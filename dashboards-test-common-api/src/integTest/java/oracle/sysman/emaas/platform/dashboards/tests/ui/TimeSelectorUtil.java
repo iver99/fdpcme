@@ -16,7 +16,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class TimeSelectorUtil
 {
-
 	public enum TimeRange
 	{
 		Last15Mins("Last 15 mins"), Last30Mins("Last 30 mins"), Last60Mins("Last 60 mins"), Last4Hours("Last 4 hours"), Last6Hours(
@@ -544,11 +543,6 @@ public class TimeSelectorUtil
 	//		};
 	//		webd.takeScreenShot();
 	//    }
-
-	private static void loadWebDriverOnly(WebDriver webDriver) throws Exception
-	{
-		driver = webDriver;
-	}
 
 	private static String timeFormatChange(String testTime, String inputDateFormat, String outputDateFormat) throws Exception
 	{

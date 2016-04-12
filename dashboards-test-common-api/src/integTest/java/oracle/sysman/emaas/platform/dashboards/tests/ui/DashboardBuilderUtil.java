@@ -2,6 +2,11 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
 import java.util.List;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DelayedPressEnterThread;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -10,20 +15,12 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DelayedPressEnterThread;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-
 public class DashboardBuilderUtil
 {
-
-	private static WebDriver driver;
-
 	public static final String REFRESH_DASHBOARD_PARAM_OFF = "Off";
 	public static final String REFRESH_DASHBOARD_PARAM_5MIN = "On (Every 5 Minutes)";
 
-	public static void addWidgetByRightDrawer(String searchString) throws Exception
+	public static void addWidgetByRightDrawer(WebDriver driver, String searchString) throws Exception
 	{
 		if (searchString == null) {
 			return;
@@ -31,7 +28,7 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("[DashboardHomeUtil] call addWidgetByRightDrawer with search string as " + searchString);
 
 		//show right drawer if it is hidden
-		DashboardBuilderUtil.showRightDrawer();
+		DashboardBuilderUtil.showRightDrawer(driver);
 
 		WebElement searchInput = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchInputCSS);
 		searchInput.click();
@@ -46,8 +43,8 @@ public class DashboardBuilderUtil
 		driver.takeScreenShot();
 
 		driver.getLogger().info("[DashboardHomeUtil] start to add widget from right drawer");
-		List<WebElement> matchingWidgets = driver.getWebDriver()
-				.findElements(By.cssSelector(DashBoardPageId.RightDrawerWidgetCSS));
+		List<WebElement> matchingWidgets = driver.getWebDriver().findElements(
+				By.cssSelector(DashBoardPageId.RightDrawerWidgetCSS));
 		if (matchingWidgets == null && matchingWidgets.size() == 0) {
 			throw new NoSuchElementException("Right drawer widget for search string =" + searchString + " is not found");
 		}
@@ -68,7 +65,7 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("[DashboardHomeUtil] finish adding widget from right drawer");
 	}
 
-	public static Boolean asHomeOption() throws Exception
+	public static Boolean asHomeOption(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("DashboardBuilderUtil.asHomeOption started");
 
@@ -100,7 +97,7 @@ public class DashboardBuilderUtil
 
 	}
 
-	public static void deleteDashboard() throws Exception
+	public static void deleteDashboard(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("DashboardBuilderUtil.deleteDashboard started");
 
@@ -120,12 +117,12 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil.deleteDashboard completed");
 	}
 
-	public static void deleteDashboardSet() throws Exception
+	public static void deleteDashboardSet(WebDriver driver) throws Exception
 	{
 
 	}
 
-	public static void duplicate(String name, String descriptions) throws Exception
+	public static void duplicate(WebDriver driver, String name, String descriptions) throws Exception
 	{
 		if (name == null || name.trim().length() == 0) {
 			driver.getLogger().info("DashboardBuilderUtil.duplicate name is null");
@@ -165,7 +162,7 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil.duplicate completed");
 	}
 
-	public static void editDashboard(String name, String descriptions) throws Exception
+	public static void editDashboard(WebDriver driver, String name, String descriptions) throws Exception
 	{
 		if (name == null && descriptions == null) {
 			return;
@@ -204,12 +201,12 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil.edit complete");
 	}
 
-	public static void editDashboardSet(String name, String descriptions, Boolean shareOption) throws Exception
+	public static void editDashboardSet(WebDriver driver, String name, String descriptions, Boolean shareOption) throws Exception
 	{
 
 	}
 
-	public static Boolean favoriteOption() throws Exception
+	public static Boolean favoriteOption(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("DashboardBuilderUtil.favoriteOption started");
 
@@ -233,21 +230,21 @@ public class DashboardBuilderUtil
 		}
 	}
 
-	public static void hideRightDrawer() throws Exception
+	public static void hideRightDrawer(WebDriver driver) throws Exception
 	{
-		if (DashboardBuilderUtil.isRightDrawerVisible() == true) {
+		if (DashboardBuilderUtil.isRightDrawerVisible(driver) == true) {
 			driver.click("css=" + DashBoardPageId.RightDrawerToggleBtnCSS);
 			driver.getLogger().info("[DashboardBuilderUtil] triggered hideRightDrawer.");
 		}
 		driver.takeScreenShot();
 	}
 
-	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
-	{
-		driver = webDriver;
-	}
+	//	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
+	//	{
+	//		driver = webDriver;
+	//	}
 
-	public static void print() throws Exception
+	public static void print(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("DashboardBuilderUtil print dashboard started");
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
@@ -260,7 +257,7 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil print completed");
 	}
 
-	public static void refreshDashboard(String refreshSettings) throws Exception
+	public static void refreshDashboard(WebDriver driver, String refreshSettings) throws Exception
 	{
 		driver.getLogger().info("DashboardBuilderUtil.refreshDashboard started for refreshSettings=" + refreshSettings);
 
@@ -291,12 +288,12 @@ public class DashboardBuilderUtil
 
 	}
 
-	public static void refreshDashboardSet(String refreshSettings) throws Exception
+	public static void refreshDashboardSet(WebDriver driver, String refreshSettings) throws Exception
 	{
 
 	}
 
-	public static void save() throws Exception
+	public static void save(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("DashboardBuilderUtil.save started");
 		driver.waitForElementPresent("css=" + DashBoardPageId.DashboardSaveCSS);
@@ -305,16 +302,16 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil.save compelted");
 	}
 
-	public static void showRightDrawer() throws Exception
+	public static void showRightDrawer(WebDriver driver) throws Exception
 	{
-		if (DashboardBuilderUtil.isRightDrawerVisible() == false) {
+		if (DashboardBuilderUtil.isRightDrawerVisible(driver) == false) {
 			driver.click("css=" + DashBoardPageId.RightDrawerToggleBtnCSS);
 			driver.getLogger().info("[DashboardBuilderUtil] triggered showRightDrawer.");
 		}
 		driver.takeScreenShot();
 	}
 
-	public static Boolean toggleShareDashboard() throws Exception
+	public static Boolean toggleShareDashboard(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("DashboardBuilderUtil.favoriteOption started");
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
@@ -337,7 +334,7 @@ public class DashboardBuilderUtil
 		}
 	}
 
-	private static boolean isRightDrawerVisible()
+	private static boolean isRightDrawerVisible(WebDriver driver)
 	{
 		WebElement rightDrawerPanel = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RightDrawerPanelCSS));
 		boolean isDisplayed = rightDrawerPanel.getCssValue("display").equals("none") != true;
