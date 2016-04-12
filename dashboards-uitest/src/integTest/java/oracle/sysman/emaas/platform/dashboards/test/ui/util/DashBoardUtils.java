@@ -50,9 +50,12 @@ public class DashBoardUtils {
     {
     	driver.getLogger().info("before clicking Delete icon");
     	driver.click(DashBoardPageId.OptionsID);
-		driver.click(DashBoardPageId.DashboardDelete);
-		driver.getLogger().info("after clicking Delete icon");
-		driver.takeScreenShot();
+	driver.isDisplayed(DashBoardPageId.DashboardDelete);
+	driver.takeScreenShot();//screenshot before click delete	
+	driver.click(DashBoardPageId.DashboardDelete);
+        driver.getLogger().info("after clicking Delete icon");
+	driver.takeScreenShot();
+		
     }
      	
     public static void noOOBCheck_GridView() throws Exception
