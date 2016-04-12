@@ -120,7 +120,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.switchToWindow();
 		String tmpUrl = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("Open 'How to get started' by url: " + tmpUrl);
-		Assert.assertEquals(tmpUrl, "docs.oracle.com/cloud/latest/em_home/index.html");
+		Assert.assertEquals(tmpUrl, "http://docs.oracle.com/cloud/latest/em_home/index.html");
 		webd.getLogger().info("Test opening 'How to get started' in welcome page finished!!!");
 	}
 
@@ -267,7 +267,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.switchToWindow();
 		String tmpUrl = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("Open 'Videos' by url: " + tmpUrl);
-		Assert.assertEquals(tmpUrl, "docs.oracle.com/cloud/latest/em_home/em_home_videos.htm");
+		Assert.assertEquals(tmpUrl, "http://docs.oracle.com/cloud/latest/em_home/em_home_videos.htm");
 		webd.getLogger().info("Test opening 'Videos' in welcome page finished!!!");
 	}
 
