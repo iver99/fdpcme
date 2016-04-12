@@ -22,8 +22,8 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/gson-2.3.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/guava-18.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jmockit-1.19.jar"/>
-	<classpathentry kind="lib" path="D:/git/emcpdf/dependencies/artifactory/emaas-qatool-jetuiautomation-utility-2.0.0-20160331114325.jar"/>
-	<classpathentry kind="lib" path="D:/git/emcpdf/dependencies/artifactory/emsaas-qatool-jet-utility-3.0.0-20160331114325.jar"/>
-	<classpathentry kind="lib" path="D:/git/emcpdf/dependencies/artifactory/qatools-standalone-2.0.0-20160331114325.zip"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emaas-qatool-jetuiautomation-utility-2.0.0-20160331114325.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emsaas-qatool-jet-utility-3.0.0-20160331114325.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/qatools-standalone-2.0.0-20160331114325.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
