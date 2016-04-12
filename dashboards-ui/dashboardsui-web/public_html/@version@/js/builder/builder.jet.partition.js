@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 define([
+    'ojs/ojcore',
     'ojs/ojknockout',
     'ojs/ojmenu',
     'ojs/ojtree',
@@ -14,6 +15,8 @@ define([
     'ojs/ojpopup',
     'ojs/ojchart',
     'ojs/ojcomponents',   
+    'ojs/ojcomponentcore',
+    'ojs/ojdialog',
     'ojs/ojdatetimepicker',
     'ojs/ojmodel',
     'ojs/ojknockout-model',
@@ -25,6 +28,8 @@ define([
     'ojs/ojdvt-base',
     'ojs/ojcheckboxset',
     'ojs/ojpopup',
+    'ojs/ojpopupcore',
+    'ojs/ojmessaging',
     'ojs/ojgauge'
 ], function (oj)
 {
