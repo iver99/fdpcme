@@ -2,38 +2,31 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
 import java.util.List;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-
 public class WidgetUtil
 {
-	private static WebDriver driver;
-
-	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
+	public static void remove(WebDriver driver, String widgetName) throws Exception
 	{
-		driver = webDriver;
+		WidgetUtil.remove(driver, widgetName, 0);
 	}
 
-	public static void remove(String widgetName) throws Exception
+	public static void remove(WebDriver driver, String widgetName, int index) throws Exception
 	{
-		WidgetUtil.remove(widgetName, 0);
-	}
-
-	public static void remove(String widgetName, int index) throws Exception
-	{
-		WebElement widgetEl = WidgetUtil.getWidgetByName(widgetName, index);
+		WebElement widgetEl = WidgetUtil.getWidgetByName(driver, widgetName, index);
 		if (null == widgetEl) {
 			driver.getLogger().info("Fail to find the widget titled with " + widgetName);
 			throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
 		}
 
-		WidgetUtil.focusOnWidgetHeader(widgetEl);
+		WidgetUtil.focusOnWidgetHeader(driver, widgetEl);
 		driver.takeScreenShot();
 
 		widgetEl.findElement(By.cssSelector(DashBoardPageId.ConfigTileCSS)).click();
@@ -43,15 +36,15 @@ public class WidgetUtil
 
 	}
 
-	public static void resizeOptions(String widgetName, int index, String resizeOptions) throws Exception
+	public static void resizeOptions(WebDriver driver, String widgetName, int index, String resizeOptions) throws Exception
 	{
-		WebElement widgetEl = WidgetUtil.getWidgetByName(widgetName, index);
+		WebElement widgetEl = WidgetUtil.getWidgetByName(driver, widgetName, index);
 		if (null == widgetEl) {
 			driver.getLogger().info("Fail to find the widget titled with " + widgetName);
 			throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
 		}
 
-		WidgetUtil.focusOnWidgetHeader(widgetEl);
+		WidgetUtil.focusOnWidgetHeader(driver, widgetEl);
 		driver.takeScreenShot();
 
 		String tileResizeCSS = null;
@@ -82,24 +75,24 @@ public class WidgetUtil
 
 	}
 
-	public static void resizeOptions(String widgetName, String resizeOptions) throws Exception
+	public static void resizeOptions(WebDriver driver, String widgetName, String resizeOptions) throws Exception
 	{
-		WidgetUtil.resizeOptions(widgetName, 0, resizeOptions);
+		WidgetUtil.resizeOptions(driver, widgetName, 0, resizeOptions);
 	}
 
-	public static void title(String widgetName, boolean visibility) throws Exception
+	public static void title(WebDriver driver, String widgetName, boolean visibility) throws Exception
 	{
-		WidgetUtil.title(widgetName, 0, visibility);
+		WidgetUtil.title(driver, widgetName, 0, visibility);
 	}
 
-	public static void title(String widgetName, int index, boolean visibility) throws Exception
+	public static void title(WebDriver driver, String widgetName, int index, boolean visibility) throws Exception
 	{
 		driver.getLogger().info(
 				"WidgetUtil.title started for widgetName=" + widgetName + ", index=" + index + ", visibility=" + visibility);
 
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
-		WidgetUtil.clickTileConfigButton(widgetName, index);
+		WidgetUtil.clickTileConfigButton(driver, widgetName, index);
 
 		if (visibility) {
 			if (driver.isDisplayed(DashBoardPageId.BuilderTileHideLocator)) {
@@ -122,25 +115,25 @@ public class WidgetUtil
 		driver.getLogger().info("WidgetUtil.title completed");
 	}
 
-	public static void udeRedirect(String widgetName) throws Exception
+	public static void udeRedirect(WebDriver driver, String widgetName) throws Exception
 	{
-		WidgetUtil.udeRedirect(widgetName, 0);
+		WidgetUtil.udeRedirect(driver, widgetName, 0);
 	}
 
-	public static void udeRedirect(String widgetName, int index) throws Exception
+	public static void udeRedirect(WebDriver driver, String widgetName, int index) throws Exception
 	{
 		driver.getLogger().info("WidgetUtil.udeRedirect started for widgetName=" + widgetName + ", index=" + index);
 
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
-		WidgetUtil.clickTileUDEExploreButton(widgetName, index);
+		WidgetUtil.clickTileUDEExploreButton(driver, widgetName, index);
 
 		driver.getLogger().info("WidgetUtil.udeRedirect completed");
 	}
 
-	private static WebElement clickTileConfigButton(String widgetName, int index)
+	private static WebElement clickTileConfigButton(WebDriver driver, String widgetName, int index)
 	{
-		WebElement tileTitle = WidgetUtil.getTileTitleElement(widgetName, index);
+		WebElement tileTitle = WidgetUtil.getTileTitleElement(driver, widgetName, index);
 		WebElement tileConfig = tileTitle.findElement(By.xpath(DashBoardPageId.BuilderTileConfigLocator));
 		if (tileConfig == null) {
 			throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
@@ -151,13 +144,13 @@ public class WidgetUtil
 		return tileConfig;
 	}
 
-	private static void clickTileUDEExploreButton(String widgetName, int index)
+	private static void clickTileUDEExploreButton(WebDriver driver, String widgetName, int index)
 	{
-		WebElement tileTitle = WidgetUtil.getTileTitleElement(widgetName, index);
+		WebElement tileTitle = WidgetUtil.getTileTitleElement(driver, widgetName, index);
 		WebElement tileConfig = tileTitle.findElement(By.xpath(DashBoardPageId.BuilderTileDataExploreLocator));
 		if (tileConfig == null) {
-			throw new NoSuchElementException(
-					"Tile data explore link for title=" + widgetName + ", index=" + index + " is not found");
+			throw new NoSuchElementException("Tile data explore link for title=" + widgetName + ", index=" + index
+					+ " is not found");
 		}
 		Actions builder = new Actions(driver.getWebDriver());
 		builder.moveToElement(tileTitle).perform();
@@ -165,7 +158,7 @@ public class WidgetUtil
 		driver.takeScreenShot();
 	}
 
-	private static void focusOnWidgetHeader(WebElement widgetElement)
+	private static void focusOnWidgetHeader(WebDriver driver, WebElement widgetElement)
 	{
 		if (null == widgetElement) {
 			return;
@@ -177,7 +170,7 @@ public class WidgetUtil
 		driver.getLogger().info("Focus to the widget");
 	}
 
-	private static WebElement getTileTitleElement(String widgetName, int index)
+	private static WebElement getTileTitleElement(WebDriver driver, String widgetName, int index)
 	{
 		driver.waitForElementPresent(DashBoardPageId.BuilderTilesEditArea);
 		driver.click(DashBoardPageId.BuilderTilesEditArea);
@@ -193,7 +186,7 @@ public class WidgetUtil
 		return tileTitles.get(index);
 	}
 
-	private static WebElement getWidgetByName(String widgetName, int index) throws InterruptedException
+	private static WebElement getWidgetByName(WebDriver driver, String widgetName, int index) throws InterruptedException
 	{
 		if (widgetName == null) {
 			return null;

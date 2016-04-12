@@ -2,26 +2,24 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
 import java.util.List;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.XPathLiteral;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
+
 public class WidgetSelectorUtil
 {
-	private static WebDriver driver;
-
-	public static void addWidget(String widgetName) throws Exception
+	public static void addWidget(WebDriver driver, String widgetName) throws Exception
 	{
 		driver.getLogger().info("WidgetSelectorUtil.addWidget started, widgetName=" + widgetName);
 		Validator.notEmptyString("widgetName", widgetName);
 
-		WidgetSelectorUtil.searchWidget(widgetName);
-		WidgetSelectorUtil.getWidgetElementByTitle(widgetName, 0);
+		WidgetSelectorUtil.searchWidget(driver, widgetName);
+		WidgetSelectorUtil.getWidgetElementByTitle(driver, widgetName, 0);
 
 		driver.waitForElementPresent(DashBoardPageId.WIDGET_SELECTOR_OK_BTN_LOCATOR);
 		driver.click(DashBoardPageId.WIDGET_SELECTOR_OK_BTN_LOCATOR);
@@ -30,7 +28,7 @@ public class WidgetSelectorUtil
 		driver.getLogger().info("WidgetSelectorUtil.addWidget completed");
 	}
 
-	public static void closeDialog() throws Exception
+	public static void closeDialog(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("WidgetSelectorUtil.closeDialog started");
 		driver.waitForElementPresent(DashBoardPageId.WIDGET_SELECTOR_CLOSE_BTN_LOCATOR);
@@ -42,27 +40,22 @@ public class WidgetSelectorUtil
 		driver.getLogger().info("WidgetSelectorUtil.closeDialog completed");
 	}
 
-	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
-	{
-		driver = webDriver;
-	}
-
-	public static void page(int pageNo) throws Exception
+	public static void page(WebDriver driver, int pageNo) throws Exception
 	{
 
 	}
 
-	public static void pagingNext() throws Exception
+	public static void pagingNext(WebDriver driver) throws Exception
 	{
 
 	}
 
-	public static void pagingPrevious() throws Exception
+	public static void pagingPrevious(WebDriver driver) throws Exception
 	{
 
 	}
 
-	private static WebElement getWidgetElementByTitle(String widgetName, int index)
+	private static WebElement getWidgetElementByTitle(WebDriver driver, String widgetName, int index)
 	{
 		String xpath = XPathLiteral.getXPath(widgetName, driver.getLogger());
 		String widgetItemByNameLocator = String.format(DashBoardPageId.WIDGET_SELECTOR_WIDGET_ITEMS_BY_TITLE, xpath);
@@ -79,7 +72,7 @@ public class WidgetSelectorUtil
 		return tileTitles.get(index);
 	}
 
-	private static void searchWidget(String widgetName) throws Exception
+	private static void searchWidget(WebDriver driver, String widgetName) throws Exception
 	{
 		driver.waitForElementPresent(DashBoardPageId.WIDGET_SELECTOR_WIDGET_AREA);
 		driver.clear(DashBoardPageId.WIDGET_SELECTOR_SEARCH_INPUT_LOCATOR);
