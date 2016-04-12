@@ -16,12 +16,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class TimeSelectorUtil
 {
-
 	public enum TimeRange
 	{
 		Last15Mins("Last 15 mins"), Last30Mins("Last 30 mins"), Last60Mins("Last 60 mins"), Last4Hours("Last 4 hours"), Last6Hours(
 				"Last 6 hours"), Last1Day("Last 1 day"), Last7Days("Last 7 days"), Last30Days("Last 30 days"), Last90Days(
-						"Last 90 days"), Latest("Latest"), Custom("Custom");
+				"Last 90 days"), Latest("Latest"), Custom("Custom");
 
 		private final String timerange;
 
@@ -36,6 +35,8 @@ public class TimeSelectorUtil
 		}
 
 	}
+
+	private static WebDriver driver;
 
 	public static String setCustomTime(WebDriver webd, int index, String startDateTime, String endDateTime) throws Exception
 	{
