@@ -569,20 +569,7 @@ public class DashBoardUtils {
 	}
 	public static void searchDashBoard(WebDriver wdriver, String board) throws Exception
 	{
-		/*
-                wdriver.takeScreenShot();
-		wdriver.getLogger().info("go into search DashBoard");		
-		wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
-		wdriver.click(DashBoardPageId.SearchDSBoxID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		wdriver.getLogger().info("search dashboard: "+board);
-		wdriver.sendKeys(DashBoardPageId.SearchDSBoxID, board);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-
-		driver.click("/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[1]/button[2]");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		wdriver.takeScreenShot();
-	        */
+		
                 wdriver.takeScreenShot();
 		wdriver.getLogger().info("searching dashboard ..."+board);
 		wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
@@ -595,7 +582,7 @@ public class DashBoardUtils {
 		Assert.assertEquals(board, wdriver.getElement(DashBoardPageId.SearchDSBoxID).getAttribute("value"));
 		
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfKeyEl));
-		wdriver.click(DashBoardPageId.DashBoardID); //give focus to search box	
+		wdriver.click(DashBoardPageId.SearchDSBoxID); //give focus to search box	
 		wdriver.getLogger().info("searching dashboard: "+board +" done!");
 		wdriver.takeScreenShot(); 
 	}
