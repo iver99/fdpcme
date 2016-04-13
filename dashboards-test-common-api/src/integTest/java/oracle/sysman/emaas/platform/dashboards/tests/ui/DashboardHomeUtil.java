@@ -44,8 +44,7 @@ public class DashboardHomeUtil
 		driver.click(DashBoardPageId.ListViewTableNameHeaderLocator);
 	}
 
-	public static void createDashboard(WebDriver driver, String name, String descriptions, Boolean displayDesc,
-			Boolean selectorRefreshcontrol) throws Exception
+	public static void createDashboard(WebDriver driver, String name, String descriptions, Boolean selectorRefreshcontrol) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call createDashboard : " + name);
 		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.CreateDSButtonID));
