@@ -87,8 +87,20 @@ public class DashboardHomeUtil
 	public static void exploreData(WebDriver driver, String option) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call exploreData -> " + option);
+		
+		if(option == null || option.isEmpty()) {
+			return;
+		}
+		
 		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataBtnID));
-		driver.click(option);
+		WebElement menu = driver.getElement(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataMenu));
+		List<WebElement> menuList = menu.findElements(By.tagName("li"));
+		for(WebElement menuItem : menuList) {
+			if(option.equals(menuItem.getText())) {
+				menuItem.click();
+				break;
+			}
+		}
 	}
 
 	public static void filterOptions(WebDriver driver, String filter) throws Exception
