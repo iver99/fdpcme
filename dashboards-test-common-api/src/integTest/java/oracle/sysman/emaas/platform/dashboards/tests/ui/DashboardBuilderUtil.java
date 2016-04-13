@@ -17,8 +17,8 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class DashboardBuilderUtil
 {
-	public static final String REFRESH_DASHBOARD_PARAM_OFF = "Off";
-	public static final String REFRESH_DASHBOARD_PARAM_5MIN = "On (Every 5 Minutes)";
+	public static final String REFRESH_DASHBOARD_SETTINGS_OFF = "Off";
+	public static final String REFRESH_DASHBOARD_SETTINGS_5MIN = "On (Every 5 Minutes)";
 
 	public static void addWidgetByRightDrawer(WebDriver driver, String searchString) throws Exception
 	{
@@ -243,7 +243,7 @@ public class DashboardBuilderUtil
 	{
 		driver.getLogger().info("DashboardBuilderUtil.isRefreshSettingChecked started for refreshSettings=" + refreshSettings);
 
-		Validator.fromValidValues("refreshSettings", refreshSettings, REFRESH_DASHBOARD_PARAM_OFF, REFRESH_DASHBOARD_PARAM_5MIN);
+		Validator.fromValidValues("refreshSettings", refreshSettings, REFRESH_DASHBOARD_SETTINGS_OFF, REFRESH_DASHBOARD_SETTINGS_5MIN);
 
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
@@ -254,7 +254,7 @@ public class DashboardBuilderUtil
 		driver.takeScreenShot();
 
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsAutoRefreshOffLocator);
-		if (REFRESH_DASHBOARD_PARAM_OFF.equals(refreshSettings)) {
+		if (REFRESH_DASHBOARD_SETTINGS_OFF.equals(refreshSettings)) {
 			boolean checked = driver.isDisplayed(DashBoardPageId.BuilderAutoRefreshOffSelectedLocator);
 			driver.getLogger().info("DashboardBuilderUtil.isRefreshSettingChecked completed, return result is " + checked);
 			return checked;
@@ -288,7 +288,7 @@ public class DashboardBuilderUtil
 	{
 		driver.getLogger().info("DashboardBuilderUtil.refreshDashboard started for refreshSettings=" + refreshSettings);
 
-		Validator.fromValidValues("refreshSettings", refreshSettings, REFRESH_DASHBOARD_PARAM_OFF, REFRESH_DASHBOARD_PARAM_5MIN);
+		Validator.fromValidValues("refreshSettings", refreshSettings, REFRESH_DASHBOARD_SETTINGS_OFF, REFRESH_DASHBOARD_SETTINGS_5MIN);
 
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
@@ -300,12 +300,12 @@ public class DashboardBuilderUtil
 
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsAutoRefreshOffLocator);
 		switch (refreshSettings) {
-			case REFRESH_DASHBOARD_PARAM_OFF:
+			case REFRESH_DASHBOARD_SETTINGS_OFF:
 				driver.check(DashBoardPageId.BuilderOptionsAutoRefreshOffLocator);
 				driver.waitForElementPresent(DashBoardPageId.BuilderAutoRefreshOffSelectedLocator);
 				driver.takeScreenShot();
 				break;
-			case REFRESH_DASHBOARD_PARAM_5MIN:
+			case REFRESH_DASHBOARD_SETTINGS_5MIN:
 				driver.check(DashBoardPageId.BuilderOptionsAutoRefreshOn5MinLocator);
 				driver.waitForElementPresent(DashBoardPageId.BuilderAutoRefreshOn5MinSelectedLocator);
 				driver.takeScreenShot();
