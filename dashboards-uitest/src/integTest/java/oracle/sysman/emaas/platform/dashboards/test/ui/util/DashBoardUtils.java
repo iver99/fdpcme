@@ -425,19 +425,23 @@ public class DashBoardUtils
 
 	public static boolean doesWebElementExist(String selector) throws Exception
 	{
-
-		WebElement el = driver.getWebDriver().findElement(By.id(selector));
-		//boolean b = driver.isElementPresent(selector);
-
-		if (el.isDisplayed()) {
-			driver.getLogger().info("can get element");
+		if (driver.isElementPresent(selector) && driver.isDisplayed(selector)) {
 			return true;
 		}
 		else {
-			driver.getLogger().info("can not get element");
 			return false;
 		}
-
+		//		WebElement el = driver.getWebDriver().findElement(By.id(selector));
+		//		//boolean b = driver.isElementPresent(selector);
+		//
+		//		if (el.isDisplayed()) {
+		//			driver.getLogger().info("can get element");
+		//			return true;
+		//		}
+		//		else {
+		//			driver.getLogger().info("can not get element");
+		//			return false;
+		//		}
 	}
 
 	public static boolean doesWebElementExistByXPath(String xpath) throws Exception
