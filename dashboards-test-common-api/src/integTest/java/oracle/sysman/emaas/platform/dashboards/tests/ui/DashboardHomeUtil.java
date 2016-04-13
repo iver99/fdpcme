@@ -310,6 +310,12 @@ public class DashboardHomeUtil
 
 	}
 
+	public static void waitForDashboardPresent(WebDriver driver, String dashboardName) throws Exception
+	{
+		String indicator = DashBoardPageId.DashboardLocator.replace("_name_", dashboardName);
+		driver.waitForElementPresent(indicator);
+	}
+
 	private static String convertID(String id)
 	{
 		return "id=" + id;
