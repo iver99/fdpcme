@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
@@ -9,8 +10,6 @@ import org.testng.Assert;
 
 public class DashBoardUtils
 {
-
-	private static WebDriver driver;
 
 	public static void addWidget() throws Exception
 	{
@@ -36,11 +35,10 @@ public class DashBoardUtils
 
 	public static void APM_OOB_GridView() throws Exception
 	{
-		//check APM oob
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
-		Assert.assertTrue(driver.isElementPresent(PageId.Application_Performance_Monitoring_ID));
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(PageId.Application_Performance_Monitoring_ID))
-				.getAttribute("aria-label"), "Application Performance Monitoring");
+		DashboardHomeUtil.gridView(driver);
+		DashboardHomeUtil.waitForDashboardPresent(driver, "Application Performance Monitoring");
+
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Application Performance Monitoring"));
 	}
 
 	public static void checkBrandingBarLink() throws Exception
@@ -223,6 +221,23 @@ public class DashBoardUtils
 		driver.takeScreenShot();
 	}
 
+	public static void clickTimePicker() throws Exception
+	{
+		WebElement Box = driver.getWebDriver().findElement(By.xpath(PageId.TimePickerID));//*[@id='oj-listbox-drop']"));//));
+		Box.click();
+		driver.takeScreenShot();
+		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
+		driver.click(PageId.CustomDateTimeID);
+		driver.takeScreenShot();
+		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
+		driver.click(PageId.DateID1);
+		driver.takeScreenShot();
+		//driver.click(DashBoardPageId.DateID2);
+		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
+		driver.click(PageId.ApplyBtnID);
+		driver.takeScreenShot();
+	}
+
 	//	public static  void addWidget(int i,String parentHandle,String dbname,String dbdesc) throws Exception
 	//	{
 	//		WidgetAddPage widgetAddPage;
@@ -384,23 +399,6 @@ public class DashBoardUtils
 	//		tg.tileShorter();
 	//	}
 
-	public static void clickTimePicker() throws Exception
-	{
-		WebElement Box = driver.getWebDriver().findElement(By.xpath(PageId.TimePickerID));//*[@id='oj-listbox-drop']"));//));
-		Box.click();
-		driver.takeScreenShot();
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
-		driver.click(PageId.CustomDateTimeID);
-		driver.takeScreenShot();
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
-		driver.click(PageId.DateID1);
-		driver.takeScreenShot();
-		//driver.click(DashBoardPageId.DateID2);
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
-		driver.click(PageId.ApplyBtnID);
-		driver.takeScreenShot();
-	}
-
 	public static void clickToSortByLastAccessed() throws Exception
 	{
 		WebElement Box = driver.getWebDriver().findElement(By.xpath(PageId.SortDropListID));//*[@id='oj-listbox-drop']"));//));
@@ -482,79 +480,33 @@ public class DashBoardUtils
 
 	public static void ITA_OOB_GridView() throws Exception
 	{
-		//check ITA OOB
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
-		Assert.assertTrue(driver.isElementPresent(PageId.Database_Health_Summary_ID));
-		Assert.assertTrue(driver.isElementPresent(PageId.Host_Health_Summary_ID));
-		Assert.assertTrue(driver.isElementPresent(PageId.Database_Performance_Analytics_ID));
-		Assert.assertTrue(driver.isElementPresent(PageId.Middleware_Performance_Analytics_ID));
-		Assert.assertTrue(driver.isElementPresent(PageId.Database_Resource_Analytics_ID));
-		Assert.assertTrue(driver.isElementPresent(PageId.Middleware_Resource_Analytics_ID));
-		Assert.assertTrue(driver.isElementPresent(PageId.WebLogic_Health_Summary_ID));
-		Assert.assertTrue(driver.isElementPresent(PageId.Database_Configuration_and_Storage_By_Version_ID));
-		Assert.assertTrue(driver.isElementPresent(PageId.Enterprise_OverView_ID));
-		Assert.assertTrue(driver.isElementPresent(PageId.Host_Inventory_By_Platform_ID));
-		Assert.assertTrue(driver.isElementPresent(PageId.Top_25_Databases_by_Resource_Consumption_ID));
-		Assert.assertTrue(driver.isElementPresent(PageId.Top_25_WebLogic_Servers_by_Heap_Usage_ID));
-		Assert.assertTrue(driver.isElementPresent(PageId.Top_25_WebLogic_Servers_by_Load_ID));
-		Assert.assertTrue(driver.isElementPresent(PageId.WebLogic_Servers_by_JDK_Version_ID));
+		DashboardHomeUtil.gridView(driver);
+		DashboardHomeUtil.waitForDashboardPresent(driver, "Database Health Summary");
 
-		Assert.assertEquals(
-				driver.getWebDriver().findElement(By.xpath(PageId.Database_Health_Summary_ID)).getAttribute("aria-label"),
-				"Database Health Summary");
-		Assert.assertEquals(
-				driver.getWebDriver().findElement(By.xpath(PageId.Host_Health_Summary_ID)).getAttribute("aria-label"),
-				"Host Health Summary");
-		Assert.assertEquals(
-				driver.getWebDriver().findElement(By.xpath(PageId.Database_Performance_Analytics_ID)).getAttribute("aria-label"),
-				"Performance Analytics: Database");
-		Assert.assertEquals(
-				driver.getWebDriver().findElement(By.xpath(PageId.Middleware_Performance_Analytics_ID))
-				.getAttribute("aria-label"), "Performance Analytics: Middleware");
-		Assert.assertEquals(
-				driver.getWebDriver().findElement(By.xpath(PageId.Database_Resource_Analytics_ID)).getAttribute("aria-label"),
-				"Resource Analytics: Database");
-		Assert.assertEquals(
-				driver.getWebDriver().findElement(By.xpath(PageId.Middleware_Resource_Analytics_ID)).getAttribute("aria-label"),
-				"Resource Analytics: Middleware");
-		Assert.assertEquals(
-				driver.getWebDriver().findElement(By.xpath(PageId.WebLogic_Health_Summary_ID)).getAttribute("aria-label"),
-				"WebLogic Health Summary");
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(PageId.Database_Configuration_and_Storage_By_Version_ID))
-				.getAttribute("aria-label"), "Database Configuration and Storage By Version");
-		Assert.assertEquals(
-				driver.getWebDriver().findElement(By.xpath(PageId.Enterprise_OverView_ID)).getAttribute("aria-label"),
-				"Enterprise Overview");
-		Assert.assertEquals(
-				driver.getWebDriver().findElement(By.xpath(PageId.Host_Inventory_By_Platform_ID)).getAttribute("aria-label"),
-				"Host Inventory By Platform");
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(PageId.Top_25_Databases_by_Resource_Consumption_ID))
-				.getAttribute("aria-label"), "Top 25 Databases by Resource Consumption");
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(PageId.Top_25_WebLogic_Servers_by_Heap_Usage_ID))
-				.getAttribute("aria-label"), "Top 25 WebLogic Servers by Heap Usage");
-		Assert.assertEquals(
-				driver.getWebDriver().findElement(By.xpath(PageId.Top_25_WebLogic_Servers_by_Load_ID)).getAttribute("aria-label"),
-				"Top 25 WebLogic Servers by Load");
-		Assert.assertEquals(
-				driver.getWebDriver().findElement(By.xpath(PageId.WebLogic_Servers_by_JDK_Version_ID)).getAttribute("aria-label"),
-				"WebLogic Servers by JDK Version");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Database Health Summary"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Host Health Summary"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Performance Analytics: Database"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Performance Analytics: Middleware"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Resource Analytics: Database"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Resource Analytics: Middleware"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "WebLogic Health Summary"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Database Configuration and Storage By Version"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Enterprise Overview"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Host Inventory By Platform"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Top 25 Databases by Resource Consumption"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Top 25 WebLogic Servers by Heap Usage"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Top 25 WebLogic Servers by Load"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "WebLogic Servers by JDK Version"));
 	}
 
 	public static void LA_OOB_GridView() throws Exception
 	{
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
-		Assert.assertTrue(driver.isElementPresent(PageId.Database_Operations_ID));
-		Assert.assertTrue(driver.isElementPresent(PageId.Host_Operations_ID));
-		Assert.assertTrue(driver.isElementPresent(PageId.Middleware_Operations_ID));
+		DashboardHomeUtil.gridView(driver);
+		DashboardHomeUtil.waitForDashboardPresent(driver, "Database Operations");
 
-		Assert.assertEquals(
-				driver.getWebDriver().findElement(By.xpath(PageId.Database_Operations_ID)).getAttribute("aria-label"),
-				"Database Operations");
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(PageId.Host_Operations_ID)).getAttribute("aria-label"),
-				"Host Operations");
-		Assert.assertEquals(
-				driver.getWebDriver().findElement(By.xpath(PageId.Middleware_Operations_ID)).getAttribute("aria-label"),
-				"Middleware Operations");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Database Operations"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Host Operations"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Middleware Operations"));
 	}
 
 	public static void loadWebDriver(WebDriver webDriver) throws Exception
@@ -767,5 +719,7 @@ public class DashBoardUtils
 	{
 		Thread.sleep(millisSec);
 	}
+
+	private static WebDriver driver;
 
 }
