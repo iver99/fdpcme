@@ -60,7 +60,7 @@ public class DashboardHomeUtil
 		if (descriptions != null && !descriptions.isEmpty()) {
 			driver.sendKeys(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardDescBoxID), descriptions);
 		}
-		if (selectorRefreshcontrol) {
+		if (selectorRefreshcontrol == null || selectorRefreshcontrol) {
 			driver.check(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardTimeRangeChecker));
 		}
 		else {
