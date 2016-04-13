@@ -1,8 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui;
 
-import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 
@@ -277,18 +277,17 @@ public class TestWelcomePage extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in test Welcome Page");
 		BrandingBarUtil.visitWelcome(webd);
-		WelcomeUtil.visitAPM(webd);
 		webd.takeScreenShot();
 
-		Assert.assertEquals(DashBoardUtils.getText(PageId.Welcome_APMLinkID), "Application Performance Monitoring");
-		Assert.assertEquals(DashBoardUtils.getText(PageId.Welcome_LALinkID), "Log Analytics");
-		Assert.assertEquals(DashBoardUtils.getText(PageId.Welcome_ITALinkID), "IT Analytics");
-		Assert.assertEquals(DashBoardUtils.getText(PageId.Welcome_DashboardsLinkID), "Dashboards");
-		Assert.assertEquals(DashBoardUtils.getText(PageId.Welcome_DataExp), "Data Explorers");
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "APM"));
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "LA"));
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "ITA"));
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "dashboards"));
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "dataExplorers"));
 
-		Assert.assertEquals(DashBoardUtils.getText(PageId.Welcome_LearnMore_getStarted), "How to get started");
-		Assert.assertEquals(DashBoardUtils.getText(PageId.Welcome_LearnMore_Videos), "Videos");
-		Assert.assertEquals(DashBoardUtils.getText(PageId.Welcome_LearnMore_ServiceOffering), "Service Offerings");
+		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "getStarted"));
+		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "videos"));
+		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "serviceOfferings"));
 	}
 
 	public void urlVerification(String pageUrl, String expectedUrl)
