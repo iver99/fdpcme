@@ -27,7 +27,7 @@ public class TestHomePage extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testAWRLink");
 
-		DashboardHomeUtil.exploreData(webd, DashBoardPageId.ExploreDataMenu_Analyze);
+		DashboardHomeUtil.exploreData(webd, DashboardHomeUtil.EXPLOREDATA_MENU_ANALYZE);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9),
@@ -41,7 +41,7 @@ public class TestHomePage extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testLALink");
 
-		DashboardHomeUtil.exploreData(webd, DashBoardPageId.ExploreDataMenu_Log);
+		DashboardHomeUtil.exploreData(webd, DashboardHomeUtil.EXPLOREDATA_MENU_LOG);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emlacore/html/log-analytics-search.html");
@@ -54,7 +54,7 @@ public class TestHomePage extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testTargetLink");
 
-		DashboardHomeUtil.exploreData(webd, DashBoardPageId.ExploreDataMenu_Search);
+		DashboardHomeUtil.exploreData(webd, DashboardHomeUtil.EXPLOREDATA_MENU_SEARCH);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		String sub_str = url.substring(url.indexOf("emsaasui") + 9);
