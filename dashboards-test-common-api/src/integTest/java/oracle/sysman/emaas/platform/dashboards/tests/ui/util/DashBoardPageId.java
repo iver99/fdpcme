@@ -323,11 +323,6 @@ public class DashBoardPageId
 	public static final String dashboardshare = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
 	public static final String stopshare_btn = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
 
-	public static final String TILE_WIDER = "wider";
-	public static final String TILE_NARROWER = "narrower";
-	public static final String TILE_TALLER = "taller";
-	public static final String TILE_SHORTER = "shorter";
-
 	// widget selector popup dialog
 	public static final String WIDGET_SELECTOR_WIDGET_AREA = "//div[@id='widget-selector-widgets']";
 	public static final String WIDGET_SELECTOR_SEARCH_INPUT_LOCATOR = "//div[@id='widget-selector-search-container']//input[@id='searchTxt']";

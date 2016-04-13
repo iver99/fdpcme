@@ -13,6 +13,11 @@ import org.openqa.selenium.interactions.Actions;
 
 public class WidgetUtil
 {
+	public static final String TILE_WIDER = "wider";
+	public static final String TILE_NARROWER = "narrower";
+	public static final String TILE_TALLER = "taller";
+	public static final String TILE_SHORTER = "shorter";
+
 	public static void remove(WebDriver driver, String widgetName) throws Exception
 	{
 		WidgetUtil.remove(driver, widgetName, 0);
@@ -49,16 +54,16 @@ public class WidgetUtil
 
 		String tileResizeCSS = null;
 		switch (resizeOptions) {
-			case DashBoardPageId.TILE_WIDER:
+			case WidgetUtil.TILE_WIDER:
 				tileResizeCSS = DashBoardPageId.WiderTileCSS;
 				break;
-			case DashBoardPageId.TILE_NARROWER:
+			case WidgetUtil.TILE_NARROWER:
 				tileResizeCSS = DashBoardPageId.NarrowerTileCSS;
 				break;
-			case DashBoardPageId.TILE_SHORTER:
+			case WidgetUtil.TILE_SHORTER:
 				tileResizeCSS = DashBoardPageId.ShorterTileCSS;
 				break;
-			case DashBoardPageId.TILE_TALLER:
+			case WidgetUtil.TILE_TALLER:
 				tileResizeCSS = DashBoardPageId.TallerTileCSS;
 				break;
 			default:
