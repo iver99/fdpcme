@@ -152,6 +152,15 @@ public class DashboardHomeUtil
 		driver.click(DashBoardPageId.DashboardsGridViewLocator);
 	}
 
+	public static boolean isDashboardExists(WebDriver driver, String dashboardName) throws Exception
+	{
+		String indicator = DashBoardPageId.DashboardLocator.replace("_name_", dashboardName);
+		if (!driver.isElementPresent(indicator)) {
+			return false;
+		}
+		return true;
+	}
+
 	public static void listView(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call listView");
