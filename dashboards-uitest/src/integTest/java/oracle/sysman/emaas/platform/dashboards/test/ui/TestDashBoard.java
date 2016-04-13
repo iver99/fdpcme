@@ -156,7 +156,7 @@ public class TestDashBoard extends LoginAndLogout{
 		el=webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
 		Assert.assertTrue(el.isSelected());
 		webd.getLogger().info("Verfiy the dashboard is not favorite");
-		DashBoardUtils.searchDashBoard(webd,dbName);
+		DashBoardUtils.searchDashBoardEmptyResult(webd,dbName);
 		Assert.assertEquals(webd.getAttribute(DashBoardPageId.DashboardSerachResult_panelID + "@childElementCount"), "0");
 		webd.getLogger().info("no favorite dashboard");
 		
@@ -427,7 +427,7 @@ public class TestDashBoard extends LoginAndLogout{
 		//open dashboard	
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		//DashBoardUtils.clickToSortByLastAccessed();
-		DashBoardUtils.searchDashBoard(webd,"LV_DashBoard");
+		DashBoardUtils.searchDashBoardList(webd,"LV_DashBoard");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.takeScreenShot();
 		DashBoardUtils.clickLVDashBoard();
@@ -451,7 +451,7 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.clickLVButton();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
-		DashBoardUtils.searchDashBoard(webd,"LV_DashBoard");
+		DashBoardUtils.searchDashBoardList(webd,"LV_DashBoard");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.takeScreenShot();
 		

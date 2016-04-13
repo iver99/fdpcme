@@ -586,6 +586,45 @@ public class DashBoardUtils {
 		wdriver.getLogger().info("searching dashboard: "+board +" done!");
 		wdriver.takeScreenShot(); 
 	}
+public static void searchDashBoardList(WebDriver wdriver, String board) throws Exception
+        {
+
+                wdriver.takeScreenShot();
+                wdriver.getLogger().info("searching dashboard ..."+board);
+                wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
+                wdriver.sendKeys(DashBoardPageId.SearchDSBoxID,"InvalidLongNameInvalidLongNameInvalidLongNameInvalidLongNameInvalidLongName");//clear all dashboards
+                By locatorOfKeyEl =  By.xpath(DashBoardPageId.DashBoardID);
+                WebDriverWait wait = new WebDriverWait(wdriver.getWebDriver(),900L);
+                wait.until(ExpectedConditions.invisibilityOfElementLocated(locatorOfKeyEl));//ensure all dashboards are cleared
+                wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
+                wdriver.sendKeys(DashBoardPageId.SearchDSBoxID, board);
+                Assert.assertEquals(board, wdriver.getElement(DashBoardPageId.SearchDSBoxID).getAttribute("value"));
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".oj-table-no-data-message")));
+                wdriver.click(DashBoardPageId.SearchDSBoxID); //give focus to search box        ^M
+                wdriver.getLogger().info("searching dashboard: "+board +" done!");
+                wdriver.takeScreenShot(); 
+        }
+
+	public static void searchDashBoardEmptyResult(WebDriver wdriver, String board) throws Exception
+        {
+
+                wdriver.takeScreenShot();
+                wdriver.getLogger().info("searching dashboard ..."+board);
+                wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
+                wdriver.sendKeys(DashBoardPageId.SearchDSBoxID,"InvalidLongNameInvalidLongNameInvalidLongNameInvalidLongNameInvalidLongName");//clear all dashboards
+                By locatorOfKeyEl =  By.xpath(DashBoardPageId.DashBoardID);
+                WebDriverWait wait = new WebDriverWait(wdriver.getWebDriver(),900L);
+                wait.until(ExpectedConditions.invisibilityOfElementLocated(locatorOfKeyEl));//ensure all dashboards are cleared
+                wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
+                wdriver.sendKeys(DashBoardPageId.SearchDSBoxID, board);
+                Assert.assertEquals(board, wdriver.getElement(DashBoardPageId.SearchDSBoxID).getAttribute("value"));
+
+          	wait.until(ExpectedConditions.invisibilityOfElementLocated(locatorOfKeyEl));
+                wdriver.click(DashBoardPageId.SearchDSBoxID); //give focus to search box        
+                wdriver.getLogger().info("searching dashboard: "+board +" done!");
+                wdriver.takeScreenShot(); 
+        }
+
 	public static void checkBrandingBarLink() throws Exception
 	{
 		clickNavigatorLink();
