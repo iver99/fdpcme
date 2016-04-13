@@ -2,11 +2,6 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
 import java.util.List;
 
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DelayedPressEnterThread;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -14,6 +9,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DelayedPressEnterThread;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class DashboardBuilderUtil
 {
@@ -43,8 +43,8 @@ public class DashboardBuilderUtil
 		driver.takeScreenShot();
 
 		driver.getLogger().info("[DashboardHomeUtil] start to add widget from right drawer");
-		List<WebElement> matchingWidgets = driver.getWebDriver().findElements(
-				By.cssSelector(DashBoardPageId.RightDrawerWidgetCSS));
+		List<WebElement> matchingWidgets = driver.getWebDriver()
+				.findElements(By.cssSelector(DashBoardPageId.RightDrawerWidgetCSS));
 		if (matchingWidgets == null && matchingWidgets.size() == 0) {
 			throw new NoSuchElementException("Right drawer widget for search string =" + searchString + " is not found");
 		}
@@ -239,6 +239,33 @@ public class DashboardBuilderUtil
 		driver.takeScreenShot();
 	}
 
+	public static boolean isRefreshSettingChecked(WebDriver driver, String refreshSettings) throws Exception
+	{
+		driver.getLogger().info("DashboardBuilderUtil.isRefreshSettingChecked started for refreshSettings=" + refreshSettings);
+
+		Validator.fromValidValues("refreshSettings", refreshSettings, REFRESH_DASHBOARD_PARAM_OFF, REFRESH_DASHBOARD_PARAM_5MIN);
+
+		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
+		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
+		driver.takeScreenShot();
+
+		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsAutoRefreshLocator);
+		driver.click(DashBoardPageId.BuilderOptionsAutoRefreshLocator);
+		driver.takeScreenShot();
+
+		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsAutoRefreshOffLocator);
+		if (REFRESH_DASHBOARD_PARAM_OFF.equals(refreshSettings)) {
+			boolean checked = driver.isDisplayed(DashBoardPageId.BuilderAutoRefreshOffSelectedLocator);
+			driver.getLogger().info("DashboardBuilderUtil.isRefreshSettingChecked completed, return result is " + checked);
+			return checked;
+		}
+		else {//REFRESH_DASHBOARD_PARAM_5MIN:
+			boolean checked = driver.isDisplayed(DashBoardPageId.BuilderAutoRefreshOn5MinSelectedLocator);
+			driver.getLogger().info("DashboardBuilderUtil.isRefreshSettingChecked completed, return result is " + checked);
+			return checked;
+		}
+	}
+
 	//	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
 	//	{
 	//		driver = webDriver;
@@ -279,7 +306,7 @@ public class DashboardBuilderUtil
 				driver.takeScreenShot();
 				break;
 			case REFRESH_DASHBOARD_PARAM_5MIN:
-				driver.click(DashBoardPageId.BuilderOptionsAutoRefreshOn5MinLocator);
+				driver.check(DashBoardPageId.BuilderOptionsAutoRefreshOn5MinLocator);
 				driver.waitForElementPresent(DashBoardPageId.BuilderAutoRefreshOn5MinSelectedLocator);
 				driver.takeScreenShot();
 				break;
