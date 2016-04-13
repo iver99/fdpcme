@@ -35,6 +35,55 @@ public class WelcomeUtil
 		driver.takeScreenShot();
 	}
 
+	public static String getExpectedText(String serviceName)
+	{
+		String expectedName = null;
+		switch (serviceName) {
+			case "APM":
+				expectedName = "Application Performance Monitoring";
+				break;
+			case "LA":
+				expectedName = "Log Analytics";
+				break;
+			case "ITA":
+				expectedName = "IT Analytics";
+				break;
+			case "dashboards":
+				expectedName = "Dashboards";
+				break;
+			case "dataExplorers":
+				expectedName = "Data Explorers";
+				break;
+			case "getStarted":
+				expectedName = "How to get started";
+				break;
+			case "videos":
+				expectedName = "Videos";
+				break;
+			case "serviceOfferings":
+				expectedName = "Service Offerings";
+				break;
+		}
+		return expectedName;
+	}
+
+	public static String getLearnMoreItemId(String itemName)
+	{
+		String itemId = null;
+		switch (itemName) {
+			case "getStarted":
+				itemId = DashBoardPageId.Welcome_LearnMore_getStarted;
+				break;
+			case "videos":
+				itemId = DashBoardPageId.Welcome_LearnMore_Videos;
+				break;
+			case "serviceOfferings":
+				itemId = DashBoardPageId.Welcome_LearnMore_ServiceOffering;
+				break;
+		}
+		return itemId;
+	}
+
 	public static String getOptionXpath(WebDriver driver, String selectId, String optionId) throws Exception
 	{
 		String optionXpath;
@@ -43,6 +92,66 @@ public class WelcomeUtil
 		int index = list.indexOf(li);
 		optionXpath = "//ul[@id='oj-listbox-results-" + selectId + "']/li[" + (index + 1) + "]/div";
 		return optionXpath;
+	}
+
+	public static String getServiceWrapperId(String serviceName)
+	{
+		String serviceWrapperId = null;
+		switch (serviceName) {
+			case "APM":
+				serviceWrapperId = DashBoardPageId.Welcome_APMLinkCSS;
+				break;
+			case "LA":
+				serviceWrapperId = DashBoardPageId.Welcome_LALinkCSS;
+				break;
+			case "ITA":
+				serviceWrapperId = DashBoardPageId.Welcome_ITALinkID;
+				break;
+			case "dashboards":
+				serviceWrapperId = DashBoardPageId.Welcome_DashboardsLinkID;
+				break;
+			case "dataExplorers":
+				serviceWrapperId = DashBoardPageId.Welcome_DataExp;
+				break;
+		}
+		return serviceWrapperId;
+	}
+
+	public static boolean isLearnMoreItemExisted(WebDriver driver, String itemName)
+	{
+		driver.getLogger().info("Start to check if learn more item: " + itemName + " is existed in welcome page...");
+		boolean isExisted = false;
+		String itemId = WelcomeUtil.getLearnMoreItemId(itemName);
+		String nameExpected = WelcomeUtil.getExpectedText(itemName);
+		driver.waitForElementPresent("id=" + itemId);
+		driver.waitForText("id=" + itemId, nameExpected);
+		String nameDisplayed = driver.getWebDriver().findElement(By.id(itemId)).getText();
+		if (nameDisplayed.equals(nameExpected)) {
+			isExisted = true;
+		}
+		driver.getLogger().info("Check of learn more item: " + itemName + " existence is finished! Result: " + isExisted);
+		return isExisted;
+	}
+
+	public static boolean isServiceExistedInWelcome(WebDriver driver, String serviceName) throws Exception
+	{
+		driver.getLogger().info("Start to check if service: " + serviceName + " is existed in welcome page...");
+		boolean isExisted = false;
+		String serviceWrapperId = WelcomeUtil.getServiceWrapperId(serviceName);
+		String xpath = "//*[@id='"
+				+ serviceWrapperId
+				+ "']/div[@class='service-box-wrapper']/div[@class='landing-home-box-content']/div[@class='landing-home-box-content-head']";
+
+		String nameExpected = WelcomeUtil.getExpectedText(serviceName);
+		driver.waitForElementPresent(xpath);
+		driver.waitForText(xpath, nameExpected);
+		String nameDisplayed = driver.getWebDriver().findElement(By.xpath(xpath)).getText();
+		if (nameDisplayed.equals(nameExpected)) {
+			isExisted = true;
+		}
+		driver.getLogger().info(
+				"Check of service: " + serviceName + " existence in welcome page is finished! Result: " + isExisted);
+		return isExisted;
 	}
 
 	public static void learnMoreHow(WebDriver driver) throws Exception
@@ -137,4 +246,5 @@ public class WelcomeUtil
 		driver.click("id=" + DashBoardPageId.Welcome_LALinkCSS);
 		driver.takeScreenShot();
 	}
+
 }
