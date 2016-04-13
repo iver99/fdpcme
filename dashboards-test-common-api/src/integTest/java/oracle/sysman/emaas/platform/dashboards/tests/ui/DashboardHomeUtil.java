@@ -87,8 +87,20 @@ public class DashboardHomeUtil
 	public static void exploreData(WebDriver driver, String option) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call exploreData -> " + option);
+		
+		if(option == null || option.isEmpty()) {
+			return;
+		}
+		
 		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataBtnID));
-		driver.click(option);
+		WebElement menu = driver.getElement(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataMenu));
+		List<WebElement> menuList = menu.findElements(By.tagName("li"));
+		for(WebElement menuItem : menuList) {
+			if(option.equals(menuItem.getText())) {
+				menuItem.click();
+				break;
+			}
+		}
 	}
 
 	public static void filterOptions(WebDriver driver, String filter) throws Exception
@@ -138,6 +150,15 @@ public class DashboardHomeUtil
 		driver.waitForElementPresent(DashBoardPageId.DashboardsGridViewLocator);
 		driver.takeScreenShot();
 		driver.click(DashBoardPageId.DashboardsGridViewLocator);
+	}
+
+	public static boolean isDashboardExists(WebDriver driver, String dashboardName) throws Exception
+	{
+		String indicator = DashBoardPageId.DashboardLocator.replace("_name_", dashboardName);
+		if (!driver.isElementPresent(indicator)) {
+			return false;
+		}
+		return true;
 	}
 
 	public static void listView(WebDriver driver) throws Exception
