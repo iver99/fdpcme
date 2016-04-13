@@ -35,11 +35,10 @@ public class DashBoardUtils
 
 	public static void APM_OOB_GridView() throws Exception
 	{
-		//check APM oob
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
-		Assert.assertTrue(driver.isElementPresent(PageId.Application_Performance_Monitoring_ID));
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(PageId.Application_Performance_Monitoring_ID))
-				.getAttribute("aria-label"), "Application Performance Monitoring");
+		DashboardHomeUtil.gridView(driver);
+		DashboardHomeUtil.waitForDashboardPresent(driver, "Application Performance Monitoring");
+
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Application Performance Monitoring"));
 	}
 
 	public static void checkBrandingBarLink() throws Exception
@@ -484,37 +483,30 @@ public class DashBoardUtils
 		DashboardHomeUtil.gridView(driver);
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Database Health Summary");
 
-		DashboardHomeUtil.isDashboardExists(driver, "Database Health Summary");
-		DashboardHomeUtil.isDashboardExists(driver, "Host Health Summary");
-		DashboardHomeUtil.isDashboardExists(driver, "Performance Analytics: Database");
-		DashboardHomeUtil.isDashboardExists(driver, "Performance Analytics: Middleware");
-		DashboardHomeUtil.isDashboardExists(driver, "Resource Analytics: Database");
-		DashboardHomeUtil.isDashboardExists(driver, "Resource Analytics: Middleware");
-		DashboardHomeUtil.isDashboardExists(driver, "WebLogic Health Summary");
-		DashboardHomeUtil.isDashboardExists(driver, "Database Configuration and Storage By Version");
-		DashboardHomeUtil.isDashboardExists(driver, "Enterprise Overview");
-		DashboardHomeUtil.isDashboardExists(driver, "Host Inventory By Platform");
-		DashboardHomeUtil.isDashboardExists(driver, "Top 25 Databases by Resource Consumption");
-		DashboardHomeUtil.isDashboardExists(driver, "Top 25 WebLogic Servers by Heap Usage");
-		DashboardHomeUtil.isDashboardExists(driver, "Top 25 WebLogic Servers by Load");
-		DashboardHomeUtil.isDashboardExists(driver, "WebLogic Servers by JDK Version");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Database Health Summary"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Host Health Summary"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Performance Analytics: Database"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Performance Analytics: Middleware"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Resource Analytics: Database"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Resource Analytics: Middleware"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "WebLogic Health Summary"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Database Configuration and Storage By Version"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Enterprise Overview"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Host Inventory By Platform"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Top 25 Databases by Resource Consumption"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Top 25 WebLogic Servers by Heap Usage"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Top 25 WebLogic Servers by Load"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "WebLogic Servers by JDK Version"));
 	}
 
 	public static void LA_OOB_GridView() throws Exception
 	{
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
-		Assert.assertTrue(driver.isElementPresent(PageId.Database_Operations_ID));
-		Assert.assertTrue(driver.isElementPresent(PageId.Host_Operations_ID));
-		Assert.assertTrue(driver.isElementPresent(PageId.Middleware_Operations_ID));
+		DashboardHomeUtil.gridView(driver);
+		DashboardHomeUtil.waitForDashboardPresent(driver, "Database Operations");
 
-		Assert.assertEquals(
-				driver.getWebDriver().findElement(By.xpath(PageId.Database_Operations_ID)).getAttribute("aria-label"),
-				"Database Operations");
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(PageId.Host_Operations_ID)).getAttribute("aria-label"),
-				"Host Operations");
-		Assert.assertEquals(
-				driver.getWebDriver().findElement(By.xpath(PageId.Middleware_Operations_ID)).getAttribute("aria-label"),
-				"Middleware Operations");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Database Operations"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Host Operations"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExists(driver, "Middleware Operations"));
 	}
 
 	public static void loadWebDriver(WebDriver webDriver) throws Exception
