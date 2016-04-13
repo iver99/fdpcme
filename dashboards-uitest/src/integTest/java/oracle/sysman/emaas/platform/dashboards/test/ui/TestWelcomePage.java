@@ -1,6 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui;
 
-import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
@@ -221,7 +221,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Open ITA by url: " + tmpUrl);
 		urlVerification(tmpUrl, "emcpdfui/home.html?filter=ita");
 
-		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_BoxID));
+		WebElement el = webd.getWebDriver().findElement(By.id(PageId.ITA_BoxID));
 		Assert.assertTrue(el.isSelected());
 		DashBoardUtils.ITA_OOB_GridView();
 		webd.getLogger().info("Test open ITA in welcome page finished!!!");
@@ -280,15 +280,15 @@ public class TestWelcomePage extends LoginAndLogout
 		WelcomeUtil.visitAPM(webd);
 		webd.takeScreenShot();
 
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_APMLinkID), "Application Performance Monitoring");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_LALinkID), "Log Analytics");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_ITALinkID), "IT Analytics");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DashboardsLinkID), "Dashboards");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DataExp), "Data Explorers");
+		Assert.assertEquals(DashBoardUtils.getText(PageId.Welcome_APMLinkID), "Application Performance Monitoring");
+		Assert.assertEquals(DashBoardUtils.getText(PageId.Welcome_LALinkID), "Log Analytics");
+		Assert.assertEquals(DashBoardUtils.getText(PageId.Welcome_ITALinkID), "IT Analytics");
+		Assert.assertEquals(DashBoardUtils.getText(PageId.Welcome_DashboardsLinkID), "Dashboards");
+		Assert.assertEquals(DashBoardUtils.getText(PageId.Welcome_DataExp), "Data Explorers");
 
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_LearnMore_getStarted), "How to get started");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_LearnMore_Videos), "Videos");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_LearnMore_ServiceOffering), "Service Offerings");
+		Assert.assertEquals(DashBoardUtils.getText(PageId.Welcome_LearnMore_getStarted), "How to get started");
+		Assert.assertEquals(DashBoardUtils.getText(PageId.Welcome_LearnMore_Videos), "Videos");
+		Assert.assertEquals(DashBoardUtils.getText(PageId.Welcome_LearnMore_ServiceOffering), "Service Offerings");
 	}
 
 	public void urlVerification(String pageUrl, String expectedUrl)

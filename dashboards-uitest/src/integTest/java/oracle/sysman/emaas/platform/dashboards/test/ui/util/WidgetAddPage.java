@@ -22,12 +22,12 @@ public class WidgetAddPage {
 	
 	public void closeWidgetDiag() throws Exception
 	{
-		driver.click(DashBoardPageId.WidgetDialogCloseButtonID);
+		driver.click(PageId.WidgetDialogCloseButtonID);
 	}
 	
 	public void addOfWidgetDetails() throws Exception
 	{
-		driver.click(DashBoardPageId.WidgetAddButton);
+		driver.click(PageId.WidgetAddButton);
 	}
 	
 	public void searchWidget(String widget) throws Exception

@@ -37,16 +37,16 @@ public class TileManager {
 	public void tileOpen() throws Exception
 	{
 		driver.getLogger().info("foucus on the widget");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
 		Actions action = new Actions(driver.getWebDriver());
 		//WebElement we = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.TileTitle));
-		WebElement we = driver.getElement(DashBoardPageId.TileTitle);
+		WebElement we = driver.getElement(PageId.TileTitle);
 		action.moveToElement(we).perform();
 
 		//driver.click(DashBoardPageId.TileTitle);
 		driver.takeScreenShot();
 		driver.getLogger().info("click configure widget icon");
-		driver.click(DashBoardPageId.ConfigTileID);
+		driver.click(PageId.ConfigTileID);
 		driver.takeScreenShot();
 	}
 	
@@ -58,7 +58,7 @@ public class TileManager {
 	
 	public void tileDelete() throws Exception
 	{
-		driver.click(DashBoardPageId.RemoveTileID);
+		driver.click(PageId.RemoveTileID);
 	}
 	
 //	public void tileRefresh() throws Exception
@@ -68,12 +68,12 @@ public class TileManager {
 	
 	public void tileTaller() throws Exception
 	{
-		driver.click(DashBoardPageId.TallerTileID);
+		driver.click(PageId.TallerTileID);
 	}
 	
 	public void tileShorter() throws Exception
 	{
-		driver.click(DashBoardPageId.ShorterTileID);
+		driver.click(PageId.ShorterTileID);
 	}
 	
 	public void tileMaximize() throws Exception
@@ -92,28 +92,28 @@ public class TileManager {
         
         String width = driver.getWebDriver().findElement(By.cssSelector("#canvas > svg > rect")).getAttribute("width");
         driver.getLogger().info("width = "+width);*/
-		driver.click(DashBoardPageId.MaximizeTileID);
+		driver.click(PageId.MaximizeTileID);
 		//get height and width after
 	}
 	
 	public void tileWider() throws Exception
 	{
 		//get height and width before
-		driver.click(DashBoardPageId.WiderTileID);
+		driver.click(PageId.WiderTileID);
 		//get height and width after
 	}
 	
 	public void tileNarrower() throws Exception
 	{
 		//get height and width before
-		driver.click(DashBoardPageId.NarrowerTileID);
+		driver.click(PageId.NarrowerTileID);
 		//get height and width after
 	}
 	
 	public void tileRestore() throws Exception
 	{
 		//get height and width before
-		driver.click(DashBoardPageId.RestoreTileID);
+		driver.click(PageId.RestoreTileID);
 		//get height and width after
 	}
 	

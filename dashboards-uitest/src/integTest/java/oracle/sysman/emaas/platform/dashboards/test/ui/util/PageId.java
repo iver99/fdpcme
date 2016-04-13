@@ -2,7 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 
 import oracle.sysman.qatool.uifwk.webdriver.*;
 
-public class DashBoardPageId {
+public class PageId {
 	/*
 	 * 
 	 *The following variable define the all elements id of Dashboard page, including the home page, create page

@@ -148,6 +148,39 @@ public class DashboardHomeUtil
 		driver.click(DashBoardPageId.DashboardsListViewLocator);
 	}
 
+	public static void resetFilterOptions(WebDriver driver) throws Exception
+	{
+		driver.waitForElementPresent(DashBoardPageId.FilterApmLocator);
+		WebElement el = driver.getElement(DashBoardPageId.FilterApmLocator);
+		if (el.isSelected()) {
+			el.click();
+		}
+		el = driver.getElement(DashBoardPageId.FilterLaLocator);
+		if (el.isSelected()) {
+			el.click();
+		}
+		el = driver.getElement(DashBoardPageId.FilterItaLocator);
+		if (el.isSelected()) {
+			el.click();
+		}
+		el = driver.getElement(DashBoardPageId.FilterOracleLocator);
+		if (el.isSelected()) {
+			el.click();
+		}
+		el = driver.getElement(DashBoardPageId.FilterShareLocator);
+		if (el.isSelected()) {
+			el.click();
+		}
+		el = driver.getElement(DashBoardPageId.FilterMeLocator);
+		if (el.isSelected()) {
+			el.click();
+		}
+		el = driver.getElement(DashBoardPageId.FilterFavoriteLocator);
+		if (el.isSelected()) {
+			el.click();
+		}
+	}
+
 	public static void search(WebDriver driver, String searchString) throws Exception
 	{
 		if (searchString == null) {
