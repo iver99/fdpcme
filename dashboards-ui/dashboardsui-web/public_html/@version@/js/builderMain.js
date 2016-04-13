@@ -52,7 +52,7 @@ requirejs.config({
         //'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
         'uifwk': '/emsaasui/uifwk'
     },
-    bundles: {
+    bundles: (window.DEV_MODE ? undefined : {
         'builder/builder.jet.partition': [
             'ojs/ojcore',
             'ojs/ojknockout',
@@ -80,8 +80,11 @@ requirejs.config({
             'ojs/ojpopup',
             'ojs/ojpopupcore',
             'ojs/ojmessaging',
-            'ojs/ojgauge']
-    },
+            'ojs/ojgauge',
+            'knockout',
+            'jquery',
+            'ojL10n']
+    }),
     // Shim configurations for modules that do not expose AMD
     shim: {
         'jquery': {
