@@ -12,6 +12,11 @@ import org.openqa.selenium.WebElement;
 
 public class DashboardHomeUtil
 {
+	public static final String EXPLOREDATA_MENU_ANALYZE = "Analyze";
+	public static final String EXPLOREDATA_MENU_LOG = "Log Visual Analyzer";
+	public static final String EXPLOREDATA_MENU_SEARCH = "Search";
+	public static final String DASHBOARDS_GRID_VIEW = "dashboards_grid_view";
+	public static final String DASHBOARDS_LIST_VIEW = "dashboards_list_view";
 	public static final String DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC = "access_date_asc";
 	public static final String DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC = "access_date_dsc";
 	public static final String DASHBOARD_QUERY_ORDER_BY_NAME_ASC = "name_asc";
@@ -23,8 +28,28 @@ public class DashboardHomeUtil
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_ASC = "owner_asc";
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_DSC = "owner_dsc";
 
-	public static void createDashboard(WebDriver driver, String name, String descriptions, Boolean displayDesc,
-			Boolean selectorRefreshcontrol) throws Exception
+	public static void clickListViewTableCreatedByHeader(WebDriver driver) throws Exception
+	{
+		driver.getLogger().info("[DashboardHomeUtil] call gridView");
+		driver.waitForElementPresent(DashBoardPageId.ListViewTableCreatedByHeaderLocator);
+		driver.click(DashBoardPageId.ListViewTableCreatedByHeaderLocator);
+	}
+
+	public static void clickListViewTableLastModifiedHeader(WebDriver driver) throws Exception
+	{
+		driver.getLogger().info("[DashboardHomeUtil] call gridView");
+		driver.waitForElementPresent(DashBoardPageId.ListViewTableLastModifiedHeaderLocator);
+		driver.click(DashBoardPageId.ListViewTableLastModifiedHeaderLocator);
+	}
+
+	public static void clickListViewTableNameHeader(WebDriver driver) throws Exception
+	{
+		driver.getLogger().info("[DashboardHomeUtil] call gridView");
+		driver.waitForElementPresent(DashBoardPageId.ListViewTableNameHeaderLocator);
+		driver.click(DashBoardPageId.ListViewTableNameHeaderLocator);
+	}
+
+	public static void createDashboard(WebDriver driver, String name, String descriptions, Boolean selectorRefreshcontrol) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call createDashboard : " + name);
 		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.CreateDSButtonID));
@@ -35,7 +60,7 @@ public class DashboardHomeUtil
 		if (descriptions != null && !descriptions.isEmpty()) {
 			driver.sendKeys(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardDescBoxID), descriptions);
 		}
-		if (selectorRefreshcontrol) {
+		if (selectorRefreshcontrol == null || selectorRefreshcontrol) {
 			driver.check(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardTimeRangeChecker));
 		}
 		else {
@@ -65,13 +90,13 @@ public class DashboardHomeUtil
 			return;
 		}
 		DashboardHomeUtil.search(driver, dashboardName);
-		if (DashBoardPageId.DashboardsGridViewLocator.equals(view)) {
+		if (DashboardHomeUtil.DASHBOARDS_GRID_VIEW.equals(view)) {
 			DashboardHomeUtil.gridView(driver);
 			driver.takeScreenShot();
 			DashboardHomeUtil.deleteDashboardInGrid(driver, dashboardName);
 		}
 
-		if (DashBoardPageId.DashboardsListViewLocator.equals(view)) {
+		if (DashboardHomeUtil.DASHBOARDS_LIST_VIEW.equals(view)) {
 			DashboardHomeUtil.listView(driver);
 			driver.takeScreenShot();
 			DashboardHomeUtil.deleteDashboardInList(driver, dashboardName);
@@ -87,16 +112,16 @@ public class DashboardHomeUtil
 	public static void exploreData(WebDriver driver, String option) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call exploreData -> " + option);
-		
-		if(option == null || option.isEmpty()) {
+
+		if (option == null || option.isEmpty()) {
 			return;
 		}
-		
+
 		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataBtnID));
 		WebElement menu = driver.getElement(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataMenu));
 		List<WebElement> menuList = menu.findElements(By.tagName("li"));
-		for(WebElement menuItem : menuList) {
-			if(option.equals(menuItem.getText())) {
+		for (WebElement menuItem : menuList) {
+			if (option.equals(menuItem.getText())) {
 				menuItem.click();
 				break;
 			}
