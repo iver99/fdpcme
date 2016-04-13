@@ -173,9 +173,6 @@ public class DashBoardPageId
 	//Explore Data
 	public static final String ExploreDataBtnID = "exploreDataBtn";
 	public static final String ExploreDataMenu = "exploreDataMenu";
-	public static final String ExploreDataMenu_Analyze = "Analyze";
-	public static final String ExploreDataMenu_Log = "Log Visual Analyzer";
-	public static final String ExploreDataMenu_Search = "Search";
 
 	//help id and about id
 	public static final String MenuBtnID = "menubutton";
