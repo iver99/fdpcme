@@ -23,6 +23,27 @@ public class DashboardHomeUtil
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_ASC = "owner_asc";
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_DSC = "owner_dsc";
 
+	public static void clickListViewTableCreatedByHeader(WebDriver driver) throws Exception
+	{
+		driver.getLogger().info("[DashboardHomeUtil] call gridView");
+		driver.waitForElementPresent(DashBoardPageId.ListViewTableCreatedByHeaderLocator);
+		driver.click(DashBoardPageId.ListViewTableCreatedByHeaderLocator);
+	}
+
+	public static void clickListViewTableLastModifiedHeader(WebDriver driver) throws Exception
+	{
+		driver.getLogger().info("[DashboardHomeUtil] call gridView");
+		driver.waitForElementPresent(DashBoardPageId.ListViewTableLastModifiedHeaderLocator);
+		driver.click(DashBoardPageId.ListViewTableLastModifiedHeaderLocator);
+	}
+
+	public static void clickListViewTableNameHeader(WebDriver driver) throws Exception
+	{
+		driver.getLogger().info("[DashboardHomeUtil] call gridView");
+		driver.waitForElementPresent(DashBoardPageId.ListViewTableNameHeaderLocator);
+		driver.click(DashBoardPageId.ListViewTableNameHeaderLocator);
+	}
+
 	public static void createDashboard(WebDriver driver, String name, String descriptions, Boolean displayDesc,
 			Boolean selectorRefreshcontrol) throws Exception
 	{
@@ -87,16 +108,16 @@ public class DashboardHomeUtil
 	public static void exploreData(WebDriver driver, String option) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call exploreData -> " + option);
-		
-		if(option == null || option.isEmpty()) {
+
+		if (option == null || option.isEmpty()) {
 			return;
 		}
-		
+
 		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataBtnID));
 		WebElement menu = driver.getElement(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataMenu));
 		List<WebElement> menuList = menu.findElements(By.tagName("li"));
-		for(WebElement menuItem : menuList) {
-			if(option.equals(menuItem.getText())) {
+		for (WebElement menuItem : menuList) {
+			if (option.equals(menuItem.getText())) {
 				menuItem.click();
 				break;
 			}
