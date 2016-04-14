@@ -33,7 +33,7 @@ public class DashBoardPageId
 	public static final String DeleteBtnID = "//*[@id=\"dtabhomesc\"]/div[1]/div[1]/div[2]/button";//div[@id='dtabhomesc']/div/div/div[2]/button";///html/body/div[2]/div/div/div/div/div[3]/div/div/div[2]/button";//"//button[@class='oj-button-half-chrome oj-sm-float-end oj-button oj-component oj-enabled oj-button-icon-only oj-component-initnode oj-default']/span[@class='oj-button-icon oj-start icon-delete-ena-16 oj-fwk-icon']";
 	public static final String DeleteBtnID_Dialog = "/html/body/div[1]/div[2]/div/div[3]/button[1]";//"//div[@id='ojDialogWrapper-dbs_cfmDialog']/div[5]/button";
 	public static final String OverviewCloseID = "overviewClose";
-	public static final String DashBoardName = "//span[@id='builder-dbd-name-display-hover-area']";
+	//	public static final String DashBoardName = "//span[@id='builder-dbd-name-display-hover-area']";
 	public static final String AddBtn = "widget-selector-okbtn";//
 	public static final String closeBtnID = "/html/body/div[1]/div[2]/div/div[1]/div/span";///html/body/div[1]/div[2]/div/div[3]/div/span";//div[contains(@id,'ojDialogWrapper-ui-id') and @class='oj-dialog oj-component oj-draggable']/div[3]/div/span"; // ";";
 	public static final String LinkID = "linksButton";
@@ -185,12 +185,17 @@ public class DashBoardPageId
 
 	//edit dashboard
 	public static final String TimeRangeID = "/html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/button";
+	public static final String BuilderNameTextLocator = "//div[contains(@class, 'builder-dbd-name')]//h1";
+	public static final String BuilderDescriptionTextLocator = "//div[contains(@class, 'builder-dbd-description')]//span[contains(@class, 'dbd-display-area-text')]";
 	public static final String NameEditID = "builder-dbd-name-editor-btn";
 	public static final String DescEditID = "builder-dbd-description-editor-btn";
 	public static final String NameInputID = "builder-dbd-name-input";
 	public static final String DescInputID = "builder-dbd-description-input";
 	public static final String NameEditOKID = "builder-dbd-name-ok";
 	public static final String DescEditOKID = "builder-dbd-description-ok";
+
+	// builder time picker
+	public static final String BuilderDateTimePickerLocator = "//div[@data-show-time-picker]";
 
 	//dashboard builder tile edit area
 	public static final String BuilderTilesEditArea = "//div[contains(@class, 'tiles-wrapper')]";
