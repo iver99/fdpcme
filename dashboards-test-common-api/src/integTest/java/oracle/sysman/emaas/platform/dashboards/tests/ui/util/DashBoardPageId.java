@@ -350,9 +350,6 @@ public class DashBoardPageId
 
 	//Brand Bar User Menu Option
 	public static final String Brand_Bar_User_Menu = "//button[contains(@id,'menubutton')]";
-	public static final String Brand_Bar_User_Menu_Help_Option = "help";
-	public static final String Brand_Bar_User_Menu_About_Option = "about";
-	public static final String Brand_Bar_User_Menu_Signout_Option = "signout";
 	public static final String Option_Help = "//a[contains(@id,'emcpdf_oba_help')]";
 	public static final String Option_About = "//*[@id='emcpdf_oba_about']";
 	public static final String Option_Logout = "//*[@id='emcpdf_oba_logout']";
