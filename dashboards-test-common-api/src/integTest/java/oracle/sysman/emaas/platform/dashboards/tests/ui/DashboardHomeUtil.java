@@ -49,7 +49,8 @@ public class DashboardHomeUtil
 		driver.click(DashBoardPageId.ListViewTableNameHeaderLocator);
 	}
 
-	public static void createDashboard(WebDriver driver, String name, String descriptions, Boolean selectorRefreshcontrol) throws Exception
+	public static void createDashboard(WebDriver driver, String name, String descriptions, Boolean selectorRefreshcontrol)
+			throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call createDashboard : " + name);
 		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.CreateDSButtonID));
@@ -184,6 +185,32 @@ public class DashboardHomeUtil
 			return false;
 		}
 		return true;
+	}
+
+	public static boolean isFilterOptionSelected(WebDriver driver, String filter) throws Exception
+	{
+		if ("apm".equals(filter)) {
+			return driver.isElementPresent(DashBoardPageId.FilterApmLocator);
+		}
+		if ("la".equals(filter)) {
+			return driver.isElementPresent(DashBoardPageId.FilterLaLocator);
+		}
+		if ("ita".equals(filter)) {
+			return driver.isElementPresent(DashBoardPageId.FilterItaLocator);
+		}
+		if ("oracle".equals(filter)) {
+			return driver.isElementPresent(DashBoardPageId.FilterOracleLocator);
+		}
+		if ("share".equals(filter)) {
+			return driver.isElementPresent(DashBoardPageId.FilterShareLocator);
+		}
+		if ("me".equals(filter)) {
+			return driver.isElementPresent(DashBoardPageId.FilterMeLocator);
+		}
+		if ("favorites".equals(filter)) {
+			return driver.isElementPresent(DashBoardPageId.FilterFavoriteLocator);
+		}
+		throw new IllegalArgumentException("Unkonw filter option: " + filter);
 	}
 
 	public static void listView(WebDriver driver) throws Exception
