@@ -1,13 +1,12 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui;
 
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 public class TestHomePage extends LoginAndLogout
 {
@@ -68,7 +67,7 @@ public class TestHomePage extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testUserMenu");
 
-		BrandingBarUtil.userMenuOptions(webd, DashBoardPageId.Brand_Bar_User_Menu_About_Option);
+		BrandingBarUtil.userMenuOptions(webd, BrandingBarUtil.USERMENU_OPTION_ABOUT);
 
 		//		BrandingBarUtil.userMenuOptions(webd, DashBoardPageId.Brand_Bar_User_Menu_About_Option);
 		//		Assert.assertEquals(webd.getWebDriver().findElement(By.xpath(PageId.AboutContentID)).getText(),

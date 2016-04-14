@@ -127,6 +127,12 @@ public class DashboardBuilderUtil
 
 	public static void duplicate(WebDriver driver, String name, String descriptions) throws Exception
 	{
+		Validator.notNull("duplicatename", name);
+		Validator.notEmptyString("duplicatename", name);
+		Validator.notEmptyString("duplicatedescription", descriptions);
+
+		Validator.notEmptyString("duplicatename", name);
+
 		if (name == null || name.trim().length() == 0) {
 			driver.getLogger().info("DashboardBuilderUtil.duplicate name is null");
 			return;
@@ -167,7 +173,10 @@ public class DashboardBuilderUtil
 
 	public static void editDashboard(WebDriver driver, String name, String descriptions) throws Exception
 	{
-		if (name == null && descriptions == null) {
+		Validator.notNull("editname", name);
+		Validator.notEmptyString("editname", name);
+
+		if (name == null && descriptions==null) {
 			return;
 		}
 		driver.getLogger().info("DashboardBuilderUtil.edit started");
@@ -246,7 +255,8 @@ public class DashboardBuilderUtil
 	{
 		driver.getLogger().info("DashboardBuilderUtil.isRefreshSettingChecked started for refreshSettings=" + refreshSettings);
 
-		Validator.fromValidValues("refreshSettings", refreshSettings, REFRESH_DASHBOARD_SETTINGS_OFF, REFRESH_DASHBOARD_SETTINGS_5MIN);
+		Validator.fromValidValues("refreshSettings", refreshSettings, REFRESH_DASHBOARD_SETTINGS_OFF,
+				REFRESH_DASHBOARD_SETTINGS_5MIN);
 
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
@@ -291,7 +301,8 @@ public class DashboardBuilderUtil
 	{
 		driver.getLogger().info("DashboardBuilderUtil.refreshDashboard started for refreshSettings=" + refreshSettings);
 
-		Validator.fromValidValues("refreshSettings", refreshSettings, REFRESH_DASHBOARD_SETTINGS_OFF, REFRESH_DASHBOARD_SETTINGS_5MIN);
+		Validator.fromValidValues("refreshSettings", refreshSettings, REFRESH_DASHBOARD_SETTINGS_OFF,
+				REFRESH_DASHBOARD_SETTINGS_5MIN);
 
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
@@ -362,6 +373,54 @@ public class DashboardBuilderUtil
 			driver.getLogger().info("DashboardBuilderUtil unshare dashboard");
 			return false;
 		}
+	}
+
+	public static boolean verifyDashboard(WebDriver driver, String dashboardName, String description, boolean showTimeSelector)
+	{
+		driver.getLogger().info("DashboardBuilderUtil.verifyDashboard started for name=\"" + dashboardName + "\", description=\""
+				+ description + "\", showTimeSelector=\"" + showTimeSelector + "\"");
+		Validator.notEmptyString("dashboardName", dashboardName);
+
+		driver.waitForElementPresent(DashBoardPageId.BuilderNameTextLocator);
+		driver.click(DashBoardPageId.BuilderNameTextLocator);
+		//		driver.takeScreenShot();
+		String realName = driver.getElement(DashBoardPageId.BuilderNameTextLocator).getAttribute("title");
+		if (!dashboardName.equals(realName)) {
+			driver.getLogger()
+					.info("DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected dashboard name is "
+							+ dashboardName + ", actual dashboard name is " + realName);
+			return false;
+		}
+
+		driver.waitForElementPresent(DashBoardPageId.BuilderDescriptionTextLocator);
+		String realDesc = driver.getElement(DashBoardPageId.BuilderDescriptionTextLocator).getAttribute("title");
+		if (description == null || description.equals("")) {
+			if (realDesc != null && !realDesc.trim().equals("")) {
+				driver.getLogger()
+						.info("DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected description is "
+								+ description + ", actual dashboard description is " + realDesc);
+				return false;
+			}
+		}
+		else {
+			if (!description.equals(realDesc)) {
+				driver.getLogger()
+						.info("DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected description is "
+								+ description + ", actual dashboard description is " + realDesc);
+				return false;
+			}
+		}
+
+		boolean actualTimeSelectorShown = driver.isDisplayed(DashBoardPageId.BuilderDateTimePickerLocator);
+		if (actualTimeSelectorShown != showTimeSelector) {
+			driver.getLogger()
+					.info("DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected showTimeSelector is "
+							+ showTimeSelector + ", actual dashboard showTimeSelector is " + actualTimeSelectorShown);
+			return false;
+		}
+
+		driver.getLogger().info("DashboardBuilderUtil.verifyDashboard compelted and returns true");
+		return true;
 	}
 
 	private static boolean isRightDrawerVisible(WebDriver driver)
