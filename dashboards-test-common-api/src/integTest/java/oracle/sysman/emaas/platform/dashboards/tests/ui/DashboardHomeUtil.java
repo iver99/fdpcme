@@ -190,25 +190,25 @@ public class DashboardHomeUtil
 	public static boolean isFilterOptionSelected(WebDriver driver, String filter) throws Exception
 	{
 		if ("apm".equals(filter)) {
-			return driver.isElementPresent(DashBoardPageId.FilterApmLocator);
+			return driver.getElement(DashBoardPageId.FilterApmLocator).isSelected();
 		}
 		if ("la".equals(filter)) {
-			return driver.isElementPresent(DashBoardPageId.FilterLaLocator);
+			return driver.getElement(DashBoardPageId.FilterLaLocator).isSelected();
 		}
 		if ("ita".equals(filter)) {
-			return driver.isElementPresent(DashBoardPageId.FilterItaLocator);
+			return driver.getElement(DashBoardPageId.FilterItaLocator).isSelected();
 		}
 		if ("oracle".equals(filter)) {
-			return driver.isElementPresent(DashBoardPageId.FilterOracleLocator);
+			return driver.getElement(DashBoardPageId.FilterOracleLocator).isSelected();
 		}
 		if ("share".equals(filter)) {
-			return driver.isElementPresent(DashBoardPageId.FilterShareLocator);
+			return driver.getElement(DashBoardPageId.FilterShareLocator).isSelected();
 		}
 		if ("me".equals(filter)) {
-			return driver.isElementPresent(DashBoardPageId.FilterMeLocator);
+			return driver.getElement(DashBoardPageId.FilterMeLocator).isSelected();
 		}
 		if ("favorites".equals(filter)) {
-			return driver.isElementPresent(DashBoardPageId.FilterFavoriteLocator);
+			return driver.getElement(DashBoardPageId.FilterFavoriteLocator).isSelected();
 		}
 		throw new IllegalArgumentException("Unkonw filter option: " + filter);
 	}
