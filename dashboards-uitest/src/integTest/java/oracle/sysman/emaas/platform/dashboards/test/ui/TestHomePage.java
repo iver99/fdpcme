@@ -155,6 +155,7 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//verify all the oob display
+		DashboardHomeUtil.waitForDashboardPresent(webd, "Database Health Summary");
 		DashBoardUtils.APM_OOB_GridView();
 		DashBoardUtils.ITA_OOB_GridView();
 		DashBoardUtils.LA_OOB_GridView();

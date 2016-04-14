@@ -48,6 +48,7 @@ public class WidgetUtil
 	{
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
+		Validator.fromValidValues("resizeOptions",resizeOptions,WidgetUtil.TILE_NARROWER,WidgetUtil.TILE_WIDER,WidgetUtil.TILE_SHORTER,WidgetUtil.TILE_TALLER);
 
 		WebElement widgetEl = WidgetUtil.getWidgetByName(driver, widgetName, index);
 		if (null == widgetEl) {
@@ -208,7 +209,7 @@ public class WidgetUtil
 		int counter = 0;
 		for (WebElement widgetElement : widgets) {
 			WebElement widgetTitle = widgetElement.findElement(By.cssSelector(DashBoardPageId.TileTitleCSS));
-			if (widgetTitle != null && widgetTitle.getText().trim().equals(widgetName)) {
+			if (widgetTitle != null && widgetTitle.getAttribute("data-tile-title").trim().equals(widgetName)) {
 				if (counter == index) {
 					widget = widgetElement;
 					break;

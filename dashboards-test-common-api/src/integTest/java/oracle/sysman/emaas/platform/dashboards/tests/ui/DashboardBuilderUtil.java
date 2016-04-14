@@ -127,6 +127,12 @@ public class DashboardBuilderUtil
 
 	public static void duplicate(WebDriver driver, String name, String descriptions) throws Exception
 	{
+		Validator.notNull("duplicatename", name);
+		Validator.notEmptyString("duplicatename", name);
+		Validator.notEmptyString("duplicatedescription", descriptions);
+
+		Validator.notEmptyString("duplicatename", name);
+
 		if (name == null || name.trim().length() == 0) {
 			driver.getLogger().info("DashboardBuilderUtil.duplicate name is null");
 			return;
@@ -167,7 +173,10 @@ public class DashboardBuilderUtil
 
 	public static void editDashboard(WebDriver driver, String name, String descriptions) throws Exception
 	{
-		if (name == null && descriptions == null) {
+		Validator.notNull("editname", name);
+		Validator.notEmptyString("editname", name);
+
+		if (name == null && descriptions==null) {
 			return;
 		}
 		driver.getLogger().info("DashboardBuilderUtil.edit started");
