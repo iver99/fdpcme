@@ -25,6 +25,9 @@ public class WidgetUtil
 
 	public static void remove(WebDriver driver, String widgetName, int index) throws Exception
 	{
+		Validator.notEmptyString("widgetName", widgetName);
+		Validator.equalOrLargerThan0("index", index);
+
 		WebElement widgetEl = WidgetUtil.getWidgetByName(driver, widgetName, index);
 		if (null == widgetEl) {
 			driver.getLogger().info("Fail to find the widget titled with " + widgetName);
@@ -43,6 +46,9 @@ public class WidgetUtil
 
 	public static void resizeOptions(WebDriver driver, String widgetName, int index, String resizeOptions) throws Exception
 	{
+		Validator.notEmptyString("widgetName", widgetName);
+		Validator.equalOrLargerThan0("index", index);
+
 		WebElement widgetEl = WidgetUtil.getWidgetByName(driver, widgetName, index);
 		if (null == widgetEl) {
 			driver.getLogger().info("Fail to find the widget titled with " + widgetName);
