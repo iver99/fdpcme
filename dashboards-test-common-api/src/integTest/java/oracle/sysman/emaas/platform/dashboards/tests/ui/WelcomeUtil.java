@@ -3,6 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
@@ -14,19 +15,23 @@ public class WelcomeUtil
 	{
 		String eleXpath = null;
 		driver.getLogger().info("Visiting Data Explorer-" + selection + " from Welcome Page...");
+
+		Validator.fromValidValues("dataExplorersSelection", selection, DATA_EXPLORERS_LOG, DATA_EXPLORERS_ANALYZE,
+				DATA_EXPLORERS_SEARCH);
+
 		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.Welcome_DataExp_SelectID);
 		driver.click("id=oj-select-choice-" + DashBoardPageId.Welcome_DataExp_SelectID);
 		driver.takeScreenShot();
 		switch (selection) {
-			case "log":
+			case DATA_EXPLORERS_LOG:
 				eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_DataExp_SelectID,
 						DashBoardPageId.Welcome_DataExp_Log);
 				break;
-			case "analyze":
+			case DATA_EXPLORERS_ANALYZE:
 				eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_DataExp_SelectID,
 						DashBoardPageId.Welcome_DataExp_Analyze);
 				break;
-			case "search":
+			case DATA_EXPLORERS_SEARCH:
 				eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_DataExp_SelectID,
 						DashBoardPageId.Welcome_DataExp_Search);
 				break;
@@ -39,28 +44,28 @@ public class WelcomeUtil
 	{
 		String expectedName = null;
 		switch (serviceName) {
-			case "APM":
+			case SERVICE_NAME_APM:
 				expectedName = "Application Performance Monitoring";
 				break;
-			case "LA":
+			case SERVICE_NAME_LA:
 				expectedName = "Log Analytics";
 				break;
-			case "ITA":
+			case SERVICE_NAME_ITA:
 				expectedName = "IT Analytics";
 				break;
-			case "dashboards":
+			case SERVICE_NAME_DASHBOARDS:
 				expectedName = "Dashboards";
 				break;
-			case "dataExplorers":
+			case SERVICE_NAME_DATA_EXPLORERS:
 				expectedName = "Data Explorers";
 				break;
-			case "getStarted":
+			case LEARN_MORE_GET_STARTED:
 				expectedName = "How to get started";
 				break;
-			case "videos":
+			case LEARN_MORE_VIDEOS:
 				expectedName = "Videos";
 				break;
-			case "serviceOfferings":
+			case LEARN_MORE_SERVICE_OFFERINGS:
 				expectedName = "Service Offerings";
 				break;
 		}
@@ -71,13 +76,13 @@ public class WelcomeUtil
 	{
 		String itemId = null;
 		switch (itemName) {
-			case "getStarted":
+			case LEARN_MORE_GET_STARTED:
 				itemId = DashBoardPageId.Welcome_LearnMore_getStarted;
 				break;
-			case "videos":
+			case LEARN_MORE_VIDEOS:
 				itemId = DashBoardPageId.Welcome_LearnMore_Videos;
 				break;
-			case "serviceOfferings":
+			case LEARN_MORE_SERVICE_OFFERINGS:
 				itemId = DashBoardPageId.Welcome_LearnMore_ServiceOffering;
 				break;
 		}
@@ -98,19 +103,19 @@ public class WelcomeUtil
 	{
 		String serviceWrapperId = null;
 		switch (serviceName) {
-			case "APM":
+			case SERVICE_NAME_APM:
 				serviceWrapperId = DashBoardPageId.Welcome_APMLinkCSS;
 				break;
-			case "LA":
+			case SERVICE_NAME_LA:
 				serviceWrapperId = DashBoardPageId.Welcome_LALinkCSS;
 				break;
-			case "ITA":
+			case SERVICE_NAME_ITA:
 				serviceWrapperId = DashBoardPageId.Welcome_ITALinkID;
 				break;
-			case "dashboards":
+			case SERVICE_NAME_DASHBOARDS:
 				serviceWrapperId = DashBoardPageId.Welcome_DashboardsLinkID;
 				break;
-			case "dataExplorers":
+			case SERVICE_NAME_DATA_EXPLORERS:
 				serviceWrapperId = DashBoardPageId.Welcome_DataExp;
 				break;
 		}
@@ -120,6 +125,10 @@ public class WelcomeUtil
 	public static boolean isLearnMoreItemExisted(WebDriver driver, String itemName)
 	{
 		driver.getLogger().info("Start to check if learn more item: " + itemName + " is existed in welcome page...");
+
+		Validator.fromValidValues("learMoreItem", itemName, LEARN_MORE_GET_STARTED, LEARN_MORE_VIDEOS,
+				LEARN_MORE_SERVICE_OFFERINGS);
+
 		boolean isExisted = false;
 		String itemId = WelcomeUtil.getLearnMoreItemId(itemName);
 		String nameExpected = WelcomeUtil.getExpectedText(itemName);
@@ -136,6 +145,10 @@ public class WelcomeUtil
 	public static boolean isServiceExistedInWelcome(WebDriver driver, String serviceName) throws Exception
 	{
 		driver.getLogger().info("Start to check if service: " + serviceName + " is existed in welcome page...");
+
+		Validator.fromValidValues("serviceName", serviceName, SERVICE_NAME_APM, SERVICE_NAME_LA, SERVICE_NAME_ITA,
+				SERVICE_NAME_DASHBOARDS, SERVICE_NAME_DATA_EXPLORERS);
+
 		boolean isExisted = false;
 		String serviceWrapperId = WelcomeUtil.getServiceWrapperId(serviceName);
 		String xpath = "//*[@id='"
@@ -198,7 +211,11 @@ public class WelcomeUtil
 	{
 		driver.getLogger().info("Visiting ITA-" + selection + " from Welcome Page...");
 
-		if (selection.equals("default")) {
+		Validator.fromValidValues("ITASelection", selection, ITA_DEFAULT, ITA_PERFORMANCE_ANALYTICS_DATABASE,
+				ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE, ITA_RESOURCE_ANALYTICS_DATABASE, ITA_RESOURCE_ANALYTICS_MIDDLEWARE,
+				ITA_DATA_EXPLORER_ANALYZE, ITA_DATA_EXPLORER);
+
+		if (selection.equals(ITA_DEFAULT)) {
 			driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_ITALinkID);
 			driver.click("id=" + DashBoardPageId.Welcome_ITALinkID);
 			driver.takeScreenShot();
@@ -209,27 +226,27 @@ public class WelcomeUtil
 			driver.click("id=oj-select-choice-" + DashBoardPageId.Welcome_ITA_SelectID);
 			driver.takeScreenShot();
 			switch (selection) {
-				case "performanceAnalyticsDatabase":
+				case ITA_PERFORMANCE_ANALYTICS_DATABASE:
 					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
 							DashBoardPageId.Welcome_ITA_PADatabase);
 					break;
-				case "performanceAnalyticsMiddleware":
+				case ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE:
 					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
 							DashBoardPageId.Welcome_ITA_PAMiddleware);
 					break;
-				case "resourceAnalyticsDatabase":
+				case ITA_RESOURCE_ANALYTICS_DATABASE:
 					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
 							DashBoardPageId.Welcome_ITA_RADatabase);
 					break;
-				case "resourceAnalyticsMiddleware":
+				case ITA_RESOURCE_ANALYTICS_MIDDLEWARE:
 					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
 							DashBoardPageId.Welcome_ITA_RAMiddleware);
 					break;
-				case "dataExplorerAnalyze":
+				case ITA_DATA_EXPLORER_ANALYZE:
 					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
 							DashBoardPageId.Welcome_ITA_DEAnalyze);
 					break;
-				case "dataExplorer":
+				case ITA_DATA_EXPLORER:
 					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
 							DashBoardPageId.Welcome_ITA_DE);
 					break;
@@ -246,5 +263,27 @@ public class WelcomeUtil
 		driver.click("id=" + DashBoardPageId.Welcome_LALinkCSS);
 		driver.takeScreenShot();
 	}
+
+	public static final String DATA_EXPLORERS_LOG = "log";
+	public static final String DATA_EXPLORERS_ANALYZE = "analyze";
+	public static final String DATA_EXPLORERS_SEARCH = "search";
+
+	public static final String ITA_DEFAULT = "default";
+	public static final String ITA_PERFORMANCE_ANALYTICS_DATABASE = "performanceAnalyticsDatabase";
+	public static final String ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE = "performanceAnalyticsMiddleware";
+	public static final String ITA_RESOURCE_ANALYTICS_DATABASE = "resourceAnalyticsDatabase";
+	public static final String ITA_RESOURCE_ANALYTICS_MIDDLEWARE = "resourceAnalyticsMiddleware";
+	public static final String ITA_DATA_EXPLORER_ANALYZE = "dataExplorerAnalyze";
+	public static final String ITA_DATA_EXPLORER = "dataExplorer";
+
+	public static final String LEARN_MORE_GET_STARTED = "getStarted";
+	public static final String LEARN_MORE_VIDEOS = "videos";
+	public static final String LEARN_MORE_SERVICE_OFFERINGS = "serviceOfferings";
+
+	public static final String SERVICE_NAME_APM = "APM";
+	public static final String SERVICE_NAME_LA = "LA";
+	public static final String SERVICE_NAME_ITA = "ITA";
+	public static final String SERVICE_NAME_DASHBOARDS = "dashboards";
+	public static final String SERVICE_NAME_DATA_EXPLORERS = "dataExplorers";
 
 }

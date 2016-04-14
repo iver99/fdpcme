@@ -13,6 +13,11 @@ import org.openqa.selenium.interactions.Actions;
 
 public class WidgetUtil
 {
+	public static final String TILE_WIDER = "wider";
+	public static final String TILE_NARROWER = "narrower";
+	public static final String TILE_TALLER = "taller";
+	public static final String TILE_SHORTER = "shorter";
+
 	public static void remove(WebDriver driver, String widgetName) throws Exception
 	{
 		WidgetUtil.remove(driver, widgetName, 0);
@@ -20,6 +25,9 @@ public class WidgetUtil
 
 	public static void remove(WebDriver driver, String widgetName, int index) throws Exception
 	{
+		Validator.notEmptyString("widgetName", widgetName);
+		Validator.equalOrLargerThan0("index", index);
+
 		WebElement widgetEl = WidgetUtil.getWidgetByName(driver, widgetName, index);
 		if (null == widgetEl) {
 			driver.getLogger().info("Fail to find the widget titled with " + widgetName);
@@ -38,6 +46,10 @@ public class WidgetUtil
 
 	public static void resizeOptions(WebDriver driver, String widgetName, int index, String resizeOptions) throws Exception
 	{
+		Validator.notEmptyString("widgetName", widgetName);
+		Validator.equalOrLargerThan0("index", index);
+		Validator.fromValidValues("resizeOptions",resizeOptions,WidgetUtil.TILE_NARROWER,WidgetUtil.TILE_WIDER,WidgetUtil.TILE_SHORTER,WidgetUtil.TILE_TALLER);
+
 		WebElement widgetEl = WidgetUtil.getWidgetByName(driver, widgetName, index);
 		if (null == widgetEl) {
 			driver.getLogger().info("Fail to find the widget titled with " + widgetName);
@@ -49,16 +61,16 @@ public class WidgetUtil
 
 		String tileResizeCSS = null;
 		switch (resizeOptions) {
-			case DashBoardPageId.TILE_WIDER:
+			case WidgetUtil.TILE_WIDER:
 				tileResizeCSS = DashBoardPageId.WiderTileCSS;
 				break;
-			case DashBoardPageId.TILE_NARROWER:
+			case WidgetUtil.TILE_NARROWER:
 				tileResizeCSS = DashBoardPageId.NarrowerTileCSS;
 				break;
-			case DashBoardPageId.TILE_SHORTER:
+			case WidgetUtil.TILE_SHORTER:
 				tileResizeCSS = DashBoardPageId.ShorterTileCSS;
 				break;
-			case DashBoardPageId.TILE_TALLER:
+			case WidgetUtil.TILE_TALLER:
 				tileResizeCSS = DashBoardPageId.TallerTileCSS;
 				break;
 			default:
@@ -197,7 +209,7 @@ public class WidgetUtil
 		int counter = 0;
 		for (WebElement widgetElement : widgets) {
 			WebElement widgetTitle = widgetElement.findElement(By.cssSelector(DashBoardPageId.TileTitleCSS));
-			if (widgetTitle != null && widgetTitle.getText().trim().equals(widgetName)) {
+			if (widgetTitle != null && widgetTitle.getAttribute("data-tile-title").trim().equals(widgetName)) {
 				if (counter == index) {
 					widget = widgetElement;
 					break;

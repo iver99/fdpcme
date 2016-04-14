@@ -22,6 +22,9 @@ public class DashboardBuilderUtil
 
 	public static void addWidgetByRightDrawer(WebDriver driver, String searchString) throws Exception
 	{
+		Validator.notNull("widgetName", searchString);
+		Validator.notEmptyString("widgetName", searchString);
+
 		if (searchString == null) {
 			return;
 		}
