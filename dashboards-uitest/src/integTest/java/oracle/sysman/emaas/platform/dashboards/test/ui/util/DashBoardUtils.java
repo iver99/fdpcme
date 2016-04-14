@@ -572,12 +572,16 @@ public class DashBoardUtils {
 		
                 wdriver.takeScreenShot();
 		wdriver.getLogger().info("searching dashboard ..."+board);
-		wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
-                wdriver.sendKeys(DashBoardPageId.SearchDSBoxID,"InvalidLongNameInvalidLongNameInvalidLongNameInvalidLongNameInvalidLongName");//clear all dashboards
-		By locatorOfKeyEl =  By.xpath(DashBoardPageId.DashBoardID);
 		WebDriverWait wait = new WebDriverWait(wdriver.getWebDriver(),900L);
+		wait.until(ExpectedConditions.elementToBeClickable(By.id(DashBoardPageId.SearchDSBoxID)));
+		wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
+		wdriver.click(DashBoardPageId.SearchDSBoxID); //give focus to search box
+                wdriver.sendKeys(DashBoardPageId.SearchDSBoxID,"InvalidLongNameInvalidLongNameInvalidLongNameInvalidLongNameInvalidLongName");//clear all dashboards
+		Assert.assertEquals("InvalidLongNameInvalidLongNameInvalidLongNameInvalidLongNameInvalidLongName", wdriver.getElement(DashBoardPageId.SearchDSBoxID).getAttribute("value"));
+		By locatorOfKeyEl =  By.xpath(DashBoardPageId.DashBoardID);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(locatorOfKeyEl));//ensure all dashboards are cleared
 		wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id(DashBoardPageId.SearchDSBoxID)));
 		wdriver.sendKeys(DashBoardPageId.SearchDSBoxID, board);
 		Assert.assertEquals(board, wdriver.getElement(DashBoardPageId.SearchDSBoxID).getAttribute("value"));
 		
@@ -591,13 +595,17 @@ public static void searchDashBoardList(WebDriver wdriver, String board) throws E
 
                 wdriver.takeScreenShot();
                 wdriver.getLogger().info("searching dashboard ..."+board);
+		WebDriverWait wait = new WebDriverWait(wdriver.getWebDriver(),900L);
+		wait.until(ExpectedConditions.elementToBeClickable(By.id(DashBoardPageId.SearchDSBoxID)));
                 wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
+		wdriver.click(DashBoardPageId.SearchDSBoxID); //give focus to search box
                 wdriver.sendKeys(DashBoardPageId.SearchDSBoxID,"InvalidLongNameInvalidLongNameInvalidLongNameInvalidLongNameInvalidLongName");//clear all dashboards
-                By locatorOfKeyEl =  By.xpath(DashBoardPageId.DashBoardID);
-                WebDriverWait wait = new WebDriverWait(wdriver.getWebDriver(),900L);
-                wait.until(ExpectedConditions.invisibilityOfElementLocated(locatorOfKeyEl));//ensure all dashboards are cleared
+		Assert.assertEquals("InvalidLongNameInvalidLongNameInvalidLongNameInvalidLongNameInvalidLongName", wdriver.getElement(DashBoardPageId.SearchDSBoxID).getAttribute("value"));
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".oj-table-no-data-message")));
+               
                 wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
-                wdriver.sendKeys(DashBoardPageId.SearchDSBoxID, board);
+		wdriver.click(DashBoardPageId.SearchDSBoxID); //give focus to search box                
+		wdriver.sendKeys(DashBoardPageId.SearchDSBoxID, board);		
                 Assert.assertEquals(board, wdriver.getElement(DashBoardPageId.SearchDSBoxID).getAttribute("value"));
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".oj-table-no-data-message")));
                 wdriver.click(DashBoardPageId.SearchDSBoxID); //give focus to search box        ^M
@@ -609,12 +617,15 @@ public static void searchDashBoardList(WebDriver wdriver, String board) throws E
         {
 
                 wdriver.takeScreenShot();
-                wdriver.getLogger().info("searching dashboard ..."+board);
-                wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
+		wdriver.getLogger().info("searching dashboard ..."+board);
+		WebDriverWait wait = new WebDriverWait(wdriver.getWebDriver(),900L);
+		By locatorOfKeyEl =  By.xpath(DashBoardPageId.DashBoardID);
+		wait.until(ExpectedConditions.elementToBeClickable(By.id(DashBoardPageId.SearchDSBoxID)));
+		wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
+		wdriver.click(DashBoardPageId.SearchDSBoxID); //give focus to search box
                 wdriver.sendKeys(DashBoardPageId.SearchDSBoxID,"InvalidLongNameInvalidLongNameInvalidLongNameInvalidLongNameInvalidLongName");//clear all dashboards
-                By locatorOfKeyEl =  By.xpath(DashBoardPageId.DashBoardID);
-                WebDriverWait wait = new WebDriverWait(wdriver.getWebDriver(),900L);
-                wait.until(ExpectedConditions.invisibilityOfElementLocated(locatorOfKeyEl));//ensure all dashboards are cleared
+		Assert.assertEquals("InvalidLongNameInvalidLongNameInvalidLongNameInvalidLongNameInvalidLongName", wdriver.getElement(DashBoardPageId.SearchDSBoxID).getAttribute("value"));
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(locatorOfKeyEl));
                 wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
                 wdriver.sendKeys(DashBoardPageId.SearchDSBoxID, board);
                 Assert.assertEquals(board, wdriver.getElement(DashBoardPageId.SearchDSBoxID).getAttribute("value"));
