@@ -122,6 +122,15 @@ $.widget('dbs.dbsDashboardPanel',
             this._createComponent();
             this.element.attr("aria-dashboard", this.options['dashboard'].id);
             this.element.attr("aria-label", self.options['dashboard'].name);
+            this.element.addClass("dbs-dsbnameele");
+            if (self.options['dashboard'].systemDashboard)
+            {
+                this.element.addClass( "dbs-dsbsystem" );
+            }
+            else
+            {
+                this.element.addClass( "dbs-dsbnormal" );
+            }
             setTimeout(function() {
                 if(_element.is(":hover")) {
                     
@@ -183,16 +192,7 @@ $.widget('dbs.dbsDashboardPanel',
             self.headerElement = $("<div></div>").addClass(self.classNames['headerContainer']);
             self.titleElement = $("<div/>")
                                   .addClass(self.classNames['headerTitle'])
-                                  .addClass("dbs-dsbnameele")
                                   .text(_title);
-            if (self.options['dashboard'].systemDashboard)
-            {
-                self.titleElement.addClass( "dbs-dsbsystem" );
-            }
-            else
-            {
-                self.titleElement.addClass( "dbs-dsbnormal" );
-            }
             self.headerElement.append(self.titleElement); 
             _name = self.options['dashboard'].name;
             if ( _name &&  _name.length > TITLE_MAX_LENGTH)

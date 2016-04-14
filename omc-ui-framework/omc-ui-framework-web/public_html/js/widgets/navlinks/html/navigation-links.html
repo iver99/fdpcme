@@ -5,7 +5,7 @@
                 <i class="fa fa-icon-font fa-home" role="img" data-bind="attr: {'aria-label': homeLinkLabel}"></i>
             </div>
         </div>
-        <div class="headerMenuText">
+        <div id="obbNavHomeLinks" class="headerMenuText">
             <!--<div class="oj-row" style="font-weight: bolder; font-size: medium;"></div>-->
             <div class="oj-row">
                 <a id="obbNavHome" data-bind="attr: {href: 'javascript: this.click()'}, click: openHome, text: homeLinkLabel"></a>
@@ -20,7 +20,7 @@
                 <a id="obbNavWelcome" data-bind="attr: {href: 'javascript: this.click()'}, click: openWelcomePage, text: welcomeLabel"></a>
             </div>
             <!-- ko foreach: homeLinks -->
-            <div id="obbNavHomeLinks" class="oj-row">
+            <div class="oj-row">
             	<a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a>
            	</div>
             <!-- /ko -->
@@ -32,10 +32,10 @@
                 <i class="fa fa-icon-font fa-desktop" role="img" data-bind="attr: {'aria-label': cloudServicesLabel}"></i>
             </div>
         </div>
-        <div class="headerMenuText">
+        <div id="obbNavCsLinks" class="headerMenuText">
             <div class="oj-row" style="font-weight: bolder; font-size: medium;" data-bind="text: cloudServicesLabel"></div>
             <!-- ko foreach: cloudServices -->
-            <div id="obbNavCsLinks" class="oj-row"><a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a></div>
+            <div class="oj-row"><a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a></div>
             <!-- /ko -->
         </div>
     </div>
@@ -45,10 +45,10 @@
                 <i class="fa fa-icon-font fa-bar-chart" role="img" data-bind="attr: {'aria-label': visualAnalyzersLabel}"></i>
             </div>
         </div>
-        <div class="headerMenuText">
+        <div id="obbNavVaLinks" class="headerMenuText">
             <div class="oj-row" style="font-weight: bolder; font-size: medium;" data-bind="text: visualAnalyzersLabel"></div>
             <!-- ko foreach: visualAnalyzers -->
-            <div id="obbNavVaLinks" class="oj-row"><a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a></div>
+            <div class="oj-row"><a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a></div>
             <!-- /ko -->
         </div>
     </div>
@@ -59,10 +59,10 @@
                 <i class="fa fa-icon-font fa-cogs" role="img" data-bind="attr: {'aria-label': administrationLabel}"></i>
             </div>
         </div>
-        <div class="headerMenuText">
+        <div id="obbNavAdminLinks" class="headerMenuText">
             <div class="oj-row" style="font-weight: bolder; font-size: medium;" data-bind="text: administrationLabel"></div>
             <!-- ko foreach: adminLinks -->
-            <div id="obbNavAdminLinks" class="oj-row"><a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a></div>
+            <div class="oj-row"><a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a></div>
             <!-- /ko -->
         </div>
     </div>
