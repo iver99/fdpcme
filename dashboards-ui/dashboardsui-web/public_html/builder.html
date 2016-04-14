@@ -152,25 +152,27 @@
                                                  rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.cancelDeleteDbs"></button>
                         </div>
                     </div>
-                <!--single dashboard set delete-->
-<!--                    <div style="display:none" id="deleteDashboard"
-                             data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 480px; min-height:200px;'}}">
+                <!--single dashboard in dashboard set close-->
+                    <div style="display:none" id="deleteDashboard"
+                             data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 460px; min-height:200px;'}}">
                             <div class="oj-dialog-header oj-helper-clearfix">
                                 <span class="oj-dialog-title"  data-bind="text: getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB')"></span>
                             </div>
                             <div class="oj-dialog-body">
-                                <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG',dashboardsetInfo.name)"></p>
-                                <p data-bind="html: getNlsString('DBSSET_BUILDER_DELETE_WARNING')"></p>
+                                <p data-bind="html: getNlsString('DBSSET_BUILDER_Delete_TIPS')"></p>
                             </div>
                             <div class="oj-dialog-footer">
                                 <button data-bind="ojComponent: {
-                                                     component: 'ojButton',label: getNlsString('COMMON_BTN_DELETE'),
-                                                     rootAttributes: {style:'margin-right:20px'}}"></button>
+                                                     component: 'ojButton',label: getNlsString('COMMON_BTN_SAVE_REMOVE'),
+                                                     rootAttributes: {style:'margin-right:20px;margin-bottom:4px'}},click:$data.saveAndRemoveDashboard"></button>
+                                <button data-bind="ojComponent: {
+                                                     component: 'ojButton',label: getNlsString('DBS_BUILDER_TILE_REMOVE'),
+                                                     rootAttributes: {style:'margin-right:20px'}},click:$data.removeDashboard"></button>
                                 <button data-bind="ojComponent: {
                                                      component: 'ojButton',label: getNlsString('COMMON_BTN_CANCEL'),
-                                                     rootAttributes: {style:'margin-right:20px'}}"></button>
+                                                     rootAttributes: {style:'margin-right:20px'}},click:$data.cancelRemoveDashboard"></button>
                             </div>
-                     </div>-->
+                     </div>
             </div>
 
             <!-- /ko -->

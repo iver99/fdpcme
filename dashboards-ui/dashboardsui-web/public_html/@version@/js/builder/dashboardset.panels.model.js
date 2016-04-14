@@ -25,7 +25,7 @@ define([
 
             var self = this;
             
-            var dashboardInstMap = {};
+            var dashboardInstMap =dashboardsetToolBarModel.dashboardInstMap = {};
             var options = {"autoRefreshInterval":dashboardsetToolBarModel.autoRefreshInterval};
             
             window.selectedDashboardInst = self.selectedDashboardInst = ko.observable(null);

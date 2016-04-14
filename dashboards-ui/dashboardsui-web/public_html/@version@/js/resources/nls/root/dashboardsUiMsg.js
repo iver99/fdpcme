@@ -21,6 +21,7 @@ define({
       "COMMON_BTN_PRINT": "Print",
       "COMMON_BTN_ADD": "Add",
       "COMMON_BTN_SEARCH": "Search",
+      "COMMON_BTN_SAVE_REMOVE":"Save and Remove",
       "COMMON_TEXT_YES": "Yes",
       "COMMON_TEXT_NO": "No",
       "COMMON_TEXT_CLOSE": "CLOSE",
@@ -350,6 +351,7 @@ define({
       "DBSSET_BUILDER_NOT_SHARED":"Not Shared (visible only to me)",
       "DBSSET_BUILDER_SHARED":"Shared with others",
       "DBSSET_BUILDER_DEFAULT_REFRESH":"Default Auto-refresh Value",
-      "DBSSET_BUILDER_REFRESH_TIPS":"Specify whether this dashboard refreshes automatically by default for other users.User changes to this setting are saved"
+      "DBSSET_BUILDER_REFRESH_TIPS":"Specify whether this dashboard refreshes automatically by default for other users.User changes to this setting are saved",
+      "DBSSET_BUILDER_Delete_TIPS":"You have unsaved changes in this dashboard.Select <b>Save and Remove </b> to save this dashboard before removing it from the dashboard set.Select <b> Remove </b> to remove the dashboard from the set and discard all changes"
 });
 
