@@ -476,7 +476,7 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("access to the home page");
 		BrandingBarUtil.visitMyHome(webd);
 		webd.getLogger().info("Verfiy the home page");
-		WelcomeUtil.isServiceExistedInWelcome(webd, DashBoardPageId.Welcome_DashboardsLinkID);
+		WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS);
 	}
 
 	//@Test
@@ -501,13 +501,24 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("create a dashboard: with description, time refresh");
 		DashboardHomeUtil.createDashboard(webd, dbName, dbDesc, true);
 
+		//Add the widget to the dashboard
+		webd.getLogger().info("Start to add Widget into the dashboard");
+		DashboardBuilderUtil.addWidgetByRightDrawer(webd, "Database Errors Trend");
+		webd.getLogger().info("Add widget finished");
+
+		//save dashboard
+		webd.getLogger().info("save the dashboard");
+		DashboardBuilderUtil.save(webd);
+
 		//set time range for time picker
 		TimeSelectorUtil.setTimeRange(webd, TimeRange.Last15Mins);
 		TimeSelectorUtil.setCustomTime(webd, "4/6/2015 07:22 PM", "4/7/2016 09:22 PM");
 
 		//open the widget
+		WidgetUtil.udeRedirect(webd, "Database Errors Trend");
 
 		//verify the url
+		webd.switchToWindow();
 
 	}
 

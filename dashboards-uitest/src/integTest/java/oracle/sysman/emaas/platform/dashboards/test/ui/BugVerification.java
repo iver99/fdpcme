@@ -5,7 +5,6 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -71,7 +70,7 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("current url = " + url);
 
 		webd.getWebDriver().navigate()
-		.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
+				.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
 		webd.waitForElementPresent("css=" + PageId.ErrorPageSingOutBtnCss);
 		webd.takeScreenShot();
 
@@ -82,10 +81,11 @@ public class BugVerification extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("welcome page is being loaded, going to to verify...");
 
-		DashboardHomeUtil.gridView(webd);
+		//DashboardHomeUtil.gridView(webd);
 		//Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.WelcomeID),"Welcome to Oracle Management Cloud");
+
+		WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS);
 		webd.getLogger().info("welcome page is verified successfully");
-		WelcomeUtil.isServiceExistedInWelcome(webd, DashBoardPageId.Welcome_DashboardsLinkID);
 		webd.getLogger().info("complete testing in testEMPCDF_832");
 	}
 
