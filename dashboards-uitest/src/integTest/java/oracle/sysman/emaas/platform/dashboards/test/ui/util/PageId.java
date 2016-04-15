@@ -1,6 +1,5 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 
-
 public class PageId
 {
 	/*
@@ -12,6 +11,7 @@ public class PageId
 	 * */
 	public static final int Delaytime_long = 8000;
 	public static final int Delaytime_short = 500;
+	public static final String ErrorPageSingOutBtnCss = "button[title='Sign Out']";
 	public static final String CreateDSButtonID = "cbtn";
 	public static final String CreateDSOfDialogID = "createDsb";
 	public static final String DashBoardNameBoxID = "dbsHNameIn";
@@ -218,12 +218,12 @@ public class PageId
 	public static final String Welcome_ITA_DE = "/html/body/div[1]/div/div/ul/li[7]/div";//"oj-listbox-result-label-13";//ITA Select Item : Data Explorer
 	public static final String Welcome_DataExp_Log = "/html/body/div[1]/div/div/ul/li[2]/div";//"oj-listbox-result-label-4";//Data Explorers Select Item : Log
 	public static final String Welcome_DataExp_Analyze = "/html/body/div[1]/div/div/ul/li[3]/div";//"oj-listbox-result-label-5";//Data Explorers Select Item : Analyze
-	public static final String Welcome_DataExp_Search = "/html/body/div[1]/div/div/ul/li[4]/div";//"oj-listbox-result-label-6";//Data Explorers Select Item : Search	
+	public static final String Welcome_DataExp_Search = "/html/body/div[1]/div/div/ul/li[4]/div";//"oj-listbox-result-label-6";//Data Explorers Select Item : Search
 
 	//Sharing and stoping dashbaord
 	public static final String option = "dashboardOptsBtn";
 	public static final String dashboardshare = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
-	public static final String stopshare_btn = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]"; 
+	public static final String stopshare_btn = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
 
 	//Branding bar link text
 	public static final String BrandingBarLinkText_CS_ITA = "IT Analytics";

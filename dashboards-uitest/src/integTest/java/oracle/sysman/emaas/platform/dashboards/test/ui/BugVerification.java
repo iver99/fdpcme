@@ -1,105 +1,92 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui;
 
-import org.testng.annotations.*;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.Select;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-
-import oracle.sysman.emaas.platform.dashboards.test.ui.util.*;
-
-import java.util.Set;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
- *  @version
- *  @author  charles.c.chen
- *  @since   release specific (what release of product did this appear in)
+ * @version
+ * @author charles.c.chen
+ * @since release specific (what release of product did this appear in)
  */
 
-public class BugVerification extends LoginAndLogout{
+public class BugVerification extends LoginAndLogout
+{
 
 	public void initTest(String testName) throws Exception
 	{
-		login(this.getClass().getName()+"."+testName);
+		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
 	@Test
 	public void testEMPCDF_812_1() throws Exception
 	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_812");
-		
+
+		//reset all filter options
+		DashboardHomeUtil.resetFilterOptions(webd);
+
 		//check ita box
-		webd.getWebDriver().findElement(By.id(PageId.ITA_BoxID)).click();
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
-		
+		DashboardHomeUtil.filterOptions(webd, "ita");
+
 		//check la box
-		webd.getWebDriver().findElement(By.id(PageId.LA_BoxID)).click();
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
-		
+		DashboardHomeUtil.filterOptions(webd, "la");
+
 		//signout menu
 		webd.click(PageId.MenuBtnID);
 		webd.click(PageId.SignOutID);
-		
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_812");
-		
+
 		//check ita box
-		Assert.assertTrue(webd.getWebDriver().findElement(By.id(PageId.ITA_BoxID)).isSelected());
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
-		
+		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "ita"));
+
 		//check la box
-		Assert.assertTrue(webd.getWebDriver().findElement(By.id(PageId.LA_BoxID)).isSelected());
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
-		
+		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "la"));
+
 		//check ita box
-		webd.getWebDriver().findElement(By.id(PageId.ITA_BoxID)).click();
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
-		
+		DashboardHomeUtil.filterOptions(webd, "ita");
+
 		//check la box
-		webd.getWebDriver().findElement(By.id(PageId.LA_BoxID)).click();
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
-		
+		DashboardHomeUtil.filterOptions(webd, "la");
+
 	}
-	
-	//https://slc05mwm.us.oracle.com:4443/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG
+
 	@Test
 	public void testEMPCDF_832_1() throws Exception
 	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_832");
-		
+
 		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("current url = "+url);
-		
+		webd.getLogger().info("current url = " + url);
+
+		webd.getWebDriver().navigate()
+		.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
+		webd.waitForElementPresent("css=" + PageId.ErrorPageSingOutBtnCss);
 		webd.takeScreenShot();
-		webd.getWebDriver().navigate().to(url.substring(0,url.indexOf("emsaasui"))+"emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
-                webd.takeScreenShot();
-		//webd.click("//*[@id='errorMain']/div[2]/button");
-		webd.click("/html/body/div/div/div/div[3]/button");
-                webd.getLogger().info("Sing out button is clicked");
+
+		webd.click("css=" + PageId.ErrorPageSingOutBtnCss);
+		webd.getLogger().info("Sing out button is clicked");
 		webd.takeScreenShot();
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
-		//this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		
-        //login(this.getClass().getName()+"."+Thread.currentThread().getStackTrace()[1].getMethodName()+"-relogin","sso.welcome");
-        //DashBoardUtils.loadWebDriverOnly(webd);
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-        //webd.getLogger().info("welcome page is being loaded, going to to verify...");
-		webd.takeScreenShot();
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_long);
-		DashBoardUtils.clickGVButton();
+
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("welcome page is being loaded, going to to verify...");
+
+		DashboardHomeUtil.gridView(webd);
 		//Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.WelcomeID),"Welcome to Oracle Management Cloud");
 		webd.getLogger().info("welcome page is verified successfully");
-                Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(PageId.Application_Performance_Monitoring_ID));
-		webd.takeScreenShot();
+		WelcomeUtil.isServiceExistedInWelcome(webd, DashBoardPageId.Welcome_DashboardsLinkID);
 		webd.getLogger().info("complete testing in testEMPCDF_832");
-		DashBoardUtils.waitForMilliSeconds(PageId.Delaytime_short);
 	}
-	
+
 }
