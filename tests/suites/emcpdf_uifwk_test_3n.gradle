@@ -29,7 +29,6 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-	classpath group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-test-common-api', version: "1.6+", transitive: true
         classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_taskprocessor", version: "${omctfVersion}"
 	classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"
     }
@@ -77,7 +76,7 @@ dependencies {
     }
 }
 
-task QATest(type:EMTest){//,dependsOn: omcSetup){ 
+task QATest(type:EMTest,dependsOn: omcSetup){ 
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestAnalyzerPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestDashboardPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestOtherPage.class"
@@ -87,4 +86,4 @@ task QATest(type:EMTest){//,dependsOn: omcSetup){
 }
 
 omcTeardown.mustRunAfter(QATest)
-task emcpdf_uifwk_test_3n (dependsOn: [QATest])//, omcTeardown])
+task emcpdf_uifwk_test_3n (dependsOn: [QATest, omcTeardown])
