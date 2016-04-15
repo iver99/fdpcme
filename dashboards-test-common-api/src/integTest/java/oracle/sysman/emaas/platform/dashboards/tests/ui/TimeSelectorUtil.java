@@ -20,7 +20,7 @@ public class TimeSelectorUtil
 	{
 		Last15Mins("Last 15 mins"), Last30Mins("Last 30 mins"), Last60Mins("Last 60 mins"), Last4Hours("Last 4 hours"), Last6Hours(
 				"Last 6 hours"), Last1Day("Last 1 day"), Last7Days("Last 7 days"), Last30Days("Last 30 days"), Last90Days(
-				"Last 90 days"), Latest("Latest"), Custom("Custom");
+						"Last 90 days"), Latest("Latest"), Custom("Custom");
 
 		private final String timerange;
 
@@ -420,9 +420,15 @@ public class TimeSelectorUtil
 			returnEndDate = TimeSelectorUtil.timeFormatChange(EndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 		}
 		else if (Character.isDigit(EndDate.charAt(0))) {
-			EndDate = actualTodayMonth + "/" + today.get(Calendar.DAY_OF_MONTH) + "/" + today.get(Calendar.YEAR) + " " + EndDate;
+			if (StartDate.startsWith("Today")) {
+				EndDate = actualTodayMonth + "/" + today.get(Calendar.DAY_OF_MONTH) + "/" + today.get(Calendar.YEAR) + " "
+						+ EndDate;
+			}
+			else if (StartDate.startsWith("Yesterday")) {
+				EndDate = actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/" + yesterday.get(Calendar.YEAR)
+						+ " " + EndDate;
+			}
 			returnEndDate = TimeSelectorUtil.timeFormatChange(EndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
-
 		}
 		else {
 			returnEndDate = EndDate;
