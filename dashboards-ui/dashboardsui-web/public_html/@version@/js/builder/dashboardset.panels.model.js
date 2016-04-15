@@ -188,7 +188,7 @@ define([
                        $('.dashboard-content .head-bar-container').css("background-color","white");
                     }
 
-                    var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel);
+                    var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel, toolBarModel);
                     ko.applyBindings(rightPanelModel, $dashboardEl.find('.dbd-left-panel')[0]);
                     rightPanelModel.initialize();
                     new Builder.ResizableView($b);

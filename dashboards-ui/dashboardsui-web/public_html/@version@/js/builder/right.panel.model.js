@@ -9,11 +9,12 @@ define(['knockout',
         'mobileutil',
         'uiutil',
         'ojs/ojcore',
+        'builder/tool-bar/edit.dialog',
         'jqueryui',
         'builder/builder.core',
         'builder/widget/widget.model'
     ], 
-    function(ko, $, dfu, mbu, uiutil, oj) {
+    function(ko, $, dfu, mbu, uiutil, oj, ed) {
         function ResizableView($b) {
             var self = this;
             
@@ -26,12 +27,13 @@ define(['knockout',
                 self.$list.each(function() {
                     var elem = $(this)
                     , v_siblings = elem.siblings(".fit-size-vertical-sibling:visible")
+                    ,rightPanelTitleHeight = $(".dbd-right-panel-title").outerHeight()+$(".dbd-right-panel-define").outerHeight()*2
                     , h = 0;
                     if (v_siblings && v_siblings.length > 0) {
                         for (var i = 0; i < v_siblings.length; i++) {
                             h += $(v_siblings[i]).outerHeight();
                         }
-                        elem.height(height - topHeight - h);
+                        elem.height(height - topHeight - rightPanelTitleHeight - h);
                     }
                 });
             };
@@ -43,7 +45,7 @@ define(['knockout',
             self.initialize();
         }
         
-        function RightPanelModel($b, tilesViewModel) {
+        function RightPanelModel($b, tilesViewModel, toolBarModel) {
             var self = this;
             self.dashboard = $b.dashboard;
             $b.registerObject(this, 'RightPanelModel');
@@ -59,6 +61,14 @@ define(['knockout',
             self.completelyHidden = ko.observable(self.isMobileDevice === 'true' || !self.emptyDashboard);
             self.maximized = ko.observable(false);
             
+            self.editDashboardDialogModel = new ed.EditDashboardDialogModel($b, toolBarModel);
+            
+            self.defineIsExpanded = ko.observable(false);
+            self.buildIsExpanded = ko.observable(true);
+            self.dbfiltersIsExpanded = ko.observable(true);
+            self.sharesettingsIsExpanded = ko.observable(false);
+            self.dbeditorIsExpanded = ko.observable(false);
+            
             var scrollInstantStore = ko.observable();
             var scrollDelay = ko.computed(function() { 
                 return scrollInstantStore();
@@ -69,7 +79,7 @@ define(['knockout',
                 scrollInstantStore(event.target.scrollTop);
             };
             
-            var widgetListHeight = ko.observable(0);
+            var widgetListHeight = ko.observable($(".dbd-left-panel-widgets").height());
             var $dbdLeftPanelWidgets = $b.findEl(".dbd-left-panel-widgets");
             if(typeof window.MutationObserver !== 'undefined'){
                 var widgetListHeightChangeObserver = new MutationObserver(function(){
@@ -309,12 +319,6 @@ define(['knockout',
                 });
             };
 
-            self.dashboardPageChanged = function(e, d) {
-                if (d.option !== "value" || !d.value)
-                    return;
-                self.loadWidgets();
-            };
-
             self.searchWidgetsInputKeypressed = function(e, d) {
                 if (d.keyCode === 13) {
                     self.searchWidgetsClicked();
@@ -344,6 +348,11 @@ define(['knockout',
                     $b.triggerBuilderResizeEvent('hide left panel');
                 } 
                 else {
+                    if(toolBarModel.openRightPanelByBuild()){
+                        self.buildIsExpanded(true);
+                    }else{
+                        self.defineIsExpanded(true);
+                    }
                     self.completelyHidden(false);
                     self.initDraggable();
                     $b.triggerBuilderResizeEvent('show left panel');
@@ -399,6 +408,39 @@ define(['knockout',
 //                    $("#dbd-left-panel-link").draggable("disable");
 //                }
 //            };
+
+            self.deleteDashboardClicked = function(){
+                toolBarModel.openDashboardDeleteConfirmDialog();
+            };        
+
+            self.defineIsExpanded.subscribe(function(val){
+                if(val){
+                    self.dbfiltersIsExpanded(true);
+                    self.sharesettingsIsExpanded(false);
+                    self.dbeditorIsExpanded(false);
+                }
+            });
+            self.dbfiltersIsExpanded.subscribe(function(val){
+                if(val){
+                    self.dbfiltersIsExpanded(true);
+                    self.sharesettingsIsExpanded(false);
+                    self.dbeditorIsExpanded(false);
+                }
+            });
+            self.sharesettingsIsExpanded.subscribe(function(val){
+                if(val){
+                    self.dbfiltersIsExpanded(false);
+                    self.sharesettingsIsExpanded(true);
+                    self.dbeditorIsExpanded(false);
+                }
+            });
+            self.dbeditorIsExpanded.subscribe(function(val){
+                if(val){
+                    self.dbfiltersIsExpanded(false);
+                    self.sharesettingsIsExpanded(false);
+                    self.dbeditorIsExpanded(true);
+                }
+            });
         }
         
         Builder.registerModule(RightPanelModel, 'RightPanelModel');

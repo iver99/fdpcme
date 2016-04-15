@@ -26,7 +26,7 @@ define(['knockout',
             self.isUpdated = $b.isDashboardUpdated;
             self.tilesViewModel = $b.getDashboardTilesViewModel();
             self.currentUser = dfu.getUserName();
-            self.editDashboardDialogModel = new ed.EditDashboardDialogModel($b, self);
+            self.openRightPanelByBuild = ko.observable(true);
             self.duplicateDashboardModel = new dd.DuplicateDashboardModel($b);
             self.toolBarGuid = Builder.getGuid();
 
@@ -557,7 +557,13 @@ define(['knockout',
             checkDashboardAsHomeSettings();
             
             self.openDashboardEditDialog = function() {
-               $('#edit-dashboard').ojDialog("open");
+               if(!self.tilesViewModel.rightPanelShown()){
+                    self.openRightPanelByBuild(false);
+                    self.tilesViewModel.toggleRightPanel();
+                    self.openRightPanelByBuild(true);
+                }else{
+                    $(".dbd-right-panel-contents").ojAccordion( { "expanded": [0] } );//to show "Build" by default on toggled
+                }
             };
             self.openDashboardDuplicateDialog = function() {
                 $('#duplicateDsbDialog').ojDialog('open');

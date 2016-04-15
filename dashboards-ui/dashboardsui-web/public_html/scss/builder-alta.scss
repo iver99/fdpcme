@@ -1060,6 +1060,24 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     border: 3px solid #F0CAC4;
 }*/
 
+//right panel accordion icon removed
+.dbd-right-panel-define>span>a,.dbd-right-panel-build>span>a{
+    display: none;
+}
+//right panel define collapsible open icon changed
+.dbd-right-panel-define .oj-collapsible-open-icon:before{
+    -webkit-transform: rotate(45deg) scale(0.9,0.9);
+    transform: rotate(45deg) scale(0.9,0.9); 
+}
+//right panel define collapsible default style changed
+.dbd-right-panel-define-container>div{
+    padding-left: 0.857rem;
+    padding-right: 0.857rem;
+}
+.dbd-right-panel-define-container>div>div{
+    margin-left:1.2rem;
+}
+
 .dbd-icon-resize{
     line-height: 12px;
     margin-right: 3px;
