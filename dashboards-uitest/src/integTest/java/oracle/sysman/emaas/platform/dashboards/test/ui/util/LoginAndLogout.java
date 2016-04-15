@@ -54,7 +54,6 @@ public class LoginAndLogout
 
 		login(testName, username, "Welcome1!", tenantID, rel, "Dashboard-UI");
 		//login(testName,"emaasadmin", "Welcome1!","TenantOPC1", "home", "Dashboard-UI");
-
 	}
 
 	public void login(String testName, String username, String password, String tenantId, String rel, String servicename)

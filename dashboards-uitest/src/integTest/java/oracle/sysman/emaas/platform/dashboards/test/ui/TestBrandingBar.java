@@ -124,14 +124,14 @@ public class TestBrandingBar extends LoginAndLogout
 		webd.getLogger().info("start to test in testAWRLink");
 
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+
 		//AWR Analytics link
 		webd.click(DashBoardPageId.AWRALinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/flex-analyzer/html/displaying/new-chart-config.html");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+
 	}
 	 */
 

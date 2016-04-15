@@ -78,7 +78,8 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("Sing out button is clicked");
 		webd.takeScreenShot();
 
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		//initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		login(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName(), "welcome");
 		webd.getLogger().info("welcome page is being loaded, going to to verify...");
 
 		//DashboardHomeUtil.gridView(webd);

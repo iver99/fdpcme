@@ -9,8 +9,6 @@ public class PageId
 	 *
 	 *
 	 * */
-	public static final int Delaytime_long = 8000;
-	public static final int Delaytime_short = 500;
 	public static final String ErrorPageSingOutBtnCss = "button[title='Sign Out']";
 	public static final String CreateDSButtonID = "cbtn";
 	public static final String CreateDSOfDialogID = "createDsb";
