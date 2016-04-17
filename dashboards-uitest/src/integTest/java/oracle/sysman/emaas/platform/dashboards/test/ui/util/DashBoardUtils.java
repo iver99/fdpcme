@@ -556,7 +556,7 @@ public class DashBoardUtils {
 	public static void clickToSortByLastAccessed() throws Exception
 	{		
 		WebElement Box = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.SortDropListID));//*[@id='oj-listbox-drop']"));//));
-		Box.click();
+		Box.click(); 
 
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
 		
@@ -584,8 +584,8 @@ public class DashBoardUtils {
 		wait.until(ExpectedConditions.elementToBeClickable(By.id(DashBoardPageId.SearchDSBoxID)));
 		wdriver.sendKeys(DashBoardPageId.SearchDSBoxID, board);
 		Assert.assertEquals(board, wdriver.getElement(DashBoardPageId.SearchDSBoxID).getAttribute("value"));
-		
-		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfKeyEl));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".dbs-summary-page-image[alt="+board+"]")));
+
 		wdriver.click(DashBoardPageId.SearchDSBoxID); //give focus to search box	
 		wdriver.getLogger().info("searching dashboard: "+board +" done!");
 		wdriver.takeScreenShot(); 
