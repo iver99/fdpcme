@@ -13,6 +13,8 @@ define(['knockout',
             self.name = ko.observable(dsb.name());
             var savedName = dsb.name();
             self.nameInputed = ko.observable(undefined); //read only input text
+            self.nameFocused = ko.observable(false);
+            self.descriptionFocused = ko.observable(false);
             self.description = ko.observable(dsb.description ? dsb.description() : undefined);
             self.descriptionInputed = ko.observable(undefined);
             self.descriptionValue = ko.observable(dsb.enableDescription ? (dsb.enableDescription()==="TRUE"?["ON"]:["OFF"]) : ["OFF"]);
@@ -36,6 +38,18 @@ define(['knockout',
                 return true;
             });
             
+            self.onNameOrDescriptionEditing = ko.computed(function(){
+                return self.nameFocused()||self.descriptionFocused();
+            });
+            
+            self.onNameOrDescriptionEditing.subscribe(function(val){
+                if(val){
+                    self.tbModel.onNameOrDescriptionEditing = true;
+                }else{
+//                    self.tbModel.onNameOrDescriptionEditing = false;
+                }
+            });
+            
             self.nameInputed.subscribe(function(val){
                 self.dashboard.name(val);
                 self.tbModel.dashboardName(val);
@@ -50,6 +64,16 @@ define(['knockout',
                 }
                 self.tbModel.dashboardDescription(val);
             } );
+            
+            self.tbModel.dashboardDescription.subscribe(function(val){
+                self.dashboard.description(val);
+                if(!self.tbModel.dashboardDescription())
+                {
+                    self.showdbDescription([]);
+                }else{
+                    self.showdbDescription(["showdbDescription"]);
+                }
+            });
         
             self.showdbDescription.subscribe(function(val){
                 if(val.indexOf("showdbDescription")>=0){
@@ -86,6 +110,7 @@ define(['knockout',
                 if (dfu.isDevMode()) {
                         url = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/");
                 }
+                self.tbModel.onNameOrDescriptionEditing = false;
                 dfu.ajaxWithRetry(url + self.dashboard.id() + "/quickUpdate", {
                         type: 'PUT',
                         dataType: "json",

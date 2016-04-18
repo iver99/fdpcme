@@ -439,6 +439,8 @@ define(['knockout',
                     self.dbfiltersIsExpanded(false);
                     self.sharesettingsIsExpanded(false);
                     self.dbeditorIsExpanded(true);
+                }else{
+                    self.tbModel.onNameOrDescriptionEditing = false;
                 }
             });
         }
