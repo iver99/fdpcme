@@ -46,7 +46,7 @@ public class BrandingBarUtil
 			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
-		isExisted = driver.isDisplayed(DashBoardPageId.BrandingBarDashboardHomeLinkID);
+		isExisted = driver.isDisplayed("id="+DashBoardPageId.BrandingBarDashboardHomeLinkID);
 		if (!isNavBarDisplayed) {
 			driver.click("id="+DashBoardPageId.LinkID);
 		}
@@ -79,7 +79,7 @@ public class BrandingBarUtil
 			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
-		isExisted = driver.isDisplayed(DashBoardPageId.BrandingBarMyFavoritesLinkID);
+		isExisted = driver.isDisplayed("id="+DashBoardPageId.BrandingBarMyFavoritesLinkID);
 		if (!isNavBarDisplayed) {
 			driver.click("id="+DashBoardPageId.LinkID);
 		}
@@ -100,7 +100,7 @@ public class BrandingBarUtil
 			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
-		isExisted = driver.isDisplayed(DashBoardPageId.BrandingBarMyHomeLinkID);
+		isExisted = driver.isDisplayed("id="+DashBoardPageId.BrandingBarMyHomeLinkID);
 		if (!isNavBarDisplayed) {
 			driver.click("id="+DashBoardPageId.LinkID);
 		}
@@ -133,7 +133,7 @@ public class BrandingBarUtil
 			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
-		isExisted = driver.isDisplayed(DashBoardPageId.BrandingBarWelcomeLinkID);
+		isExisted = driver.isDisplayed("id="+DashBoardPageId.BrandingBarWelcomeLinkID);
 		if (!isNavBarDisplayed) {
 			driver.click("id="+DashBoardPageId.LinkID);
 		}
