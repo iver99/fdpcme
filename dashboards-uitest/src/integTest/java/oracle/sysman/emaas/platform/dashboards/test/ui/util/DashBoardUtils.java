@@ -19,7 +19,6 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-
 import org.testng.Assert;
 
 public class DashBoardUtils {
@@ -52,10 +51,18 @@ public class DashBoardUtils {
     public static void clickDelete() throws Exception
     {
     	driver.getLogger().info("before clicking Delete icon");
+
     	driver.click(DashBoardPageId.OptionsID);
-		driver.click(DashBoardPageId.DashboardDelete);
-		driver.getLogger().info("after clicking Delete icon");
-		driver.takeScreenShot();
+    	
+    	driver.getLogger().info("verify the delete option is eanbled");	
+//	WebDriverWait wait = new WebDriverWait(driver.getWebDriver(),900L);	
+//	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.DashboardDelete)));
+	driver.takeScreenShot();//screenshot before click delete	
+	driver.getLogger().info("click the delete option");	
+	driver.click(DashBoardPageId.DashboardDelete);
+        driver.getLogger().info("after clicking Delete icon");	
+	driver.takeScreenShot();
+		
     }
      	
     public static void noOOBCheck_GridView() throws Exception
