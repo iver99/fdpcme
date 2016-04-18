@@ -584,7 +584,7 @@ public class DashBoardUtils {
 		wait.until(ExpectedConditions.elementToBeClickable(By.id(DashBoardPageId.SearchDSBoxID)));
 		wdriver.sendKeys(DashBoardPageId.SearchDSBoxID, board);
 		Assert.assertEquals(board, wdriver.getElement(DashBoardPageId.SearchDSBoxID).getAttribute("value"));
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".dbs-summary-page-image[alt="+board+"]")));
+		Assert.assertTrue(wdriver.getText("css=div.oj-panel.dbs-summary-container").contains(board));		
 
 		wdriver.click(DashBoardPageId.SearchDSBoxID); //give focus to search box	
 		wdriver.getLogger().info("searching dashboard: "+board +" done!");

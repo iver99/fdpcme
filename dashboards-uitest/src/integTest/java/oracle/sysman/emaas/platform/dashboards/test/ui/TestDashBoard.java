@@ -94,17 +94,24 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to delete the dashboard");
 
 		DashBoardUtils.searchDashBoard(webd,dbName);
-
-		webd.takeScreenShot();
-
-		webd.click(DashBoardPageId.InfoBtnID);
-		webd.takeScreenShot();
-
-		webd.click(DashBoardPageId.RmBtnID);
-		webd.takeScreenShot();
 		
-		//click delete button
-		DashBoardUtils.clickDeleteButton();
+		webd.takeScreenShot();
+		webd.waitForElementPresent("css=div.oj-panel.dbs-summary-container");
+		if (webd.getText("css=div.oj-panel.dbs-summary-container").contains(dbName))
+
+		{
+
+			webd.getLogger().info("delete the dashboard: "+dbName);	
+ 
+			webd.click(DashBoardPageId.InfoBtnID);
+
+			webd.click(DashBoardPageId.RmBtnID);
+ 
+			webd.waitForElementPresent(DashBoardPageId.DeleteBtnID_Dialog);
+
+			DashBoardUtils.clickDeleteButton();
+
+		}
 
 		webd.getLogger().info("the dashboard has been deleted");
 	}
