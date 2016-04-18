@@ -43,12 +43,12 @@ public class BrandingBarUtil
 		boolean isExisted = false;
 		boolean isNavBarDisplayed = BrandingBarUtil.isNavigationBarDisplayed(driver);
 		if (!isNavBarDisplayed) {
-			driver.click(DashBoardPageId.LinkID);
+			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
 		isExisted = driver.isDisplayed(DashBoardPageId.BrandingBarDashboardHomeLinkID);
 		if (!isNavBarDisplayed) {
-			driver.click(DashBoardPageId.LinkID);
+			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
 		driver.getLogger()
@@ -76,12 +76,12 @@ public class BrandingBarUtil
 		boolean isExisted = false;
 		boolean isNavBarDisplayed = BrandingBarUtil.isNavigationBarDisplayed(driver);
 		if (!isNavBarDisplayed) {
-			driver.click(DashBoardPageId.LinkID);
+			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
 		isExisted = driver.isDisplayed(DashBoardPageId.BrandingBarMyFavoritesLinkID);
 		if (!isNavBarDisplayed) {
-			driver.click(DashBoardPageId.LinkID);
+			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
 		driver.getLogger()
@@ -97,12 +97,12 @@ public class BrandingBarUtil
 		boolean isExisted = false;
 		boolean isNavBarDisplayed = BrandingBarUtil.isNavigationBarDisplayed(driver);
 		if (!isNavBarDisplayed) {
-			driver.click(DashBoardPageId.LinkID);
+			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
 		isExisted = driver.isDisplayed(DashBoardPageId.BrandingBarMyHomeLinkID);
 		if (!isNavBarDisplayed) {
-			driver.click(DashBoardPageId.LinkID);
+			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
 		driver.getLogger()
@@ -130,12 +130,12 @@ public class BrandingBarUtil
 		boolean isExisted = false;
 		boolean isNavBarDisplayed = BrandingBarUtil.isNavigationBarDisplayed(driver);
 		if (!isNavBarDisplayed) {
-			driver.click(DashBoardPageId.LinkID);
+			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
 		isExisted = driver.isDisplayed(DashBoardPageId.BrandingBarWelcomeLinkID);
 		if (!isNavBarDisplayed) {
-			driver.click(DashBoardPageId.LinkID);
+			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
 		driver.getLogger().info(
@@ -228,7 +228,7 @@ public class BrandingBarUtil
 	{
 		driver.getLogger().info("[BrandingBarUtil.visitDashboardHome] start to visit 'Dashboards' link from branding bar.");
 		if (!BrandingBarUtil.isNavigationBarDisplayed(driver)) {
-			driver.click(DashBoardPageId.LinkID);
+			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
 		driver.waitForElementPresent(DashBoardPageId.BrandingBarDashboardLinkLocator);
@@ -240,20 +240,21 @@ public class BrandingBarUtil
 	{
 		driver.getLogger().info("[BrandingBarUtil.visitMyFavorites] start to visit 'My Favorites' link from branding bar.");
 		if (!BrandingBarUtil.isNavigationBarDisplayed(driver)) {
-			driver.click(DashBoardPageId.LinkID);
+			driver.click("id="+DashBoardPageId.LinkID);
 		}
-		driver.waitForElementPresent(DashBoardPageId.BrandingBarMyFavoritesLinkID);
-		driver.click(DashBoardPageId.BrandingBarMyFavoritesLinkID);
+		driver.waitForElementPresent("id="+DashBoardPageId.BrandingBarMyFavoritesLinkID);
+		driver.click("id="+DashBoardPageId.BrandingBarMyFavoritesLinkID);
+		driver.takeScreenShot();
 	}
 
 	public static void visitMyHome(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("[BrandingBarUtil.visitMyHome] start to visit 'Home' link from branding bar.");
 		if (!BrandingBarUtil.isNavigationBarDisplayed(driver)) {
-			driver.click(DashBoardPageId.LinkID);
+			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
-		driver.click(DashBoardPageId.BrandingBarMyHomeLinkID);
+		driver.click("id="+DashBoardPageId.BrandingBarMyHomeLinkID);
 		driver.takeScreenShot();
 	}
 
@@ -261,10 +262,10 @@ public class BrandingBarUtil
 	{
 		driver.getLogger().info("[BrandingBarUtil.visitWelcome] start to visit 'Welcome' link from branding bar.");
 		if (!BrandingBarUtil.isNavigationBarDisplayed(driver)) {
-			driver.click(DashBoardPageId.LinkID);
+			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
-		driver.click(DashBoardPageId.BrandingBarWelcomeLinkID);
+		driver.click("id="+DashBoardPageId.BrandingBarWelcomeLinkID);
 		driver.takeScreenShot();
 	}
 
@@ -297,12 +298,12 @@ public class BrandingBarUtil
 
 		boolean isNavBarDisplayed = BrandingBarUtil.isNavigationBarDisplayed(driver);
 		if (!isNavBarDisplayed) {
-			driver.click(DashBoardPageId.LinkID);
+			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
 		isExisted = driver.isDisplayed(xpath);
 		if (!isNavBarDisplayed) {
-			driver.click(DashBoardPageId.LinkID);
+			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
 		return isExisted;
@@ -310,7 +311,7 @@ public class BrandingBarUtil
 
 	private static boolean isNavigationBarDisplayed(WebDriver driver)
 	{
-		return driver.isDisplayed(DashBoardPageId.BrandingBarNavLinksId);
+		return driver.isDisplayed("id="+DashBoardPageId.BrandingBarNavLinksId);
 	}
 
 	private static void visitApplicationLink(WebDriver driver, String linkType, String linkName)
@@ -319,7 +320,7 @@ public class BrandingBarUtil
 		//Find link element by parent id and link name
 		String xpath = "//div[@id='" + parentId + "']/descendant::a[text()='" + linkName + "']";
 		if (!BrandingBarUtil.isNavigationBarDisplayed(driver)) {
-			driver.click(DashBoardPageId.LinkID);
+			driver.click("id="+DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
 		driver.click(xpath);
