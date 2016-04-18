@@ -418,6 +418,8 @@ define(['knockout',
                     self.dbfiltersIsExpanded(true);
                     self.sharesettingsIsExpanded(false);
                     self.dbeditorIsExpanded(false);
+                }else{
+                    self.dbeditorIsExpanded(false);
                 }
             });
             self.dbfiltersIsExpanded.subscribe(function(val){
@@ -440,7 +442,7 @@ define(['knockout',
                     self.sharesettingsIsExpanded(false);
                     self.dbeditorIsExpanded(true);
                 }else{
-                    self.tbModel.onNameOrDescriptionEditing = false;
+                    toolBarModel.onNameOrDescriptionEditing = false;
                 }
             });
         }
