@@ -38,18 +38,18 @@ define(['knockout',
                 return true;
             });
             
-            self.onNameOrDescriptionEditing = ko.computed(function(){
-                return self.nameFocused()||self.descriptionFocused();
-            });
-            
-            self.onNameOrDescriptionEditing.subscribe(function(val){
-                if(val){
-                    self.tbModel.onNameOrDescriptionEditing = true;
-                }else{
-//                    self.tbModel.onNameOrDescriptionEditing = false;
-                }
-            });
-            
+//            self.onNameOrDescriptionEditing = ko.computed(function(){
+//                return self.nameFocused()||self.descriptionFocused();
+//            });
+//            
+//            self.onNameOrDescriptionEditing.subscribe(function(val){
+//                if(val){
+//                    self.tbModel.onNameOrDescriptionEditing = true;
+//                }else{
+////                    self.tbModel.onNameOrDescriptionEditing = false;
+//                }
+//            });
+//            
             self.nameInputed.subscribe(function(val){
                 self.dashboard.name(val);
                 self.tbModel.dashboardName(val);
@@ -110,7 +110,7 @@ define(['knockout',
                 if (dfu.isDevMode()) {
                         url = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/");
                 }
-                self.tbModel.onNameOrDescriptionEditing = false;
+//                self.tbModel.onNameOrDescriptionEditing = false;
                 dfu.ajaxWithRetry(url + self.dashboard.id() + "/quickUpdate", {
                         type: 'PUT',
                         dataType: "json",

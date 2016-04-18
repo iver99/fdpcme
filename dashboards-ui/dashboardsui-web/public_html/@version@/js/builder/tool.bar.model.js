@@ -755,7 +755,7 @@ define(['knockout',
             };
             
             self.intervalID = null;
-            self.onNameOrDescriptionEditing = false;
+//            self.onNameOrDescriptionEditing = false;
             self.setAutoRefreshOptoin = function (interval) {
                 if(dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)){
                         interval = dashboardSetOptions.autoRefreshInterval();
@@ -771,9 +771,9 @@ define(['knockout',
                         interval = 3000;
                     }
                     self.intervalID = setInterval(function () {
-                        if(self.onNameOrDescriptionEditing){
-                            return;
-                        }
+//                        if(self.onNameOrDescriptionEditing){
+//                            return;
+//                        }
                         Builder.loadDashboard(
                                 $b.dashboard.id(),
                                 function (dashboardInst) {
