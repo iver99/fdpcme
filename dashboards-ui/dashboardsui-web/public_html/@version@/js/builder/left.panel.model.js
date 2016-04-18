@@ -279,7 +279,8 @@ define(['knockout',
             };
 
             self.widgetGoDataExploreHandler = function(widget) {
-                var url = Builder.getVisualAnalyzerUrl(widget.PROVIDER_NAME(), widget.PROVIDER_VERSION());
+                var versionPlus = encodeURIComponent(widget.PROVIDER_VERSION()+'+');
+                var url = Builder.getVisualAnalyzerUrl(widget.PROVIDER_NAME(), versionPlus);                
                 url && window.open(url + "?widgetId=" + widget.WIDGET_UNIQUE_ID());
             };
 
