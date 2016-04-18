@@ -53,12 +53,14 @@ public class DashBoardUtils {
     	driver.getLogger().info("before clicking Delete icon");
 
     	driver.click(DashBoardPageId.OptionsID);
-	WebDriverWait wait = new WebDriverWait(driver.getWebDriver(),900L);	
-	wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(DashBoardPageId.DashboardDelete)));
+    	
+    	driver.getLogger().info("verify the delete option is eanbled");	
+//	WebDriverWait wait = new WebDriverWait(driver.getWebDriver(),900L);	
+//	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.DashboardDelete)));
 	driver.takeScreenShot();//screenshot before click delete	
+	driver.getLogger().info("click the delete option");	
 	driver.click(DashBoardPageId.DashboardDelete);
-        driver.getLogger().info("after clicking Delete icon");
-	driver.getWebDriver().getCurrentUrl().contains("home.html");
+        driver.getLogger().info("after clicking Delete icon");	
 	driver.takeScreenShot();
 		
     }

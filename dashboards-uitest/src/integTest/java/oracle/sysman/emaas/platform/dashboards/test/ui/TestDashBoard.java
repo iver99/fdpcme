@@ -8,10 +8,16 @@ import org.openqa.selenium.support.ui.Select;
 
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.*;
 
 import java.util.Set;
+
 import org.testng.Assert;
+
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardPageId;
 
 /**
  *  @version
@@ -169,16 +175,34 @@ public class TestDashBoard extends LoginAndLogout{
 		//webd.sendKeys(DashBoardPageId.SearchDSBoxID, "");
 		//DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);		
 		//DashBoardUtils.searchDashBoard(webd,dbName);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		
+		//verify the created dashbobard is displayed
+//		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(),900L);	
+//		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.oj-panel.dbs-summary-container")));
+		webd.waitForElementPresent("css=div.oj-panel.dbs-summary-container");
+		
+		if (webd.getText("css=div.oj-panel.dbs-summary-container").contains(dbName))
+		{
+			webd.getLogger().info("delete the dashboard: "+dbName);	
+			webd.click(DashBoardPageId.InfoBtnID);
+			webd.click(DashBoardPageId.RmBtnID);
+			webd.waitForElementPresent(DashBoardPageId.DeleteBtnID_Dialog);
+			DashBoardUtils.clickDeleteButton();
+			
+		}
+		
+		
+//		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+//		webd.takeScreenShot();
+//		DashBoardUtils.clickDashBoard();
+//		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+//		webd.takeScreenShot();
+//		DashBoardUtils.clickDelete();
+//		webd.takeScreenShot();
+//		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+//		DashBoardUtils.clickDeleteButton();
 		webd.takeScreenShot();
-		DashBoardUtils.clickDashBoard();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		webd.takeScreenShot();
-		DashBoardUtils.clickDelete();
-		webd.takeScreenShot();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		DashBoardUtils.clickDeleteButton();
-		webd.takeScreenShot();
+		
 		webd.getLogger().info("the dashboard has been deleted");		
 	}
 	
