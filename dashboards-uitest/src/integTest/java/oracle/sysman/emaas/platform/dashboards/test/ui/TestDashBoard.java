@@ -78,25 +78,38 @@ public class TestDashBoard extends LoginAndLogout{
 		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DashboardsLinkID),"Dashboards");
 		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DataExp),"Data Explorers");
 		
-		//delete the dashboard
+		
+	}
+	@Test(dependsOnMethods={"testSetHome"})
+	public void deleteSetHome()throws Exception
+	{
+		String dbName="SetHome_testDashboard";
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		
+		webd.getLogger().info("start to test in deleteSetHome");
+		
+		DashBoardUtils.clickGVButton();
+		String parentWindow = webd.getWebDriver().getWindowHandle();
+
 		webd.getLogger().info("start to delete the dashboard");
-		webd.click(DashBoardPageId.Welcome_DashboardsLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);		
+
 		DashBoardUtils.searchDashBoard(webd,dbName);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+
 		webd.takeScreenShot();
-		DashBoardUtils.clickDashBoard();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+
+		webd.click(DashBoardPageId.InfoBtnID);
 		webd.takeScreenShot();
-		DashBoardUtils.clickDelete();
+
+		webd.click(DashBoardPageId.RmBtnID);
 		webd.takeScreenShot();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		
+		//click delete button
 		DashBoardUtils.clickDeleteButton();
-		webd.takeScreenShot();
+
 		webd.getLogger().info("the dashboard has been deleted");
 	}
 	
-	@Test
+	/*@Test
 	public void testFavorite() throws Exception
 	{
 		//create a dashboard
@@ -482,5 +495,5 @@ public class TestDashBoard extends LoginAndLogout{
 		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DashboardsLinkID),"Dashboards");
 		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DataExp),"Data Explorers");
 		
-	}
+	}*/
 }
