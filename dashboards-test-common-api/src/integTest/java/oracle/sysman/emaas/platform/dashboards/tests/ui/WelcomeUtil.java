@@ -40,7 +40,7 @@ public class WelcomeUtil
 		driver.takeScreenShot();
 	}
 
-	public static String getExpectedText(String serviceName)
+	private static String getExpectedText(String serviceName)
 	{
 		String expectedName = null;
 		switch (serviceName) {
@@ -72,7 +72,7 @@ public class WelcomeUtil
 		return expectedName;
 	}
 
-	public static String getLearnMoreItemId(String itemName)
+	private static String getLearnMoreItemId(String itemName)
 	{
 		String itemId = null;
 		switch (itemName) {
@@ -89,7 +89,7 @@ public class WelcomeUtil
 		return itemId;
 	}
 
-	public static String getOptionXpath(WebDriver driver, String selectId, String optionId) throws Exception
+	private static String getOptionXpath(WebDriver driver, String selectId, String optionId) throws Exception
 	{
 		String optionXpath;
 		WebElement li = driver.getWebDriver().findElement(By.id(optionId));
@@ -99,7 +99,7 @@ public class WelcomeUtil
 		return optionXpath;
 	}
 
-	public static String getServiceWrapperId(String serviceName)
+	private static String getServiceWrapperId(String serviceName)
 	{
 		String serviceWrapperId = null;
 		switch (serviceName) {
