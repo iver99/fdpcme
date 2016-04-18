@@ -97,20 +97,20 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening Data Explorers-Search in welcome page finished!!!");
 	}
 
-	@Test
-	public void testOpenGetStartedPage() throws Exception
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test opening 'How to get started' in welcome page...");
-
-		BrandingBarUtil.visitWelcome(webd);
-		WelcomeUtil.learnMoreHow(webd);
-		webd.switchToWindow();
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open 'How to get started' by url: " + tmpUrl);
-		Assert.assertEquals(tmpUrl, "http://docs.oracle.com/cloud/latest/em_home/index.html");
-		webd.getLogger().info("Test opening 'How to get started' in welcome page finished!!!");
-	}
+	//	@Test
+	//	public void testOpenGetStartedPage() throws Exception
+	//	{
+	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+	//		webd.getLogger().info("Start to test opening 'How to get started' in welcome page...");
+	//
+	//		BrandingBarUtil.visitWelcome(webd);
+	//		WelcomeUtil.learnMoreHow(webd);
+	//		webd.switchToWindow();
+	//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+	//		webd.getLogger().info("Open 'How to get started' by url: " + tmpUrl);
+	//		Assert.assertEquals(tmpUrl, "http://docs.oracle.com/cloud/latest/em_home/index.html");
+	//		webd.getLogger().info("Test opening 'How to get started' in welcome page finished!!!");
+	//	}
 
 	@Test
 	public void testOpenITA_DEAnalyzePage() throws Exception
@@ -229,35 +229,35 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test open LA in welcome page finished!!!");
 	}
 
-	@Test
-	public void testOpenServiceOfferingPage() throws Exception
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test opening 'Service Offerings' in welcome page...");
+	//	@Test
+	//	public void testOpenServiceOfferingPage() throws Exception
+	//	{
+	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+	//		webd.getLogger().info("Start to test opening 'Service Offerings' in welcome page...");
+	//
+	//		BrandingBarUtil.visitWelcome(webd);
+	//		WelcomeUtil.learnMoreServiceOffering(webd);
+	//		webd.switchToWindow();
+	//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+	//		webd.getLogger().info("Open 'Service Offerings' by url: " + tmpUrl);
+	//		Assert.assertEquals(tmpUrl, "https://cloud.oracle.com/management");
+	//		webd.getLogger().info("Test opening 'Service Offerings' in welcome page finished!!!");
+	//	}
 
-		BrandingBarUtil.visitWelcome(webd);
-		WelcomeUtil.learnMoreServiceOffering(webd);
-		webd.switchToWindow();
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open 'Service Offerings' by url: " + tmpUrl);
-		Assert.assertEquals(tmpUrl, "https://cloud.oracle.com/management");
-		webd.getLogger().info("Test opening 'Service Offerings' in welcome page finished!!!");
-	}
-
-	@Test
-	public void testOpenVideosPage() throws Exception
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test opening 'Videos' in welcome page...");
-
-		BrandingBarUtil.visitWelcome(webd);
-		WelcomeUtil.learnMoreVideo(webd);
-		webd.switchToWindow();
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open 'Videos' by url: " + tmpUrl);
-		Assert.assertEquals(tmpUrl, "http://docs.oracle.com/cloud/latest/em_home/em_home_videos.htm");
-		webd.getLogger().info("Test opening 'Videos' in welcome page finished!!!");
-	}
+	//	@Test
+	//	public void testOpenVideosPage() throws Exception
+	//	{
+	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+	//		webd.getLogger().info("Start to test opening 'Videos' in welcome page...");
+	//
+	//		BrandingBarUtil.visitWelcome(webd);
+	//		WelcomeUtil.learnMoreVideo(webd);
+	//		webd.switchToWindow();
+	//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+	//		webd.getLogger().info("Open 'Videos' by url: " + tmpUrl);
+	//		Assert.assertEquals(tmpUrl, "http://docs.oracle.com/cloud/latest/em_home/em_home_videos.htm");
+	//		webd.getLogger().info("Test opening 'Videos' in welcome page finished!!!");
+	//	}
 
 	@Test
 	public void testWelcomepage() throws Exception
