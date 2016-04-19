@@ -242,13 +242,13 @@
                             <span class="dbd-toolbar-icon-delete"></span>
                         </div>
                         
-                        <button class="dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print toolbar-save"
+                        <button id="dashboard-screenshot" class="dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print toolbar-save"
                                 data-bind="click: handleDashboardSave, ojComponent: {
                                         component:'ojButton', chroming: 'half', label: getNlsString('COMMON_BTN_SAVE'), disabled: disableSave, 
                                         icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
                             }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.tilesViewModel.isMobileDevice !== 'true'">
                         </button>
-                        <button class='dashboardOptsBtn oj-button oj-default oj-button-half-chrome no-print'
+                        <button id="dashboardOptsBtn" class='dashboardOptsBtn oj-button oj-default oj-button-half-chrome no-print'
                                 data-bind="visible: true, ojComponent: { component: 'ojButton', chroming: 'half', label: getNlsString('DBS_BUILDER_BTN_OPTIONS'), icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
                                     menu: '#dashboardOptsMenu'},
                                 attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
