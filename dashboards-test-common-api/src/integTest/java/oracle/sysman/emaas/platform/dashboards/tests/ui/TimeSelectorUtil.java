@@ -36,13 +36,11 @@ public class TimeSelectorUtil
 
 	}
 
-	private static WebDriver driver;
-
 	public static String setCustomTime(WebDriver webd, int index, String startDateTime, String endDateTime) throws Exception
 	{
 
-		String start = TimeSelectorUtil.timeFormatChange(startDateTime, "MM/dd/yy hh:mm a", "MM/dd/yyyy hh:mm a");
-		String end = TimeSelectorUtil.timeFormatChange(endDateTime, "MM/dd/yy hh:mm a", "MM/dd/yyyy hh:mm a");
+		String start = TimeSelectorUtil.timeFormatChange(webd, startDateTime, "MM/dd/yy hh:mm a", "MM/dd/yyyy hh:mm a");
+		String end = TimeSelectorUtil.timeFormatChange(webd, endDateTime, "MM/dd/yy hh:mm a", "MM/dd/yyyy hh:mm a");
 		webd.getLogger().info("the start time in dashboard is:" + start + ",the end time in dashboard is:" + end);
 		webd.getLogger().info("we are going to set the custom time in dashboard page");
 
@@ -107,7 +105,7 @@ public class TimeSelectorUtil
 			TimeSelectorUtil.clickApplyButton(webd);
 			String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
 					.get(index - 1).getText();
-			return TimeSelectorUtil.dateConvert(returnTimeRange, TimeRange.Custom);
+			return TimeSelectorUtil.dateConvert(webd, returnTimeRange, TimeRange.Custom);
 		}
 
 	}
@@ -116,72 +114,7 @@ public class TimeSelectorUtil
 	//Time hh:mm a
 	public static String setCustomTime(WebDriver webd, String startDateTime, String endDateTime) throws Exception
 	{
-		String start = TimeSelectorUtil.timeFormatChange(startDateTime, "MM/dd/yy hh:mm a", "MM/dd/yyyy hh:mm a");
-		String end = TimeSelectorUtil.timeFormatChange(endDateTime, "MM/dd/yy hh:mm a", "MM/dd/yyyy hh:mm a");
-		webd.getLogger().info("the start time in dashboard is:" + start + ",the end time in dashboard is:" + end);
-		webd.getLogger().info("we are going to set the custom time in dashboard page");
-
-		TimeSelectorUtil.clickTimePicker(webd);
-		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
-		webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
-		webd.takeScreenShot();
-
-		String regex = "(.*?)\\s+(.*)";
-		Pattern p = Pattern.compile(regex);
-		Matcher mStart = p.matcher(start);
-		Matcher mEnd = p.matcher(end);
-		String startDate = null;
-		String startTime = null;
-		String endDate = null;
-		String endTime = null;
-
-		if (mStart.find()) {
-			if (mStart.group(1) == null || mStart.group(1).isEmpty() || mStart.group(2) == null || mStart.group(2).isEmpty()) {
-				throw new Exception("the start date or the start time is empty.Please check:\n" + start);
-			}
-			startDate = mStart.group(1);
-			startTime = mStart.group(2);
-			webd.getLogger().info("start date is:" + startDate + ",start time is:" + startTime);
-
-		}
-		if (mEnd.find()) {
-			if (mEnd.group(1) == null || mEnd.group(1).isEmpty() || mEnd.group(2) == null || mEnd.group(2).isEmpty()) {
-				throw new Exception("the end date or the end time is empty.Please check:\n" + end);
-			}
-			endDate = mEnd.group(1);
-			endTime = mEnd.group(2);
-			webd.getLogger().info("end date is:" + endDate + ",end time is:" + endTime);
-
-		}
-
-		//set start date time and end date time
-		webd.getLogger().info("Verify if custom panpel displayed...");
-		webd.isDisplayed("css=" + TimeSelectorUIControls.sPickPanel);
-		webd.takeScreenShot();
-
-		webd.getLogger().info("Input the start date time and end date time...");
-		webd.click("css=" + TimeSelectorUIControls.sStartDateInput);
-		webd.clear("css=" + TimeSelectorUIControls.sStartDateInput);
-		webd.sendKeys("css=" + TimeSelectorUIControls.sStartDateInput, startDate);
-		webd.click("css=" + TimeSelectorUIControls.sStartTimeInput);
-		webd.clear("css=" + TimeSelectorUIControls.sStartTimeInput);
-		webd.sendKeys("css=" + TimeSelectorUIControls.sStartTimeInput, startTime);
-		webd.click("css=" + TimeSelectorUIControls.sEndDateInput);
-		webd.clear("css=" + TimeSelectorUIControls.sEndDateInput);
-		webd.sendKeys("css=" + TimeSelectorUIControls.sEndDateInput, endDate);
-		webd.click("css=" + TimeSelectorUIControls.sEndTimeInput);
-		webd.clear("css=" + TimeSelectorUIControls.sEndTimeInput);
-		webd.sendKeys("css=" + TimeSelectorUIControls.sEndTimeInput, endTime);
-		webd.takeScreenShot();
-
-		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-			throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
-		}
-		else {
-			TimeSelectorUtil.clickApplyButton(webd);
-			String returnTimeRange = webd.getText("css=" + TimeSelectorUIControls.sTimeRangeBtn);
-			return TimeSelectorUtil.dateConvert(returnTimeRange, TimeRange.Custom);
-		}
+		return TimeSelectorUtil.setCustomTime(webd, 1, startDateTime, endDateTime);
 	}
 
 	public static String setTimeRange(WebDriver webd, int Index, TimeRange rangeoption) throws Exception
@@ -245,70 +178,13 @@ public class TimeSelectorUtil
 		}
 		String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
 				.get(Index - 1).getText();
-		return TimeSelectorUtil.dateConvert(returnTimeRange, rangeoption);
+		return TimeSelectorUtil.dateConvert(webd, returnTimeRange, rangeoption);
 
 	}
 
 	public static String setTimeRange(WebDriver webd, TimeRange rangeoption) throws Exception
 	{
-		TimeSelectorUtil.clickTimePicker(webd);
-		switch (rangeoption) {
-			case Last15Mins:
-				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_15Min);
-				webd.click("css=" + TimeSelectorUIControls.sTimeRange_15Min);
-				webd.takeScreenShot();
-				break;
-			case Last30Mins:
-				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_30Min);
-				webd.click("css=" + TimeSelectorUIControls.sTimeRange_30Min);
-				webd.takeScreenShot();
-				break;
-			case Last60Mins:
-				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_60Min);
-				webd.click("css=" + TimeSelectorUIControls.sTimeRange_60Min);
-				webd.takeScreenShot();
-				break;
-			case Last4Hours:
-				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_4Hour);
-				webd.click("css=" + TimeSelectorUIControls.sTimeRange_4Hour);
-				webd.takeScreenShot();
-				break;
-			case Last6Hours:
-				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_6Hour);
-				webd.click("css=" + TimeSelectorUIControls.sTimeRange_6Hour);
-				webd.takeScreenShot();
-				break;
-			case Last1Day:
-				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_1Day);
-				webd.click("css=" + TimeSelectorUIControls.sTimeRange_1Day);
-				webd.takeScreenShot();
-				break;
-			case Last7Days:
-				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_7Days);
-				webd.click("css=" + TimeSelectorUIControls.sTimeRange_7Days);
-				webd.takeScreenShot();
-				break;
-			case Last30Days:
-				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_30Days);
-				webd.click("css=" + TimeSelectorUIControls.sTimeRange_30Days);
-				webd.takeScreenShot();
-				break;
-			case Last90Days:
-				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_90Days);
-				webd.click("css=" + TimeSelectorUIControls.sTimeRange_90Days);
-				webd.takeScreenShot();
-				break;
-			case Latest:
-				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Latest);
-				webd.click("css=" + TimeSelectorUIControls.sTimeRange_Latest);
-				webd.takeScreenShot();
-				return webd.getText("css=" + TimeSelectorUIControls.sTimeRangeBtn);
-			case Custom:
-				throw new Exception("Please use setCustomTime API to set Custom Range");
-
-		}
-		String returnTimeRange = webd.getText("css=" + TimeSelectorUIControls.sTimeRangeBtn);
-		return TimeSelectorUtil.dateConvert(returnTimeRange, rangeoption);
+		return TimeSelectorUtil.setTimeRange(webd, 1, rangeoption);
 	}
 
 	private static void clickApplyButton(WebDriver webd) throws Exception
@@ -357,14 +233,12 @@ public class TimeSelectorUtil
 		webd.takeScreenShot();
 	}
 
-	private static String dateConvert(String convertDate, TimeRange timerange) throws Exception
+	private static String dateConvert(WebDriver driver, String convertDate, TimeRange timerange) throws Exception
 	{
 		String timeRange = timerange.getRangeOption();
 		String tmpDate = "";
 		String returnStartDate = "";
 		String returnEndDate = "";
-
-		System.out.println("convertDate:" + convertDate);
 
 		if (convertDate.startsWith(timeRange)) {
 			tmpDate = convertDate.substring(timeRange.length() + 1);
@@ -377,6 +251,7 @@ public class TimeSelectorUtil
 		String StartDate = date[0].trim();
 		String EndDate = date[1].trim();
 		String tmpStartDate = StartDate;
+		String[] tmpStart = StartDate.split(" ");
 
 		Calendar current = Calendar.getInstance();
 		Calendar today = Calendar.getInstance(); //today
@@ -397,13 +272,13 @@ public class TimeSelectorUtil
 		if (StartDate.startsWith("Today")) {
 			StartDate = StartDate.replace("Today",
 					actualTodayMonth + "/" + today.get(Calendar.DAY_OF_MONTH) + "/" + today.get(Calendar.YEAR));
-			returnStartDate = TimeSelectorUtil.timeFormatChange(StartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
+			returnStartDate = TimeSelectorUtil.timeFormatChange(driver, StartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 
 		}
 		else if (StartDate.startsWith("Yesterday")) {
 			StartDate = StartDate.replace("Yesterday", actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/"
 					+ yesterday.get(Calendar.YEAR));
-			returnStartDate = TimeSelectorUtil.timeFormatChange(StartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
+			returnStartDate = TimeSelectorUtil.timeFormatChange(driver, StartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 		}
 		else {
 			returnStartDate = StartDate;
@@ -412,33 +287,33 @@ public class TimeSelectorUtil
 		if (EndDate.startsWith("Today")) {
 			EndDate = EndDate.replace("Today",
 					actualTodayMonth + "/" + today.get(Calendar.DAY_OF_MONTH) + "/" + today.get(Calendar.YEAR));
-			returnEndDate = TimeSelectorUtil.timeFormatChange(EndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
+			returnEndDate = TimeSelectorUtil.timeFormatChange(driver, EndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 
 		}
 		else if (EndDate.startsWith("Yesterday")) {
 			EndDate = EndDate.replace("Yesterday", actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/"
 					+ yesterday.get(Calendar.YEAR));
-			returnEndDate = TimeSelectorUtil.timeFormatChange(EndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
+			returnEndDate = TimeSelectorUtil.timeFormatChange(driver, EndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 		}
 		else if (Character.isDigit(EndDate.charAt(0))) {
 			if (tmpStartDate.startsWith("Today")) {
 				EndDate = actualTodayMonth + "/" + today.get(Calendar.DAY_OF_MONTH) + "/" + today.get(Calendar.YEAR) + " "
 						+ EndDate;
-				returnEndDate = TimeSelectorUtil.timeFormatChange(EndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
+				returnEndDate = TimeSelectorUtil.timeFormatChange(driver, EndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 			}
-			if (tmpStartDate.startsWith("Yesterday")) {
+			else if (tmpStartDate.startsWith("Yesterday")) {
 				EndDate = actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/" + yesterday.get(Calendar.YEAR)
 						+ " " + EndDate;
-				returnEndDate = TimeSelectorUtil.timeFormatChange(EndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
+				returnEndDate = TimeSelectorUtil.timeFormatChange(driver, EndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 			}
-
+			else {
+				returnEndDate = tmpStart[0] + " " + tmpStart[1] + " " + tmpStart[2] + " " + EndDate;
+			}
 		}
 		else {
 			returnEndDate = EndDate;
 
 		}
-		System.out.println("returnStartDate:" + returnStartDate);
-		System.out.println("returnEndDate" + returnEndDate);
 
 		String[] tmpReturnStartDate = returnStartDate.split(" ");
 		String[] tmpReturnEndDate = returnEndDate.split(" ");
@@ -451,8 +326,6 @@ public class TimeSelectorUtil
 			returnEndDate = tmpReturnEndDate[0] + " " + tmpReturnEndDate[1] + " " + tmpReturnEndDate[2] + " "
 					+ tmpReturnEndDate[3].substring(1) + " " + tmpReturnEndDate[4];
 		}
-		System.out.println(returnStartDate);
-		System.out.println(returnEndDate);
 
 		return timeRange + ": " + returnStartDate + " - " + returnEndDate;
 
@@ -553,7 +426,8 @@ public class TimeSelectorUtil
 	//		webd.takeScreenShot();
 	//    }
 
-	private static String timeFormatChange(String testTime, String inputDateFormat, String outputDateFormat) throws Exception
+	private static String timeFormatChange(WebDriver driver, String testTime, String inputDateFormat, String outputDateFormat)
+			throws Exception
 	{
 		SimpleDateFormat inputFormat = new SimpleDateFormat(inputDateFormat);
 		SimpleDateFormat outputFormat = new SimpleDateFormat(outputDateFormat);
@@ -562,10 +436,9 @@ public class TimeSelectorUtil
 			date = inputFormat.parse(testTime);
 		}
 		catch (ParseException e) {
-			driver.getLogger().info(e.getLocalizedMessage());//System.out.println("can't parse the time");
+			driver.getLogger().info(e.getLocalizedMessage());
 		}
 
-		//System.out.println("the output time is:" + outputFormat.format(date));
 		return outputFormat.format(date);
 	}
 }
