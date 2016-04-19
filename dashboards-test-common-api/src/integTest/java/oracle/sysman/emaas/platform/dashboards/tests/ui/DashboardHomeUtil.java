@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
@@ -28,27 +29,14 @@ public class DashboardHomeUtil
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_ASC = "owner_asc";
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_DSC = "owner_dsc";
 
-	public static void clickListViewTableCreatedByHeader(WebDriver driver) throws Exception
-	{
-		driver.getLogger().info("[DashboardHomeUtil] call gridView");
-		driver.waitForElementPresent(DashBoardPageId.ListViewTableCreatedByHeaderLocator);
-		driver.click(DashBoardPageId.ListViewTableCreatedByHeaderLocator);
-	}
-
-	public static void clickListViewTableLastModifiedHeader(WebDriver driver) throws Exception
-	{
-		driver.getLogger().info("[DashboardHomeUtil] call gridView");
-		driver.waitForElementPresent(DashBoardPageId.ListViewTableLastModifiedHeaderLocator);
-		driver.click(DashBoardPageId.ListViewTableLastModifiedHeaderLocator);
-	}
-
-	public static void clickListViewTableNameHeader(WebDriver driver) throws Exception
-	{
-		driver.getLogger().info("[DashboardHomeUtil] call gridView");
-		driver.waitForElementPresent(DashBoardPageId.ListViewTableNameHeaderLocator);
-		driver.click(DashBoardPageId.ListViewTableNameHeaderLocator);
-	}
-
+	/**
+	 * Create one Dashboard
+	 * @param driver
+	 * @param name dashboard name
+	 * @param descriptions dashboard description(optional)
+	 * @param selectorRefreshcontrol optional
+	 * @throws Exception
+	 */
 	public static void createDashboard(WebDriver driver, String name, String descriptions, Boolean selectorRefreshcontrol)
 			throws Exception
 	{
@@ -72,24 +60,17 @@ public class DashboardHomeUtil
 		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.DashOKButtonID));
 	}
 
-	public static void createDashboardSet(WebDriver driver, String name, String descriptions, Boolean displayDesc,
-			Boolean selectorRefreshcontrol) throws Exception
-	{
-
-	}
-
 	/**
-	 * @param dashboardName
+	 * Delete one dashboard by name
+	 * @param dashboardName dashboard name
 	 * @param view
-	 *            DashboardsGridViewLocator | DashboardsListViewLocator
+	 *            dashboards_grid_view | dashboards_list_view
 	 * @throws Exception
 	 */
-	public static void delete(WebDriver driver, String dashboardName, String view) throws Exception
+	public static void deleteDashboard(WebDriver driver, String dashboardName, String view) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call delete dashboardName : " + dashboardName);
-		if (dashboardName == null || dashboardName.isEmpty()) {
-			return;
-		}
+		Validator.notEmptyString("dashboardName", dashboardName);
 		DashboardHomeUtil.search(driver, dashboardName);
 		if (DashboardHomeUtil.DASHBOARDS_GRID_VIEW.equals(view)) {
 			DashboardHomeUtil.gridView(driver);
@@ -106,35 +87,15 @@ public class DashboardHomeUtil
 	}
 
 	/**
-	 * @param option
-	 *            ExploreDataMenu_Analyze | ExploreDataMenu_Log | ExploreDataMenu_Search
+	 * add filter
+	 * @param driver
+	 * @param filter	filter name - apm,la,ita,oracle,share,me,favorites(multiple choice and split with comma)
 	 * @throws Exception
 	 */
-	public static void exploreData(WebDriver driver, String option) throws Exception
-	{
-		driver.getLogger().info("[DashboardHomeUtil] call exploreData -> " + option);
-
-		if (option == null || option.isEmpty()) {
-			return;
-		}
-
-		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataBtnID));
-		WebElement menu = driver.getElement(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataMenu));
-		List<WebElement> menuList = menu.findElements(By.tagName("li"));
-		for (WebElement menuItem : menuList) {
-			if (option.equals(menuItem.getText())) {
-				menuItem.click();
-				break;
-			}
-		}
-	}
-
 	public static void filterOptions(WebDriver driver, String filter) throws Exception
 	{
-		driver.getLogger().info("[DashboardHomeUtil] call filterOptions");
-		if (filter == null) {
-			return;
-		}
+		driver.getLogger().info("[DashboardHomeUtil] call filterOptions filter: " + filter);
+		Validator.notEmptyString("filter", filter);
 		String[] fs = filter.split(",");
 		ArrayList<String> trimedFs = new ArrayList<String>();
 		for (String s : fs) {
@@ -168,8 +129,43 @@ public class DashboardHomeUtil
 			driver.waitForElementPresent(DashBoardPageId.FilterFavoriteLocator);
 			driver.click(DashBoardPageId.FilterFavoriteLocator);
 		}
+		throw new IllegalArgumentException("Unkown filter:  " + filter);
 	}
 
+	/**
+	 * goto the link in Data Explorer by displayed name
+	 * @param option
+	 *            Analyze | Log Visual Analyzer | Search
+	 * @throws Exception
+	 */
+	public static void gotoDataExplorer(WebDriver driver, String option) throws Exception
+	{
+		driver.getLogger().info("[DashboardHomeUtil] call exploreData -> " + option);
+
+		Validator.notEmptyString("option", option);
+
+		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataBtnID));
+		WebElement menu = driver.getElement(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataMenu));
+		List<WebElement> menuList = menu.findElements(By.tagName("li"));
+		for (WebElement menuItem : menuList) {
+			if (option.equals(menuItem.getText())) {
+				menuItem.click();
+				break;
+			}
+		}
+	}
+
+	//	public static void createDashboardSet(WebDriver driver, String name, String descriptions, Boolean displayDesc,
+	//			Boolean selectorRefreshcontrol) throws Exception
+	//	{
+	//
+	//	}
+
+	/**
+	 * choose grid view
+	 * @param driver
+	 * @throws Exception
+	 */
 	public static void gridView(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call gridView");
@@ -178,17 +174,35 @@ public class DashboardHomeUtil
 		driver.click(DashBoardPageId.DashboardsGridViewLocator);
 	}
 
+	/**
+	 * check if the dashboard is existing or not by name
+	 * @param driver
+	 * @param dashboardName
+	 * @return
+	 * @throws Exception
+	 */
 	public static boolean isDashboardExists(WebDriver driver, String dashboardName) throws Exception
 	{
-		String indicator = DashBoardPageId.DashboardLocator.replace("_name_", dashboardName);
+		driver.getLogger().info("[DashboardHomeUtil] call isDashboardExists dashboardName: " + dashboardName);
+		Validator.notEmptyString("dashboardName", dashboardName);
+		String indicator = DashBoardPageId.DashboardNameLocator.replace("_name_", dashboardName);
 		if (!driver.isElementPresent(indicator)) {
 			return false;
 		}
 		return true;
 	}
 
+	/**
+	 * check if the filter is selected by filter name
+	 * @param driver
+	 * @param filter filer name - apm, la , ita, oracle, share, me favorites(single choice)
+	 * @return
+	 * @throws Exception
+	 */
 	public static boolean isFilterOptionSelected(WebDriver driver, String filter) throws Exception
 	{
+		driver.getLogger().info("[DashboardHomeUtil] call isFilterOptionSelected filter: " + filter);
+		Validator.notEmptyString("filter", filter);
 		if ("apm".equals(filter)) {
 			return driver.getElement(DashBoardPageId.FilterApmLocator).isSelected();
 		}
@@ -213,6 +227,11 @@ public class DashboardHomeUtil
 		throw new IllegalArgumentException("Unkonw filter option: " + filter);
 	}
 
+	/**
+	 * choose the list view
+	 * @param driver
+	 * @throws Exception
+	 */
 	public static void listView(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call listView");
@@ -221,8 +240,14 @@ public class DashboardHomeUtil
 		driver.click(DashBoardPageId.DashboardsListViewLocator);
 	}
 
+	/**
+	 * reset the filters
+	 * @param driver
+	 * @throws Exception
+	 */
 	public static void resetFilterOptions(WebDriver driver) throws Exception
 	{
+		driver.getLogger().info("[DashboardHomeUtil] call resetFilterOptions");
 		driver.waitForElementPresent(DashBoardPageId.FilterApmLocator);
 		WebElement el = driver.getElement(DashBoardPageId.FilterApmLocator);
 		if (el.isSelected()) {
@@ -254,11 +279,16 @@ public class DashboardHomeUtil
 		}
 	}
 
+	/**
+	 * search dashboard
+	 * @param driver
+	 * @param searchString
+	 * @throws Exception
+	 */
 	public static void search(WebDriver driver, String searchString) throws Exception
 	{
-		if (searchString == null) {
-			return;
-		}
+		driver.getLogger().info("[DashboardHomeUtil] call search searchString: " + searchString);
+		Validator.notEmptyString("searchString", searchString);
 		driver.getLogger().info("[DashboardHomeUtil] call search");
 		driver.waitForElementPresent(DashBoardPageId.SearchDashboardInputLocator);
 		driver.getElement(DashBoardPageId.SearchDashboardInputLocator).clear();
@@ -267,27 +297,52 @@ public class DashboardHomeUtil
 		driver.click(DashBoardPageId.SearchDashboardSearchBtnLocator);
 	}
 
+	/**
+	 * Select an any-type dashboard by name, including OOB dashboard & user created dashboard
+	 *
+	 * @param driver
+	 * @param dashboardName
+	 * @throws Exception
+	 */
 	public static void selectDashboard(WebDriver driver, String dashboardName) throws Exception
 	{
-		String indicator = DashBoardPageId.DashboardLocator.replace("_name_", dashboardName);
+		driver.getLogger().info("[DashboardHomeUtil] call selectDashboard dashboardName: " + dashboardName);
+		String indicator = DashBoardPageId.DashboardNameLocator.replace("_name_", dashboardName);
 		if (!driver.isElementPresent(indicator)) {
 			throw new NoSuchElementException("Dashboard not exists. Name: " + dashboardName);
 		}
 		driver.click(indicator);
 	}
 
+	/**
+	 * Select an OOB dashboard by name
+	 *
+	 * @param driver
+	 * @param dashboardName
+	 * @throws Exception
+	 */
 	public static void selectOOB(WebDriver driver, String dashboardName) throws Exception
 	{
-		String indicator = DashBoardPageId.OOBDashboardLocator.replace("_name_", dashboardName);
+		driver.getLogger().info("[DashboardHomeUtil] call selectOOB dashboardName: " + dashboardName);
+		Validator.notEmptyString("dashboardName", dashboardName);
+		String indicator = DashBoardPageId.OOBDashboardNameLocator.replace("_name_", dashboardName);
 		if (!driver.isElementPresent(indicator)) {
 			throw new NoSuchElementException("Dashboard not exists. Name: " + dashboardName);
 		}
 		driver.click(indicator);
 	}
 
+	/**
+	 * sort dashboards
+	 * @param driver
+	 * @param option sort by - default, access_date_asc, access_date_dsc, name_asc, name_dsc, creation_date_asc, 
+	 * creation_date_dsc, last_modification_date_asc, last_modification_date_dsc, owner_asc, owner_dsc
+	 * @throws Exception
+	 */
 	public static void sortBy(WebDriver driver, String option) throws Exception
 	{
-		driver.getLogger().info("[DashboardHomeUtil] call listView");
+		driver.getLogger().info("[DashboardHomeUtil] call sortBy option: " + option);
+		Validator.notEmptyString("option", option);
 		driver.waitForElementPresent(DashBoardPageId.SortBySelectLocator);
 		driver.click(DashBoardPageId.SortBySelectLocator);
 
@@ -341,9 +396,53 @@ public class DashboardHomeUtil
 
 	}
 
+	/**
+	 * 
+	 * @param driver
+	 * @throws Exception
+	 */
+	public static void sortListViewByCreateBy(WebDriver driver) throws Exception
+	{
+		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableCreatedByHeader");
+		driver.waitForElementPresent(DashBoardPageId.ListViewTableCreatedByHeaderLocator);
+		driver.click(DashBoardPageId.ListViewTableCreatedByHeaderLocator);
+	}
+
+	/**
+	 * 
+	 * @param driver
+	 * @throws Exception
+	 */
+	public static void sortListViewByLastModified(WebDriver driver) throws Exception
+	{
+		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableLastModifiedHeader");
+		driver.waitForElementPresent(DashBoardPageId.ListViewTableLastModifiedHeaderLocator);
+		driver.click(DashBoardPageId.ListViewTableLastModifiedHeaderLocator);
+	}
+
+	/**
+	 * 
+	 * @param driver
+	 * @throws Exception
+	 */
+	public static void sortListViewByName(WebDriver driver) throws Exception
+	{
+		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableNameHeader");
+		driver.waitForElementPresent(DashBoardPageId.ListViewTableNameHeaderLocator);
+		driver.click(DashBoardPageId.ListViewTableNameHeaderLocator);
+	}
+
+	/**
+	 * wait the dashboard by name
+	 * @param driver
+	 * @param dashboardName
+	 * @throws Exception
+	 */
 	public static void waitForDashboardPresent(WebDriver driver, String dashboardName) throws Exception
 	{
-		String indicator = DashBoardPageId.DashboardLocator.replace("_name_", dashboardName);
+		Validator.notEmptyString("dashboardName", dashboardName);
+		driver.getLogger().info("[DashboardHomeUtil] call waitForDashboardPresent dashboardName: " + dashboardName);
+		String indicator = DashBoardPageId.DashboardNameLocator.replace("_name_", dashboardName);
 		driver.waitForElementPresent(indicator);
 	}
 

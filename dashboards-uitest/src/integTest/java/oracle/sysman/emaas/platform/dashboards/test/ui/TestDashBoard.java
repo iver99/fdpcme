@@ -297,7 +297,7 @@ public class TestDashBoard extends LoginAndLogout
 		if (el.isSelected()) {
 			el.click();
 		}
-		DashboardHomeUtil.delete(webd, dbName, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+		DashboardHomeUtil.deleteDashboard(webd, dbName, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 		webd.getLogger().info("the dashboard has been deleted");
 	}
 
@@ -359,7 +359,7 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("switch to grid view");
 		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.search(webd, "SetHome_testDashboard");
-		DashboardHomeUtil.delete(webd, "SetHome_testDashboard", DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+		DashboardHomeUtil.deleteDashboard(webd, "SetHome_testDashboard", DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 		webd.getLogger().info("the dashboard has been deleted");
 	}
 
@@ -376,7 +376,8 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardHomeUtil.search(webd, "Test_Dashboard_no_Widget_GridView modify");
 		//delte dashboard
 		webd.getLogger().info("start to delete dashboard in grid view");
-		DashboardHomeUtil.delete(webd, "Test_Dashboard_no_Widget_GridView modify", DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+		DashboardHomeUtil.deleteDashboard(webd, "Test_Dashboard_no_Widget_GridView modify",
+				DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboard_noWidget_ListView" })
@@ -392,7 +393,7 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardHomeUtil.search(webd, "Test_Dashboard_no_Widget_ListView");
 		//delte dashboard
 		webd.getLogger().info("start to delete dashboard in grid view");
-		DashboardHomeUtil.delete(webd, "Test_Dashboard_no_Widget_ListView", DashboardHomeUtil.DASHBOARDS_LIST_VIEW);
+		DashboardHomeUtil.deleteDashboard(webd, "Test_Dashboard_no_Widget_ListView", DashboardHomeUtil.DASHBOARDS_LIST_VIEW);
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView", "testModifyDashboard_widget", "testWidgetConfiguration" })
@@ -435,7 +436,7 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardHomeUtil.createDashboard(webd, dbName, dbDesc, true);
 
 		//set it as home
-		Assert.assertTrue(DashboardBuilderUtil.asHomeOption(webd));
+		Assert.assertTrue(DashboardBuilderUtil.toggleHome(webd));
 
 		//check home page
 		webd.getLogger().info("access to the home page");
@@ -444,7 +445,7 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardBuilderUtil.verifyDashboard(webd, dbName, dbDesc, true);
 
 		//set it not home
-		Assert.assertFalse(DashboardBuilderUtil.asHomeOption(webd));
+		Assert.assertFalse(DashboardBuilderUtil.toggleHome(webd));
 
 		//check home page
 		webd.getLogger().info("access to the home page");

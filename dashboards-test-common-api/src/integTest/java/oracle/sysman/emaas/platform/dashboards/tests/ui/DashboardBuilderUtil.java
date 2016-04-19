@@ -28,6 +28,8 @@ public class DashboardBuilderUtil
 		if (searchString == null) {
 			return;
 		}
+
+		driver.waitForElementPresent("css="+DashBoardPageId.RightDrawerCSS);
 		driver.getLogger().info("[DashboardHomeUtil] call addWidgetByRightDrawer with search string as " + searchString);
 
 		//show right drawer if it is hidden
@@ -40,7 +42,8 @@ public class DashboardBuilderUtil
 		driver.takeScreenShot();
 
 		WebElement searchButton = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchButtonCSS);
-		searchButton.click();
+        driver.waitForElementPresent("css="+DashBoardPageId.RightDrawerSearchButtonCSS);
+        searchButton.click();
 		//wait for ajax resolved
 		Thread.sleep(DashBoardPageId.Delaytime_short);
 		driver.takeScreenShot();
@@ -68,7 +71,7 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("[DashboardHomeUtil] finish adding widget from right drawer");
 	}
 
-	public static Boolean asHomeOption(WebDriver driver) throws Exception
+	public static Boolean toggleHome(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("DashboardBuilderUtil.asHomeOption started");
 
@@ -133,10 +136,6 @@ public class DashboardBuilderUtil
 
 		Validator.notEmptyString("duplicatename", name);
 
-		if (name == null || name.trim().length() == 0) {
-			driver.getLogger().info("DashboardBuilderUtil.duplicate name is null");
-			return;
-		}
 		driver.getLogger().info("DashboardBuilderUtil.duplicate started");
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
@@ -148,9 +147,8 @@ public class DashboardBuilderUtil
 		//add name and description
 		driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS).clear();
 		driver.click("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS);
-		Long timeOutInSecond = 10L;
 		By locatorOfDuplicateNameEl = By.id(DashBoardPageId.BuilderOptionsDuplicateNameCSS);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), timeOutInSecond);
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), DashBoardPageId.Delaytime_builder_short);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateNameEl));
 		driver.sendKeys("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS, name);
 		driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS).clear();
@@ -176,9 +174,6 @@ public class DashboardBuilderUtil
 		Validator.notNull("editname", name);
 		Validator.notEmptyString("editname", name);
 
-		if (name == null && descriptions==null) {
-			return;
-		}
 		driver.getLogger().info("DashboardBuilderUtil.edit started");
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
@@ -187,10 +182,9 @@ public class DashboardBuilderUtil
 		driver.takeScreenShot();
 		driver.waitForElementPresent("id=" + DashBoardPageId.BuilderOptionsEditNameCSS);
 
-		//wait for 10l
-		Long timeOutInSecond = 10L;
+		//wait for 900s
 		By locatorOfEditDesEl = By.id(DashBoardPageId.BuilderOptionsEditDescriptionCSS);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), timeOutInSecond);
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), DashBoardPageId.Delaytime_builder_short);
 
 		//add name and description
 		driver.getElement("id=" + DashBoardPageId.BuilderOptionsEditNameCSS).clear();
@@ -244,7 +238,8 @@ public class DashboardBuilderUtil
 
 	public static void hideRightDrawer(WebDriver driver) throws Exception
 	{
-		if (DashboardBuilderUtil.isRightDrawerVisible(driver) == true) {
+        driver.waitForElementPresent("css="+DashBoardPageId.RightDrawerCSS);
+        if (DashboardBuilderUtil.isRightDrawerVisible(driver) == true) {
 			driver.click("css=" + DashBoardPageId.RightDrawerToggleBtnCSS);
 			driver.getLogger().info("[DashboardBuilderUtil] triggered hideRightDrawer.");
 		}
@@ -345,7 +340,8 @@ public class DashboardBuilderUtil
 
 	public static void showRightDrawer(WebDriver driver) throws Exception
 	{
-		if (DashboardBuilderUtil.isRightDrawerVisible(driver) == false) {
+        driver.waitForElementPresent("css="+DashBoardPageId.RightDrawerCSS);
+        if (DashboardBuilderUtil.isRightDrawerVisible(driver) == false) {
 			driver.click("css=" + DashBoardPageId.RightDrawerToggleBtnCSS);
 			driver.getLogger().info("[DashboardBuilderUtil] triggered showRightDrawer.");
 		}
@@ -427,7 +423,11 @@ public class DashboardBuilderUtil
 	{
 		WebElement rightDrawerPanel = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RightDrawerPanelCSS));
 		boolean isDisplayed = rightDrawerPanel.getCssValue("display").equals("none") != true;
+		driver.getLogger().info("DashboardBuilderUtil.isRightDrawerVisible,the isDisplayed value is "+isDisplayed);
+
 		boolean isWidthValid = rightDrawerPanel.getCssValue("width").equals("0px") != true;
+		driver.getLogger().info("DashboardBuilderUtil.isRightDrawerVisible,the isWidthValid value is "+isWidthValid);
+
 		return isDisplayed && isWidthValid;
 	}
 

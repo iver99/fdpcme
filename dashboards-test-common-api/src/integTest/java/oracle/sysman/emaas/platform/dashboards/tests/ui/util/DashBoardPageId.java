@@ -11,6 +11,7 @@ public class DashBoardPageId
 	 * */
 	public static final int Delaytime_long = 8000;
 	public static final int Delaytime_short = 500;
+	public static final Long Delaytime_builder_short = 900L;
 	public static final String CreateDSButtonID = "cbtn";
 	public static final String CreateDSOfDialogID = "createDsb";
 	public static final String DashBoardNameBoxID = "dbsHNameIn";
@@ -107,8 +108,8 @@ public class DashBoardPageId
 	public static final String ListViewTableLastModifiedHeaderLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'oj-table-column-header-cell') and @abbr='Last Modified']";
 
 	//Dashboard
-	public static final String DashboardLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele') and (@aria-label = '_name_' or text() = '_name_')]";//[contains(@class, 'dbs-dsbnameele')]//text()[. = '_name_']";//*[contains(@class, 'icon-listview-16')]";
-	public static final String OOBDashboardLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbsystem') and (@aria-label = '_name_' or text() = '_name_')]";
+	public static final String DashboardNameLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele') and (@aria-label = '_name_' or text() = '_name_')]";//[contains(@class, 'dbs-dsbnameele')]//text()[. = '_name_']";//*[contains(@class, 'icon-listview-16')]";
+	public static final String OOBDashboardNameLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbsystem') and (@aria-label = '_name_' or text() = '_name_')]";
 
 	//Branding Bar links
 	//Home Link
@@ -212,19 +213,19 @@ public class DashBoardPageId
 	public static final String BuilderOptionsAutoRefreshOn5MinLocator = "//li[@data-singledb-option=\"On (Every 5 Minutes)\"]/a";
 	public static final String BuilderOptionsDeleteLocator = "id=emcpdf_dsbopts_delete";
 	public static final String BuilderOptionsDeleteMenuLocator = "//a[@id='emcpdf_dsbopts_delete']";
-	public static final String BuilderOptionsPrintLocatorCSS = "[data-singledb-option=\"Print\"] a";
-	public static final String BuilderOptionsEditLocatorCSS = "[data-singledb-option=\"Edit\"] a";
+	public static final String BuilderOptionsPrintLocatorCSS = "li[data-singledb-option=\"Print\"] a";
+	public static final String BuilderOptionsEditLocatorCSS = "li[data-singledb-option=\"Edit\"] a";
 	public static final String BuilderOptionsEditNameCSS = "dbsHNameIn";
 	public static final String BuilderOptionsEditDescriptionCSS = "dbsHDpIn";
 	public static final String BuilderOptionsEditSaveCSS = "createDsb-2";
-	public static final String BuilderOptionsShareLocatorCSS = "[data-singledb-option=\"Share\"] a";
-	public static final String BuilderOptionsUnShareLocatorCSS = "[data-singledb-option=\"Stop Sharing\"] a";
-	public static final String BuilderOptionsFavoriteLocatorCSS = "[data-singledb-option=\"Add Favorite\"] a";
-	public static final String BuilderOptionsRemoveFavoriteLocatorCSS = "[data-singledb-option=\"Remove Favorite\"] a";
-	public static final String BuilderOptionsSetHomeLocatorCSS = "[data-singledb-option=\"Set as Home\"] a";
-	public static final String BuilderOptionsRemoveHomeLocatorCSS = "[data-singledb-option=\"Remove as Home\"] a";
+	public static final String BuilderOptionsShareLocatorCSS = "li[data-singledb-option=\"Share\"] a";
+	public static final String BuilderOptionsUnShareLocatorCSS = "li[data-singledb-option=\"Stop Sharing\"] a";
+	public static final String BuilderOptionsFavoriteLocatorCSS = "li[data-singledb-option=\"Add Favorite\"] a";
+	public static final String BuilderOptionsRemoveFavoriteLocatorCSS = "li[data-singledb-option=\"Remove Favorite\"] a";
+	public static final String BuilderOptionsSetHomeLocatorCSS = "li[data-singledb-option=\"Set as Home\"] a";
+	public static final String BuilderOptionsRemoveHomeLocatorCSS = "li[data-singledb-option=\"Remove as Home\"] a";
 	public static final String BuilderOptionsSetHomeComfirmCSS = "id=btnConfirmSetAsHome";
-	public static final String BuilderOptionsDuplicateLocatorCSS = "[data-singledb-option=\"Duplicate\"] a";
+	public static final String BuilderOptionsDuplicateLocatorCSS = "li[data-singledb-option=\"Duplicate\"] a";
 	public static final String BuilderOptionsDuplicateNameCSS = "dupDsbNameIn";
 	public static final String BuilderOptionsDuplicateDescriptionCSS = "dupDsbDescIn";
 	public static final String BuilderOptionsDuplicateSaveCSS = "id=createDsb-1";
