@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
@@ -60,9 +61,7 @@ public class DashboardHomeUtil
 	public static void deleteDashboard(WebDriver driver, String dashboardName, String view) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call delete dashboardName : " + dashboardName);
-		if (dashboardName == null || dashboardName.isEmpty()) {
-			return;
-		}
+		Validator.notEmptyString("dashboardName", dashboardName);
 		DashboardHomeUtil.search(driver, dashboardName);
 		if (DashboardHomeUtil.DASHBOARDS_GRID_VIEW.equals(view)) {
 			DashboardHomeUtil.gridView(driver);
@@ -81,9 +80,7 @@ public class DashboardHomeUtil
 	public static void filterOptions(WebDriver driver, String filter) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call filterOptions filter: " + filter);
-		if (filter == null) {
-			return;
-		}
+		Validator.notEmptyString("filter", filter);
 		String[] fs = filter.split(",");
 		ArrayList<String> trimedFs = new ArrayList<String>();
 		for (String s : fs) {
@@ -117,6 +114,7 @@ public class DashboardHomeUtil
 			driver.waitForElementPresent(DashBoardPageId.FilterFavoriteLocator);
 			driver.click(DashBoardPageId.FilterFavoriteLocator);
 		}
+		throw new IllegalArgumentException("Unkown filter:  " + filter);
 	}
 
 	/**
@@ -128,9 +126,7 @@ public class DashboardHomeUtil
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call exploreData -> " + option);
 
-		if (option == null || option.isEmpty()) {
-			return;
-		}
+		Validator.notEmptyString("option", option);
 
 		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataBtnID));
 		WebElement menu = driver.getElement(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataMenu));
@@ -160,6 +156,7 @@ public class DashboardHomeUtil
 	public static boolean isDashboardExists(WebDriver driver, String dashboardName) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call isDashboardExists dashboardName: " + dashboardName);
+		Validator.notEmptyString("dashboardName", dashboardName);
 		String indicator = DashBoardPageId.DashboardNameLocator.replace("_name_", dashboardName);
 		if (!driver.isElementPresent(indicator)) {
 			return false;
@@ -170,7 +167,7 @@ public class DashboardHomeUtil
 	public static boolean isFilterOptionSelected(WebDriver driver, String filter) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call isFilterOptionSelected filter: " + filter);
-
+		Validator.notEmptyString("filter", filter);
 		if ("apm".equals(filter)) {
 			return driver.getElement(DashBoardPageId.FilterApmLocator).isSelected();
 		}
@@ -240,9 +237,7 @@ public class DashboardHomeUtil
 	public static void search(WebDriver driver, String searchString) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call search searchString: " + searchString);
-		if (searchString == null) {
-			return;
-		}
+		Validator.notEmptyString("searchString", searchString);
 		driver.getLogger().info("[DashboardHomeUtil] call search");
 		driver.waitForElementPresent(DashBoardPageId.SearchDashboardInputLocator);
 		driver.getElement(DashBoardPageId.SearchDashboardInputLocator).clear();
@@ -253,7 +248,7 @@ public class DashboardHomeUtil
 
 	/**
 	 * Select an any-type dashboard by name, including OOB dashboard & user created dashboard
-	 * 
+	 *
 	 * @param driver
 	 * @param dashboardName
 	 * @throws Exception
@@ -270,7 +265,7 @@ public class DashboardHomeUtil
 
 	/**
 	 * Select an OOB dashboard by name
-	 * 
+	 *
 	 * @param driver
 	 * @param dashboardName
 	 * @throws Exception
@@ -278,7 +273,7 @@ public class DashboardHomeUtil
 	public static void selectOOB(WebDriver driver, String dashboardName) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call selectOOB dashboardName: " + dashboardName);
-
+		Validator.notEmptyString("dashboardName", dashboardName);
 		String indicator = DashBoardPageId.OOBDashboardNameLocator.replace("_name_", dashboardName);
 		if (!driver.isElementPresent(indicator)) {
 			throw new NoSuchElementException("Dashboard not exists. Name: " + dashboardName);
@@ -289,6 +284,7 @@ public class DashboardHomeUtil
 	public static void sortBy(WebDriver driver, String option) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call sortBy option: " + option);
+		Validator.notEmptyString("option", option);
 		driver.waitForElementPresent(DashBoardPageId.SortBySelectLocator);
 		driver.click(DashBoardPageId.SortBySelectLocator);
 
@@ -365,6 +361,7 @@ public class DashboardHomeUtil
 
 	public static void waitForDashboardPresent(WebDriver driver, String dashboardName) throws Exception
 	{
+		Validator.notEmptyString("dashboardName", dashboardName);
 		driver.getLogger().info("[DashboardHomeUtil] call waitForDashboardPresent dashboardName: " + dashboardName);
 		String indicator = DashBoardPageId.DashboardNameLocator.replace("_name_", dashboardName);
 		driver.waitForElementPresent(indicator);
@@ -377,6 +374,7 @@ public class DashboardHomeUtil
 
 	private static void deleteDashboardInGrid(WebDriver driver, String dashboardName)
 	{
+		Validator.notEmptyString("dashboardName", dashboardName);
 		WebElement gridTable = driver.getElement(DashboardHomeUtil.convertID(DashBoardPageId.DashboardTableID));
 		List<WebElement> dashboardList = gridTable.findElements(By.tagName("div"));
 		for (WebElement dashboard : dashboardList) {
@@ -392,6 +390,7 @@ public class DashboardHomeUtil
 	private static void deleteDashboardInList(WebDriver driver, String dashboardName)
 	{
 		// find table
+		Validator.notEmptyString("dashboardName", dashboardName);
 		WebElement listTable = driver.getElement(DashboardHomeUtil.convertID(DashBoardPageId.DASHBOARD_LIST_TABLE));
 		// find the column index of both "Name" & button
 		WebElement headRow = listTable.findElement(By.tagName("thead")).findElement(By.tagName("tr"));
