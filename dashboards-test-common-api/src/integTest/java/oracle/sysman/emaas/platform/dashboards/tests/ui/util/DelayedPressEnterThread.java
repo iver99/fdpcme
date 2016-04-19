@@ -6,6 +6,8 @@ import java.awt.event.KeyEvent;
 
 /**
  * Created by shjie on 2016/4/8.
+ * It is used in Builder page's print function to let the print window close
+ * others can also use this to solve the similar problem
  */
 public class DelayedPressEnterThread implements Runnable
 {
@@ -18,6 +20,7 @@ public class DelayedPressEnterThread implements Runnable
 
 	public DelayedPressEnterThread(String threadName)
 	{
+//		delay=5000 means delay 5s
 		delay = 5000;
 		init(threadName);
 	}
