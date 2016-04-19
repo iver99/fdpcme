@@ -11,6 +11,13 @@ import org.openqa.selenium.WebElement;
 
 public class WelcomeUtil
 {
+	/**
+	 * Visit Log/Analyze/Search from Data Explorers dropdown in welcome
+	 * 
+	 * @param driver
+	 * @param selection
+	 * 				log | analyze | search
+	 */
 	public static void dataExplorers(WebDriver driver, String selection) throws Exception
 	{
 		String eleXpath = null;
@@ -122,6 +129,14 @@ public class WelcomeUtil
 		return serviceWrapperId;
 	}
 
+	/**
+	 * Check if specific item in Learn More is existed in welcome.
+	 * 
+	 * @param driver
+	 * @param itemName
+	 * 		getStarted | videos | serviceOfferings
+	 * @return
+	 */
 	public static boolean isLearnMoreItemExisted(WebDriver driver, String itemName)
 	{
 		driver.getLogger().info("Start to check if learn more item: " + itemName + " is existed in welcome page...");
@@ -142,6 +157,15 @@ public class WelcomeUtil
 		return isExisted;
 	}
 
+	/**
+	 * Check if specific service is existed in welcome
+	 * 
+	 * @param driver
+	 * @param serviceName
+	 * 			APM | LA | ITA | dashboards | dataExplorers 
+	 * @return
+	 * @throws Exception
+	 */
 	public static boolean isServiceExistedInWelcome(WebDriver driver, String serviceName) throws Exception
 	{
 		driver.getLogger().info("Start to check if service: " + serviceName + " is existed in welcome page...");
@@ -167,6 +191,12 @@ public class WelcomeUtil
 		return isExisted;
 	}
 
+	/**
+	 * Visit "How to get started" in welcome
+	 * 
+	 * @param driver
+	 * @throws Exception
+	 */
 	public static void learnMoreHow(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("Visiting 'Learn More-How to get started' from Welcome Page...");
@@ -175,6 +205,12 @@ public class WelcomeUtil
 		driver.takeScreenShot();
 	}
 
+	/**
+	 * Visit "Service Offerings" in welcome
+	 * 
+	 * @param driver
+	 * @throws Exception
+	 */
 	public static void learnMoreServiceOffering(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("Visiting 'Learn More-Service Offerings' from Welcome Page...");
@@ -183,6 +219,12 @@ public class WelcomeUtil
 		driver.takeScreenShot();
 	}
 
+	/**
+	 * Visit "Videos" in welcome
+	 * 
+	 * @param driver
+	 * @throws Exception
+	 */
 	public static void learnMoreVideo(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("Visiting 'Learn More-Videos' from Welcome Page...");
@@ -191,6 +233,12 @@ public class WelcomeUtil
 		driver.takeScreenShot();
 	}
 
+	/**
+	 * Visit "Application Performance Monitoring" in welcome
+	 * 
+	 * @param driver
+	 * @throws Exception
+	 */
 	public static void visitAPM(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("Visit APM from Welcome Page...");
@@ -199,6 +247,12 @@ public class WelcomeUtil
 		driver.takeScreenShot();
 	}
 
+	/**
+	 * Visit "Dashboards" in welcome
+	 * 
+	 * @param driver
+	 * @throws Exception
+	 */
 	public static void visitDashboards(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("Visit Dashboards from Welcome Page...");
@@ -207,6 +261,15 @@ public class WelcomeUtil
 		driver.takeScreenShot();
 	}
 
+	/**
+	 * Visit specific item in IT Analytics in welcome
+	 * 
+	 * @param driver
+	 * @param selection
+	 * 		default | performanceAnayticsDatabase | performanceAnalyticsMiddleware | 
+	 * 		resourceAnalyticsDatabase | resourceAnalyticsMiddleware | dataExplorerAnalyze | dataExplorer
+	 * @throws Exception
+	 */
 	public static void visitITA(WebDriver driver, String selection) throws Exception
 	{
 		driver.getLogger().info("Visiting ITA-" + selection + " from Welcome Page...");
@@ -256,6 +319,12 @@ public class WelcomeUtil
 		}
 	}
 
+	/**
+	 * Visit "Log Analytics" in welcome
+	 * 
+	 * @param driver
+	 * @throws Exception
+	 */
 	public static void visitLA(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("Visiting LA from Welcome Page...");
