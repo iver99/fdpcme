@@ -18,7 +18,7 @@ import org.testng.annotations.Test;
 /**
  * @author wenjzhu
  */
-public class MyDashbaordTest extends LocalEmaasWebDriverLoader
+public class MyDashboardTest extends LocalEmaasWebDriverLoader
 {
 
 	@Test
