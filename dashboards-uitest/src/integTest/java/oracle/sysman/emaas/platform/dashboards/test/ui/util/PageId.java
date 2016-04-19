@@ -222,14 +222,4 @@ public class PageId
 	public static final String option = "dashboardOptsBtn";
 	public static final String dashboardshare = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
 	public static final String stopshare_btn = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
-
-	//Branding bar link text
-	public static final String BrandingBarLinkText_CS_ITA = "IT Analytics";
-	public static final String BrandingBarLinkText_CS_APM = "APM";
-	public static final String BrandingBarLinkText_CS_LA = "Log Analytics";
-	public static final String BrandingBarLinkText_VA_ITA = "Analyze";
-	public static final String BrandingBarLinkText_VA_TA = "Search";
-	public static final String BrandingBarLinkText_VA_LA = "Log";
-	public static final String BrandingBarLinkText_ADMIN_AGENT = "Agents";
-	public static final String BrandingBarLinkText_ADMIN_ITA = "IT Analytics Administration";
 }

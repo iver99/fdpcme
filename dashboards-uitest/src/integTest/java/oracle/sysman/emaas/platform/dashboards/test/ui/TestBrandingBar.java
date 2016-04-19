@@ -2,7 +2,6 @@ package oracle.sysman.emaas.platform.dashboards.test.ui;
 
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
-import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 
 import org.testng.Assert;
@@ -30,7 +29,7 @@ public class TestBrandingBar extends LoginAndLogout
 		webd.getLogger().info("start to test in testAdminLink");
 
 		//IT Analytics Administration link
-		BrandingBarUtil.visitApplicationAdministration(webd, PageId.BrandingBarLinkText_ADMIN_ITA);
+		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ITA);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcitas/warehouseadmin/html/admin-sources.html");
@@ -43,7 +42,7 @@ public class TestBrandingBar extends LoginAndLogout
 		webd.getLogger().info("start to test in testAgentsLink");
 
 		//Agents link
-		BrandingBarUtil.visitApplicationAdministration(webd, PageId.BrandingBarLinkText_ADMIN_AGENT);
+		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "tenantmgmt/services/customersoftware");
@@ -56,7 +55,7 @@ public class TestBrandingBar extends LoginAndLogout
 		webd.getLogger().info("start to test in testAnalyzeLink");
 
 		//Analyze link
-		BrandingBarUtil.visitApplicationVisualAnalyzer(webd, PageId.BrandingBarLinkText_VA_ITA);
+		BrandingBarUtil.visitApplicationVisualAnalyzer(webd, BrandingBarUtil.NAV_LINK_TEXT_VA_ITA);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9),
@@ -70,7 +69,7 @@ public class TestBrandingBar extends LoginAndLogout
 		webd.getLogger().info("start to test in testAPMLink");
 
 		//APM link
-		BrandingBarUtil.visitApplicationCloudService(webd, PageId.BrandingBarLinkText_CS_APM);
+		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_APM);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "apmUi/index.html");
@@ -109,7 +108,7 @@ public class TestBrandingBar extends LoginAndLogout
 		webd.getLogger().info("start to test in testITALink");
 
 		//IT Analytics link,check checkbox
-		BrandingBarUtil.visitApplicationCloudService(webd, PageId.BrandingBarLinkText_CS_ITA);
+		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_ITA);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcpdfui/home.html?filter=ita");
@@ -142,7 +141,7 @@ public class TestBrandingBar extends LoginAndLogout
 		webd.getLogger().info("start to test in testLALink");
 
 		//Log Analytics link
-		BrandingBarUtil.visitApplicationCloudService(webd, PageId.BrandingBarLinkText_CS_LA);
+		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_LA);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emlacore/html/log-analytics-search.html");
@@ -155,7 +154,7 @@ public class TestBrandingBar extends LoginAndLogout
 		webd.getLogger().info("start to test in testLogLink");
 
 		//Log link
-		BrandingBarUtil.visitApplicationVisualAnalyzer(webd, PageId.BrandingBarLinkText_VA_LA);
+		BrandingBarUtil.visitApplicationVisualAnalyzer(webd, BrandingBarUtil.NAV_LINK_TEXT_VA_LA);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emlacore/html/log-analytics-search.html");
@@ -168,7 +167,7 @@ public class TestBrandingBar extends LoginAndLogout
 		webd.getLogger().info("start to test in testSearchLink");
 
 		//Target link
-		BrandingBarUtil.visitApplicationVisualAnalyzer(webd, PageId.BrandingBarLinkText_VA_TA);
+		BrandingBarUtil.visitApplicationVisualAnalyzer(webd, BrandingBarUtil.NAV_LINK_TEXT_VA_TA);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		String sub_str = url.substring(url.indexOf("emsaasui") + 9);
