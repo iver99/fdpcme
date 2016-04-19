@@ -99,17 +99,17 @@ public class DashBoardUtils
 	}
 
 	//Sharing and stopping dashbaord
-	public static void sharedashboard() throws Exception
-	{
-		driver.click(PageId.option);
-		driver.click(PageId.dashboardshare);
-	}
-
-	public static void sharestopping() throws Exception
-	{
-		driver.click(PageId.option);
-		driver.click(PageId.stopshare_btn);
-	}
+	//	public static void sharedashboard() throws Exception
+	//	{
+	//		driver.click(PageId.option);
+	//		driver.click(PageId.dashboardshare);
+	//	}
+	//
+	//	public static void sharestopping() throws Exception
+	//	{
+	//		driver.click(PageId.option);
+	//		driver.click(PageId.stopshare_btn);
+	//	}
 
 	public static void waitForMilliSeconds(long millisSec) throws Exception
 	{
