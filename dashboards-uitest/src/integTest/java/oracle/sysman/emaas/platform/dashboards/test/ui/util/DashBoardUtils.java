@@ -536,7 +536,7 @@ public class DashBoardUtils {
 	public static boolean doesWebElementExistByXPath(String xpath) throws Exception
 	{
 		                             
-		        WebElement el=driver.getWebDriver().findElement(By.xpath(xpath));
+		       WebElement el=driver.getWebDriver().findElement(By.xpath(xpath));
 			
 		       if(el.isDisplayed()){
 		    	   driver.getLogger().info("xpath:can get element");
@@ -589,15 +589,22 @@ public class DashBoardUtils {
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(locatorOfKeyEl));//ensure all dashboards are cleared
 		wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
 		wait.until(ExpectedConditions.elementToBeClickable(By.id(DashBoardPageId.SearchDSBoxID)));
+		wdriver.click(DashBoardPageId.SearchDSBoxID); //give focus to search box
 		wdriver.sendKeys(DashBoardPageId.SearchDSBoxID, board);
+		wdriver.click("css=.oj-button.oj-component[title='Search']");
+		
 		Assert.assertEquals(board, wdriver.getElement(DashBoardPageId.SearchDSBoxID).getAttribute("value"));
-		Assert.assertTrue(wdriver.getText("css=div.oj-panel.dbs-summary-container").contains(board));		
-
+		
+		
+		
+		wait.until(ExpectedConditions.textToBePresentInElement(By.cssSelector(".dbs-summary-header-title"),board));
+		Assert.assertTrue(wdriver.getText("css=div.oj-panel.dbs-summary-container").contains(board));	
 		wdriver.click(DashBoardPageId.SearchDSBoxID); //give focus to search box	
 		wdriver.getLogger().info("searching dashboard: "+board +" done!");
 		wdriver.takeScreenShot(); 
 	}
-public static void searchDashBoardList(WebDriver wdriver, String board) throws Exception
+
+	public static void searchDashBoardList(WebDriver wdriver, String board) throws Exception
         {
 
                 wdriver.takeScreenShot();
