@@ -28,6 +28,8 @@ public class DashboardBuilderUtil
 		if (searchString == null) {
 			return;
 		}
+
+		driver.waitForElementPresent("css="+DashBoardPageId.RightDrawerCSS);
 		driver.getLogger().info("[DashboardHomeUtil] call addWidgetByRightDrawer with search string as " + searchString);
 
 		//show right drawer if it is hidden
@@ -40,7 +42,8 @@ public class DashboardBuilderUtil
 		driver.takeScreenShot();
 
 		WebElement searchButton = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchButtonCSS);
-		searchButton.click();
+        driver.waitForElementPresent("css="+DashBoardPageId.RightDrawerSearchButtonCSS);
+        searchButton.click();
 		//wait for ajax resolved
 		Thread.sleep(DashBoardPageId.Delaytime_short);
 		driver.takeScreenShot();
@@ -244,7 +247,8 @@ public class DashboardBuilderUtil
 
 	public static void hideRightDrawer(WebDriver driver) throws Exception
 	{
-		if (DashboardBuilderUtil.isRightDrawerVisible(driver) == true) {
+        driver.waitForElementPresent("css="+DashBoardPageId.RightDrawerCSS);
+        if (DashboardBuilderUtil.isRightDrawerVisible(driver) == true) {
 			driver.click("css=" + DashBoardPageId.RightDrawerToggleBtnCSS);
 			driver.getLogger().info("[DashboardBuilderUtil] triggered hideRightDrawer.");
 		}
@@ -345,7 +349,8 @@ public class DashboardBuilderUtil
 
 	public static void showRightDrawer(WebDriver driver) throws Exception
 	{
-		if (DashboardBuilderUtil.isRightDrawerVisible(driver) == false) {
+        driver.waitForElementPresent("css="+DashBoardPageId.RightDrawerCSS);
+        if (DashboardBuilderUtil.isRightDrawerVisible(driver) == false) {
 			driver.click("css=" + DashBoardPageId.RightDrawerToggleBtnCSS);
 			driver.getLogger().info("[DashboardBuilderUtil] triggered showRightDrawer.");
 		}
@@ -427,7 +432,11 @@ public class DashboardBuilderUtil
 	{
 		WebElement rightDrawerPanel = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RightDrawerPanelCSS));
 		boolean isDisplayed = rightDrawerPanel.getCssValue("display").equals("none") != true;
+		driver.getLogger().info("DashboardBuilderUtil.isRightDrawerVisible,the isDisplayed value is "+isDisplayed);
+
 		boolean isWidthValid = rightDrawerPanel.getCssValue("width").equals("0px") != true;
+		driver.getLogger().info("DashboardBuilderUtil.isRightDrawerVisible,the isWidthValid value is "+isWidthValid);
+
 		return isDisplayed && isWidthValid;
 	}
 
