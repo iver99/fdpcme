@@ -30,12 +30,22 @@ import java.util.Calendar;
 public class TestDateTimePicker extends CommonUIUtils
 {
 	private static String verifyDate(String time) throws ParseException {
-		SimpleDateFormat format = new java.text.SimpleDateFormat("MMM d, yyyy hh:mm a");
-		SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
-		SimpleDateFormat format2 = new SimpleDateFormat("MMM d, yyyy");
+		
 		if(time==null ||"".equals(time)){
 			return "";
 		}
+		
+		Calendar current = Calendar.getInstance();
+		return compareTime(current,time);
+
+		
+	}
+	
+	private static String compareTime(Calendar current,String time){
+		SimpleDateFormat format = new java.text.SimpleDateFormat("MMM d, yyyy hh:mm a");
+		SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat format2 = new SimpleDateFormat("MMM d, yyyy");
+		
 		Date date = null;
 		try {
 			date = format.parse(time);
@@ -43,7 +53,6 @@ public class TestDateTimePicker extends CommonUIUtils
 			e.printStackTrace();
 		}
 
-		Calendar current = Calendar.getInstance();
 		Calendar today = Calendar.getInstance();    //today
 		today.set(Calendar.YEAR, current.get(Calendar.YEAR));
 		today.set(Calendar.MONTH, current.get(Calendar.MONTH));
@@ -61,96 +70,44 @@ public class TestDateTimePicker extends CommonUIUtils
 		yesterday.set( Calendar.HOUR_OF_DAY, 0);
 		yesterday.set( Calendar.MINUTE, 0);
 		yesterday.set(Calendar.SECOND, 0);
-
+		
 		current.setTime(date);
 
 		if(current.after(today)){
+		
 			return "Today";
 		}
 		else if(current.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
-                current.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)&&current.get(Calendar.SECOND)==today.get(Calendar.SECOND)&&current.get(Calendar.MINUTE)==today.get(Calendar.MINUTE)&&current.get(Calendar.HOUR_OF_DAY)==today.get(Calendar.HOUR_OF_DAY)){
+                current.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)&&current.get(Calendar.SECOND)==today.get(Calendar.SECOND)&&current.get(Calendar.MINUTE)==today.get(Calendar.MINUTE)&&current.get(Calendar.HOUR_OF_DAY)==today.get(Calendar.HOUR_OF_DAY)){ /*add fix for EMCPDF-1485. The fix is adding more "if" to resolve different time settings. In common API, there is a new implementation with some dev code fix.*/
+		
 			return "Today";
 		}
 		else if(current.before(today) && current.after(yesterday)){
+		
 			return "Yesterday";
 		}
 		else if(current.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR) &&
                 current.get(Calendar.DAY_OF_YEAR) == yesterday.get(Calendar.DAY_OF_YEAR)&&current.get(Calendar.SECOND)==yesterday.get(Calendar.SECOND)&&current.get(Calendar.MINUTE)==yesterday.get(Calendar.MINUTE)&&current.get(Calendar.HOUR_OF_DAY)==yesterday.get(Calendar.HOUR_OF_DAY)){
+			
 			return "Yesterday";}
 		else{
 			//return format2.format(format1.parse(time.substring(0, 10)));
 			String[] sTmpDay = time.split(",");
 			//String sTemp = sTmpDay[0];
 			if (sTmpDay[0].length() == 5){
+			
 				return time.substring(0,11);
 			}
 			else
-			{
+			{     
 				return time.substring(0,12);
 			}
 			
 			//int index = time.indexOf("-")+1;
 			//return time.substring(index, time.length());
-		}
+		}			
+
 	}
-	
-	private static String verifyDate_custom(String time) throws ParseException {
-		SimpleDateFormat format = new java.text.SimpleDateFormat("MM/dd/yyyy hh:mm a");
-		SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
-		SimpleDateFormat format2 = new SimpleDateFormat("MMM d, yyyy");
-		if(time==null ||"".equals(time)){
-			return "";
-		}
-		Date date = null;
-		try {
-			date = format.parse(time);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-
-		Calendar current = Calendar.getInstance();
-		Calendar today = Calendar.getInstance();    //today
-		today.set(Calendar.YEAR, current.get(Calendar.YEAR));
-		today.set(Calendar.MONTH, current.get(Calendar.MONTH));
-		today.set(Calendar.DAY_OF_MONTH,current.get(Calendar.DAY_OF_MONTH));
-
-		today.set( Calendar.HOUR_OF_DAY, 0);
-		today.set( Calendar.MINUTE, 0);
-		today.set(Calendar.SECOND, 0);
-
-		Calendar yesterday = Calendar.getInstance();    //yesterday
-
-		yesterday.set(Calendar.YEAR, current.get(Calendar.YEAR));
-		yesterday.set(Calendar.MONTH, current.get(Calendar.MONTH));
-		yesterday.set(Calendar.DAY_OF_MONTH,current.get(Calendar.DAY_OF_MONTH)-1);
-		yesterday.set( Calendar.HOUR_OF_DAY, 0);
-		yesterday.set( Calendar.MINUTE, 0);
-		yesterday.set(Calendar.SECOND, 0);
-
-		current.setTime(date);
-
-		if(current.after(today)){
-			return "Today";
-		}
-		else if(current.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
-                current.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)&&current.get(Calendar.SECOND)==today.get(Calendar.SECOND)&&current.get(Calendar.MINUTE)==today.get(Calendar.MINUTE)&&current.get(Calendar.HOUR_OF_DAY)==today.get(Calendar.HOUR_OF_DAY)){
-			return "Today";
-		}
-		else if(current.before(today) && current.after(yesterday)){
-			return "Yesterday";
-		}
-		else if(current.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR) &&
-                current.get(Calendar.DAY_OF_YEAR) == yesterday.get(Calendar.DAY_OF_YEAR)&&current.get(Calendar.SECOND)==yesterday.get(Calendar.SECOND)&&current.get(Calendar.MINUTE)==yesterday.get(Calendar.MINUTE)&&current.get(Calendar.HOUR_OF_DAY)==yesterday.get(Calendar.HOUR_OF_DAY)){
-			return "Yesterday";
-		}
-		else{
-			return format2.format(format1.parse(time.substring(0, 10)));
-			//return time.substring(0,11);
-			//int index = time.indexOf("-")+1;
-			//return time.substring(index, time.length());
-		}
-	}
-
 
 	public static void selectPeriod(WebDriver driver, String uicontrol, String period) throws Exception
 	{
@@ -558,7 +515,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		webdriver.clear(UIControls.sStartDateInput);
 		webdriver.sendKeys(UIControls.sStartDateInput, "10/11/2015");
 		webdriver.clear(UIControls.sStartTimeInput);
-		webdriver.sendKeys(UIControls.sStartTimeInput, "11:59 PM");
+		webdriver.sendKeys(UIControls.sStartTimeInput, "11:59 PM");//this is for testing the intermittent diffs and it also covered previous case.
 		webdriver.clear(UIControls.sEndDateInput);
 		webdriver.sendKeys(UIControls.sEndDateInput, "10/12/2015");
 		webdriver.clear(UIControls.sEndTimeInput);
@@ -581,10 +538,15 @@ public class TestDateTimePicker extends CommonUIUtils
 		webdriver.getLogger().info("convert string to datetime 'MM/dd/yyyy hh:mm a'");
 		dTmpStart = fmt1.parse(sStartDate+" "+sStartTime);
 		dTmpEnd = fmt1.parse(sEndDate+" "+sEndTime);
+		
 
 		//verify if the date is today or yesterday
-		String sTmpStartDay=TestDateTimePicker.verifyDate_custom(sStartDate+" "+sStartTime);
-		String sTmpEndDay=TestDateTimePicker.verifyDate_custom(sEndDate+" "+sEndTime);
+		//String sTmpStartDay=TestDateTimePicker.verifyDate(sStartDate+" "+sStartTime);
+		//String sTmpEndDay=TestDateTimePicker.verifyDate(sEndDate+" "+sEndTime);
+
+		String sTmpStartDay=TestDateTimePicker.verifyDate(fmt2.format(dTmpStart));
+		String sTmpEndDay=TestDateTimePicker.verifyDate(fmt2.format(dTmpEnd));
+		
 		webdriver.getLogger().info(sTmpStartDay+" " +sTmpEndDay);
 
 
