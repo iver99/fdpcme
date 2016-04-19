@@ -29,11 +29,6 @@ public class WidgetUtil
 		Validator.equalOrLargerThan0("index", index);
 
 		WebElement widgetEl = WidgetUtil.getWidgetByName(driver, widgetName, index);
-		if (null == widgetEl) {
-			driver.getLogger().info("Fail to find the widget titled with " + widgetName);
-			driver.takeScreenShot();
-			throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
-		}
 
 		WidgetUtil.focusOnWidgetHeader(driver, widgetEl);
 		driver.takeScreenShot();
@@ -52,11 +47,6 @@ public class WidgetUtil
 		Validator.fromValidValues("resizeOptions",resizeOptions,WidgetUtil.TILE_NARROWER,WidgetUtil.TILE_WIDER,WidgetUtil.TILE_SHORTER,WidgetUtil.TILE_TALLER);
 
 		WebElement widgetEl = WidgetUtil.getWidgetByName(driver, widgetName, index);
-		if (null == widgetEl) {
-			driver.getLogger().info("Fail to find the widget titled with " + widgetName);
-			driver.takeScreenShot();
-			throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
-		}
 
 		WidgetUtil.focusOnWidgetHeader(driver, widgetEl);
 		driver.takeScreenShot();
@@ -174,9 +164,11 @@ public class WidgetUtil
 
 	private static void focusOnWidgetHeader(WebDriver driver, WebElement widgetElement)
 	{
-		if (null == widgetElement) {
-			return;
-		}
+        if (null == widgetElement) {
+            driver.getLogger().info("Fail to find the widget element");
+            driver.takeScreenShot();
+            throw new NoSuchElementException("Widget config menu is not found");
+        }
 
 		WebElement widgetHeader = widgetElement.findElement(By.cssSelector(DashBoardPageId.TileTitleCSS));
 		Actions actions = new Actions(driver.getWebDriver());
@@ -211,8 +203,12 @@ public class WidgetUtil
 		int counter = 0;
 		for (WebElement widgetElement : widgets) {
 			WebElement widgetTitle = widgetElement.findElement(By.cssSelector(DashBoardPageId.TileTitleCSS));
-			if (widgetTitle != null && widgetTitle.getAttribute("data-tile-title").trim().equals(widgetName)) {
-				if (counter == index) {
+            Validator.notNull("widgetTitle",widgetTitle);
+            String widgetAttribute = widgetTitle.getAttribute("data-tile-title");
+            Validator.notNull("widgetTitleAttribute",widgetAttribute);
+
+            if (widgetAttribute.trim().equals(widgetName)) {
+                if (counter == index) {
 					widget = widgetElement;
 					break;
 				}
