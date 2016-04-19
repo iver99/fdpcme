@@ -69,6 +69,8 @@ public class DashboardBuilderUtil
 		driver.takeScreenShot();
 
 		driver.getLogger().info("[DashboardHomeUtil] finish adding widget from right drawer");
+
+        hideRightDrawer(driver);// hide drawer;
 	}
 
 	public static Boolean toggleHome(WebDriver driver) throws Exception
@@ -236,7 +238,7 @@ public class DashboardBuilderUtil
 		}
 	}
 
-	public static void hideRightDrawer(WebDriver driver) throws Exception
+	private static void hideRightDrawer(WebDriver driver) throws Exception
 	{
         driver.waitForElementPresent("css="+DashBoardPageId.RightDrawerCSS);
         if (DashboardBuilderUtil.isRightDrawerVisible(driver) == true) {
@@ -338,7 +340,7 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil.save compelted");
 	}
 
-	public static void showRightDrawer(WebDriver driver) throws Exception
+	private static void showRightDrawer(WebDriver driver) throws Exception
 	{
         driver.waitForElementPresent("css="+DashBoardPageId.RightDrawerCSS);
         if (DashboardBuilderUtil.isRightDrawerVisible(driver) == false) {
