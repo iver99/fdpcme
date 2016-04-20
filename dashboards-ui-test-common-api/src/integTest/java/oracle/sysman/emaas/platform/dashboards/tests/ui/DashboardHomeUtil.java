@@ -35,10 +35,10 @@ public class DashboardHomeUtil
 	 * @param driver
 	 * @param name dashboard name
 	 * @param descriptions dashboard description(optional)
-	 * @param selectorRefreshcontrol optional
+	 * @param showTimeRangeFilter optional
 	 * @throws Exception
 	 */
-	public static void createDashboard(WebDriver driver, String name, String descriptions, Boolean selectorRefreshcontrol)
+	public static void createDashboard(WebDriver driver, String name, String descriptions, Boolean showTimeRangeFilter)
 			throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call createDashboard : " + name);
@@ -50,7 +50,7 @@ public class DashboardHomeUtil
 		if (descriptions != null && !descriptions.isEmpty()) {
 			driver.sendKeys(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardDescBoxID), descriptions);
 		}
-		if (selectorRefreshcontrol == null || selectorRefreshcontrol) {
+		if (showTimeRangeFilter == null || showTimeRangeFilter) {
 			driver.check(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardTimeRangeChecker));
 		}
 		else {
