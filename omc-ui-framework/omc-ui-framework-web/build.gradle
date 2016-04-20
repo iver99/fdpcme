@@ -58,7 +58,7 @@ dependencies {
         compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
 	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
         compile(group: 'com.oracle.emaas.emctas.tgtsel', name:'emcs-targetselector', version:tselVersion, ext:'zip'){ transitive = false }
-	compile(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-test-common-api', version: '1.6.0+'){ transitive = false }
+	compile(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '1.6.0+'){ transitive = false }
 	compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')	
 }
 

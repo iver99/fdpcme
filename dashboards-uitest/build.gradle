@@ -29,7 +29,7 @@ publishing.publications {
 }
 
 dependencies {
-    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-test-common-api', version: '1.6.0+') { transitive = false }
+    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '1.6.0+') { transitive = false }
     testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 }
 
