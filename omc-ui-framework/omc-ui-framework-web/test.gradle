@@ -11,5 +11,5 @@ task integTestJar (type:Jar) {
 }
 
 dependencies {
-    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-test-common-api', version: '1.6.0+') { transitive = false }
+    testConfig project(':dashboards-ui-test-common-api') { transitive = false }
 }
