@@ -467,7 +467,7 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("search the dashboard");
 		DashboardHomeUtil.search(webd, "Test_Dashboard_no_Widget_GridView modify");
 		webd.getLogger().info("verify the dashboard is existed");
-		DashboardHomeUtil.isDashboardExists(webd, "Test_Dashboard_no_Widget_GridView modify");
+		DashboardHomeUtil.isDashboardExisted(webd, "Test_Dashboard_no_Widget_GridView modify");
 		webd.getLogger().info("open the dashboard");
 		DashboardHomeUtil.selectDashboard(webd, "Test_Dashboard_no_Widget_GridView modify");
 
@@ -487,7 +487,7 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("search the dashboard");
 		DashboardHomeUtil.search(webd, "Test_Dashboard_no_Widget_GridView modify");
 		webd.getLogger().info("verify the dashboard is existed");
-		DashboardHomeUtil.isDashboardExists(webd, "Test_Dashboard_no_Widget_GridView modify");
+		DashboardHomeUtil.isDashboardExisted(webd, "Test_Dashboard_no_Widget_GridView modify");
 		webd.getLogger().info("open the dashboard");
 		DashboardHomeUtil.selectDashboard(webd, "Test_Dashboard_no_Widget_GridView modify");
 

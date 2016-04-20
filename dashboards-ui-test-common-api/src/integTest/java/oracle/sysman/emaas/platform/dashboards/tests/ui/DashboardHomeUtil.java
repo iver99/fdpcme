@@ -189,7 +189,7 @@ public class DashboardHomeUtil
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean isDashboardExists(WebDriver driver, String dashboardName) throws Exception
+	public static boolean isDashboardExisted(WebDriver driver, String dashboardName) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call isDashboardExists dashboardName: " + dashboardName);
 		Validator.notEmptyString("dashboardName", dashboardName);

@@ -86,7 +86,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExists(webd, "ADashboard Test");
+		DashboardHomeUtil.isDashboardExisted(webd, "ADashboard Test");
 		String firstDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(0)
 				.getAttribute("aria-label");
 		Assert.assertEquals(firstDbName, "ADashboard Test");
@@ -104,7 +104,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExists(webd, "ADashboard Test");
+		DashboardHomeUtil.isDashboardExisted(webd, "ADashboard Test");
 		int DashboardCount = Integer.parseInt(webd.getAttribute(PageId.DashboardDisplayPanelID + "@childElementCount"));
 		String lastDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(DashboardCount - 1)
 				.getAttribute("aria-label");
@@ -123,7 +123,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExists(webd, "Enterprise Overview");
+		DashboardHomeUtil.isDashboardExisted(webd, "Enterprise Overview");
 		String firstDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(0)
 				.getAttribute("aria-label");
 		Assert.assertEquals(firstDbName, "Enterprise Overview");
@@ -142,7 +142,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExists(webd, "Enterprise Overview");
+		DashboardHomeUtil.isDashboardExisted(webd, "Enterprise Overview");
 		int DashboardCount = Integer.parseInt(webd.getAttribute(PageId.DashboardDisplayPanelID + "@childElementCount"));
 		String lastDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(DashboardCount - 1)
 				.getAttribute("aria-label");
@@ -174,7 +174,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExists(webd, "ADashboard Test");
+		DashboardHomeUtil.isDashboardExisted(webd, "ADashboard Test");
 		int DashboardCount = Integer.parseInt(webd.getAttribute(PageId.DashboardDisplayPanelID + "@childElementCount"));
 		String lastDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(DashboardCount - 1)
 				.getAttribute("aria-label");
@@ -206,7 +206,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExists(webd, "ADashboard Test");
+		DashboardHomeUtil.isDashboardExisted(webd, "ADashboard Test");
 		String firstDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(0)
 				.getAttribute("aria-label");
 		Assert.assertEquals(firstDbName, "ADashboard Test");
@@ -240,7 +240,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExists(webd, "ADashboard Test");
+		DashboardHomeUtil.isDashboardExisted(webd, "ADashboard Test");
 		int DashboardCount = Integer.parseInt(webd.getAttribute(PageId.DashboardDisplayPanelID + "@childElementCount"));
 		String lastDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(DashboardCount - 1)
 				.getAttribute("aria-label");
@@ -276,7 +276,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExists(webd, "ADashboard Test");
+		DashboardHomeUtil.isDashboardExisted(webd, "ADashboard Test");
 		String firstDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(0)
 				.getAttribute("aria-label");
 		Assert.assertEquals(firstDbName, "ADashboard Test");
@@ -295,7 +295,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExists(webd, "ADashboard Test");
+		DashboardHomeUtil.isDashboardExisted(webd, "ADashboard Test");
 		String firstDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(0)
 				.getAttribute("aria-label");
 		Assert.assertEquals(firstDbName, "ADashboard Test");
@@ -313,7 +313,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExists(webd, "ADashboard Test");
+		DashboardHomeUtil.isDashboardExisted(webd, "ADashboard Test");
 		int DashboardCount = Integer.parseInt(webd.getAttribute(PageId.DashboardDisplayPanelID + "@childElementCount"));
 		String lastDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(DashboardCount - 1)
 				.getAttribute("aria-label");
