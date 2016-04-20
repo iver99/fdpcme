@@ -364,7 +364,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc", "testShareDashboard",
-			"testStopShareDashboard" })
+	"testStopShareDashboard" })
 	public void testRemoveDashboard_GridView() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -436,7 +436,7 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardHomeUtil.createDashboard(webd, dbName, dbDesc, true);
 
 		//set it as home
-		Assert.assertTrue(DashboardBuilderUtil.asHomeOption(webd));
+		Assert.assertTrue(DashboardBuilderUtil.toggleHome(webd));
 
 		//check home page
 		webd.getLogger().info("access to the home page");
@@ -445,7 +445,7 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardBuilderUtil.verifyDashboard(webd, dbName, dbDesc, true);
 
 		//set it not home
-		Assert.assertFalse(DashboardBuilderUtil.asHomeOption(webd));
+		Assert.assertFalse(DashboardBuilderUtil.toggleHome(webd));
 
 		//check home page
 		webd.getLogger().info("access to the home page");

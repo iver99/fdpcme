@@ -69,9 +69,11 @@ public class DashboardBuilderUtil
 		driver.takeScreenShot();
 
 		driver.getLogger().info("[DashboardHomeUtil] finish adding widget from right drawer");
+
+        hideRightDrawer(driver);// hide drawer;
 	}
 
-	public static Boolean asHomeOption(WebDriver driver) throws Exception
+	public static Boolean toggleHome(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("DashboardBuilderUtil.asHomeOption started");
 
@@ -136,10 +138,6 @@ public class DashboardBuilderUtil
 
 		Validator.notEmptyString("duplicatename", name);
 
-		if (name == null || name.trim().length() == 0) {
-			driver.getLogger().info("DashboardBuilderUtil.duplicate name is null");
-			return;
-		}
 		driver.getLogger().info("DashboardBuilderUtil.duplicate started");
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
@@ -151,9 +149,8 @@ public class DashboardBuilderUtil
 		//add name and description
 		driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS).clear();
 		driver.click("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS);
-		Long timeOutInSecond = 10L;
 		By locatorOfDuplicateNameEl = By.id(DashBoardPageId.BuilderOptionsDuplicateNameCSS);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), timeOutInSecond);
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), DashBoardPageId.Delaytime_builder_short);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateNameEl));
 		driver.sendKeys("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS, name);
 		driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS).clear();
@@ -179,9 +176,6 @@ public class DashboardBuilderUtil
 		Validator.notNull("editname", name);
 		Validator.notEmptyString("editname", name);
 
-		if (name == null && descriptions==null) {
-			return;
-		}
 		driver.getLogger().info("DashboardBuilderUtil.edit started");
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
@@ -190,10 +184,9 @@ public class DashboardBuilderUtil
 		driver.takeScreenShot();
 		driver.waitForElementPresent("id=" + DashBoardPageId.BuilderOptionsEditNameCSS);
 
-		//wait for 10l
-		Long timeOutInSecond = 10L;
+		//wait for 900s
 		By locatorOfEditDesEl = By.id(DashBoardPageId.BuilderOptionsEditDescriptionCSS);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), timeOutInSecond);
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), DashBoardPageId.Delaytime_builder_short);
 
 		//add name and description
 		driver.getElement("id=" + DashBoardPageId.BuilderOptionsEditNameCSS).clear();
@@ -245,7 +238,7 @@ public class DashboardBuilderUtil
 		}
 	}
 
-	public static void hideRightDrawer(WebDriver driver) throws Exception
+	private static void hideRightDrawer(WebDriver driver) throws Exception
 	{
         driver.waitForElementPresent("css="+DashBoardPageId.RightDrawerCSS);
         if (DashboardBuilderUtil.isRightDrawerVisible(driver) == true) {
@@ -347,7 +340,7 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil.save compelted");
 	}
 
-	public static void showRightDrawer(WebDriver driver) throws Exception
+	private static void showRightDrawer(WebDriver driver) throws Exception
 	{
         driver.waitForElementPresent("css="+DashBoardPageId.RightDrawerCSS);
         if (DashboardBuilderUtil.isRightDrawerVisible(driver) == false) {

@@ -25,6 +25,6 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emsaas-qatool-jet-utility-3.0.0-20160331114325.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/qatools-standalone-2.0.0-20160331114325.zip"/>
 	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/dashboards-test-common-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dashboards-ui-test-common-api"/>
 	<classpathentry kind="output" path="build/classes/integTest"/>
 </classpath>
