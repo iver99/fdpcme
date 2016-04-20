@@ -1,5 +1,10 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
@@ -8,13 +13,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil.TimeRange;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.WidgetUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
  * @version
@@ -56,17 +55,18 @@ public class TestDashBoard extends LoginAndLogout
 
 		//verify the refresh option
 		webd.getLogger().info("Verify the default refersh option is 5 mins");
-		Assert.assertTrue(DashboardBuilderUtil
-				.isRefreshSettingChecked(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN));
+		Assert.assertTrue(
+				DashboardBuilderUtil.isRefreshSettingChecked(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN));
 
 		webd.getLogger().info("turn off the refresh option and check the option is checked");
 		DashboardBuilderUtil.refreshDashboard(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
-		Assert.assertTrue(DashboardBuilderUtil.isRefreshSettingChecked(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF));
+		Assert.assertTrue(
+				DashboardBuilderUtil.isRefreshSettingChecked(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF));
 
 		webd.getLogger().info("switch the refresh option to 5 mins and check the option is checked");
 		DashboardBuilderUtil.refreshDashboard(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN);
-		Assert.assertTrue(DashboardBuilderUtil
-				.isRefreshSettingChecked(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN));
+		Assert.assertTrue(
+				DashboardBuilderUtil.isRefreshSettingChecked(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN));
 
 		//delete the dashboard
 		webd.getLogger().info("start to delete dashboard in builder page");
@@ -187,7 +187,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//open the widget
 		webd.getLogger().info("open the widget");
-		WidgetUtil.udeRedirect(webd, "Database Errors Trend");
+		DashboardBuilderUtil.openWidget(webd, "Database Errors Trend");
 		//verify the result
 
 		//		String currentWindow = webd.getWebDriver().getWindowHandle();
@@ -204,8 +204,8 @@ public class TestDashBoard extends LoginAndLogout
 
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
-		if (!url.substring(url.indexOf("emsaasui") + 9).contains(
-				"emlacore/html/log-analytics-search.html?widgetId=2013&dashboardId")) {
+		if (!url.substring(url.indexOf("emsaasui") + 9)
+				.contains("emlacore/html/log-analytics-search.html?widgetId=2013&dashboardId")) {
 			Assert.fail("not open the correct widget");
 		}
 
@@ -364,7 +364,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc", "testShareDashboard",
-	"testStopShareDashboard" })
+			"testStopShareDashboard" })
 	public void testRemoveDashboard_GridView() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -396,7 +396,8 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardHomeUtil.deleteDashboard(webd, "Test_Dashboard_no_Widget_ListView", DashboardHomeUtil.DASHBOARDS_LIST_VIEW);
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView", "testModifyDashboard_widget", "testWidgetConfiguration" })
+	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView", "testModifyDashboard_widget",
+			"testWidgetConfiguration" })
 	public void testRemoveDashboardInBuilderPage() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -530,7 +531,7 @@ public class TestDashBoard extends LoginAndLogout
 		TimeSelectorUtil.setCustomTime(webd, "04/06/2015 07:22 PM", "04/07/2016 09:22 PM");
 
 		//open the widget
-		WidgetUtil.udeRedirect(webd, "Database Errors Trend");
+		DashboardBuilderUtil.openWidget(webd, "Database Errors Trend");
 
 		//verify the url
 		webd.switchToWindow();
@@ -562,16 +563,16 @@ public class TestDashBoard extends LoginAndLogout
 
 		//widget operation
 		webd.getLogger().info("hide/show the widget title");
-		WidgetUtil.title(webd, WidgetName_1, false);
-		WidgetUtil.title(webd, WidgetName_2, true);
+		DashboardBuilderUtil.showWidgetTitle(webd, WidgetName_1, false);
+		DashboardBuilderUtil.showWidgetTitle(webd, WidgetName_2, true);
 		webd.getLogger().info("resize the widget title");
-		WidgetUtil.resizeOptions(webd, WidgetName_1, WidgetUtil.TILE_WIDER);
-		WidgetUtil.resizeOptions(webd, WidgetName_1, WidgetUtil.TILE_NARROWER);
-		WidgetUtil.resizeOptions(webd, WidgetName_2, WidgetUtil.TILE_TALLER);
-		WidgetUtil.resizeOptions(webd, WidgetName_2, WidgetUtil.TILE_SHORTER);
+		DashboardBuilderUtil.resizeWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_WIDER);
+		DashboardBuilderUtil.resizeWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_NARROWER);
+		DashboardBuilderUtil.resizeWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_TALLER);
+		DashboardBuilderUtil.resizeWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_SHORTER);
 		webd.getLogger().info("remove the widget title");
-		WidgetUtil.remove(webd, WidgetName_1);
-		WidgetUtil.remove(webd, WidgetName_2);
+		DashboardBuilderUtil.removeWidget(webd, WidgetName_1);
+		DashboardBuilderUtil.removeWidget(webd, WidgetName_2);
 
 		//save the dashboard
 		webd.getLogger().info("save the dashboard");
