@@ -20,7 +20,7 @@ import com.google.common.base.Predicate;
  */
 public class WaitUtil
 {
-	public static final int WAIT_DELAY = 900;
+	public static final long WAIT_DELAY = 900;
 
 	public static void waitForAjaxFinished(final oracle.sysman.qatool.uifwk.webdriver.WebDriver webd)
 	{
@@ -32,8 +32,8 @@ public class WaitUtil
 			public boolean apply(org.openqa.selenium.WebDriver d)
 			{
 				boolean activeAjax = (Boolean) ((JavascriptExecutor) d).executeScript("return $.active === 0");
-				webd.getLogger().info(
-						"Wait for ajax finished: " + System.currentTimeMillis() + " has active ajax: " + !activeAjax);
+				webd.getLogger()
+						.info("Wait for ajax finished: " + System.currentTimeMillis() + " has active ajax: " + !activeAjax);
 				return activeAjax;
 			}
 		});

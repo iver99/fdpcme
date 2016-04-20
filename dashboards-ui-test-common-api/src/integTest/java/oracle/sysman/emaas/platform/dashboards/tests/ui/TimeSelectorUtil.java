@@ -7,20 +7,21 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorUIControls;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorUIControls;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class TimeSelectorUtil
 {
 	public enum TimeRange
 	{
-		Last15Mins("Last 15 mins"), Last30Mins("Last 30 mins"), Last60Mins("Last 60 mins"), Last4Hours("Last 4 hours"), Last6Hours(
-				"Last 6 hours"), Last1Day("Last 1 day"), Last7Days("Last 7 days"), Last30Days("Last 30 days"), Last90Days(
-				"Last 90 days"), Latest("Latest"), Custom("Custom");
+		Last15Mins("Last 15 mins"), Last30Mins("Last 30 mins"), Last60Mins("Last 60 mins"), Last4Hours(
+				"Last 4 hours"), Last6Hours("Last 6 hours"), Last1Day("Last 1 day"), Last7Days("Last 7 days"), Last30Days(
+						"Last 30 days"), Last90Days("Last 90 days"), Latest("Latest"), Custom("Custom");
 
 		private final String timerange;
 
@@ -78,7 +79,7 @@ public class TimeSelectorUtil
 
 		//set start date time and end date time
 		webd.getLogger().info("Verify if custom panpel displayed...");
-		WebDriverWait wdwait = new WebDriverWait(webd.getWebDriver(), 900L);
+		WebDriverWait wdwait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_DELAY);
 		wdwait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(TimeSelectorUIControls.sPickPanel)));
 		//webd.isDisplayed(TimeSelectorUIControls.sPickPanel);
 		webd.takeScreenShot();
@@ -276,8 +277,8 @@ public class TimeSelectorUtil
 
 		}
 		else if (StartDate.startsWith("Yesterday")) {
-			StartDate = StartDate.replace("Yesterday", actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/"
-					+ yesterday.get(Calendar.YEAR));
+			StartDate = StartDate.replace("Yesterday",
+					actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/" + yesterday.get(Calendar.YEAR));
 			returnStartDate = TimeSelectorUtil.timeFormatChange(driver, StartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 		}
 		else {
@@ -291,8 +292,8 @@ public class TimeSelectorUtil
 
 		}
 		else if (EndDate.startsWith("Yesterday")) {
-			EndDate = EndDate.replace("Yesterday", actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/"
-					+ yesterday.get(Calendar.YEAR));
+			EndDate = EndDate.replace("Yesterday",
+					actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/" + yesterday.get(Calendar.YEAR));
 			returnEndDate = TimeSelectorUtil.timeFormatChange(driver, EndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 		}
 		else if (Character.isDigit(EndDate.charAt(0))) {
