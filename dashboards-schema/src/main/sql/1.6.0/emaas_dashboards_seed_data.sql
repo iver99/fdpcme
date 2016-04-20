@@ -41,3 +41,26 @@ EXCEPTION
     RAISE;
 END;
 /
+
+DECLARE
+  V_COUNT number;
+BEGIN
+
+SELECT COUNT(1) INTO V_COUNT from EMS_DASHBOARD where TENANT_ID='&TENANT_ID' AND DASHBOARD_ID IN (11, 12, 13);
+IF (V_COUNT>0) THEN
+  DELETE FROM EMS_DASHBOARD_TILE where TENANT_ID='&TENANT_ID' AND DASHBOARD_ID IN (11, 12, 13);
+  DELETE FROM EMS_DASHBOARD where TENANT_ID='&TENANT_ID' AND DASHBOARD_ID IN (11, 12, 13);
+  COMMIT;
+  DBMS_OUTPUT.PUT_LINE('OOB dashboard <Database Health Summary/Host Health Summary/WebLogic Health Summary> for tenant: &TENANT_ID are removed successfully! Upgraded records: '||V_COUNT);
+ELSE
+  DBMS_OUTPUT.PUT_LINE('OOB dashboard <Database Health Summary/Host Health Summary/WebLogic Health Summary> for tenant: &TENANT_ID are removed before, no need to upgrade again');
+END IF;
+
+EXCEPTION
+  WHEN OTHERS THEN
+    ROLLBACK;
+    DBMS_OUTPUT.PUT_LINE('Failed to OOB dashboard <Database Health Summary/Host Health Summary/WebLogic Health Summary> for tenant: &TENANT_ID due to '||SQLERRM);
+    RAISE;
+END;
+/
+
