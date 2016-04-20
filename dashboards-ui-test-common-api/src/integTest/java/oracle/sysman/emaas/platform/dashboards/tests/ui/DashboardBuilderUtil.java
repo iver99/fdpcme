@@ -263,7 +263,7 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil.openWidget completed");
 	}
 
-	public static void print(WebDriver driver) throws Exception
+	public static void printDashboard(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("DashboardBuilderUtil print dashboard started");
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
@@ -380,7 +380,7 @@ public class DashboardBuilderUtil
 		DashboardBuilderUtil.resizeWidget(driver, widgetName, 0, resizeOptions);
 	}
 
-	public static void save(WebDriver driver) throws Exception
+	public static void saveDashboard(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("DashboardBuilderUtil.save started");
 		driver.waitForElementPresent("css=" + DashBoardPageId.DashboardSaveCSS);

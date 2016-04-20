@@ -183,7 +183,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//save dashboard
 		webd.getLogger().info("save the dashboard");
-		DashboardBuilderUtil.save(webd);
+		DashboardBuilderUtil.saveDashboard(webd);
 
 		//open the widget
 		webd.getLogger().info("open the widget");
@@ -344,7 +344,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//save dashboard
 		webd.getLogger().info("save the dashboard");
-		DashboardBuilderUtil.save(webd);
+		DashboardBuilderUtil.saveDashboard(webd);
 	}
 
 	@Test(dependsOnMethods = { "testSetHome" })
@@ -524,7 +524,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//save dashboard
 		webd.getLogger().info("save the dashboard");
-		DashboardBuilderUtil.save(webd);
+		DashboardBuilderUtil.saveDashboard(webd);
 
 		//set time range for time picker
 		TimeSelectorUtil.setTimeRange(webd, TimeRange.Last15Mins);
@@ -576,7 +576,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//save the dashboard
 		webd.getLogger().info("save the dashboard");
-		DashboardBuilderUtil.save(webd);
+		DashboardBuilderUtil.saveDashboard(webd);
 
 	}
 

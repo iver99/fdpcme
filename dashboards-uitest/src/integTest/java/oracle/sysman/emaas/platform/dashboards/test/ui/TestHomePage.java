@@ -228,7 +228,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//edit the dashboard in builder page
 		DashboardBuilderUtil.editDashboard(webd, "ADashboard Test", "ADashboard Test desc1");
-		DashboardBuilderUtil.save(webd);
+		DashboardBuilderUtil.saveDashboard(webd);
 
 		//back to home page
 		webd.getLogger().info("back to the dashboard home page");
@@ -264,7 +264,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//edit the dashboard in builder page
 		DashboardBuilderUtil.editDashboard(webd, "ADashboard Test", "ADashboard Test desc2");
-		DashboardBuilderUtil.save(webd);
+		DashboardBuilderUtil.saveDashboard(webd);
 
 		//back to home page
 		webd.getLogger().info("back to the dashboard home page");
