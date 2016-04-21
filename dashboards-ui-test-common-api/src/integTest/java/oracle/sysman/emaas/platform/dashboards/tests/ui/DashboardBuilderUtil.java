@@ -38,7 +38,10 @@ public class DashboardBuilderUtil
 			return;
 		}
 
-		driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerCSS);
+		By locatorOfKeyEl =  By.cssSelector(DashBoardPageId.RightDrawerCSS);
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(),DashBoardPageId.Delaytime_builder_short);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfKeyEl));
+
 		driver.getLogger().info("[DashboardHomeUtil] call addWidgetByRightDrawer with search string as " + searchString);
 
 		//show right drawer if it is hidden
