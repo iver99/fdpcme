@@ -17,7 +17,7 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class DashboardBuilderUtil
 {
-	public static final String REFRESH_DASHBOARD_SETTINGS_OFF = "Off";
+	public static final String REFRESH_DASHBOARD_SETTINGS_OFF = "OFF";
 	public static final String REFRESH_DASHBOARD_SETTINGS_5MIN = "On (Every 5 Minutes)";
 
 	public static final String TILE_WIDER = "wider";
@@ -486,7 +486,7 @@ public class DashboardBuilderUtil
 
 		driver.waitForElementPresent(DashBoardPageId.BuilderNameTextLocator);
 		driver.click(DashBoardPageId.BuilderNameTextLocator);
-		//		driver.takeScreenShot();
+		driver.takeScreenShot();
 		String realName = driver.getElement(DashBoardPageId.BuilderNameTextLocator).getAttribute("title");
 		if (!dashboardName.equals(realName)) {
 			driver.getLogger()
