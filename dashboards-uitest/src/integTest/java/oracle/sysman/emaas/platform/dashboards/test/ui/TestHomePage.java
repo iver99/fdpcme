@@ -9,6 +9,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 
 import org.openqa.selenium.By;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -22,7 +23,7 @@ public class TestHomePage extends LoginAndLogout
 		webd.getLogger().info("start to create a dashboard for test");
 
 		//create a dashboard
-		DashboardHomeUtil.createDashboard(webd, "ADasbhoard Test", "", true);
+		DashboardHomeUtil.createDashboard(webd, "ADashboard Test", "", true);
 		DashboardBuilderUtil.verifyDashboard(webd, "ADashboard Test", "", true);
 	}
 
@@ -33,6 +34,21 @@ public class TestHomePage extends LoginAndLogout
 
 		//reset all the checkboxes
 		DashboardHomeUtil.resetFilterOptions(webd);
+	}
+
+	@AfterClass
+	public void removeDashboard() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to create a dashboard for test");
+
+		//search the dashboard
+		webd.getLogger().info("search the dashboard");
+		DashboardHomeUtil.search(webd, "ADashboard Test");
+
+		//remove the dashboard
+		DashboardHomeUtil.deleteDashboard(webd, "ADashboard Test", DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+
 	}
 
 	@Test
