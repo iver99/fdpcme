@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
 import java.util.List;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -44,7 +45,6 @@ public class DashboardBuilderUtil
 		DashboardBuilderUtil.showRightDrawer(driver);
 
 		WebElement searchInput = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchInputCSS);
-		searchInput.click();
 		searchInput.clear();
 		searchInput.sendKeys(searchString);
 		driver.takeScreenShot();
@@ -53,7 +53,7 @@ public class DashboardBuilderUtil
 		driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerSearchButtonCSS);
 		searchButton.click();
 		//wait for ajax resolved
-		Thread.sleep(DashBoardPageId.Delaytime_short);
+		WaitUtil.waitForAjaxFinished(driver);
 		driver.takeScreenShot();
 
 		driver.getLogger().info("[DashboardHomeUtil] start to add widget from right drawer");
