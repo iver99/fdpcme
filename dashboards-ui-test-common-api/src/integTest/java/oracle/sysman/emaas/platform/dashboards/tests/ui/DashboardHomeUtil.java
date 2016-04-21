@@ -32,10 +32,14 @@ public class DashboardHomeUtil
 
 	/**
 	 * Create one Dashboard
+	 *
 	 * @param driver
-	 * @param name dashboard name
-	 * @param descriptions dashboard description(optional)
-	 * @param showTimeRangeFilter optional
+	 * @param name
+	 *            dashboard name
+	 * @param descriptions
+	 *            dashboard description(optional)
+	 * @param showTimeRangeFilter
+	 *            optional
 	 * @throws Exception
 	 */
 	public static void createDashboard(WebDriver driver, String name, String descriptions, Boolean showTimeRangeFilter)
@@ -63,7 +67,9 @@ public class DashboardHomeUtil
 
 	/**
 	 * Delete one dashboard by name
-	 * @param dashboardName dashboard name
+	 *
+	 * @param dashboardName
+	 *            dashboard name
 	 * @param view
 	 *            dashboards_grid_view | dashboards_list_view
 	 * @throws Exception
@@ -89,8 +95,10 @@ public class DashboardHomeUtil
 
 	/**
 	 * add filter
+	 *
 	 * @param driver
-	 * @param filter	filter name - apm,la,ita,oracle,share,me,favorites(multiple choice and split with comma)
+	 * @param filter
+	 *            filter name - apm,la,ita,oracle,share,me,favorites(multiple choice and split with comma)
 	 * @throws Exception
 	 */
 	public static void filterOptions(WebDriver driver, String filter) throws Exception
@@ -137,11 +145,11 @@ public class DashboardHomeUtil
 			driver.click(DashBoardPageId.FilterFavoriteLocator);
 			WaitUtil.waitForAjaxFinished(driver);
 		}
-		throw new IllegalArgumentException("Unkown filter:  " + filter);
 	}
 
 	/**
 	 * goto the link in Data Explorer by displayed name
+	 *
 	 * @param option
 	 *            Analyze | Log Visual Analyzer | Search
 	 * @throws Exception
@@ -171,6 +179,7 @@ public class DashboardHomeUtil
 
 	/**
 	 * choose grid view
+	 *
 	 * @param driver
 	 * @throws Exception
 	 */
@@ -184,6 +193,7 @@ public class DashboardHomeUtil
 
 	/**
 	 * check if the dashboard is existing or not by name
+	 *
 	 * @param driver
 	 * @param dashboardName
 	 * @return
@@ -202,8 +212,10 @@ public class DashboardHomeUtil
 
 	/**
 	 * check if the filter is selected by filter name
+	 *
 	 * @param driver
-	 * @param filter filer name - apm, la , ita, oracle, share, me favorites(single choice)
+	 * @param filter
+	 *            filer name - apm, la , ita, oracle, share, me favorites(single choice)
 	 * @return
 	 * @throws Exception
 	 */
@@ -214,29 +226,32 @@ public class DashboardHomeUtil
 		if ("apm".equals(filter)) {
 			return driver.getElement(DashBoardPageId.FilterApmLocator).isSelected();
 		}
-		if ("la".equals(filter)) {
+		else if ("la".equals(filter)) {
 			return driver.getElement(DashBoardPageId.FilterLaLocator).isSelected();
 		}
-		if ("ita".equals(filter)) {
+		else if ("ita".equals(filter)) {
 			return driver.getElement(DashBoardPageId.FilterItaLocator).isSelected();
 		}
-		if ("oracle".equals(filter)) {
+		else if ("oracle".equals(filter)) {
 			return driver.getElement(DashBoardPageId.FilterOracleLocator).isSelected();
 		}
-		if ("share".equals(filter)) {
+		else if ("share".equals(filter)) {
 			return driver.getElement(DashBoardPageId.FilterShareLocator).isSelected();
 		}
-		if ("me".equals(filter)) {
+		else if ("me".equals(filter)) {
 			return driver.getElement(DashBoardPageId.FilterMeLocator).isSelected();
 		}
-		if ("favorites".equals(filter)) {
+		else if ("favorites".equals(filter)) {
 			return driver.getElement(DashBoardPageId.FilterFavoriteLocator).isSelected();
 		}
-		throw new IllegalArgumentException("Unkonw filter option: " + filter);
+		else {
+			throw new IllegalArgumentException("Unkonw filter option: " + filter);
+		}
 	}
 
 	/**
 	 * choose the list view
+	 *
 	 * @param driver
 	 * @throws Exception
 	 */
@@ -250,6 +265,7 @@ public class DashboardHomeUtil
 
 	/**
 	 * reset the filters
+	 *
 	 * @param driver
 	 * @throws Exception
 	 */
@@ -290,6 +306,7 @@ public class DashboardHomeUtil
 
 	/**
 	 * search dashboard
+	 *
 	 * @param driver
 	 * @param searchString
 	 * @throws Exception
@@ -344,9 +361,11 @@ public class DashboardHomeUtil
 
 	/**
 	 * sort dashboards
+	 *
 	 * @param driver
-	 * @param option sort by - default, access_date_asc, access_date_dsc, name_asc, name_dsc, creation_date_asc, 
-	 * creation_date_dsc, last_modification_date_asc, last_modification_date_dsc, owner_asc, owner_dsc
+	 * @param option
+	 *            sort by - default, access_date_asc, access_date_dsc, name_asc, name_dsc, creation_date_asc, creation_date_dsc,
+	 *            last_modification_date_asc, last_modification_date_dsc, owner_asc, owner_dsc
 	 * @throws Exception
 	 */
 	public static void sortBy(WebDriver driver, String option) throws Exception
@@ -418,7 +437,6 @@ public class DashboardHomeUtil
 	}
 
 	/**
-	 * 
 	 * @param driver
 	 * @throws Exception
 	 */
@@ -431,7 +449,6 @@ public class DashboardHomeUtil
 	}
 
 	/**
-	 * 
 	 * @param driver
 	 * @throws Exception
 	 */
@@ -444,7 +461,6 @@ public class DashboardHomeUtil
 	}
 
 	/**
-	 * 
 	 * @param driver
 	 * @throws Exception
 	 */
@@ -458,6 +474,7 @@ public class DashboardHomeUtil
 
 	/**
 	 * wait the dashboard by name
+	 *
 	 * @param driver
 	 * @param dashboardName
 	 * @throws Exception
