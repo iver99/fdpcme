@@ -38,4 +38,23 @@ public class WaitUtil
 			}
 		});
 	}
+
+	public static void waitForPageFullyLoaded(final oracle.sysman.qatool.uifwk.webdriver.WebDriver webd)
+	{
+		Boolean loaded = false;
+		int maxRetries = 60 * 2; //2 minutes
+		for (int i = 0; i < maxRetries; ++i) {
+			loaded = (Boolean) ((JavascriptExecutor) webd.getWebDriver())
+					.executeScript("return window.operationStack.isComplete()");
+			if (loaded) {
+				break;
+			}
+			System.out.println("sleep after checking if pageFullyLoaded");
+			try {
+				Thread.sleep(1000);
+			}
+			catch (InterruptedException ie) {
+			}
+		}
+	}
 }
