@@ -28,9 +28,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Sanitized
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter.ApplicationOPCName;
-import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
-import oracle.sysman.emaas.platform.dashboards.core.cache.ICacheFetchFactory;
-import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
@@ -118,21 +115,7 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getAdminLinks()
 	{
-		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
-		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_ADMIN_LINKS, new ICacheFetchFactory() {
-						@Override
-						public Object fetchCachable(Object key) throws Exception
-						{
-							return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
-						}
-					});
-		}
-		catch (Exception e) {
-			logger.error(e);
-			return null;
-		}
+		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
 	}
 
 	/**
@@ -147,19 +130,7 @@ public class RegistrationEntity implements Serializable
 	public List<LinkEntity> getCloudServices()
 	{
 		String tenantName = TenantContext.getCurrentTenant();
-		Tenant cacheTenant = new Tenant(tenantName);
-		List<LinkEntity> list = null;
-		try {
-			list = (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS);
-			if (list != null) {
-				return list;
-			}
-		}
-		catch (Exception e) {
-			logger.error(e);
-		}
-		list = new ArrayList<LinkEntity>();
+		List<LinkEntity> list = new ArrayList<LinkEntity>();
 		Set<String> subscribedApps = getTenantSubscribedApplicationSet(false);
 		for (String app : subscribedApps) {
 			try {
@@ -191,8 +162,6 @@ public class RegistrationEntity implements Serializable
 				_logger.error("Failed to discover link of cloud service: " + app, e);
 			}
 		}
-		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
-				CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS, list);
 		return list;
 	}
 
@@ -217,21 +186,7 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getHomeLinks()
 	{
-		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
-		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS, new ICacheFetchFactory() {
-						@Override
-						public Object fetchCachable(Object key) throws Exception
-						{
-							return lookupLinksWithRelPrefix(NAME_HOME_LINK);
-						}
-					});
-		}
-		catch (Exception e) {
-			logger.error(e);
-		}
-		return null;
+		return lookupLinksWithRelPrefix(NAME_HOME_LINK);
 	}
 
 	public String getSessionExpiryTime()
@@ -301,24 +256,9 @@ public class RegistrationEntity implements Serializable
 	/**
 	 * @return Visual analyzer links discovered from service manager
 	 */
-	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getVisualAnalyzers()
 	{
-		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
-		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_VISUAL_ANALYZER, new ICacheFetchFactory() {
-						@Override
-						public Object fetchCachable(Object key) throws Exception
-						{
-							return lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER);
-						}
-					});
-		}
-		catch (Exception e) {
-			logger.error(e);
-			return null;
-		}
+		return lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER);
 	}
 
 	private void addToLinksMap(Map<String, LinkEntity> linksMap, List<Link> links, String serviceName, String version)
