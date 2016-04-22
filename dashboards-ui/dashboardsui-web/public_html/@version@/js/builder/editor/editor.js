@@ -112,13 +112,13 @@ define(['knockout',
                 self.tilesReorder();
             };
             
-            self.broadenTile = function(tile) {
-                var width = self.mode.getModeWidth(tile);
+            self.broadenTile = function(tile,value) {
+                var width = self.mode.getModeWidth(tile),offsetValue = value || 1;
                 if (width >= self.mode.MODE_MAX_COLUMNS)
                     return;
                 var col = self.mode.getModeColumn(tile) + self.mode.getModeWidth(tile);
                 if(col + 1 > self.mode.MODE_MAX_COLUMNS){
-                    self.mode.setModeColumn(tile, self.mode.getModeColumn(tile) - 1);
+                    self.mode.setModeColumn(tile, self.mode.getModeColumn(tile) - value);
                     col = self.mode.getModeColumn(tile);
                 }
                 var cells = self.getCellsOccupied(self.mode.getModeRow(tile), col, 1, self.mode.getModeHeight(tile));
@@ -132,36 +132,118 @@ define(['knockout',
                 self.tilesReorder();
             };
             
-            self.narrowTile = function(tile) {
-                var width = self.mode.getModeWidth(tile);
+            self.narrowTile = function(tile,value) {
+                var width = self.mode.getModeWidth(tile),offsetValue = value || 1;
                 if (width <= 1)
                     return;
-                width--;
+                width = width - offsetValue;
                 self.tilesGrid.updateTileSize(tile, width, self.mode.getModeHeight(tile));
                 self.tilesReorder();
             };
             
-            self.tallerTile = function(tile) {
-                var cells = self.getCellsOccupied(self.mode.getModeRow(tile)+self.mode.getModeHeight(tile), self.mode.getModeColumn(tile), self.mode.getModeWidth(tile), 1);                               
+            self.tallerTile = function(tile,value) {
+                var cells = self.getCellsOccupied(self.mode.getModeRow(tile)+self.mode.getModeHeight(tile), self.mode.getModeColumn(tile), self.mode.getModeWidth(tile), 1),                          
+                    offsetValue = value || 1;
                 var tilesToMove = self.getTilesUnder(cells, tile);
                 for(var i in tilesToMove) {                    
-                    self.moveTileDown(tilesToMove[i], 1);
+                    self.moveTileDown(tilesToMove[i], offsetValue);
                 }
-                self.tilesGrid.updateTileSize(tile, self.mode.getModeWidth(tile), self.mode.getModeHeight(tile) + 1);
+                self.tilesGrid.updateTileSize(tile, self.mode.getModeWidth(tile), self.mode.getModeHeight(tile) + offsetValue);
                 self.tilesReorder();
             };
             
-            self.shorterTile = function(tile) {
-                var height = self.mode.getModeHeight(tile);
+            self.shorterTile = function(tile,value) {
+                var height = self.mode.getModeHeight(tile),offsetValue = value || 1;
                 if (height <= 1)
                     return;
-                height--;
+                height = height - offsetValue;
                 var tilesToMove = self.getTilesBelow(tile);
                 self.tilesGrid.updateTileSize(tile, self.mode.getModeWidth(tile), height);
                 for(var i in tilesToMove) {
-                    self.moveTileUp(tilesToMove[i], 1);
+                    self.moveTileUp(tilesToMove[i], offsetValue);
                 }
                 self.tilesReorder();
+            };
+            
+            self.resizeTile = function (tile,options) {
+                var isPositionValid = options && options.left && options.top;
+                var isResizeModeValid = options && options.mode === 'x' || options.mode === 'y'  || options.mode === 'xy';
+                if (isPositionValid === false  || isResizeModeValid === false){
+                      console.log("invalid resize options :"+JSON.parse(options));
+                      return false;
+                }
+                
+                var widgetArea = $b.findEl('.widget-area'), widgetAreaWidth = widgetArea.width();
+                var columnGridWidth = widgetAreaWidth / self.mode.MODE_MAX_COLUMNS,columnGridHeight = Builder.DEFAULT_HEIGHT;
+                var currentWidth = tile.modeWidth() * columnGridWidth,currentHeight = tile.modeHeight() * columnGridHeight,
+                    currentLeft = tile.modeColumn() * columnGridWidth,currentTop = tile.modeRow();
+                
+                if (options.mode === 'x') {
+                    var leftOfContainer = widgetArea.offset().left;
+                    var offsetXValue = Math.round((options.left - leftOfContainer - (currentLeft+currentWidth))/columnGridWidth);
+                    var isBroaden = offsetXValue > 0 ;
+                    var isNarrow = offsetXValue < 0 ;
+                    if (isBroaden) {
+                        self.broadenTile(tile,Math.abs(offsetXValue));
+                        return true;
+                    }
+
+                    if (isNarrow) {
+                        self.narrowTile(tile,Math.abs(offsetXValue));
+                        return true;
+                    }
+                }else if(options.mode === 'y'){
+                    var topOfContainer = widgetArea.offset().top;
+                    var offsetYValue = Math.round((options.top - topOfContainer - (currentTop+currentHeight))/columnGridHeight);
+                    var isTaller = offsetYValue > 0;
+                    var isShorter = offsetYValue < 0 ;
+                     if(isTaller){
+                        self.tallerTile(tile,Math.abs(offsetYValue));
+                        return true;
+                    }
+
+                    if (isShorter) {
+                        self.shorterTile(tile,Math.abs(offsetYValue));
+                        return true;
+                    }
+                }else if (options.mode === 'xy') {
+                    var leftOfContainer = widgetArea.offset().left;
+                    var topOfContainer = widgetArea.offset().top;
+                    var offsetXValue = Math.round((options.left - leftOfContainer - (currentLeft+currentWidth))/columnGridWidth);
+                    var offsetYValue = Math.round((options.top - topOfContainer - (currentTop+currentHeight))/columnGridHeight);
+                    var isBroaden = offsetXValue > 0 ;
+                    var isNarrow = offsetXValue < 0 ;
+                    var isTaller = offsetYValue > 0;
+                    var isShorter = offsetYValue < 0 ;
+                    if (isBroaden) {
+                        self.broadenTile(tile,Math.abs(offsetXValue));
+                        return true;
+                    }
+
+                    if (isNarrow) {
+                        self.narrowTile(tile,Math.abs(offsetXValue));
+                        return true;
+                    }
+                    
+                     if(isTaller){
+                        self.tallerTile(tile,Math.abs(offsetYValue));
+                        return true;
+                    }
+
+                    if (isShorter) {
+                        self.shorterTile(tile,Math.abs(offsetYValue));
+                        return true;
+                    }
+//                    $b.findEl('.tile-dragging-placeholder').css({
+//                        left: tile.left() - 5,
+//                        top: tile.top() - 5,
+//                        width: ui.helper.width() - 10,
+//                        height: ui.helper.height() - 10
+//                    }).show();
+
+                }
+                
+                console.log(self.getCellFromPosition(widgetAreaWidth,{left:options.left,top:options.top}));
             };
                                    
             //reorder and re-register tiles

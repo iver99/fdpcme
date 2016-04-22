@@ -68,6 +68,20 @@ define(['knockout',
             self.showTimeRange = ko.observable(false);
             self.showWidgetTitle = ko.observable(true);
             self.showRightPanelToggler = ko.observable(true);
+            
+            self.resizingTile = ko.observable();
+            self.resizingOptions = ko.observable().extend({ rateLimit: { timeout: 100, method: "always" } });
+            self.resizingMonitor = ko.computed(function () {
+                ko.mapping.fromJS(self.resizingOptions());
+                if (self.resizingTile() && self.resizingOptions() && self.resizingOptions().mode) {
+                    var hasChanged = self.editor.resizeTile(self.resizingTile(), self.resizingOptions());
+                    if (hasChanged) {
+                        self.notifyTileChange(self.resizingTile(), new Builder.TileChange("DRAG_RESIZE")); // todo
+                        self.show();
+                    }
+                   
+                }
+            });
 
             self.isEmpty = function() {
                 return !self.editor.tiles() || self.editor.tiles().length === 0;
@@ -379,6 +393,44 @@ define(['knockout',
                 $('.dbd-widget').on('dragstart', self.handleStartDragging);
                 $('.dbd-widget').on('drag', self.handleOnDragging);
                 $('.dbd-widget').on('dragstop', self.handleStopDragging);
+                
+                $('.dbd-resize-handler').on('mousedown', function (event) {
+                    var targetHandler = $(event.currentTarget),resizeMode = null;
+                    if ($(targetHandler).hasClass('dbd-resize-handler-right')) {
+                        resizeMode = 'x';
+                    } else if ($(targetHandler).hasClass('dbd-resize-handler-bottom')) {
+                        resizeMode = 'y';
+                    } else if($(targetHandler).hasClass('dbd-resize-handler-right-bottom')){
+                        resizeMode = 'xy';
+                    }
+                    
+                    var isResizing =  resizeMode !== null;
+                    if(isResizing) {
+                        self.resizingTile(ko.dataFor(targetHandler.closest('.dbd-widget')[0]));
+                        self.resizingOptions({mode:resizeMode});
+                    }
+                    self.tilesView.disableDraggable();
+
+                });
+
+                $('#globalBody').on('mousemove', function (event) {
+                   if (self.resizingOptions()) {
+                        if(self.resizingOptions().mode === 'x') {
+                            $(this).css('cursor','ew-resize');
+                        }else if(self.resizingOptions().mode === 'y'){
+                            $(this).css('cursor','ns-resize');
+                        }else if(self.resizingOptions().mode === 'xy'){
+                            $(this).css('cursor','se-resize');
+                        }
+                        var clonedTarget = $.extend(self.resizingOptions(), {left: event.clientX, top: event.clientY});
+                        self.resizingOptions(clonedTarget);
+                    }
+                }).on('mouseup', function (event) {
+                        self.resizingTile(null);
+                        self.resizingOptions(null);
+                        $(this).css('cursor','default');
+                        self.tilesView.enableDraggable();
+                });;
             };
             
             self.isDraggingCellChanged = function(pos) {
