@@ -22,7 +22,7 @@ public class WaitUtil
 {
 	public static final long WAIT_TIMEOUT = 900; //unit sec
 
-	public static void waitForAjaxFinished(final oracle.sysman.qatool.uifwk.webdriver.WebDriver webd)
+	public static void waitForPageFullyLoaded(final oracle.sysman.qatool.uifwk.webdriver.WebDriver webd)
 	{
 		webd.getLogger().info("START wait for ajax finished: " + System.currentTimeMillis());
 		org.openqa.selenium.WebDriver driver = webd.getWebDriver();
@@ -32,29 +32,11 @@ public class WaitUtil
 			public boolean apply(org.openqa.selenium.WebDriver d)
 			{
 				boolean activeAjax = (Boolean) ((JavascriptExecutor) d).executeScript("return $.active === 0");
-				webd.getLogger()
-						.info("Wait for ajax finished: " + System.currentTimeMillis() + " has active ajax: " + !activeAjax);
+				webd.getLogger().info(
+						"Wait for ajax finished: " + System.currentTimeMillis() + " has active ajax: " + !activeAjax);
 				return activeAjax;
 			}
 		});
 	}
 
-	public static void waitForPageFullyLoaded(final oracle.sysman.qatool.uifwk.webdriver.WebDriver webd)
-	{
-		Boolean loaded = false;
-		int maxRetries = 60 * 2; //2 minutes
-		for (int i = 0; i < maxRetries; ++i) {
-			loaded = (Boolean) ((JavascriptExecutor) webd.getWebDriver())
-					.executeScript("return window.operationStack.isComplete()");
-			if (loaded) {
-				break;
-			}
-			System.out.println("sleep after checking if pageFullyLoaded");
-			try {
-				Thread.sleep(1000);
-			}
-			catch (InterruptedException ie) {
-			}
-		}
-	}
 }
