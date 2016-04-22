@@ -1,10 +1,5 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
@@ -14,6 +9,11 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil.TimeRange;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @version
@@ -29,6 +29,69 @@ public class TestDashBoard extends LoginAndLogout
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
 	}
+
+	//	@Test
+	//	public void testSaveConfirmation() throws Exception
+	//	{
+	//		String dbName = "Test Dashboard for Save Confirmation";
+	//
+	//		//Initialize the test
+	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+	//		webd.getLogger().info("start to test in testSaveConfimation");
+	//
+	//		//reset the home page
+	//		webd.getLogger().info("reset all filter options in the home page");
+	//		DashboardHomeUtil.resetFilterOptions(webd);
+	//
+	//		//switch to Grid View
+	//		webd.getLogger().info("switch to grid view");
+	//		DashboardHomeUtil.gridView(webd);
+	//
+	//		//create a dashboard
+	//		webd.getLogger().info("create a dashboard: with description, time refresh");
+	//		DashboardHomeUtil.createDashboard(webd, dbName, null, true);
+	//
+	//		DashboardBuilderUtil.verifyDashboard(webd, dbName, null, true);
+	//
+	//		//edit the dashboard
+	//		webd.getLogger().info("add a widget to the dashboard");
+	//		DashboardBuilderUtil.addWidgetByRightDrawer(webd, "Database Errors Trend");
+	//
+	//		//leave the builder page
+	//		webd.getLogger().info("return to dashboard home page");
+	//		BrandingBarUtil.visitDashboardHome(webd);
+	//		webd.getLogger().info("the warning dialog pop up");
+	//		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), 900L);
+	//		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+	//
+	//		//Accepting alert.
+	//		webd.getLogger().info("foucus on the alert");
+	//		//Alert alert = webd.getWebDriver().switchTo().alert();
+	//		webd.getLogger().info(webd.switchToPopup());
+	//		webd.getLogger().info("click button on the dialog, should navigate to the home page");
+	//		alert.accept();
+	//
+	//		//verify if in the home page
+	//		webd.getLogger().info("verify if in the home page");
+	//		wait.until(ExpectedConditions.presenceOfElementLocated(By.id(PageId.DashboardDisplayPanelID)));
+	//
+	//		//search dashboard
+	//		webd.getLogger().info("search the dashboard");
+	//		DashboardHomeUtil.search(webd, dbName);
+	//
+	//		//delete the dashboard
+	//		webd.getLogger().info("delete the dashboard");
+	//		DashboardHomeUtil.deleteDashboard(webd, dbName, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+	//
+	//		//Save the dashboard
+	//		//DashboardBuilderUtil.saveDashboard(webd);
+	//
+	//		//delete the dashboard
+	//		//DashboardBuilderUtil.deleteDashboard(webd);
+	//
+	//		//verify the dashboard has been deleted
+	//
+	//	}
 
 	@Test
 	public void testCreateDashboad_noDesc_GridView() throws Exception
@@ -55,18 +118,17 @@ public class TestDashBoard extends LoginAndLogout
 
 		//verify the refresh option
 		webd.getLogger().info("Verify the default refersh option is 5 mins");
-		Assert.assertTrue(
-				DashboardBuilderUtil.isRefreshSettingChecked(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN));
+		Assert.assertTrue(DashboardBuilderUtil
+				.isRefreshSettingChecked(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN));
 
 		webd.getLogger().info("turn off the refresh option and check the option is checked");
 		DashboardBuilderUtil.refreshDashboard(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
-		Assert.assertTrue(
-				DashboardBuilderUtil.isRefreshSettingChecked(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF));
+		Assert.assertTrue(DashboardBuilderUtil.isRefreshSettingChecked(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF));
 
 		webd.getLogger().info("switch the refresh option to 5 mins and check the option is checked");
 		DashboardBuilderUtil.refreshDashboard(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN);
-		Assert.assertTrue(
-				DashboardBuilderUtil.isRefreshSettingChecked(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN));
+		Assert.assertTrue(DashboardBuilderUtil
+				.isRefreshSettingChecked(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN));
 
 		//delete the dashboard
 		webd.getLogger().info("start to delete dashboard in builder page");
@@ -204,8 +266,8 @@ public class TestDashBoard extends LoginAndLogout
 
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
-		if (!url.substring(url.indexOf("emsaasui") + 9)
-				.contains("emlacore/html/log-analytics-search.html?widgetId=2013&dashboardId")) {
+		if (!url.substring(url.indexOf("emsaasui") + 9).contains(
+				"emlacore/html/log-analytics-search.html?widgetId=2013&dashboardId")) {
 			Assert.fail("not open the correct widget");
 		}
 
@@ -396,8 +458,7 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardHomeUtil.deleteDashboard(webd, "Test_Dashboard_no_Widget_ListView", DashboardHomeUtil.DASHBOARDS_LIST_VIEW);
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView", "testModifyDashboard_widget",
-			"testWidgetConfiguration" })
+	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView", "testModifyDashboard_widget", "testWidgetConfiguration" })
 	public void testRemoveDashboardInBuilderPage() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
