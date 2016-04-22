@@ -1097,11 +1097,22 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .dbd-right-panel-editdashboard>span>a,.dbd-right-panel-build>span>a{
     display: none;
 }
-//right panel define collapsible open icon changed
-.dbd-right-panel-editdashboard .oj-collapsible-open-icon:before{
+//right panel editdashboard collapsible open icon changed
+/*.dbd-right-panel-editdashboard .oj-collapsible-open-icon:before{
     -webkit-transform: rotate(45deg) scale(0.9,0.9);
     transform: rotate(45deg) scale(0.9,0.9); 
+}*/
+
+//right panel editdashboard collapsible icon removed
+.dbd-right-panel-editdashboard-container>div>span>a{
+    display: none;
 }
+
+.dbd-right-panel-editdashboard-container>div>div{
+    margin-top: 10px;
+}
+
+
 //right panel define collapsible default style changed
 .dbd-right-panel-editdashboard-container>div{
     padding-left: 0.857rem;

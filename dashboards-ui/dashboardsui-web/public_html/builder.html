@@ -692,18 +692,8 @@
                         <div class="dbd-right-panel-editdashboard" data-bind="ojComponent: {component: 'ojCollapsible',expanded:defineIsExpanded}">
                             <span style="padding: 0.8571rem; border-top-width: 1px;">Define</span>
                             <div class="dbd-right-panel-editdashboard-container" style="padding-left:0; padding-right:0;">
-                                <div class="dbd-right-panel-editdashboard-filters" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbfiltersIsExpanded}">
-                                    <span>Dashboard Filters</span>
-                                    <div>filters content</div>
-                                </div>
-                                <hr/>
-                                <div class="dbd-right-panel-editdashboard-share" data-bind="ojComponent: {component: 'ojCollapsible', expanded:sharesettingsIsExpanded}">
-                                    <span>Share Settings</span>
-                                    <div>settings content</div>
-                                </div>
-                                <hr/>
                                 <div class="dbd-right-panel-editdashboard-general" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbeditorIsExpanded}">
-                                    <span>Name and Description</span>
+                                    <span>General</span>
                                     <div class="cDsbDialog oj-form-layout">
                                         <div class="oj-form">
                                             <div class="oj-flex" >
@@ -758,6 +748,16 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <hr/>
+                                <div class="dbd-right-panel-editdashboard-filters" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbfiltersIsExpanded}">
+                                    <span>Filters</span>
+                                    <div>filters content</div>
+                                </div>
+                                <hr/>
+                                <div class="dbd-right-panel-editdashboard-share" data-bind="ojComponent: {component: 'ojCollapsible', expanded:sharesettingsIsExpanded}">
+                                    <span>Share</span>
+                                    <div>settings content</div>
                                 </div>
                                 <hr/>
                                 <div>
