@@ -689,20 +689,20 @@
                                         style: {right: $root.scrollbarWidth + 'px'}">
                     <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #E7F1FE ; color: #0572ce">Dashboard</div>
                                         <div class="dbd-right-panel-contents" data-bind="ojComponent: {component: 'ojAccordion'} ">
-                        <div class="dbd-right-panel-define" data-bind="ojComponent: {component: 'ojCollapsible',expanded:defineIsExpanded}">
+                        <div class="dbd-right-panel-editdashboard" data-bind="ojComponent: {component: 'ojCollapsible',expanded:defineIsExpanded}">
                             <span style="padding: 0.8571rem; border-top-width: 1px;">Define</span>
-                            <div class="dbd-right-panel-define-container" style="padding-left:0; padding-right:0;">
-                                <div class="dbd-right-panel-define-dbfilters" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbfiltersIsExpanded}">
+                            <div class="dbd-right-panel-editdashboard-container" style="padding-left:0; padding-right:0;">
+                                <div class="dbd-right-panel-editdashboard-filters" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbfiltersIsExpanded}">
                                     <span>Dashboard Filters</span>
                                     <div>filters content</div>
                                 </div>
                                 <hr/>
-                                <div class="dbd-right-panel-define-sharesettings" data-bind="ojComponent: {component: 'ojCollapsible', expanded:sharesettingsIsExpanded}">
+                                <div class="dbd-right-panel-editdashboard-share" data-bind="ojComponent: {component: 'ojCollapsible', expanded:sharesettingsIsExpanded}">
                                     <span>Share Settings</span>
                                     <div>settings content</div>
                                 </div>
                                 <hr/>
-                                <div class="dbd-right-panel-define-dbeditor" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbeditorIsExpanded}">
+                                <div class="dbd-right-panel-editdashboard-general" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbeditorIsExpanded}">
                                     <span>Name and Description</span>
                                     <div class="cDsbDialog oj-form-layout">
                                         <div class="oj-form">

@@ -27,7 +27,7 @@ define(['knockout',
                 self.$list.each(function() {
                     var elem = $(this)
                     , v_siblings = elem.siblings(".fit-size-vertical-sibling:visible")
-                    ,rightPanelTitleHeight = $(".dbd-right-panel-title").outerHeight()+$(".dbd-right-panel-define").outerHeight()*2
+                    ,rightPanelTitleHeight = $(".dbd-right-panel-title").outerHeight()+$(".dbd-right-panel-editdashboard").outerHeight()*2
                     , h = 0;
                     if (v_siblings && v_siblings.length > 0) {
                         for (var i = 0; i < v_siblings.length; i++) {
