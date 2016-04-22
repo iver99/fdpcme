@@ -356,4 +356,7 @@ public class DashBoardPageId
 	public static final String DASHBOARD_LIST_TABLE = "dbstable";
 	public static final String DASHBOARD_HOME_DELETE_BUTTON = "//*[@id=\"dsbinfopop\"]/div/div/button";
 	public static final String DASHBOARD_HOME_DELETE_CONFIRM = "//*[@id=\"ojDialogWrapper-dbs_cfmDialog\"]/div[3]/button[1]";
+
+	//error page
+	public static final String ErrorSignOutButtonId = "dbd_sign_out_button";
 }
