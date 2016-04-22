@@ -81,7 +81,7 @@ dependencies{
     {
 	exclude('module':'groovy')
     }
-    testConfig project(':dashboards-ui-test-common-api') { transitive = false }
+    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '1.6.0+')
     configurations{
 	restAssured.exclude module:'groovy'
     }

@@ -20,13 +20,13 @@ import com.google.common.base.Predicate;
  */
 public class WaitUtil
 {
-	public static final long WAIT_DELAY = 900;
+	public static final long WAIT_TIMEOUT = 900; //unit sec
 
 	public static void waitForPageFullyLoaded(final oracle.sysman.qatool.uifwk.webdriver.WebDriver webd)
 	{
 		webd.getLogger().info("START wait for ajax finished: " + System.currentTimeMillis());
 		org.openqa.selenium.WebDriver driver = webd.getWebDriver();
-		WebDriverWait wait = new WebDriverWait(driver, WAIT_DELAY);
+		WebDriverWait wait = new WebDriverWait(driver, WAIT_TIMEOUT);
 		wait.until(new Predicate<org.openqa.selenium.WebDriver>() {
 			@Override
 			public boolean apply(org.openqa.selenium.WebDriver d)

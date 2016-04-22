@@ -38,7 +38,10 @@ public class DashboardBuilderUtil
 			return;
 		}
 
-		driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerCSS);
+		By locatorOfKeyEl = By.cssSelector(DashBoardPageId.RightDrawerCSS);
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfKeyEl));
+
 		driver.getLogger().info("[DashboardHomeUtil] call addWidgetByRightDrawer with search string as " + searchString);
 
 		//show right drawer if it is hidden
@@ -126,7 +129,7 @@ public class DashboardBuilderUtil
 		driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS).clear();
 		driver.click("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS);
 		By locatorOfDuplicateNameEl = By.id(DashBoardPageId.BuilderOptionsDuplicateNameCSS);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), DashBoardPageId.Delaytime_builder_short);
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateNameEl));
 		driver.sendKeys("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS, name);
 		driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS).clear();
@@ -162,7 +165,7 @@ public class DashboardBuilderUtil
 
 		//wait for 900s
 		By locatorOfEditDesEl = By.id(DashBoardPageId.BuilderOptionsEditDescriptionCSS);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), DashBoardPageId.Delaytime_builder_short);
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 
 		//add name and description
 		driver.getElement("id=" + DashBoardPageId.BuilderOptionsEditNameCSS).clear();
@@ -398,7 +401,7 @@ public class DashboardBuilderUtil
 	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.showWidgetTitle started for widgetName=" + widgetName + ", index=" + index
-						+ ", visibility=" + visibility);
+				+ ", visibility=" + visibility);
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
 		DashboardBuilderUtil.clickTileConfigButton(driver, widgetName, index);
@@ -483,7 +486,7 @@ public class DashboardBuilderUtil
 	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.verifyDashboard started for name=\"" + dashboardName + "\", description=\"" + description
-						+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
+				+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
 
 		driver.waitForElementPresent(DashBoardPageId.BuilderNameTextLocator);
@@ -493,7 +496,7 @@ public class DashboardBuilderUtil
 		if (!dashboardName.equals(realName)) {
 			driver.getLogger().info(
 					"DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected dashboard name is "
-					+ dashboardName + ", actual dashboard name is " + realName);
+							+ dashboardName + ", actual dashboard name is " + realName);
 			return false;
 		}
 
@@ -503,7 +506,7 @@ public class DashboardBuilderUtil
 			if (realDesc != null && !realDesc.trim().equals("")) {
 				driver.getLogger().info(
 						"DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected description is "
-						+ description + ", actual dashboard description is " + realDesc);
+								+ description + ", actual dashboard description is " + realDesc);
 				return false;
 			}
 		}
@@ -511,7 +514,7 @@ public class DashboardBuilderUtil
 			if (!description.equals(realDesc)) {
 				driver.getLogger().info(
 						"DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected description is "
-						+ description + ", actual dashboard description is " + realDesc);
+								+ description + ", actual dashboard description is " + realDesc);
 				return false;
 			}
 		}
@@ -520,7 +523,7 @@ public class DashboardBuilderUtil
 		if (actualTimeSelectorShown != showTimeSelector) {
 			driver.getLogger().info(
 					"DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected showTimeSelector is "
-					+ showTimeSelector + ", actual dashboard showTimeSelector is " + actualTimeSelectorShown);
+							+ showTimeSelector + ", actual dashboard showTimeSelector is " + actualTimeSelectorShown);
 			return false;
 		}
 
