@@ -93,6 +93,7 @@ public class UserOptionsManager {
                 // create or update if exists
                 EmsUserOptions emsUserOptions = dsf.getEmsUserOptions(currentUser, userOptions.getDashboardId());
                 if(null == emsUserOptions){
+                    emsUserOptions = userOptions.toEntity(emsUserOptions, currentUser);
                     dsf.persistEmsUserOptions(emsUserOptions);
                 }else{
                     emsUserOptions = userOptions.toEntity(emsUserOptions, currentUser);
