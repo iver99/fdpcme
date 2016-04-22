@@ -62,7 +62,7 @@ define([
                     "appId": "APM",
                     "appName": "BRANDING_BAR_APP_NAME_APM",
                     "serviceDisplayName": "BRANDING_BAR_CLOUD_SERVICE_NAME_APM",
-                    "serviceName": "apmUI",
+                    "serviceName": "ApmUI",
                     "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_apm_gs"
                 };
