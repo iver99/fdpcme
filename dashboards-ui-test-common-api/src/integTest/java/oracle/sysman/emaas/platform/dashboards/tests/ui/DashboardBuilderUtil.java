@@ -2,7 +2,6 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
 import java.util.List;
 
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -14,6 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DelayedPressEnterThread;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class DashboardBuilderUtil
@@ -38,8 +38,8 @@ public class DashboardBuilderUtil
 			return;
 		}
 
-		By locatorOfKeyEl =  By.cssSelector(DashBoardPageId.RightDrawerCSS);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(),DashBoardPageId.Delaytime_builder_short);
+		By locatorOfKeyEl = By.cssSelector(DashBoardPageId.RightDrawerCSS);
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfKeyEl));
 
 		driver.getLogger().info("[DashboardHomeUtil] call addWidgetByRightDrawer with search string as " + searchString);
@@ -129,7 +129,7 @@ public class DashboardBuilderUtil
 		driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS).clear();
 		driver.click("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS);
 		By locatorOfDuplicateNameEl = By.id(DashBoardPageId.BuilderOptionsDuplicateNameCSS);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), DashBoardPageId.Delaytime_builder_short);
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateNameEl));
 		driver.sendKeys("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS, name);
 		driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS).clear();
@@ -165,7 +165,7 @@ public class DashboardBuilderUtil
 
 		//wait for 900s
 		By locatorOfEditDesEl = By.id(DashBoardPageId.BuilderOptionsEditDescriptionCSS);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), DashBoardPageId.Delaytime_builder_short);
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 
 		//add name and description
 		driver.getElement("id=" + DashBoardPageId.BuilderOptionsEditNameCSS).clear();
