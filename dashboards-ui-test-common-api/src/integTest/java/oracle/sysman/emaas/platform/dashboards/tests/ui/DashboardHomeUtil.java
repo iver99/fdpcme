@@ -113,37 +113,37 @@ public class DashboardHomeUtil
 		if (trimedFs.contains("apm")) {
 			driver.waitForElementPresent(DashBoardPageId.FilterApmLocator);
 			driver.click(DashBoardPageId.FilterApmLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		if (trimedFs.contains("la")) {
 			driver.waitForElementPresent(DashBoardPageId.FilterLaLocator);
 			driver.click(DashBoardPageId.FilterLaLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		if (trimedFs.contains("ita")) {
 			driver.waitForElementPresent(DashBoardPageId.FilterItaLocator);
 			driver.click(DashBoardPageId.FilterItaLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		if (trimedFs.contains("oracle")) {
 			driver.waitForElementPresent(DashBoardPageId.FilterOracleLocator);
 			driver.click(DashBoardPageId.FilterOracleLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		if (trimedFs.contains("share")) {
 			driver.waitForElementPresent(DashBoardPageId.FilterShareLocator);
 			driver.click(DashBoardPageId.FilterShareLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		if (trimedFs.contains("me")) {
 			driver.waitForElementPresent(DashBoardPageId.FilterMeLocator);
 			driver.click(DashBoardPageId.FilterMeLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		if (trimedFs.contains("favorites")) {
 			driver.waitForElementPresent(DashBoardPageId.FilterFavoriteLocator);
 			driver.click(DashBoardPageId.FilterFavoriteLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 	}
 
@@ -301,7 +301,7 @@ public class DashboardHomeUtil
 		if (el.isSelected()) {
 			el.click();
 		}
-		WaitUtil.waitForAjaxFinished(driver);
+		WaitUtil.waitForPageFullyLoaded(driver);
 	}
 
 	/**
@@ -321,7 +321,7 @@ public class DashboardHomeUtil
 		driver.click(DashBoardPageId.SearchDashboardInputLocator);
 		driver.sendKeys(DashBoardPageId.SearchDashboardInputLocator, searchString);
 		driver.click(DashBoardPageId.SearchDashboardSearchBtnLocator);
-		WaitUtil.waitForAjaxFinished(driver);
+		WaitUtil.waitForPageFullyLoaded(driver);
 	}
 
 	/**
@@ -378,57 +378,57 @@ public class DashboardHomeUtil
 		if ("default".equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SortByDefaultLocator);
 			driver.click(DashBoardPageId.SortByDefaultLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_NAME_ASC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SortByNameASCLocator);
 			driver.click(DashBoardPageId.SortByNameASCLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_NAME_DSC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SortByNameDSCLocator);
 			driver.click(DashBoardPageId.SortByNameDSCLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_OWNER_ASC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SortByCreatedByASCLocator);
 			driver.click(DashBoardPageId.SortByCreatedByASCLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_OWNER_DSC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SortByCreatedByDSCLocator);
 			driver.click(DashBoardPageId.SortByCreatedByDSCLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_ASC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SortByCreateDateASCLocator);
 			driver.click(DashBoardPageId.SortByCreateDateASCLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_DSC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SortByCreateDateDSCLocator);
 			driver.click(DashBoardPageId.SortByCreateDateDSCLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_ASC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SortByLastModifiedASCLocator);
 			driver.click(DashBoardPageId.SortByLastModifiedASCLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_DSC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SortByLastModifiedDSCLocator);
 			driver.click(DashBoardPageId.SortByLastModifiedDSCLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SortByLastAccessASCLocator);
 			driver.click(DashBoardPageId.SortByLastAccessASCLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SortByLastAccessDSCLocator);
 			driver.click(DashBoardPageId.SortByLastAccessDSCLocator);
-			WaitUtil.waitForAjaxFinished(driver);
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else {
 			throw new IllegalArgumentException("Unknow Sort by option: " + option);
@@ -445,7 +445,7 @@ public class DashboardHomeUtil
 		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableCreatedByHeader");
 		driver.waitForElementPresent(DashBoardPageId.ListViewTableCreatedByHeaderLocator);
 		driver.click(DashBoardPageId.ListViewTableCreatedByHeaderLocator);
-		WaitUtil.waitForAjaxFinished(driver);
+		WaitUtil.waitForPageFullyLoaded(driver);
 	}
 
 	/**
@@ -457,7 +457,7 @@ public class DashboardHomeUtil
 		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableLastModifiedHeader");
 		driver.waitForElementPresent(DashBoardPageId.ListViewTableLastModifiedHeaderLocator);
 		driver.click(DashBoardPageId.ListViewTableLastModifiedHeaderLocator);
-		WaitUtil.waitForAjaxFinished(driver);
+		WaitUtil.waitForPageFullyLoaded(driver);
 	}
 
 	/**
@@ -469,7 +469,7 @@ public class DashboardHomeUtil
 		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableNameHeader");
 		driver.waitForElementPresent(DashBoardPageId.ListViewTableNameHeaderLocator);
 		driver.click(DashBoardPageId.ListViewTableNameHeaderLocator);
-		WaitUtil.waitForAjaxFinished(driver);
+		WaitUtil.waitForPageFullyLoaded(driver);
 	}
 
 	/**
