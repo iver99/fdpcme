@@ -731,11 +731,24 @@
                                                 </div>
                                             </div>             
                                             <div class="oj-flex">
-                                                <div data-bind="ojComponent: {component: 'ojCheckboxset', value: editDashboardDialogModel.showdbDescription}" >
-                                                    <span class="oj-choice-row">
-                                                        <input id="showdbDescription" type="checkbox" value="showdbDescription">
-                                                        <label for="showdbDescription">Show dashboard description</label>
-                                                    </span>
+                                                <div class="oj-flex-item">
+                                                    <div data-bind="ojComponent: {component: 'ojCheckboxset', value: editDashboardDialogModel.showdbDescription}" >
+                                                        <span class="oj-choice-row">
+                                                            <input id="showdbDescription" type="checkbox" value="showdbDescription">
+                                                            <label for="showdbDescription">Show dashboard description</label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="oj-flex" >
+                                                <div class="oj-flex-item">
+                                                    <label class="oj-label">Dashboards Home Page</label>
+                                                    <div data-bind="ojComponent: {component: 'ojCheckboxset', value: editDashboardDialogModel.showdbOnHomePage}" >
+                                                        <span class="oj-choice-row">
+                                                            <input id="showdbOnHomePage" type="checkbox" value="showdbOnHomePage">
+                                                            <label for="showdbOnHomePage">Hide dashboard on Dashboards Home page</label>
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="oj-flex" >
