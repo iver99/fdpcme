@@ -48,6 +48,7 @@ define(['knockout',
         function RightPanelModel($b, tilesViewModel, toolBarModel) {
             var self = this;
             self.dashboard = $b.dashboard;
+            self.tilesViewModel = tilesViewModel;
             $b.registerObject(this, 'RightPanelModel');
 
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');

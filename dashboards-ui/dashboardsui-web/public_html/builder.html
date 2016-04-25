@@ -834,9 +834,21 @@
                                                     </span>
                                                 </div>
                                             </div>
+                                            <div class="oj-flex">  
+                                                            <div class="oj-flex-item">
+                                                                <label>Default Time Range Value</label>
+                                                            </div>
+                                                        </div>
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
-                                                    
+                                                    <div class="oj-row fit-size-vertical-sibling df-computed-content-width"
+                                                        style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0"
+                                                        data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
+                                                        <div class="oj-col oj-sm-12 oj-md-7">
+                                                          <div data-bind="visible: !dashboard.enableTimeRange || dashboard.enableTimeRange() !== 'TRUE'">&nbsp;</div>
+                                                          <div data-bind="component: {name: 'df-datetime-picker', params: tilesViewModel.datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'"></div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
