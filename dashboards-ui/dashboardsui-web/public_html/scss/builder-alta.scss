@@ -1207,46 +1207,39 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 //new dashbord set css
 #dbd-tabs-container{
     #dbd-set-name{
-        height: 50px;
-        line-height: 50px;
+        height: 47px;
+        line-height: 47px;
         background-color: #3caf85;
         padding-right:3px;
+        margin-top:6px;
+        margin-left:29px;
         > span{
             color: white!important;
             font-weight: bold;
             font-size: 15px;
-            padding-left: 30px;
+            padding-left: 16px;
             min-width: 180px;
         }
-        #tabs-gear{
+        #tabs-caret{
             width: 35px;
             background-color: #3CAF85;
             background-image: none;
             border-color: #3CAF85;
-            .dbd-icon-gear{
+            .oj-button-menu-dropdown-icon{
                 color: white;
-                margin-left: 4px;
             }
             .oj-button-text{
-                display: none;
-            }
-            .oj-button-menu-dropdown-icon{
                 display: none;
             }
             &:hover{
                 cursor: pointer;
             }
-        }
-        #tabs-gear.oj-selected{
-            background-color: #0572ce;
-            border-color: #0572ce;
-            background-image: none;
-        }  
+        } 
     }
     #add-nav{
         .dbd-icon-add{
             color: #878c90;
-            padding-top: 23px;
+            padding-top: 24px;
             padding-left: 10px;
         }  
         &:hover{
@@ -1273,10 +1266,11 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
             margin-left: 5px;
         }
         .other-nav.oj-selected{
-            border-top-color: #3caf85;
-            border-left: solid 1px #c4ced7;
-            border-right:solid 1px #c4ced7;
+            border-top-color: transparent;     
             margin-top:7px;
+            border-bottom: 3px solid;
+            border-bottom-color: #3caf85;
+            background:transparent;
             .oj-tabs-gen-div{
                 border-color: transparent;
             }
@@ -1286,10 +1280,6 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
                 background-color: transparent;
             }
         }
-        //hack default sortable css
-        .other-nav.oj-tabs-tab.oj-selected.ui-sortable-handle.oj-active.ui-sortable-helper{
-            height: 44px!important;
-        }   
     }
     .dbd-tabs-nav.ui-sortable{
         .oj-tabs-close-icon{

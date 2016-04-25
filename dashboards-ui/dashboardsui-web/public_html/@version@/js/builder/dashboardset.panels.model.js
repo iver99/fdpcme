@@ -44,7 +44,7 @@ define([
                             $(window).trigger("resize");
                         }, 200);
                     }else{
-                        var $target =$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-list-container');
+                        var $target =$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId);
                         homeScrollbarReset($target);
                     }
                 } else {
@@ -52,7 +52,7 @@ define([
                         self.includingDashboard(dashboardId);
                         //new dashboard home css change:align
                         setTimeout(function () {
-                            var $target = $('#dashboard-' + dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-list-container');
+                            var $target = $('#dashboard-' + dashboardsetToolBarModel.selectedDashboardItem().dashboardId);
                             homeScrollbarReset($target);                   
                     }, 2000);
                     } else {
@@ -184,10 +184,7 @@ define([
                     self.selectedDashboardInst(dashboardInstMap[dsbId]);
 
                     ko.applyBindings(tilesViewModel, $dashboardEl.find('.dashboard-content-main')[0]);
-                    if(dashboardsetToolBarModel.isDashboardSet()){
-                       $('.dashboard-content .head-bar-container').css("background-color","white");
-                    }
-
+                    
                     var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel, toolBarModel);
                     ko.applyBindings(rightPanelModel, $dashboardEl.find('.dbd-left-panel')[0]);
                     rightPanelModel.initialize();
@@ -197,7 +194,7 @@ define([
                     $('#globalBody').show();
                     $dashboardEl.css("visibility", "visible");
                     if (dashboardsetToolBarModel.isDashboardSet()) {
-                        $b.findEl('.head-bar-container').css("background-color", "white");
+                        $b.findEl('.head-bar-container').css("border-bottom", "0");
 
                         //hide some drop-down menu options
                         $b.findEl('.dropdown-menu li').each(function (index, element) {
@@ -283,7 +280,7 @@ define([
             
             function windowResizeProcess(){
                 if ($('.dbs-list-container').length !== 0 && self.selectedDashboardInst().type === 'new') {
-                    var $target=$($('.dbs-list-container')[0]);
+                    var $target=$('.dashboard-picker-container:visible');
                     homeScrollbarReset($target);
                 } 
                 else if (self.selectedDashboardInst().type === 'included') {              
@@ -295,7 +292,8 @@ define([
                     var bodyHeight = $(window).height();
                     var titleToolbarHeight = target.position().top;
                     var newHeight = Number(bodyHeight) - Number(titleToolbarHeight);
-                    $('.dbs-list-container').css({'height': newHeight}); 
+                    target.css({'height': newHeight}); 
+                    target.css({'overflow-y': 'scroll'}); 
             }
         }
         Builder.registerModule(DashboardsetPanelsModel, 'DashboardsetPanelsModel');

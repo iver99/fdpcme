@@ -32,9 +32,8 @@
                 <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',truncation:'progressive',removable:dashboardsetConfig.isCreator,reorderable:dashboardsetConfig.isCreator}">
                     <div id="dbd-set-name" class="oj-tabs-facet">
                             <span data-bind="text:dashboardsetName()"></span>
-                            <button id="tabs-gear"
-                                    data-bind="ojComponent: {component: 'ojButton',
-                                            icons: {start:'fa-icon-font fa-icon-font-14 dbd-icon-gear'},
+                            <button id="tabs-caret"
+                                    data-bind="ojComponent: {component: 'ojButton',      
                                     menu: '#dbd-set-option'
                                 }, attr: {title: getNlsString('DBSSET_BUILDER_DASHBOARDSET_OPTIONS')}">
                             </button>
@@ -44,7 +43,7 @@
                     <ul class="dbd-tabs-nav">
                     </ul>
 
-                    <div class="oj-tabs-facet demo-tabs-facet-flex" data-bind="visible:dashboardsetConfig.isCreator">
+                    <div class="oj-tabs-facet demo-tabs-facet-flex" data-bind="visible:dashboardsetConfig.isCreator && noDashboardHome">
                          <span id="add-nav" data-bind="click:addNewDashboard">
                              <i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i>
                          </span>
@@ -1023,7 +1022,7 @@
             <script id="dashboard-include-template" type="text/html">
                 <div class="dashboard-content dashboard-picker-container">
                     <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container" 
-                         style="padding-left: 30px; background-color: white;">
+                         style="padding-left: 30px;border-bottom: 0">
                         <div class="builder-toolbar" aria-label="Builder toolbar">
                             <div class="builder-toolbar-left dbd-pull-left">
                                 <div class="builder-dbd-name">
@@ -1037,7 +1036,7 @@
                         </div>
                     </div>
                     <!--div class="dbs-tiles-panel-sm oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; min-height: 600px; padding-left: 10px;width:100%;overflow-y: scroll"-->
-                    <div class="dbs-list-container oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; width: 100%; overflow-y: scroll">
+                    <div class="dbs-list-container oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; width: 100%;">
                         <div class="dashboard-picker dbs-tiles-container-full-sm dbs-tiles-container-full-md dbs-tiles-container-full-lg dbs-tiles-container-full-xl" style="margin-bottom: 100px;"
                              data-bind="component: {
                              name: 'df-oracle-dashboard-list',

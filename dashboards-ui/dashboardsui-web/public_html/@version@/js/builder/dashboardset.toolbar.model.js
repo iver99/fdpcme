@@ -35,6 +35,7 @@ define(['knockout',
             self.isDashboardSet = ko.observable(ko.unwrap(dashboardInst.type)  === "SET");
             self.dashboardsetId=ko.unwrap(dashboardInst.id());
             self.hasUserOptionInDB = false;
+            self.noDashboardHome=ko.observable(true);
             self.extendedOptions = {};
             self.autoRefreshInterval = ko.observable(DEFAULT_AUTO_REFRESH_INTERVAL);
             
@@ -203,6 +204,7 @@ define(['knockout',
                 $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + newDashboardItem.dashboardId});
                 $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
                 self.selectedDashboardItem(newDashboardItem);
+                self.noDashboardHome(false);
             };
             
             /**
@@ -227,6 +229,7 @@ define(['knockout',
                     $("#dbd-tabs-container").ojTabs("refresh");   
                 }
                 self.saveDashboardSet();
+                self.noDashboardHome(true);
             };
             
             self.removeDashboard = function(){
@@ -401,6 +404,9 @@ define(['knockout',
                             if (self.extendedOptions && self.extendedOptions.selectedTab === singleDashboardItem.dashboardId) {
                                 indexOfSelectedTabInUserOption = index;
                             }
+                            if(self.dashboardsetItems.length===1 && singleDashboardItem.type==='new'){
+                                self.noDashboardHome(false);
+                            } 
                             $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
                         });
                         
@@ -440,7 +446,7 @@ define(['knockout',
                     self.raw = obj;
                 } else {
                     self.type = "new";
-                    self.name = ko.observable("Dashboard");
+                    self.name = ko.observable("Select a dashboard");
                     self.dashboardId = Builder.getGuid();
                     self.raw = null;
                 }
@@ -724,7 +730,10 @@ define(['knockout',
                 } else {
                     highlightNextTab(removeDashboardId, ui.tab);
                     $("#dashboard-" + removeDashboardId).remove();
-                }            
+                }  
+                if(self.dashboardInstMap[removeDashboardId].type === 'new' && self.dashboardsetItems.length > 0){
+                    self.noDashboardHome(true);
+                }
             } );
                         
             $("#dbd-tabs-container").on("ojdeselect", function (event, ui) {
