@@ -445,6 +445,17 @@ define(['knockout',
                     toolBarModel.onNameOrDescriptionEditing = false;
                 }
             });
+            
+
+            self.instanceSupport = ko.observable("multiple");
+            self.enableEntityFilter = ko.observable(true);
+            self.enableTimeRangeFilter = ko.observable(true);
+            self.defaultEntityValue = ko.observable("allEntities");
+
+
+
+
+            
         }
         
         Builder.registerModule(RightPanelModel, 'RightPanelModel');

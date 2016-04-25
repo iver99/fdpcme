@@ -740,7 +740,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="oj-flex" >
+                                            <div class="oj-flex" style="margin-top: 20px;">
                                                 <div class="oj-flex-item">
                                                     <label class="oj-label">Dashboards Home Page</label>
                                                     <div data-bind="ojComponent: {component: 'ojCheckboxset', value: editDashboardDialogModel.showdbOnHomePage}" >
@@ -765,7 +765,82 @@
                                 <hr/>
                                 <div class="dbd-right-panel-editdashboard-filters" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbfiltersIsExpanded}">
                                     <span>Filters</span>
-                                    <div>filters content</div>
+                                    <div class="filter-settings oj-form-layout">
+                                        <div class="oj-form">
+                                            <div class="oj-flex" >
+                                                <div class="oj-flex-item">
+                                                    <label data-bind="text: 'Entity Filter'"></label>
+                                                </div>
+                                            </div>
+                                            <div class="oj-flex" >
+                                                <div class="oj-flex-item">
+                                                    <span class="oj-choice-row">
+                                                        <input id="showEntityFilter" type="checkbox" data-bind="checked: enableEntityFilter">
+                                                        <label for="showEntityFilter">Show Entity filter</label>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="oj-flex" >
+                                                <div class="oj-flex-item">
+                                                    <form class="oj-form">
+                                                        <div class="oj-flex">  
+                                                            <div class="oj-flex-item">
+                                                                <label>Instance Support</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="oj-flex">  
+                                                            <div class="oj-flex-item">
+                                                                <div data-bind="ojComponent: {component: 'ojRadioset', value: instanceSupport, disabled: !enableEntityFilter()}" >
+                                                                   <span class="oj-choice-row">
+                                                                       <input id="multipleInstanceSupport" type="radio" name="instanceSupport" value="multiple">
+                                                                       <label for="multipleInstanceSupport">Dashboard supports multiple instances</label>
+                                                                   </span>
+                                                                   <span class="oj-choice-row">
+                                                                       <input id="singleInstanceSupport" type="radio" name="instanceSupport" value="single">
+                                                                       <label for="singleInstanceSupport">Dashboard supports a single instace</label>
+                                                                   </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="oj-flex">  
+                                                            <div class="oj-flex-item">
+                                                                <label>Default Entity Value</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="oj-flex">  
+                                                            <div class="oj-flex-item">
+                                                                <select data-bind="ojComponent: {component: 'ojSelect',disabled: !enableEntityFilter(),
+                                                                                                 value: defaultEntityValue,rootAttributes: {style:'max-width:20em'}}">
+                                                                  <option value="allEntities">All Entities</option>
+                                                                  <option value="allHosts">All Hosts</option>
+                                                                  <option value="allLinux">All Linux</option>
+                                                                  <option value="allWindows">All Windows</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="oj-flex" >
+                                                <div class="oj-flex-item">
+                                                    <label data-bind="text: 'Time Range Filter'"></label>
+                                                </div>
+                                            </div>
+                                            <div class="oj-flex" >
+                                                <div class="oj-flex-item">
+                                                    <span class="oj-choice-row">
+                                                        <input id="showTimeRangeFilter" type="checkbox" data-bind="checked: enableTimeRangeFilter">
+                                                        <label for="showTimeRangeFilter">Show Time Range filter</label>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="oj-flex" >
+                                                <div class="oj-flex-item">
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <hr/>
                                 <div class="dbd-right-panel-editdashboard-share" data-bind="ojComponent: {component: 'ojCollapsible', expanded:sharesettingsIsExpanded}">
