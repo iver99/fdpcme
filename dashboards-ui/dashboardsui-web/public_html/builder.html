@@ -660,21 +660,31 @@
                 <div class="right-panel-toggler no-print" data-bind="
                         visible: $root.isMobileDevice !== 'true' && !dashboard.systemDashboard() && showRightPanelToggler() && isCreator === true,
                         style: {
-                            right: rightPanelShown() ? 
+                                 right: rightPanelShown() ? 
                                 (283 + $root.scrollbarWidth) + 'px' : 
                                 $root.scrollbarWidth + 'px'
                         }">
-                    <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn oj-buttonset-first" style="display: block;"
-                                data-bind="ojComponent: {
-                                    checked: rightPanelShown,
+                    <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn rightpanel-wrench" style="display: block;"
+                            data-bind="ojComponent: {
+                                    component:'ojButton', 
+                                    display: 'icons', 
+                                    icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 dbd-wrench'}  
+                            },
+                            click: toggleRightPanel,
+                            css:{
+                               'wrench-selected':rightPanelIcon()=='wrench'
+                            }"/></button>
+
+                    <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn oj-buttonset-first rightpanel-pencil" style="display: block;"
+                            data-bind="ojComponent: {
                                     component:'ojButton', 
                                     display: 'icons', 
                                     icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-pencil'}, 
-                                    label: getNlsString(rightPanelShown() ? 'DBS_BUILDER_LEFT_PANEL_BTN_HIDE_LABEL' : 'DBS_BUILDER_LEFT_PANEL_BTN_SHOW_LABEL')
+                                    label: getNlsString(rightPanelIcon() ? 'DBS_BUILDER_LEFT_PANEL_BTN_HIDE_LABEL' : 'DBS_BUILDER_LEFT_PANEL_BTN_SHOW_LABEL')
                                 }, 
                                 click: toggleRightPanel,
                                 css: {
-                                    'drawer-selected': rightPanelShown()
+                                    'drawer-selected': rightPanelIcon()=='pencil'
                                 }"/></button>                    
                     <button class="right-panel-help-btn drawer-icon-btn" data-bind="ojComponent: {
                         component:'ojButton', 
@@ -687,7 +697,7 @@
                         data-bind="css: {'dbd-no-left-panel': maximized() || completelyHidden()},
                                         style: {right: $root.scrollbarWidth + 'px'}">
                     <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #E7F1FE ; color: #0572ce">Dashboard</div>
-                                        <div class="dbd-right-panel-contents" data-bind="ojComponent: {component: 'ojAccordion'} ">
+                    <div class="dbd-right-panel-contents" data-bind="ojComponent: {component: 'ojAccordion'} ">
                         <div class="dbd-right-panel-editdashboard" data-bind="ojComponent: {component: 'ojCollapsible',expanded:defineIsExpanded}">
                             <span style="padding: 0.8571rem; border-top-width: 1px;">Define</span>
                             <div class="dbd-right-panel-editdashboard-container" style="padding-left:0; padding-right:0;">

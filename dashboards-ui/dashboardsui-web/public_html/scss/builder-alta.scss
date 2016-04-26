@@ -235,6 +235,9 @@ body, html {
 .dbd-toolbar-icon-edit:before,.fa-pencil:before {
   content: "\f040";
 }
+.dbd-wrench:before{
+   content: "\f0ad"; 
+}
 
 .dbd-toolbar-icon-refresh:before,.fa-refresh:before {
   content: "\f021";
@@ -754,6 +757,15 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 
 .drawer-icon-btn.drawer-selected {
+    //hack oj default
+    background-image: none !important;
+    background-color: white !important;
+    border-color: #c4ced7 !important;
+    .oj-button-icon {
+        color: #0572ce !important;
+    }
+}
+.drawer-icon-btn.wrench-selected {
     //hack oj default
     background-image: none !important;
     background-color: white !important;

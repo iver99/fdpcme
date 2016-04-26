@@ -99,11 +99,32 @@ define(['knockout',
             self.openAddWidgetDialog = function() {
                 $('#dashboardBuilderAddWidgetDialog').ojDialog('open');
             };
-             
+            
             self.rightPanelShown = ko.observable(self.isEmpty());
-            self.toggleRightPanel = function() {
-                $b.getRightPanelModel().toggleLeftPanel();
-                self.rightPanelShown(!self.rightPanelShown());
+            
+            self.rightPanelIcon = ko.observable(function(){
+                var icon="none";
+                if (self.isEmpty()){
+                    icon="wrench";
+                }
+                return icon;  
+            }());
+            self.toggleRightPanel = function(data,event) {
+                if($(event.currentTarget).hasClass('rightpanel-pencil')){
+                    if(self.rightPanelIcon()==='wrench'){
+                        self.rightPanelIcon("pencil");
+                    }else{
+                        $b.getRightPanelModel().toggleLeftPanel(); 
+                        self.rightPanelShown(!self.rightPanelShown());
+                    }
+                }else if($(event.currentTarget).hasClass('rightpanel-wrench')){
+                    if(self.rightPanelIcon()==='pencil'){
+                        self.rightPanelIcon("wrench");
+                    }else{
+                        $b.getRightPanelModel().toggleLeftPanel();
+                        self.rightPanelShown(!self.rightPanelShown());
+                    }
+                }              
             };
             
 //            self.appendTextTile = function () {
