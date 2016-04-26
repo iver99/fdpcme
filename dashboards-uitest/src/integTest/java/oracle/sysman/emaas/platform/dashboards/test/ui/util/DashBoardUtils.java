@@ -111,9 +111,9 @@ public class DashBoardUtils
 	//		driver.click(PageId.stopshare_btn);
 	//	}
 
-	public static void waitForMilliSeconds(long millisSec) throws Exception
-	{
-		Thread.sleep(millisSec);
-	}
+	//	public static void waitForMilliSeconds(long millisSec) throws Exception
+	//	{
+	//		Thread.sleep(millisSec);
+	//	}
 
 }
