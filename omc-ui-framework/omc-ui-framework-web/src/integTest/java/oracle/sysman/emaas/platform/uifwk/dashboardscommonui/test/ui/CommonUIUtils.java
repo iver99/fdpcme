@@ -15,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.Arrays;
 
 import oracle.sysman.emsaas.login.LoginUtils;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
@@ -238,6 +239,7 @@ public class CommonUIUtils
 		String s_appname = res1.jsonPath().getString("applications");
 		CommonUIUtils.commonUITestLog("The response content is:" + s_appname);
 		String[] ls_appname = s_appname.split(",");
+		Arrays.sort(ls_appname);
 		for (int i = 0; i < ls_appname.length; i++) {
 			CommonUIUtils.commonUITestLog(i + " : " + ls_appname[i]);
 			if (ls_appname[i].contains("APM")) {
@@ -247,6 +249,14 @@ public class CommonUIUtils
 				else {
 					sAppName = sAppName + " | Application Performance Monitoring";
 				}
+			}			
+			else if (ls_appname[i].contains("ITAnalytics")) {
+				if (sAppName.equals("")) {
+					sAppName = "IT Analytics";
+				}
+				else {
+					sAppName = sAppName + " | IT Analytics";
+				}
 			}
 			else if (ls_appname[i].contains("LogAnalytics")) {
 				if (sAppName.equals("")) {
@@ -254,14 +264,6 @@ public class CommonUIUtils
 				}
 				else {
 					sAppName = sAppName + " | Log Analytics";
-				}
-			}
-			else if (ls_appname[i].contains("ITAnalytics")) {
-				if (sAppName.equals("")) {
-					sAppName = "IT Analytics";
-				}
-				else {
-					sAppName = sAppName + " | IT Analytics";
 				}
 			}
 		}
@@ -403,9 +405,9 @@ public class CommonUIUtils
 		Assert.assertEquals(driver.getText(UIControls.sAddWidgetIcon), "Add");
 
 		driver.getLogger().info("Click the Add Widgets icon");
+		driver.waitForElementPresent(UIControls.sAddWidgetIcon);
 		driver.click(UIControls.sAddWidgetIcon);
-		Thread.sleep(15000);
-
+		
 		driver.getLogger().info("Verify the Add Widgets window is opened");
 		Assert.assertTrue(driver.isElementPresent(UIControls.sWidgetWindowTitle));
 		driver.getLogger().info("The window title is:  " + driver.getText(UIControls.sWidgetWindowTitle));
@@ -422,17 +424,18 @@ public class CommonUIUtils
 		//Add a widget
 		driver.getLogger().info("Select a widget and add it to the main page");
 		driver.getLogger().info("Select a widget");
+		driver.waitForElementPresent(UIControls.sWidgetSelct);
 		driver.click(UIControls.sWidgetSelct);
-		Thread.sleep(15000);
 		driver.getLogger().info("Click Add button");
+		driver.waitForElementPresent(UIControls.sAddWidgetBtn);
 		driver.click(UIControls.sAddWidgetBtn);
 		driver.takeScreenShot();
-		Thread.sleep(5000);
+		
 		driver.getLogger().info("Close the Add Widget window");
+		driver.waitForElementPresent(UIControls.sCloseWidget);
 		driver.click(UIControls.sCloseWidget);
 		driver.takeScreenShot();
-		Thread.sleep(15000);
-
+		
 		driver.getLogger().info("Verify the widget has been added to main page");
 		Assert.assertTrue(driver.isElementPresent(UIControls.sWidget));
 		driver.takeScreenShot();
@@ -448,9 +451,9 @@ public class CommonUIUtils
 			Assert.assertEquals(driver.getText(UIControls.sAddWidgetIcon), "Open");
 
 			driver.getLogger().info("Click the Open icon");
+			driver.waitForElementPresent(UIControls.sAddWidgetIcon);
 			driver.click(UIControls.sAddWidgetIcon);
-			Thread.sleep(10000);
-
+			
 			driver.getLogger().info("Verify the Open Widgets window is opened");
 			Assert.assertTrue(driver.isElementPresent(UIControls.sWidgetWindowTitle));
 			driver.getLogger().info("The window title is:  " + driver.getText(UIControls.sWidgetWindowTitle));
@@ -475,13 +478,14 @@ public class CommonUIUtils
 			{
 				driver.getLogger().info("Select a widget and open it in the main page");
 				driver.getLogger().info("Select a widget");
+				driver.waitForElementPresent(UIControls.sWidgetSelct);
 				driver.click(UIControls.sWidgetSelct);
-				Thread.sleep(5000);
+				
 				driver.getLogger().info("Click Open button");
+				driver.waitForElementPresent(UIControls.sAddWidgetBtn);
 				driver.click(UIControls.sAddWidgetBtn);
 				driver.takeScreenShot();
-				Thread.sleep(5000);
-
+				
 				driver.getLogger().info("Verify the widget has been opened in main page");
 				Assert.assertTrue(driver.isElementPresent(UIControls.sWidget));
 				driver.takeScreenShot();

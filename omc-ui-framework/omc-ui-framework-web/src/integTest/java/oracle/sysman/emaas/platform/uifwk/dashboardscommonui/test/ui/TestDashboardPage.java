@@ -39,13 +39,9 @@ public class TestDashboardPage extends CommonUIUtils
 	{
 		try
 		{
-			CommonUIUtils.commonUITestLog("This is to test Dashboard Page");
-
 			String testName = this.getClass().getName() + ".testDashboardPage_noPara";
 			WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
-			//CommonUIUtils.getAppName(sTenantId,sSsoUserName);
-			//CommonUIUtils.getRoles(sTenantId,sSsoUserName);
-			Thread.sleep(5000);
+			webdriver.getLogger().info("This is to test Dashboard Page");
 			
 			//login
 			Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver,sTenantId,sSsoUserName,sSsoPassword);
@@ -56,19 +52,20 @@ public class TestDashboardPage extends CommonUIUtils
 
 			//click the compass icon
 			webdriver.getLogger().info("Click the Application navigator icon");
+			webdriver.waitForElementPresent(UIControls.sCompassIcon);
 			webdriver.click(UIControls.sCompassIcon);
 			webdriver.takeScreenShot();
 
 			verifyMenu(webdriver, isDSAdmin);
 
 			//click the compass icon again
-			Thread.sleep(10000);
-
 			webdriver.getLogger().info("Click the Application navigator icon again");
+			webdriver.waitForElementPresent(UIControls.sCompassIcon);
 			webdriver.click(UIControls.sCompassIcon);
 			webdriver.takeScreenShot();
-			Thread.sleep(5000);
+			
 			webdriver.getLogger().info("Verify the Links menu disappeared");
+			webdriver.waitForElementPresent(UIControls.sLinksMenu);
 			Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: none;");
 			
 			//Add a widget
@@ -95,8 +92,7 @@ public class TestDashboardPage extends CommonUIUtils
 				WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
 				//CommonUIUtils.getAppName(sTenantId,sSsoUserName);
 				//CommonUIUtils.getRoles(sTenantId,sSsoUserName);
-				Thread.sleep(5000);
-				
+								
 				//login
 				Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver,"?appId=Dashboard",sTenantId,sSsoUserName,sSsoPassword);
 				webdriver.getLogger().info("Assert that common UI login was successfuly");
@@ -106,19 +102,20 @@ public class TestDashboardPage extends CommonUIUtils
 		
 				//click the compass icon
 				webdriver.getLogger().info("Click the Application navigator icon");
+				webdriver.waitForElementPresent(UIControls.sCompassIcon);
 				webdriver.click(UIControls.sCompassIcon);
 				webdriver.takeScreenShot();
 		
 				verifyMenu(webdriver, isDSAdmin);
 		
 				//click the compass icon again
-				Thread.sleep(10000);
-		
 				webdriver.getLogger().info("Click the Application navigator icon again");
+				webdriver.waitForElementPresent(UIControls.sCompassIcon);
 				webdriver.click(UIControls.sCompassIcon);
 				webdriver.takeScreenShot();
-				Thread.sleep(5000);
+				
 				webdriver.getLogger().info("Verify the Links menu disappeared");
+				webdriver.waitForElementPresent(UIControls.sLinksMenu);
 				Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: none;");
 				
 				//Add a widget
