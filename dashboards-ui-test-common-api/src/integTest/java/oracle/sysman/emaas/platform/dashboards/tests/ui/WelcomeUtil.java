@@ -4,10 +4,13 @@ import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class WelcomeUtil
 {
@@ -26,6 +29,8 @@ public class WelcomeUtil
 		Validator.fromValidValues("dataExplorersSelection", selection, DATA_EXPLORERS_LOG, DATA_EXPLORERS_ANALYZE,
 				DATA_EXPLORERS_SEARCH);
 
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
 		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.Welcome_DataExp_SelectID);
 		driver.click("id=oj-select-choice-" + DashBoardPageId.Welcome_DataExp_SelectID);
 		driver.takeScreenShot();
@@ -232,6 +237,7 @@ public class WelcomeUtil
 	public static void learnMoreHow(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("Visiting 'Learn More-How to get started' from Welcome Page...");
+		WaitUtil.waitForPageFullyLoaded(driver);
 		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_LearnMore_getStarted);
 		driver.click("id=" + DashBoardPageId.Welcome_LearnMore_getStarted);
 		driver.takeScreenShot();
@@ -246,6 +252,7 @@ public class WelcomeUtil
 	public static void learnMoreServiceOffering(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("Visiting 'Learn More-Service Offerings' from Welcome Page...");
+		WaitUtil.waitForPageFullyLoaded(driver);
 		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_LearnMore_ServiceOffering);
 		driver.click("id=" + DashBoardPageId.Welcome_LearnMore_ServiceOffering);
 		driver.takeScreenShot();
@@ -260,6 +267,7 @@ public class WelcomeUtil
 	public static void learnMoreVideo(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("Visiting 'Learn More-Videos' from Welcome Page...");
+		WaitUtil.waitForPageFullyLoaded(driver);
 		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_LearnMore_Videos);
 		driver.click("id=" + DashBoardPageId.Welcome_LearnMore_Videos);
 		driver.takeScreenShot();
@@ -274,6 +282,8 @@ public class WelcomeUtil
 	public static void visitAPM(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("Visit APM from Welcome Page...");
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
 		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_APMLinkCSS);
 		driver.click("id=" + DashBoardPageId.Welcome_APMLinkCSS);
 		driver.takeScreenShot();
@@ -288,6 +298,8 @@ public class WelcomeUtil
 	public static void visitDashboards(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("Visit Dashboards from Welcome Page...");
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
 		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_DashboardsLinkID);
 		driver.click("id=" + DashBoardPageId.Welcome_DashboardsLinkID);
 		driver.takeScreenShot();
@@ -310,6 +322,9 @@ public class WelcomeUtil
 				ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE, ITA_RESOURCE_ANALYTICS_DATABASE, ITA_RESOURCE_ANALYTICS_MIDDLEWARE,
 				ITA_DATA_EXPLORER_ANALYZE, ITA_DATA_EXPLORER);
 
+
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
 		if (ITA_DEFAULT.equals(selection)) {
 			driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_ITALinkID);
 			driver.click("id=" + DashBoardPageId.Welcome_ITALinkID);
@@ -360,6 +375,8 @@ public class WelcomeUtil
 	public static void visitLA(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("Visiting LA from Welcome Page...");
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
 		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_LALinkCSS);
 		driver.click("id=" + DashBoardPageId.Welcome_LALinkCSS);
 		driver.takeScreenShot();
