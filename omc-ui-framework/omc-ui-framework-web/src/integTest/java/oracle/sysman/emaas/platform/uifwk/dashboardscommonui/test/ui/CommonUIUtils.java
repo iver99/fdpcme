@@ -20,6 +20,9 @@ import java.util.Properties;
 import oracle.sysman.emsaas.login.LoginUtils;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import com.jayway.restassured.RestAssured;
@@ -481,6 +484,14 @@ public class CommonUIUtils
 			Assert.assertFalse(driver.isElementPresent(UIControls.sAdminLabel));
 			Assert.assertFalse(driver.isElementPresent(UIControls.sAdminLink));
 		}
+	}
+
+	public static void verifyNoLinksMenu(WebDriver driver) throws Exception
+	{
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), 900L);
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(UIControls.sLinksMenu)));
+		Assert.assertEquals(driver.getAttribute(UIControls.sLinksMenu + "@style"), "display: none;");
+
 	}
 
 	public static void verifyPageContent(WebDriver driver, String sAppName) throws Exception

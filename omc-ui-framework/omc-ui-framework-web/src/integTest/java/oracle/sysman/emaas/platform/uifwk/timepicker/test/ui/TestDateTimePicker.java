@@ -10,23 +10,17 @@
 
 package oracle.sysman.emaas.platform.uifwk.timepicker.test.ui;
 
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
-
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
-import java.text.DateFormat;
 import java.util.Date;
-import java.util.Calendar;
 import java.util.TimeZone;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil.TimeRange;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author shangwan
@@ -35,84 +29,106 @@ public class TestDateTimePicker extends CommonUIUtils
 {
 	private static void verifyResult(WebDriver driver, String returnDate, TimeRange option) throws Exception
 	{
-		
+
 		String timeRange = option.getRangeOption();
-		
+
 		String sTmpStartDateTime = driver.getText(UIControls.sStartText);
 		String sTmpEndDateTime = driver.getText(UIControls.sEndText);
-		
+
 		SimpleDateFormat fmt = new SimpleDateFormat("MMM d, yyyy h:mm a");
-		
+
 		Date dTmpStart = new Date();
 		Date dTmpEnd = new Date();
-		
-		String tmpReturnDate= "";
-		
-		if(!timeRange.equals("Latest"))
-		{
-			tmpReturnDate=returnDate.substring(timeRange.length()+1);
-			
+
+		String tmpReturnDate = "";
+
+		if (!timeRange.equals("Latest")) {
+			tmpReturnDate = returnDate.substring(timeRange.length() + 1);
+
 			String[] tmpDate = tmpReturnDate.split("-");
-			
+
 			String tmpStartDate = tmpDate[0].trim();
 			String tmpEndDate = tmpDate[1].trim();
-			
+
 			Assert.assertEquals(tmpStartDate, sTmpStartDateTime);
 			Assert.assertEquals(tmpEndDate, sTmpEndDateTime);
-		}		
-				
-		driver.getLogger().info("Verify the result in label");		
-		
+		}
+
+		driver.getLogger().info("Verify the result in label");
+
 		dTmpStart = fmt.parse(sTmpStartDateTime);
 		dTmpEnd = fmt.parse(sTmpEndDateTime);
-		
+
 		TimeZone tz = TimeZone.getDefault();
 
 		int starttz = tz.getOffset(dTmpStart.getTime());
 		int endtz = tz.getOffset(dTmpEnd.getTime());
-		
-		driver.getLogger().info("sStartText: "+ sTmpStartDateTime);
-		driver.getLogger().info("sEndText: "+ sTmpEndDateTime);
-		
-		long lTimeRange = dTmpEnd.getTime()-dTmpStart.getTime()+(endtz-starttz);
-		
+
+		driver.getLogger().info("sStartText: " + sTmpStartDateTime);
+		driver.getLogger().info("sEndText: " + sTmpEndDateTime);
+
+		long lTimeRange = dTmpEnd.getTime() - dTmpStart.getTime() + (endtz - starttz);
+
 		//verify the time range is expected
-		switch(timeRange)
-		{
+		switch (timeRange) {
 			case "Last 15 mins":
-				Assert.assertEquals(lTimeRange/(60*1000),15);
+				Assert.assertEquals(lTimeRange / (60 * 1000), 15);
 				break;
 			case "Last 30 mins":
-				Assert.assertEquals(lTimeRange/(60*1000),30);
+				Assert.assertEquals(lTimeRange / (60 * 1000), 30);
 				break;
 			case "Last 60 mins":
-				Assert.assertEquals(lTimeRange/(60*1000),60);
+				Assert.assertEquals(lTimeRange / (60 * 1000), 60);
 				break;
 			case "Last 4 hours":
-				Assert.assertEquals(lTimeRange/(60*60*1000),4);
+				Assert.assertEquals(lTimeRange / (60 * 60 * 1000), 4);
 				break;
 			case "Last 6 hours":
-				Assert.assertEquals(lTimeRange/(60*60*1000),6);
+				Assert.assertEquals(lTimeRange / (60 * 60 * 1000), 6);
 				break;
 			case "Last 1 day":
-				Assert.assertEquals(lTimeRange/(24*60*60*1000),1);
+				Assert.assertEquals(lTimeRange / (24 * 60 * 60 * 1000), 1);
 				break;
 			case "Last 7 days":
-				Assert.assertEquals(lTimeRange/(24*60*60*1000),7);
+				Assert.assertEquals(lTimeRange / (24 * 60 * 60 * 1000), 7);
 				break;
 			case "Last 30 days":
-				Assert.assertEquals(lTimeRange/(24*60*60*1000),30);
+				Assert.assertEquals(lTimeRange / (24 * 60 * 60 * 1000), 30);
 				break;
 			case "Last 90 day":
-				Assert.assertEquals(lTimeRange/(24*60*60*1000),90);
+				Assert.assertEquals(lTimeRange / (24 * 60 * 60 * 1000), 90);
 				break;
 			case "Latest":
-				Assert.assertEquals(lTimeRange,0);
+				Assert.assertEquals(lTimeRange, 0);
 				break;
 		}
-		
-		driver.getLogger().info("Verify Result Pass!");	
-		
+
+		driver.getLogger().info("Verify Result Pass!");
+
+	}
+
+	@Test
+	public void testDateTimePicker_Custom() throws Exception
+	{
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testDateTimePicker_Custom";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Custom");
+		String returnDate = TimeSelectorUtil.setCustomTime(webdriver, "04/14/2016 12:00 AM", "04/14/2016 12:30 PM");
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Custom);
+
+		webdriver.shutdownBrowser(true);
 	}
 
 	@Test
@@ -129,17 +145,66 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		webdriver.getLogger().info("Assert that common UI login was successfuly");
 		Assert.assertTrue(bLoginSuccessful);
-		
+
 		//set time range
 		webdriver.getLogger().info("set timerange as Last 15 minutes");
-		String returnDate=TimeSelectorUtil.setTimeRange(webdriver,TimeRange.Last15Mins);
-		
+		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, TimeRange.Last15Mins);
+
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		verifyResult(webdriver,returnDate,TimeRange.Last15Mins);
-		
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last15Mins);
+
 		webdriver.shutdownBrowser(true);
 
+	}
+
+	@Test
+	public void testDateTimePicker_Last1Day() throws Exception
+	{
+
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testDateTimePicker_Last1Day";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Last 1 day");
+		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, TimeRange.Last1Day);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last1Day);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	@Test
+	public void testDateTimePicker_Last30Days() throws Exception
+	{
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testDateTimePicker_Last30Days";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Last 30 days");
+		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, TimeRange.Last30Days);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last30Days);
+
+		webdriver.shutdownBrowser(true);
 	}
 
 	@Test
@@ -150,7 +215,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		String testName = this.getClass().getName() + ".testDateTimePicker_Last30Mins";
 		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
-		
+
 		//login
 		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
 		webdriver.getLogger().info("Assert that common UI login was successfuly");
@@ -158,36 +223,11 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//set time range
 		webdriver.getLogger().info("set timerange as Last 30 minutes");
-		String returnDate=TimeSelectorUtil.setTimeRange(webdriver,TimeRange.Last30Mins);
-				
+		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, TimeRange.Last30Mins);
+
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		verifyResult(webdriver,returnDate,TimeRange.Last30Mins);
-
-		webdriver.shutdownBrowser(true);
-	}
-
-	@Test
-	public void testDateTimePicker_Last60Mins() throws Exception
-	{
-
-		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
-
-		String testName = this.getClass().getName() + ".testDateTimePicker_Last60Mins";
-		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
-		
-		//login
-		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
-		webdriver.getLogger().info("Assert that common UI login was successfuly");
-		Assert.assertTrue(bLoginSuccessful);
-
-		//set time range
-		webdriver.getLogger().info("set timerange as Last 60 minutes");
-		String returnDate=TimeSelectorUtil.setTimeRange(webdriver,TimeRange.Last60Mins);
-				
-		//verify the result
-		webdriver.getLogger().info("verify the time range is set correctly");
-		verifyResult(webdriver,returnDate,TimeRange.Last60Mins);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last30Mins);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -205,15 +245,40 @@ public class TestDateTimePicker extends CommonUIUtils
 		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
 		webdriver.getLogger().info("Assert that common UI login was successfuly");
 		Assert.assertTrue(bLoginSuccessful);
-		
+
 		//set time range
 		webdriver.getLogger().info("set timerange as Last 4 hours");
-		String returnDate=TimeSelectorUtil.setTimeRange(webdriver,TimeRange.Last4Hours);
-				
+		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, TimeRange.Last4Hours);
+
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		verifyResult(webdriver,returnDate,TimeRange.Last4Hours);
-		
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last4Hours);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	@Test
+	public void testDateTimePicker_Last60Mins() throws Exception
+	{
+
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testDateTimePicker_Last60Mins";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Last 60 minutes");
+		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, TimeRange.Last60Mins);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last60Mins);
+
 		webdriver.shutdownBrowser(true);
 	}
 
@@ -230,39 +295,14 @@ public class TestDateTimePicker extends CommonUIUtils
 		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
 		webdriver.getLogger().info("Assert that common UI login was successfuly");
 		Assert.assertTrue(bLoginSuccessful);
-		
+
 		//set time range
 		webdriver.getLogger().info("set timerange as Last 6 hours");
-		String returnDate=TimeSelectorUtil.setTimeRange(webdriver,TimeRange.Last6Hours);
-				
+		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, TimeRange.Last6Hours);
+
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		verifyResult(webdriver,returnDate,TimeRange.Last6Hours);
-
-		webdriver.shutdownBrowser(true);
-	}
-
-	@Test
-	public void testDateTimePicker_Last1Day() throws Exception
-	{
-
-		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
-
-		String testName = this.getClass().getName() + ".testDateTimePicker_Last1Day";
-		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
-		
-		//login
-		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
-		webdriver.getLogger().info("Assert that common UI login was successfuly");
-		Assert.assertTrue(bLoginSuccessful);
-		
-		//set time range
-		webdriver.getLogger().info("set timerange as Last 1 day");
-		String returnDate=TimeSelectorUtil.setTimeRange(webdriver,TimeRange.Last1Day);
-				
-		//verify the result
-		webdriver.getLogger().info("verify the time range is set correctly");
-		verifyResult(webdriver,returnDate,TimeRange.Last1Day);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last6Hours);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -283,35 +323,11 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//set time range
 		webdriver.getLogger().info("set timerange as Last 7 days");
-		String returnDate=TimeSelectorUtil.setTimeRange(webdriver,TimeRange.Last7Days);
-				
+		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, TimeRange.Last7Days);
+
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		verifyResult(webdriver,returnDate,TimeRange.Last7Days);
-
-		webdriver.shutdownBrowser(true);
-	}
-
-	@Test
-	public void testDateTimePicker_Last30Days() throws Exception
-	{
-		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
-
-		String testName = this.getClass().getName() + ".testDateTimePicker_Last30Days";
-		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
-
-		//login
-		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
-		webdriver.getLogger().info("Assert that common UI login was successfuly");
-		Assert.assertTrue(bLoginSuccessful);
-
-		//set time range
-		webdriver.getLogger().info("set timerange as Last 30 days");
-		String returnDate=TimeSelectorUtil.setTimeRange(webdriver,TimeRange.Last30Days);
-				
-		//verify the result
-		webdriver.getLogger().info("verify the time range is set correctly");
-		verifyResult(webdriver,returnDate,TimeRange.Last30Days);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last7Days);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -323,7 +339,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		String testName = this.getClass().getName() + ".testDateTimePicker_Last90Days";
 		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
-		
+
 		//login
 		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
 		webdriver.getLogger().info("Assert that common UI login was successfuly");
@@ -331,39 +347,15 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//set time range
 		webdriver.getLogger().info("set timerange as Last 90 days");
-		String returnDate=TimeSelectorUtil.setTimeRange(webdriver,TimeRange.Last90Days);
-				
+		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, TimeRange.Last90Days);
+
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		verifyResult(webdriver,returnDate,TimeRange.Last90Days);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last90Days);
 
 		webdriver.shutdownBrowser(true);
 	}
 
-	@Test
-	public void testDateTimePicker_Custom() throws Exception
-	{
-		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
-
-		String testName = this.getClass().getName() + ".testDateTimePicker_Custom";
-		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
-		
-		//login
-		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
-		webdriver.getLogger().info("Assert that common UI login was successfuly");
-		Assert.assertTrue(bLoginSuccessful);
-
-		//set time range
-		webdriver.getLogger().info("set timerange as Custom");
-		String returnDate=TimeSelectorUtil.setCustomTime(webdriver,"04/14/2016 12:00 AM", "04/14/2016 12:30 PM");
-				
-		//verify the result
-		webdriver.getLogger().info("verify the time range is set correctly");
-		verifyResult(webdriver,returnDate,TimeRange.Custom);
-
-		webdriver.shutdownBrowser(true);
-	}
-	
 	@Test
 	public void testDateTimePicker_Latest() throws Exception
 	{
@@ -371,7 +363,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		String testName = this.getClass().getName() + ".testDateTimePicker_Latest";
 		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
-		
+
 		//login
 		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
 		webdriver.getLogger().info("Assert that common UI login was successfuly");
@@ -379,13 +371,13 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//set time range
 		webdriver.getLogger().info("set timerange as Latest");
-		String returnDate=TimeSelectorUtil.setTimeRange(webdriver,TimeRange.Latest);
-				
+		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, TimeRange.Latest);
+
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		verifyResult(webdriver,returnDate,TimeRange.Latest);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Latest);
 
-		webdriver.shutdownBrowser(true);		
+		webdriver.shutdownBrowser(true);
 	}
 
 }
