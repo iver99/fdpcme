@@ -4,6 +4,11 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+
 public class BrandingBarUtil
 {
 	// values for 'option' for user menu
@@ -88,6 +93,8 @@ public class BrandingBarUtil
 			driver.click("id=" + DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
+		//Wait until the links menu is displayed
+		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
 		isExisted = driver.isDisplayed("id=" + DashBoardPageId.BrandingBarDashboardHomeLinkID);
 		//Recover the navigation bar to the original status
 		if (!isNavBarDisplayed) {
@@ -141,6 +148,8 @@ public class BrandingBarUtil
 			driver.click("id=" + DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
+		//Wait until the links menu is displayed
+		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
 		isExisted = driver.isDisplayed("id=" + DashBoardPageId.BrandingBarMyFavoritesLinkID);
 		//Recover the navigation bar to the original status
 		if (!isNavBarDisplayed) {
@@ -172,6 +181,8 @@ public class BrandingBarUtil
 			driver.click("id=" + DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
+		//Wait until the links menu is displayed
+		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
 		isExisted = driver.isDisplayed("id=" + DashBoardPageId.BrandingBarMyHomeLinkID);
 		//Recover the navigation bar to the original status
 		if (!isNavBarDisplayed) {
@@ -226,6 +237,8 @@ public class BrandingBarUtil
 			driver.click("id=" + DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
+		//Wait until the links menu is displayed
+		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
 		isExisted = driver.isDisplayed("id=" + DashBoardPageId.BrandingBarWelcomeLinkID);
 		//Recover the navigation bar to the original status
 		if (!isNavBarDisplayed) {
@@ -253,6 +266,13 @@ public class BrandingBarUtil
 		driver.getLogger().info("Click brand bar user menur option:" + option);
 		driver.waitForElementPresent(DashBoardPageId.Brand_Bar_User_Menu);
 		driver.click(DashBoardPageId.Brand_Bar_User_Menu);
+
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), 900L);
+		By locator = By.id(DashBoardPageId.UserMenuPopupId);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+		driver.takeScreenShot();
+		Assert.assertTrue(driver.isDisplayed("id=" + DashBoardPageId.UserMenuPopupId));
+
 		switch (option) {
 			case USERMENU_OPTION_HELP:
 				driver.takeScreenShot();
@@ -348,8 +368,10 @@ public class BrandingBarUtil
 			driver.click("id=" + DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
+		//Wait until the links menu is displayed
+		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
 		driver.waitForElementPresent(DashBoardPageId.BrandingBarDashboardLinkLocator);
-		driver.check(DashBoardPageId.BrandingBarDashboardLinkLocator);
+		driver.click(DashBoardPageId.BrandingBarDashboardLinkLocator);
 		driver.takeScreenShot();
 	}
 
@@ -366,6 +388,9 @@ public class BrandingBarUtil
 		if (!BrandingBarUtil.isNavigationBarDisplayed(driver)) {
 			driver.click("id=" + DashBoardPageId.LinkID);
 		}
+		driver.takeScreenShot();
+		//Wait until the links menu is displayed
+		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
 		driver.waitForElementPresent("id=" + DashBoardPageId.BrandingBarMyFavoritesLinkID);
 		driver.click("id=" + DashBoardPageId.BrandingBarMyFavoritesLinkID);
 		driver.takeScreenShot();
@@ -385,6 +410,8 @@ public class BrandingBarUtil
 			driver.click("id=" + DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
+		//Wait until the links menu is displayed
+		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
 		driver.click("id=" + DashBoardPageId.BrandingBarMyHomeLinkID);
 		driver.takeScreenShot();
 	}
@@ -403,8 +430,36 @@ public class BrandingBarUtil
 			driver.click("id=" + DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
+		//Wait until the links menu is displayed
+		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
 		driver.click("id=" + DashBoardPageId.BrandingBarWelcomeLinkID);
 		driver.takeScreenShot();
+	}
+
+	/**
+	 * Check the visibility of the navigation links panel
+	 *
+	 * @param driver
+	 *            WebDriver instance
+	 * @param visible
+	 *            The visibility of the navigation links panel
+	 * @return
+	 */
+	private static void checkLinksMenuVisibility(WebDriver driver, boolean visible)
+	{
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), 900L);
+		By locator = By.id(DashBoardPageId.BrandingBarNavLinksId);
+		if (visible) {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+			driver.takeScreenShot();
+			Assert.assertTrue(driver.isDisplayed("id=" + DashBoardPageId.BrandingBarNavLinksId));
+		}
+		else {
+			wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
+			driver.takeScreenShot();
+			Assert.assertFalse(driver.isDisplayed("id=" + DashBoardPageId.BrandingBarNavLinksId));
+		}
+
 	}
 
 	/**
@@ -418,19 +473,19 @@ public class BrandingBarUtil
 	{
 		String parentId = null;
 		switch (linkType) {
-			//Home links
+		//Home links
 			case "home":
 				parentId = DashBoardPageId.BrandingBarHomeLinksID;
 				break;
-				//Cloud service links
+			//Cloud service links
 			case "cs":
 				parentId = DashBoardPageId.BrandingBarCloudServiceLinksID;
 				break;
-				//Visual analyzer links
+			//Visual analyzer links
 			case "va":
 				parentId = DashBoardPageId.BrandingBarVisualAnalyzerLinksID;
 				break;
-				//Administration links
+			//Administration links
 			case "admin":
 				parentId = DashBoardPageId.BrandingBarAdminLinksID;
 				break;
@@ -463,6 +518,8 @@ public class BrandingBarUtil
 			driver.click("id=" + DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
+		//Wait until the links menu is displayed
+		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
 		isExisted = driver.isDisplayed(xpath);
 		//Recover the navigation bar to the original status
 		if (!isNavBarDisplayed) {
@@ -507,6 +564,8 @@ public class BrandingBarUtil
 			driver.click("id=" + DashBoardPageId.LinkID);
 		}
 		driver.takeScreenShot();
+		//Wait until the links menu is displayed
+		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
 		driver.click(xpath);
 		driver.takeScreenShot();
 	}

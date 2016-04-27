@@ -352,7 +352,7 @@ public class DashBoardPageId
 	public static final String Option_About = "//*[@id='emcpdf_oba_about']";
 	public static final String Option_Logout = "//*[@id='emcpdf_oba_logout']";
 	public static final String AboutDialogClose = "//button[contains(@id,'okButton')]";
-
+	public static final String UserMenuPopupId = "emaasAppheaderGlobalNavMenuId";
 	public static final String DASHBOARD_LIST_TABLE = "dbstable";
 	public static final String DASHBOARD_HOME_DELETE_BUTTON = "//*[@id=\"dsbinfopop\"]/div/div/button";
 	public static final String DASHBOARD_HOME_DELETE_CONFIRM = "//*[@id=\"ojDialogWrapper-dbs_cfmDialog\"]/div[3]/button[1]";
