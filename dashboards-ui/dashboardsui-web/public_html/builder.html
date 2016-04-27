@@ -697,7 +697,7 @@
                         data-bind="css: {'dbd-no-left-panel': maximized() || completelyHidden()},
                                         style: {right: $root.scrollbarWidth + 'px'}">
                     <div class="dbd-right-panel-contents">
-                        <div class="dbd-right-panel-editdashboard">
+                        <div class="dbd-right-panel-editdashboard" style="display: none;">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Edit Dashboard</div>
                             <div class="dbd-right-panel-editdashboard-container" style="padding-left:0; padding-right:0;">
                                 <div class="dbd-right-panel-editdashboard-general" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbeditorIsExpanded}">
@@ -911,15 +911,10 @@
                         <div class="dbd-right-panel-editsettings" style="display:none;">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Edit Settings</div>
                         </div>
-                        <div class="dbd-right-panel-wrench" style="display:none;">
+                        <div class="dbd-right-panel-wrench" >
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Build Dashboard</div>
                             <div class="dbd-right-panel-build-container" style="padding:0">
                     <div class="dbd-left-panel-header fit-size-vertical-sibling">
-                        <div class="oj-row">
-                            <div class="oj-col">
-                                <h3 class="dbd-left-panel-header-title" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTENT_LABEL')"></h3>
-                            </div>
-                        </div>
                         <div class="dbd-left-panel-header-search">
                             <div  class="dbd-left-panel-header-search-input">
                                 <input class="widget-search-input" type="text" name="searchInput"

@@ -27,13 +27,12 @@ define(['knockout',
                 self.$list.each(function() {
                     var elem = $(this)
                     , v_siblings = elem.siblings(".fit-size-vertical-sibling:visible")
-                    ,rightPanelTitleHeight = $(".dbd-right-panel-title").outerHeight()+$(".dbd-right-panel-editdashboard").outerHeight()*2
-                    , h = 0;
+                    , h = 62;
                     if (v_siblings && v_siblings.length > 0) {
                         for (var i = 0; i < v_siblings.length; i++) {
                             h += $(v_siblings[i]).outerHeight();
                         }
-                        elem.height(height - topHeight - rightPanelTitleHeight - h);
+                        elem.height(height - topHeight - h);
                     }
                 });
             };
@@ -104,9 +103,7 @@ define(['knockout',
                 var toWidgetIndex = Math.ceil(widgetListHeight()/30)+fromWidgetIndex;
                 if (self.widgets && self.widgets().length > 0) {
                     for (var i = fromWidgetIndex; i < toWidgetIndex; i++) {
-                        var temp = self.widgets()[i].WIDGET_VISUAL();
-                        console.log(temp);
-                        if (!self.widgets()[i].WIDGET_VISUAL()){
+                        if (self.widgets()[i]&&!self.widgets()[i].WIDGET_VISUAL()){
                             self.getWidgetScreenshot(self.widgets()[i]);
                         }
                     }
