@@ -556,6 +556,30 @@ public class TestDashBoard extends LoginAndLogout
 		Assert.assertFalse(DashboardBuilderUtil.toggleShareDashboard(webd));
 	}
 
+          @Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
+	public void testDuplicateDashbaord() throws Exception
+	{
+                String dbName = "Test_Dashboard_duplicate";
+                String dbDesc = "Test_Dashboard_duplicate_desc";     
+           
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testshareddashboard");
+
+		DashboardHomeUtil.gridView(webd);
+
+		//search the dashboard and open it in builder page
+		webd.getLogger().info("search the dashboard");
+		DashboardHomeUtil.search(webd, "Test_Dashboard_no_Widget_GridView modify");
+		webd.getLogger().info("verify the dashboard is existed");
+		DashboardHomeUtil.isDashboardExisted(webd, "Test_Dashboard_no_Widget_GridView modify");
+		webd.getLogger().info("open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "Test_Dashboard_no_Widget_GridView modify");
+
+		//Duplicate dashbaord
+		DashboardBuilderUtil.duplicateDashboard(webd, dbName, dbDesc);
+	}
+
+
 	//@Test
 	public void testTimePicker() throws Exception
 	{
