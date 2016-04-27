@@ -866,7 +866,42 @@
                                 <hr/>
                                 <div class="dbd-right-panel-editdashboard-share" data-bind="ojComponent: {component: 'ojCollapsible', expanded:sharesettingsIsExpanded}">
                                     <span>Share</span>
-                                    <div>settings content</div>
+                                    <div class="filter-settings oj-form-layout">
+                                        <form class="oj-form">
+                                            <div class="oj-flex">  
+                                                <div class="oj-flex-item">
+                                                    <label>Dashboard Sharing</label>
+                                                </div>
+                                            </div>
+                                            <div class="oj-flex">  
+                                                <div class="oj-flex-item">
+                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: dashboardSharing}" >
+                                                        <span class="oj-choice-row">
+                                                            <input id="dashboardSharingNotShared" type="radio" name="dashboardSharing" value="notShared">
+                                                            <label for="dashboardSharingNotShared">Not Shared</label>
+                                                        </span>
+                                                        <span class="oj-choice-row">
+                                                            <input id="dashboardSharingShared" type="radio" name="dashboardSharing" value="shared">
+                                                            <label for="dashboardSharingShared">Shared (others can view)</label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="oj-flex">  
+                                                <div class="oj-flex-item">
+                                                    <label>Default Auto-refresh Value</label>
+                                                </div>
+                                            </div>
+                                            <div class="oj-flex">  
+                                                <div class="oj-flex-item">
+                                                    <select data-bind="ojComponent: {component: 'ojSelect', value: defaultAutoRefreshValue,disabled:!enableShareAutoRefresh(),rootAttributes: {style:'max-width:20em'}}">
+                                                        <option value="every5minutes">On(Every 5 Minutes)</option>
+                                                        <option value="every15minutes">On(Every 15 Minutes)</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                                 <hr/>
                                 <div>

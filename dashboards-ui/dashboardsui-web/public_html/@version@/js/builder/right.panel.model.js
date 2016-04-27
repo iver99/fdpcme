@@ -452,6 +452,16 @@ define(['knockout',
             self.enableEntityFilter = ko.observable(true);
             self.enableTimeRangeFilter = ko.observable(true);
             self.defaultEntityValue = ko.observable("allEntities");
+            self.dashboardSharing = ko.observable("notShared");
+            self.dashboardSharing.subscribe(function(val){
+                if("notShared"===val){
+                    self.enableShareAutoRefresh(false);
+                }else{
+                    self.enableShareAutoRefresh(true);
+                }
+            });
+            self.defaultAutoRefreshValue = ko.observable("every5minutes");
+            self.enableShareAutoRefresh = ko.observable(false);
 
 
 
