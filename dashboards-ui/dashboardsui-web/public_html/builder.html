@@ -696,10 +696,9 @@
                 <div class="dbd-left-panel dbd-left-panel-show no-print"
                         data-bind="css: {'dbd-no-left-panel': maximized() || completelyHidden()},
                                         style: {right: $root.scrollbarWidth + 'px'}">
-                    <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #E7F1FE ; color: #0572ce">Dashboard</div>
-                    <div class="dbd-right-panel-contents" data-bind="ojComponent: {component: 'ojAccordion'} ">
-                        <div class="dbd-right-panel-editdashboard" data-bind="ojComponent: {component: 'ojCollapsible',expanded:defineIsExpanded}">
-                            <span style="padding: 0.8571rem; border-top-width: 1px;">Define</span>
+                    <div class="dbd-right-panel-contents">
+                        <div class="dbd-right-panel-editdashboard">
+                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Edit Dashboard</div>
                             <div class="dbd-right-panel-editdashboard-container" style="padding-left:0; padding-right:0;">
                                 <div class="dbd-right-panel-editdashboard-general" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbeditorIsExpanded}">
                                     <span>General</span>
@@ -909,8 +908,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="dbd-right-panel-build" data-bind="ojComponent: {component: 'ojCollapsible', expanded:buildIsExpanded}">
-                            <span style="padding: 0.8571rem; border-top-width: 1px;">Build</span>
+                        <div class="dbd-right-panel-editsettings" style="display:none;">
+                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Edit Settings</div>
+                        </div>
+                        <div class="dbd-right-panel-wrench" style="display:none;">
+                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Build Dashboard</div>
                             <div class="dbd-right-panel-build-container" style="padding:0">
                     <div class="dbd-left-panel-header fit-size-vertical-sibling">
                         <div class="oj-row">
