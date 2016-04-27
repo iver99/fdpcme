@@ -101,11 +101,11 @@ public class TestDashBoard extends LoginAndLogout
 
 		//search the dashboard and open it in builder page
 		webd.getLogger().info("search the dashboard");
-		DashboardHomeUtil.search(webd, "Test_Dashboard_no_Widget_GridView modify");
+		DashboardHomeUtil.search(webd, "AAA_testDashboard_modify");
 		webd.getLogger().info("verify the dashboard is existed");
-		DashboardHomeUtil.isDashboardExisted(webd, "Test_Dashboard_no_Widget_GridView modify");
+		DashboardHomeUtil.isDashboardExisted(webd, "AAA_testDashboard_modify");
 		webd.getLogger().info("open the dashboard");
-		DashboardHomeUtil.selectDashboard(webd, "Test_Dashboard_no_Widget_GridView modify");
+		DashboardHomeUtil.selectDashboard(webd, "AAA_testDashboard_modify");
 
 		//sharing dashbaord
 		Assert.assertTrue(DashboardBuilderUtil.toggleShareDashboard(webd));
@@ -121,11 +121,11 @@ public class TestDashBoard extends LoginAndLogout
 
 		//search the dashboard and open it in builder page
 		webd.getLogger().info("search the dashboard");
-		DashboardHomeUtil.search(webd, "Test_Dashboard_no_Widget_GridView modify");
+		DashboardHomeUtil.search(webd, "AAA_testDashboard_modify");
 		webd.getLogger().info("verify the dashboard is existed");
-		DashboardHomeUtil.isDashboardExisted(webd, "Test_Dashboard_no_Widget_GridView modify");
+		DashboardHomeUtil.isDashboardExisted(webd, "AAA_testDashboard_modify");
 		webd.getLogger().info("open the dashboard");
-		DashboardHomeUtil.selectDashboard(webd, "Test_Dashboard_no_Widget_GridView modify");
+		DashboardHomeUtil.selectDashboard(webd, "AAA_testDashboard_modify");
 
 		//stop sharing dashbaord
 		Assert.assertFalse(DashboardBuilderUtil.toggleShareDashboard(webd));

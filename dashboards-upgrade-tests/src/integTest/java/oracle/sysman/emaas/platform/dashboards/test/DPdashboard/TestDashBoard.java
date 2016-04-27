@@ -95,7 +95,7 @@ public class TestDashBoard extends LoginAndLogout
 
 	
 
-	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView" })
+	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView" })
 	public void testModifyDashboard_namedesc() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -105,13 +105,13 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("start to edit dashboard in grid view");
 		DashboardHomeUtil.gridView(webd);
 		webd.getLogger().info("search dashboard");
-		DashboardHomeUtil.search(webd, "Test_Dashboard_no_Widget_GridView");
-		DashboardHomeUtil.selectDashboard(webd, "Test_Dashboard_no_Widget_GridView");
-		DashboardBuilderUtil.editDashboard(webd, "Test_Dashboard_no_Widget_GridView modify",
-				"Test_Dashboard_no_Widget_GridView desc modify");
+		DashboardHomeUtil.search(webd, "AAA_testDashboard");
+		DashboardHomeUtil.selectDashboard(webd, "AAA_testDashboard");
+		DashboardBuilderUtil.editDashboard(webd, "AAA_testDashboard_modify",
+				"AAA_testDashboard_desc_modify");
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView" })
+	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView","testModifyDashboard_namedesc" })
 	public void testModifyDashboard_widget() throws Exception
 	{
 		String WidgetName_1 = "Top Hosts by Log Entries";
@@ -122,11 +122,11 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("start to test in testModifyDashboard_descwidget");
 		//search the dashboard want to modify
 		webd.getLogger().info("search dashboard");
-		DashboardHomeUtil.search(webd, "AAA_testDashboard");
+		DashboardHomeUtil.search(webd, "AAA_testDashboard_modify");
 
 		//open the dashboard in the builder page
 		webd.getLogger().info("open the dashboard");
-		DashboardHomeUtil.selectDashboard(webd, "AAA_testDashboard");
+		DashboardHomeUtil.selectDashboard(webd, "AAA_testDashboard_modify");
 
 		//add the widget into the dashboard
 		webd.getLogger().info("Start to add Widget into the dashboard");
