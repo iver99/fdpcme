@@ -5,7 +5,7 @@
             <pipeline name="COMPONENT"/>
          </pipelines>
      </lrg>
-<lrg name="emcpdf_dashboard_backendtest_3n" launcher="tests/suites/emcpdf_dashboard_backendtest_3n" description=" lrg for BackendTest">
+<lrg name="emcpdf_dashboard_backendtest_3n" launcher="tests/suites/emcpdf_dashboard_backendtest_3n.gradle" description=" lrg for BackendTest">
          <pipelines>
             <pipeline name="STAGE"/>
          </pipelines>
