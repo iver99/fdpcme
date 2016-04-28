@@ -10,18 +10,19 @@ import static org.testng.Assert.*;
  * Created by Troy on 2016/1/20.
  */
 @Test(groups = {"s1"})
-public class EmsDashboardTileParamsTest {
-    private EmsDashboard emsDashboard = new EmsDashboard(new Date(),10L,10L,"elephant",10,10,10,10,10,new Date(),
+public class EmsDashboardTileParamsTest { 
+    Date now = new Date();
+    private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10, now, 
             "elephant","elephant","elephant","elephant",10,10);
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
-            new Date(),
+            now,
             emsDashboard,
             10,
             10,
             10,
             10,
             10,
-            new Date(),
+            now,
             "elephant",
             "elephant", /*Integer position, */
             "elephant",
@@ -51,7 +52,7 @@ public class EmsDashboardTileParamsTest {
             10,
             10,
             "dolphine",
-            new Date(),
+            now,
             emsDashboardTile);
     @Test
     public void testGetDashboardTile() throws Exception {
@@ -93,8 +94,8 @@ public class EmsDashboardTileParamsTest {
     @Test
     public void testGetParamValueTimestamp() throws Exception {
         emsDashboardTileParams = new EmsDashboardTileParams();
-        emsDashboardTileParams.setParamValueTimestamp(new Date());
-        assertEquals(emsDashboardTileParams.getParamValueTimestamp(), new Date());
+        emsDashboardTileParams.setParamValueTimestamp(now);
+        assertEquals(emsDashboardTileParams.getParamValueTimestamp(), now);
     }
 
     @Test

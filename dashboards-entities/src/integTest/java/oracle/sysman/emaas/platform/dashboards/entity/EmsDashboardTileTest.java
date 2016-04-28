@@ -12,19 +12,20 @@ import static org.testng.Assert.*;
  * Created by Troy on 2016/1/20.
  */
 @Test(groups={"s1"})
-public class EmsDashboardTileTest {
-    private EmsDashboard emsDashboard = new EmsDashboard(new Date(),10L,10L,"elephant",10,10,10,10,10,new Date(),
+public class EmsDashboardTileTest { 
+    Date now = new Date();
+    private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10, now, 
             "elephant","elephant","elephant","elephant",10,10);
 
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
-            new Date(),
+            now,
             emsDashboard,
             10,
             10,
             10,
             10,
             10,
-            new Date(),
+            now,
             "elephant",
             "elephant", /*Integer position, */
             "elephant",
@@ -55,7 +56,7 @@ public class EmsDashboardTileTest {
             10,
             10,
             "dolphine",
-            new Date(),
+            now,
             emsDashboardTile);
     @Test
     public void testAddEmsDashboardTileParams() throws Exception {
@@ -72,8 +73,8 @@ public class EmsDashboardTileTest {
 
     @Test
     public void testGetCreationDate() throws Exception { 
-        emsDashboardTile.setCreationDate(new Date());
-        assertEquals(emsDashboardTile.getCreationDate(), new Date()); 
+        emsDashboardTile.setCreationDate(now);
+        assertEquals(emsDashboardTile.getCreationDate(), now); 
     }
 
     @Test
@@ -105,8 +106,8 @@ public class EmsDashboardTileTest {
 
     @Test
     public void testGetLastModificationDate() throws Exception {
-        emsDashboardTile.setLastModificationDate(new Date());
-        assertEquals(emsDashboardTile.getLastModificationDate(), new Date());
+        emsDashboardTile.setLastModificationDate(now);
+        assertEquals(emsDashboardTile.getLastModificationDate(), now);
     }
 
     @Test
