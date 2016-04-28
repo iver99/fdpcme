@@ -207,7 +207,7 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("SSO_USERNAME");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-							.commonUITestLog("The SSO_USERNAME property value is null ... set it to a different value -- 'emcsadmin'.");
+					.commonUITestLog("The SSO_USERNAME property value is null ... set it to a different value -- 'emcsadmin'.");
 					sPropertyValue = "emcsadmin";
 				}
 			}
@@ -215,7 +215,7 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("SSO_PASSWORD");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-							.commonUITestLog("The SSO_PASSWORD property value is null ... set it to a different value -- 'Welcome1!'.");
+					.commonUITestLog("The SSO_PASSWORD property value is null ... set it to a different value -- 'Welcome1!'.");
 					sPropertyValue = "Welcome1!";
 				}
 			}
@@ -223,7 +223,7 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("COMMON_UI_URL_SUFFIX");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-							.commonUITestLog("The COMMON_UI_URL_SUFFIX property value is null ... set it to a different value -- '/emsaasui/uifwk/test.html'.");
+					.commonUITestLog("The COMMON_UI_URL_SUFFIX property value is null ... set it to a different value -- '/emsaasui/uifwk/test.html'.");
 					sPropertyValue = "/emsaasui/uifwk/test.html";
 				}
 			}
@@ -231,7 +231,7 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("SAAS_AUTH_TOKEN");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-					.commonUITestLog("The DASHBOARD_API_ENDPOINT property value is null ... set it to a different value -- 'welcome1'.");
+							.commonUITestLog("The DASHBOARD_API_ENDPOINT property value is null ... set it to a different value -- 'welcome1'.");
 					sPropertyValue = "Basic d2VibG9naWM6d2VsY29tZTE=";
 
 				}
@@ -239,7 +239,7 @@ public class CommonUIUtils
 					sPropertyValue = emaasProp.getProperty("DASHBOARD_API_ENDPOINT");
 					if (sPropertyValue == null) {
 						CommonUIUtils
-						.commonUITestLog("The SAAS_AUTH_TOKEN property value is null ... set it to a different value .");
+								.commonUITestLog("The SAAS_AUTH_TOKEN property value is null ... set it to a different value .");
 						sPropertyValue = sOhsUrl + "/emcpdf/api/v1/";
 					}
 				}
@@ -248,7 +248,7 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("TARGETMODEL_SERVICE_SHARD_ENDPOINT");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-							.commonUITestLog("The TARGETMODEL_SERVICE_SHARD_ENDPOINT property value is null ... set it to a different value.");
+					.commonUITestLog("The TARGETMODEL_SERVICE_SHARD_ENDPOINT property value is null ... set it to a different value.");
 					sRolesUrl = CommonUIUtils.getEmaasPropertyValue("EMCS_NODE2_HOSTNAME");
 					if (sRolesUrl == null) {
 						sPropertyValue = null;
@@ -498,19 +498,27 @@ public class CommonUIUtils
 	{
 		//verify the product name,app name,content of page
 		driver.getLogger().info("Verify the page content");
+		//Oracle logo
 		Assert.assertTrue(driver.isElementPresent(UIControls.sOracleImage));
 		Assert.assertEquals(driver.getAttribute(UIControls.sOracleImage + "@alt"), "Oracle");
+		//Product title
 		Assert.assertTrue(driver.isElementPresent(UIControls.sProductText));
+		String productTitle = "Management Cloud";
+		driver.waitForText(UIControls.sProductText, productTitle);
 		driver.getLogger().info("The Product is:  " + driver.getText(UIControls.sProductText));
-		Assert.assertEquals(driver.getText(UIControls.sProductText), "Management Cloud");
+		Assert.assertEquals(driver.getText(UIControls.sProductText), productTitle);
+		//Application names
 		Assert.assertTrue(driver.isElementPresent(UIControls.sAppText));
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), 900L);
-		wait.until(ExpectedConditions.textToBePresentInElement(By.xpath(UIControls.sAppText), sAppName));
+		driver.waitForText(UIControls.sAppText, sAppName);
 		driver.getLogger().info("The App is:  " + sAppName);
 		Assert.assertEquals(driver.getText(UIControls.sAppText), sAppName);
+		//Page title
 		Assert.assertTrue(driver.isElementPresent(UIControls.sPageText));
+		String pageTitle = "Sample page for OMC UI Framework components testing only";
+		driver.waitForText(UIControls.sPageText, pageTitle);
 		driver.getLogger().info("The page content is:  " + driver.getText(UIControls.sPageText));
-		Assert.assertEquals(driver.getText(UIControls.sPageText), "Sample page for OMC UI Framework components testing only");
+		Assert.assertEquals(driver.getText(UIControls.sPageText), pageTitle);
+		//Buttons
 		Assert.assertTrue(driver.isElementPresent(UIControls.sCompassIcon));
 		Assert.assertTrue(driver.isElementPresent(UIControls.sAddWidgetIcon));
 	}
