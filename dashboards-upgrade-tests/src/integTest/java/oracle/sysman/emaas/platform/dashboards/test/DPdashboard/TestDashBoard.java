@@ -1,19 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.test.DPdashboard;
 
-//import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
-//import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
-//import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
-//import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
-//import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-//import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
-//import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil.TimeRange;
-//import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
-//import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 
-//import org.openqa.selenium.By;
-//import org.openqa.selenium.WebElement;
 import org.testng.Assert;
-//import org.testng.annotations.Test;
 
 import org.testng.annotations.*;
 import org.openqa.selenium.WebElement;
@@ -47,55 +35,38 @@ public class TestDashBoard extends LoginAndLogout
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
+
+          @Test
+	  	public void testCreateDashboad_noWidget_GridView() throws Exception
+	  	{
+	  		String dbName = "AAA_testDashboard";
+	  		String dbDesc = "AAA_testDashBoard desc";
+	  
+	  		//Initialize the test
+	  		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+	  		webd.getLogger().info("start to test in testCreateDashboad_noWidget_GridView");
+	  
+	  		//reset the home page
+	  		webd.getLogger().info("reset all filter options in the home page");
+	  		DashboardHomeUtil.resetFilterOptions(webd);
+	  
+	  		//switch to Grid View
+	  		webd.getLogger().info("switch to grid view");
+	  		DashboardHomeUtil.gridView(webd);
+	  
+	  		//create dashboard
+	  		webd.getLogger().info("create a dashboard: with description, time refresh");
+	  		DashboardHomeUtil.createDashboard(webd, dbName, dbDesc, true);
+	  
+	  		DashboardBuilderUtil.verifyDashboard(webd, dbName, dbDesc, true);
+	  
+	          }
 	
-	@Test
-	public void testCreateDashboard_withWidget_GridView() throws Exception
-	{
-		String dbName = "AAA_testDashboard";
-		String dbDesc = "AAA_testDashBoard desc";
-
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testCreateDashBoard");
-
-		//reset the home page
-		webd.getLogger().info("reset all filter options in the home page");
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-		//create dashboard
-		webd.getLogger().info("start to create dashboard in grid view");
-		DashboardHomeUtil.gridView(webd);
-		DashboardHomeUtil.createDashboard(webd, dbName, dbDesc, true);
-
-		//verify dashboard in builder page
-		DashboardBuilderUtil.verifyDashboard(webd, dbName, dbDesc, true);
-
-		//add widget
-		webd.getLogger().info("Start to add Widget into the dashboard");
-		DashboardBuilderUtil.addWidgetByRightDrawer(webd, "Database Errors Trend");
-		webd.getLogger().info("Add widget finished");
-
-		//save dashboard
-		webd.getLogger().info("save the dashboard");
-		DashboardBuilderUtil.saveDashboard(webd);
-
-		//open the widget
-		webd.getLogger().info("open the widget");
-		DashboardBuilderUtil.openWidget(webd, "Database Errors Trend");
-		
-		webd.switchToWindow();
-
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		if (!url.substring(url.indexOf("emsaasui") + 9).contains(
-				"emlacore/html/log-analytics-search.html?widgetId=2013&dashboardId")) {
-			Assert.fail("not open the correct widget");
-		}
-
-	}
+	
 
 	
 
-	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView" })
+	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView" })
 	public void testModifyDashboard_namedesc() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -111,7 +82,7 @@ public class TestDashBoard extends LoginAndLogout
 				"AAA_testDashboard_desc_modify");
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView","testModifyDashboard_namedesc" })
+	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView","testModifyDashboard_namedesc" })
 	public void testModifyDashboard_widget() throws Exception
 	{
 		String WidgetName_1 = "Top Hosts by Log Entries";
@@ -141,3 +112,4 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardBuilderUtil.saveDashboard(webd);
 	}
 }
+
