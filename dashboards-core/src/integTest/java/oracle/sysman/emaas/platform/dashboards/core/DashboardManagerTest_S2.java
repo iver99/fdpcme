@@ -743,12 +743,13 @@ public class DashboardManagerTest_S2
 	{
 		loadMockBeforeMethod();
 		Dashboard dbd1 = new Dashboard();
+		Date now = new Date();
 		dbd1.setName("test");
 		String testScreenshotDate = "data:image/png;base64,shot";
 		dbd1.setScreenShot(testScreenshotDate);
 		dbd1.setHref("");
 		dbd1.setLastModifiedBy("sysman");
-		dbd1.setLastModificationDate(new Date());
+		dbd1.setLastModificationDate(now);
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenantId1 = 11L;
 		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);

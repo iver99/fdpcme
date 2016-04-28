@@ -12,13 +12,14 @@ import static org.testng.Assert.*;
 @Test(groups = {"s1"})
 public class EmsDashboardFavoriteTest {
     private EmsDashboard emsDashboard = new EmsDashboard();
+    Date now = new Date();
     private EmsDashboardFavorite emsDashboardFavorite = new EmsDashboardFavorite
-            (new Date(),emsDashboard,"elephant");
+            (now,emsDashboard,"elephant");
     @Test
     public void testGetCreationDate() throws Exception {
         EmsDashboardFavorite emsDashboardFavorite = new EmsDashboardFavorite();
-        emsDashboardFavorite.setCreationDate(new Date());
-        assertEquals(emsDashboardFavorite.getCreationDate(),new Date());
+        emsDashboardFavorite.setCreationDate(now);
+        assertEquals(emsDashboardFavorite.getCreationDate(), now);
     }
 
     @Test

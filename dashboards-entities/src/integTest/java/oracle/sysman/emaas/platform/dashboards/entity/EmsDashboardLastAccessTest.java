@@ -11,12 +11,13 @@ import static org.testng.Assert.*;
  */
 @Test(groups = {"s1"})
 public class EmsDashboardLastAccessTest {
-    private EmsDashboardLastAccess emsDashboardLastAccess = new EmsDashboardLastAccess(new Date(),"elephant",10L);
+    Date now = new Date();
+    private EmsDashboardLastAccess emsDashboardLastAccess = new EmsDashboardLastAccess(now,"elephant",10L);
     @Test
     public void testGetAccessDate() throws Exception {
         EmsDashboardLastAccess emsDashboardLastAccess = new EmsDashboardLastAccess();
-        emsDashboardLastAccess.setAccessDate(new Date());
-        assertEquals(emsDashboardLastAccess.getAccessDate(),new Date());
+        emsDashboardLastAccess.setAccessDate(now);
+        assertEquals(emsDashboardLastAccess.getAccessDate(), now);
     }
 
     @Test
