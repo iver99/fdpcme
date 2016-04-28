@@ -3,6 +3,10 @@ package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 public class DashBoardUtils
@@ -17,12 +21,38 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Monitoring"));
 	}
 
+	public static void clickDashboardLinkInBrandingBar(WebDriver webdriver) throws Exception
+	{
+		webdriver.getLogger().info("Click Compass icon to display menu of branding bar");
+		webdriver.getWebDriver().findElement(By.xpath(PageId.CompassIcon)).click();
+		WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(PageId.DashboardLink)));
+		webdriver.takeScreenShot();
+		webdriver.getLogger().info("Click Dashboard link to back to dashboard home page");
+		webdriver.getWebDriver().findElement(By.xpath(PageId.DashboardLink)).click();
+		webdriver.takeScreenShot();
+	}
+
 	public static void closeOverviewPage() throws Exception
 	{
 
 		driver.getLogger().info("before clicking overview button");
 		driver.click(PageId.OverviewCloseID);
 		driver.getLogger().info("after clicking overview button");
+	}
+
+	public static void handleAlert(WebDriver webdriver) throws Exception
+	{
+		WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+
+		//Accepting alert.
+		webdriver.getLogger().info("foucus on the alert");
+		alert = webdriver.getWebDriver().switchTo().alert();
+		webdriver.takeScreenShot();
+		webdriver.getLogger().info("click button on the dialog, should navigate to the home page");
+		alert.accept();
+		webdriver.takeScreenShot();
 	}
 
 	public static void ITA_OOB_GridView() throws Exception

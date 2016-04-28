@@ -43,6 +43,10 @@ public class PageId
 	public static final String MenuBtnID = "menubutton";
 	public static final String SignOutID = "emcpdf_oba_logout";
 
+	//Branding bar
+	public static final String CompassIcon = "//*[@id='linksButton']";
+	public static final String DashboardLink = "//*[@id='obbNavDsbHome']";
+
 	//Branding bar link text
 	public static final String BrandingBarLinkText_CS_ITA = "IT Analytics";
 	public static final String BrandingBarLinkText_CS_APM = "APM";
