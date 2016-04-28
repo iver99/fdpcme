@@ -354,14 +354,15 @@ public class ScreenshorCRUD
 			//			Assert.assertTrue(res1.getStatusCode() == 404);
 			//			Assert.assertEquals(res1.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
 
-			String invalidIdUrl = screenshotRelUrl.replaceAll("/1", "/999999999/");
+			String invalidIdUrl = screenshotRelUrl.replace("/1/", "/999999999/");
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken)
 					.when().get(invalidIdUrl);
 			System.out.println("Stauts code is :" + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 404);
-			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
+			// no error response code/message check as the response is an image file, not json string
+			//			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
 
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -402,8 +403,8 @@ public class ScreenshorCRUD
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken)
 					.when().get(ssRelUrl);
-			Assert.assertTrue(res2.getStatusCode() == 200);
 			System.out.println("Stauts code is :" + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 200);
 			//Assert.assertEquals(res2.jsonPath().getString("screenShot"), null);
 			//Assert.assertEquals(res2.asString(), "Specified dashboard screenshot does not exist");
 			System.out.println("											");
