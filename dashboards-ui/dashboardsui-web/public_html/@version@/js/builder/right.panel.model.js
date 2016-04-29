@@ -63,11 +63,9 @@ define(['knockout',
             
             self.editDashboardDialogModel = new ed.EditDashboardDialogModel($b, toolBarModel);
             
-            self.defineIsExpanded = ko.observable(false);
-            self.buildIsExpanded = ko.observable(true);
-            self.dbfiltersIsExpanded = ko.observable(true);
+            self.dbfiltersIsExpanded = ko.observable(false);
             self.sharesettingsIsExpanded = ko.observable(false);
-            self.dbeditorIsExpanded = ko.observable(false);
+            self.dbeditorIsExpanded = ko.observable(true);
             
             var scrollInstantStore = ko.observable();
             var scrollDelay = ko.computed(function() { 
@@ -346,11 +344,7 @@ define(['knockout',
                     $b.triggerBuilderResizeEvent('hide left panel');
                 } 
                 else {
-                    if(toolBarModel.openRightPanelByBuild()){
-                        self.buildIsExpanded(true);
-                    }else{
-                        self.defineIsExpanded(true);
-                    }
+                    self.dbeditorIsExpanded(true);
                     self.completelyHidden(false);
                     self.initDraggable();
                     $b.triggerBuilderResizeEvent('show left panel');
@@ -411,15 +405,6 @@ define(['knockout',
                 toolBarModel.openDashboardDeleteConfirmDialog();
             };        
 
-            self.defineIsExpanded.subscribe(function(val){
-                if(val){
-                    self.dbfiltersIsExpanded(true);
-                    self.sharesettingsIsExpanded(false);
-                    self.dbeditorIsExpanded(false);
-                }else{
-                    self.dbeditorIsExpanded(false);
-                }
-            });
             self.dbfiltersIsExpanded.subscribe(function(val){
                 if(val){
                     self.dbfiltersIsExpanded(true);
@@ -445,6 +430,7 @@ define(['knockout',
             });
             
 
+            self.showdbOnHomePage = ko.observable([]);
             self.instanceSupport = ko.observable("multiple");
             self.enableEntityFilter = ko.observable(true);
             self.enableTimeRangeFilter = ko.observable(true);

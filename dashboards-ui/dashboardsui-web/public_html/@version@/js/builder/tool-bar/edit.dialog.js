@@ -26,7 +26,6 @@ define(['knockout',
                 return false;
             };
             self.showdbDescription = ko.observable(isEditDsbOptionEnabled(self.descriptionValue) ?["showdbDescription"]:[]);
-            self.showdbOnHomePage = ko.observable(["showdbOnHomePage"]);
 //            self.entityFilterValue = ko.observable(dsb.enableEntityFilter ? (dsb.enableEntityFilter()==="TRUE"?["ON"]:["OFF"]) : ["OFF"]);//ko.observable(["OFF"]);
             self.timeRangeFilterValue = ko.observable(dsb.enableTimeRange ? (dsb.enableTimeRange()==="TRUE"?["ON"]:["OFF"]) : ["ON"]); //ko.observable(["ON"]);//for now ON always and hide option in UI
 //            self.targetFilterValue = ko.observable(["OFF"]);
