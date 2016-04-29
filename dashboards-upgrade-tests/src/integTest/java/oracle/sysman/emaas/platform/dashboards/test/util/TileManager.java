@@ -30,7 +30,7 @@ public class TileManager {
 		
 	}
 	
-	public void tileOpen() throws Exception
+	/*public void tileOpen() throws Exception
 	{
 		driver.getLogger().info("foucus on the widget");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
@@ -44,7 +44,7 @@ public class TileManager {
 		driver.getLogger().info("click configure widget icon");
 		driver.click(DashBoardPageId.ConfigTileID);
 		driver.takeScreenShot();
-	}
+	}*/
 	
 	
 //	public void tileEdit() throws Exception

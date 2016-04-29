@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.test.ui.util;
+package oracle.sysman.emaas.platform.dashboards.test.util;
 
 public class PageId
 {
@@ -42,10 +42,6 @@ public class PageId
 	//help id and about id
 	public static final String MenuBtnID = "menubutton";
 	public static final String SignOutID = "emcpdf_oba_logout";
-
-	//Branding bar
-	public static final String CompassIcon = "//*[@id='linksButton']";
-	public static final String DashboardLink = "//*[@id='obbNavDsbHome']";
 
 	//Branding bar link text
 	public static final String BrandingBarLinkText_CS_ITA = "IT Analytics";
@@ -140,3 +136,4 @@ public class PageId
 	//	public static final String stopshare_btn = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
 	//>>>>>>> 160c9f7961de810ed40fc62d0e8080a544e5730e
 }
+

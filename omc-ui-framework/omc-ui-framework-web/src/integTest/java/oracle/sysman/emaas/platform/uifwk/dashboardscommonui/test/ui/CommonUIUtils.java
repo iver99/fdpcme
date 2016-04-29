@@ -498,17 +498,27 @@ public class CommonUIUtils
 	{
 		//verify the product name,app name,content of page
 		driver.getLogger().info("Verify the page content");
+		//Oracle logo
 		Assert.assertTrue(driver.isElementPresent(UIControls.sOracleImage));
 		Assert.assertEquals(driver.getAttribute(UIControls.sOracleImage + "@alt"), "Oracle");
+		//Product title
 		Assert.assertTrue(driver.isElementPresent(UIControls.sProductText));
+		String productTitle = "Management Cloud";
+		driver.waitForText(UIControls.sProductText, productTitle);
 		driver.getLogger().info("The Product is:  " + driver.getText(UIControls.sProductText));
-		Assert.assertEquals(driver.getText(UIControls.sProductText), "Management Cloud");
+		Assert.assertEquals(driver.getText(UIControls.sProductText), productTitle);
+		//Application names
 		Assert.assertTrue(driver.isElementPresent(UIControls.sAppText));
+		driver.waitForText(UIControls.sAppText, sAppName);
 		driver.getLogger().info("The App is:  " + sAppName);
 		Assert.assertEquals(driver.getText(UIControls.sAppText), sAppName);
+		//Page title
 		Assert.assertTrue(driver.isElementPresent(UIControls.sPageText));
+		String pageTitle = "Sample page for OMC UI Framework components testing only";
+		driver.waitForText(UIControls.sPageText, pageTitle);
 		driver.getLogger().info("The page content is:  " + driver.getText(UIControls.sPageText));
-		Assert.assertEquals(driver.getText(UIControls.sPageText), "Sample page for OMC UI Framework components testing only");
+		Assert.assertEquals(driver.getText(UIControls.sPageText), pageTitle);
+		//Buttons
 		Assert.assertTrue(driver.isElementPresent(UIControls.sCompassIcon));
 		Assert.assertTrue(driver.isElementPresent(UIControls.sAddWidgetIcon));
 	}

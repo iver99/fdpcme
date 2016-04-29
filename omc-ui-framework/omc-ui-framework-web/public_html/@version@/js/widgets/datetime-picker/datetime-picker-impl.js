@@ -1,5 +1,22 @@
 define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg", "ojs/ojdatetimepicker"],
         function (ko, $, msgUtilModel, oj, nls) {
+        
+            //Firefox ignores milliseconds when converting a date to Date object, while it doesn't when converting a number.
+            //The funciton is used to keep the milliseconds no matter it is a Date Object or number so that when calculating time periods, it is precise.
+            function newDateWithMilliseconds(date) {
+                if(date instanceof Date) {                    
+                    var year = date.getFullYear();
+                    var month = date.getMonth();
+                    var day = date.getDate();
+                    var hours = date.getHours();
+                    var minutes = date.getMinutes();
+                    var seconds = date.getSeconds();
+                    var milliseconds = date.getMilliseconds();
+                    return new Date(year, month, day, hours, minutes, seconds, milliseconds);
+                }else {
+                    return new Date(date);
+                }
+            }
 
             /**
              * 
@@ -775,7 +792,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 var curDate = new Date();
                 self.init = true;
                 self.initialize = function() {
-                    start = new Date(curDate - 15 * 60 * 1000);
+                    start = newDateWithMilliseconds(curDate - 15 * 60 * 1000);
                     end = new Date();
                     var tpNotToShow = self.getParam(self.timePeriodsNotToShow);
 
@@ -783,8 +800,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         //users input start date and end date
                         var sdt = self.getParam(self.startDateTime);
                         var edt = self.getParam(self.endDateTime);
-                        start = new Date(sdt);
-                        end = new Date(edt);
+                        start = newDateWithMilliseconds(sdt);
+                        end = newDateWithMilliseconds(edt);
                         dateTimeDiff = end - start;
                         var t_timePeriod = in_array(dateTimeDiff, self.timePeriodObject());
                         
@@ -810,7 +827,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     } else if (self.startDateTime && !self.endDateTime) {
                         customClick(0);
                         var sdt = self.getParam(self.startDateTime);
-                        start = new Date(sdt);
+                        start = newDateWithMilliseconds(sdt);
                         end = new Date();
                     } else {
                         //users input nothing
