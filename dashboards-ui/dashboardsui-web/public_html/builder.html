@@ -908,10 +908,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="dbd-right-panel-editsettings" style="display:none;">
+                        <div class="dbd-right-panel-editsettings"  data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Edit Settings</div>
                         </div>
-                        <div class="dbd-right-panel-wrench" >
+                        <div class="dbd-right-panel-wrench" data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='wrench'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Build Dashboard</div>
                             <div class="dbd-right-panel-build-container" style="padding:0">
                     <div class="dbd-left-panel-header fit-size-vertical-sibling">
@@ -947,7 +947,7 @@
                                     <span tabindex="0" data-bind="text:WIDGET_NAME, event: {keypress: $root.widgetKeyPress},attr:{'data-rightpanel-items':WIDGET_NAME}"></span>
                                 </div>
                                 <div data-bind="css:'widget-'+WIDGET_UNIQUE_ID(),
-                                                ojComponent:{component: 'ojPopup'}" class="dbd-left-panel-img-pop">
+                                                ojComponent:{component: 'ojPopup',tail: 'simple'}" class="dbd-left-panel-img-pop">
                                     <div class="oj-row">
                                         <div class="oj-col oj-sm-12 oj-md-12">
                                             <h2 data-bind="text:WIDGET_NAME"></h2>

@@ -113,14 +113,26 @@ define(['knockout',
                 if($(event.currentTarget).hasClass('rightpanel-pencil')){
                     if(self.rightPanelIcon()==='wrench'){
                         self.rightPanelIcon("pencil");
-                    }else{
+                        if(!self.rightPanelShown()){ 
+                            $b.getRightPanelModel().toggleLeftPanel();
+                            self.rightPanelShown(!self.rightPanelShown());
+                        }
+                    }else{                        
+                        self.rightPanelIcon("pencil");
+                        if(self.rightPanelShown())self.rightPanelIcon("none");
                         $b.getRightPanelModel().toggleLeftPanel(); 
                         self.rightPanelShown(!self.rightPanelShown());
                     }
                 }else if($(event.currentTarget).hasClass('rightpanel-wrench')){
                     if(self.rightPanelIcon()==='pencil'){
                         self.rightPanelIcon("wrench");
+                         if(!self.rightPanelShown()){
+                            $b.getRightPanelModel().toggleLeftPanel();
+                            self.rightPanelShown(!self.rightPanelShown());
+                        }
                     }else{
+                        self.rightPanelIcon("wrench");
+                        if(self.rightPanelShown())self.rightPanelIcon("none");
                         $b.getRightPanelModel().toggleLeftPanel();
                         self.rightPanelShown(!self.rightPanelShown());
                     }
