@@ -35,16 +35,11 @@
      </lrg>
      
 
-     <lrg name="emcpdf_uifwk_test_3n" launcher="tests/suites/emcpdf_uifwk_test_3n.gradle" description="lrg for QATest of uifwk">
+     <lrg name="emcpdf_uifwk_test_3n" launcher="tests/suites/emcpdf_uifwk_test_3n.gradle" description="lrg for QATest and DEVtest of uifwk">
          <pipelines>
              <pipeline name="STAGE" />
          </pipelines>
-     </lrg>
-     <lrg name="emcpdf_uifwk_dev_test_3n" launcher="tests/suites/emcpdf_uifwk_dev_test_3n.gradle" description="lrg for DEVTest of uifwk">
-         <pipelines>
-             <pipeline name="STAGE" />
-         </pipelines>
-     </lrg>
+     </lrg>    
   <lrg name="emcpdf_upgrade_test_3n" launcher="tests/suites/emcpdf_upgrade_test_3n.gradle" description="lrg for upgrade lrg">
          <pipelines>
              <pipeline name="PRODUCT" />
