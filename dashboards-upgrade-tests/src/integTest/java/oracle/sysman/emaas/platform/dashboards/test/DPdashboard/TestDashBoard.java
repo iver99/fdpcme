@@ -1,5 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.test.DPdashboard;
 
+
+import org.testng.Assert;
+
 import org.testng.annotations.*;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -16,98 +19,97 @@ import org.testng.Assert;
 
 
 
-public class TestDashBoard extends LoginAndLogout{
+
+/**
+ * @version
+ * @author siakula
+ * @since release specific (what release of product did this appear in)
+ */
+
+public class TestDashBoard extends LoginAndLogout
+{
 
 	public void initTest(String testName) throws Exception
 	{
-		login(this.getClass().getName()+"."+testName);
+		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
-	}		
-	
-	@Test
-	public void testCreateDashBoard() throws Exception
-	{
-				
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		
-		webd.getLogger().info("start to test in testCreateDashBoard");
-		
-		String parentWindow = webd.getWebDriver().getWindowHandle();
-				
-		DashBoardUtils.openDBCreatePage();
-		String dbName="AAA_testDashboard";
-		String dbDesc="AAA_testDashBoard desc";
-		DashBoardUtils.inputDashBoardInfo(dbName,dbDesc);
-		//verify input info's existence
-		//Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashBoardNameBoxID),"AAA_testDashboard");
-		webd.getLogger().info("Name = "+DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		
-		DashBoardUtils.clickOKButton();		
-		
-		webd.takeScreenShot();
-		//add widget
-		DashBoardUtils.addWidget(1,parentWindow,"AAA_testDashboard","AAA_testDashBoard desc");
-				
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		
-		webd.takeScreenShot();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);	
 	}
+
+
+          @Test
+	  	public void testCreateDashboad_noWidget_GridView() throws Exception
+	  	{
+	  		String dbName = "AAA_testDashboard";
+	  		String dbDesc = "AAA_testDashBoard desc";
+	  
+	  		//Initialize the test
+	  		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+	  		webd.getLogger().info("start to test in testCreateDashboad_noWidget_GridView");
+	  
+	  		//reset the home page
+	  		webd.getLogger().info("reset all filter options in the home page");
+	  		DashboardHomeUtil.resetFilterOptions(webd);
+	  
+	  		//switch to Grid View
+	  		webd.getLogger().info("switch to grid view");
+	  		DashboardHomeUtil.gridView(webd);
+	  
+	  		//create dashboard
+	  		webd.getLogger().info("create a dashboard: with description, time refresh");
+	  		DashboardHomeUtil.createDashboard(webd, dbName, dbDesc, true);
+	  
+	  		DashboardBuilderUtil.verifyDashboard(webd, dbName, dbDesc, true);
+	  
+	          }
 	
 	
-	@Test(dependsOnMethods = { "testCreateDashBoard" })
-	public void testModifyDashBoard() throws Exception
+
+	
+
+	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView" })
+	public void testModifyDashboard_namedesc() throws Exception
 	{
-					
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testModifyDashBoard");
-		
-		DashBoardUtils.clickGVButton();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);;
-		
-		String parentWindow = webd.getWebDriver().getWindowHandle();
-		//open dashboard	
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		//DashBoardUtils.clickToSortByLastAccessed();
-		DashBoardUtils.searchDashBoard("AAA_testDashboard");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		webd.takeScreenShot();
-		DashBoardUtils.clickDashBoard();
-		//String parentWindow = webd.getWebDriver().getWindowHandle();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		//add a new widget
-		DashBoardUtils.addWidget(0,parentWindow,"AAA_testDashboard","AAA_testDashBoard desc");
-		
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
-		webd.takeScreenShot();
-	}	
-	
-	@Test(dependsOnMethods = { "testModifyDashBoard" })
-	public void testNavigateWidget() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testNavigateDashBoard");
-		
-		DashBoardUtils.clickGVButton();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
-		String parentWindow = webd.getWebDriver().getWindowHandle();
-		//open dashboard	
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		//DashBoardUtils.clickToSortByLastAccessed();
-		DashBoardUtils.searchDashBoard("AAA_testDashboard");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		webd.takeScreenShot();
-		DashBoardUtils.clickDashBoard();
-		
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
-		DashBoardUtils.navigateWidget(parentWindow);
-		DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
+
+		//edit dashboard
+		webd.getLogger().info("start to edit dashboard in grid view");
+		DashboardHomeUtil.gridView(webd);
+		webd.getLogger().info("search dashboard");
+		DashboardHomeUtil.search(webd, "AAA_testDashboard");
+		DashboardHomeUtil.selectDashboard(webd, "AAA_testDashboard");
+		DashboardBuilderUtil.editDashboard(webd, "AAA_testDashboard_modify",
+				"AAA_testDashboard_desc_modify");
 	}
 
+	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView","testModifyDashboard_namedesc" })
+	public void testModifyDashboard_widget() throws Exception
+	{
+		String WidgetName_1 = "Top Hosts by Log Entries";
+		String WidgetName_2 = "Top 10 Listeners by Load";
 
+		//initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testModifyDashboard_descwidget");
+		//search the dashboard want to modify
+		webd.getLogger().info("search dashboard");
+		DashboardHomeUtil.search(webd, "AAA_testDashboard_modify");
+
+		//open the dashboard in the builder page
+		webd.getLogger().info("open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "AAA_testDashboard_modify");
+
+		//add the widget into the dashboard
+		webd.getLogger().info("Start to add Widget into the dashboard");
+		//DashboardBuilderUtil.showRightDrawer(webd);
+		DashboardBuilderUtil.addWidgetByRightDrawer(webd, WidgetName_1);
+		DashboardBuilderUtil.addWidgetByRightDrawer(webd, WidgetName_2);
+		DashboardBuilderUtil.addWidgetByRightDrawer(webd, WidgetName_1);
+		webd.getLogger().info("Add widget finished");
+
+		//save dashboard
+		webd.getLogger().info("save the dashboard");
+		DashboardBuilderUtil.saveDashboard(webd);
+	}
 }
 
