@@ -47,7 +47,7 @@
                     </div>
                     <!-- /ko -->
                 </div>
-                <div id="widget-selector-widgets">
+                <div id="widget-selector-widgets" data-bind="attr:{'data-wgt-slt-auto-close': autoCloseDialog ? 'TRUE' : 'FALSE'}">
                     <!-- ko if: widgetOnLoading -->
                     <div id="widget-selector-loading" data-bind="text: widgetsLoadingHints"></div>
                     <!-- /ko -->
