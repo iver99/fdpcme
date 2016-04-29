@@ -42,6 +42,9 @@ import org.testng.Assert;
 
 public class TestDashBoard extends LoginAndLogout
 {
+         //private String dbName_withWidgetGrid = "";
+         private String dbName_setHome = "";
+
 
 	public void initTest(String testName) throws Exception
 	{
@@ -136,6 +139,11 @@ public class TestDashBoard extends LoginAndLogout
 
 		//stop sharing dashbaord
 		Assert.assertFalse(DashboardBuilderUtil.toggleShareDashboard(webd));
+	}
+
+      private String generateTimeStamp()
+	{
+		return String.valueOf(System.currentTimeMillis());
 	}
 
 	
