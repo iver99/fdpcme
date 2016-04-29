@@ -482,7 +482,7 @@ define(['knockout',
                 }  
             };
             
-            self.handleShareUnshare = function() {
+            self.handleShareUnshare = function(isToShare) {
                 var _shareState = self.dashboard.sharePublic();
                 var _url = "/sso.static/dashboards.service/";
                 if (dfu.isDevMode()) {
@@ -492,11 +492,11 @@ define(['knockout',
                         type: 'PUT',
                         dataType: "json",
                         contentType: 'application/json',
-                        data: JSON.stringify({sharePublic: (_shareState === true ? false : true)}),
+                        data: JSON.stringify({sharePublic: isToShare}),
                         headers: dfu.getDashboardsRequestHeader(), //{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
                         success: function (result) {
                             //self.sharePublic(_shareState === true ? false : true);
-                            self.dashboard.sharePublic(_shareState === true ? false : true);
+                            self.dashboard.sharePublic(isToShare);
                             if (self.dashboard.sharePublic() === true)
                             {
                                 self.sharePublicLabel(unshareDashboardLabel);
@@ -749,10 +749,6 @@ define(['knockout',
                 };
                 prefUtil.getAllPreferences(options);
             }
-            self.openShareConfirmDialog = function() {
-                self.handleShareUnshare();
-                //$("#share_cfmDialog").ojDialog("open"); 
-            };
             
             self.intervalID = null;
 //            self.onNameOrDescriptionEditing = false;
@@ -855,17 +851,6 @@ define(['knockout',
                             "endOfGroup": false
                         }
                     ]
-                },
-                {
-                    "label": self.sharePublicLabel,
-                    "url": "#",
-                    "id":"emcpdf_dsbopts_share"+self.toolBarGuid,
-                    "onclick": self.editDisabled() === true ? null : self.openShareConfirmDialog,
-                    "icon": self.cssSharePublic,
-                    "title": "",//self.sharePublicTitle,
-                    "disabled": self.editDisabled() === true,
-                    "showOnMobile": true,
-                    "endOfGroup": false
                 },
                 {
                     "label": getNlsString('COMMON_BTN_PRINT'),

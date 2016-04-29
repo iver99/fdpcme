@@ -431,25 +431,59 @@ define(['knockout',
             
 
             self.showdbOnHomePage = ko.observable([]);
-            self.instanceSupport = ko.observable("multiple");
+            
             self.enableEntityFilter = ko.observable(true);
+            self.instanceSupport = ko.observable("multiple");
             self.enableTimeRangeFilter = ko.observable(true);
             self.defaultEntityValue = ko.observable("allEntities");
+            self.filterSettingModified = ko.observable(false);
+            var filterSettingModified = ko.computed(function(){
+                return self.instanceSupport()+self.enableEntityFilter()+self.enableTimeRangeFilter()+self.defaultEntityValue();
+            });
+            filterSettingModified.subscribe(function(val){
+                self.filterSettingModified(true);
+            });
+            self.applyFilterSetting = function(){
+                //add save filter setting logic here
+                self.filterSettingModified(false);
+            };
+            
             self.dashboardSharing = ko.observable("notShared");
             self.dashboardSharing.subscribe(function(val){
                 if("notShared"===val){
                     self.enableShareAutoRefresh(false);
+                    toolBarModel.handleShareUnshare(false);
                 }else{
                     self.enableShareAutoRefresh(true);
+                    toolBarModel.handleShareUnshare(true);
                 }
             });
             self.defaultAutoRefreshValue = ko.observable("every5minutes");
             self.enableShareAutoRefresh = ko.observable(false);
 
+            self.enableEntityFilter.subscribe(function(val){
+                if(val){
+                    $(".enableEntityFilter").css("color","#333");
+                }else{
+                    $(".enableEntityFilter").css("color","#9e9e9e");
+                }
+            });
 
+            self.enableTimeRangeFilter.subscribe(function(val){
+                if(val){
+                    $(".enableTimeRangeFilter").css("color","#333");
+                }else{
+                    $(".enableTimeRangeFilter").css("color","#9e9e9e");
+                }
+            });
 
-
-            
+            self.enableShareAutoRefresh.subscribe(function(val){
+                if(val){
+                    $(".enableShareAutoRefresh").css("color","#333");
+                }else{
+                    $(".enableShareAutoRefresh").css("color","#9e9e9e");
+                }
+            });
         }
         
         Builder.registerModule(RightPanelModel, 'RightPanelModel');

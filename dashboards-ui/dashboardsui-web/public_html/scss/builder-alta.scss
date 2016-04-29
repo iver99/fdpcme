@@ -1105,6 +1105,13 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     border: 3px solid #F0CAC4;
 }*/
 
+.dbd-right-panel-editdashboard-innertitle{
+    color: #0572ce;
+}
+
+.dbd-right-panel-editdashboard-container .checkboxControledContent{
+    margin-left: 15px;
+}
 //right panel editdashboard collapsible open icon changed
 /*.dbd-right-panel-editdashboard .oj-collapsible-open-icon:before{
     -webkit-transform: rotate(45deg) scale(0.9,0.9);

@@ -697,11 +697,14 @@
                         data-bind="css: {'dbd-no-left-panel': maximized() || completelyHidden()},
                                         style: {right: $root.scrollbarWidth + 'px'}">
                     <div class="dbd-right-panel-contents">
-                        <div class="dbd-right-panel-editdashboard" style="display: none;">
-                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Edit Dashboard</div>
+                        <div class="dbd-right-panel-editdashboard" style="display: block;">
+                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">
+                                <a class="oj-fwk-icon-caret-start oj-fwk-icon" style="color:#0572ce"></a>
+                                <span>Edit Dashboard</span>
+                            </div>
                             <div class="dbd-right-panel-editdashboard-container" style="padding-left:0; padding-right:0;">
                                 <div class="dbd-right-panel-editdashboard-general" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbeditorIsExpanded}">
-                                    <span>General</span>
+                                    <span class="dbd-right-panel-editdashboard-innertitle">General</span>
                                     <div class="cDsbDialog oj-form-layout">
                                         <div class="oj-form">
                                             <div class="oj-flex" >
@@ -751,7 +754,7 @@
                                             <div class="oj-flex" style="margin-top: 20px;">
                                                 <div class="oj-flex-item">
                                                     <label class="oj-label">Dashboards Home Page</label>
-                                                    <div data-bind="ojComponent: {component: 'ojCheckboxset', value: editDashboardDialogModel.showdbOnHomePage}" >
+                                                    <div data-bind="ojComponent: {component: 'ojCheckboxset', value: showdbOnHomePage}" >
                                                         <span class="oj-choice-row">
                                                             <input id="showdbOnHomePage" type="checkbox" value="showdbOnHomePage">
                                                             <label for="showdbOnHomePage">Hide dashboard on Dashboards Home page</label>
@@ -772,28 +775,28 @@
                                 </div>
                                 <hr/>
                                 <div class="dbd-right-panel-editdashboard-filters" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbfiltersIsExpanded}">
-                                    <span>Filters</span>
+                                    <span  class="dbd-right-panel-editdashboard-innertitle">Filters</span>
                                     <div class="filter-settings oj-form-layout">
                                         <div class="oj-form">
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
-                                                    <label data-bind="text: 'Entity Filter'"></label>
+                                                    <label class="oj-label" data-bind="text: 'Entity Filter'"></label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
-                                                    <span class="oj-choice-row">
+                                                    <span class="oj-choice-row" style="margin: 8px 0 12px 0;">
                                                         <input id="showEntityFilter" type="checkbox" data-bind="checked: enableEntityFilter">
                                                         <label for="showEntityFilter">Show Entity filter</label>
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="oj-flex" >
+                                            <div class="oj-flex">
                                                 <div class="oj-flex-item">
-                                                    <form class="oj-form">
+                                                    <form class="oj-form checkboxControledContent">
                                                         <div class="oj-flex">  
                                                             <div class="oj-flex-item">
-                                                                <label>Instance Support</label>
+                                                                <label class="oj-label enableEntityFilter">Instance Support</label>
                                                             </div>
                                                         </div>
                                                         <div class="oj-flex">  
@@ -812,7 +815,7 @@
                                                         </div>
                                                         <div class="oj-flex">  
                                                             <div class="oj-flex-item">
-                                                                <label>Default Entity Value</label>
+                                                                <label class="oj-label enableEntityFilter"  style="margin: 10px 0 0 0;">Default Entity Value</label>
                                                             </div>
                                                         </div>
                                                         <div class="oj-flex">  
@@ -831,45 +834,58 @@
                                             </div>
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
-                                                    <label data-bind="text: 'Time Range Filter'"></label>
+                                                    <label class="oj-label"  style="margin: 10px 0 0 0;" data-bind="text: 'Time Range Filter'"></label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
-                                                    <span class="oj-choice-row">
+                                                    <span class="oj-choice-row"  style="margin: 8px 0 12px 0;">
                                                         <input id="showTimeRangeFilter" type="checkbox" data-bind="checked: enableTimeRangeFilter">
                                                         <label for="showTimeRangeFilter">Show Time Range filter</label>
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="oj-flex">  
-                                                            <div class="oj-flex-item">
-                                                                <label>Default Time Range Value</label>
-                                                            </div>
-                                                        </div>
-                                            <div class="oj-flex" >
-                                                <div class="oj-flex-item">
-                                                    <div class="oj-row fit-size-vertical-sibling df-computed-content-width"
-                                                        style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0"
-                                                        data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
-                                                        <div class="oj-col oj-sm-12 oj-md-7">
-                                                          <div data-bind="visible: !dashboard.enableTimeRange || dashboard.enableTimeRange() !== 'TRUE'">&nbsp;</div>
-                                                          <div data-bind="component: {name: 'df-datetime-picker', params: tilesViewModel.datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'"></div>
+                                            <div class="oj-flex">
+                                                <form class="oj-form checkboxControledContent" style="overflow: hidden;">
+                                                    <div class="oj-flex">  
+                                                        <div class="oj-flex-item">
+                                                            <label class="oj-label enableTimeRangeFilter">Default Time Range Value</label>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                    <div class="oj-flex" >
+                                                        <div class="oj-flex-item">
+                                                            <div class="oj-row fit-size-vertical-sibling df-computed-content-width"
+                                                                 style="max-width: none;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0"
+                                                                 data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
+                                                                <div class="oj-col oj-sm-12 oj-md-7" style="padding-left: 0;width: 100px;">
+                                                                    <div data-bind="visible: !dashboard.enableTimeRange || dashboard.enableTimeRange() !== 'TRUE'">&nbsp;</div>
+                                                                    <div style="width: 100px;" data-bind="component: {name: 'df-datetime-picker', params: tilesViewModel.datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="oj-flex" >
+                                                        <div class="oj-flex-item">
+                                                            <button class="dbd-pull-right" data-bind="click: applyFilterSetting(), ojComponent: { 
+                                                                                            component: 'ojButton', label: 'Apply' , 
+                                                                                            disabled: !filterSettingModified(), 
+                                                                                            rootAttributes: {style:'margin:0 5px 0 0'} },
+                                                                                    css: {'oj-button-primary':filterSettingModified()}"></button>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <hr/>
                                 <div class="dbd-right-panel-editdashboard-share" data-bind="ojComponent: {component: 'ojCollapsible', expanded:sharesettingsIsExpanded}">
-                                    <span>Share</span>
-                                    <div class="filter-settings oj-form-layout">
+                                    <span class="dbd-right-panel-editdashboard-innertitle">Share</span>
+                                    <div class="share-settings oj-form-layout">
                                         <form class="oj-form">
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label>Dashboard Sharing</label>
+                                                    <label class="oj-label">Dashboard Sharing</label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
@@ -888,7 +904,12 @@
                                             </div>
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label>Default Auto-refresh Value</label>
+                                                    <label class="oj-label enableShareAutoRefresh" style="margin: 10px 0 0 0;color: #9e9e9e;">Default Auto-refresh Value</label>
+                                                </div>
+                                            </div>
+                                            <div class="oj-flex">  
+                                                <div class="oj-flex-item">
+                                                    <label class="enableShareAutoRefresh" style="color: #9e9e9e;">Specify the default for other users</label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
@@ -911,7 +932,7 @@
                         <div class="dbd-right-panel-editsettings"  data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Edit Settings</div>
                         </div>
-                        <div class="dbd-right-panel-wrench" data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='wrench'">
+                        <div class="dbd-right-panel-wrench" style="display:none;">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Build Dashboard</div>
                             <div class="dbd-right-panel-build-container" style="padding:0">
                     <div class="dbd-left-panel-header fit-size-vertical-sibling">
