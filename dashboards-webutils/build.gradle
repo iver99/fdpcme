@@ -8,6 +8,11 @@ jar {
 }
 publishing.publications {
 
+	integTest(MavenPublication) {
+                        setArtifactId(project.name + '-' + integTestJar.appendix)
+                        setGroupId('com.oracle.emaas.emcpssf.test')
+                        artifact integTestJar.archivePath
+    }
         thisJarPublication(MavenPublication) {
                 setGroupId('com.oracle.emaas.emcpdf.test')
                 artifact jar
@@ -15,6 +20,7 @@ publishing.publications {
 }
 
 artifactoryPublish {
+	 publications('integTest')
         publications('thisJarPublication')
 }
 
@@ -53,3 +59,5 @@ dependencies {
         compile(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
 	testCompile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 } 
+build.dependsOn integTestJar
+

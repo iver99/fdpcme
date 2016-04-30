@@ -5,12 +5,12 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import java.text.SimpleDateFormat
 import java.util.Date
 
+apply from: 'test.gradle'
 apply plugin: 'war'
 
 apply plugin: 'compass'
 
 group = 'com.oracle.emaas.emcpdf'
-version = '1.1'
 
 jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
 def versionPathElement = jsversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
@@ -24,7 +24,7 @@ def File sourceWebappDir = new File(project.projectDir, 'public_html')
 // source directories where jet, canvg, canvas files are copied
 def File sourceJetDestDir = new File(sourceWebappDir, 'libs/@version@/js/oraclejet')
 //def File sourceJsCanvgDestDir = new File(sourceWebappDir, 'libs/@version@/js/canvg')
-//def File sourceJsCanvasDesDir = new File(sourceWebappDir, 'libs/@version@/js/html2canvas')
+//def File sourceJsCanvasDesDir = new File(sourceWebappDir, 'libs/@version@/js/html2canvas
 def File sourceCKeditorDesDir = new File(sourceWebappDir, 'libs/@version@/js/ckeditor')
 // sourc directories where font files are copied
 def File sourceFontDestDir = new File(sourceWebappDir, 'libs/@version@/css/font-awesome')
@@ -608,3 +608,21 @@ else
     war.dependsOn minifyHomeJs
 
 }
+publishing.publications {
+        integTest(MavenPublication) {
+                setArtifactId(project.name + '-' + integTestJar.appendix)
+                setGroupId('com.oracle.emaas.emcpdf.test')
+                artifact integTestJar.archivePath
+        }
+
+        thisJarPublication(MavenPublication) {
+                setGroupId('com.oracle.emaas.emcpdf.test')
+                artifact jar
+        }
+}
+
+artifactoryPublish {
+        publications('integTest')
+        publications('thisJarPublication')
+}
+build.dependsOn integTestJar
