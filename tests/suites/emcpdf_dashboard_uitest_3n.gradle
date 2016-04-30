@@ -34,6 +34,8 @@ buildscript {
     }
     dependencies {
    	classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true 
+	 classpath group: "com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "${devinfraVersion}", transitive: true
+
         classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_taskprocessor", version: "${omctfVersion}" 
 	classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"
   }
@@ -47,10 +49,10 @@ repositories {
 
 apply plugin: 'TestInfraPlugin'
 apply plugin: 'groovy'
+apply plugin: 'DevInfraPlugin'
 
-apply from: getAbsoluteFilePath("omctf_commontasks")
-apply from: getAbsoluteFilePath("omctf_taskprocessor")
-
+apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_commontasks")
+apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_taskprocessor")
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 
 /* *************************************************************************************************
