@@ -185,7 +185,7 @@ define([
 
                     ko.applyBindings(tilesViewModel, $dashboardEl.find('.dashboard-content-main')[0]);
                     
-                    var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel, toolBarModel);
+                    var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel, toolBarModel,dashboardsetToolBarModel);
                     ko.applyBindings(rightPanelModel, $dashboardEl.find('.dbd-left-panel')[0]);
                     rightPanelModel.initialize();
                     new Builder.ResizableView($b);

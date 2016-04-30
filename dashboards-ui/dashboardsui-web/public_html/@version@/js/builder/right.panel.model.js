@@ -44,8 +44,9 @@ define(['knockout',
             self.initialize();
         }
         
-        function RightPanelModel($b, tilesViewModel, toolBarModel) {
+        function RightPanelModel($b, tilesViewModel, toolBarModel, dashboardsetToolBarModel) {
             var self = this;
+            self.dashboardsetToolBarModel = dashboardsetToolBarModel;
             self.dashboard = $b.dashboard;
             self.tilesViewModel = tilesViewModel;
             $b.registerObject(this, 'RightPanelModel');

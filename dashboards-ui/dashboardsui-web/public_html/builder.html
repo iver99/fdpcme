@@ -697,9 +697,9 @@
                         data-bind="css: {'dbd-no-left-panel': maximized() || completelyHidden()},
                                         style: {right: $root.scrollbarWidth + 'px'}">
                     <div class="dbd-right-panel-contents">
-                        <div class="dbd-right-panel-editdashboard" style="display: none;">
+                        <div class="dbd-right-panel-editdashboard" data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.tilesViewModel.editPanelContent()=='edit'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">
-                                <a class="oj-fwk-icon-caret-start oj-fwk-icon" style="color:#0572ce"></a>
+                                <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: tilesViewModel.switchEditPanelContent"style="color:#0572ce"></a>
                                 <span>Edit Dashboard</span>
                             </div>
                             <div class="dbd-right-panel-editdashboard-container" style="padding-left:0; padding-right:0;">
@@ -929,10 +929,32 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="dbd-right-panel-editsettings"  data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'">
+                        <div id="dbd-right-panel-editsettings"  class="dbd-right-panel-editsettings"  data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.tilesViewModel.editPanelContent()=='settings'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Edit Settings</div>
+                              <!--dxy -->
+                            <div id="dbd-edit-settings-container" class="dbd-edit-settings-container">
+                                <!--ko if: $data.dashboardsetToolBarModel.isDashboardSet-->
+                                <span class="edit-setting-head">Dashboard Set</span>
+                                <span class="edit-setting-link" data-bind="text:$data.dashboardsetToolBarModel.dashboardsetName(), click: tilesViewModel.switchEditPanelContent"></span>
+                                <span class="edit-setting-head" >Selected Dashboard</span>
+                                <span class="edit-setting-link" data-bind="text:$data.dashboardsetToolBarModel.selectedDashboardItem().name, click: tilesViewModel.switchEditPanelContent"></span>
+
+                                <span class="edit-setting-head">Widgets</span>
+                                <!--ko foreach:tilesViewModel.dashboard.tiles-->
+                                <span class="edit-setting-link" data-bind="text:WIDGET_NAME, click: $parent.tilesViewModel.switchEditPanelContent"></span>
+                                <!--/ko-->
+                               <!--/ko-->
+                               <!--ko ifnot: $data.dashboardsetToolBarModel.isDashboardSet-->
+                                <span class="edit-setting-head">Dashboard</span>
+                                <span class="edit-setting-link" data-bind="text: dashboard.name, click: tilesViewModel.switchEditPanelContent"></span>
+                                <span class="edit-setting-head">Widgets</span>
+                                <!--ko foreach: tilesViewModel.dashboard.tiles -->
+                                <span class="edit-setting-link"  data-bind="text:WIDGET_NAME, click: $parent.tilesViewModel.switchEditPanelContent"></span>
+                               <!--/ko-->
+                               <!--/ko-->
+                            </div>
                         </div>
-                        <div class="dbd-right-panel-wrench" style="display:none;">
+                        <div class="dbd-right-panel-wrench" data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='wrench'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Build Dashboard</div>
                             <div class="dbd-right-panel-build-container" style="padding:0">
                     <div class="dbd-left-panel-header fit-size-vertical-sibling">

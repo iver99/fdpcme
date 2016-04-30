@@ -108,10 +108,23 @@ define(['knockout',
                     icon="wrench";
                 }
                 return icon;  
+            }());  
+            
+            self.editPanelContent = ko.observable(function(){
+                var content = "settings";
+                return content;
             }());
-            self.toggleRightPanel = function(data,event) {
-                if($(event.currentTarget).hasClass('rightpanel-pencil')){
-                    if(self.rightPanelIcon()==='wrench'){
+            
+            self.switchEditPanelContent = function(data,event){    
+                if($(event.currentTarget).hasClass('edit-setting-link')){
+                    self.editPanelContent("edit");
+                }else{
+                    self.editPanelContent("settings");
+                }
+            };
+            self.toggleRightPanel = function(data,event) {  
+                if($(event.currentTarget).hasClass('rightpanel-pencil')){ 
+                    if(self.rightPanelIcon()==='wrench'){                       
                         self.rightPanelIcon("pencil");
                         if(!self.rightPanelShown()){ 
                             $b.getRightPanelModel().toggleLeftPanel();
@@ -123,8 +136,8 @@ define(['knockout',
                         $b.getRightPanelModel().toggleLeftPanel(); 
                         self.rightPanelShown(!self.rightPanelShown());
                     }
-                }else if($(event.currentTarget).hasClass('rightpanel-wrench')){
-                    if(self.rightPanelIcon()==='pencil'){
+                }else if($(event.currentTarget).hasClass('rightpanel-wrench')){ 
+                    if(self.rightPanelIcon()==='pencil' ){                         
                         self.rightPanelIcon("wrench");
                          if(!self.rightPanelShown()){
                             $b.getRightPanelModel().toggleLeftPanel();
