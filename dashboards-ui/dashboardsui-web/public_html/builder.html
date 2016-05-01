@@ -931,25 +931,29 @@
                         </div>
                         <div id="dbd-right-panel-editsettings"  class="dbd-right-panel-editsettings"  data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.tilesViewModel.editPanelContent()=='settings'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Edit Settings</div>
-                              <!--dxy -->
-                            <div id="dbd-edit-settings-container" class="dbd-edit-settings-container">
+                             <div id="dbd-edit-settings-container" class="dbd-edit-settings-container">
                                 <!--ko if: $data.dashboardsetToolBarModel.isDashboardSet-->
                                 <span class="edit-setting-head">Dashboard Set</span>
                                 <span class="edit-setting-link" data-bind="text:$data.dashboardsetToolBarModel.dashboardsetName(), click: tilesViewModel.switchEditPanelContent"></span>
+                                    <!--ko if: $data.dashboardsetToolBarModel.dashboardsetItems.length>0-->
                                 <span class="edit-setting-head" >Selected Dashboard</span>
                                 <span class="edit-setting-link" data-bind="text:$data.dashboardsetToolBarModel.selectedDashboardItem().name, click: tilesViewModel.switchEditPanelContent"></span>
-
+                                    <!--/ko-->
+                                <!--ko if: $data.tilesViewModel.dashboard.tiles().length>0-->
                                 <span class="edit-setting-head">Widgets</span>
-                                <!--ko foreach:tilesViewModel.dashboard.tiles-->
+                                    <!--ko foreach:tilesViewModel.dashboard.tiles-->
                                 <span class="edit-setting-link" data-bind="text:WIDGET_NAME, click: $parent.tilesViewModel.switchEditPanelContent"></span>
+                                    <!--/ko-->
                                 <!--/ko-->
                                <!--/ko-->
                                <!--ko ifnot: $data.dashboardsetToolBarModel.isDashboardSet-->
                                 <span class="edit-setting-head">Dashboard</span>
                                 <span class="edit-setting-link" data-bind="text: dashboard.name, click: tilesViewModel.switchEditPanelContent"></span>
+                                <!--ko if: $data.tilesViewModel.dashboard.tiles().length>0-->
                                 <span class="edit-setting-head">Widgets</span>
-                                <!--ko foreach: tilesViewModel.dashboard.tiles -->
+                                    <!--ko foreach: tilesViewModel.dashboard.tiles -->
                                 <span class="edit-setting-link"  data-bind="text:WIDGET_NAME, click: $parent.tilesViewModel.switchEditPanelContent"></span>
+                                    <!--/ko-->
                                <!--/ko-->
                                <!--/ko-->
                             </div>
@@ -962,7 +966,7 @@
                             <div  class="dbd-left-panel-header-search-input">
                                 <input class="widget-search-input" type="text" name="searchInput"
                                    data-bind="event: { keypress: searchWidgetsInputKeypressed }, ojComponent:{component:'ojInputText', value: keyword, 
-                                              placeholder: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODE_CONTENT'), rootAttributes: {'class': 'dbs-search-box-input'}}
+                                              placeholder: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODER_CONTENT'), rootAttributes: {'class': 'dbs-search-box-input'}}
                                               ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL') }"/>
                             </div>
                             <div>
