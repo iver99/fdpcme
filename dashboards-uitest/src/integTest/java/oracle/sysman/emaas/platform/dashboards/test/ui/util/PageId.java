@@ -15,6 +15,8 @@ public class PageId
 	public static final String ErrorPageSingOutBtnCss = "button[title='Sign Out']";
 	public static final String OverviewCloseID = "overviewClose";
 	public static final String WidgetSearchBtnID = "dbd-left-panel-header-search-btn";
+	public static final String ADashboardTestByAriaLabel = "//*[@aria-label='ADashboard Test']";
+	public static final String EnterpriseOverviewByAriaLabel = "//*[@aria-label='Enterprise Overview']";
 
 	//OOB dashboards ID
 	public static final String Application_Performance_Monitoring_ID = "//div[@aria-dashboard='14']";
