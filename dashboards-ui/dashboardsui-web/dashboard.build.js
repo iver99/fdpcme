@@ -3,7 +3,7 @@
     baseUrl: "@version@/js",
     dir: "../build/public_html",
     optimize:"none",
-    optimizeCss: "standard",
+    optimizeCss: "none", //this will not compile 4 css file of DF, but will fix emcpdf-1586
     modules: [
         {
             name: "builder/builder.jet.partition"
