@@ -122,34 +122,26 @@ define(['knockout',
                     self.editPanelContent("settings");
                 }
             };
-            self.toggleRightPanel = function(data,event) {  
-                if($(event.currentTarget).hasClass('rightpanel-pencil')){ 
-                    if(self.rightPanelIcon()==='wrench'){                       
-                        self.rightPanelIcon("pencil");
-                        if(!self.rightPanelShown()){ 
-                            $b.getRightPanelModel().toggleLeftPanel();
-                            self.rightPanelShown(!self.rightPanelShown());
-                        }
-                    }else{                        
-                        self.rightPanelIcon("pencil");
-                        if(self.rightPanelShown())self.rightPanelIcon("none");
-                        $b.getRightPanelModel().toggleLeftPanel(); 
-                        self.rightPanelShown(!self.rightPanelShown());
+            self.toggleRightPanel = function(data,event) {
+                    var clickedIcon;
+                    if ($(event.currentTarget).hasClass('rightpanel-pencil')) {
+                        clickedIcon = "pencil";
+                    } else if ($(event.currentTarget).hasClass('rightpanel-wrench')) {
+                        clickedIcon = "wrench";
                     }
-                }else if($(event.currentTarget).hasClass('rightpanel-wrench')){ 
-                    if(self.rightPanelIcon()==='pencil' ){                         
-                        self.rightPanelIcon("wrench");
-                         if(!self.rightPanelShown()){
-                            $b.getRightPanelModel().toggleLeftPanel();
-                            self.rightPanelShown(!self.rightPanelShown());
-                        }
-                    }else{
-                        self.rightPanelIcon("wrench");
-                        if(self.rightPanelShown())self.rightPanelIcon("none");
+
+                    if (self.rightPanelShown() && clickedIcon !== self.rightPanelIcon()) {
+                        self.rightPanelIcon(clickedIcon);
+                    }
+                    else if (self.rightPanelShown()) {
+                        self.rightPanelIcon("none");
                         $b.getRightPanelModel().toggleLeftPanel();
                         self.rightPanelShown(!self.rightPanelShown());
-                    }
-                }              
+                    } else {
+                        self.rightPanelIcon(clickedIcon);
+                        $b.getRightPanelModel().toggleLeftPanel();
+                        self.rightPanelShown(!self.rightPanelShown());
+                    }              
             };
             
 //            self.appendTextTile = function () {
