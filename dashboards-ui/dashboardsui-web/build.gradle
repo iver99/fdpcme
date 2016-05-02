@@ -606,5 +606,4 @@ if(project.hasProperty("devMode")){
 else
 {
     war.dependsOn minifyHomeJs
-
 }
