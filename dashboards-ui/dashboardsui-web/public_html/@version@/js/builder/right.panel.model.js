@@ -250,6 +250,30 @@ define(['knockout',
 //                    return;
 //                self.checkAndDisableLinkDraggable();
 //            };
+            var AUTO_PAGE_NAV = 1;
+            var widgetListHeight = ko.observable(0);
+            var pageSizeLastTime = 0;
+            // try using MutationObserver to detect widget list height change.
+            // if MutationObserver is not availbe, register builder resize listener.
+            if (typeof window.MutationObserver !== 'undefined') {
+                var widgetListHeightChangeObserver = new MutationObserver(function () {
+                    widgetListHeight($(".dbd-left-panel-widgets").height());
+                });
+                widgetListHeightChangeObserver.observe($(".dbd-left-panel-widgets")[0], {
+                    attributes: true,
+                    attributeFilter: ['style']
+                });
+            } else {
+                $b.addBuilderResizeListener(function () {
+                    widgetListHeight($(".dbd-left-panel-widgets").height());
+                });
+            }
+            // for delay notification.
+            widgetListHeight.extend({rateLimit: 500, method: 'notifyWhenChangesStop '});
+            widgetListHeight.subscribe(function () {
+                console.log("loaded");
+                self.loadWidgets(null, AUTO_PAGE_NAV);
+            });
 
 
             self.loadWidgets = function(req) {                

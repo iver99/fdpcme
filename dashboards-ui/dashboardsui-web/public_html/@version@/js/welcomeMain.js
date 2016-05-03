@@ -72,7 +72,7 @@ require(['ojs/ojcore',
             var logReceiver = dfu.getLogUrl();
            
             logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
-            logger.setLogLevel(oj.Logger.LEVEL_LOG);
+            logger.setLogLevel(oj.Logger.LEVEL_WARN);
             
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar", {
@@ -193,10 +193,10 @@ require(['ojs/ojcore',
                             landingHomeUrls[dataExplorers[i].name] = dataExplorers[i].href;
                             //change name of data explorer in ITA to "Data Explorer - Analyze" & "Data Explorer"
                             if(dataExplorers[i].serviceName === "EmcitasApplications") {                             
-                                self.exploreDataInITA.push({href: dataExplorers[i].href, name: self.dataExplorer+" - " +dataExplorers[i].name, serviceName: dataExplorers[i].serviceName, version: dataExplorers[i].version});
+                                self.exploreDataInITA.push({id: 'ITA_Analyze', href: dataExplorers[i].href, name: self.dataExplorer+" - " +dataExplorers[i].name, serviceName: dataExplorers[i].serviceName, version: dataExplorers[i].version});
                                 landingHomeUrls[self.dataExplorer+" - " +dataExplorers[i].name] = dataExplorers[i].href;
                             }else if (dataExplorers[i].serviceName === "TargetAnalytics") {
-                                self.exploreDataInITA.push({href: dataExplorers[i].href, name: self.dataExplorer, serviceName: dataExplorers[i].serviceName, version: dataExplorers[i].version});
+                                self.exploreDataInITA.push({id: 'ITA_Search', href: dataExplorers[i].href, name: self.dataExplorer, serviceName: dataExplorers[i].serviceName, version: dataExplorers[i].version});
                                 landingHomeUrls[self.dataExplorer] = dataExplorers[i].href;
                             }
                             //change name of data explorer in ITA starting with "Data Explorer - "

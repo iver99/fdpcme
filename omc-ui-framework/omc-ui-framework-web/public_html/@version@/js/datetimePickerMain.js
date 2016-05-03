@@ -24,7 +24,8 @@ requirejs.config({
     shim: {
         'jquery': {
             exports: ['jQuery', '$']
-        },'crossroads': {
+        },
+        'crossroads': {
             deps: ['signals'],
             exports: 'crossroads'
         }
@@ -38,7 +39,9 @@ requirejs.config({
             merge: {
                // 'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsMsgBundle'
             }
-        },text: {
+        }
+	,
+        text: {
             useXhr: function (url, protocol, hostname, port) {
               // allow cross-domain requests
               // remote server allows CORS
@@ -71,7 +74,7 @@ require(['ojs/ojcore',
                 viewModel: {require: "/emsaasui/uifwk/js/widgets/datetime-picker/js/datetime-picker.js"},
                 template: {require: "text!/emsaasui/uifwk/js/widgets/datetime-picker/html/datetime-picker.html"}
             });
-            
+
             function MyViewModel() {
                 var self = this;
                 var start = new Date(new Date() - 24 * 60 * 60 * 1000);
@@ -111,8 +114,6 @@ require(['ojs/ojcore',
                     startDateTime: /*self.initStart,*/ start,
                     endDateTime: self.initEnd, //end,
                     timePeriodsNotToShow: /*["Last 30 days", "Last 90 days"],*/ self.timePeriodsNotToShow,
-                    enableTimeFilter: true,
-                    hideMainLabel: true,
 //                    timeDisplay: self.timeDisplay,
 //                    customTimeBack: 90*24*60*60*1000,
 //                    appId: "APM",
@@ -126,8 +127,6 @@ require(['ojs/ojcore',
                         console.log(start);
                         console.log(end);
                         console.log(tp);
-                        console.log(tf);
-//                        $("#timeFilterValue").text("time filter value: " + JSON.stringify(tf));
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
                         if(self.isTimePeriodLessThan1day(tp) && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
@@ -178,7 +177,6 @@ require(['ojs/ojcore',
                     self.initEnd(new Date(new Date() - 3*60*60*1000));
                     self.timePeriodsNotToShow(["Last 90 days", "Latest"]);
                     self.timeDisplay("long");
-                    self.timePeriodPre("Last 90 days");                    
                 }
                 
                 self.lineSeriesValues = ko.observableArray();

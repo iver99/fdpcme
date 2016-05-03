@@ -62,7 +62,7 @@ define(['jquery',
     }
     Builder.registerModule(WidgetDataSource, "WidgetDataSource");
         
-    function createTextWidget(width) {
+    /*function createTextWidget(width) {
         var widget = {};
         widget.WIDGET_KOC_NAME = "DF_V1_WIDGET_TEXT";
         widget.WIDGET_TEMPLATE = "./widgets/textwidget/textwidget.html";
@@ -75,5 +75,5 @@ define(['jquery',
         widget.content = null;
         return widget;
     }
-    Builder.registerFunction(createTextWidget, 'createTextWidget');
+    Builder.registerFunction(createTextWidget, 'createTextWidget');*/
 });

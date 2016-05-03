@@ -130,7 +130,7 @@ define(['knockout',
         }
         Builder.registerModule(DashboardItemChangeEvent, 'DashboardItemChangeEvent');
         
-        function DashboardTextTile(mode, $b, widget, funcShow, deleteTextCallback) {
+        /*function DashboardTextTile(mode, $b, widget, funcShow, deleteTextCallback) {
             var self = this;
             self.dashboard = $b.dashboard;
             self.title = ko.observable("text widget title"); //to do 
@@ -149,7 +149,7 @@ define(['knockout',
 
             Builder.initializeTextTileAfterLoad(mode, $b, self, funcShow, deleteTextCallback, Builder.isContentLengthValid);            
         }
-        Builder.registerModule(DashboardTextTile, 'DashboardTextTile');
+        Builder.registerModule(DashboardTextTile, 'DashboardTextTile');*/
 
         /**
          *  Object used to represents a dashboard tile created by clicking adding widget
@@ -169,11 +169,11 @@ define(['knockout',
             self.isMaximized = ko.observable(false);            
 
             var kowidget;
-            if(widget.type === "TEXT_WIDGET") {
-                kowidget = new Builder.TextTileItem(widget);
-            }else {
+//            if(widget.type === "TEXT_WIDGET") {
+//                kowidget = new Builder.TextTileItem(widget);
+//            }else {
                 kowidget = new Builder.TileItem(widget);
-            }
+//            }
             for (var p in kowidget)
                 self[p] = kowidget[p];
             if(self['WIDGET_SUPPORT_TIME_CONTROL']) {
@@ -189,7 +189,7 @@ define(['knockout',
         }
         Builder.registerModule(DashboardTile, 'DashboardTile');
 
-        function initializeTextTileAfterLoad(mode, $b, tile, funcShow, deleteTextCallback) {
+        /*function initializeTextTileAfterLoad(mode, $b, tile, funcShow, deleteTextCallback) {
             if(!tile) {
                 return;
             }
@@ -217,7 +217,7 @@ define(['knockout',
                 return tile.cssStyle() + "display:" + display + "; left: 10px;"+tileBorder;
             });
         }
-        Builder.registerFunction(initializeTextTileAfterLoad, 'initializeTextTileAfterLoad');
+        Builder.registerFunction(initializeTextTileAfterLoad, 'initializeTextTileAfterLoad');*/
 
         function initializeTileAfterLoad(mode, dashboard, tile, timeSelectorModel, targetContext, loadImmediately) {
             if (!tile)

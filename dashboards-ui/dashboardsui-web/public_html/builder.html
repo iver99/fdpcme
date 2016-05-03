@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html id='global-html'>
+<html id="global-html"  lang="en">
     <head>
         <title data-bind="text:builderTitle"></title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -300,7 +300,7 @@
                             <span class="dbd-toolbar-icon-delete"></span>
                         </div>
                         
-                        <button class="dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print"
+                        <button class="dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print toolbar-save"
                                 data-bind="click: handleDashboardSave, ojComponent: {
                                         component:'ojButton', chroming: 'half', label: getNlsString('COMMON_BTN_SAVE'), disabled: disableSave, 
                                         icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
@@ -478,7 +478,7 @@
                              data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
                             <div class="oj-col oj-sm-12 oj-md-7">
                                <div data-bind="visible: !dashboard.enableTimeRange || dashboard.enableTimeRange() !== 'TRUE'">&nbsp;</div>
-                               <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'"></div>
+                               <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>
                             </div>
                         </div>
 
@@ -504,14 +504,14 @@
                                     <div style="position: absolute; top: 0; left: 0px; right: 0; bottom: 0px; margin: 5px;">
                                         <div class="dbd-tile-header tile-drag-handle" style="display: flex">
                                           <!-- ko if: $root.dashboard.systemDashboard() && linkedDashboard && linkedDashboard() !== '#'-->
-                                            <h2 class="dbd-tile-title"><a data-bind="text:hideTitle() === 'true' ? '': title, attr: {href: linkedDashboard}"></a></h2>
+                                            <h2 class="dbd-tile-title"><a data-bind="text:hideTitle() === 'true' ? '': title, attr: {href: linkedDashboard, 'data-tile-title': title}"></a></h2>
                                           <!-- /ko -->
                                           <!-- ko if: !$root.dashboard.systemDashboard() || !linkedDashboard || linkedDashboard() === '#'-->
-                                            <h2 class="dbd-tile-title" data-bind="text:hideTitle() === 'true' ? '': title"></h2>
+                                            <h2 class="dbd-tile-title" data-bind="text:hideTitle() === 'true' ? '': title, attr: {'data-tile-title': title}"></h2>
                                           <!-- /ko -->
                                           <div class="dbd-pull-right" style="display: flex" data-bind="visible: $root.isMobileDevice !== 'true'">
                                               <div class="dbd-btn-editor">                 
-                                                  <button class="oj-button-half-chrome" tabindex="0"
+                                                  <button class="oj-button-half-chrome dbd-data-explore" tabindex="0"
                                                           data-bind="
                                                              attr:{'id': 'editButton' + clientGuid,title: getNlsString('DBS_BUILDER_TILE_EDIT')},
                                                              click:$root.openInDataExplorer,
@@ -674,7 +674,7 @@
                         component:'ojButton', 
                         display: 'icons', 
                         icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-question-circle'}, 
-                        label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')}"></button>
+                        label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')}"></button>-->
                 </div>
                 <!-- ko stopBinding: true -->
                 <div class="dbd-left-panel dbd-left-panel-show no-print"

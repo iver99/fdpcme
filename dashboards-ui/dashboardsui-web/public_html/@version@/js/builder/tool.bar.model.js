@@ -131,10 +131,10 @@ define(['knockout',
             };
 
             self.initEventHandlers = function() {
-                $b.addEventListener($b.EVENT_NEW_TEXT_START_DRAGGING, self.handleAddWidgetTooltip);
+//                $b.addEventListener($b.EVENT_NEW_TEXT_START_DRAGGING, self.handleAddWidgetTooltip);
                 $b.addEventListener($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, self.handleAddWidgetTooltip);
-                $b.addEventListener($b.EVENT_TEXT_START_EDITING, self.handleStartEditText);
-                $b.addEventListener($b.EVENT_TEXT_STOP_EDITING, self.handleStopEditText);
+//                $b.addEventListener($b.EVENT_TEXT_START_EDITING, self.handleStartEditText);
+//                $b.addEventListener($b.EVENT_TEXT_STOP_EDITING, self.handleStopEditText);
             };
 
             self.rightButtonsAreaClasses = ko.computed(function() {
@@ -285,7 +285,7 @@ define(['knockout',
                 $b.findEl(".parent-message-dialog").ojDialog("open");
             };
 
-            self.handleStartEditText = function () {
+            /*self.handleStartEditText = function () {
                 self.disableSave(true);
                 self.tilesViewModel.tilesView.disableDraggable();
             };
@@ -297,7 +297,7 @@ define(['knockout',
                     self.disableSave(false);
                 }
                 self.tilesViewModel.tilesView.enableDraggable();
-            };
+            };*/
 
             self.getSummary = function(dashboardId, name, description, tilesViewModel) {
                 function dashboardSummary(name, description) {
@@ -452,12 +452,12 @@ define(['knockout',
     //                ,providerVersion: '1.0'
             };
 
-            self.HandleAddTextWidget = function() {
+            /*self.HandleAddTextWidget = function() {
                 var maximizedTile = self.tilesViewModel.editor.getMaximizedTile();
                 if (maximizedTile)
                     self.tilesViewModel.restore(maximizedTile);
                 self.tilesViewModel.appendTextTile();
-            };
+            };*/
 
             self.openAddWidgetDialog = function() {
                 var maximizedTile = self.tilesViewModel.editor.getMaximizedTile();
@@ -521,7 +521,6 @@ define(['knockout',
 
             self.initialize();
 
-            //Dashboard Options ======start=======
             var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
             var addFavoriteLabel = getNlsString('DBS_BUILDER_BTN_FAVORITES_ADD');
             var removeFavoriteLabel = getNlsString('DBS_BUILDER_BTN_FAVORITES_REMOVE');
@@ -786,6 +785,17 @@ define(['knockout',
             //self.isSystemDashboard = self.dashboard.systemDashboard();
             self.dashboardOptsMenuItems = [
                 {
+                    "label": getNlsString('DBS_BUILDER_BTN_ADD'),
+                    "url": "#",
+                    "id":"emcpdf_dsbopts_add",
+                    "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
+                    "icon":"dbd-toolbar-icon-add-widget",
+                    "title": "",//getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
+                    "disabled": self.editDisabled() === true,
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
+                    "endOfGroup": false
+                },
+                {
                     "label": getNlsString('COMMON_BTN_EDIT'),
                     "url": "#",
                     "id":"emcpdf_dsbopts_edit"+self.toolBarGuid,
@@ -915,7 +925,6 @@ define(['knockout',
                     "endOfGroup": false
                 }
             ];
-            //Dashboard Options ======end=======
         }
         
         Builder.registerModule(ToolBarModel, 'ToolBarModel');

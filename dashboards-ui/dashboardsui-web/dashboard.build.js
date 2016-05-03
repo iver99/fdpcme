@@ -3,7 +3,7 @@
     baseUrl: "@version@/js",
     dir: "../build/public_html",
     optimize:"none",
-    optimizeCss: "standard",
+    optimizeCss: "standard", 
     modules: [
         {
             name: "builder/builder.jet.dvt.partition"

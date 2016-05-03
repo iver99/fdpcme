@@ -52,9 +52,42 @@ requirejs.config({
         'emcta':'/emsaasui/emcta/ta/js',
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
-        'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
+        //'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
         'uifwk': '/emsaasui/uifwk'
     },
+    bundles: (window.DEV_MODE ? undefined : {
+        'builder/builder.jet.partition': [
+            'ojs/ojcore',
+            'ojs/ojknockout',
+            'ojs/ojmenu',
+            'ojs/ojtree',
+            'ojs/ojvalidation',
+            'ojs/ojknockout-validation',
+            'ojs/ojbutton',
+            'ojs/ojselectcombobox',
+            'ojs/ojpopup',
+            'ojs/ojchart',
+            'ojs/ojcomponents',   
+            'ojs/ojcomponentcore',
+            'ojs/ojdialog',
+            'ojs/ojdatetimepicker',
+            'ojs/ojmodel',
+            'ojs/ojknockout-model',
+            'ojs/ojtoolbar',
+            'ojs/ojpagingcontrol',
+            'ojs/ojeditablevalue',
+            'ojs/ojdatetimepicker',
+            'ojs/internal-deps/dvt/DvtChart',
+            'ojs/ojdvt-base',
+            'ojs/ojcheckboxset',
+            'ojs/ojpopup',
+            'ojs/ojpopupcore',
+            'ojs/ojmessaging',
+            'ojs/ojgauge',
+            'knockout',
+            'jquery',
+            'ojL10n']
+    }),
     // Shim configurations for modules that do not expose AMD
     shim: {
         'jquery': {
@@ -116,7 +149,7 @@ require(['knockout',
         logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
         // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
         // If you comment the line below, our current log calls will not be output!
-        logger.setLogLevel(oj.Logger.LEVEL_LOG);
+        logger.setLogLevel(oj.Logger.LEVEL_WARN);
 
         if (!ko.components.isRegistered('df-oracle-branding-bar')) {
             ko.components.register("df-oracle-branding-bar",{
