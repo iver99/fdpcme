@@ -1,4 +1,6 @@
 apply plugin: 'DevInfraPlugin'
+apply plugin: 'groovy'
+import groovy.sql.Sql
 import java.util.logging.LogManager.Cleaner;
 import org.gradle.api.artifacts.Configuration.State  
 ext.distDir = "${rootDir}/dist"  
@@ -154,6 +156,7 @@ configurations {
 	prebuild_groovy { transitive = false }
 	prebuild_integtest { transitive = false }
 compile.exclude group: "com.google.code.findbugs", module: "annotations"
+	driver
 }
 
 dependencies {
@@ -199,6 +202,7 @@ dependencies {
 	                   'com.jayway.restassured:rest-assured:2.3.1',
 	                   'com.jayway.restassured:rest-assured-common:2.3.1',
 	                   'org.jmockit:jmockit:1.19'
+	driver group: 'com.oracle.jdbc', name: 'ojdbc7', version: '12.1.0.1.0'
 }
 
 task runS1Tests(type: Exec) {
@@ -240,6 +244,8 @@ task preBuildCompile(type: Copy) {
    from configurations.prebuild_cache
    from configurations.prebuild_groovy
    from configurations.prebuild_integtest
+   from configurations.webdriver
+   from configurations.testConfig
    into "$afDir"
    rename(/registry-client-1.\d+.\d+-\d+.jar/, 'registry-client-1.x.jar')
    rename(/registry-lookup-client-1.\d+.\d+-\d+.jar/, 'registry-lookup-client-1.x.jar')
@@ -308,3 +314,43 @@ artifactoryPublish {
 // Apply code coverage gradle file. Defines jacoco and sonar properties.
 project.ext.set("source_cc", "${rootDir}/codeCoverage")
 apply from: "${project.ext.source_cc}/codeCoverage.gradle" 
+
+// clean up database for Local LRG
+URLClassLoader loader = GroovyObject.class.classLoader
+configurations.driver.each {File file ->
+    loader.addURL(file.toURL())
+}
+
+String CLEANUP_SQL = "cleanup_df.sql"
+String db_usr = "SYSEMS_T_3"
+String db_pw = "welcome1"
+String db_url_pre = "jdbc:oracle:thin:@"
+String db_url_suf = ".us.oracle.com:1521:orcl12c"
+
+task cleanUpDB4LocalLRG<<{
+    if(project.hasProperty('cleanDB')) {
+    	def driverName = 'oracle.jdbc.OracleDriver'
+    	Class.forName(driverName)
+    	def props = [user: db_usr, password: db_pw] as Properties
+    	def url = db_url_pre + project.getProperty('cleanDB') + db_url_suf
+    	def sql = groovy.sql.Sql.newInstance(url,props,driverName)
+    	def file = new File(CLEANUP_SQL)
+
+    	file.eachLine{
+		def line=it
+		if(!line.trim().isEmpty()&&!line.contains("commit"))
+		{
+			if(line.trim().toLowerCase().startsWith("delete"))
+			{
+				line=line.replace(";","")
+				sql.execute(line)
+				println "Successfully Executed: "+line+" , affected row count:"+sql.getUpdateCount()
+			}
+		}	
+    	}
+    	sql.close() 
+	println "\t================================\n"
+	println "\t     Clean up DB data done\n"
+	println "\t================================"
+    }
+}

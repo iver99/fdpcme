@@ -66,13 +66,29 @@ repositories {
             url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
 
     }
+
 dependencies {
     testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-web-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')
-}
-configurations {
-restAssured.exclude module: 'groovy'
-}
+    }
+    testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils-integ-tests', version: "${REPO_BID}") {
+	exclude('module':'groovy')
+    }
+    testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
+    testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
+    testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
+    testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
+    testConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
+    testConfig(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2') { transitive = false }
+    testConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13') { transitive = false }
+    testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13') { transitive = false }
+    testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
+    testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils', version:"${REPO_BID}")
+    testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '1.6.0+') 
+    configurations {
+	restAssured.exclude module: 'groovy' 
+    }
 }
 
 task QATest(type:EMTest,dependsOn: omcSetup){ 
@@ -84,5 +100,12 @@ task QATest(type:EMTest,dependsOn: omcSetup){
 	useRestAssured=true
 }
 
-omcTeardown.mustRunAfter(QATest)
-task emcpdf_uifwk_test_3n (dependsOn: [QATest, omcTeardown])
+task DEVTest(type:EMTest,dependsOn: QATest){ 
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"	
+	useRestAssured=true
+	ext.set("testType", "unit")
+}
+
+omcTeardown.mustRunAfter(DEVTest)
+task emcpdf_uifwk_test_3n (dependsOn: [DEVTest, omcTeardown])
