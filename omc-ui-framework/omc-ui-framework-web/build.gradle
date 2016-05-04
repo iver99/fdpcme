@@ -25,7 +25,7 @@ def File sourceTargetSelectorDestDir = new File(sourceWebappDir, 'libs/emcstgtse
 
 def stagingDir = buildDir.absolutePath+'/staging/public_html'
 def compiledDir = buildDir.absolutePath+'/public_html'
-def File sourceTargetSelectorAPIDestDir = new File(buildDir.absolutePath+'/stage _tsel')
+def File sourceTargetSelectorAPIDestDir = new File(buildDir.absolutePath+'/stage_tsel')
 def webRootSourceDir = 'public_html'
 
 sourceCompatibility = 1.7
