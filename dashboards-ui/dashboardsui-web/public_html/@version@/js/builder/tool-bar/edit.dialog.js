@@ -53,6 +53,7 @@ define(['knockout',
             self.nameInputed.subscribe(function(val){
                 self.dashboard.name(val);
                 self.tbModel.dashboardName(val);
+                self.name(val);
             } );
             
             self.descriptionInputed.subscribe(function(val){
@@ -63,6 +64,7 @@ define(['knockout',
                     self.dashboard.description = ko.observable(val);
                 }
                 self.tbModel.dashboardDescription(val);
+                self.description(val);
             } );
             
             self.tbModel.dashboardDescription.subscribe(function(val){
@@ -88,8 +90,8 @@ define(['knockout',
             self.noSameNameValidator = {
                     'validate' : function (value) {
                         self.nameValidated(true);
-                        if (savedName === value)
-                            return true;
+//                        if (savedName === value)
+//                            return true;
                         value = value + "";
 
                         if (value && Builder.isDashboardNameExisting(value)) {
@@ -133,7 +135,7 @@ define(['knockout',
                             self.tbModel.dashboardDescriptionEnabled(isEditDsbOptionEnabled(self.descriptionValue) ? "TRUE" : "FALSE");
 //                            self.dashboard.enableEntityFilter(self.isEditDsbOptionEnabled(self.entityFilterValue) ? "TRUE" : "FALSE");
                             self.dashboard.enableTimeRange(isEditDsbOptionEnabled(self.timeRangeFilterValue) ? "TRUE" : "FALSE");
-                            savedName = self.name();
+//                            savedName = self.name();
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});

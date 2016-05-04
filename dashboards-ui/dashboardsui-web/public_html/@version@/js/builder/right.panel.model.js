@@ -433,6 +433,14 @@ define(['knockout',
 
             self.showdbOnHomePage = ko.observable([]);
             
+            self.saveNameAndDescriptionEditing = ko.computed(function(){
+                return self.editDashboardDialogModel.showdbDescription()+self.editDashboardDialogModel.name()+self.editDashboardDialogModel.description()+self.showdbOnHomePage();
+            });
+            
+            self.saveNameAndDescriptionEditing.subscribe(function(){
+                self.editDashboardDialogModel.save();
+            });
+            
             self.enableEntityFilter = ko.observable(true);
             self.instanceSupport = ko.observable("multiple");
             self.enableTimeRangeFilter = ko.observable(true);
