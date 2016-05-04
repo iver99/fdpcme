@@ -1,6 +1,23 @@
 define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg", "ojs/ojdatetimepicker"],
         function (ko, $, msgUtilModel, oj, nls) {
 
+            //Firefox ignores milliseconds when converting a date to Date object, while it doesn't when converting a number.
+            //The funciton is used to keep the milliseconds no matter it is a Date Object or number so that when calculating time periods, it is precise.
+            function newDateWithMilliseconds(date) {
+                if(date instanceof Date) {                    
+                    var year = date.getFullYear();
+                    var month = date.getMonth();
+                    var day = date.getDate();
+                    var hours = date.getHours();
+                    var minutes = date.getMinutes();
+                    var seconds = date.getSeconds();
+                    var milliseconds = date.getMilliseconds();
+                    return new Date(year, month, day, hours, minutes, seconds, milliseconds);
+                }else {
+                    return new Date(date);
+                }
+            }
+            
             /**
              * 
              * @param {String} string the string to search
@@ -964,7 +981,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.init = true;
                 self.initialize = function() {
                     curDate = new Date();
-                    start = new Date(curDate - 15 * 60 * 1000);
+                    start = newDateWithMilliseconds(curDate - 15 * 60 * 1000);
                     end = new Date();
                     var tpNotToShow = self.getParam(self.timePeriodsNotToShow);
                     var sdt, edt, range;
@@ -983,7 +1000,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                                 self.setTimePeriodChosen(tp);
                                 self.setTimePeriodToLastX(tp, start, end);
                             }else {                            
-                                start = new Date(new Date() - self.timePeriodObject()[tp][1]);
+                                start = newDateWithMilliseconds(new Date() - self.timePeriodObject()[tp][1]);
                                 end = new Date();
                                 if($.inArray(tp, tpNotToShow) === -1) {
                                     self.setTimePeriodChosen(tp);
@@ -1000,8 +1017,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             //users input start date and end date
                             sdt = self.getParam(self.startDateTime);
                             edt = self.getParam(self.endDateTime);
-                            start = new Date(sdt);
-                            end = new Date(edt);
+                            start = newDateWithMilliseconds(sdt);
+                            end = newDateWithMilliseconds(edt);
                             if(Math.abs(end.getTime()-new Date().getTime())>60*1000 || end.getMinutes() !== new Date().getMinutes()) {
                                 var t_timePeriod = self.timePeriodCustom;
                                 customClick(0);
@@ -1031,7 +1048,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         } else if (self.startDateTime && !self.endDateTime) {
                             customClick(0);
                             sdt = self.getParam(self.startDateTime);
-                            start = new Date(sdt);
+                            start = newDateWithMilliseconds(sdt);
                             end = new Date();
                         } else {
                             //users input nothing
