@@ -8,45 +8,52 @@ import org.openqa.selenium.support.ui.Select;
 
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.*;
 
 import java.util.Set;
+
 import org.testng.Assert;
 
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardPageId;
+
 /**
- *  @version
- *  @author  charles.c.chen
- *  @since   release specific (what release of product did this appear in)
+ * @version
+ * @author charles.c.chen
+ * @since release specific (what release of product did this appear in)
  */
 
-public class TestDashBoard extends LoginAndLogout{
+public class TestDashBoard extends LoginAndLogout
+{
 
 	public void initTest(String testName) throws Exception
 	{
-		login(this.getClass().getName()+"."+testName);
+		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
 	}
-	
+
 	@Test
 	public void testSetHome() throws Exception
 	{
 		//create a new dashboard
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		
+
 		webd.getLogger().info("start to test in testSetHome");
-		
+
 		DashBoardUtils.clickGVButton();
 		String parentWindow = webd.getWebDriver().getWindowHandle();
-				
-		DashBoardUtils.openDBCreatePage();
-		String dbName="SetHome_testDashboard";
-		String dbDesc="SetHome_testDashboard desc";
-		DashBoardUtils.inputDashBoardInfo(dbName,dbDesc);
 
-		webd.getLogger().info("Name = "+DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
+		DashBoardUtils.openDBCreatePage();
+		String dbName = "SetHome_testDashboard";
+		String dbDesc = "SetHome_testDashboard desc";
+		DashBoardUtils.inputDashBoardInfo(dbName, dbDesc);
+
+		webd.getLogger().info("Name = " + DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		
-		DashBoardUtils.clickOKButton();		
+
+		DashBoardUtils.clickOKButton();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.takeScreenShot();
 
@@ -60,8 +67,8 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.click(DashBoardPageId.HomeLinkID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.getLogger().info("Verfiy the home page");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashboardNameID),dbName);
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashboardDescID),dbDesc);		
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashboardNameID), dbName);
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashboardDescID), dbDesc);
 		//set it not home
 		DashBoardUtils.clickSetHome();
 		webd.takeScreenShot();
@@ -72,26 +79,47 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.click(DashBoardPageId.HomeLinkID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.getLogger().info("Verfiy the home page");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_APMLinkID),"Application Performance Monitoring");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_LALinkID),"Log Analytics");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_ITALinkID),"IT Analytics");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DashboardsLinkID),"Dashboards");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DataExp),"Data Explorers");
-		
-		//delete dashboard
-		webd.click(DashBoardPageId.Welcome_DashboardsLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		DashBoardUtils.searchDashBoard(webd,dbName);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_APMLinkID), "Application Performance Monitoring");
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_LALinkID), "Log Analytics");
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_ITALinkID), "IT Analytics");
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DashboardsLinkID), "Dashboards");
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DataExp), "Data Explorers");
+
+	}
+
+	@Test(dependsOnMethods = { "testSetHome" })
+	public void deleteSetHome() throws Exception
+	{
+		String dbName = "SetHome_testDashboard";
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+
+		webd.getLogger().info("start to test in deleteSetHome");
+
+		DashBoardUtils.clickGVButton();
+		String parentWindow = webd.getWebDriver().getWindowHandle();
+
+		webd.getLogger().info("start to delete the dashboard");
+
+		DashBoardUtils.searchDashBoard(webd, dbName);
+
 		webd.takeScreenShot();
-		DashBoardUtils.clickDashBoard();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		webd.takeScreenShot();
-		DashBoardUtils.clickDelete();
-		webd.takeScreenShot();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		DashBoardUtils.clickDeleteButton();
-		webd.takeScreenShot();
+		webd.waitForElementPresent("css=div.oj-panel.dbs-summary-container");
+		if (webd.getText("css=div.oj-panel.dbs-summary-container").contains(dbName))
+
+		{
+
+			webd.getLogger().info("delete the dashboard: " + dbName);
+
+			webd.click(DashBoardPageId.InfoBtnID);
+
+			webd.click(DashBoardPageId.RmBtnID);
+
+			webd.waitForElementPresent(DashBoardPageId.DeleteBtnID_Dialog);
+
+			DashBoardUtils.clickDeleteButton();
+
+		}
+
 		webd.getLogger().info("the dashboard has been deleted");
 	}
 
@@ -100,28 +128,28 @@ public class TestDashBoard extends LoginAndLogout{
 	{
 		//create a dashboard
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		
+
 		webd.getLogger().info("start to test in testFavorite");
-		
+
 		DashBoardUtils.clickGVButton();
 		String parentWindow = webd.getWebDriver().getWindowHandle();
-				
-		DashBoardUtils.openDBCreatePage();
-		String dbName="favorite_testDashboard";
-		String dbDesc="favorite_testDashboard desc";
-		DashBoardUtils.inputDashBoardInfo(dbName,dbDesc);
 
-		webd.getLogger().info("Name = "+DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
+		DashBoardUtils.openDBCreatePage();
+		String dbName = "favorite_testDashboard";
+		String dbDesc = "favorite_testDashboard desc";
+		DashBoardUtils.inputDashBoardInfo(dbName, dbDesc);
+
+		webd.getLogger().info("Name = " + DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		
-		DashBoardUtils.clickOKButton();		
+
+		DashBoardUtils.clickOKButton();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.takeScreenShot();
-		
+
 		//set it to favorite
 		DashBoardUtils.clickFavorite();
 		webd.takeScreenShot();
-		
+
 		//verify the dashboard is favorite
 		DashBoardUtils.clickNavigatorLink();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
@@ -129,22 +157,22 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.click(DashBoardPageId.MyFavoritesLinkID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.getLogger().info("Verfiy the favortie checkbox is checked");
-		WebElement el=webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
+		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
 		Assert.assertTrue(el.isSelected());
 		webd.getLogger().info("Verfiy the dashboard is favorite");
-		DashBoardUtils.searchDashBoard(webd,dbName);
+		DashBoardUtils.searchDashBoard(webd, dbName);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
 		webd.takeScreenShot();
 		webd.getLogger().info("Open the dashboard");
 		DashBoardUtils.clickDashBoard();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashboardNameID),dbName);
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashboardDescID),dbDesc);
-		
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashboardNameID), dbName);
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashboardDescID), dbDesc);
+
 		//set it to not favorite		
 		DashBoardUtils.clickFavorite();
 		webd.takeScreenShot();
-		
+
 		//verify the dashboard is not favoite
 		DashBoardUtils.clickNavigatorLink();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
@@ -152,149 +180,150 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.click(DashBoardPageId.MyFavoritesLinkID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.getLogger().info("Verfiy the favortie checkbox is checked");
-		el=webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
+		el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
 		Assert.assertTrue(el.isSelected());
 		webd.getLogger().info("Verfiy the dashboard is not favorite");
-		DashBoardUtils.searchDashBoard(webd,dbName);
+		DashBoardUtils.searchDashBoardEmptyResult(webd, dbName);
 		Assert.assertEquals(webd.getAttribute(DashBoardPageId.DashboardSerachResult_panelID + "@childElementCount"), "0");
 		webd.getLogger().info("no favorite dashboard");
-		
+
 		//delete the dashboard
 		webd.getLogger().info("start to delete the dashboard");
-		el=webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
-		if(el.isSelected()){
+		el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
+		if (el.isSelected()) {
 			el.click();
 		}
 		//webd.sendKeys(DashBoardPageId.SearchDSBoxID, "");
 		//DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);		
-		//DashBoardUtils.searchDashBoard(dbName);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		//DashBoardUtils.searchDashBoard(webd,dbName);
+
+		//verify the created dashbobard is displayed
+		//		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(),900L);	
+		//		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.oj-panel.dbs-summary-container")));
+		webd.waitForElementPresent("css=div.oj-panel.dbs-summary-container");
+
+		if (webd.getText("css=div.oj-panel.dbs-summary-container").contains(dbName)) {
+			webd.getLogger().info("delete the dashboard: " + dbName);
+			webd.click(DashBoardPageId.InfoBtnID);
+			webd.click(DashBoardPageId.RmBtnID);
+			webd.waitForElementPresent(DashBoardPageId.DeleteBtnID_Dialog);
+			DashBoardUtils.clickDeleteButton();
+
+		}
+
+		//		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		//		webd.takeScreenShot();
+		//		DashBoardUtils.clickDashBoard();
+		//		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		//		webd.takeScreenShot();
+		//		DashBoardUtils.clickDelete();
+		//		webd.takeScreenShot();
+		//		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		//		DashBoardUtils.clickDeleteButton();
 		webd.takeScreenShot();
-		DashBoardUtils.clickDashBoard();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		webd.takeScreenShot();
-		DashBoardUtils.clickDelete();
-		webd.takeScreenShot();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		DashBoardUtils.clickDeleteButton();
-		webd.takeScreenShot();
-		webd.getLogger().info("the dashboard has been deleted");		
+
+		webd.getLogger().info("the dashboard has been deleted");
 	}
-	
+
 	@Test
 	public void testCreateDashBoard() throws Exception
 	{
-				
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		
-		webd.getLogger().info("start to test in testCreateDashBoard");
-		
-		String parentWindow = webd.getWebDriver().getWindowHandle();
-				
-		DashBoardUtils.openDBCreatePage();
-		String dbName="AAA_testDashboard";
-		String dbDesc="AAA_testDashBoard desc";
-		DashBoardUtils.inputDashBoardInfo(dbName,dbDesc);
 
-		webd.getLogger().info("Name = "+DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+
+		webd.getLogger().info("start to test in testCreateDashBoard");
+
+		String parentWindow = webd.getWebDriver().getWindowHandle();
+
+		DashBoardUtils.openDBCreatePage();
+		String dbName = "AAA_testDashboard";
+		String dbDesc = "AAA_testDashBoard desc";
+		DashBoardUtils.inputDashBoardInfo(dbName, dbDesc);
+		//verify input info's existence
+		//Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashBoardNameBoxID),"AAA_testDashboard");
+		webd.getLogger().info("Name = " + DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		
-		//click save button
-		DashBoardUtils.clickOKButton();		
+
+		DashBoardUtils.clickOKButton();
+
 		webd.takeScreenShot();
-		
 		//add widget
-		webd.getLogger().info("Start to add Widget into the dashboard");
-		//search widget
-		DashBoardUtils.searchWidget("Top Hosts by Log Entries");
-		
-		//select the widget
-		webd.getLogger().info("Select a widget and add it to the dashboard");	
-		DashBoardUtils.addWidget();
-		webd.getLogger().info("Add widget finished");
-		
-		//add widget
-		//DashBoardUtils.addWidget(1,parentWindow,"AAA_testDashboard","AAA_testDashBoard desc");
-				
+		DashBoardUtils.addWidget(1, parentWindow, "AAA_testDashboard", "AAA_testDashBoard desc");
+
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		
-		//save dashboard
-		DashBoardUtils.clickSaveButton();
-		
+
 		webd.takeScreenShot();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);	
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
-	
-	
+
 	@Test(dependsOnMethods = { "testCreateDashBoard" })
 	public void testModifyDashBoard() throws Exception
 	{
-					
+
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testModifyDashBoard");
-		
+
 		DashBoardUtils.clickGVButton();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);;
-		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		;
+
 		String parentWindow = webd.getWebDriver().getWindowHandle();
 		//open dashboard	
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
 		//DashBoardUtils.clickToSortByLastAccessed();
-		DashBoardUtils.searchDashBoard(webd,"AAA_testDashboard");
+		DashBoardUtils.searchDashBoard(webd, "AAA_testDashboard");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
 		webd.takeScreenShot();
 		DashBoardUtils.clickDashBoard();
 		//String parentWindow = webd.getWebDriver().getWindowHandle();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
 		//add a new widget
-		//DashBoardUtils.addWidget(0,parentWindow,"AAA_testDashboard","AAA_testDashBoard desc");
-		
-		DashBoardUtils.modifyDashboardInfo("AAA_testDashboard","AAA_testDashBoard desc modify");
-		
+		DashBoardUtils.addWidget(0, parentWindow, "AAA_testDashboard", "AAA_testDashBoard desc");
+
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
+
 		webd.takeScreenShot();
-	}	
-//	
-//	@Test(dependsOnMethods = { "testModifyDashBoard" })
-//	public void testNavigateWidget() throws Exception
-//	{
-//		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-//		webd.getLogger().info("start to test in testNavigateDashBoard");
-//		
-//		DashBoardUtils.clickGVButton();
-//		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-//		
-//		String parentWindow = webd.getWebDriver().getWindowHandle();
-//		//open dashboard	
-//		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-//		//DashBoardUtils.clickToSortByLastAccessed();
-//		DashBoardUtils.searchDashBoard(webd,"AAA_testDashboard");
-//		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-//		webd.takeScreenShot();
-//		DashBoardUtils.clickDashBoard();
-//		
-//		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-//		
-//		DashBoardUtils.navigateWidget(parentWindow);
-//		DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
-//	}
-//	
-	@Test(dependsOnMethods = { "testCreateDashBoard","testModifyDashBoard","testshareddashboard","teststopsharing"})
+	}
+
+	@Test(dependsOnMethods = { "testModifyDashBoard" })
+	public void testNavigateWidget() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testNavigateDashBoard");
+
+		DashBoardUtils.clickGVButton();
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+
+		String parentWindow = webd.getWebDriver().getWindowHandle();
+		//open dashboard	
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		//DashBoardUtils.clickToSortByLastAccessed();
+		DashBoardUtils.searchDashBoard(webd, "AAA_testDashboard");
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		webd.takeScreenShot();
+		DashBoardUtils.clickDashBoard();
+
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+
+		DashBoardUtils.navigateWidget(parentWindow);
+		DashBoardUtils.waitForMilliSeconds(2 * DashBoardPageId.Delaytime_long);
+	}
+
+	@Test(dependsOnMethods = { "testCreateDashBoard", "testModifyDashBoard", "testNavigateWidget" })
 	//@Test
 	public void testRemoveDashBoard() throws Exception
 	{
-				
+
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testRemoveDashBoard");	
+		webd.getLogger().info("start to test in testRemoveDashBoard");
 		//focus a dashboard
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
 		webd.takeScreenShot();
-		
+
 		DashBoardUtils.clickGVButton();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		//DashBoardUtils.clickToSortByLastAccessed();
-		DashBoardUtils.searchDashBoard(webd,"AAA_testDashboard");
+		DashBoardUtils.searchDashBoard(webd, "AAA_testDashboard");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.takeScreenShot();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
@@ -303,204 +332,128 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.click(DashBoardPageId.RmBtnID);
 		webd.takeScreenShot();
-		
+
 		//click delete button
 		DashBoardUtils.clickDeleteButton();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
+
 		webd.takeScreenShot();
-					
+
 	}
-	
+
 	@Test
 	public void testCreateSpecialDashBoard() throws Exception
 	{
-				
+
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		
+
 		webd.getLogger().info("start to test in testCreateSpecialDashBoard");
-		
+
 		String parentWindow = webd.getWebDriver().getWindowHandle();
-				
+
 		DashBoardUtils.openDBCreatePage();
-		String dbName="testDashboard_Spec";
-		String dbDesc="testDashboard_Spec_Desc";
-		DashBoardUtils.inputDashBoardInfo(dbName,dbDesc);
+		String dbName = "testDashboard_Spec";
+		String dbDesc = "testDashboard_Spec_Desc";
+		DashBoardUtils.inputDashBoardInfo(dbName, dbDesc);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		//verify input info's existence
 		//Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashBoardNameBoxID),"AAA_testDashboard");
-		webd.getLogger().info("Name = "+DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
+		webd.getLogger().info("Name = " + DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		
-		DashBoardUtils.clickOKButton();		
-		
+
+		DashBoardUtils.clickOKButton();
+
 		webd.takeScreenShot();
 		String widgetName = "Database Errors Trend";
-		String widgetName1 = "Top 10 Listeners by Load";
-				
 		//add widget
-		webd.getLogger().info("Start to add Widget into the dashboard");
-		//search widget
-		DashBoardUtils.searchWidget(widgetName);
-				
-		//select the widget
-		webd.getLogger().info("Select a widget and add it to the dashboard");	
-		DashBoardUtils.addWidget();
-		webd.getLogger().info("Add widget finished");
-		
-		//save the dashboard
-		DashBoardUtils.clickSaveButton();
-		
-		//modify the dashboard
-		DashBoardUtils.modifyDashboardInfo("DBA_Name_Modify","DBA_DESC_MODIFY");
-		//add widget
-		webd.getLogger().info("Start to add Widget into the dashboard");
-		//search widget
-		DashBoardUtils.searchWidget(widgetName1);
-						
-		//select the widget
-		webd.getLogger().info("Select a widget and add it to the dashboard");	
-		DashBoardUtils.addWidget();
-		webd.getLogger().info("Add widget finished");
-				
-		//save the dashboard
-		DashBoardUtils.clickSaveButton();		
+		DashBoardUtils.addWidget(1, parentWindow, widgetName, "DBA_Name_Modify", "DBA_DESC_MODIFY");
 
-		//add time selector
-		DashBoardUtils.clickTimePicker();
-		
-		//widget operation
-		TileManager tg = new TileManager(webd);
-		
-	    tg.tileOpen();
-		tg.tileDelete();
-		//save dashboard
-		DashBoardUtils.clickSaveButton();
-		tg.tileOpen();
-		tg.tileMaximize();
-		tg.tileOpen();
-		tg.tileRestore();
-		tg.tileOpen();
-		tg.tileWider();
-		tg.tileOpen();
-		tg.tileNarrower();
-		tg.tileOpen();
-		tg.tileTaller();
-		tg.tileOpen();
-		tg.tileShorter();
-		//save the dashboard
-		DashBoardUtils.clickSaveButton();	
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
+
 		webd.takeScreenShot();
-			
+
 	}
-	
+
 	@Test(dependsOnMethods = { "testCreateSpecialDashBoard" })
 	//@Test
 	public void testRemoveSpecialDashBoard() throws Exception
 	{
-				
+
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testRemoveDashBoard");	
-		
+		webd.getLogger().info("start to test in testRemoveDashBoard");
+
 		DashBoardUtils.clickGVButton();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
+
 		//focus a dashboard
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
 		webd.takeScreenShot();
 		//DashBoardUtils.clickToSortByLastAccessed();
-		DashBoardUtils.searchDashBoard(webd,"DBA_Name_Modify");
+		DashBoardUtils.searchDashBoard(webd, "DBA_Name_Modify");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.takeScreenShot();
-		
+
 		webd.click(DashBoardPageId.InfoBtnID);
 		webd.click(DashBoardPageId.RmBtnID);
-		
+
 		//click delete button
 		DashBoardUtils.clickDeleteButton();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
+
 		webd.takeScreenShot();
-					
-	}	
+
+	}
 
 	@Test
 	public void testDeleteOOB() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testUserMenu");
-		
+
 		DashBoardUtils.clickGVButton();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
+
 		//check OOB delete protection
-		DashBoardUtils.searchDashBoard(webd,"Application Performance");
+		DashBoardUtils.searchDashBoard(webd, "Application Performance");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
+
 		webd.click(DashBoardPageId.InfoBtnID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		WebElement removeButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.RmBtnID));
-		Assert.assertFalse(removeButton.isEnabled());		
+		Assert.assertFalse(removeButton.isEnabled());
 	}
-	
+
 	@Test
 	public void testCreateLVDashBoard() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testCreateLVDashBoard");
-		
+
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		DashBoardUtils.clickLVButton();
-		
+
 		String parentWindow = webd.getWebDriver().getWindowHandle();
-		
+
 		DashBoardUtils.openDBCreatePage();
-		
-		String dbName="LV_DashBoard";
+
+		String dbName = "LV_DashBoard";
 		String dbDesc = "LV_DashBoard Desc";
-		DashBoardUtils.inputDashBoardInfo(dbName,dbDesc);
+		DashBoardUtils.inputDashBoardInfo(dbName, dbDesc);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		//verify input info's existence
 		//Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashBoardNameBoxID),"AAA_testDashboard");
-		webd.getLogger().info("Name = "+DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
+		webd.getLogger().info("Name = " + DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
-		DashBoardUtils.clickOKButton();		
-		
+
+		DashBoardUtils.clickOKButton();
+
 		webd.takeScreenShot();
 		String widgetName = "Database Errors Trend";
-		String widgetName1 = "Top 10 Listeners by Load";
-		
 		//add widget
-		webd.getLogger().info("Start to add Widget into the dashboard");
-		//search widget
-		DashBoardUtils.searchWidget(widgetName);
-				
-		//select the widget
-		webd.getLogger().info("Select a widget and add it to the dashboard");	
-		DashBoardUtils.addWidget();
-		webd.getLogger().info("Add widget finished");
-		
-		//save the dashboard
-		DashBoardUtils.clickSaveButton();		
-		
-		//add widget
-		webd.getLogger().info("Start to add Widget into the dashboard");
-		//search widget
-		DashBoardUtils.searchWidget(widgetName1);
-						
-		//select the widget
-		webd.getLogger().info("Select a widget and add it to the dashboard");	
-		DashBoardUtils.addWidget();
-		webd.getLogger().info("Add widget finished");
-				
-		//save the dashboard
-		DashBoardUtils.clickSaveButton();	
-				
+		DashBoardUtils.addWidget(1, parentWindow, dbName, dbDesc);
+
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
+
 		webd.takeScreenShot();
 	}
 
@@ -509,15 +462,15 @@ public class TestDashBoard extends LoginAndLogout{
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testModifyLVDashBoard");
-		
+
 		DashBoardUtils.clickLVButton();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
+
 		String parentWindow = webd.getWebDriver().getWindowHandle();
 		//open dashboard	
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		//DashBoardUtils.clickToSortByLastAccessed();
-		DashBoardUtils.searchDashBoard(webd,"LV_DashBoard");
+		DashBoardUtils.searchDashBoardList(webd, "LV_DashBoard");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.takeScreenShot();
 		DashBoardUtils.clickLVDashBoard();
@@ -525,106 +478,52 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		//String widgetName = "Database Errors Trend";
 		//add a new widget
-		//DashBoardUtils.addWidget(0,parentWindow,"LV_DashBoard","LV_DashBoard Desc");
-		//modify the dashboard
-		DashBoardUtils.modifyDashboardInfo("LV_DashBoard","LV_DashBoard Desc modify");
-		
+		DashBoardUtils.addWidget(0, parentWindow, "LV_DashBoard", "LV_DashBoard Desc");
+
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
+
 		webd.takeScreenShot();
 	}
 
-	@Test(dependsOnMethods = { "testCreateLVDashBoard","testModifyLVDashBoard" })
+	@Test(dependsOnMethods = { "testCreateLVDashBoard", "testModifyLVDashBoard" })
 	public void testRemoveLVDashBoard() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testRemoveLVDashBoard");
-		
+
 		DashBoardUtils.clickLVButton();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
-		DashBoardUtils.searchDashBoard(webd,"LV_DashBoard");
+
+		DashBoardUtils.searchDashBoardList(webd, "LV_DashBoard");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.takeScreenShot();
-		
+
 		webd.click(DashBoardPageId.DashBoardInfoID);
 		webd.click(DashBoardPageId.DashBoardDeleteID);
-		
+
 		//click delete button
 		DashBoardUtils.clickLVDeleteButton();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
+
 		webd.takeScreenShot();
-	}
-      
-    //sharing dashbaord after cretion of dashbaord
-		       
-	@Test(dependsOnMethods = { "testCreateDashBoard" })
-	public void testshareddashboard() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testshareddashboard");
-		
-		DashBoardUtils.clickGVButton();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
-		String parentWindow = webd.getWebDriver().getWindowHandle();
-		
-		//open dashboard	
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		
-		//DashBoardUtils.clickToSortByLastAccessed();
-		DashBoardUtils.searchDashBoard(webd,"AAA_testDashboard");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		webd.takeScreenShot();
-		DashBoardUtils.clickDashBoard(); 
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		       			
-		//DashBoardUtils.navigateWidget(parentWindow);
-		//DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
-		//DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		       			
-		//DashBoardUtils.navigateWidget(parentWindow);
-		//DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
-        
-		//sharing dashbaord
-		DashBoardUtils.sharedashboard();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-							
-		//DashBoardUtils.navigateWidget(parentWindow);
-		//DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
-		
 	}
 
-	//Stopping sharing dashbaord  
-	@Test(dependsOnMethods = { "testshareddashboard" })
-	public void teststopsharing() throws Exception
+	@Test
+	public void testWelcomepage() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in teststopsharing");
-		
-		DashBoardUtils.clickGVButton();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);	
-		
-		String parentWindow = webd.getWebDriver().getWindowHandle();
-		//open dashboard
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		//DashBoardUtils.clickToSortByLastAccessed();
-		DashBoardUtils.searchDashBoard(webd,"AAA_testDashboard");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		webd.takeScreenShot();
-		DashBoardUtils.clickDashBoard();
-					       			
+		webd.getLogger().info("start to test in testWelcomepage");
+		DashBoardUtils.clickNavigatorLink();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-					       			
-		//DashBoardUtils.navigateWidget(parentWindow);
-		//DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
-		//stopp sharing dashbaord
-		DashBoardUtils.sharestopping();
+		//Home link
+		webd.click(DashBoardPageId.HomeLinkID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-										
-		//DashBoardUtils.navigateWidget(parentWindow);
-		//DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
+
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_APMLinkID), "Application Performance Monitoring");
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_LALinkID), "Log Analytics");
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_ITALinkID), "IT Analytics");
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DashboardsLinkID), "Dashboards");
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DataExp), "Data Explorers");
+
 	}
-	
 }
