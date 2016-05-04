@@ -250,19 +250,9 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs, unpackJETFromArtifactory, unpac
             filesMatching("**/*.html") {
                 filter(ReplaceTokens, tokens: [version: versionPathElement])
             }
-            filesMatching("**/dashboards-home-alta.css") {
-                filter(ReplaceTokens, tokens: [version: versionPathElement])
+        filesMatching("**/*.css") {
+        filter(ReplaceTokens, tokens: [version: versionPathElement])
             }
-            filesMatching("**/dashboards-common-alta.css") {
-                filter(ReplaceTokens, tokens: [version: versionPathElement])
-            }
-            filesMatching("**/builder-alta.css") {
-                filter(ReplaceTokens, tokens: [version: versionPathElement])
-            }
-            filesMatching("**/landing-home-alta.css") {
-                filter(ReplaceTokens, tokens: [version: versionPathElement])
-            }
-
     }
     into stagingDir
 
@@ -616,4 +606,5 @@ if(project.hasProperty("devMode")){
 else
 {
     war.dependsOn minifyHomeJs
+
 }

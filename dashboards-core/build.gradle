@@ -70,10 +70,6 @@ dependencies {
 	compile(group: 'com.sun.jersey', name: 'jersey-core', version: '1.17.1') {transitive=false}
 	compile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17.1') {transitive=false}
 	compile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
-	compile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
-	compile(group: 'com.sun.jersey', name: 'jersey-core', version: '1.17.1') {transitive=false}
-	compile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17.1') {transitive=false}
-	testCompile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
 
 }
 

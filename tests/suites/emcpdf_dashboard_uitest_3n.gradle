@@ -76,15 +76,14 @@ maven {
 
 
 //Update the lrgConfig configuration to specify where the test jar is.
-dependencies{
-    testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-uitest-integ-tests', version: "${REPO_BID}")
-    {
-	exclude('module':'groovy')
-    }
-    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '1.6.0+')
-    configurations{
-	restAssured.exclude module:'groovy'
-    }
+ dependencies{
+testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-uitest-integ-tests', version: "${REPO_BID}")
+{
+exclude('module':'groovy')
+}
+configurations{
+restAssured.exclude module:'groovy'
+}
 }
 
 //This are 1 test blocks to run testng tests.

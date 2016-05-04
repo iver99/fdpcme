@@ -74,7 +74,7 @@ public class RegistryServiceManagerTest
 	@Test(groups = { "s2" })
 	public void testStartStop(@Mocked final RegistrationManager anyRm, @Mocked final RegistrationClient anyClient,
 			@Mocked final InitialContext anyContext, @Mocked final MBeanServer anyMb, @Mocked final PropertyReader anyReader,
-			/*@Mocked final RegistryLookupUtil anyLookupUtil,*/ @Mocked final InfoManager anyIm,
+			@Mocked final RegistryLookupUtil anyLookupUtil, @Mocked final InfoManager anyIm,
 			@Mocked final InstanceInfo anyInstInfo)
 	{
 		try {
@@ -91,30 +91,29 @@ public class RegistryServiceManagerTest
 					result = "http://domain.hostname:port";
 					PropertyReader.loadProperty(anyString);
 					result = serviceProps;
-					//RegistryLookupUtil.getServiceInternalLink("RegistryService", VERSION, "collection/instances", anyString);
-					//result = new Link().withRel("collection/instances").withHref(
-					//		"http://den00zyr.us.oracle.com:7004/registry/servicemanager/registry/v1");
+					RegistryLookupUtil.getServiceInternalLink("RegistryService", VERSION, "collection/instances", anyString);
+					result = new Link().withRel("collection/instances").withHref(
+							"http://den00zyr.us.oracle.com:7004/registry/servicemanager/registry/v1");
 				}
 			};
 			rsm.postStart(null);
 			Assert.assertTrue(rsm.isRegistrationComplete());
 			rsm.preStop(null);
 
-//comment due to emcpdf-1498
-//			new Expectations() {
-//				{
-//					RegistryLookupUtil.getServiceInternalLink("RegistryService", VERSION, "collection/instances", anyString);
-//					result = null;
-//				}
-//			};
-//			rsm.postStart(null);
-//			Assert.assertFalse(rsm.isRegistrationComplete());
+			new Expectations() {
+				{
+					RegistryLookupUtil.getServiceInternalLink("RegistryService", VERSION, "collection/instances", anyString);
+					result = null;
+				}
+			};
+			rsm.postStart(null);
+			Assert.assertFalse(rsm.isRegistrationComplete());
 
 			new Expectations() {
 				{
-					//RegistryLookupUtil.getServiceInternalLink("RegistryService", VERSION, "collection/instances", anyString);
-					//result = new Link().withRel("collection/instances").withHref(
-					//		"http://den00zyr.us.oracle.com:7004/registry/servicemanager/registry/v1");
+					RegistryLookupUtil.getServiceInternalLink("RegistryService", VERSION, "collection/instances", anyString);
+					result = new Link().withRel("collection/instances").withHref(
+							"http://den00zyr.us.oracle.com:7004/registry/servicemanager/registry/v1");
 					RegistrationManager.getInstance().getRegistrationClient().register();
 					result = new Exception();
 				}

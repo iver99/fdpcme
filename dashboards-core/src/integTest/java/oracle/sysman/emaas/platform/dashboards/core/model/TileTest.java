@@ -30,15 +30,14 @@ public class TileTest
 	public void testTile() throws DashboardException
 	{
 		Tile tile = new Tile();
-		Date now = new Date();
 		tile.setColumn(1);
 		tile.setContent("ss");
-		tile.setCreationDate(now);
+		tile.setCreationDate(new Date());
 		Dashboard d = new Dashboard();
 		tile.setDashboard(d);
 		tile.setHeight(1);
 		tile.setIsMaximized(true);
-		tile.setLastModificationDate(now);
+		tile.setLastModificationDate(new Date());
 		tile.setLastModifiedBy("ss");
 		tile.setLinkText("ss");
 		tile.setLinkUrl("ss");
@@ -85,7 +84,7 @@ public class TileTest
 		edtp.setParamName("ss");
 		edtp.setParamValueNum(0);
 		edtp.setParamValueStr("ss");
-		edtp.setParamValueTimestamp(now);
+		edtp.setParamValueTimestamp(new Date());
 		et.addEmsDashboardTileParams(edtp);
 		Assert.assertNotNull(edtp.getDashboardTile());
 		Assert.assertNotNull(edtp.getIsSystem());

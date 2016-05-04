@@ -1,3 +1,5 @@
+
+
 sourceSets {
     integTest {
         java.srcDir 'src/integTest/java'
@@ -9,7 +11,8 @@ task integTestJar (type:Jar) {
     from sourceSets.integTest.output
     appendix = 'integ-tests'
 }
-
 dependencies {
-    testConfig project(':dashboards-ui-test-common-api') { transitive = false }
+	
+
+
 }

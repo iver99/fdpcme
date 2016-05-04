@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.test.util;
+package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.Test;
 
@@ -12,7 +12,11 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
 
-
+/**
+ *  @version
+ *  @author  charles.c.chen
+ *  @since   release specific (what release of product did this appear in)
+ */
 
 public class TileManager {
 	
@@ -77,7 +81,15 @@ public class TileManager {
 		//get height and width before
 		/*
 		DashBoardUtils.doesWebElementExistByXPath("/html/body/div[*]/div[2]/div/div/div[2]/div[1]/div[2]/div/div/div/div[1]/div");///html/body/div[*]/div[2]/div/div/div[2]/div[1]/div[1]/h2");
-		        
+		//String width = driver.getWebDriver().findElement(By.xpath("/html/body/div[*]/div[2]/div/div/div[2]/div[1]/div[2]/div/div/div/div[1]/div")).getAttribute("width");
+		//String width1 = driver.getWebDriver().findElement(By.xpath("//*[name()='svg']/*[name()='rect']")).getAttribute("width");  
+		//driver.getLogger().info("width1 = "+width1);
+		
+		//WebElement mainelement = driver.getElement("/html/body/div[*]/div[2]/div/div/div[2]/div[1]/div[2]/div/div/div/div[1]/div");
+		//WebElement editDescbutton = driver.getElement("/html/body/div[2]/div[2]/div/div/div[2]/div[1]/div[2]/div/div/div/div[1]/div/svg/g/g/g/rect");
+		//Actions builder = new Actions(driver.getWebDriver());
+        //builder.moveToElement(mainelement).moveToElement(editDescbutton).click().perform();  
+        
         String width = driver.getWebDriver().findElement(By.cssSelector("#canvas > svg > rect")).getAttribute("width");
         driver.getLogger().info("width = "+width);*/
 		driver.click(DashBoardPageId.MaximizeTileID);
@@ -106,5 +118,4 @@ public class TileManager {
 	}
 	
 }
-
 

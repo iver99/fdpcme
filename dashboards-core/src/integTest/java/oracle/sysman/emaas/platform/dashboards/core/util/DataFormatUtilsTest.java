@@ -42,8 +42,7 @@ public class DataFormatUtilsTest
 		Assert.assertNull(DataFormatUtils.date2Timestamp(null));
 
 		long current = System.currentTimeMillis();
-		Date now = new Date(current);
-		Timestamp rtn = DataFormatUtils.date2Timestamp(now);
+		Timestamp rtn = DataFormatUtils.date2Timestamp(new Date(current));
 		Assert.assertEquals(current, rtn.getTime());
 	}
 

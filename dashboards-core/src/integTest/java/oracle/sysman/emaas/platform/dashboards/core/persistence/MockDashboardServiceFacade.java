@@ -356,8 +356,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	{
 		System.out.println("[MockDashboardServiceFacade] mergeEmsDashboard called");
 		if (emsDashboard.getLastModificationDate() == null) {
-			Date now = new Date();
-			emsDashboard.setLastModificationDate(now);
+			emsDashboard.setLastModificationDate(new Date());
 		}
 		return this.localMerge(emsDashboard, new EmsDashboardSelector(emsDashboard.getDashboardId(), null, null, null));
 	}
@@ -397,8 +396,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 		System.out.println("[MockDashboardServiceFacade] persistEmsDashboard called");
 		emsDashboard.setDashboardId(newDashboardId());
 		if (emsDashboard.getCreationDate() == null) {
-			Date now = new Date();
-			emsDashboard.setCreationDate(now);
+			emsDashboard.setCreationDate(new Date());
 		}
 		if (emsDashboard.getTenantId() == null) {
 			emsDashboard.setTenantId(currentTenant);
