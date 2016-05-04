@@ -10,6 +10,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
@@ -31,9 +34,6 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
  * @author guobaochen
@@ -817,12 +817,13 @@ public class DashboardManagerTest_S2
 	{
 		loadMockBeforeMethod();
 		Dashboard dbd1 = new Dashboard();
+		Date now = new Date();
 		dbd1.setName("test");
 		String testScreenshotDate = "data:image/png;base64,shot";
 		dbd1.setScreenShot(testScreenshotDate);
 		dbd1.setHref("");
 		dbd1.setLastModifiedBy("sysman");
-		dbd1.setLastModificationDate(new Date());
+		dbd1.setLastModificationDate(now);
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenantId1 = 11L;
 		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);

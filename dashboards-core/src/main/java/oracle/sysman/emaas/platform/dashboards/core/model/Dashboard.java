@@ -270,8 +270,7 @@ public class Dashboard
 					to.setSubDashboards(subDashboardList);
 				}
 			}
-		}
-		else {
+		}else {
 			to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
 
 			if (alwaysLoadTiles || Dashboard.DASHBOARD_TYPE_SINGLEPAGE.equals(to.getType())) {

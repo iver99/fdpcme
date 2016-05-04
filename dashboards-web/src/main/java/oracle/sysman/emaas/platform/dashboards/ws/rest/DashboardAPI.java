@@ -348,8 +348,8 @@ public class DashboardAPI extends APIBase
 	@QueryParam("onlyFavorites") Boolean onlyFavorites*/)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
-				"Service call to [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&filter={}", queryString,
-				limit, offset, orderBy, filterString);
+				"Service call to [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&filter={}", queryString, limit,
+				offset, orderBy, filterString);
 		logkeyHeaders("queryDashboards()", userTenant, tenantIdParam);
 		String qs = null;
 		try {
@@ -575,7 +575,8 @@ public class DashboardAPI extends APIBase
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
 			@PathParam("id") Long dashboardId, JSONObject inputJson)
 	{
-		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}/options/", dashboardId);
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}/options/",
+				dashboardId);
 		UserOptions userOption;
 		try {
 			userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);

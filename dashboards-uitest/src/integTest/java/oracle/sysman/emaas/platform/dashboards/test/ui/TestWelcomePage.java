@@ -1,398 +1,285 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui;
 
-import org.testng.annotations.*;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
+
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.Select;
-
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-
-import oracle.sysman.emaas.platform.dashboards.test.ui.util.*;
-
-import java.util.Set;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
- *  @version
- *  @author  charles.c.chen
- *  @since   release specific (what release of product did this appear in)
+ * @version
+ * @author charles.c.chen
+ * @since release specific (what release of product did this appear in)
  */
 
-public class TestWelcomePage extends LoginAndLogout{
+public class TestWelcomePage extends LoginAndLogout
+{
 
 	public void initTest(String testName) throws Exception
 	{
-		login(this.getClass().getName()+"."+testName);
+		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
 	}
-	
-	public void pageVerification(WebDriver webDriver, String pageID, String url) throws Exception
-	{
-		webDriver.getLogger().info("Open page");
-		webDriver.click(pageID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webDriver.takeScreenShot();
-		String tmpurl = webDriver.getWebDriver().getCurrentUrl();
-		webDriver.getLogger().info("url = "+tmpurl);
-		Assert.assertEquals(tmpurl.substring(tmpurl.indexOf("emsaasui")+9),url);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-	}
-			
-	@Test
-	public void testWelcomepage() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		//Home link
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_APMLinkID),"Application Performance Monitoring");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_LALinkID),"Log Analytics");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_ITALinkID),"IT Analytics");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DashboardsLinkID),"Dashboards");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DataExp),"Data Explorers");
-		
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_LearnMore_getStarted),"How to get started");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_LearnMore_Videos),"Videos");
-		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_LearnMore_ServiceOffering),"Service Offerings");
-	}
-	
+
 	@Test
 	public void testOpenAPMPage() throws Exception
 	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		//Home link
-		webd.getLogger().info("Open Welcome Page");
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		//APM link		
-		pageVerification(webd,DashBoardPageId.Welcome_APMLinkID,"apmUi/index.html");			
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening APM in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitAPM(webd);
+		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("Open APM by url: " + tmpUrl);
+		urlVerification(tmpUrl, "apmUi/index.html");
+		webd.getLogger().info("Test open APM in welcome page finished!!!");
 	}
-	
-	@Test
-	public void testOpenLAPage() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		//Home link
-		webd.getLogger().info("Open Welcome Page");
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		//LA link
-		pageVerification(webd,DashBoardPageId.Welcome_LALinkID,"emlacore/html/log-analytics-search.html");	
-	}
-		
-	@Test
-	public void testOpenITAPage() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		//Home link
-		webd.getLogger().info("Open Welcome Page");
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		//ITA link
-		pageVerification(webd,DashBoardPageId.Welcome_ITALinkID,"emcpdfui/home.html?filter=ita");	
-				
-		WebElement el=webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_BoxID));
-		Assert.assertTrue(el.isSelected());		
-		DashBoardUtils.ITA_OOB_GridView();
-	}
-	
+
 	@Test
 	public void testOpenDashboardPage() throws Exception
 	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		//Home link
-		webd.getLogger().info("Open Welcome Page");
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		//Dashboard link
-		pageVerification(webd,DashBoardPageId.Welcome_DashboardsLinkID,"emcpdfui/home.html");			
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening Dashboards in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitDashboards(webd);
+		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("Open Dashboards by url: " + tmpUrl);
+		urlVerification(tmpUrl, "emcpdfui/home.html");
+		webd.getLogger().info("Test open dashboards in welcome page finished!!!");
 	}
-	/*
-	@Test
-	public void testOpenGetStartedPage() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		//Home link
-		webd.getLogger().info("Open Welcome Page");
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		//get started link
-		webd.getLogger().info("Open How to get started page");
-		webd.click(DashBoardPageId.Welcome_LearnMore_getStarted);
-		DashBoardUtils.waitForMilliSeconds(3*DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url,"docs.oracle.com/cloud/latest/em_home/index.html");	
-	}
-	
-	@Test
-	public void testOpenVideosPage() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		//Home link
-		webd.getLogger().info("Open Welcome Page");
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		//videos link
-		webd.getLogger().info("Open Videos page");
-		webd.click(DashBoardPageId.Welcome_LearnMore_Videos);
-		DashBoardUtils.waitForMilliSeconds(3*DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url,"docs.oracle.com/cloud/latest/em_home/em_home_videos.htm");	
-	}
-	
-	@Test
-	public void testOpenServiceOfferingPage() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		//Home link
-		webd.getLogger().info("Open Welcome Page");
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		//service offerings link
-		webd.getLogger().info("Open Videos page");
-		webd.click(DashBoardPageId.Welcome_LearnMore_ServiceOffering);
-		DashBoardUtils.waitForMilliSeconds(3*DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url,"https://cloud.oracle.com/management");	
-	}
-	*/
-	@Test
-	public void testOpenITA_PADatabasePage() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		//Home link
-		webd.getLogger().info("Open Welcome Page");
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		//ITA link
-		webd.click(DashBoardPageId.Welcome_ITA_SelectID);
-		pageVerification(webd,DashBoardPageId.Welcome_ITA_PADatabase,"emcitas/db-analytics-war/html/db-performance-analytics.html");			
-	}
-	
-	@Test
-	public void testOpenITA_PAMiddlewarePage() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		//Home link
-		webd.getLogger().info("Open Welcome Page");
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		//ITA link
-		webd.click(DashBoardPageId.Welcome_ITA_SelectID);
-		pageVerification(webd,DashBoardPageId.Welcome_ITA_PAMiddleware,"emcitas/mw-analytics-war/html/mw-perf-analytics.html");			
-	}
-	
-	@Test
-	public void testOpenITA_RADatabasePage() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		//Home link
-		webd.getLogger().info("Open Welcome Page");
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		//ITA link
-		webd.click(DashBoardPageId.Welcome_ITA_SelectID);
-		pageVerification(webd,DashBoardPageId.Welcome_ITA_RADatabase,"emcitas/db-analytics-war/html/db-analytics-resource-planner.html");			
-	}
-	
-	@Test
-	public void testOpenITA_RAMiddlewarePage() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		//Home link
-		webd.getLogger().info("Open Welcome Page");
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		//ITA link
-		webd.click(DashBoardPageId.Welcome_ITA_SelectID);
-		pageVerification(webd,DashBoardPageId.Welcome_ITA_RAMiddleware,"emcitas/mw-analytics-war/html/mw-analytics-resource-planner.html");			
-	}
-	
-	@Test
-	public void testOpenITA_DEAnalyzePage() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		//Home link
-		webd.getLogger().info("Open Welcome Page");
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		//ITA link
-		webd.click(DashBoardPageId.Welcome_ITA_SelectID);
-		pageVerification(webd,DashBoardPageId.Welcome_ITA_DEAnalyze,"emcitas/flex-analyzer/html/displaying/new-chart-config.html");			
-	}
-	
-	@Test
-	public void testOpenITA_DEPage() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		//Home link
-		webd.getLogger().info("Open Welcome Page");
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		//ITA link
-		webd.click(DashBoardPageId.Welcome_ITA_SelectID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		webd.getLogger().info("Open page");
-		webd.click(DashBoardPageId.Welcome_ITA_DE);
-		String url = "emcta/ta/analytics.html";
-		String tmpurl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+tmpurl);
-		Assert.assertTrue(tmpurl.substring(tmpurl.indexOf("emsaasui")+9).contains(url));
-		//pageVerification(webd,DashBoardPageId.Welcome_ITA_DE,"emcta/ta/analytics.html");			
-	}
-	
-	@Test
-	public void testOpenDE_LAPage() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		//Home link
-		webd.getLogger().info("Open Welcome Page");
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		//Data Explorer link
-		webd.click(DashBoardPageId.Welcome_DataExp_SelectID);
-		pageVerification(webd,DashBoardPageId.Welcome_DataExp_Log,"emlacore/html/log-analytics-search.html");			
-	}
-	
+
 	@Test
 	public void testOpenDE_AnalyzerPage() throws Exception
 	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		//Home link
-		webd.getLogger().info("Open Welcome Page");
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		//Data Explorer link
-		webd.click(DashBoardPageId.Welcome_DataExp_SelectID);
-		pageVerification(webd,DashBoardPageId.Welcome_DataExp_Analyze,"emcitas/flex-analyzer/html/displaying/new-chart-config.html");			
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening Data Explorers-Analyze in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.dataExplorers(webd, "analyze");
+		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("Open Data Explorers-Analyze by url: " + tmpUrl);
+		urlVerification(tmpUrl, "emcitas/flex-analyzer/html/displaying/new-chart-config.html");
+		webd.getLogger().info("Test open Data Explorers-Analyze in welcome page finished!!!");
 	}
-	
+
+	@Test
+	public void testOpenDE_LAPage() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening Data Explorers-Log in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.dataExplorers(webd, "log");
+		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("Open Data Explorers-Log by url: " + tmpUrl);
+		urlVerification(tmpUrl, "emlacore/html/log-analytics-search.html");
+		webd.getLogger().info("Test opening Data Explorers-Log in welcome page finished!!!");
+	}
+
 	@Test
 	public void testOpenDE_SearchPage() throws Exception
 	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		//Home link
-		webd.getLogger().info("Open Welcome Page");
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		//Data Explorer link
-		webd.click(DashBoardPageId.Welcome_DataExp_SelectID);
-		webd.getLogger().info("Open page");
-		webd.click(DashBoardPageId.Welcome_DataExp_Search);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening Data Explorers-Search in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.dataExplorers(webd, "search");
 		String url = "emcta/ta/analytics.html";
-		String tmpurl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+tmpurl);
-		Assert.assertTrue(tmpurl.substring(tmpurl.indexOf("emsaasui")+9).contains(url));		
+		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("Open Data Explorers-Search by url: " + tmpUrl);
+		Assert.assertTrue(tmpUrl.contains(url));
+		webd.getLogger().info("Test opening Data Explorers-Search in welcome page finished!!!");
+	}
+
+	//	@Test
+	//	public void testOpenGetStartedPage() throws Exception
+	//	{
+	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+	//		webd.getLogger().info("Start to test opening 'How to get started' in welcome page...");
+	//
+	//		BrandingBarUtil.visitWelcome(webd);
+	//		WelcomeUtil.learnMoreHow(webd);
+	//		webd.switchToWindow();
+	//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+	//		webd.getLogger().info("Open 'How to get started' by url: " + tmpUrl);
+	//		Assert.assertEquals(tmpUrl, "http://docs.oracle.com/cloud/latest/em_home/index.html");
+	//		webd.getLogger().info("Test opening 'How to get started' in welcome page finished!!!");
+	//	}
+
+	@Test
+	public void testOpenITA_DEAnalyzePage() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA: Data Explorer-Analyze in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "dataExplorerAnalyze");
+		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("Open ITA: Data Explorer-Analyze by url: " + tmpUrl);
+		urlVerification(tmpUrl, "emcitas/flex-analyzer/html/displaying/new-chart-config.html");
+		webd.getLogger().info("Test opening ITA: Data Explorer-Analyze in welcome page finished!!!");
+	}
+
+	@Test
+	public void testOpenITA_DEPage() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA: Data Explorer in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "dataExplorer");
+		String url = "emcta/ta/analytics.html";
+		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("Open ITA: Data Explorer by url: " + tmpUrl);
+		Assert.assertTrue(tmpUrl.contains(url));
+		webd.getLogger().info("Test opening ITA: Data Explorer in welcome page finished!!!");
+	}
+
+	@Test
+	public void testOpenITA_PADatabasePage() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA: Performance Analytics-Database in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "performanceAnalyticsDatabase");
+		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("Open ITA: Performance Analytics-Database by url: " + tmpUrl);
+		urlVerification(tmpUrl, "emcitas/db-analytics-war/html/db-performance-analytics.html");
+		webd.getLogger().info("Test opening ITA: Performance Analytics-Database in welcome page finished!!!");
+	}
+
+	@Test
+	public void testOpenITA_PAMiddlewarePage() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA: Performance Analytics-Middleware in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "performanceAnalyticsMiddleware");
+		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("Open ITA: Performance Analytics-Middleware by url: " + tmpUrl);
+		urlVerification(tmpUrl, "emcitas/mw-analytics-war/html/mw-perf-analytics.html");
+		webd.getLogger().info("Test opening ITA: Performance Analytics-Middleware in welcome page finished!!!");
+	}
+
+	@Test
+	public void testOpenITA_RADatabasePage() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA: Resource Analytics-Database in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "resourceAnalyticsDatabase");
+		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("Open ITA: Resource Analytics-Database by url: " + tmpUrl);
+		urlVerification(tmpUrl, "emcitas/db-analytics-war/html/db-analytics-resource-planner.html");
+		webd.getLogger().info("Test opening ITA: Resource Analytics-Database in welcome page finished!!!");
+	}
+
+	@Test
+	public void testOpenITA_RAMiddlewarePage() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA: Resource Analytics-Middleware in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "resourceAnalyticsMiddleware");
+		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("Open ITA: Resource Analytics-Middleware by url: " + tmpUrl);
+		urlVerification(tmpUrl, "emcitas/mw-analytics-war/html/mw-analytics-resource-planner.html");
+		webd.getLogger().info("Test opening ITA: Resource Analytics-Middleware in welcome page finished!!!");
+	}
+
+	@Test
+	public void testOpenITAPage() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "default");
+		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("Open ITA by url: " + tmpUrl);
+		urlVerification(tmpUrl, "emcpdfui/home.html?filter=ita");
+
+		WebElement el = webd.getWebDriver().findElement(By.id(PageId.ITA_BoxID));
+		Assert.assertTrue(el.isSelected());
+		DashBoardUtils.ITA_OOB_GridView();
+		webd.getLogger().info("Test open ITA in welcome page finished!!!");
+	}
+
+	@Test
+	public void testOpenLAPage() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening LA in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitLA(webd);
+		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("Open LA by url: " + tmpUrl);
+		urlVerification(tmpUrl, "emlacore/html/log-analytics-search.html");
+		webd.getLogger().info("Test open LA in welcome page finished!!!");
+	}
+
+	//	@Test
+	//	public void testOpenServiceOfferingPage() throws Exception
+	//	{
+	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+	//		webd.getLogger().info("Start to test opening 'Service Offerings' in welcome page...");
+	//
+	//		BrandingBarUtil.visitWelcome(webd);
+	//		WelcomeUtil.learnMoreServiceOffering(webd);
+	//		webd.switchToWindow();
+	//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+	//		webd.getLogger().info("Open 'Service Offerings' by url: " + tmpUrl);
+	//		Assert.assertEquals(tmpUrl, "https://cloud.oracle.com/management");
+	//		webd.getLogger().info("Test opening 'Service Offerings' in welcome page finished!!!");
+	//	}
+
+	//	@Test
+	//	public void testOpenVideosPage() throws Exception
+	//	{
+	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+	//		webd.getLogger().info("Start to test opening 'Videos' in welcome page...");
+	//
+	//		BrandingBarUtil.visitWelcome(webd);
+	//		WelcomeUtil.learnMoreVideo(webd);
+	//		webd.switchToWindow();
+	//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+	//		webd.getLogger().info("Open 'Videos' by url: " + tmpUrl);
+	//		Assert.assertEquals(tmpUrl, "http://docs.oracle.com/cloud/latest/em_home/em_home_videos.htm");
+	//		webd.getLogger().info("Test opening 'Videos' in welcome page finished!!!");
+	//	}
+
+	@Test
+	public void testWelcomepage() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in test Welcome Page");
+		BrandingBarUtil.visitWelcome(webd);
+		webd.takeScreenShot();
+
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "APM"));
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "LA"));
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "ITA"));
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "dashboards"));
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "dataExplorers"));
+
+		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "getStarted"));
+		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "videos"));
+		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "serviceOfferings"));
+	}
+
+	public void urlVerification(String pageUrl, String expectedUrl)
+	{
+		Assert.assertEquals(pageUrl.substring(pageUrl.indexOf("emsaasui") + 9), expectedUrl);
 	}
 }

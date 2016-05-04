@@ -32,10 +32,6 @@ import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class DashboardManager
 {
 	private static final Logger logger = LogManager.getLogger(DashboardManager.class);
@@ -262,7 +258,8 @@ public class DashboardManager
 			}
 			else if (!ed.getScreenShot().startsWith(SCREENSHOT_BASE64_PNG_PREFIX)
 					&& !ed.getScreenShot().startsWith(SCREENSHOT_BASE64_JPG_PREFIX)) {
-				logger.error("Retrieved an invalid screenshot base64 data that is not started with specified prefix, we use a blank screenshot then");
+				logger.error(
+						"Retrieved an invalid screenshot base64 data that is not started with specified prefix, we use a blank screenshot then");
 				logger.debug("Th screenshot string with an invalid base64 previs is: {}", ed.getScreenShot());
 				return new ScreenshotData(BLANK_SCREENSHOT, ed.getCreationDate(), ed.getLastModificationDate());
 			}
@@ -597,7 +594,6 @@ public class DashboardManager
 			//					" from Ems_Dashboard p left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?1 and p.tenant_Id = le.tenant_Id) "
 			//							+ "where p.deleted = 0 and p.tenant_Id = ?2 and (p.share_public = 1 or p.owner = ?3) ");
 			//			index = 4;
-
 			sb.append("where p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
 					+ ") ");
 			paramList.add(tenantId);
@@ -701,13 +697,15 @@ public class DashboardManager
 			}
 
 			if (!ic) {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and t.title like ?"
-						+ index++ + " )) ");
+				sb.append(
+						" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and t.title like ?"
+								+ index++ + " )) ");
 				paramList.add("%" + queryString + "%");
 			}
 			else {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and lower(t.title) like ?"
-						+ index++ + " )) ");
+				sb.append(
+						" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and lower(t.title) like ?"
+								+ index++ + " )) ");
 				paramList.add("%" + queryString.toLowerCase(locale) + "%");
 			}
 		}
@@ -1059,7 +1057,8 @@ public class DashboardManager
 	{
 		String opcTenantId = TenantContext.getCurrentTenant();
 		if (opcTenantId == null || "".equals(opcTenantId)) {
-			logger.warn("When trying to retrieve subscribed application, it's found the tenant context is not set (TenantContext.getCurrentTenant() == null)");
+			logger.warn(
+					"When trying to retrieve subscribed application, it's found the tenant context is not set (TenantContext.getCurrentTenant() == null)");
 			return null;
 		}
 		List<String> appNames = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId);
@@ -1116,7 +1115,8 @@ public class DashboardManager
 				return true;
 			}
 		}
-		logger.debug("dashboard can't be accessed by current tenant as it's application type isn't in the subscribed application list");
+		logger.debug(
+				"dashboard can't be accessed by current tenant as it's application type isn't in the subscribed application list");
 		return false;
 	}
 }

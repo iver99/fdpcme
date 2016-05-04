@@ -79,7 +79,6 @@ dependencies {
 
 	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 
-
 }
 
 
