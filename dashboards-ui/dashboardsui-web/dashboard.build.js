@@ -6,11 +6,11 @@
     optimizeCss: "standard", 
     modules: [
         {
-            name: "builder/builder.jet.dvt.partition"
+            name: "builder/builder.jet.partition"
         },
         {
             name: "builderMain",
-            exclude: ["builder/builder.jet.dvt.partition"]
+            exclude: ["builder/builder.jet.partition"]
         },
         {
             name: "homeMain"
