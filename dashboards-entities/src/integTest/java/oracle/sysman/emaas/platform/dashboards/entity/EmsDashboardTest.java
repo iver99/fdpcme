@@ -13,19 +13,19 @@ import static org.testng.Assert.*;
  */
 @Test(groups={"s1"})
 public class EmsDashboardTest {
-     Date now = new Date();
-    private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10, now,
-             "elephant","elephant","elephant","elephant",10,10);
+    private EmsDashboard emsDashboard = new EmsDashboard(new Date(),10L,10L,"elephant",10,10,10,10,10,new Date(),
+    "elephant","elephant","elephant","elephant",10,10);
+
 
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
-            now,
+            new Date(),
             emsDashboard,
             10,
             10,
             10,
             10,
             10,
-            now,
+            new Date(),
             "elephant",
             "elephant", /*Integer position, */
             "elephant",
@@ -65,8 +65,8 @@ public class EmsDashboardTest {
 
     @Test
     public void testGetCreationDate() throws Exception { 
-        emsDashboard.setCreationDate(now);
-        assertEquals(emsDashboard.getCreationDate(), now); 
+        emsDashboard.setCreationDate(new Date());
+        assertEquals(emsDashboard.getCreationDate(), new Date()); 
     }
 
     @Test
@@ -131,8 +131,8 @@ public class EmsDashboardTest {
 
     @Test
     public void testGetLastModificationDate() throws Exception {  
-        emsDashboard.setLastModificationDate(now);
-        assertEquals(emsDashboard.getLastModificationDate(), now); 
+        emsDashboard.setLastModificationDate(new Date());
+        assertEquals(emsDashboard.getLastModificationDate(), new Date()); 
     }
 
     @Test
