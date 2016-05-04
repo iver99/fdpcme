@@ -1,5 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mocked;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
