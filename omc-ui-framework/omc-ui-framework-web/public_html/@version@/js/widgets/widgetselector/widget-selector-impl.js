@@ -215,7 +215,7 @@ define([
                         for (i = 0; i < widgetArray.length; i++) {
                             var widget = widgetArray[i];
                             if (widget.PROVIDER_NAME === providerName &&
-                                    widget.PROVIDER_VERSION === providerVersion &&
+                    //                widget.PROVIDER_VERSION === providerVersion &&
                                     widget.WIDGET_GROUP_NAME === groupName) {
                                 availWidgets.push(widget);
                             }
@@ -255,7 +255,7 @@ define([
                 self.widgetBoxClicked = function(data, event) {
                     var curWidget = self.currentWidget();
                     if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME || 
-                            curWidget.PROVIDER_VERSION !== data.PROVIDER_VERSION || 
+                            /*curWidget.PROVIDER_VERSION !== data.PROVIDER_VERSION ||*/ 
                             curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) {
                         widgetArray[curWidget.index].isSelected(false);
                         data.isSelected(true);
@@ -426,8 +426,8 @@ define([
                 function loadWidgets(data) {
                     if (data && data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
-                            if ((!widgetProviderName && !widgetProviderVersion) || 
-                                    (widgetProviderName === data[i].PROVIDER_NAME && widgetProviderVersion === data[i].PROVIDER_VERSION)) {
+                            if ((!widgetProviderName /*&& !widgetProviderVersion*/) || 
+                                    (widgetProviderName === data[i].PROVIDER_NAME /*&& widgetProviderVersion === data[i].PROVIDER_VERSION*/)) {
                                 var widget = data[i];
                                 widget.index = widgetIndex;
                                 widget.WIDGET_VISUAL = ko.observable();
@@ -503,8 +503,9 @@ define([
                             pname = data[i].PROVIDER_NAME;
                             pversion = data[i].PROVIDER_VERSION;
                             gname = data[i].WIDGET_GROUP_NAME;
-                            if ((!widgetProviderName && !widgetProviderVersion) || 
-                                    widgetProviderName === pname && widgetProviderVersion === pversion) {
+                            if ((!widgetProviderName /*&& !widgetProviderVersion */) || 
+                                    widgetProviderName === pname 
+                                /*    && widgetProviderVersion === pversion */) {
                                 //Enable ITA widget group since ITA widgets are enabled now.
 //                                if (!(pname === 'EmcitasApplications' && pversion === '0.1' && data[i].WIDGET_GROUP_ID === 3)) {
                                     var widgetGroup = {value:pname+'|'+pversion+'|'+gname, label:gname};
