@@ -190,6 +190,7 @@ define({
       "DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_LABEL3": "Memory Used",
       "DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_LABEL4": "Disk Used",
       "DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_DESC": "Group one or more content terms into a single container",
+      "DBS_BUILDER_LEFT_PANEL_Edit_Page": "Edit Page",
 //      "DBS_BUILDER_LEFT_PANEL_WIDGET_BTN_LABEL": "Go To Data Explorer",
 //      "DBS_BUILDER_LEFT_PANEL_ADD_TEXT": "Text",
 //      "DBS_BUILDER_LEFT_PANEL_ADD_TEXT_HELPER": "Sample Text",
