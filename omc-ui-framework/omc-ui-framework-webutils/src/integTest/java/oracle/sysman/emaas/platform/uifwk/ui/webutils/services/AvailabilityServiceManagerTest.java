@@ -17,17 +17,20 @@ import javax.management.InstanceNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
-import mockit.Expectations;
-import mockit.Mocked;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emaas.platform.uifwk.ui.target.services.GlobalStatus;
-import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.RegistryLookupUtil;
-
 import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
+import mockit.Expectations;
+import mockit.Mocked;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.Builder;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emaas.platform.uifwk.ui.target.services.GlobalStatus;
+import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.RegistryLookupUtil;
 import weblogic.management.timer.Timer;
 
 /**
@@ -53,7 +56,9 @@ public class AvailabilityServiceManagerTest
 
 	@Test(groups = { "s2" })
 	public void testHandleNotification(@Mocked final Notification anyNoti, @Mocked final RegistryServiceManager anyRsm,
-			@Mocked final RegistryLookupUtil anyLookupUtil) throws Exception
+			@Mocked final RegistryLookupUtil anyLookupUtil, @Mocked final LookupManager lookupmgr,
+			@Mocked final LookupClient rsClient, @Mocked final RegistrationManager anyRegistrationManager,
+			@Mocked final InstanceInfo anyInstanceInfo, @Mocked final Builder anyBuilder) throws Exception
 	{
 		new Expectations() {
 			{
