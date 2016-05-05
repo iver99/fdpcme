@@ -84,8 +84,13 @@ define({
       "BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING":"Session timeout. Redirecting to SSO login page now...",
        //datetime picker
       "DATETIME_PICKER_DROP_DOWN": "Drop Down",
+      "DATATIME_PICKER_TF_INDICATOR_LABEL": "Time filter indicator",
       "DATETIME_PICKER_TIME_FILTER": "Time Filter",
       "DATETIME_FILTER_TIME_FILTER_ICON_TITLE": "Click to show time filter settings",
+      "DATETIME_PICKER_START_DATE_LABEL": "Start Date",
+      "DATETIME_PICKER_START_TIME_LABEL": "Start Time",
+      "DATETIME_PICKER_END_DATE_LABEL": "End Date",
+      "DATETIME_PICKER_END_TIME_LABEL": "End Time",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS": "Last 15 mins",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS": "Last 30 mins",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS": "Last 60 mins",
