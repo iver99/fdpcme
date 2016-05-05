@@ -180,7 +180,7 @@
 
             <script id="dashboard-content-template" type="text/html">
             <div class="dashboard-content page-break" style="visibility: hidden">
-            <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container" style="padding-left: 30px;">
+            <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container" style="padding-left:16px;">
                 <div class="builder-toolbar" aria-label="Builder toolbar"
                        class="oj-component oj-component-initnode">
                     <div class="builder-toolbar-left dbd-pull-left">
@@ -476,7 +476,7 @@
                         <div class="oj-row fit-size-vertical-sibling df-computed-content-width"
                              style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0"
                              data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
-                            <div class="oj-col oj-sm-12 oj-md-7">
+                            <div class="oj-col oj-sm-12 oj-md-7" style="padding-left: 0">
                                <div data-bind="visible: !dashboard.enableTimeRange || dashboard.enableTimeRange() !== 'TRUE'">&nbsp;</div>
                                <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>
                             </div>
@@ -834,7 +834,7 @@
             <script id="dashboard-include-template" type="text/html">
                 <div class="dashboard-content dashboard-picker-container">
                     <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container" 
-                         style="padding-left: 30px; background-color: white;">
+                         style="padding-left: 16px; background-color: white;">
                         <div class="builder-toolbar" aria-label="Builder toolbar">
                             <div class="builder-toolbar-left dbd-pull-left">
                                 <div class="builder-dbd-name">
