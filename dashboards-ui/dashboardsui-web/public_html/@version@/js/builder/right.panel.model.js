@@ -493,6 +493,34 @@ define(['knockout',
                     $(".enableShareAutoRefresh").css("color","#9e9e9e");
                 }
             });
+            
+            self.dashboardsetName = ko.observable(self.dashboardsetToolBarModel.dashboardsetName());
+            self.dashboardsetDescription = ko.observable(self.dashboardsetToolBarModel.dashboardsetDescription());
+            self.dashboardsetNameInputed = ko.observable(self.dashboardsetName());
+            self.dashboardsetDescriptionInputed = ko.observable(self.dashboardsetDescription());
+            self.dashboardsetShare = ko.observable("notShared");
+            self.dashboardsetName.subscribe(function(val){
+                $('#nameDescription input').val(val);
+                self.dashboardsetToolBarModel.dbConfigMenuClick.saveDbsDescription({dashboardsetConfig:{share:self.dashboardsetShare()}});
+            });
+            self.dashboardsetDescription.subscribe(function(val){
+                $('#nameDescription textarea').val(val);
+                self.dashboardsetToolBarModel.dbConfigMenuClick.saveDbsDescription({dashboardsetConfig:{share:self.dashboardsetShare}});
+            });
+            self.dashboardsetNameInputed.subscribe(function(val){
+                self.dashboardsetName(val);
+            });
+            self.dashboardsetDescriptionInputed.subscribe(function(val){
+                self.dashboardsetDescription(val);
+            });
+            self.dashboardsetShare.subscribe(function(val){
+                self.dashboardsetToolBarModel.dbConfigMenuClick.saveDbsDescription({dashboardsetConfig:{share:self.dashboardsetShare}});
+            });
+            
+            self.deleteDashboardSetClicked = function(){
+                $('#deleteDashboardset').ojDialog("open");
+            };  
+
         }
         
         Builder.registerModule(RightPanelModel, 'RightPanelModel');

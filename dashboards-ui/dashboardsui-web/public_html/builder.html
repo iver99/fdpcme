@@ -697,6 +697,102 @@
                         data-bind="css: {'dbd-no-left-panel': maximized() || completelyHidden()},
                                         style: {right: $root.scrollbarWidth + 'px'}">
                     <div class="dbd-right-panel-contents">
+                        <div class="dbd-right-panel-editdashboardset" data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.tilesViewModel.editPanelContent()=='editset'">
+                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">
+                                <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: tilesViewModel.switchEditPanelContent"style="color:#0572ce"></a>
+                                <span>Edit Dashboard Set</span>
+                            </div>
+                            <div class="dbd-right-panel-editdashboard-container" style="padding-left:0; padding-right:0;">
+                                <div class="dbd-right-panel-editdashboard-general" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbeditorIsExpanded}">
+                                    <span class="dbd-right-panel-editdashboard-innertitle">General</span>
+                                    <div class="cDsbDialog oj-form-layout">
+                                        <div class="oj-form">
+                                            <div class="oj-flex" >
+                                                <div class="oj-flex-item">
+                                                    <label for="dbsHNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
+                                                    <input id="dbsHNameIn" maxlength="64" required
+                                                           data-bind="ojComponent: { component: 'ojInputText', value: dashboardsetName, rawValue: dashboardsetNameInputed,
+                                               validators : [{
+                                                       type: 'regExp', options : {
+                                                       pattern: '.{1,64}', 
+                                                       messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME_SUM'),
+                                                       messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME')}
+                                                    }],
+                                               rootAttributes: {style:'max-width:420px;'},
+                                               translations: {'required': {
+                                                        hint: '',
+                                                        messageSummary: getNlsString('COMMON_REQUIRE_ERROR', '{label}'), 
+                                                        messageDetail: ''
+                                               }
+                                             }}">
+                                                </div>
+                                            </div>
+                                            <div class="oj-flex" >
+                                                <div class="oj-flex-item">
+                                                    <label for="dbsHDpIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
+                                                    <textarea id="dbsHDpIn" maxlength="256" rows="3" style="resize: vertical"
+                                                              data-bind="ojComponent: {component: 'ojTextArea', value: dashboardsetDescription, rawValue: dashboardsetDescriptionInputed, rootAttributes: {style:'max-width:420px;'},
+                                                                validators : [{type: 'regExp', options : {
+                                                                       pattern: '(.|\\b|\\s){0,256}', 
+                                                                       messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
+                                                                       messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES')}}]
+                                            }"></textarea>
+                                                </div>
+                                            </div>             
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="dbd-right-panel-editdashboard-share" data-bind="ojComponent: {component: 'ojCollapsible', expanded:sharesettingsIsExpanded}">
+                                    <span class="dbd-right-panel-editdashboard-innertitle">Share</span>
+                                    <div class="share-settings oj-form-layout">
+                                        <form class="oj-form">
+                                            <div class="oj-flex">  
+                                                <div class="oj-flex-item">
+                                                    <label class="oj-label">Dashboard Sharing</label>
+                                                </div>
+                                            </div>
+                                            <div class="oj-flex">  
+                                                <div class="oj-flex-item">
+                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: dashboardsetShare}" >
+                                                        <span class="oj-choice-row">
+                                                            <input id="dashboardSetSharingNotShared" type="radio" name="dashboardSetSharing" value="off">
+                                                            <label for="dashboardSharingNotShared">Not Shared</label>
+                                                        </span>
+                                                        <span class="oj-choice-row">
+                                                            <input id="dashboardSetSharingShared" type="radio" name="dashboardSetSharing" value="on">
+                                                            <label for="dashboardSharingShared">Shared (others can view)</label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="oj-flex">  
+                                                <div class="oj-flex-item">
+                                                    <label class="oj-label enableShareAutoRefresh" style="margin: 10px 0 0 0;color: #9e9e9e;">Default Auto-refresh Value</label>
+                                                </div>
+                                            </div>
+                                            <div class="oj-flex">  
+                                                <div class="oj-flex-item">
+                                                    <label class="enableShareAutoRefresh" style="color: #9e9e9e;">Specify the default for other users</label>
+                                                </div>
+                                            </div>
+                                            <div class="oj-flex">  
+                                                <div class="oj-flex-item">
+                                                    <select data-bind="ojComponent: {component: 'ojSelect', value: defaultAutoRefreshValue,disabled:!enableShareAutoRefresh(),rootAttributes: {style:'max-width:20em'}}">
+                                                        <option value="every5minutes">On(Every 5 Minutes)</option>
+                                                        <option value="every15minutes">On(Every 15 Minutes)</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div>
+                                    <button data-bind="click: deleteDashboardClicked, ojComponent: { component: 'ojButton', label: 'Delete Dashboard' }"></button>
+                                </div>
+                            </div>
+                        </div>
                         <div class="dbd-right-panel-editdashboard" data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.tilesViewModel.editPanelContent()=='edit'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">
                                 <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: tilesViewModel.switchEditPanelContent"style="color:#0572ce"></a>
@@ -917,19 +1013,19 @@
                                 </div>
                                 <hr/>
                                 <div>
-                                    <button data-bind="click: deleteDashboardClicked, ojComponent: { component: 'ojButton', label: 'Delete Dashboard' }"></button>
+                                    <button data-bind="click: deleteDashboardSetClicked, ojComponent: { component: 'ojButton', label: 'Delete Dashboard' }"></button>
                                 </div>
                             </div>
                         </div>
-                        <div id="dbd-right-panel-editsettings"  class="dbd-right-panel-editsettings"  data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.tilesViewModel.editPanelContent()=='settings'">
+						<div id="dbd-right-panel-editsettings"  class="dbd-right-panel-editsettings"  data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.tilesViewModel.editPanelContent()=='settings'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Edit Settings</div>
                              <div id="dbd-edit-settings-container" class="dbd-edit-settings-container">
                                 <!--ko if: $data.dashboardsetToolBarModel.isDashboardSet-->
                                 <span class="edit-setting-head">Dashboard Set</span>
-                                <span class="edit-setting-link" data-bind="text:$data.dashboardsetToolBarModel.dashboardsetName(), click: tilesViewModel.switchEditPanelContent"></span>
+                                <span class="edit-setting-link edit-dsbset-link" data-bind="text:$data.dashboardsetToolBarModel.dashboardsetName(), click: tilesViewModel.switchEditPanelContent"></span>
                                     <!--ko if: $data.dashboardsetToolBarModel.dashboardsetItems.length>0-->
                                 <span class="edit-setting-head" >Selected Dashboard</span>
-                                <span class="edit-setting-link" data-bind="text:$data.dashboardsetToolBarModel.selectedDashboardItem().name, click: tilesViewModel.switchEditPanelContent"></span>
+                                <span class="edit-setting-link edit-dsb-link" data-bind="text:$data.dashboardsetToolBarModel.selectedDashboardItem().name, click: tilesViewModel.switchEditPanelContent"></span>
                                     <!--/ko-->
                                 <!--ko if: $data.tilesViewModel.dashboard.tiles().length>0-->
                                 <span class="edit-setting-head">Widgets</span>
@@ -940,7 +1036,7 @@
                                <!--/ko-->
                                <!--ko ifnot: $data.dashboardsetToolBarModel.isDashboardSet-->
                                 <span class="edit-setting-head">Dashboard</span>
-                                <span class="edit-setting-link" data-bind="text: dashboard.name, click: tilesViewModel.switchEditPanelContent"></span>
+                                <span class="edit-setting-link edit-dsb-link" data-bind="text: dashboard.name, click: tilesViewModel.switchEditPanelContent"></span>
                                 <!--ko if: $data.tilesViewModel.dashboard.tiles().length>0-->
                                 <span class="edit-setting-head">Widgets</span>
                                     <!--ko foreach: tilesViewModel.dashboard.tiles -->

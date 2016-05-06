@@ -116,8 +116,10 @@ define(['knockout',
             }());
             
             self.switchEditPanelContent = function(data,event){    
-                if($(event.currentTarget).hasClass('edit-setting-link')){
+                if($(event.currentTarget).hasClass('edit-dsb-link')){
                     self.editPanelContent("edit");
+                }else if($(event.currentTarget).hasClass('edit-dsbset-link')){
+                    self.editPanelContent("editset");
                 }else{
                     self.editPanelContent("settings");
                 }
