@@ -18,8 +18,8 @@ define(['knockout',
         'builder/editor/editor.mode',
         'builder/widget/widget.model',
         'jqueryui',
-        'builder/builder.jet.partition',
-        'ckeditor'
+        'builder/builder.jet.partition'
+//        'ckeditor'
     ],
     
     function(ko, oj, km, dfu, uiutil, dfumodel, mbu, $)

@@ -52,7 +52,7 @@ requirejs.config({
         'emcta':'/emsaasui/emcta/ta/js',
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
-        'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
+//        'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
         'uifwk': '/emsaasui/uifwk'
     },
     bundles: (window.DEV_MODE ? undefined : {
@@ -137,7 +137,7 @@ require(['knockout',
     'loggingutil',
     'ojs/ojcore',
     'dashboards/widgets/autorefresh/js/auto-refresh',
-    'dashboards/widgets/textwidget/js/textwidget',
+//    'dashboards/widgets/textwidget/js/textwidget',
     'dashboards/dashboardhome-impl',
     'jqueryui',
     'common.uifwk',
@@ -147,7 +147,7 @@ require(['knockout',
     'builder/dashboardset.toolbar.model',
     'builder/dashboardset.panels.model'
 ],
-    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, textwidget, dashboardhome_impl) // this callback gets executed when all required modules are loaded
+    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, /*textwidget, */dashboardhome_impl) // this callback gets executed when all required modules are loaded
     {
         var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
@@ -178,10 +178,10 @@ require(['knockout',
             viewModel:auto_refresh,
             template:{require:'text!./widgets/autorefresh/auto-refresh.html'}
         });
-        ko.components.register("DF_V1_WIDGET_TEXT", {
+        /*ko.components.register("DF_V1_WIDGET_TEXT", {
             viewModel: textwidget,
             template: {require: 'text!./widgets/textwidget/textwidget.html'}
-        });
+        });*/
             
         if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
             ko.components.register("df-oracle-dashboard-list",{
