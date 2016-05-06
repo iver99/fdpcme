@@ -225,7 +225,7 @@ public class DashBoardPageId
 	public static final String BuilderOptionsDuplicateLocatorCSS = "li[data-singledb-option=\"Duplicate\"] a";
 	public static final String BuilderOptionsDuplicateNameCSS = "dupDsbNameIn";
 	public static final String BuilderOptionsDuplicateDescriptionCSS = "dupDsbDescIn";
-	public static final String BuilderOptionsDuplicateSaveCSS = "id=createDsb-1";
+	public static final String BuilderOptionsDuplicateSaveCSS = "createDsb-1";
 	//dashboard tool bar
 	public static final String DashboardSaveCSS = "button.dashboard-screenshot";
 
