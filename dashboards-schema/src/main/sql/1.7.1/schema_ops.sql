@@ -1,5 +1,5 @@
 Rem ----------------------------------------------------------------
-Rem 4/20/2016	jnan	Created file
+Rem 1/27/2016	jishshi	Created file
 Rem Extract unique teant IDs from tables EMS_DASHBOARD & append that ID next to upgrade implementation file & run that file
 Rem ----------------------------------------------------------------
 
