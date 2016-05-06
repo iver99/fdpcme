@@ -144,8 +144,16 @@ public class DashboardBuilderUtil
 		driver.takeScreenShot();
 
 		//press ok button
-		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
-		driver.click(DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
+		By locatorOfDuplicateSaveEl = By.id(DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateSaveEl));
+
+		WebElement saveButton = driver.getElement("id="+DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
+		Actions actions = new Actions(driver.getWebDriver());
+		actions.moveToElement(saveButton).build().perform();
+		driver.takeScreenShot();
+		driver.getLogger().info("DashboardBuilderUtil.duplicate save button has been focused");
+
+		driver.click("id="+DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
 		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.duplicate completed");
 	}
