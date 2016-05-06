@@ -54,13 +54,27 @@ define(['knockout',
             self.loginUser = ko.observable(dfu.getUserName());
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
 
-            self.targetsFromParam = dfu_model.getUrlParam("targets");
             self.targets = ko.observable(null);
-            if(self.targetsFromParam) {
-                self.targets(JSON.parse(decodeURI(self.targetsFromParam)));
-//                console.log("***");
-//                console.log(JSON.stringify(self.targets()));
-            }
+//            self.targetsFromParam = dfu_model.getUrlParam("targets");
+//            self.targets = ko.observable(null);
+//            if(self.targetsFromParam) {
+//                self.targets(JSON.parse(decodeURI(self.targetsFromParam)));
+////                console.log("***");
+////                console.log(JSON.stringify(self.targets()));
+//            }
+//            
+//            //decompress targets obtained from url
+//            self.targetszFromParam = dfu_model.getUrlParam("targetsz");
+//            if(self.targetszFromParam) {
+//                var deCompressedTargets = self.targetszFromParam;
+//                require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
+//                    if(TargetSelectorUtils.decompress) {
+//                        deCompressedTargets = TargetSelectorUtils.decompress(self.targetszFromParam);
+//                    }
+//                    self.targets(JSON.parse(decodeURI(deCompressedTargets)));
+//                    console.log("***"+self.targets());
+//                });
+//            }
 
             self.timeSelectorModel = new Builder.TimeSelectorModel();
             self.tilesView = $b.getDashboardTilesView();

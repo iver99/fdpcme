@@ -378,8 +378,21 @@ define(['knockout',
                                 widgetUrl += "&startTime="+start+"&endTime="+end;
                             }
                             
-                            targets && targets() && (widgetUrl += "&targets="+encodeURI(JSON.stringify(targets())));
-                            window.open(widgetUrl);
+//                            targets && targets() && (widgetUrl += "&targets="+encodeURI(JSON.stringify(targets())));
+//                            window.open(widgetUrl);
+                            
+                            require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
+                                if(targets && targets()) {
+                                    var compressedTargets = encodeURI(JSON.stringify(targets()));
+                                    var targetUrlParam = "targets";
+                                    if(TargetSelectorUtils.compress) {
+                                        compressedTargets = TargetSelectorUtils.compress(targets());
+                                        targetUrlParam = "targetsz";
+                                    }
+                                    widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
+                                }
+                                window.open(widgetUrl);
+                            });
                         };
                     }
                 }         
