@@ -433,11 +433,11 @@ define(['knockout',
 
             self.showdbOnHomePage = ko.observable([]);
             
-            self.saveNameAndDescriptionEditing = ko.computed(function(){
+            var dsbSaveDelay = ko.computed(function(){
                 return self.editDashboardDialogModel.showdbDescription()+self.editDashboardDialogModel.name()+self.editDashboardDialogModel.description()+self.showdbOnHomePage();
             });
-            
-            self.saveNameAndDescriptionEditing.subscribe(function(){
+            dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } }); 
+            dsbSaveDelay.subscribe(function(){
                 self.editDashboardDialogModel.save();
             });
             
@@ -498,14 +498,12 @@ define(['knockout',
             self.dashboardsetDescription = ko.observable(self.dashboardsetToolBarModel.dashboardsetDescription());
             self.dashboardsetNameInputed = ko.observable(self.dashboardsetName());
             self.dashboardsetDescriptionInputed = ko.observable(self.dashboardsetDescription());
-            self.dashboardsetShare = ko.observable("notShared");
+            self.dashboardsetShare = ko.observable("off");
             self.dashboardsetName.subscribe(function(val){
                 $('#nameDescription input').val(val);
-                self.dashboardsetToolBarModel.dbConfigMenuClick.saveDbsDescription({dashboardsetConfig:{share:self.dashboardsetShare()}});
             });
             self.dashboardsetDescription.subscribe(function(val){
                 $('#nameDescription textarea').val(val);
-                self.dashboardsetToolBarModel.dbConfigMenuClick.saveDbsDescription({dashboardsetConfig:{share:self.dashboardsetShare}});
             });
             self.dashboardsetNameInputed.subscribe(function(val){
                 self.dashboardsetName(val);
@@ -513,10 +511,13 @@ define(['knockout',
             self.dashboardsetDescriptionInputed.subscribe(function(val){
                 self.dashboardsetDescription(val);
             });
-            self.dashboardsetShare.subscribe(function(val){
+            var dsbSetSaveDelay = ko.computed(function() { 
+                return self.dashboardsetName()+self.dashboardsetDescription()+self.dashboardsetShare();
+            });
+            dsbSetSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } }); 
+            dsbSetSaveDelay.subscribe(function(){
                 self.dashboardsetToolBarModel.dbConfigMenuClick.saveDbsDescription({dashboardsetConfig:{share:self.dashboardsetShare}});
             });
-            
             self.deleteDashboardSetClicked = function(){
                 $('#deleteDashboardset').ojDialog("open");
             };  
