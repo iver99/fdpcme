@@ -203,6 +203,7 @@ require(['knockout',
                 var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dashboard);
                 var dashboardsetPanelsModel = new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
                 ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
+                ko.applyBindings(dashboardsetPanelsModel, document.getElementById('popUp-dialog'));
                 dashboardsetToolBarModel.initializeDashboardset();
                 $("#loading").hide();
                 $('#globalBody').show();
