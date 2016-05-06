@@ -644,7 +644,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                     .on('click', function(event) {
                         //prevent event bubble
                         event.stopPropagation();
-                        self.handleDashboardClicked(event, {'id': context.row.id, 'element': _link});
+                        self.handleDashboardClicked(event, {'id': context.row.id, 'element': _link,'name':context.row.name});
                     });
             _link.text(context.row.name);
             $(context.cellContext.parentElement).append(_link);
