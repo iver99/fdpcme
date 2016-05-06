@@ -84,6 +84,11 @@ requirejs.config({
             'ojs/ojpopupcore',
             'ojs/ojmessaging',
             'ojs/ojgauge',
+            'ojs/ojdatasource-common',
+            'ojs/ojinputtext',
+            'ojs/ojpagingtabledatasource',
+            'ojdnd',
+            'promise',
             'knockout',
             'jquery',
             'ojL10n']
