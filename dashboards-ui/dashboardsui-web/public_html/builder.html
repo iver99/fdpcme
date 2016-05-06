@@ -476,10 +476,34 @@
             <div class="oj-col stretch-height builder-main dashboard-content-main" role="main">
                     <div class="tiles-col-container oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size">
                         <div class="oj-row fit-size-vertical-sibling df-computed-content-width"
-                             style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0"
-                             data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
-                            <div class="oj-col oj-sm-12 oj-md-7" style="padding-left: 0">
-                               <div data-bind="visible: !dashboard.enableTimeRange || dashboard.enableTimeRange() !== 'TRUE'">&nbsp;</div>
+                             style="max-width: none; padding-left: 8px;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0" 
+                             data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE'">
+                            <div style="display: inline-block; float: left;">
+                                <!--<div class="oj-col oj-sm-12 oj-md-3">-->
+                                <div data-bind="visible: dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE'" style="padding-left: 5px;">
+                                    <emcta-target-selector data-bind="attr: {id: 'tsel_'+dashboard.id()}" 
+                                                           params="returnFunction: returnFromTargetSelector, 
+                                                                   config:{
+                                                                       selectionMode: selectionMode()[0],
+                                                                       returnMode: returnMode,
+                                                                       inputCriteria: getInputCriteria(),
+                                                                       ui: {
+                                                                           showLaunchButton: true,
+                                                                           dropdownInitialLabel: dropdownInitialLabel(),
+                                                                           dropdownResultLabel: dropdownResultLabel()
+                                                                       }
+                                                                   }"></emcta-target-selector>
+                                    <!--                                <span class="oj-select-choice" tabindex="0"  style="width: auto; display: inline-block;"
+                                                                          data-bind="click: launchTargetSelector,
+                                                                                     event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {launchTargetSelector()}}}"
+                                                                                     aria-label="Pick target instances">
+                                                                        <span class="oj-select-chosen" style="padding-right: 24px;" data-bind="text: tgtSelLabel"></span>
+                                                                        <a class="oj-select-arrow oj-component-icon oj-clickable-icon-nocontext oj-select-open-icon"></a>
+                                                                    </span>-->
+                                </div>
+                            </div>
+                            <div style="display: inline-block; float: left">
+                               <!--<div data-bind="visible: !dashboard.enableTimeRange || dashboard.enableTimeRange() !== 'TRUE'">&nbsp;</div>-->
                                <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>
                             </div>
                         </div>
@@ -926,14 +950,14 @@
                                  </span>
                              </div>
                          </div>
-<!--                         <div style="padding-top: 10px;">
+                         <div style="padding-top: 10px;">
                              <div id="checkboxsetEntityFilter" data-bind="ojComponent: {component: 'ojCheckboxset', value: toolBarModel.editDashboardDialogModel.entityFilterValue}">
                                  <span class="oj-choice-row">
                                      <input id="ckbxEntityFilter" type="checkbox" value="ON">
                                      <label for="ckbxEntityFilter"  data-bind="text: getNlsString('DBS_BUILDER_EDIT_SHOW_ENTITY_FILTER')"></label>
                                  </span>
                              </div>
-                         </div>-->
+                         </div>
                          <div style="padding-top: 10px;">
                              <div id="checkboxsetTimeFilter" data-bind="ojComponent: {component: 'ojCheckboxset', value: toolBarModel.editDashboardDialogModel.timeRangeFilterValue}">
                                  <span class="oj-choice-row">

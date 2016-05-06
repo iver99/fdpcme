@@ -47,6 +47,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSec
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.DeleteSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableDescriptionState;
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableEntityFilterState;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
@@ -403,7 +404,7 @@ public class DashboardAPI extends APIBase
 		String name = null;
 		String description = null;
 		String enableDescription = null;
-		//		String enableEntityFilter = null;
+		String enableEntityFilter = null;
 		String enableTimeRange = null;
 		Boolean share = null;
 		try {
@@ -416,9 +417,9 @@ public class DashboardAPI extends APIBase
 			if (inputJson.has("enableDescription")) {
 				enableDescription = inputJson.getString("enableDescription");
 			}
-			//			if (inputJson.has("enableEntityFilter")) {
-			//				enableEntityFilter = inputJson.getString("enableEntityFilter");
-			//			}
+			if (inputJson.has("enableEntityFilter")) {
+				enableEntityFilter = inputJson.getString("enableEntityFilter");
+			}
 			if (inputJson.has("enableTimeRange")) {
 				enableTimeRange = inputJson.getString("enableTimeRange");
 			}
@@ -453,9 +454,9 @@ public class DashboardAPI extends APIBase
 				input.setEnableDescription(EnableDescriptionState.fromName(enableDescription));
 			}
 
-			//			if (enableEntityFilter != null) {
-			//				input.setEnableEntityFilter(EnableEntityFilterState.fromName(enableEntityFilter));
-			//			}
+			if (enableEntityFilter != null) {
+				input.setEnableEntityFilter(EnableEntityFilterState.fromName(enableEntityFilter));
+			}
 
 			if (enableTimeRange != null) {
 				input.setEnableTimeRange(EnableTimeRangeState.fromName(enableTimeRange));

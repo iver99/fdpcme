@@ -146,6 +146,8 @@ require(['knockout',
     {
         var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
+        require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
+                TargetSelectorUtils.registerComponents();
         logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
         // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
         // If you comment the line below, our current log calls will not be output!
@@ -248,6 +250,7 @@ require(['knockout',
                 }
             });
         });
+    });
     }
 );
 

@@ -76,57 +76,56 @@ public class Dashboard
 		}
 	}
 
-	// comment out for 1.6
-	//	public static enum EnableEntityFilterState
-	//	{
-	//		FALSE("FALSE", 0), TRUE("TRUE", 1), AUTO("AUTO", 2);
-	//
-	//		@JsonCreator
-	//		public static EnableEntityFilterState fromName(String name)
-	//		{
-	//			if (name == null) {
-	//				return null;
-	//			}
-	//			for (EnableEntityFilterState eefs : EnableEntityFilterState.values()) {
-	//				if (eefs.getName().toLowerCase().equals(name.toLowerCase())) {
-	//					return eefs;
-	//				}
-	//			}
-	//			return null;
-	//		}
-	//
-	//		public static EnableEntityFilterState fromValue(Integer value)
-	//		{
-	//			for (EnableEntityFilterState eefs : EnableEntityFilterState.values()) {
-	//				if (eefs.getValue().equals(value)) {
-	//					return eefs;
-	//				}
-	//			}
-	//			return null;
-	//		}
-	//
-	//		private String name;
-	//
-	//		@JsonIgnore
-	//		private Integer value;
-	//
-	//		private EnableEntityFilterState(String name, Integer value)
-	//		{
-	//			this.name = name;
-	//			this.value = value;
-	//		}
-	//
-	//		@JsonValue
-	//		public String getName()
-	//		{
-	//			return name;
-	//		}
-	//
-	//		public Integer getValue()
-	//		{
-	//			return value;
-	//		}
-	//	}
+	public static enum EnableEntityFilterState
+	{
+		FALSE("FALSE", 0), TRUE("TRUE", 1), AUTO("AUTO", 2);
+	
+		@JsonCreator
+		public static EnableEntityFilterState fromName(String name)
+		{
+			if (name == null) {
+				return null;
+			}
+			for (EnableEntityFilterState eefs : EnableEntityFilterState.values()) {
+				if (eefs.getName().toLowerCase().equals(name.toLowerCase())) {
+					return eefs;
+				}
+			}
+			return null;
+		}
+	
+		public static EnableEntityFilterState fromValue(Integer value)
+		{
+			for (EnableEntityFilterState eefs : EnableEntityFilterState.values()) {
+				if (eefs.getValue().equals(value)) {
+					return eefs;
+				}
+			}
+			return null;
+		}
+	
+		private String name;
+	
+		@JsonIgnore
+		private Integer value;
+	
+		private EnableEntityFilterState(String name, Integer value)
+		{
+			this.name = name;
+			this.value = value;
+		}
+	
+		@JsonValue
+		public String getName()
+		{
+			return name;
+		}
+	
+		public Integer getValue()
+		{
+			return value;
+		}
+	}
 
 	public static enum EnableTimeRangeState
 	{
@@ -187,7 +186,7 @@ public class Dashboard
 	public static final Integer DASHBOARD_TYPE_CODE_SET = Integer.valueOf(2);
 
 	public static final EnableTimeRangeState DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = EnableTimeRangeState.FALSE;
-	//	public static final EnableEntityFilterState DASHBOARD_ENABLE_ENTITY_FILTER_DEFAULT = EnableEntityFilterState.FALSE;
+	public static final EnableEntityFilterState DASHBOARD_ENABLE_ENTITY_FILTER_DEFAULT = EnableEntityFilterState.FALSE;
 	public static final EnableDescriptionState DASHBOARD_ENABLE_DESCRIPTION_DEFAULT = EnableDescriptionState.FALSE;
 	public static final boolean DASHBOARD_ENABLE_REFRESH_DEFAULT = Boolean.FALSE;
 
@@ -230,7 +229,7 @@ public class Dashboard
 		to.setDeleted(from.getDeleted() == null ? null : from.getDeleted() > 0);
 		to.setDescription(from.getDescription());
 		to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
-		//		to.setEnableEntityFilter(EnableEntityFilterState.fromValue(from.getEnableEntityFilter()));
+		to.setEnableEntityFilter(EnableEntityFilterState.fromValue(from.getEnableEntityFilter()));
 		to.setEnableDescription(EnableDescriptionState.fromValue(from.getEnableDescription()));
 		to.setEnableRefresh(DataFormatUtils.integer2Boolean(from.getEnableRefresh()));
 		to.setIsSystem(DataFormatUtils.integer2Boolean(from.getIsSystem()));
@@ -307,7 +306,7 @@ public class Dashboard
 
 	private EnableTimeRangeState enableTimeRange;
 
-	//	private final EnableEntityFilterState enableEntityFilter;
+	private EnableEntityFilterState enableEntityFilter;
 
 	private Boolean enableRefresh;
 
@@ -347,7 +346,7 @@ public class Dashboard
 		type = Dashboard.DASHBOARD_TYPE_NORMAL;
 		enableTimeRange = Dashboard.DASHBOARD_ENABLE_TIME_RANGE_DEFAULT;
 		enableDescription = Dashboard.DASHBOARD_ENABLE_DESCRIPTION_DEFAULT;
-		//		enableEntityFilter = Dashboard.DASHBOARD_ENABLE_ENTITY_FILTER_DEFAULT;
+		enableEntityFilter = Dashboard.DASHBOARD_ENABLE_ENTITY_FILTER_DEFAULT;
 		enableRefresh = Dashboard.DASHBOARD_ENABLE_REFRESH_DEFAULT;
 		deleted = DASHBOARD_DELETED_DEFAULT;
 		isSystem = Boolean.FALSE;
@@ -394,10 +393,10 @@ public class Dashboard
 		return enableDescription;
 	}
 
-	//	public EnableEntityFilter getEnableEntityFilter()
-	//	{
-	//		return enableEntityFilter;
-	//	}
+	public EnableEntityFilterState getEnableEntityFilter()
+	{
+		return enableEntityFilter;
+	}
 
 	/**
 	 * @return the enableRefresh
@@ -461,7 +460,7 @@ public class Dashboard
 		}
 		Integer isEnableDescription = enableDescription == null ? null : enableDescription.getValue();
 		Integer isEnableTimeRange = enableTimeRange == null ? null : enableTimeRange.getValue();
-		//		Integer isEnableEntityFilter = enableEntityFilter == null ? null : enableEntityFilter.getValue();
+		Integer isEnableEntityFilter = enableEntityFilter == null ? null : enableEntityFilter.getValue();
 		Integer isEnableRefresh = DataFormatUtils.boolean2Integer(enableRefresh);
 		Integer isIsSystem = DataFormatUtils.boolean2Integer(isSystem);
 		Integer isShare = DataFormatUtils.boolean2Integer(sharePublic);
@@ -472,7 +471,7 @@ public class Dashboard
 
 		if (ed == null) {
 			ed = new EmsDashboard(creationDate, dashboardId, 0L, htmlEcodedDesc, isEnableTimeRange, isEnableRefresh,
-					isEnableDescription, /*isEnableEntityFilter,*/isIsSystem, isShare, lastModificationDate, lastModifiedBy,
+					isEnableDescription, isEnableEntityFilter, isIsSystem, isShare, lastModificationDate, lastModifiedBy,
 					htmlEcodedName, owner, screenShot, dashboardType, appType);
 
 			if (type.equals(Dashboard.DASHBOARD_TYPE_SET)) {
@@ -502,7 +501,7 @@ public class Dashboard
 			ed.setEnableTimeRange(isEnableTimeRange);
 			ed.setEnableDescription(isEnableDescription);
 			ed.setEnableRefresh(isEnableRefresh);
-			//			ed.setEnableEntityFilter(isEnableEntityFilter);
+			ed.setEnableEntityFilter(isEnableEntityFilter);
 			if (ed.getIsSystem() != null && isIsSystem != null && !isIsSystem.equals(ed.getIsSystem())) {
 				throw new CommonResourceException(
 						MessageUtils.getDefaultBundleString(CommonResourceException.NOT_SUPPORT_UPDATE_IS_SYSTEM_FIELD));
@@ -599,10 +598,10 @@ public class Dashboard
 		this.enableDescription = enableDescription;
 	}
 
-	//	public void setEnableEntityFilter(EnableEntityFilterState enableEntityFilter)
-	//	{
-	//		this.enableEntityFilter = enableEntityFilter;
-	//	}
+	public void setEnableEntityFilter(EnableEntityFilterState enableEntityFilter)
+	{
+		this.enableEntityFilter = enableEntityFilter;
+	}
 
 	/**
 	 * @param enableRefresh

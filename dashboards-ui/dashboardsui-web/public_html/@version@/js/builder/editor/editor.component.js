@@ -37,13 +37,13 @@ define(['knockout',
         }
         Builder.registerModule(DashboardTimeRangeChange, 'DashboardTimeRangeChange');
 
-        function DashboardTargetContext(target, type, emsite) {
-            var self = this;
-            self.target = target;
-            self.type = type;
-            self.emsite = emsite;
-        }
-        Builder.registerModule(DashboardTargetContext, 'DashboardTargetContext');
+//        function DashboardTargetContext(target, type, emsite) {
+//            var self = this;
+//            self.target = target;
+//            self.type = type;
+//            self.emsite = emsite;
+//        }
+//        Builder.registerModule(DashboardTargetContext, 'DashboardTargetContext');
 
         /**
          * 
@@ -84,13 +84,14 @@ define(['knockout',
         }
         Builder.registerModule(TileChange, 'TileChange');
 
-        function DashboardItemChangeEvent(timeRangeChange, targetContext, customChanges, tileChange, timeRangeEnabled){
+        function DashboardItemChangeEvent(timeRangeChange, targets, customChanges, tileChange, timeRangeEnabled, targetSelectorEnabled){
             var self = this;
             self.timeRangeChange = null;
-            self.targetContext = null;
+            self.targets = targets && targets();
             self.customChanges = null;
-            self.enableTimeRange = null;
+
             self.timeRangeEnabled = null;
+            self.targetSelectorEnabled = null;
 //            if(enableTimeRange === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
 //                self.timeRangeChange = null;
 //            }else{
@@ -101,9 +102,9 @@ define(['knockout',
             if (timeRangeChange instanceof DashboardTimeRangeChange){
                 self.timeRangeChange = timeRangeChange;
             }
-            if(targetContext instanceof DashboardTargetContext) {
-                self.targetContext = targetContext;
-            }
+//            if(targetContext instanceof DashboardTargetContext) {
+//                self.targetContext = targetContext;
+//            }
 
             if (customChanges instanceof Array){
                 for(var i=0;i<customChanges.length;i++){
@@ -126,6 +127,11 @@ define(['knockout',
                 self.timeRangeEnabled = true;
             }else {
                 self.timeRangeEnabled = false;
+            }
+             if(targetSelectorEnabled === "TRUE") {
+                self.targetSelectorEnabled = true;
+            }else {
+                self.targetSelectorEnabled = false;
             }
         }
         Builder.registerModule(DashboardItemChangeEvent, 'DashboardItemChangeEvent');
@@ -161,7 +167,7 @@ define(['knockout',
          *  @param width width for the tile
          *  @param widget widget from which the tile is to be created
          */
-        function DashboardTile(mode, dashboard, type, title, description, widget, timeSelectorModel, targetContext, loadImmediately) {
+        function DashboardTile(mode, dashboard, type, title, description, widget, timeSelectorModel, targets, loadImmediately) {
             var self = this;
             self.dashboard = dashboard;
             self.title = ko.observable(title);
@@ -185,7 +191,7 @@ define(['knockout',
             }
 
 
-            Builder.initializeTileAfterLoad(mode, dashboard, self, timeSelectorModel, targetContext, loadImmediately);
+            Builder.initializeTileAfterLoad(mode, dashboard, self, timeSelectorModel, targets, loadImmediately);
         }
         Builder.registerModule(DashboardTile, 'DashboardTile');
 
@@ -219,7 +225,7 @@ define(['knockout',
         }
         Builder.registerFunction(initializeTextTileAfterLoad, 'initializeTextTileAfterLoad');*/
 
-        function initializeTileAfterLoad(mode, dashboard, tile, timeSelectorModel, targetContext, loadImmediately) {
+        function initializeTileAfterLoad(mode, dashboard, tile, timeSelectorModel, targets, loadImmediately) {
             if (!tile)
                 return;
 
@@ -261,13 +267,14 @@ define(['knockout',
             tile.linkedDashboard = ko.computed(function() {
                 if (tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()) {
                     var link = '/emsaasui/emcpdfui/builder.html?dashboardId=' + tile.WIDGET_LINKED_DASHBOARD();
-                    targetContext && targetContext.target && (link += '&target='+targetContext.target+'&type='+targetContext.type+'&emsite='+targetContext.emsite);
+//                    targetContext && targetContext.target && (link += '&target='+targetContext.target+'&type='+targetContext.type+'&emsite='+targetContext.emsite);
                     (dashboard.enableTimeRange()==="TRUE" || Builder.isTimeRangeAvailInUrl()===true)&& timeSelectorModel && timeSelectorModel.viewStart() && (link += '&startTime='+timeSelectorModel.viewStart().getTime()+'&endTime='+timeSelectorModel.viewEnd().getTime());
+                    targets && targets() && (link += "&targets="+encodeURI(JSON.stringify(targets())));
                     return link;
                 } else
                     return "#";
             });
-            tile.dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd()), targetContext, null, null, dashboard.enableTimeRange());
+            tile.dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd()), targets, null, null, dashboard.enableTimeRange(), dashboard.enableEntityFilter());
             /**
              * Integrator needs to override below FUNCTION to respond to DashboardItemChangeEvent
              * e.g.
@@ -361,13 +368,18 @@ define(['knockout',
                     var url = Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), versionPlus);
                     if (url){
                         tile.configure = function(){
+                            var widgetUrl = url;
+                            widgetUrl += "?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboard.id()+"&dashboardName="+dashboard.name();
                             if(dashboard.enableTimeRange() === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
-                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboard.id()+"&dashboardName="+dashboard.name());
-                            }else{
+                                widgetUrl += "";
+                            }else {
                                 var start = timeSelectorModel.viewStart().getTime();
                                 var end = timeSelectorModel.viewEnd().getTime();
-                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboard.id()+"&dashboardName="+dashboard.name()+"&startTime="+start+"&endTime="+end);
+                                widgetUrl += "&startTime="+start+"&endTime="+end;
                             }
+                            
+                            targets && targets() && (widgetUrl += "&targets="+encodeURI(JSON.stringify(targets())));
+                            window.open(widgetUrl);
                         };
                     }
                 }         
