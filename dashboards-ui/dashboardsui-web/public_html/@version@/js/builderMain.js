@@ -137,7 +137,7 @@ require(['knockout',
     'loggingutil',
     'ojs/ojcore',
     'dashboards/widgets/autorefresh/js/auto-refresh',
-    'dashboards/widgets/textwidget/js/textwidget',
+//    'dashboards/widgets/textwidget/js/textwidget',
     'dashboards/dashboardhome-impl',
     'jqueryui',
     'common.uifwk',
@@ -147,7 +147,7 @@ require(['knockout',
     'builder/dashboardset.toolbar.model',
     'builder/dashboardset.panels.model'
 ],
-    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, textwidget, dashboardhome_impl) // this callback gets executed when all required modules are loaded
+    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, /*textwidget, */dashboardhome_impl) // this callback gets executed when all required modules are loaded
     {
         var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
