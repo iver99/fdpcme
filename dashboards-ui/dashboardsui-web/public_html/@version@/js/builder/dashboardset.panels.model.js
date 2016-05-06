@@ -76,12 +76,21 @@ define([
                     dashboardsViewModle.handleDashboardClicked = function(event, data) {
                         
                         var hasDuplicatedDashboard = false;
-                        dashboardsetToolBarModel.dashboardsetItems.forEach(function(dashboardItem) {
-                            if (dashboardItem.dashboardId === data.dashboard.id) {
+                        var dataId;
+                        var dataName;
+                            if(typeof(data.dashboard)!=='undefined'){
+                               dataId= data.dashboard.id;
+                               dataName=data.dashboard.name;
+                            }else{
+                               dataId= data.id;
+                               dataName=data.name; 
+                            }
+                        dashboardsetToolBarModel.dashboardsetItems.forEach(function(dashboardItem) {                         
+                            if (dashboardItem.dashboardId === dataId) {
                                 hasDuplicatedDashboard = true;
                                     dfu.showMessage({
                                         type: 'warn',
-                                        summary: oj.Translations.getTranslatedString("DBS_BUILDER_DASHBOARD_SET_DUPLICATED_DASHBOARD", data.dashboard.name),
+                                        summary: oj.Translations.getTranslatedString("DBS_BUILDER_DASHBOARD_SET_DUPLICATED_DASHBOARD", dataName),
                                         detail: '',
                                         removeDelayTime: 5000});
                                 }
@@ -89,8 +98,8 @@ define([
                         
                         if (!hasDuplicatedDashboard) {
                             dashboardsetToolBarModel.pickDashboard(guid, {
-                                id: ko.observable(data.dashboard.id),
-                                name: ko.observable(data.dashboard.name)
+                                id: ko.observable(dataId),
+                                name: ko.observable(dataName)
                             });
                         }
                     };
