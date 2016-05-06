@@ -558,11 +558,7 @@ define(['knockout',
             
             self.openDashboardEditDialog = function() {
                if(!self.tilesViewModel.rightPanelShown()){
-                    self.openRightPanelByBuild(false);
                     self.tilesViewModel.toggleRightPanel();
-                    self.openRightPanelByBuild(true);
-                }else{
-                    $(".dbd-right-panel-contents").ojAccordion( { "expanded": [0] } );//to show "Build" by default on toggled
                 }
             };
             self.openDashboardDuplicateDialog = function() {
