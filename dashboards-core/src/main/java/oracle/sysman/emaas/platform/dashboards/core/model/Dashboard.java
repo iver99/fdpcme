@@ -6,22 +6,127 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
+import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
+import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonValue;
 
-import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
-import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
-import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
-
 public class Dashboard
 {
+	public static enum EnableDescriptionState
+	{
+		FALSE("FALSE", 0), TRUE("TRUE", 1), AUTO("AUTO", 2);
+
+		@JsonCreator
+		public static EnableDescriptionState fromName(String name)
+		{
+			if (name == null) {
+				return null;
+			}
+			for (EnableDescriptionState eefs : EnableDescriptionState.values()) {
+				if (eefs.getName().toLowerCase().equals(name.toLowerCase())) {
+					return eefs;
+				}
+			}
+			return null;
+		}
+
+		public static EnableDescriptionState fromValue(Integer value)
+		{
+			for (EnableDescriptionState eefs : EnableDescriptionState.values()) {
+				if (eefs.getValue().equals(value)) {
+					return eefs;
+				}
+			}
+			return null;
+		}
+
+		private String name;
+
+		@JsonIgnore
+		private Integer value;
+
+		private EnableDescriptionState(String name, Integer value)
+		{
+			this.name = name;
+			this.value = value;
+		}
+
+		@JsonValue
+		public String getName()
+		{
+			return name;
+		}
+
+		public Integer getValue()
+		{
+			return value;
+		}
+	}
+
+	public static enum EnableEntityFilterState
+	{
+		FALSE("FALSE", 0), TRUE("TRUE", 1), AUTO("AUTO", 2);
+	
+		@JsonCreator
+		public static EnableEntityFilterState fromName(String name)
+		{
+			if (name == null) {
+				return null;
+			}
+			for (EnableEntityFilterState eefs : EnableEntityFilterState.values()) {
+				if (eefs.getName().toLowerCase().equals(name.toLowerCase())) {
+					return eefs;
+				}
+			}
+			return null;
+		}
+	
+		public static EnableEntityFilterState fromValue(Integer value)
+		{
+			for (EnableEntityFilterState eefs : EnableEntityFilterState.values()) {
+				if (eefs.getValue().equals(value)) {
+					return eefs;
+				}
+			}
+			return null;
+		}
+	
+		private String name;
+	
+		@JsonIgnore
+		private Integer value;
+	
+		private EnableEntityFilterState(String name, Integer value)
+		{
+			this.name = name;
+			this.value = value;
+		}
+	
+		@JsonValue
+		public String getName()
+		{
+			return name;
+		}
+	
+		public Integer getValue()
+		{
+			return value;
+		}
+	}
+
 	public static enum EnableTimeRangeState
 	{
 		FALSE("FALSE", 0), TRUE("TRUE", 1), AUTO("AUTO", 2);
@@ -77,7 +182,12 @@ public class Dashboard
 	public static final Integer DASHBOARD_TYPE_CODE_NORMAL = Integer.valueOf(0);
 	public static final String DASHBOARD_TYPE_SINGLEPAGE = "SINGLEPAGE";
 	public static final Integer DASHBOARD_TYPE_CODE_SINGLEPAGE = Integer.valueOf(1);
+	public static final String DASHBOARD_TYPE_SET = "SET";
+	public static final Integer DASHBOARD_TYPE_CODE_SET = Integer.valueOf(2);
+
 	public static final EnableTimeRangeState DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = EnableTimeRangeState.FALSE;
+	public static final EnableEntityFilterState DASHBOARD_ENABLE_ENTITY_FILTER_DEFAULT = EnableEntityFilterState.FALSE;
+	public static final EnableDescriptionState DASHBOARD_ENABLE_DESCRIPTION_DEFAULT = EnableDescriptionState.FALSE;
 	public static final boolean DASHBOARD_ENABLE_REFRESH_DEFAULT = Boolean.FALSE;
 
 	public static final boolean DASHBOARD_DELETED_DEFAULT = Boolean.FALSE;
@@ -90,7 +200,7 @@ public class Dashboard
 	 */
 	public static Dashboard valueOf(EmsDashboard ed)
 	{
-		return Dashboard.valueOf(ed, null, true, true);
+		return Dashboard.valueOf(ed, null, true, true, true);
 	}
 
 	/**
@@ -105,7 +215,8 @@ public class Dashboard
 	 *            false: just load single page tiles, true: load tiles data for the dashboard without considering its types
 	 * @return
 	 */
-	public static Dashboard valueOf(EmsDashboard from, Dashboard to, boolean alwaysLoadTiles, boolean loadTileParams)
+	public static Dashboard valueOf(EmsDashboard from, Dashboard to, boolean loadSubDashboards, boolean alwaysLoadTiles,
+			boolean loadTileParams)
 	{
 		if (from == null) {
 			return null;
@@ -118,6 +229,8 @@ public class Dashboard
 		to.setDeleted(from.getDeleted() == null ? null : from.getDeleted() > 0);
 		to.setDescription(from.getDescription());
 		to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
+		to.setEnableEntityFilter(EnableEntityFilterState.fromValue(from.getEnableEntityFilter()));
+		to.setEnableDescription(EnableDescriptionState.fromValue(from.getEnableDescription()));
 		to.setEnableRefresh(DataFormatUtils.integer2Boolean(from.getEnableRefresh()));
 		to.setIsSystem(DataFormatUtils.integer2Boolean(from.getIsSystem()));
 		to.setSharePublic(DataFormatUtils.integer2Boolean(from.getSharePublic()));
@@ -128,18 +241,51 @@ public class Dashboard
 		// by default, we'll not load screenshot for query
 		//		to.setScreenShot(from.getScreenShot());
 		to.setType(DataFormatUtils.dashboardTypeInteger2String(from.getType()));
-		if (alwaysLoadTiles || Dashboard.DASHBOARD_TYPE_SINGLEPAGE.equals(to.getType())) {
-			List<EmsDashboardTile> edtList = from.getDashboardTileList();
-			if (edtList != null) {
-				List<Tile> tileList = new ArrayList<Tile>();
-				for (EmsDashboardTile edt : edtList) {
-					Tile tile = Tile.valueOf(edt, loadTileParams);
-					tile.setDashboard(to);
-					tileList.add(tile);
+		if (from.getType().equals(DASHBOARD_TYPE_CODE_SET)) {
+			to.setEnableTimeRange(null);
+			to.setIsSystem(null);
+			if (loadSubDashboards) {
+				List<EmsSubDashboard> emsSubDashboards = from.getSubDashboardList();
+				if (emsSubDashboards != null) {
+					List<Dashboard> subDashboardList = new ArrayList<>();
+					for (EmsSubDashboard esd : emsSubDashboards) {
+						Dashboard dbd = new Dashboard();
+						dbd.setEnableTimeRange(null);
+						dbd.setEnableRefresh(null);
+						dbd.setIsSystem(null);
+						dbd.setSharePublic(null);
+						dbd.setType(null);
+
+						Long subDashboardId = esd.getSubDashboardId();
+						Long tenantId = from.getTenantId();
+						DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+						EmsDashboard ed = dsf.getEmsDashboardById(subDashboardId);
+
+						dbd.setDashboardId(ed.getDashboardId());
+						dbd.setName(ed.getName());
+
+						subDashboardList.add(dbd);
+					}
+					to.setSubDashboards(subDashboardList);
 				}
-				to.setTileList(tileList);
+			}
+		}else {
+			to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
+
+			if (alwaysLoadTiles || Dashboard.DASHBOARD_TYPE_SINGLEPAGE.equals(to.getType())) {
+				List<EmsDashboardTile> edtList = from.getDashboardTileList();
+				if (edtList != null) {
+					List<Tile> tileList = new ArrayList<Tile>();
+					for (EmsDashboardTile edt : edtList) {
+						Tile tile = Tile.valueOf(edt, loadTileParams);
+						tile.setDashboard(to);
+						tileList.add(tile);
+					}
+					to.setTileList(tileList);
+				}
 			}
 		}
+
 		return to;
 	}
 
@@ -156,7 +302,11 @@ public class Dashboard
 
 	private String description;
 
+	private EnableDescriptionState enableDescription;
+
 	private EnableTimeRangeState enableTimeRange;
+
+	private EnableEntityFilterState enableEntityFilter;
 
 	private Boolean enableRefresh;
 
@@ -187,11 +337,16 @@ public class Dashboard
 	@JsonProperty("tiles")
 	private List<Tile> tileList;
 
+	@JsonProperty("subDashboards")
+	private List<Dashboard> subDashboards;
+
 	public Dashboard()
 	{
 		// defaults for non-null values
 		type = Dashboard.DASHBOARD_TYPE_NORMAL;
 		enableTimeRange = Dashboard.DASHBOARD_ENABLE_TIME_RANGE_DEFAULT;
+		enableDescription = Dashboard.DASHBOARD_ENABLE_DESCRIPTION_DEFAULT;
+		enableEntityFilter = Dashboard.DASHBOARD_ENABLE_ENTITY_FILTER_DEFAULT;
 		enableRefresh = Dashboard.DASHBOARD_ENABLE_REFRESH_DEFAULT;
 		deleted = DASHBOARD_DELETED_DEFAULT;
 		isSystem = Boolean.FALSE;
@@ -231,6 +386,16 @@ public class Dashboard
 	public String getDescription()
 	{
 		return description;
+	}
+
+	public EnableDescriptionState getEnableDescription()
+	{
+		return enableDescription;
+	}
+
+	public EnableEntityFilterState getEnableEntityFilter()
+	{
+		return enableEntityFilter;
 	}
 
 	/**
@@ -293,7 +458,9 @@ public class Dashboard
 			throw new CommonFunctionalException(
 					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_DESCRIPTION_ERROR));
 		}
+		Integer isEnableDescription = enableDescription == null ? null : enableDescription.getValue();
 		Integer isEnableTimeRange = enableTimeRange == null ? null : enableTimeRange.getValue();
+		Integer isEnableEntityFilter = enableEntityFilter == null ? null : enableEntityFilter.getValue();
 		Integer isEnableRefresh = DataFormatUtils.boolean2Integer(enableRefresh);
 		Integer isIsSystem = DataFormatUtils.boolean2Integer(isSystem);
 		Integer isShare = DataFormatUtils.boolean2Integer(sharePublic);
@@ -303,13 +470,27 @@ public class Dashboard
 		String htmlEcodedDesc = description == null ? null : StringEscapeUtils.escapeHtml4(description);
 
 		if (ed == null) {
-			ed = new EmsDashboard(creationDate, dashboardId, 0L, htmlEcodedDesc, isEnableTimeRange, isEnableRefresh, isIsSystem,
-					isShare, lastModificationDate, lastModifiedBy, htmlEcodedName, owner, screenShot, dashboardType, appType);
-			if (tileList != null) {
-				for (Tile tile : tileList) {
-					EmsDashboardTile edt = tile.getPersistenceEntity(null);
-					//					edt.setPosition(i++);
-					ed.addEmsDashboardTile(edt);
+			ed = new EmsDashboard(creationDate, dashboardId, 0L, htmlEcodedDesc, isEnableTimeRange, isEnableRefresh,
+					isEnableDescription, isEnableEntityFilter, isIsSystem, isShare, lastModificationDate, lastModifiedBy,
+					htmlEcodedName, owner, screenShot, dashboardType, appType);
+
+			if (type.equals(Dashboard.DASHBOARD_TYPE_SET)) {
+				// support create subDashboards
+				//                if (subDashboards != null) {
+				//                    for (int index=0;index < subDashboards.size() ;index++ ) {
+				//                        Dashboard dbd = subDashboards.get(index);
+				//                        EmsSubDashboard esdbd = new EmsSubDashboard(dashboardId,dbd.getDashboardId(),index);
+				//                        ed.addEmsSubDashboard(esdbd);
+				//                    }
+				//                }
+			}
+			else {
+				if (tileList != null) {
+					for (Tile tile : tileList) {
+						EmsDashboardTile edt = tile.getPersistenceEntity(null);
+						//					edt.setPosition(i++);
+						ed.addEmsDashboardTile(edt);
+					}
 				}
 			}
 		}
@@ -318,7 +499,9 @@ public class Dashboard
 			ed.setDeleted(deleted ? getDashboardId() : 0);
 			ed.setDescription(htmlEcodedDesc);
 			ed.setEnableTimeRange(isEnableTimeRange);
+			ed.setEnableDescription(isEnableDescription);
 			ed.setEnableRefresh(isEnableRefresh);
+			ed.setEnableEntityFilter(isEnableEntityFilter);
 			if (ed.getIsSystem() != null && isIsSystem != null && !isIsSystem.equals(ed.getIsSystem())) {
 				throw new CommonResourceException(
 						MessageUtils.getDefaultBundleString(CommonResourceException.NOT_SUPPORT_UPDATE_IS_SYSTEM_FIELD));
@@ -333,7 +516,14 @@ public class Dashboard
 				throw new CommonResourceException(
 						MessageUtils.getDefaultBundleString(CommonResourceException.NOT_SUPPORT_UPDATE_TYPE_FIELD));
 			}
-			updateEmsDashboardTiles(tileList, ed);
+			if (type.equals(Dashboard.DASHBOARD_TYPE_SET)) {
+				updateEmsSubDashboards(subDashboards, ed);
+			}
+			else {
+				updateEmsDashboardTiles(tileList, ed);
+				removeUnsharedDashboards(ed);
+			}
+
 		}
 		return ed;
 	}
@@ -355,6 +545,11 @@ public class Dashboard
 	public Boolean getSharePublic()
 	{
 		return sharePublic;
+	}
+
+	public List<Dashboard> getSubDashboards()
+	{
+		return subDashboards;
 	}
 
 	public List<Tile> getTileList()
@@ -396,6 +591,16 @@ public class Dashboard
 	public void setDescription(String description)
 	{
 		this.description = description;
+	}
+
+	public void setEnableDescription(EnableDescriptionState enableDescription)
+	{
+		this.enableDescription = enableDescription;
+	}
+
+	public void setEnableEntityFilter(EnableEntityFilterState enableEntityFilter)
+	{
+		this.enableEntityFilter = enableEntityFilter;
 	}
 
 	/**
@@ -467,6 +672,11 @@ public class Dashboard
 		this.sharePublic = sharePublic;
 	}
 
+	public void setSubDashboards(List<Dashboard> subDashboards)
+	{
+		this.subDashboards = subDashboards;
+	}
+
 	public void setTileList(List<Tile> emsDashboardTileList)
 	{
 		tileList = emsDashboardTileList;
@@ -475,6 +685,15 @@ public class Dashboard
 	public void setType(String type)
 	{
 		this.type = type;
+	}
+
+	private void removeUnsharedDashboards(EmsDashboard ed)
+	{
+		if (ed.getSharePublic() == 0) {
+			Long tenantId = ed.getTenantId();
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			dsf.removeEmsSubDashboardBySubId(ed.getDashboardId());
+		}
 	}
 
 	private void updateEmsDashboardTiles(List<Tile> tiles, EmsDashboard ed) throws DashboardException
@@ -523,6 +742,48 @@ public class Dashboard
 				tile.getPersistenceEntity(edt);
 			}
 			//			edt.setPosition(i);
+		}
+	}
+
+	private void updateEmsSubDashboards(List<Dashboard> dashboards, EmsDashboard ed) throws DashboardException
+	{
+		if (dashboards == null) {
+			throw new CommonSecurityException("sub dashboard is null");
+		}
+
+		Map<Dashboard, EmsSubDashboard> rows = new HashMap();
+		List<EmsSubDashboard> subDashboardList = ed.getSubDashboardList();
+		if (subDashboardList != null) {
+			for (int i = subDashboardList.size() - 1; i >= 0; i--) {
+				EmsSubDashboard emsSubDashboard = subDashboardList.get(i);
+				ed.removeEmsSubDashboard(emsSubDashboard);
+			}
+		}
+
+		for (int index = 0; index < dashboards.size(); index++) {
+			Dashboard subDashboard = dashboards.get(index);
+
+			Long tenantId = ed.getTenantId();
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+
+			Long subDashboardId = subDashboard.getDashboardId();
+			EmsDashboard subbed = dsf.getEmsDashboardById(subDashboardId);
+
+			if (subbed != null) {
+				// remove duplicated entity
+				if (!rows.containsKey(subDashboard)) {
+					EmsSubDashboard emsSubDashboard = new EmsSubDashboard(dashboardId, subDashboard.getDashboardId(), index);
+					ed.addEmsSubDashboard(emsSubDashboard);
+					rows.put(subDashboard, emsSubDashboard);
+
+					// update share public property
+					if (ed.getSharePublic().equals(1)) {
+						subbed.setSharePublic(1);
+						dsf.mergeEmsDashboard(subbed);
+					}
+
+				}
+			}
 		}
 	}
 }

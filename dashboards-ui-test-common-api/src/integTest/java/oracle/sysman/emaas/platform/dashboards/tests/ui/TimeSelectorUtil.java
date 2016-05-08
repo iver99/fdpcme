@@ -199,7 +199,8 @@ public class TimeSelectorUtil
 		}
 		else {
 			webd.click("css=" + TimeSelectorUIControls.sApplyBtn);
-			webd.takeScreenShot();
+			WaitUtil.waitForPageFullyLoaded(webd);
+                        webd.takeScreenShot();
 		}
 	}
 

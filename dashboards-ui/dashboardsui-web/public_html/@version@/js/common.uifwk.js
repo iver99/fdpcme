@@ -8,6 +8,7 @@ define([
     'ojs/ojdialog',
     'ojs/ojmenu',
     'ojs/ojtoolbar',
+    'require',
     'text'
 ], function (oj)
 {

@@ -259,21 +259,21 @@ $.widget('dbs.dbsDashboardPanel',
                 self._setBase64ScreenShot(_ss);
             }
             else {
-                //if (_dashboard['systemDashboard'] === true || (_dashboard['tiles'] && _dashboard['tiles'].length > 0))
-                if (_dashboard['screenShotHref'])
-                {
-                   
-                    var url =  _dashboard['screenShotHref'];
-                    if (!dfu.isDevMode()){
-//                        url = dfu.buildFullUrl(dfu.getDashboardsUrl(), url);
+                if (_dashboard['screenShotHref']) {
+
+                    var url = _dashboard['screenShotHref'];
+                    if (!dfu.isDevMode()) {
                         url = dfu.getRelUrlFromFullUrl(url);
-                    } 
+                    }
+//                    if (dfu.isDevMode()) {
+//                        url = dfu.buildFullUrl(dfu.getDashboardsUrl(), '/' + self.options['dashboard']['id'] + '/screenshot');
+//                    } 
                     
                     // don't use base64 image data, but use the URL retrieved from dashboard directly as screenshot url
                     self._setBase64ScreenShot(url);
                     if(_dmodel) _dmodel['screenShot'] = url;
               
-//                   dfu.ajaxWithRetry({
+//                    dfu.ajaxWithRetry({
 //                            //This will be a page which will return the base64 encoded string
 //                        //url: '/sso.static/dashboards.service/' + self.options['dashboard']['id'] + '/screenshot',//self.options['dashboard']['screenShotHref'], 
 //                        url: url,                   

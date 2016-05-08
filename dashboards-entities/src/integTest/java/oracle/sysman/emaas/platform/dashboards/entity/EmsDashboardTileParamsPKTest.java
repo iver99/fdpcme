@@ -10,9 +10,9 @@ import static org.testng.Assert.*;
  * Created by Troy on 2016/1/20.
  */
 @Test(groups = {"s1"})
-public class EmsDashboardTileParamsPKTest {
+public class EmsDashboardTileParamsPKTest { 
     Date now =  new Date();
-    private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10, now,
+    private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10,10,10, now,
             "elephant","elephant","elephant","elephant",10,10);
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
             now,

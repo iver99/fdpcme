@@ -10,9 +10,9 @@
  */
 
 define([
-    'dbs/datasourcefactory',
-    'dbs/dbstablesource',
-    'dbs/dbsfilter',
+    'dashboards/datasourcefactory',
+    'dashboards/dbstablesource',
+    'dashboards/dbsfilter',
     'ojs/ojcore', 
     'knockout', 
     'jquery', 
@@ -39,6 +39,22 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.description = ko.observable('');
         self.timeRangeFilterValue = ko.observable(["ON"]);//for now ON always and hide option in UI
         self.targetFilterValue = ko.observable(["OFF"]);
+        self.selectType =  ko.observable("NORMAL");
+        self.showHideDescription=ko.observable(false);
+        self.singleVisible = ko.observable(true);
+        self.setVisible=ko.observable(false);
+
+        self.dashboardtypeSelectFuc=function(){
+            if(self.selectType()==="NORMAL"){
+                self.singleVisible(true);
+                self.setVisible(false);
+            }else{
+                self.singleVisible(false);
+                self.setVisible(true);
+            }
+            return true;
+        };
+
         self.isDisabled = ko.computed(function() { 
             if (self.nameInputed() && self.nameInputed().length > 0)
             {
@@ -63,12 +79,25 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             }
             return false;
         };
-        
+
     }
         
-    function confirmDialogModel(title, okLabel, message, okFunction) {
+    function confirmDialogModel(parentElementId, title, okLabel, message, okFunction) {
         var self = this;
         //self.style = ko.observable('min-width: 450px; min-height:150px;');
+        self.parentElementId = parentElementId;
+        self.getElementByCss = function(cssSelector) {
+            if (cssSelector && cssSelector !== null)
+            {
+                if (self.parentElementId && self.parentElementId.trim().length > 0)
+                {
+                    var y = $("#"+self.parentElementId+" "+cssSelector);
+                    return $("#"+self.parentElementId+" "+cssSelector);
+                }
+                return $(cssSelector);
+            }
+            return null;
+        };
         self.title = ko.observable(title || '');
         self.okLabel = ko.observable(okLabel || '');
         self.message = ko.observable(message || '');
@@ -86,11 +115,11 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                 _okfunc();
                 //self.close();
             };
-            $( "#dbs_cfmDialog" ).ojDialog( "open" );
+            self.getElementByCss( ".dbs_cfmDialog" ).ojDialog( "open" );
         };
         
         self.close = function () {
-            $( "#dbs_cfmDialog" ).ojDialog( "close" );
+            $( ".dbs_cfmDialog" ).ojDialog( "close" );
         };
         
         self.keydown = function (d, e) {
@@ -98,7 +127,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
              self.close();
            }
         };
-    } 
+    }
     
     function welcomeDialogModel(prefUtil, showWel) {
         var self = this;
@@ -130,10 +159,22 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         
     }
     
-    function ViewModel(predata) {
+    function ViewModel(predata, parentElementId, defaultFilters) {
         
         var self = this, showWelcome = predata.getShowWelcomePref();
         
+        self.parentElementId = parentElementId;
+        self.getElementByCss = function(cssSelector) {
+            if (cssSelector && cssSelector !== null)
+            {
+                if (self.parentElementId && self.parentElementId.trim().length > 0)
+                {
+                    return $("#"+self.parentElementId+" "+cssSelector);
+                }
+                return $(cssSelector);
+            }
+            return null;
+        };
         self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
         
         //welcome
@@ -144,7 +185,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.userName = dfu.getUserName();
         self.isMobileDevice = ko.observable( (new mbu()).isMobile );
 
-        self.filter = predata.getDashboardsFilter({'prefUtil' : self.prefUtil, 
+        self.filter = predata.getDashboardsFilter({'prefUtil' : self.prefUtil,
             'filterPrefKey': DASHBOARDS_FILTER_PREF_KEY,
             'filterChange': function(event) {
                 if (self.dsFactory)
@@ -154,17 +195,20 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                 }
             }
         });
-        
+        self.showExploreDataBtn= ko.observable(true);
         self.showSeachClear = ko.observable(false);
+        self.tilesViewGridId = self.parentElementId+'gridtview';
+        self.tilesViewListId = self.parentElementId+'listview';
         self.tilesViewGrid = 'gridtview';
         self.tilesViewList = 'listview';
         self.isTilesView = ko.observable(predata.getDashboardsViewPref());
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
         self.selectedDashboard = ko.observable(null);
+        self.sortById = self.parentElementId+'sortcb';
         self.sortBy = ko.observable(['default']);
         self.createDashboardModel = new createDashboardDialogModel();
-        self.confirmDialogModel = new confirmDialogModel();
+        self.confirmDialogModel = new confirmDialogModel(parentElementId);
         //self.comingsoonDialogModel = new comingsoonDialogModel();
         
         self.pageSize = ko.observable(120);
@@ -184,8 +228,13 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             return _spo;
         });
         
-        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), self.filter.toFilterString()
-                                                   /*filter['types'], filter['appTypes'], filter['owners'], filter['favoritesOnly']*/);
+        
+        var filterString = self.filter.toFilterString()||"";
+        if(defaultFilters && Array.isArray(defaultFilters)){
+           filterString = filterString +","+ defaultFilters.join(",");
+        }
+        
+        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), filterString);
         self.datasourceCallback = function (_event) {
                     var _i = 0, _rawdbs = [];
                     if (_event['data'])
@@ -255,7 +304,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         
         self.handleShowDashboardPop = function(event, data) {
             //console.log(data);
-            var popup = $("#dsbinfopop");
+            var popup = self.getElementByCss(".dashboard-picker:visible .dsbinfopop");
             var isOpen = !popup.ojPopup("isOpen");
             if (!isOpen)
             {
@@ -278,7 +327,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         
         self.handleCloseDashboardPop = function(event, data) {
             //console.log(data);
-            var popup = $("#dsbinfopop");
+            var popup = $(".dashboard-picker:visible .dsbinfopop");
             var isOpen = !popup.ojPopup("isOpen");
             if (!isOpen)
             {
@@ -340,6 +389,10 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             $( "#cDsbDialog" ).ojDialog( "open" );
         };
         
+        self.cancelDashboardCreate = function(){
+            $( "#cDsbDialog" ).ojDialog( "open" );
+        };
+
         self.confirmDashboardCreate = function()
         {
             var _trackObj = ko.utils.unwrapObservable(self.tracker), 
@@ -356,11 +409,12 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             //self.tracker(undefined);
             self.createMessages.removeAll();
             
-            var _addeddb = {"name": self.createDashboardModel.name(), 
+            var _addeddb = { "type":self.createDashboardModel.selectType(),
+                            "name": self.createDashboardModel.name(),
                             "description": self.createDashboardModel.description(),
+//                            "showhidedescription":self.showHideDescription(),
                             "enableTimeRange": self.createDashboardModel.isEnableTimeRange() ? "TRUE" : "FALSE",
                             "enableRefresh": self.createDashboardModel.isEnableTimeRange()};
-            
             if (!_addeddb['name'] || _addeddb['name'] === "" || _addeddb['name'].length > 64)
             {
                 //_trackObj = new oj.InvalidComponentTracker();
@@ -436,7 +490,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             if ( _option === "checked" )
             {
                 self.prefUtil.setPreference(DASHBOARDS_VIEW_PREF_KEY, _value);
-                if (data.value == 'listview')
+                if (data.value === 'listview')
                 {
                     var __sortui = self._getListTableSortUi(self.sortBy()),  _ts = self.dashboardsTS();
                     if ( _ts && _ts !== null && __sortui !== null )
@@ -464,7 +518,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                 if (valueParam.optionMetadata.writeback == 'shouldNotWrite')
                 {
                     // change by set self.sortBy triggered by list table sort
-                    $("#sinput").dbsTypeAhead("forceSearch");                 
+                    //self.getElementByCss(".sinput").dbsTypeAhead("forceSearch");   
+                    self.forceSearch();
                 }
                 else
                 {
@@ -475,12 +530,13 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                             if (__sortui === null)
                             {
                                 //sort column not in table, clear the table header sorting icon
-                                var _headercolumns = $("#dbstable").find('.oj-table-column-header-cell');
+                                //$("#dbstable")
+                                var _headercolumns = self.getElementByCss('.oj-table-column-header-cell');
                                 _headercolumns.data('sorted', null);
-                                var headerColumnAscLink =  $("#dbstable").find('.oj-table-column-header-asc-link.oj-enabled');
+                                var headerColumnAscLink =  self.getElementByCss('.oj-table-column-header-asc-link.oj-enabled');
                                 headerColumnAscLink.addClass('oj-disabled');
                                 headerColumnAscLink.removeClass('oj-enabled');
-                                var headerColumnDscLink =  $("#dbstable").find('.oj-table-column-header-dsc-link.oj-enabled');
+                                var headerColumnDscLink =  self.getElementByCss('.oj-table-column-header-dsc-link.oj-enabled');
                                 headerColumnDscLink.addClass('oj-disabled');
                                 headerColumnDscLink.removeClass('oj-enabled');
                             }
@@ -529,7 +585,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             
             return null;
         };
-        
+
         self.typeaheadSearchStart = function (event, data)
         {
             var  _ts = self.dashboardsTS();
@@ -574,31 +630,23 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                     _ts.handleEvent(oj.TableDataSource.EventType['REQUEST']);
                 }
             }
-            $("#sinput").dbsTypeAhead("forceSearch", endcallback);
+            self.getElementByCss(".dbs-sinput").dbsTypeAhead("forceSearch", endcallback);
         };
         
         self.clearSearch = function (event, data)
         {
-            $("#sinput").dbsTypeAhead("clearInput");
+            self.getElementByCss(".dbs-sinput").dbsTypeAhead("clearInput");
         };
         
         self.listNameRender = function (context) 
         {
-            var _link = $(document.createElement('a')).addClass( "dbs-dsbnameele" )
+            var _link = $(document.createElement('a'))
                     .on('click', function(event) {
                         //prevent event bubble
                         event.stopPropagation();
-                        self.handleDashboardClicked(event, {'id': context.row.id, 'element': _link});
+                        self.handleDashboardClicked(event, {'id': context.row.id, 'element': _link,'name':context.row.name});
                     });
             _link.text(context.row.name);
-            if (context.row.systemDashboard === true)
-            {
-                _link.addClass( "dbs-dsbsystem" );
-            }
-            else
-            {
-                _link.addClass( "dbs-dsbnormal" );
-            }
             $(context.cellContext.parentElement).append(_link);
         };
         

@@ -3,7 +3,7 @@
     baseUrl: "@version@/js",
     dir: "../build/public_html",
     optimize:"none",
-    optimizeCss: "standard",
+    optimizeCss: "standard", 
     modules: [
         {
             name: "builder/builder.jet.partition"
@@ -59,6 +59,6 @@
         'dbs': '../js',
         'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
         'prefutil':'empty:'
-	//'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
+//	'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
     }
 })

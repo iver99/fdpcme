@@ -37,7 +37,7 @@ define(['knockout',
             };
             
             self.rebuildElementSet = function() {
-                self.$list = $(".fit-size");
+                self.$list = $b.findEl(".fit-size");
             };
             
             self.initialize();
@@ -54,12 +54,57 @@ define(['knockout',
             self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
             
             self.keyword = ko.observable('');
-            self.page = ko.observable(1);
             self.widgets = ko.observableArray([]);
-            self.totalPages = ko.observable(1);
 
             self.completelyHidden = ko.observable(self.isMobileDevice === 'true' || !self.emptyDashboard);
             self.maximized = ko.observable(false);
+            
+            var scrollInstantStore = ko.observable();
+            var scrollDelay = ko.computed(function() { 
+                return scrollInstantStore();
+            });
+            scrollDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 400 } }); 
+            
+            self.widgetListScroll = function(data, event) {
+                scrollInstantStore(event.target.scrollTop);
+            };
+            
+            var widgetListHeight = ko.observable(0);
+            var $dbdLeftPanelWidgets = $b.findEl(".dbd-left-panel-widgets");
+            if(typeof window.MutationObserver !== 'undefined'){
+                var widgetListHeightChangeObserver = new MutationObserver(function(){
+                    widgetListHeight($dbdLeftPanelWidgets.height());
+                });
+                widgetListHeightChangeObserver.observe($dbdLeftPanelWidgets[0],{
+                    attributes: true,
+                    attrbuteFilter: ['style']
+                });
+            }else{
+                $b.addBuilderResizeListener(function(){
+                    widgetListHeight($dbdLeftPanelWidgets.height());
+                });
+            }
+            widgetListHeight.subscribe(function(){
+                loadSeeableWidgetScreenshots();
+            });
+            
+            var loadSeeableWidgetScreenshots = function(startPosition){
+                var fromWidgetIndex = startPosition?(Math.floor(startPosition/30)):0;
+                var toWidgetIndex = Math.ceil(widgetListHeight()/30)+fromWidgetIndex;
+                if (self.widgets && self.widgets().length > 0) {
+                    for (var i = fromWidgetIndex; i < toWidgetIndex; i++) {
+                        var temp = self.widgets()[i].WIDGET_VISUAL();
+                        console.log(temp);
+                        if (!self.widgets()[i].WIDGET_VISUAL()){
+                            self.getWidgetScreenshot(self.widgets()[i]);
+                        }
+                    }
+                }
+            };
+            scrollDelay.subscribe(function(val){
+                loadSeeableWidgetScreenshots(val);
+            });
+            
 
 //            self.showTimeControl = ko.observable(false);
             // observable variable possibly updated by other events
@@ -108,13 +153,8 @@ define(['knockout',
                     self.loadWidgets();
                     self.initDraggable();
 //                    self.checkAndDisableLinkDraggable();
-                    $("#dbd-left-panel-widgets-page-input").keyup(function(e) {
-                        var replacedValue = this.value.replace(/[^0-9\.]/g, '');
-                        if (this.value !== replacedValue) {
-                            this.value = replacedValue;
-                        }
-                    });
-                    $('#widget-search-input').autocomplete({
+
+                    $b.findEl('.widget-search-input').autocomplete({
                         source: self.autoSearchWidgets,
                         delay: 700,
                         minLength: 0
@@ -138,7 +178,7 @@ define(['knockout',
             };
 
             self.initWidgetDraggable = function() {
-                $(".dbd-left-panel-widget-text").draggable({
+                $b.findEl(".dbd-left-panel-widget-text").draggable({
                     helper: "clone",
                     scroll: false,
                     start: function(e, t) {
@@ -235,48 +275,24 @@ define(['knockout',
                 self.loadWidgets(null, AUTO_PAGE_NAV);
             });
 
-            self.loadWidgets = function(req, behavior) {
-                
-                // page size is calculated by widget list container height
-                // so that scroll bar will never display in the drawer panel
-                var pageSize = Math.floor(widgetListHeight() / 30);
-                // widget list won't be loaded if the panel height is even not
-                // enough for 1 item to display.
-                if (pageSize < 1) {
-                    return;
-                }
-                
-                var pageIndex = self.page();
-                
-                // in order to keep the items a user sees in the new page size
-                // when he or she resize the widget list panel, 
-                // set behavior with the value of AUTO_PAGE_NAV.
-                if ((behavior & AUTO_PAGE_NAV) && pageSizeLastTime > 0) {
-                    pageIndex = Math.ceil(((self.page() - 1) * pageSizeLastTime + 1) / pageSize);
-                }
-                self.page(pageIndex);
-                
-                pageSizeLastTime = pageSize;
-                
+
+            self.loadWidgets = function(req) {                
                 var widgetDS = new Builder.WidgetDataSource();
                 
-                widgetDS.widgetPageSize = pageSize;
-                
                 widgetDS.loadWidgetData(
-                    pageIndex,
                     req && (typeof req.term === "string") ? req.term : self.keyword(),
-                    function (page, widgets, totalPages) {
+                    function (widgets) {
                         self.widgets([]);
                         if (widgets && widgets.length > 0) {
                             for (var i = 0; i < widgets.length; i++) {
                                 if (!widgets[i].WIDGET_DESCRIPTION)
                                     widgets[i].WIDGET_DESCRIPTION = null;
                                 var wgt = ko.mapping.fromJS(widgets[i]);
-                                self.getWidgetScreenshot(wgt);
+                                wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
+//                                self.getWidgetScreenshot(wgt);
                                 self.widgets.push(wgt);
                             }
                         }
-                        totalPages !== self.totalPages() && self.totalPages(totalPages);
                         self.initWidgetDraggable();
                     }
                 );
@@ -332,12 +348,10 @@ define(['knockout',
             };
 
             self.searchWidgetsClicked = function() {
-                self.page(1);
                 self.loadWidgets();
             };
             
             self.autoSearchWidgets = function(req) {
-                self.page(1);
                 self.loadWidgets(req);
             };
 
@@ -360,11 +374,15 @@ define(['knockout',
                 }
             };
 
-            self.widgetMouseOverHandler = function(widget) {
+            self.widgetMouseOverHandler = function(widget,event) {
                 if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
                     return;
-                if (!$('.widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("isOpen")) {
-                   $('.widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("open", $('.widget-item-'+widget.WIDGET_UNIQUE_ID()), 
+                if(!widget.WIDGET_VISUAL())
+                    self.getWidgetScreenshot(widget);
+                var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
+                var popupContent=$(widgetItem).find('.dbd-left-panel-img-pop');
+                if (!popupContent.ojPopup("isOpen")) {
+                   $(popupContent).ojPopup("open", $(widgetItem), 
                    {
                        my : "end center", at : "start-10 center"
                    });
@@ -386,8 +404,8 @@ define(['knockout',
             self.containerMouseOverHandler = function() {
                 if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
                     return;
-                if (!$('.right-container-pop').ojPopup("isOpen")) {
-                   $('.right-container-pop').ojPopup("open", $('.dbd-left-panel-footer-contain'), 
+                if (!$b.findEl('.right-container-pop').ojPopup("isOpen")) {
+                   $b.findEl('.right-container-pop').ojPopup("open", $b.findEl('.dbd-left-panel-footer-contain'), 
                    {
                        my : "end bottom", at : "start-25 bottom"
                    });
@@ -395,8 +413,8 @@ define(['knockout',
             };
 
             self.containerMouseOutHandler = function() {
-                if ($('.right-container-pop').ojPopup("isOpen")) {
-                    $('.right-container-pop').ojPopup("close");
+                if ($b.findEl('.right-container-pop').ojPopup("isOpen")) {
+                    $b.findEl('.right-container-pop').ojPopup("close");
                 }
             };
 

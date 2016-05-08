@@ -1,4 +1,4 @@
-version = "1.6.0" + "-$buildTimestamp"
+version = "1.7.0" + "-$buildTimestamp"
 sourceSets {
 integTest {
         java.srcDir 'src/integTest/java'
@@ -12,9 +12,11 @@ clean{
   delete 'build'
 }
 
-task integTestJar (type:Jar) {
+task integTestJar (type:Jar, dependsOn: [':omc-ui-framework:omc-ui-framework-web:unpackTargetSelectorFromArtifactory']) {
     from sourceSets.integTest.output
-   
+    //Add the Target Selector Test API classes 
+    from fileTree(dir: '../omc-ui-framework/omc-ui-framework-web/build/stage_tsel')   
+  
 }
 
 

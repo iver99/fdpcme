@@ -10,6 +10,7 @@ requirejs.config({
         'jquery': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-2.1.3.min',
         'jqueryui-amd': '../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
+        'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
         'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/min',
         'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/ojL10n',

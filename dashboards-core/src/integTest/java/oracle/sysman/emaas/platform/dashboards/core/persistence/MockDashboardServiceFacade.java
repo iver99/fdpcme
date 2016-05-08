@@ -22,73 +22,15 @@ import mockit.Mock;
 import mockit.MockUp;
 import oracle.sysman.emaas.platform.dashboards.core.util.FacadeUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 
 /**
  * @author wenjzhu
  */
 public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 {
-	static class EmsDashboardFavoriteSelector implements EntitySelector<EmsDashboardFavorite>
-	{
-
-		private final String username;
-		private final Long dashboardId;
-
-		public EmsDashboardFavoriteSelector(String username, Long dashboardId)
-		{
-			this.username = username;
-			this.dashboardId = dashboardId;
-		}
-
-		@Override
-		public boolean selectEntity(EmsDashboardFavorite entity)
-		{
-			if (dashboardId != null) {
-				if (entity.getDashboard() == null || !entity.getDashboard().getDashboardId().equals(dashboardId)) {
-					return false;
-				}
-			}
-			if (username != null) {
-				if (!entity.getUserName().equals(username)) {
-					return false;
-				}
-			}
-			return true;
-		}
-	}
-
-	static class EmsDashboardLastAccessSelector implements EntitySelector<EmsDashboardLastAccess>
-	{
-
-		private final String username;
-		private final Long dashboardId;
-
-		public EmsDashboardLastAccessSelector(String username, Long dashboardId)
-		{
-			this.username = username;
-			this.dashboardId = dashboardId;
-		}
-
-		@Override
-		public boolean selectEntity(EmsDashboardLastAccess entity)
-		{
-			if (dashboardId != null) {
-				if (!entity.getDashboardId().equals(dashboardId)) {
-					return false;
-				}
-			}
-			if (username != null) {
-				if (!entity.getAccessedBy().equals(username)) {
-					return false;
-				}
-			}
-			return true;
-		}
-	}
-
 	static class EmsDashboardSelector implements EntitySelector<EmsDashboard>
 	{
 
@@ -146,6 +88,36 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 		}
 	}
 
+	//
+	//	static class EmsDashboardLastAccessSelector implements EntitySelector<EmsDashboardLastAccess>
+	//	{
+	//
+	//		private final String username;
+	//		private final Long dashboardId;
+	//
+	//		public EmsDashboardLastAccessSelector(String username, Long dashboardId)
+	//		{
+	//			this.username = username;
+	//			this.dashboardId = dashboardId;
+	//		}
+	//
+	//		@Override
+	//		public boolean selectEntity(EmsDashboardLastAccess entity)
+	//		{
+	//			if (dashboardId != null) {
+	//				if (!entity.getDashboardId().equals(dashboardId)) {
+	//					return false;
+	//				}
+	//			}
+	//			if (username != null) {
+	//				if (!entity.getAccessedBy().equals(username)) {
+	//					return false;
+	//				}
+	//			}
+	//			return true;
+	//		}
+	//	}
+
 	static class EmsPreferenceSelector implements EntitySelector<EmsPreference>
 	{
 
@@ -175,6 +147,42 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 			}
 			if (!entity.getUserName().equals(username)) {
 				return false;
+			}
+			return true;
+		}
+	}
+
+	static class EmsUserOptionsSelector implements EntitySelector<EmsUserOptions>
+	{
+
+		private final String username;
+		private final Long dashboardId;
+		private final Integer isFavorite;
+
+		public EmsUserOptionsSelector(String username, Long dashboardId, Integer isFavorite)
+		{
+			this.username = username;
+			this.dashboardId = dashboardId;
+			this.isFavorite = isFavorite;
+		}
+
+		@Override
+		public boolean selectEntity(EmsUserOptions entity)
+		{
+			if (dashboardId != null) {
+				if (entity == null || !dashboardId.equals(entity.getDashboardId())) {
+					return false;
+				}
+			}
+			if (username != null) {
+				if (entity == null || !entity.getUserName().equals(username)) {
+					return false;
+				}
+			}
+			if (isFavorite != null) {
+				if (entity == null || !isFavorite.equals(entity.getIsFavorite())) {
+					return false;
+				}
 			}
 			return true;
 		}
@@ -226,28 +234,10 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	}
 
 	@Mock
-	public EmsDashboardFavorite getEmsDashboardFavoriteByPK(Long dashboardId, String username)
-	{
-		System.out.println("[MockDashboardServiceFacade] getEmsDashboardFavoriteByPK called");
-		List<EmsDashboardFavorite> ps = this.localFind(EmsDashboardFavorite.class, new EmsDashboardFavoriteSelector(username,
-				dashboardId));
-		return ps.isEmpty() ? null : ps.get(0);
-	}
-
-	@Mock
 	public List<EmsDashboard> getEmsDashboardFindAll()
 	{
 		System.out.println("[MockDashboardServiceFacade] getEmsDashboardFindAll called");
 		return this.localFind(EmsDashboard.class, null);
-	}
-
-	@Mock
-	public EmsDashboardLastAccess getEmsDashboardLastAccessByPK(Long dashboardId, String username)
-	{
-		System.out.println("[MockDashboardServiceFacade] getEmsDashboardLastAccessByPK called");
-		List<EmsDashboardLastAccess> ps = this.localFind(EmsDashboardLastAccess.class, new EmsDashboardLastAccessSelector(
-				username, dashboardId));
-		return ps.isEmpty() ? null : ps.get(0);
 	}
 
 	@Mock
@@ -278,6 +268,14 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 		//		}
 		//		return result;
 		return this.localFind(EmsPreference.class, new EmsPreferenceSelector(username));
+	}
+
+	@Mock
+	public EmsUserOptions getEmsUserOptions(String username, Long dashboardId)
+	{
+		System.out.println("[MockDashboardServiceFacade] getEmsUserOptions called");
+		List<EmsUserOptions> ps = localFind(EmsUserOptions.class, new EmsUserOptionsSelector(username, dashboardId, null));
+		return ps.isEmpty() ? null : ps.get(0);
 	}
 
 	@Mock
@@ -340,13 +338,12 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	public List<EmsDashboard> getFavoriteEmsDashboards(String username)
 	{
 		System.out.println("[MockDashboardServiceFacade] getFavoriteEmsDashboards called");
-		List<EmsDashboardFavorite> ps = this.localFind(EmsDashboardFavorite.class, new EmsDashboardFavoriteSelector(username,
-				null));
+		List<EmsUserOptions> ps = localFind(EmsUserOptions.class, new EmsUserOptionsSelector(username, null, 1));
 		ArrayList<EmsDashboard> result = new ArrayList<EmsDashboard>();
-		for (EmsDashboardFavorite p : ps) {
-			if (p.getDashboard() != null && p.getDashboard().getDashboardId() != null) {
-				EmsDashboard d = getEmsDashboardById(p.getDashboard().getDashboardId());
-				if (d != null) {
+		for (EmsUserOptions p : ps) {
+			if (p.getDashboardId() != null) {
+				EmsDashboard d = getEmsDashboardById(p.getDashboardId());
+				if (d != null && d.getDeleted().intValue() <= 0) {
 					result.add(d);
 				}
 			}
@@ -363,22 +360,6 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 			emsDashboard.setLastModificationDate(now);
 		}
 		return this.localMerge(emsDashboard, new EmsDashboardSelector(emsDashboard.getDashboardId(), null, null, null));
-	}
-
-	@Mock
-	public EmsDashboardFavorite mergeEmsDashboardFavorite(EmsDashboardFavorite emsDashboardFavorite)
-	{
-		System.out.println("[MockDashboardServiceFacade] mergeEmsDashboardFavorite called");
-		return this.localMerge(emsDashboardFavorite, new EmsDashboardFavoriteSelector(emsDashboardFavorite.getUserName(),
-				emsDashboardFavorite.getDashboard().getDashboardId()));
-	}
-
-	@Mock
-	public EmsDashboardLastAccess mergeEmsDashboardLastAccess(EmsDashboardLastAccess emsDashboardLastAccess)
-	{
-		System.out.println("[MockDashboardServiceFacade] mergeEmsDashboardLastAccess called");
-		return this.localMerge(emsDashboardLastAccess, new EmsDashboardLastAccessSelector(emsDashboardLastAccess.getAccessedBy(),
-				emsDashboardLastAccess.getDashboardId()));
 	}
 
 	@Mock
@@ -403,6 +384,14 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	}
 
 	@Mock
+	public EmsUserOptions mergeEmsUserOptions(EmsUserOptions emsUserOptions)
+	{
+		System.out.println("[MockDashboardServiceFacade] mergeEmsUserOptions called");
+		return this.localMerge(emsUserOptions,
+				new EmsUserOptionsSelector(emsUserOptions.getUserName(), emsUserOptions.getDashboardId(), null));
+	}
+
+	@Mock
 	public EmsDashboard persistEmsDashboard(EmsDashboard emsDashboard)
 	{
 		System.out.println("[MockDashboardServiceFacade] persistEmsDashboard called");
@@ -411,27 +400,10 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 			Date now = new Date();
 			emsDashboard.setCreationDate(now);
 		}
+		if (emsDashboard.getTenantId() == null) {
+			emsDashboard.setTenantId(currentTenant);
+		}
 		return localPersist(emsDashboard);
-	}
-
-	@Mock
-	public EmsDashboardFavorite persistEmsDashboardFavorite(EmsDashboardFavorite emsDashboardFavorite)
-	{
-		System.out.println("[MockDashboardServiceFacade] mergeEmsDashboardFavorite called");
-		if (emsDashboardFavorite.getCreationDate() == null) {
-			emsDashboardFavorite.setCreationDate(new Date());
-		}
-		return localPersist(emsDashboardFavorite);
-	}
-
-	@Mock
-	public EmsDashboardLastAccess persistEmsDashboardLastAccess(EmsDashboardLastAccess emsDashboardLastAccess)
-	{
-		System.out.println("[MockDashboardServiceFacade] persistEmsDashboardLastAccess called");
-		if (emsDashboardLastAccess.getAccessDate() == null) {
-			emsDashboardLastAccess.setAccessDate(new Date());
-		}
-		return localPersist(emsDashboardLastAccess);
 	}
 
 	@Mock
@@ -439,6 +411,19 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	{
 		System.out.println("[MockDashboardServiceFacade] persistEmsPreference called");
 		return localPersist(emsPreference);
+	}
+
+	@Mock
+	public EmsUserOptions persistEmsUserOptions(EmsUserOptions emsUserOptions)
+	{
+		if (emsUserOptions.getAutoRefreshInterval() == null) {
+			emsUserOptions.setAutoRefreshInterval(0L);
+		}
+		if (emsUserOptions.getIsFavorite() == null) {
+			emsUserOptions.setIsFavorite(0);
+		}
+		System.out.println("[MockDashboardServiceFacade] persistEmsUserOptions called");
+		return localPersist(emsUserOptions);
 	}
 
 	@Mock
@@ -458,29 +443,17 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	}
 
 	@Mock
+	public void removeAllEmsUserOptions(Long dashboardId)
+	{
+		System.out.println("[MockDashboardServiceFacade] removeAllEmsUserOptions called");
+		this.localRemove(EmsUserOptions.class, new EmsUserOptionsSelector(null, dashboardId, null));
+	}
+
+	@Mock
 	public void removeEmsDashboard(EmsDashboard emsDashboard)
 	{
 		System.out.println("[MockDashboardServiceFacade] mergeEmsDashboardFavorite called");
 		this.localRemove(emsDashboard.getClass(), new EmsDashboardSelector(emsDashboard.getDashboardId(), null, null, null));
-	}
-
-	@Mock
-	public void removeEmsDashboardFavorite(EmsDashboardFavorite emsDashboardFavorite)
-	{
-		System.out.println("[MockDashboardServiceFacade] mergeEmsDashboardFavorite called");
-		this.localRemove(emsDashboardFavorite.getClass(), new EmsDashboardFavoriteSelector(emsDashboardFavorite.getUserName(),
-				emsDashboardFavorite.getDashboard().getDashboardId()));
-		//return null;
-	}
-
-	@Mock
-	public void removeEmsDashboardLastAccess(EmsDashboardLastAccess emsDashboardLastAccess)
-	{
-		System.out.println("[MockDashboardServiceFacade] mergeEmsDashboardFavorite called");
-		this.localRemove(
-				emsDashboardLastAccess.getClass(),
-				new EmsDashboardLastAccessSelector(emsDashboardLastAccess.getAccessedBy(), emsDashboardLastAccess
-						.getDashboardId()));
 	}
 
 	@Mock
@@ -502,6 +475,24 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 				new EmsPreferenceSelector(emsPreference.getUserName(), emsPreference.getPrefKey()));
 	}
 
+	@Mock
+	public int removeEmsSubDashboardBySubId(long subDashboardId){
+        return 0;
+    }
+
+	@Mock
+	public int removeEmsSubDashboardBySetId(long dashboardSetId){
+        return 0;
+	}
+
+
+	@Mock
+	public void removeEmsUserOptions(EmsUserOptions emsUserOptions)
+	{
+		this.localRemove(emsUserOptions.getClass(),
+				new EmsUserOptionsSelector(emsUserOptions.getUserName(), emsUserOptions.getDashboardId(), null));
+	}
+
 	@SuppressWarnings("unchecked")
 	private <T> T cloneEntity(T c)
 	{
@@ -510,14 +501,9 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 			return (T) FacadeUtil.cloneEmsPreference((EmsPreference) c);
 		}
 
-		if (EmsDashboardLastAccess.class.equals(c.getClass())) {
-			System.out.println("[MockDashboardServiceFacade] cloneEntity: clone EmsDashboardLastAccess");
-			return (T) FacadeUtil.cloneEmsDashboardLastAccess((EmsDashboardLastAccess) c);
-		}
-
-		if (EmsDashboardFavorite.class.equals(c.getClass())) {
-			System.out.println("[MockDashboardServiceFacade] cloneEntity: clone EmsDashboardFavorite");
-			return (T) FacadeUtil.cloneEmsDashboardFavorite((EmsDashboardFavorite) c);
+		if (EmsUserOptions.class.equals(c.getClass())) {
+			System.out.println("[MockDashboardServiceFacade] cloneEntity: clone EmsUserOptions");
+			return (T) FacadeUtil.cloneEmsUserOptions((EmsUserOptions) c);
 		}
 
 		if (EmsDashboard.class.equals(c.getClass())) {

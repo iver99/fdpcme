@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 define([
+    'ojdnd',
+    'promise',
     'ojs/ojcore',
     'ojs/ojknockout',
     'ojs/ojmenu',
@@ -30,7 +32,10 @@ define([
     'ojs/ojpopup',
     'ojs/ojpopupcore',
     'ojs/ojmessaging',
-    'ojs/ojgauge'
+    'ojs/ojgauge',
+    'ojs/ojdatasource-common',
+    'ojs/ojinputtext',
+    'ojs/ojpagingtabledatasource'
 ], function (oj)
 {
     return {

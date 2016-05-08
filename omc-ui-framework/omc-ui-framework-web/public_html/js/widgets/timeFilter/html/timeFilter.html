@@ -1,0 +1,82 @@
+<style>
+    .tf-wrapper {
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-bottom: 5px;
+        font-size: 14px;
+    }
+    
+    .tf-hint {
+/*        background: #F0F0F0;
+        border: 1px dotted gray;*/
+        font-style: italic;
+        color: black;
+    }
+    
+    .tf-row {
+        padding:5px;
+    }
+    
+    .tf-label {
+        font-weight: bold;
+    }
+</style>
+<div class="tf-wrapper">
+    <div class="oj-row" style="padding-bottom: 10px;">
+        <span class="oj-col oj-sm-12 oj-md-12" style="font-weight: bold; text-align: center;" data-bind="text: timeFilterTitle"></span>
+    </div>
+    <!-- time filter start-->
+    <div class="oj-row tf-row">
+       <span class="oj-col oj-sm-2 oj-md-2 tf-label" style="padding-top: 8px; padding-bottom: 8px;" data-bind="text: timeFilterLabel"></span>
+       <input class="oj-col oj-sm-10 oj-md-10" type="text" data-bind="ojComponent: {component: 'ojInputText', value: timeFilterValue, attr: {'aria-label': timeFilterLabel}">
+    </div>
+
+    <div class="oj-row tf-row tf-hint">
+        <span data-bind="text: hintForTimeFilter"></span>
+    </div>
+    <!-- time filter end -->
+    
+    <!--  day of week filter start -->
+    <div class="oj-row tf-row">
+        <div class="oj-col oj-sm-2 oj-md-2 tf-label" data-bind="text: daysFilterLabel"></div>
+        <div class="oj-col oj-sm-8 oj-md-8">
+            <div class="oj-row" data-bind="ojComponent: {component: 'ojCheckboxset', value: daysOptionAllChecked}">
+               <div style="padding-left: 0px;">
+                    <input type="checkbox" data-bind="attr: {id: 'daysOptionAll_'+randomId}, value: 'all'">
+                    <label data-bind="text: timeFilterOptionAll, attr: {for: 'daysOptionAll_'+randomId}"></label>
+                </div>
+            </div>
+            <div class="oj-row" data-bind="ojComponent: {component: 'ojCheckboxset', value: daysChecked}">
+                <div data-bind="foreach: daysFilterOptions">
+                    <div class="oj-col oj-sm-6 oj-md-6" style="padding-left: 0px;">
+                    <input type="checkbox" data-bind="attr: {id: $data+$parent.randomId}, value: $index() + 1">
+                    <label data-bind="text: $data, attr: {for: $data+$parent.randomId}"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- day of week filter end -->
+   
+    <!-- month of year filter start -->
+    <div class="oj-row tf-row">
+        <div class="oj-col oj-sm-2 oj-md-2 tf-label" data-bind="text: monthsFilterLabel"></div>
+        <div class="oj-col oj-sm-10 oj-md-10">            
+            <div class="oj-row"  data-bind="ojComponent: {component: 'ojCheckboxset', value: monthsOptionAllChecked}">
+                <div style="padding-left: 0px;">
+                    <input type="checkbox" data-bind="attr: {id: 'monthCheckAll_'+randomId}, value: 'all'">
+                    <label data-bind="text: timeFilterOptionAll, attr: {for: 'monthCheckAll_'+randomId}"></label>
+                </div>
+            </div>
+            <div class="oj-row" data-bind="ojComponent: {component: 'ojCheckboxset', value: monthsChecked}">
+                <div data-bind="foreach: monthsFilterOptions">
+                    <div class="oj-col oj-sm-4 oj-md-4" style="padding-left: 0px;">
+                        <input type="checkbox" data-bind="attr: {id: $data+$parent.randomId}, value: ($index()+1)">
+                        <label data-bind="text: $data, attr: {for: $data+$parent.randomId}"></label>
+                    </div>
+                </div>
+           </div>
+        </div>
+    </div>
+    <!--month of yesr filter end -->
+</div>
