@@ -9,6 +9,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -502,11 +503,18 @@ public class DashboardHomeUtil
 			if (dashboardName.equals(dashboard.getAttribute("aria-label"))) {
 				dashboard.findElement(By.cssSelector("button")).click(); // click "i" button
 				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON); // click delete
-                driver.waitForElementPresent(DashBoardPageId.BuilderDeleteDialogLocator);
-                driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM); // confirm to delete
+				driver.waitForElementPresent(DashBoardPageId.BuilderDeleteDialogLocator);
+				driver.getLogger().info("foucus on the delete button");
+				driver.getWebDriver().findElement(By.xpath(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM)).sendKeys(Keys.TAB);
 
-                WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-                wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(DashBoardPageId.BuilderDeleteDialogLocator)));
+				//driver.focus(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM); //focus on the delete button
+				driver.getLogger().info("click on the delete button");
+				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM); // confirm to delete
+
+				driver.getLogger().info("wait for the popup dialog close");
+				WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(DashBoardPageId.BuilderDeleteDialogLocator)));
+
 				break;
 			}
 		}
@@ -535,11 +543,15 @@ public class DashboardHomeUtil
 			if (dashboardName.equals(rowColList.get(nameColIndex).getText())) {
 				rowColList.get(buttonColIndex).findElement(By.tagName("button")).click(); // click "i" button
 				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON); // click delete
-                driver.waitForElementPresent(DashBoardPageId.BuilderDeleteDialogLocator);
-                driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM); // confirm to delete
-                WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-                wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(DashBoardPageId.BuilderDeleteDialogLocator)));
-                break;
+				driver.waitForElementPresent(DashBoardPageId.BuilderDeleteDialogLocator);
+				driver.getLogger().info("foucus on the delete button");
+				driver.getWebDriver().findElement(By.xpath(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM)).sendKeys(Keys.TAB);
+
+				driver.getLogger().info("click on the delete button");
+				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM); // confirm to delete
+				WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(DashBoardPageId.BuilderDeleteDialogLocator)));
+				break;
 			}
 		}
 	}

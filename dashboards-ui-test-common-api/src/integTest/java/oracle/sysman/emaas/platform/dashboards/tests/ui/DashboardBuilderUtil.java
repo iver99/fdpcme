@@ -9,6 +9,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -111,6 +112,7 @@ public class DashboardBuilderUtil
 
 	public static void duplicateDashboard(WebDriver driver, String name, String descriptions) throws Exception
 	{
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		Validator.notNull("duplicatename", name);
 		Validator.notEmptyString("duplicatename", name);
 		Validator.notEmptyString("duplicatedescription", descriptions);
@@ -124,12 +126,12 @@ public class DashboardBuilderUtil
 		driver.click("css=" + DashBoardPageId.BuilderOptionsDuplicateLocatorCSS);
 		driver.takeScreenShot();
 		driver.waitForElementPresent("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS);
-
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("ojDialogWrapper-duplicateDsbDialog")));
 		//add name and description
 		driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS).clear();
 		driver.click("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS);
 		By locatorOfDuplicateNameEl = By.id(DashBoardPageId.BuilderOptionsDuplicateNameCSS);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateNameEl));
 		driver.sendKeys("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS, name);
 		driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS).clear();
@@ -146,14 +148,19 @@ public class DashboardBuilderUtil
 		//press ok button
 		By locatorOfDuplicateSaveEl = By.id(DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateSaveEl));
+		wait.until(ExpectedConditions.elementToBeClickable(locatorOfDuplicateSaveEl));
 
-		WebElement saveButton = driver.getElement("id="+DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
+		WebElement saveButton = driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
 		Actions actions = new Actions(driver.getWebDriver());
 		actions.moveToElement(saveButton).build().perform();
+		driver.getWebDriver().findElement(locatorOfDuplicateSaveEl).sendKeys(Keys.TAB);
+
 		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.duplicate save button has been focused");
 
-		driver.click("id="+DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
+		((JavascriptExecutor) driver.getWebDriver()).executeScript("document.getElementById(" + locatorOfDuplicateNameEl
+				+ ").focus();");
+		driver.click("id=" + DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
 		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.duplicate completed");
 	}
@@ -409,7 +416,7 @@ public class DashboardBuilderUtil
 	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.showWidgetTitle started for widgetName=" + widgetName + ", index=" + index
-				+ ", visibility=" + visibility);
+						+ ", visibility=" + visibility);
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
 		DashboardBuilderUtil.clickTileConfigButton(driver, widgetName, index);
@@ -494,7 +501,7 @@ public class DashboardBuilderUtil
 	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.verifyDashboard started for name=\"" + dashboardName + "\", description=\"" + description
-				+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
+						+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
 
 		driver.waitForElementPresent(DashBoardPageId.BuilderNameTextLocator);
