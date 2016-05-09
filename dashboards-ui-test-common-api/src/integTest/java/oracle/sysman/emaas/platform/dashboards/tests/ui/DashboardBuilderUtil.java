@@ -147,13 +147,13 @@ public class DashboardBuilderUtil
 		By locatorOfDuplicateSaveEl = By.id(DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateSaveEl));
 
-		WebElement saveButton = driver.getElement("id="+DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
+		WebElement saveButton = driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
 		Actions actions = new Actions(driver.getWebDriver());
 		actions.moveToElement(saveButton).build().perform();
 		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.duplicate save button has been focused");
 
-		driver.click("id="+DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
+		driver.click("id=" + DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
 		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.duplicate completed");
 	}
@@ -201,11 +201,6 @@ public class DashboardBuilderUtil
 
 	}
 
-	//	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
-	//	{
-	//		driver = webDriver;
-	//	}
-
 	public static Boolean favoriteOption(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("DashboardBuilderUtil.favoriteOption started");
@@ -228,6 +223,11 @@ public class DashboardBuilderUtil
 			driver.getLogger().info("DashboardBuilderUtil remove favorite completed");
 			return false;
 		}
+	}
+
+	public static void gridView(WebDriver driver) throws Exception
+	{
+		DashboardHomeUtil.gridView(driver);
 	}
 
 	public static boolean isRefreshSettingChecked(WebDriver driver, String refreshSettings) throws Exception
@@ -258,10 +258,20 @@ public class DashboardBuilderUtil
 		}
 	}
 
+	public static void listView(WebDriver driver) throws Exception
+	{
+		DashboardHomeUtil.listView(driver);
+	}
+
 	public static void openWidget(WebDriver driver, String widgetName) throws Exception
 	{
 		DashboardBuilderUtil.openWidget(driver, widgetName, 0);
 	}
+
+	//	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
+	//	{
+	//		driver = webDriver;
+	//	}
 
 	public static void openWidget(WebDriver driver, String widgetName, int index) throws Exception
 	{
@@ -400,6 +410,16 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil.save compelted");
 	}
 
+	public static void search(WebDriver driver, String searchString) throws Exception
+	{
+		DashboardHomeUtil.search(driver, searchString);
+	}
+
+	public static void selectDashboard(WebDriver driver, String dashboardName) throws Exception
+	{
+		DashboardHomeUtil.selectDashboard(driver, dashboardName);
+	}
+
 	public static void showWidgetTitle(WebDriver driver, String widgetName, boolean visibility) throws Exception
 	{
 		DashboardBuilderUtil.showWidgetTitle(driver, widgetName, 0, visibility);
@@ -433,6 +453,20 @@ public class DashboardBuilderUtil
 			driver.takeScreenShot();
 		}
 		driver.getLogger().info("DashboardBuilderUtil.showWidgetTitle completed");
+	}
+
+	/**
+	 * sort dashboards
+	 *
+	 * @param driver
+	 * @param option
+	 *            sort by - default, access_date_asc, access_date_dsc, name_asc, name_dsc, creation_date_asc, creation_date_dsc,
+	 *            last_modification_date_asc, last_modification_date_dsc, owner_asc, owner_dsc
+	 * @throws Exception
+	 */
+	public static void sortBy(WebDriver driver, String option) throws Exception
+	{
+		DashboardHomeUtil.sortBy(driver, option);
 	}
 
 	public static Boolean toggleHome(WebDriver driver) throws Exception
