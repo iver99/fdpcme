@@ -410,8 +410,6 @@ define(['knockout',
                 if(val){
                     if(!self.dashboardsetToolBarModel.isDashboardSet()){
                         self.dbfiltersIsExpanded(true);
-                    }else{
-                        self.dbfiltersIsExpanded(false);
                     }
                     self.sharesettingsIsExpanded(false);
                     self.dbeditorIsExpanded(false);
@@ -420,7 +418,6 @@ define(['knockout',
             self.sharesettingsIsExpanded.subscribe(function(val){
                 if(val){
                     self.dbfiltersIsExpanded(false);
-                    self.sharesettingsIsExpanded(true);
                     self.dbeditorIsExpanded(false);
                 }
             });
@@ -428,7 +425,6 @@ define(['knockout',
                 if(val){
                     self.dbfiltersIsExpanded(false);
                     self.sharesettingsIsExpanded(false);
-                    self.dbeditorIsExpanded(true);
                 }else{
                     toolBarModel.onNameOrDescriptionEditing = false;
                 }
@@ -535,15 +531,17 @@ define(['knockout',
             self.switchEditPanelContent = function(data,event){    
                 if($(event.currentTarget).hasClass('edit-dsb-link')){
                     self.editPanelContent("edit");
-                    self.dbeditorIsExpanded(true);
+                        self.dbeditorIsExpanded(true);
                 }else if($(event.currentTarget).hasClass('edit-dsbset-link')){
                     self.editPanelContent("editset");
                     self.dbeditorIsExpanded(true);
                 }else{
-                    self.editPanelContent("settings");
-                    self.dbfiltersIsExpanded(false);
                     self.sharesettingsIsExpanded(false);
+                    self.dbfiltersIsExpanded(false);
                     self.dbeditorIsExpanded(false);
+                    self.editPanelContent("settings");
+                    $(".dbd-right-panel-editdashboard-share>div").css("display","none");
+                    $(".dbd-right-panel-editdashboard-filters>div").css("display","none");
                 }
             };
         }
