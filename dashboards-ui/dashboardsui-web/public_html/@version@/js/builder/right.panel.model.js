@@ -408,7 +408,11 @@ define(['knockout',
 
             self.dbfiltersIsExpanded.subscribe(function(val){
                 if(val){
-                    self.dbfiltersIsExpanded(true);
+                    if(!self.dashboardsetToolBarModel.isDashboardSet()){
+                        self.dbfiltersIsExpanded(true);
+                    }else{
+                        self.dbfiltersIsExpanded(false);
+                    }
                     self.sharesettingsIsExpanded(false);
                     self.dbeditorIsExpanded(false);
                 }
@@ -523,6 +527,25 @@ define(['knockout',
             };  
         }
 
+            self.editPanelContent = ko.observable(function(){
+                var content = "settings";
+                return content;
+            }());
+            
+            self.switchEditPanelContent = function(data,event){    
+                if($(event.currentTarget).hasClass('edit-dsb-link')){
+                    self.editPanelContent("edit");
+                    self.dbeditorIsExpanded(true);
+                }else if($(event.currentTarget).hasClass('edit-dsbset-link')){
+                    self.editPanelContent("editset");
+                    self.dbeditorIsExpanded(true);
+                }else{
+                    self.editPanelContent("settings");
+                    self.dbfiltersIsExpanded(false);
+                    self.sharesettingsIsExpanded(false);
+                    self.dbeditorIsExpanded(false);
+                }
+            };
         }
         
         Builder.registerModule(RightPanelModel, 'RightPanelModel');

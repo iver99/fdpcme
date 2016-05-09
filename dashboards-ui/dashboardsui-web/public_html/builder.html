@@ -698,9 +698,9 @@
                                         style: {right: $root.scrollbarWidth + 'px'}">
                     <div class="dbd-right-panel-contents">
                     <!--ko if: $data.dashboardsetToolBarModel.isDashboardSet-->
-                        <div class="dbd-right-panel-editdashboardset" data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.tilesViewModel.editPanelContent()=='editset'">
+                        <div class="dbd-right-panel-editdashboardset" data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.editPanelContent()=='editset'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">
-                                <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: tilesViewModel.switchEditPanelContent"style="color:#0572ce"></a>
+                                <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: switchEditPanelContent"style="color:#0572ce"></a>
                                 <span>Edit Dashboard Set</span>
                             </div>
                             <div class="dbd-right-panel-editdashboard-container" style="padding-left:0; padding-right:0;">
@@ -795,9 +795,9 @@
                             </div>
                         </div>
                         <!-- /ko -->
-                        <div class="dbd-right-panel-editdashboard" data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.tilesViewModel.editPanelContent()=='edit'">
+                        <div class="dbd-right-panel-editdashboard" data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.editPanelContent()=='edit'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">
-                                <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: tilesViewModel.switchEditPanelContent"style="color:#0572ce"></a>
+                                <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: switchEditPanelContent"style="color:#0572ce"></a>
                                 <span>Edit Dashboard</span>
                             </div>
                             <div class="dbd-right-panel-editdashboard-container" style="padding-left:0; padding-right:0;">
@@ -1019,15 +1019,15 @@
                                 </div>
                             </div>
                         </div>
-						<div id="dbd-right-panel-editsettings"  class="dbd-right-panel-editsettings"  data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.tilesViewModel.editPanelContent()=='settings'">
+						<div id="dbd-right-panel-editsettings"  class="dbd-right-panel-editsettings"  data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.editPanelContent()=='settings'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Edit Settings</div>
                              <div id="dbd-edit-settings-container" class="dbd-edit-settings-container">
                                 <!--ko if: $data.dashboardsetToolBarModel.isDashboardSet-->
                                 <span class="edit-setting-head">Dashboard Set</span>
-                                <span class="edit-setting-link edit-dsbset-link" data-bind="text:$data.dashboardsetToolBarModel.dashboardsetName(), click: tilesViewModel.switchEditPanelContent"></span>
+                                <span class="edit-setting-link edit-dsbset-link" data-bind="text:$data.dashboardsetToolBarModel.dashboardsetName(), click: switchEditPanelContent"></span>
                                     <!--ko if: $data.dashboardsetToolBarModel.dashboardsetItems.length>0-->
                                 <span class="edit-setting-head" >Selected Dashboard</span>
-                                <span class="edit-setting-link edit-dsb-link" data-bind="text:$data.dashboardsetToolBarModel.selectedDashboardItem().name, click: tilesViewModel.switchEditPanelContent"></span>
+                                <span class="edit-setting-link edit-dsb-link" data-bind="text:$data.dashboardsetToolBarModel.selectedDashboardItem().name, click: switchEditPanelContent"></span>
                                     <!--/ko-->
                                 <!--ko if: $data.tilesViewModel.dashboard.tiles().length>0-->
                                 <span class="edit-setting-head">Widgets</span>
@@ -1038,7 +1038,7 @@
                                <!--/ko-->
                                <!--ko ifnot: $data.dashboardsetToolBarModel.isDashboardSet-->
                                 <span class="edit-setting-head">Dashboard</span>
-                                <span class="edit-setting-link edit-dsb-link" data-bind="text: dashboard.name, click: tilesViewModel.switchEditPanelContent"></span>
+                                <span class="edit-setting-link edit-dsb-link" data-bind="text: dashboard.name, click: switchEditPanelContent"></span>
                                 <!--ko if: $data.tilesViewModel.dashboard.tiles().length>0-->
                                 <span class="edit-setting-head">Widgets</span>
                                     <!--ko foreach: tilesViewModel.dashboard.tiles -->

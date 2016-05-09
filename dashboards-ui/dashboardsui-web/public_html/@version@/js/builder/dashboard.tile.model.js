@@ -110,20 +110,6 @@ define(['knockout',
                 return icon;  
             }());  
             
-            self.editPanelContent = ko.observable(function(){
-                var content = "settings";
-                return content;
-            }());
-            
-            self.switchEditPanelContent = function(data,event){    
-                if($(event.currentTarget).hasClass('edit-dsb-link')){
-                    self.editPanelContent("edit");
-                }else if($(event.currentTarget).hasClass('edit-dsbset-link')){
-                    self.editPanelContent("editset");
-                }else{
-                    self.editPanelContent("settings");
-                }
-            };
             self.toggleRightPanel = function(data,event) {
                     var clickedIcon;
                     if ($(event.currentTarget).hasClass('rightpanel-pencil')) {
