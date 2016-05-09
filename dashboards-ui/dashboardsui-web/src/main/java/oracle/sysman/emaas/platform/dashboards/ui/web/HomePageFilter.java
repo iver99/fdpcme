@@ -92,17 +92,12 @@ public class HomePageFilter implements Filter
 							String value = preference.substring(flag + 8, preference.length() - 2);
 							logger.info("The ID of the dashboard which has been set as Home is: \"{}\"", value);
 							if (!value.equals("")) {
-								StringBuffer homeUrl = httpReq.getRequestURL();
-								logger.info("The http request URL is: \"{}\"", homeUrl.toString());
-								int position = homeUrl.indexOf("/emcpdfui");
-								String url = homeUrl.substring(0, position + 10);
-								logger.info("Get the first part of the URL as: \"{}\"", url);
-								String redirectUrl = url + "builder.html?dashboardId=" + value;
+								String redirectUrl = "./builder.html?dashboardId=" + value;
 								if (!isHomeDashboardExists(domainName, authorization, userTenant, value)) {
 									logger.info("The dashboard which has been set as Home is not existed. Id: \"{}\"", value);
-									redirectUrl = url + "error.html?msg=DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG";
 									logger.info("Removing the dashboard as Home from the user preferences...");
 									removeDashboardAsHomePreference(domainName, authorization, userTenant);
+									redirectUrl = "./error.html?msg=DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG";
 									logger.info("Redirecting to the error page. URL: \"{}\"", redirectUrl);
 								}
 								else {
@@ -115,9 +110,7 @@ public class HomePageFilter implements Filter
 							}
 						}
 					}
-
 				}
-
 			}
 		}
 		chain.doFilter(request, response);
