@@ -640,13 +640,21 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         
         self.listNameRender = function (context) 
         {
-            var _link = $(document.createElement('a'))
+            var _link = $(document.createElement('a')).addClass( "dbs-dsbnameele" )
                     .on('click', function(event) {
                         //prevent event bubble
                         event.stopPropagation();
                         self.handleDashboardClicked(event, {'id': context.row.id, 'element': _link,'name':context.row.name});
                     });
             _link.text(context.row.name);
+            if (context.row.systemDashboard === true)
+            {
+                _link.addClass( "dbs-dsbsystem" );
+            }
+            else
+            {
+                _link.addClass( "dbs-dsbnormal" );
+            }
             $(context.cellContext.parentElement).append(_link);
         };
         
