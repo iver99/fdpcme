@@ -255,7 +255,8 @@ public class CommonUIUtils
 					}
 					else {
 						CommonUIUtils.commonUITestLog("The TARGETMODEL_SERVICE_SHARD_ENDPOINT property is '" + sRolesUrl + "'.");
-						sPropertyValue = "http://" + sRolesUrl + ":7004/targetmodel";
+
+						sPropertyValue = "http://"+sRolesUrl + ":7004/tm-mgmt";
 					}
 				}
 			}
