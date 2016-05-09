@@ -493,7 +493,7 @@ define(['knockout',
                     $(".enableShareAutoRefresh").css("color","#9e9e9e");
                 }
             });
-            
+            if(self.dashboardsetToolBarModel.isDashboardSet()){
             self.dashboardsetName = ko.observable(self.dashboardsetToolBarModel.dashboardsetName());
             self.dashboardsetDescription = ko.observable(self.dashboardsetToolBarModel.dashboardsetDescription());
             self.dashboardsetNameInputed = ko.observable(self.dashboardsetName());
@@ -521,6 +521,7 @@ define(['knockout',
             self.deleteDashboardSetClicked = function(){
                 $('#deleteDashboardset').ojDialog("open");
             };  
+        }
 
         }
         
