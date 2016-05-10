@@ -1,14 +1,13 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui;
 
+import java.util.List;
+
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
-import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
-import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -24,8 +23,8 @@ public class TestHomePage extends LoginAndLogout
 		webd.getLogger().info("start to create a dashboard for test");
 
 		//create a dashboard
-		DashboardHomeUtil.createDashboard(webd, "ADashboard Test", "", true);
-		DashboardBuilderUtil.verifyDashboard(webd, "ADashboard Test", "", true);
+		DashboardHomeUtil.createDashboard(webd, "ADashboard Test", "", false);
+		DashboardBuilderUtil.verifyDashboard(webd, "ADashboard Test", "", false);
 	}
 
 	public void initTest(String testName) throws Exception
@@ -103,12 +102,12 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExisted(webd, "ADashboard Test");
-		webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
-		String firstDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(0)
-				.getAttribute("aria-label");
-		webd.getLogger().info("The first dashboard sorted by 'Created By Ascending' is " + firstDbName);
-		Assert.assertEquals(firstDbName, "ADashboard Test");
+		//DashboardHomeUtil.listView(webd);
+		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
+
+		//webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
+		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(0), "ADashboard Test");
 	}
 
 	@Test
@@ -123,13 +122,13 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExisted(webd, "ADashboard Test");
-		webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
-		int DashboardCount = Integer.parseInt(webd.getAttribute(PageId.DashboardDisplayPanelID + "@childElementCount"));
-		String lastDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(DashboardCount - 1)
-				.getAttribute("aria-label");
-		webd.getLogger().info("The last dashboard sorted by 'Created By Decending' is " + lastDbName);
-		Assert.assertEquals(lastDbName, "ADashboard Test");
+		//DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
+
+		//webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
+		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(names.size() - 1), "ADashboard Test");
+		webd.getLogger().info("The last dashboard sorted by 'Created By Decending' is " + names.get(names.size() - 1));
 	}
 
 	@Test
@@ -144,13 +143,13 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExisted(webd, "Enterprise Overview");
-		webd.waitForElementPresent(PageId.EnterpriseOverviewByAriaLabel);
-		String firstDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(0)
-				.getAttribute("aria-label");
-		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + firstDbName);
-		Assert.assertEquals(firstDbName, "Enterprise Overview");
+		//DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.waitForDashboardPresent(webd, "Enterprise Overview");
 
+		//webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
+		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(0), "Enterprise Overview");
+		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(0));
 	}
 
 	@Test
@@ -165,13 +164,13 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExisted(webd, "Enterprise Overview");
-		webd.waitForElementPresent(PageId.EnterpriseOverviewByAriaLabel);
-		int DashboardCount = Integer.parseInt(webd.getAttribute(PageId.DashboardDisplayPanelID + "@childElementCount"));
-		String lastDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(DashboardCount - 1)
-				.getAttribute("aria-label");
-		webd.getLogger().info("The last dashboard sorted by 'Creation Date Decending' is " + lastDbName);
-		Assert.assertEquals(lastDbName, "Enterprise Overview");
+		//DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.waitForDashboardPresent(webd, "Enterprise Overview");
+
+		//webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
+		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(names.size() - 1), "Enterprise Overview");
+		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(names.size() - 1));
 
 	}
 
@@ -193,20 +192,21 @@ public class TestHomePage extends LoginAndLogout
 		webd.getLogger().info("back to the dashboard home page");
 		BrandingBarUtil.visitDashboardHome(webd);
 
+		DashboardHomeUtil.closeOverviewPage(webd);
+
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by last accessed by Ascending");
 		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC);
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExisted(webd, "ADashboard Test");
-		webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
-		int DashboardCount = Integer.parseInt(webd.getAttribute(PageId.DashboardDisplayPanelID + "@childElementCount"));
-		String lastDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(DashboardCount - 1)
-				.getAttribute("aria-label");
-		webd.getLogger().info("The last dashboard sorted by 'Last Access Ascending' is " + lastDbName);
-		Assert.assertEquals(lastDbName, "ADashboard Test");
+		//DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
 
+		//webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
+		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(names.size() - 1), "ADashboard Test");
+		webd.getLogger().info("The last dashboard sorted by 'Last Access Ascending' is " + names.get(names.size() - 1));
 	}
 
 	@Test
@@ -227,18 +227,21 @@ public class TestHomePage extends LoginAndLogout
 		webd.getLogger().info("back to the dashboard home page");
 		BrandingBarUtil.visitDashboardHome(webd);
 
+		DashboardHomeUtil.closeOverviewPage(webd);
+
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by last accessed by Decending");
 		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC);
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExisted(webd, "ADashboard Test");
-		webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
-		String firstDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(0)
-				.getAttribute("aria-label");
-		webd.getLogger().info("The first dashboard sorted by 'Last Access Decending' is " + firstDbName);
-		Assert.assertEquals(firstDbName, "ADashboard Test");
+		//DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
+
+		//webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
+		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(0), "ADashboard Test");
+		webd.getLogger().info("The first dashboard sorted by 'Last Access Decending' is " + names.get(0));
 	}
 
 	@Test
@@ -263,20 +266,21 @@ public class TestHomePage extends LoginAndLogout
 		webd.getLogger().info("back to the dashboard home page");
 		BrandingBarUtil.visitDashboardHome(webd);
 
+		DashboardHomeUtil.closeOverviewPage(webd);
+
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by last accessed by Ascending");
 		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_ASC);
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExisted(webd, "ADashboard Test");
-		webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
-		int DashboardCount = Integer.parseInt(webd.getAttribute(PageId.DashboardDisplayPanelID + "@childElementCount"));
-		String lastDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(DashboardCount - 1)
-				.getAttribute("aria-label");
-		webd.getLogger().info("The last dashboard sorted by 'Last Modified Ascending' is " + lastDbName);
-		Assert.assertEquals(lastDbName, "ADashboard Test");
+		//DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
 
+		//webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
+		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(names.size() - 1), "ADashboard Test");
+		webd.getLogger().info("The last dashboard sorted by 'Last Modified Ascending' is " + names.get(names.size() - 1));
 	}
 
 	@Test
@@ -301,18 +305,21 @@ public class TestHomePage extends LoginAndLogout
 		webd.getLogger().info("back to the dashboard home page");
 		BrandingBarUtil.visitDashboardHome(webd);
 
+		DashboardHomeUtil.closeOverviewPage(webd);
+
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by last accessed by Ascending");
 		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_DSC);
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExisted(webd, "ADashboard Test");
-		webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
-		String firstDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(0)
-				.getAttribute("aria-label");
-		webd.getLogger().info("The first dashboard sorted by 'Last Modified Decending' is " + firstDbName);
-		Assert.assertEquals(firstDbName, "ADashboard Test");
+		//DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
+
+		//webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
+		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(0), "ADashboard Test");
+		webd.getLogger().info("The first dashboard sorted by 'Last Modified Decending' is " + names.get(0));
 
 	}
 
@@ -328,12 +335,13 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExisted(webd, "ADashboard Test");
-		webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
-		String firstDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(0)
-				.getAttribute("aria-label");
-		webd.getLogger().info("The first dashboard sorted by 'Name Ascending' is " + firstDbName);
-		Assert.assertEquals(firstDbName, "ADashboard Test");
+		//DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
+
+		//webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
+		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(0), "ADashboard Test");
+		webd.getLogger().info("The first dashboard sorted by 'Name Ascending' is " + names.get(0));
 	}
 
 	@Test
@@ -348,13 +356,13 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.isDashboardExisted(webd, "ADashboard Test");
-		webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
-		int DashboardCount = Integer.parseInt(webd.getAttribute(PageId.DashboardDisplayPanelID + "@childElementCount"));
-		String lastDbName = webd.getWebDriver().findElements(By.cssSelector(PageId.DashboardCss)).get(DashboardCount - 1)
-				.getAttribute("aria-label");
-		webd.getLogger().info("The last dashboard sorted by 'Name Decending' is " + lastDbName);
-		Assert.assertEquals(lastDbName, "ADashboard Test");
+		//DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
+
+		//webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
+		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(names.size() - 1), "ADashboard Test");
+		webd.getLogger().info("The last dashboard sorted by 'Name Decending' is " + names.get(names.size() - 1));
 	}
 
 	@Test
@@ -382,7 +390,7 @@ public class TestHomePage extends LoginAndLogout
 		DashBoardUtils.LA_OOB_GridView();
 
 		//sort func
-		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC);
+		//DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC);
 	}
 
 	@Test
