@@ -7,22 +7,21 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorUIControls;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class TimeSelectorUtil
 {
 	public enum TimeRange
 	{
-		Last15Mins("Last 15 mins"), Last30Mins("Last 30 mins"), Last60Mins("Last 60 mins"), Last4Hours(
-				"Last 4 hours"), Last6Hours("Last 6 hours"), Last1Day("Last 1 day"), Last7Days("Last 7 days"), Last30Days(
-						"Last 30 days"), Last90Days("Last 90 days"), Latest("Latest"), Custom("Custom");
-
+		Last15Mins("Last 15 mins"), Last30Mins("Last 30 mins"), Last60Mins("Last hour"), Last4Hours("Last 4 hours"), Last6Hours(
+				"Last 6 hours"), Last1Day("Last day"), Last7Days("Last week"), Last14Days("Last 14 days"), Last30Days(
+						"Last 30 days"), Last90Days("Last 90 days"), Last1Year("Last year"), Latest("Latest"), Custom("Custom");
 		private final String timerange;
 
 		private TimeRange(String timerange)
@@ -157,6 +156,11 @@ public class TimeSelectorUtil
 				webd.click("css=" + TimeSelectorUIControls.sTimeRange_7Days);
 				webd.takeScreenShot();
 				break;
+			case Last14Days:
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_14Days);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_14Days);
+				webd.takeScreenShot();
+				break;
 			case Last30Days:
 				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_30Days);
 				webd.click("css=" + TimeSelectorUIControls.sTimeRange_30Days);
@@ -165,6 +169,11 @@ public class TimeSelectorUtil
 			case Last90Days:
 				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_90Days);
 				webd.click("css=" + TimeSelectorUIControls.sTimeRange_90Days);
+				webd.takeScreenShot();
+				break;
+			case Last1Year:
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_1Year);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_1Year);
 				webd.takeScreenShot();
 				break;
 			case Latest:
@@ -200,7 +209,7 @@ public class TimeSelectorUtil
 		else {
 			webd.click("css=" + TimeSelectorUIControls.sApplyBtn);
 			WaitUtil.waitForPageFullyLoaded(webd);
-                        webd.takeScreenShot();
+			webd.takeScreenShot();
 		}
 	}
 
@@ -278,8 +287,8 @@ public class TimeSelectorUtil
 
 		}
 		else if (StartDate.startsWith("Yesterday")) {
-			StartDate = StartDate.replace("Yesterday",
-					actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/" + yesterday.get(Calendar.YEAR));
+			StartDate = StartDate.replace("Yesterday", actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/"
+					+ yesterday.get(Calendar.YEAR));
 			returnStartDate = TimeSelectorUtil.timeFormatChange(driver, StartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 		}
 		else {
@@ -293,8 +302,8 @@ public class TimeSelectorUtil
 
 		}
 		else if (EndDate.startsWith("Yesterday")) {
-			EndDate = EndDate.replace("Yesterday",
-					actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/" + yesterday.get(Calendar.YEAR));
+			EndDate = EndDate.replace("Yesterday", actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/"
+					+ yesterday.get(Calendar.YEAR));
 			returnEndDate = TimeSelectorUtil.timeFormatChange(driver, EndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 		}
 		else if (Character.isDigit(EndDate.charAt(0))) {
