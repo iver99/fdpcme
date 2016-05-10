@@ -148,16 +148,22 @@ public class DashboardBuilderUtil
 		//press ok button
 		By locatorOfDuplicateSaveEl = By.id(DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateSaveEl));
+		wait.until(ExpectedConditions.elementToBeClickable(locatorOfDuplicateSaveEl));
+
+		By locatorOfDuplicateDesEl = By.id(DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS);
+		driver.getWebDriver().findElement(locatorOfDuplicateDesEl).sendKeys(Keys.TAB);
 
 		WebElement saveButton = driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
 		Actions actions = new Actions(driver.getWebDriver());
 		actions.moveToElement(saveButton).build().perform();
+
 		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.duplicate save button has been focused");
 
 		driver.click("id=" + DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
 		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.duplicate completed");
+
 	}
 
 	public static void editDashboard(WebDriver driver, String name, String descriptions) throws Exception
