@@ -16,6 +16,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class DashboardHomeUtil
 {
+	public static final String DASHBOARD = "dashboard";
+	public static final String DASHBOARDSET = "dashboardSet";
 	public static final String EXPLOREDATA_MENU_ANALYZE = "Analyze";
 	public static final String EXPLOREDATA_MENU_LOG = "Log Visual Analyzer";
 	public static final String EXPLOREDATA_MENU_SEARCH = "Search";
@@ -41,18 +43,18 @@ public class DashboardHomeUtil
 	}
 
 	/**
-	 * Create one Dashboard
+	 * Create one Dashboard or Dashbaord Set
 	 *
 	 * @param driver
 	 * @param name
 	 *            dashboard name
 	 * @param descriptions
 	 *            dashboard description(optional)
-	 * @param showTimeRangeFilter
-	 *            optional
+	 * @param type
+	 *            dashboard | dashboardSet
 	 * @throws Exception
 	 */
-	public static void createDashboard(WebDriver driver, String name, String descriptions, Boolean showTimeRangeFilter)
+	public static void createDashboard(WebDriver driver, String name, String descriptions, String type)
 			throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call createDashboard : " + name);
@@ -64,13 +66,11 @@ public class DashboardHomeUtil
 		if (descriptions != null && !descriptions.isEmpty()) {
 			driver.sendKeys(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardDescBoxID), descriptions);
 		}
-		if (showTimeRangeFilter == null || showTimeRangeFilter) {
-			driver.check(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardTimeRangeChecker));
+		if (DashboardHomeUtil.DASHBOARD.equalsIgnoreCase(type)) {
+			driver.check(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardType_Single));
+		} else if (DashboardHomeUtil.DASHBOARDSET.equalsIgnoreCase(type)) {
+			driver.check(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardType_Set));
 		}
-		else {
-			driver.uncheck(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardTimeRangeChecker));
-		}
-
 		driver.takeScreenShot();
 		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.DashOKButtonID));
 	}
@@ -176,8 +176,8 @@ public class DashboardHomeUtil
 
 		Validator.notEmptyString("option", option);
 
-		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataBtnID));
-		WebElement menu = driver.getElement(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataMenu));
+		driver.click(DashboardHomeUtil.convertName(DashBoardPageId.ExploreDataBtnID));
+		WebElement menu = driver.getElement(DashboardHomeUtil.convertName(DashBoardPageId.ExploreDataMenu));
 		List<WebElement> menuList = menu.findElements(By.tagName("li"));
 		for (WebElement menuItem : menuList) {
 			if (option.equals(menuItem.getText())) {
@@ -516,6 +516,10 @@ public class DashboardHomeUtil
 	private static String convertID(String id)
 	{
 		return "id=" + id;
+	}
+	
+	private static String convertName(String name) {
+		return "name=" + name;
 	}
 
 	private static void deleteDashboardInGrid(WebDriver driver, String dashboardName)

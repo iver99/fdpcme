@@ -33,7 +33,7 @@ public class TimeSelectorUIControls
 	public static final String sCancelBtn = "button[id^='cancelButton']";
 
 	public static final String sDateTimePick = "[id^='dateTimePicker_']";
-	public static final String sTimeRangeBtn = ".dropdown[id^='dropDown']";//"[id^='dateTimePicker_'] .oj-select-choice .oj-select-arrow";
+	public static final String sTimeRangeBtn = ".oj-select-choice[id^='dropDown']";//".dropdown[id^='dropDown']";"[id^='dateTimePicker_'] .oj-select-choice .oj-select-arrow";
 	public static final String sDisplayDateTime = "[id^='dateTimePicker_'] .oj-select-choice .oj-select-chosen";
 	//	public static final String sFilterInfoIndicator = "[id^='tfInfoIndicator_'].time-filter-indicator";
 	//	public static final String sFilterInfo = "div[id^='tfInfo_'] [data-bind='html: timeFilterInfo']";
@@ -45,9 +45,10 @@ public class TimeSelectorUIControls
 	public static final String sTimeRange_6Hour = "a[data-bind*='timePeriodLast6hours']";
 	public static final String sTimeRange_1Day = "a[data-bind*='timePeriodLast1day']";
 	public static final String sTimeRange_7Days = "a[data-bind*='timePeriodLast7days']";
+	public static final String sTimeRange_14Days = "a[data-bind*='timePeriodLast14days']";
 	public static final String sTimeRange_30Days = "a[data-bind*='timePeriodLast30days']";
 	public static final String sTimeRange_90Days = "a[data-bind*='timePeriodLast90days']";
-	//	public static final String sTimeRange_1Year = "a[data-bind*='timePeriodLast1year']";
+	public static final String sTimeRange_1Year = "a[data-bind*='timePeriodLast1year']";
 	public static final String sTimeRange_Custom = "a[data-bind*='timePeriodCustom']";
 	public static final String sTimeRange_Latest = "a[data-bind*='timePeriodLatest']";
 	//	public static final String sTimeFilterIcon = "img[alt='Time Filter']";
