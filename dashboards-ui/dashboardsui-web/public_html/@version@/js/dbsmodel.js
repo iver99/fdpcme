@@ -159,7 +159,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         
     }
     
-    function ViewModel(predata, parentElementId, defaultFilters) {
+    function ViewModel(predata, parentElementId, defaultFilters,dashboardSetItem) {
         
         var self = this, showWelcome = predata.getShowWelcomePref();
         
@@ -184,6 +184,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         //dashboards
         self.userName = dfu.getUserName();
         self.isMobileDevice = ko.observable( (new mbu()).isMobile );
+        self.currentDashboardSetItem=dashboardSetItem;
+        self.dashboardInTabs=ko.observable(false);
 
         self.filter = predata.getDashboardsFilter({'prefUtil' : self.prefUtil,
             'filterPrefKey': DASHBOARDS_FILTER_PREF_KEY,
@@ -321,6 +323,14 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             self.selectedDashboard(data);
             if (data.element)
             {
+                self.dashboardInTabs(false);
+                if (typeof(self.currentDashboardSetItem)!=='undefined') {
+                    self.currentDashboardSetItem().forEach(function (item) {
+                        if (item.name() === data.dashboard.name) {
+                            self.dashboardInTabs(true);
+                        }
+                    });
+                }
                 popup.ojPopup('open', data.element, {'at': 'right center', 'my': 'start center'});
             }
         };

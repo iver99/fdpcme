@@ -68,8 +68,8 @@ define([
 
                 var predataModel = new model.PredataModel();
                 
-                function init() {
-                    var dashboardsViewModle = new model.ViewModel(predataModel, "dashboard-" + guid ,['Me','Oracle','NORMAL','Share']);
+                function init() {              
+                    var dashboardsViewModle = new model.ViewModel(predataModel, "dashboard-" + guid ,['Me','Oracle','NORMAL','Share'],dashboardsetToolBarModel.reorderedDbsSetItems);
                     
                     dashboardsViewModle.showExploreDataBtn(false);
                     
