@@ -13,9 +13,10 @@ public class DashBoardPageId
 	public static final String CreateDSOfDialogID = "createDsb";
 	public static final String DashBoardNameBoxID = "dbsHNameIn";
 	public static final String DashBoardDescBoxID = "dbsHDpIn";
-	public static final String DashBoardTimeRangeChecker = "ckbxTimeRangeFilter";
 	public static final String DashOKButtonID = "createDsb";
 	public static final String DashSaveButtonID = "createDsb-2";
+	public static final String DashBoardType_Single = "dashboardtype-single";
+	public static final String DashBoardType_Set = "dashboardtype-set";
 	//public static final String WidgetAddButtonID = "add-widget-button";
 	public static final String OptionsID = "dashboardOptsBtn";
 	public static final String DashBoardSaveID = "dashboard-screenshot";
