@@ -33,7 +33,7 @@ public class TimeSelectorUIControls
 	public static final String sCancelBtn = "button[id^='cancelButton']";
 
 	public static final String sDateTimePick = "[id^='dateTimePicker_']";
-	public static final String sTimeRangeBtn = ".dropdown[id^='dropDown']";//"[id^='dateTimePicker_'] .oj-select-choice .oj-select-arrow";
+	public static final String sTimeRangeBtn = "span[id^='dropDown']";//".dropdown[id^='dropDown']";//"[id^='dateTimePicker_'] .oj-select-choice .oj-select-arrow";
 	public static final String sDisplayDateTime = "[id^='dateTimePicker_'] .oj-select-choice .oj-select-chosen";
 	//	public static final String sFilterInfoIndicator = "[id^='tfInfoIndicator_'].time-filter-indicator";
 	//	public static final String sFilterInfo = "div[id^='tfInfo_'] [data-bind='html: timeFilterInfo']";
@@ -82,4 +82,14 @@ public class TimeSelectorUIControls
 	// Begin: Components
 	public static final String sPickPanel = ".pickerPanel";//"[id^='pickerPanel_'].pickerPanel";
 	// End: Components
+
+	// Begin: Time Filter
+	public static final String sTimeFilterIcon = "img[id^='timeFilterIcon_']";
+	public static final String sTimeFilterHoursFilter = "div[id^='hoursFilter_']>div>input";
+	public static final String sTimeFilterDaysFilterAll = "input[id^='daysOptionAll_']";
+	public static final String sTimeFilterMonthsFilterAll = "input[id^='monthCheckAll_']";
+	public static final String sTimeFilterDaysMonthsFilterPrefix = "input[id^='";
+	public static final String sTimeFilterDaysMonthsFilterSuffix = "']";
+	// End: Time Filter
+
 }

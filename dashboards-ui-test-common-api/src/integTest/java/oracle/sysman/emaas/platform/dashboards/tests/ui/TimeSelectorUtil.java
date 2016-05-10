@@ -2,26 +2,29 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorExludedDayMonth;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorUIControls;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorUIControls;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-
 public class TimeSelectorUtil
 {
 	public enum TimeRange
 	{
-		Last15Mins("Last 15 mins"), Last30Mins("Last 30 mins"), Last60Mins("Last 60 mins"), Last4Hours(
-				"Last 4 hours"), Last6Hours("Last 6 hours"), Last1Day("Last 1 day"), Last7Days("Last 7 days"), Last30Days(
-						"Last 30 days"), Last90Days("Last 90 days"), Latest("Latest"), Custom("Custom");
+		Last15Mins("Last 15 mins"), Last30Mins("Last 30 mins"), Last60Mins("Last 60 mins"), Last4Hours("Last 4 hours"), Last6Hours(
+				"Last 6 hours"), Last1Day("Last 1 day"), Last7Days("Last 7 days"), Last30Days("Last 30 days"), Last90Days(
+				"Last 90 days"), Latest("Latest"), Custom("Custom");
 
 		private final String timerange;
 
@@ -118,6 +121,23 @@ public class TimeSelectorUtil
 		return TimeSelectorUtil.setCustomTime(webd, 1, startDateTime, endDateTime);
 	}
 
+	public static void setTimeFilter(WebDriver webd, int index, String hoursToExclude, int[] daysToExclude, int[] monthsToExclude)
+			throws Exception
+	{
+		TimeSelectorUtil.clickTimePicker(webd, index);
+		TimeSelectorUtil.clickTimeFilterIcon(webd);
+		TimeSelectorUtil.setHoursToExclude(webd, hoursToExclude);
+		TimeSelectorUtil.setDaysToExclude(webd, daysToExclude);
+		TimeSelectorUtil.setMonthsToExclude(webd, monthsToExclude);
+		TimeSelectorUtil.clickApplyButton(webd);
+	}
+
+	public static void setTimeFilter(WebDriver webd, String hoursToExclude, int[] daysToExclude, int[] monthsToExclude)
+			throws Exception
+	{
+		TimeSelectorUtil.setTimeFilter(webd, 1, hoursToExclude, daysToExclude, monthsToExclude);
+	}
+
 	public static String setTimeRange(WebDriver webd, int Index, TimeRange rangeoption) throws Exception
 	{
 		TimeSelectorUtil.clickTimePicker(webd, Index);
@@ -200,7 +220,7 @@ public class TimeSelectorUtil
 		else {
 			webd.click("css=" + TimeSelectorUIControls.sApplyBtn);
 			WaitUtil.waitForPageFullyLoaded(webd);
-                        webd.takeScreenShot();
+			webd.takeScreenShot();
 		}
 	}
 
@@ -216,6 +236,21 @@ public class TimeSelectorUtil
 			webd.click("css=" + TimeSelectorUIControls.sCancelBtn);
 			webd.takeScreenShot();
 		}
+	}
+
+	private static void clickTimeFilterIcon(WebDriver webd) throws Exception
+	{
+		webd.getLogger().info("Click custom option...");
+		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
+		webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
+		webd.takeScreenShot();
+		webd.getLogger().info("Click custom option finished!");
+
+		webd.getLogger().info("Click time fitler icon...");
+		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeFilterIcon);
+		webd.click("css=" + TimeSelectorUIControls.sTimeFilterIcon);
+		webd.takeScreenShot();
+		webd.getLogger().info("Click time filter icon finished!");
 	}
 
 	private static void clickTimePicker(WebDriver webd) throws Exception
@@ -278,8 +313,8 @@ public class TimeSelectorUtil
 
 		}
 		else if (StartDate.startsWith("Yesterday")) {
-			StartDate = StartDate.replace("Yesterday",
-					actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/" + yesterday.get(Calendar.YEAR));
+			StartDate = StartDate.replace("Yesterday", actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/"
+					+ yesterday.get(Calendar.YEAR));
 			returnStartDate = TimeSelectorUtil.timeFormatChange(driver, StartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 		}
 		else {
@@ -293,8 +328,8 @@ public class TimeSelectorUtil
 
 		}
 		else if (EndDate.startsWith("Yesterday")) {
-			EndDate = EndDate.replace("Yesterday",
-					actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/" + yesterday.get(Calendar.YEAR));
+			EndDate = EndDate.replace("Yesterday", actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/"
+					+ yesterday.get(Calendar.YEAR));
 			returnEndDate = TimeSelectorUtil.timeFormatChange(driver, EndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 		}
 		else if (Character.isDigit(EndDate.charAt(0))) {
@@ -331,6 +366,122 @@ public class TimeSelectorUtil
 
 		return timeRange + ": " + returnStartDate + " - " + returnEndDate;
 
+	}
+
+	private static String getInputForHoursFilter(WebDriver webd, String hoursToExclude)
+	{
+		String hoursInput = "";
+
+		//get separate hours to include
+		String[] hoursToExcludeRanges = hoursToExclude.split(",");
+		ArrayList<Integer> hoursToIncludeList = new ArrayList<Integer>();
+		for (int i = 0; i < 24; i++) {
+			hoursToIncludeList.add(i);
+		}
+		ArrayList<Integer> hoursToExcludeList = new ArrayList<Integer>();
+		for (String tmpRange : hoursToExcludeRanges) {
+			String[] bounds = tmpRange.split("-");
+			int start = Integer.parseInt(bounds[0].trim());
+			int end = Integer.parseInt(bounds[1].trim());
+			for (int j = start; j <= end; j++) {
+				if (hoursToExcludeList.contains(j)) {
+					continue;
+				}
+				else {
+					hoursToExcludeList.add(j);
+				}
+			}
+		}
+
+		hoursToIncludeList.removeAll(hoursToExcludeList);
+		Collections.sort(hoursToIncludeList);
+
+		//get hours filter input from separate hours to include
+		ArrayList<Integer> hoursIncludedStarts = new ArrayList<Integer>();
+		ArrayList<Integer> hoursIncludedEnds = new ArrayList<Integer>();
+		hoursIncludedStarts.add(hoursToIncludeList.get(0));
+		for (int i = 1; i < hoursToIncludeList.size(); i++) {
+			if (i == hoursToIncludeList.size() - 1) {
+				hoursIncludedEnds.add(hoursToIncludeList.get(i));
+				break;
+			}
+			if (hoursToIncludeList.get(i) - hoursToIncludeList.get(i - 1) == 1) {
+				continue;
+			}
+			else {
+				hoursIncludedEnds.add(hoursToIncludeList.get(i - 1));
+				hoursIncludedStarts.add(hoursToIncludeList.get(i));
+			}
+		}
+
+		for (int i = 0; i < hoursIncludedStarts.size(); i++) {
+			if (hoursIncludedStarts.get(i) != hoursIncludedEnds.get(i)) {
+				hoursInput = hoursInput + hoursIncludedStarts.get(i) + "-" + hoursIncludedEnds.get(i);
+			}
+			else {
+				hoursInput = hoursInput + hoursIncludedStarts.get(i);
+			}
+
+			if (i == hoursIncludedStarts.size() - 1) {
+				hoursInput = hoursInput + "";
+			}
+			else {
+				hoursInput = hoursInput + ",";
+			}
+		}
+		return hoursInput;
+	}
+
+	private static void setDaysToExclude(WebDriver webd, int[] daysToExclude)
+	{
+		webd.getLogger().info("Start to set days to exclude...");
+
+		if (daysToExclude == null || daysToExclude.length == 0) {
+			daysToExclude = new int[] {};
+		}
+
+		String[] days = { TimeSelectorExludedDayMonth.EXCLUDE_SUNDAY, TimeSelectorExludedDayMonth.EXCLUDE_MONDAY,
+				TimeSelectorExludedDayMonth.EXCLUDE_TUESDAY, TimeSelectorExludedDayMonth.EXCLUDE_WEDENSDAY,
+				TimeSelectorExludedDayMonth.EXCLUDE_THURSDAY, TimeSelectorExludedDayMonth.EXCLUDE_FRIDAY,
+				TimeSelectorExludedDayMonth.EXCLUDE_SATURDAY };
+
+		//check all days first
+		webd.waitForElementPresent("css=" + TimeSelectorUIControls.sTimeFilterDaysFilterAll);
+		if (!webd.getElement("css=" + TimeSelectorUIControls.sTimeFilterDaysFilterAll).isSelected()) {
+			webd.click("css=" + TimeSelectorUIControls.sTimeFilterDaysFilterAll);
+		}
+		//uncheck excluded days
+		for (int tmpValue : daysToExclude) {
+			String eleLocator = "css=" + TimeSelectorUIControls.sTimeFilterDaysMonthsFilterPrefix + days[tmpValue - 1]
+					+ TimeSelectorUIControls.sTimeFilterDaysMonthsFilterSuffix;
+			webd.waitForElementPresent(eleLocator);
+			webd.click(eleLocator);
+		}
+		webd.getLogger().info("Set days to exclude finished!");
+		webd.takeScreenShot();
+	}
+
+	private static void setHoursToExclude(WebDriver webd, String hoursToExclude) throws Exception
+	{
+		webd.getLogger().info("Start to set hours to exclude...");
+
+		String hoursInput = "";
+		if (hoursToExclude == null || "".equals(hoursToExclude)) {
+			hoursInput = "0-23";
+		}
+		else {
+			if (!hoursToExclude.matches("(\\s*\\d{1,2}-\\s*\\d{1,2},?)*")) {
+				throw new Exception("The format of hours to exclude is incorrect. Format should be 's1-e1,s2-e2,...'");
+			}
+			hoursInput = TimeSelectorUtil.getInputForHoursFilter(webd, hoursToExclude);
+		}
+
+		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeFilterHoursFilter);
+		webd.click("css=" + TimeSelectorUIControls.sTimeFilterHoursFilter);
+		webd.clear("css=" + TimeSelectorUIControls.sTimeFilterHoursFilter);
+		webd.sendKeys("css=" + TimeSelectorUIControls.sTimeFilterHoursFilter, hoursInput);
+		webd.getLogger().info("Set hours to exclude finished!");
+		webd.takeScreenShot();
 	}
 
 	//    public static String setExcludeHour(WebDriver webd, int Index, String hours) throws Exception
@@ -427,6 +578,37 @@ public class TimeSelectorUtil
 	//		};
 	//		webd.takeScreenShot();
 	//    }
+
+	private static void setMonthsToExclude(WebDriver webd, int[] monthsToExclude)
+	{
+		webd.getLogger().info("Start to set days to exclude...");
+
+		if (monthsToExclude == null || monthsToExclude.length == 0) {
+			monthsToExclude = new int[] {};
+		}
+
+		String[] months = { TimeSelectorExludedDayMonth.EXCLUDE_JANUARY, TimeSelectorExludedDayMonth.EXCLUDE_FEBRUARY,
+				TimeSelectorExludedDayMonth.EXCLUDE_MARCH, TimeSelectorExludedDayMonth.EXCLUDE_APRIL,
+				TimeSelectorExludedDayMonth.EXCLUDE_MAY, TimeSelectorExludedDayMonth.EXCLUDE_JUNE,
+				TimeSelectorExludedDayMonth.EXCLUDE_JULY, TimeSelectorExludedDayMonth.EXCLUDE_AUGUST,
+				TimeSelectorExludedDayMonth.EXCLUDE_SEPTEMBER, TimeSelectorExludedDayMonth.EXCLUDE_OCTOBER,
+				TimeSelectorExludedDayMonth.EXCLUDE_NOVEMBER, TimeSelectorExludedDayMonth.EXCLUDE_SEPTEMBER };
+
+		//check all months first
+		webd.waitForElementPresent("css=" + TimeSelectorUIControls.sTimeFilterMonthsFilterAll);
+		if (!webd.getElement("css=" + TimeSelectorUIControls.sTimeFilterMonthsFilterAll).isSelected()) {
+			webd.click("css=" + TimeSelectorUIControls.sTimeFilterMonthsFilterAll);
+		}
+		//uncheck excluded months
+		for (int tmpValue : monthsToExclude) {
+			String eleLocator = "css=" + TimeSelectorUIControls.sTimeFilterDaysMonthsFilterPrefix + months[tmpValue - 1]
+					+ TimeSelectorUIControls.sTimeFilterDaysMonthsFilterSuffix;
+			webd.waitForElementPresent(eleLocator);
+			webd.click(eleLocator);
+		}
+		webd.getLogger().info("Set months to exclude finished!");
+		webd.takeScreenShot();
+	}
 
 	private static String timeFormatChange(WebDriver driver, String testTime, String inputDateFormat, String outputDateFormat)
 			throws Exception
