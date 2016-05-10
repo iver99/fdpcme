@@ -239,6 +239,12 @@ public class DashBoardPageId
 	public static final String BuilderAutoRefreshOffSelectedLocator = "//li[@data-singledb-option='Off']/a/span[contains(@class, 'fa-check')]";
 	public static final String BuilderAutoRefreshOn5MinSelectedLocator = "//li[@data-singledb-option='On (Every 5 Minutes)']/a/span[contains(@class, 'fa-check')]";
 
+	//dashboard set
+	public static final String DashboardSetNavsContainerCSS = "#dbd-set-tabs";
+	public static final String DashboardSetNavsCSS = ".dbd-tabs-nav .oj-tabs-tab";
+	public static final String DashboardSetNavRemoveBtnCSS = ".oj-tabs-close-icon";
+	public static final String DashboardSetNavAddBtnCSS = "#add-nav";
+
 	// for R1.6, following ids are not used any more
 	//refresh //*[@id='ojChoiceId_autoRefreshSelect_selected
 	public static final String AutoRefreshID = "//*[@id='ojChoiceId_autoRefreshSelect_selected']";
