@@ -23,7 +23,7 @@ public class TestHomePage extends LoginAndLogout
 		webd.getLogger().info("start to create a dashboard for test");
 
 		//create a dashboard
-		DashboardHomeUtil.createDashboard(webd, "ADashboard Test", "", false);
+		DashboardHomeUtil.createDashboard(webd, "ADashboard Test", "", DashboardHomeUtil.DASHBOARD);
 		DashboardBuilderUtil.verifyDashboard(webd, "ADashboard Test", "", false);
 	}
 

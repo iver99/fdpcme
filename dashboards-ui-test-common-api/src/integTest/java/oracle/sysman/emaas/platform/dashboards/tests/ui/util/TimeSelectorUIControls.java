@@ -83,4 +83,14 @@ public class TimeSelectorUIControls
 	// Begin: Components
 	public static final String sPickPanel = ".pickerPanel";//"[id^='pickerPanel_'].pickerPanel";
 	// End: Components
+
+	// Begin: Time Filter
+	public static final String sTimeFilterIcon = "img[id^='timeFilterIcon_']";
+	public static final String sTimeFilterHoursFilter = "div[id^='hoursFilter_']>div>input";
+	public static final String sTimeFilterDaysFilterAll = "input[id^='daysOptionAll_']";
+	public static final String sTimeFilterMonthsFilterAll = "input[id^='monthCheckAll_']";
+	public static final String sTimeFilterDaysMonthsFilterPrefix = "input[id^='";
+	public static final String sTimeFilterDaysMonthsFilterSuffix = "']";
+	// End: Time Filter
+
 }
