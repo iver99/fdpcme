@@ -176,8 +176,8 @@ public class DashboardHomeUtil
 
 		Validator.notEmptyString("option", option);
 
-		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataBtnID));
-		WebElement menu = driver.getElement(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataMenu));
+		driver.click(DashboardHomeUtil.convertName(DashBoardPageId.ExploreDataBtnID));
+		WebElement menu = driver.getElement(DashboardHomeUtil.convertName(DashBoardPageId.ExploreDataMenu));
 		List<WebElement> menuList = menu.findElements(By.tagName("li"));
 		for (WebElement menuItem : menuList) {
 			if (option.equals(menuItem.getText())) {
@@ -516,6 +516,10 @@ public class DashboardHomeUtil
 	private static String convertID(String id)
 	{
 		return "id=" + id;
+	}
+	
+	private static String convertName(String name) {
+		return "name=" + name;
 	}
 
 	private static void deleteDashboardInGrid(WebDriver driver, String dashboardName)
