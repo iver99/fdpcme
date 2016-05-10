@@ -26,7 +26,7 @@
         <span class="oj-col oj-sm-12 oj-md-12" style="font-weight: bold; text-align: center;" data-bind="text: timeFilterTitle"></span>
     </div>
     <!-- time filter start-->
-    <div class="oj-row tf-row">
+    <div class="oj-row tf-row" data-bind="attr: {id: 'hoursFilter_'+randomId}">
        <span class="oj-col oj-sm-2 oj-md-2 tf-label" style="padding-top: 8px; padding-bottom: 8px;" data-bind="text: timeFilterLabel"></span>
        <input class="oj-col oj-sm-10 oj-md-10" type="text" data-bind="ojComponent: {component: 'ojInputText', value: timeFilterValue, attr: {'aria-label': timeFilterLabel}}">
     </div>
