@@ -49,7 +49,7 @@ public class TimeSelectorUtil
 			TimeSelectorExludedDayMonth.EXCLUDE_MAY, TimeSelectorExludedDayMonth.EXCLUDE_JUNE,
 			TimeSelectorExludedDayMonth.EXCLUDE_JULY, TimeSelectorExludedDayMonth.EXCLUDE_AUGUST,
 			TimeSelectorExludedDayMonth.EXCLUDE_SEPTEMBER, TimeSelectorExludedDayMonth.EXCLUDE_OCTOBER,
-			TimeSelectorExludedDayMonth.EXCLUDE_NOVEMBER, TimeSelectorExludedDayMonth.EXCLUDE_SEPTEMBER };
+			TimeSelectorExludedDayMonth.EXCLUDE_NOVEMBER, TimeSelectorExludedDayMonth.EXCLUDE_DECEMBER };
 
 	public static String setCustomTime(WebDriver webd, int index, String startDateTime, String endDateTime) throws Exception
 	{
@@ -180,6 +180,7 @@ public class TimeSelectorUtil
 				}
 			}
 		}
+		result = result.substring(0, result.length() - 2);
 		return result;
 	}
 
@@ -463,7 +464,14 @@ public class TimeSelectorUtil
 		hoursIncludedStarts.add(hoursToIncludeList.get(0));
 		for (int i = 1; i < hoursToIncludeList.size(); i++) {
 			if (i == hoursToIncludeList.size() - 1) {
-				hoursIncludedEnds.add(hoursToIncludeList.get(i));
+				if (hoursToIncludeList.get(i) - hoursToIncludeList.get(i - 1) == 1) {
+					hoursIncludedEnds.add(hoursToIncludeList.get(i));
+				}
+				else {
+					hoursIncludedEnds.add(hoursToIncludeList.get(i - 1));
+					hoursIncludedStarts.add(hoursToIncludeList.get(i));
+					hoursIncludedEnds.add(hoursToIncludeList.get(i));
+				}
 				break;
 			}
 			if (hoursToIncludeList.get(i) - hoursToIncludeList.get(i - 1) == 1) {
@@ -476,13 +484,7 @@ public class TimeSelectorUtil
 		}
 
 		for (int i = 0; i < hoursIncludedStarts.size(); i++) {
-			if (hoursIncludedStarts.get(i) != hoursIncludedEnds.get(i)) {
-				hoursInput = hoursInput + hoursIncludedStarts.get(i) + "-" + hoursIncludedEnds.get(i);
-			}
-			else {
-				hoursInput = hoursInput + hoursIncludedStarts.get(i);
-			}
-
+			hoursInput = hoursInput + hoursIncludedStarts.get(i) + "-" + hoursIncludedEnds.get(i);
 			if (i == hoursIncludedStarts.size() - 1) {
 				hoursInput = hoursInput + "";
 			}
