@@ -367,4 +367,9 @@ public class DashBoardPageId
 
 	//error page
 	public static final String ErrorSignOutButtonId = "dbd_sign_out_button";
+   
+       //Add button for widgetSelector
+	public static final String WidgetSelector_AddButtonId = "add-widget-button";
+        
+        
 }
