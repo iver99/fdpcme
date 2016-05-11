@@ -138,7 +138,7 @@ public class DashboardBuilderUtil
 		DashboardBuilderUtil.hideRightDrawer(driver);// hide drawer;
 	}
 
-	public static void deleteDashboard(WebDriver driver) throws Exception
+	public static void deleteDashboard(WebDriver driver)
 	{
 		driver.getLogger().info("DashboardBuilderUtil.deleteDashboard started");
 
@@ -147,7 +147,7 @@ public class DashboardBuilderUtil
 		driver.takeScreenShot();
 
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsDeleteLocator);
-		driver.click(DashBoardPageId.BuilderOptionsDeleteMenuLocator);
+		driver.click(DashBoardPageId.BuilderOptionsDeleteLocator);
 		driver.takeScreenShot();
 
 		driver.waitForElementPresent(DashBoardPageId.BuilderDeleteDialogLocator);
@@ -158,9 +158,24 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil.deleteDashboard completed");
 	}
 
-	public static void deleteDashboardSet(WebDriver driver) throws Exception
+	public static void deleteDashboardSet(WebDriver driver)
 	{
+		driver.getLogger().info("DashboardBuilderUtil.deleteDashboardSet started");
 
+		driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionBtn);
+		driver.click(DashBoardPageId.DashboardSetOptionBtn);
+		driver.takeScreenShot();
+
+		driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionsDeleteLocator);
+		driver.click(DashBoardPageId.DashboardSetOptionsDeleteLocator);
+		driver.takeScreenShot();
+
+		driver.waitForElementPresent(DashBoardPageId.DashboardSetDeleteDialogLocator);
+		driver.click(DashBoardPageId.DashboardSetDeleteDialogDeleteBtnLocator);
+		driver.takeScreenShot();
+		driver.waitForElementPresent(DashBoardPageId.SearchDashboardInputLocator);
+
+		driver.getLogger().info("DashboardBuilderUtil.deleteDashboardSet completed");
 	}
 
 	public static void duplicateDashboard(WebDriver driver, String name, String descriptions) throws Exception
@@ -455,7 +470,7 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil print set completed");
 	}
 
-	public static void refreshDashboard(WebDriver driver, String refreshSettings) throws Exception
+	public static void refreshDashboard(WebDriver driver, String refreshSettings)
 	{
 		driver.getLogger().info("DashboardBuilderUtil.refreshDashboard started for refreshSettings=" + refreshSettings);
 
