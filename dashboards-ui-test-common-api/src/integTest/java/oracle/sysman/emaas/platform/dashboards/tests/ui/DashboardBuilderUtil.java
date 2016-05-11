@@ -2,12 +2,6 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
 import java.util.List;
 
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DelayedPressEnterThread;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -15,6 +9,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DelayedPressEnterThread;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class DashboardBuilderUtil
 {
@@ -29,9 +29,61 @@ public class DashboardBuilderUtil
 
 	public static final String TILE_SHORTER = "shorter";
 
-    private static final String DASHBOARD_SELECTION_TAB_NAME = "Dashboard";
+	private static final String DASHBOARD_SELECTION_TAB_NAME = "Dashboard";
 
-    public static void addWidgetByRightDrawer(WebDriver driver, String searchString) throws Exception
+	public static void addNewDashboardToSet(WebDriver driver, String dashboardName) throws Exception
+	{
+		driver.getLogger().info("DashboardBuilderUtil.addNewDashboardToSet started for name=\"" + dashboardName + "\"");
+		Validator.notEmptyString("dashboardName", dashboardName);
+
+		WebElement dashboardSetContainer = driver.getWebDriver()
+				.findElement(By.cssSelector(DashBoardPageId.DashboardSetNavsContainerCSS));
+		if (dashboardSetContainer == null) {
+			throw new NoSuchElementException(
+					"DashboardBuilderUtil.removeDashboardInSet: the dashboard navigator container is not found");
+		}
+
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait.until(ExpectedConditions.visibilityOf(dashboardSetContainer));
+		driver.takeScreenShot();
+
+		boolean isSelectionTabExist = false;
+		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DashboardSetNavsCSS));
+		if (navs == null || navs.size() == 0) {
+			throw new NoSuchElementException("DashboardBuilderUtil.addNewDashboardToSet: the dashboard navigators is not found");
+		}
+
+		for (WebElement nav : navs) {
+			if (nav.getAttribute("data-tabs-name").trim().equals(DASHBOARD_SELECTION_TAB_NAME)) {
+				isSelectionTabExist = true;
+				nav.click();
+				WaitUtil.waitForPageFullyLoaded(driver);
+				driver.takeScreenShot();
+				driver.getLogger().info("DashboardBuilderUtil.addNewDashboardToSet has click on the dashboard selection tab");
+				break;
+			}
+		}
+
+		if (isSelectionTabExist == false) {
+			WebElement addNav = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.DashboardSetNavAddBtnCSS));
+			if (addNav == null) {
+				throw new NoSuchElementException(
+						"DashboardBuilderUtil.removeDashboardInSet: the dashboard 'add' button  is not found");
+			}
+			addNav.click();
+			WaitUtil.waitForPageFullyLoaded(driver); // wait for all dashboards loaded
+		}
+
+		driver.takeScreenShot();
+		DashboardHomeUtil.selectDashboard(driver, dashboardName);
+		driver.getLogger().info(
+				"DashboardBuilderUtil.removeDashboardInSet has selected the dashboard named with \"" + dashboardName + "\"");
+
+		driver.takeScreenShot();
+		driver.getLogger().info("DashboardBuilderUtil.addNewDashboardToSet completed and returns true");
+	}
+
+	public static void addWidgetByRightDrawer(WebDriver driver, String searchString) throws Exception
 	{
 		Validator.notNull("widgetName", searchString);
 		Validator.notEmptyString("widgetName", searchString);
@@ -62,8 +114,8 @@ public class DashboardBuilderUtil
 		driver.takeScreenShot();
 
 		driver.getLogger().info("[DashboardHomeUtil] start to add widget from right drawer");
-		List<WebElement> matchingWidgets = driver.getWebDriver().findElements(
-				By.cssSelector(DashBoardPageId.RightDrawerWidgetCSS));
+		List<WebElement> matchingWidgets = driver.getWebDriver()
+				.findElements(By.cssSelector(DashBoardPageId.RightDrawerWidgetCSS));
 		if (matchingWidgets == null || matchingWidgets.size() == 0) {
 			throw new NoSuchElementException("Right drawer widget for search string =" + searchString + " is not found");
 		}
@@ -271,15 +323,15 @@ public class DashboardBuilderUtil
 		DashboardHomeUtil.listView(driver);
 	}
 
-	public static void openWidget(WebDriver driver, String widgetName) throws Exception
-	{
-		DashboardBuilderUtil.openWidget(driver, widgetName, 0);
-	}
-
 	//	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
 	//	{
 	//		driver = webDriver;
 	//	}
+
+	public static void openWidget(WebDriver driver, String widgetName) throws Exception
+	{
+		DashboardBuilderUtil.openWidget(driver, widgetName, 0);
+	}
 
 	public static void openWidget(WebDriver driver, String widgetName, int index) throws Exception
 	{
@@ -340,6 +392,49 @@ public class DashboardBuilderUtil
 	public static void refreshDashboardSet(WebDriver driver, String refreshSettings) throws Exception
 	{
 
+	}
+
+	public static void removeDashboardInSet(WebDriver driver, String dashboardName)
+	{
+		driver.getLogger().info("DashboardBuilderUtil.removeDashboardInSet started for name=\"" + dashboardName + "\"");
+		Validator.notEmptyString("dashboardName", dashboardName);
+
+		WebElement dashboardSetContainer = driver.getWebDriver()
+				.findElement(By.cssSelector(DashBoardPageId.DashboardSetNavsContainerCSS));
+		if (dashboardSetContainer == null) {
+			throw new NoSuchElementException(
+					"DashboardBuilderUtil.removeDashboardInSet: the dashboard navigator container is not found");
+		}
+
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait.until(ExpectedConditions.visibilityOf(dashboardSetContainer));
+		driver.takeScreenShot();
+
+		boolean hasFound = false;
+		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DashboardSetNavsCSS));
+		if (navs == null || navs.size() == 0) {
+			throw new NoSuchElementException("DashboardBuilderUtil.removeDashboardInSet: the dashboard navigators is not found");
+		}
+
+		for (WebElement nav : navs) {
+			if (nav.getAttribute("data-tabs-name").trim().equals(dashboardName)) {
+				hasFound = true;
+				nav.findElement(By.cssSelector(DashBoardPageId.DashboardSetNavRemoveBtnCSS)).click();
+				driver.getLogger()
+						.info("DashboardBuilderUtil.removeDashboardInSet has found and removed the dashboard named with \""
+								+ dashboardName + "\"");
+				driver.takeScreenShot();
+				break;
+			}
+		}
+
+		if (hasFound == false) {
+			throw new NoSuchElementException(
+					"DashboardBuilderUtil.removeDashboardInSet can not find the dashboard named with \"" + dashboardName + "\"");
+		}
+
+		driver.takeScreenShot();
+		driver.getLogger().info("DashboardBuilderUtil.removeDashboardInSet completed");
 	}
 
 	public static void removeWidget(WebDriver driver, String widgetName) throws Exception
@@ -435,8 +530,7 @@ public class DashboardBuilderUtil
 
 	public static void showWidgetTitle(WebDriver driver, String widgetName, int index, boolean visibility) throws Exception
 	{
-		driver.getLogger().info(
-				"DashboardBuilderUtil.showWidgetTitle started for widgetName=" + widgetName + ", index=" + index
+		driver.getLogger().info("DashboardBuilderUtil.showWidgetTitle started for widgetName=" + widgetName + ", index=" + index
 				+ ", visibility=" + visibility);
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
@@ -534,9 +628,8 @@ public class DashboardBuilderUtil
 
 	public static boolean verifyDashboard(WebDriver driver, String dashboardName, String description, boolean showTimeSelector)
 	{
-		driver.getLogger().info(
-				"DashboardBuilderUtil.verifyDashboard started for name=\"" + dashboardName + "\", description=\"" + description
-				+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
+		driver.getLogger().info("DashboardBuilderUtil.verifyDashboard started for name=\"" + dashboardName + "\", description=\""
+				+ description + "\", showTimeSelector=\"" + showTimeSelector + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
 
 		driver.waitForElementPresent(DashBoardPageId.BuilderNameTextLocator);
@@ -544,8 +637,8 @@ public class DashboardBuilderUtil
 		driver.takeScreenShot();
 		String realName = driver.getElement(DashBoardPageId.BuilderNameTextLocator).getAttribute("title");
 		if (!dashboardName.equals(realName)) {
-			driver.getLogger().info(
-					"DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected dashboard name is "
+			driver.getLogger()
+					.info("DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected dashboard name is "
 							+ dashboardName + ", actual dashboard name is " + realName);
 			return false;
 		}
@@ -554,16 +647,16 @@ public class DashboardBuilderUtil
 		String realDesc = driver.getElement(DashBoardPageId.BuilderDescriptionTextLocator).getAttribute("title");
 		if (description == null || description.equals("")) {
 			if (realDesc != null && !realDesc.trim().equals("")) {
-				driver.getLogger().info(
-						"DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected description is "
+				driver.getLogger()
+						.info("DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected description is "
 								+ description + ", actual dashboard description is " + realDesc);
 				return false;
 			}
 		}
 		else {
 			if (!description.equals(realDesc)) {
-				driver.getLogger().info(
-						"DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected description is "
+				driver.getLogger()
+						.info("DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected description is "
 								+ description + ", actual dashboard description is " + realDesc);
 				return false;
 			}
@@ -571,8 +664,8 @@ public class DashboardBuilderUtil
 
 		boolean actualTimeSelectorShown = driver.isDisplayed(DashBoardPageId.BuilderDateTimePickerLocator);
 		if (actualTimeSelectorShown != showTimeSelector) {
-			driver.getLogger().info(
-					"DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected showTimeSelector is "
+			driver.getLogger()
+					.info("DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected showTimeSelector is "
 							+ showTimeSelector + ", actual dashboard showTimeSelector is " + actualTimeSelectorShown);
 			return false;
 		}
@@ -581,91 +674,32 @@ public class DashboardBuilderUtil
 		return true;
 	}
 
-	public static void addNewDashboardToSet(WebDriver driver, String dashboardName) throws Exception {
-		driver.getLogger().info(
-				"DashboardBuilderUtil.addNewDashboardToSet started for name=\"" + dashboardName + "\"");
-		Validator.notEmptyString("dashboardName", dashboardName);
-
-        WebElement dashboardSetContainer = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.DashboardSetNavsContainerCSS));
-        if (dashboardSetContainer == null) {
-            throw new NoSuchElementException("DashboardBuilderUtil.removeDashboardInSet: the dashboard navigator container is not found");
-        }
-
-        WebDriverWait wait = new WebDriverWait(driver.getWebDriver(),WaitUtil.WAIT_TIMEOUT);
-        wait.until(ExpectedConditions.visibilityOf(dashboardSetContainer));
-        driver.takeScreenShot();
-
-        boolean isSelectionTabExist = false;
-        List<WebElement> navs  = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DashboardSetNavsCSS));
-        if (navs == null || navs.size() == 0) {
-            throw new NoSuchElementException("DashboardBuilderUtil.addNewDashboardToSet: the dashboard navigators is not found");
-        }
-
-        for(WebElement nav : navs){
-            if(nav.getAttribute("data-tabs-name").trim().equals(DASHBOARD_SELECTION_TAB_NAME)){
-                isSelectionTabExist = true;
-                nav.click();
-                WaitUtil.waitForPageFullyLoaded(driver);
-                driver.takeScreenShot();
-                driver.getLogger().info("DashboardBuilderUtil.addNewDashboardToSet has click on the dashboard selection tab");
-                break;
-            }
-        }
-
-        if(isSelectionTabExist == false) {
-            WebElement addNav = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.DashboardSetNavAddBtnCSS));
-            if (addNav == null ) {
-                throw new NoSuchElementException("DashboardBuilderUtil.removeDashboardInSet: the dashboard 'add' button  is not found");
-            }
-            addNav.click();
-            WaitUtil.waitForPageFullyLoaded(driver); // wait for all dashboards loaded
-        }
-
-        driver.takeScreenShot();
-        DashboardHomeUtil.selectDashboard(driver,dashboardName);
-        driver.getLogger().info("DashboardBuilderUtil.removeDashboardInSet has selected the dashboard named with \"" + dashboardName +"\"");
-
-        driver.takeScreenShot();
-		driver.getLogger().info("DashboardBuilderUtil.addNewDashboardToSet completed and returns true");
+	public static boolean verifyWidget(WebDriver driver, String widgetName)
+	{
+		return DashboardBuilderUtil.verifyWidget(driver, widgetName, 0);
 	}
 
-	public static void removeDashboardInSet(WebDriver driver, String dashboardName)
+	public static boolean verifyWidget(WebDriver driver, String widgetName, int index)
 	{
-		driver.getLogger().info(
-				"DashboardBuilderUtil.removeDashboardInSet started for name=\"" + dashboardName + "\"");
-		Validator.notEmptyString("dashboardName", dashboardName);
+		driver.getLogger()
+				.info("DashboardBuilderUtil.verifyWidget started for name=\"" + widgetName + "\", index=\"" + index + "\"");
+		Validator.notEmptyString("dashboardName", widgetName);
 
-        WebElement dashboardSetContainer = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.DashboardSetNavsContainerCSS));
-        if (dashboardSetContainer == null) {
-            throw new NoSuchElementException("DashboardBuilderUtil.removeDashboardInSet: the dashboard navigator container is not found");
-        }
+		WebElement we = null;
+		try {
+			we = DashboardBuilderUtil.getTileTitleElement(driver, widgetName, index);
+		}
+		catch (NoSuchElementException e) {
+			driver.getLogger().info("DashboardBuilderUtil.verifyWidget compelted and returns false");
+			return false;
+		}
+		if (we == null) {
+			driver.getLogger().info("DashboardBuilderUtil.verifyWidget compelted and returns false");
+			return false;
+		}
 
-        WebDriverWait wait = new WebDriverWait(driver.getWebDriver(),WaitUtil.WAIT_TIMEOUT);
-        wait.until(ExpectedConditions.visibilityOf(dashboardSetContainer));
-        driver.takeScreenShot();
-
-        boolean hasFound = false;
-        List<WebElement> navs  = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DashboardSetNavsCSS));
-        if (navs == null || navs.size() == 0) {
-            throw new NoSuchElementException("DashboardBuilderUtil.removeDashboardInSet: the dashboard navigators is not found");
-        }
-
-        for(WebElement nav : navs){
-            if(nav.getAttribute("data-tabs-name").trim().equals(dashboardName)){
-                hasFound = true;
-                nav.findElement(By.cssSelector(DashBoardPageId.DashboardSetNavRemoveBtnCSS)).click();
-                driver.getLogger().info("DashboardBuilderUtil.removeDashboardInSet has found and removed the dashboard named with \"" + dashboardName +"\"");
-                driver.takeScreenShot();
-                break;
-            }
-        }
-
-        if(hasFound == false) {
-            throw new NoSuchElementException("DashboardBuilderUtil.removeDashboardInSet can not find the dashboard named with \"" + dashboardName +"\"");
-        }
-
-		driver.takeScreenShot();
-		driver.getLogger().info("DashboardBuilderUtil.removeDashboardInSet completed");
+		driver.getLogger().info("DashboardBuilderUtil.verifyWidget compelted and returns true");
+		return true;
 	}
 
 	private static WebElement clickTileConfigButton(WebDriver driver, String widgetName, int index)
@@ -686,8 +720,8 @@ public class DashboardBuilderUtil
 		WebElement tileTitle = DashboardBuilderUtil.getTileTitleElement(driver, widgetName, index);
 		WebElement tileConfig = tileTitle.findElement(By.xpath(DashBoardPageId.BuilderTileDataExploreLocator));
 		if (tileConfig == null) {
-			throw new NoSuchElementException("Tile data explorer link for title=" + widgetName + ", index=" + index
-					+ " is not found");
+			throw new NoSuchElementException(
+					"Tile data explorer link for title=" + widgetName + ", index=" + index + " is not found");
 		}
 		Actions builder = new Actions(driver.getWebDriver());
 		builder.moveToElement(tileTitle).perform();
