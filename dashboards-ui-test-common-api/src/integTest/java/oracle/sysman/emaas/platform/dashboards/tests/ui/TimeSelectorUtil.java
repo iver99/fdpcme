@@ -40,7 +40,7 @@ public class TimeSelectorUtil
 	}
 
 	public static String[] days = { TimeSelectorExludedDayMonth.EXCLUDE_SUNDAY, TimeSelectorExludedDayMonth.EXCLUDE_MONDAY,
-		TimeSelectorExludedDayMonth.EXCLUDE_TUESDAY, TimeSelectorExludedDayMonth.EXCLUDE_WEDENSDAY,
+		TimeSelectorExludedDayMonth.EXCLUDE_TUESDAY, TimeSelectorExludedDayMonth.EXCLUDE_WEDNESDAY,
 		TimeSelectorExludedDayMonth.EXCLUDE_THURSDAY, TimeSelectorExludedDayMonth.EXCLUDE_FRIDAY,
 		TimeSelectorExludedDayMonth.EXCLUDE_SATURDAY };
 
@@ -153,7 +153,7 @@ public class TimeSelectorUtil
 			result += "";
 		}
 		else {
-			result += "Days Excluded: ";
+			result += "Days excluded: ";
 			for (int i = 0; i < daysToExclude.length; i++) {
 				int value = daysToExclude[i];
 				if (i == daysToExclude.length - 1) {
@@ -169,7 +169,7 @@ public class TimeSelectorUtil
 			result += "";
 		}
 		else {
-			result += "Months Excluded: ";
+			result += "Months excluded: ";
 			for (int i = 0; i < monthsToExclude.length; i++) {
 				int value = monthsToExclude[i];
 				if (i == monthsToExclude.length - 1) {
