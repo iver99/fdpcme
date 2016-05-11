@@ -30,7 +30,7 @@ public class UIControls
 
 	//Begin: Button
 	public static final String sAddWidgetBtn = "//*[@id='widget-selector-okbtn']";
-	public static final String sCloseWidget = "/html/body/div[1]/div[2]/div/div[3]/div";
+	public static final String sCloseWidget = "/html/body/div[1]/div[2]/div/div[1]/div";
 	//End: Button
 
 	//Begin: Icon
@@ -44,7 +44,7 @@ public class UIControls
 
 	//Begin: Images
 	public static final String sOracleImage = "/html/body/div[2]/header/div/div[1]/div[1]/div[1]/div[1]/img";
-	public static final String sWidgetSelct = "/html/body/div[1]/div[2]/div/div[4]/div[1]/div[2]/ul/li[1]/a/div";//"/html/body/div[1]/div[2]/div/div[4]/div[1]/div[2]/div[1]";
+	public static final String sWidgetSelct = "/html/body/div[1]/div[2]/div/div[2]/div[1]/div[2]/ul/li[1]/a/div";//"/html/body/div[1]/div[2]/div/div[4]/div[1]/div[2]/div[1]";
 	//End: Images
 
 	//Begin: Links
@@ -62,6 +62,6 @@ public class UIControls
 	public static final String sAdmin = "/html/body/div[2]/header/div/div[1]/div[3]/div/div/div[4]";
 	public static final String sWidget = "//*[@id='widgets-container']";
 	public static final String sCategorySelect = "//*[@id='ojChoiceId_categorySelect_selected']";
-	public static final String sWidgetDiplay = "/html/body/div[1]/div[2]/div/div[4]/div[1]/div[2]/ul";
+	public static final String sWidgetDiplay = "/html/body/div[1]/div[2]/div/div[2]/div[1]/div[2]/ul";
 	//End: Components
 }

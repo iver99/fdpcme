@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +10,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotData;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameNameException;
@@ -29,13 +35,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavoritePK;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccessPK;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class DashboardManager
 {
@@ -47,19 +47,7 @@ public class DashboardManager
 		instance = new DashboardManager();
 	}
 
-	/**
-	 * Returns the singleton instance for dashboard manager
-	 *
-	 * @return
-	 */
-	public static DashboardManager getInstance()
-	{
-		return instance;
-	}
-
-	private DashboardManager()
-	{
-	}
+	public static final String BLANK_SCREENSHOT = "data:image/png;base64,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AEFIhjEBbGkpyX9EeoKlxVwvUjtiTYqnp98ivhBnAMDXwenpqfbp6a+1iNgHAHS/n/PlMyGNeHNmgKWVXejlAybZ4F/iL3HrBB73ywzvAAABnWlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyI+CiAgICAgICAgIDxleGlmOlBpeGVsWERpbWVuc2lvbj4zNDk8L2V4aWY6UGl4ZWxYRGltZW5zaW9uPgogICAgICAgICA8ZXhpZjpQaXhlbFlEaW1lbnNpb24+MTg3PC9leGlmOlBpeGVsWURpbWVuc2lvbj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CppjahgAAAX4SURBVHgB7dTBCQAgDARBtf+eo1jEviYNHAxh97xbjgABAgQSgZOsGCFAgACBLyC6HoEAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqHABWHCBXJKFjVxAAAAAElFTkSuQmCC";
 
 	//	private Map<Tile, EmsDashboardTile> updateDashboardTiles(List<Tile> tiles, EmsDashboard ed) {
 	//		Map<Tile, EmsDashboardTile> rows = new HashMap<Tile, EmsDashboardTile>();
@@ -109,6 +97,23 @@ public class DashboardManager
 	//		return rows;
 	//	}
 
+	public static final String SCREENSHOT_BASE64_PNG_PREFIX = "data:image/png;base64,";
+	public static final String SCREENSHOT_BASE64_JPG_PREFIX = "data:image/jpeg;base64,";
+
+	/**
+	 * Returns the singleton instance for dashboard manager
+	 *
+	 * @return
+	 */
+	public static DashboardManager getInstance()
+	{
+		return instance;
+	}
+
+	private DashboardManager()
+	{
+	}
+
 	/**
 	 * Adds a dashboard as favorite
 	 *
@@ -137,8 +142,9 @@ public class DashboardManager
 			}
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
-			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
-			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
+			//			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
+			//			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
+			EmsDashboardFavorite edf = dsf.getEmsDashboardFavoriteByPK(dashboardId, currentUser);
 			if (edf == null) {
 				edf = new EmsDashboardFavorite(DateUtil.getCurrentUTCTime(), ed, currentUser);
 				dsf.persistEmsDashboardFavorite(edf);
@@ -214,7 +220,7 @@ public class DashboardManager
 		deleteDashboard(dashboardId, false, tenantId);
 	}
 
-	public String getDashboardBase64ScreenShotById(Long dashboardId, Long tenantId) throws DashboardException
+	public ScreenshotData getDashboardBase64ScreenShotById(Long dashboardId, Long tenantId) throws DashboardException
 	{
 		EntityManager em = null;
 		try {
@@ -240,7 +246,18 @@ public class DashboardManager
 			if (!isDashboardAccessbyCurrentTenant(ed)) {
 				throw new DashboardNotFoundException();
 			}
-			return ed.getScreenShot();
+			if (ed.getScreenShot() == null) {
+				logger.debug("Retrieved null screenshot base64 data from persistence layer, we use a blank screenshot then");
+				return new ScreenshotData(BLANK_SCREENSHOT, ed.getCreationDate(), ed.getLastModificationDate());
+			}
+			else if (!ed.getScreenShot().startsWith(SCREENSHOT_BASE64_PNG_PREFIX)
+					&& !ed.getScreenShot().startsWith(SCREENSHOT_BASE64_JPG_PREFIX)) {
+				logger.error(
+						"Retrieved an invalid screenshot base64 data that is not started with specified prefix, we use a blank screenshot then");
+				logger.debug("Th screenshot string with an invalid base64 previs is: {}", ed.getScreenShot());
+				return new ScreenshotData(BLANK_SCREENSHOT, ed.getCreationDate(), ed.getLastModificationDate());
+			}
+			return new ScreenshotData(ed.getScreenShot(), ed.getCreationDate(), ed.getLastModificationDate());
 		}
 		finally {
 			if (em != null) {
@@ -291,7 +308,7 @@ public class DashboardManager
 				throw new DashboardNotFoundException();
 			}
 			updateLastAccessDate(dashboardId, tenantId, dsf);
-			return Dashboard.valueOf(ed);
+			return Dashboard.valueOf(ed, null, true, true);
 		}
 		finally {
 			if (em != null) {
@@ -311,17 +328,18 @@ public class DashboardManager
 			return null;
 		}
 		String currentUser = UserContext.getCurrentUser();
-		String jpql = "select d from EmsDashboard d where d.name = ?1 and (d.owner = ?2 or d.sharePublic = 1) and d.deleted = ?3";
-		Object[] params = new Object[] { StringEscapeUtils.escapeHtml4(name), currentUser, new Integer(0) };
+		//		String jpql = "select d from EmsDashboard d where d.name = ?1 and (d.owner = ?2 or d.sharePublic = 1) and d.deleted = ?3";
+		//		Object[] params = new Object[] { StringEscapeUtils.escapeHtml4(name), currentUser, new Integer(0) };
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
-			Query query = em.createQuery(jpql);
-			for (int i = 1; i <= params.length; i++) {
-				query.setParameter(i, params[i - 1]);
-			}
-			EmsDashboard ed = (EmsDashboard) query.getSingleResult();
+			//			Query query = em.createQuery(jpql);
+			//			for (int i = 1; i <= params.length; i++) {
+			//				query.setParameter(i, params[i - 1]);
+			//			}
+			//			EmsDashboard ed = (EmsDashboard) query.getSingleResult();
+			EmsDashboard ed = dsf.getEmsDashboardByName(name, currentUser);
 			return Dashboard.valueOf(ed);
 		}
 		catch (NoResultException e) {
@@ -344,16 +362,17 @@ public class DashboardManager
 	public List<Dashboard> getFavoriteDashboards(Long tenantId)
 	{
 		String currentUser = UserContext.getCurrentUser();
-		String hql = "select d from EmsDashboard d join EmsDashboardFavorite f on d.dashboardId = f.dashboard.dashboardId and f.userName = '"
-				+ currentUser + "' and d.deleted = ?1";
+		//		String hql = "select d from EmsDashboard d join EmsDashboardFavorite f on d.dashboardId = f.dashboard.dashboardId and f.userName = '"
+		//				+ currentUser + "' and d.deleted = ?1";
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
-			Query query = em.createQuery(hql);
-			query.setParameter(1, new Integer(0));
-			@SuppressWarnings("unchecked")
-			List<EmsDashboard> edList = query.getResultList();
+			//			Query query = em.createQuery(hql);
+			//			query.setParameter(1, new Integer(0));
+			//			@SuppressWarnings("unchecked")
+			//			List<EmsDashboard> edList = query.getResultList();
+			List<EmsDashboard> edList = dsf.getFavoriteEmsDashboards(currentUser);
 			List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
 			for (EmsDashboard ed : edList) {
 				dbdList.add(Dashboard.valueOf(ed));
@@ -394,8 +413,9 @@ public class DashboardManager
 			}
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
-			EmsDashboardLastAccessPK edlapk = new EmsDashboardLastAccessPK(currentUser, dashboardId);
-			EmsDashboardLastAccess edla = em.find(EmsDashboardLastAccess.class, edlapk);
+			//			EmsDashboardLastAccessPK edlapk = new EmsDashboardLastAccessPK(currentUser, dashboardId);
+			//			EmsDashboardLastAccess edla = em.find(EmsDashboardLastAccess.class, edlapk);
+			EmsDashboardLastAccess edla = dsf.getEmsDashboardLastAccessByPK(dashboardId, currentUser);
 			return edla;
 		}
 		finally {
@@ -439,8 +459,9 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
-			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
-			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
+			//			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
+			//			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
+			EmsDashboardFavorite edf = dsf.getEmsDashboardFavoriteByPK(dashboardId, currentUser);
 			return edf != null;
 		}
 		finally {
@@ -462,7 +483,7 @@ public class DashboardManager
 		List<EmsDashboard> edList = dsf.getEmsDashboardFindAll();
 		List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
 		for (EmsDashboard ed : edList) {
-			dbdList.add(Dashboard.valueOf(ed));
+			dbdList.add(Dashboard.valueOf(ed, null, false, false));
 		}
 		return dbdList;
 	}
@@ -563,6 +584,17 @@ public class DashboardManager
 		int index = 1;
 		String currentUser = UserContext.getCurrentUser();
 		List<Object> paramList = new ArrayList<Object>();
+		sb = new StringBuilder(" from Ems_Dashboard p  ");
+		if (getListDashboardsOrderBy(orderBy).toLowerCase().contains("access_date")) {
+			sb.append("left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?"
+					+ index++ + " and p.tenant_Id = le.tenant_Id) ");
+			paramList.add(currentUser);
+		}
+		if (filter != null && filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
+			sb.append("left join Ems_Dashboard_Favorite df on (p.dashboard_Id = df.dashboard_Id and df.user_name = ?" + index++
+					+ " and p.tenant_Id = df.tenant_Id) ");
+			paramList.add(currentUser);
+		}
 		if (apps.isEmpty()) {
 			// no subscribe apps
 			//			sb = new StringBuilder(
@@ -576,8 +608,8 @@ public class DashboardManager
 				paramList.add(currentUser);
 			}
 			if (filter != null && filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
-				sb.append("left join Ems_Dashboard_Favorite df on (p.dashboard_Id =df.dashboard_Id and df.user_name = ?"
-						+ index++ + " and p.tenant_Id = df.tenant_Id) ");
+				sb.append("left join Ems_Dashboard_Favorite df on (p.dashboard_Id =df.dashboard_Id and df.user_name = ?" + index++
+						+ " and p.tenant_Id = df.tenant_Id) ");
 				paramList.add(currentUser);
 			}
 			sb.append("where p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
@@ -601,17 +633,7 @@ public class DashboardManager
 			//							+ sbApps.toString() + "))) ");
 
 			//			index = 4;
-			sb = new StringBuilder(" from Ems_Dashboard p  ");
-			if (getListDashboardsOrderBy(orderBy).toLowerCase().contains("access_date")) {
-				sb.append("left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?"
-						+ index++ + " and p.tenant_Id = le.tenant_Id) ");
-				paramList.add(currentUser);
-			}
-			if (filter != null && filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
-				sb.append("left join Ems_Dashboard_Favorite df on (p.dashboard_Id = df.dashboard_Id and df.user_name = ?"
-						+ index++ + " and p.tenant_Id = df.tenant_Id) ");
-				paramList.add(currentUser);
-			}
+
 			sb.append("where p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
 					+ " or (p.is_system = 1 and p.application_type in (" + sbApps.toString() + "))) ");
 			paramList.add(tenantId);
@@ -699,13 +721,15 @@ public class DashboardManager
 			}
 
 			if (!ic) {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and t.title like ?"
-						+ index++ + " )) ");
+				sb.append(
+						" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and t.title like ?"
+								+ index++ + " )) ");
 				paramList.add("%" + queryString + "%");
 			}
 			else {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and lower(t.title) like ?"
-						+ index++ + " )) ");
+				sb.append(
+						" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and lower(t.title) like ?"
+								+ index++ + " )) ");
 				paramList.add("%" + queryString.toLowerCase(locale) + "%");
 			}
 		}
@@ -715,7 +739,9 @@ public class DashboardManager
 
 		//query
 		StringBuilder sbQuery = new StringBuilder(sb);
-		sbQuery.insert(0, "select p.* ");
+		sbQuery.insert(0,
+				"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
+						+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE ");
 		String jpqlQuery = sbQuery.toString();
 		//System.out.println("sql: " + jpqlQuery);
 		logger.debug(jpqlQuery);
@@ -723,38 +749,34 @@ public class DashboardManager
 		EntityManager em = dsf.getEntityManager();
 		Query listQuery = em.createNativeQuery(jpqlQuery, EmsDashboard.class);
 		initializeQueryParams(listQuery, paramList);
-		//listQuery.setFirstResult(firstResult);
-		//listQuery.setMaxResults(maxResults);
+		listQuery.setFirstResult(firstResult);
+		listQuery.setMaxResults(maxResults);
 		@SuppressWarnings("unchecked")
 		List<EmsDashboard> edList = listQuery.getResultList();
 		List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
 
 		if (edList != null && !edList.isEmpty()) {
-			for (int i = 0; i < maxResults && i + firstResult < edList.size(); i++) {
-				//				int idx = i + firstResult;
-				//				if (idx >= edList.size()) {
-				//					break;
-				//				}
-				dbdList.add(Dashboard.valueOf(edList.get(i + firstResult)));
+			for (int i = 0; i < edList.size(); i++) {
+				dbdList.add(Dashboard.valueOf(edList.get(i), null, false, false));
 			}
 		}
-		Long totalResults = edList == null ? 0L : Long.valueOf(edList.size());
+		//		Long totalResults = edList == null ? 0L : Long.valueOf(edList.size());
+		//		PaginatedDashboards pd = new PaginatedDashboards(totalResults, firstResult, dbdList == null ? 0 : dbdList.size(),
+		//				maxResults, dbdList);
+		//		return pd;
+
+		StringBuilder sbCount = new StringBuilder(sb);
+		sbCount.insert(0, "select count(*) ");
+		String jpqlCount = sbCount.toString();
+		logger.debug(jpqlCount);
+		Query countQuery = em.createNativeQuery(jpqlCount);
+		initializeQueryParams(countQuery, paramList);
+		Long totalResults = ((BigDecimal) countQuery.getSingleResult()).longValue();
 		PaginatedDashboards pd = new PaginatedDashboards(totalResults, firstResult, dbdList == null ? 0 : dbdList.size(),
 				maxResults, dbdList);
 		return pd;
-		/*
-				StringBuilder sbCount = new StringBuilder(sb);
-				sbCount.insert(0, "select count(*) ");
-				String jpqlCount = sbCount.toString();
-				logger.debug(jpqlCount);
-				Query countQuery = em.createNativeQuery(jpqlCount);
-				initializeQueryParams(countQuery, paramList);
-				Long totalResults = ((BigDecimal) countQuery.getSingleResult()).longValue();
-				PaginatedDashboards pd = new PaginatedDashboards(totalResults, firstResult, dbdList == null ? 0 : dbdList.size(),
-						maxResults, dbdList);
-				return pd;*/
 	}
-	
+
 	/**
 	 * Removes a dashboard from favorite list
 	 *
@@ -777,8 +799,9 @@ public class DashboardManager
 			}
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
-			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
-			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
+			//			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
+			//			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
+			EmsDashboardFavorite edf = dsf.getEmsDashboardFavoriteByPK(dashboardId, currentUser);
 			if (edf != null) {
 				dsf.removeEmsDashboardFavorite(edf);
 			}
@@ -816,7 +839,7 @@ public class DashboardManager
 				}
 			}
 			//check dashboard name
-			if (dbd.getName() == null || dbd.getName().trim() == "" || dbd.getName().length() > 64) {
+			if (dbd.getName() == null || "".equals(dbd.getName().trim()) || dbd.getName().length() > 64) {
 				throw new CommonFunctionalException(
 						MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_NAME_ERROR));
 			}
@@ -847,7 +870,7 @@ public class DashboardManager
 			ed.setOwner(currentUser);
 			dsf.persistEmsDashboard(ed);
 			updateLastAccessDate(ed.getDashboardId(), tenantId);
-			return Dashboard.valueOf(ed, dbd);
+			return Dashboard.valueOf(ed, dbd, true, true);
 		}
 		finally {
 			if (em != null) {
@@ -973,7 +996,7 @@ public class DashboardManager
 				ed.setOwner(dbd.getOwner());
 			}
 			dsf.mergeEmsDashboard(ed);
-			return Dashboard.valueOf(ed, dbd);
+			return Dashboard.valueOf(ed, dbd, true, true);
 		}
 		finally {
 			if (em != null) {
@@ -1015,8 +1038,9 @@ public class DashboardManager
 		}
 		em = dsf.getEntityManager();
 		String currentUser = UserContext.getCurrentUser();
-		EmsDashboardLastAccessPK edlapk = new EmsDashboardLastAccessPK(currentUser, dashboardId);
-		EmsDashboardLastAccess edla = em.find(EmsDashboardLastAccess.class, edlapk);
+		//		EmsDashboardLastAccessPK edlapk = new EmsDashboardLastAccessPK(currentUser, dashboardId);
+		//		EmsDashboardLastAccess edla = em.find(EmsDashboardLastAccess.class, edlapk);
+		EmsDashboardLastAccess edla = dsf.getEmsDashboardLastAccessByPK(dashboardId, currentUser);
 		if (edla == null) {
 			edla = new EmsDashboardLastAccess(DateUtil.getCurrentUTCTime(), currentUser, dashboardId);
 			dsf.persistEmsDashboardLastAccess(edla);
@@ -1074,7 +1098,8 @@ public class DashboardManager
 	{
 		String opcTenantId = TenantContext.getCurrentTenant();
 		if (opcTenantId == null || "".equals(opcTenantId)) {
-			logger.warn("When trying to retrieve subscribed application, it's found the tenant context is not set (TenantContext.getCurrentTenant() == null)");
+			logger.warn(
+					"When trying to retrieve subscribed application, it's found the tenant context is not set (TenantContext.getCurrentTenant() == null)");
 			return null;
 		}
 		List<String> appNames = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId);
@@ -1131,7 +1156,8 @@ public class DashboardManager
 				return true;
 			}
 		}
-		logger.debug("dashboard can't be accessed by current tenant as it's application type isn't in the subscribed application list");
+		logger.debug(
+				"dashboard can't be accessed by current tenant as it's application type isn't in the subscribed application list");
 		return false;
 	}
 }

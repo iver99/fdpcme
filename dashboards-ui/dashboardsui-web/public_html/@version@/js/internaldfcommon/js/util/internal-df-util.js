@@ -32,11 +32,11 @@ define(['knockout',
             if (isDevMode){
                self.getDevData = function(){
                    return devData;
-               }
+               };
             }
             self.isDevMode = function(){
                 return isDevMode;
-            }
+            };
             
             self.getUserName = function() {
                 return userName;
@@ -109,7 +109,7 @@ define(['knockout',
                 }else{
                     return '/sso.static/savedsearch.widgets';
                 }
-            }
+            };
             self.getPreferencesUrl=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
                 if (self.isDevMode()){
@@ -132,7 +132,7 @@ define(['knockout',
              * @returns {Array} quickLinks
              */
             self.discoverQuickLinks = function() {
-            	var regInfo = self.getRegistrationInfo();
+                var regInfo = self.getRegistrationInfo();
                 if (regInfo && regInfo.quickLinks){
                     return regInfo.quickLinks;
                 }
@@ -146,7 +146,7 @@ define(['knockout',
              * @returns {Array} visualAnalyzerLinks
              */
             self.discoverVisualAnalyzerLinks = function() {
-            	var regInfo = self.getRegistrationInfo();
+                var regInfo = self.getRegistrationInfo();
                 if (regInfo && regInfo.visualAnalyzers){
                     return regInfo.visualAnalyzers;
                 }
@@ -161,7 +161,7 @@ define(['knockout',
              * @returns {parameter value}
              */
             self.getUrlParam = function(name){
-                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
+                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(window.location.search);
                 return results === null ? "" : results[1];                
             };
             
@@ -227,16 +227,16 @@ define(['knockout',
             };
             
             self.getRelUrlFromFullUrl = function(url) {
-            	if (!url)
-            		return url;
-            	var protocolIndex = url.indexOf('://');
-            	if (protocolIndex === -1)
-            		return url;
-            	var urlNoProtocol = url.substring(protocolIndex + 3);
-            	var relPathIndex = urlNoProtocol.indexOf('/');
-            	if (relPathIndex === -1)
-            		return url;
-            	return urlNoProtocol.substring(relPathIndex);
+                if (!url)
+                    return url;
+                var protocolIndex = url.indexOf('://');
+                if (protocolIndex === -1)
+                    return url;
+                var urlNoProtocol = url.substring(protocolIndex + 3);
+                var relPathIndex = urlNoProtocol.indexOf('/');
+                if (relPathIndex === -1)
+                    return url;
+                return urlNoProtocol.substring(relPathIndex);
             };
             
             /**
@@ -253,8 +253,8 @@ define(['knockout',
                     var providerVersionPlus = encodeURIComponent(providerVersion+'+');
                     var assetRoot = dfu.discoverUrl(providerName, providerVersionPlus, providerAssetRoot);
                     if (assetRoot){
-                    	if (relUrlExpected)
-                    		assetRoot = self.getRelUrlFromFullUrl(assetRoot);
+                        if (relUrlExpected)
+                            assetRoot = self.getRelUrlFromFullUrl(assetRoot);
                         return assetRoot;
                     }else{
                         console.log("Warning: asset root not found by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
@@ -274,7 +274,7 @@ define(['knockout',
                     }
                 }
                 return null;
-            };
+            }
             
             /**
              * Discover quick link
@@ -301,14 +301,14 @@ define(['knockout',
              * Display message
              */
             self.showMessage = function(messageObj) {
-            	return msgUtil.showMessage(messageObj);
+                return msgUtil.showMessage(messageObj);
             };
             
             /**
              * Discover logout url for current logged in user
              */
             self.discoverLogoutUrl = function() {
-            	return dfu.discoverLogoutUrl();
+                return dfu.discoverLogoutUrl();
             };
             
         }

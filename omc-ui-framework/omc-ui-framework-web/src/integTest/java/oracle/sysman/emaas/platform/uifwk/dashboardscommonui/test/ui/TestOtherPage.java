@@ -14,8 +14,8 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
 import org.testng.Assert;
-import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 /**
  * @author shangwan
@@ -26,71 +26,68 @@ public class TestOtherPage extends CommonUIUtils
 	public static void initValue()
 	{
 		//CommonUIUtils.getAppName(sTenantId,sSsoUserName);
-		CommonUIUtils.getRoles(sTenantId,sSsoUserName);
+		CommonUIUtils.getRoles(sTenantId, sSsoUserName);
 	}
-	
+
 	@Test
 	public void testAPMPage() throws Exception
 	{
-		try
-		{
+		try {
 			CommonUIUtils.commonUITestLog("This is to test APM Page");
-	
+
 			String testName = this.getClass().getName() + ".testAPMPage";
 			WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
 			//CommonUIUtils.getAppName(sTenantId,sSsoUserName);
 			//CommonUIUtils.getRoles(sTenantId,sSsoUserName);
-			Thread.sleep(5000);
-			
+
 			//login
-			Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver,"?appId=APM",sTenantId,sSsoUserName,sSsoPassword);
+			Boolean bLoginSuccessful = CommonUIUtils
+					.loginCommonUI(webdriver, "?appId=APM", sTenantId, sSsoUserName, sSsoPassword);
 			webdriver.getLogger().info("Assert that common UI login was successfuly");
 			Assert.assertTrue(bLoginSuccessful);
-			
-			Thread.sleep(10000);
-			verifyPageContent(webdriver, "Application Performance Monitoring");
-	
+
+			CommonUIUtils.verifyPageContent(webdriver, "Application Performance Monitoring");
+
 			//click the compass icon
 			webdriver.getLogger().info("Click the Application navigator icon");
+			webdriver.waitForElementPresent(UIControls.sCompassIcon);
 			webdriver.click(UIControls.sCompassIcon);
 			webdriver.takeScreenShot();
-	
-			verifyMenu(webdriver, isAPMAdmin);
-	
+
+			CommonUIUtils.verifyMenu(webdriver, isAPMAdmin);
+
 			//click the compass icon again
-			Thread.sleep(10000);
-	
 			webdriver.getLogger().info("Click the Application navigator icon again");
+			webdriver.waitForElementPresent(UIControls.sCompassIcon);
 			webdriver.click(UIControls.sCompassIcon);
 			webdriver.takeScreenShot();
-			Thread.sleep(5000);
+
 			webdriver.getLogger().info("Verify the Links menu disappeared");
-			Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: none;");
-			
+			CommonUIUtils.verifyNoLinksMenu(webdriver);
+
 			//Open a widget
-			openWidget(webdriver, false);
-	
+			CommonUIUtils.openWidget(webdriver, false);
+
 			//logout
 			webdriver.getLogger().info("Logout");
-			CommonUIUtils.logoutCommonUI(webdriver);			
-			
+			CommonUIUtils.logoutCommonUI(webdriver);
+
 		}
 		catch (Exception ex) {
 			Assert.fail(ex.getLocalizedMessage());
-		}	
+		}
 	}
-	
+
 	@Test
 	public void testErrorPage() throws Exception
 	{
-		try
-		{
+		try {
 			String testName = this.getClass().getName() + ".testErrorPage";
 			WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
 
 			//login
-			Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver, "?appId=Error",sTenantId,sSsoUserName,sSsoPassword);
-			Thread.sleep(10000);
+			Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver, "?appId=Error", sTenantId, sSsoUserName,
+					sSsoPassword);
 			webdriver.getLogger().info("Assert that common UI login was successfuly");
 			Assert.assertTrue(bLoginSuccessful);
 
@@ -113,26 +110,26 @@ public class TestOtherPage extends CommonUIUtils
 					"Sample page for OMC UI Framework components testing only");
 			//Assert.assertTrue(webdriver.isElementPresent(UIControls.sCompassIcon));
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sAddWidgetIcon));
-			
+
 			//click the compass icon
 			webdriver.getLogger().info("Click the Application navigator icon");
+			webdriver.waitForElementPresent(UIControls.sCompassIcon);
 			webdriver.click(UIControls.sCompassIcon);
 			webdriver.takeScreenShot();
-	
-			verifyMenu(webdriver, isDSAdmin);
-	
+
+			CommonUIUtils.verifyMenu(webdriver, isDSAdmin);
+
 			//click the compass icon again
-			Thread.sleep(10000);
-	
 			webdriver.getLogger().info("Click the Application navigator icon again");
+			webdriver.waitForElementPresent(UIControls.sCompassIcon);
 			webdriver.click(UIControls.sCompassIcon);
 			webdriver.takeScreenShot();
-			Thread.sleep(5000);
+
 			webdriver.getLogger().info("Verify the Links menu disappeared");
-			Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: none;");
+			CommonUIUtils.verifyNoLinksMenu(webdriver);
 
 			//Open a widget
-			openWidget(webdriver, false);
+			CommonUIUtils.openWidget(webdriver, false);
 
 			//logout
 			CommonUIUtils.logoutCommonUI(webdriver);
@@ -141,55 +138,54 @@ public class TestOtherPage extends CommonUIUtils
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}
-	
+
 	@Test
 	public void testTenantPage() throws Exception
 	{
-			try
-			{
-				CommonUIUtils.commonUITestLog("This is to test Tenant Manager Page");
-		
-				String testName = this.getClass().getName() + ".testTenantPage";
-				WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
-				//CommonUIUtils.getAppName(sTenantId,sSsoUserName);
-				//CommonUIUtils.getRoles(sTenantId,sSsoUserName);
-				Thread.sleep(5000);
-				
-				//login
-				Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver,"?appId=TenantManagement",sTenantId,sSsoUserName,sSsoPassword);
-				webdriver.getLogger().info("Assert that common UI login was successfuly");
-				Assert.assertTrue(bLoginSuccessful);
-		
-				verifyPageContent(webdriver, "Set up Oracle Management Cloud");
-		
-				//click the compass icon
-				webdriver.getLogger().info("Click the Application navigator icon");
-				webdriver.click(UIControls.sCompassIcon);
-				webdriver.takeScreenShot();
-		
-				verifyMenu(webdriver, isDSAdmin);
-		
-				//click the compass icon again
-				Thread.sleep(10000);
-		
-				webdriver.getLogger().info("Click the Application navigator icon again");
-				webdriver.click(UIControls.sCompassIcon);
-				webdriver.takeScreenShot();
-				Thread.sleep(5000);
-				webdriver.getLogger().info("Verify the Links menu disappeared");
-				Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: none;");
-				
-				//Open a widget
-				openWidget(webdriver, false);
-		
-				//logout
-				webdriver.getLogger().info("Logout");
-				CommonUIUtils.logoutCommonUI(webdriver);			
-				
-			}
-			catch (Exception ex) {
-				Assert.fail(ex.getLocalizedMessage());
-			}	
+		try {
+			CommonUIUtils.commonUITestLog("This is to test Tenant Manager Page");
+
+			String testName = this.getClass().getName() + ".testTenantPage";
+			WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+			//CommonUIUtils.getAppName(sTenantId,sSsoUserName);
+			//CommonUIUtils.getRoles(sTenantId,sSsoUserName);
+
+			//login
+			Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver, "?appId=TenantManagement", sTenantId, sSsoUserName,
+					sSsoPassword);
+			webdriver.getLogger().info("Assert that common UI login was successfuly");
+			Assert.assertTrue(bLoginSuccessful);
+
+			CommonUIUtils.verifyPageContent(webdriver, "Set up Oracle Management Cloud");
+
+			//click the compass icon
+			webdriver.getLogger().info("Click the Application navigator icon");
+			webdriver.waitForElementPresent(UIControls.sCompassIcon);
+			webdriver.click(UIControls.sCompassIcon);
+			webdriver.takeScreenShot();
+
+			CommonUIUtils.verifyMenu(webdriver, isDSAdmin);
+
+			//click the compass icon again
+			webdriver.getLogger().info("Click the Application navigator icon again");
+			webdriver.waitForElementPresent(UIControls.sCompassIcon);
+			webdriver.click(UIControls.sCompassIcon);
+			webdriver.takeScreenShot();
+
+			webdriver.getLogger().info("Verify the Links menu disappeared");
+			CommonUIUtils.verifyNoLinksMenu(webdriver);
+
+			//Open a widget
+			CommonUIUtils.openWidget(webdriver, false);
+
+			//logout
+			webdriver.getLogger().info("Logout");
+			CommonUIUtils.logoutCommonUI(webdriver);
+
+		}
+		catch (Exception ex) {
+			Assert.fail(ex.getLocalizedMessage());
+		}
 	}
 
 	/*
@@ -287,7 +283,7 @@ public class TestOtherPage extends CommonUIUtils
 
 		//login
 		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver, "?appId=APM&isAdmin=false");
-		
+
 		Thread.sleep(10000);
 
 		webdriver.getLogger().info("Assert that common UI login was successfuly");
@@ -795,5 +791,5 @@ public class TestOtherPage extends CommonUIUtils
 		//logout
 		CommonUIUtils.logoutCommonUI(webdriver);
 	}
-*/
+	 */
 }

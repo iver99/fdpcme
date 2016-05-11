@@ -1,9 +1,13 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+import java.text.SimpleDateFormat
+import java.util.Date
 
 apply plugin: 'eclipse'
 
 apply from:'test.gradle'
 
-
+dfversion = project.ext.getServiceVersion('DashboardService-API')
+def versionPathElement = dfversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
 
 publishing.publications {
     integTest(MavenPublication) {
@@ -16,22 +20,17 @@ publishing.publications {
                         setGroupId('com.oracle.emaas.emcpdf.test')
     }
 }
- 
 
-   sourceSets {	
-  main {	
-     java {	
-        srcDir 'src/main/java'	
-               }	
-    resources {	
-         srcDir 'src/main/java'	
-                }	
-         }	
-  	
+sourceSets {	
+	main {	
+		java {	
+			srcDir 'src/main/java'	
+		}	
+		resources {	
+			srcDirs = ['src/main/java', 'src/resources/java']
+		}	
+	}
  }
-
-
-
 
 artifactoryPublish {
 	 publications('integTest')
@@ -55,6 +54,7 @@ dependencies {
 	
 	compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1')  { transitive = false }
 	compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1')  { transitive = false }
+	compile(group: 'org.apache.logging.log4j', name:'log4j-slf4j-impl', version:'2.0.1')  { transitive = false }
         compile(group: 'org.apache.commons', name:'commons-lang3', version:'3.1') { transitive = false }
 	compile(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5')  { transitive = false }
 	compile(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')   { transitive = false }
@@ -66,8 +66,21 @@ dependencies {
 	compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.+')
         compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.+') 
 	compile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2')  { transitive = false }
+	compile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+	compile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
+	compile(group: 'com.sun.jersey', name: 'jersey-core', version: '1.17.1') {transitive=false}
+	compile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17.1') {transitive=false}
+	testCompile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
 
 }
+
+processResources {
+    from('src/main/resources') {
+        include '*.properties', '*.xml'
+        filter(ReplaceTokens, tokens: [version : versionPathElement])
+    }
+}
+
 build.dependsOn integTestJar
 
 
@@ -79,5 +92,6 @@ sourceSets {
                 resources.srcDirs = ['src/integTest/java']
         }
 }
+
 
 

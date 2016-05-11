@@ -61,8 +61,8 @@ public class TenantSubscriptionUtil
 			}
 			else {
 				LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
-				itrLogger
-				.info("RestClient is connecting to get response after getting authorization token from registration manager.");
+				itrLogger.info(
+						"RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
 			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
@@ -77,11 +77,13 @@ public class TenantSubscriptionUtil
 	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
 	private static Logger itrLogger = LogUtil.getInteractionLogger();
 
-	public static List<String> getTenantSubscribedServices(String tenant)
+	@SuppressWarnings("unchecked")
+	public static List<String> getTenantSubscribedServices(final String tenant)
 	{
 		// for junit test only
 		if (Boolean.TRUE.equals(IS_TEST_ENV)) {
-			logger.warn("In test environment, the subscribed applications for are tenants are specified to \"APM\" and \"ITAnalytics\"");
+			logger.warn(
+					"In test environment, the subscribed applications for are tenants are specified to \"APM\" and \"ITAnalytics\"");
 			return Arrays.asList(new String[] { "APM", "ITAnalytics" });
 		}
 
@@ -176,7 +178,8 @@ public class TenantSubscriptionUtil
 
 	public static boolean isAPMServiceOnly(List<String> services)
 	{
-		logger.debug("Checking if only APM is subscribed, checked services are {}", services == null ? null : services.toString());
+		logger.debug("Checking if only APM is subscribed, checked services are {}",
+				services == null ? null : services.toString());
 		if (services == null || services.size() != 1) {
 			return false;
 		}

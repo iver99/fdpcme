@@ -28,7 +28,10 @@ publishing.publications {
     
 }
 
-
+dependencies {
+    testConfig project(':dashboards-ui-test-common-api') { transitive = false }
+    testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+}
 
 artifactoryPublish {
 publications ('integTest')

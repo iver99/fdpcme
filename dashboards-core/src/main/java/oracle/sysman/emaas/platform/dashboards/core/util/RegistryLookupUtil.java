@@ -268,7 +268,7 @@ public class RegistryLookupUtil
 					protocoledLinks.add(link);
 				}
 			}
-			catch (Throwable thr) {
+			catch (Exception thr) {
 				logger.error(thr.getLocalizedMessage(), thr);
 				return protocoledLinks;
 			}
@@ -288,13 +288,15 @@ public class RegistryLookupUtil
 		List<Link> protocoledLinks = new ArrayList<Link>();
 		for (Link link : links) {
 			try {
-				logger.debug("Checks link on protocol {} with expected rel prefix {} against retrieved link (rel={}, href={})", protocol, relPrefix, link.getRel(), link.getHref());
+				logger.debug("Checks link on protocol {} with expected rel prefix {} against retrieved link (rel={}, href={})",
+						protocol, relPrefix, link.getRel(), link.getHref());
 				URI uri = URI.create(link.getHref());
-				if (protocol.equalsIgnoreCase(uri.getScheme()) && link.getRel() != null && link.getRel().indexOf(relPrefix) == 0) {
+				if (protocol.equalsIgnoreCase(uri.getScheme()) && link.getRel() != null
+						&& link.getRel().indexOf(relPrefix) == 0) {
 					protocoledLinks.add(link);
 				}
 			}
-			catch (Throwable thr) {
+			catch (Exception thr) {
 				logger.error(thr.getLocalizedMessage(), thr);
 				return protocoledLinks;
 			}
@@ -310,8 +312,9 @@ public class RegistryLookupUtil
 				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, tenantName);
 		InstanceInfo.Builder builder = InstanceInfo.Builder.newBuilder().withServiceName(serviceName);
-		if (!StringUtil.isEmpty(version))
+		if (!StringUtil.isEmpty(version)) {
 			builder = builder.withVersion(version);
+		}
 		InstanceInfo info = builder.build();
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		Link lk = null;
@@ -326,7 +329,8 @@ public class RegistryLookupUtil
 							"retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
 							serviceName, version, tenantName);
 					result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
-					itrLogger.debug("Retrieved InstanceInfo list {} by using LookupClient.lookup for InstanceInfo {}", result, info);
+					itrLogger.debug("Retrieved InstanceInfo list {} by using LookupClient.lookup for InstanceInfo {}", result,
+							info);
 				}
 				else {
 					result = new ArrayList<InstanceInfo>();
@@ -359,7 +363,8 @@ public class RegistryLookupUtil
 									sanitizedInstance, tenantName);
 						}
 						else {
-							logger.debug("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
+							logger.debug(
+									"Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
 							sanitizedInstance = LookupManager.getInstance().getLookupClient()
 									.getSanitizedInstanceInfo(internalInstance);
 							itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
@@ -409,7 +414,8 @@ public class RegistryLookupUtil
 									sanitizedInstance, tenantName);
 						}
 						else {
-							logger.debug("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
+							logger.debug(
+									"Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
 							sanitizedInstance = LookupManager.getInstance().getLookupClient()
 									.getSanitizedInstanceInfo(internalInstance);
 							itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
@@ -614,8 +620,8 @@ public class RegistryLookupUtil
 
 	private static Link replaceVanityUrlDomainForLink(String domainPort, Link lk, String tenantName)
 	{
-		logger.debug("/replaceDomainForLink/ Trying to replace link url \"{}\" with domain \"{}\"", lk != null ? lk.getHref()
-				: null, domainPort);
+		logger.debug("/replaceDomainForLink/ Trying to replace link url \"{}\" with domain \"{}\"",
+				lk != null ? lk.getHref() : null, domainPort);
 		if (StringUtil.isEmpty(domainPort) || lk == null || StringUtil.isEmpty(lk.getHref())) {
 			return lk;
 		}

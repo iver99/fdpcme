@@ -76,14 +76,15 @@ maven {
 
 
 //Update the lrgConfig configuration to specify where the test jar is.
- dependencies{
-testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-uitest-integ-tests', version: "${REPO_BID}")
-{
-exclude('module':'groovy')
-}
-configurations{
-restAssured.exclude module:'groovy'
-}
+dependencies{
+    testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-uitest-integ-tests', version: "${REPO_BID}")
+    {
+	exclude('module':'groovy')
+    }
+    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '1.7.0+')
+    configurations{
+	restAssured.exclude module:'groovy'
+    }
 }
 
 //This are 1 test blocks to run testng tests.
@@ -93,6 +94,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'DashboardUITest') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestHomePage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage')
                 'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestBrandingBar')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')

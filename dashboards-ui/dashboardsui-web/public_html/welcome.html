@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <title data-bind="text: landingHomeTitle"></title>
         <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 
         <link rel="icon" type="image/png" href="/emsaasui/uifwk/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
-        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
+        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v1.2.0/alta/oj-alta-min.css" type="text/css"/>
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/landing-home-alta.css" type="text/css"/>
@@ -33,7 +33,7 @@
                 <div class="landing-home-box-wrapper">
                     <ul class="box-list-ul">
                         <li class="box-list-li box-list-a">
-                            <a data-bind="attr: {href: 'javascript: this.click()'}, click: openAPM">
+                            <a id="APM_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openAPM">
                                 <div class="service-box-wrapper">
                                     <div class="landing-home-box-img APM-box">
                                         <img class="app-image" src="@version@/images/AppPerfMonitoring_w_92px.png" data-bind="attr: {alt: APM}"/>
@@ -69,13 +69,13 @@
                                         <div class="landing-home-box-content-head" data-bind="text: ITA"></div>
                                         <div class="landing-home-box-content-desc" data-bind="text: ITADesc"></div>
                                         <select id="ITA_options" aria-label="IT Analytics" style="float: right; margin-top: 10px; margin-right: 10px; width: 235px;" data-bind="ojComponent: {component: 'ojSelect', value: ITA_Type, optionChange: ITAOptionChosen}">
-                                            <option value="select" data-bind="text: select"></option>
-                                            <option value="DB_perf" data-bind="text: ITA_DB_Performance"></option>
-                                            <option value="mw_perf" data-bind="text: ITA_Middleware_Performance"></option>
-                                            <option value="DB_resource" data-bind="text: ITA_DB_Resource"></option>
-                                            <option value="mw_resource" data-bind="text: ITA_Middleware_Resource"></option>
+                                            <option value="select" id="ITA_Select" data-bind="text: select"></option>
+                                            <option value="DB_perf" id="ITA_DB_perf" data-bind="text: ITA_DB_Performance"></option>
+                                            <option value="mw_perf" id="ITA_mw_perf" data-bind="text: ITA_Middleware_Performance"></option>
+                                            <option value="DB_resource" id="ITA_DB_resource" data-bind="text: ITA_DB_Resource"></option>
+                                            <option value="mw_resource" id="ITA_mw_resource" data-bind="text: ITA_Middleware_Resource"></option>
                                             <!-- ko foreach: exploreDataInITA -->                                            
-                                            <option data-bind="value: name, text: name"></option>
+                                            <option data-bind="attr: {id: id}, value: name, text: name"></option>
                                             <!-- /ko -->
                                         </select>
                                     </div>
@@ -105,10 +105,10 @@
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: dataExplorers"></div>
                                         <div class="landing-home-box-content-desc" data-bind="text: dataExplorersDesc"></div>
-                                        <select aria-label="Data Explorers" style="float: right; margin-top: 25px; margin-right: 10px; width: 235px;" data-bind="ojComponent: {component: 'ojSelect', value: data_type, optionChange: dataExplorersChosen}">                                      
-                                            <option value="select" data-bind="text: select"></option>                                            
+                                        <select id="dataExp_options" aria-label="Data Explorers" style="float: right; margin-top: 25px; margin-right: 10px; width: 235px;" data-bind="ojComponent: {component: 'ojSelect', value: data_type, optionChange: dataExplorersChosen}">                                      
+                                            <option value="select" id="dataExp_Select" data-bind="text: select"></option>                                            
                                             <!-- ko foreach: exploreDataLinkList -->
-                                            <option data-bind="value: name, text: name"></option>
+                                            <option data-bind="attr: {id: 'dataExp_'+name}, value: name, text: name"></option>
                                             <!-- /ko -->
                                         </select>
 
@@ -123,13 +123,13 @@
                                 <hr/>
                                 <ul>
                                     <li class="landing-home-box-learn-more">
-                                        <a data-bind="attr: {href: 'javascript: this.click()'}, click: openGetStarted, text: getStarted"></a>
+                                        <a data-bind="attr: {href: 'javascript: this.click()', id: 'getStarted'}, click: openGetStarted, text: getStarted"></a>
                                     </li>
                                     <li class="landing-home-box-learn-more">
-                                        <a data-bind="attr: {href: 'javascript: this.click()'}, click: openVideos, text: videos"></a>
+                                        <a data-bind="attr: {href: 'javascript: this.click()', id: 'videos'}, click: openVideos, text: videos"></a>
                                     </li>
                                     <li class="landing-home-box-learn-more">
-                                        <a data-bind="attr: {href: 'javascript: this.click()'}, click: openCommunity, text: community"></a>
+                                        <a data-bind="attr: {href: 'javascript: this.click()', id: 'service_offerings'}, click: openCommunity, text: community"></a>
                                     </li>
                                 </ul>
                             </div>

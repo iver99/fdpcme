@@ -40,13 +40,12 @@ define(['jquery', 'ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-uti
                         var tenantIdDotUsername = data.currentUser;
                         var indexOfDot = tenantIdDotUsername.indexOf(".");
                         tenantName = tenantIdDotUsername.substring(0, indexOfDot);
-                        userName = tenantIdDotUsername.substring(indexOfDot + 1, tenantIdDotUsername.length)
+                        userName = tenantIdDotUsername.substring(indexOfDot + 1, tenantIdDotUsername.length);
                         tenantUser = tenantIdDotUsername;
                     });
 
                   if ((!tenantName || !userName) && location.href && location.href.indexOf("error.html") === -1) {
-                        location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl="
-                                          + encodeURIComponent(location.href);
+                        location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl="+ encodeURIComponent(location.href);
                         return null;
                   }
                   else

@@ -536,7 +536,7 @@ public class DashboardCRUD
 
 	}
 
-	@Test
+	/*@Test
 	public void dashboard_fullquery()
 	{
 		int totalResults = 0;
@@ -696,7 +696,7 @@ public class DashboardCRUD
 			System.out.println("------------------------------------------");
 			System.out.println("											");
 		}
-	}
+	}*/
 
 	@Test
 	public void dashboard_lastAccess()

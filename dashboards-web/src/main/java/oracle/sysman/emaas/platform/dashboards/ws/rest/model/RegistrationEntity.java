@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +18,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
@@ -29,14 +33,13 @@ import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * @author miao
  */
-public class RegistrationEntity
+public class RegistrationEntity implements Serializable
 {
+	private static final long serialVersionUID = 7632586542760891331L;
+
 	private static final Logger logger = LogManager.getLogger(RegistrationEntity.class);
 
 	public static final String NAME_REGISTRYUTILS = "registryUrls";
@@ -75,6 +78,7 @@ public class RegistrationEntity
 	//	private String registryUrls;
 
 	static boolean successfullyInitialized = false;
+
 	static {
 		try {
 			//.initComponent() reads the default "looup-client.properties" file in class path
@@ -108,6 +112,7 @@ public class RegistrationEntity
 	/**
 	 * @return Administration links discovered from service manager
 	 */
+	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getAdminLinks()
 	{
 		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
@@ -121,11 +126,12 @@ public class RegistrationEntity
 	//		return new String(LookupManager.getInstance().getAuthorizationToken());
 	//	}
 
+	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getCloudServices()
 	{
+		String tenantName = TenantContext.getCurrentTenant();
 		List<LinkEntity> list = new ArrayList<LinkEntity>();
 		Set<String> subscribedApps = getTenantSubscribedApplicationSet(false);
-		String tenantName = TenantContext.getCurrentTenant();
 		for (String app : subscribedApps) {
 			try {
 				if (APM_SERVICENAME.equals(app)) {
@@ -177,6 +183,7 @@ public class RegistrationEntity
 	/**
 	 * @return Home links discovered from service manager
 	 */
+	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getHomeLinks()
 	{
 		return lookupLinksWithRelPrefix(NAME_HOME_LINK);
@@ -312,7 +319,7 @@ public class RegistrationEntity
 	/**
 	 * This method returns a set of SM(service manager) services names represents the subscribed services for specified tenant
 	 *
-	 * @param tenantName
+	 * @param isAdmin
 	 * @return
 	 */
 	private Set<String> getTenantSubscribedApplicationSet(boolean isAdmin)
@@ -371,8 +378,8 @@ public class RegistrationEntity
 			try {
 				SanitizedInstanceInfo sanitizedInstance = null;
 				if (!StringUtil.isEmpty(tenantName)) {
-					sanitizedInstance = LookupManager.getInstance().getLookupClient()
-							.getSanitizedInstanceInfo(internalInstance, tenantName);
+					sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance,
+							tenantName);
 					logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
 							sanitizedInstance, tenantName);
 				}

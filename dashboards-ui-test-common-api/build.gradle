@@ -1,0 +1,54 @@
+version = "1.7.0" + "-$buildTimestamp"
+sourceSets {
+integTest {
+        java.srcDir 'src/integTest/java'
+
+    
+        compileClasspath = configurations.testConfig + configurations.webdriver + configurations.testNG
+        }
+    }
+
+clean{
+  delete 'build'
+}
+
+task integTestJar (type:Jar) {
+    from sourceSets.integTest.output
+   
+}
+
+
+check.dependsOn integTestJar
+
+ext.customPomDefinition = {
+    def dependencies = asNode().appendNode('dependencies')
+    configurations.testConfig.allDependencies.each { dep ->
+        if (dep.name != 'unspecified') {
+            def dependency = dependencies.appendNode('dependency')
+            dependency.appendNode('groupId', dep.group)
+            dependency.appendNode('artifactId', dep.name)
+            dependency.appendNode('version', dep.version)
+	     
+        }
+    }
+}
+publishing.publications {
+    integTest(MavenPublication) {
+                        setArtifactId(project.name)
+                        setGroupId('com.oracle.emaas.emcpdf.testsdk.ui')
+                        artifact integTestJar.archivePath
+			pom.withXml customPomDefinition
+    }
+    
+}
+
+
+
+artifactoryPublish {
+publications ('integTest')
+
+    }
+
+dependencies {
+testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+}

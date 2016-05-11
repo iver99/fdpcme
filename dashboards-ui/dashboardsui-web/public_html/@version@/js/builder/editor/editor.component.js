@@ -11,7 +11,7 @@ define(['knockout',
         'builder/dashboard.tile.model',
         'builder/editor/editor.tiles'
     ], 
-    function(ko, $, oj, dfu, dtm) {
+    function(ko, $, oj, dfu) {
         function Cell(row, column) {
             var self = this;
             
@@ -130,7 +130,7 @@ define(['knockout',
         }
         Builder.registerModule(DashboardItemChangeEvent, 'DashboardItemChangeEvent');
         
-        function DashboardTextTile(mode, $b, widget, funcShow, deleteTextCallback) {
+        /*function DashboardTextTile(mode, $b, widget, funcShow, deleteTextCallback) {
             var self = this;
             self.dashboard = $b.dashboard;
             self.title = ko.observable("text widget title"); //to do 
@@ -149,7 +149,7 @@ define(['knockout',
 
             Builder.initializeTextTileAfterLoad(mode, $b, self, funcShow, deleteTextCallback, Builder.isContentLengthValid);            
         }
-        Builder.registerModule(DashboardTextTile, 'DashboardTextTile');
+        Builder.registerModule(DashboardTextTile, 'DashboardTextTile');*/
 
         /**
          *  Object used to represents a dashboard tile created by clicking adding widget
@@ -169,11 +169,11 @@ define(['knockout',
             self.isMaximized = ko.observable(false);            
 
             var kowidget;
-            if(widget.type === "TEXT_WIDGET") {
-                kowidget = new Builder.TextTileItem(widget);
-            }else {
+//            if(widget.type === "TEXT_WIDGET") {
+//                kowidget = new Builder.TextTileItem(widget);
+//            }else {
                 kowidget = new Builder.TileItem(widget);
-            }
+//            }
             for (var p in kowidget)
                 self[p] = kowidget[p];
             if(self['WIDGET_SUPPORT_TIME_CONTROL']) {
@@ -189,7 +189,7 @@ define(['knockout',
         }
         Builder.registerModule(DashboardTile, 'DashboardTile');
 
-        function initializeTextTileAfterLoad(mode, $b, tile, funcShow, deleteTextCallback, isContentLengthValid) {
+        /*function initializeTextTileAfterLoad(mode, $b, tile, funcShow, deleteTextCallback) {
             if(!tile) {
                 return;
             }
@@ -207,7 +207,7 @@ define(['knockout',
     //                reorder: funcReorder,
                 tiles: dashboard.tiles,
                 tile: tile,
-                validator: isContentLengthValid,
+                validator: Builder.isContentLengthValid,
                 builder: $b
             };
 
@@ -217,7 +217,7 @@ define(['knockout',
                 return tile.cssStyle() + "display:" + display + "; left: 10px;"+tileBorder;
             });
         }
-        Builder.registerFunction(initializeTextTileAfterLoad, 'initializeTextTileAfterLoad');
+        Builder.registerFunction(initializeTextTileAfterLoad, 'initializeTextTileAfterLoad');*/
 
         function initializeTileAfterLoad(mode, dashboard, tile, timeSelectorModel, targetContext, loadImmediately) {
             if (!tile)
@@ -231,13 +231,13 @@ define(['knockout',
                 return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard() || _currentUser !== dashboard.owner();
             });
             tile.widerEnabled = ko.computed(function() {
-                return tile.width() < mode.MODE_MAX_COLUMNS;
+                return mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS;
             });
             tile.narrowerEnabled = ko.computed(function() {
-                return tile.width() > 1;
+                return mode.getModeWidth(tile) > 1;
             });
             tile.shorterEnabled = ko.computed(function() {
-                return tile.height() > 1;
+                return mode.getModeHeight(tile) > 1;
             });
             tile.maximizeEnabled = ko.computed(function() {
                 return !tile.isMaximized();
@@ -250,12 +250,12 @@ define(['knockout',
                 return typeof(tile.configure)==="function";
             });
             tile.tileDisplayClass = ko.computed(function() {
-                var css = 'oj-md-'+(tile.width()*3) + ' oj-sm-'+(tile.width()*3) + ' oj-lg-'+(tile.width()*3);
+                var css = 'oj-md-'+(mode.getModeWidth(tile)*3) + ' oj-sm-'+(mode.getModeWidth(tile)*3) + ' oj-lg-'+(mode.getModeWidth(tile)*3);
                 css += tile.isMaximized() ? ' dbd-tile-maximized ' : '';
                 css += tile.shouldHide() ? ' dbd-tile-no-display' : '';
                 css += tile.editDisabled() ? ' dbd-tile-edit-disabled' : '';
                 css += tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD() ? ' dbd-tile-linked-dashboard' : '';
-                css += tile.toBeOccupied() ? ' dbd-tile-to-be-occupuied' : '';
+//                css += tile.toBeOccupied() ? ' dbd-tile-to-be-occupuied' : '';
                 return css;
             });
             tile.linkedDashboard = ko.computed(function() {
@@ -362,11 +362,11 @@ define(['knockout',
                     if (url){
                         tile.configure = function(){
                             if(dashboard.enableTimeRange() === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
-                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID());
+                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboard.id()+"&dashboardName="+dashboard.name());
                             }else{
                                 var start = timeSelectorModel.viewStart().getTime();
                                 var end = timeSelectorModel.viewEnd().getTime();
-                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&startTime="+start+"&endTime="+end);
+                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboard.id()+"&dashboardName="+dashboard.name()+"&startTime="+start+"&endTime="+end);
                             }
                         };
                     }

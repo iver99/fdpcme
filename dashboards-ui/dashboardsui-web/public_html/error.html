@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html id='global-html'>
+<html id="global-html" lang="en">
     <head>
         <title data-bind="text:errorPageTitle"></title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/png" href="/emsaasui/uifwk/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
-        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
+        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v1.2.0/alta/oj-alta-min.css" type="text/css"/>
         <style type="text/css">
             div.dbd-error-area {
               position: absolute; 
@@ -59,7 +59,7 @@
                     </div>
                     <br><br><br>
                     <div>
-                    	<button class="oj-button-primary" data-bind="click: signOut, 
+                    	<button id="dbd_sign_out_button" class="oj-button-primary" data-bind="click: signOut, 
                     					ojComponent: {component: 'ojButton', label: oj.Translations.getTranslatedString('DBS_ERROR_BTN_SIGN_OUT')}, 
                     					attr: {title: oj.Translations.getTranslatedString('DBS_ERROR_BTN_SIGN_OUT')}" 
                     			style="text-align: center"></button>
