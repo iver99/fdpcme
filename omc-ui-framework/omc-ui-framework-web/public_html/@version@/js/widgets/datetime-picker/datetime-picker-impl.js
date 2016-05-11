@@ -1752,7 +1752,14 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             hoursExcludedStart.push(hoursExcluded[0]);
                             for(i=1; i<hoursExcluded.length; i++) {                                
                                 if(i === hoursExcluded.length-1) {
-                                    hoursExcludedEnd.push(hoursExcluded[i]);
+                                    if(hoursExcluded[i] - hoursExcluded[i-1] === 1) {
+                                        hoursExcludedEnd.push(hoursExcluded[i]);
+                                    }else {
+                                        hoursExcludedEnd.push(hoursExcluded[i-1]);
+                                        hoursExcludedStart.push(hoursExcluded[i]);
+                                        hoursExcludedEnd.push(hoursExcluded[i]);
+                                    }
+                                    
                                     break;
                                 }
                                 if(hoursExcluded[i] - hoursExcluded[i-1] === 1) {
@@ -1764,11 +1771,12 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             }
                             
                             for(i=0; i<hoursExcludedStart.length; i++) {
-                                if(hoursExcludedStart[i] !== hoursExcludedEnd[i]) {
-                                    hoursExcludedInfo += hoursExcludedStart[i] + "-" +hoursExcludedEnd[i];
-                                }else {
-                                    hoursExcludedInfo += hoursExcludedStart[i];
-                                }
+//                                if(hoursExcludedStart[i] !== hoursExcludedEnd[i]) {
+//                                    hoursExcludedInfo += hoursExcludedStart[i] + "-" +hoursExcludedEnd[i];
+//                                }else {
+//                                    hoursExcludedInfo += hoursExcludedStart[i];
+//                                }
+                                hoursExcludedInfo += hoursExcludedStart[i] + "-" +hoursExcludedEnd[i];
                                 if(i === hoursExcludedStart.length-1) {
                                     hoursExcludedInfo += "";
                                 }else {

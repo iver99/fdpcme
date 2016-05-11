@@ -34,11 +34,11 @@
 
             <!--button id="cbtn" class="dbs-home-button-create-new-dashboard"
                     data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, ojComponent: { component:'ojButton', label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button-->
-            <button data-bind="visible:showExploreDataBtn,ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_EXPLORE_BTN_LABEL'), 
+            <button name="exploreDataBtn" data-bind="visible:showExploreDataBtn,ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_EXPLORE_BTN_LABEL'), 
                                                                              menu: '#exploreDataMenu-'+sortById, rootAttributes: {'style': 'margin-left: 8px;'}}, 
                                                                attr: { 'title': getNlsString('DBS_HOME_EXPLORE_BTN_TT') }">
             </button>
-            <ul style="display:none"
+            <ul style="display:none" name="exploreDataMenu"
                 data-bind="ojComponent: {component: 'ojMenu', select: exploreDataMenuItemSelect},attr:{id:'exploreDataMenu-'+sortById}">
                 <!-- ko foreach: exploreDataLinkList -->
                 <li>
@@ -116,7 +116,7 @@
         <div  style="border-top: 1px solid #d6dfe6; margin-top: 10px; padding-top: 5px; "> 
             <button class="oj-button-half-chrome" data-bind="ojComponent: {component:'ojButton', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_DELETE_LABEL'), 
                                                                                                        icons: {start:'oj-fwk-icon icon-trashcan-ena-16 dbs-icon-size-16'}, 
-                                                                                                       disabled: (dashboard.systemDashboard || $component.userName !== dashboard.owner)}, 
+                                                                                                       disabled: (dashboard.systemDashboard || $component.userName !== dashboard.owner || $component.dashboardInTabs)}, 
                                                                                          click: $component.handleDashboardDeleted"></button>
             <!--button class="oj-button-half-chrome oj-sm-float-end" data-bind="ojComponent: {component:'ojButton', label: 'Close'}, click: $component.handleCloseDashboardPop"></button-->
         </div>

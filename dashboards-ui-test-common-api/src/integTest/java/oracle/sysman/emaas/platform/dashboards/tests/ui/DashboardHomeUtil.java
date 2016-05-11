@@ -16,6 +16,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class DashboardHomeUtil
 {
+	public static final String DASHBOARD = "dashboard";
+	public static final String DASHBOARDSET = "dashboardSet";
 	public static final String EXPLOREDATA_MENU_ANALYZE = "Analyze";
 	public static final String EXPLOREDATA_MENU_LOG = "Log Visual Analyzer";
 	public static final String EXPLOREDATA_MENU_SEARCH = "Search";
@@ -32,19 +34,27 @@ public class DashboardHomeUtil
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_ASC = "owner_asc";
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_DSC = "owner_dsc";
 
+	public static void closeOverviewPage(WebDriver driver) throws Exception
+	{
+		if (driver.isDisplayed(DashBoardPageId.OverviewCloseID)) {
+			driver.getLogger().info("before clicking overview button");
+			driver.click(DashBoardPageId.OverviewCloseID);
+		}
+	}
+
 	/**
-	 * Create one Dashboard
+	 * Create one Dashboard or Dashbaord Set
 	 *
 	 * @param driver
 	 * @param name
 	 *            dashboard name
 	 * @param descriptions
 	 *            dashboard description(optional)
-	 * @param showTimeRangeFilter
-	 *            optional
+	 * @param type
+	 *            dashboard | dashboardSet
 	 * @throws Exception
 	 */
-	public static void createDashboard(WebDriver driver, String name, String descriptions, Boolean showTimeRangeFilter)
+	public static void createDashboard(WebDriver driver, String name, String descriptions, String type)
 			throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call createDashboard : " + name);
@@ -56,13 +66,11 @@ public class DashboardHomeUtil
 		if (descriptions != null && !descriptions.isEmpty()) {
 			driver.sendKeys(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardDescBoxID), descriptions);
 		}
-		if (showTimeRangeFilter == null || showTimeRangeFilter) {
-			driver.check(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardTimeRangeChecker));
+		if (DashboardHomeUtil.DASHBOARD.equalsIgnoreCase(type)) {
+			driver.check(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardType_Single));
+		} else if (DashboardHomeUtil.DASHBOARDSET.equalsIgnoreCase(type)) {
+			driver.check(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardType_Set));
 		}
-		else {
-			driver.uncheck(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardTimeRangeChecker));
-		}
-
 		driver.takeScreenShot();
 		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.DashOKButtonID));
 	}
@@ -149,6 +157,12 @@ public class DashboardHomeUtil
 		}
 	}
 
+	//	public static void createDashboardSet(WebDriver driver, String name, String descriptions, Boolean displayDesc,
+	//			Boolean selectorRefreshcontrol) throws Exception
+	//	{
+	//
+	//	}
+
 	/**
 	 * goto the link in Data Explorer by displayed name
 	 *
@@ -162,8 +176,8 @@ public class DashboardHomeUtil
 
 		Validator.notEmptyString("option", option);
 
-		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataBtnID));
-		WebElement menu = driver.getElement(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataMenu));
+		driver.click(DashboardHomeUtil.convertName(DashBoardPageId.ExploreDataBtnID));
+		WebElement menu = driver.getElement(DashboardHomeUtil.convertName(DashBoardPageId.ExploreDataMenu));
 		List<WebElement> menuList = menu.findElements(By.tagName("li"));
 		for (WebElement menuItem : menuList) {
 			if (option.equals(menuItem.getText())) {
@@ -172,12 +186,6 @@ public class DashboardHomeUtil
 			}
 		}
 	}
-
-	//	public static void createDashboardSet(WebDriver driver, String name, String descriptions, Boolean displayDesc,
-	//			Boolean selectorRefreshcontrol) throws Exception
-	//	{
-	//
-	//	}
 
 	/**
 	 * choose grid view
@@ -249,6 +257,22 @@ public class DashboardHomeUtil
 		else {
 			throw new IllegalArgumentException("Unkonw filter option: " + filter);
 		}
+	}
+
+	public static List<String> listDashboardNames(WebDriver driver) throws Exception
+	{
+		List<String> names = new ArrayList<String>();
+		List<WebElement> eles = driver.getWebDriver().findElements(By.xpath(DashBoardPageId.DashboardNameContainers));
+		for (WebElement e : eles) {
+			//String name = e.getAttribute("aria-label");
+			if (e.getAttribute("aria-label") != null) {
+				names.add(e.getAttribute("aria-label"));
+			}
+			else {
+				names.add(e.getText());
+			}
+		}
+		return names;
 	}
 
 	/**
@@ -493,6 +517,10 @@ public class DashboardHomeUtil
 	{
 		return "id=" + id;
 	}
+	
+	private static String convertName(String name) {
+		return "name=" + name;
+	}
 
 	private static void deleteDashboardInGrid(WebDriver driver, String dashboardName)
 	{
@@ -502,11 +530,11 @@ public class DashboardHomeUtil
 			if (dashboardName.equals(dashboard.getAttribute("aria-label"))) {
 				dashboard.findElement(By.cssSelector("button")).click(); // click "i" button
 				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON); // click delete
-                driver.waitForElementPresent(DashBoardPageId.BuilderDeleteDialogLocator);
-                driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM); // confirm to delete
+				driver.waitForElementPresent(DashBoardPageId.BuilderDeleteDialogLocator);
+				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM); // confirm to delete
 
-                WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-                wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(DashBoardPageId.BuilderDeleteDialogLocator)));
+				WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(DashBoardPageId.BuilderDeleteDialogLocator)));
 				break;
 			}
 		}
@@ -535,11 +563,11 @@ public class DashboardHomeUtil
 			if (dashboardName.equals(rowColList.get(nameColIndex).getText())) {
 				rowColList.get(buttonColIndex).findElement(By.tagName("button")).click(); // click "i" button
 				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON); // click delete
-                driver.waitForElementPresent(DashBoardPageId.BuilderDeleteDialogLocator);
-                driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM); // confirm to delete
-                WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-                wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(DashBoardPageId.BuilderDeleteDialogLocator)));
-                break;
+				driver.waitForElementPresent(DashBoardPageId.BuilderDeleteDialogLocator);
+				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM); // confirm to delete
+				WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(DashBoardPageId.BuilderDeleteDialogLocator)));
+				break;
 			}
 		}
 	}

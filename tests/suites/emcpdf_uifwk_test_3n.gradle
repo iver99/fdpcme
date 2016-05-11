@@ -85,7 +85,7 @@ dependencies {
     testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils', version:"${REPO_BID}")
     testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
-    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '1.7.0+') 
+    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '1.7.1+') 
     configurations {
 	restAssured.exclude module: 'groovy' 
     }

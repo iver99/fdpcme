@@ -13,9 +13,10 @@ public class DashBoardPageId
 	public static final String CreateDSOfDialogID = "createDsb";
 	public static final String DashBoardNameBoxID = "dbsHNameIn";
 	public static final String DashBoardDescBoxID = "dbsHDpIn";
-	public static final String DashBoardTimeRangeChecker = "ckbxTimeRangeFilter";
 	public static final String DashOKButtonID = "createDsb";
 	public static final String DashSaveButtonID = "createDsb-2";
+	public static final String DashBoardType_Single = "dashboardtype-single";
+	public static final String DashBoardType_Set = "dashboardtype-set";
 	//public static final String WidgetAddButtonID = "add-widget-button";
 	public static final String OptionsID = "dashboardOptsBtn";
 	public static final String DashBoardSaveID = "dashboard-screenshot";
@@ -107,6 +108,7 @@ public class DashBoardPageId
 	//Dashboard
 	public static final String DashboardNameLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele') and (@aria-label = '_name_' or text() = '_name_')]";//[contains(@class, 'dbs-dsbnameele')]//text()[. = '_name_']";//*[contains(@class, 'icon-listview-16')]";
 	public static final String OOBDashboardNameLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbsystem') and (@aria-label = '_name_' or text() = '_name_')]";
+	public static final String DashboardNameContainers = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele')]";
 
 	//Branding Bar links
 	//Home Link
@@ -236,6 +238,12 @@ public class DashBoardPageId
 	// auto refresh menu items
 	public static final String BuilderAutoRefreshOffSelectedLocator = "//li[@data-singledb-option='Off']/a/span[contains(@class, 'fa-check')]";
 	public static final String BuilderAutoRefreshOn5MinSelectedLocator = "//li[@data-singledb-option='On (Every 5 Minutes)']/a/span[contains(@class, 'fa-check')]";
+
+	//dashboard set
+	public static final String DashboardSetNavsContainerCSS = "#dbd-set-tabs";
+	public static final String DashboardSetNavsCSS = ".dbd-tabs-nav .oj-tabs-tab";
+	public static final String DashboardSetNavRemoveBtnCSS = ".oj-tabs-close-icon";
+	public static final String DashboardSetNavAddBtnCSS = "#add-nav";
 
 	// for R1.6, following ids are not used any more
 	//refresh //*[@id='ojChoiceId_autoRefreshSelect_selected

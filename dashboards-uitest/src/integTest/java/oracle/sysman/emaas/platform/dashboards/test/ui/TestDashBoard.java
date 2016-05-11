@@ -111,7 +111,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//create dashboard
 		webd.getLogger().info("Create a dashboard: no description, with time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_noDesc, null, true);
+		DashboardHomeUtil.createDashboard(webd, dbName_noDesc, null, DashboardHomeUtil.DASHBOARD);
 		webd.getLogger().info("verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noDesc, null, true), "Create dashboard failed!");
 
@@ -158,7 +158,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//create dashboard
 		webd.getLogger().info("Create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_noWidgetGrid, dbDesc, true);
+		DashboardHomeUtil.createDashboard(webd, dbName_noWidgetGrid, dbDesc, DashboardHomeUtil.DASHBOARD);
 		webd.getLogger().info("verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noWidgetGrid, dbDesc, true),
 				"Create dashboard failed!");
@@ -184,7 +184,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//create dashboard
 		webd.getLogger().info("Create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_noTimeRefresh, dbDesc, false);
+		DashboardHomeUtil.createDashboard(webd, dbName_noTimeRefresh, dbDesc, DashboardHomeUtil.DASHBOARD);
 		webd.getLogger().info("verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noTimeRefresh, dbDesc, false),
 				"Create dashboard failed!");
@@ -215,7 +215,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//create dashboard
 		webd.getLogger().info("create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_noWidgetList, dbDesc, true);
+		DashboardHomeUtil.createDashboard(webd, dbName_noWidgetList, dbDesc, DashboardHomeUtil.DASHBOARD);
 		webd.getLogger().info("verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noWidgetList, dbDesc, true),
 				"Create dashboard failed!");
@@ -238,7 +238,7 @@ public class TestDashBoard extends LoginAndLogout
 		//create dashboard
 		webd.getLogger().info("Start to create dashboard in grid view");
 		DashboardHomeUtil.gridView(webd);
-		DashboardHomeUtil.createDashboard(webd, dbName_withWidgetGrid, dbDesc, true);
+		DashboardHomeUtil.createDashboard(webd, dbName_withWidgetGrid, dbDesc, DashboardHomeUtil.DASHBOARD);
 
 		//verify dashboard in builder page
 		webd.getLogger().info("Verify the dashboard created Successfully");
@@ -347,7 +347,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//create dashboard
 		webd.getLogger().info("Create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_favorite, dbDesc, true);
+		DashboardHomeUtil.createDashboard(webd, dbName_favorite, dbDesc, DashboardHomeUtil.DASHBOARD);
 
 		//verify dashboard in builder page
 		webd.getLogger().info("Verify the dashboard created Successfully");
@@ -559,7 +559,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//create a dashboard
 		webd.getLogger().info("create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName, null, true);
+		DashboardHomeUtil.createDashboard(webd, dbName, null, DashboardHomeUtil.DASHBOARD);
 		//verify dashboard in builder page
 		webd.getLogger().info("Verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, null, true), "Create dashboard failed!");
@@ -601,7 +601,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//create dashboard
 		webd.getLogger().info("create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_setHome, dbDesc, true);
+		DashboardHomeUtil.createDashboard(webd, dbName_setHome, dbDesc, DashboardHomeUtil.DASHBOARD);
 
 		//verify dashboard in builder page
 		webd.getLogger().info("Verify the dashboard created Successfully");
@@ -692,7 +692,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//create dashboard
 		webd.getLogger().info("Create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_timepicker, dbDesc, true);
+		DashboardHomeUtil.createDashboard(webd, dbName_timepicker, dbDesc, DashboardHomeUtil.DASHBOARD);
 
 		//verify dashboard in builder page
 		webd.getLogger().info("Verify the dashboard created Successfully");
