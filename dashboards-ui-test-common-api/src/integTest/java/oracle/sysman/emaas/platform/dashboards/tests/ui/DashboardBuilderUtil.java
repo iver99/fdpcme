@@ -15,6 +15,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 public class DashboardBuilderUtil
 {
@@ -41,6 +42,7 @@ public class DashboardBuilderUtil
 		By locatorOfKeyEl = By.cssSelector(DashBoardPageId.RightDrawerCSS);
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfKeyEl));
+        WaitUtil.waitForPageFullyLoaded(driver);
 
 		driver.getLogger().info("[DashboardHomeUtil] call addWidgetByRightDrawer with search string as " + searchString);
 
@@ -48,11 +50,15 @@ public class DashboardBuilderUtil
 		DashboardBuilderUtil.showRightDrawer(driver);
 
 		WebElement searchInput = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchInputCSS);
+        // focus to search input box
+        new Actions(driver.getWebDriver()).moveToElement(searchInput).build().perform();
 		searchInput.clear();
 		searchInput.sendKeys(searchString);
 		driver.takeScreenShot();
+        //verify input box value
+        Assert.assertEquals(searchInput.getAttribute("value"),searchString);
 
-		WebElement searchButton = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchButtonCSS);
+        WebElement searchButton = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchButtonCSS);
 		driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerSearchButtonCSS);
 		searchButton.click();
 		//wait for ajax resolved
@@ -71,9 +77,8 @@ public class DashboardBuilderUtil
 		//      CommonActions.dragAndDropElement(driver, matchingWidgets.get(0), tilesContainer);
 
 		// focus to  the first matching  widget
-		new Actions(driver.getWebDriver()).moveToElement(searchButton).build().perform();
-		searchButton.sendKeys(Keys.TAB);
-		driver.takeScreenShot();
+        driver.getWebDriver().switchTo().activeElement().sendKeys(Keys.TAB);
+        driver.takeScreenShot();
 
 		// press enter to add widget
 		driver.getWebDriver().switchTo().activeElement().sendKeys(Keys.ENTER);
