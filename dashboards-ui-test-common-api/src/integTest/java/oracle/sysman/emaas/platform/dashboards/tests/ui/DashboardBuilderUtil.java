@@ -357,7 +357,7 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil print completed");
 	}
 
-	public static void refreshDashboard(WebDriver driver, String refreshSettings) throws Exception
+	public static void refreshDashboard(WebDriver driver, String refreshSettings)
 	{
 		driver.getLogger().info("DashboardBuilderUtil.refreshDashboard started for refreshSettings=" + refreshSettings);
 
@@ -386,12 +386,59 @@ public class DashboardBuilderUtil
 				break;
 		}
 		driver.getLogger().info("DashboardBuilderUtil.refreshDashboard completed");
-
 	}
 
-	public static void refreshDashboardSet(WebDriver driver, String refreshSettings) throws Exception
+	public static void refreshDashboardSet(WebDriver driver, String refreshSettings)
 	{
+		driver.getLogger().info("DashboardBuilderUtil.refreshDashboardSet started for refreshSettings=" + refreshSettings);
 
+		Validator.fromValidValues("refreshDashboardSet", refreshSettings, REFRESH_DASHBOARD_SETTINGS_OFF,
+				REFRESH_DASHBOARD_SETTINGS_5MIN);
+
+		driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionBtn);
+		driver.click(DashBoardPageId.DashboardSetOptionBtn);
+		driver.takeScreenShot();
+
+		driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionsAutoRefreshLocator);
+		driver.click(DashBoardPageId.DashboardSetOptionsAutoRefreshLocator);
+		driver.takeScreenShot();
+
+		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsAutoRefreshOffLocator);
+		switch (refreshSettings) {
+			case REFRESH_DASHBOARD_SETTINGS_OFF:
+				driver.check(DashBoardPageId.DashboardSetOptionsAutoRefreshOffLocator);
+
+				// click the same option menu just to ensure that the item is really checked
+				driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionBtn);
+				driver.click(DashBoardPageId.DashboardSetOptionBtn);
+				driver.takeScreenShot();
+
+				driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionsAutoRefreshLocator);
+				driver.click(DashBoardPageId.DashboardSetOptionsAutoRefreshLocator);
+				driver.takeScreenShot();
+
+				driver.waitForElementPresent(DashBoardPageId.DashboardSetAutoRefreshOffSelectedLocator);
+				driver.takeScreenShot();
+				driver.check(DashBoardPageId.DashboardSetOptionsAutoRefreshOffLocator);
+				break;
+			case REFRESH_DASHBOARD_SETTINGS_5MIN:
+				driver.check(DashBoardPageId.DashboardSetOptionsAutoRefreshOn5MinLocator);
+
+				// click the same option menu just to ensure that the item is really checked
+				driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionBtn);
+				driver.click(DashBoardPageId.DashboardSetOptionBtn);
+				driver.takeScreenShot();
+
+				driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionsAutoRefreshLocator);
+				driver.click(DashBoardPageId.DashboardSetOptionsAutoRefreshLocator);
+				driver.takeScreenShot();
+
+				driver.waitForElementPresent(DashBoardPageId.DashboardSetAutoRefreshOn5MinSelectedLocator);
+				driver.takeScreenShot();
+				driver.check(DashBoardPageId.DashboardSetOptionsAutoRefreshOn5MinLocator);
+				break;
+		}
+		driver.getLogger().info("DashboardBuilderUtil.refreshDashboardSet completed");
 	}
 
 	public static void removeDashboardInSet(WebDriver driver, String dashboardName)
