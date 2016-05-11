@@ -198,21 +198,21 @@ public class DashboardBuilderUtil
 		driver.takeScreenShot();
 
 		//press ok button
-		By locatorOfDuplicateSaveEl = By.id(DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
+		By locatorOfDuplicateSaveEl = By.cssSelector(DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateSaveEl));
 		wait.until(ExpectedConditions.elementToBeClickable(locatorOfDuplicateSaveEl));
 
 		By locatorOfDuplicateDesEl = By.id(DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS);
 		driver.getWebDriver().findElement(locatorOfDuplicateDesEl).sendKeys(Keys.TAB);
 
-		WebElement saveButton = driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
+		WebElement saveButton = driver.getElement("css=" + DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
 		Actions actions = new Actions(driver.getWebDriver());
 		actions.moveToElement(saveButton).build().perform();
 
 		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.duplicate save button has been focused");
 
-		driver.click("id=" + DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
+		driver.click("css=" + DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
 		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.duplicate completed");
 
@@ -250,8 +250,8 @@ public class DashboardBuilderUtil
 		driver.takeScreenShot();
 
 		//press ok button
-		driver.waitForElementPresent("id=" + DashBoardPageId.BuilderOptionsEditSaveCSS);
-		driver.click("id=" + DashBoardPageId.BuilderOptionsEditSaveCSS);
+		driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsEditSaveCSS);
+		driver.click("css=" + DashBoardPageId.BuilderOptionsEditSaveCSS);
 		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.edit complete");
 	}

@@ -216,7 +216,7 @@ public class DashBoardPageId
 	public static final String BuilderOptionsEditLocatorCSS = "li[data-singledb-option=\"Edit\"] a";
 	public static final String BuilderOptionsEditNameCSS = "dbsHNameIn";
 	public static final String BuilderOptionsEditDescriptionCSS = "dbsHDpIn";
-	public static final String BuilderOptionsEditSaveCSS = "createDsb-2";
+	public static final String BuilderOptionsEditSaveCSS = ".createDsb-2";
 	public static final String BuilderOptionsShareLocatorCSS = "li[data-singledb-option=\"Share\"] a";
 	public static final String BuilderOptionsUnShareLocatorCSS = "li[data-singledb-option=\"Stop Sharing\"] a";
 	public static final String BuilderOptionsFavoriteLocatorCSS = "li[data-singledb-option=\"Add Favorite\"] a";
@@ -227,7 +227,7 @@ public class DashBoardPageId
 	public static final String BuilderOptionsDuplicateLocatorCSS = "li[data-singledb-option=\"Duplicate\"] a";
 	public static final String BuilderOptionsDuplicateNameCSS = "dupDsbNameIn";
 	public static final String BuilderOptionsDuplicateDescriptionCSS = "dupDsbDescIn";
-	public static final String BuilderOptionsDuplicateSaveCSS = "createDsb-1";
+	public static final String BuilderOptionsDuplicateSaveCSS = ".createDsb-1";
 	//dashboard tool bar
 	public static final String DashboardSaveCSS = "button.dashboard-screenshot";
 
