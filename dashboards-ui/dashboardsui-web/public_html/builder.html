@@ -55,7 +55,7 @@
                     data-bind="ojComponent: {component: 'ojMenu',select:$root.dashboardsetConfigMenu}">
                     <!--ko foreach:dashboardsetMenu-->
                     <li data-bind="attr:{'id':id},visible: visibility">
-                        <a href="#">
+                        <a href="#" data-bind="attr:{'dashboardset-option':label}">
                             <span class="fa-icon-font fa-icon-font-14 oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
                             <span data-bind="text:label"></span>
                         </a>
@@ -91,7 +91,7 @@
                                      <input id="dbsInfoName"
                                            data-bind="ojComponent: { component: 'ojInputText',rootAttributes: {style:'max-width:420px;'},value:dashboardsetName()}">
                                      <h4 data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></h4>
-                                     <textarea maxlength="256" rows="5"
+                                     <textarea id="dbsInfoDescription" maxlength="256" rows="5"
                                               data-bind="ojComponent: {component: 'ojTextArea', rootAttributes: {style:'max-width:420px;'},value:dashboardsetDescription()
                                                               }"></textarea>
                                 </div>

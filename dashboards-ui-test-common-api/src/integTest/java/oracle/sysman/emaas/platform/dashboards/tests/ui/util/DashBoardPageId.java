@@ -216,7 +216,7 @@ public class DashBoardPageId
 	public static final String BuilderOptionsEditLocatorCSS = "li[data-singledb-option=\"Edit\"] a";
 	public static final String BuilderOptionsEditNameCSS = "dbsHNameIn";
 	public static final String BuilderOptionsEditDescriptionCSS = "dbsHDpIn";
-	public static final String BuilderOptionsEditSaveCSS = "createDsb-2";
+	public static final String BuilderOptionsEditSaveCSS = ".createDsb-2";
 	public static final String BuilderOptionsShareLocatorCSS = "li[data-singledb-option=\"Share\"] a";
 	public static final String BuilderOptionsUnShareLocatorCSS = "li[data-singledb-option=\"Stop Sharing\"] a";
 	public static final String BuilderOptionsFavoriteLocatorCSS = "li[data-singledb-option=\"Add Favorite\"] a";
@@ -227,7 +227,31 @@ public class DashBoardPageId
 	public static final String BuilderOptionsDuplicateLocatorCSS = "li[data-singledb-option=\"Duplicate\"] a";
 	public static final String BuilderOptionsDuplicateNameCSS = "dupDsbNameIn";
 	public static final String BuilderOptionsDuplicateDescriptionCSS = "dupDsbDescIn";
-	public static final String BuilderOptionsDuplicateSaveCSS = "createDsb-1";
+	public static final String BuilderOptionsDuplicateSaveCSS = ".createDsb-1";
+	//dashboard set options
+	public static final String DashboardSetNavsContainerCSS = "#dbd-set-tabs";
+	public static final String DashboardSetNavsCSS = ".dbd-tabs-nav .oj-tabs-tab";
+	public static final String DashboardSetNavRemoveBtnCSS = ".oj-tabs-close-icon";
+	public static final String DashboardSetNavAddBtnCSS = "#add-nav";
+	public static final String DashboardSetPrintLoadingID = "printLoading";
+	public static final String DashboardsetOptionsMenuID = "tabs-gear";
+	public static final String DashboardsetOptionsEditCSS="#dbs-edit a";
+	public static final String DashboardsetOptionsEditSaveID="saveDsbInfo";
+	public static final String DashboardsetOptionsEditDialogID="ojDialogWrapper-changeDashboardsetInfo";
+	public static final String DashboardsetOptionsNameCollapsibleCSS="#nameDescription a.oj-collapsible-open-icon";
+	public static final String DashboardsetOptionsEditNameCSS="#changeDashboardsetInfo #dbsInfoName";
+	public static final String DashboardsetOptionsEditDescriptionCSS="#changeDashboardsetInfo #dbsInfoDescription";
+	public static final String DashboardsetOptionsShareDiaOpenCSS="#shareSettings .oj-collapsible-wrapper";
+	public static final String DashboardsetOptionsShareCollapsibleCSS="#shareSettings .edit-dbsset-title";
+	public static final String DashboardsetOptionsShareOnJudgeCSS="#shareSettings #share-on.oj-selected";
+	public static final String DashboardsetOptionsShareCSS="#shareSettings #share-on";
+	public static final String DashboardsetOptionsUnshareCSS="#shareSettings #share-off";
+	public static final String DashboardsetOptionsPrintCSS= "#dbs-print a";
+	public static final String DashboardsetOptionsfavoriteCSS= "#dbs-favorite a";
+	public static final String DashboardsetOptionsRemoveFavoriteCSS= "#dbs-favorite a[dashboardset-option=\"Remove Favorite\"]";
+	public static final String DashboardsetOptionsHomeCSS= "#dbs-home a";
+	public static final String DashboardsetOptionsAddHomeCSS= "#dbs-home a[dashboardset-option=\"Set as Home\"]";
+
 	//dashboard tool bar
 	public static final String DashboardSaveCSS = "button.dashboard-screenshot";
 
@@ -238,12 +262,6 @@ public class DashBoardPageId
 	// auto refresh menu items
 	public static final String BuilderAutoRefreshOffSelectedLocator = "//li[@data-singledb-option='Off']/a/span[contains(@class, 'fa-check')]";
 	public static final String BuilderAutoRefreshOn5MinSelectedLocator = "//li[@data-singledb-option='On (Every 5 Minutes)']/a/span[contains(@class, 'fa-check')]";
-
-	//dashboard set
-	public static final String DashboardSetNavsContainerCSS = "#dbd-set-tabs";
-	public static final String DashboardSetNavsCSS = ".dbd-tabs-nav .oj-tabs-tab";
-	public static final String DashboardSetNavRemoveBtnCSS = ".oj-tabs-close-icon";
-	public static final String DashboardSetNavAddBtnCSS = "#add-nav";
 
 	// for R1.6, following ids are not used any more
 	//refresh //*[@id='ojChoiceId_autoRefreshSelect_selected
