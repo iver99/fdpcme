@@ -14,6 +14,10 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil.TimeRange;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.WidgetSelectorUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.ErrorPageUtil;
+
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -791,6 +795,50 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("save the dashboard");
 		DashboardBuilderUtil.saveDashboard(webd);
 	}
+         
+          //Testcase for validating Error page
+
+             @Test
+          	public void testErrorPage() throws Exception
+         	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testErrorPage");
+
+		//ErrorPage link
+		//BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_Erpge);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = " + url);
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcpdfui/builder.html?dashboardId=80");
+		WaitUtil.waitForPageFullyLoaded(webd);
+		//validating Error page
+		ErrorPageUtil.signOut(webd);
+        	}
+
+           //Testcase for adding widget using widgetselector
+            
+             @Test
+         	public void testWidgetSelector() throws Exception
+        	{
+	       String WidgetName_1 = "Database Errors Trend";
+	      
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in WidgetSelectorPage");
+
+		//ErrorPage link
+		//BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_WidgetSelector);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = " + url);
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "uifwk/test.html");
+		WaitUtil.waitForPageFullyLoaded(webd);
+		//click on Add button
+		 webd.click("id=" + DashBoardPageId.WidgetSelector_AddButtonId); 
+		 webd.takeScreenShot();
+		 //Adding widgets using widgetSElector diagoue
+		 webd.getLogger().info("satrt widget selector dialogue box opens");
+		 WidgetSelectorUtil.addWidget(webd, WidgetName_1);
+		  
+        	}
+
 
 	private String generateTimeStamp()
 	{
