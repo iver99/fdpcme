@@ -261,7 +261,30 @@ public class TimeSelectorUtil
 		}
 		String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
 				.get(Index - 1).getText();
-		return TimeSelectorUtil.dateConvert(webd, returnTimeRange, rangeoption);
+
+		if (returnTimeRange.startsWith(rangeoption.getRangeOption() + ":")) {
+			return TimeSelectorUtil.dateConvert(webd, returnTimeRange, rangeoption);
+		}
+		else {
+			String returnStartDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartDateInput))
+					.get(Index - 1).getAttribute("value")
+					+ " "
+					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).get(Index - 1)
+							.getAttribute("value");
+			String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndDateInput))
+					.get(Index - 1).getAttribute("value")
+					+ " "
+					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(Index - 1)
+							.getAttribute("value");
+
+			returnStartDate = TimeSelectorUtil.timeFormatChange(webd, returnStartDate, "MM/dd/yyyy hh:mm a",
+					"MMM d, yyyy hh:mm a");
+			returnEndDate = TimeSelectorUtil.timeFormatChange(webd, returnEndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
+
+			String returnDate = returnTimeRange + ": " + returnStartDate + " - " + returnEndDate;
+
+			return TimeSelectorUtil.dateConvert(webd, returnDate, rangeoption);
+		}
 
 	}
 
