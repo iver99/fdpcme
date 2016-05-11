@@ -24,7 +24,7 @@ public class TimeSelectorUtil
 	{
 		Last15Mins("Last 15 mins"), Last30Mins("Last 30 mins"), Last60Mins("Last hour"), Last4Hours("Last 4 hours"), Last6Hours(
 				"Last 6 hours"), Last1Day("Last day"), Last7Days("Last week"), Last14Days("Last 14 days"), Last30Days(
-				"Last 30 days"), Last90Days("Last 90 days"), Last1Year("Last year"), Latest("Latest"), Custom("Custom");
+						"Last 30 days"), Last90Days("Last 90 days"), Last1Year("Last year"), Latest("Latest"), Custom("Custom");
 		private final String timerange;
 
 		private TimeRange(String timerange)
@@ -38,6 +38,18 @@ public class TimeSelectorUtil
 		}
 
 	}
+
+	public static String[] days = { TimeSelectorExludedDayMonth.EXCLUDE_SUNDAY, TimeSelectorExludedDayMonth.EXCLUDE_MONDAY,
+		TimeSelectorExludedDayMonth.EXCLUDE_TUESDAY, TimeSelectorExludedDayMonth.EXCLUDE_WEDENSDAY,
+		TimeSelectorExludedDayMonth.EXCLUDE_THURSDAY, TimeSelectorExludedDayMonth.EXCLUDE_FRIDAY,
+		TimeSelectorExludedDayMonth.EXCLUDE_SATURDAY };
+
+	public static String[] months = { TimeSelectorExludedDayMonth.EXCLUDE_JANUARY, TimeSelectorExludedDayMonth.EXCLUDE_FEBRUARY,
+			TimeSelectorExludedDayMonth.EXCLUDE_MARCH, TimeSelectorExludedDayMonth.EXCLUDE_APRIL,
+			TimeSelectorExludedDayMonth.EXCLUDE_MAY, TimeSelectorExludedDayMonth.EXCLUDE_JUNE,
+			TimeSelectorExludedDayMonth.EXCLUDE_JULY, TimeSelectorExludedDayMonth.EXCLUDE_AUGUST,
+			TimeSelectorExludedDayMonth.EXCLUDE_SEPTEMBER, TimeSelectorExludedDayMonth.EXCLUDE_OCTOBER,
+			TimeSelectorExludedDayMonth.EXCLUDE_NOVEMBER, TimeSelectorExludedDayMonth.EXCLUDE_SEPTEMBER };
 
 	public static String setCustomTime(WebDriver webd, int index, String startDateTime, String endDateTime) throws Exception
 	{
@@ -120,8 +132,8 @@ public class TimeSelectorUtil
 		return TimeSelectorUtil.setCustomTime(webd, 1, startDateTime, endDateTime);
 	}
 
-	public static void setTimeFilter(WebDriver webd, int index, String hoursToExclude, int[] daysToExclude, int[] monthsToExclude)
-			throws Exception
+	public static String setTimeFilter(WebDriver webd, int index, String hoursToExclude, int[] daysToExclude,
+			int[] monthsToExclude) throws Exception
 	{
 		TimeSelectorUtil.clickTimePicker(webd, index);
 		TimeSelectorUtil.clickTimeFilterIcon(webd);
@@ -129,12 +141,52 @@ public class TimeSelectorUtil
 		TimeSelectorUtil.setDaysToExclude(webd, daysToExclude);
 		TimeSelectorUtil.setMonthsToExclude(webd, monthsToExclude);
 		TimeSelectorUtil.clickApplyButton(webd);
+
+		String result = "";
+		if (hoursToExclude == null || "".equals(hoursToExclude)) {
+			result += "";
+		}
+		else {
+			result += "Hours excluded: " + hoursToExclude + ". ";
+		}
+		if (null == daysToExclude || daysToExclude.length == 0) {
+			result += "";
+		}
+		else {
+			result += "Days Excluded: ";
+			for (int i = 0; i < daysToExclude.length; i++) {
+				int value = daysToExclude[i];
+				if (i == daysToExclude.length - 1) {
+					result += days[value - 1] + ". ";
+				}
+				else {
+					result += days[value - 1] + ", ";
+				}
+			}
+
+		}
+		if (null == monthsToExclude || monthsToExclude.length == 0) {
+			result += "";
+		}
+		else {
+			result += "Months Excluded: ";
+			for (int i = 0; i < monthsToExclude.length; i++) {
+				int value = monthsToExclude[i];
+				if (i == monthsToExclude.length - 1) {
+					result += months[value - 1] + ". ";
+				}
+				else {
+					result += months[value - 1] + ", ";
+				}
+			}
+		}
+		return result;
 	}
 
-	public static void setTimeFilter(WebDriver webd, String hoursToExclude, int[] daysToExclude, int[] monthsToExclude)
+	public static String setTimeFilter(WebDriver webd, String hoursToExclude, int[] daysToExclude, int[] monthsToExclude)
 			throws Exception
 	{
-		TimeSelectorUtil.setTimeFilter(webd, 1, hoursToExclude, daysToExclude, monthsToExclude);
+		return TimeSelectorUtil.setTimeFilter(webd, 1, hoursToExclude, daysToExclude, monthsToExclude);
 	}
 
 	public static String setTimeRange(WebDriver webd, int Index, TimeRange rangeoption) throws Exception
@@ -449,11 +501,6 @@ public class TimeSelectorUtil
 			daysToExclude = new int[] {};
 		}
 
-		String[] days = { TimeSelectorExludedDayMonth.EXCLUDE_SUNDAY, TimeSelectorExludedDayMonth.EXCLUDE_MONDAY,
-				TimeSelectorExludedDayMonth.EXCLUDE_TUESDAY, TimeSelectorExludedDayMonth.EXCLUDE_WEDENSDAY,
-				TimeSelectorExludedDayMonth.EXCLUDE_THURSDAY, TimeSelectorExludedDayMonth.EXCLUDE_FRIDAY,
-				TimeSelectorExludedDayMonth.EXCLUDE_SATURDAY };
-
 		//check all days first
 		webd.waitForElementPresent("css=" + TimeSelectorUIControls.sTimeFilterDaysFilterAll);
 		if (!webd.getElement("css=" + TimeSelectorUIControls.sTimeFilterDaysFilterAll).isSelected()) {
@@ -595,13 +642,6 @@ public class TimeSelectorUtil
 		if (monthsToExclude == null || monthsToExclude.length == 0) {
 			monthsToExclude = new int[] {};
 		}
-
-		String[] months = { TimeSelectorExludedDayMonth.EXCLUDE_JANUARY, TimeSelectorExludedDayMonth.EXCLUDE_FEBRUARY,
-				TimeSelectorExludedDayMonth.EXCLUDE_MARCH, TimeSelectorExludedDayMonth.EXCLUDE_APRIL,
-				TimeSelectorExludedDayMonth.EXCLUDE_MAY, TimeSelectorExludedDayMonth.EXCLUDE_JUNE,
-				TimeSelectorExludedDayMonth.EXCLUDE_JULY, TimeSelectorExludedDayMonth.EXCLUDE_AUGUST,
-				TimeSelectorExludedDayMonth.EXCLUDE_SEPTEMBER, TimeSelectorExludedDayMonth.EXCLUDE_OCTOBER,
-				TimeSelectorExludedDayMonth.EXCLUDE_NOVEMBER, TimeSelectorExludedDayMonth.EXCLUDE_SEPTEMBER };
 
 		//check all months first
 		webd.waitForElementPresent("css=" + TimeSelectorUIControls.sTimeFilterMonthsFilterAll);
