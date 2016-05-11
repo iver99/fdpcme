@@ -3,6 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -24,7 +25,7 @@ public class TimeSelectorUtil
 	{
 		Last15Mins("Last 15 mins"), Last30Mins("Last 30 mins"), Last60Mins("Last hour"), Last4Hours("Last 4 hours"), Last6Hours(
 				"Last 6 hours"), Last1Day("Last day"), Last7Days("Last week"), Last14Days("Last 14 days"), Last30Days(
-						"Last 30 days"), Last90Days("Last 90 days"), Last1Year("Last year"), Latest("Latest"), Custom("Custom");
+				"Last 30 days"), Last90Days("Last 90 days"), Last1Year("Last year"), Latest("Latest"), Custom("Custom");
 		private final String timerange;
 
 		private TimeRange(String timerange)
@@ -40,16 +41,16 @@ public class TimeSelectorUtil
 	}
 
 	public static String[] days = { TimeSelectorExludedDayMonth.EXCLUDE_SUNDAY, TimeSelectorExludedDayMonth.EXCLUDE_MONDAY,
-		TimeSelectorExludedDayMonth.EXCLUDE_TUESDAY, TimeSelectorExludedDayMonth.EXCLUDE_WEDNESDAY,
-		TimeSelectorExludedDayMonth.EXCLUDE_THURSDAY, TimeSelectorExludedDayMonth.EXCLUDE_FRIDAY,
-		TimeSelectorExludedDayMonth.EXCLUDE_SATURDAY };
+			TimeSelectorExludedDayMonth.EXCLUDE_TUESDAY, TimeSelectorExludedDayMonth.EXCLUDE_WEDNESDAY,
+			TimeSelectorExludedDayMonth.EXCLUDE_THURSDAY, TimeSelectorExludedDayMonth.EXCLUDE_FRIDAY,
+			TimeSelectorExludedDayMonth.EXCLUDE_SATURDAY };
 
 	public static String[] months = { TimeSelectorExludedDayMonth.EXCLUDE_JANUARY, TimeSelectorExludedDayMonth.EXCLUDE_FEBRUARY,
-			TimeSelectorExludedDayMonth.EXCLUDE_MARCH, TimeSelectorExludedDayMonth.EXCLUDE_APRIL,
-			TimeSelectorExludedDayMonth.EXCLUDE_MAY, TimeSelectorExludedDayMonth.EXCLUDE_JUNE,
-			TimeSelectorExludedDayMonth.EXCLUDE_JULY, TimeSelectorExludedDayMonth.EXCLUDE_AUGUST,
-			TimeSelectorExludedDayMonth.EXCLUDE_SEPTEMBER, TimeSelectorExludedDayMonth.EXCLUDE_OCTOBER,
-			TimeSelectorExludedDayMonth.EXCLUDE_NOVEMBER, TimeSelectorExludedDayMonth.EXCLUDE_DECEMBER };
+		TimeSelectorExludedDayMonth.EXCLUDE_MARCH, TimeSelectorExludedDayMonth.EXCLUDE_APRIL,
+		TimeSelectorExludedDayMonth.EXCLUDE_MAY, TimeSelectorExludedDayMonth.EXCLUDE_JUNE,
+		TimeSelectorExludedDayMonth.EXCLUDE_JULY, TimeSelectorExludedDayMonth.EXCLUDE_AUGUST,
+		TimeSelectorExludedDayMonth.EXCLUDE_SEPTEMBER, TimeSelectorExludedDayMonth.EXCLUDE_OCTOBER,
+		TimeSelectorExludedDayMonth.EXCLUDE_NOVEMBER, TimeSelectorExludedDayMonth.EXCLUDE_DECEMBER };
 
 	public static String setCustomTime(WebDriver webd, int index, String startDateTime, String endDateTime) throws Exception
 	{
@@ -147,8 +148,12 @@ public class TimeSelectorUtil
 			result += "";
 		}
 		else {
+			hoursToExclude = hoursToExclude.replace(" ", "");
+			hoursToExclude = hoursToExclude.replace(",", ", ");
 			result += "Hours excluded: " + hoursToExclude + ". ";
 		}
+
+		Arrays.sort(daysToExclude);
 		if (null == daysToExclude || daysToExclude.length == 0) {
 			result += "";
 		}
@@ -165,6 +170,8 @@ public class TimeSelectorUtil
 			}
 
 		}
+
+		Arrays.sort(monthsToExclude);
 		if (null == monthsToExclude || monthsToExclude.length == 0) {
 			result += "";
 		}
