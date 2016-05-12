@@ -32,7 +32,7 @@
                 <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',truncation:'progressive',removable:dashboardsetConfig.isCreator,reorderable:dashboardsetConfig.isCreator}">
                     <div id="dbd-set-name" class="oj-tabs-facet">
                             <span data-bind="text:dashboardsetName()"></span>
-                            <button id="tabs-gear"
+                            <button id="tabs-gear" class="dbd-set-option-btn"
                                     data-bind="ojComponent: {component: 'ojButton',
                                             icons: {start:'fa-icon-font fa-icon-font-14 dbd-icon-gear'},
                                     menu: '#dbd-set-option'
@@ -146,7 +146,7 @@
                         <div class="oj-dialog-footer">
                             <button data-bind="ojComponent: {
                                                  component: 'ojButton',label: getNlsString('COMMON_BTN_DELETE'),
-                                                 rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.deleteDbs"></button>
+                                                 rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.deleteDbs" data-delete-set-dialog="Delete"></button>
                             <button data-bind="ojComponent: {
                                                  component: 'ojButton',label: getNlsString('COMMON_BTN_CANCEL'),
                                                  rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.cancelDeleteDbs"></button>
@@ -565,7 +565,7 @@
                                                         event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}},
                                                         ojComponent: {component: 'ojMenu', select: $root.menuItemSelect}">
                                                         <li data-option="showhide-title">
-                                                            <a href="#">
+                                                            <a href="#" data-bind="attr: {'data-show-hide-title': hideTitle() === 'true' ? 'show' : 'hide'}">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <i class="fa-icon-font fa-icon-font-16" data-bind="css: hideTitle() === 'true' ? 'dbd-icon-eye':'dbd-icon-eye-slash'"></i>
                                                                 </span>
@@ -984,7 +984,7 @@
                         </div>
                         <div class="oj-dialog-footer">
                             <button data-bind="click: toolBarModel.handleDeleteDashboardClicked,
-                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_DELETE'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_DELETE'), rootAttributes: {style:'margin-right:5px'}}" data-delete-dialog="Delete"></button>
                             <button class="dbs_dcbtn" data-bind="click: toolBarModel.handleDeleteDashboardCancelled,
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'), rootAttributes: {style:'margin-right:5px'}}"></button>
                         </div>
