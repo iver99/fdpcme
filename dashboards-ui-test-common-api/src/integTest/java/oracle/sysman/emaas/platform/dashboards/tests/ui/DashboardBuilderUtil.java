@@ -84,7 +84,7 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil.addNewDashboardToSet completed and returns true");
 	}
 
-	public static void addWidgetByRightDrawer(WebDriver driver, String searchString) throws Exception
+	public static void addWidgetToDashboard(WebDriver driver, String searchString) throws Exception
 	{
 		Validator.notNull("widgetName", searchString);
 		Validator.notEmptyString("widgetName", searchString);
@@ -98,7 +98,7 @@ public class DashboardBuilderUtil
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfKeyEl));
         WaitUtil.waitForPageFullyLoaded(driver);
 
-		driver.getLogger().info("[DashboardHomeUtil] call addWidgetByRightDrawer with search string as " + searchString);
+		driver.getLogger().info("[DashboardHomeUtil] call addWidgetToDashboard with search string as " + searchString);
 
 		//show right drawer if it is hidden
 		DashboardBuilderUtil.showRightDrawer(driver);

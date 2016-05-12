@@ -251,7 +251,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//add widget
 		webd.getLogger().info("Start to add Widget into the dashboard");
-		DashboardBuilderUtil.addWidgetByRightDrawer(webd, "Database Errors Trend");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "Database Errors Trend");
 		webd.getLogger().info("Add widget finished");
 		//verify if the widget added successfully
 		//TODO
@@ -457,11 +457,11 @@ public class TestDashBoard extends LoginAndLogout
 		//add the widget into the dashboard
 		webd.getLogger().info("Start to add Widget into the dashboard");
 		webd.getLogger().info("Add Widget 'Top Hosts by Log Entries' into the dashboard");
-		DashboardBuilderUtil.addWidgetByRightDrawer(webd, WidgetName_1);
+		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_1);
 		webd.getLogger().info("Add Widget 'Top 10 Listeners by Load' into the dashboard");
-		DashboardBuilderUtil.addWidgetByRightDrawer(webd, WidgetName_2);
+		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_2);
 		webd.getLogger().info("Add Widget 'Top Hosts by Log Entries' into the dashboard");
-		DashboardBuilderUtil.addWidgetByRightDrawer(webd, WidgetName_1);
+		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_1);
 		webd.getLogger().info("Add widget finished");
 
 		//save dashboard
@@ -570,7 +570,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//edit the dashboard
 		webd.getLogger().info("add a widget to the dashboard");
-		DashboardBuilderUtil.addWidgetByRightDrawer(webd, "Database Errors Trend");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "Database Errors Trend");
 
 		//leave the builder page
 		webd.getLogger().info("return to dashboard home page");
@@ -704,7 +704,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//Add the widget to the dashboard
 		webd.getLogger().info("Start to add Widget into the dashboard");
-		DashboardBuilderUtil.addWidgetByRightDrawer(webd, "Database Errors Trend");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "Database Errors Trend");
 		webd.getLogger().info("Add widget finished");
 
 		//save dashboard
