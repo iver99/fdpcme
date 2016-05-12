@@ -6,7 +6,6 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
 import org.testng.Assert;
@@ -444,7 +443,7 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//verify all the oob display
-		DashboardHomeUtil.waitForDashboardPresent(webd, "Database Health Summary");
+		//DashboardHomeUtil.waitForDashboardPresent(webd, "Database Health Summary");
 		DashBoardUtils.APM_OOB_GridView();
 		DashBoardUtils.ITA_OOB_GridView();
 		DashBoardUtils.LA_OOB_GridView();
