@@ -905,6 +905,26 @@ public class DashboardBuilderUtil
 		return true;
 	}
 
+	public static boolean verifyDashboardSet(WebDriver driver, String dashboardSetName)
+	{
+		driver.getLogger().info("DashboardBuilderUtil.verifyDashboard started for name=\"" + dashboardSetName + "\"");
+		Validator.notEmptyString("dashboardSetName", dashboardSetName);
+
+		driver.waitForElementPresent(DashBoardPageId.DashboardSetNameTextLocator);
+		driver.click(DashBoardPageId.DashboardSetNameTextLocator);
+		driver.takeScreenShot();
+		String realName = driver.getElement(DashBoardPageId.DashboardSetNameTextLocator).getText();
+		if (!dashboardSetName.equals(realName)) {
+			driver.getLogger()
+					.info("DashboardBuilderUtil.verifyDashboardSet compelted and returns false. Expected dashboard set name is "
+							+ dashboardSetName + ", actual dashboard set name is " + realName);
+			return false;
+		}
+
+		driver.getLogger().info("DashboardBuilderUtil.verifyDashboardSet compelted and returns true");
+		return true;
+	}
+
 	public static boolean verifyWidget(WebDriver driver, String widgetName)
 	{
 		return DashboardBuilderUtil.verifyWidget(driver, widgetName, 0);

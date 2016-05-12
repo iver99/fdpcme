@@ -228,6 +228,8 @@ public class DashBoardPageId
 	public static final String BuilderOptionsDuplicateNameCSS = "dupDsbNameIn";
 	public static final String BuilderOptionsDuplicateDescriptionCSS = "dupDsbDescIn";
 	public static final String BuilderOptionsDuplicateSaveCSS = ".createDsb-1";
+	// dashboard set name
+	public static final String DashboardSetNameTextLocator = "//div[@id='dbd-set-name']/span";
 	//dashboard set options
 	public static final String DashboardSetNavsContainerCSS = "#dbd-set-tabs";
 	public static final String DashboardSetNavsCSS = ".dbd-tabs-nav .oj-tabs-tab";
