@@ -1,4 +1,4 @@
-version = "1.7.0" + "-$buildTimestamp"
+version = "1.7.1" + "-$buildTimestamp"
 sourceSets {
 integTest {
         java.srcDir 'src/integTest/java'

@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Properties;
 
 import oracle.sysman.emsaas.login.LoginUtils;
@@ -106,56 +105,57 @@ public class CommonUIUtils
 
 	public static String getAppName(String sTenant, String sUser)
 	{
-		//String sAppName = "";
-
-		RestAssured.useRelaxedHTTPSValidation();
-		RestAssured.baseURI = sAPIUrl;
-
-		Response res1 = RestAssured
-				.given()
-				.contentType(ContentType.JSON)
-				.log()
-				.everything()
-				.headers("X-USER-IDENTITY-DOMAIN-NAME", sTenant, "X-REMOTE-USER", sTenant + "." + sUser, "Authorization",
-						sAuthToken).when().get("/subscribedapps");
-		CommonUIUtils.commonUITestLog("The statu code is:" + res1.getStatusCode() + res1.jsonPath().get("applications"));
-		String s_appname = res1.jsonPath().getString("applications");
-		//The response content contains "[" and "]", need to remove them before storing into array
-		CommonUIUtils.commonUITestLog("The response content is:" + s_appname);
-		s_appname = s_appname.replaceAll("\\[", "").replaceAll("\\]", "");
-		String[] ls_appname = s_appname.split(",");
-		for (int i = 0; i < ls_appname.length; i++) {
-			//Trim the whitespace
-			ls_appname[i] = ls_appname[i].trim();
-		}
-		Arrays.sort(ls_appname);
-		for (int i = 0; i < ls_appname.length; i++) {
-			CommonUIUtils.commonUITestLog(i + " : " + ls_appname[i]);
-			if (ls_appname[i].contains("APM")) {
-				if (sAppName.equals("")) {
-					sAppName = "Application Performance Monitoring";
-				}
-				else {
-					sAppName = sAppName + " | Application Performance Monitoring";
-				}
-			}
-			else if (ls_appname[i].contains("ITAnalytics")) {
-				if (sAppName.equals("")) {
-					sAppName = "IT Analytics";
-				}
-				else {
-					sAppName = sAppName + " | IT Analytics";
-				}
-			}
-			else if (ls_appname[i].contains("LogAnalytics")) {
-				if (sAppName.equals("")) {
-					sAppName = "Log Analytics";
-				}
-				else {
-					sAppName = sAppName + " | Log Analytics";
-				}
-			}
-		}
+		//		//String sAppName = "";
+		//
+		//		RestAssured.useRelaxedHTTPSValidation();
+		//		RestAssured.baseURI = sAPIUrl;
+		//
+		//		Response res1 = RestAssured
+		//				.given()
+		//				.contentType(ContentType.JSON)
+		//				.log()
+		//				.everything()
+		//				.headers("X-USER-IDENTITY-DOMAIN-NAME", sTenant, "X-REMOTE-USER", sTenant + "." + sUser, "Authorization",
+		//						sAuthToken).when().get("/subscribedapps");
+		//		CommonUIUtils.commonUITestLog("The statu code is:" + res1.getStatusCode() + res1.jsonPath().get("applications"));
+		//		String s_appname = res1.jsonPath().getString("applications");
+		//		//The response content contains "[" and "]", need to remove them before storing into array
+		//		CommonUIUtils.commonUITestLog("The response content is:" + s_appname);
+		//		s_appname = s_appname.replaceAll("\\[", "").replaceAll("\\]", "");
+		//		String[] ls_appname = s_appname.split(",");
+		//		for (int i = 0; i < ls_appname.length; i++) {
+		//			//Trim the whitespace
+		//			ls_appname[i] = ls_appname[i].trim();
+		//		}
+		//		Arrays.sort(ls_appname);
+		//		for (int i = 0; i < ls_appname.length; i++) {
+		//			CommonUIUtils.commonUITestLog(i + " : " + ls_appname[i]);
+		//			if (ls_appname[i].contains("APM")) {
+		//				if (sAppName.equals("")) {
+		//					sAppName = "Application Performance Monitoring";
+		//				}
+		//				else {
+		//					sAppName = sAppName + " | Application Performance Monitoring";
+		//				}
+		//			}
+		//			else if (ls_appname[i].contains("ITAnalytics")) {
+		//				if (sAppName.equals("")) {
+		//					sAppName = "IT Analytics";
+		//				}
+		//				else {
+		//					sAppName = sAppName + " | IT Analytics";
+		//				}
+		//			}
+		//			else if (ls_appname[i].contains("LogAnalytics")) {
+		//				if (sAppName.equals("")) {
+		//					sAppName = "Log Analytics";
+		//				}
+		//				else {
+		//					sAppName = sAppName + " | Log Analytics";
+		//				}
+		//			}
+		//		}
+		sAppName = ""; //With fix to EMCPDF-1220, the application name in Dashboard pages will be blank
 		CommonUIUtils.commonUITestLog("The App Name is:" + sAppName);
 		return sAppName;
 
@@ -207,7 +207,7 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("SSO_USERNAME");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-					.commonUITestLog("The SSO_USERNAME property value is null ... set it to a different value -- 'emcsadmin'.");
+							.commonUITestLog("The SSO_USERNAME property value is null ... set it to a different value -- 'emcsadmin'.");
 					sPropertyValue = "emcsadmin";
 				}
 			}
@@ -215,7 +215,7 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("SSO_PASSWORD");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-					.commonUITestLog("The SSO_PASSWORD property value is null ... set it to a different value -- 'Welcome1!'.");
+							.commonUITestLog("The SSO_PASSWORD property value is null ... set it to a different value -- 'Welcome1!'.");
 					sPropertyValue = "Welcome1!";
 				}
 			}
@@ -223,7 +223,7 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("COMMON_UI_URL_SUFFIX");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-					.commonUITestLog("The COMMON_UI_URL_SUFFIX property value is null ... set it to a different value -- '/emsaasui/uifwk/test.html'.");
+							.commonUITestLog("The COMMON_UI_URL_SUFFIX property value is null ... set it to a different value -- '/emsaasui/uifwk/test.html'.");
 					sPropertyValue = "/emsaasui/uifwk/test.html";
 				}
 			}
@@ -231,7 +231,7 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("SAAS_AUTH_TOKEN");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-							.commonUITestLog("The DASHBOARD_API_ENDPOINT property value is null ... set it to a different value -- 'welcome1'.");
+					.commonUITestLog("The DASHBOARD_API_ENDPOINT property value is null ... set it to a different value -- 'welcome1'.");
 					sPropertyValue = "Basic d2VibG9naWM6d2VsY29tZTE=";
 
 				}
@@ -239,7 +239,7 @@ public class CommonUIUtils
 					sPropertyValue = emaasProp.getProperty("DASHBOARD_API_ENDPOINT");
 					if (sPropertyValue == null) {
 						CommonUIUtils
-								.commonUITestLog("The SAAS_AUTH_TOKEN property value is null ... set it to a different value .");
+						.commonUITestLog("The SAAS_AUTH_TOKEN property value is null ... set it to a different value .");
 						sPropertyValue = sOhsUrl + "/emcpdf/api/v1/";
 					}
 				}
@@ -248,14 +248,15 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("TARGETMODEL_SERVICE_SHARD_ENDPOINT");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-					.commonUITestLog("The TARGETMODEL_SERVICE_SHARD_ENDPOINT property value is null ... set it to a different value.");
+							.commonUITestLog("The TARGETMODEL_SERVICE_SHARD_ENDPOINT property value is null ... set it to a different value.");
 					sRolesUrl = CommonUIUtils.getEmaasPropertyValue("EMCS_NODE2_HOSTNAME");
 					if (sRolesUrl == null) {
 						sPropertyValue = null;
 					}
 					else {
 						CommonUIUtils.commonUITestLog("The TARGETMODEL_SERVICE_SHARD_ENDPOINT property is '" + sRolesUrl + "'.");
-						sPropertyValue = "http://" + sRolesUrl + ":7004/targetmodel";
+
+						sPropertyValue = "http://"+sRolesUrl + ":7004/tm-mgmt";
 					}
 				}
 			}
