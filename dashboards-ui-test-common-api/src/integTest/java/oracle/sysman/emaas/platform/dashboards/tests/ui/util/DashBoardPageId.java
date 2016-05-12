@@ -37,7 +37,6 @@ public class DashBoardPageId
 	public static final String closeBtnID = "/html/body/div[1]/div[2]/div/div[1]/div/span";///html/body/div[1]/div[2]/div/div[3]/div/span";//div[contains(@id,'ojDialogWrapper-ui-id') and @class='oj-dialog oj-component oj-draggable']/div[3]/div/span"; // ";";
 	public static final String LinkID = "linksButton";
 	public static final String DashBoardLinkID = "link=All Dashboards";
-	public static final String DashboardTableID = "dtabhomesc";
 	public static final String DeleteBtn_cfmDialog = "/html/body/div[1]/div[2]/div/div[3]/button[1]";
 	public static final String DashboardSerachResult_panelID = "dtabhomesc";
 
@@ -223,7 +222,7 @@ public class DashBoardPageId
 	public static final String BuilderOptionsRemoveFavoriteLocatorCSS = "li[data-singledb-option=\"Remove Favorite\"] a";
 	public static final String BuilderOptionsSetHomeLocatorCSS = "li[data-singledb-option=\"Set as Home\"] a";
 	public static final String BuilderOptionsRemoveHomeLocatorCSS = "li[data-singledb-option=\"Remove as Home\"] a";
-	public static final String BuilderOptionsSetHomeComfirmCSS = "id=btnConfirmSetAsHome";
+	public static final String BuilderOptionsSetHomeSaveCSS = "#btnComfirmSetAsHome";
 	public static final String BuilderOptionsDuplicateLocatorCSS = "li[data-singledb-option=\"Duplicate\"] a";
 	public static final String BuilderOptionsDuplicateNameCSS = "dupDsbNameIn";
 	public static final String BuilderOptionsDuplicateDescriptionCSS = "dupDsbDescIn";
@@ -390,9 +389,13 @@ public class DashBoardPageId
 	public static final String Option_Logout = "//*[@id='emcpdf_oba_logout']";
 	public static final String AboutDialogClose = "//button[contains(@id,'okButton')]";
 	public static final String UserMenuPopupId = "emaasAppheaderGlobalNavMenuId";
-	public static final String DASHBOARD_LIST_TABLE = "dbstable";
-	public static final String DASHBOARD_HOME_DELETE_BUTTON = "//*[@id=\"dsbinfopop\"]/div/div/button";
-	public static final String DASHBOARD_HOME_DELETE_CONFIRM = "//*[@id=\"ojDialogWrapper-dbs_cfmDialog\"]/div[3]/button[1]";
+	
+	// Dashboard Home
+	public static final String DASHBOARD_GRID_TABLE_CSS = ".dbs-summaries-container";
+	public static final String DASHBOARD_LIST_TABLE = "table[aria-label='Dashboards Table']";
+	public static final String DASHBOARD_HOME_DELETE_BUTTON = "dsbinfopop_delete";
+	public static final String DASHBOARD_HOME_DELETE_CONFIRM = "dbs_cfmDialog_delete";
+	public static final String DASHBOARD_HOME_DELETE_DIALOG = ".dbs_cfmDialog";
 
 	//error page
 	public static final String ErrorSignOutButtonId = "dbd_sign_out_button";
