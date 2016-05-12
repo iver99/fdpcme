@@ -296,14 +296,14 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
-	public void testDuplicateDashbaord() throws Exception
+	public void testDuplicateDashboard() throws Exception
 	{
 
 		String dbName = "Test_Dashboard_duplicate";
 		String dbDesc = "Test_Dashboard_duplicate_desc";
 
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testDuplicateDashbaord");
+		webd.getLogger().info("start to test in testDuplicateDashboard");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -425,7 +425,7 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Open the dashboard to edit name and description");
 		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid);
 		DashboardBuilderUtil
-		.editDashboard(webd, dbName_noWidgetGrid + "-modify", "Test_Dashboard_no_Widget_GridView desc modify");
+				.editDashboard(webd, dbName_noWidgetGrid + "-modify", "Test_Dashboard_no_Widget_GridView desc modify");
 
 		//Verify the dashboard edited successfully
 		webd.getLogger().info("Verify the dashboard edited successfully");
@@ -470,7 +470,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc", "testShareDashboard",
-			"testStopShareDashboard", "testDuplicateDashbaord" })
+			"testStopShareDashboard", "testDuplicateDashboard" })
 	public void testRemoveDashboard_GridView() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
