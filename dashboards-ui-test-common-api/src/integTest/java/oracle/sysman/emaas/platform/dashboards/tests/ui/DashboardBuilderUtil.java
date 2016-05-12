@@ -51,8 +51,13 @@ public class DashboardBuilderUtil
 
 		WebElement searchInput = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchInputCSS);
         // focus to search input box
-        new Actions(driver.getWebDriver()).moveToElement(searchInput).build().perform();
+	wait.until(ExpectedConditions.elementToBeClickable(searchInput));
+ 
+		Actions actions = new Actions(driver.getWebDriver());
+		actions.moveToElement(searchInput).build().perform();
 		searchInput.clear();
+		actions.moveToElement(searchInput).build().perform();
+		driver.click("css=" + DashBoardPageId.RightDrawerSearchInputCSS);
 		searchInput.sendKeys(searchString);
 		driver.takeScreenShot();
         //verify input box value
@@ -662,6 +667,7 @@ public class DashboardBuilderUtil
 		if (DashboardBuilderUtil.isRightDrawerVisible(driver) == false) {
 			driver.click("css=" + DashBoardPageId.RightDrawerToggleBtnCSS);
 			driver.getLogger().info("[DashboardBuilderUtil] triggered showRightDrawer.");
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		driver.takeScreenShot();
 	}
