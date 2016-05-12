@@ -1057,7 +1057,7 @@
                                 <p data-bind="html: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_CONFIRM')"></p>
                             </div>
                             <div class="oj-dialog-footer">
-                                <button data-bind="click: toolBarModel.setAsHomeConfirmed, 
+                                <button id="btnComfirmSetAsHome" data-bind="click: toolBarModel.setAsHomeConfirmed, 
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_YES'), rootAttributes: {style:'margin-right:5px'}}"></button>
                                 <button id="btnCancelSetAsHome" data-bind="click: toolBarModel.setAsHomeCancelled,
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_NO'), rootAttributes: {style:'margin-right:5px'}}"></button>

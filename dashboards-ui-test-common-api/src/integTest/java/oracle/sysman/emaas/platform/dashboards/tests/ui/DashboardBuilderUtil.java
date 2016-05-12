@@ -750,9 +750,10 @@ public class DashboardBuilderUtil
 			driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsSetHomeLocatorCSS);
 			driver.click("css=" + DashBoardPageId.BuilderOptionsSetHomeLocatorCSS);
 			driver.takeScreenShot();
-			boolean comfirmDialog = driver.isDisplayed(DashBoardPageId.BuilderOptionsSetHomeComfirmCSS);
+			boolean comfirmDialog = driver.isDisplayed("css=" + DashBoardPageId.BuilderOptionsSetHomeSaveCSS);
+			System.out.println("dialog home "+comfirmDialog);
 			if (comfirmDialog) {
-				driver.click(DashBoardPageId.BuilderOptionsSetHomeComfirmCSS);
+				driver.click("css=" + DashBoardPageId.BuilderOptionsSetHomeSaveCSS);
 				driver.takeScreenShot();
 			}
 			;

@@ -222,7 +222,7 @@ public class DashBoardPageId
 	public static final String BuilderOptionsRemoveFavoriteLocatorCSS = "li[data-singledb-option=\"Remove Favorite\"] a";
 	public static final String BuilderOptionsSetHomeLocatorCSS = "li[data-singledb-option=\"Set as Home\"] a";
 	public static final String BuilderOptionsRemoveHomeLocatorCSS = "li[data-singledb-option=\"Remove as Home\"] a";
-	public static final String BuilderOptionsSetHomeComfirmCSS = "id=btnConfirmSetAsHome";
+	public static final String BuilderOptionsSetHomeSaveCSS = "#btnComfirmSetAsHome";
 	public static final String BuilderOptionsDuplicateLocatorCSS = "li[data-singledb-option=\"Duplicate\"] a";
 	public static final String BuilderOptionsDuplicateNameCSS = "dupDsbNameIn";
 	public static final String BuilderOptionsDuplicateDescriptionCSS = "dupDsbDescIn";
