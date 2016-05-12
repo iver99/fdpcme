@@ -153,11 +153,11 @@ public class TimeSelectorUtil
 			result += "Hours excluded: " + hoursToExclude + ". ";
 		}
 
-		Arrays.sort(daysToExclude);
 		if (null == daysToExclude || daysToExclude.length == 0) {
 			result += "";
 		}
 		else {
+			Arrays.sort(daysToExclude);
 			result += "Days excluded: ";
 			for (int i = 0; i < daysToExclude.length; i++) {
 				int value = daysToExclude[i];
@@ -171,11 +171,11 @@ public class TimeSelectorUtil
 
 		}
 
-		Arrays.sort(monthsToExclude);
 		if (null == monthsToExclude || monthsToExclude.length == 0) {
 			result += "";
 		}
 		else {
+			Arrays.sort(monthsToExclude);
 			result += "Months excluded: ";
 			for (int i = 0; i < monthsToExclude.length; i++) {
 				int value = monthsToExclude[i];
