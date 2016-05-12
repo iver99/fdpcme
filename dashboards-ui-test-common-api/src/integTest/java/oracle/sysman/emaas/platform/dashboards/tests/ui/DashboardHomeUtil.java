@@ -9,6 +9,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -564,6 +565,7 @@ public class DashboardHomeUtil
 				rowColList.get(buttonColIndex).findElement(By.tagName("button")).click(); // click "i" button
 				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON); // click delete
 				driver.waitForElementPresent(DashBoardPageId.BuilderDeleteDialogLocator);
+
 				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM); // confirm to delete
 				WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(DashBoardPageId.BuilderDeleteDialogLocator)));
