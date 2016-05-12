@@ -667,6 +667,7 @@ public class DashboardBuilderUtil
 		if (DashboardBuilderUtil.isRightDrawerVisible(driver) == false) {
 			driver.click("css=" + DashBoardPageId.RightDrawerToggleBtnCSS);
 			driver.getLogger().info("[DashboardBuilderUtil] triggered showRightDrawer.");
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		driver.takeScreenShot();
 	}
