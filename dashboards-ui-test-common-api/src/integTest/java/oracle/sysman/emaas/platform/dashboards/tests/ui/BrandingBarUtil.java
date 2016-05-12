@@ -28,6 +28,7 @@ public class BrandingBarUtil
 	//Administration
 	public static final String NAV_LINK_TEXT_ADMIN_AGENT = "Agents";
 	public static final String NAV_LINK_TEXT_ADMIN_ITA = "IT Analytics Administration";
+	public static final String NAV_LINK_TEXT_ADMIN_ALERT = "Alert Rules";
 
 	/**
 	 * Check if the specified administration link is existed or not by given name
@@ -434,6 +435,24 @@ public class BrandingBarUtil
 		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
 		driver.click("id=" + DashBoardPageId.BrandingBarWelcomeLinkID);
 		driver.takeScreenShot();
+	}
+	
+	/**
+	 * Check whether admin field exist
+	 *
+	 * @param driver
+	 *            WebDriver instance
+	 * @return
+	 */
+	public static boolean isAdmin(WebDriver driver) throws Exception
+	{
+		driver.getLogger().info("start validating admin tab");	
+		if (!BrandingBarUtil.isNavigationBarDisplayed(driver)) {
+			driver.click("id=" + DashBoardPageId.LinkID);
+		}
+		driver.takeScreenShot();
+		boolean isDisplayed = driver.isDisplayed("id=" + DashBoardPageId.BrandingBarAdminLinksID);
+		return isDisplayed;
 	}
 
 	/**
