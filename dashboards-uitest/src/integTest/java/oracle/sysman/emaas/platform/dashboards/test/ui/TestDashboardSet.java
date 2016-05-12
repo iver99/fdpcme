@@ -114,7 +114,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(dependsOnGroups = "other test")
 	public void testAddDashboardInGridView() throws Exception
 	{
 		//init the test
@@ -260,6 +260,58 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
+	@Test(dependsOnMethods = { "testAddDashboardInListView" })
+	public void testPrint() throws Exception
+	{
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testRemoveDashboardSetFromBuilderPage");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//open the dashboardset
+		webd.getLogger().info("Open the dashboard set in builder page");
+		DashboardHomeUtil.selectDashboard(webd, dbsetName);
+
+		//print the dashboard set
+		webd.getLogger().info("Print the dashboard set");
+		DashboardBuilderUtil.printDashboardSet(webd);
+	}
+
+	@Test(groups = "other test")
+	public void testRefresh() throws Exception
+	{
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testRemoveDashboardFromDashboardSet");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//open the dashboardset
+		webd.getLogger().info("Open the dashboard in the builder page");
+		DashboardHomeUtil.selectDashboard(webd, dbsetName);
+
+		//verify the refresh status
+		webd.getLogger().info("Verify the defaul refresh setting for the dashboard is OFF");
+		//TODO
+
+		//set the refresh setting to 5 min
+		webd.getLogger().info("Set the refresh setting to 5MIN");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN);
+		webd.getLogger().info("Verify the refresh setting for the dashboard is 5MIN");
+		//TODO
+
+		//set the refresh setting to OFF
+		webd.getLogger().info("Set the refresh setting to OFF");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
+		webd.getLogger().info("Verify the refresh setting for the dashboard is OFF");
+		//TODO
+	}
+
 	@Test(dependsOnMethods = { "testAddDashboardInGridView" })
 	public void testRemoveDashboardFromDashboardSet() throws Exception
 	{
@@ -314,7 +366,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	@Test(dependsOnMethods = { "testAddDashboardInListView" })
+	@Test(dependsOnMethods = { "testPrint" })
 	public void testRemoveDashboardSetFromHomePage() throws Exception
 	{
 		//init the test
@@ -395,6 +447,48 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Go to home page and verify if the dashboard set is home page");
 		BrandingBarUtil.visitMyHome(webd);
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_setHome), "DashboarSet is NOT set to home page");
+	}
+
+	@Test(groups = "other test")
+	public void testShare() throws Exception
+	{
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testAddDashboardInGridView");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//open the dashboardset
+		webd.getLogger().info("Open the dashboard in the builder page");
+		DashboardHomeUtil.selectDashboard(webd, dbsetName);
+
+		//share the dashboardset
+		webd.getLogger().info("Share the dashboard");
+		Assert.assertTrue(DashboardBuilderUtil.toggleShareDashboardset(webd), "Share the dashboard set failed!");
+
+	}
+
+	@Test(groups = "other test", dependsOnMethods = { "testShare" })
+	public void testStopSharing() throws Exception
+	{
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testAddDashboardInGridView");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//open the dashboardset
+		webd.getLogger().info("Open the dashboard in the builder page");
+		DashboardHomeUtil.selectDashboard(webd, dbsetName);
+
+		//share the dashboardset
+		webd.getLogger().info("Share the dashboard");
+		Assert.assertFalse(DashboardBuilderUtil.toggleShareDashboardset(webd), "Stop sharing the dashboard set failed!");
+
 	}
 
 	private String generateTimeStamp()
