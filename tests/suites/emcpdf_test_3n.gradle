@@ -100,7 +100,7 @@ dependencies{
       	exclude('module':'groovy')
     }
     
-     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '1.6.0+')
+     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '1.7.1+')
      
      testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
      		exclude('module':'groovy')
@@ -138,8 +138,6 @@ dependencies{
 	testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2')  { transitive = false }
      
      
-
-    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '1.6.0+')
     configurations{
 	restAssured.exclude module:'groovy'
     }
