@@ -191,8 +191,10 @@ require(['ojs/ojcore',
                             self.exploreDataLinkList.push(dataExplorers[i]);                                                        
                             landingHomeUrls[dataExplorers[i].name] = dataExplorers[i].href;
                             //change name of data explorer in ITA to "Data Explorer - Analyze" & "Data Explorer"
+
                             if(dataExplorers[i].serviceName === "emcitas-ui-apps") {                             
-                                self.exploreDataInITA.push({href: dataExplorers[i].href, name: self.dataExplorer+" - " +dataExplorers[i].name, serviceName: dataExplorers[i].serviceName, version: dataExplorers[i].version});
+                                self.exploreDataInITA.push({id: 'ITA_Analyze', href: dataExplorers[i].href, name: self.dataExplorer+" - " +dataExplorers[i].name, serviceName: dataExplorers[i].serviceName, version: dataExplorers[i].version});
+			    	landingHomeUrls[self.dataExplorer+" - " +dataExplorers[i].name] = dataExplorers[i].href;
                             }else if (dataExplorers[i].serviceName === "TargetAnalytics") {
                                 self.exploreDataInITA.push({id: 'ITA_Search', href: dataExplorers[i].href, name: self.dataExplorer, serviceName: dataExplorers[i].serviceName, version: dataExplorers[i].version});
                                 landingHomeUrls[self.dataExplorer] = dataExplorers[i].href;
