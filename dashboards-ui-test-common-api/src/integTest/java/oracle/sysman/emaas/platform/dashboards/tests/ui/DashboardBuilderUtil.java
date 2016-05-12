@@ -96,7 +96,7 @@ public class DashboardBuilderUtil
 		By locatorOfKeyEl = By.cssSelector(DashBoardPageId.RightDrawerCSS);
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfKeyEl));
-        WaitUtil.waitForPageFullyLoaded(driver);
+		WaitUtil.waitForPageFullyLoaded(driver);
 
 		driver.getLogger().info("[DashboardHomeUtil] call addWidgetByRightDrawer with search string as " + searchString);
 
@@ -104,15 +104,15 @@ public class DashboardBuilderUtil
 		DashboardBuilderUtil.showRightDrawer(driver);
 
 		WebElement searchInput = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchInputCSS);
-        // focus to search input box
-        new Actions(driver.getWebDriver()).moveToElement(searchInput).build().perform();
+		// focus to search input box
+		new Actions(driver.getWebDriver()).moveToElement(searchInput).build().perform();
 		searchInput.clear();
 		searchInput.sendKeys(searchString);
 		driver.takeScreenShot();
-        //verify input box value
-        Assert.assertEquals(searchInput.getAttribute("value"),searchString);
+		//verify input box value
+		Assert.assertEquals(searchInput.getAttribute("value"), searchString);
 
-        WebElement searchButton = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchButtonCSS);
+		WebElement searchButton = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchButtonCSS);
 		driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerSearchButtonCSS);
 		searchButton.click();
 		//wait for ajax resolved
@@ -131,8 +131,8 @@ public class DashboardBuilderUtil
 		//      CommonActions.dragAndDropElement(driver, matchingWidgets.get(0), tilesContainer);
 
 		// focus to  the first matching  widget
-        driver.getWebDriver().switchTo().activeElement().sendKeys(Keys.TAB);
-        driver.takeScreenShot();
+		driver.getWebDriver().switchTo().activeElement().sendKeys(Keys.TAB);
+		driver.takeScreenShot();
 
 		// press enter to add widget
 		driver.getWebDriver().switchTo().activeElement().sendKeys(Keys.ENTER);
@@ -399,15 +399,47 @@ public class DashboardBuilderUtil
 		}
 	}
 
-	public static void listView(WebDriver driver) throws Exception
+	public static boolean isRefreshSettingCheckedForDashbaordSet(WebDriver driver, String refreshSettings)
 	{
-		DashboardHomeUtil.listView(driver);
+		driver.getLogger().info(
+				"DashboardBuilderUtil.isRefreshSettingCheckedForDashbaordSet started for refreshSettings=" + refreshSettings);
+
+		Validator.fromValidValues("refreshDashboardSet", refreshSettings, REFRESH_DASHBOARD_SETTINGS_OFF,
+				REFRESH_DASHBOARD_SETTINGS_5MIN);
+
+		driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionBtn);
+		driver.click(DashBoardPageId.DashboardSetOptionBtn);
+		driver.takeScreenShot();
+
+		driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionsAutoRefreshLocator);
+		driver.click(DashBoardPageId.DashboardSetOptionsAutoRefreshLocator);
+		driver.takeScreenShot();
+
+		driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionsAutoRefreshOffLocator);
+		driver.takeScreenShot();
+		if (REFRESH_DASHBOARD_SETTINGS_OFF.equals(refreshSettings)) {
+			boolean checked = driver.isDisplayed(DashBoardPageId.DashboardSetAutoRefreshOffSelectedLocator);
+			driver.getLogger()
+					.info("DashboardBuilderUtil.isRefreshSettingCheckedForDashbaordSet completed, return result is " + checked);
+			return checked;
+		}
+		else {// REFRESH_DASHBOARD_SETTINGS_5MIN:
+			boolean checked = driver.isDisplayed(DashBoardPageId.DashboardSetAutoRefreshOn5MinSelectedLocator);
+			driver.getLogger()
+					.info("DashboardBuilderUtil.isRefreshSettingCheckedForDashbaordSet completed, return result is " + checked);
+			return checked;
+		}
 	}
 
 	//	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
 	//	{
 	//		driver = webDriver;
 	//	}
+
+	public static void listView(WebDriver driver) throws Exception
+	{
+		DashboardHomeUtil.listView(driver);
+	}
 
 	public static void openWidget(WebDriver driver, String widgetName) throws Exception
 	{
@@ -522,38 +554,12 @@ public class DashboardBuilderUtil
 		driver.click(DashBoardPageId.DashboardSetOptionsAutoRefreshLocator);
 		driver.takeScreenShot();
 
-		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsAutoRefreshOffLocator);
+		driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionsAutoRefreshOffLocator);
 		switch (refreshSettings) {
 			case REFRESH_DASHBOARD_SETTINGS_OFF:
 				driver.check(DashBoardPageId.DashboardSetOptionsAutoRefreshOffLocator);
-
-				// click the same option menu just to ensure that the item is really checked
-				driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionBtn);
-				driver.click(DashBoardPageId.DashboardSetOptionBtn);
-				driver.takeScreenShot();
-
-				driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionsAutoRefreshLocator);
-				driver.click(DashBoardPageId.DashboardSetOptionsAutoRefreshLocator);
-				driver.takeScreenShot();
-
-				driver.waitForElementPresent(DashBoardPageId.DashboardSetAutoRefreshOffSelectedLocator);
-				driver.takeScreenShot();
-				driver.check(DashBoardPageId.DashboardSetOptionsAutoRefreshOffLocator);
 				break;
 			case REFRESH_DASHBOARD_SETTINGS_5MIN:
-				driver.check(DashBoardPageId.DashboardSetOptionsAutoRefreshOn5MinLocator);
-
-				// click the same option menu just to ensure that the item is really checked
-				driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionBtn);
-				driver.click(DashBoardPageId.DashboardSetOptionBtn);
-				driver.takeScreenShot();
-
-				driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionsAutoRefreshLocator);
-				driver.click(DashBoardPageId.DashboardSetOptionsAutoRefreshLocator);
-				driver.takeScreenShot();
-
-				driver.waitForElementPresent(DashBoardPageId.DashboardSetAutoRefreshOn5MinSelectedLocator);
-				driver.takeScreenShot();
 				driver.check(DashBoardPageId.DashboardSetOptionsAutoRefreshOn5MinLocator);
 				break;
 		}
