@@ -856,7 +856,7 @@ public class DashboardBuilderUtil
 			driver.waitForElementPresent("id=" + DashBoardPageId.DashboardsetOptionsEditSaveID);
 			driver.click("id=" + DashBoardPageId.DashboardsetOptionsEditSaveID);
 			driver.getLogger().info("DashboardBuilderUtil toggleShareDashboardset completed");
-			return true;
+			return false;
 		}
 		else {
 			driver.waitForElementPresent("css=" + DashBoardPageId.DashboardsetOptionsShareCSS);
@@ -866,7 +866,7 @@ public class DashboardBuilderUtil
 			driver.waitForElementPresent("id=" + DashBoardPageId.DashboardsetOptionsEditSaveID);
 			driver.click("id=" + DashBoardPageId.DashboardsetOptionsEditSaveID);
 			driver.getLogger().info("DashboardBuilderUtil toggleShareDashboardset completed");
-			return false;
+			return true;
 		}
 	}
 
