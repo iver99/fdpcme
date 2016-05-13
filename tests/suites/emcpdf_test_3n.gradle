@@ -27,12 +27,17 @@
 
 buildscript {
     repositories {
+	 /* To check if the jar is available in local maven repository */
+         maven {
+             url = "${PUB_MAVEN_MY_MAVEN_REPO}"
+         }
         maven {
             url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
         }
     }
     dependencies {
    	classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true 
+	classpath group: "com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "${devinfraVersion}", transitive: true
         classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_taskprocessor", version: "${omctfVersion}" 
 	classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"
   }
@@ -43,25 +48,13 @@ repositories {
      url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
     }
 }
-
+apply plugin: 'DevInfraPlugin'
 apply plugin: 'TestInfraPlugin'
 apply plugin: 'groovy'
-// Uncomment below line once EMDI-6096 is fixed
-// apply from: getSingleFileInConfiguration(project.buildscript.configurations.classpath,"omctf_commontasks")
-/** Start of WA for EMDI-6096 */
-def getAbsoluteFilePath(artifactNameToSearch) {
-    absPath=""
-    buildscript.configurations.classpath.resolve().each {
-        String absolutePath=it.getAbsolutePath();
-        if(absolutePath.contains(artifactNameToSearch)){
-            absPath=absolutePath
-        }
-    }
-    return absPath
-}
-apply from: getAbsoluteFilePath("omctf_commontasks")
-apply from: getAbsoluteFilePath("omctf_taskprocessor")
-/** End of WA for EMDI-6096 */
+
+apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_commontasks")
+
+
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 
 /* *************************************************************************************************
