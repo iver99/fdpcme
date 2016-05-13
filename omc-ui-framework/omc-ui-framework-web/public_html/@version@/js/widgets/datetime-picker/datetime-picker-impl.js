@@ -1019,12 +1019,15 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         }
                     }else {
                         if(self.startDateTime && self.endDateTime) {
+                            curDate = new Date();
                             //users input start date and end date
                             sdt = self.getParam(self.startDateTime);
                             edt = self.getParam(self.endDateTime);
                             start = newDateWithMilliseconds(sdt);
                             end = newDateWithMilliseconds(edt);
-                            if(Math.abs(end.getTime()-new Date().getTime())>60*1000 || end.getMinutes() !== new Date().getMinutes()) {
+                            console.log("Param endDateTime is " + end);
+                            console.log("Initializing time is " + curDate);
+                            if(Math.abs(end.getTime()-curDate.getTime())>60*1000 || end.getMinutes() !== curDate.getMinutes()) {
                                 var t_timePeriod = self.timePeriodCustom;
                                 customClick(0);
                             }else {
