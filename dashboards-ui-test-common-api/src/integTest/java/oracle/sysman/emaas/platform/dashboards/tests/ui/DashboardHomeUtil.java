@@ -54,8 +54,7 @@ public class DashboardHomeUtil
 	 *            dashboard | dashboardSet
 	 * @throws Exception
 	 */
-	public static void createDashboard(WebDriver driver, String name, String descriptions, String type)
-			throws Exception
+	public static void createDashboard(WebDriver driver, String name, String descriptions, String type) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call createDashboard : " + name);
 		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.CreateDSButtonID));
@@ -68,7 +67,8 @@ public class DashboardHomeUtil
 		}
 		if (DashboardHomeUtil.DASHBOARD.equalsIgnoreCase(type)) {
 			driver.check(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardType_Single));
-		} else if (DashboardHomeUtil.DASHBOARDSET.equalsIgnoreCase(type)) {
+		}
+		else if (DashboardHomeUtil.DASHBOARDSET.equalsIgnoreCase(type)) {
 			driver.check(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardType_Set));
 		}
 		driver.takeScreenShot();
@@ -265,7 +265,7 @@ public class DashboardHomeUtil
 		List<WebElement> eles = driver.getWebDriver().findElements(By.xpath(DashBoardPageId.DashboardNameContainers));
 		for (WebElement e : eles) {
 			//String name = e.getAttribute("aria-label");
-			if (e.getAttribute("aria-label") != null) {
+			if (DashboardHomeUtil.isAttribtuePresent(e, "aria-label")) {
 				names.add(e.getAttribute("aria-label"));
 			}
 			else {
@@ -517,8 +517,9 @@ public class DashboardHomeUtil
 	{
 		return "id=" + id;
 	}
-	
-	private static String convertName(String name) {
+
+	private static String convertName(String name)
+	{
 		return "name=" + name;
 	}
 
@@ -570,5 +571,20 @@ public class DashboardHomeUtil
 				break;
 			}
 		}
+	}
+
+	private static boolean isAttribtuePresent(WebElement element, String attribute)
+	{
+		Boolean result = false;
+		try {
+			String value = element.getAttribute(attribute);
+			if (value != null) {
+				result = true;
+			}
+		}
+		catch (Exception e) {
+		}
+
+		return result;
 	}
 }
