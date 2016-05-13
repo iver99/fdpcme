@@ -11,22 +11,19 @@ function(dm, dc, dp, oj, ko, $)
  */
 
 
-    DatasourceFactory = function(dashbaordsUrl, sortBy, types, appTypes, owners, favoritesOnly) {
+    var DatasourceFactory = function(dashbaordsUrl, sortBy, filter) {
         var self = this;
         self.dashbaordsUrl = dashbaordsUrl;
         self.sortBy = sortBy;
-        self.types = types;
-        self.appTypes = appTypes;
-        self.owners = owners;
-        self.favoritesOnly = favoritesOnly;
+        self.filter = filter;
         self.build = function(query, pageSize) {
           return (function () {
-            var _orderby = self.sortBy, _types = self.types, _appTypes = self.appTypes, _owners =  self.owners, _favoritesOnly = self.favoritesOnly,
+            var _orderby = self.sortBy, _filter = self.filter,
                         _model = dm.DashboardModel, _pageSize = 20, _fetchSize = 60, _modelLimit = 1000;
             if (pageSize)
             {
                 _pageSize = pageSize;
-                _fetchSize = ((_pageSize * 2) > 300 ? _pageSize : (_pageSize * 2));
+                _fetchSize = pageSize;//((_pageSize * 2) > 300 ? _pageSize : (_pageSize * 2));
                 if (_fetchSize > _modelLimit) _modelLimit = _fetchSize;
             }
             var _collection = new dc.DashboardCollection([], 
@@ -35,10 +32,11 @@ function(dm, dc, dp, oj, ko, $)
                          'url': self.dashbaordsUrl, 
                          'query': query,
                          'orderBy': _orderby,
-                         'types': _types,
-                         'appTypes': _appTypes,
-                         'owners': _owners,
-                         "favoritesOnly": _favoritesOnly, 
+                         'filter': _filter,
+//                         'types': _types,
+//                         'appTypes': _appTypes,
+//                         'owners': _owners,
+//                         "favoritesOnly": _favoritesOnly, 
                          'model': _model});
             var _pagingds = new dp.DashboardPaging(_collection);// new oj.CollectionPagingDataSource(_collection);
             _pagingds.setPageSize(_pageSize);

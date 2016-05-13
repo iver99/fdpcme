@@ -114,10 +114,6 @@ public class APIBase
 		}
 		UserContext.setCurrentUser(userName);
 		String tenantName = userTenant.substring(0, idx);
-		if (tenantName == null || "".equals(tenantName)) {
-			throw new CommonSecurityException(
-					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
-		}
 		TenantContext.setCurrentTenant(tenantName);
 	}
 

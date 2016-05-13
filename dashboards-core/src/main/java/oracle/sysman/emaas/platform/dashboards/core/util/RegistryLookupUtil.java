@@ -268,7 +268,7 @@ public class RegistryLookupUtil
 					protocoledLinks.add(link);
 				}
 			}
-			catch (Throwable thr) {
+			catch (Exception thr) {
 				logger.error(thr.getLocalizedMessage(), thr);
 				return protocoledLinks;
 			}
@@ -291,11 +291,12 @@ public class RegistryLookupUtil
 				logger.debug("Checks link on protocol {} with expected rel prefix {} against retrieved link (rel={}, href={})",
 						protocol, relPrefix, link.getRel(), link.getHref());
 				URI uri = URI.create(link.getHref());
-				if (protocol.equalsIgnoreCase(uri.getScheme()) && link.getRel() != null && link.getRel().indexOf(relPrefix) == 0) {
+				if (protocol.equalsIgnoreCase(uri.getScheme()) && link.getRel() != null
+						&& link.getRel().indexOf(relPrefix) == 0) {
 					protocoledLinks.add(link);
 				}
 			}
-			catch (Throwable thr) {
+			catch (Exception thr) {
 				logger.error(thr.getLocalizedMessage(), thr);
 				return protocoledLinks;
 			}
@@ -362,7 +363,8 @@ public class RegistryLookupUtil
 									sanitizedInstance, tenantName);
 						}
 						else {
-							logger.debug("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
+							logger.debug(
+									"Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
 							sanitizedInstance = LookupManager.getInstance().getLookupClient()
 									.getSanitizedInstanceInfo(internalInstance);
 							itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
@@ -412,7 +414,8 @@ public class RegistryLookupUtil
 									sanitizedInstance, tenantName);
 						}
 						else {
-							logger.debug("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
+							logger.debug(
+									"Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
 							sanitizedInstance = LookupManager.getInstance().getLookupClient()
 									.getSanitizedInstanceInfo(internalInstance);
 							itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
@@ -617,8 +620,8 @@ public class RegistryLookupUtil
 
 	private static Link replaceVanityUrlDomainForLink(String domainPort, Link lk, String tenantName)
 	{
-		logger.debug("/replaceDomainForLink/ Trying to replace link url \"{}\" with domain \"{}\"", lk != null ? lk.getHref()
-				: null, domainPort);
+		logger.debug("/replaceDomainForLink/ Trying to replace link url \"{}\" with domain \"{}\"",
+				lk != null ? lk.getHref() : null, domainPort);
 		if (StringUtil.isEmpty(domainPort) || lk == null || StringUtil.isEmpty(lk.getHref())) {
 			return lk;
 		}

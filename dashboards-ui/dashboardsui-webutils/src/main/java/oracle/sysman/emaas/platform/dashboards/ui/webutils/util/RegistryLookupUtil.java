@@ -77,7 +77,7 @@ public class RegistryLookupUtil
 					protocoledLinks.add(link);
 				}
 			}
-			catch (Throwable thr) {
+			catch (Exception thr) {
 				logger.error(thr.getLocalizedMessage(), thr);
 				return protocoledLinks;
 			}
@@ -102,7 +102,7 @@ public class RegistryLookupUtil
 					protocoledLinks.add(link);
 				}
 			}
-			catch (Throwable thr) {
+			catch (Exception thr) {
 				logger.error(thr.getLocalizedMessage(), thr);
 				return protocoledLinks;
 			}

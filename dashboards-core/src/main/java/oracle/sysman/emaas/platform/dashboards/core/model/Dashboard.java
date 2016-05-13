@@ -6,6 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonValue;
+
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
@@ -13,12 +19,6 @@ import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.annotate.JsonValue;
 
 public class Dashboard
 {
@@ -77,14 +77,20 @@ public class Dashboard
 	public static final Integer DASHBOARD_TYPE_CODE_NORMAL = Integer.valueOf(0);
 	public static final String DASHBOARD_TYPE_SINGLEPAGE = "SINGLEPAGE";
 	public static final Integer DASHBOARD_TYPE_CODE_SINGLEPAGE = Integer.valueOf(1);
-	public static final EnableTimeRangeState DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = EnableTimeRangeState.AUTO;
+	public static final EnableTimeRangeState DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = EnableTimeRangeState.FALSE;
 	public static final boolean DASHBOARD_ENABLE_REFRESH_DEFAULT = Boolean.FALSE;
 
 	public static final boolean DASHBOARD_DELETED_DEFAULT = Boolean.FALSE;
 
+	/**
+	 * Create a new dashboard instance from giving EmsDashboard instance
+	 *
+	 * @param ed
+	 * @return
+	 */
 	public static Dashboard valueOf(EmsDashboard ed)
 	{
-		return Dashboard.valueOf(ed, null);
+		return Dashboard.valueOf(ed, null, true, true);
 	}
 
 	/**
@@ -95,9 +101,11 @@ public class Dashboard
 	 * @param to
 	 *            prototype Dashboard object, and it's values will be covered by value from EmsDashboard instance, or a new
 	 *            Dashboard instance will be created if it's null
+	 * @param alwaysLoadTiles
+	 *            false: just load single page tiles, true: load tiles data for the dashboard without considering its types
 	 * @return
 	 */
-	public static Dashboard valueOf(EmsDashboard from, Dashboard to)
+	public static Dashboard valueOf(EmsDashboard from, Dashboard to, boolean alwaysLoadTiles, boolean loadTileParams)
 	{
 		if (from == null) {
 			return null;
@@ -120,15 +128,17 @@ public class Dashboard
 		// by default, we'll not load screenshot for query
 		//		to.setScreenShot(from.getScreenShot());
 		to.setType(DataFormatUtils.dashboardTypeInteger2String(from.getType()));
-		List<EmsDashboardTile> edtList = from.getDashboardTileList();
-		if (edtList != null) {
-			List<Tile> tileList = new ArrayList<Tile>();
-			for (EmsDashboardTile edt : edtList) {
-				Tile tile = Tile.valueOf(edt);
-				tile.setDashboard(to);
-				tileList.add(tile);
+		if (alwaysLoadTiles || Dashboard.DASHBOARD_TYPE_SINGLEPAGE.equals(to.getType())) {
+			List<EmsDashboardTile> edtList = from.getDashboardTileList();
+			if (edtList != null) {
+				List<Tile> tileList = new ArrayList<Tile>();
+				for (EmsDashboardTile edt : edtList) {
+					Tile tile = Tile.valueOf(edt, loadTileParams);
+					tile.setDashboard(to);
+					tileList.add(tile);
+				}
+				to.setTileList(tileList);
 			}
-			to.setTileList(tileList);
 		}
 		return to;
 	}
@@ -165,6 +175,8 @@ public class Dashboard
 	private String screenShot;
 
 	private String screenShotHref;
+
+	private String optionsHref;
 
 	private String href;
 
@@ -259,6 +271,11 @@ public class Dashboard
 		return name;
 	}
 
+	public String getOptionsHref()
+	{
+		return optionsHref;
+	}
+
 	public String getOwner()
 	{
 		return owner;
@@ -267,7 +284,7 @@ public class Dashboard
 	public EmsDashboard getPersistenceEntity(EmsDashboard ed) throws DashboardException
 	{
 		//check dashboard name
-		if (name == null || name.trim() == "" || name.length() > 64) {
+		if (name == null || "".equals(name.trim()) || name.length() > 64) {
 			throw new CommonFunctionalException(
 					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_NAME_ERROR));
 		}
@@ -418,6 +435,11 @@ public class Dashboard
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+
+	public void setOptionsHref(String optionsHref)
+	{
+		this.optionsHref = optionsHref;
 	}
 
 	public void setOwner(String owner)

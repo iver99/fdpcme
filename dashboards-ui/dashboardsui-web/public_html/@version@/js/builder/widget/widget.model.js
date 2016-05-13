@@ -5,12 +5,15 @@
  */
 
 define(['jquery',
-        'uifwk/js/util/df-util',
-        'builder/builder.core'], function($, dfu) {
+        'ojs/ojcore',
+        'dfutil',
+        'builder/builder.core'], function($, oj, dfu) {
     function WidgetDataSource() {
         var self = this;
         var DEFAULT_WIDGET_PAGE_SIZE = 20;
 
+        self.widgetPageSize = DEFAULT_WIDGET_PAGE_SIZE;
+        
         self.loadWidgetData = function(page, keyword, successCallback) {
             initialize(page);
             loadWidgets(keyword);
@@ -31,6 +34,7 @@ define(['jquery',
                 url: widgetsUrl,
                 headers: dfu.getSavedSearchRequestHeader(),
                 success: function(data) {
+                    sortWidgetsData(data);
                     data && data.length > 0 && (filterWidgetsData(data, keyword));
                 },
                 error: function(){
@@ -39,6 +43,17 @@ define(['jquery',
                 async: false
             });
         };
+        
+        function sortWidgetsData(widgets) {
+            if (widgets && widgets.length > 0) {
+                widgets.sort(function(a, b) {
+                    var na = a.WIDGET_NAME.toLowerCase(), nb = b.WIDGET_NAME.toLowerCase();
+                    if (na < nb) return -1;
+                    if (na > nb) return 1;
+                    return 0;
+                });
+            }
+        }
 
         function filterWidgetsData(data, keyword){
             var lcKeyword = $.trim(keyword) ? $.trim(keyword).toLowerCase() : null;
@@ -48,15 +63,15 @@ define(['jquery',
                 !lcKeyword && (widget = data[i]);
                 widget && self.widget.push(widget);
             }
-            self.widget.length && (self.totalPages = Math.ceil(self.widget.length / DEFAULT_WIDGET_PAGE_SIZE));
+            self.widget.length && (self.totalPages = Math.ceil(self.widget.length / self.widgetPageSize));
             self.page > self.totalPages && (self.page = self.totalPages);
             self.page < 1 && (self.page = 1);
-            self.widget = self.widget.slice((self.page - 1) * DEFAULT_WIDGET_PAGE_SIZE, self.page * DEFAULT_WIDGET_PAGE_SIZE);
+            self.widget = self.widget.slice((self.page - 1) * self.widgetPageSize, self.page * self.widgetPageSize);
         }
     }
     Builder.registerModule(WidgetDataSource, "WidgetDataSource");
         
-    function createTextWidget(width) {
+    /*function createTextWidget(width) {
         var widget = {};
         widget.WIDGET_KOC_NAME = "DF_V1_WIDGET_TEXT";
         widget.WIDGET_TEMPLATE = "./widgets/textwidget/textwidget.html";
@@ -68,6 +83,6 @@ define(['jquery',
         widget.row = null;
         widget.content = null;
         return widget;
-    };
-    Builder.registerFunction(createTextWidget, 'createTextWidget');
+    }
+    Builder.registerFunction(createTextWidget, 'createTextWidget');*/
 });

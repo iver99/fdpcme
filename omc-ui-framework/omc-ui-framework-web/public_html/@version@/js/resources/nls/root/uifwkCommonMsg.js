@@ -76,16 +76,18 @@ define({
       "WIDGET_SELECTOR_WIDGET_GROUP_DASHBOARDS_BUILTIN": "Dashboards Built-In",
       "WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE": "Screen Shot",
       "WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE": "Description",
+      "WIDGET_SELECTOR_WIDGETS_LOADING_HINT": "Loading...",
       "BRANDING_BAR_MESSAGE_AJAX_RETRYING_SUMMARY":"Not connected.",
       "BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL":"Retrying to connect to your cloud service now...",
-      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY":"Cloud services is not reachable at this time.",
-      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL":"Try again later or contact Oracle Support Services if it persists.",
+      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY":"Oracle Management Cloud is unreachable.",
+      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL":"Try again later.",
       "BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING":"Session timeout. Redirecting to SSO login page now...",
        //datetime picker
        "DATETIME_PICKER_DROP_DOWN": "Drop Down",
-      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS": "Last 15 minutes",
-      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS": "Last 30 minutes",
-      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS": "Last 60 minutes",
+       "DATETIME_PICKER_TIME_FILTER": "Time Filter",
+      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS": "Last 15 mins",
+      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS": "Last 30 mins",
+      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS": "Last 60 mins",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_4_HOURS": "Last 4 hours",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_6_HOURS": "Last 6 hours",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_DAY": "Last 1 day",
@@ -117,6 +119,13 @@ define({
       "DATETIME_PICKER_WINDOW_SIZE_WITH_HOURS": "{0} hour(s) {1} minute(s).",
       "DATETIME_PICKER_WINDOW_SIZE_WITH_MINUTES": "{0} minute(s).",
       "DATETIME_PICKER_SHOW_TODAY": "Today",
-      "DATETIME_PICKER_SHOW_YESTERDAY": "Yesterday"
+      "DATETIME_PICKER_SHOW_YESTERDAY": "Yesterday",
+      
+      //time filter
+      "TIME_FILTER_TIME_LABEL": "Time",
+      "TIME_FILTER_TIME_HINT": "Hint : Enter time ranges in 24 hr format. For multiple time ranges separate them with ',' Ex: 1-7,13-17",
+      "TIME_FILTER_DAYS_LABEL": "Days",
+      "TIME_FILTER_MONTHS_LABEL": "Months",
+      "TIME_FILTER_OPTION_ALL": "All"      
 });
 

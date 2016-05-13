@@ -42,7 +42,7 @@ define(['knockout',
 
             self.open = function() {
                 self.clear();
-                $( "#cDsbDialog" ).ojDialog( "open" );    
+                $("#cDsbDialog").ojDialog( "open" );    
             };
 
             self.save = function() {
@@ -92,8 +92,7 @@ define(['knockout',
                 }
                 return false;
             };
-        
-        };
+        }
         
         return {"EditDashboardDialogModel": EditDashboardDialogModel};
     }

@@ -35,6 +35,7 @@ define([
                 self.affirmativeButtonLabel = affirmativeTxt ? affirmativeTxt : nls.WIDGET_SELECTOR_DEFAULT_AFFIRMATIVE_BTN_LABEL;
                 self.widgetScreenShotPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE;
                 self.widgetDescPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE;
+                self.widgetsLoadingHints = nls.WIDGET_SELECTOR_WIDGETS_LOADING_HINT;
                         
                 self.widgetGroupFilterVisible = ko.observable(widgetProviderName && widgetProviderVersion ? false : true);
                 self.searchText = ko.observable("");
@@ -69,6 +70,7 @@ define([
                 self.naviNextBtnEnabled=ko.observable(totalPage > 1 && curPage!== totalPage ? true:false);
                 self.currentWidget = ko.observable();
                 self.confirmBtnDisabled = ko.observable(true);
+                self.widgetOnLoading = ko.observable(true);
                 
                 // Initialize data and refresh
                 self.beforeOpenDialog = function(event, ui) {
@@ -183,7 +185,7 @@ define([
                         self.currentWidget(null);
                     }
                     self.confirmBtnDisabled(true);
-                };
+                }
                 
                 // Get widget data to be shown in current page
                 function fetchWidgetsForCurrentPage(allWidgets) {
@@ -192,7 +194,7 @@ define([
                         loadWidgetScreenshot(allWidgets[i]);
                         curPageWidgets.push(allWidgets[i]);
                     }
-                };
+                }
                 
                 // Get available widgets to be searched from
                 function getAvailableWidgets() {
@@ -212,23 +214,23 @@ define([
                         availWidgets = widgetArray;
                     }
                     else {
-                        for (i = 0; i < widgetArray.length; i++) {
+                        for (var i = 0; i < widgetArray.length; i++) {
                             var widget = widgetArray[i];
                             if (widget.PROVIDER_NAME === providerName &&
-                                    widget.PROVIDER_VERSION === providerVersion &&
+                    //                widget.PROVIDER_VERSION === providerVersion &&
                                     widget.WIDGET_GROUP_NAME === groupName) {
                                 availWidgets.push(widget);
                             }
                         }
                     }
                     return availWidgets;
-                };
+                }
                 
                 // Refresh pagination button status
                 function refreshNaviButton() {
                     self.naviPreBtnEnabled(curPage === 1 ? false : true);
                     self.naviNextBtnEnabled(totalPage > 1 && curPage!== totalPage ? true:false);
-                };
+                }
                 
                 // Return search result of type ahead search
                 self.searchFilterFunc = function (arr, value) {
@@ -255,7 +257,7 @@ define([
                 self.widgetBoxClicked = function(data, event) {
                     var curWidget = self.currentWidget();
                     if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME || 
-                            curWidget.PROVIDER_VERSION !== data.PROVIDER_VERSION || 
+                            /*curWidget.PROVIDER_VERSION !== data.PROVIDER_VERSION ||*/ 
                             curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) {
                         widgetArray[curWidget.index].isSelected(false);
                         data.isSelected(true);
@@ -309,6 +311,21 @@ define([
                     else {
                         var ajaxCallDfd = $.Deferred();
                         var loadedCnt = 0;
+                        var successRetrun = function (data, textStatus, jqXHR) {
+                            loadWidgets(data);
+                            loadedCnt++;
+                            if (loadedCnt === availableWidgetGroups.length) {
+                                ajaxCallDfd.resolve(data, textStatus, jqXHR);
+                            }
+                        };
+                        var errorRetrun = function (jqXHR, textStatus, errorThrown) {
+                            loadedCnt++;
+                            if (loadedCnt === availableWidgetGroups.length) {
+                                ajaxCallDfd.reject(jqXHR, textStatus, errorThrown);
+                            }
+                            oj.Logger.error('Error when fetching widgets by URL: ' + widgetsUrl + '.');
+                        };
+
                         for (var i = 0; i < availableWidgetGroups.length; i++) {
                             //Get widgets by widget group id
                             widgetsUrl = widgetsUrl + "?widgetGroupId=" + availableWidgetGroups[i].WIDGET_GROUP_ID;
@@ -318,27 +335,14 @@ define([
                             dfu.ajaxWithRetry({
                                 url: widgetsUrl,
                                 headers: dfu.getSavedSearchServiceRequestHeader(),
-                                success: function(data, textStatus, jqXHR) {
-                                    loadWidgets(data);
-                                    loadedCnt++;
-                                    if (loadedCnt === availableWidgetGroups.length) {
-                                        ajaxCallDfd.resolve(data, textStatus, jqXHR);
-                                    }
-                                },
-                                error: function(jqXHR, textStatus, errorThrown){
-                                    loadedCnt++;
-                                    if (loadedCnt === availableWidgetGroups.length) {
-                                        ajaxCallDfd.reject(jqXHR, textStatus, errorThrown);
-                                    }
-                                    oj.Logger.error('Error when fetching widgets by URL: '+widgetsUrl+'.');
-                                },
+                                success: successRetrun,
+                                error: errorRetrun,
                                 async: true
-                            });  
+                            });
                         }
-
                         return ajaxCallDfd;
                     }
-                };
+                }
                 
                 function getWidgetGroups() {
                     var widgetgroupsUrl = '/sso.static/savedsearch.widgetgroups';
@@ -368,7 +372,7 @@ define([
                             },
                             async: true
                         });
-                };
+                }
                 
                 function refreshPageData() {
                     curPage = 1;
@@ -381,7 +385,7 @@ define([
                     self.curPageWidgetList(curPageWidgets);
                     self.naviPreBtnEnabled(curPage === 1 ? false : true);
                     self.naviNextBtnEnabled(totalPage > 1 && curPage!== totalPage ? true:false);
-                };
+                }
                 
                 // Refresh widget/widget group data and UI displaying
                 function refreshWidgets() {
@@ -396,6 +400,7 @@ define([
                     self.currentWidget(null);
                     self.confirmBtnDisabled(true);
                     self.searchText("");
+                    self.widgetOnLoading(true);
                     refreshPageData();
                     
                     getWidgetGroups().done(function(data, textStatus, jqXHR){
@@ -412,6 +417,7 @@ define([
                             else {
                                 refreshPageData();
                             }
+                            self.widgetOnLoading(false);
                         })
                         .fail(function(xhr, textStatus, errorThrown){
                             oj.Logger.error("Failed to fetch widgets.");
@@ -420,14 +426,14 @@ define([
                     .fail(function(xhr, textStatus, errorThrown){
                         oj.Logger.error("Failed to fetch widget groups.");
                     });
-                };
+                }
                 
                 // Load widgets from ajax call result data
                 function loadWidgets(data) {
                     if (data && data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
-                            if ((!widgetProviderName && !widgetProviderVersion) || 
-                                    (widgetProviderName === data[i].PROVIDER_NAME && widgetProviderVersion === data[i].PROVIDER_VERSION)) {
+                            if ((!widgetProviderName /*&& !widgetProviderVersion*/) || 
+                                    (widgetProviderName === data[i].PROVIDER_NAME /*&& widgetProviderVersion === data[i].PROVIDER_VERSION*/)) {
                                 var widget = data[i];
                                 widget.index = widgetIndex;
                                 widget.WIDGET_VISUAL = ko.observable();
@@ -448,9 +454,38 @@ define([
                             }
                         }
                     }
-                };
+                }
                 
                 function loadWidgetScreenshot(widget) {
+                    var url = widget.WIDGET_SCREENSHOT_HREF;
+                    if (!url) { // backward compility if SSF doesn't support .png screenshot. to be removed once SSF changes are merged
+                        loadWidgetBase64Screenshot(widget);
+                        return;
+                    }
+                    if (!dfu.isDevMode()){
+                        url = dfu.getRelUrlFromFullUrl(url);
+                    } 
+                    widget && !widget.WIDGET_VISUAL && (widget.WIDGET_VISUAL = ko.observable(''));
+                    url && widget.WIDGET_VISUAL(url);
+                    if (!widget.WIDGET_VISUAL()) {
+                        var laImagePath = "/emsaasui/uifwk/@version@/images/widgets/sample-widget-histogram.png";
+                        var taImagePath = "/emsaasui/uifwk/@version@/images/widgets/sample-widget-histogram.png";
+                        var itaImagePath = "/emsaasui/uifwk/@version@/images/widgets/sample-widget-histogram.png";
+                        if ('LoganService' === widget.PROVIDER_NAME) {
+                            widget.WIDGET_VISUAL(laImagePath);
+                        }
+                        else if ('TargetAnalytics' === widget.PROVIDER_NAME) {
+                            widget.WIDGET_VISUAL(taImagePath);
+                        }
+                        else if ('EmcitasApplications' === widget.PROVIDER_NAME) {
+                            widget.WIDGET_VISUAL(itaImagePath);
+                        }else{
+                            widget.WIDGET_VISUAL(itaImagePath); //default image
+                        }
+                    }
+                }
+                
+                function loadWidgetBase64Screenshot(widget) {
                     if (!widget.isScreenshotLoaded) {
                         var widgetsUrl = '/sso.static/savedsearch.widgets';
                         if (dfu.isDevMode()){
@@ -489,7 +524,7 @@ define([
                             async: true
                         });  
                     }
-                };
+                }
                 
                 // Load widget groups from ajax call result data
                 function loadWidgetGroups(data) {
@@ -503,8 +538,9 @@ define([
                             pname = data[i].PROVIDER_NAME;
                             pversion = data[i].PROVIDER_VERSION;
                             gname = data[i].WIDGET_GROUP_NAME;
-                            if ((!widgetProviderName && !widgetProviderVersion) || 
-                                    widgetProviderName === pname && widgetProviderVersion === pversion) {
+                            if ((!widgetProviderName /*&& !widgetProviderVersion */) || 
+                                    widgetProviderName === pname 
+                                /*    && widgetProviderVersion === pversion */) {
                                 //Enable ITA widget group since ITA widgets are enabled now.
 //                                if (!(pname === 'EmcitasApplications' && pversion === '0.1' && data[i].WIDGET_GROUP_ID === 3)) {
                                     var widgetGroup = {value:pname+'|'+pversion+'|'+gname, label:gname};
@@ -515,7 +551,7 @@ define([
                         }
                     }
                     return targetWidgetGroupArray;
-                };
+                }
                 
                 // Calculate the time difference between current date and the last modification date
                 function getLastModificationTimeString(lastModifiedDate) {
@@ -568,7 +604,7 @@ define([
                     }
                     
                     return result;
-                };
+                }
                 
             }
             

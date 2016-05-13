@@ -12,6 +12,7 @@
 define([
     'dbs/datasourcefactory',
     'dbs/dbstablesource',
+    'dbs/dbsfilter',
     'ojs/ojcore', 
     'knockout', 
     'jquery', 
@@ -22,7 +23,7 @@ define([
     'ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'
 ],
-function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
+function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 {
     var SHOW_WELCOME_PREF_KEY = "Dashboards.showWelcomeDialog",
             DASHBOARDS_FILTER_PREF_KEY = "Dashboards.dashboardsFilter",
@@ -63,12 +64,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             return false;
         };
         
-//        self.keydown = function (d, e) {
-//           if (e.keyCode === 13) {
-//              $( "#cDsbDialog" ).ojDialog( "close" );
-//           }
-//        };
-    };
+    }
         
     function confirmDialogModel(title, okLabel, message, okFunction) {
         var self = this;
@@ -102,15 +98,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
              self.close();
            }
         };
-    }; 
-
-    function comingsoonDialogModel() {
-        var self = this;
-       
-        self.close = function () {
-            $( "#dbs_comingsoonDialog" ).ojDialog( "close" );
-        };
-    };
+    } 
     
     function welcomeDialogModel(prefUtil, showWel) {
         var self = this;
@@ -140,11 +128,11 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             $('#overviewDialog').ojDialog('close');
         };    
         
-    };
+    }
     
     function ViewModel(predata) {
         
-        var self = this, showWelcome = predata.getShowWelcomePref(), filter = predata.getDashboardsFilter();
+        var self = this, showWelcome = predata.getShowWelcomePref();
         
         self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
         
@@ -155,14 +143,17 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         //dashboards
         self.userName = dfu.getUserName();
         self.isMobileDevice = ko.observable( (new mbu()).isMobile );
-        self.typeFilter = ko.observable(filter['types']);
-        self.serviceFilter = ko.observable(filter['appTypes']);
-        self.creatorFilter = ko.observable(filter['owners']);
-        self.favoritesFilter = ko.observable(filter['favoritesOnly']===true ? ['favoritesOnly'] : null);
-        self.showServiceFilter = ko.observable(predata.getShowServiceFilter());
-        self.showLaServiceFilter = ko.observable(predata.getShowLaService());
-        self.showApmSrviceFilter = ko.observable(predata.getShowApmService());
-        self.showItaServiceFilter = ko.observable(predata.getShowItaService());
+
+        self.filter = predata.getDashboardsFilter({'prefUtil' : self.prefUtil, 
+            'filterPrefKey': DASHBOARDS_FILTER_PREF_KEY,
+            'filterChange': function(event) {
+                if (self.dsFactory)
+                {
+                   self.dsFactory.filter = self.filter.toFilterString();
+                   self._forceSearch();
+                }
+            }
+        });
         
         self.showSeachClear = ko.observable(false);
         self.tilesViewGrid = 'gridtview';
@@ -174,7 +165,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         self.sortBy = ko.observable(['default']);
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel();
-        self.comingsoonDialogModel = new comingsoonDialogModel();
+        //self.comingsoonDialogModel = new comingsoonDialogModel();
         
         self.pageSize = ko.observable(120);
         
@@ -193,8 +184,8 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             return _spo;
         });
         
-        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), 
-                                                   filter['types'], filter['appTypes'], filter['owners'], filter['favoritesOnly']);
+        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), self.filter.toFilterString()
+                                                   /*filter['types'], filter['appTypes'], filter['owners'], filter['favoritesOnly']*/);
         self.datasourceCallback = function (_event) {
                     var _i = 0, _rawdbs = [];
                     if (_event['data'])
@@ -281,14 +272,6 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             self.selectedDashboard(data);
             if (data.element)
             {
-//                if (data.dashboard.systemDashboard == true)
-//                {
-//                    popup.ojPopup( "option", "initialFocus", "none" );
-//                }
-//                else
-//                {
-//                    popup.ojPopup( "option", "initialFocus", "firstFocusable" );
-//                }
                 popup.ojPopup('open', data.element, {'at': 'right center', 'my': 'start center'});
             }
         };
@@ -405,7 +388,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
                             $( "#cDsbDialog" ).css("cursor", "default");
                             //self.createDashboardModel.isDisabled(false);
                             var _m = null; //getNlsString('COMMON_SERVER_ERROR');
-                            var _mdetail = undefined;
+                            var _mdetail;
                             if (jqXHR && jqXHR[0] && jqXHR[0].responseJSON && jqXHR[0].responseJSON.errorCode === 10001)
                             {
                                  _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR'); //jqXHR[0].responseJSON.errorMessage;
@@ -547,68 +530,6 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             return null;
         };
         
-        self.handleTypeFilterChanged = function (event, data) {
-            var _option = data.option, _value = data.value;
-            if ( _option === "value" )
-            {
-                self.dsFactory.types = _value;
-                self._forceSearch();
-                self.saveDashbordsFilter(_value, self.serviceFilter(), self.creatorFilter(), self.favoritesFilter());
-            }
-        };
-        
-        self.handleServiceFilterChanged = function (event, data) {
-            var _option = data.option, _value = data.value;
-            if ( _option === "value" )
-            {
-                self.dsFactory.appTypes = _value;
-                self._forceSearch();
-                self.saveDashbordsFilter(self.typeFilter(), _value, self.creatorFilter(), self.favoritesFilter());
-            }
-        };
-        
-        self.handleOwnerFilterChanged = function (event, data) {
-            var _option = data.option, _value = data.value;
-            if ( _option === "value" )
-            {
-                self.dsFactory.owners = _value;
-                self._forceSearch();
-                self.saveDashbordsFilter(self.typeFilter(), self.serviceFilter(), _value, self.favoritesFilter());
-            }
-        };
-        
-        self.handleFavoritesFilterChanged = function (event, data) {
-            var _option = data.option, _value = data.value;
-            if ( _option === "value" )
-            {
-                self.dsFactory.favoritesOnly = _value && _value.length > 0 ? true : false;
-                self._forceSearch();
-                self.saveDashbordsFilter(self.typeFilter(), self.serviceFilter(), self.creatorFilter(), _value);
-            }
-        };
-        
-        self.saveDashbordsFilter = function (typeFilter, serviceFilter, creatorFilter, favoritesFilter)
-        {
-            var _filter = {};
-            if (typeFilter !== undefined && typeFilter.length > 0)
-            {
-                _filter.types = typeFilter;
-            }
-            if (serviceFilter !== undefined && serviceFilter.length > 0)
-            {
-                _filter.appTypes = serviceFilter;
-            }
-            if (creatorFilter !== undefined && creatorFilter.length > 0)
-            {
-                _filter.owners = creatorFilter;
-            }
-            if (favoritesFilter !== undefined && favoritesFilter !== null && favoritesFilter.length > 0)
-            {
-                _filter.favoritesOnly = true;
-            }
-            self.prefUtil.setPreference(DASHBOARDS_FILTER_PREF_KEY, JSON.stringify(_filter));
-        };
-        
         self.typeaheadSearchStart = function (event, data)
         {
             var  _ts = self.dashboardsTS();
@@ -663,19 +584,27 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         
         self.listNameRender = function (context) 
         {
-            var _link = $(document.createElement('a'))
+            var _link = $(document.createElement('a')).addClass( "dbs-dsbnameele" )
                     .on('click', function(event) {
                         //prevent event bubble
                         event.stopPropagation();
                         self.handleDashboardClicked(event, {'id': context.row.id, 'element': _link});
                     });
             _link.text(context.row.name);
+            if (context.row.systemDashboard === true)
+            {
+                _link.addClass( "dbs-dsbsystem" );
+            }
+            else
+            {
+                _link.addClass( "dbs-dsbnormal" );
+            }
             $(context.cellContext.parentElement).append(_link);
         };
         
         self.listInfoRender = function (context) 
         {
-            var _info = $("<button data-bind=\"ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_LABEL'), icons: {start: 'icon-locationinfo-16 oj-fwk-icon dbs-icon-size-16'}}\"></button>")
+            var _info = $("<button data-bind=\"ojComponent: { component:'ojButton', chroming: 'half', display: 'icons', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_LABEL'), icons: {start: 'icon-locationinfo-16 oj-fwk-icon dbs-icon-size-16'}}\"></button>")
                     .addClass("oj-button-half-chrome oj-sm-float-end")
                     .on('click', function(event) {
                         //prevent event bubble
@@ -704,7 +633,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             }
         };
         
-    };
+    }
     
     function PredataModel() {
         var self = this; 
@@ -713,67 +642,33 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         
         var getUrlParam = function(name) {
                         //name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(window.location.search);
             return results === null ? "" : results[1];//decodeURIComponent(results[1].replace(/\+/g, " "));
         };
         
-        self.getIsIta = function () {
-            return (getUrlParam("filter") === "ita" ? true : false);
-        };
-        
-        self.showFavoritesOnly = function () {
-            return (getUrlParam("filter") === "favorites" ? true : false);
-        };
-                    
-        self.getShowLaService = function() {
-            if (self.sApplications !== undefined && $.inArray("LogAnalytics", self.sApplications['applications']) >= 0) return true;
-            return false;
-        };
-        
-        self.getShowApmService = function() {
-            if (self.sApplications !== undefined && $.inArray("APM", self.sApplications['applications']) >= 0) return true;
-            return false;
-        };
-        
-        self.getShowItaService = function() {
-            if (self.sApplications !== undefined && $.inArray("ITAnalytics", self.sApplications['applications']) >= 0) return true;
-            return false;
-        };
-        
-        self.getShowServiceFilter = function() {
-            if (self.getShowLaService() === true 
-                    || self.getShowApmService() === true 
-                    || self.getShowItaService() === true)
+        self.getDashboardsFilter = function (options) {
+            var _options = options || {}, _filterPref = self.getDashboardsFilterPref(), _filterUrlParam=getUrlParam("filter");
+            if (_filterUrlParam && _filterUrlParam.trim().length > 0)
             {
-                return true;
+                _options['saveFilterPref'] = false;
+                _filterPref = _filterUrlParam.toLowerCase();
             }
-            return false;
-        };
-        
-        self.getDashboardsFilter = function () {
-            var filter = self.getDashboardsFilterPref();
-            var _appTypes = (filter['appTypes'] === undefined ? [] : filter['appTypes']);
-            if (self.getIsIta() === true)
+            else
             {
-                if ($.inArray("ITAnalytics", _appTypes) < 0)
-                {
-                    _appTypes.push("ITAnalytics");
-                }
+                _options['saveFilterPref'] = true;
             }
-            if (self.showFavoritesOnly() === true) {
-                filter['favoritesOnly'] = true;
+            if (_filterPref && _filterPref.trim().slice(0, 1) === '{')
+            {
+                _filterPref = null;
             }
-            return {types: (filter['types'] === undefined ? [] : filter['types']), 
-                appTypes: _appTypes, 
-                owners: (filter['owners'] === undefined ? [] : filter['owners']),
-                favoritesOnly: (filter['favoritesOnly'] === undefined ? false : filter['favoritesOnly'])};
+            return new dft.DashboardsFilter(_filterPref, self.sApplications ? self.sApplications['applications'] : [], _options);
         };
         
         self.getDashboardsFilterPref = function () {
             var filter = self.getPreferenceValue(DASHBOARDS_FILTER_PREF_KEY);
-            if (filter === undefined || filter.length === 0) return {};
+            if (filter === undefined || filter.length === 0) return undefined;
             filter = $("<div/>").html(filter).text();
-            return JSON.parse(filter);
+            return filter;
         };
         
         self.getShowWelcomePref = function () {
@@ -800,7 +695,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         
         self.getPreferenceValue = function(key) {
             if (self.preferences === undefined) return undefined;
-            var arr = undefined;
+            var arr;
             arr = $.grep(self.preferences, function( pref ) {
                 if (pref !== undefined && pref['key'] === key) return true;
                 return false;
@@ -840,7 +735,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         self.loadAll = function() {
             return $.when(self.loadPreferences(), self.loadSubscribedApplications());
         };
-    };
+    }
     
     return {'ViewModel': ViewModel, 'PredataModel': PredataModel};
 });

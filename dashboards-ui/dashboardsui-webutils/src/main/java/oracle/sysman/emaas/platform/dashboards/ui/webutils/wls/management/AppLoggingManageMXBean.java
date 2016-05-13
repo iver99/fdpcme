@@ -38,7 +38,7 @@ public class AppLoggingManageMXBean implements IAppLoggingManageMXBean
 
 			if (logger.getLevel() != null) {
 				sb.append('{').append('"').append(logger.getName()).append('"').append(':').append('"')
-				.append(logger.getLevel().toString()).append('"').append('}');
+						.append(logger.getLevel().toString()).append('"').append('}');
 
 				sb.append(',');
 			}
@@ -77,6 +77,6 @@ public class AppLoggingManageMXBean implements IAppLoggingManageMXBean
 			lc.setLevel(Level.FATAL);
 		}
 		ctx.updateLoggers();
-		sysLogger.info("Logging MXBean sets the log level to {}" + lc.getLevel().name());
+		sysLogger.info("Logging MXBean sets the log level to {}", lc.getLevel().name());
 	}
 }
