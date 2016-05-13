@@ -358,7 +358,7 @@ public class TestDashboardSet extends LoginAndLogout
 		//verify if in the home page
 		webd.getLogger().info("Verify delete successfully and back to the home page");
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), 900L);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.id(PageId.DashboardDisplayPanelID)));
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DashboardDisplayPanelCss)));
 
 		//verify if in the dashboar set has been deleted
 		webd.getLogger().info("Verify if the dashboard has been deleted");
@@ -391,7 +391,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboardSet" })
+	@Test(dependsOnMethods = { "testSetHome" })
 	public void testRemoveHome() throws Exception
 	{
 		//init the test
@@ -402,7 +402,7 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Start the test case: testSetHome");
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("current url = " + url);
-		if (!url.substring(url.indexOf("emsaasui") + 9).contains("builder.html&dashboardId=")) {
+		if (!url.substring(url.indexOf("emsaasui") + 9).contains("builder.html?dashboardId=")) {
 			Assert.fail("not open the builder page");
 		}
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_setHome), "Not the correct home page");
@@ -454,7 +454,7 @@ public class TestDashboardSet extends LoginAndLogout
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testAddDashboardInGridView");
+		webd.getLogger().info("Start the test case: testShare");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -475,7 +475,7 @@ public class TestDashboardSet extends LoginAndLogout
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testAddDashboardInGridView");
+		webd.getLogger().info("Start the test case: testStopSharing");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");

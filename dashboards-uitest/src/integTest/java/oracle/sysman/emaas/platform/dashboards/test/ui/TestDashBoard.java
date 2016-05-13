@@ -10,14 +10,13 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.ErrorPageUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil.TimeRange;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WidgetSelectorUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.ErrorPageUtil;
-
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -332,6 +331,22 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test
+	public void testErrorPage() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testErrorPage");
+
+		//ErrorPage link
+		//BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_Erpge);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = " + url);
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcpdfui/builder.html?dashboardId=80");
+		WaitUtil.waitForPageFullyLoaded(webd);
+		//validating Error page
+		ErrorPageUtil.signOut(webd);
+	}
+
+	@Test
 	public void testFavorite() throws Exception
 	{
 		dbName_favorite = "favoriteDashboard-" + generateTimeStamp();
@@ -425,7 +440,7 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Open the dashboard to edit name and description");
 		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid);
 		DashboardBuilderUtil
-				.editDashboard(webd, dbName_noWidgetGrid + "-modify", "Test_Dashboard_no_Widget_GridView desc modify");
+		.editDashboard(webd, dbName_noWidgetGrid + "-modify", "Test_Dashboard_no_Widget_GridView desc modify");
 
 		//Verify the dashboard edited successfully
 		webd.getLogger().info("Verify the dashboard edited successfully");
@@ -541,7 +556,7 @@ public class TestDashBoard extends LoginAndLogout
 		//verify if in the home page
 		webd.getLogger().info("verify delete successfully and back to the home page");
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), 900L);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.id(PageId.DashboardDisplayPanelID)));
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DashboardDisplayPanelCss)));
 	}
 
 	@Test
@@ -582,7 +597,7 @@ public class TestDashBoard extends LoginAndLogout
 		//verify if in the home page
 		webd.getLogger().info("Verify if in the home page");
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), 900L);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.id(PageId.DashboardDisplayPanelID)));
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DashboardDisplayPanelCss)));
 	}
 
 	@Test
@@ -760,6 +775,8 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
+	//Testcase for validating Error page
+
 	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView", "testModifyDashboard_widget" })
 	public void testWidgetConfiguration() throws Exception
 	{
@@ -795,32 +812,14 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("save the dashboard");
 		DashboardBuilderUtil.saveDashboard(webd);
 	}
-         
-          //Testcase for validating Error page
 
-             @Test
-          	public void testErrorPage() throws Exception
-         	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testErrorPage");
+	//Testcase for adding widget using widgetselector
 
-		//ErrorPage link
-		//BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_Erpge);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcpdfui/builder.html?dashboardId=80");
-		WaitUtil.waitForPageFullyLoaded(webd);
-		//validating Error page
-		ErrorPageUtil.signOut(webd);
-        	}
+	@Test
+	public void testWidgetSelector() throws Exception
+	{
+		String WidgetName_1 = "Database Errors Trend";
 
-           //Testcase for adding widget using widgetselector
-            
-             @Test
-         	public void testWidgetSelector() throws Exception
-        	{
-	       String WidgetName_1 = "Database Errors Trend";
-	      
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in WidgetSelectorPage");
 
@@ -831,14 +830,13 @@ public class TestDashBoard extends LoginAndLogout
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "uifwk/test.html");
 		WaitUtil.waitForPageFullyLoaded(webd);
 		//click on Add button
-		 webd.click("id=" + DashBoardPageId.WidgetSelector_AddButtonId); 
-		 webd.takeScreenShot();
-		 //Adding widgets using widgetSElector diagoue
-		 webd.getLogger().info("satrt widget selector dialogue box opens");
-		 WidgetSelectorUtil.addWidget(webd, WidgetName_1);
-		  
-        	}
+		webd.click("id=" + DashBoardPageId.WidgetSelector_AddButtonId);
+		webd.takeScreenShot();
+		//Adding widgets using widgetSElector diagoue
+		webd.getLogger().info("satrt widget selector dialogue box opens");
+		WidgetSelectorUtil.addWidget(webd, WidgetName_1);
 
+	}
 
 	private String generateTimeStamp()
 	{
