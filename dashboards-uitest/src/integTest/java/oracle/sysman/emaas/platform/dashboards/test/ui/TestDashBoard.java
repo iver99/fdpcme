@@ -36,7 +36,7 @@ public class TestDashBoard extends LoginAndLogout
 {
 	private String dbName_noDesc = "";
 	private String dbName_noWidgetGrid = "";
-	private String dbName_noTimeRefresh = "";
+	private final String dbName_noTimeRefresh = "";
 	private String dbName_noWidgetList = "";
 	private String dbName_withWidgetGrid = "";
 	private String dbName_setHome = "";
@@ -165,37 +165,6 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noWidgetGrid, dbDesc, true),
 				"Create dashboard failed!");
-	}
-
-	@Test
-	public void testCreateDashboard_noTimeRefresh() throws Exception
-	{
-		dbName_noTimeRefresh = "noTimeselector-" + generateTimeStamp();
-		String dbDesc = "Test Dashboard no timeselector description";
-
-		//Initialize the test
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testCreateDashboard_noTimeRefresh");
-
-		//reset the home page
-		webd.getLogger().info("Reset all filter options in the home page");
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-		//switch to Grid View
-		webd.getLogger().info("Switch to grid view");
-		DashboardHomeUtil.gridView(webd);
-
-		//create dashboard
-		webd.getLogger().info("Create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_noTimeRefresh, dbDesc, DashboardHomeUtil.DASHBOARD);
-		webd.getLogger().info("verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noTimeRefresh, dbDesc, false),
-				"Create dashboard failed!");
-
-		//delete the dashboard
-		webd.getLogger().info("start to delete dashboard in builder page");
-		DashboardBuilderUtil.deleteDashboard(webd);
-
 	}
 
 	@Test
@@ -440,7 +409,7 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Open the dashboard to edit name and description");
 		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid);
 		DashboardBuilderUtil
-		.editDashboard(webd, dbName_noWidgetGrid + "-modify", "Test_Dashboard_no_Widget_GridView desc modify");
+				.editDashboard(webd, dbName_noWidgetGrid + "-modify", "Test_Dashboard_no_Widget_GridView desc modify");
 
 		//Verify the dashboard edited successfully
 		webd.getLogger().info("Verify the dashboard edited successfully");

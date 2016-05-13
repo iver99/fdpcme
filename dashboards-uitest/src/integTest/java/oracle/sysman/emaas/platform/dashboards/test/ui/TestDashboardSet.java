@@ -53,6 +53,10 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
 
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
 		//create dashboardset
 		webd.getLogger().info("Create a new dashboard set");
 		DashboardHomeUtil.createDashboard(webd, dbsetName, dbsetDesc, DashboardHomeUtil.DASHBOARDSET);
@@ -96,17 +100,23 @@ public class TestDashboardSet extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 
 		//remove the test data
+		webd.getLogger().info("Start to delete the dashboard set: " + dbName);
+		DashboardHomeUtil.deleteDashboard(webd, dbsetName_Favorite, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+		webd.getLogger().info("Verify the dashboard set: " + dbName + " has been deleted");
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName), "Delete dashboard " + dbName + " failed!");
+		webd.getLogger().info("Delete the dashboard set: " + dbName + " finished");
+
 		webd.getLogger().info("Start to delete the dashboard set: " + dbsetName_setHome);
 		DashboardHomeUtil.deleteDashboard(webd, dbsetName_setHome, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 		webd.getLogger().info("Verify the dashboard set: " + dbsetName_setHome + " has been deleted");
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbsetName_setHome), "Delete dashboard " + dbsetName_setHome
-				+ " failed!");
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbsetName_setHome), "Delete dashboard set "
+				+ dbsetName_setHome + " failed!");
 		webd.getLogger().info("Delete the dashboard set: " + dbsetName_setHome + " finished");
 
 		webd.getLogger().info("Start to delete the dashboard set: " + dbsetName_Favorite);
 		DashboardHomeUtil.deleteDashboard(webd, dbsetName_Favorite, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 		webd.getLogger().info("Verify the dashboard set: " + dbsetName_Favorite + " has been deleted");
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbsetName_Favorite), "Delete dashboard "
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbsetName_Favorite), "Delete dashboard set "
 				+ dbsetName_Favorite + " failed!");
 		webd.getLogger().info("Delete the dashboard set: " + dbsetName_Favorite + " finished");
 
@@ -114,7 +124,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	@Test(dependsOnGroups = "other test")
+	@Test(groups = "third run", dependsOnGroups = { "second run" })
 	public void testAddDashboardInGridView() throws Exception
 	{
 		//init the test
@@ -124,6 +134,10 @@ public class TestDashboardSet extends LoginAndLogout
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
 
 		//open the dashboardset
 		webd.getLogger().info("Open the dashboard in the builder page");
@@ -138,7 +152,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	@Test(dependsOnMethods = { "testRemoveDashboardFromDashboardSet" })
+	@Test(groups = "third run", dependsOnMethods = { "testRemoveDashboardFromDashboardSet" })
 	public void testAddDashboardInListView() throws Exception
 	{
 		//init the test
@@ -148,6 +162,10 @@ public class TestDashboardSet extends LoginAndLogout
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to list view
+		webd.getLogger().info("Switch to the list view");
+		DashboardHomeUtil.listView(webd);
 
 		//open the dashboardset
 		webd.getLogger().info("Open the dashboard in the builder page");
@@ -176,6 +194,10 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
 
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
 		//create dashboardset
 		webd.getLogger().info("Create a new dashboard set");
 		DashboardHomeUtil.createDashboard(webd, dbsetName_Test, dbsetDesc, DashboardHomeUtil.DASHBOARDSET);
@@ -186,7 +208,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(groups = "second run", dependsOnGroups = { "first run" })
 	public void testFavorite() throws Exception
 	{
 		dbsetName_Favorite = "DashboardSet_Favorite-" + generateTimeStamp();
@@ -199,6 +221,10 @@ public class TestDashboardSet extends LoginAndLogout
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
 
 		//create dashboardset
 		webd.getLogger().info("Create a new dashboard set");
@@ -246,6 +272,10 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
 
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
 		//open the dashboardset
 		webd.getLogger().info("Open the dashboard in the builder page");
 		DashboardHomeUtil.selectDashboard(webd, dbsetName_Test);
@@ -260,16 +290,20 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	@Test(dependsOnMethods = { "testAddDashboardInListView" })
+	@Test(groups = "second run", dependsOnGroups = { "first run" })
 	public void testPrint() throws Exception
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testRemoveDashboardSetFromBuilderPage");
+		webd.getLogger().info("Start the test case: testPrint");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
 
 		//open the dashboardset
 		webd.getLogger().info("Open the dashboard set in builder page");
@@ -280,16 +314,20 @@ public class TestDashboardSet extends LoginAndLogout
 		DashboardBuilderUtil.printDashboardSet(webd);
 	}
 
-	@Test(groups = "other test")
+	@Test(groups = "second run", dependsOnGroups = { "first run" })
 	public void testRefresh() throws Exception
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testRemoveDashboardFromDashboardSet");
+		webd.getLogger().info("Start the test case: testRefresh");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
 
 		//open the dashboardset
 		webd.getLogger().info("Open the dashboard in the builder page");
@@ -297,22 +335,25 @@ public class TestDashboardSet extends LoginAndLogout
 
 		//verify the refresh status
 		webd.getLogger().info("Verify the defaul refresh setting for the dashboard is OFF");
-		//TODO
+		Assert.assertTrue(DashboardBuilderUtil.isRefreshSettingCheckedForDashbaordSet(webd,
+				DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF), "the default setting is not off");
 
 		//set the refresh setting to 5 min
 		webd.getLogger().info("Set the refresh setting to 5MIN");
 		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN);
 		webd.getLogger().info("Verify the refresh setting for the dashboard is 5MIN");
-		//TODO
+		Assert.assertTrue(DashboardBuilderUtil.isRefreshSettingCheckedForDashbaordSet(webd,
+				DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN), "the setting is not 5 minus");
 
 		//set the refresh setting to OFF
 		webd.getLogger().info("Set the refresh setting to OFF");
 		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
 		webd.getLogger().info("Verify the refresh setting for the dashboard is OFF");
-		//TODO
+		Assert.assertTrue(DashboardBuilderUtil.isRefreshSettingCheckedForDashbaordSet(webd,
+				DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF), "the setting is not off");
 	}
 
-	@Test(dependsOnMethods = { "testAddDashboardInGridView" })
+	@Test(groups = "third run", dependsOnMethods = { "testAddDashboardInGridView" })
 	public void testRemoveDashboardFromDashboardSet() throws Exception
 	{
 		//init the test
@@ -323,9 +364,15 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
 
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
 		//open the dashboardset
 		webd.getLogger().info("Open the dashboard in the builder page");
 		DashboardHomeUtil.selectDashboard(webd, dbsetName);
+
+		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//remove a dashboard from the dashboard set
 		webd.getLogger().info("Remove a dashboard from the dashborad set");
@@ -347,6 +394,10 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
 
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
 		//open the dashboardset
 		webd.getLogger().info("Open the dashboard set in builder page");
 		DashboardHomeUtil.selectDashboard(webd, dbsetName_Test + "-Modify");
@@ -366,7 +417,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	@Test(dependsOnMethods = { "testPrint" })
+	@Test(groups = "last run", dependsOnGroups = { "third run" })
 	public void testRemoveDashboardSetFromHomePage() throws Exception
 	{
 		//init the test
@@ -385,13 +436,12 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Start to delete the dashboard set: " + dbsetName);
 		DashboardHomeUtil.deleteDashboard(webd, dbsetName, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 		webd.getLogger().info("Verify the dashboard set: " + dbsetName + " has been deleted");
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbsetName), "Delete dashboard " + dbsetName_setHome
-				+ " failed!");
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbsetName), "Delete dashboard " + dbsetName + " failed!");
 		webd.getLogger().info("Delete the dashboard set: " + dbsetName + " finished");
 
 	}
 
-	@Test(dependsOnMethods = { "testSetHome" })
+	@Test(groups = "last run", dependsOnMethods = { "testSetHome" })
 	public void testRemoveHome() throws Exception
 	{
 		//init the test
@@ -417,7 +467,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	@Test(dependsOnGroups = { "first run" })
+	@Test(groups = "last run", dependsOnGroups = { "third run" })
 	public void testSetHome() throws Exception
 	{
 		dbsetName_setHome = "DashboardSet_TestSetHome-" + generateTimeStamp();
@@ -430,6 +480,10 @@ public class TestDashboardSet extends LoginAndLogout
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
 
 		//create dashboardset
 		webd.getLogger().info("Create a new dashboard set");
@@ -449,7 +503,7 @@ public class TestDashboardSet extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_setHome), "DashboarSet is NOT set to home page");
 	}
 
-	@Test(groups = "other test")
+	@Test(groups = "second run", dependsOnGroups = { "first run" })
 	public void testShare() throws Exception
 	{
 		//init the test
@@ -459,6 +513,10 @@ public class TestDashboardSet extends LoginAndLogout
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
 
 		//open the dashboardset
 		webd.getLogger().info("Open the dashboard in the builder page");
@@ -470,7 +528,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	@Test(groups = "other test", dependsOnMethods = { "testShare" })
+	@Test(groups = "second run", dependsOnMethods = { "testShare" })
 	public void testStopSharing() throws Exception
 	{
 		//init the test
@@ -480,6 +538,10 @@ public class TestDashboardSet extends LoginAndLogout
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
 
 		//open the dashboardset
 		webd.getLogger().info("Open the dashboard in the builder page");
