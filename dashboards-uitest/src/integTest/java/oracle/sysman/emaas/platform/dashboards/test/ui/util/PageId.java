@@ -10,7 +10,8 @@ public class PageId
 	 *
 	 * */
 	//home page
-	public static final String DashboardDisplayPanelID = "dtabhomesc";
+	//public static final String DashboardDisplayPanelID = "dtabhomesc";
+	public static final String DashboardDisplayPanelCss = ".dbs-summaries-container";
 	public static final String DashboardCss = "div#dtabhomesc div.oj-panel";
 	public static final String ErrorPageSingOutBtnCss = "button[title='Sign Out']";
 	public static final String OverviewCloseID = "overviewClose";

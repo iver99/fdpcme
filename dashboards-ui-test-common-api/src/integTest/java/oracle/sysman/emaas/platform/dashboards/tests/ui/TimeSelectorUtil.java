@@ -3,6 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -24,7 +25,7 @@ public class TimeSelectorUtil
 	{
 		Last15Mins("Last 15 mins"), Last30Mins("Last 30 mins"), Last60Mins("Last hour"), Last4Hours("Last 4 hours"), Last6Hours(
 				"Last 6 hours"), Last1Day("Last day"), Last7Days("Last week"), Last14Days("Last 14 days"), Last30Days(
-						"Last 30 days"), Last90Days("Last 90 days"), Last1Year("Last year"), Latest("Latest"), Custom("Custom");
+				"Last 30 days"), Last90Days("Last 90 days"), Last1Year("Last year"), Latest("Latest"), Custom("Custom");
 		private final String timerange;
 
 		private TimeRange(String timerange)
@@ -40,16 +41,16 @@ public class TimeSelectorUtil
 	}
 
 	public static String[] days = { TimeSelectorExludedDayMonth.EXCLUDE_SUNDAY, TimeSelectorExludedDayMonth.EXCLUDE_MONDAY,
-		TimeSelectorExludedDayMonth.EXCLUDE_TUESDAY, TimeSelectorExludedDayMonth.EXCLUDE_WEDENSDAY,
-		TimeSelectorExludedDayMonth.EXCLUDE_THURSDAY, TimeSelectorExludedDayMonth.EXCLUDE_FRIDAY,
-		TimeSelectorExludedDayMonth.EXCLUDE_SATURDAY };
+			TimeSelectorExludedDayMonth.EXCLUDE_TUESDAY, TimeSelectorExludedDayMonth.EXCLUDE_WEDNESDAY,
+			TimeSelectorExludedDayMonth.EXCLUDE_THURSDAY, TimeSelectorExludedDayMonth.EXCLUDE_FRIDAY,
+			TimeSelectorExludedDayMonth.EXCLUDE_SATURDAY };
 
 	public static String[] months = { TimeSelectorExludedDayMonth.EXCLUDE_JANUARY, TimeSelectorExludedDayMonth.EXCLUDE_FEBRUARY,
-			TimeSelectorExludedDayMonth.EXCLUDE_MARCH, TimeSelectorExludedDayMonth.EXCLUDE_APRIL,
-			TimeSelectorExludedDayMonth.EXCLUDE_MAY, TimeSelectorExludedDayMonth.EXCLUDE_JUNE,
-			TimeSelectorExludedDayMonth.EXCLUDE_JULY, TimeSelectorExludedDayMonth.EXCLUDE_AUGUST,
-			TimeSelectorExludedDayMonth.EXCLUDE_SEPTEMBER, TimeSelectorExludedDayMonth.EXCLUDE_OCTOBER,
-			TimeSelectorExludedDayMonth.EXCLUDE_NOVEMBER, TimeSelectorExludedDayMonth.EXCLUDE_SEPTEMBER };
+		TimeSelectorExludedDayMonth.EXCLUDE_MARCH, TimeSelectorExludedDayMonth.EXCLUDE_APRIL,
+		TimeSelectorExludedDayMonth.EXCLUDE_MAY, TimeSelectorExludedDayMonth.EXCLUDE_JUNE,
+		TimeSelectorExludedDayMonth.EXCLUDE_JULY, TimeSelectorExludedDayMonth.EXCLUDE_AUGUST,
+		TimeSelectorExludedDayMonth.EXCLUDE_SEPTEMBER, TimeSelectorExludedDayMonth.EXCLUDE_OCTOBER,
+		TimeSelectorExludedDayMonth.EXCLUDE_NOVEMBER, TimeSelectorExludedDayMonth.EXCLUDE_DECEMBER };
 
 	public static String setCustomTime(WebDriver webd, int index, String startDateTime, String endDateTime) throws Exception
 	{
@@ -147,13 +148,17 @@ public class TimeSelectorUtil
 			result += "";
 		}
 		else {
+			hoursToExclude = hoursToExclude.replace(" ", "");
+			hoursToExclude = hoursToExclude.replace(",", ", ");
 			result += "Hours excluded: " + hoursToExclude + ". ";
 		}
+
 		if (null == daysToExclude || daysToExclude.length == 0) {
 			result += "";
 		}
 		else {
-			result += "Days Excluded: ";
+			Arrays.sort(daysToExclude);
+			result += "Days excluded: ";
 			for (int i = 0; i < daysToExclude.length; i++) {
 				int value = daysToExclude[i];
 				if (i == daysToExclude.length - 1) {
@@ -165,11 +170,13 @@ public class TimeSelectorUtil
 			}
 
 		}
+
 		if (null == monthsToExclude || monthsToExclude.length == 0) {
 			result += "";
 		}
 		else {
-			result += "Months Excluded: ";
+			Arrays.sort(monthsToExclude);
+			result += "Months excluded: ";
 			for (int i = 0; i < monthsToExclude.length; i++) {
 				int value = monthsToExclude[i];
 				if (i == monthsToExclude.length - 1) {
@@ -180,6 +187,7 @@ public class TimeSelectorUtil
 				}
 			}
 		}
+		result = result.substring(0, result.length() - 2);
 		return result;
 	}
 
@@ -260,7 +268,30 @@ public class TimeSelectorUtil
 		}
 		String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
 				.get(Index - 1).getText();
-		return TimeSelectorUtil.dateConvert(webd, returnTimeRange, rangeoption);
+
+		if (returnTimeRange.startsWith(rangeoption.getRangeOption() + ":")) {
+			return TimeSelectorUtil.dateConvert(webd, returnTimeRange, rangeoption);
+		}
+		else {
+			String returnStartDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartDateInput))
+					.get(Index - 1).getAttribute("value")
+					+ " "
+					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).get(Index - 1)
+							.getAttribute("value");
+			String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndDateInput))
+					.get(Index - 1).getAttribute("value")
+					+ " "
+					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(Index - 1)
+							.getAttribute("value");
+
+			returnStartDate = TimeSelectorUtil.timeFormatChange(webd, returnStartDate, "MM/dd/yyyy hh:mm a",
+					"MMM d, yyyy hh:mm a");
+			returnEndDate = TimeSelectorUtil.timeFormatChange(webd, returnEndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
+
+			String returnDate = returnTimeRange + ": " + returnStartDate + " - " + returnEndDate;
+
+			return TimeSelectorUtil.dateConvert(webd, returnDate, rangeoption);
+		}
 
 	}
 
@@ -463,7 +494,14 @@ public class TimeSelectorUtil
 		hoursIncludedStarts.add(hoursToIncludeList.get(0));
 		for (int i = 1; i < hoursToIncludeList.size(); i++) {
 			if (i == hoursToIncludeList.size() - 1) {
-				hoursIncludedEnds.add(hoursToIncludeList.get(i));
+				if (hoursToIncludeList.get(i) - hoursToIncludeList.get(i - 1) == 1) {
+					hoursIncludedEnds.add(hoursToIncludeList.get(i));
+				}
+				else {
+					hoursIncludedEnds.add(hoursToIncludeList.get(i - 1));
+					hoursIncludedStarts.add(hoursToIncludeList.get(i));
+					hoursIncludedEnds.add(hoursToIncludeList.get(i));
+				}
 				break;
 			}
 			if (hoursToIncludeList.get(i) - hoursToIncludeList.get(i - 1) == 1) {
@@ -476,13 +514,7 @@ public class TimeSelectorUtil
 		}
 
 		for (int i = 0; i < hoursIncludedStarts.size(); i++) {
-			if (hoursIncludedStarts.get(i) != hoursIncludedEnds.get(i)) {
-				hoursInput = hoursInput + hoursIncludedStarts.get(i) + "-" + hoursIncludedEnds.get(i);
-			}
-			else {
-				hoursInput = hoursInput + hoursIncludedStarts.get(i);
-			}
-
+			hoursInput = hoursInput + hoursIncludedStarts.get(i) + "-" + hoursIncludedEnds.get(i);
 			if (i == hoursIncludedStarts.size() - 1) {
 				hoursInput = hoursInput + "";
 			}
