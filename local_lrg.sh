@@ -10,7 +10,7 @@ endif
 set buildID = $argv[1]
 set uploadPath = $argv[2] #/net/slc00bqs/scratch/download/may2/df_20_lrgs_502
 if (! -d $uploadPath) then
-  mkdir -p $uploadPath
+  mkdir -m 777 -vp $uploadPath
 endif
 set propertiesFile = $argv[3] #/net/den00zyr/scratch/emaas/setuplogs/emaas.properties.log
 set dbNode = $argv[4] #den00zys
