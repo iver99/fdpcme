@@ -25,7 +25,7 @@
 
      <lrg name="emcpdf_dashboard_uitest_3n" launcher="tests/suites/emcpdf_dashboard_uitest_3n.gradle" description="lrg for ui automation,running in farm">
              <pipelines>
-            <pipeline name="STAGE"/>
+            <pipeline name="PRODUCT"/>
              </pipelines>
      </lrg>
      <lrg name="emcpdf_dev_ui_test" launcher="tests/suites/emcpdf_dev_ui_test.gradle" description="lrg for DEVTest(webui)">
