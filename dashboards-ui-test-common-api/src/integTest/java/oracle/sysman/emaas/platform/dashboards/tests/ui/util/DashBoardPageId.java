@@ -352,6 +352,7 @@ public class DashBoardPageId
 	public static final String Welcome_ITA_PAMiddleware = "ITA_mw_perf"; //"/html/body/div[1]/div/div/ul/li[3]/div";//"oj-listbox-result-label-9";//ITA Select Item : Performance Analytics - Middleware
 	public static final String Welcome_ITA_RADatabase = "ITA_DB_resource"; //"/html/body/div[1]/div/div/ul/li[4]/div";//"oj-listbox-result-label-10";//ITA Select Item : Resource Analytics - Database
 	public static final String Welcome_ITA_RAMiddleware = "ITA_mw_resource"; //"/html/body/div[1]/div/div/ul/li[5]/div";//"oj-listbox-result-label-11";//ITA Select Item : Resource Analytics - Middleware
+	public static final String Welcome_ITA_RA_Host = "ITA_svr_resource";
 	public static final String Welcome_ITA_DEAnalyze = "ITA_Analyze"; //"/html/body/div[1]/div/div/ul/li[6]/div";//"oj-listbox-result-label-12";//ITA Select Item : Data Explorer - Analyze
 	public static final String Welcome_ITA_DE = "ITA_Search"; //"/html/body/div[1]/div/div/ul/li[7]/div";//"oj-listbox-result-label-13";//ITA Select Item : Data Explorer
 	public static final String Welcome_DataExp_Log = "dataExp_Log"; //"/html/body/div[1]/div/div/ul/li[2]/div";//"oj-listbox-result-label-4";//Data Explorers Select Item : Log
