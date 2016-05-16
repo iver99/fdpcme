@@ -44,6 +44,7 @@ public class TestDashBoard extends LoginAndLogout
 {
          //private String dbName_withWidgetGrid = "";
          private String dbName_setHome = "";
+         private String dbName_noWidgetGrid = "";
 
 
 	public void initTest(String testName) throws Exception
@@ -72,8 +73,12 @@ public class TestDashBoard extends LoginAndLogout
 			DashboardHomeUtil.gridView(webd);
 	
 			//create dashboard
-			webd.getLogger().info("create a dashboard: with description, time refresh");
-			DashboardHomeUtil.createDashboard(webd, dbName_setHome, dbDesc, true);
+			webd.getLogger().info("Create a dashboard: with description, time refresh");
+		       DashboardHomeUtil.createDashboard(webd, dbName_noWidgetGrid, dbDesc, DashboardHomeUtil.DASHBOARD);
+		      webd.getLogger().info("verify the dashboard created Successfully");
+		      Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noWidgetGrid, dbDesc, true),
+				"Create dashboard failed!");
+
 	
 			//verify dashboard in builder page
 			webd.getLogger().info("Verify the dashboard created Successfully");
