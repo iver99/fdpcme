@@ -36,7 +36,7 @@ public class DashboardsFilter
 	private static final String favoriteFilterString = "Favorites";
 
 	public static final String APM_PROVIDER_APMUI = "ApmUI";
-	public static final String ITA_PROVIDER_EMCI = "EmcitasApplications";
+	public static final String ITA_PROVIDER_EMCI = "emcitas-ui-apps";
 	public static final String ITA_PROVIDER_TA = "TargetAnalytics";
 	public static final String LA_PROVIDER_LS = "LogAnalyticsUI";
 

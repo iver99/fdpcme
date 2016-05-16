@@ -48,19 +48,6 @@ public class TestBrandingBar extends LoginAndLogout
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "tenantmgmt/services/customersoftware");
 	}
 
-	@Test
-	public void testAnalyzeLink() throws Exception
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testAnalyzeLink");
-
-		//Analyze link
-		BrandingBarUtil.visitApplicationVisualAnalyzer(webd, BrandingBarUtil.NAV_LINK_TEXT_VA_ITA);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9),
-				"emcitas/flex-analyzer/html/displaying/new-chart-config.html");
-	}
 
 	@Test
 	public void testAPMLink() throws Exception
@@ -113,26 +100,6 @@ public class TestBrandingBar extends LoginAndLogout
 		webd.getLogger().info("url = " + url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcpdfui/home.html?filter=ita");
 	}
-
-	//the below test removed from sprint47_df
-	/*
-	@Test
-	public void testAWRLink() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testAWRLink");
-
-		DashBoardUtils.clickNavigatorLink();
-
-		//AWR Analytics link
-		webd.click(DashBoardPageId.AWRALinkID);
-
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/flex-analyzer/html/displaying/new-chart-config.html");
-
-	}
-	 */
 
 	@Test
 	public void testLALink() throws Exception

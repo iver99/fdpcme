@@ -6,7 +6,6 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
 import org.testng.Assert;
@@ -52,19 +51,6 @@ public class TestHomePage extends LoginAndLogout
 
 	}
 
-	@Test
-	public void testExploreData_AnalyzeLink() throws Exception
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testExploreData_AnalyzeLink");
-
-		DashboardHomeUtil.gotoDataExplorer(webd, DashboardHomeUtil.EXPLOREDATA_MENU_ANALYZE);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9),
-				"emcitas/flex-analyzer/html/displaying/new-chart-config.html");
-
-	}
 
 	@Test
 	public void testExploreData_LALink() throws Exception
@@ -444,7 +430,7 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//verify all the oob display
-		DashboardHomeUtil.waitForDashboardPresent(webd, "Database Health Summary");
+		//DashboardHomeUtil.waitForDashboardPresent(webd, "Database Health Summary");
 		DashBoardUtils.APM_OOB_GridView();
 		DashBoardUtils.ITA_OOB_GridView();
 		DashBoardUtils.LA_OOB_GridView();
