@@ -58,15 +58,15 @@ public class DashBoardUtils
 	public static void ITA_OOB_GridView() throws Exception
 	{
 		DashboardHomeUtil.gridView(driver);
-		DashboardHomeUtil.waitForDashboardPresent(driver, "Database Health Summary");
+		DashboardHomeUtil.waitForDashboardPresent(driver, "Performance Analytics: Database");
 
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Host Health Summary"));
+		//Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
+		//Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Host Health Summary"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Performance Analytics: Database"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Performance Analytics: Middleware"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Database"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Middleware"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Health Summary"));
+		//Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Health Summary"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Database Configuration and Storage By Version"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Enterprise Overview"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Host Inventory By Platform"));
@@ -109,13 +109,13 @@ public class DashBoardUtils
 		//verify all the oob dashboard not exsit
 		driver.getLogger().info("verify all the oob dashboard not exsit");
 		Assert.assertFalse(driver.isElementPresent(PageId.Application_Performance_Monitoring_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.Database_Health_Summary_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.Host_Health_Summary_ID));
+		//Assert.assertFalse(driver.isElementPresent(PageId.Database_Health_Summary_ID));
+		//Assert.assertFalse(driver.isElementPresent(PageId.Host_Health_Summary_ID));
 		Assert.assertFalse(driver.isElementPresent(PageId.Database_Performance_Analytics_ID));
 		Assert.assertFalse(driver.isElementPresent(PageId.Middleware_Performance_Analytics_ID));
 		Assert.assertFalse(driver.isElementPresent(PageId.Database_Resource_Analytics_ID));
 		Assert.assertFalse(driver.isElementPresent(PageId.Middleware_Resource_Analytics_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.WebLogic_Health_Summary_ID));
+		//Assert.assertFalse(driver.isElementPresent(PageId.WebLogic_Health_Summary_ID));
 		Assert.assertFalse(driver.isElementPresent(PageId.Database_Configuration_and_Storage_By_Version_ID));
 		Assert.assertFalse(driver.isElementPresent(PageId.Enterprise_OverView_ID));
 		Assert.assertFalse(driver.isElementPresent(PageId.Host_Inventory_By_Platform_ID));

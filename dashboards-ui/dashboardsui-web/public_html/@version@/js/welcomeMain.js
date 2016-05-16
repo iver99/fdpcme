@@ -168,7 +168,7 @@ require(['ojs/ojcore',
                 
                 //get urls of databases and middleware
                 self.getITAVerticalAppUrl = function(rel) {
-                    var serviceName = "EmcitasApplications";
+                    var serviceName = "emcitas-ui-apps";
                     var version = "1.0";                   
                     var url = dfu_model.discoverUrl(serviceName, version, rel);
                     return url;
@@ -193,15 +193,16 @@ require(['ojs/ojcore',
                             self.exploreDataLinkList.push(dataExplorers[i]);                                                        
                             landingHomeUrls[dataExplorers[i].name] = dataExplorers[i].href;
                             //change name of data explorer in ITA to "Data Explorer - Analyze" & "Data Explorer"
-                            if(dataExplorers[i].serviceName === "EmcitasApplications") {                             
+
+                            if(dataExplorers[i].serviceName === "emcitas-ui-apps") {                             
                                 self.exploreDataInITA.push({id: 'ITA_Analyze', href: dataExplorers[i].href, name: self.dataExplorer+" - " +dataExplorers[i].name, serviceName: dataExplorers[i].serviceName, version: dataExplorers[i].version});
-                                landingHomeUrls[self.dataExplorer+" - " +dataExplorers[i].name] = dataExplorers[i].href;
+			    	landingHomeUrls[self.dataExplorer+" - " +dataExplorers[i].name] = dataExplorers[i].href;
                             }else if (dataExplorers[i].serviceName === "TargetAnalytics") {
                                 self.exploreDataInITA.push({id: 'ITA_Search', href: dataExplorers[i].href, name: self.dataExplorer, serviceName: dataExplorers[i].serviceName, version: dataExplorers[i].version});
                                 landingHomeUrls[self.dataExplorer] = dataExplorers[i].href;
                             }
                             //change name of data explorer in ITA starting with "Data Explorer - "
-//                            if(dataExplorers[i].serviceName === "EmcitasApplications" || dataExplorers[i].serviceName === "TargetAnalytics") {
+//                            if(dataExplorers[i].serviceName === "emcitas-ui-apps" || dataExplorers[i].serviceName === "TargetAnalytics") {
 //                                self.exploreDataInITA.push(dataExplorers[i]);
 //                            }
                         }

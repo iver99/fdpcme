@@ -46,14 +46,14 @@ public class DashBoardPageId
 	//OOB dashboards ID
 	//OOB dashboards ID
 	public static final String Application_Performance_Monitoring_CSS = ".dbs-summary-page-image[alt='Application Performance Monitoring']";
-	public static final String Database_Health_Summary_CSS = ".dbs-summary-page-image[alt='Database Health Summary']";
-	public static final String Host_Health_Summary_CSS = ".dbs-summary-page-image[alt='Host Health Summary']";
+	//public static final String Database_Health_Summary_CSS = ".dbs-summary-page-image[alt='Database Health Summary']";
+	//public static final String Host_Health_Summary_CSS = ".dbs-summary-page-image[alt='Host Health Summary']";
 	public static final String Database_Performance_Analytics_CSS = ".dbs-summary-page-image[alt='Performance Analytics: Database']";
 	public static final String Middleware_Performance_Analytics_CSS = ".dbs-summary-page-image[alt='Performance Analytics: Middleware']";
 	//public static final String Middleware_Datasource_Performance_Analytics_ID = "//div[@aria-dashboard='19']";
 	public static final String Database_Resource_Analytics_CSS = ".dbs-summary-page-image[alt='Resource Analytics: Database']";
 	public static final String Middleware_Resource_Analytics_CSS = ".dbs-summary-page-image[alt='Resource Analytics: Middleware']";
-	public static final String WebLogic_Health_Summary_CSS = ".dbs-summary-page-image[alt='WebLogic Health Summary']";
+	//public static final String WebLogic_Health_Summary_CSS = ".dbs-summary-page-image[alt='WebLogic Health Summary']";
 	public static final String Database_Configuration_and_Storage_By_Version_CSS = ".dbs-summary-page-image[alt='Database Configuration and Storage By Version']";
 	public static final String Enterprise_OverView_CSS = ".dbs-summary-page-image[alt='Enterprise Overview']";
 	public static final String Host_Inventory_By_Platform_CSS = ".dbs-summary-page-image[alt='Host Inventory By Platform']";
@@ -103,6 +103,7 @@ public class DashBoardPageId
 	public static final String ListViewTableNameHeaderLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'oj-table-column-header-cell') and @abbr='Name']";
 	public static final String ListViewTableCreatedByHeaderLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'oj-table-column-header-cell') and @abbr='Created By']";
 	public static final String ListViewTableLastModifiedHeaderLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'oj-table-column-header-cell') and @abbr='Last Modified']";
+	public static final String ListViewSortLocatorCss = "a.oj-table-column-header-asc-link";
 
 	//Dashboard
 	public static final String DashboardNameLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele') and (@aria-label = '_name_' or text() = '_name_')]";//[contains(@class, 'dbs-dsbnameele')]//text()[. = '_name_']";//*[contains(@class, 'icon-listview-16')]";
@@ -389,7 +390,7 @@ public class DashBoardPageId
 	public static final String Option_Logout = "//*[@id='emcpdf_oba_logout']";
 	public static final String AboutDialogClose = "//button[contains(@id,'okButton')]";
 	public static final String UserMenuPopupId = "emaasAppheaderGlobalNavMenuId";
-	
+
 	// Dashboard Home
 	public static final String DASHBOARD_GRID_TABLE_CSS = ".dbs-summaries-container";
 	public static final String DASHBOARD_LIST_TABLE = "table[aria-label='Dashboards Table']";
