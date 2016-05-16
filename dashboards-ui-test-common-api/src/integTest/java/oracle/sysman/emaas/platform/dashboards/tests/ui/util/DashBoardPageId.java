@@ -103,6 +103,7 @@ public class DashBoardPageId
 	public static final String ListViewTableNameHeaderLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'oj-table-column-header-cell') and @abbr='Name']";
 	public static final String ListViewTableCreatedByHeaderLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'oj-table-column-header-cell') and @abbr='Created By']";
 	public static final String ListViewTableLastModifiedHeaderLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'oj-table-column-header-cell') and @abbr='Last Modified']";
+	public static final String ListViewSortLocatorCss = "a.oj-table-column-header-asc-link";
 
 	//Dashboard
 	public static final String DashboardNameLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele') and (@aria-label = '_name_' or text() = '_name_')]";//[contains(@class, 'dbs-dsbnameele')]//text()[. = '_name_']";//*[contains(@class, 'icon-listview-16')]";
@@ -389,7 +390,7 @@ public class DashBoardPageId
 	public static final String Option_Logout = "//*[@id='emcpdf_oba_logout']";
 	public static final String AboutDialogClose = "//button[contains(@id,'okButton')]";
 	public static final String UserMenuPopupId = "emaasAppheaderGlobalNavMenuId";
-	
+
 	// Dashboard Home
 	public static final String DASHBOARD_GRID_TABLE_CSS = ".dbs-summaries-container";
 	public static final String DASHBOARD_LIST_TABLE = "table[aria-label='Dashboards Table']";
