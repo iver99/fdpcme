@@ -55,20 +55,6 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testOpenDE_AnalyzerPage() throws Exception
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test opening Data Explorers-Analyze in welcome page...");
-
-		BrandingBarUtil.visitWelcome(webd);
-		WelcomeUtil.dataExplorers(webd, "analyze");
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open Data Explorers-Analyze by url: " + tmpUrl);
-		urlVerification(tmpUrl, "emcitas/flex-analyzer/html/displaying/new-chart-config.html");
-		webd.getLogger().info("Test open Data Explorers-Analyze in welcome page finished!!!");
-	}
-
-	@Test
 	public void testOpenDE_LAPage() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -112,19 +98,6 @@ public class TestWelcomePage extends LoginAndLogout
 	//		webd.getLogger().info("Test opening 'How to get started' in welcome page finished!!!");
 	//	}
 
-	@Test
-	public void testOpenITA_DEAnalyzePage() throws Exception
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test opening ITA: Data Explorer-Analyze in welcome page...");
-
-		BrandingBarUtil.visitWelcome(webd);
-		WelcomeUtil.visitITA(webd, "dataExplorerAnalyze");
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open ITA: Data Explorer-Analyze by url: " + tmpUrl);
-		urlVerification(tmpUrl, "emcitas/flex-analyzer/html/displaying/new-chart-config.html");
-		webd.getLogger().info("Test opening ITA: Data Explorer-Analyze in welcome page finished!!!");
-	}
 
 	@Test
 	public void testOpenITA_DEPage() throws Exception
