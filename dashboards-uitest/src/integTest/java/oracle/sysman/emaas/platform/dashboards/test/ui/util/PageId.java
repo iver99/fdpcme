@@ -18,6 +18,7 @@ public class PageId
 	public static final String WidgetSearchBtnID = "dbd-left-panel-header-search-btn";
 	public static final String ADashboardTestByAriaLabel = "//*[@aria-label='ADashboard Test']";
 	public static final String EnterpriseOverviewByAriaLabel = "//*[@aria-label='Enterprise Overview']";
+	public static final String SortbyID = "oj-select-choice-mainContentsortcb";
 
 	//OOB dashboards ID
 	public static final String Application_Performance_Monitoring_ID = "//div[@aria-dashboard='14']";
