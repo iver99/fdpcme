@@ -9,11 +9,16 @@ import oracle.sysman.emaas.platform.dashboards.test.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class DashboardHomeUtil
 {
+	public static final String DASHBOARD = "dashboard";
+	public static final String DASHBOARDSET = "dashboardSet";
 	public static final String EXPLOREDATA_MENU_ANALYZE = "Analyze";
 	public static final String EXPLOREDATA_MENU_LOG = "Log Visual Analyzer";
 	public static final String EXPLOREDATA_MENU_SEARCH = "Search";
@@ -30,20 +35,27 @@ public class DashboardHomeUtil
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_ASC = "owner_asc";
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_DSC = "owner_dsc";
 
+	public static void closeOverviewPage(WebDriver driver) throws Exception
+	{
+		if (driver.isDisplayed(DashBoardPageId.OverviewCloseID)) {
+			driver.getLogger().info("before clicking overview button");
+			driver.click(DashBoardPageId.OverviewCloseID);
+		}
+	}
+
 	/**
-	 * Create one Dashboard
+	 * Create one Dashboard or Dashbaord Set
 	 *
 	 * @param driver
 	 * @param name
 	 *            dashboard name
 	 * @param descriptions
 	 *            dashboard description(optional)
-	 * @param showTimeRangeFilter
-	 *            optional
+	 * @param type
+	 *            dashboard | dashboardSet
 	 * @throws Exception
 	 */
-	public static void createDashboard(WebDriver driver, String name, String descriptions, Boolean showTimeRangeFilter)
-			throws Exception
+	public static void createDashboard(WebDriver driver, String name, String descriptions, String type) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call createDashboard : " + name);
 		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.CreateDSButtonID));
@@ -54,13 +66,12 @@ public class DashboardHomeUtil
 		if (descriptions != null && !descriptions.isEmpty()) {
 			driver.sendKeys(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardDescBoxID), descriptions);
 		}
-		if (showTimeRangeFilter == null || showTimeRangeFilter) {
-			driver.check(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardTimeRangeChecker));
+		if (DashboardHomeUtil.DASHBOARD.equalsIgnoreCase(type)) {
+			driver.check(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardType_Single));
 		}
-		else {
-			driver.uncheck(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardTimeRangeChecker));
+		else if (DashboardHomeUtil.DASHBOARDSET.equalsIgnoreCase(type)) {
+			driver.check(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardType_Set));
 		}
-
 		driver.takeScreenShot();
 		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.DashOKButtonID));
 	}
@@ -147,6 +158,12 @@ public class DashboardHomeUtil
 		}
 	}
 
+	//	public static void createDashboardSet(WebDriver driver, String name, String descriptions, Boolean displayDesc,
+	//			Boolean selectorRefreshcontrol) throws Exception
+	//	{
+	//
+	//	}
+
 	/**
 	 * goto the link in Data Explorer by displayed name
 	 *
@@ -160,8 +177,8 @@ public class DashboardHomeUtil
 
 		Validator.notEmptyString("option", option);
 
-		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataBtnID));
-		WebElement menu = driver.getElement(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataMenu));
+		driver.click(DashboardHomeUtil.convertName(DashBoardPageId.ExploreDataBtnID));
+		WebElement menu = driver.getElement(DashboardHomeUtil.convertName(DashBoardPageId.ExploreDataMenu));
 		List<WebElement> menuList = menu.findElements(By.tagName("li"));
 		for (WebElement menuItem : menuList) {
 			if (option.equals(menuItem.getText())) {
@@ -170,12 +187,6 @@ public class DashboardHomeUtil
 			}
 		}
 	}
-
-	//	public static void createDashboardSet(WebDriver driver, String name, String descriptions, Boolean displayDesc,
-	//			Boolean selectorRefreshcontrol) throws Exception
-	//	{
-	//
-	//	}
 
 	/**
 	 * choose grid view
@@ -247,6 +258,22 @@ public class DashboardHomeUtil
 		else {
 			throw new IllegalArgumentException("Unkonw filter option: " + filter);
 		}
+	}
+
+	public static List<String> listDashboardNames(WebDriver driver) throws Exception
+	{
+		List<String> names = new ArrayList<String>();
+		List<WebElement> eles = driver.getWebDriver().findElements(By.xpath(DashBoardPageId.DashboardNameContainers));
+		for (WebElement e : eles) {
+			//String name = e.getAttribute("aria-label");
+			if (DashboardHomeUtil.isAttribtuePresent(e, "aria-label")) {
+				names.add(e.getAttribute("aria-label"));
+			}
+			else {
+				names.add(e.getText());
+			}
+		}
+		return names;
 	}
 
 	/**
@@ -492,15 +519,36 @@ public class DashboardHomeUtil
 		return "id=" + id;
 	}
 
+	private static String convertName(String name)
+	{
+		return "name=" + name;
+	}
+	
+	private static String convertCss(String cssName) {
+		return "css=" + cssName;
+	}
+
 	private static void deleteDashboardInGrid(WebDriver driver, String dashboardName)
 	{
-		WebElement gridTable = driver.getElement(DashboardHomeUtil.convertID(DashBoardPageId.DashboardTableID));
+		WebElement gridTable = driver.getElement(convertCss(DashBoardPageId.DASHBOARD_GRID_TABLE_CSS));
 		List<WebElement> dashboardList = gridTable.findElements(By.tagName("div"));
 		for (WebElement dashboard : dashboardList) {
 			if (dashboardName.equals(dashboard.getAttribute("aria-label"))) {
 				dashboard.findElement(By.cssSelector("button")).click(); // click "i" button
-				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON); // click delete
-				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM); // confirm to delete
+				
+				driver.click(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON)); // click delete
+				
+				driver.waitForElementPresent(convertCss(DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG));
+				driver.getLogger().info("foucus on the delete button");
+				driver.getWebDriver().findElement(By.name(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM)).sendKeys(Keys.TAB);
+
+				//driver.focus(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM); //focus on the delete button
+				driver.getLogger().info("click on the delete button");
+				driver.click(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM)); // confirm to delete
+
+				driver.getLogger().info("wait for the popup dialog close");
+				WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG)));
 				break;
 			}
 		}
@@ -509,7 +557,7 @@ public class DashboardHomeUtil
 	private static void deleteDashboardInList(WebDriver driver, String dashboardName)
 	{
 		// find table
-		WebElement listTable = driver.getElement(DashboardHomeUtil.convertID(DashBoardPageId.DASHBOARD_LIST_TABLE));
+		WebElement listTable = driver.getElement(convertCss(DashBoardPageId.DASHBOARD_LIST_TABLE));
 		// find the column index of both "Name" & button
 		WebElement headRow = listTable.findElement(By.tagName("thead")).findElement(By.tagName("tr"));
 		List<WebElement> headColList = headRow.findElements(By.tagName("th"));
@@ -528,11 +576,34 @@ public class DashboardHomeUtil
 			List<WebElement> rowColList = row.findElements(By.tagName("td"));
 			if (dashboardName.equals(rowColList.get(nameColIndex).getText())) {
 				rowColList.get(buttonColIndex).findElement(By.tagName("button")).click(); // click "i" button
-				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON); // click delete
-				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM); // confirm to delete
+				driver.click(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON)); // click delete
+				
+				driver.waitForElementPresent(convertCss(DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG));
+				driver.getLogger().info("foucus on the delete button");
+				driver.getWebDriver().findElement(By.name(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM)).sendKeys(Keys.TAB);
+
+				driver.getLogger().info("click on the delete button");
+				driver.click(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM)); // confirm to delete
+				WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG)));
 				break;
 			}
 		}
+	}
+
+	private static boolean isAttribtuePresent(WebElement element, String attribute)
+	{
+		Boolean result = false;
+		try {
+			String value = element.getAttribute(attribute);
+			if (value != null) {
+				result = true;
+			}
+		}
+		catch (Exception e) {
+		}
+
+		return result;
 	}
 }
 

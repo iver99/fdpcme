@@ -28,6 +28,8 @@ import org.testng.Assert;
 
 public class TestDashBoard extends LoginAndLogout
 {
+       private String dbName_noWidgetGrid = "";
+       
 
 	public void initTest(String testName) throws Exception
 	{
@@ -39,7 +41,7 @@ public class TestDashBoard extends LoginAndLogout
           @Test
 	  	public void testCreateDashboad_noWidget_GridView() throws Exception
 	  	{
-	  		String dbName = "AAA_testDashboard";
+	  		dbName_noWidgetGrid = "AAA_testDashboard" + generateTimeStamp();;
 	  		String dbDesc = "AAA_testDashBoard desc";
 	  
 	  		//Initialize the test
@@ -55,12 +57,13 @@ public class TestDashBoard extends LoginAndLogout
 	  		DashboardHomeUtil.gridView(webd);
 	  
 	  		//create dashboard
-	  		webd.getLogger().info("create a dashboard: with description, time refresh");
-	  		DashboardHomeUtil.createDashboard(webd, dbName, dbDesc, true);
-	  
-	  		DashboardBuilderUtil.verifyDashboard(webd, dbName, dbDesc, true);
-	  
-	          }
+                      webd.getLogger().info("Create a dashboard: with description, time refresh");
+	         	DashboardHomeUtil.createDashboard(webd, dbName_noWidgetGrid, dbDesc, DashboardHomeUtil.DASHBOARD);
+	        	webd.getLogger().info("verify the dashboard created Successfully");
+	        	Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noWidgetGrid, dbDesc, true),
+	  			"Create dashboard failed!");
+	}
+
 	
 	
 
@@ -100,16 +103,24 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "AAA_testDashboard_modify");
 
 		//add the widget into the dashboard
-		webd.getLogger().info("Start to add Widget into the dashboard");
-		//DashboardBuilderUtil.showRightDrawer(webd);
-		DashboardBuilderUtil.addWidgetByRightDrawer(webd, WidgetName_1);
-		DashboardBuilderUtil.addWidgetByRightDrawer(webd, WidgetName_2);
-		DashboardBuilderUtil.addWidgetByRightDrawer(webd, WidgetName_1);
+               webd.getLogger().info("Start to add Widget into the dashboard");
+		webd.getLogger().info("Add Widget 'Top Hosts by Log Entries' into the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_1);
+		webd.getLogger().info("Add Widget 'Top 10 Listeners by Load' into the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_2);
+		webd.getLogger().info("Add Widget 'Top Hosts by Log Entries' into the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_1);
 		webd.getLogger().info("Add widget finished");
 
 		//save dashboard
 		webd.getLogger().info("save the dashboard");
 		DashboardBuilderUtil.saveDashboard(webd);
 	}
+ 
+         private String generateTimeStamp()
+	{
+		return String.valueOf(System.currentTimeMillis());
+	}
+
 }
 
