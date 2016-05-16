@@ -390,6 +390,7 @@ public class DashboardBuilderUtil
 		Validator.fromValidValues("refreshSettings", refreshSettings, REFRESH_DASHBOARD_SETTINGS_OFF,
 				REFRESH_DASHBOARD_SETTINGS_5MIN);
 
+		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.BuilderOptionsMenuLocator)));
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -423,6 +424,7 @@ public class DashboardBuilderUtil
 		Validator.fromValidValues("refreshDashboardSet", refreshSettings, REFRESH_DASHBOARD_SETTINGS_OFF,
 				REFRESH_DASHBOARD_SETTINGS_5MIN);
 
+		driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionBtn);
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.DashboardSetOptionBtn)));
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -535,8 +537,9 @@ public class DashboardBuilderUtil
 		Validator.fromValidValues("refreshSettings", refreshSettings, REFRESH_DASHBOARD_SETTINGS_OFF,
 				REFRESH_DASHBOARD_SETTINGS_5MIN);
 
+		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.elementToBeClickable(By.xpath(DashBoardPageId.DashboardSetOptionBtn)));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.BuilderOptionsMenuLocator)));
 		WaitUtil.waitForPageFullyLoaded(driver);
 
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
@@ -570,6 +573,7 @@ public class DashboardBuilderUtil
 		Validator.fromValidValues("refreshDashboardSet", refreshSettings, REFRESH_DASHBOARD_SETTINGS_OFF,
 				REFRESH_DASHBOARD_SETTINGS_5MIN);
 
+		driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionBtn);
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.elementToBeClickable(By.xpath(DashBoardPageId.DashboardSetOptionBtn)));
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -735,6 +739,7 @@ public class DashboardBuilderUtil
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
 
+		driver.waitForElementPresent(DashBoardPageId.BuilderTilesEditArea);
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.BuilderTilesEditArea)));
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -909,6 +914,7 @@ public class DashboardBuilderUtil
 				+ description + "\", showTimeSelector=\"" + showTimeSelector + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
 
+		driver.waitForElementPresent(DashBoardPageId.BuilderNameTextLocator);
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.BuilderNameTextLocator)));
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -1002,8 +1008,9 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil.verifyDashboard started for name=\"" + dashboardSetName + "\"");
 		Validator.notEmptyString("dashboardSetName", dashboardSetName);
 
+		driver.waitForElementPresent(DashBoardPageId.DashboardSetNameTextLocator);
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(DashBoardPageId.DashboardSetNameTextLocator)));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.DashboardSetNameTextLocator)));
 		WaitUtil.waitForPageFullyLoaded(driver);
 
 		driver.waitForElementPresent(DashBoardPageId.DashboardSetNameTextLocator);
