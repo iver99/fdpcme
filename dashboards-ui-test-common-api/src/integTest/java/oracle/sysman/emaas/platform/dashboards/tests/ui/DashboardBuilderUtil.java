@@ -86,61 +86,66 @@ public class DashboardBuilderUtil
 
 	public static void addWidgetToDashboard(WebDriver driver, String searchString) throws Exception
 	{
-		Validator.notNull("widgetName", searchString);
-		Validator.notEmptyString("widgetName", searchString);
+                Validator.notNull("widgetName", searchString);
+                Validator.notEmptyString("widgetName", searchString);
 
-		if (searchString == null) {
-			return;
-		}
+                if (searchString == null) {
+                        return;
+                }
 
-		By locatorOfKeyEl = By.cssSelector(DashBoardPageId.RightDrawerCSS);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfKeyEl));
-		WaitUtil.waitForPageFullyLoaded(driver);
+                By locatorOfKeyEl = By.cssSelector(DashBoardPageId.RightDrawerCSS);
+                WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+                wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfKeyEl));
+                WaitUtil.waitForPageFullyLoaded(driver);
 
-		driver.getLogger().info("[DashboardHomeUtil] call addWidgetToDashboard with search string as " + searchString);
+                driver.getLogger().info("[DashboardHomeUtil] call addWidgetToDashboard with search string as " + searchString);
 
-		//show right drawer if it is hidden
-		DashboardBuilderUtil.showRightDrawer(driver);
+                //show right drawer if it is hidden
+                DashboardBuilderUtil.showRightDrawer(driver);
 
-		WebElement searchInput = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchInputCSS);
-		// focus to search input box
-		new Actions(driver.getWebDriver()).moveToElement(searchInput).build().perform();
-		searchInput.clear();
-		searchInput.sendKeys(searchString);
-		driver.takeScreenShot();
-		//verify input box value
-		Assert.assertEquals(searchInput.getAttribute("value"), searchString);
+                WebElement searchInput = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchInputCSS);
+                // focus to search input box
+                wait.until(ExpectedConditions.elementToBeClickable(searchInput));
 
-		WebElement searchButton = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchButtonCSS);
-		driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerSearchButtonCSS);
-		searchButton.click();
-		//wait for ajax resolved
-		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.takeScreenShot();
+                Actions actions = new Actions(driver.getWebDriver());
+                actions.moveToElement(searchInput).build().perform();
+                searchInput.clear();
+                actions.moveToElement(searchInput).build().perform();
+                driver.click("css=" + DashBoardPageId.RightDrawerSearchInputCSS);
+                searchInput.sendKeys(searchString);
+                driver.takeScreenShot();
+                //verify input box value
+                Assert.assertEquals(searchInput.getAttribute("value"),searchString);
 
-		driver.getLogger().info("[DashboardHomeUtil] start to add widget from right drawer");
-		List<WebElement> matchingWidgets = driver.getWebDriver()
-				.findElements(By.cssSelector(DashBoardPageId.RightDrawerWidgetCSS));
-		if (matchingWidgets == null || matchingWidgets.size() == 0) {
-			throw new NoSuchElementException("Right drawer widget for search string =" + searchString + " is not found");
-		}
+                WebElement searchButton = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchButtonCSS);
+                driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerSearchButtonCSS);
+                searchButton.click();
+                //wait for ajax resolved
+                WaitUtil.waitForPageFullyLoaded(driver);
+                driver.takeScreenShot();
 
-		//drag and drop not working
-		//      WebElement tilesContainer = driver.getElement("css=" + DashBoardPageId.RightDrawerWidgetToAreaCSS);
-		//      CommonActions.dragAndDropElement(driver, matchingWidgets.get(0), tilesContainer);
+                driver.getLogger().info("[DashboardHomeUtil] start to add widget from right drawer");
+                List<WebElement> matchingWidgets = driver.getWebDriver().findElements(
+                                By.cssSelector(DashBoardPageId.RightDrawerWidgetCSS));
+                if (matchingWidgets == null || matchingWidgets.size() == 0) {
+                        throw new NoSuchElementException("Right drawer widget for search string =" + searchString + " is not found");
+                }
 
-		// focus to  the first matching  widget
-		driver.getWebDriver().switchTo().activeElement().sendKeys(Keys.TAB);
-		driver.takeScreenShot();
+                //drag and drop not working
+                //      WebElement tilesContainer = driver.getElement("css=" + DashBoardPageId.RightDrawerWidgetToAreaCSS);
+                //      CommonActions.dragAndDropElement(driver, matchingWidgets.get(0), tilesContainer);
 
-		// press enter to add widget
-		driver.getWebDriver().switchTo().activeElement().sendKeys(Keys.ENTER);
-		driver.takeScreenShot();
+                // focus to  the first matching  widget
+                driver.getWebDriver().switchTo().activeElement().sendKeys(Keys.TAB);
+                driver.takeScreenShot();
 
-		driver.getLogger().info("[DashboardHomeUtil] finish adding widget from right drawer");
+                // press enter to add widget
+                driver.getWebDriver().switchTo().activeElement().sendKeys(Keys.ENTER);
+                driver.takeScreenShot();
 
-		DashboardBuilderUtil.hideRightDrawer(driver);// hide drawer;
+                driver.getLogger().info("[DashboardHomeUtil] finish adding widget from right drawer");
+
+                DashboardBuilderUtil.hideRightDrawer(driver);// hide drawer;
 	}
 
 	public static void deleteDashboard(WebDriver driver)
@@ -1129,6 +1134,7 @@ public class DashboardBuilderUtil
 		if (DashboardBuilderUtil.isRightDrawerVisible(driver) == false) {
 			driver.click("css=" + DashBoardPageId.RightDrawerToggleBtnCSS);
 			driver.getLogger().info("[DashboardBuilderUtil] triggered showRightDrawer.");
+			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		driver.takeScreenShot();
 	}

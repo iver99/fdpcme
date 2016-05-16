@@ -21,13 +21,13 @@ public class PageId
 
 	//OOB dashboards ID
 	public static final String Application_Performance_Monitoring_ID = "//div[@aria-dashboard='14']";
-	public static final String Database_Health_Summary_ID = "//div[@aria-dashboard='11']";
-	public static final String Host_Health_Summary_ID = "//div[@aria-dashboard='13']";
+	//public static final String Database_Health_Summary_ID = "//div[@aria-dashboard='11']";
+	//public static final String Host_Health_Summary_ID = "//div[@aria-dashboard='13']";
 	public static final String Database_Performance_Analytics_ID = "//div[@aria-dashboard='2']";
 	public static final String Middleware_Performance_Analytics_ID = "//div[@aria-dashboard='4']";
 	public static final String Database_Resource_Analytics_ID = "//div[@aria-dashboard='3']";
 	public static final String Middleware_Resource_Analytics_ID = "//div[@aria-dashboard='18']";
-	public static final String WebLogic_Health_Summary_ID = "//div[@aria-dashboard='12']";
+	//public static final String WebLogic_Health_Summary_ID = "//div[@aria-dashboard='12']";
 	public static final String Database_Configuration_and_Storage_By_Version_ID = "//div[@aria-dashboard='6']";
 	public static final String Enterprise_OverView_ID = "//div[@aria-dashboard='1']";
 	public static final String Host_Inventory_By_Platform_ID = "//div[@aria-dashboard='5']";
