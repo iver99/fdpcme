@@ -310,7 +310,7 @@ public class TestDashBoard extends LoginAndLogout
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
                	webd.getWebDriver().navigate()
-                                 .to(url.substring(0, url.indexOf("emsaasui")) + "emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
+                                 .to(url.substring(0, url.indexOf("emsaasui")) + "emcpdfui/error.html?invalidUrl=https%3A%2F%2Fden00bve.us.oracle.com%3A4443%2Femsaasui%2Femcpdfui%2Fbuilder.html%3FdashboardId%3D80");
  
 		//Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcpdfui/builder.html?dashboardId=80");
 		WaitUtil.waitForPageFullyLoaded(webd);
