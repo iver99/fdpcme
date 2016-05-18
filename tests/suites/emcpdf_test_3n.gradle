@@ -220,6 +220,7 @@ task DEVTest2(type:EMTest,dependsOn: DEVUiTest){
 	ext.set("testType", "unit")
 }
 
-
-omcTeardown.mustRunAfter(DEVTest2)
-task emcpdf_test_3n (dependsOn:[DEVTest2, omcTeardown])
+task emcpdf_test_3n (dependsOn:[DEVTest2, omcTeardown]) {
+    omcTeardown.mustRunAfter(DEVTest2)
+    apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_taskprocessor")
+}
