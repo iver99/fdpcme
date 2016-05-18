@@ -299,7 +299,7 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
-	@Test
+	/*@Test
 	public void testErrorPage() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -316,7 +316,7 @@ public class TestDashBoard extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 		//validating Error page
 		ErrorPageUtil.signOut(webd);
-	}
+	}*/
 
 	@Test
 	public void testFavorite() throws Exception
