@@ -12,7 +12,7 @@ import org.openqa.selenium.support.ui.Select;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import oracle.sysman.emaas.platform.dashboards.test.util.*;
-
+import oracle.sysman.emaas.platform.dashboards.tests.ui.*;
 
 import java.util.Set;
 import org.testng.Assert;

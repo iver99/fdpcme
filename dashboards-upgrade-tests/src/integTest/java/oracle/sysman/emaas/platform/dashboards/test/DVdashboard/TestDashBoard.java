@@ -1,19 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.test.DVdashboard;
 
-//import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
-//import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
-//import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
-//import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
-//import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-//import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
-//import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil.TimeRange;
-//import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
-//import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-
-//import org.openqa.selenium.By;
-//import org.openqa.selenium.WebElement;
 import org.testng.Assert;
-//import org.testng.annotations.Test;
 
 
 
@@ -26,7 +13,7 @@ import org.openqa.selenium.support.ui.Select;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import oracle.sysman.emaas.platform.dashboards.test.util.*;
-
+import oracle.sysman.emaas.platform.dashboards.tests.ui.*;
 
 import java.util.Set;
 import org.testng.Assert;
