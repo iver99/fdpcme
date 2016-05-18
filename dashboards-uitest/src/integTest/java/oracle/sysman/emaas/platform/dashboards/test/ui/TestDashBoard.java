@@ -309,7 +309,10 @@ public class TestDashBoard extends LoginAndLogout
 		//BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_Erpge);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcpdfui/builder.html?dashboardId=80");
+               	webd.getWebDriver().navigate()
+                                 .to(url.substring(0, url.indexOf("emsaasui")) + "emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
+ 
+		//Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcpdfui/builder.html?dashboardId=80");
 		WaitUtil.waitForPageFullyLoaded(webd);
 		//validating Error page
 		ErrorPageUtil.signOut(webd);
@@ -796,7 +799,10 @@ public class TestDashBoard extends LoginAndLogout
 		//BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_WidgetSelector);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "uifwk/test.html");
+   webd.getWebDriver().navigate()
+				.to(url.substring(0, url.indexOf("emsaasui")) + "uifwk/test.html");
+
+		//Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "uifwk/test.html");
 		WaitUtil.waitForPageFullyLoaded(webd);
 		//click on Add button
 		webd.click("id=" + DashBoardPageId.WidgetSelector_AddButtonId);

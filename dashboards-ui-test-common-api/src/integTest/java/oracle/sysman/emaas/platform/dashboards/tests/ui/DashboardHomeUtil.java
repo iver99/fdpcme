@@ -265,6 +265,19 @@ public class DashboardHomeUtil
 	{
 		List<String> names = new ArrayList<String>();
 		List<WebElement> eles = driver.getWebDriver().findElements(By.xpath(DashBoardPageId.DashboardNameContainers));
+		for (int i = 1; i <= eles.size(); i++) {
+			driver.getLogger().info(
+					"Get dahsbord name for: "
+							+ DashBoardPageId.DashboardNameIndexLocator.replaceFirst("_index_", String.valueOf(i)));
+			WebElement ele = driver.getElement(DashBoardPageId.DashboardNameIndexLocator.replaceFirst("_index_",
+					String.valueOf(i)));
+			String name = DashboardHomeUtil.getElementAttribtue(ele, "aria-label");
+			if (name == null) {
+				name = ele.getText();
+			}
+			names.add(name);
+		}
+		/*
 		for (WebElement e : eles) {
 			//String name = e.getAttribute("aria-label");
 			if (DashboardHomeUtil.isAttribtuePresent(e, "aria-label")) {
@@ -273,7 +286,7 @@ public class DashboardHomeUtil
 			else {
 				names.add(e.getText());
 			}
-		}
+		}*/
 		return names;
 	}
 
@@ -637,6 +650,17 @@ public class DashboardHomeUtil
 				break;
 			}
 		}
+	}
+
+	private static String getElementAttribtue(WebElement element, String attribute)
+	{
+		try {
+			return element.getAttribute(attribute);
+		}
+		catch (Exception e) {
+		}
+
+		return null;
 	}
 
 	private static boolean isAttribtuePresent(WebElement element, String attribute)
