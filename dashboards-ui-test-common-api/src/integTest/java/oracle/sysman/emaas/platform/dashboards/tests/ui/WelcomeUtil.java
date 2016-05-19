@@ -311,7 +311,8 @@ public class WelcomeUtil
 	 * @param driver
 	 * @param selection
 	 * 		default | performanceAnayticsDatabase | performanceAnalyticsMiddleware | 
-	 * 		resourceAnalyticsDatabase | resourceAnalyticsMiddleware | dataExplorerAnalyze | dataExplorer
+	 * 		resourceAnalyticsDatabase | resourceAnalyticsMiddleware | resourceAnalyticsHost | 
+	 *  	dataExplorerAnalyze | dataExplorer
 	 * @throws Exception
 	 */
 	public static void visitITA(WebDriver driver, String selection) throws Exception
@@ -355,6 +356,7 @@ public class WelcomeUtil
 				case ITA_RESOURCE_ANALYTICS_HOST:
 					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
 							DashBoardPageId.Welcome_ITA_RA_Host);
+					break;
 				case ITA_DATA_EXPLORER_ANALYZE:
 					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
 							DashBoardPageId.Welcome_ITA_DEAnalyze);
