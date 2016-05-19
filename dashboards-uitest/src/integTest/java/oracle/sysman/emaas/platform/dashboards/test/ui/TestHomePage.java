@@ -8,7 +8,6 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -57,7 +56,6 @@ public class TestHomePage extends LoginAndLogout
 
 	}
 
-
 	@Test
 	public void testExploreData_LALink() throws Exception
 	{
@@ -100,7 +98,7 @@ public class TestHomePage extends LoginAndLogout
 		webd.getLogger().info("Sort the dashboard by created by Ascending");
 		DashboardHomeUtil.sortListViewByCreateBy(webd);
 
-		WaitUtil.waitForPageFullyLoaded(webd);
+		//WaitUtil.waitForPageFullyLoaded(webd);
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Ascending");
@@ -306,6 +304,7 @@ public class TestHomePage extends LoginAndLogout
 		webd.getLogger().info("back to the dashboard home page");
 		BrandingBarUtil.visitDashboardHome(webd);
 
+		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
 		DashboardHomeUtil.closeOverviewPage(webd);
 
 		//switch to list view
@@ -364,6 +363,8 @@ public class TestHomePage extends LoginAndLogout
 		//back to home page
 		webd.getLogger().info("back to the dashboard home page");
 		BrandingBarUtil.visitDashboardHome(webd);
+		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
+		//WaitUtil.waitForPageFullyLoaded(webd);
 
 		DashboardHomeUtil.closeOverviewPage(webd);
 
@@ -404,6 +405,8 @@ public class TestHomePage extends LoginAndLogout
 		//back to home page
 		webd.getLogger().info("back to the dashboard home page");
 		BrandingBarUtil.visitDashboardHome(webd);
+		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
+		//WaitUtil.waitForPageFullyLoaded(webd);
 
 		DashboardHomeUtil.closeOverviewPage(webd);
 

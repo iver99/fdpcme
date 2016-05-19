@@ -109,6 +109,7 @@ public class DashBoardPageId
 	public static final String DashboardNameLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele') and (@aria-label = '_name_' or text() = '_name_')]";//[contains(@class, 'dbs-dsbnameele')]//text()[. = '_name_']";//*[contains(@class, 'icon-listview-16')]";
 	public static final String OOBDashboardNameLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbsystem') and (@aria-label = '_name_' or text() = '_name_')]";
 	public static final String DashboardNameContainers = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele')]";
+	public static final String DashboardNameIndexLocator = "xpath=(//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele')])[_index_]";
 
 	//Branding Bar links
 	//Home Link
