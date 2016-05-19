@@ -95,7 +95,7 @@ public void testSetHome() throws Exception
 	@Test
 		public void testShareDashboard() throws Exception
 		{ 
-		        //dbName_noWidgetGrid = "NoWidgetGridView-" + generateTimeStamp();   
+		        dbName_noWidgetGrid = "NoWidgetGridView-" + generateTimeStamp();   
 		   
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 			webd.getLogger().info("start to test in testshareddashboard");
