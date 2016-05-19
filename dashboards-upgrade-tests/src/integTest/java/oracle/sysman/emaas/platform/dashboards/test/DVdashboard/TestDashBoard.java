@@ -16,6 +16,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.test.util.*;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.*;
 
@@ -36,6 +37,8 @@ public class TestDashBoard extends LoginAndLogout
          //private String dbName_withWidgetGrid = "";
          private String dbName_setHome = "";
          private String dbName_noWidgetGrid = "";
+         private String dbName_favorite = "";
+  
 
 
 	public void initTest(String testName) throws Exception
@@ -91,36 +94,87 @@ public void testSetHome() throws Exception
 				"It is NOT the home page!");
  
 	}
-	
-@Test
-	public void testWidgetSelector() throws Exception
+	@Test
+	public void testFavorite() throws Exception
 	{
-		String WidgetName_1 = "Database Errors Trend";
+		dbName_favorite = "favoriteDashboard-" + generateTimeStamp();
+		String dbDesc = "favorite_testDashboard desc";
 
+		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in WidgetSelectorPage");
+		webd.getLogger().info("Start to test in testFavorite");
 
-		//ErrorPage link
-		//BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_WidgetSelector);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		String testUrl = url.substring(0, url.indexOf("emsaasui")) + "emsaasui/uifwk/test.html";
-		webd.getLogger().info("test page url is " + testUrl);
-		webd.getWebDriver().navigate().to(testUrl);
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
 
-		//Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "uifwk/test.html");
-		// let's try to wait until page is loaded and jquery loaded before calling waitForPageFullyLoaded
-		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.elementToBeClickable(By.id(DashBoardPageId.WidgetSelector_AddButtonId)));
-		WaitUtil.waitForPageFullyLoaded(webd);
-		//click on Add button
-		webd.click("id=" + DashBoardPageId.WidgetSelector_AddButtonId);
-		webd.takeScreenShot();
-		//Adding widgets using widgetSElector diagoue
-		webd.getLogger().info("satrt widget selector dialogue box opens");
-		WidgetSelectorUtil.addWidget(webd, WidgetName_1);
+		//switch to Grid View
+		webd.getLogger().info("Switch to grid view");
+		DashboardHomeUtil.gridView(webd);
 
+		//create dashboard
+		webd.getLogger().info("Create a dashboard: with description, time refresh");
+		DashboardHomeUtil.createDashboard(webd, dbName_favorite, dbDesc, DashboardHomeUtil.DASHBOARD);
+
+		//verify dashboard in builder page
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_favorite, dbDesc, true), "Create dashboard failed!");
+
+		//set it to favorite
+		webd.getLogger().info("Set the dashboard to favorite");
+		Assert.assertTrue(DashboardBuilderUtil.favoriteOption(webd));
+
+		//verify the dashboard is favorite
+		webd.getLogger().info("Visit my favorite page");
+		BrandingBarUtil.visitMyFavorites(webd);
+
+		webd.getLogger().info("Verfiy the favortie checkbox is checked");
+		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "favorites"), "My Favorites option is NOT checked");
+		//		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
+		//		Assert.assertTrue(el.isSelected());
+
+		webd.getLogger().info("Verfiy the dashboard is favorite");
+		//DashboardHomeUtil.search(webd, dbName_favorite);
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_favorite), "Can not find the dashboard");
+
+		webd.getLogger().info("Open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, dbName_favorite);
+		webd.getLogger().info("Verify the dashboard in builder page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_favorite, dbDesc, true), "Create dashboard failed!");
+
+		//set it to not favorite
+		webd.getLogger().info("set the dashboard to not favorite");
+		Assert.assertFalse(DashboardBuilderUtil.favoriteOption(webd), "Set to not my favorite dashboard failed!");
+
+		//verify the dashboard is not favoite
+		webd.getLogger().info("visit my favorite page");
+		BrandingBarUtil.visitMyFavorites(webd);
+		webd.getLogger().info("Verfiy the favortie checkbox is checked");
+		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "favorites"), "My Favorites option is NOT checked");
+		//		el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
+		//		Assert.assertTrue(el.isSelected());
+		webd.getLogger().info("Verfiy the dashboard is not favorite");
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_favorite),
+				"The dashboard is still my favorite dashboard");
+				//		DashboardHomeUtil.search(webd, dbName_favorite);
+				//		Assert.assertEquals(webd.getAttribute(DashBoardPageId.DashboardSerachResult_panelID + "@childElementCount"), "0");
+				//		webd.getLogger().info("no favorite dashboard");
+
+		//delete the dashboard
+		webd.getLogger().info("start to delete the dashboard");
+
+		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
+		if (el.isSelected()) {
+			el.click();
+		}
+		DashboardHomeUtil.deleteDashboard(webd, dbName_favorite, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+		webd.getLogger().info("the dashboard has been deleted");
 	}
+
+
+
+
+
 
       private String generateTimeStamp()
 	{
