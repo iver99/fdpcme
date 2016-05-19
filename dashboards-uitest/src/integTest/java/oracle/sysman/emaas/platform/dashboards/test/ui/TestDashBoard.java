@@ -799,12 +799,13 @@ public class TestDashBoard extends LoginAndLogout
 		//BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_WidgetSelector);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
-		webd.getWebDriver().navigate().to(url.substring(0, url.indexOf("emsaasui")) + "uifwk/test.html");
+		String testUrl = url.substring(0, url.indexOf("emsaasui")) + "emsaasui/uifwk/test.html";
+		webd.getLogger().info("test page url is " + testUrl);
+		webd.getWebDriver().navigate().to(testUrl);
 
 		//Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "uifwk/test.html");
 		// let's try to wait until page is loaded and jquery loaded before calling waitForPageFullyLoaded
 		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("widgets-container")));
 		wait.until(ExpectedConditions.elementToBeClickable(By.id(DashBoardPageId.WidgetSelector_AddButtonId)));
 		WaitUtil.waitForPageFullyLoaded(webd);
 		//click on Add button
