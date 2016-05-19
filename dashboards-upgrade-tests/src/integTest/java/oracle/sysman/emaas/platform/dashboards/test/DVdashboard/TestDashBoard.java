@@ -92,50 +92,35 @@ public void testSetHome() throws Exception
  
 	}
 	
-	@Test
-		public void testShareDashboard() throws Exception
-		{ 
-		        dbName_noWidgetGrid = "NoWidgetGridView-" + generateTimeStamp();   
-		   
-			initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-			webd.getLogger().info("start to test in testshareddashboard");
-	
-			DashboardHomeUtil.gridView(webd);
-			//search the dashboard and open it in builder page
-			webd.getLogger().info("search the dashboard");
-			DashboardHomeUtil.search(webd, dbName_noWidgetGrid + "-modify");
-			webd.getLogger().info("verify the dashboard is existed");
-			Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_noWidgetGrid + "-modify"), "Dashboard NOT found!");
-			webd.getLogger().info("open the dashboard");
-			DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid + "-modify");
-	
-			//sharing dashbaord
-			webd.getLogger().info("Share the dashboard");
-			Assert.assertTrue(DashboardBuilderUtil.toggleShareDashboard(webd), "Share dashboard failed!");
-	
-		}
-	
-		@Test(dependsOnMethods = { "testShareDashboard" })
-		public void testStopShareDashboard() throws Exception
-		{
-			initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-			webd.getLogger().info("start to test in testshareddashboard");
-	
-			DashboardHomeUtil.gridView(webd);
-	
-			//search the dashboard and open it in builder page
-			webd.getLogger().info("search the dashboard");
-			DashboardHomeUtil.search(webd, dbName_noWidgetGrid + "-modify");
-			webd.getLogger().info("verify the dashboard is existed");
-			Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_noWidgetGrid + "-modify"), "Dashboard NOT found!");
-			webd.getLogger().info("open the dashboard");
-			DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid + "-modify");
-	
-			//stop sharing dashbaord
-			webd.getLogger().info("Stop share the dashboard");
-			Assert.assertFalse(DashboardBuilderUtil.toggleShareDashboard(webd), "Stop sharing the dashboard failed!");
-	}
+@Test
+	public void testWidgetSelector() throws Exception
+	{
+		String WidgetName_1 = "Database Errors Trend";
 
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in WidgetSelectorPage");
+
+		//ErrorPage link
+		//BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_WidgetSelector);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = " + url);
+		String testUrl = url.substring(0, url.indexOf("emsaasui")) + "emsaasui/uifwk/test.html";
+		webd.getLogger().info("test page url is " + testUrl);
+		webd.getWebDriver().navigate().to(testUrl);
+
+		//Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "uifwk/test.html");
+		// let's try to wait until page is loaded and jquery loaded before calling waitForPageFullyLoaded
+		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait.until(ExpectedConditions.elementToBeClickable(By.id(DashBoardPageId.WidgetSelector_AddButtonId)));
+		WaitUtil.waitForPageFullyLoaded(webd);
+		//click on Add button
+		webd.click("id=" + DashBoardPageId.WidgetSelector_AddButtonId);
+		webd.takeScreenShot();
+		//Adding widgets using widgetSElector diagoue
+		webd.getLogger().info("satrt widget selector dialogue box opens");
+		WidgetSelectorUtil.addWidget(webd, WidgetName_1);
+
+	}
 
       private String generateTimeStamp()
 	{
