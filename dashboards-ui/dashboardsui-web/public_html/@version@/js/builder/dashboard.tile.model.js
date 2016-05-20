@@ -27,7 +27,7 @@ define(['knockout',
         ko.mapping = km;
         var draggingTileClass = 'dbd-tile-in-dragging';
         
-        function DashboardTilesViewModel($b) {        
+        function DashboardTilesViewModel($b, dashboardInst) {        
         
             var widgetAreaWidth = 0;
             var widgetAreaContainer = null;
@@ -127,7 +127,7 @@ define(['knockout',
             
             self.appendNewTile = function(name, description, width, height, widget) {
                 if (widget) {
-                    var newTile = self.editor.createNewTile(name, description, width, height, widget, self.timeSelectorModel, self.targets, true);
+                    var newTile = self.editor.createNewTile(name, description, width, height, widget, self.timeSelectorModel, self.targets, true, dashboardInst);
                     if (newTile){
                        self.editor.tiles.push(newTile);
                        self.show();
@@ -665,8 +665,8 @@ define(['knockout',
                         cell.column = self.editor.mode.MODE_MAX_COLUMNS-width;
                     }
                     if (!tile) {
-                        tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targets, true);                        
-                        Builder.initializeTileAfterLoad(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targets, true);
+                        tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targets, true, dashboardInst);                        
+                        Builder.initializeTileAfterLoad(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targets, true, dashboardInst);
                         u.helper.tile = tile;
                         self.editor.tiles.push(tile);
                         $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
