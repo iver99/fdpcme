@@ -161,7 +161,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
     
     function ViewModel(predata, parentElementId, defaultFilters,dashboardSetItem) {
         
-        var self = this, showWelcome = predata.getShowWelcomePref();
+        var self = this, showWelcome = (predata === null ? false : predata.getShowWelcomePref());
         
         self.parentElementId = parentElementId;
         self.getElementByCss = function(cssSelector) {
@@ -182,28 +182,36 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.welcomeDialogModel = new welcomeDialogModel(self.prefUtil, showWelcome);
         
         //dashboards
+        self.isDashboardSet = predata === null ? true : false;
         self.userName = dfu.getUserName();
         self.isMobileDevice = ko.observable( (new mbu()).isMobile );
         self.currentDashboardSetItem=dashboardSetItem;
         self.dashboardInTabs=ko.observable(false);
 
-        self.filter = predata.getDashboardsFilter({'prefUtil' : self.prefUtil,
-            'filterPrefKey': DASHBOARDS_FILTER_PREF_KEY,
-            'filterChange': function(event) {
-                if (self.dsFactory)
-                {
-                   self.dsFactory.filter = self.filter.toFilterString();
-                   self._forceSearch();
+        if (predata !== null)
+        {
+            self.filter = predata.getDashboardsFilter({'prefUtil' : self.prefUtil,
+                'filterPrefKey': DASHBOARDS_FILTER_PREF_KEY,
+                'filterChange': function(event) {
+                    if (self.dsFactory)
+                    {
+                        self.dsFactory.filter = self.filter.toFilterString();
+                        self._forceSearch();
+                    }
                 }
-            }
-        });
+            });
+        }
+        else
+        {
+            self.filter = null;
+        }
         self.showExploreDataBtn= ko.observable(true);
         self.showSeachClear = ko.observable(false);
         self.tilesViewGridId = self.parentElementId+'gridtview';
         self.tilesViewListId = self.parentElementId+'listview';
         self.tilesViewGrid = 'gridtview';
         self.tilesViewList = 'listview';
-        self.isTilesView = ko.observable(predata.getDashboardsViewPref());
+        self.isTilesView = ko.observable(predata === null ? 'gridtview' : predata.getDashboardsViewPref());
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
         self.selectedDashboard = ko.observable(null);
@@ -231,9 +239,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         });
         
         
-        var filterString = self.filter.toFilterString()||"";
+        var filterString =  self.filter !== null ? self.filter.toFilterString() : null;
         if(defaultFilters && Array.isArray(defaultFilters)){
-           filterString = filterString +","+ defaultFilters.join(",");
+           filterString = filterString === null ? defaultFilters.join(",") : filterString +","+ defaultFilters.join(",");
         }
         
         self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), filterString);
@@ -499,7 +507,10 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             var _option = data.option, _value = data.value;
             if ( _option === "checked" )
             {
-                self.prefUtil.setPreference(DASHBOARDS_VIEW_PREF_KEY, _value);
+                if (self.isDashboardSet !== true)
+                {
+                    self.prefUtil.setPreference(DASHBOARDS_VIEW_PREF_KEY, _value);
+                }
                 if (data.value === 'listview')
                 {
                     var __sortui = self._getListTableSortUi(self.sortBy()),  _ts = self.dashboardsTS();
