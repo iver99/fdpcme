@@ -1072,15 +1072,25 @@ public class DashboardBuilderUtil
 
 	private static void clickTileOpenInDataExplorerButton(WebDriver driver, String widgetName, int index)
 	{
-		WebElement tileTitle = DashboardBuilderUtil.getTileTitleElement(driver, widgetName, index);
-		WebElement tileConfig = tileTitle.findElement(By.xpath(DashBoardPageId.BuilderTileDataExploreLocator));
-		if (tileConfig == null) {
-			throw new NoSuchElementException(
-					"Tile data explorer link for title=" + widgetName + ", index=" + index + " is not found");
+		driver.getLogger().info("Start to find widget with widgetName=" + widgetName + ", index=" + index);
+		WebElement widgetTitle = DashboardBuilderUtil.getTileTitleElement(driver, widgetName, index);
+		if (widgetTitle == null) {
+			throw new NoSuchElementException("Widget with title=" + widgetName + ", index=" + index + " is not found");
 		}
+		driver.getLogger().info("Found widget with name=" + widgetName + ", index =" + index + " before opening widget link");
+		WebElement widgetDataExplore = widgetTitle.findElement(By.xpath(DashBoardPageId.BuilderTileDataExploreLocator));
+		if (widgetDataExplore == null) {
+			throw new NoSuchElementException(
+					"Widget data explorer link for title=" + widgetName + ", index=" + index + " is not found");
+		}
+		driver.getLogger().info("Found widget configure button");
 		Actions builder = new Actions(driver.getWebDriver());
-		builder.moveToElement(tileTitle).perform();
-		builder.moveToElement(tileConfig).click().perform();
+		driver.getLogger().info("Now moving to the widget title bar");
+		builder.moveToElement(widgetTitle).perform();
+		driver.takeScreenShot();
+		driver.getLogger().info("and clicks the widget config button");
+		//		builder.moveToElement(widgetDataExplore).click().perform();
+		widgetDataExplore.click();
 		driver.takeScreenShot();
 	}
 
