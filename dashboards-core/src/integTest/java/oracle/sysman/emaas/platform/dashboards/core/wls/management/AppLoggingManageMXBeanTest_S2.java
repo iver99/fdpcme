@@ -51,7 +51,7 @@ public class AppLoggingManageMXBeanTest_S2
 	{
 		AppLoggingManageMXBean almmxb = new AppLoggingManageMXBean();
 		String levels = almmxb.getLogLevels();
-		Assert.assertTrue(levels.contains("\"oracle.sysman.emaas.platform.dashboards\":\"INFO\""));
+		Assert.assertTrue(levels.contains("\"oracle.sysman.emaas.platform.dashboards.interaction.log\":\"INFO\""));
 	}
 
 	public void testSetLogLevels() throws URISyntaxException
