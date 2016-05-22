@@ -258,7 +258,7 @@ public class CommonUIUtils
 					else {
 						CommonUIUtils.commonUITestLog("The TARGETMODEL_SERVICE_SHARD_ENDPOINT property is '" + sRolesUrl + "'.");
 
-						sPropertyValue = "http://"+sRolesUrl + ":7004/tm-mgmt";
+						sPropertyValue = "http://"+sRolesUrl + ":7004/tm-mgmt/api/v1.1";
 					}
 				}
 			}
@@ -295,7 +295,7 @@ public class CommonUIUtils
 	public static void getRoles(String sTenant, String sUser)
 	{
 		CommonUIUtils.commonUITestLog("The Roles URL is:" + sRolesUrl);
-		String sTempRolsUrl = sRolesUrl.substring(0, sRolesUrl.length() - 11);
+		String sTempRolsUrl = sRolesUrl.substring(0, sRolesUrl.length() - 16);
 		CommonUIUtils.commonUITestLog("The Roles URL is:" + sTempRolsUrl);
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = sTempRolsUrl + "authorization/ws/api/v1/";
