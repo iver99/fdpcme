@@ -36,6 +36,12 @@ public class TestBrandingBar extends LoginAndLogout {
 				"emaastesttenant1_ita_admin1");
 		webd.getLogger().info("start to test in testAdminLink");
 		WaitUtil.waitForPageFullyLoaded(webd);
+                
+		// Navigate to one of the subscribed applications firstly (e.g. APM),
+		// then navigate back to ensure user roles are synced up from OPC in Authorization storage
+		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_APM);
+		WaitUtil.waitForPageFullyLoaded(webd);
+                
 		BrandingBarUtil.visitApplicationCloudService(webd,
 				BrandingBarUtil.NAV_LINK_TEXT_CS_ITA);
 		WaitUtil.waitForPageFullyLoaded(webd);
@@ -114,7 +120,13 @@ public class TestBrandingBar extends LoginAndLogout {
 				Thread.currentThread().getStackTrace()[1].getMethodName(),
 				"emaastesttenant1_ita_user1");
 		webd.getLogger().info("start to test in testAdminLink");
-
+                WaitUtil.waitForPageFullyLoaded(webd);
+                
+		// Navigate to one of the subscribed applications firstly (e.g. APM),
+		// then navigate back to ensure user roles are synced up from OPC in Authorization storage
+		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_APM);
+		WaitUtil.waitForPageFullyLoaded(webd);
+                
 		BrandingBarUtil.visitApplicationCloudService(webd,
 				BrandingBarUtil.NAV_LINK_TEXT_CS_ITA);
 		WaitUtil.waitForPageFullyLoaded(webd);
