@@ -26,7 +26,7 @@ if (! -d $workPath) then
 endif
 
 git pull
-gradle clean build artifactoryPublish -PBuildID=$buildID -PlrgMetadata=1 -x test --refresh-dependencies
+gradle clean build artifactoryPublish -PFORCE_PUBLISH_SDK=1 -PBuildID=$buildID -PlrgMetadata=1 -x test --refresh-dependencies
 echo "[gradle clean build artifactoryPublish] success"
 
 setenv SKIP_OMCSETUP true
