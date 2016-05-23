@@ -106,6 +106,9 @@ dependencies{
      	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils-integ-tests', version: "${REPO_BID}"){
      		exclude('module':'groovy')
      	}
+	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils-integ-tests', version: "${REPO_BID}"){
+     		exclude('module':'groovy')
+     	}
      	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}")
              testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}")
              testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}")
@@ -216,7 +219,7 @@ task DEVUiTest(type:EMTest,dependsOn: DEVTest){
 
 task DEVTest2(type:EMTest,dependsOn: DEVUiTest){ 
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/wls/management/AppLoggingManageMXBeanTest.class"	
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"	
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
