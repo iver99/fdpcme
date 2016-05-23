@@ -580,7 +580,7 @@ public class TestDashBoard extends LoginAndLogout
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test in testCreateDashboad_noWidget_GridView");
-
+		WaitUtil.waitForPageFullyLoaded(webd);
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
