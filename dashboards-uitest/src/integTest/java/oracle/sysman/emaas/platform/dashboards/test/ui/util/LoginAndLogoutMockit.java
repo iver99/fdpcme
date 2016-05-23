@@ -94,7 +94,8 @@ public class LoginAndLogoutMockit extends LocalEmaasWebDriverLoader
 	{
 		runEmaasWebDriver();
 		webd = myWebDriver();
-		String url = "https://slc03rry.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
+		//TODO replace below url with your dev env
+		String url = "https://den00zyr.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
 		//		webd.getLogger().info("before::start to test in LoginAndOut");
 		//		webd.getLogger().info("url is " + url + "   properties file is <devMode>");
 		// if the ui have been login, do not login ,again
