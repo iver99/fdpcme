@@ -131,6 +131,9 @@ require(['ojs/ojcore',
                 self.ITA_DB_Resource = getNlsString("LANDING_HOME_ITA_DB_RESOURCE");
                 self.ITA_Middleware_Performance = getNlsString("LANDING_HOME_ITA_MIDDLEWARE_PERFORMANCE");
                 self.ITA_Middleware_Resource = getNlsString("LANDING_HOME_ITA_MIDDLEWARE_RESOURCE");
+                
+                self.infraMonitoring = getNlsString("LANDING_HOME_INFRA_MONITORING");
+                self.infraMonitoringDesc = getNlsString("LANDING_HOME_INFRA_MONITORING_DESC");
 
                 self.dashboards = getNlsString("LANDING_HOME_DASHBOARDS");
                 self.dashboardsDesc = getNlsString("LANDING_HOME_DASHBOARDS_DESC");
@@ -249,7 +252,7 @@ require(['ojs/ojcore',
                                 $("#ITA_options").focus();
                             }else {
                                 $(event.target).blur();
-                                $("#dashboards_wrapper").focus();
+                                $("#infra_mon_wrapper").focus();
                             }
                         }
                     }
@@ -260,6 +263,12 @@ require(['ojs/ojcore',
                         window.location.href = self.landingHomeUrls[data.value];
                     }
                 };
+                self.openInfraMonitoring = function() {
+                    oj.Logger.info("Trying to open Infrastructure Monitoring by URL: " + self.infraMonitoringUrl);
+                    if(self.infraMonitoringUrl) {
+                        window.location.href = self.infraMonitoringUrl;
+                    }
+                }
                 self.openDashboards = function() {
                     oj.Logger.info('Trying to open dashboards by URL: ' + self.dashboardsUrl);
                     if(self.dashboardsUrl) {
