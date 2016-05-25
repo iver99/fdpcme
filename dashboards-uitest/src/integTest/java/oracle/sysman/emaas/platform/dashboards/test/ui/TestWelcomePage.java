@@ -100,6 +100,18 @@ public class TestWelcomePage extends LoginAndLogout
 
 
 	@Test
+	public void testOpenInfraMonitoring() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test open Infrastructure Monitoring in welcome page...");
+		
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitInfraMonitoring(webd);
+		//to do...
+		//add verification of infra monitoring url/page
+	}
+	
+	@Test
 	public void testOpenITA_DEPage() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());

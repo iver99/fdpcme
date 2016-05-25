@@ -306,6 +306,22 @@ public class WelcomeUtil
 	}
 
 	/**
+	 * Visit "Infrustructure Monitoring" in welcome
+	 * 
+	 * @param driver
+	 * @throws Exception
+	 */
+	public static void visitInfraMonitoring(WebDriver driver) throws Exception
+	{
+		driver.getLogger().info("Visit Infrastructure Monitoring from Welcome page..");
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
+		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_InfraMonitoringID);
+		driver.click("id=" + DashBoardPageId.Welcome_InfraMonitoringID);
+		driver.takeScreenShot();
+	}	
+	
+	/**
 	 * Visit specific item in IT Analytics in welcome
 	 * 
 	 * @param driver
