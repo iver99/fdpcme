@@ -199,7 +199,7 @@ define(['knockout',
                 var newDashboardItem = new dashboardItem();
                 self.dashboardsetItems.push(newDashboardItem);
                 self.reorderedDbsSetItems.push(newDashboardItem);
-                addNewTab(newDashboardItem.name(),newDashboardItem.dashboardId,-1);
+                addNewTab(newDashboardItem.name(),newDashboardItem.dashboardId,-1,"new");
                 $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + newDashboardItem.dashboardId});
                 $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
                 self.selectedDashboardItem(newDashboardItem);
@@ -446,15 +446,21 @@ define(['knockout',
                 }
             }
             
-            function addNewTab(tabName,dashboardId,insertIndex) {                
-                $( "#dbd-tabs-container" ).ojTabs( "addTab", 
-                         {
-                           "tab" : $("<li class='other-nav' id='dashboardTab-"+dashboardId+"' data-tabs-name='"+tabName+"'><span class='tabs-name'>"+tabName+"</span></li>"),
-                           "content" : $("<div class='dbd-info other-nav-info' id='dashboardTabInfo-"+dashboardId+"'></div>"),
-                           "index":insertIndex
-                         } );
-                $("#dbd-tabs-container").ojTabs("refresh");         
-            }
+                function addNewTab(tabName, dashboardId, insertIndex, type) {                    
+                    var tabContent;
+                    if (type === "new") {
+                        tabContent = $("<li class='other-nav' id='dashboardTab-" + dashboardId + "' data-tabs-name='" + tabName + "'><span class='tabs-name'>" + tabName + "</span></li>");
+                    } else {
+                        tabContent = $("<li class='other-nav' id='dashboardTab-" + dashboardId + "' data-tabs-name='" + tabName + "'data-dashboard-name-in-set='" + tabName + "'><span class='tabs-name'>" + tabName + "</span></li>");
+                    }
+                    $("#dbd-tabs-container").ojTabs("addTab",
+                            {
+                                "tab": tabContent,
+                                "content": $("<div class='dbd-info other-nav-info' id='dashboardTabInfo-" + dashboardId + "'></div>"),
+                                "index": insertIndex
+                            });
+                    $("#dbd-tabs-container").ojTabs("refresh");
+                }
             
             function findRemoveTab(dashboardsetItems,dashboardPickerId){
                 var dashboardToRemove = -1;

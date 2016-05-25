@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="/emsaasui/uifwk/@version@/css/widgets/widget-selector-alta.css" type="text/css"/>
     </head>
     <body>
-        <div style="display:none;" class="widget-selector-main"
+        <div style="display:none;" class="widget-selector-main"  data-testapiversion="1.7.5" 
             data-bind="ojComponent:{component: 'ojDialog', beforeOpen: beforeOpenDialog,
                 initialVisibility: 'hide', title: widgetSelectorTitle, resizeBehavior: 'none',
                 rootAttributes: { style: 'width: 867px;'}}, attr: {id: dialogId}">   
@@ -47,7 +47,7 @@
                     </div>
                     <!-- /ko -->
                 </div>
-                <div id="widget-selector-widgets">
+                <div id="widget-selector-widgets" data-bind="attr:{'data-wgt-slt-auto-close': autoCloseDialog !== false ? 'TRUE' : 'FALSE'}">
                     <!-- ko if: widgetOnLoading -->
                     <div id="widget-selector-loading" data-bind="text: widgetsLoadingHints"></div>
                     <!-- /ko -->

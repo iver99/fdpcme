@@ -11,9 +11,9 @@ clean{
   delete 'build'
 }
 
-//dependencies {
-	//testCompile project(':dashboards-uitest') {transitive = true }
-//}
+dependencies {
+	testConfig project(':dashboards-ui-test-common-api') {transitive = false }
+}
 
 task integTestJar (type:Jar) {
     from sourceSets.integTest.output

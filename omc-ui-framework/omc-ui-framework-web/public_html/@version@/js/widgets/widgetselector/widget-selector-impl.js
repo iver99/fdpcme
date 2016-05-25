@@ -508,7 +508,7 @@ define([
                                     else if ('TargetAnalytics' === widget.PROVIDER_NAME) {
                                         widget.WIDGET_VISUAL(taImagePath);
                                     }
-                                    else if ('EmcitasApplications' === widget.PROVIDER_NAME) {
+                                    else if ('emcitas-ui-apps' === widget.PROVIDER_NAME) {
                                         widget.WIDGET_VISUAL(itaImagePath);
                                     }else{
                                         widget.WIDGET_VISUAL(itaImagePath); //default image
@@ -542,7 +542,7 @@ define([
                                     widgetProviderName === pname 
                                 /*    && widgetProviderVersion === pversion */) {
                                 //Enable ITA widget group since ITA widgets are enabled now.
-//                                if (!(pname === 'EmcitasApplications' && pversion === '0.1' && data[i].WIDGET_GROUP_ID === 3)) {
+//                                if (!(pname === 'emcitas-ui-apps' && pversion === '1.0' && data[i].WIDGET_GROUP_ID === 3)) {
                                     var widgetGroup = {value:pname+'|'+pversion+'|'+gname, label:gname};
                                     targetWidgetGroupArray.push(widgetGroup);
                                     availableWidgetGroups.push(data[i]);

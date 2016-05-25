@@ -13,9 +13,10 @@ public class DashBoardPageId
 	public static final String CreateDSOfDialogID = "createDsb";
 	public static final String DashBoardNameBoxID = "dbsHNameIn";
 	public static final String DashBoardDescBoxID = "dbsHDpIn";
-	public static final String DashBoardTimeRangeChecker = "ckbxTimeRangeFilter";
 	public static final String DashOKButtonID = "createDsb";
 	public static final String DashSaveButtonID = "createDsb-2";
+	public static final String DashBoardType_Single = "dashboardtype-single";
+	public static final String DashBoardType_Set = "dashboardtype-set";
 	//public static final String WidgetAddButtonID = "add-widget-button";
 	public static final String OptionsID = "dashboardOptsBtn";
 	public static final String DashBoardSaveID = "dashboard-screenshot";
@@ -36,7 +37,6 @@ public class DashBoardPageId
 	public static final String closeBtnID = "/html/body/div[1]/div[2]/div/div[1]/div/span";///html/body/div[1]/div[2]/div/div[3]/div/span";//div[contains(@id,'ojDialogWrapper-ui-id') and @class='oj-dialog oj-component oj-draggable']/div[3]/div/span"; // ";";
 	public static final String LinkID = "linksButton";
 	public static final String DashBoardLinkID = "link=All Dashboards";
-	public static final String DashboardTableID = "dtabhomesc";
 	public static final String DeleteBtn_cfmDialog = "/html/body/div[1]/div[2]/div/div[3]/button[1]";
 	public static final String DashboardSerachResult_panelID = "dtabhomesc";
 
@@ -46,14 +46,14 @@ public class DashBoardPageId
 	//OOB dashboards ID
 	//OOB dashboards ID
 	public static final String Application_Performance_Monitoring_CSS = ".dbs-summary-page-image[alt='Application Performance Monitoring']";
-	public static final String Database_Health_Summary_CSS = ".dbs-summary-page-image[alt='Database Health Summary']";
-	public static final String Host_Health_Summary_CSS = ".dbs-summary-page-image[alt='Host Health Summary']";
+	//public static final String Database_Health_Summary_CSS = ".dbs-summary-page-image[alt='Database Health Summary']";
+	//public static final String Host_Health_Summary_CSS = ".dbs-summary-page-image[alt='Host Health Summary']";
 	public static final String Database_Performance_Analytics_CSS = ".dbs-summary-page-image[alt='Performance Analytics: Database']";
 	public static final String Middleware_Performance_Analytics_CSS = ".dbs-summary-page-image[alt='Performance Analytics: Middleware']";
 	//public static final String Middleware_Datasource_Performance_Analytics_ID = "//div[@aria-dashboard='19']";
 	public static final String Database_Resource_Analytics_CSS = ".dbs-summary-page-image[alt='Resource Analytics: Database']";
 	public static final String Middleware_Resource_Analytics_CSS = ".dbs-summary-page-image[alt='Resource Analytics: Middleware']";
-	public static final String WebLogic_Health_Summary_CSS = ".dbs-summary-page-image[alt='WebLogic Health Summary']";
+	//public static final String WebLogic_Health_Summary_CSS = ".dbs-summary-page-image[alt='WebLogic Health Summary']";
 	public static final String Database_Configuration_and_Storage_By_Version_CSS = ".dbs-summary-page-image[alt='Database Configuration and Storage By Version']";
 	public static final String Enterprise_OverView_CSS = ".dbs-summary-page-image[alt='Enterprise Overview']";
 	public static final String Host_Inventory_By_Platform_CSS = ".dbs-summary-page-image[alt='Host Inventory By Platform']";
@@ -103,10 +103,13 @@ public class DashBoardPageId
 	public static final String ListViewTableNameHeaderLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'oj-table-column-header-cell') and @abbr='Name']";
 	public static final String ListViewTableCreatedByHeaderLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'oj-table-column-header-cell') and @abbr='Created By']";
 	public static final String ListViewTableLastModifiedHeaderLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'oj-table-column-header-cell') and @abbr='Last Modified']";
+	public static final String ListViewSortLocatorCss = "a.oj-table-column-header-asc-link";
 
 	//Dashboard
 	public static final String DashboardNameLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele') and (@aria-label = '_name_' or text() = '_name_')]";//[contains(@class, 'dbs-dsbnameele')]//text()[. = '_name_']";//*[contains(@class, 'icon-listview-16')]";
 	public static final String OOBDashboardNameLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbsystem') and (@aria-label = '_name_' or text() = '_name_')]";
+	public static final String DashboardNameContainers = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele')]";
+	public static final String DashboardNameIndexLocator = "xpath=(//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele')])[_index_]";
 
 	//Branding Bar links
 	//Home Link
@@ -205,32 +208,67 @@ public class DashBoardPageId
 
 	//dashboard builder options
 	public static final String BuilderOptionsMenuLocator = "//button[contains(@class, 'dashboardOptsBtn')]";
-	public static final String BuilderOptionsAutoRefreshLocator = "id=emcpdf_dsbopts_refresh";
+	public static final String BuilderOptionsAutoRefreshLocator = "//li[@data-singledb-option='Auto-refresh']/a";
 	public static final String BuilderOptionsAutoRefreshOffLocator = "//li[@data-singledb-option='Off']/a";
 	public static final String BuilderOptionsAutoRefreshOn5MinLocator = "//li[@data-singledb-option=\"On (Every 5 Minutes)\"]/a";
-	public static final String BuilderOptionsDeleteLocator = "id=emcpdf_dsbopts_delete";
-	public static final String BuilderOptionsDeleteMenuLocator = "//a[@id='emcpdf_dsbopts_delete']";
+	public static final String BuilderOptionsDeleteLocator = "//li[@data-singledb-option='Delete']/a";
+	//	public static final String BuilderOptionsDeleteMenuLocator = "//a[@id='emcpdf_dsbopts_delete']";
 	public static final String BuilderOptionsPrintLocatorCSS = "li[data-singledb-option=\"Print\"] a";
 	public static final String BuilderOptionsEditLocatorCSS = "li[data-singledb-option=\"Edit\"] a";
 	public static final String BuilderOptionsEditNameCSS = "dbsHNameIn";
 	public static final String BuilderOptionsEditDescriptionCSS = "dbsHDpIn";
-	public static final String BuilderOptionsEditSaveCSS = "createDsb-2";
+	public static final String BuilderOptionsEditSaveCSS = ".createDsb-2";
 	public static final String BuilderOptionsShareLocatorCSS = "li[data-singledb-option=\"Share\"] a";
 	public static final String BuilderOptionsUnShareLocatorCSS = "li[data-singledb-option=\"Stop Sharing\"] a";
 	public static final String BuilderOptionsFavoriteLocatorCSS = "li[data-singledb-option=\"Add Favorite\"] a";
 	public static final String BuilderOptionsRemoveFavoriteLocatorCSS = "li[data-singledb-option=\"Remove Favorite\"] a";
 	public static final String BuilderOptionsSetHomeLocatorCSS = "li[data-singledb-option=\"Set as Home\"] a";
 	public static final String BuilderOptionsRemoveHomeLocatorCSS = "li[data-singledb-option=\"Remove as Home\"] a";
-	public static final String BuilderOptionsSetHomeComfirmCSS = "id=btnConfirmSetAsHome";
+	public static final String BuilderOptionsSetHomeSaveCSS = "#btnComfirmSetAsHome";
 	public static final String BuilderOptionsDuplicateLocatorCSS = "li[data-singledb-option=\"Duplicate\"] a";
 	public static final String BuilderOptionsDuplicateNameCSS = "dupDsbNameIn";
 	public static final String BuilderOptionsDuplicateDescriptionCSS = "dupDsbDescIn";
-	public static final String BuilderOptionsDuplicateSaveCSS = "createDsb-1";
+	public static final String BuilderOptionsDuplicateSaveCSS = ".createDsb-1";
+	// dashboard set name
+	public static final String DashboardSetNameTextLocator = "//div[@id='dbd-set-name']/span";
+	//dashboard set options
+	public static final String DashboardSetNavsContainerCSS = "#dbd-set-tabs";
+	public static final String DashboardSetNavsCSS = ".dbd-tabs-nav .oj-tabs-tab";
+	public static final String DashboardSetNavRemoveBtnCSS = ".oj-tabs-close-icon";
+	public static final String DashboardSetNavAddBtnCSS = "#add-nav";
+	public static final String DashboardSetOptionBtn = "//button[contains(@class, 'dbd-set-option-btn')]";
+	public static final String DashboardSetOptionsAutoRefreshLocator = "id=dbs-refresh";
+	public static final String DashboardSetOptionsAutoRefreshOffLocator = "id=refresh-off";
+	public static final String DashboardSetAutoRefreshOffSelectedLocator = "//li[@id='refresh-off']/a/span[contains(@class, 'dbd-icon-check')]";
+	public static final String DashboardSetOptionsAutoRefreshOn5MinLocator = "id=refresh-time";
+	public static final String DashboardSetAutoRefreshOn5MinSelectedLocator = "//li[@id='refresh-time']/a/span[contains(@class, 'dbd-icon-check')]";
+	public static final String DashboardSetOptionsDeleteLocator = "//ul[@id='dbd-set-option']/li[@id='dbs-delete']";
+	public static final String DashboardSetDeleteDialogLocator = "id=deleteDashboardset";
+	public static final String DashboardSetDeleteDialogDeleteBtnLocator = "//button[@data-delete-set-dialog='Delete']";
+	public static final String DashboardSetPrintLoadingID = "printLoading";
+	public static final String DashboardsetOptionsMenuID = "tabs-gear";
+	public static final String DashboardsetOptionsEditCSS = "#dbs-edit a";
+	public static final String DashboardsetOptionsEditSaveID = "saveDsbInfo";
+	public static final String DashboardsetOptionsEditDialogID = "ojDialogWrapper-changeDashboardsetInfo";
+	public static final String DashboardsetOptionsNameCollapsibleCSS = "#nameDescription a.oj-collapsible-open-icon";
+	public static final String DashboardsetOptionsEditNameCSS = "#changeDashboardsetInfo #dbsInfoName";
+	public static final String DashboardsetOptionsEditDescriptionCSS = "#changeDashboardsetInfo #dbsInfoDescription";
+	public static final String DashboardsetOptionsShareDiaOpenCSS = "#shareSettings .oj-collapsible-wrapper";
+	public static final String DashboardsetOptionsShareCollapsibleCSS = "#shareSettings .edit-dbsset-title";
+	public static final String DashboardsetOptionsShareOnJudgeCSS = "#shareSettings #share-on.oj-selected";
+	public static final String DashboardsetOptionsShareCSS = "#shareSettings #share-on";
+	public static final String DashboardsetOptionsUnshareCSS = "#shareSettings #share-off";
+	public static final String DashboardsetOptionsPrintCSS = "#dbs-print a";
+	public static final String DashboardsetOptionsfavoriteCSS = "#dbs-favorite a";
+	public static final String DashboardsetOptionsRemoveFavoriteCSS = "#dbs-favorite a[dashboardset-option=\"Remove Favorite\"]";
+	public static final String DashboardsetOptionsHomeCSS = "#dbs-home a";
+	public static final String DashboardsetOptionsAddHomeCSS = "#dbs-home a[dashboardset-option=\"Set as Home\"]";
+
 	//dashboard tool bar
 	public static final String DashboardSaveCSS = "button.dashboard-screenshot";
 
 	//dashboard delete dialog
-	public static final String BuilderDeleteDialogLocator = "id=ojDialogWrapper-dbs_cfmDialog";
+	public static final String BuilderDeleteDialogLocator = "id=ojDialogWrapper-delete-dashboard";
 	public static final String BuilderDeleteDialogDeleteBtnLocator = "//button[@data-delete-dialog='Delete']";
 
 	// auto refresh menu items
@@ -353,10 +391,18 @@ public class DashBoardPageId
 	public static final String Option_Logout = "//*[@id='emcpdf_oba_logout']";
 	public static final String AboutDialogClose = "//button[contains(@id,'okButton')]";
 	public static final String UserMenuPopupId = "emaasAppheaderGlobalNavMenuId";
-	public static final String DASHBOARD_LIST_TABLE = "dbstable";
-	public static final String DASHBOARD_HOME_DELETE_BUTTON = "//*[@id=\"dsbinfopop\"]/div/div/button";
-	public static final String DASHBOARD_HOME_DELETE_CONFIRM = "//*[@id=\"ojDialogWrapper-dbs_cfmDialog\"]/div[3]/button[1]";
+
+	// Dashboard Home
+	public static final String DASHBOARD_GRID_TABLE_CSS = ".dbs-summaries-container";
+	public static final String DASHBOARD_LIST_TABLE = "table[aria-label='Dashboards Table']";
+	public static final String DASHBOARD_HOME_DELETE_BUTTON = "dsbinfopop_delete";
+	public static final String DASHBOARD_HOME_DELETE_CONFIRM = "dbs_cfmDialog_delete";
+	public static final String DASHBOARD_HOME_DELETE_DIALOG = ".dbs_cfmDialog";
 
 	//error page
 	public static final String ErrorSignOutButtonId = "dbd_sign_out_button";
+
+	//Add button for widgetSelector
+	public static final String WidgetSelector_AddButtonId = "add-widget-button";
+
 }

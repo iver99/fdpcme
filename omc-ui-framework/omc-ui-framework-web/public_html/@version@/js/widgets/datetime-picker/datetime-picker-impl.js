@@ -1019,12 +1019,15 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         }
                     }else {
                         if(self.startDateTime && self.endDateTime) {
+                            curDate = new Date();
                             //users input start date and end date
                             sdt = self.getParam(self.startDateTime);
                             edt = self.getParam(self.endDateTime);
                             start = newDateWithMilliseconds(sdt);
                             end = newDateWithMilliseconds(edt);
-                            if(Math.abs(end.getTime()-new Date().getTime())>60*1000 || end.getMinutes() !== new Date().getMinutes()) {
+                            console.log("Param endDateTime is " + end);
+                            console.log("Initializing time is " + curDate);
+                            if(Math.abs(end.getTime()-curDate.getTime())>60*1000 || end.getMinutes() !== curDate.getMinutes()) {
                                 var t_timePeriod = self.timePeriodCustom;
                                 customClick(0);
                             }else {
@@ -1752,7 +1755,14 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             hoursExcludedStart.push(hoursExcluded[0]);
                             for(i=1; i<hoursExcluded.length; i++) {                                
                                 if(i === hoursExcluded.length-1) {
-                                    hoursExcludedEnd.push(hoursExcluded[i]);
+                                    if(hoursExcluded[i] - hoursExcluded[i-1] === 1) {
+                                        hoursExcludedEnd.push(hoursExcluded[i]);
+                                    }else {
+                                        hoursExcludedEnd.push(hoursExcluded[i-1]);
+                                        hoursExcludedStart.push(hoursExcluded[i]);
+                                        hoursExcludedEnd.push(hoursExcluded[i]);
+                                    }
+                                    
                                     break;
                                 }
                                 if(hoursExcluded[i] - hoursExcluded[i-1] === 1) {
@@ -1764,11 +1774,12 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             }
                             
                             for(i=0; i<hoursExcludedStart.length; i++) {
-                                if(hoursExcludedStart[i] !== hoursExcludedEnd[i]) {
-                                    hoursExcludedInfo += hoursExcludedStart[i] + "-" +hoursExcludedEnd[i];
-                                }else {
-                                    hoursExcludedInfo += hoursExcludedStart[i];
-                                }
+//                                if(hoursExcludedStart[i] !== hoursExcludedEnd[i]) {
+//                                    hoursExcludedInfo += hoursExcludedStart[i] + "-" +hoursExcludedEnd[i];
+//                                }else {
+//                                    hoursExcludedInfo += hoursExcludedStart[i];
+//                                }
+                                hoursExcludedInfo += hoursExcludedStart[i] + "-" +hoursExcludedEnd[i];
                                 if(i === hoursExcludedStart.length-1) {
                                     hoursExcludedInfo += "";
                                 }else {

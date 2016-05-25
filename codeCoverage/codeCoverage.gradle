@@ -642,9 +642,10 @@ task mergeUnitTestCoverageData << {
     task mergeData(dependsOn: [mergeDataUnitTest, mergeDataIntegTest]) << {
         println "Code Coverage: Merged code coverage data"
     }
-    afterEvaluate {
+    /*afterEvaluate {
         tasks.sonarRunner.dependsOn = [tasks.mergeData]
-    }
+    }*/
+// comment out for EMDI-7303
     mergeData.finalizedBy copyMergedFile
 
     /* Code Coverage Report Generator Final steps wrapper */

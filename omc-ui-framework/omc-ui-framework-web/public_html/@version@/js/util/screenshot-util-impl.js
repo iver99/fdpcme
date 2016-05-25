@@ -57,8 +57,21 @@ define(['jquery',
                     });
                     parentNode.appendChild(canvas);
                 });
+                
+                var optWidth = $elemInst.width(), optHeight = $elemInst.height();
+                var ratio = target_width / target_height;
+                var optRatio = optWidth / optHeight;
+                if (optRatio >= ratio) {
+                    optHeight = (optWidth * target_height) / target_width;
+                } else {
+                    optWidth = (optHeight * target_width) / target_height;
+                }
+                
                 html2canvas($elemInst, {
                     background: "#fff",
+                    logging: true,
+                    width: optWidth,
+                    height: optHeight,
                     onrendered: function(canvas) {
                         try {
                             var resize_canvas = document.createElement('canvas');

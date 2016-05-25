@@ -1,4 +1,8 @@
-version = "1.7.0" + "-$buildTimestamp"
+version = "1.7.5" + "-$buildTimestamp"
+
+project.ext.intgRun = hasProperty('IFARM_RUN') && IFARM_RUN != '' ? IFARM_RUN : 0
+project.ext.buildBranch = hasProperty('BUILD_BRANCH') && BUILD_BRANCH != '' ? BUILD_BRANCH : 'master'
+project.ext.forcePublishSdk = hasProperty('FORCE_PUBLISH_SDK') && FORCE_PUBLISH_SDK != '' ? FORCE_PUBLISH_SDK : 0
 sourceSets {
 integTest {
         java.srcDir 'src/integTest/java'
@@ -44,12 +48,12 @@ publishing.publications {
     
 }
 
-
-
 artifactoryPublish {
-publications ('integTest')
-
+    if ( forcePublishSdk == "1" || (intgRun == "1" && buildBranch == "master")) {
+	publications ('integTest')
     }
+}
+
 
 dependencies {
 testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }

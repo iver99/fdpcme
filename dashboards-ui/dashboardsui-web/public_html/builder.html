@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html id="global-html"  lang="en">
+<html id="global-html"  lang="en" data-testapiversion="1.7.5">
     <head>
         <title data-bind="text:builderTitle"></title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -32,7 +32,7 @@
                 <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',truncation:'progressive',removable:dashboardsetConfig.isCreator,reorderable:dashboardsetConfig.isCreator}">
                     <div id="dbd-set-name" class="oj-tabs-facet">
                             <span data-bind="text:dashboardsetName()"></span>
-                            <button id="tabs-gear"
+                            <button id="tabs-gear" class="dbd-set-option-btn"
                                     data-bind="ojComponent: {component: 'ojButton',
                                             icons: {start:'fa-icon-font fa-icon-font-14 dbd-icon-gear'},
                                     menu: '#dbd-set-option'
@@ -55,7 +55,7 @@
                     data-bind="ojComponent: {component: 'ojMenu',select:$root.dashboardsetConfigMenu}">
                     <!--ko foreach:dashboardsetMenu-->
                     <li data-bind="attr:{'id':id},visible: visibility">
-                        <a href="#">
+                        <a href="#" data-bind="attr:{'dashboardset-option':label}">
                             <span class="fa-icon-font fa-icon-font-14 oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
                             <span data-bind="text:label"></span>
                         </a>
@@ -91,7 +91,7 @@
                                      <input id="dbsInfoName"
                                            data-bind="ojComponent: { component: 'ojInputText',rootAttributes: {style:'max-width:420px;'},value:dashboardsetName()}">
                                      <h4 data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></h4>
-                                     <textarea maxlength="256" rows="5"
+                                     <textarea id="dbsInfoDescription" maxlength="256" rows="5"
                                               data-bind="ojComponent: {component: 'ojTextArea', rootAttributes: {style:'max-width:420px;'},value:dashboardsetDescription()
                                                               }"></textarea>
                                 </div>
@@ -146,7 +146,7 @@
                         <div class="oj-dialog-footer">
                             <button data-bind="ojComponent: {
                                                  component: 'ojButton',label: getNlsString('COMMON_BTN_DELETE'),
-                                                 rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.deleteDbs"></button>
+                                                 rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.deleteDbs" data-delete-set-dialog="Delete"></button>
                             <button data-bind="ojComponent: {
                                                  component: 'ojButton',label: getNlsString('COMMON_BTN_CANCEL'),
                                                  rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.cancelDeleteDbs"></button>
@@ -565,7 +565,7 @@
                                                         event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}},
                                                         ojComponent: {component: 'ojMenu', select: $root.menuItemSelect}">
                                                         <li data-option="showhide-title">
-                                                            <a href="#">
+                                                            <a href="#" data-bind="attr: {'data-show-hide-title': hideTitle() === 'true' ? 'show' : 'hide'}">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <i class="fa-icon-font fa-icon-font-16" data-bind="css: hideTitle() === 'true' ? 'dbd-icon-eye':'dbd-icon-eye-slash'"></i>
                                                                 </span>
@@ -724,8 +724,12 @@
                                 </button>-->
                                 <button class="dbd-left-panel-header-search-btn oj-button-half-chrome" data-bind="click: searchWidgetsClicked,
                                         ojComponent: {component: 'ojButton',chroming: 'half', label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons', 
-                                        icons: {start:'left-panel-dbd-search-icon'}}"> 
+                                        icons: {start:'left-panel-dbd-search-icon'}}" style="float:right"> 
                                 </button> 
+                                <button class="oj-button-half-chrome" data-bind="click: clearWidgetSearchInputClicked, visible: clearRightPanelSearch,
+                                                    ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
+                                                    icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 31px;'}}" style="float:right;margin-bottom:0"> 
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -980,7 +984,7 @@
                         </div>
                         <div class="oj-dialog-footer">
                             <button data-bind="click: toolBarModel.handleDeleteDashboardClicked,
-                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_DELETE'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_DELETE'), rootAttributes: {style:'margin-right:5px'}}" data-delete-dialog="Delete"></button>
                             <button class="dbs_dcbtn" data-bind="click: toolBarModel.handleDeleteDashboardCancelled,
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'), rootAttributes: {style:'margin-right:5px'}}"></button>
                         </div>
@@ -1053,7 +1057,7 @@
                                 <p data-bind="html: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_CONFIRM')"></p>
                             </div>
                             <div class="oj-dialog-footer">
-                                <button data-bind="click: toolBarModel.setAsHomeConfirmed, 
+                                <button id="btnComfirmSetAsHome" data-bind="click: toolBarModel.setAsHomeConfirmed, 
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_YES'), rootAttributes: {style:'margin-right:5px'}}"></button>
                                 <button id="btnCancelSetAsHome" data-bind="click: toolBarModel.setAsHomeCancelled,
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_NO'), rootAttributes: {style:'margin-right:5px'}}"></button>

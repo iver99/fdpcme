@@ -10,23 +10,25 @@ public class PageId
 	 *
 	 * */
 	//home page
-	public static final String DashboardDisplayPanelID = "dtabhomesc";
+	//public static final String DashboardDisplayPanelID = "dtabhomesc";
+	public static final String DashboardDisplayPanelCss = ".dbs-summaries-container";
 	public static final String DashboardCss = "div#dtabhomesc div.oj-panel";
 	public static final String ErrorPageSingOutBtnCss = "button[title='Sign Out']";
 	public static final String OverviewCloseID = "overviewClose";
 	public static final String WidgetSearchBtnID = "dbd-left-panel-header-search-btn";
 	public static final String ADashboardTestByAriaLabel = "//*[@aria-label='ADashboard Test']";
 	public static final String EnterpriseOverviewByAriaLabel = "//*[@aria-label='Enterprise Overview']";
+	public static final String SortbyID = "oj-select-choice-mainContentsortcb";
 
 	//OOB dashboards ID
 	public static final String Application_Performance_Monitoring_ID = "//div[@aria-dashboard='14']";
-	public static final String Database_Health_Summary_ID = "//div[@aria-dashboard='11']";
-	public static final String Host_Health_Summary_ID = "//div[@aria-dashboard='13']";
+	//public static final String Database_Health_Summary_ID = "//div[@aria-dashboard='11']";
+	//public static final String Host_Health_Summary_ID = "//div[@aria-dashboard='13']";
 	public static final String Database_Performance_Analytics_ID = "//div[@aria-dashboard='2']";
 	public static final String Middleware_Performance_Analytics_ID = "//div[@aria-dashboard='4']";
 	public static final String Database_Resource_Analytics_ID = "//div[@aria-dashboard='3']";
 	public static final String Middleware_Resource_Analytics_ID = "//div[@aria-dashboard='18']";
-	public static final String WebLogic_Health_Summary_ID = "//div[@aria-dashboard='12']";
+	//public static final String WebLogic_Health_Summary_ID = "//div[@aria-dashboard='12']";
 	public static final String Database_Configuration_and_Storage_By_Version_ID = "//div[@aria-dashboard='6']";
 	public static final String Enterprise_OverView_ID = "//div[@aria-dashboard='1']";
 	public static final String Host_Inventory_By_Platform_ID = "//div[@aria-dashboard='5']";

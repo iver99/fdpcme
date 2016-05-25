@@ -54,6 +54,7 @@ define(['knockout',
             self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
             
             self.keyword = ko.observable('');
+            self.clearRightPanelSearch=ko.observable(false);
             self.widgets = ko.observableArray([]);
 
             self.completelyHidden = ko.observable(self.isMobileDevice === 'true' || !self.emptyDashboard);
@@ -293,7 +294,7 @@ define(['knockout',
                                 self.widgets.push(wgt);
                             }
                         }
-                        self.initWidgetDraggable();
+                        self.initWidgetDraggable();                       
                     }
                 );
             };
@@ -353,12 +354,18 @@ define(['knockout',
             
             self.autoSearchWidgets = function(req) {
                 self.loadWidgets(req);
+                if (req.term.length === 0) {
+                    self.clearRightPanelSearch(false);
+                }else{
+                    self.clearRightPanelSearch(true);
+                }
             };
 
             self.clearWidgetSearchInputClicked = function() {
                 if (self.keyword()) {
                     self.keyword(null);
                     self.searchWidgetsClicked();
+                    self.clearRightPanelSearch(false);
                 }
             };
             

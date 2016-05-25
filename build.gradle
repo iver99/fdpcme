@@ -207,7 +207,7 @@ dependencies {
 
 task runS1Tests(type: Exec) {
     executable = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
-    args 'do_lrg', '-Plrgs=emcpdf_dev_test'
+    args 'do_lrg', '-Plrgs=emcpdf_l0_test'
     if (project.hasProperty('BuildID')) {
         args "-PREPO_BID=${BuildID}"
     }
@@ -216,12 +216,13 @@ task runS1Tests(type: Exec) {
 runS1Tests.enabled = !project.disableBuildTests
 
 task runS2Tests(type: Exec) {
-    executable project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
-    args 'do_lrg', '-Plrgs=emcpdf_web_unit_test'
+ executable = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
+    args 'do_lrg', '-Plrgs=emcpdf_l1_test'
     if (project.hasProperty('BuildID')) {
         args "-PREPO_BID=${BuildID}"
     }
     finalizedBy "print_results"
+
 } 
 
 runS2Tests.enabled = !project.disableBuildTests

@@ -66,10 +66,10 @@ define([
                 $("#dashboards-tabs-contents").append($includingEl);
                 $includingEl.attr("id", "dashboard-" + guid);
 
-                var predataModel = new model.PredataModel();
+                //var predataModel = new model.PredataModel();
                 
-                function init() {
-                    var dashboardsViewModle = new model.ViewModel(predataModel, "dashboard-" + guid ,['Me','Oracle','NORMAL','Share']);
+                function init() {              
+                    var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share'],dashboardsetToolBarModel.reorderedDbsSetItems);
                     
                     dashboardsViewModle.showExploreDataBtn(false);
                     
@@ -111,7 +111,8 @@ define([
                 dashboardInstMap[guid] = dashboardInst;
                 self.selectedDashboardInst(dashboardInst);
                 
-                predataModel.loadAll().then(init, init); //nomatter there is error in predata loading, initiating
+                //predataModel.loadAll().then(init, init); //nomatter there is error in predata loading, initiating
+                init();
             };
 
             self.loadDashboard = function (dsbId) {
@@ -150,7 +151,7 @@ define([
                             if (tile.type() === "TEXT_WIDGET") {
                                 Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.editor.tiles.deleteTile, Builder.isContentLengthValid);
                             } else {
-                                Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, true);
+                                Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, true);
                             }
                         }
                     }
