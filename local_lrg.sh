@@ -19,7 +19,7 @@ set end = $argv[6] #20
 
 # 3n : "emcpdf_test_3n" "emcpdf_upgrade_test_3n"
 # non-3n : "emcpdf_l0_test" "emcpdf_l1_test"
-set lrgs=("emcpdf_test_3n" "emcpdf_upgrade_test_3n" "emcpdf_l0_test" "emcpdf_l1_test")
+set lrgs=("emcpdf_l0_test" "emcpdf_l1_test")
 set workPath = "temp"
 if (! -d $workPath) then
   mkdir $workPath
