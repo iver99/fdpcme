@@ -293,8 +293,8 @@ task jsCodeCoverage(type:JavaExec, dependsOn:[cleanJs, copyJsSource]) {
 	logger.lifecycle("filepath:  "+artifact.name)
         if (artifact.name.equals('JSCover-all')) {
 		logger.lifecycle("filepath"+artifact.file.absolutePath)
-		//args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/ckeditor\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
-		args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/d3\\/.*', '--no-instrument-reg=.*\\/canvg\\/.*', '--no-instrument-reg=.*\\/html2canvas\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*', '--no-instrument-reg=.*\\/ita-tool\\/.*', '--no-instrument-reg=.*\\/js\\/util\\/.*','--no-instrument-reg=.*\\/js\\/jquery\\/.*', '--no-instrument-reg=.*\\/js\\/resources\\/nls\\/root\\/uifwkCommonMsg.js','--no-instrument-reg=.*\\/ckeditor\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
+		//args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/js\\/util\\/.*','--no-instrument-reg=.*\\/ckeditor\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
+		args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/d3\\/.*', '--no-instrument-reg=.*\\/canvg\\/.*', '--no-instrument-reg=.*\\/html2canvas\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*', '--no-instrument-reg=.*\\/ita-tool\\/.*', '--no-instrument-reg=.*\\/js\\/jquery\\/.*', '--no-instrument-reg=.*\\/js\\/resources\\/nls\\/root\\/uifwkCommonMsg.js','--no-instrument-reg=.*\\/ckeditor\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
             }
 	}      
     
