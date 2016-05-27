@@ -827,7 +827,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 
 .dbd-left-panel-header {
     width: 100%; 
-    height: 32px;
+    height: 43px;
 }
 
 .dbd-left-panel-header-title {
@@ -845,7 +845,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     border-color: #c4ced7;
     border-style: solid;
     height: 32px;
-    margin: 0 10px 10px 10px;
+    margin: 10px 10px 10px 10px;
     background-color: #fcfdfe;
     float: left;
     box-sizing: border-box; 
@@ -1109,14 +1109,19 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     color: #0572ce;
 }
 
-.dbd-right-panel-editdashboard-container .checkboxControledContent{
+.dbd-right-panel-editdashboard-container{
+    width: 100%;
+    overflow-x: hidden;
+    position: relative;
+    height: auto;
+    .checkboxControledContent{
     margin-left: 15px;
+    }
 }
-//right panel editdashboard collapsible open icon changed
-/*.dbd-right-panel-editdashboard .oj-collapsible-open-icon:before{
-    -webkit-transform: rotate(45deg) scale(0.9,0.9);
-    transform: rotate(45deg) scale(0.9,0.9); 
-}*/
+
+.dbd-right-panel-title{
+    background-color: #d1e7cc ;
+}
 
 //right panel editdashboard collapsible icon removed
 .dbd-right-panel-editdashboard-container>div>span>a{

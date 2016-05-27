@@ -699,12 +699,12 @@
                     <div class="dbd-right-panel-contents">
                     <!--ko if: $data.dashboardsetToolBarModel.isDashboardSet-->
                         <div class="dbd-right-panel-editdashboardset" data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.editPanelContent()=='editset'">
-                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">
+                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" >
                                 <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: switchEditPanelContent"style="color:#0572ce"></a>
                                 <span>Edit Dashboard Set</span>
                             </div>
-                            <div class="dbd-right-panel-editdashboard-container" style="padding-left:0; padding-right:0;">
-                                <div class="dbd-right-panel-editdashboard-general" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbeditorIsExpanded}">
+                            <div class="dbd-right-panel-editdashboard-container fit-size" style="overflow-y: scroll">
+                                <div class="dbd-right-panel-editdashboard-general" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbeditorIsExpanded}" style="margin-top: 10px;">
                                     <span class="dbd-right-panel-editdashboard-innertitle">General</span>
                                     <div class="cDsbDialog oj-form-layout">
                                         <div class="oj-form">
@@ -796,12 +796,12 @@
                         </div>
                         <!-- /ko -->
                         <div class="dbd-right-panel-editdashboard" data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.editPanelContent()=='edit'">
-                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">
+                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" >
                                 <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: switchEditPanelContent"style="color:#0572ce"></a>
                                 <span>Edit Dashboard</span>
                             </div>
-                            <div class="dbd-right-panel-editdashboard-container" style="padding-left:0; padding-right:0;">
-                                <div class="dbd-right-panel-editdashboard-general" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbeditorIsExpanded}">
+                            <div class="dbd-right-panel-editdashboard-container fit-size" style="padding-left:0; padding-right:0;overflow-y: scroll">
+                                <div class="dbd-right-panel-editdashboard-general" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbeditorIsExpanded}"  style="margin-top: 10px;">
                                     <span class="dbd-right-panel-editdashboard-innertitle">General</span>
                                     <div class="cDsbDialog oj-form-layout">
                                         <div class="oj-form">
@@ -1020,7 +1020,7 @@
                             </div>
                         </div>
 						<div id="dbd-right-panel-editsettings"  class="dbd-right-panel-editsettings"  data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.editPanelContent()=='settings'">
-                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Edit Settings</div>
+                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" >Edit Settings</div>
                              <div id="dbd-edit-settings-container" class="dbd-edit-settings-container">
                                 <!--ko if: $data.dashboardsetToolBarModel.isDashboardSet-->
                                 <span class="edit-setting-head">Dashboard Set</span>
@@ -1049,7 +1049,7 @@
                             </div>
                         </div>
                         <div class="dbd-right-panel-wrench" data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='wrench'">
-                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" style="background-color: #d1e7cc ;margin-bottom: 10px;">Build Dashboard</div>
+                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" >Build Dashboard</div>
                             <div class="dbd-right-panel-build-container" style="padding:0">
                     <div class="dbd-left-panel-header fit-size-vertical-sibling">
                         <div class="dbd-left-panel-header-search">

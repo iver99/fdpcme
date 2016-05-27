@@ -27,7 +27,10 @@ define(['knockout',
                 self.$list.each(function() {
                     var elem = $(this)
                     , v_siblings = elem.siblings(".fit-size-vertical-sibling:visible")
-                    , h = 62;
+                    , h = 54;
+                    if(v_siblings && 1 == v_siblings.length && v_siblings.attr("class").indexOf("dbd-right-panel-title")>-1){
+                        h = 0;
+                    }
                     if (v_siblings && v_siblings.length > 0) {
                         for (var i = 0; i < v_siblings.length; i++) {
                             h += $(v_siblings[i]).outerHeight();
@@ -543,6 +546,7 @@ define(['knockout',
                     $(".dbd-right-panel-editdashboard-share>div").css("display","none");
                     $(".dbd-right-panel-editdashboard-filters>div").css("display","none");
                 }
+                $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
             };
         }
         
