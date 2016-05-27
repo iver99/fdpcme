@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html id='global-html'>
+<html id="global-html"  lang="en" data-testapiversion="1.7.5">
     <head>
         <title data-bind="text:builderTitle"></title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/dashboards-home-alta.css" type="text/css"/>
-       
+
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -54,7 +54,7 @@
                     data-bind="ojComponent: {component: 'ojMenu',select:$root.dashboardsetConfigMenu}">
                     <!--ko foreach:dashboardsetMenu-->
                     <li data-bind="attr:{'id':id},visible: visibility">
-                        <a href="#">
+                        <a href="#" data-bind="attr:{'dashboardset-option':label}">
                             <span class="fa-icon-font fa-icon-font-14 oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
                             <span data-bind="text:label"></span>
                         </a>
@@ -90,7 +90,7 @@
                                      <input id="dbsInfoName"
                                            data-bind="ojComponent: { component: 'ojInputText',rootAttributes: {style:'max-width:420px;'},value:dashboardsetName()}">
                                      <h4 data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></h4>
-                                     <textarea maxlength="256" rows="5"
+                                     <textarea id="dbsInfoDescription" maxlength="256" rows="5"
                                               data-bind="ojComponent: {component: 'ojTextArea', rootAttributes: {style:'max-width:420px;'},value:dashboardsetDescription()
                                                               }"></textarea>
                                 </div>
@@ -145,7 +145,7 @@
                         <div class="oj-dialog-footer">
                             <button data-bind="ojComponent: {
                                                  component: 'ojButton',label: getNlsString('COMMON_BTN_DELETE'),
-                                                 rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.deleteDbs"></button>
+                                                 rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.deleteDbs" data-delete-set-dialog="Delete"></button>
                             <button data-bind="ojComponent: {
                                                  component: 'ojButton',label: getNlsString('COMMON_BTN_CANCEL'),
                                                  rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.cancelDeleteDbs"></button>
@@ -181,7 +181,7 @@
 
             <script id="dashboard-content-template" type="text/html">
             <div class="dashboard-content page-break" style="visibility: hidden">
-            <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container" style="padding-left: 30px;">
+            <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container" style="padding-left:16px;">
                 <div class="builder-toolbar" aria-label="Builder toolbar"
                        class="oj-component oj-component-initnode">
                     <div class="builder-toolbar-left dbd-pull-left">
@@ -301,7 +301,7 @@
                             <span class="dbd-toolbar-icon-delete"></span>
                         </div>
                         
-                        <button class="dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print"
+                        <button class="dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print toolbar-save"
                                 data-bind="click: handleDashboardSave, ojComponent: {
                                         component:'ojButton', chroming: 'half', label: getNlsString('COMMON_BTN_SAVE'), disabled: disableSave, 
                                         icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
@@ -465,21 +465,37 @@
                         </button>
                     </div>
                 </div>-->
-<!--                <div data-bind="component: {
+                <div data-bind="component: {
                         name: 'df-widget-selector',
                         params: addWidgetDialogParams
                     }">
-                </div>-->
+                </div>
             </div>
 
             <div class="oj-col stretch-height builder-main dashboard-content-main" role="main">
                     <div class="tiles-col-container oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size">
                         <div class="oj-row fit-size-vertical-sibling df-computed-content-width"
-                             style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0"
-                             data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
-                            <div class="oj-col oj-sm-12 oj-md-7">
-                               <div data-bind="visible: !dashboard.enableTimeRange || dashboard.enableTimeRange() !== 'TRUE'">&nbsp;</div>
-                               <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'"></div>
+                             style="max-width: none; padding-left: 8px;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0" 
+                             data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE'">
+                            <div style="display: inline-block; float: left;">
+                                <!--<div class="oj-col oj-sm-12 oj-md-3">-->
+                                <div data-bind="visible: dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE'" style="padding-left: 5px;">
+                                    <emcta-target-selector data-bind="attr: {id: 'tsel_'+dashboard.id()}" 
+                                                           params="returnFunction: returnFromTargetSelector, 
+                                                                   config:{
+                                                                       selectionMode: selectionMode()[0],
+                                                                       returnMode: returnMode,
+                                                                       inputCriteria: getInputCriteria(),
+                                                                       ui: {
+                                                                           showLaunchButton: true,
+                                                                           dropdownInitialLabel: dropdownInitialLabel(),
+                                                                           dropdownResultLabel: dropdownResultLabel()
+                                                                       }
+                                                                   }"></emcta-target-selector>
+                                </div>
+                            </div>
+                            <div style="display: inline-block; float: left">
+                               <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>
                             </div>
                         </div>
 
@@ -487,7 +503,7 @@
                         <div class="tooltip-add-widget" style="padding-top: 64px; text-align: center">
                             <img src="@version@/images/add-widget-tooltip.png" style="width: 240px; height: 240px; margin-bottom: 30px;" data-bind="attr:{alt:oj.Translations.getTranslatedString('Add content to dashboard')}"/>
                             <p style="font-size: 24px; font-weight: bold;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></p>
-                            <p style="font-size: 16px;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1')"></p>
+                            <p style="font-size: 16px;" data-bind="visible:($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())),text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1')"></p>
                             <!--<p style="font-size: 16px;">
                                 <span data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_1')"></span>
                                 <a data-bind="attr: {href:'javascript: this.click()'}, click: $root.openAddWidgetDialog, text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_ADD_LINK')"></a>
@@ -505,14 +521,14 @@
                                     <div class="dbd-tile-container">
                                         <div class="dbd-tile-header tile-drag-handle" style="display: flex">
                                           <!-- ko if: $root.dashboard.systemDashboard() && linkedDashboard && linkedDashboard() !== '#'-->
-                                            <h2 class="dbd-tile-title"><a data-bind="text:hideTitle() === 'true' ? '': title, attr: {href: linkedDashboard}"></a></h2>
+                                            <h2 class="dbd-tile-title"><a data-bind="text:hideTitle() === 'true' ? '': title, attr: {href: linkedDashboard, 'data-tile-title': title}"></a></h2>
                                           <!-- /ko -->
                                           <!-- ko if: !$root.dashboard.systemDashboard() || !linkedDashboard || linkedDashboard() === '#'-->
-                                            <h2 class="dbd-tile-title" data-bind="text:hideTitle() === 'true' ? '': title"></h2>
+                                            <h2 class="dbd-tile-title" data-bind="text:hideTitle() === 'true' ? '': title, attr: {'data-tile-title': title}"></h2>
                                           <!-- /ko -->
                                           <div class="dbd-pull-right" style="display: flex" data-bind="visible: $root.isMobileDevice !== 'true'">
                                               <div class="dbd-btn-editor">                 
-                                                  <button class="oj-button-half-chrome" tabindex="0"
+                                                  <button class="oj-button-half-chrome dbd-data-explore" tabindex="0"
                                                           data-bind="
                                                              attr:{'id': 'editButton' + clientGuid,title: getNlsString('DBS_BUILDER_TILE_EDIT')},
                                                              click:$root.openInDataExplorer,
@@ -548,7 +564,7 @@
                                                         event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}},
                                                         ojComponent: {component: 'ojMenu', select: $root.menuItemSelect}">
                                                         <li data-option="showhide-title">
-                                                            <a href="#">
+                                                            <a href="#" data-bind="attr: {'data-show-hide-title': hideTitle() === 'true' ? 'show' : 'hide'}">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <i class="fa-icon-font fa-icon-font-16" data-bind="css: hideTitle() === 'true' ? 'dbd-icon-eye':'dbd-icon-eye-slash'"></i>
                                                                 </span>
@@ -686,11 +702,12 @@
                                 css: {
                                     'drawer-selected': rightPanelIcon()=='pencil'
                                 }"/></button>                    
+<!--            EMCPDF-1513:Help Tab on right drawer disabled       
                     <button class="right-panel-help-btn drawer-icon-btn" data-bind="ojComponent: {
                         component:'ojButton', 
                         display: 'icons', 
                         icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-question-circle'}, 
-                        label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')}"></button>
+                        label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')}"></button>-->
                 </div>
                 <!-- ko stopBinding: true -->
                 <div class="dbd-left-panel dbd-left-panel-show no-print"
@@ -1071,8 +1088,12 @@
                                 </button>-->
                                 <button class="dbd-left-panel-header-search-btn oj-button-half-chrome" data-bind="click: searchWidgetsClicked,
                                         ojComponent: {component: 'ojButton',chroming: 'half', label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons', 
-                                        icons: {start:'left-panel-dbd-search-icon'}}"> 
+                                        icons: {start:'left-panel-dbd-search-icon'}}" style="float:right"> 
                                 </button> 
+                                <button class="oj-button-half-chrome" data-bind="click: clearWidgetSearchInputClicked, visible: clearRightPanelSearch,
+                                                    ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
+                                                    icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 31px;'}}" style="float:right;margin-bottom:0"> 
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -1081,7 +1102,7 @@
                             <div class="dbd-left-panel-widget" data-bind="css: 'widget-item-'+WIDGET_UNIQUE_ID()">
                                 <div class="dbd-left-panel-widget-text"
                                             data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
-                                    <span tabindex="0" data-bind="text:WIDGET_NAME, event: {keypress: $root.widgetKeyPress},attr:{'data-rightpanel-items':WIDGET_NAME}"></span>
+                                    <span tabindex="0" data-bind="text:WIDGET_NAME, event: {keypress: $root.widgetKeyPress},attr:{'data-rightpanel-items':WIDGET_NAME,'aria-label':WIDGET_NAME}"></span>
                                 </div>
                                 <div data-bind="css:'widget-'+WIDGET_UNIQUE_ID(),
                                                 ojComponent:{component: 'ojPopup',tail: 'simple'}" class="dbd-left-panel-img-pop">
@@ -1257,6 +1278,7 @@
                         <button data-bind="click: toolBarModel.handleDeleteDashboardClicked,
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_DELETE'), rootAttributes: {style:'margin-right:5px'}}"></button>
                         <button class="dbs_dcbtn" data-bind="click: toolBarModel.handleDeleteDashboardCancelled,
+
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'), rootAttributes: {style:'margin-right:5px'}}"></button>
                     </div>
                 </div>
@@ -1321,14 +1343,14 @@
                 <div style="display:none" id="setAsHomeCfmDialog"
                      data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
                                         cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
-                    <div class="oj-dialog-header oj-helper-clearfix">
-                        <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_BUILDER_SET_AS_HOME_DIALOG_TITLE')"></span>
-                    </div>
-                    <div class="oj-dialog-body">
-                        <p data-bind="html: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_CONFIRM')"></p>
-                    </div>
-                    <div class="oj-dialog-footer">
-                        <button data-bind="click: toolBarModel.setAsHomeConfirmed, 
+                            <div class="oj-dialog-header oj-helper-clearfix">
+                                <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_BUILDER_SET_AS_HOME_DIALOG_TITLE')"></span>
+                            </div>
+                            <div class="oj-dialog-body">
+                                <p data-bind="html: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_CONFIRM')"></p>
+                            </div>
+                            <div class="oj-dialog-footer">
+                                <button id="btnComfirmSetAsHome" data-bind="click: toolBarModel.setAsHomeConfirmed, 
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_YES'), rootAttributes: {style:'margin-right:5px'}}"></button>
                         <button id="btnCancelSetAsHome" data-bind="click: toolBarModel.setAsHomeCancelled,
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_NO'), rootAttributes: {style:'margin-right:5px'}}"></button>

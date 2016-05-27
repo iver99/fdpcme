@@ -26,7 +26,7 @@ define(['knockout',
                 return false;
             };
             self.showdbDescription = ko.observable(isEditDsbOptionEnabled(self.descriptionValue) ?["showdbDescription"]:[]);
-//            self.entityFilterValue = ko.observable(dsb.enableEntityFilter ? (dsb.enableEntityFilter()==="TRUE"?["ON"]:["OFF"]) : ["OFF"]);//ko.observable(["OFF"]);
+            self.entityFilterValue = ko.observable(dsb.enableEntityFilter ? (dsb.enableEntityFilter()==="TRUE"?["ON"]:["OFF"]) : ["OFF"]);//ko.observable(["OFF"]);
             self.timeRangeFilterValue = ko.observable(dsb.enableTimeRange ? (dsb.enableTimeRange()==="TRUE"?["ON"]:["OFF"]) : ["ON"]); //ko.observable(["ON"]);//for now ON always and hide option in UI
 //            self.targetFilterValue = ko.observable(["OFF"]);
             self.nameValidated = ko.observable(true);
@@ -117,7 +117,7 @@ define(['knockout',
                         type: 'PUT',
                         dataType: "json",
                         contentType: 'application/json',
-                        data: JSON.stringify({name: self.name(), description: self.description(), enableDescription: isEditDsbOptionEnabled(self.descriptionValue) ? "TRUE" : "FALSE", /*enableEntityFilter: (isEditDsbOptionEnabled(self.entityFilterValue) ? "TRUE" : "FALSE"),*/ enableTimeRange: (isEditDsbOptionEnabled(self.timeRangeFilterValue) ? "TRUE" : "FALSE")}),
+                        data: JSON.stringify({name: self.name(), description: self.description(), enableDescription: self.isEditDsbOptionEnabled(self.descriptionValue) ? "TRUE" : "FALSE", enableEntityFilter: (self.isEditDsbOptionEnabled(self.entityFilterValue) ? "TRUE" : "FALSE"), enableTimeRange: (self.isEditDsbOptionEnabled(self.timeRangeFilterValue) ? "TRUE" : "FALSE")}),
                         headers: dfu.getDashboardsRequestHeader(), //{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
                         success: function (result) {
                             self.dashboard.name(self.name());
@@ -131,11 +131,12 @@ define(['knockout',
                                 self.dashboard.description = ko.observable(self.description());
                             }
                             self.tbModel.dashboardDescription(self.description());
-                            self.dashboard.enableDescription(isEditDsbOptionEnabled(self.descriptionValue) ? "TRUE" : "FALSE");
-                            self.tbModel.dashboardDescriptionEnabled(isEditDsbOptionEnabled(self.descriptionValue) ? "TRUE" : "FALSE");
-//                            self.dashboard.enableEntityFilter(self.isEditDsbOptionEnabled(self.entityFilterValue) ? "TRUE" : "FALSE");
-                            self.dashboard.enableTimeRange(isEditDsbOptionEnabled(self.timeRangeFilterValue) ? "TRUE" : "FALSE");
-//                            savedName = self.name();
+
+                            self.dashboard.enableDescription(self.isEditDsbOptionEnabled(self.descriptionValue) ? "TRUE" : "FALSE");
+                            self.tbModel.dashboardDescriptionEnabled(self.isEditDsbOptionEnabled(self.descriptionValue) ? "TRUE" : "FALSE");
+                            self.dashboard.enableEntityFilter(self.isEditDsbOptionEnabled(self.entityFilterValue) ? "TRUE" : "FALSE");
+                            self.dashboard.enableTimeRange(self.isEditDsbOptionEnabled(self.timeRangeFilterValue) ? "TRUE" : "FALSE");
+                            $('#edit-dashboard').ojDialog("close"); 
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});

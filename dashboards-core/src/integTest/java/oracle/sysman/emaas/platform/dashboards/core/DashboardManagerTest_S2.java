@@ -10,6 +10,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
@@ -20,6 +23,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.resource.Dashboard
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableDescriptionState;
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableEntityFilterState;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
@@ -31,9 +35,6 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
  * @author guobaochen
@@ -708,29 +709,29 @@ public class DashboardManagerTest_S2
 
 	}
 
-	//	@Test(groups = { "s2" })
-	//	public void testEnableEntityFilterState() throws DashboardException
-	//	{
-	//		EnableEntityFilterState eef = EnableEntityFilterState.fromName(null);
-	//		Assert.assertNull(eef);
-	//
-	//		eef = EnableEntityFilterState.fromName("TRUE");
-	//		Assert.assertEquals(EnableEntityFilterState.TRUE, eef);
-	//
-	//		eef = EnableEntityFilterState.fromName("ANYSTRING");
-	//		Assert.assertNull(eef);
-	//
-	//		eef = EnableEntityFilterState.fromValue(0);
-	//		Assert.assertEquals(EnableEntityFilterState.FALSE, eef);
-	//
-	//		eef = EnableEntityFilterState.fromValue(null);
-	//		Assert.assertNull(eef);
-	//
-	//		Dashboard dsb = new Dashboard();
-	//		dsb.setEnableEntityFilter(EnableEntityFilterState.FALSE);
-	//		eef = dsb.getEnableEntityFilter();
-	//		Assert.assertEquals(EnableEntityFilterState.FALSE, eef);
-	//	}
+	@Test(groups = { "s2" })
+	public void testEnableEntityFilterState() throws DashboardException
+	{
+		EnableEntityFilterState eef = EnableEntityFilterState.fromName(null);
+		Assert.assertNull(eef);
+	
+		eef = EnableEntityFilterState.fromName("TRUE");
+		Assert.assertEquals(EnableEntityFilterState.TRUE, eef);
+	
+		eef = EnableEntityFilterState.fromName("ANYSTRING");
+		Assert.assertNull(eef);
+	
+		eef = EnableEntityFilterState.fromValue(0);
+		Assert.assertEquals(EnableEntityFilterState.FALSE, eef);
+	
+		eef = EnableEntityFilterState.fromValue(null);
+		Assert.assertNull(eef);
+	
+		Dashboard dsb = new Dashboard();
+		dsb.setEnableEntityFilter(EnableEntityFilterState.FALSE);
+		eef = dsb.getEnableEntityFilter();
+		Assert.assertEquals(EnableEntityFilterState.FALSE, eef);
+	}
 
 	@Test(groups = { "s2" })
 	public void testEnableTimeRangeState() throws DashboardException
@@ -817,12 +818,13 @@ public class DashboardManagerTest_S2
 	{
 		loadMockBeforeMethod();
 		Dashboard dbd1 = new Dashboard();
+		Date now = new Date();
 		dbd1.setName("test");
 		String testScreenshotDate = "data:image/png;base64,shot";
 		dbd1.setScreenShot(testScreenshotDate);
 		dbd1.setHref("");
 		dbd1.setLastModifiedBy("sysman");
-		dbd1.setLastModificationDate(new Date());
+		dbd1.setLastModificationDate(now);
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenantId1 = 11L;
 		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);

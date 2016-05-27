@@ -52,9 +52,47 @@ requirejs.config({
         'emcta':'/emsaasui/emcta/ta/js',
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
-        'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
+//        'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
         'uifwk': '/emsaasui/uifwk'
     },
+    bundles: (window.DEV_MODE ? undefined : {
+        'builder/builder.jet.partition': [
+            'ojs/ojcore',
+            'ojs/ojknockout',
+            'ojs/ojmenu',
+            'ojs/ojtree',
+            'ojs/ojvalidation',
+            'ojs/ojknockout-validation',
+            'ojs/ojbutton',
+            'ojs/ojselectcombobox',
+            'ojs/ojpopup',
+            'ojs/ojchart',
+            'ojs/ojcomponents',   
+            'ojs/ojcomponentcore',
+            'ojs/ojdialog',
+            'ojs/ojdatetimepicker',
+            'ojs/ojmodel',
+            'ojs/ojknockout-model',
+            'ojs/ojtoolbar',
+            'ojs/ojpagingcontrol',
+            'ojs/ojeditablevalue',
+            'ojs/ojdatetimepicker',
+            'ojs/internal-deps/dvt/DvtChart',
+            'ojs/ojdvt-base',
+            'ojs/ojcheckboxset',
+            'ojs/ojpopup',
+            'ojs/ojpopupcore',
+            'ojs/ojmessaging',
+            'ojs/ojgauge',
+            'ojs/ojdatasource-common',
+            'ojs/ojinputtext',
+            'ojs/ojpagingtabledatasource',
+            'ojdnd',
+            'promise',
+            'knockout',
+            'jquery',
+            'ojL10n']
+    }),
     // Shim configurations for modules that do not expose AMD
     shim: {
         'jquery': {
@@ -99,24 +137,26 @@ require(['knockout',
     'loggingutil',
     'ojs/ojcore',
     'dashboards/widgets/autorefresh/js/auto-refresh',
-    'dashboards/widgets/textwidget/js/textwidget',
+//    'dashboards/widgets/textwidget/js/textwidget',
     'dashboards/dashboardhome-impl',
     'jqueryui',
     'common.uifwk',
-    'builder/builder.jet.dvt.partition',
+    'builder/builder.jet.partition',
     'builder/builder.core',
     'dashboards/dbstypeahead',
     'builder/dashboardset.toolbar.model',
     'builder/dashboardset.panels.model'
 ],
-    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, textwidget, dashboardhome_impl) // this callback gets executed when all required modules are loaded
+    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, /*textwidget, */dashboardhome_impl) // this callback gets executed when all required modules are loaded
     {
         var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
+        require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
+                TargetSelectorUtils.registerComponents();
         logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
         // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
         // If you comment the line below, our current log calls will not be output!
-        logger.setLogLevel(oj.Logger.LEVEL_LOG);
+        logger.setLogLevel(oj.Logger.LEVEL_WARN);
 
         if (!ko.components.isRegistered('df-oracle-branding-bar')) {
             ko.components.register("df-oracle-branding-bar",{
@@ -138,10 +178,10 @@ require(['knockout',
             viewModel:auto_refresh,
             template:{require:'text!./widgets/autorefresh/auto-refresh.html'}
         });
-        ko.components.register("DF_V1_WIDGET_TEXT", {
+        /*ko.components.register("DF_V1_WIDGET_TEXT", {
             viewModel: textwidget,
             template: {require: 'text!./widgets/textwidget/textwidget.html'}
-        });
+        });*/
             
         if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
             ko.components.register("df-oracle-dashboard-list",{
@@ -215,6 +255,7 @@ require(['knockout',
                 }
             });
         });
+    });
     }
 );
 

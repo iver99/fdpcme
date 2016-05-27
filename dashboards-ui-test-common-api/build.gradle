@@ -1,0 +1,60 @@
+version = "1.7.5" + "-$buildTimestamp"
+
+project.ext.intgRun = hasProperty('IFARM_RUN') && IFARM_RUN != '' ? IFARM_RUN : 0
+project.ext.buildBranch = hasProperty('BUILD_BRANCH') && BUILD_BRANCH != '' ? BUILD_BRANCH : 'master'
+project.ext.forcePublishSdk = hasProperty('FORCE_PUBLISH_SDK') && FORCE_PUBLISH_SDK != '' ? FORCE_PUBLISH_SDK : 0
+sourceSets {
+integTest {
+        java.srcDir 'src/integTest/java'
+
+    
+        compileClasspath = configurations.testConfig + configurations.webdriver + configurations.testNG
+        }
+    }
+
+clean{
+  delete 'build'
+}
+
+task integTestJar (type:Jar, dependsOn: [':omc-ui-framework:omc-ui-framework-web:unpackTargetSelectorFromArtifactory']) {
+    from sourceSets.integTest.output
+    //Add the Target Selector Test API classes 
+    from fileTree(dir: '../omc-ui-framework/omc-ui-framework-web/build/stage_tsel')   
+  
+}
+
+
+check.dependsOn integTestJar
+
+ext.customPomDefinition = {
+    def dependencies = asNode().appendNode('dependencies')
+    configurations.testConfig.allDependencies.each { dep ->
+        if (dep.name != 'unspecified') {
+            def dependency = dependencies.appendNode('dependency')
+            dependency.appendNode('groupId', dep.group)
+            dependency.appendNode('artifactId', dep.name)
+            dependency.appendNode('version', dep.version)
+	     
+        }
+    }
+}
+publishing.publications {
+    integTest(MavenPublication) {
+                        setArtifactId(project.name)
+                        setGroupId('com.oracle.emaas.emcpdf.testsdk.ui')
+                        artifact integTestJar.archivePath
+			pom.withXml customPomDefinition
+    }
+    
+}
+
+artifactoryPublish {
+    if ( forcePublishSdk == "1" || (intgRun == "1" && buildBranch == "master")) {
+	publications ('integTest')
+    }
+}
+
+
+dependencies {
+testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+}

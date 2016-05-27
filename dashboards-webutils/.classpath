@@ -19,5 +19,6 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-mapper-asl-1.9.13.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-xc-1.9.2.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/wlfullclient-12.1.2-0-0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-client-1.17.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

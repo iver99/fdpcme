@@ -7,6 +7,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
+import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
+import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreferencePK;
@@ -179,6 +181,18 @@ public class DashboardServiceFacade
 		if (emsDashboard.getSharePublic() == null) {
 			emsDashboard.setSharePublic(0);
 		}
+		if (emsDashboard.getEnableEntityFilter() == null) {
+			emsDashboard.setEnableEntityFilter(0);
+		}
+		if (emsDashboard.getEnableTimeRange() == null) {
+			emsDashboard.setEnableTimeRange(0);
+		}
+		if (emsDashboard.getEnableDescription() == null) {
+			emsDashboard.setEnableDescription(0);
+		}
+		if (emsDashboard.getEnableRefresh() == null) {
+			emsDashboard.setEnableRefresh(0);
+		}
 
 		em.persist(emsDashboard);
 		commitTransaction();
@@ -216,7 +230,7 @@ public class DashboardServiceFacade
 	public EmsUserOptions persistEmsUserOptions(EmsUserOptions emsUserOptions)
 	{
 		if (emsUserOptions.getAutoRefreshInterval() == null) {
-			emsUserOptions.setAutoRefreshInterval(0L);
+			emsUserOptions.setAutoRefreshInterval(UserOptionsManager.DEFAULT_REFRESH_INTERVAL);
 		}
 		if (emsUserOptions.getIsFavorite() == null) {
 			emsUserOptions.setIsFavorite(0);
@@ -313,19 +327,19 @@ public class DashboardServiceFacade
 		commitTransaction();
 	}
 
-	public int removeEmsSubDashboardBySubId(long subDashboardId)
+	public int removeEmsSubDashboardBySetId(long subDashboardId)
 	{
 		getEntityManager().getTransaction().begin();
-		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeBySubDashboardID").setParameter("p", subDashboardId)
+		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeByDashboardSetID").setParameter("p", subDashboardId)
 				.executeUpdate();
 		commitTransaction();
 		return deleteCout;
 	}
 
-	public int removeEmsSubDashboardBySetId(long subDashboardId)
+	public int removeEmsSubDashboardBySubId(long subDashboardId)
 	{
 		getEntityManager().getTransaction().begin();
-		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeByDashboardSetID").setParameter("p", subDashboardId)
+		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeBySubDashboardID").setParameter("p", subDashboardId)
 				.executeUpdate();
 		commitTransaction();
 		return deleteCout;

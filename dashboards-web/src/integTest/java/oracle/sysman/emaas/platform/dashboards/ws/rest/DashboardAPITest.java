@@ -3,6 +3,13 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
+
+
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
@@ -14,6 +21,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
+
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
@@ -25,6 +33,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * @author danfjian
@@ -480,8 +489,8 @@ public class DashboardAPITest
 	private void assertQueryDashboards()
 	{
 		Assert.assertNotNull(dashboardAPI.queryDashboards("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", "query str", 10, 5,
-				"name", null));
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", "query str", 10, 5, "name",
+				null));
 	}
 
 	private void assertQuickUpdateDashboard() throws JSONException
@@ -499,8 +508,8 @@ public class DashboardAPITest
 	private void assertUpdateDashboard() throws JSONException
 	{
 		Assert.assertNotNull(dashboardAPI.updateDashboard("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L, new JSONObject(
-						"{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false}")));
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L,
+				new JSONObject("{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false}")));
 	}
 
     private void assertGetUserOptions(){
@@ -521,3 +530,4 @@ public class DashboardAPITest
     }
 
 }
+

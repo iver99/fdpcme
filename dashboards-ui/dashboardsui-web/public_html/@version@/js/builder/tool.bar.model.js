@@ -29,6 +29,7 @@ define(['knockout',
             self.openRightPanelByBuild = ko.observable(true);
             self.duplicateDashboardModel = new dd.DuplicateDashboardModel($b);
             self.toolBarGuid = Builder.getGuid();
+            self.isUnderSet = ko.dataFor($("#dbd-set-tabs")[0]).isDashboardSet();
 
             if (self.dashboard.id && self.dashboard.id())
                 self.dashboardId = self.dashboard.id();
@@ -55,8 +56,13 @@ define(['knockout',
             self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
             self.editDisabled = ko.observable(self.dashboard.type() === SINGLEPAGE_TYPE || self.dashboard.systemDashboard() || self.currentUser !== self.dashboard.owner());
             self.disableSave = ko.observable(false);
-            self.autoRefreshInterval = ko.observable(DEFAULT_AUTO_REFRESH_INTERVAL);
-            self.isUserOptionsExist = ko.observable(false); 
+
+            self.hasUserOptionInDB = ko.observable(false); 
+            if(dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)){
+                self.autoRefreshInterval = dashboardSetOptions.autoRefreshInterval;
+            }else {
+                self.autoRefreshInterval = ko.observable(DEFAULT_AUTO_REFRESH_INTERVAL);
+            }
             
             if (window.DEV_MODE) { // for dev mode debug only
                 self.changeMode = function() {
@@ -114,27 +120,55 @@ define(['knockout',
 //                });
             };
             
+            self.intervalID = null;
+            self.setAutoRefreshInterval = function (interval) {
+                self.intervalID && clearInterval(self.intervalID); // clear interval if exists
+                if (interval) {
+                    if (window.DEV_MODE) {
+                        interval = 3000;
+                    }
+                    self.intervalID = setInterval(function () {
+                        Builder.loadDashboard(
+                                $b.dashboard.id(),
+                                function (dashboardInst) {
+                                    self.dashboardName(dashboardInst.name());
+                                    self.dashboardDescription((dashboardInst.description && dashboardInst.description()) || "");
+                                }, function () {
+                            console.log("update dashboard name && description  failed !");
+                        });
+                        $b.getDashboardTilesViewModel().timeSelectorModel.timeRangeChange(true);
+                    }, interval);
+                }
+            };
+            
             self.initUserOtions = function () {
-                Builder.fetchDashboardOptions(
+                if(!self.isUnderSet){
+                     Builder.fetchDashboardOptions(
                     self.dashboard.id(),
                     function (data) {
                         //sucessfully get options
-                        self.isUserOptionsExist(true);
-                        self.setAutoRefreshOptoin(data["autoRefreshInterval"]);
+                        self.hasUserOptionInDB(true);
+                        self.autoRefreshInterval(data["autoRefreshInterval"]);
+                        //required to init interverl
+                        self.setAutoRefreshInterval(data["autoRefreshInterval"]);
                     },
                     function (jqXHR, textStatus, errorThrown) {
                         if(jqXHR.status === 404){
-                            self.isUserOptionsExist(false);
-                            self.setAutoRefreshOptoin(DEFAULT_AUTO_REFRESH_INTERVAL);
+                            self.hasUserOptionInDB(false);
+                            self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
                         }
                     });
+                }else{
+                    self.setAutoRefreshInterval(self.autoRefreshInterval());
+                }
+               
             };
 
             self.initEventHandlers = function() {
-                $b.addEventListener($b.EVENT_NEW_TEXT_START_DRAGGING, self.handleAddWidgetTooltip);
+//                $b.addEventListener($b.EVENT_NEW_TEXT_START_DRAGGING, self.handleAddWidgetTooltip);
                 $b.addEventListener($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, self.handleAddWidgetTooltip);
-                $b.addEventListener($b.EVENT_TEXT_START_EDITING, self.handleStartEditText);
-                $b.addEventListener($b.EVENT_TEXT_STOP_EDITING, self.handleStopEditText);
+//                $b.addEventListener($b.EVENT_TEXT_START_EDITING, self.handleStartEditText);
+//                $b.addEventListener($b.EVENT_TEXT_STOP_EDITING, self.handleStopEditText);
             };
 
             self.rightButtonsAreaClasses = ko.computed(function() {
@@ -285,7 +319,7 @@ define(['knockout',
                 $b.findEl(".parent-message-dialog").ojDialog("open");
             };
 
-            self.handleStartEditText = function () {
+            /*self.handleStartEditText = function () {
                 self.disableSave(true);
                 self.tilesViewModel.tilesView.disableDraggable();
             };
@@ -297,7 +331,7 @@ define(['knockout',
                     self.disableSave(false);
                 }
                 self.tilesViewModel.tilesView.enableDraggable();
-            };
+            };*/
 
             self.getSummary = function(dashboardId, name, description, tilesViewModel) {
                 function dashboardSummary(name, description) {
@@ -367,19 +401,6 @@ define(['knockout',
                     self.tilesViewModel.dashboard.screenShot = ko.observable(null);
                     self.handleSaveUpdateDashboard(outputData);
                 }
-                 var optionsJson = {
-                    "dashboardId": self.dashboard.id(),
-                    "autoRefreshInterval": self.autoRefreshInterval()
-                };
-                //save user options
-                if (self.isUserOptionsExist()) {
-                    Builder.updateDashboardOptions(optionsJson);
-                } else {
-                    Builder.saveDashboardOptions(optionsJson,function(){
-                        self.isUserOptionsExist(true);
-                    });
-                }
-                
             };
 
             self.handleSaveUpdateDashboard = function(outputData) {
@@ -452,12 +473,12 @@ define(['knockout',
     //                ,providerVersion: '1.0'
             };
 
-            self.HandleAddTextWidget = function() {
+            /*self.HandleAddTextWidget = function() {
                 var maximizedTile = self.tilesViewModel.editor.getMaximizedTile();
                 if (maximizedTile)
                     self.tilesViewModel.restore(maximizedTile);
                 self.tilesViewModel.appendTextTile();
-            };
+            };*/
 
             self.openAddWidgetDialog = function() {
                 var maximizedTile = self.tilesViewModel.editor.getMaximizedTile();
@@ -521,7 +542,6 @@ define(['knockout',
 
             self.initialize();
 
-            //Dashboard Options ======start=======
             var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
             var addFavoriteLabel = getNlsString('DBS_BUILDER_BTN_FAVORITES_ADD');
             var removeFavoriteLabel = getNlsString('DBS_BUILDER_BTN_FAVORITES_REMOVE');
@@ -746,47 +766,40 @@ define(['knockout',
                 prefUtil.getAllPreferences(options);
             }
             
-            self.intervalID = null;
-//            self.onNameOrDescriptionEditing = false;
-            self.setAutoRefreshOptoin = function (interval) {
-                if(dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)){
-                        interval = dashboardSetOptions.autoRefreshInterval();
-                }else{
-                    self.autoRefreshInterval(interval);
-                }
-                if (null !== self.intervalID) {
-                    clearInterval(self.intervalID);
-                }
-                
-                if (interval) {
-                    if (window.DEV_MODE) {
-                        interval = 3000;
-                    }
-                    self.intervalID = setInterval(function () {
-//                        if(self.onNameOrDescriptionEditing){
-//                            return;
-//                        }
-                        Builder.loadDashboard(
-                                $b.dashboard.id(),
-                                function (dashboardInst) {
-                                    self.dashboardName(dashboardInst.name());
-                                    self.dashboardDescription((dashboardInst.description && dashboardInst.description()) || "");
-                                }, function () {
-                                    console.log("update dashboard name && description  failed !");
+            self.autoRefreshInterval.subscribe(function (value) {
+                // update 
+                var optionsJson = {
+                    "dashboardId": self.dashboard.id(),
+                    "autoRefreshInterval": self.autoRefreshInterval()
+                };
+                //save user options if it is in single dashboard mode
+                if (!self.isUnderSet) {
+                    if (self.hasUserOptionInDB()) {
+                        Builder.updateDashboardOptions(optionsJson);
+                    } else {
+                        Builder.saveDashboardOptions(optionsJson, function () {
+                            self.hasUserOptionInDB(true);
                         });
-                        $b.getDashboardTilesViewModel().timeSelectorModel.timeRangeChange(true);
-                    }, interval);
+                    }
                 }
-            };
-            
-            if (dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)) {
-                dashboardSetOptions.autoRefreshInterval.subscribe(function(value){
-                    self.setAutoRefreshOptoin(value);
-                });
-            }
+
+                self.setAutoRefreshInterval(value);
+
+            });
 
             //self.isSystemDashboard = self.dashboard.systemDashboard();
             self.dashboardOptsMenuItems = [
+                {
+                    "label": getNlsString('DBS_BUILDER_BTN_ADD'),
+                    "url": "#",
+                    "id":"emcpdf_dsbopts_add",
+                    "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
+                    "icon":"dbd-toolbar-icon-add-widget",
+                    "title": "",//getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
+                    "disabled": self.editDisabled() === true,
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
+                    "endOfGroup": false
+                },
                 {
                     "label": getNlsString('COMMON_BTN_EDIT'),
                     "url": "#",
@@ -822,7 +835,7 @@ define(['knockout',
                                 $(event.currentTarget).find(".oj-menu-item-icon").addClass("fa-check");
 
                                 event.stopPropagation();
-                                self.setAutoRefreshOptoin(0);
+                                self.autoRefreshInterval(0);
                             },
                             "disabled": false,
                             "showOnMobile": true,
@@ -840,7 +853,7 @@ define(['knockout',
                                 $(event.currentTarget).closest("ul").find(".oj-menu-item-icon").removeClass("fa-check");
                                 $(event.currentTarget).find(".oj-menu-item-icon").addClass("fa-check");
                                 event.stopPropagation();
-                                self.setAutoRefreshOptoin(300000);// 5 minutes
+                                self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);// 5 minutes
                             },
                              "disabled": false,
                             "showOnMobile": true,
@@ -906,7 +919,6 @@ define(['knockout',
                     "endOfGroup": false
                 }
             ];
-            //Dashboard Options ======end=======
         }
         
         Builder.registerModule(ToolBarModel, 'ToolBarModel');

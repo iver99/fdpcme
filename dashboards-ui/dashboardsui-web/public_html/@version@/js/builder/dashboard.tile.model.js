@@ -18,8 +18,8 @@ define(['knockout',
         'builder/editor/editor.mode',
         'builder/widget/widget.model',
         'jqueryui',
-        'builder/builder.jet.dvt.partition',
-        'ckeditor'
+        'builder/builder.jet.partition'
+//        'ckeditor'
     ],
     
     function(ko, oj, km, dfu, uiutil, dfumodel, mbu, $)
@@ -53,10 +53,29 @@ define(['knockout',
             self.dashboard = $b.dashboard;
             self.loginUser = ko.observable(dfu.getUserName());
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
-            self.target = dfu_model.getUrlParam("target");
-            self.type = dfu_model.getUrlParam("type");
-            self.emsite = dfu_model.getUrlParam("emsite");
-            self.targetContext = new Builder.DashboardTargetContext(self.target, self.type, self.emsite);
+
+            self.targets = ko.observable(null);
+//            self.targetsFromParam = dfu_model.getUrlParam("targets");
+//            self.targets = ko.observable(null);
+//            if(self.targetsFromParam) {
+//                self.targets(JSON.parse(decodeURI(self.targetsFromParam)));
+////                console.log("***");
+////                console.log(JSON.stringify(self.targets()));
+//            }
+//            
+//            //decompress targets obtained from url
+//            self.targetszFromParam = dfu_model.getUrlParam("targetsz");
+//            if(self.targetszFromParam) {
+//                var deCompressedTargets = self.targetszFromParam;
+//                require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
+//                    if(TargetSelectorUtils.decompress) {
+//                        deCompressedTargets = TargetSelectorUtils.decompress(self.targetszFromParam);
+//                    }
+//                    self.targets(JSON.parse(decodeURI(deCompressedTargets)));
+//                    console.log("***"+self.targets());
+//                });
+//            }
+
             self.timeSelectorModel = new Builder.TimeSelectorModel();
             self.tilesView = $b.getDashboardTilesView();
             self.isOnePageType = (self.dashboard.type() === Builder.SINGLEPAGE_TYPE);
@@ -148,7 +167,7 @@ define(['knockout',
             
             self.appendNewTile = function(name, description, width, height, widget) {
                 if (widget) {
-                    var newTile = self.editor.createNewTile(name, description, width, height, widget, self.timeSelectorModel, self.targetContext, true);
+                    var newTile = self.editor.createNewTile(name, description, width, height, widget, self.timeSelectorModel, self.targets, true);
                     if (newTile){
                        self.editor.tiles.push(newTile);
                        self.show();
@@ -406,7 +425,7 @@ define(['knockout',
                 if (change instanceof Builder.TileChange){
                     tChange = change;
                 }
-                var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()), self.targetContext, null,tChange, self.dashboard.enableTimeRange());
+                var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()), self.targets, null,tChange, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
                 Builder.fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent); 
             };
             
@@ -724,8 +743,8 @@ define(['knockout',
                         cell.column = self.editor.mode.MODE_MAX_COLUMNS-width;
                     }
                     if (!tile) {
-                        tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targetContext, true);                        
-                        Builder.initializeTileAfterLoad(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targetContext, true);
+                        tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targets, true);                        
+                        Builder.initializeTileAfterLoad(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targets, true);
                         u.helper.tile = tile;
                         self.editor.tiles.push(tile);
                         $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
@@ -918,6 +937,31 @@ define(['knockout',
                     }
                 }
             };
+            
+            self.returnFromTargetSelector = function(targets) {
+//                if(targets.targets) {
+//                    if(targets.targets.length === 1) {
+//                        self.tgtSelLabel(getNlsString('DBS_BUILDER_ONE_TARGET_SELECTED'));
+//                    }else {
+//                        self.tgtSelLabel(getNlsString('DBS_BUILDER_MULTI_TARGETS_SELECTED', targets.targets.length));
+//                    }
+//                }
+                self.targets(targets);
+                var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()), self.targets, null, null, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
+                Builder.fireDashboardItemChangeEvent(self.dashboard.tiles(), dashboardItemChangeEvent);
+            };
+            
+            self.selectionMode = ko.observable(["byCriteria"]);
+            self.returnMode = ko.observable('criteria');
+            self.dropdownInitialLabel = ko.observable(getNlsString("DBS_BUILDER_ALL_TARGETS"));
+            self.dropdownResultLabel = ko.observable(getNlsString("DBS_BUILDER_TARGETS_SELECTED"));
+            
+            self.getInputCriteria = function() {
+                if(self.targets()) {
+                    return self.targets.criteria;
+                }
+                return '';
+            }
 
             var timeSelectorChangelistener = ko.computed(function(){
                 return {
@@ -927,7 +971,7 @@ define(['knockout',
                 
             timeSelectorChangelistener.subscribe(function (value) {
                 if (value.timeRangeChange){
-                    var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),self.targetContext, null, null, self.dashboard.enableTimeRange());
+                    var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),self.targets, null, null, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
                     Builder.fireDashboardItemChangeEvent(self.dashboard.tiles(), dashboardItemChangeEvent);
                     self.timeSelectorModel.timeRangeChange(false);
                 }

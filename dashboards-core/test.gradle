@@ -2,6 +2,7 @@
 sourceSets {
     integTest {
         java.srcDir 'src/integTest/java'
+	resources.srcDir 'src/integTest/java'
         compileClasspath = configurations.testNG+configurations.restAssured+configurations.testConfig
     }
 }

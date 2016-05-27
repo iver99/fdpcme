@@ -62,14 +62,14 @@ define([
                     "appId": "APM",
                     "appName": "BRANDING_BAR_APP_NAME_APM",
                     "serviceDisplayName": "BRANDING_BAR_CLOUD_SERVICE_NAME_APM",
-                    "serviceName": "apmUI",
+                    "serviceName": "ApmUI",
                     "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_apm_gs"
                 };
                 appMap[appIdITAnalytics] = {
                     "appId": "ITAnalytics",
                     "appName": "BRANDING_BAR_APP_NAME_IT_ANALYTICS", 
-                    "serviceName": "EmcitasApplications",
+                    "serviceName": "emcitas-ui-apps",
                     "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_it_gs"
                 };
@@ -592,6 +592,8 @@ define([
                     }
                     
                     if (subscribedApps && subscribedApps.length > 0) {
+                        //Alphabetically sort the subscribed application names
+                        subscribedApps.sort();
                         for (var i = 0; i < subscribedApps.length; i++) {
                             var appProps = appMap[subscribedApps[i]];
                             if (appProps) {

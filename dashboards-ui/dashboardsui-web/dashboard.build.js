@@ -3,14 +3,14 @@
     baseUrl: "@version@/js",
     dir: "../build/public_html",
     optimize:"none",
-    optimizeCss: "standard",
+    optimizeCss: "standard", 
     modules: [
         {
-            name: "builder/builder.jet.dvt.partition"
+            name: "builder/builder.jet.partition"
         },
         {
             name: "builderMain",
-            exclude: ["builder/builder.jet.dvt.partition"]
+            exclude: ["builder/builder.jet.partition"]
         },
         {
             name: "homeMain"
@@ -58,7 +58,7 @@
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
         'dbs': '../js',
         'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
-        'prefutil':'empty:',
-	'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
+        'prefutil':'empty:'
+//	'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
     }
 })

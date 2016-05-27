@@ -122,6 +122,15 @@ $.widget('dbs.dbsDashboardPanel',
             this._createComponent();
             this.element.attr("aria-dashboard", this.options['dashboard'].id);
             this.element.attr("aria-label", self.options['dashboard'].name);
+            this.element.addClass("dbs-dsbnameele");
+            if (self.options['dashboard'].systemDashboard)
+            {
+                this.element.addClass( "dbs-dsbsystem" );
+            }
+            else
+            {
+                this.element.addClass( "dbs-dsbnormal" );
+            }
             setTimeout(function() {
                 if(_element.is(":hover")) {
                     
