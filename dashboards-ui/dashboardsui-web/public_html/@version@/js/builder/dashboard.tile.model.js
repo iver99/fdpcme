@@ -129,8 +129,16 @@ define(['knockout',
                 return icon;  
             }());  
             
-            self.toggleRightPanel = function(data,event) {
+            self.toggleRightPanel = function(data,event,target) {
                     var clickedIcon;
+                if(!event){
+                    if("edit" === target && !self.rightPanelShown()){
+                        clickedIcon = "pencil";
+                        self.rightPanelIcon(clickedIcon);
+                        $b.getRightPanelModel().toggleLeftPanel();
+                        self.rightPanelShown(!self.rightPanelShown());
+                    }
+                }else{
                     if ($(event.currentTarget).hasClass('rightpanel-pencil')) {
                         clickedIcon = "pencil";
                     } else if ($(event.currentTarget).hasClass('rightpanel-wrench')) {
@@ -149,6 +157,7 @@ define(['knockout',
                         $b.getRightPanelModel().toggleLeftPanel();
                         self.rightPanelShown(!self.rightPanelShown());
                     }              
+                }
             };
             
 //            self.appendTextTile = function () {

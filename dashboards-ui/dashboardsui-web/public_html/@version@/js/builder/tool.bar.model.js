@@ -577,9 +577,7 @@ define(['knockout',
             checkDashboardAsHomeSettings();
             
             self.openDashboardEditDialog = function() {
-               if(!self.tilesViewModel.rightPanelShown()){
-                    self.tilesViewModel.toggleRightPanel();
-                }
+                self.tilesViewModel.toggleRightPanel(null,null,"edit");
             };
             self.openDashboardDuplicateDialog = function() {
                 $('#duplicateDsbDialog').ojDialog('open');

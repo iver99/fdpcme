@@ -786,12 +786,12 @@
                                             </div>
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label class="oj-label enableShareAutoRefresh" style="margin: 10px 0 0 0;color: #9e9e9e;">Default Auto-refresh Value</label>
+                                                    <label class="oj-label enableSetShareAutoRefresh" style="margin: 10px 0 0 0;">Default Auto-refresh Value</label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label class="enableShareAutoRefresh" style="color: #9e9e9e;">Specify the default for other users</label>
+                                                    <label class="enableSetShareAutoRefresh">Specify the default for other users</label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
@@ -1011,17 +1011,17 @@
                                             </div>
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label class="oj-label enableShareAutoRefresh" style="margin: 10px 0 0 0;color: #9e9e9e;">Default Auto-refresh Value</label>
+                                                    <label class="oj-label enableShareAutoRefresh" style="margin: 10px 0 0 0;">Default Auto-refresh Value</label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label class="enableShareAutoRefresh" style="color: #9e9e9e;">Specify the default for other users</label>
+                                                    <label class="enableShareAutoRefresh">Specify the default for other users</label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <select data-bind="ojComponent: {component: 'ojSelect', value: defaultAutoRefreshValue,disabled:!enableShareAutoRefresh(),rootAttributes: {style:'max-width:20em'}}">
+                                                    <select data-bind="ojComponent: {component: 'ojSelect', value: defaultAutoRefreshValue,disabled:dashboardSharing()==='notShared',rootAttributes: {style:'max-width:20em'}}">
                                                         <option value="every5minutes">On(Every 5 Minutes)</option>
                                                         <option value="every15minutes">On(Every 15 Minutes)</option>
                                                     </select>

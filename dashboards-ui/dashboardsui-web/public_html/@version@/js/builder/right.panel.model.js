@@ -27,8 +27,8 @@ define(['knockout',
                 self.$list.each(function() {
                     var elem = $(this)
                     , v_siblings = elem.siblings(".fit-size-vertical-sibling:visible")
-                    , h = 54;
-                    if(v_siblings && 1 == v_siblings.length && v_siblings.attr("class").indexOf("dbd-right-panel-title")>-1){
+                    , h = 52;
+                    if(v_siblings && 1 === v_siblings.length && v_siblings.attr("class").indexOf("dbd-right-panel-title")>-1){
                         h = 0;
                     }
                     if (v_siblings && v_siblings.length > 0) {
@@ -491,18 +491,22 @@ define(['knockout',
                 self.filterSettingModified(false);
             };
             
-            self.dashboardSharing = ko.observable("notShared");
+            self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
+            if(self.dashboardSharing() === 'notShared'){
+                $(".enableShareAutoRefresh").css("color","#9e9e9e");
+            }else{
+                $(".enableShareAutoRefresh").css("color","#333");
+            }
             self.dashboardSharing.subscribe(function(val){
                 if("notShared"===val){
-                    self.enableShareAutoRefresh(false);
+                    $(".enableShareAutoRefresh").css("color","#9e9e9e");
                     toolBarModel.handleShareUnshare(false);
                 }else{
-                    self.enableShareAutoRefresh(true);
+                    $(".enableShareAutoRefresh").css("color","#333");
                     toolBarModel.handleShareUnshare(true);
                 }
             });
             self.defaultAutoRefreshValue = ko.observable("every5minutes");
-            self.enableShareAutoRefresh = ko.observable(false);
 
             self.enableEntityFilter.subscribe(function(val){
                 if(val){
@@ -519,14 +523,6 @@ define(['knockout',
                     $(".enableTimeRangeFilter").css("color","#9e9e9e");
                 }
             });
-
-            self.enableShareAutoRefresh.subscribe(function(val){
-                if(val){
-                    $(".enableShareAutoRefresh").css("color","#333");
-                }else{
-                    $(".enableShareAutoRefresh").css("color","#9e9e9e");
-                }
-            });
             
             if (self.dashboardsetToolBarModel.isDashboardSet()) {
                 
@@ -538,15 +534,21 @@ define(['knockout',
                 
                 var prevSharePublic = self.dashboardsetToolBarModel.dashboardsetConfig.share();
                 self.dashboardsetShare = ko.observable(prevSharePublic);
+                if(self.dashboardsetShare() === 'off'){
+                    $(".enableSetShareAutoRefresh").css("color","#9e9e9e");
+                }else{
+                    $(".enableSetShareAutoRefresh").css("color","#333");
+                }
+                self.dashboardsetShare.subscribe(function (val) {
+                    if (val === "on") {
+                        $(".enableSetShareAutoRefresh").css("color", "#333");
+                    } else {
+                        $(".enableSetShareAutoRefresh").css("color", "#9e9e9e");
+                    }
+                });
                 
                 self.defaultSetAutoRefreshValue = ko.observable("every5minutes"); // todo get from instance
                 
-                self.dashboardsetName.subscribe(function (val) {
-                    $('#nameDescription input').val(val);
-                });
-                self.dashboardsetDescription.subscribe(function (val) {
-                    $('#nameDescription textarea').val(val);
-                });
                 self.dashboardsetNameInputed.subscribe(function (val) {
                     self.dashboardsetName(val);
                 });
@@ -560,8 +562,6 @@ define(['knockout',
                 
                 //todo called when refresh page;
                 dsbSetSaveDelay.subscribe(function () {
-                                debugger;
-
                     self.dashboardsetToolBarModel.saveDashboardSet(
                             {
                                 "name": self.dashboardsetName(),
@@ -582,8 +582,8 @@ define(['knockout',
                                 }
                                 
                                 self.dashboardsetShare(result.sharePublic === true ? "on" : "off");
-                                self.dashboardsetName(result.name);
-                                self.dashboardsetDescription(result.description);
+                                self.dashboardsetToolBarModel.dashboardsetName(result.name);
+                                self.dashboardsetToolBarModel.dashboardsetDescription(result.description);
                             },
                             function (jqXHR, textStatus, errorThrown) {
                                 dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
