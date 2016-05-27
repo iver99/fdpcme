@@ -437,6 +437,8 @@ define([
                                 var widget = data[i];
                                 widget.index = widgetIndex;
                                 widget.WIDGET_VISUAL = ko.observable();
+                                widget.imgWidth = ko.observable("190px");
+                                widget.imgHeight = ko.observable("140px");
 
                                 if (!widget.WIDGET_DESCRIPTION)
                                     widget.WIDGET_DESCRIPTION = "";
@@ -483,6 +485,29 @@ define([
                             widget.WIDGET_VISUAL(itaImagePath); //default image
                         }
                     }
+                    
+
+                    var ratio = 190 / 140;
+
+                    var tmpImage = new Image();
+                    var imgHref = widget.WIDGET_VISUAL();
+                    tmpImage.src = imgHref;
+                    
+                    tmpImage.onload = function() {
+                        var imgWidth = tmpImage.width;
+                        var imgHeight = tmpImage.height;
+                        var imgRatio = imgWidth / imgHeight;
+                        if (imgRatio > ratio) {
+                            imgHeight = imgHeight * 190 / imgWidth;
+                            imgWidth = 190;
+                        } else {
+                            imgWidth =  imgWidth * 140 / imgHeight;
+                            imgHeight = 140;
+                        }
+
+                        widget.imgWidth(imgWidth+"px");
+                        widget.imgHeight(imgHeight+"px");
+                    }
                 }
                 
                 function loadWidgetBase64Screenshot(widget) {
@@ -514,6 +539,7 @@ define([
                                         widget.WIDGET_VISUAL(itaImagePath); //default image
                                     }
                                 }
+                               
                                 widgetArray[widget.index].WIDGET_VISUAL(widget.WIDGET_VISUAL());
                                 widget.isScreenshotLoaded = true;
                                 widgetArray[widget.index].isScreenshotLoaded = true;

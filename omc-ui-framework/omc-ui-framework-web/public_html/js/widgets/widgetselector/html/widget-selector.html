@@ -68,7 +68,7 @@
                                         <div data-bind="text: WIDGET_DESCRIPTION"></div>
                                     </div>
                                     <div class="widget-box-screenshot" data-bind="css: {'widget-box-inactive': !isScreenShotPageDisplayed()}">
-                                        <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL}" class="widget-selector-screenshot"/>
+                                        <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL, width: imgWidth, height: imgHeight}" class="widget-selector-screencshot" style="vertical-align: middle;"/>
                                     </div>
                                     <div class="widget-box-navigation">
                                         <button class="widget-box-navi-control" style="margin-left: -20px;" data-bind="css: {'widget-box-navi-control-inactive': !isScreenShotPageDisplayed()}, 
