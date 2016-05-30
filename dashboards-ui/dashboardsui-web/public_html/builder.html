@@ -796,7 +796,7 @@
                                             </div>
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <select data-bind="ojComponent: {component: 'ojSelect', value: defaultAutoRefreshValue,disabled:!enableShareAutoRefresh(),rootAttributes: {style:'max-width:20em'}}">
+                                                    <select data-bind="ojComponent: {component: 'ojSelect', value: defaultSetAutoRefreshValue,disabled:dashboardsetShare() === 'off',rootAttributes: {style:'max-width:20em'}}">
                                                         <option value="every5minutes">On(Every 5 Minutes)</option>
                                                         <option value="every15minutes">On(Every 15 Minutes)</option>
                                                     </select>

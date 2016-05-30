@@ -527,35 +527,73 @@ define(['knockout',
                     $(".enableShareAutoRefresh").css("color","#9e9e9e");
                 }
             });
-            if(self.dashboardsetToolBarModel.isDashboardSet()){
-            self.dashboardsetName = ko.observable(self.dashboardsetToolBarModel.dashboardsetName());
-            self.dashboardsetDescription = ko.observable(self.dashboardsetToolBarModel.dashboardsetDescription());
-            self.dashboardsetNameInputed = ko.observable(self.dashboardsetName());
-            self.dashboardsetDescriptionInputed = ko.observable(self.dashboardsetDescription());
-            self.dashboardsetShare = ko.observable("off");
-            self.dashboardsetName.subscribe(function(val){
-                $('#nameDescription input').val(val);
-            });
-            self.dashboardsetDescription.subscribe(function(val){
-                $('#nameDescription textarea').val(val);
-            });
-            self.dashboardsetNameInputed.subscribe(function(val){
-                self.dashboardsetName(val);
-            });
-            self.dashboardsetDescriptionInputed.subscribe(function(val){
-                self.dashboardsetDescription(val);
-            });
-            var dsbSetSaveDelay = ko.computed(function() { 
-                return self.dashboardsetName()+self.dashboardsetDescription()+self.dashboardsetShare();
-            });
-            dsbSetSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } }); 
-            dsbSetSaveDelay.subscribe(function(){
-                self.dashboardsetToolBarModel.dbConfigMenuClick.saveDbsDescription({dashboardsetConfig:{share:self.dashboardsetShare}});
-            });
-            self.deleteDashboardSetClicked = function(){
-                $('#deleteDashboardset').ojDialog("open");
-            };  
-        }
+            
+            if (self.dashboardsetToolBarModel.isDashboardSet()) {
+                
+                
+                self.dashboardsetName = ko.observable(self.dashboardsetToolBarModel.dashboardsetName());
+                self.dashboardsetDescription = ko.observable(self.dashboardsetToolBarModel.dashboardsetDescription());
+                self.dashboardsetNameInputed = ko.observable(self.dashboardsetName());
+                self.dashboardsetDescriptionInputed = ko.observable(self.dashboardsetDescription());
+                
+                var prevSharePublic = self.dashboardsetToolBarModel.dashboardsetConfig.share();
+                self.dashboardsetShare = ko.observable(prevSharePublic);
+                
+                self.defaultSetAutoRefreshValue = ko.observable("every5minutes"); // todo get from instance
+                
+                self.dashboardsetName.subscribe(function (val) {
+                    $('#nameDescription input').val(val);
+                });
+                self.dashboardsetDescription.subscribe(function (val) {
+                    $('#nameDescription textarea').val(val);
+                });
+                self.dashboardsetNameInputed.subscribe(function (val) {
+                    self.dashboardsetName(val);
+                });
+                self.dashboardsetDescriptionInputed.subscribe(function (val) {
+                    self.dashboardsetDescription(val);
+                });
+                var dsbSetSaveDelay = ko.computed(function () {
+                    return self.dashboardsetName() + self.dashboardsetDescription() + self.dashboardsetShare();
+                });
+                dsbSetSaveDelay.extend({rateLimit: {method: "notifyWhenChangesStop", timeout: 800}});
+                
+                //todo called when refresh page;
+                dsbSetSaveDelay.subscribe(function () {
+                                debugger;
+
+                    self.dashboardsetToolBarModel.saveDashboardSet(
+                            {
+                                "name": self.dashboardsetName(),
+                                "description": self.dashboardsetDescription(),
+                                "sharePublic": self.dashboardsetShare() === "on" ? true : false
+                            },
+                            function (result) {
+                                var sharePublic = result.sharePublic  === true ? "on" : "off";
+                                if ( sharePublic !== prevSharePublic) {
+                                    var shareMsgKey = result.sharePublic ? 'DBS_BUILDER_DASHBOARD_SET_SHARE_SUCCESS' : 'DBS_BUILDER_DASHBOARD_SET_SHARE_ERROR';
+                                    dfu.showMessage({
+                                        type: 'confirm',
+                                        summary: getNlsString(shareMsgKey),
+                                        detail: '',
+                                        removeDelayTime: 5000
+                                    });
+                                    prevSharePublic = sharePublic;
+                                }
+                                
+                                self.dashboardsetShare(result.sharePublic === true ? "on" : "off");
+                                self.dashboardsetName(result.name);
+                                self.dashboardsetDescription(result.description);
+                            },
+                            function (jqXHR, textStatus, errorThrown) {
+                                dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
+                            });
+                });
+                
+                self.deleteDashboardSetClicked = function () {
+                    $('#deleteDashboardset').ojDialog("open");
+                };
+            }
 
             self.editPanelContent = ko.observable(function(){
                 var content = "settings";
