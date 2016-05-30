@@ -10,7 +10,7 @@ define(['knockout',
     ], function(ko, $, oj) {
         function NormalEditorMode() {
             this.mode = "Normal Display Mode";
-            this.MODE_MAX_COLUMNS = 8;
+            this.MODE_MAX_COLUMNS = 12;
             this.editable = true;
             this.POSITION_TYPE = Builder.EDITOR_POS_BASED_ON_ROW_COLUMN;
         }
