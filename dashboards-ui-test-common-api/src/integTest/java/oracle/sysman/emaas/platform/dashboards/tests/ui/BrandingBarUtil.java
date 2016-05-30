@@ -6,6 +6,9 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -387,19 +390,19 @@ public class BrandingBarUtil
 	{
 		String parentId = null;
 		switch (linkType) {
-		//Home links
+			//Home links
 			case "home":
 				parentId = DashBoardPageId.BrandingBarHomeLinksID;
 				break;
-				//Cloud service links
+			//Cloud service links
 			case "cs":
 				parentId = DashBoardPageId.BrandingBarCloudServiceLinksID;
 				break;
-				//Visual analyzer links
+			//Visual analyzer links
 			case "va":
 				parentId = DashBoardPageId.BrandingBarVisualAnalyzerLinksID;
 				break;
-				//Administration links
+			//Administration links
 			case "admin":
 				parentId = DashBoardPageId.BrandingBarAdminLinksID;
 				break;
@@ -455,6 +458,24 @@ public class BrandingBarUtil
 	}
 
 	/**
+	 * Check if a element is stale or not
+	 *
+	 * @param element
+	 *            WebElement instance
+	 * @return
+	 */
+	private static boolean isElementStale(WebElement element)
+	{
+		try {
+			element.getText();
+			return false;
+		}
+		catch (StaleElementReferenceException e) {
+			return true;
+		}
+	}
+
+	/**
 	 * Check if the navigation bar is displayed or not
 	 *
 	 * @param driver
@@ -496,7 +517,7 @@ public class BrandingBarUtil
 	 *            Locator the link
 	 * @return
 	 */
-	private static void visitApplicationLink(WebDriver driver, String locator)
+	private static void visitApplicationLink(WebDriver driver, final String locator)
 	{
 		Validator.notEmptyString("locator in [BrandingBarUtil.visitApplicationLink]", locator);
 		// Open navigation bar if it's not displayed
@@ -504,7 +525,25 @@ public class BrandingBarUtil
 		//Wait until the links menu is displayed
 		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
 		driver.waitForElementPresent(locator);
-		driver.click(locator);
+		//Add try catch to handle StaleElementReferenceException
+		try {
+			driver.click(locator);
+		}
+		catch (StaleElementReferenceException e) {
+			driver.getLogger().info("StaleElementReferenceException thrown, wait for element becoming not stale");
+			// wait until element is not stale
+			new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT).until(new ExpectedCondition<Boolean>() {
+				@Override
+				public Boolean apply(org.openqa.selenium.WebDriver d)
+				{
+					WebElement element = d.findElement(By.xpath(locator));
+					Boolean isStale = BrandingBarUtil.isElementStale(element);
+					return !isStale;
+				}
+			});
+			driver.click(locator);
+		}
+
 		driver.takeScreenShot();
 	}
 
