@@ -486,28 +486,11 @@ define([
                         }
                     }
                     
-
-                    var ratio = 190 / 140;
-
-                    var tmpImage = new Image();
-                    var imgHref = widget.WIDGET_VISUAL();
-                    tmpImage.src = imgHref;
-                    
-                    tmpImage.onload = function() {
-                        var imgWidth = tmpImage.width;
-                        var imgHeight = tmpImage.height;
-                        var imgRatio = imgWidth / imgHeight;
-                        if (imgRatio > ratio) {
-                            imgHeight = imgHeight * 190 / imgWidth;
-                            imgWidth = 190;
-                        } else {
-                            imgWidth =  imgWidth * 140 / imgHeight;
-                            imgHeight = 140;
-                        }
-
-                        widget.imgWidth(imgWidth+"px");
-                        widget.imgHeight(imgHeight+"px");
-                    }
+                    //resize widget screenshot according to aspect ratio
+                    dfu.getScreenshotSizePerRatio(190, 140, widget.WIDGET_VISUAL(), function(imgWidth, imgHeight) {
+                        widget.imgWidth(imgWidth + "px");
+                        widget.imgHeight(imgHeight + "px");
+                    });
                 }
                 
                 function loadWidgetBase64Screenshot(widget) {
