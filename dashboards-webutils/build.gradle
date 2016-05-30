@@ -1,6 +1,6 @@
 
 apply plugin: 'eclipse' 
-
+apply from: 'test.gradle'
 jar {
         from('src/main/java') {
                 include '**/*.xml'
@@ -8,6 +8,11 @@ jar {
 }
 publishing.publications {
 
+	integTest(MavenPublication) {
+                        setArtifactId(project.name + '-' + integTestJar.appendix)
+                        setGroupId('com.oracle.emaas.emcpssf.test')
+                        artifact integTestJar.archivePath
+    }
         thisJarPublication(MavenPublication) {
                 setGroupId('com.oracle.emaas.emcpdf.test')
                 artifact jar
@@ -15,20 +20,44 @@ publishing.publications {
 }
 
 artifactoryPublish {
+	 publications('integTest')
         publications('thisJarPublication')
+}
+
+
+test {
+        useTestNG()
+        {
+                //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
+                //if you wish to run ALL tests within this projet - remove following.
+                includeGroups 's1' ,'s2'
+        }
+}
+
+sourceSets {
+        test{
+                java {
+                        srcDirs = ['src/integTest/java']
+                }
+                resources.srcDirs = ['src/integTest/java']
+        }
 }
 
  
 dependencies { 
         compile project(':dashboards-core')
+	compile configurations.testNG
         compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
         compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
         compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0'){ transitive = false }
-        compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.0.0+'){ transitive = false }
-        compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.0.0+'){ transitive = false }
+        compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.+'){ transitive = false }
+        compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.+'){ transitive = false }
         compile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){ transitive = false }
         compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.3.0'){ transitive = false }
         compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.3.0'){ transitive = false }
         compile(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.3.0'){ transitive = false }
         compile(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
+	testCompile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 } 
+build.dependsOn integTestJar
+

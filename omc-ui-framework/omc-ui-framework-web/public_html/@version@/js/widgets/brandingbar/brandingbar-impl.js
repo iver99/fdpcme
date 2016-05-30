@@ -62,14 +62,14 @@ define([
                     "appId": "APM",
                     "appName": "BRANDING_BAR_APP_NAME_APM",
                     "serviceDisplayName": "BRANDING_BAR_CLOUD_SERVICE_NAME_APM",
-                    "serviceName": "apmUI",
+                    "serviceName": "ApmUI",
                     "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_apm_gs"
                 };
                 appMap[appIdITAnalytics] = {
                     "appId": "ITAnalytics",
                     "appName": "BRANDING_BAR_APP_NAME_IT_ANALYTICS", 
-                    "serviceName": "EmcitasApplications",
+                    "serviceName": "emcitas-ui-apps",
                     "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_it_gs"
                 };
@@ -117,9 +117,8 @@ define([
                 self.notificationPageUrl = null;
                 self.navLinksVisible = true; //self.appId === 'Error' ? false : true; EMCPDF-992
                 
-                var appProperties = appMap[self.appId];
-                self.serviceName = appProperties['serviceName'];
-                self.serviceVersion = appProperties['version'];
+                var isAppIdNotEmpty = self.appId && $.trim(self.appId) !== "";
+                var appProperties = isAppIdNotEmpty && appMap[self.appId] ? appMap[self.appId] : {};
                 
                 var maxMsgDisplayCnt = $.isFunction(params.maxMessageDisplayCount) ? params.maxMessageDisplayCount() : 
                         (typeof(params.maxMessageDisplayCount) === "number" && params.maxMessageDisplayCount > 0 ?
@@ -187,6 +186,7 @@ define([
                 //SSO logout handler
                 self.handleSignout = function() {
                     //Clear interval for extending user session
+                    /* globals clearInterval*/
                     if (window.intervalToExtendCurrentUserSession)
                         clearInterval(window.intervalToExtendCurrentUserSession);
                     
@@ -221,7 +221,7 @@ define([
                 
                 //Open help link
                 var helpBaseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";//"http://tahiti-stage.us.oracle.com/pls/topic/lookup?ctx=cloud&id=";
-                var helpTopicId = appProperties["helpTopicId"];
+                var helpTopicId = appProperties["helpTopicId"] ? appProperties["helpTopicId"] : "em_home_gs";
                 self.openHelpLink = function() {
                     oj.Logger.info("Open help link: " + helpBaseUrl + helpTopicId);
                     window.open(helpBaseUrl + helpTopicId);
@@ -236,23 +236,35 @@ define([
                     {
                         "label": self.helpMenuLabel,
                         "url": "#",
-                        "id":"emcpdf_oba_help",
-                        "onclick": self.openHelpLink
+                        "id":"emcpdf_oba_help"
 //                        ,"subNavItems": self.subHelpMenuItems
                     },
                     {
                         "label": self.aboutMenuLabel,
                         "url": "#",
-                        "id":"emcpdf_oba_about",
-                        "onclick": self.openAboutBox
+                        "id":"emcpdf_oba_about"
                     },
                     {
                         "label": self.signOutMenuLabel,
                         "url": "#",
-                        "id":"emcpdf_oba_logout",
-                        "onclick": self.handleSignout
+                        "id":"emcpdf_oba_logout"
                     }
                 ];
+                
+                self.globalNavMenuItemSelect = function(event, ui) {
+                    var itemId = $(ui.item).children("a").attr("id");
+                    switch(itemId) {
+                        case "emcpdf_oba_help": 
+                            self.openHelpLink();
+                            break;
+                        case "emcpdf_oba_about":
+                            self.openAboutBox();
+                            break;
+                        case "emcpdf_oba_logout":
+                            self.handleSignout();
+                            break;
+                    }
+                };
                 
                 var templatePath = "/emsaasui/uifwk/js/widgets/navlinks/html/navigation-links.html";
                 var vmPath = "/emsaasui/uifwk/js/widgets/navlinks/js/navigation-links.js";
@@ -264,7 +276,7 @@ define([
                     tenantName: self.tenantName,
                     nlsStrings: nls,
                     appMap: appMap,
-                    app: appMap[self.appId],
+                    app: appProperties,
                     appDashboard: appMap[appIdDashboard],
                     appTenantManagement: appMap[appIdTenantManagement],
                     appEventUI: appMap[appIdEventUI],
@@ -386,7 +398,7 @@ define([
                             async: true
                         });  
                     }
-                };
+                }
                 
                 function receiveMessage(event)
                 {
@@ -408,7 +420,7 @@ define([
                             showMessage(data);
                         }
                     }
-                };
+                }
                 
                 function showMessage(data) {
                     if (data) {
@@ -475,7 +487,7 @@ define([
                             setTimeout(function(){removeMessage(message);}, data.removeDelayTime);
                         }
                     }
-                };
+                }
                 
                 function removeMessage(data) {
                     if (data.category === catRetryInProgress) {
@@ -513,21 +525,21 @@ define([
                         if (displayMessageCount <= maxMsgDisplayCnt)
                             self.hiddenMessagesExpanded(false);
                     }
-                };
+                }
                 
                 function removeItemByValue(obj, value)
                 {
                     return obj.filter(function (val) {
                         return val !== value;
                     });
-                };
+                }
                 
                 function removeItemByPropertyValue(obj, prop, value)
                 {
                     return obj.filter(function (val) {
                         return val[prop] !== value;
                     });
-                };
+                }
                 
                 function checkNotifications() {
                     oj.Logger.info("Start to check notifications for branding bar. relNotificationCheck: "+
@@ -555,38 +567,46 @@ define([
                             }
                         }
                     }
-                };
+                }
                 
                 function getSubscribedAppsCallback(apps) {
                     oj.Logger.info("Finished getting subscribed applications for branding bar.", false);
                     subscribedApps = apps;
                     refreshAppName();
-                };
+                }
                 
                 function getSubscribedApplications() {
                     oj.Logger.info("Start to get subscribed applications for branding bar.", false);
                     dfu.checkSubscribedApplications(getSubscribedAppsCallback);
-                };
+                }
                 
                 function refreshAppName() {
                     var subscribedServices = null;
                     //For app pages like LA or ITA or APM: only show name of LA or ITA or APM in Branding Bar. 
                     //Even other apps are subscribed to current tenant as well, we don't show them
-                    if (self.appId !== 'Dashboard' && self.appId !== 'Error')
-                        subscribedApps = [self.appId];
-                    else if (self.appId === 'Error')
+                    if (!isAppIdNotEmpty || self.appId === 'Dashboard' || self.appId === 'Error' || self.appId === 'EventUI') {
                         subscribedApps = [];
+                    }
+                    else {
+                        subscribedApps = [self.appId];
+                    }
+                    
                     if (subscribedApps && subscribedApps.length > 0) {
-                        for (i = 0; i < subscribedApps.length; i++) {
-                            var servicename = nls[appMap[subscribedApps[i]]['appName']] ? nls[appMap[subscribedApps[i]]['appName']] : "";
-                            if (i === 0)
-                                subscribedServices = servicename;
-                            else 
-                                subscribedServices = subscribedServices + " | " + servicename;
+                        //Alphabetically sort the subscribed application names
+                        subscribedApps.sort();
+                        for (var i = 0; i < subscribedApps.length; i++) {
+                            var appProps = appMap[subscribedApps[i]];
+                            if (appProps) {
+                                var servicename = nls[appProps['appName']] ? nls[appProps['appName']] : "";
+                                if (i === 0)
+                                    subscribedServices = servicename;
+                                else 
+                                    subscribedServices = subscribedServices + " | " + servicename;
+                            }
                         }
                     }
                     self.appName(subscribedServices);
-                };
+                }
             }
             
             return BrandingBarViewModel;

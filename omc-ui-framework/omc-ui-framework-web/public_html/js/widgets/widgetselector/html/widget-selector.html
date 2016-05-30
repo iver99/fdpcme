@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="/emsaasui/uifwk/@version@/css/widgets/widget-selector-alta.css" type="text/css"/>
     </head>
     <body>
-        <div style="display:none;" 
+        <div style="display:none;" class="widget-selector-main"  data-testapiversion="1.7.5" 
             data-bind="ojComponent:{component: 'ojDialog', beforeOpen: beforeOpenDialog,
                 initialVisibility: 'hide', title: widgetSelectorTitle, resizeBehavior: 'none',
                 rootAttributes: { style: 'width: 867px;'}}, attr: {id: dialogId}">   
@@ -22,13 +22,13 @@
                                             attr: {placeholder: searchBoxPlaceHolder, 'aria-label': searchBoxPlaceHolder},
                                             typeAheadSearch: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
                             <button class="oj-button-half-chrome widget-selector-clear-button" data-bind="click: clearSearchText, visible: clearButtonVisible,
-                                ojComponent: {component: 'ojButton', label: clearButtonLabel, display: 'icons', 
+                                ojComponent: {component: 'ojButton', label: clearButtonLabel, display: 'icons', chroming: 'half',
                                 icons: {start:'widget-selector-clear-icon'}}"> 
                             </button>
                         </div>
                         <div id="widget-selector-search-icon-container">
                             <button class="oj-button-half-chrome widget-selector-search-button" data-bind="click: searchWidgets,
-                                ojComponent: {component: 'ojButton', label: searchButtonLabel, display: 'icons', 
+                                ojComponent: {component: 'ojButton', label: searchButtonLabel, display: 'icons', chroming: 'half',
                                 icons: {start:'widget-selector-search-icon'}}"> 
                             </button> 
                         </div>
@@ -47,11 +47,15 @@
                     </div>
                     <!-- /ko -->
                 </div>
-                <div id="widget-selector-widgets">
+                <div id="widget-selector-widgets" data-bind="attr:{'data-wgt-slt-auto-close': autoCloseDialog !== false ? 'TRUE' : 'FALSE'}">
+                    <!-- ko if: widgetOnLoading -->
+                    <div id="widget-selector-loading" data-bind="text: widgetsLoadingHints"></div>
+                    <!-- /ko -->
+                    <!-- ko if not: widgetOnLoading -->
                     <ul style="text-align: left; padding: 0px; margin-left: 5px; margin-top: 5px;">
                         <!-- ko foreach: curPageWidgetList -->
                         <li class="widget-selector-li">
-                            <a data-bind="click: $parent.widgetBoxClicked, attr: {href: 'javascript: this.click()'}">
+                            <a data-bind="click: $parent.widgetBoxClicked, attr: {href: 'javascript: this.click()', 'data-widget-title': WIDGET_NAME}">
                                 <div class="widget-selector-container" data-bind="attr:{title: name}, css: {'widget-selector-container-selected': isSelected}">
                                     <div class="widget-box-title" data-bind="attr: {title: WIDGET_NAME}">
                                         <span data-bind="text: WIDGET_NAME"></span>
@@ -78,15 +82,16 @@
                         </li>
                         <!-- /ko -->
                     </ul>
+                    <!-- /ko -->
                 </div>
                 <div style="width:840px;height:24px;">
                     <div style="float:right;height:24px;">
                         <button id="preButton" class="oj-button-half-chrome widget-selector-icon-button" data-bind="click: naviPrevious, event: {keypress: naviPrevious},
-                            ojComponent: {component: 'ojButton', disabled: !naviPreBtnEnabled()},style:{opacity: naviPreBtnEnabled()?1:0.4}" >  
+                            ojComponent: {component: 'ojButton', chroming: 'half', disabled: !naviPreBtnEnabled()},style:{opacity: naviPreBtnEnabled()?1:0.4}" >  
                             <i class="fa fa-icon-font fa-chevron-left pagination-font-icon"></i>
                         </button> 
                         <button id="nextButton" class="oj-button-half-chrome widget-selector-icon-button" data-bind="click: naviNext, event: {keypress: naviNext},
-                            ojComponent: {component: 'ojButton', disabled: !naviNextBtnEnabled()},style:{opacity: naviNextBtnEnabled()?1:0.4}"> 
+                            ojComponent: {component: 'ojButton', chroming: 'half', disabled: !naviNextBtnEnabled()},style:{opacity: naviNextBtnEnabled()?1:0.4}"> 
                             <i class="fa fa-icon-font fa-chevron-right pagination-font-icon"></i>
                         </button>
                     </div>

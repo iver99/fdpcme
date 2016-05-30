@@ -10,33 +10,23 @@
 
 package oracle.sysman.emaas.platform.dashboards.webutils.services;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-import javax.naming.InitialContext;
-
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InfoManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.InstanceStatus;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
-import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager.ServiceConfigBuilder;
-import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager.UrlType;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import weblogic.application.ApplicationLifecycleEvent;
+
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import javax.naming.InitialContext;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class RegistryServiceManager implements ApplicationServiceManager
 {
@@ -310,12 +300,12 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			logger.info("Initialize lookup manager");
 			LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
 
-			logger.info("Checking RegistryService");
-			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
-				setRegistrationComplete(Boolean.FALSE);
-				logger.error("Failed to found registryService. Dashboard-API registration is not complete.");
-				return false;
-			}
+//			logger.info("Checking RegistryService");
+//			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
+//				setRegistrationComplete(Boolean.FALSE);
+//				logger.error("Failed to found registryService. Dashboard-API registration is not complete.");
+//				return false;
+//			}
 
 			ServiceConfigBuilder builder = new ServiceConfigBuilder();
 			builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version")).characteristics(serviceProps.getProperty("characteristics"));

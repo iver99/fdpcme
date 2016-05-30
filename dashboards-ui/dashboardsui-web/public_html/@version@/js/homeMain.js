@@ -17,21 +17,22 @@ requirejs.config({
     },
     // Path mappings for the logical module names
     paths: {
-        'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.3.0',
+        'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.4.0',
         'jquery': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-2.1.3.min',
         'jqueryui': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/min',
-        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/ojL10n',
-        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/resources',
+        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/min',
+        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/ojL10n',
+        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/resources',
+        'ojdnd': '../../libs/@version@/js/oraclejet/js/libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../../libs/@version@/js/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
-        'dbs': '.',
+        'dashboards': '.',
         'dfutil':'internaldfcommon/js/util/internal-df-util',
         'prefutil':'/emsaasui/uifwk/js/util/preference-util',
         'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
@@ -65,7 +66,7 @@ requirejs.config({
     waitSeconds: 300
 });
 
-var dashboardsViewModle = undefined;
+//var dashboardsViewModle = undefined;
 
 /**
  * A top-level require call executed by the Application.
@@ -73,13 +74,15 @@ var dashboardsViewModle = undefined;
  * by the modules themselves), we are listing them explicitly to get the references to the 'oj' and 'ko'
  * objects in the callback
  */
-require(['dbs/dbsmodel',
+require(['dashboards/dbsmodel',
     'knockout',
     'jquery',
     'ojs/ojcore',
     'dfutil',
     'uifwk/js/util/df-util',
+    'dashboards/dashboardhome-impl',
     'loggingutil',
+    'common.uifwk',
     'ojs/ojmodel',
     'ojs/ojknockout',
     'ojs/ojknockout-model',
@@ -89,13 +92,13 @@ require(['dbs/dbsmodel',
     'ojs/ojinputtext',
     'ojs/ojknockout-validation',
     'ojs/ojpopup',
-    'dbs/dbstypeahead',
-    'dbs/dbsdashboardpanel',
+    'dashboards/dbstypeahead',
+    'dashboards/dbsdashboardpanel',
     'ojs/ojselectcombobox',
     'ojs/ojmenu',
     'ojs/ojtable'
 ],
-        function(model, ko, $, oj, dfu, dfumodel, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
+        function(model, ko, $, oj, dfu, dfumodel, dashboardhome_impl, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
         {
             var logger = new _emJETCustomLogger();
 //            var dfRestApi = dfu.discoverDFRestApiUrl();
@@ -104,7 +107,7 @@ require(['dbs/dbsmodel',
                 logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
                 // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                 // If you comment the line below, our current log calls will not be output!
-                logger.setLogLevel(oj.Logger.LEVEL_LOG);
+                logger.setLogLevel(oj.Logger.LEVEL_WARN);
 //            }
 
            
@@ -114,6 +117,19 @@ require(['dbs/dbsmodel',
                     template:{require:'text!/emsaasui/uifwk/js/widgets/brandingbar/html/brandingbar.html'}
                 });
             }
+            
+            if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
+                ko.components.register("df-oracle-dashboard-list",{
+                    viewModel:dashboardhome_impl,
+                    template:{require:'text!/emsaasui/emcpdfui/dashboardhome.html'}
+                });
+            }
+            ko.bindingHandlers.stopBinding = {
+                init: function () {
+                    return {controlsDescendantBindings: true};
+                }
+            };
+            ko.virtualElements.allowedBindings.stopBinding = true;
             
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             
@@ -136,7 +152,7 @@ require(['dbs/dbsmodel',
                self.homeTitle = dfu_model.generateWindowTitle(getNlsString("DBS_HOME_TITLE_HOME"), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
            }
             //dashboardsViewModle = new model.ViewModel();
-            headerViewModel = new HeaderViewModel();
+            var headerViewModel = new HeaderViewModel();
             var titleVM = new TitleViewModel();
 
             $(document).ready(function() {
@@ -148,7 +164,7 @@ require(['dbs/dbsmodel',
 
                 var predataModel = new model.PredataModel();
                 function init() {
-                    dashboardsViewModle = new model.ViewModel(predataModel);
+                    var dashboardsViewModle = new model.ViewModel(predataModel, "mainContent");
                     ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
                     $('#mainContent').show();
                     
@@ -168,12 +184,12 @@ function truncateString(str, length) {
         return str.substring(0, _tlocation) + "...";
     }
     return str;
-};
+}
 
 
 function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);
-};
+}
 
 function getDateString(isoString) {
     //console.log(isoString);
@@ -187,5 +203,5 @@ function getDateString(isoString) {
         }
     }
     return "";
-};
+}
 

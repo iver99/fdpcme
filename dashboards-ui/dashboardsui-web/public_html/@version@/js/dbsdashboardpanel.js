@@ -36,8 +36,7 @@ ko.bindingHandlers.dbsDashboardPanel = {
     }
 };
 
-var TITLE_MAX_LENGTH = 34, 
-    TAB_INDEX_ATTR = "tabindex";
+var TITLE_MAX_LENGTH = 34;
 
 $.widget('dbs.dbsDashboardPanel',
 {
@@ -69,7 +68,7 @@ $.widget('dbs.dbsDashboardPanel',
         
         active: false,
         
-        _activate: function(event, callback) {
+        _activate: function(event) {
             var self = this;
             if (self.active === false)
             {
@@ -95,7 +94,7 @@ $.widget('dbs.dbsDashboardPanel',
             }
         },
         
-        _deactivate: function(event, callback) {
+        _deactivate: function(event) {
             var self = this;
             if (self.active === true)
             {
@@ -123,6 +122,15 @@ $.widget('dbs.dbsDashboardPanel',
             this._createComponent();
             this.element.attr("aria-dashboard", this.options['dashboard'].id);
             this.element.attr("aria-label", self.options['dashboard'].name);
+            this.element.addClass("dbs-dsbnameele");
+            if (self.options['dashboard'].systemDashboard)
+            {
+                this.element.addClass( "dbs-dsbsystem" );
+            }
+            else
+            {
+                this.element.addClass( "dbs-dsbnormal" );
+            }
             setTimeout(function() {
                 if(_element.is(":hover")) {
                     
@@ -186,7 +194,7 @@ $.widget('dbs.dbsDashboardPanel',
                                   .addClass(self.classNames['headerTitle'])
                                   .text(_title);
             self.headerElement.append(self.titleElement); 
-            var _name = self.options['dashboard'].name;
+            _name = self.options['dashboard'].name;
             if ( _name &&  _name.length > TITLE_MAX_LENGTH)
             {
                 //self.headerElement.attr("dbstooltip", self.options['dashboard'].name);
@@ -196,7 +204,7 @@ $.widget('dbs.dbsDashboardPanel',
             // add toolbar
             self.toolbarElement = $("<div></div>").addClass(self.classNames['headerToolbar']);
             
-            self.infoElement = $("<button data-bind=\"ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_LABEL'), icons: {start: 'icon-locationinfo-16 oj-fwk-icon dbs-icon-size-16'}}\"></button>")
+            self.infoElement = $("<button data-bind=\"ojComponent: { component:'ojButton', chroming: 'half', display: 'icons', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_LABEL'), icons: {start: 'icon-locationinfo-16 oj-fwk-icon dbs-icon-size-16'}}\"></button>")
                     .addClass("oj-button-half-chrome oj-sm-float-end")
                     .on('click.'+_name, function(event) {
                         //prevent event bubble
@@ -215,9 +223,9 @@ $.widget('dbs.dbsDashboardPanel',
             _element.append(self.contentPagesEle);
         },
         
-        _setBase64ScreenShot: function(screenShot) {
+        _setBase64ScreenShot: function(screenShotUrl) {
             var self = this, _title = (self.options['dashboard']) ? self.options['dashboard'].name : '';
-            if (!screenShot || screenShot === null)
+            if (!screenShotUrl || screenShotUrl === null)
             {
                 if (self.contentPage1ImgEle) 
                 {
@@ -232,7 +240,7 @@ $.widget('dbs.dbsDashboardPanel',
                     self.contentPage1ImgEle = $("<img>").addClass(self.classNames['pageImage']).attr('alt', _title);
                     self.contentPage1Ele.append(self.contentPage1ImgEle);
                 }
-                self.contentPage1ImgEle.attr("src", screenShot);
+                self.contentPage1ImgEle.attr("src", screenShotUrl);
             }
         },
         
@@ -251,34 +259,39 @@ $.widget('dbs.dbsDashboardPanel',
                 self._setBase64ScreenShot(_ss);
             }
             else {
-                if (_dashboard['systemDashboard'] === true || (_dashboard['tiles'] && _dashboard['tiles'].length > 0))
-                {
-                   
-              var url =  _dashboard['screenShotHref'];
-              url = dfu.getRelUrlFromFullUrl(url);
-              if (dfu.isDevMode()){
-                  url = dfu.buildFullUrl(dfu.getDashboardsUrl(),'/'+ self.options['dashboard']['id'] + '/screenshot');
-              } 
+                if (_dashboard['screenShotHref']) {
+
+                    var url = _dashboard['screenShotHref'];
+                    if (!dfu.isDevMode()) {
+                        url = dfu.getRelUrlFromFullUrl(url);
+                    }
+//                    if (dfu.isDevMode()) {
+//                        url = dfu.buildFullUrl(dfu.getDashboardsUrl(), '/' + self.options['dashboard']['id'] + '/screenshot');
+//                    } 
+                    
+                    // don't use base64 image data, but use the URL retrieved from dashboard directly as screenshot url
+                    self._setBase64ScreenShot(url);
+                    if(_dmodel) _dmodel['screenShot'] = url;
               
-                   dfu.ajaxWithRetry({
-                            //This will be a page which will return the base64 encoded string
-                        //url: '/sso.static/dashboards.service/' + self.options['dashboard']['id'] + '/screenshot',//self.options['dashboard']['screenShotHref'], 
-                        url: url,                   
-                        headers: dfu.getDashboardsRequestHeader(),
-                        success: function(response){
-                            var __ss = (response.screenShot ? response.screenShot : undefined);
-                            self._setBase64ScreenShot(__ss);
-                            if (_dmodel)
-                            {
-                                //_dmodel.set("screenShot", _ss);
-                                _dmodel['screenShot'] = __ss;
-                            }
-                        },
-                        error : function(jqXHR, textStatus, errorThrown) {
-                            self._setBase64ScreenShot(null);
-                            //console.log("Load image error");
-                        }
-                    });
+//                    dfu.ajaxWithRetry({
+//                            //This will be a page which will return the base64 encoded string
+//                        //url: '/sso.static/dashboards.service/' + self.options['dashboard']['id'] + '/screenshot',//self.options['dashboard']['screenShotHref'], 
+//                        url: url,                   
+//                        headers: dfu.getDashboardsRequestHeader(),
+//                        success: function(response){
+//                            var __ss = (response.screenShot ? response.screenShot : undefined);
+//                            self._setBase64ScreenShot(__ss);
+//                            if (_dmodel)
+//                            {
+//                                //_dmodel.set("screenShot", _ss);
+//                                _dmodel['screenShot'] = __ss;
+//                            }
+//                        },
+//                        error : function(jqXHR, textStatus, errorThrown) {
+//                            self._setBase64ScreenShot(null);
+//                            //console.log("Load image error");
+//                        }
+//                    });
                 }
                 else
                 {

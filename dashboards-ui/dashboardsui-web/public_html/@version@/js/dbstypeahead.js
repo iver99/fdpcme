@@ -154,7 +154,7 @@ $.widget( "dbs.dbsTypeAhead", {
 			focus: function() {
 				
 			},
-			blur: function( event ) {
+			blur: function() {
                             
 			}
 		});
@@ -175,7 +175,7 @@ $.widget( "dbs.dbsTypeAhead", {
 	},
 
 	_initSource: function() {
-		var array, url,
+		var array, 
 			that = this, filterFunc = that.options.filterFunc;
 		if ( $.isArray( this.options.source ) ) {
 			array = this.options.source;
@@ -224,7 +224,7 @@ $.widget( "dbs.dbsTypeAhead", {
                                 },
                                 error: function() {
                                     //console.log("[dbsTypeAhead] fetch failed");
-			            response(_dataSource);
+                                    response(_dataSource);
 				}
                             } );
                         };
@@ -239,7 +239,7 @@ $.widget( "dbs.dbsTypeAhead", {
 
 			// Search if the value has changed, or if the user retypes the same value
 			var equalValues = this.term === this._value(),
-		            modifierKey = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
+                            modifierKey = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
 
 			if ( !equalValues || ( equalValues && !modifierKey ) ) {
 				//this.selectedItem = null;
@@ -249,7 +249,7 @@ $.widget( "dbs.dbsTypeAhead", {
 	},
 
 	search: function( value, event ) {
-		value = value != null ? value : this._value();
+		value = value !== null ? value : this._value();
 
 		// always save the actual value, not the one passed as an argument
 		this.term = this._value();
@@ -268,16 +268,16 @@ $.widget( "dbs.dbsTypeAhead", {
         
         
         forceSearch: function(  callback  ) {
-	    this._searchTimeOutWithoutEvent(0, true, callback);	
+            this._searchTimeOutWithoutEvent(0, true, callback);
 	},
         
         _searchTimeOutWithoutEvent: function( timeout, isForceSearch, callback ) {
             clearTimeout( this.searching );
             // always save the actual value, not the one passed as an argument
             var value = this.term = this._value();
-	    this.searching = this._delay(function() {
+            this.searching = this._delay(function() {
                 return this._search( value, isForceSearch, callback );
-	    }, timeout );	
+            }, timeout );
         },
         
 	_search: function( value, isForceSearch, callback ) {
@@ -349,22 +349,22 @@ $.widget( "dbs.dbsTypeAhead", {
         
         _selfSearchStart: function( ) {
             this._delay(function() {
-	        var _value = this._value();
+                var _value = this._value();
 		if ( !this.options.disabled && this.options.selfSearchStart  ) {
 			this._trigger( "selfSearchStart", null, _value );
 		} 
-	    }, 0 );
+            }, 0 );
                 
 	},
         
         _acceptInput: function( ) {
             this._delay(function() {
 
-	        var _value = this._value();
+                var _value = this._value();
 		if ( !this.options.disabled && this.options.acceptInput && !this.cancelSearch  ) {
 			this._trigger( "acceptInput", null, _value );
 		} 
-	    }, 0 );
+            }, 0 );
                 
 	},
 
@@ -380,7 +380,7 @@ $.widget( "dbs.dbsTypeAhead", {
 	_keyEvent: function( keyEvent, event ) {
             if ( !this.isMultiLine ) {
 		// prevents moving cursor to beginning/end of the text field in some browsers
-	        event.preventDefault();
+                event.preventDefault();
             }
 	},
         

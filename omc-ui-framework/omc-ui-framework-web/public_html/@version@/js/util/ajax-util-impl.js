@@ -1,14 +1,70 @@
 define([
     'jquery', 
+    'knockout',
     'ojs/ojcore', 
     'uifwk/js/util/message-util', 
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg'
 ],
-    function($, oj, msgUtilModel, nls)
+    function($, ko, oj, msgUtilModel, nls)
     {
+        /**
+         * Register ajax global start / stop event 
+         * so that application may know if there are active ajax requests.
+         * Note that only ajax requests that are sent via jQuery can be monitored.
+         * @type Function|ko.dependentObservable
+         */
+        var activeAjaxMonitor = (function () {
+            var ajaxPending = ko.observable(false);
+
+            $(document).ajaxStart(function () {
+                ajaxPending(true);
+            });
+
+            $(document).ajaxStop(function () {
+                ajaxPending(false);
+            });
+
+            var ajaxPendingDelayNotification = ko.pureComputed(function () {
+                return ajaxPending();
+            });
+            ajaxPendingDelayNotification.extend({rateLimit: {timeout: 0, method: "notifyWhenChangesStop"}});
+            return ajaxPendingDelayNotification;
+            
+        })();
+            
         function DashboardFrameworkAjaxUtility() {
             var self = this;
             var messageUtil = new msgUtilModel();
+            
+            /**
+             * register the ajax stop event
+             * @param {type} handler 
+             * @param {type} wait    wait n ms to call the handler after ajax stops
+             * @param {type} maxWait if wait time is over maxWait, the handler 
+             *                       will be executed anyway.
+             * @returns {undefined}
+             */
+            self.actionAfterAjaxStop = function(handler, wait, maxWait) {
+                var maxWaitTimeout = null;
+                var waitTimeout = null;
+                if (maxWait) {
+                    maxWaitTimeout = setTimeout(function () {
+                        clearTimeout(waitTimeout);
+                        handler();
+                    }, maxWait);
+                }
+                
+                var subscription = activeAjaxMonitor.subscribe(function (ajaxRunning) {
+                    if (!ajaxRunning) {
+                        clearTimeout(waitTimeout);
+                        waitTimeout = setTimeout(function () {
+                            subscription.dispose();
+                            clearTimeout(maxWaitTimeout);
+                            handler();
+                        }, wait);
+                    }
+                });
+            };
             
             /**
              * Ajax call with retry logic
@@ -250,11 +306,11 @@ define([
                 
                 return retryOptions;
             };
-                        
+
             function isValidShowMessageOption(messageOption) {
                 return messageOption === "none" || messageOption === "summary" || 
                         messageOption === "all";
-            };
+            }
             
             function logMessage(url, messageType, messageText) {
                 if (messageType) 
@@ -295,14 +351,14 @@ define([
                             oj.Logger.log(messageText);
                     }
                 }
-            };
+            }
             
             function removeMessage(messageId) {
                 if (messageId) {
                     var messageObj = {id: messageId, tag: 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE', action: 'remove', category: 'retry_in_progress'};
                     window.postMessage(messageObj, window.location.href);
                 }
-            };
+            }
             
             function getMessageFromXhrResponse(xhr) {
                 var message = null;
@@ -322,7 +378,7 @@ define([
 //                }
                 
                 return message;
-            };
+            }
             
         }
         

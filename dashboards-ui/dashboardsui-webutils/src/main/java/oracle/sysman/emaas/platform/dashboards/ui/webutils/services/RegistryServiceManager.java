@@ -308,12 +308,12 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			logger.info("Initialize lookup manager");
 			LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
 
-			logger.info("Checking RegistryService");
-			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
-				setRegistrationComplete(Boolean.FALSE);
-				logger.error("Failed to found registryService. Dashboard-UI registration is not complete.");
-				return false;
-			}
+//			logger.info("Checking RegistryService");
+//			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
+//				setRegistrationComplete(Boolean.FALSE);
+//				logger.error("Failed to found registryService. Dashboard-UI registration is not complete.");
+//				return false;
+//			}
 
 			ServiceConfigBuilder builder = new ServiceConfigBuilder();
 			builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"))

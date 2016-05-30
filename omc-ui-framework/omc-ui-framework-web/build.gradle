@@ -26,6 +26,7 @@ def File sourceTargetSelectorDestDir = new File(sourceWebappDir, 'libs/emcstgtse
 
 def stagingDir = buildDir.absolutePath+'/staging/public_html'
 def compiledDir = buildDir.absolutePath+'/public_html'
+def File sourceTargetSelectorAPIDestDir = new File(buildDir.absolutePath+'/stage_tsel')
 def webRootSourceDir = 'public_html'
 
 sourceCompatibility = 1.7
@@ -47,17 +48,20 @@ if (project.hasProperty("debugTsel"))
 }
 else
 {
-    tselVersion =  getDependentSdkVersion('com.oracle.emaas.emctas.tgtsel', 'emcs-targetselector', '1.5+')
+    tselVersion =  getDependentSdkVersion('com.oracle.emaas.emctas.tgtsel', 'emcs-targetselector', '1.7.+')
 }
 
 dependencies {
-        compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.2-19410', ext: 'war'){ transitive = false }	
+	compile configurations.testNG
+	compile configurations.webdriver
+	compile configurations.restAssured
+        compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.2.0-22069', ext: 'war'){ transitive = false }	
         compile(group: 'files', name: 'canvg', version: '1.3', ext: 'zip'){ transitive = false }
         compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
 	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
         compile(group: 'com.oracle.emaas.emctas.tgtsel', name:'emcs-targetselector', version:tselVersion, ext:'zip'){ transitive = false }
-
-	compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')	
+	providedCompile project(':dashboards-ui-test-common-api')  { transitive = false }
+        compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')	
 }
 
 task cleanJs(type:Delete) {
@@ -432,6 +436,7 @@ project.task("unpackTargetSelectorFromArtifactory") << {
     def File buildTargetSelectorUnzipDir = new File(buildDir.absolutePath, 'emcs-targetselector')
     //first time or if custom cleans removes it
     sourceTargetSelectorDestDir.mkdirs()
+    sourceTargetSelectorAPIDestDir.mkdirs()
 
     //project.configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
     configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
@@ -442,12 +447,41 @@ project.task("unpackTargetSelectorFromArtifactory") << {
                 from project.zipTree(artifact.file.absolutePath)
                 into buildTargetSelectorUnzipDir.absolutePath
             }
-            // Copy each of the unzipped directories to
-            // the appropriate source directories
-            // 1. build >> public_html/emcsDependencies/libs/emcstgtsel/
-            project.copy {
-                from  buildTargetSelectorUnzipDir
-                into sourceTargetSelectorDestDir.absolutePath
+
+            if (!files(buildTargetSelectorUnzipDir.listFiles().findAll{
+                        it.name.startsWith('TargetSelectorUtil')
+                    }).isEmpty())
+            {
+                logger.lifecycle("Target Selector artifact contains Source and Test API Zip")
+                logger.lifecycle("Unpacking Test API..")
+                //Copy the Test API classes to a dir so they can be added to the distributed jar
+                project.copy {
+                    from buildTargetSelectorUnzipDir.listFiles().findAll{
+                        it.name.startsWith('TargetSelectorUtil')
+                    }.collect {
+                        zipTree(it)
+                    }
+                    into sourceTargetSelectorAPIDestDir
+                }
+	
+                logger.lifecycle("Unpacking Source..")
+                //Copy Tsel source code to destination dir
+                project.copy {
+                    from buildTargetSelectorUnzipDir.listFiles().findAll{
+                        it.name.startsWith('emcs-targetselector')
+                    }.collect {
+                        zipTree(it)
+                    }
+                    into sourceTargetSelectorDestDir
+                }
+            }
+            else
+            {
+                logger.lifecycle("Unpacking Source..")
+                project.copy {
+                    from buildTargetSelectorUnzipDir
+                    into sourceTargetSelectorDestDir
+                }
             }
             
             //finally delete the build directory
@@ -460,6 +494,8 @@ project.task("cleanTargetSelector") << {
     println 'Cleaning up target selector directories ...'
     println 'target selector dir: ' + sourceTargetSelectorDestDir.absolutePath
     sourceTargetSelectorDestDir.deleteDir()
+    println 'target selector API dir: ' + sourceTargetSelectorAPIDestDir.absolutePath
+    sourceTargetSelectorAPIDestDir.deleteDir()
 }
 
 
@@ -539,4 +575,13 @@ publishing.publications {
 
 artifactoryPublish {
 	publications ('integTest')
+}
+
+sourceSets {
+        test{
+                java {
+                        srcDirs = ['src/integTest/java']
+                }
+                resources.srcDirs = ['src/integTest/java']
+        }
 }

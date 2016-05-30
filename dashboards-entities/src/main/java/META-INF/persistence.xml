@@ -8,10 +8,10 @@
 		<jta-data-source>jdbc/emaas_dashboards_ds</jta-data-source>
 		<class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile</class>
         <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard</class>
-        <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess</class>
         <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams</class>
-        <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite</class>
         <class>oracle.sysman.emaas.platform.dashboards.entity.EmsPreference</class>
+		<class>oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions</class>
+		<class>oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard</class>
 
 		<properties>
 			<property name="eclipselink.logging.exceptions" value="true" />
@@ -51,6 +51,8 @@
         <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams</class>
         <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite</class>
         <class>oracle.sysman.emaas.platform.dashboards.entity.EmsPreference</class>
+		<class>oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions</class>
+		<class>oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard</class>
 
 		<properties>
 			<property name="eclipselink.logging.exceptions" value="true" />

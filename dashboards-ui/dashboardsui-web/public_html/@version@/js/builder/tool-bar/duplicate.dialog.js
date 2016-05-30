@@ -90,7 +90,7 @@ define(['knockout',
                 }
                 else {
                     if (newDashboard.tiles() && newDashboard.tiles().length > 0) {
-                        ssu.getBase64ScreenShot('#tiles-wrapper', 314, 165, 0.8, function(data) {
+                        ssu.getBase64ScreenShot($b.findEl('.tiles-wrapper'), 314, 165, 0.8, function(data) {
                             newDashboard.screenShot = data;  
                             self.saveDuplicatedDashboardToServer(newDashboard);
                         });                
@@ -133,7 +133,7 @@ define(['knockout',
                         'tileParameters', 'name', 'systemParameter', 
                         'value', 'content', 'linkText', "systemDashboard",
                         'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
-                    'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight", 
+                    'ignore': ["createdOn", "href", "owner", "modeWidth","sharePublic", "modeHeight", 
                         "lastModifiedBy", "lastModifiedOn", "tileId",
                         "modeColumn", "modeRow", "screenShotHref", 
                         "customParameters", "clientGuid", "dashboard", 
@@ -145,13 +145,14 @@ define(['knockout',
                         "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
                 });
                 var dashboardJSON = JSON.stringify(dbdJs);
+                //console.log("dashboard to dup: "+dashboardJSON);
                 Builder.duplicateDashboard(dashboardJSON, function(data) {
-                	succCallback && succCallback(data);
+                    succCallback && succCallback(data);
                 }, function(error) {
                     errorCallback && errorCallback(error);
                 });
             };
-        };
+        }
         
         return {"DuplicateDashboardModel": DuplicateDashboardModel};
     }

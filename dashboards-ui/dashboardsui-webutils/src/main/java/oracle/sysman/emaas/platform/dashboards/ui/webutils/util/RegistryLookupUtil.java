@@ -34,7 +34,7 @@ public class RegistryLookupUtil
 
 	// keep the following the same with service name
 	public static final String APM_SERVICE = "ApmUI";
-	public static final String ITA_SERVICE = "EmcitasApplications";
+	public static final String ITA_SERVICE = "emcitas-ui-apps";
 	public static final String LA_SERVICE = "LoganService";
 	public static final String TA_SERVICE = "TargetAnalytics";
 
@@ -77,7 +77,7 @@ public class RegistryLookupUtil
 					protocoledLinks.add(link);
 				}
 			}
-			catch (Throwable thr) {
+			catch (Exception thr) {
 				logger.error(thr.getLocalizedMessage(), thr);
 				return protocoledLinks;
 			}
@@ -102,7 +102,7 @@ public class RegistryLookupUtil
 					protocoledLinks.add(link);
 				}
 			}
-			catch (Throwable thr) {
+			catch (Exception thr) {
 				logger.error(thr.getLocalizedMessage(), thr);
 				return protocoledLinks;
 			}

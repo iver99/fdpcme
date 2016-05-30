@@ -62,7 +62,7 @@ define(['knockout',
             };
             
             self.push = function(tile) {
-                tile.clientGuid = getGuid();
+                tile.clientGuid = Builder.getGuid();
                 self.tiles.push(tile);
             };
             
@@ -82,7 +82,7 @@ define(['knockout',
                 for (var i = 0; i < self.tiles().length; i++) {
                     var tile = self.tiles()[i];
                     if (tile && tile.isMaximized && tile.isMaximized()) {
-                    	return tile;
+                        return tile;
                     }
                 }
                 return null;
@@ -107,7 +107,7 @@ define(['knockout',
                 self.removeTile(tile);
                 self.tilesGrid.unregisterTileInGrid(tile);
                 for(var i in tilesToMove) {
-                    self.moveTileUp(tilesToMove[i], tile.height());
+                    self.moveTileUp(tilesToMove[i], self.mode.getModeHeight(tile));
                 }
                 self.tilesReorder();
             };
@@ -187,7 +187,7 @@ define(['knockout',
             };
 
             self.updateTilePosition = function(tile, row, column) {
-                if (tile.row() !== null && tile.column() !== null)
+                if (self.mode.getModeRow(tile) !== null && self.mode.getModeColumn(tile) !== null)
                     self.tilesGrid.unregisterTileInGrid(tile);
                 tile.row(row);
                 self.mode.resetModeRow(tile, row);
@@ -227,20 +227,20 @@ define(['knockout',
             self.sortTilesByColumnsThenRows = function() {
                 // note that sort is based on the internal position, not the mode position
                 self.tiles.sort(function(tile1, tile2) {
-                    if (tile1.column() !== tile2.column())
-                        return tile1.column() - tile2.column();
+                    if (self.mode.getModeColumn(tile1) !== self.mode.getModeColumn(tile2))
+                        return self.mode.getModeColumn(tile1) - self.mode.getModeColumn(tile2);
                     else
-                        return tile1.row() - tile2.row();
+                        return self.mode.getModeRow(tile1) - self.mode.getModeRow(tile2);
                 });
             };
             
             self.sortTilesByRowsThenColumns = function() {
                 // note that sort is based on the internal position, not the mode position
                 self.tiles.sort(function(tile1, tile2) {
-                    if (tile1.row() !== tile2.row())
-                        return tile1.row() - tile2.row();
+                    if (self.mode.getModeRow(tile1) !== self.mode.getModeRow(tile2))
+                        return self.mode.getModeRow(tile1) - self.mode.getModeRow(tile2);
                     else
-                        return tile1.column() - tile2.column();
+                        return self.mode.getModeColumn(tile1) - self.mode.getModeColumn(tile2);
                 });
             };
                         
@@ -299,20 +299,21 @@ define(['knockout',
                 var column = self.mode.getModeColumn(tile);
                 var nextRow = row + height;
                 var nexts = [];
-                                
-                while(self.tilesGrid.tileGrid[nextRow] && nexts.length === 0) {
-                    for(var i=0; i<width; i++) {
-                        var col = column + i;
-                        if(!self.tilesGrid.tileGrid[nextRow]) {
-                            break;
-                        }
+                
+                for(var col=column; col<column+width; col++) { //find one tile below each coloumn of this tile
+                    nextRow = row + height;
+                    while(self.tilesGrid.tileGrid[nextRow]) {
                         var tileBelow = self.tilesGrid.tileGrid[nextRow][col];
                         if(tileBelow && $.inArray(tileBelow, nexts) === -1 && tileBelow !== tile) {
                             nexts.push(tileBelow);
+                            if(nextRow === (row+height)) {
+                                col = self.mode.getModeColumn(tileBelow) + self.mode.getModeWidth(tileBelow) - 1;
+                            }
+                            break;
                         }
+                        nextRow++;
                     }
-                    nextRow++;
-                }                
+                }
                 return nexts;
             };
 //            self.moved = [];
@@ -329,12 +330,12 @@ define(['knockout',
                 for(var i in nextTiles) {
                     var iTile = nextTiles[i];
                         if(self.draggingTile === iTile) {
-                            self.moveTileDown(iTile, rowDiff-iTile.height());
+                            self.moveTileDown(iTile, rowDiff-self.mode.getModeHeight(iTile));
                         }else {
                             self.moveTileDown(iTile, rowDiff);
                         }
                 }
-                self.updateTilePosition(tile, nextRow, tile.column());
+                self.updateTilePosition(tile, nextRow, self.mode.getModeColumn(tile));
             };
             
             self.canMoveToRow = function(tile, nextRow) {
@@ -435,48 +436,59 @@ define(['knockout',
             
             //move tiles up if they can and remove empty rows
             self.checkToMoveTilesUp = function() {
+                var iTile, j;
                 for(var i=0; i<self.tiles().length; i++) {
-                    var iTile = self.tiles()[i];
-                    var preTile = self.tiles()[i-1];
-                    var j;
-                    if(i === 0) {
-                        j = 0;
-                    }else {
-                        j = (preTile.row() > iTile.row()) ? 0 : preTile.row();
-                    }
-                    for(; j<iTile.row(); j++) {
-                        if(self.canMoveToRow(iTile, j)) {
-                            self.updateTilePosition(iTile, j, iTile.column());
+                    iTile = self.tiles()[i];
+                    for(j=self.mode.getModeRow(iTile)-1; j>=0; j--) {
+                        if(self.canMoveToRow(iTile, j)){
+                            continue;
+                        }else{
+                            self.updateTilePosition(iTile, j+1, self.mode.getModeColumn(iTile));
                             break;
                         }
                     }
+                    if(j == -1) {
+                        self.updateTilePosition(iTile, j+1, self.mode.getModeColumn(iTile));
+                    }
+//                    var preTile = self.tiles()[i-1];
+//                    if(i === 0) {
+//                        j = 0;
+//                    }else {
+//                        j = (preTile.row() > iTile.row()) ? 0 : preTile.row();
+//                    }
+//                    for(; j<iTile.row(); j++) {
+//                        if(self.canMoveToRow(iTile, j)) {
+//                            self.updateTilePosition(iTile, j, iTile.column());
+//                            break;
+//                        }
+//                    }
                 }
                 //check for empry rows
                 var rows = self.tilesGrid.size();
                 var emptyRows = [];
-                for(var i=0; i< rows; i++) {
+                for(i=0; i< rows; i++) {
                      if(self.tilesGrid.isEmptyRow(i)) {
                          emptyRows.push(i);
                      }
                 }
                 //remove empty rows
-                for(var i=emptyRows.length-1; i>=0; i--) {
+                for(i=emptyRows.length-1; i>=0; i--) {
                        self.tilesGrid.tileGrid.splice(emptyRows[i], 1); 
                 }
                 //reset rows of tiles below empty rows
                 for(var i=0; i<self.tiles().length; i++) {
-                    var iRow = self.tiles()[i].row();
+                    var iRow = self.mode.getModeRow(self.tiles()[i]);
                     var iTile = self.tiles()[i];
                     for(var j=0; j<emptyRows.length; j++) {
                         if(iRow > emptyRows[j]) {
-                            self.updateTilePosition(iTile, iRow-j-1, iTile.column());
+                            self.updateTilePosition(iTile, iRow-j-1, self.mode.getModeColumn(iTile));
                         }
                     }
                 }
             };
             
             self.getCellFromPosition = function(widgetAreaWidth, position) {
-                var row = 0, height = 0;
+                var row = 0, height = 0-Builder.DEFAULT_HEIGHT / 2;
                 var grid = self.tilesGrid;
                 for (; row < grid.size(); row++) {
                     height += grid.getRowHeight(row);
@@ -489,7 +501,7 @@ define(['knockout',
                 return new Builder.Cell(row, column);
             };
             
-            self.createNewTile = function(name, description, width, height, widget, timeSelectorModel, targetContext, loadImmediately) {
+            self.createNewTile = function(name, description, width, height, widget, timeSelectorModel, targets, loadImmediately) {
                 if (!widget)
                     return null;
                 
@@ -527,7 +539,7 @@ define(['knockout',
                                 oj.Logger.log("widget viewmodel:: "+assetRoot+viewmodel);    
                             }
 
-                            newTile =new Builder.DashboardTile(self.mode, $b.dashboard, koc_name, name, description, widget, timeSelectorModel, targetContext, loadImmediately);
+                            newTile =new Builder.DashboardTile(self.mode, $b.dashboard, koc_name, name, description, widget, timeSelectorModel, targets, loadImmediately);
                             var tileCell;
                             if(!(self.tiles && self.tiles().length > 0)) {
                                 tileCell = new Builder.Cell(0, 0);
@@ -590,7 +602,7 @@ define(['knockout',
 //                    } 
                 return newTile;
             };
-        };
+        }
         
         Builder.registerModule(TilesEditor, 'TilesEditor');
         

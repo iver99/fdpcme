@@ -239,33 +239,25 @@
   box-sizing: content-box; 
 }
 
+//hack default 'create name validation' css style
+#cDsbDialog{
+    .oj-dialog-body{
+            .oj-inputtext{
+                .oj-message-content{
+                    .oj-message-summary{
+                        display: inline;
+                    }
+                    .oj-message-detail{
+                        display: inline;
+                    }
+                }
+            }
+    }
+}
+
 .oj-label-required:before{content:'*'}
 
-/*
-#ojDialogWrapper-cDsbDialog #createDialogFooter #createDsb{
-    margin-bottom: 4px; 
-    background-image: none;
-    margin-left: 6px;
-    text-shadow: none;
-
-    color: #ffffff;
-    font-weight: bold;
-    background-color: #0572ce;
-    background: linear-gradient(to bottom, #0470c9 0%, #0571cd 50%, #0479d8 100%);
-    border: 1px solid #0476d3;
-    border-radius: 2px;
-    
-    text-align: right;
-    box-shadow:none;      
-}
-
-#ojDialogWrapper-cDsbDialog #createDialogFooter #createDsb:hover{
-    background-color: #3a9aea;
-    border: 1px solid #3a9aea;  
-    background-image: none;
-}
-*/
-.oj-button.dbs-home-button {
+.oj-button.oj-button-full-chrome.dbs-home-blue-button {
     background-image: none;
     text-shadow: none;
 
@@ -280,7 +272,7 @@
     box-shadow:none;        
 }
 
-.oj-button.dbs-home-button:hover{
+.oj-button.oj-button-full-chrome.dbs-home-blue-button:hover{
     background-color: #3a9aea;
     border: 1px solid #3a9aea;  
     background-image: none;
@@ -379,3 +371,45 @@ a:hover {
 }
 
 
+// for dashboard set home seletor layout
+@media print, screen {
+    
+    .dbs-tiles-container-full-sm {
+        margin-left: auto;
+        margin-right: auto;
+        float: none;
+       
+        width: 670px;
+        min-width: 670px;
+        max-width: 670px;}
+}
+
+@media print and (orientation: landscape), screen and (min-width: 1010px) {
+   .dbs-tiles-container-full-md {
+    margin-left: auto;
+    margin-right: auto;
+    float: none;
+    width: 1002px;
+    min-width: 1002px;
+    max-width: 1002px;}
+}
+
+@media print and (orientation: landscape), screen and (min-width: 1345px) {
+    .dbs-tiles-container-full-lg {
+    margin-left: auto;
+    margin-right: auto;
+    float: none;
+    width: 1337px;
+    min-width: 1337px;
+    max-width: 1337px;}
+}
+
+@media print and (orientation: landscape), screen and (min-width: 1680px) {
+    .dbs-tiles-container-full-xl {
+    margin-left: auto;
+    margin-right: auto;
+    float: none;
+    width: 1670px;
+    min-width: 1670px;
+    max-width: 1670px;}
+}

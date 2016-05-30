@@ -57,9 +57,11 @@ public class DashboardCRUD
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 200);
 			Assert.assertEquals(res1.jsonPath().get("dashboards.name[0]"), "Application Performance Monitoring");
-			Assert.assertEquals(res1.jsonPath().get("dashboards.name[1]"), "Database Health Summary");
-			Assert.assertEquals(res1.jsonPath().get("dashboards.name[2]"), "Host Health Summary");
-			Assert.assertEquals(res1.jsonPath().get("dashboards.name[3]"), "Performance Analytics: Database");
+			//Assert.assertEquals(res1.jsonPath().get("dashboards.name[1]"), "Database Health Summary");
+			//Assert.assertEquals(res1.jsonPath().get("dashboards.name[2]"), "Host Health Summary");
+			Assert.assertEquals(res1.jsonPath().get("dashboards.name[1]"), "Performance Analytics: Database");
+			Assert.assertEquals(res1.jsonPath().get("dashboards.name[2]"), "Performance Analytics: Middleware");
+			Assert.assertEquals(res1.jsonPath().get("dashboards.name[3]"), "Resource Analytics: Database");			
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
@@ -534,7 +536,7 @@ public class DashboardCRUD
 
 	}
 
-	@Test
+	/*@Test
 	public void dashboard_fullquery()
 	{
 		int totalResults = 0;
@@ -608,8 +610,8 @@ public class DashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken)
-					.when()
-					.get("/dashboards?offset=0&limit=240&orderBy=access_Date&appTypes=LogAnalytics,APM,ITAnalytics&owners=Others");
+					.when().get("/dashboards?offset=0&limit=240&orderBy=access_Date&owners=Others");
+					//.get("/dashboards?offset=0&limit=240&orderBy=access_Date&appTypes=LogAnalytics,APM,ITAnalytics&owners=Others");
 			Assert.assertTrue(res4.getStatusCode() == 200);
 			System.out.println(res4.asString());
 			List<String> list_dashboards3 = res4.jsonPath().get("dashboards.name");
@@ -694,7 +696,7 @@ public class DashboardCRUD
 			System.out.println("------------------------------------------");
 			System.out.println("											");
 		}
-	}
+	}*/
 
 	@Test
 	public void dashboard_lastAccess()

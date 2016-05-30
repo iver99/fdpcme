@@ -39,7 +39,7 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
             if (window && window.console) {
                 window.console.info(output);
             }
-            _cacheOrSend(oj.Logger.LEVEL_INFO, output,flush);
+            //_cacheOrSend(oj.Logger.LEVEL_INFO, output,flush);
         };
 
         /**
@@ -63,7 +63,7 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
             if (window && window.console) {
                 window.console.log(output);
             }
-            _cacheOrSend(oj.Logger.LEVEL_LOG, output,flush);
+            //_cacheOrSend(oj.Logger.LEVEL_LOG, output,flush);
         };
 
         //
@@ -141,7 +141,7 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
                 //TODO: Change to use callServiceManager.
                 //TODO: Why not get tenantId from cookie?
                 //TODO: Should global be false?
-                var headers = undefined;
+                var headers;
                 if (dfu.isDevMode()){
                     headers = {"Authorization":"Basic " + btoa(dfu.getDevData().wlsAuth)};
                 }
@@ -207,13 +207,13 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
                 var tenantName = logOwner.substring(0, logOwner.indexOf('.'));
                 dfu = new dfumodel(userName, tenantName);
 
-                if (maxInterval != undefined) {
+                if (maxInterval !== undefined) {
                     logsCacheMaxInterval = maxInterval;
                 }
-                if (frequency != undefined) {
+                if (frequency !== undefined) {
                     logsCacheFrequency = frequency;
                 }
-                if (limit != undefined) {
+                if (limit !== undefined) {
                     logsCacheLimit = limit;
                 }
 

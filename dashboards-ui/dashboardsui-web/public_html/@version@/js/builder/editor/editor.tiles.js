@@ -19,20 +19,20 @@ define(['knockout',
             self.top = ko.observable(0);
             self.cssWidth = ko.observable(0);
             self.cssHeight = ko.observable(0);
-            self.linkText = ko.observable('');
-            self.linkUrl = ko.observable('');
+            //self.linkText = ko.observable('');
+            //self.linkUrl = ko.observable('');
             self.hideTitle = ko.observable("false");
             self.cssStyle = ko.computed(function() {
                 return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: " + self.cssHeight() + "px;";
             });
             self.widgetCssStyle = ko.computed(function() {
-                return "width: " + (self.cssWidth()-20) + "px; height: " + (self.cssHeight()-35-20) + "px;";
+                return "width: " + (self.cssWidth()-10) + "px; height: " + (self.cssHeight()-35-10) + "px;";
             });
 
             ko.mapping.fromJS(data, {include: ['column', 'row', 'width', 'height']}, this);
             data.title && (self.title = ko.observable(Builder.decodeHtml(data.title)));
-            data.linkText && (self.linkText(Builder.decodeHtml(data.linkText)));
-            data.linkUrl && (self.linkUrl(Builder.decodeHtml(data.linkUrl)));
+            //data.linkText && (self.linkText(Builder.decodeHtml(data.linkText)));
+            //data.linkUrl && (self.linkUrl(Builder.decodeHtml(data.linkUrl)));
             self.clientGuid = Builder.getGuid();
             self.sectionBreak = false;
             self.displayHeight = function() {
@@ -48,7 +48,7 @@ define(['knockout',
             }
         }
         
-        function TextTileItem(data) {
+        /*function TextTileItem(data) {
             ko.utils.extend(this, new Builder.TileItem(data));
             ko.mapping.fromJS(data, {include: ['content']}, this);
             this.content = ko.observable(Builder.decodeHtml(data.content));
@@ -60,12 +60,12 @@ define(['knockout',
             self.displayHeight = function() {
                 return $('#tile' + self.clientGuid).height();
             };
-        }
+        }*/
         
         Builder.registerModule(TileItem, 'TileItem');
-        Builder.registerModule(TextTileItem, 'TextTileItem');
+        //Builder.registerModule(TextTileItem, 'TextTileItem');
         
-        return {"TileItem": TileItem, 
-            "TextTileItem": TextTileItem};
+        return {"TileItem": TileItem/*, 
+            "TextTileItem": TextTileItem*/};
     }
 );
