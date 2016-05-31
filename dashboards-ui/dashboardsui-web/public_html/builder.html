@@ -182,8 +182,7 @@
             <script id="dashboard-content-template" type="text/html">
             <div class="dashboard-content page-break" style="visibility: hidden">
             <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container" style="padding-left:16px;">
-                <div class="builder-toolbar" aria-label="Builder toolbar"
-                       class="oj-component oj-component-initnode">
+                <div class="builder-toolbar oj-component oj-component-initnode" aria-label="Builder toolbar" >
                     <div class="builder-toolbar-left dbd-pull-left">
                         <div class="builder-dbd-name">
                             <div class="builder-dbd-name-display-area dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
@@ -279,7 +278,7 @@
                               </div>
                         </div>
                     </div>
-                    <div data-bind="css: rightButtonsAreaClasses()" class="builder-toolbar-right oj-toolbar-row">
+                    <div data-bind="css: rightButtonsAreaClasses(),visible:false" class="builder-toolbar-right oj-toolbar-row">
                         <!-- ko if: window.DEV_MODE -->
 <!--                        <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
                                 data-bind="click: changeMode, ojComponent: {
@@ -465,39 +464,48 @@
                         </button>
                     </div>
                 </div>-->
-                <div data-bind="component: {
-                        name: 'df-widget-selector',
-                        params: addWidgetDialogParams
-                    }">
-                </div>
             </div>
-
             <div class="oj-col stretch-height builder-main dashboard-content-main" role="main">
-                    <div class="tiles-col-container oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size">
-                        <div class="oj-row fit-size-vertical-sibling df-computed-content-width"
-                             style="max-width: none; padding-left: 8px;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0" 
-                             data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE'">
-                            <div style="display: inline-block; float: left;">
-                                <!--<div class="oj-col oj-sm-12 oj-md-3">-->
-                                <div data-bind="visible: dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE'" style="padding-left: 5px;">
-                                    <emcta-target-selector data-bind="attr: {id: 'tsel_'+dashboard.id()}" 
-                                                           params="returnFunction: returnFromTargetSelector, 
-                                                                   config:{
-                                                                       selectionMode: selectionMode()[0],
-                                                                       returnMode: returnMode,
-                                                                       inputCriteria: getInputCriteria(),
-                                                                       ui: {
-                                                                           showLaunchButton: true,
-                                                                           dropdownInitialLabel: dropdownInitialLabel(),
-                                                                           dropdownResultLabel: dropdownResultLabel()
-                                                                       }
-                                                                   }"></emcta-target-selector>
-                                </div>
+                <div class="tiles-col-container oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size">
+                    <div class="oj-row fit-size-vertical-sibling df-computed-content-width"
+                         style="max-width: none; padding-left: 8px;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0" 
+                         data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE'">
+                        <div class="df-toolbar">
+                            <!-- ko with:toolbarModel -->
+                            <button class='dashboardOptsBtn dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print'
+                                    data-bind="visible: true, ojComponent: { component: 'ojButton', chroming: 'half', icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
+                                    menu: '#dashboardOptsMenu'+toolBarGuid},
+                                    attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
+                            </button>
+                            <button class="dashboardSaveBtn dashboardOptsBtn oj-button oj-default oj-button-half-chrome no-print"
+                                    data-bind="click: handleDashboardSave, ojComponent: {
+                                        component:'ojButton', chroming: 'half', disabled: disableSave,
+                                        icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
+                                        }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.isMobileDevice !== 'true'">
+                            </button>
+                            <ul class="no-print dropdown-menu" data-bind="ojComponent: {component: 'ojMenu'},attr:{id:'dashboardOptsMenu'+toolBarGuid}" style="display: none;">
+                                <!-- ko template: {name: 'dsbOptsMenuItemTemplate', foreach: dashboardOptsMenuItems, as: 'item'} -->
+                                <!-- /ko -->
+                            </ul>
+                            <!-- /ko -->
+                            <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator"></span>
+                            <div class="df-targte-selector" data-bind="visible: dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE'">
+                                <emcta-target-selector data-bind="attr: {id: 'tsel_'+dashboard.id()}"
+                                                       params="returnFunction: returnFromTargetSelector,
+                                                           config:{
+                                                               selectionMode: selectionMode()[0],
+                                                               returnMode: returnMode,
+                                                               inputCriteria: getInputCriteria(),
+                                                               ui: {
+                                                                   showLaunchButton: true,
+                                                                   dropdownInitialLabel: dropdownInitialLabel(),
+                                                                   dropdownResultLabel: dropdownResultLabel()
+                                                               }
+                                                           }"></emcta-target-selector>
                             </div>
-                            <div style="display: inline-block; float: left">
-                               <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>
-                            </div>
+                            <div class="df-date-time-picker" data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>
                         </div>
+                    </div>
 
                         <!-- ko if:$root.isEmpty() -->
                         <div class="tooltip-add-widget" style="padding-top: 64px; text-align: center">
@@ -702,7 +710,7 @@
                                 css: {
                                     'drawer-selected': rightPanelIcon()=='pencil'
                                 }"/></button>                    
-<!--            EMCPDF-1513:Help Tab on right drawer disabled       
+<!--            EMCPDF-1513:Help Tab on right drawer disabled
                     <button class="right-panel-help-btn drawer-icon-btn" data-bind="ojComponent: {
                         component:'ojButton', 
                         display: 'icons', 
@@ -1088,11 +1096,11 @@
                                 </button>-->
                                 <button class="dbd-left-panel-header-search-btn oj-button-half-chrome" data-bind="click: searchWidgetsClicked,
                                         ojComponent: {component: 'ojButton',chroming: 'half', label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons', 
-                                        icons: {start:'left-panel-dbd-search-icon'}}" style="float:right"> 
+                                        icons: {start:'left-panel-dbd-search-icon'}}" style="float:right">
                                 </button> 
                                 <button class="oj-button-half-chrome" data-bind="click: clearWidgetSearchInputClicked, visible: clearRightPanelSearch,
-                                                    ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
-                                                    icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 31px;'}}" style="float:right;margin-bottom:0"> 
+                                                    ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons',
+                                                    icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 31px;'}}" style="float:right;margin-bottom:0">
                                 </button>
                             </div>
                         </div>
@@ -1350,7 +1358,7 @@
                                 <p data-bind="html: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_CONFIRM')"></p>
                             </div>
                             <div class="oj-dialog-footer">
-                                <button id="btnComfirmSetAsHome" data-bind="click: toolBarModel.setAsHomeConfirmed, 
+                                <button id="btnComfirmSetAsHome" data-bind="click: toolBarModel.setAsHomeConfirmed,
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_YES'), rootAttributes: {style:'margin-right:5px'}}"></button>
                         <button id="btnCancelSetAsHome" data-bind="click: toolBarModel.setAsHomeCancelled,
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_NO'), rootAttributes: {style:'margin-right:5px'}}"></button>

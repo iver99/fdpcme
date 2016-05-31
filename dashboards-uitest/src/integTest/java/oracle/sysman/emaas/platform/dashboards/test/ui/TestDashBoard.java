@@ -25,8 +25,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardPageId;
-
 /**
  * @version
  * @author charles.c.chen

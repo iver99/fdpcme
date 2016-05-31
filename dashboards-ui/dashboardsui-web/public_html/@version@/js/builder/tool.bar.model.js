@@ -785,50 +785,95 @@ define(['knockout',
 
             });
 
-            //self.isSystemDashboard = self.dashboard.systemDashboard();
             self.dashboardOptsMenuItems = [
-                {
-                    "label": getNlsString('DBS_BUILDER_BTN_ADD'),
-                    "url": "#",
-                    "id":"emcpdf_dsbopts_add",
-                    "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
-                    "icon":"dbd-toolbar-icon-add-widget",
-                    "title": "",//getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
-                    "disabled": self.editDisabled() === true,
-                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
-                    "endOfGroup": false
-                },
+//                {
+//                    "label": getNlsString('DBS_BUILDER_BTN_ADD'),
+//                    "url": "#",
+//                    "id":"emcpdf_dsbopts_add",
+//                    "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
+//                    "icon":"dbd-toolbar-icon-add-widget",
+//                    "title": "",//getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
+//                    "disabled": self.editDisabled() === true,
+//                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
+//                    "endOfGroup": false
+//                },
                 {
                     "label": getNlsString('COMMON_BTN_EDIT'),
                     "url": "#",
-                    "id":"emcpdf_dsbopts_edit"+self.toolBarGuid,
+                    "id": "emcpdf_dsbopts_edit" + self.toolBarGuid,
                     "onclick": self.editDisabled() === true ? "" : self.openDashboardEditDialog,
                     "icon": "dbd-toolbar-icon-edit",
                     "title": "", //getNlsString('DBS_BUILDER_BTN_EDIT_TITLE'),
                     "disabled": self.editDisabled() === true,
-                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
+                    "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
+                    "endOfGroup": false
+                },
+                {
+                    "label": getNlsString('COMMON_BTN_PRINT'),
+                    "url": "#",
+                    "id": "emcpdf_dsbopts_print" + self.toolBarGuid,
+                    "onclick": function (data, event) {
+                        window.print();
+                    },
+                    "icon": "dbd-toolbar-icon-print",
+                    "title": "", //getNlsString('COMMON_BTN_PRINT'),
+                    "disabled": false,
+                    "showOnMobile": true,
+                    "endOfGroup": false
+                },
+                {
+                    "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
+                    "url": "#",
+                    "id": "emcpdf_dsbopts_duplicate" + self.toolBarGuid,
+                    "onclick": self.openDashboardDuplicateDialog,
+                    "icon": "dbd-toolbar-icon-duplicate",
+                    "title": "", //getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
+                    "disabled": false,
+                    "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
+                    "endOfGroup": true
+                },
+                {
+                    "label": self.favoriteLabel,
+                    "url": "#",
+                    "id": "emcpdf_dsbopts_favorites" + self.toolBarGuid,
+                    "onclick": self.handleDashboardFavorites,
+                    "icon": self.favoritesIcon, //"dbd-toolbar-icon-favorites",
+                    "title": "", //self.favoriteLabel,
+                    "disabled": false,
+                    "showOnMobile": true,
+                    "endOfGroup": false
+                },
+                {
+                    "label": self.dashboardAsHomeLabel,
+                    "url": "#",
+                    "id": "emcpdf_dsbopts_home" + self.toolBarGuid,
+                    "onclick": self.handleDashboardAsHome,
+                    "icon": self.dashboardsAsHomeIcon,
+                    "title": "", //self.setAsHomeLabel,
+                    "disabled": false,
+                    "showOnMobile": true,
                     "endOfGroup": false
                 },
                 {
                     "label": getNlsString('DBS_BUILDER_AUTOREFRESH_REFRESH'),
                     "url": "#",
-                    "id": "emcpdf_dsbopts_refresh"+self.toolBarGuid,
+                    "id": "emcpdf_dsbopts_refresh" + self.toolBarGuid,
                     "onclick": "",
                     "icon": "dbd-toolbar-icon-refresh",
                     "title": "", //getNlsString('DBS_BUILDER_AUTOREFRESH_REFRESH'),
                     "disabled": self.editDisabled() === true,
                     "showOnMobile": true,
-                    "endOfGroup": true,
-                    "subItems":[
+                    "endOfGroup": false,
+                    "subItems": [
                         {
                             "label": getNlsString('DBS_BUILDER_AUTOREFRESH_OFF'),
                             "url": "#",
-                            "id": "emcpdf_dsbopts_refresh_off"+self.toolBarGuid,
-                            "icon": ko.computed(function(){
-                              return self.autoRefreshInterval() === 0 ? "fa-check":"";  
+                            "id": "emcpdf_dsbopts_refresh_off" + self.toolBarGuid,
+                            "icon": ko.computed(function () {
+                                return self.autoRefreshInterval() === 0 ? "fa-check" : "";
                             }),
                             "title": "",
-                            "onclick": function(data,event){
+                            "onclick": function (data, event) {
                                 $(event.currentTarget).closest("ul").find(".oj-menu-item-icon").removeClass("fa-check");
                                 $(event.currentTarget).find(".oj-menu-item-icon").addClass("fa-check");
 
@@ -842,9 +887,9 @@ define(['knockout',
                         {
                             "label": getNlsString('DBS_BUILDER_AUTOREFRESH_ON'),
                             "url": "#",
-                            "id": "emcpdf_dsbopts_refresh_on"+self.toolBarGuid,
-                            "icon":ko.computed(function(){
-                              return self.autoRefreshInterval() ? "fa-check":"";  
+                            "id": "emcpdf_dsbopts_refresh_on" + self.toolBarGuid,
+                            "icon": ko.computed(function () {
+                                return self.autoRefreshInterval() ? "fa-check" : "";
                             }),
                             "title": "",
                             "onclick": function (data, event) {
@@ -853,69 +898,23 @@ define(['knockout',
                                 event.stopPropagation();
                                 self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);// 5 minutes
                             },
-                             "disabled": false,
+                            "disabled": false,
                             "showOnMobile": true,
                             "endOfGroup": false
                         }
                     ]
-                },
-                {
-                    "label": getNlsString('COMMON_BTN_PRINT'),
-                    "url": "#",
-                    "id": "emcpdf_dsbopts_print"+self.toolBarGuid,
-                    "onclick": function (data, event) {
-                        window.print();
-                    },
-                    "icon": "dbd-toolbar-icon-print",
-                    "title": "",//getNlsString('COMMON_BTN_PRINT'),
-                    "disabled": false,
-                    "showOnMobile": true,
-                    "endOfGroup": false
-                },
-                {
-                    "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
-                    "url": "#",
-                    "id": "emcpdf_dsbopts_duplicate"+self.toolBarGuid,
-                    "onclick": self.openDashboardDuplicateDialog,
-                    "icon": "dbd-toolbar-icon-duplicate",
-                    "title": "", //getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
-                    "disabled": false,
-                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
-                    "endOfGroup": false
-                },
-                {
-                    "label": self.favoriteLabel,
-                    "url": "#",
-                    "id":"emcpdf_dsbopts_favorites"+self.toolBarGuid,
-                    "onclick": self.handleDashboardFavorites,
-                    "icon": self.favoritesIcon, //"dbd-toolbar-icon-favorites",
-                    "title": "", //self.favoriteLabel,
-                    "disabled": false,
-                    "showOnMobile": true,
-                    "endOfGroup": false
-                },
-                {
-                    "label": self.dashboardAsHomeLabel,
-                    "url": "#",
-                    "id":"emcpdf_dsbopts_home"+self.toolBarGuid,
-                    "onclick": self.handleDashboardAsHome,
-                    "icon": self.dashboardsAsHomeIcon,
-                    "title": "", //self.setAsHomeLabel,
-                    "disabled": false,
-                    "showOnMobile": true,
-                    "endOfGroup": self.editDisabled() === false
-                },
-                {
-                    "label": getNlsString('COMMON_BTN_DELETE'),
-                    "url": "#",
-                    "id":"emcpdf_dsbopts_delete"+self.toolBarGuid,
-                    "onclick": self.editDisabled() === true ? "" : self.openDashboardDeleteConfirmDialog,
-                    "icon":"dbd-toolbar-icon-delete",
-                    "title": "", //getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),
-                    "disabled": self.editDisabled() === true,
-                    "showOnMobile": true,
-                    "endOfGroup": false
                 }
+//                {
+//                    "label": getNlsString('COMMON_BTN_DELETE'),
+//                    "url": "#",
+//                    "id":"emcpdf_dsbopts_delete"+self.toolBarGuid,
+//                    "onclick": self.editDisabled() === true ? "" : self.openDashboardDeleteConfirmDialog,
+//                    "icon":"dbd-toolbar-icon-delete",
+//                    "title": "", //getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),
+//                    "disabled": self.editDisabled() === true,
+//                    "showOnMobile": true,
+//                    "endOfGroup": false
+//                }
             ];
         }
         
