@@ -92,11 +92,62 @@ body, html {
 }
 
 .tiles-col-container {
-  padding-left: 0px;
-  padding-right: 0px;
-  overflow-x: hidden !important; 
-  overflow-y: scroll;
-  position: relative;
+    padding-left: 0px;
+    padding-right: 0px;
+    overflow-x: hidden !important; 
+    overflow-y: scroll;
+    position: relative;
+
+    .df-toolbar {
+        .oj-button {
+            width:35px;
+            margin-top: 5px;
+            vertical-align:top;
+            .oj-button-text {
+                padding-right: 0 !important;
+            }
+            .oj-button-icon {
+                margin-bottom: 4px !important;
+            }
+        }
+
+        .dashboardOptsBtn {
+            .oj-button-menu-dropdown-icon{
+                display: none;
+            }
+            .dbd-toolbar-icon-option{
+                height: 30px;
+                &:before{
+                    height: 30px;
+                }
+            }
+        }
+
+        .dashboardSaveBtn{
+            .dbd-toolbar-icon-save{
+                height: 30px;
+                &:before{
+                    height: 30px;
+                }
+            }
+        }
+
+        .oj-toolbar-separator {
+            margin: 8px 5px;
+            vertical-align: top;
+        }
+
+
+        .df-date-time-picker {
+            display: inline-block;
+            vertical-align: top;
+            margin-top: 5px;
+        }
+        
+        .df-targte-selector {
+            padding-left:5px;
+        }
+    }
 }
 
 .dbd-tile {
@@ -1119,7 +1170,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     position: relative;
     height: auto;
     .checkboxControledContent{
-    margin-left: 15px;
+        margin-left: 15px;
     }
 }
 

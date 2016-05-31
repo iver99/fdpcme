@@ -1001,6 +1001,8 @@ define(['knockout',
                     self.timeSelectorModel.timeRangeChange(true);		
                 }
             };
+            
+            self.toolbarModel = null;
         }
         
         Builder.registerModule(DashboardTilesViewModel, 'DashboardTilesViewModel');
