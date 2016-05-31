@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
 /**
  * @author shangwan
  */
-public class gTestDateTimePicker extends CommonUIUtils
+public class TestDateTimePicker extends CommonUIUtils
 {
 	private static void verifyResult(WebDriver driver, String returnDate, TimeRange option, String StartLabelLocator,
 			String EndLabelLocator) throws Exception
