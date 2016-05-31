@@ -4,6 +4,14 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.Test;
+
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
@@ -16,14 +24,6 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WidgetSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.Test;
 
 /**
  * @version
@@ -124,8 +124,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		webd.getLogger().info("Turn off the refresh option and check the option is checked");
 		DashboardBuilderUtil.refreshDashboard(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
-		Assert.assertTrue(
-				DashboardBuilderUtil.isRefreshSettingChecked(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF),
+		Assert.assertTrue(DashboardBuilderUtil.isRefreshSettingChecked(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF),
 				"Refresh option is NOT set to OFF!");
 
 		webd.getLogger().info("Turn on the refresh option to 5 mins and check the option is checked");
@@ -235,10 +234,53 @@ public class TestDashBoard extends LoginAndLogout
 
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
-		if (!url.substring(url.indexOf("emsaasui") + 9).contains(
-				"emlacore/html/log-analytics-search.html?widgetId=2013&dashboardId")) {
+		if (!url.substring(url.indexOf("emsaasui") + 9)
+				.contains("emlacore/html/log-analytics-search.html?widgetId=2013&dashboardId")) {
 			Assert.fail("NOT open the correct widget");
 		}
+	}
+
+	@Test
+	public void testDashboardWith12Columns() throws Exception
+	{
+		String name = "DashboardWith12Columns" + generateTimeStamp();
+		String desc = "Description for " + name;
+
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testDashboardWith12Columns");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//create dashboard
+		webd.getLogger().info("Start to create dashboard");
+		DashboardHomeUtil.createDashboard(webd, name, desc, DashboardHomeUtil.DASHBOARD);
+
+		//verify dashboard in builder page
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, name, desc, true),
+				"Failed to verify the created dashboard. Probably the creation failed, or name/description is wrongly specified!");
+
+		String widgetName = "Database Errors Trend";
+		//add widget
+		webd.getLogger().info("Start to add Widget into the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, widgetName);
+		webd.getLogger().info("Add widget finished");
+
+		webd.getLogger().info("Get narrower widgets");
+		for (int i = 1; i <= 5; i++) {
+			DashboardBuilderUtil.resizeWidget(webd, name, DashboardBuilderUtil.TILE_NARROWER);
+			webd.takeScreenShot();
+		}
+		webd.getLogger().info("Finished to get narrower widgets");
+
+		webd.getLogger().info("Get wider widgets");
+		for (int i = 1; i <= 11; i++) {
+			DashboardBuilderUtil.resizeWidget(webd, name, DashboardBuilderUtil.TILE_WIDER);
+			webd.takeScreenShot();
+		}
+		webd.getLogger().info("Finished to get wider widgets");
 	}
 
 	@Test
@@ -380,9 +422,9 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Verfiy the dashboard is not favorite");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_favorite),
 				"The dashboard is still my favorite dashboard");
-		//		DashboardHomeUtil.search(webd, dbName_favorite);
-		//		Assert.assertEquals(webd.getAttribute(DashBoardPageId.DashboardSerachResult_panelID + "@childElementCount"), "0");
-		//		webd.getLogger().info("no favorite dashboard");
+				//		DashboardHomeUtil.search(webd, dbName_favorite);
+				//		Assert.assertEquals(webd.getAttribute(DashBoardPageId.DashboardSerachResult_panelID + "@childElementCount"), "0");
+				//		webd.getLogger().info("no favorite dashboard");
 
 		//delete the dashboard
 		webd.getLogger().info("start to delete the dashboard");
@@ -411,8 +453,8 @@ public class TestDashBoard extends LoginAndLogout
 		//Open the dashboard
 		webd.getLogger().info("Open the dashboard to edit name and description");
 		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid);
-		DashboardBuilderUtil
-		.editDashboard(webd, dbName_noWidgetGrid + "-modify", "Test_Dashboard_no_Widget_GridView desc modify");
+		DashboardBuilderUtil.editDashboard(webd, dbName_noWidgetGrid + "-modify",
+				"Test_Dashboard_no_Widget_GridView desc modify");
 
 		//Verify the dashboard edited successfully
 		webd.getLogger().info("Verify the dashboard edited successfully");
@@ -454,8 +496,8 @@ public class TestDashBoard extends LoginAndLogout
 
 		webd.getLogger().info("Add Widget 'Top Hosts by Log Entries' into the dashboard");
 		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_1);
-		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_1, 1), "The second Widget '" + WidgetName_1
-				+ "' not found");
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_1, 1),
+				"The second Widget '" + WidgetName_1 + "' not found");
 
 		webd.getLogger().info("Add widget finished");
 
@@ -511,7 +553,8 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView", "testModifyDashboard_widget", "testWidgetConfiguration" })
+	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView", "testModifyDashboard_widget",
+			"testWidgetConfiguration" })
 	public void testRemoveDashboardInBuilderPage() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -695,7 +738,8 @@ public class TestDashBoard extends LoginAndLogout
 
 		//verify dashboard in builder page
 		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_timepicker, dbDesc, true), "Create dashboard failed!");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_timepicker, dbDesc, true),
+				"Create dashboard failed!");
 
 		//Add the widget to the dashboard
 		webd.getLogger().info("Start to add Widget into the dashboard");
@@ -748,8 +792,8 @@ public class TestDashBoard extends LoginAndLogout
 
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
-		if (!url.substring(url.indexOf("emsaasui") + 9).contains(
-				"startTime=" + String.valueOf(StartTimeStamp) + "&endTime=" + String.valueOf(EndTimeStamp))) {
+		if (!url.substring(url.indexOf("emsaasui") + 9)
+				.contains("startTime=" + String.valueOf(StartTimeStamp) + "&endTime=" + String.valueOf(EndTimeStamp))) {
 			Assert.fail("not open the correct widget");
 		}
 
