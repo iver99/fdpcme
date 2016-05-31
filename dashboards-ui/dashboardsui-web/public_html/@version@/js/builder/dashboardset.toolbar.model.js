@@ -330,7 +330,7 @@ define(['knockout',
                     "icon": "dbd-icon-refresh",
                     "title": "",
                     "disabled": "",
-                    "endOfGroup": self.isMobileDevice==='true'?false:visibilityOnDifDevice(true, false),    
+                    "endOfGroup": false,    
                     "showOnMobile": true,
                     "showOnViewer":true,
                     "visibility":visibilityOnDifDevice(true,true),
@@ -359,19 +359,6 @@ define(['knockout',
                             "visibility":visibilityOnDifDevice(true,true),
                             "subMenu": []
                         }]
-                },
-                {
-                    "label": getNlsString("COMMON_BTN_DELETE"),
-                    "url": "#",
-                    "id": "dbs-delete",
-                    "icon": "dbd-toolbar-icon-delete",
-                    "title": "",
-                    "disabled": "",
-                    "endOfGroup": false,
-                    "showOnMobile": false,
-                    "showOnViewer":false,
-                    "visibility":visibilityOnDifDevice(false,false),
-                    "subMenu": []
                 }
             ]);
 
