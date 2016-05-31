@@ -13,6 +13,10 @@ clean{
 
 dependencies {
 	testConfig project(':dashboards-ui-test-common-api') {transitive = false }
+	
+	testCompile configurations.testConfig
+    testCompile configurations.webdriver
+    testCompile configurations.testNG
 }
 
 task integTestJar (type:Jar) {

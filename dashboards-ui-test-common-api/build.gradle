@@ -1,17 +1,17 @@
 version = "1.7.5" + "-$buildTimestamp"
 
+apply plugin: 'eclipse'
+
 project.ext.intgRun = hasProperty('IFARM_RUN') && IFARM_RUN != '' ? IFARM_RUN : 0
 project.ext.buildBranch = hasProperty('BUILD_BRANCH') && BUILD_BRANCH != '' ? BUILD_BRANCH : 'master'
 project.ext.forcePublishSdk = hasProperty('FORCE_PUBLISH_SDK') && FORCE_PUBLISH_SDK != '' ? FORCE_PUBLISH_SDK : 0
 sourceSets {
-integTest {
+	integTest {
         java.srcDir 'src/integTest/java'
-
-    
         compileClasspath = configurations.testConfig + configurations.webdriver + configurations.testNG
-        }
-    }
-
+	}
+}
+        
 clean{
   delete 'build'
 }
@@ -34,7 +34,6 @@ ext.customPomDefinition = {
             dependency.appendNode('groupId', dep.group)
             dependency.appendNode('artifactId', dep.name)
             dependency.appendNode('version', dep.version)
-	     
         }
     }
 }
@@ -56,5 +55,9 @@ artifactoryPublish {
 
 
 dependencies {
-testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+	
+	testCompile configurations.testConfig
+    testCompile configurations.webdriver
+    testCompile configurations.testNG
 }
