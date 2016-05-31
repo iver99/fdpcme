@@ -7,7 +7,6 @@ import java.util.Date
 
 apply from: 'test.gradle'
 apply plugin: 'war'
-
 apply plugin: 'compass'
 
 group = 'com.oracle.emaas.emcpdf'
@@ -21,12 +20,9 @@ targetCompatibility = 1.7
 // source 'webapp' directory
 def File sourceWebappDir = new File(project.projectDir, 'public_html')
 
-// source directories where jet, canvg, canvas files are copied
+// source directories where jet, ckeditor, font-awesome files are copied
 def File sourceJetDestDir = new File(sourceWebappDir, 'libs/@version@/js/oraclejet')
-//def File sourceJsCanvgDestDir = new File(sourceWebappDir, 'libs/@version@/js/canvg')
-//def File sourceJsCanvasDesDir = new File(sourceWebappDir, 'libs/@version@/js/html2canvas
 def File sourceCKeditorDesDir = new File(sourceWebappDir, 'libs/@version@/js/ckeditor')
-// sourc directories where font files are copied
 def File sourceFontDestDir = new File(sourceWebappDir, 'libs/@version@/css/font-awesome')
 
 // folders for minify, fingereprint js files
@@ -42,7 +38,6 @@ configurations {
     compass
     jscover { transitive = false }
 }
-
 
 dependencies {
         providedCompile project(':dashboards-ui:dashboardsui-webutils'){ transitive = false }
@@ -129,10 +124,21 @@ project.task("unpackJETFromArtifactory") << {
                 from project.zipTree(artifact.file.absolutePath)
                 into buildJetUnzipDir.absolutePath
             }
-            project.copy {
-                from  buildJetUnzipDir
-                into sourceJetDestDir.absolutePath
-            }
+            if(project.hasProperty("devMode")){
+		project.copy {
+		    from  buildJetUnzipDir
+		    into sourceJetDestDir.absolutePath
+		}
+	    }
+	    else
+	    {
+		def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/oraclejet");
+		outputs.dir outputDir
+		project.copy {
+		    from  buildJetUnzipDir
+		    into outputDir
+		}
+	    }
             project.delete(buildJetUnzipDir)
         }
     }
@@ -145,73 +151,45 @@ project.task("cleanJet") << {
 }
 
 //unpack js libs from artifactory
-project.task("unpackJSLibFromArtifactory") << {
-    //def File buildJsCanvgUnzipDir = new File(buildDir.absolutePath, 'canvg')
-    //def File buildJsCanvasUnzipDir = new File(buildDir.absolutePath, 'html2canvas')
+project.task("unpackJSLibFromArtifactory") << {    
     def File buildCKeditorUnzipDir = new File(buildDir.absolutePath, 'ckeditor')
     //first time or if custom cleans removes it
-    //sourceJsCanvgDestDir.mkdirs()
-    //sourceJsCanvasDesDir.mkdirs()
     sourceCKeditorDesDir.mkdirs()
 
     configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-        /*if (artifact.name.equals('canvg') && files(sourceJsCanvgDestDir.listFiles()).isEmpty()) {
-            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-            sourceJsCanvgDestDir.mkdirs()
-            project.copy {
-                from project.zipTree(artifact.file.absolutePath)
-                into buildJsCanvgUnzipDir.absolutePath
-            }
-            project.copy {
-                from  buildJsCanvgUnzipDir
-                into sourceJsCanvgDestDir.absolutePath
-            }
-            project.delete(buildJsCanvgUnzipDir)
-        }
-
-    if (artifact.name.equals('html2canvas') && files(sourceJsCanvasDesDir.listFiles()).isEmpty()) {
-            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-            sourceJsCanvasDesDir.mkdirs()
-            project.copy {
-                from artifact.file.absolutePath
-                into buildJsCanvasUnzipDir.absolutePath
-            }
-            project.copy {
-                from  buildJsCanvasUnzipDir
-                into sourceJsCanvasDesDir.absolutePath
-        rename 'html2canvas-(.+)', 'html2canvas.js'
-            }
-            project.delete(buildJsCanvasUnzipDir)
-        }*/
-    
-    if (artifact.name.equals('ckeditor_full') && files(sourceCKeditorDesDir.listFiles()).isEmpty()) {
+	if (artifact.name.equals('ckeditor_full') && files(sourceCKeditorDesDir.listFiles()).isEmpty()) {
             logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
             sourceCKeditorDesDir.mkdirs()
             project.copy {
                 from project.zipTree(artifact.file.absolutePath)
                 into buildCKeditorUnzipDir.absolutePath
             }
-        project.copy {
-                from  buildCKeditorUnzipDir.absolutePath+'/ckeditor/'
-                into sourceCKeditorDesDir.absolutePath
-            }
+	    if(project.hasProperty("devMode")){
+	        project.copy {
+                    from  buildCKeditorUnzipDir.absolutePath+'/ckeditor/'
+                    into sourceCKeditorDesDir.absolutePath
+                }
+	    }
+	    else
+	    {
+	        def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/ckeditor");
+	        outputs.dir outputDir
+	        project.copy {
+	            from  buildCKeditorUnzipDir
+	            into outputDir
+	        }
+	    }
             project.delete(buildCKeditorUnzipDir)
-        }
+	}
     }
 }
 
 project.task("cleanJSLib") << {
-    /*println 'Cleaning up JS lib directories ...'
-    println 'JS lib canvg dir: ' + sourceJsCanvgDestDir.absolutePath
-    sourceJsCanvgDestDir.deleteDir()
-    println 'JS lib html2canvas dir : ' + sourceJsCanvasDesDir.absolutePath
-    sourceJsCanvasDesDir.deleteDir()*/
     println 'JS lib ckeditor dir : ' + sourceCKeditorDesDir.absolutePath
     sourceCKeditorDesDir.deleteDir()
 }
 
-project.task("unpackFontFromArtifactory") << {
-    
+project.task("unpackFontFromArtifactory") << {    
     def File buildFontUnzipDir = new File(buildDir.absolutePath, 'font-awesome')
     //first time or if custom cleans removes it
     sourceFontDestDir.mkdirs()
@@ -226,12 +204,22 @@ project.task("unpackFontFromArtifactory") << {
 	    }
 	    
 	    ant.unzip(src: buildFontUnzipDir.absolutePath+"/font-awesome-4.3.0.zip", dest:buildFontUnzipDir.absolutePath)
-		    
-	    project.copy {
+	
+     	    if(project.hasProperty("devMode")){
+	        project.copy {
 	    	    from buildFontUnzipDir.absolutePath+"/font-awesome-4.3.0"
 		    into sourceFontDestDir.absolutePath
+	        }
 	    }
-		    
+	    else
+	    {
+	        def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/css/font-awesome");
+	        outputs.dir outputDir
+	        project.copy {
+		    from  buildFontUnzipDir
+		    into outputDir
+	        }
+	    }	
 	    project.delete(buildFontUnzipDir)
         }
     }
@@ -243,7 +231,7 @@ project.task("cleanFont") << {
     sourceFontDestDir.deleteDir()
 }
 
-task copyJsSource(type:Copy, dependsOn:[cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory,unpackFontFromArtifactory,compileSass]) {
+task copyJsSource(type:Copy, dependsOn:[cleanJs, compileSass]) {//unpackJETFromArtifactory, unpackJSLibFromArtifactory,unpackFontFromArtifactory,compileSass]) {
 
     from (webRootSourceDir) {
         include "**/*"
@@ -259,19 +247,22 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs, unpackJETFromArtifactory, unpac
             filesMatching("**/*.html") {
                 filter(ReplaceTokens, tokens: [version: versionPathElement])
             }
-            filesMatching("**/dashboards-home-alta.css") {
+	    filesMatching("**/*.css") {
                 filter(ReplaceTokens, tokens: [version: versionPathElement])
             }
-            filesMatching("**/dashboards-common-alta.css") {
-                filter(ReplaceTokens, tokens: [version: versionPathElement])
-            }
-            filesMatching("**/builder-alta.css") {
-                filter(ReplaceTokens, tokens: [version: versionPathElement])
-            }
-            filesMatching("**/landing-home-alta.css") {
-                filter(ReplaceTokens, tokens: [version: versionPathElement])
-            }
-
+	    
+//            filesMatching("**/dashboards-home-alta.css") {
+//                filter(ReplaceTokens, tokens: [version: versionPathElement])
+//            }
+//            filesMatching("**/dashboards-common-alta.css") {
+//                filter(ReplaceTokens, tokens: [version: versionPathElement])
+//            }
+//            filesMatching("**/builder-alta.css") {
+//                filter(ReplaceTokens, tokens: [version: versionPathElement])
+//            }
+//            filesMatching("**/landing-home-alta.css") {
+//                filter(ReplaceTokens, tokens: [version: versionPathElement])
+//            }
     }
     into stagingDir
 
@@ -283,9 +274,12 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs, unpackJETFromArtifactory, unpac
     }
 }
 
+task stageJs(dependsOn:[unpackJETFromArtifactory, unpackJSLibFromArtifactory,unpackFontFromArtifactory,copyJsSource]) {
+}
+
 clean.dependsOn cleanJet,cleanJSLib, cleanJs, cleanFont
 
-task jsCodeCoverage(type:JavaExec, dependsOn:[cleanJs, copyJsSource]) {
+task jsCodeCoverage(type:JavaExec, dependsOn:[cleanJs, stageJs]){//copyJsSource]) {
 
     //vmArgs '-Dfile.encoding=UTF-8'
     main '-jar'
@@ -316,7 +310,7 @@ jsCodeCoverage.onlyIf{jscc}
  * combine -> minify -> fingerprint JavaScript
  */
 
-task copyStagedJs(type:Copy, dependsOn:[copyJsSource]) {
+task copyStagedJs(type:Copy, dependsOn:[stageJs]){//[copyJsSource]) {
     from (stagingDir) {
 	include "**/*"	
     }
