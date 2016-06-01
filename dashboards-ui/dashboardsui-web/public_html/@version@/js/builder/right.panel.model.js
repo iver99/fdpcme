@@ -492,38 +492,15 @@ define(['knockout',
             };
             
             self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
-            if(self.dashboardSharing() === 'notShared'){
-                $(".enableShareAutoRefresh").css("color","#9e9e9e");
-            }else{
-                $(".enableShareAutoRefresh").css("color","#333");
-            }
             self.dashboardSharing.subscribe(function(val){
                 if("notShared"===val){
-                    $(".enableShareAutoRefresh").css("color","#9e9e9e");
                     toolBarModel.handleShareUnshare(false);
                 }else{
-                    $(".enableShareAutoRefresh").css("color","#333");
                     toolBarModel.handleShareUnshare(true);
                 }
             });
             self.defaultAutoRefreshValue = ko.observable("every5minutes");
 
-            self.enableEntityFilter.subscribe(function(val){
-                if(val){
-                    $(".enableEntityFilter").css("color","#333");
-                }else{
-                    $(".enableEntityFilter").css("color","#9e9e9e");
-                }
-            });
-
-            self.enableTimeRangeFilter.subscribe(function(val){
-                if(val){
-                    $(".enableTimeRangeFilter").css("color","#333");
-                }else{
-                    $(".enableTimeRangeFilter").css("color","#9e9e9e");
-                }
-            });
-            
             if (self.dashboardsetToolBarModel.isDashboardSet()) {
                 
                 
@@ -534,19 +511,7 @@ define(['knockout',
                 
                 var prevSharePublic = self.dashboardsetToolBarModel.dashboardsetConfig.share();
                 self.dashboardsetShare = ko.observable(prevSharePublic);
-                if(self.dashboardsetShare() === 'off'){
-                    $(".enableSetShareAutoRefresh").css("color","#9e9e9e");
-                }else{
-                    $(".enableSetShareAutoRefresh").css("color","#333");
-                }
-                self.dashboardsetShare.subscribe(function (val) {
-                    if (val === "on") {
-                        $(".enableSetShareAutoRefresh").css("color", "#333");
-                    } else {
-                        $(".enableSetShareAutoRefresh").css("color", "#9e9e9e");
-                    }
-                });
-                
+
                 self.defaultSetAutoRefreshValue = ko.observable("every5minutes"); // todo get from instance
                 
                 self.dashboardsetNameInputed.subscribe(function (val) {

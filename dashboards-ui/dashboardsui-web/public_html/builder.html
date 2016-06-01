@@ -801,12 +801,12 @@
                                             </div>
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label class="oj-label enableSetShareAutoRefresh" style="margin: 10px 0 0 0;">Default Auto-refresh Value</label>
+                                                    <label class="oj-label enableSetShareAutoRefresh" style="margin: 10px 0 0 0;" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardsetShare() === 'off'}">Default Auto-refresh Value</label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label class="enableSetShareAutoRefresh">Specify the default for other users</label>
+                                                    <label class="enableSetShareAutoRefresh" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardsetShare() === 'off'}">Specify the default for other users</label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
@@ -918,7 +918,7 @@
                                                     <form class="oj-form checkboxControledContent">
                                                         <div class="oj-flex">  
                                                             <div class="oj-flex-item">
-                                                                <label class="oj-label enableEntityFilter">Instance Support</label>
+                                                                <label class="oj-label enableEntityFilter" data-bind="css: {'dbd-right-panel-collapsible-disabled': !enableEntityFilter()}">Instance Support</label>
                                                             </div>
                                                         </div>
                                                         <div class="oj-flex">  
@@ -937,7 +937,7 @@
                                                         </div>
                                                         <div class="oj-flex">  
                                                             <div class="oj-flex-item">
-                                                                <label class="oj-label enableEntityFilter"  style="margin: 10px 0 0 0;">Default Entity Value</label>
+                                                                <label class="oj-label enableEntityFilter"  style="margin: 10px 0 0 0;" data-bind="css: {'dbd-right-panel-collapsible-disabled': !enableEntityFilter()}">Default Entity Value</label>
                                                             </div>
                                                         </div>
                                                         <div class="oj-flex">  
@@ -971,7 +971,7 @@
                                                 <form class="oj-form checkboxControledContent" style="overflow: hidden;">
                                                     <div class="oj-flex">  
                                                         <div class="oj-flex-item">
-                                                            <label class="oj-label enableTimeRangeFilter">Default Time Range Value</label>
+                                                            <label class="oj-label enableTimeRangeFilter" data-bind="css: {'dbd-right-panel-collapsible-disabled': !enableTimeRangeFilter()}">Default Time Range Value</label>
                                                         </div>
                                                     </div>
                                                     <div class="oj-flex" >
@@ -1026,12 +1026,12 @@
                                             </div>
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label class="oj-label enableShareAutoRefresh" style="margin: 10px 0 0 0;">Default Auto-refresh Value</label>
+                                                    <label class="oj-label enableShareAutoRefresh" style="margin: 10px 0 0 0;" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardSharing() === 'notShared'}">Default Auto-refresh Value</label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label class="enableShareAutoRefresh">Specify the default for other users</label>
+                                                    <label class="enableShareAutoRefresh" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardSharing() === 'notShared'}">Specify the default for other users</label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
