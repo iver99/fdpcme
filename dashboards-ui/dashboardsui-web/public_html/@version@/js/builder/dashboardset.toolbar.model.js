@@ -267,6 +267,24 @@ define(['knockout',
             self.cancelRemoveDashboard = function(){
                 $('#deleteDashboard').ojDialog("close"); 
             };
+            
+            self.removeDashboard = function(){
+                $('#deleteDashboard').ojDialog("close"); 
+                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId)
+                highlightNextTab(self.selectedDashboardItem().dashboardId, removeTab);
+                $("#dbd-tabs-container").ojTabs("refresh");
+                
+            };
+            self.saveAndRemoveDashboard = function(){
+                $('#deleteDashboard').ojDialog("close"); 
+                self.dashboardInstMap[self.selectedDashboardItem().dashboardId].toolBarModel.handleDashboardSave();
+                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId)
+                highlightNextTab(self.selectedDashboardItem().dashboardId, removeTab);
+                $("#dbd-tabs-container").ojTabs("refresh"); 
+            };
+            self.cancelRemoveDashboard = function(){
+                $('#deleteDashboard').ojDialog("close"); 
+            };
                     
             self.dbConfigMenuClick = new dbConfigMenuClick();  
             

@@ -752,6 +752,7 @@ public class TestDashBoard extends LoginAndLogout
 				"startTime=" + String.valueOf(StartTimeStamp) + "&endTime=" + String.valueOf(EndTimeStamp))) {
 			Assert.fail("not open the correct widget");
 		}
+
 	}
 
 	//Testcase for validating Error page
@@ -828,4 +829,6 @@ public class TestDashBoard extends LoginAndLogout
 	{
 		return String.valueOf(System.currentTimeMillis());
 	}
+
 }
+
