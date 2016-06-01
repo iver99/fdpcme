@@ -159,7 +159,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         
     }
     
-    function ViewModel(predata, parentElementId, defaultFilters,dashboardSetItem) {
+    function ViewModel(predata, parentElementId, defaultFilters, dashboardSetItem, isSet) {
         
         var self = this, showWelcome = (predata === null ? false : predata.getShowWelcomePref());
         
@@ -182,7 +182,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.welcomeDialogModel = new welcomeDialogModel(self.prefUtil, showWelcome);
         
         //dashboards
-        self.isDashboardSet = predata === null ? true : false;
+        self.isDashboardSet = isSet === true ? true : false;
         self.userName = dfu.getUserName();
         self.isMobileDevice = ko.observable( (new mbu()).isMobile );
         self.currentDashboardSetItem=dashboardSetItem;
@@ -410,7 +410,11 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.cancelDashboardCreate = function(){
             $( "#cDsbDialog" ).ojDialog( "open" );
         };
-
+        
+        self.afterConfirmDashboardCreate = function(_model, _resp, _options) {
+            _model.openDashboardPage();
+        };
+         
         self.confirmDashboardCreate = function()
         {
             var _trackObj = ko.utils.unwrapObservable(self.tracker), 
@@ -453,7 +457,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                             //self.refreshPagingSource(true);
                             $( "#cDsbDialog" ).css("cursor", "default");
                             $( "#cDsbDialog" ).ojDialog( "close" );
-                            _model.openDashboardPage();
+                            self.afterConfirmDashboardCreate(_model, _resp, _options);
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             //console.log('Error in Create: ' + textStatus);

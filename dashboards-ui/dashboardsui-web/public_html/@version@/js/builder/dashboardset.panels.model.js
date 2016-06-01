@@ -69,7 +69,7 @@ define([
                 //var predataModel = new model.PredataModel();
                 
                 function init() {              
-                    var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share'],dashboardsetToolBarModel.reorderedDbsSetItems);
+                    var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share'], dashboardsetToolBarModel.reorderedDbsSetItems, true);
                     
                     dashboardsViewModle.showExploreDataBtn(false);
                     
@@ -103,8 +103,15 @@ define([
                             });
                         }
                     };
+                    
+                    dashboardsViewModle.afterConfirmDashboardCreate = function(_model, _resp, _options) {
+                        var __data = {dashboard: {id : _model.get("id"), name: _model.get("name")}};
+                        dashboardsViewModle.handleDashboardClicked(null, __data);
+                        $('#dashboardTab-'+__data.dashboard.id).find('.tabs-name').text(__data.dashboard.name);
+                    };
                     ko.applyBindings(dashboardsViewModle, $includingEl[0]);
-                }
+                };
+                
                 var dashboardInst = {
                     type: "new"
                 };
