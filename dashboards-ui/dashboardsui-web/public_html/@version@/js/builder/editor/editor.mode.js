@@ -82,7 +82,7 @@ define(['knockout',
         TabletEditorMode.prototype.constructor = TabletEditorMode;
         TabletEditorMode.prototype.resetModeWidth = function(tile) {
             !tile.modeWidth && (tile.modeWidth = ko.observable());
-            tile.modeWidth(tile.width() <= 2 ? 1 : 2);
+            tile.modeWidth(tile.width() <= 3 ? 1 : 2);
         };
         TabletEditorMode.prototype.setModeWidth = function(tile, width) {
             oj.Logger.error("Unsupport operation: TabletEditorMode.setModeWidth()");
