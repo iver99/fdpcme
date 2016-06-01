@@ -2,9 +2,13 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -31,6 +35,22 @@ public class BrandingBarUtil
 	public static final String NAV_LINK_TEXT_ADMIN_ALERT = "Alert Rules";
 
 	/**
+	 * Check whether admin field exist
+	 *
+	 * @param driver
+	 *            WebDriver instance
+	 * @return
+	 */
+	public static boolean isAdmin(WebDriver driver) throws Exception
+	{
+		driver.getLogger().info("start validating admin tab");
+		//Open the navigation bar if it's not displayed
+		BrandingBarUtil.openNavigationBar(driver);
+		boolean isDisplayed = driver.isDisplayed("id=" + DashBoardPageId.BrandingBarAdminLinksID);
+		return isDisplayed;
+	}
+
+	/**
 	 * Check if the specified administration link is existed or not by given name
 	 *
 	 * @param driver
@@ -42,13 +62,10 @@ public class BrandingBarUtil
 	public static boolean isAdminLinkExisted(WebDriver driver, String adminLinkName)
 	{
 		Validator.notEmptyString("adminLinkName in [BrandingBarUtil.isAdminLinkExisted]", adminLinkName);
-		driver.getLogger().info(
-				"[BrandingBarUtil.isAdminLinkExisted] start to check if admin link is existed in navigation bar. Link name: "
-						+ adminLinkName);
+		driver.getLogger().info("Start to check if admin link is existed in navigation bar. Link name: " + adminLinkName);
 		boolean isExisted = false;
 		isExisted = BrandingBarUtil.isApplicationLinkExisted(driver, "admin", adminLinkName);
-		driver.getLogger().info(
-				"[BrandingBarUtil.isAdminLinkExisted] existence check for admin link is completed. Result: " + isExisted);
+		driver.getLogger().info("Existence check for admin link is completed. Result: " + isExisted);
 		return isExisted;
 	}
 
@@ -65,13 +82,10 @@ public class BrandingBarUtil
 	{
 		Validator.notEmptyString("cloudServiceLinkName in [BrandingBarUtil.isCloudServiceLinkExisted]", cloudServiceLinkName);
 		driver.getLogger().info(
-				"[BrandingBarUtil.isCloudServiceLinkExisted] start to check if cloud service link is existed in navigation bar. Link name: "
-						+ cloudServiceLinkName);
+				"Start to check if cloud service link is existed in navigation bar. Link name: " + cloudServiceLinkName);
 		boolean isExisted = false;
 		isExisted = BrandingBarUtil.isApplicationLinkExisted(driver, "cs", cloudServiceLinkName);
-		driver.getLogger().info(
-				"[BrandingBarUtil.isCloudServiceLinkExisted] existence check for cloud service link is completed. Result: "
-						+ isExisted);
+		driver.getLogger().info("Existence check for cloud service link is completed. Result: " + isExisted);
 		return isExisted;
 	}
 
@@ -84,28 +98,13 @@ public class BrandingBarUtil
 	 */
 	public static boolean isDashboardHomeLinkExisted(WebDriver driver)
 	{
-		driver.getLogger().info(
-				"[BrandingBarUtil.isDashboardHomeLinkExisted] start to check if 'Dashboards' link is existed in navigation bar.");
+		driver.getLogger().info("Start to check if 'Dashboards' link is existed in navigation bar.");
 		boolean isExisted = false;
-		//Check if navigation bar is already displayed or not
-		boolean isNavBarDisplayed = BrandingBarUtil.isNavigationBarDisplayed(driver);
-		//If not, open the navigation bar, if yes, just keep it as it is
-		if (!isNavBarDisplayed) {
-			driver.click("id=" + DashBoardPageId.LinkID);
-		}
-		driver.takeScreenShot();
-		//Wait until the links menu is displayed
-		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
-		isExisted = driver.isDisplayed("id=" + DashBoardPageId.BrandingBarDashboardHomeLinkID);
-		//Recover the navigation bar to the original status
-		if (!isNavBarDisplayed) {
-			driver.click("id=" + DashBoardPageId.LinkID);
-		}
-		driver.takeScreenShot();
-		driver.getLogger().info(
-				"[BrandingBarUtil.isDashboardHomeLinkExisted] existence check for 'Dashboards' link is completed. Result: "
-						+ isExisted);
+		String locator = "id=" + DashBoardPageId.BrandingBarDashboardHomeLinkID;
+		isExisted = BrandingBarUtil.isApplicationLinkExisted(driver, locator);
+		driver.getLogger().info("Existence check for 'Dashboards' link is completed. Result: " + isExisted);
 		return isExisted;
+
 	}
 
 	/**
@@ -120,13 +119,10 @@ public class BrandingBarUtil
 	public static boolean isHomeLinkExisted(WebDriver driver, String homeLinkName)
 	{
 		Validator.notEmptyString("homeLinkName in [BrandingBarUtil.isHomeLinkExisted]", homeLinkName);
-		driver.getLogger().info(
-				"[BrandingBarUtil.isHomeLinkExisted] start to check if home link is existed in navigation bar. Link name: "
-						+ homeLinkName);
+		driver.getLogger().info("Start to check if home link is existed in navigation bar. Link name: " + homeLinkName);
 		boolean isExisted = false;
 		isExisted = BrandingBarUtil.isApplicationLinkExisted(driver, "home", homeLinkName);
-		driver.getLogger().info(
-				"[BrandingBarUtil.isHomeLinkExisted] existence check for home link is completed. Result: " + isExisted);
+		driver.getLogger().info("Existence check for home link is completed. Result: " + isExisted);
 		return isExisted;
 	}
 
@@ -139,27 +135,11 @@ public class BrandingBarUtil
 	 */
 	public static boolean isMyFavoritesLinkExisted(WebDriver driver)
 	{
-		driver.getLogger().info(
-				"[BrandingBarUtil.isMyFavoritesLinkExisted] start to check if 'My Favorites' link is existed in navigation bar.");
+		driver.getLogger().info("Start to check if 'My Favorites' link is existed in navigation bar.");
 		boolean isExisted = false;
-		//Check if navigation bar is already displayed or not
-		boolean isNavBarDisplayed = BrandingBarUtil.isNavigationBarDisplayed(driver);
-		//If not, open the navigation bar, if yes, just keep it as it is
-		if (!isNavBarDisplayed) {
-			driver.click("id=" + DashBoardPageId.LinkID);
-		}
-		driver.takeScreenShot();
-		//Wait until the links menu is displayed
-		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
-		isExisted = driver.isDisplayed("id=" + DashBoardPageId.BrandingBarMyFavoritesLinkID);
-		//Recover the navigation bar to the original status
-		if (!isNavBarDisplayed) {
-			driver.click("id=" + DashBoardPageId.LinkID);
-		}
-		driver.takeScreenShot();
-		driver.getLogger().info(
-				"[BrandingBarUtil.isMyFavoritesLinkExisted] existence check for 'My Favorites' link is completed. Result: "
-						+ isExisted);
+		String locator = "id=" + DashBoardPageId.BrandingBarMyFavoritesLinkID;
+		isExisted = BrandingBarUtil.isApplicationLinkExisted(driver, locator);
+		driver.getLogger().info("Existence check for 'My Favorites' link is completed. Result: " + isExisted);
 		return isExisted;
 	}
 
@@ -172,26 +152,11 @@ public class BrandingBarUtil
 	 */
 	public static boolean isMyHomeLinkExisted(WebDriver driver)
 	{
-		driver.getLogger().info(
-				"[BrandingBarUtil.isMyHomeLinkExisted] start to check if 'Home' link is existed in navigation bar.");
+		driver.getLogger().info("Start to check if 'Home' link is existed in navigation bar.");
 		boolean isExisted = false;
-		//Check if navigation bar is already displayed or not
-		boolean isNavBarDisplayed = BrandingBarUtil.isNavigationBarDisplayed(driver);
-		//If not, open the navigation bar, if yes, just keep it as it is
-		if (!isNavBarDisplayed) {
-			driver.click("id=" + DashBoardPageId.LinkID);
-		}
-		driver.takeScreenShot();
-		//Wait until the links menu is displayed
-		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
-		isExisted = driver.isDisplayed("id=" + DashBoardPageId.BrandingBarMyHomeLinkID);
-		//Recover the navigation bar to the original status
-		if (!isNavBarDisplayed) {
-			driver.click("id=" + DashBoardPageId.LinkID);
-		}
-		driver.takeScreenShot();
-		driver.getLogger().info(
-				"[BrandingBarUtil.isMyHomeLinkExisted] existence check for 'Home' link is completed. Result: " + isExisted);
+		String locator = "id=" + DashBoardPageId.BrandingBarMyHomeLinkID;
+		isExisted = BrandingBarUtil.isApplicationLinkExisted(driver, locator);
+		driver.getLogger().info("Existence check for 'Home' link is completed. Result: " + isExisted);
 		return isExisted;
 	}
 
@@ -209,13 +174,10 @@ public class BrandingBarUtil
 		Validator.notEmptyString("visualAnalyzerLinkName in [BrandingBarUtil.isVisualAnalyzerLinkExisted]",
 				visualAnalyzerLinkName);
 		driver.getLogger().info(
-				"[BrandingBarUtil.isVisualAnalyzerLinkExisted] start to check if visual analyzer link is existed in navigation bar. Link name: "
-						+ visualAnalyzerLinkName);
+				"Start to check if visual analyzer link is existed in navigation bar. Link name: " + visualAnalyzerLinkName);
 		boolean isExisted = false;
 		isExisted = BrandingBarUtil.isApplicationLinkExisted(driver, "va", visualAnalyzerLinkName);
-		driver.getLogger().info(
-				"[BrandingBarUtil.isVisualAnalyzerLinkExisted] existence check for visual analyzer link is completed. Result: "
-						+ isExisted);
+		driver.getLogger().info("Existence check for visual analyzer link is completed. Result: " + isExisted);
 		return isExisted;
 	}
 
@@ -228,26 +190,11 @@ public class BrandingBarUtil
 	 */
 	public static boolean isWelcomeLinkExisted(WebDriver driver)
 	{
-		driver.getLogger().info(
-				"[BrandingBarUtil.isWelcomeLinkExisted] start to check if 'Welcome' link is existed in navigation bar.");
+		driver.getLogger().info("Start to check if 'Welcome' link is existed in navigation bar.");
 		boolean isExisted = false;
-		//Check if navigation bar is already displayed or not
-		boolean isNavBarDisplayed = BrandingBarUtil.isNavigationBarDisplayed(driver);
-		//If not, open the navigation bar, if yes, just keep it as it is
-		if (!isNavBarDisplayed) {
-			driver.click("id=" + DashBoardPageId.LinkID);
-		}
-		driver.takeScreenShot();
-		//Wait until the links menu is displayed
-		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
-		isExisted = driver.isDisplayed("id=" + DashBoardPageId.BrandingBarWelcomeLinkID);
-		//Recover the navigation bar to the original status
-		if (!isNavBarDisplayed) {
-			driver.click("id=" + DashBoardPageId.LinkID);
-		}
-		driver.takeScreenShot();
-		driver.getLogger().info(
-				"[BrandingBarUtil.isWelcomeLinkExisted] existence check for 'Welcome' link is completed. Result: " + isExisted);
+		String locator = "id=" + DashBoardPageId.BrandingBarWelcomeLinkID;
+		isExisted = BrandingBarUtil.isApplicationLinkExisted(driver, locator);
+		driver.getLogger().info("Existence check for 'Welcome' link is completed. Result: " + isExisted);
 		return isExisted;
 	}
 
@@ -264,8 +211,9 @@ public class BrandingBarUtil
 	{
 		Validator.fromValidValues("option", option, USERMENU_OPTION_HELP, USERMENU_OPTION_ABOUT, USERMENU_OPTION_SIGNOUT);
 
-		driver.getLogger().info("Click brand bar user menur option:" + option);
+		driver.getLogger().info("Start to do branding bar user menu option: " + option);
 		driver.waitForElementPresent(DashBoardPageId.Brand_Bar_User_Menu);
+		driver.getLogger().info("Click branding bar user menu button.");
 		driver.click(DashBoardPageId.Brand_Bar_User_Menu);
 
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), 900L);
@@ -273,19 +221,24 @@ public class BrandingBarUtil
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
 		driver.takeScreenShot();
 		Assert.assertTrue(driver.isDisplayed("id=" + DashBoardPageId.UserMenuPopupId));
+		driver.getLogger().info("User menu popup is displayed.");
 
 		switch (option) {
 			case USERMENU_OPTION_HELP:
 				driver.takeScreenShot();
+				driver.getLogger().info("Click Help menu.");
 				driver.click(DashBoardPageId.Option_Help);
 				break;
 			case USERMENU_OPTION_ABOUT:
 				driver.takeScreenShot();
+				driver.getLogger().info("Click About menu.");
 				driver.click(DashBoardPageId.Option_About);
 				driver.takeScreenShot();
+				driver.getLogger().info("Close the About dialog.");
 				driver.click(DashBoardPageId.AboutDialogClose);
 				break;
 			case USERMENU_OPTION_SIGNOUT:
+				driver.getLogger().info("Click Sign Out menu.");
 				driver.click(DashBoardPageId.Option_Logout);
 				break;
 		}
@@ -304,9 +257,7 @@ public class BrandingBarUtil
 	public static void visitApplicationAdministration(WebDriver driver, String adminLinkName) throws Exception
 	{
 		Validator.notEmptyString("adminLinkName in [BrandingBarUtil.visitApplicationAdministration]", adminLinkName);
-		driver.getLogger().info(
-				"[BrandingBarUtil.visitApplicationAdministration] start to visit admin link from branding bar. Link name: "
-						+ adminLinkName);
+		driver.getLogger().info("Start to visit admin link from branding bar. Link name: " + adminLinkName);
 		BrandingBarUtil.visitApplicationLink(driver, "admin", adminLinkName);
 	}
 
@@ -322,17 +273,14 @@ public class BrandingBarUtil
 	public static void visitApplicationCloudService(WebDriver driver, String cloudServiceLinkName) throws Exception
 	{
 		Validator.notEmptyString("cloudServiceLinkName in [BrandingBarUtil.visitApplicationCloudService]", cloudServiceLinkName);
-		driver.getLogger().info(
-				"[BrandingBarUtil.visitApplicationCloudService] start to visit cloud service link from branding bar. Link name: "
-						+ cloudServiceLinkName);
+		driver.getLogger().info("Start to visit cloud service link from branding bar. Link name: " + cloudServiceLinkName);
 		BrandingBarUtil.visitApplicationLink(driver, "cs", cloudServiceLinkName);
 	}
 
 	public static void visitApplicationHome(WebDriver driver, String homeLinkName) throws Exception
 	{
 		Validator.notEmptyString("homeLinkName in [BrandingBarUtil.visitApplicationHome]", homeLinkName);
-		driver.getLogger().info(
-				"[BrandingBarUtil.visitApplicationHome] start to visit home link from branding bar. Link name: " + homeLinkName);
+		driver.getLogger().info("Start to visit home link from branding bar. Link name: " + homeLinkName);
 		BrandingBarUtil.visitApplicationLink(driver, "home", homeLinkName);
 	}
 
@@ -349,9 +297,7 @@ public class BrandingBarUtil
 	{
 		Validator.notEmptyString("visualAnalyzerLinkName in [BrandingBarUtil.visitApplicationVisualAnalyzer]",
 				visualAnalyzerLinkName);
-		driver.getLogger().info(
-				"[BrandingBarUtil.visitApplicationVisualAnalyzer] start to visit visual analyzer link from branding bar. Link name: "
-						+ visualAnalyzerLinkName);
+		driver.getLogger().info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
 		BrandingBarUtil.visitApplicationLink(driver, "va", visualAnalyzerLinkName);
 	}
 
@@ -364,16 +310,8 @@ public class BrandingBarUtil
 	 */
 	public static void visitDashboardHome(WebDriver driver) throws Exception
 	{
-		driver.getLogger().info("[BrandingBarUtil.visitDashboardHome] start to visit 'Dashboards' link from branding bar.");
-		if (!BrandingBarUtil.isNavigationBarDisplayed(driver)) {
-			driver.click("id=" + DashBoardPageId.LinkID);
-		}
-		driver.takeScreenShot();
-		//Wait until the links menu is displayed
-		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
-		driver.waitForElementPresent(DashBoardPageId.BrandingBarDashboardLinkLocator);
-		driver.click(DashBoardPageId.BrandingBarDashboardLinkLocator);
-		driver.takeScreenShot();
+		driver.getLogger().info("Start to visit 'Dashboards' link from branding bar.");
+		BrandingBarUtil.visitApplicationLink(driver, DashBoardPageId.BrandingBarDashboardLinkLocator);
 	}
 
 	/**
@@ -386,15 +324,7 @@ public class BrandingBarUtil
 	public static void visitMyFavorites(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("[BrandingBarUtil.visitMyFavorites] start to visit 'My Favorites' link from branding bar.");
-		if (!BrandingBarUtil.isNavigationBarDisplayed(driver)) {
-			driver.click("id=" + DashBoardPageId.LinkID);
-		}
-		driver.takeScreenShot();
-		//Wait until the links menu is displayed
-		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
-		driver.waitForElementPresent("id=" + DashBoardPageId.BrandingBarMyFavoritesLinkID);
-		driver.click("id=" + DashBoardPageId.BrandingBarMyFavoritesLinkID);
-		driver.takeScreenShot();
+		BrandingBarUtil.visitApplicationLink(driver, DashBoardPageId.BrandingBarMyFavoritesLinkID);
 	}
 
 	/**
@@ -407,14 +337,7 @@ public class BrandingBarUtil
 	public static void visitMyHome(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("[BrandingBarUtil.visitMyHome] start to visit 'Home' link from branding bar.");
-		if (!BrandingBarUtil.isNavigationBarDisplayed(driver)) {
-			driver.click("id=" + DashBoardPageId.LinkID);
-		}
-		driver.takeScreenShot();
-		//Wait until the links menu is displayed
-		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
-		driver.click("id=" + DashBoardPageId.BrandingBarMyHomeLinkID);
-		driver.takeScreenShot();
+		BrandingBarUtil.visitApplicationLink(driver, DashBoardPageId.BrandingBarMyHomeLinkID);
 	}
 
 	/**
@@ -427,32 +350,7 @@ public class BrandingBarUtil
 	public static void visitWelcome(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("[BrandingBarUtil.visitWelcome] start to visit 'Welcome' link from branding bar.");
-		if (!BrandingBarUtil.isNavigationBarDisplayed(driver)) {
-			driver.click("id=" + DashBoardPageId.LinkID);
-		}
-		driver.takeScreenShot();
-		//Wait until the links menu is displayed
-		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
-		driver.click("id=" + DashBoardPageId.BrandingBarWelcomeLinkID);
-		driver.takeScreenShot();
-	}
-	
-	/**
-	 * Check whether admin field exist
-	 *
-	 * @param driver
-	 *            WebDriver instance
-	 * @return
-	 */
-	public static boolean isAdmin(WebDriver driver) throws Exception
-	{
-		driver.getLogger().info("start validating admin tab");	
-		if (!BrandingBarUtil.isNavigationBarDisplayed(driver)) {
-			driver.click("id=" + DashBoardPageId.LinkID);
-		}
-		driver.takeScreenShot();
-		boolean isDisplayed = driver.isDisplayed("id=" + DashBoardPageId.BrandingBarAdminLinksID);
-		return isDisplayed;
+		BrandingBarUtil.visitApplicationLink(driver, DashBoardPageId.BrandingBarWelcomeLinkID);
 	}
 
 	/**
@@ -492,7 +390,7 @@ public class BrandingBarUtil
 	{
 		String parentId = null;
 		switch (linkType) {
-		//Home links
+			//Home links
 			case "home":
 				parentId = DashBoardPageId.BrandingBarHomeLinksID;
 				break;
@@ -517,6 +415,34 @@ public class BrandingBarUtil
 	 *
 	 * @param driver
 	 *            WebDriver instance
+	 * @param locator
+	 *            Locator of the link
+	 * @return
+	 */
+	private static boolean isApplicationLinkExisted(WebDriver driver, String locator)
+	{
+		Validator.notEmptyString("locator in [BrandingBarUtil.isApplicationLinkExisted]", locator);
+		boolean isExisted = false;
+		//Check if navigation bar is already displayed or not
+		boolean isNavBarDisplayed = BrandingBarUtil.isNavigationBarDisplayed(driver);
+		//If not, open the navigation bar, if yes, just keep it as it is
+		BrandingBarUtil.openNavigationBar(driver);
+		//Wait until the links menu is displayed
+		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
+		isExisted = driver.isDisplayed(locator);
+		//Recover the navigation bar to the original status
+		if (!isNavBarDisplayed) {
+			driver.click("id=" + DashBoardPageId.LinkID);
+		}
+		driver.takeScreenShot();
+		return isExisted;
+	}
+
+	/**
+	 * Check if the specified link is exited or not
+	 *
+	 * @param driver
+	 *            WebDriver instance
 	 * @param linkType
 	 *            Type of the link, should be one of "home", "cs", "va", "admin"
 	 * @param linkName
@@ -525,27 +451,28 @@ public class BrandingBarUtil
 	 */
 	private static boolean isApplicationLinkExisted(WebDriver driver, String linkType, String linkName)
 	{
-		boolean isExisted = false;
 		String parentId = BrandingBarUtil.getApplicationLinkParentId(linkType);
 		//Find link element by parent id and link name
 		String xpath = "//div[@id='" + parentId + "']/descendant::a[text()='" + linkName + "']";
+		return BrandingBarUtil.isApplicationLinkExisted(driver, xpath);
+	}
 
-		//Check if navigation bar is already displayed or not
-		boolean isNavBarDisplayed = BrandingBarUtil.isNavigationBarDisplayed(driver);
-		//If not, open the navigation bar, if yes, just keep it as it is
-		if (!isNavBarDisplayed) {
-			driver.click("id=" + DashBoardPageId.LinkID);
+	/**
+	 * Check if a element is stale or not
+	 *
+	 * @param element
+	 *            WebElement instance
+	 * @return
+	 */
+	private static boolean isElementStale(WebElement element)
+	{
+		try {
+			element.getText();
+			return false;
 		}
-		driver.takeScreenShot();
-		//Wait until the links menu is displayed
-		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
-		isExisted = driver.isDisplayed(xpath);
-		//Recover the navigation bar to the original status
-		if (!isNavBarDisplayed) {
-			driver.click("id=" + DashBoardPageId.LinkID);
+		catch (StaleElementReferenceException e) {
+			return true;
 		}
-		driver.takeScreenShot();
-		return isExisted;
 	}
 
 	/**
@@ -560,6 +487,64 @@ public class BrandingBarUtil
 		boolean isDisplayed = driver.isDisplayed("id=" + DashBoardPageId.BrandingBarNavLinksId);
 		driver.getLogger().info("Check if the navigation bar is displayed or not. Result: " + isDisplayed);
 		return isDisplayed;
+	}
+
+	/**
+	 * Open the navigation bar
+	 *
+	 * @param driver
+	 *            WebDriver instance
+	 * @return
+	 */
+	private static void openNavigationBar(WebDriver driver)
+	{
+		//Open the navigation bar if it's not displayed
+		if (!BrandingBarUtil.isNavigationBarDisplayed(driver)) {
+			String navBarId = "id=" + DashBoardPageId.LinkID;
+			driver.waitForElementPresent(navBarId);
+			driver.click(navBarId);
+			WaitUtil.waitForPageFullyLoaded(driver);
+		}
+		driver.takeScreenShot();
+	}
+
+	/**
+	 * Navigate to the specified application page by locator
+	 *
+	 * @param driver
+	 *            WebDriver instance
+	 * @param locator
+	 *            Locator the link
+	 * @return
+	 */
+	private static void visitApplicationLink(WebDriver driver, final String locator)
+	{
+		Validator.notEmptyString("locator in [BrandingBarUtil.visitApplicationLink]", locator);
+		// Open navigation bar if it's not displayed
+		BrandingBarUtil.openNavigationBar(driver);
+		//Wait until the links menu is displayed
+		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
+		driver.waitForElementPresent(locator);
+		//Add try catch to handle StaleElementReferenceException
+		try {
+			driver.click(locator);
+		}
+		catch (StaleElementReferenceException e) {
+			driver.getLogger().info("StaleElementReferenceException thrown, wait for element becoming not stale");
+			// wait until element is not stale
+			new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT).until(new ExpectedCondition<Boolean>() {
+				@Override
+				public Boolean apply(org.openqa.selenium.WebDriver d)
+				{
+					WebElement element = d.findElement(By.xpath(locator));
+					Boolean isStale = BrandingBarUtil.isElementStale(element);
+					return !isStale;
+				}
+			});
+			driver.click(locator);
+		}
+
+		driver.takeScreenShot();
 	}
 
 	/**
@@ -578,14 +563,6 @@ public class BrandingBarUtil
 		String parentId = BrandingBarUtil.getApplicationLinkParentId(linkType);
 		//Find link element by parent id and link name
 		String xpath = "//div[@id='" + parentId + "']/descendant::a[text()='" + linkName + "']";
-		//Open the navigation bar if it's not displayed
-		if (!BrandingBarUtil.isNavigationBarDisplayed(driver)) {
-			driver.click("id=" + DashBoardPageId.LinkID);
-		}
-		driver.takeScreenShot();
-		//Wait until the links menu is displayed
-		BrandingBarUtil.checkLinksMenuVisibility(driver, true);
-		driver.click(xpath);
-		driver.takeScreenShot();
+		BrandingBarUtil.visitApplicationLink(driver, xpath);
 	}
 }
