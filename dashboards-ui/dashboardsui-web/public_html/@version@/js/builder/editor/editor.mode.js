@@ -10,7 +10,7 @@ define(['knockout',
     ], function(ko, $, oj) {
         function NormalEditorMode() {
             this.mode = "Normal Display Mode";
-            this.MODE_MAX_COLUMNS = 8;
+            this.MODE_MAX_COLUMNS = 12;
             this.editable = true;
             this.POSITION_TYPE = Builder.EDITOR_POS_BASED_ON_ROW_COLUMN;
         }
@@ -82,7 +82,7 @@ define(['knockout',
         TabletEditorMode.prototype.constructor = TabletEditorMode;
         TabletEditorMode.prototype.resetModeWidth = function(tile) {
             !tile.modeWidth && (tile.modeWidth = ko.observable());
-            tile.modeWidth(tile.width() <= 2 ? 1 : 2);
+            tile.modeWidth(tile.width() <= 3 ? 1 : 2);
         };
         TabletEditorMode.prototype.setModeWidth = function(tile, width) {
             oj.Logger.error("Unsupport operation: TabletEditorMode.setModeWidth()");

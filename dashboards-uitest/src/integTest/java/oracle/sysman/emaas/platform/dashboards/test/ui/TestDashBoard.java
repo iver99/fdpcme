@@ -242,6 +242,49 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test
+	public void testDashboardWith12Columns() throws Exception
+	{
+		String name = "DashboardWith12Columns" + generateTimeStamp();
+		String desc = "Description for " + name;
+
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testDashboardWith12Columns");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//create dashboard
+		webd.getLogger().info("Start to create dashboard");
+		DashboardHomeUtil.createDashboard(webd, name, desc, DashboardHomeUtil.DASHBOARD);
+
+		//verify dashboard in builder page
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, name, desc, true),
+				"Failed to verify the created dashboard. Probably the creation failed, or name/description is wrongly specified!");
+
+		String widgetName = "Database Errors Trend";
+		//add widget
+		webd.getLogger().info("Start to add Widget into the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, widgetName);
+		webd.getLogger().info("Add widget finished");
+
+		webd.getLogger().info("Get narrower widgets");
+		for (int i = 1; i <= 5; i++) {
+			DashboardBuilderUtil.resizeWidget(webd, widgetName, DashboardBuilderUtil.TILE_NARROWER);
+			webd.takeScreenShot();
+		}
+		webd.getLogger().info("Finished to get narrower widgets");
+
+		webd.getLogger().info("Get wider widgets");
+		for (int i = 1; i <= 11; i++) {
+			DashboardBuilderUtil.resizeWidget(webd, widgetName, DashboardBuilderUtil.TILE_WIDER);
+			webd.takeScreenShot();
+		}
+		webd.getLogger().info("Finished to get wider widgets");
+	}
+
+	@Test
 	public void testDeleteOOB() throws Exception
 	{
 		//initialize the test
