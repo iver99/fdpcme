@@ -512,7 +512,10 @@ body, html {
 }
 
 .dbd-pull-right {
-    float: right!important;
+    position: absolute;
+    right: 5px;
+    background-color: #fff;
+    
     button {
         margin-bottom: 0;
     }

@@ -70,9 +70,8 @@ define(['knockout',
             } );
             
             self.tbModel.dashboardDescription.subscribe(function(val){
-                self.dashboard.description(val);
-                if(!self.tbModel.dashboardDescription())
-                {
+                self.dashboard.description && self.dashboard.description(val);
+                if(!self.tbModel.dashboardDescription()){
                     self.showdbDescription([]);
                 }else{
                     self.showdbDescription(["showdbDescription"]);
