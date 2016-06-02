@@ -127,7 +127,25 @@ public class RegistrationEntity implements Serializable
 
 		List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
 		List<LinkEntity> filteredAdminLinks = filterAdminLinksByUserRoles(registeredAdminLinks, userRoles);
-		return sortServiceLinks(filteredAdminLinks);
+		// Try to find Administration Console link
+		LinkEntity adminConsoleLink = null;
+		for (LinkEntity le : filteredAdminLinks) {
+			if (ADMIN_CONSOLE_UI_SERVICENAME.equals(le.getServiceName())) {
+				adminConsoleLink = le;
+				filteredAdminLinks.remove(le);
+				break;
+			}
+		}
+
+		List<LinkEntity> sortedAdminLinks = new ArrayList<LinkEntity>();
+		// The Administration Console link should be always shown at the top
+		if (adminConsoleLink != null) {
+			sortedAdminLinks.add(adminConsoleLink);
+		}
+		// The others should be sorted in alphabetical order
+		sortedAdminLinks.addAll(sortServiceLinks(filteredAdminLinks));
+
+		return sortedAdminLinks;
 	}
 
 	/**
