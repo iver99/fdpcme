@@ -30,6 +30,7 @@ define(['knockout',
                         
             self.selectedDashboardItem.subscribe(function (selected) {
                 console.log("current selectselectedDashboardItemed dashboard: %o", selected);
+                self.extendedOptions.selectedTab = selected.dashboardId;
             });
 
             self.isDashboardSet = ko.observable(ko.unwrap(dashboardInst.type)  === "SET");
@@ -196,7 +197,7 @@ define(['knockout',
                                     JSON.stringify(newDashboardJs));
                     }
                 }, 2000, 30000);
-                    
+                self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;  
                 self.saveUserOptions();
             };
 
