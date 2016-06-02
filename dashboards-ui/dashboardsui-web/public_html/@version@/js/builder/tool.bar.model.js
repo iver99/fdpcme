@@ -357,9 +357,16 @@ define(['knockout',
                 outputData.eventType = "SAVE";
 
                 if (self.tilesViewModel.dashboard.tiles() && self.tilesViewModel.dashboard.tiles().length > 0) {
-                    ssu.getBase64ScreenShot($b.findEl('.tiles-wrapper'), 314, 165, 0.8, function(data) {
+                    var width = 314, height = 165;
+                    var elem = $b.findEl('.tiles-wrapper');
+                    var elemWidth = elem.width(), elemHeight = elem.height();
+                    if (elemWidth / elemHeight > width / height) {
+                        elem.height(width / height * elemWidth);
+                    }
+                    ssu.getBase64ScreenShot(elem, 314, 165, 0.8, function(data) {
                         outputData.screenShot = data;
                         self.tilesViewModel.dashboard.screenShot = ko.observable(data);  
+                        elem.height(elemHeight);
                         self.handleSaveUpdateDashboard(outputData);
                     });                
                 }
