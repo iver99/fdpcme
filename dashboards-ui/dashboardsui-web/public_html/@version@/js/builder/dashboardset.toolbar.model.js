@@ -184,15 +184,11 @@ define(['knockout',
                 dfu.getAjaxUtil().actionAfterAjaxStop(function () {
                     var $tilesWrapper = $(".tiles-wrapper:visible");
                     if ($tilesWrapper && selectedDashboardInst().tilesViewModel.tilesView.dashboard.tiles().length > 0) {
-                        var width = 314, height = 165;
-                        var elemWidth = $tilesWrapper.width(), elemHeight = $tilesWrapper.height();
-                        if (elemWidth / elemHeight > width / height) {
-                            $tilesWrapper.height(width / height * elemWidth);
-                        }
-                        
+                        var prevStyle = $tilesWrapper.css('backgroundColor');
+                        $tilesWrapper.css('backgroundColor', 'rgb(247,247,247)');
                         ssu.getBase64ScreenShot($tilesWrapper, 314, 165, 0.8, function (data) {
                             newDashboardJs.screenShot = data;
-                            $tilesWrapper.height(elemHeight);
+                            $tilesWrapper.css('backgroundColor', prevStyle);
                             Builder.updateDashboard(
                                     ko.unwrap(dashboardInst.id),
                                     JSON.stringify(newDashboardJs));
