@@ -264,9 +264,9 @@ require(['ojs/ojcore',
                     }
                 };
                 self.openInfraMonitoring = function() {
-                    oj.Logger.info("Trying to open Infrastructure Monitoring by URL: " + self.infraMonitoringUrl);
-                    if(self.infraMonitoringUrl) {
-                        window.location.href = self.infraMonitoringUrl;
+                    if (self.landingHomeUrls && self.landingHomeUrls.Monitoring) {
+                        oj.Logger.info("Trying to open Infrastructure Monitoring by URL: " + self.landingHomeUrls.Monitoring);
+                        window.location.href = self.landingHomeUrls.Monitoring;
                     }
                 }
                 self.openDashboards = function() {
