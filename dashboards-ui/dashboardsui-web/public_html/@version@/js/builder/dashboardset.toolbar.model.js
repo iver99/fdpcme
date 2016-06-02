@@ -182,13 +182,18 @@ define(['knockout',
                 // a tab may take some time to render the tiles.
                 dfu.getAjaxUtil().actionAfterAjaxStop(function () {
                     var $tilesWrapper = $(".tiles-wrapper:visible");
-                    if ($tilesWrapper && $tilesWrapper.length > 0) {
+                    if ($tilesWrapper && selectedDashboardInst().tilesViewModel.tilesView.dashboard.tiles().length > 0) {
                         ssu.getBase64ScreenShot($tilesWrapper, 314, 165, 0.8, function (data) {
                             newDashboardJs.screenShot = data;
                             Builder.updateDashboard(
                                     ko.unwrap(dashboardInst.id),
                                     JSON.stringify(newDashboardJs));
                         });
+                    }else{
+                        newDashboardJs.screenShot = null;
+                            Builder.updateDashboard(
+                                    ko.unwrap(dashboardInst.id),
+                                    JSON.stringify(newDashboardJs));
                     }
                 }, 2000, 30000);
                     
