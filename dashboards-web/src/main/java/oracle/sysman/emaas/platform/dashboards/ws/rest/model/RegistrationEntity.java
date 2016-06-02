@@ -21,9 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
@@ -36,6 +33,9 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author miao
@@ -78,6 +78,12 @@ public class RegistrationEntity implements Serializable
 	public static final String TMUI_SERVICENAME = "TenantManagementUI";
 	public static final String EVENTUI_SERVICENAME = "EventUI";
 
+	// Infrastructure Monitoring service
+	public static final String MONITORING_OPC_APPNAME = "Monitoring";
+	public static final String MONITORING_SERVICENAME = "MonitoringServiceUI";
+	public static final String MONITORING_VERSION = "1.5+";
+	public static final String MONITORING_HOME_LINK = "sso.home";
+
 	private static final Logger _logger = LogManager.getLogger(RegistrationEntity.class);
 	//	private String registryUrls;
 
@@ -119,15 +125,14 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getAdminLinks()
 	{
-							List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
-									UserContext.getCurrentUser());
-							if (!PrivilegeChecker.isAdminUser(userRoles)) {
-								return null;
-							}
+		List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(), UserContext.getCurrentUser());
+		if (!PrivilegeChecker.isAdminUser(userRoles)) {
+			return null;
+		}
 
-							List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
-							List<LinkEntity> filteredAdminLinks = filterAdminLinksByUserRoles(registeredAdminLinks, userRoles);
-							return sortServiceLinks(filteredAdminLinks);
+		List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
+		List<LinkEntity> filteredAdminLinks = filterAdminLinksByUserRoles(registeredAdminLinks, userRoles);
+		return sortServiceLinks(filteredAdminLinks);
 	}
 
 	/**
@@ -169,6 +174,18 @@ public class RegistrationEntity implements Serializable
 					list.add(new LinkEntity(ApplicationOPCName.ITAnalytics.toString(), ITA_URL, ITA_SERVICENAME, ITA_VERSION)); //version is hard coded now
 
 				}
+				else if (MONITORING_SERVICENAME.equals(app)) {
+					Link l = RegistryLookupUtil.getServiceExternalLink(MONITORING_SERVICENAME, MONITORING_VERSION,
+							MONITORING_HOME_LINK, tenantName);
+					if (l == null) {
+						throw new Exception("Link for " + app + "return null");
+					}
+					//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
+					LinkEntity le = new LinkEntity(MONITORING_OPC_APPNAME, l.getHref(), MONITORING_SERVICENAME,
+							MONITORING_VERSION);
+					le = replaceWithVanityUrl(le, tenantName, MONITORING_SERVICENAME);
+					list.add(le);
+				}
 			}
 			catch (Exception e) {
 				_logger.error("Failed to discover link of cloud service: " + app, e);
@@ -199,7 +216,7 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getHomeLinks()
 	{
-							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_HOME_LINK));
+		return sortServiceLinks(lookupLinksWithRelPrefix(NAME_HOME_LINK));
 	}
 
 	public String getSessionExpiryTime()
@@ -271,7 +288,7 @@ public class RegistrationEntity implements Serializable
 	 */
 	public List<LinkEntity> getVisualAnalyzers()
 	{
-							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
+		return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
 	}
 
 	private void addToLinksMap(Map<String, LinkEntity> linksMap, List<Link> links, String serviceName, String version)
@@ -306,6 +323,10 @@ public class RegistrationEntity implements Serializable
 					resultLinks.add(le);
 				}
 				else if (le.getServiceName().equals(LA_SERVICENAME) && roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_LA)) {
+					resultLinks.add(le);
+				}
+				else if (le.getServiceName().equals(MONITORING_SERVICENAME)
+						&& roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_MONITORING)) {
 					resultLinks.add(le);
 				}
 				else if (le.getServiceName().equals(EVENTUI_SERVICENAME) || le.getServiceName().equals(TMUI_SERVICENAME)) {
@@ -380,12 +401,16 @@ public class RegistrationEntity implements Serializable
 			else if (ApplicationOPCName.LogAnalytics.toString().equals(app)) {
 				appSet.add(LA_SERVICENAME);
 			}
+			//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
+			else if (MONITORING_OPC_APPNAME.equals(app)) {
+				appSet.add(MONITORING_SERVICENAME);
+			}
 		}
 		//if any of APM/LA/TA is subscribed, TenantManagementUI/EventUI should be subscribed accordingly as agreement now
 		if (appSet.size() > 0) {
-			if (isAdmin) {
-				appSet.add(TMUI_SERVICENAME);
-			}
+			//			if (isAdmin) {
+			appSet.add(TMUI_SERVICENAME);
+			//			}
 			appSet.add(EVENTUI_SERVICENAME);
 		}
 		return appSet;
@@ -414,8 +439,8 @@ public class RegistrationEntity implements Serializable
 			try {
 				SanitizedInstanceInfo sanitizedInstance = null;
 				if (!StringUtil.isEmpty(tenantName)) {
-					sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance,
-							tenantName);
+					sanitizedInstance = LookupManager.getInstance().getLookupClient()
+							.getSanitizedInstanceInfo(internalInstance, tenantName);
 					logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
 							sanitizedInstance, tenantName);
 				}
@@ -427,8 +452,6 @@ public class RegistrationEntity implements Serializable
 				}
 			}
 			catch (Exception e) {
-				// TODO Auto-generated catch block
-				//				e.printStackTrace();
 				_logger.error("Error to get SanitizedInstanceInfo", e);
 			}
 			if (NAME_DASHBOARD_UI_SERVICENAME.equals(internalInstance.getServiceName())

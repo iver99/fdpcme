@@ -56,7 +56,9 @@ define([
                 var appIdTenantManagement = "TenantManagement";
                 var appIdError = "Error";
                 self.SERVICE_VERSION=encodeURIComponent('1.0+');
+                self.MONITORING_SERVICE_VERSION=encodeURIComponent('1.5+');
                 var appIdEventUI = "EventUI";
+                var appIdMonitoring = "Monitoring";
                 var appMap = {};
                 appMap[appIdAPM] = {
                     "appId": "APM",
@@ -107,6 +109,13 @@ define([
                     "serviceName": "EventUI",
                     "version": self.SERVICE_VERSION,
                     "helpTopicId": ""
+                }; 
+                appMap[appIdMonitoring] = {
+                    "appId": appIdMonitoring,
+                    "appName": "BRANDING_BAR_APP_NAME_MONITORING", 
+                    "serviceName": "MonitoringServiceUI",
+                    "version": self.MONITORING_SERVICE_VERSION,
+                    "helpTopicId": "em_moncs"
                 }; 
             
                 self.appId = $.isFunction(params.appId) ? params.appId() : params.appId;
