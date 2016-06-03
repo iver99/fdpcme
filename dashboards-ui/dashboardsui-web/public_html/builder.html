@@ -235,48 +235,7 @@
                                         class="oj-fwk-icon-status-error oj-fwk-icon"></span>
                                   </button>
                               </div>
-                        </div>
-                        <div class="builder-dbd-description" data-bind="visible: dashboardDescriptionEnabled()==='TRUE'">
-                            <div class="builder-dbd-description-display-area dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
-                                <span class="builder-dbd-description-display-hover-area dbd-display-hover-area">
-<!--                                    <span data-bind="text: dashboardDescription, 
-                                                     event: { dblclick: editDashboardDescription }, 
-                                                     enterpress: editDashboardDescription, 
-                                                     attr: {title: dashboardDescription}" 
-                                          class="dbd-display-area-text"  tabindex="0"></span>-->
-                                    <span data-bind="text: dashboardDescription,
-                                                     attr: {title: dashboardDescription}" 
-                                          class="dbd-display-area-text"></span>
-                                    <button class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
-                                              data-bind="click: editDashboardDescription,ojComponent: {
-                                                    component:'ojButton', chroming: 'half'
-                                        }">
-                                        <img width="16" height="16" src="@version@/images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
-                                    </button>
-                                </span>
-                            </div>
-                            <div class="builder-dbd-description-edit-area dbd-edit-area">
-                                <input class="builder-dbd-description-input"
-                                       data-bind="event: {keypress: handleDashboardDescriptionInputKeyPressed},valueUpdate: 'afterkeydown',
-                                       		   ojComponent: {component: 'ojInputText', 
-                                               value: dashboardDescriptionEditing, rootAttributes: {
-                                               style:'max-width:55em;'}}" maxlength="256">
-                                <button class="builder-dbd-description-ok oj-button oj-default oj-button-half-chrome"
-                                          data-bind="click:okChangeDashboardDescription,ojComponent: {
-                                                component:'ojButton', chroming: 'half',
-                                    }, attr: {title: getNlsString('COMMON_BTN_OK')}" tabindex="0">
-                                    <span role="img"
-                                        class="oj-fwk-icon-status-confirmation oj-fwk-icon"></span>
-                                  </button>
-                                  <button class="builder-dbd-description-cancel oj-button oj-default oj-button-half-chrome"
-                                          data-bind="click:cancelChangeDashboardDescription, ojComponent: {
-                                                component:'ojButton', chroming: 'half'
-                                    }, attr: {title: getNlsString('COMMON_BTN_CANCEL')}" tabindex="0">
-                                    <span role="img"
-                                        class="oj-fwk-icon-status-error oj-fwk-icon"></span>
-                                  </button>
-                              </div>
-                        </div>
+                        </div>                      
                     </div>
                     <div data-bind="css: rightButtonsAreaClasses(),visible:false" class="builder-toolbar-right oj-toolbar-row">
                         <!-- ko if: window.DEV_MODE -->
@@ -476,9 +435,16 @@
                 <div class="tiles-col-container oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size">
                     <div class="oj-row fit-size-vertical-sibling df-computed-content-width"
                          style="max-width: none; padding-left: 8px;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0" 
-                         data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE'">
+                         data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE'">                          
                         <div class="df-toolbar">
                             <!-- ko with:toolbarModel -->
+                            <div class="builder-dbd-description" data-bind="visible: dashboardDescriptionEnabled()==='TRUE'">
+                                <div class="builder-dbd-description-display-area dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
+                                    <span data-bind="text: dashboardDescription,
+                                                     attr: {title: dashboardDescription}" 
+                                          class="dbd-display-area-text single-dbd-description"></span>          
+                                </div>
+                            </div>  
                             <button class='dashboardOptsBtn dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print'
                                     data-bind="visible: true, ojComponent: { component: 'ojButton', chroming: 'half', icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
                                     menu: '#dashboardOptsMenu'+toolBarGuid},

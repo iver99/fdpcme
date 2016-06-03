@@ -183,7 +183,7 @@ body, html {
 }
 
 .builder-dbd-name .dbd-display-area {
-  width: 600px;
+  width: inherit;
 }
 
 .builder-dbd-name .dbd-display-hover-area {
@@ -221,6 +221,7 @@ body, html {
 
 .builder-dbd-description .dbd-display-area-text {
   line-height: 2.5em; 
+  margin-left: 10px;
 }
 
 .builder-dbd-description:not(.editing) .dbd-edit-area {
@@ -234,21 +235,28 @@ body, html {
 }
 
 .builder-toolbar-left {
-/*  padding-right: 180px;
-  margin-right: -180px;*/
-    padding-right: 300px;
-    margin-right: -300px;
+    /*  padding-right: 180px;
+      margin-right: -180px;*/
+    border-bottom: solid 2px #3caf85;
+    margin-bottom: -3px;
+    padding-right:5px;
 }
 
-.builder-dbd-description .dbd-display-hover-area {
-  box-sizing: border-box;
-  float: left;
-  white-space: nowrap;
-  overflow: hidden;
+.builder-dbd-description {
+    .dbd-display-hover-area {
+        box-sizing: border-box;
+        float: left;
+        white-space: nowrap;
+        overflow: hidden;
+        max-width: 100%;
+        width: auto;
+    }
+    .single-dbd-description{
+        width:100%
+    }
 }
 
 .builder-toolbar-left, .builder-dbd-description .dbd-display-area-text {
-  width: 100%;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   float:left;
@@ -256,13 +264,8 @@ body, html {
   overflow:hidden;
   text-overflow:ellipsis;
   margin-top: 1px;
-  margin-bottom: 1px;
 }
 
-.builder-dbd-description .dbd-display-hover-area {
-  max-width: 100%;
-  width: auto;
-}
 
 /*.builder-dbd-description .dbd-display-hover-area:hover .dbd-display-area-text {
   padding-right: 40px;
@@ -1294,7 +1297,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
         background-color: #3caf85;
         padding-right:3px;
         margin-top:6px;
-        margin-left:29px;
+        margin-left:18px;
         > span{
             color: white!important;
             font-weight: bold;
@@ -1350,7 +1353,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
         .other-nav.oj-selected{
             border-top-color: transparent;     
             margin-top:7px;
-            border-bottom: 3px solid;
+            border-bottom: 2px solid;
             border-bottom-color: #3caf85;
             background:transparent;
             .oj-tabs-gen-div{
