@@ -30,6 +30,7 @@ define(['knockout',
                         
             self.selectedDashboardItem.subscribe(function (selected) {
                 console.log("current selectselectedDashboardItemed dashboard: %o", selected);
+                self.extendedOptions.selectedTab = selected.dashboardId;
             });
 
             self.isDashboardSet = ko.observable(ko.unwrap(dashboardInst.type)  === "SET");
@@ -183,16 +184,24 @@ define(['knockout',
                 // a tab may take some time to render the tiles.
                 dfu.getAjaxUtil().actionAfterAjaxStop(function () {
                     var $tilesWrapper = $(".tiles-wrapper:visible");
-                    if ($tilesWrapper && $tilesWrapper.length > 0) {
+                    if ($tilesWrapper && selectedDashboardInst().tilesViewModel.tilesView.dashboard.tiles().length > 0) {
+                        var prevStyle = $tilesWrapper.css('backgroundColor');
+                        $tilesWrapper.css('backgroundColor', 'rgb(247,247,247)');
                         ssu.getBase64ScreenShot($tilesWrapper, 314, 165, 0.8, function (data) {
                             newDashboardJs.screenShot = data;
+                            $tilesWrapper.css('backgroundColor', prevStyle);
                             Builder.updateDashboard(
                                     ko.unwrap(dashboardInst.id),
                                     JSON.stringify(newDashboardJs));
                         });
+                    }else{
+                        newDashboardJs.screenShot = null;
+                            Builder.updateDashboard(
+                                    ko.unwrap(dashboardInst.id),
+                                    JSON.stringify(newDashboardJs));
                     }
                 }, 2000, 30000);
-                    
+                self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;  
                 self.saveUserOptions();
             };
 

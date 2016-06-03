@@ -493,6 +493,12 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 				new EmsUserOptionsSelector(emsUserOptions.getUserName(), emsUserOptions.getDashboardId(), null));
 	}
 
+        @Mock
+        public int removeUnsharedEmsSubDashboard(long subDashboardId, String owner)
+        {
+               return 1;
+        }
+
 	@SuppressWarnings("unchecked")
 	private <T> T cloneEntity(T c)
 	{
