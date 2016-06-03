@@ -132,11 +132,13 @@ define(['knockout',
             self.toggleRightPanel = function(data,event,target) {
                     var clickedIcon;
                 if(!event){
-                    if("edit" === target && !self.rightPanelShown()){
+                    if("edit" === target){
                         clickedIcon = "pencil";
                         self.rightPanelIcon(clickedIcon);
-                        $b.getRightPanelModel().toggleLeftPanel();
-                        self.rightPanelShown(!self.rightPanelShown());
+                        if(!self.rightPanelShown()){
+                            $b.getRightPanelModel().toggleLeftPanel();
+                            self.rightPanelShown(!self.rightPanelShown());
+                        }
                     }
                 }else{
                     if ($(event.currentTarget).hasClass('rightpanel-pencil')) {
