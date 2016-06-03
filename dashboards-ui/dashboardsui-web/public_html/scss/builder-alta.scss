@@ -836,6 +836,10 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     }
 }
 
+.rightpanel-pencil{
+    border-top: 0;
+}
+
 .right-panel-toggler .oj-button.oj-selected .oj-button-label {
     border-right: 1px solid white
 }
@@ -853,7 +857,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 
 .dbd-left-panel-show {
-    width: 280px;
+    width: 320px;
 }
 
 .dbd-left-panel-hide {

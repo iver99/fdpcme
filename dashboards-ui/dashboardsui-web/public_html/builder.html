@@ -658,7 +658,7 @@
                         visible: $root.isMobileDevice !== 'true' && !dashboard.systemDashboard() && showRightPanelToggler() && isCreator === true,
                         style: {
                                  right: rightPanelShown() ? 
-                                (283 + $root.scrollbarWidth) + 'px' : 
+                                (323 + $root.scrollbarWidth) + 'px' : 
                                 $root.scrollbarWidth + 'px'
                         }">
                     <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn rightpanel-wrench" style="display: block;"
@@ -953,16 +953,16 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="oj-flex" >
-                                                        <div class="oj-flex-item">
-                                                            <button class="dbd-pull-right" data-bind="click: applyFilterSetting(), ojComponent: { 
-                                                                                            component: 'ojButton', label: 'Apply' , 
-                                                                                            disabled: !filterSettingModified(), 
-                                                                                            rootAttributes: {style:'margin:0 5px 0 0'} },
-                                                                                    css: {'oj-button-primary':filterSettingModified()}"></button>
-                                                        </div>
-                                                    </div>
                                                 </form>
+                                            </div>
+                                            <div class="oj-flex" >
+                                                <div class="oj-flex-item">
+                                                    <button data-bind="click: applyFilterSetting(), ojComponent: { 
+                                                                                    component: 'ojButton', label: 'Apply' , 
+                                                                                    disabled: !filterSettingModified(), 
+                                                                                    rootAttributes: {style:'float:right;margin:0 5px 5px 0;'} },
+                                                                            css: {'oj-button-primary':filterSettingModified()}"></button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
