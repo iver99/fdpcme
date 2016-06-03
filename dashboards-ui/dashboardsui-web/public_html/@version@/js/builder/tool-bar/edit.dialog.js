@@ -65,6 +65,7 @@ define(['knockout',
                 else{
                     self.dashboard.description = ko.observable(val);
                 }
+                self.dashboard.description(val);
                 self.tbModel.dashboardDescription(val);
                 self.description(val);
             } );
@@ -132,12 +133,12 @@ define(['knockout',
                             {
                                 self.dashboard.description = ko.observable(self.description());
                             }
-                            self.tbModel.dashboardDescription(self.description());
-
-                            self.dashboard.enableDescription(isEditDsbOptionEnabled(self.descriptionValue) ? "TRUE" : "FALSE");
-                            self.tbModel.dashboardDescriptionEnabled(isEditDsbOptionEnabled(self.descriptionValue) ? "TRUE" : "FALSE");
-                            self.dashboard.enableEntityFilter(isEditDsbOptionEnabled(self.entityFilterValue) ? "TRUE" : "FALSE");
-                            self.dashboard.enableTimeRange(isEditDsbOptionEnabled(self.timeRangeFilterValue) ? "TRUE" : "FALSE");
+//                            self.tbModel.dashboardDescription(self.description());
+//
+//                            self.dashboard.enableDescription(isEditDsbOptionEnabled(self.descriptionValue) ? "TRUE" : "FALSE");
+//                            self.tbModel.dashboardDescriptionEnabled(isEditDsbOptionEnabled(self.descriptionValue) ? "TRUE" : "FALSE");
+//                            self.dashboard.enableEntityFilter(isEditDsbOptionEnabled(self.entityFilterValue) ? "TRUE" : "FALSE");
+//                            self.dashboard.enableTimeRange(isEditDsbOptionEnabled(self.timeRangeFilterValue) ? "TRUE" : "FALSE");
 
                             $('#edit-dashboard').ojDialog("close"); 
                         },
