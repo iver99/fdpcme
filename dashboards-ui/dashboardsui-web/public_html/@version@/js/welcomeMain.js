@@ -223,13 +223,20 @@ require(['ojs/ojcore',
                 self.getServiceUrls();
                                 
                 self.openAPM = function() {
+                    if(!self.landingHomeUrls) {
+                        console.log("---fetching service links is not finished yet!---");
+                        return;
+                    }
                     oj.Logger.info('Trying to open APM by URL: ' + self.landingHomeUrls.APM);
                     if(self.landingHomeUrls.APM) {
                         window.location.href = self.landingHomeUrls.APM;
                     }
                 };
                 self.openLogAnalytics = function (data, event) {
-
+                    if(!self.landingHomeUrls) {
+                        console.log("---fetching service links is not finished yet!---");
+                        return;
+                    }
                     oj.Logger.info('Trying to open Log Analytics by URL: ' + self.landingHomeUrls.LogAnalytics);
                     if (self.landingHomeUrls.LogAnalytics) {
                         window.location.href = self.landingHomeUrls.LogAnalytics;
@@ -238,6 +245,10 @@ require(['ojs/ojcore',
                 };
                 self.openITAnalytics = function(data, event) {
                     if (event.type === "click" || (event.type === "keypress" && event.keyCode === 13)) {
+                        if(!self.landingHomeUrls) {
+                            console.log("---fetching service links is not finished yet!---");
+                            return;
+                        }
                         oj.Logger.info('Trying to open IT Analytics by URL: ' + self.landingHomeUrls.ITAnalytics);
                         if(self.landingHomeUrls.ITAnalytics) {
                             window.location.href = self.landingHomeUrls.ITAnalytics;
@@ -263,6 +274,10 @@ require(['ojs/ojcore',
                     }
                 };
                 self.ITAOptionChosen = function(event, data) {
+                    if(!self.landingHomeUrls) {
+                        console.log("---fetching service links is not finished yet!---");
+                        return;
+                    }
                     if(data.value && self.landingHomeUrls[data.value]) {
                         oj.Logger.info('Trying to open ' + data.value + ' by URL: ' + self.landingHomeUrls[data.value]);
                         window.location.href = self.landingHomeUrls[data.value];
@@ -280,7 +295,11 @@ require(['ojs/ojcore',
                         window.location.href = self.dashboardsUrl;
                     }
                 };
-                self.dataExplorersChosen = function (event, data) {                    
+                self.dataExplorersChosen = function (event, data) {
+                    if(!self.landingHomeUrls) {
+                        console.log("---fetching service links is not finished yet!---");
+                        return;
+                    }
                     if (data.value && self.landingHomeUrls[data.value]) {
                         oj.Logger.info('Trying to open ' + data.value + ' by URL: ' + self.landingHomeUrls[data.value]);
                         window.location.href = self.landingHomeUrls[data.value];
