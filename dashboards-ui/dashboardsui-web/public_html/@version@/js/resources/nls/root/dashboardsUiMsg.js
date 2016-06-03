@@ -319,7 +319,7 @@ define({
       "LANDING_HOME_ITA_MIDDLEWARE_RESOURCE": "Resource Analytics - Middleware",
 
       "LANDING_HOME_INFRA_MONITORING": "Infrastructure Monitoring",
-      "LANDING_HOME_INFRA_MONITORING_DESC": "to do...",
+      "LANDING_HOME_INFRA_MONITORING_DESC": "Monitor your entire IT infrastructure - on-premises or on the cloud - from one unified platform",
 
       "LANDING_HOME_DASHBOARDS": "Dashboards",
       "LANDING_HOME_DASHBOARDS_DESC": "Build custom dashboards using out-of-the-box widgets or your own visualization of data",

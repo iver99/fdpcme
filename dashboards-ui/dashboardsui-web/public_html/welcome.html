@@ -82,6 +82,7 @@
                                 </div>
                             <!--</a>-->
                         </li>
+                        <!-- ko if: showInfraMonitoring -->
                         <li class="box-list-li box-list-a">
                             <a id="infra_mon_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openInfraMonitoring">
                                 <div class="service-box-wrapper">
@@ -95,6 +96,7 @@
                                 </div>
                             </a>
                         </li>
+                        <!-- /ko -->
                         <li class="box-list-li box-list-a">
                             <a id="dashboards_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openDashboards">
                                 <div class="service-box-wrapper">

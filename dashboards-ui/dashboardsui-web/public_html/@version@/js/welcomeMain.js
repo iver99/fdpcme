@@ -150,7 +150,9 @@ require(['ojs/ojcore',
                 self.community = getNlsString("LANDING_HOME_COMMUNITY_LINK");
                 
                 self.ITA_Type = "select";
-                self.data_type = "select";                
+                self.data_type = "select";
+                
+                self.showInfraMonitoring = ko.observable(false);
                 
                 self.getServiceUrls = function() {
                     var serviceUrl = dfu.getRegistrationUrl();
@@ -176,13 +178,16 @@ require(['ojs/ojcore',
                     return url;
                 };
                 
-                function fetchServiceLinks(data) {
+                function fetchServiceLinks(data) { 
                     var landingHomeUrls = {};
                     var i;
                     if(data.cloudServices && data.cloudServices.length>0) {
                         var cloudServices = data.cloudServices;
                         var cloudServicesNum = cloudServices.length;
                         for(i=0; i<cloudServicesNum; i++) {
+                            if(cloudServices[i].name == "Monitoring") {
+                                self.showInfraMonitoring(true);
+                            }
                             landingHomeUrls[cloudServices[i].name] = cloudServices[i].href;
                         }
                     }
@@ -233,7 +238,7 @@ require(['ojs/ojcore',
                 };
                 self.openITAnalytics = function(data, event) {
                     if (event.type === "click" || (event.type === "keypress" && event.keyCode === 13)) {
-                        oj.Logger.info('Trying to open Log Analytics by URL: ' + self.landingHomeUrls.LogAnalytics);
+                        oj.Logger.info('Trying to open IT Analytics by URL: ' + self.landingHomeUrls.ITAnalytics);
                         if(self.landingHomeUrls.ITAnalytics) {
                             window.location.href = self.landingHomeUrls.ITAnalytics;
                         }
