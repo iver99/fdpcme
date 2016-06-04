@@ -191,7 +191,7 @@ define(['knockout',
                     }
                     else if ($tilesWrapper && selectedDashboardInst().tilesViewModel.tilesView.dashboard.tiles().length > 0) {
                         var $clone = Builder.createScreenshotElementClone($tilesWrapper);
-                        ssu.getBase64ScreenShot($tilesWrapper, 314, 165, 0.8, function (data) {
+                        ssu.getBase64ScreenShot($clone, 314, 165, 0.8, function (data) {
                             newDashboardJs.screenShot = data;
                             Builder.removeScreenshotElementClone($clone);
                             Builder.updateDashboard(
