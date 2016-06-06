@@ -75,64 +75,7 @@
                       <li class="oj-menu-divider"></li>
                     <!--/ko-->
                     <!--/ko-->
-                </ul>
-                <div style="display:none" id="changeDashboardsetInfo"
-                     data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 480px; min-height:280px;'}}">
-                    <div class="oj-dialog-header oj-helper-clearfix">
-                        <span class="oj-dialog-title" data-bind="text:getNlsString('DBSSET_BUILDER_EDIT_DASHBOARDSET')"></span>
-                    </div>
-                    <div class="oj-dialog-body">
-                        <div data-bind="ojComponent: {component: 'ojAccordion'}">
-                            <div id="nameDescription" data-bind="ojComponent: {component: 'ojCollapsible', expanded:true}">
-                                <span class="edit-dbsset-title" data-bind="text:getNlsString('DBSSET_BUILDER_NAME_DESCRIPTION')"></span>
-                                <div>
-                                     <h4 data-bind="text:getNlsString('DBS_HOME_CREATE_DLG_NAME')"></h4>
-                                     <input id="dbsInfoName"
-                                           data-bind="ojComponent: { component: 'ojInputText',rootAttributes: {style:'max-width:420px;'},value:dashboardsetName()}">
-                                     <h4 data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></h4>
-                                     <textarea id="dbsInfoDescription" maxlength="256" rows="5"
-                                              data-bind="ojComponent: {component: 'ojTextArea', rootAttributes: {style:'max-width:420px;'},value:dashboardsetDescription()
-                                                              }"></textarea>
-                                </div>
-                            </div>
-                            <div id="shareSettings" data-bind="ojComponent: {component: 'ojCollapsible', expanded:false}">
-                                <span class="edit-dbsset-title" data-bind="text:getNlsString('DBSSET_BUILDER_SHARE_SETTINGS')"></span>
-                                <div>
-                                    <label id="mainlabelid" data-bind="text:getNlsString('DBSSET_BUILDER_VISIBILITY')"></label>
-                                    <div id="radiosetSetBasicDemoId" aria-labelledby="mainlabelid"
-                                         data-bind="ojComponent: {component: 'ojRadioset',value: dashboardsetConfig.share}" >
-                                        <span class="oj-choice-row">
-                                            <input id="share-off" type="radio" name="sharesettings" value="off">
-                                            <label for="share-off" data-bind="text:getNlsString('DBSSET_BUILDER_NOT_SHARED')"></label>
-                                        </span>
-                                        <span class="oj-choice-row">
-                                            <input id="share-on" type="radio" name="sharesettings" value="on">
-                                            <label for="share-on" data-bind="text:getNlsString('DBSSET_BUILDER_SHARED')"></label>
-                                        </span>                              
-                                    </div>   
-                                    <!--TODO: In Later version-->
-<!--                                    <form id="dashboardset-refresh">
-                                        <label for="dbs-set-refresh" data-bind="text:getNlsString('DBSSET_BUILDER_DEFAULT_REFRESH')"></label>
-                                        <span data-bind="text:getNlsString('DBSSET_BUILDER_REFRESH_TIPS')"></span>
-                                        <select id="dbs-set-refresh" data-bind="ojComponent: {component: 'ojSelect',value: dashboardsetConfig.refresh,
-                                                    rootAttributes: {style:'max-width:20em'}}">
-                                            <option value="off" data-bind="text:getNlsString('DBS_BUILDER_AUTOREFRESH_OFF')"></option>
-                                            <option value="on" data-bind="text:getNlsString('DBS_BUILDER_AUTOREFRESH_ON')"></option>
-                                        </select>
-                                    </form>-->
-                                </div>      
-                            </div>
-                        </div>
-                    </div>
-                    <div class="oj-dialog-footer">
-                        <button id="saveDsbInfo" data-bind="ojComponent: {
-                                             component: 'ojButton',label: getNlsString('COMMON_BTN_SAVE'),
-                                             rootAttributes: {style:'margin-right:10px'}},click:dbConfigMenuClick.saveDbsDescription"></button>
-                        <button id="cancelSaveDsbInfo" data-bind="ojComponent: {
-                                             component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'),
-                                             rootAttributes: {style:'margin-right:30px'}},click:dbConfigMenuClick.cancelSaveDbsetInfo"></button>
-                    </div>
-                </div>
+                </ul>                
                     <div style="display:none" id="deleteDashboardset"
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 480px; min-height:200px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
@@ -1012,8 +955,8 @@
                                         </form>
                                     </div>
                                 </div>
-                                <hr/>
-                                <div>
+                                <hr data-bind="visible:!$data.isUnderSet"/>
+                                <div data-bind="visible:!$data.isUnderSet">
                                     <button data-bind="click: deleteDashboardClicked, ojComponent: { component: 'ojButton', label: 'Delete Dashboard' }"></button>
                                 </div>
                             </div>
