@@ -334,23 +334,23 @@ public class TestDashboardSet extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, dbsetName);
 
 		//verify the refresh status
-		webd.getLogger().info("Verify the defaul refresh setting for the dashboard is OFF");
+		webd.getLogger().info("Verify the defaul refresh setting for the dashboard is 5 mins");
 		Assert.assertTrue(DashboardBuilderUtil.isRefreshSettingCheckedForDashbaordSet(webd,
-				DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF), "the default setting is not off");
+				DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN), "the default setting is not ON(5 mins)");
 
 		//set the refresh setting to 5 min
-		webd.getLogger().info("Set the refresh setting to 5MIN");
-		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN);
-		webd.getLogger().info("Verify the refresh setting for the dashboard is 5MIN");
-		Assert.assertTrue(DashboardBuilderUtil.isRefreshSettingCheckedForDashbaordSet(webd,
-				DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN), "the setting is not 5 minus");
-
-		//set the refresh setting to OFF
 		webd.getLogger().info("Set the refresh setting to OFF");
 		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
 		webd.getLogger().info("Verify the refresh setting for the dashboard is OFF");
 		Assert.assertTrue(DashboardBuilderUtil.isRefreshSettingCheckedForDashbaordSet(webd,
-				DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF), "the setting is not off");
+				DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF), "the setting is not OFF");
+
+		//set the refresh setting to OFF
+		webd.getLogger().info("Set the refresh setting to 5 mins");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN);
+		webd.getLogger().info("Verify the refresh setting for the dashboard is 5 mins");
+		Assert.assertTrue(DashboardBuilderUtil.isRefreshSettingCheckedForDashbaordSet(webd,
+				DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN), "the setting is not ON(5 mins)");		
 	}
 
 	@Test(groups = "third run", dependsOnMethods = { "testAddDashboardInGridView" })
