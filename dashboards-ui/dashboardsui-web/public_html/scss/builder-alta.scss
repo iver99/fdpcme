@@ -221,7 +221,6 @@ body, html {
 
 .builder-dbd-description .dbd-display-area-text {
   line-height: 2.5em; 
-  margin-left: 10px;
 }
 
 .builder-dbd-description:not(.editing) .dbd-edit-area {
@@ -1345,8 +1344,8 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
   
     .dbd-tabs-nav{
         .other-nav {
-            .oj-tabs-gen-div{
-                margin-bottom: 4px;  
+            .oj-tabs-gen-div{ 
+                margin-bottom: 0;  
                 height:36px;
                 .oj-tabs-gen-a{
                     margin-right: 5px;
@@ -1363,7 +1362,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
         }
         .other-nav.oj-selected{
             border-top-color: transparent;     
-            margin-top:3px;
+            margin-top:7px;
             border-bottom: 2px solid;
             border-bottom-color: #3caf85;
             background:transparent;
