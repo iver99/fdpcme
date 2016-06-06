@@ -177,7 +177,7 @@ body, html {
 .builder-dbd-name {
   font-size: 1.286rem;
   font-family: inherit;
-  line-height: 36px;
+  line-height: 34px;
   vertical-align: middle;
   color: #252525;
 }
@@ -795,7 +795,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 
 .right-panel-toggler {
-    margin-top: 5px;
+    margin-top: 10px;
     right: 282px;
     z-index: 999;
     max-width: 30px;
@@ -1299,13 +1299,16 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 //new dashbord set css
 #dbd-tabs-container{
+    .oj-tabs-nav-root{
+        height:48px;
+    }
     #dbd-set-name{
-        height: 47px;
-        line-height: 47px;
+        height: 40px;
+        line-height: 40px;
         background-color: #3caf85;
         padding-right:3px;
-        margin-top:6px;
-        margin-left:18px;
+        margin-top:7px;
+        margin-left:10px;
         > span{
             color: white!important;
             font-weight: bold;
@@ -1360,7 +1363,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
         }
         .other-nav.oj-selected{
             border-top-color: transparent;     
-            margin-top:7px;
+            margin-top:3px;
             border-bottom: 2px solid;
             border-bottom-color: #3caf85;
             background:transparent;
