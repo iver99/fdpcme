@@ -967,8 +967,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <hr/>
-                                <div class="dbd-right-panel-editdashboard-share" data-bind="ojComponent: {component: 'ojCollapsible', expanded:sharesettingsIsExpanded}">
+                                <hr data-bind="visible:!$data.isUnderSet"/>
+                                <div class="dbd-right-panel-editdashboard-share" data-bind="ojComponent: {component: 'ojCollapsible', expanded:sharesettingsIsExpanded},visible:!$data.isUnderSet">
                                     <span class="dbd-right-panel-editdashboard-innertitle">Share</span>
                                     <div class="share-settings oj-form-layout">
                                         <form class="oj-form">

@@ -55,6 +55,7 @@ define(['knockout',
             $b.registerObject(this, 'RightPanelModel');
 
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
+            self.isUnderSet = ko.dataFor($("#dbd-set-tabs")[0]).isDashboardSet();
             self.scrollbarWidth = uiutil.getScrollbarWidth();
             
             self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
@@ -566,22 +567,22 @@ define(['knockout',
             }());
             
             self.switchEditPanelContent = function(data,event){    
-                if($(event.currentTarget).hasClass('edit-dsb-link')){
+                if ($(event.currentTarget).hasClass('edit-dsb-link')) {
                     self.editPanelContent("edit");
-                        self.dbeditorIsExpanded(true);
-                }else if($(event.currentTarget).hasClass('edit-dsbset-link')){
+                    self.dbeditorIsExpanded(true);
+                } else if ($(event.currentTarget).hasClass('edit-dsbset-link')) {
                     self.editPanelContent("editset");
                     self.dbeditorIsExpanded(true);
-                }else{
+                } else {
                     self.sharesettingsIsExpanded(false);
                     self.dbfiltersIsExpanded(false);
                     self.dbeditorIsExpanded(false);
                     self.editPanelContent("settings");
-                    $(".dbd-right-panel-editdashboard-share>div").css("display","none");
-                    $(".dbd-right-panel-editdashboard-filters>div").css("display","none");
+                    $(".dbd-right-panel-editdashboard-share>div").css("display", "none");
+                    $(".dbd-right-panel-editdashboard-filters>div").css("display", "none");
                 }
                 $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
-            };
+        };
         }
         
         Builder.registerModule(RightPanelModel, 'RightPanelModel');

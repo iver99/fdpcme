@@ -106,7 +106,9 @@ define(['knockout',
                 var configId = data.item.attr('id');
                 switch (configId) {
                     case 'dbs-edit':
-                        $('#changeDashboardsetInfo').ojDialog("open");
+                        if (self.dashboardInstMap[self.selectedDashboardItem().dashboardId].type !== 'new') {
+                            self.dashboardInstMap[self.selectedDashboardItem().dashboardId].tilesViewModel.editRightpanelLinkage("dashboardset-edit");
+                        }
                         break;
                     case 'refresh-off':
                         self.dbConfigMenuClick.refreshDbs(self,'off');       
