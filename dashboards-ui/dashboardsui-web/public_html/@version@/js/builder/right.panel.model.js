@@ -476,10 +476,17 @@ define(['knockout',
                 self.editDashboardDialogModel.save();
             });
             
-            self.enableEntityFilter = ko.observable(true);
+            self.enableEntityFilter = ko.observable(self.dashboard.enableEntityFilter() === 'TRUE');
             self.instanceSupport = ko.observable("multiple");
-            self.enableTimeRangeFilter = ko.observable(true);
+            self.enableTimeRangeFilter = ko.observable(self.dashboard.enableTimeRange() === 'TRUE');
             self.defaultEntityValue = ko.observable("allEntities");
+            self.enableEntityFilter.subscribe(function(val){
+                self.dashboard.enableEntityFilter(val ? 'TRUE' : 'FALSE');
+            });
+            self.enableTimeRangeFilter.subscribe(function(val){
+                self.dashboard.enableTimeRange(val ? 'TRUE' : 'FALSE');
+            });
+            
             self.filterSettingModified = ko.observable(false);
             var filterSettingModified = ko.computed(function(){
                 return self.instanceSupport()+self.enableEntityFilter()+self.enableTimeRangeFilter()+self.defaultEntityValue();
