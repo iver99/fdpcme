@@ -106,12 +106,11 @@ function(ko, $, dfu, oj)
         }
         self.invalidUrlLabel = oj.Translations.getResource("DBS_ERROR_URL");
         
-        self.signOut = function() {
+        self.signOut = function() { 
             //Clear interval for extending user session
             if (window.intervalToExtendCurrentUserSession)
-                clearInterval(window.intervalToExtendCurrentUserSession);
-            
-            var ssoLogoutEndUrl = window.location.protocol + "//" + window.location.host + "/emsaasui/emcpdfui/welcome.html";
+                clearInterval(window.intervalToExtendCurrentUserSession); 
+            var ssoLogoutEndUrl = encodeURI(window.location.protocol + "//" + window.location.host + "/emsaasui/emcpdfui/welcome.html"); 
             var logoutUrlDiscovered = dfu.discoverLogoutUrl();
             //If session timed out, redirect to sso login page and go to home page after re-login.
             if (window.currentUserSessionExpired === true && logoutUrlDiscovered === null) {
