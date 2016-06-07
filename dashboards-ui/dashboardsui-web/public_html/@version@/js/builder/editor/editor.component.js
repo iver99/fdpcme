@@ -240,7 +240,7 @@ define(['knockout',
                 return mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS;
             });
             tile.narrowerEnabled = ko.computed(function() {
-                return mode.getModeWidth(tile) > 1;
+                return mode.getModeWidth(tile) > mode.MODE_MIN_COLUMNS;
             });
             tile.shorterEnabled = ko.computed(function() {
                 return mode.getModeHeight(tile) > 1;
