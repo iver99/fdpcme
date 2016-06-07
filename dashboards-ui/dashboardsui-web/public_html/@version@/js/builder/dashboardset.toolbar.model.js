@@ -23,6 +23,7 @@ define(['knockout',
         function DashboardsetToolBarModel(dashboardInst) {                     
             var self = this;
 
+            self.dashboardInst = dashboardInst;
             self.dashboardsetItems = [];
             self.reorderedDbsSetItems=ko.observableArray();
 
