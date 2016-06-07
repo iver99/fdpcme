@@ -5,6 +5,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import java.text.SimpleDateFormat
 import java.util.Date
 
+apply plugin: 'eclipse-wtp'
 apply plugin: 'war'
 apply plugin: 'compass'
 apply from: 'test.gradle'
@@ -32,8 +33,11 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 configurations{
+	jscover { transitive = false }
 	compass
 }
+
+def jscc = "1".equals(System.getenv()['ENABLE_CC_JS'])
 
 def tselVersion 
 if (project.hasProperty("debugTsel"))
@@ -61,6 +65,7 @@ dependencies {
         compile(group: 'com.oracle.emaas.emctas.tgtsel', name:'emcs-targetselector', version:tselVersion, ext:'zip'){ transitive = false }
 	providedCompile project(':dashboards-ui-test-common-api')  { transitive = false }
         compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')	
+	jscover (group:'com.github.tntim96', name:'JSCover-all', version:'1.0.19')
 }
 
 task cleanJs(type:Delete) {
@@ -267,7 +272,34 @@ javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
     }
 }
 
-task individualMinify(dependsOn: [copyJsSource, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
+task jsCodeCoverage(type:JavaExec, dependsOn:[cleanJs, copyJsSource]) {
+
+    //vmArgs '-Dfile.encoding=UTF-8'
+    main '-jar'
+    configurations.jscover.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+	logger.lifecycle("filepath:  "+artifact.name)
+        if (artifact.name.equals('JSCover-all')) {
+		logger.lifecycle("filepath"+artifact.file.absolutePath)
+		//args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/ckeditor\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
+		args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/d3\\/.*', '--no-instrument-reg=.*\\/canvg\\/.*', '--no-instrument-reg=.*\\/html2canvas\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*', '--no-instrument-reg=.*\\/ita-tool\\/.*', '--no-instrument-reg=.*\\/ckeditor\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
+            }
+	}      
+    
+    doLast {
+        //delete uninstrumented source
+        //delete stagingDir+'/js'
+	delete stagingDir
+        //rename instrumented source to source folder
+        //file(stagingDir+'/jscc').renameTo(file(stagingDir+'/js'))
+	file(buildDir.absolutePath+'/staging/public_htmlcc').renameTo(file(stagingDir))
+        //now zip up original-src so we can download and generate reports
+        //ant.zip(destfile: stagingDir+'/js/original-src.zip',basedir: stagingDir+'/js/original-src/');
+	ant.zip(destfile: stagingDir+'/original-src.zip',basedir: stagingDir+'/original-src/');
+   }
+}
+jsCodeCoverage.onlyIf{jscc}
+
+task individualMinify(dependsOn: [copyJsSource, jsCodeCoverage, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
 
 compass {
     // We package the gems into the .jar file (see compass dependencies)
@@ -505,7 +537,7 @@ war.archiveName "omc-ui-framework-web.war"
 copyJsSource.dependsOn unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory, unpackTargetSelectorFromArtifactory
 
 //copy files without minify when -PdevMode enabled
-task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory,compileSass, unpackTargetSelectorFromArtifactory]){
+task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory,compileSass, unpackTargetSelectorFromArtifactory,jsCodeCoverage]){
     from(webRootSourceDir) {
 	include "**/*"
     }

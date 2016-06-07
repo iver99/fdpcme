@@ -327,10 +327,10 @@ public class DashboardServiceFacade
 		commitTransaction();
 	}
 
-	public int removeEmsSubDashboardBySetId(long subDashboardId)
+	public int removeEmsSubDashboardBySetId(long dashboardSetId)
 	{
 		getEntityManager().getTransaction().begin();
-		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeByDashboardSetID").setParameter("p", subDashboardId)
+		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeByDashboardSetID").setParameter("p", dashboardSetId)
 				.executeUpdate();
 		commitTransaction();
 		return deleteCout;
@@ -344,6 +344,15 @@ public class DashboardServiceFacade
 		commitTransaction();
 		return deleteCout;
 	}
+
+    public int removeUnsharedEmsSubDashboard(long subDashboardId, String owner)
+    {
+        getEntityManager().getTransaction().begin();
+        int deleteCout = em.createNamedQuery("EmsSubDashboard.removeUnshared").setParameter("p1", subDashboardId).setParameter("p2", owner)
+                .executeUpdate();
+        commitTransaction();
+        return deleteCout;
+    }
 
 	public void removeEmsUserOptions(EmsUserOptions emsUserOptions)
 	{
