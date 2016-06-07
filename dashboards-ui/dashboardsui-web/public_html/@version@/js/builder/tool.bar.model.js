@@ -357,9 +357,12 @@ define(['knockout',
                 outputData.eventType = "SAVE";
 
                 if (self.tilesViewModel.dashboard.tiles() && self.tilesViewModel.dashboard.tiles().length > 0) {
-                    ssu.getBase64ScreenShot($b.findEl('.tiles-wrapper'), 314, 165, 0.8, function(data) {
+                    var elem = $b.findEl('.tiles-wrapper');
+                    var clone = Builder.createScreenshotElementClone(elem);
+                    ssu.getBase64ScreenShot(clone, 314, 165, 0.8, function(data) {
                         outputData.screenShot = data;
-                        self.tilesViewModel.dashboard.screenShot = ko.observable(data);  
+                        Builder.removeScreenshotElementClone(clone);
+                        self.tilesViewModel.dashboard.screenShot = ko.observable(data);
                         self.handleSaveUpdateDashboard(outputData);
                     });                
                 }
