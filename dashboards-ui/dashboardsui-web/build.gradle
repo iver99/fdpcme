@@ -595,7 +595,7 @@ sourceSets {
 
 
 //copy files without any convert when -PdevMode enabled
-task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory,unpackFontFromArtifactory,compileSass]){
+task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory,unpackFontFromArtifactory,compileSass]){//, unpackJSLibFromArtifactory
     from('public_html') {
 	include "**/*"
     }
