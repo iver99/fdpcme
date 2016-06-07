@@ -178,8 +178,14 @@ define(['knockout',
                 $("#tile" + clientGuid + " .dbd-btn-maxminToggle").css("display", "none");
             };
             self.openInDataExplorer = function (event, ui) {
-                var tile = ko.dataFor(ui.currentTarget);
-                self.editor.configure(tile);
+                $b.getToolBarModel().handleDashboardSave();
+                var iId = setInterval(function() {
+                    if (!$b.isDashboardUpdated()) {
+                        clearInterval(iId);
+                        var tile = ko.dataFor(ui.currentTarget);
+                        self.editor.configure(tile);
+                    }
+                }, 300);
             };
             
             self.maxMinToggle = function (event, ui) {

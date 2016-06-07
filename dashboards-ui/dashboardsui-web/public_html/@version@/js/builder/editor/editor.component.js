@@ -391,7 +391,7 @@ define(['knockout',
                                     }
                                     widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
                                 }
-                                window.open(widgetUrl);
+                                window.location = widgetUrl;
                             });
                         };
                     }
