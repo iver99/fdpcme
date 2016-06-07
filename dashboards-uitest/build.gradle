@@ -1,3 +1,5 @@
+apply plugin: 'eclipse'
+
 sourceSets {
 integTest {
         java.srcDir 'src/integTest/java'
@@ -31,6 +33,10 @@ publishing.publications {
 dependencies {
     testConfig project(':dashboards-ui-test-common-api') { transitive = false }
     testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+    
+    testCompile configurations.testConfig
+    testCompile configurations.webdriver
+    testCompile configurations.testNG
 }
 
 artifactoryPublish {
