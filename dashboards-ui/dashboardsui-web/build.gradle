@@ -125,14 +125,11 @@ project.task("unpackJETFromArtifactory") << {
                 from project.zipTree(artifact.file.absolutePath)
                 into buildJetUnzipDir.absolutePath
             }
-            if(project.hasProperty("devMode")){
-		project.copy {
-		    from  buildJetUnzipDir
-		    into sourceJetDestDir.absolutePath
-		}
+	    project.copy {
+		from  buildJetUnzipDir
+		into sourceJetDestDir.absolutePath
 	    }
-	    else
-	    {
+            if(!project.hasProperty("devMode")){
 		def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/oraclejet");
 		outputs.dir outputDir
 		project.copy {
@@ -151,45 +148,6 @@ project.task("cleanJet") << {
     sourceJetDestDir.deleteDir()
 }
 
-//unpack js libs from artifactory
-//project.task("unpackJSLibFromArtifactory") << {    
-//    def File buildCKeditorUnzipDir = new File(buildDir.absolutePath, 'ckeditor')
-    //first time or if custom cleans removes it
-//    sourceCKeditorDesDir.mkdirs()
-
-//    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-//	if (artifact.name.equals('ckeditor_full') && files(sourceCKeditorDesDir.listFiles()).isEmpty()) {
-//            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-//            sourceCKeditorDesDir.mkdirs()
-//            project.copy {
-//                from project.zipTree(artifact.file.absolutePath)
-//                into buildCKeditorUnzipDir.absolutePath
-//            }
-//	    if(project.hasProperty("devMode")){
-//	        project.copy {
-//                    from  buildCKeditorUnzipDir.absolutePath+'/ckeditor/'
-//                    into sourceCKeditorDesDir.absolutePath
-//                }
-//	    }
-//	    else
-//	    {
-//	        def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/ckeditor");
-//	        outputs.dir outputDir
-//	        project.copy {
-//	            from  buildCKeditorUnzipDir
-//	            into outputDir
-//	        }
-//	    }
-//            project.delete(buildCKeditorUnzipDir)
-//	}
-//    }
-//}
-
-//project.task("cleanJSLib") << {
-//    println 'JS lib ckeditor dir : ' + sourceCKeditorDesDir.absolutePath
-//    sourceCKeditorDesDir.deleteDir()
-//}
-
 project.task("unpackFontFromArtifactory") << {    
     def File buildFontUnzipDir = new File(buildDir.absolutePath, 'font-awesome')
     //first time or if custom cleans removes it
@@ -205,19 +163,17 @@ project.task("unpackFontFromArtifactory") << {
 	    }
 	    
 	    ant.unzip(src: buildFontUnzipDir.absolutePath+"/font-awesome-4.3.0.zip", dest:buildFontUnzipDir.absolutePath)
-	
-     	    if(project.hasProperty("devMode")){
-	        project.copy {
+
+	    project.copy {
 	    	    from buildFontUnzipDir.absolutePath+"/font-awesome-4.3.0"
 		    into sourceFontDestDir.absolutePath
-	        }
 	    }
-	    else
-	    {
+	
+     	    if(!project.hasProperty("devMode")){
 	        def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/css/font-awesome");
 	        outputs.dir outputDir
 	        project.copy {
-		    from  buildFontUnzipDir
+		    from sourceFontDestDir.absolutePath
 		    into outputDir
 	        }
 	    }	
