@@ -644,7 +644,7 @@ define(['knockout',
                             $('#tile'+tile.clientGuid).addClass(draggingTileClass);
                         }
                     }
-                if (e.clientY <= tcc.offset().top || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= rpt.offset().left) {
+                if (e.clientY <= tcc.offset().top || e.clientX >= rpt.offset().left) {
                     if (self.isEmpty()) {
                         $b.findEl('.tile-dragging-placeholder').hide();
                         $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging out of edit area", false);
@@ -655,18 +655,18 @@ define(['knockout',
                     if (self.isEmpty()) $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging into edit area (stopped dragging)", true);
                     var cell = self.editor.getCellFromPosition(widgetAreaWidth, pos); 
                     if (!cell) return;
-                    if(!self.previousDragCell) self.previousDragCell = cell;
+                    
                     if(self.previousDragCell && self.previousDragCell.row === cell.row && self.previousDragCell.column === cell.column) {
                         return;
                     }
+                    if(!self.previousDragCell) self.previousDragCell = cell;
                     var widget = ko.mapping.toJS(ko.dataFor(u.helper[0]));
                     var width = Builder.getTileDefaultWidth(widget, self.editor.mode), height = Builder.getTileDefaultHeight(widget, self.editor.mode);
                     if(cell.column>self.editor.mode.MODE_MAX_COLUMNS-width) {
                         cell.column = self.editor.mode.MODE_MAX_COLUMNS-width;
                     }
                     if (!tile) {
-                        tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targets, true, dashboardInst);                        
-                        Builder.initializeTileAfterLoad(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targets, true, dashboardInst);
+                        tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targets, false, dashboardInst);
                         u.helper.tile = tile;
                         self.editor.tiles.push(tile);
                         $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
@@ -714,14 +714,14 @@ define(['knockout',
             self.onNewWidgetStopDragging = function(e, u) {
                 var tcc = $b.findEl(".tiles-col-container");
                 var rpt = $b.findEl(".right-panel-toggler");
-                var tile = null; 
+                var tile = u.helper.tile; 
                 
                 if(u.helper.tile) {
                     if($('#tile'+u.helper.tile.clientGuid).hasClass(draggingTileClass)) {
                         $('#tile'+u.helper.tile.clientGuid).removeClass(draggingTileClass);
                     }
                 }
-                if (e.clientY <= tcc.offset().top || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= rpt.offset().left) {
+                if (e.clientY <= tcc.offset().top || e.clientX >= rpt.offset().left) {
                     if (self.isEmpty()) {
                         $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging out of edit area (stopped dragging)", false);
                     }
@@ -738,7 +738,8 @@ define(['knockout',
                 self.editor.draggingTile = null;
                 u.helper.tile = null;
                 self.previousDragCell = null;
-                tile && tile.WIDGET_SUPPORT_TIME_CONTROL && self.triggerTileTimeControlSupportEvent(tile.WIDGET_SUPPORT_TIME_CONTROL()?true:null);
+                tile && tile.WIDGET_SUPPORT_TIME_CONTROL && self.triggerTileTimeControlSupportEvent(tile.WIDGET_SUPPORT_TIME_CONTROL()?true:null);                
+                setTimeout(function() {Builder.initializeTileAfterLoad(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targets, true, dashboardInst)}, 500);
             };
             
 //            self.onNewTextDragging = function(e, u) {
