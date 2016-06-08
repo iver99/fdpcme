@@ -178,7 +178,8 @@ define(['knockout',
                 $("#tile" + clientGuid + " .dbd-btn-maxminToggle").css("display", "none");
             };
             self.openInDataExplorer = function (event, ui) {
-                $b.getToolBarModel().handleDashboardSave();
+		if (!self.isSystemDashboard)
+                	$b.getToolBarModel().handleDashboardSave();
                 var iId = setInterval(function() {
                     if (!$b.isDashboardUpdated()) {
                         clearInterval(iId);
