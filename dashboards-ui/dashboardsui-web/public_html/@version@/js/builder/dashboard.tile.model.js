@@ -653,7 +653,14 @@ define(['knockout',
                     return;
                 }else {
                     if (self.isEmpty()) $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging into edit area (stopped dragging)", true);
-                    var cell = self.editor.getCellFromPosition(widgetAreaWidth, pos); 
+                    //use tile's left as the cursor's left to calculate the cell so that placeholder closely follow users' mouse
+                    var cellPos = {};
+                    cellPos.left = pos.left;
+                    cellPos.top = pos.top;
+                    if(tile) {
+                        cellPos.left = cellPos.left - tile.cssWidth()/2;
+                    }
+                    var cell = self.editor.getCellFromPosition(widgetAreaWidth, cellPos); 
                     if (!cell) return;
                     
                     if(self.previousDragCell && self.previousDragCell.row === cell.row && self.previousDragCell.column === cell.column) {
