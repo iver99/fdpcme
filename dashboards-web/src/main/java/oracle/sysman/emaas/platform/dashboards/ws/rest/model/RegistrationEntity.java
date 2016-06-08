@@ -79,6 +79,12 @@ public class RegistrationEntity implements Serializable
 	public static final String EVENTUI_SERVICENAME = "EventUI";
 	public static final String ADMIN_CONSOLE_UI_SERVICENAME = "AdminConsoleSaaSUi";
 
+	// Infrastructure Monitoring service
+	public static final String MONITORING_OPC_APPNAME = "Monitoring";
+	public static final String MONITORING_SERVICENAME = "MonitoringServiceUI";
+	public static final String MONITORING_VERSION = "1.5+";
+	public static final String MONITORING_HOME_LINK = "sso.home";
+
 	private static final Logger _logger = LogManager.getLogger(RegistrationEntity.class);
 	//	private String registryUrls;
 
@@ -186,6 +192,18 @@ public class RegistrationEntity implements Serializable
 				else if (ITA_SERVICENAME.equals(app)) {
 					list.add(new LinkEntity(ApplicationOPCName.ITAnalytics.toString(), ITA_URL, ITA_SERVICENAME, ITA_VERSION)); //version is hard coded now
 
+				}
+				else if (MONITORING_SERVICENAME.equals(app)) {
+					Link l = RegistryLookupUtil.getServiceExternalLink(MONITORING_SERVICENAME, MONITORING_VERSION,
+							MONITORING_HOME_LINK, tenantName);
+					if (l == null) {
+						throw new Exception("Link for " + app + "return null");
+					}
+					//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
+					LinkEntity le = new LinkEntity(MONITORING_OPC_APPNAME, l.getHref(), MONITORING_SERVICENAME,
+							MONITORING_VERSION);
+					le = replaceWithVanityUrl(le, tenantName, MONITORING_SERVICENAME);
+					list.add(le);
 				}
 			}
 			catch (Exception e) {
@@ -326,8 +344,11 @@ public class RegistrationEntity implements Serializable
 				else if (le.getServiceName().equals(LA_SERVICENAME) && roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_LA)) {
 					resultLinks.add(le);
 				}
-				else if (le.getServiceName().equals(EVENTUI_SERVICENAME) || le.getServiceName().equals(TMUI_SERVICENAME)
-						|| le.getServiceName().equals(ADMIN_CONSOLE_UI_SERVICENAME)) {
+				else if (le.getServiceName().equals(MONITORING_SERVICENAME)
+						&& roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_MONITORING)) {
+					resultLinks.add(le);
+				}
+				else if (le.getServiceName().equals(EVENTUI_SERVICENAME) || le.getServiceName().equals(TMUI_SERVICENAME)) {
 					resultLinks.add(le);
 				}
 			}
@@ -399,6 +420,10 @@ public class RegistrationEntity implements Serializable
 			else if (ApplicationOPCName.LogAnalytics.toString().equals(app)) {
 				appSet.add(LA_SERVICENAME);
 			}
+			//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
+			else if (MONITORING_OPC_APPNAME.equals(app)) {
+				appSet.add(MONITORING_SERVICENAME);
+			}
 		}
 		//if any of APM/LA/TA is subscribed, TenantManagementUI/EventUI/AdminConsoleSaaSUi should be subscribed accordingly as agreement now
 		if (appSet.size() > 0) {
@@ -447,8 +472,6 @@ public class RegistrationEntity implements Serializable
 				}
 			}
 			catch (Exception e) {
-				// TODO Auto-generated catch block
-				//				e.printStackTrace();
 				_logger.error("Error to get SanitizedInstanceInfo", e);
 			}
 			if (NAME_DASHBOARD_UI_SERVICENAME.equals(internalInstance.getServiceName())
