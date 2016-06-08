@@ -21,9 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
@@ -36,6 +33,9 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author miao
@@ -77,6 +77,7 @@ public class RegistrationEntity implements Serializable
 	//	public static final String TA_URL = "/emsaasui/emcta/ta/analytics.html";
 	public static final String TMUI_SERVICENAME = "TenantManagementUI";
 	public static final String EVENTUI_SERVICENAME = "EventUI";
+	public static final String ADMIN_CONSOLE_UI_SERVICENAME = "AdminConsoleSaaSUi";
 
 	private static final Logger _logger = LogManager.getLogger(RegistrationEntity.class);
 	//	private String registryUrls;
@@ -119,15 +120,32 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getAdminLinks()
 	{
-							List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
-									UserContext.getCurrentUser());
-							if (!PrivilegeChecker.isAdminUser(userRoles)) {
-								return null;
-							}
+		List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(), UserContext.getCurrentUser());
+		if (!PrivilegeChecker.isAdminUser(userRoles)) {
+			return null;
+		}
 
-							List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
-							List<LinkEntity> filteredAdminLinks = filterAdminLinksByUserRoles(registeredAdminLinks, userRoles);
-							return sortServiceLinks(filteredAdminLinks);
+		List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
+		List<LinkEntity> filteredAdminLinks = filterAdminLinksByUserRoles(registeredAdminLinks, userRoles);
+		// Try to find Administration Console link
+		LinkEntity adminConsoleLink = null;
+		for (LinkEntity le : filteredAdminLinks) {
+			if (ADMIN_CONSOLE_UI_SERVICENAME.equals(le.getServiceName())) {
+				adminConsoleLink = le;
+				filteredAdminLinks.remove(le);
+				break;
+			}
+		}
+
+		List<LinkEntity> sortedAdminLinks = new ArrayList<LinkEntity>();
+		// The Administration Console link should be always shown at the top
+		if (adminConsoleLink != null) {
+			sortedAdminLinks.add(adminConsoleLink);
+		}
+		// The others should be sorted in alphabetical order
+		sortedAdminLinks.addAll(sortServiceLinks(filteredAdminLinks));
+
+		return sortedAdminLinks;
 	}
 
 	/**
@@ -199,7 +217,7 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getHomeLinks()
 	{
-							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_HOME_LINK));
+		return sortServiceLinks(lookupLinksWithRelPrefix(NAME_HOME_LINK));
 	}
 
 	public String getSessionExpiryTime()
@@ -271,7 +289,7 @@ public class RegistrationEntity implements Serializable
 	 */
 	public List<LinkEntity> getVisualAnalyzers()
 	{
-							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
+		return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
 	}
 
 	private void addToLinksMap(Map<String, LinkEntity> linksMap, List<Link> links, String serviceName, String version)
@@ -308,7 +326,8 @@ public class RegistrationEntity implements Serializable
 				else if (le.getServiceName().equals(LA_SERVICENAME) && roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_LA)) {
 					resultLinks.add(le);
 				}
-				else if (le.getServiceName().equals(EVENTUI_SERVICENAME) || le.getServiceName().equals(TMUI_SERVICENAME)) {
+				else if (le.getServiceName().equals(EVENTUI_SERVICENAME) || le.getServiceName().equals(TMUI_SERVICENAME)
+						|| le.getServiceName().equals(ADMIN_CONSOLE_UI_SERVICENAME)) {
 					resultLinks.add(le);
 				}
 			}
@@ -381,12 +400,13 @@ public class RegistrationEntity implements Serializable
 				appSet.add(LA_SERVICENAME);
 			}
 		}
-		//if any of APM/LA/TA is subscribed, TenantManagementUI/EventUI should be subscribed accordingly as agreement now
+		//if any of APM/LA/TA is subscribed, TenantManagementUI/EventUI/AdminConsoleSaaSUi should be subscribed accordingly as agreement now
 		if (appSet.size() > 0) {
-			if (isAdmin) {
-				appSet.add(TMUI_SERVICENAME);
-			}
+			//			if (isAdmin) {
+			appSet.add(TMUI_SERVICENAME);
+			//			}
 			appSet.add(EVENTUI_SERVICENAME);
+			appSet.add(ADMIN_CONSOLE_UI_SERVICENAME);
 		}
 		return appSet;
 	}
@@ -414,8 +434,8 @@ public class RegistrationEntity implements Serializable
 			try {
 				SanitizedInstanceInfo sanitizedInstance = null;
 				if (!StringUtil.isEmpty(tenantName)) {
-					sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance,
-							tenantName);
+					sanitizedInstance = LookupManager.getInstance().getLookupClient()
+							.getSanitizedInstanceInfo(internalInstance, tenantName);
 					logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
 							sanitizedInstance, tenantName);
 				}
