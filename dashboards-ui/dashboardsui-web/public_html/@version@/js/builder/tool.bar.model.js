@@ -816,7 +816,14 @@ define(['knockout',
                     "url": "#",
                     "id": "emcpdf_dsbopts_print" + self.toolBarGuid,
                     "onclick": function (data, event) {
+                        $(".dashboard-content-main:hidden").each(function(index,currentValue){
+                            $(currentValue).addClass("no-print");   
+                        });
                         window.print();
+                        $(".dashboard-content-main").each(function(index,currentValue){
+                            $(currentValue).removeClass("no-print");   
+                        });
+                        
                     },
                     "icon": "dbd-toolbar-icon-print",
                     "title": "", //getNlsString('COMMON_BTN_PRINT'),
