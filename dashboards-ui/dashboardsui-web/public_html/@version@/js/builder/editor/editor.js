@@ -134,7 +134,7 @@ define(['knockout',
             
             self.narrowTile = function(tile) {
                 var width = self.mode.getModeWidth(tile);
-                if (width <= 1)
+                if (width <= self.mode.MODE_MIN_COLUMNS)
                     return;
                 width--;
                 self.tilesGrid.updateTileSize(tile, width, self.mode.getModeHeight(tile));
