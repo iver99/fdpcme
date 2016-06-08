@@ -23,7 +23,7 @@ def File sourceWebappDir = new File(project.projectDir, 'public_html')
 
 // source directories where jet, ckeditor, font-awesome files are copied
 def File sourceJetDestDir = new File(sourceWebappDir, 'libs/@version@/js/oraclejet')
-def File sourceCKeditorDesDir = new File(sourceWebappDir, 'libs/@version@/js/ckeditor')
+//def File sourceCKeditorDesDir = new File(sourceWebappDir, 'libs/@version@/js/ckeditor')
 def File sourceFontDestDir = new File(sourceWebappDir, 'libs/@version@/css/font-awesome')
 
 // folders for minify, fingereprint js files
@@ -60,7 +60,7 @@ dependencies {
         providedCompile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
         
 	compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.2.0-22069', ext: 'war'){ transitive = false }
-	compile(group: 'CKSource', name: 'ckeditor_full', version: '4.5.1', ext: 'zip'){transitive = false}
+	//compile(group: 'CKSource', name: 'ckeditor_full', version: '4.5.1', ext: 'zip'){transitive = false}
 	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
         compile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
     
@@ -125,14 +125,11 @@ project.task("unpackJETFromArtifactory") << {
                 from project.zipTree(artifact.file.absolutePath)
                 into buildJetUnzipDir.absolutePath
             }
-            if(project.hasProperty("devMode")){
-		project.copy {
-		    from  buildJetUnzipDir
-		    into sourceJetDestDir.absolutePath
-		}
+	    project.copy {
+		from  buildJetUnzipDir
+		into sourceJetDestDir.absolutePath
 	    }
-	    else
-	    {
+            if(!project.hasProperty("devMode")){
 		def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/oraclejet");
 		outputs.dir outputDir
 		project.copy {
@@ -151,45 +148,6 @@ project.task("cleanJet") << {
     sourceJetDestDir.deleteDir()
 }
 
-//unpack js libs from artifactory
-project.task("unpackJSLibFromArtifactory") << {    
-    def File buildCKeditorUnzipDir = new File(buildDir.absolutePath, 'ckeditor')
-    //first time or if custom cleans removes it
-    sourceCKeditorDesDir.mkdirs()
-
-    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-	if (artifact.name.equals('ckeditor_full') && files(sourceCKeditorDesDir.listFiles()).isEmpty()) {
-            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-            sourceCKeditorDesDir.mkdirs()
-            project.copy {
-                from project.zipTree(artifact.file.absolutePath)
-                into buildCKeditorUnzipDir.absolutePath
-            }
-	    if(project.hasProperty("devMode")){
-	        project.copy {
-                    from  buildCKeditorUnzipDir.absolutePath+'/ckeditor/'
-                    into sourceCKeditorDesDir.absolutePath
-                }
-	    }
-	    else
-	    {
-	        def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/ckeditor");
-	        outputs.dir outputDir
-	        project.copy {
-	            from  buildCKeditorUnzipDir
-	            into outputDir
-	        }
-	    }
-            project.delete(buildCKeditorUnzipDir)
-	}
-    }
-}
-
-project.task("cleanJSLib") << {
-    println 'JS lib ckeditor dir : ' + sourceCKeditorDesDir.absolutePath
-    sourceCKeditorDesDir.deleteDir()
-}
-
 project.task("unpackFontFromArtifactory") << {    
     def File buildFontUnzipDir = new File(buildDir.absolutePath, 'font-awesome')
     //first time or if custom cleans removes it
@@ -205,19 +163,17 @@ project.task("unpackFontFromArtifactory") << {
 	    }
 	    
 	    ant.unzip(src: buildFontUnzipDir.absolutePath+"/font-awesome-4.3.0.zip", dest:buildFontUnzipDir.absolutePath)
-	
-     	    if(project.hasProperty("devMode")){
-	        project.copy {
+
+	    project.copy {
 	    	    from buildFontUnzipDir.absolutePath+"/font-awesome-4.3.0"
 		    into sourceFontDestDir.absolutePath
-	        }
 	    }
-	    else
-	    {
+	
+     	    if(!project.hasProperty("devMode")){
 	        def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/css/font-awesome");
 	        outputs.dir outputDir
 	        project.copy {
-		    from  buildFontUnzipDir
+		    from sourceFontDestDir.absolutePath
 		    into outputDir
 	        }
 	    }	
@@ -275,10 +231,10 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs, compileSass]) {//unpackJETFromA
     }
 }
 
-task stageJs(dependsOn:[unpackJETFromArtifactory, unpackJSLibFromArtifactory,unpackFontFromArtifactory,copyJsSource]) {
+task stageJs(dependsOn:[unpackJETFromArtifactory,unpackFontFromArtifactory,copyJsSource]) {//, unpackJSLibFromArtifactory
 }
 
-clean.dependsOn cleanJet,cleanJSLib, cleanJs, cleanFont
+clean.dependsOn cleanJet, cleanJs, cleanFont//cleanJSLib,
 
 task jsCodeCoverage(type:JavaExec, dependsOn:[cleanJs, stageJs]){//copyJsSource]) {
 
@@ -289,7 +245,7 @@ task jsCodeCoverage(type:JavaExec, dependsOn:[cleanJs, stageJs]){//copyJsSource]
         if (artifact.name.equals('JSCover-all')) {
 		logger.lifecycle("filepath"+artifact.file.absolutePath)
 		//args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/js\\/util\\/.*','--no-instrument-reg=.*\\/ckeditor\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
-		args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/d3\\/.*', '--no-instrument-reg=.*\\/canvg\\/.*', '--no-instrument-reg=.*\\/html2canvas\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*', '--no-instrument-reg=.*\\/ita-tool\\/.*', '--no-instrument-reg=.*\\/js\\/jquery\\/.*', '--no-instrument-reg=.*\\/js\\/resources\\/nls\\/root\\/uifwkCommonMsg.js','--no-instrument-reg=.*\\/ckeditor\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
+		args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/d3\\/.*', '--no-instrument-reg=.*\\/canvg\\/.*', '--no-instrument-reg=.*\\/html2canvas\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*', '--no-instrument-reg=.*\\/ita-tool\\/.*', '--no-instrument-reg=.*\\/js\\/jquery\\/.*', '--no-instrument-reg=.*\\/js\\/resources\\/nls\\/root\\/uifwkCommonMsg.js',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
             }
 	}      
     
@@ -595,7 +551,7 @@ sourceSets {
 
 
 //copy files without any convert when -PdevMode enabled
-task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory,unpackFontFromArtifactory,compileSass]){
+task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory,unpackFontFromArtifactory,compileSass]){//, unpackJSLibFromArtifactory
     from('public_html') {
 	include "**/*"
     }
