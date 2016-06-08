@@ -865,7 +865,7 @@ define(['knockout',
                     "onclick": "",
                     "icon": "dbd-toolbar-icon-refresh",
                     "title": "", //getNlsString('DBS_BUILDER_AUTOREFRESH_REFRESH'),
-                    "disabled": self.editDisabled() === true,
+                    "disabled": false,
                     "showOnMobile": true,
                     "endOfGroup": false,
                     "subItems": [

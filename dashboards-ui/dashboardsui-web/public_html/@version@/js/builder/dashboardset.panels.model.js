@@ -216,7 +216,7 @@ define([
 
                         //hide some drop-down menu options
                         $b.findEl('.dropdown-menu li').each(function (index, element) {
-                            if (!($(element).attr('data-singledb-option') === 'Edit')) {
+                            if (($(element).attr('data-singledb-option') !== 'Edit') && ($(element).attr('data-singledb-option') !== 'Print')) {
                                 $(element).css({display: "none"});
                             }
                         });
