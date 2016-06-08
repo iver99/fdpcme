@@ -193,11 +193,10 @@ define(['knockout',
                                     JSON.stringify(newDashboardJs));
                     }
                     else if ($tilesWrapper && selectedDashboardInst().tilesViewModel.tilesView.dashboard.tiles().length > 0) {
-                        var prevStyle = $tilesWrapper.css('backgroundColor');
-                        $tilesWrapper.css('backgroundColor', 'rgb(247,247,247)');
-                        ssu.getBase64ScreenShot($tilesWrapper, 314, 165, 0.8, function (data) {
+                        var $clone = Builder.createScreenshotElementClone($tilesWrapper);
+                        ssu.getBase64ScreenShot($clone, 314, 165, 0.8, function (data) {
                             newDashboardJs.screenShot = data;
-                            $tilesWrapper.css('backgroundColor', prevStyle);
+                            Builder.removeScreenshotElementClone($clone);
                             Builder.updateDashboard(
                                     ko.unwrap(dashboardInst.id),
                                     JSON.stringify(newDashboardJs));

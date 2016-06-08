@@ -392,11 +392,10 @@ define(['knockout',
 
                 if (self.tilesViewModel.dashboard.tiles() && self.tilesViewModel.dashboard.tiles().length > 0) {
                     var elem = $b.findEl('.tiles-wrapper');
-                    var prevStyle = elem.css('backgroundColor');
-                    elem.css('backgroundColor', 'rgb(247,247,247)');
-                    ssu.getBase64ScreenShot(elem, 314, 165, 0.8, function(data) {
+                    var clone = Builder.createScreenshotElementClone(elem);
+                    ssu.getBase64ScreenShot(clone, 314, 165, 0.8, function(data) {
                         outputData.screenShot = data;
-                        elem.css('backgroundColor', prevStyle);
+                        Builder.removeScreenshotElementClone(clone);
                         self.tilesViewModel.dashboard.screenShot = ko.observable(data);
                         self.handleSaveUpdateDashboard(outputData);
                     });                
