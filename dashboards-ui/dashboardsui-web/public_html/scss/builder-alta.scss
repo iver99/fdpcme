@@ -947,6 +947,11 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     overflow-x: hidden; 
     overflow-y: hidden; 
     position: relative;
+    .fa-plus{
+        margin-top:9px;
+        margin-right: -16px;
+        float: right;
+    }
 }
 
 .left-panel-dbd-widget-goto-icon:before {
