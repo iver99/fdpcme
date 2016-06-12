@@ -31,11 +31,16 @@ and open the template in the editor.
   box-sizing: content-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: inherit !important;
 } 
 
 .fa-icon-font-16 {
     font-size: 16px !important;
 } 
+
+.fa-icon-font-14 {
+    font-size: 14px !important;
+}
 
 .fa-icon-font-18 {
     font-size: 18px !important;
@@ -45,11 +50,12 @@ body, html {
   width: 100%;
   padding: 0;
   margin: 0;
-  overflow: hidden;
+  overflow: hidden!important;
   height: 100%;
 }
 
 .globalBody {
+    width: 100%;
     position: absolute;
     left: 0px;
     top: 0px;
@@ -93,7 +99,7 @@ body, html {
 .tiles-col-container {
   padding-left: 0px;
   padding-right: 0px;
-  overflow-x: hidden; 
+  overflow-x: hidden !important; 
   overflow-y: scroll;
   position: relative;
 }
@@ -125,7 +131,8 @@ body, html {
 .builder-dbd-name {
   font-size: 1.286rem;
   font-family: inherit;
-  line-height: 1.4em;
+  line-height: 36px;
+  vertical-align: middle;
   color: #252525;
 }
 
@@ -173,10 +180,6 @@ body, html {
 .builder-dbd-description:not(.editing) .dbd-edit-area {
   display: none;
 }
-
-/*.text-widget-area:not(.editing) .dbd-edit-area {
-  display: none;
-}  */
 
 .builder-dbd-description .dbd-edit-area .oj-inputtext {
   width: 700px;
@@ -440,16 +443,16 @@ body, html {
                         line-height 0.5s;
 }
 
-.tile-dragging-placeholder {
+.tile-dragging-placeholder {    
     -webkit-transition: top 0.5s, 
-                        left 0.5s, 
-                        width 0.5s,
-                        height 0.5s,
-                        font-size 0.5s,
-                        line-height 0.5s;
-}
-
-.tile-dragging-placeholder {display:none; position: absolute; 
+        left 0.5s, 
+        width 0.5s,
+        height 0.5s,
+        font-size 0.5s,
+        line-height 0.5s;
+    
+    display:none; 
+    position: absolute; 
     background-color: #F0CAC4;
     border-bottom: 1px solid #F0CAC4;
     margin-left: 10px;
@@ -477,7 +480,10 @@ body, html {
 }
 
 .dbd-pull-right {
-  float: right!important;
+    float: right!important;
+    button {
+        margin-bottom: 0;
+    }
 }
 
 .dbd-pull-middle {
@@ -808,7 +814,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .dbd-left-panel-header-search-input {
     float: left; 
     height: 30px;
-    width: 228px;
+    width: 190px;
 }
 
 .dbd-left-panel-header-search-input input {
@@ -1102,17 +1108,229 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
         display:none !important;
     }
     
+    html,body,div,table {
+        float: none !important;
+    }
+    
+    #globalBody{
+        width: auto !important;
+    }
+    
+    html,body,#globalBody,#dashboards-tabs-contents,.dashboard-content {
+        position:relative !important;
+        overflow: visible !important;
+    }
+    
+    .page-break,.dashboard-content{
+        display:block !important;
+        page-break-after: always;
+        page-break-inside: avoid;
+    }
+    
+    .dashboard-picker-container{
+        display:none !important;
+    }
+
     .tiles-col-container{
-        /*width: auto !important;*/
         height: auto !important;
-        overflow-y: visible !important;
+        overflow: visible !important;
     }
-    .dbd-widget {
-        page-break-before: always;
+
+    .dbd-widget > div {
+        position:relative !important;
+        page-break-inside: avoid;
     }
+    
     @page {
         size: A3 landscape;
         /*margin: 23cm;*/
     }
 }
+//new dashbord set css
+#dbd-tabs-container{
+    #dbd-set-name{
+        height: 50px;
+        line-height: 50px;
+        background-color: #3caf85;
+        padding-right:3px;
+        > span{
+            color: white!important;
+            font-weight: bold;
+            font-size: 15px;
+            padding-left: 16px;
+            min-width: 180px;
+        }
+        #tabs-gear{
+            width: 35px;
+            background-color: #3CAF85;
+            background-image: none;
+            border-color: #3CAF85;
+            .dbd-icon-gear{
+                color: white;
+                margin-left: 4px;
+            }
+            .oj-button-text{
+                display: none;
+            }
+            .oj-button-menu-dropdown-icon{
+                display: none;
+            }
+            &:hover{
+                cursor: pointer;
+            }
+        }
+        #tabs-gear.oj-selected{
+            background-color: #0572ce;
+            border-color: #0572ce;
+            background-image: none;
+        }  
+    }
+    #add-nav{
+        .dbd-icon-add{
+            color: #878c90;
+            padding-top: 23px;
+            padding-left: 10px;
+        }  
+        &:hover{
+            cursor: pointer;
+        }
+    }
+  
+    .dbd-tabs-nav{
+        .other-nav {
+            .oj-tabs-gen-div{
+                margin-bottom: 4px;  
+                height:36px;
+                .oj-tabs-gen-a{
+                    margin-right: 5px;
+                    margin-bottom: -6px;
+                    .tabs-name{
+                        text-decoration: none;
+                    }
+                }  
+            }
+        }
+        .other-nav:first-child{
+            margin-top: 7px;
+            margin-left: 5px;
+        }
+        .other-nav.oj-selected{
+            border-top-color: #3caf85;
+            border-left: solid 1px #c4ced7;
+            border-right:solid 1px #c4ced7;
+            margin-top:7px;
+            .oj-tabs-gen-div{
+                border-color: transparent;
+            }
+        }
+        .other-nav.oj-active{
+            a{
+                background-color: transparent;
+            }
+        }
+        //hack default sortable css
+        .other-nav.oj-tabs-tab.oj-selected.ui-sortable-handle.oj-active.ui-sortable-helper{
+            height: 44px!important;
+        }   
+    }
+    .dbd-tabs-nav.ui-sortable{
+        .oj-tabs-close-icon{
+            margin-top: 6px;
+        }        
+    }
+    .other-nav-info{       
+        border-bottom: none;
+        padding: 0;
+        
+        .dbd-info-head{
+            display: inline;
+            margin-left:18px;
+            h1 {
+                display: inline;
+                font-size: 1.286rem;
+            }
+            .dbd-function-set{
+                display: inline;
+                float: right;
+                .single-dbd-option{
+                    &.oj-default{
+                        background-color: transparent;
+                        background-image: none;
+                        border-color: transparent;
+                    }
+                    .oj-button-text{
+                        font-weight: normal;
+                    }
+                    .oj-button-menu-dropdown-icon{
+                        display: none;
+                    }
+                }
+            }
+        }
+        .dbd-info-detail{
+            margin-top: 20px;
+            margin-left: 18px;
+        }
+    }
+    .add-info{
+        background-color: #F7F7F7;
+        border-bottom: 0;
+    }
+    //hack default overflow
+    .oj-conveyorbelt{
+        > div:last-child{
+            .oj-conveyorbelt-overflow-indicator{
+               margin-top: 6.5px;
+            }
+        }
+    }
+}
 
+#changeDashboardsetInfo{
+    #nameDescription{     
+        .oj-collapsible-content{
+            border:0;
+        }
+    }
+    #shareSettings{
+        #dashboardset-refresh{
+            margin-top: 10px;
+        }
+    }
+    .edit-dbsset-title{
+        font-size: 14px;
+        background-color:#F9F9F9;
+        border:0;
+        a{
+            font-size: 14px;
+        }
+    }
+}
+
+.dbd-noselected{
+    padding-left: 14px;
+}
+.dbd-icon-add:before{
+    content: "\f067";
+}
+.dbd-icon-gear:before{
+    content: "\f013";
+}
+.dbd-icon-refresh:before{
+    content: "\f021";
+}
+.dbd-icon-users:before{
+    content: "\f0c0";
+}
+.dbd-icon-check:before{
+    content: "\f00c";
+}
+
+#dashboardset-print-mask {
+    position:absolute; 
+    left:0; 
+    top:0; 
+    z-index:900; 
+    background-color:black; 
+    opacity: 0.4; 
+}

@@ -69,31 +69,40 @@ public class HomePageFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException
+	ServletException
 	{
 		HttpServletRequest httpReq = (HttpServletRequest) request;
 		HttpServletResponse httpRes = (HttpServletResponse) response;
 		String referer = httpReq.getHeader(REFERER);
-		logger.info("The Referer is: \"{}\"", referer);
+		logger.info("The Referer header get from http request is: \"{}\"", referer);
 		if (referer != null) {
+			logger.info("Start to check whether the http request comes just after the user login.");
 			if (referer.toLowerCase().contains(AUTH_CRED_PATH)) {
+				logger.info("User logged in! Start to check the user preference of Home.");
 				String userTenant = httpReq.getHeader(OAM_REMOTE_USER_HEADER);
+				logger.info("Current tenant user is: \"{}\"", userTenant);
 				if (userTenant != null && !userTenant.equals("")) {
 					String domainName = userTenant.substring(0, userTenant.indexOf("."));
 					String authorization = new String(LookupManager.getInstance().getAuthorizationToken());
 					String preference = getPreference(domainName, authorization, userTenant);
+					logger.info("Get the user preference of Home settings. Result: \"{}\"", preference);
 					if (preference != null && !preference.equals("")) {
 						int flag = preference.indexOf("value");
 						if (flag > 0) {
 							String value = preference.substring(flag + 8, preference.length() - 2);
+							logger.info("The ID of the dashboard which has been set as Home is: \"{}\"", value);
 							if (!value.equals("")) {
-								StringBuffer homeUrl = httpReq.getRequestURL();
-								int position = homeUrl.indexOf("/emcpdfui");
-								String url = homeUrl.substring(0, position + 10);
-								String redirectUrl = url + "builder.html?dashboardId=" + value;
+								String redirectUrl = "./builder.html?dashboardId=" + value;
 								if (!isHomeDashboardExists(domainName, authorization, userTenant, value)) {
-									redirectUrl = url + "error.html?msg=DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG";
+									logger.info("The dashboard which has been set as Home is not existed. Id: \"{}\"", value);
+									logger.info("Removing the dashboard as Home from the user preferences...");
 									removeDashboardAsHomePreference(domainName, authorization, userTenant);
+									redirectUrl = "./error.html?msg=DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG";
+									logger.info("Redirecting to the error page. URL: \"{}\"", redirectUrl);
+								}
+								else {
+									logger.info("Redirecting to the dashboard page which has been set as Home. URL: \"{}\"",
+											redirectUrl);
 								}
 
 								httpRes.sendRedirect(redirectUrl);
@@ -101,9 +110,7 @@ public class HomePageFilter implements Filter
 							}
 						}
 					}
-
 				}
-
 			}
 		}
 		chain.doFilter(request, response);

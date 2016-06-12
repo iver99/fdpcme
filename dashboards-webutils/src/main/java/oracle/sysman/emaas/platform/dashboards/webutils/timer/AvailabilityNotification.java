@@ -13,6 +13,9 @@ package oracle.sysman.emaas.platform.dashboards.webutils.timer;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.DBConnectionManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
@@ -20,19 +23,16 @@ import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.targetmodel.services.GlobalStatus;
 import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * @author guobaochen
  */
 public class AvailabilityNotification implements NotificationListener
 {
-	private final Logger logger = LogManager.getLogger(AvailabilityNotification.class);
-
 	private static final String ENTITY_NAMING_SERVICE_NAME = "EntityNaming";
+
 	private static final String ENTITY_NAMING_SERVICE_VERSION = "1.0+";
 	private static final String ENTITY_NAMING_SERVICE_REL = "collection/domains";
+	private final Logger logger = LogManager.getLogger(AvailabilityNotification.class);
 
 	private final RegistryServiceManager rsm;
 
@@ -54,7 +54,8 @@ public class AvailabilityNotification implements NotificationListener
 		}
 		// check if service manager is up and registration is complete
 		if (!rsm.isRegistrationComplete() && !rsm.registerService()) {
-			logger.warn("Dashboards service registration is not completed. Ignore database or other dependant services availability checking");
+			logger.warn(
+					"Dashboards service registration is not completed. Ignore database or other dependant services availability checking");
 			return;
 		}
 
@@ -93,6 +94,7 @@ public class AvailabilityNotification implements NotificationListener
 		// now all checking is OK
 		try {
 			rsm.markServiceUp();
+			GlobalStatus.setDashboardUpStatus();
 			logger.debug("Dashboards service is up");
 		}
 		catch (Exception e) {

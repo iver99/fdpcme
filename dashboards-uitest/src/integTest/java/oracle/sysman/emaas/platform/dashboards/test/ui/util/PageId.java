@@ -10,13 +10,15 @@ public class PageId
 	 *
 	 * */
 	//home page
-	public static final String DashboardDisplayPanelID = "dtabhomesc";
+	//public static final String DashboardDisplayPanelID = "dtabhomesc";
+	public static final String DashboardDisplayPanelCss = ".dbs-summaries-container";
 	public static final String DashboardCss = "div#dtabhomesc div.oj-panel";
 	public static final String ErrorPageSingOutBtnCss = "button[title='Sign Out']";
 	public static final String OverviewCloseID = "overviewClose";
 	public static final String WidgetSearchBtnID = "dbd-left-panel-header-search-btn";
 	public static final String ADashboardTestByAriaLabel = "//*[@aria-label='ADashboard Test']";
 	public static final String EnterpriseOverviewByAriaLabel = "//*[@aria-label='Enterprise Overview']";
+	public static final String SortbyID = "oj-select-choice-mainContentsortcb";
 
 	//OOB dashboards ID
 	public static final String Application_Performance_Monitoring_ID = "//div[@aria-dashboard='14']";

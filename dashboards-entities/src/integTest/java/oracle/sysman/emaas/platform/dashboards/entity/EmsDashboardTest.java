@@ -13,9 +13,9 @@ import static org.testng.Assert.*;
  */
 @Test(groups={"s1"})
 public class EmsDashboardTest {
-    Date now = new Date();
-    private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10, now,
-            "elephant","elephant","elephant","elephant",10,10);
+     Date now = new Date();
+    private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10,10,10, now,
+             "elephant","elephant","elephant","elephant",10,10);
 
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
             now,
@@ -52,7 +52,8 @@ public class EmsDashboardTest {
     public void testAddEmsDashboardTile() throws Exception {
         emsDashboard = new EmsDashboard();
         EmsDashboardTile emsDashboardTile = new EmsDashboardTile();
-        assertEquals(emsDashboard.addEmsDashboardTile(emsDashboardTile),emsDashboardTile);
+        emsDashboard.addEmsDashboardTile(emsDashboardTile);
+        assertEquals(emsDashboard.getDashboardTileList().get(0),emsDashboardTile);
     }
 
     @Test
@@ -63,9 +64,9 @@ public class EmsDashboardTest {
     }
 
     @Test
-    public void testGetCreationDate() throws Exception {
+    public void testGetCreationDate() throws Exception { 
         emsDashboard.setCreationDate(now);
-        assertEquals(emsDashboard.getCreationDate(), now);
+        assertEquals(emsDashboard.getCreationDate(), now); 
     }
 
     @Test
@@ -104,6 +105,18 @@ public class EmsDashboardTest {
     }
 
     @Test
+    public void testGetEnableDescription() throws Exception {
+        emsDashboard.setEnableDescription(10);
+        assertEquals(emsDashboard.getEnableDescription(),new Integer(10));
+    }
+    
+    @Test
+    public void testGetEnableEntityFilter() throws Exception {
+        emsDashboard.setEnableEntityFilter(10);
+        assertEquals(emsDashboard.getEnableEntityFilter(),new Integer(10));
+    }
+    
+    @Test
     public void testGetEnableTimeRange() throws Exception {
         emsDashboard.setEnableTimeRange(10);
         assertEquals(emsDashboard.getEnableTimeRange(),new Integer(10));
@@ -117,9 +130,9 @@ public class EmsDashboardTest {
     }
 
     @Test
-    public void testGetLastModificationDate() throws Exception {
+    public void testGetLastModificationDate() throws Exception {  
         emsDashboard.setLastModificationDate(now);
-        assertEquals(emsDashboard.getLastModificationDate(), now);
+        assertEquals(emsDashboard.getLastModificationDate(), now); 
     }
 
     @Test
@@ -207,6 +220,16 @@ public class EmsDashboardTest {
 
     @Test
     public void testSetEnableRefresh() throws Exception {
+
+    }
+    
+    @Test
+    public void testSetEnableDescription() throws Exception {
+
+    }
+    
+    @Test
+    public void testSetEnableEntityFilter() throws Exception {
 
     }
 

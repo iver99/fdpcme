@@ -6,7 +6,7 @@ public class TimeSelectorExludedDayMonth
 	public static final String EXCLUDE_SUNDAY = "Sunday";
 	public static final String EXCLUDE_MONDAY = "Monday";
 	public static final String EXCLUDE_TUESDAY = "Tuesday";
-	public static final String EXCLUDE_WEDENSDAY = "Wedensday";
+	public static final String EXCLUDE_WEDNESDAY = "Wednesday";
 	public static final String EXCLUDE_THURSDAY = "Thursday";
 	public static final String EXCLUDE_FRIDAY = "Friday";
 	public static final String EXCLUDE_SATURDAY = "Saturday";

@@ -49,12 +49,19 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.DeleteSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableDescriptionState;
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableEntityFilterState;
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONObject;
 
 /**
  * @author wenjzhu
@@ -368,6 +375,9 @@ public class DashboardAPI extends APIBase
 		logkeyHeaders("quickUpdateDashboard()", userTenant, tenantIdParam);
 		String name = null;
 		String description = null;
+		String enableDescription = null;
+		String enableEntityFilter = null;
+		String enableTimeRange = null;
 		Boolean share = null;
 		try {
 			if (inputJson.has("name")) {
@@ -376,6 +386,16 @@ public class DashboardAPI extends APIBase
 			if (inputJson.has("description")) {
 				description = inputJson.getString("description");
 			}
+			if (inputJson.has("enableDescription")) {
+				enableDescription = inputJson.getString("enableDescription");
+			}
+			if (inputJson.has("enableEntityFilter")) {
+				enableEntityFilter = inputJson.getString("enableEntityFilter");
+			}
+			if (inputJson.has("enableTimeRange")) {
+				enableTimeRange = inputJson.getString("enableTimeRange");
+			}
+
 			if (inputJson.has("sharePublic")) {
 				share = inputJson.getBoolean("sharePublic");
 			}
@@ -401,6 +421,19 @@ public class DashboardAPI extends APIBase
 			if (description != null) {
 				input.setDescription(description);
 			}
+
+			if (enableDescription != null) {
+				input.setEnableDescription(EnableDescriptionState.fromName(enableDescription));
+			}
+
+			if (enableEntityFilter != null) {
+				input.setEnableEntityFilter(EnableEntityFilterState.fromName(enableEntityFilter));
+			}
+
+			if (enableTimeRange != null) {
+				input.setEnableTimeRange(EnableTimeRangeState.fromName(enableTimeRange));
+			}
+
 			if (share != null) {
 				input.setSharePublic(share);
 			}
@@ -560,6 +593,11 @@ public class DashboardAPI extends APIBase
 		updateDashboardHref(dbd, tenantName);
 		updateDashboardScreenshotHref(dbd, tenantName);
 		updateDashboardOptionsHref(dbd, tenantName);
+		if(dbd != null && dbd.getType()!= null && dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET) && dbd.getSubDashboards() != null){
+			for(Dashboard subDbd :dbd.getSubDashboards()){
+				updateDashboardHref(subDbd,tenantName);
+			}
+		}
 		return dbd;
 	}
 

@@ -149,5 +149,4 @@ public class RegistrationEntityTest
 	{
 		Assert.assertNotNull(registrationEntity.getVisualAnalyzers());
 	}
-
 }

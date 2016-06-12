@@ -1,4 +1,27 @@
-.dropdown {
+@font-face { 
+    font-family: 'FaFont';
+    src: url("../../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff2") format("woff2"),
+         url("../../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff") format("woff"); 
+    font-weight: normal; 
+    font-style: normal; 
+}
+.fa-icon-font { 
+    font-family: FaFont; 
+    font-size: 1rem; 
+    display: inline-block;
+    color: #878c90;
+    font-weight: normal;
+    speak: none;
+    font-style: normal;
+    font-variant: normal; 
+    text-transform: none; 
+    text-align: center;
+    -moz-box-sizing: content-box; 
+    box-sizing: content-box; 
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.panel {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
     color: #333333;
@@ -6,54 +29,65 @@
     border-width: 1px;
     border-style: solid;
     border-color: #dfe4e7;
-    border-radius: 2px;
-    padding-left:8px;
-    height: 34px; 
-    width: auto;
-    line-height: 32px;
-    display: inline-block;
-}
-.panel {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 12px;
-    color: #333333;
-    background-color: #ffffff;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #dfe4e7;
-    border-radius: 2px;
+    /*border-radius: 2px;*/
     /*height: 396px;*/
     /*width: 630px;*/
 }
 .drawers {
     width: 104px;
-    float: left;
+    /*float: left;*/
+    /*border: 1px solid #F0F0F0;*/
     /*height: 396px;*/
-    background-color: #f0f0f0;
+    background-color: #fcfdfe;
 }
+
+.float-left {
+    float: left;
+}
+.float-right {
+    float: right;
+}
+
 .drawer {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 12px;
-    color: #333333;
-    border-width: 1px;
+    font-size: 14px;
+    color: black;
+/*    border-width: 0px;
     border-style: solid;
-    border-color: #dfe4e7;
-    padding-left: 8px;
-    padding-top: 11px;
-    padding-bottom: 3px;
-    height: 20px;
+    border-color: #FFFFFF; //#dfe4e7;*/
+    padding-left: 10px;
+    padding-top: 7px;
+    padding-bottom: 6px;
+    height: 18px; //20px;
     width: 94px;
     display: block;
 }
 
 .drawerNotChosen {
-    background-color:  #f0f0f0 !important;
-    font-weight: normal !important;
+    background-color:  #fcfdfe; //#FFFFFF; /*#f0f0f0 !important;*/
+    /*font-weight: normal !important;*/
 }
 
-.drawerChosen {
-    background-color:  #ffffff !important;
-    font-weight: bold !important;
+.leftDrawerChosen {
+    background-color:  #ebeced; //#E4F0FA; /*#ffffff !important;*/
+    /*font-weight: bold !important;*/
+    /*border-left: 3px solid #0572ce;*/
+}
+
+.leftDrawerHover {
+    background-color: #ebeced; //#F0F0F0;
+    /*border-left: 3px solid #85bbe7;*/
+}
+
+.rightDrawerChosen {
+    background-color:  #ebeced; //#E4F0FA; /*#ffffff !important;*/
+    /*font-weight: bold !important;*/
+    /*border-right: 3px solid #0572ce;*/
+}
+
+.rightDrawerHover {
+    background-color: #ebeced; //#F0F0F0;
+    /*border-right: 3px solid #85bbe7;*/
 }
 
 .drawerNotToShow {
@@ -67,13 +101,35 @@
     text-decoration: none;
 }
 
+.drawers a:active {
+    font-weight: normal;
+}
+
 .pickerPanel {
-    width: 510px;
-    height: 387px;
-    float: right;
+    width: 550px; //510px;
+    height: 402px;
+    /*float: right;*/
     padding-top: 10px;
+    /*padding-left: 10px;*/
+    margin-top: -1px;
+    
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #333333;
+    background-color: #fcfdfe; //#ffffff;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #dfe4e7;
+}
+
+.picker-panel-padding-right {
     padding-right: 10px;
 }
+
+.picker-panel-padding-left {
+    padding-left: 10px;
+}
+
 .chosenDate {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 12px;
@@ -107,6 +163,7 @@
 }
 .datePicker {
     font-size: 15px;
+    padding-left: 5px;
     /*padding-top: 10px;*/
 }
 
@@ -165,4 +222,23 @@
 
 .oj-datepicker-calendar td a.oj-selected {
     color: #000000;
+}
+
+.time-filter-indicator {
+    display: inline-block;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    cursor: default;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.time-filter-indicator:before{
+    content: "\f069";
+}
+html:not([dir="rtl"]) .time-filter-indicator{
+    right: 20px;
+}
+html[dir="rtl"] .time-filter-indicator{
+    left: 20px;
 }

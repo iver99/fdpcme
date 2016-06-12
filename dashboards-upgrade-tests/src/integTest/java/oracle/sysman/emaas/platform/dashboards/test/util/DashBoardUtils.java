@@ -1,6 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.test.util;
 
-import oracle.sysman.emaas.platform.dashboards.test.util.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.testng.Assert;

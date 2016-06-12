@@ -59,6 +59,6 @@
         'dbs': '../js',
         'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
         'prefutil':'empty:'
-	//'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
+//	'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
     }
 })

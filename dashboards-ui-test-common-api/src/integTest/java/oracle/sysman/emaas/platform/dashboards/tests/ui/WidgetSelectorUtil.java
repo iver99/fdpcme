@@ -2,14 +2,14 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
 import java.util.List;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
+
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.XPathLiteral;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
 
 public class WidgetSelectorUtil
 {
@@ -19,25 +19,21 @@ public class WidgetSelectorUtil
 		Validator.notEmptyString("widgetName", widgetName);
 
 		WidgetSelectorUtil.searchWidget(driver, widgetName);
+		String autoCloseCheck = driver.getElement(DashBoardPageId.WIDGET_SELECTOR_WIDGET_AREA)
+				.getAttribute("data-wgt-slt-auto-close");
+		Boolean autoClose = Boolean.valueOf(autoCloseCheck);
 		WidgetSelectorUtil.getWidgetElementByTitle(driver, widgetName, 0);
 
 		driver.waitForElementPresent(DashBoardPageId.WIDGET_SELECTOR_OK_BTN_LOCATOR);
 		driver.click(DashBoardPageId.WIDGET_SELECTOR_OK_BTN_LOCATOR);
 		driver.takeScreenShot();
 
+		// automatically close the dialog then
+		if (!autoClose) {
+			WidgetSelectorUtil.closeDialog(driver);
+		}
+
 		driver.getLogger().info("WidgetSelectorUtil.addWidget completed");
-	}
-
-	public static void closeDialog(WebDriver driver) throws Exception
-	{
-		driver.getLogger().info("WidgetSelectorUtil.closeDialog started");
-		driver.waitForElementPresent(DashBoardPageId.WIDGET_SELECTOR_CLOSE_BTN_LOCATOR);
-		driver.takeScreenShot();
-		driver.click(DashBoardPageId.WIDGET_SELECTOR_CLOSE_BTN_LOCATOR);
-		driver.takeScreenShot();
-		driver.waitForNotElementPresent(DashBoardPageId.WIDGET_SELECTOR_CLOSE_BTN_LOCATOR);
-
-		driver.getLogger().info("WidgetSelectorUtil.closeDialog completed");
 	}
 
 	public static void page(WebDriver driver, int pageNo) throws Exception
@@ -53,6 +49,18 @@ public class WidgetSelectorUtil
 	public static void pagingPrevious(WebDriver driver) throws Exception
 	{
 
+	}
+
+	private static void closeDialog(WebDriver driver) throws Exception
+	{
+		driver.getLogger().info("(Internal method) WidgetSelectorUtil.closeDialog started");
+		driver.waitForElementPresent(DashBoardPageId.WIDGET_SELECTOR_CLOSE_BTN_LOCATOR);
+		driver.takeScreenShot();
+		driver.click(DashBoardPageId.WIDGET_SELECTOR_CLOSE_BTN_LOCATOR);
+		driver.takeScreenShot();
+		driver.waitForNotElementPresent(DashBoardPageId.WIDGET_SELECTOR_CLOSE_BTN_LOCATOR);
+
+		driver.getLogger().info("(Internal method) WidgetSelectorUtil.closeDialog completed");
 	}
 
 	private static WebElement getWidgetElementByTitle(WebDriver driver, String widgetName, int index)
