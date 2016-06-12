@@ -641,11 +641,11 @@
                         <div class="dbd-right-panel-editdashboardset" data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.editPanelContent()=='editset'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" >
                                 <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: switchEditPanelContent"style="color:#0572ce"></a>
-                                <span>Edit Dashboard Set</span>
+                                <span data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_DSBSET_TITLE')"></span>
                             </div>
                             <div class="dbd-right-panel-editdashboard-container fit-size" style="overflow-y: scroll">
                                 <div class="dbd-right-panel-editdashboard-general" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbeditorIsExpanded}" style="margin-top: 10px;">
-                                    <span class="dbd-right-panel-editdashboard-innertitle">General</span>
+                                    <span class="dbd-right-panel-editdashboard-innertitle" data-bind="text: getNlsString('DBS_BUILDER_EDIT_DSB_GENERAL')"></span>
                                     <div class="cDsbDialog oj-form-layout">
                                         <div class="oj-form">
                                             <div class="oj-flex" >
@@ -685,12 +685,12 @@
                                 </div>
                                 <hr/>
                                 <div class="dbd-right-panel-editdashboard-share" data-bind="ojComponent: {component: 'ojCollapsible', expanded:sharesettingsIsExpanded}">
-                                    <span class="dbd-right-panel-editdashboard-innertitle">Share</span>
+                                    <span class="dbd-right-panel-editdashboard-innertitle" data-bind="text: getNlsString('COMMON_TEXT_SHARE')"></span>
                                     <div class="share-settings oj-form-layout">
                                         <form class="oj-form">
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label class="oj-label">Dashboard Sharing</label>
+                                                    <label class="oj-label" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING')"></label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
@@ -698,23 +698,23 @@
                                                     <div data-bind="ojComponent: {component: 'ojRadioset', value: dashboardsetShare}" >
                                                         <span class="oj-choice-row">
                                                             <input id="dashboardSetSharingNotShared" type="radio" name="dashboardSetSharing" value="off">
-                                                            <label for="dashboardSharingNotShared">Not Shared</label>
+                                                            <label for="dashboardSharingNotShared" data-bind="text: getNlsString('DBSSET_BUILDER_NOT_SHARED')"></label>
                                                         </span>
                                                         <span class="oj-choice-row">
                                                             <input id="dashboardSetSharingShared" type="radio" name="dashboardSetSharing" value="on">
-                                                            <label for="dashboardSharingShared">Shared (others can view)</label>
+                                                            <label for="dashboardSharingShared" data-bind="text: getNlsString('DBSSET_BUILDER_SHARED')"></label>
                                                         </span>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label class="oj-label enableSetShareAutoRefresh" style="margin: 10px 0 0 0;" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardsetShare() === 'off'}">Default Auto-refresh Value</label>
+                                                    <label class="oj-label enableSetShareAutoRefresh" style="margin: 10px 0 0 0;" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardsetShare() === 'off'},text: getNlsString('DBSSET_BUILDER_DEFAULT_REFRESH')"></label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label class="enableSetShareAutoRefresh" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardsetShare() === 'off'}">Specify the default for other users</label>
+                                                    <label class="enableSetShareAutoRefresh" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardsetShare() === 'off'},text: getNlsString('DBS_BUILDER_DSB_DEFAULT_REFRESH_DESC')">Specify the default for other users</label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
@@ -738,11 +738,11 @@
                         <div class="dbd-right-panel-editdashboard" data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.editPanelContent()=='edit'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" >
                                 <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: switchEditPanelContent"style="color:#0572ce"></a>
-                                <span>Edit Dashboard</span>
+                                <span data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_DSB_TITLE')"></span>
                             </div>
                             <div class="dbd-right-panel-editdashboard-container fit-size" style="padding-left:0; padding-right:0;overflow-y: scroll">
                                 <div class="dbd-right-panel-editdashboard-general" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbeditorIsExpanded}"  style="margin-top: 10px;">
-                                    <span class="dbd-right-panel-editdashboard-innertitle">General</span>
+                                    <span class="dbd-right-panel-editdashboard-innertitle" data-bind="text: getNlsString('DBS_BUILDER_EDIT_DSB_GENERAL')"></span>
                                     <div class="cDsbDialog oj-form-layout">
                                         <div class="oj-form">
                                             <div class="oj-flex" >
@@ -784,7 +784,7 @@
                                                     <div data-bind="ojComponent: {component: 'ojCheckboxset', value: editDashboardDialogModel.showdbDescription}" >
                                                         <span class="oj-choice-row">
                                                             <input id="showdbDescription" type="checkbox" value="showdbDescription">
-                                                            <label for="showdbDescription">Show dashboard description</label>
+                                                            <label for="showdbDescription" data-bind="text: getNlsString('DBS_BUILDER_EDIT_SHOW_DSB_DESC')"></label>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -806,19 +806,19 @@
                                 </div>
                                 <hr/>
                                 <div class="dbd-right-panel-editdashboard-filters" data-bind="ojComponent: {component: 'ojCollapsible', expanded:dbfiltersIsExpanded}">
-                                    <span  class="dbd-right-panel-editdashboard-innertitle">Filters</span>
+                                    <span  class="dbd-right-panel-editdashboard-innertitle"  data-bind="text: getNlsString('DBS_BUILDER_FILTERS')"></span>
                                     <div class="filter-settings oj-form-layout">
                                         <div class="oj-form">
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
-                                                    <label class="oj-label" data-bind="text: 'Entity Filter'"></label>
+                                                    <label class="oj-label" data-bind="text: getNlsString('DBS_BUILDER_EDIT_ENTITY_FILTER')"></label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
                                                     <span class="oj-choice-row" style="margin: 8px 0 12px 0;">
                                                         <input id="showEntityFilter" type="checkbox" data-bind="checked: enableEntityFilter">
-                                                        <label for="showEntityFilter">Show Entity filter</label>
+                                                        <label for="showEntityFilter" data-bind="text: getNlsString('DBS_BUILDER_EDIT_SHOW_ENTITY_FILTER')"></label>
                                                     </span>
                                                 </div>
                                             </div>
@@ -865,14 +865,14 @@
                                             </div>
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
-                                                    <label class="oj-label"  style="margin: 10px 0 0 0;" data-bind="text: 'Time Range Filter'"></label>
+                                                    <label class="oj-label"  style="margin: 10px 0 0 0;" data-bind="text: getNlsString('DBS_BUILDER_EDIT_TIME_FILTER')"></label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
                                                     <span class="oj-choice-row"  style="margin: 8px 0 12px 0;">
                                                         <input id="showTimeRangeFilter" type="checkbox" data-bind="checked: enableTimeRangeFilter">
-                                                        <label for="showTimeRangeFilter">Show Time Range filter</label>
+                                                        <label for="showTimeRangeFilter" data-bind="text: getNlsString('DBS_BUILDER_EDIT_SHOW_TIME_FILTER')"></label>
                                                     </span>
                                                 </div>
                                             </div>
@@ -911,12 +911,12 @@
                                 </div>
                                 <hr data-bind="visible:!$data.isUnderSet"/>
                                 <div class="dbd-right-panel-editdashboard-share" data-bind="ojComponent: {component: 'ojCollapsible', expanded:sharesettingsIsExpanded},visible:!$data.isUnderSet">
-                                    <span class="dbd-right-panel-editdashboard-innertitle">Share</span>
+                                    <span class="dbd-right-panel-editdashboard-innertitle" data-bind="text: getNlsString('COMMON_TEXT_SHARE')"></span>
                                     <div class="share-settings oj-form-layout">
                                         <form class="oj-form">
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label class="oj-label">Dashboard Sharing</label>
+                                                    <label class="oj-label" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING')"></label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
@@ -924,23 +924,23 @@
                                                     <div data-bind="ojComponent: {component: 'ojRadioset', value: dashboardSharing}" >
                                                         <span class="oj-choice-row">
                                                             <input id="dashboardSharingNotShared" type="radio" name="dashboardSharing" value="notShared">
-                                                            <label for="dashboardSharingNotShared">Not Shared</label>
+                                                            <label for="dashboardSharingNotShared" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING_NOT_SHARED')"></label>
                                                         </span>
                                                         <span class="oj-choice-row">
                                                             <input id="dashboardSharingShared" type="radio" name="dashboardSharing" value="shared">
-                                                            <label for="dashboardSharingShared">Shared (others can view)</label>
+                                                            <label for="dashboardSharingShared" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING_SHARED')"></label>
                                                         </span>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label class="oj-label enableShareAutoRefresh" style="margin: 10px 0 0 0;" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardSharing() === 'notShared'}">Default Auto-refresh Value</label>
+                                                    <label class="oj-label enableShareAutoRefresh" style="margin: 10px 0 0 0;" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardSharing() === 'notShared'}" data-bind="text: getNlsString('DBS_BUILDER_DSB_DEFAULT_REFRESH')"></label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label class="enableShareAutoRefresh" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardSharing() === 'notShared'}">Specify the default for other users</label>
+                                                    <label class="enableShareAutoRefresh" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardSharing() === 'notShared'}" data-bind="text: getNlsString('DBS_BUILDER_DSB_DEFAULT_REFRESH_DESC')"></label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
@@ -956,18 +956,18 @@
                                 </div>
                                 <hr data-bind="visible:!$data.isUnderSet"/>
                                 <div data-bind="visible:!$data.isUnderSet">
-                                    <button data-bind="click: deleteDashboardClicked, ojComponent: { component: 'ojButton', label: 'Delete Dashboard' }"></button>
+                                    <button data-bind="click: deleteDashboardClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_DELETE_TITLE') }"></button>
                                 </div>
                             </div>
                         </div>
 						<div id="dbd-right-panel-editsettings"  class="dbd-right-panel-editsettings"  data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.editPanelContent()=='settings'">
-                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" >Edit Settings</div>
+                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_SETTINGS_TITLE')"></div>
                              <div id="dbd-edit-settings-container" class="dbd-edit-settings-container">
                                 <!--ko if: $data.dashboardsetToolBarModel.isDashboardSet-->
-                                <span class="edit-setting-head">Dashboard Set</span>
+                                <span class="edit-setting-head" data-bind="text: getNlsString('DBSSET_BUILDER_DASHBOARDSET')"></span>
                                 <span class="edit-setting-link edit-dsbset-link" data-bind="text:$data.dashboardsetToolBarModel.dashboardsetName(), click: switchEditPanelContent"></span>
                                     <!--ko if: $data.dashboardsetToolBarModel.dashboardsetItems.length>0-->
-                                <span class="edit-setting-head" >Selected Dashboard</span>
+                                <span class="edit-setting-head" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_SELECTED_DSB')"></span>
                                 <span class="edit-setting-link edit-dsb-link" data-bind="text:$data.dashboardsetToolBarModel.selectedDashboardItem().name, click: switchEditPanelContent"></span>
                                     <!--/ko-->
                                 <!--ko if: $data.tilesViewModel.dashboard.tiles().length>0-->
@@ -990,7 +990,7 @@
                             </div>
                         </div>
                         <div class="dbd-right-panel-wrench" data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='wrench'">
-                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" >Build Dashboard</div>
+                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_TITLE')"></div>
                             <div class="dbd-right-panel-build-container" style="padding:0">
                     <div class="dbd-left-panel-header fit-size-vertical-sibling">
                         <div class="dbd-left-panel-header-search">
