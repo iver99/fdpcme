@@ -394,6 +394,8 @@ define(['knockout',
                     self.getWidgetScreenshot(widget);
                 var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
                 var popupContent=$(widgetItem).find('.dbd-left-panel-img-pop');
+                $b.findEl(".dbd-right-panel-build-container i.fa-plus").hide();
+                $(widgetItem).find('i').show();
                 if (!popupContent.ojPopup("isOpen")) {
                    $(popupContent).ojPopup("open", $(widgetItem), 
                    {
@@ -402,7 +404,9 @@ define(['knockout',
                }
             };
 
-            self.widgetMouseOutHandler = function(widget) {              
+            self.widgetMouseOutHandler = function(widget,event) {              
+                var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
+                $(widgetItem).find('i').hide();
                 if ($('.widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("isOpen")) {
                     $('.widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("close");
                 }
@@ -412,6 +416,17 @@ define(['knockout',
                 if (event.keyCode === 13) {
                    tilesViewModel.appendNewTile(widget.WIDGET_NAME(), "", 4, 2, ko.toJS(widget));
                 }
+            };
+            
+            self.widgetShowPlusIcon = function(widget, event) {
+                $b.findEl(".dbd-right-panel-build-container i.fa-plus").hide();
+                var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
+                $(widgetItem).find('i').show();
+            };
+            
+            self.widgetHidePlusIcon = function(widget, event) {
+                var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
+                $(widgetItem).find('i').hide();
             };
             
             self.containerMouseOverHandler = function() {

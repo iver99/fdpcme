@@ -205,6 +205,7 @@ define({
 //      "DBS_BUILDER_LEFT_PANEL_SHOW_TIME_SELECTOR": "Show Time Selector",
 //      "DBS_BUILDER_LEFT_PANEL_SHOW_REFRESH": "Show Refresh Control",
       "DBS_BUILDER_LEFT_PANEL_BUILD_TITLE": "Build Dashboard",
+      "DBS_BUILDER_LEFT_PANEL_BUILD_BUTTON_PLUS": "add to dashboard",
       "DBS_BUILDER_LEFT_PANEL_SELECTED_DSB": "Selected Dashboard",
       "DBS_BUILDER_LEFT_PANEL_EDIT_DSBSET_TITLE": "Edit Dashboard Set",
       "DBS_BUILDER_LEFT_PANEL_EDIT_DSB_TITLE": "Edit Dashboard",

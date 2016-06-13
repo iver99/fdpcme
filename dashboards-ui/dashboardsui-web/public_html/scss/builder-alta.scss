@@ -926,7 +926,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     background-color: #fcfdfe;
     float: left;
     box-sizing: border-box; 
-    width: 260px;
+    width: 275px;
 }
 
 .dbd-left-panel-header-search-input {
@@ -957,8 +957,10 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     position: relative;
     .fa-plus{
         margin-top:9px;
-        margin-right: -16px;
+        margin-left: -16px;
         float: right;
+        color: #878c90;
+        display: none;
     }
 }
 
@@ -993,7 +995,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 
 .dbd-left-panel-widget {
-    width: 245px; 
+    width: 276px; 
     height: 30px;
 }
 
@@ -1004,7 +1006,8 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .dbd-left-panel-widget-text {
     /*padding-right: 35px;*/ 
     float: left; 
-    width: 240px; 
+    width: 260px; 
+    padding-right: 16px;
     white-space: nowrap;
     overflow: hidden; 
     text-overflow: ellipsis; 
