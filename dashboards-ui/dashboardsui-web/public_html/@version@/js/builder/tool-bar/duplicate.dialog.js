@@ -58,9 +58,14 @@ define(['knockout',
                     trackObj.focusOnFirstInvalid();
                     return;
                 }
-                
-                $( "#duplicateDsbDialog" ).css("cursor", "progress");
+
+                $("#duplicateDsbDialog").css("cursor", "progress");
                 self.duplicateDashboard();
+            };
+            
+            self.cancelDuplicateDashboard = function () {
+                selectedDashboardInst().toolBarModel.duplicateInSet(false);
+                $('#duplicateDsbDialog').ojDialog('close');
             };
             
             self.duplicateDashboard = function() {
@@ -103,10 +108,15 @@ define(['knockout',
             };
             
             self.saveDuplicatedDashboardToServer = function(newDashboard) {
-                var succCallback = function(data) {
-                    $('#duplicateDsbDialog').ojDialog('close');
-                    if (data && data.id) {
-                        window.location.href = "/emsaasui/emcpdfui/builder.html?dashboardId=" + data.id;
+                var succCallback = function (data) {
+                    if (selectedDashboardInst().toolBarModel.duplicateInSet()) {
+                        selectedDashboardInst().dashboardsetToolBar.toolbarDuplcateInSet(data);
+                    } else {
+                        selectedDashboardInst().toolBarModel.duplicateInSet(false);
+                        $('#duplicateDsbDialog').ojDialog('close');
+                        if (data && data.id) {
+                            window.location.href = "/emsaasui/emcpdfui/builder.html?dashboardId=" + data.id;
+                        }
                     }
                 };
                 var errorCallback = function(error) {

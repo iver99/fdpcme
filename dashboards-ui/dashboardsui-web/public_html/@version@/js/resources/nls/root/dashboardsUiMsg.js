@@ -134,6 +134,8 @@ define({
       "DBS_BUILDER_BTN_DUPLICATE": "Duplicate",
       "DBS_BUILDER_BTN_DUPLICATE_TITLE": "Duplicate dashboard",
       "DBS_BUILDER_DUPLICATE_DIALOG_TITLE": "Duplicate Dashboard",
+      "DBS_BUILDER_ADDTOSET":"Add to set",
+      "DBS_BUILDER_NOT_ADDTOSET":"Do not add to set",
       "DBS_BUILDER_BTN_EDIT_TITLE": "Edit dashboard",
       "DBS_BUILDER_EDIT_DSB_NAME": "Dashboard Name",
       "DBS_BUILDER_EDIT_SHOW_DSB_DESC": "Show dashboard description",

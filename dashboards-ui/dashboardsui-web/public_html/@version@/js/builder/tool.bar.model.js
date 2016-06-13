@@ -30,6 +30,7 @@ define(['knockout',
             self.duplicateDashboardModel = new dd.DuplicateDashboardModel($b);
             self.toolBarGuid = Builder.getGuid();
             self.isUnderSet = ko.dataFor($("#dbd-set-tabs")[0]).isDashboardSet();
+            self.duplicateInSet=ko.observable(false);
 
             if (self.dashboard.id && self.dashboard.id())
                 self.dashboardId = self.dashboard.id();
@@ -809,6 +810,7 @@ define(['knockout',
                     "title": "", //getNlsString('DBS_BUILDER_BTN_EDIT_TITLE'),
                     "disabled": self.editDisabled() === true,
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
+                    "showSubMenu": false,
                     "endOfGroup": false
                 },
                 {
@@ -829,18 +831,56 @@ define(['knockout',
                     "title": "", //getNlsString('COMMON_BTN_PRINT'),
                     "disabled": false,
                     "showOnMobile": true,
+                    "showSubMenu": false,
                     "endOfGroup": false
                 },
                 {
                     "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
                     "url": "#",
                     "id": "emcpdf_dsbopts_duplicate" + self.toolBarGuid,
-                    "onclick": self.openDashboardDuplicateDialog,
+                    "onclick": function(data,event){
+                        if(!self.isUnderSet){
+                            self.openDashboardDuplicateDialog();
+                        }
+                    },
                     "icon": "dbd-toolbar-icon-duplicate",
                     "title": "", //getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
                     "disabled": false,
-                    "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
-                    "endOfGroup": true
+                    "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",                    
+                    "endOfGroup": true,
+                    "showSubMenu": self.isUnderSet,
+                    "subItems": [
+                        {
+                            "label": getNlsString('DBS_BUILDER_ADDTOSET'),
+                            "url": "#",
+                            "id": "emcpdf_dsbopts_addToSet" + self.toolBarGuid,
+                            "icon": "",
+                            "title": "",
+                            "onclick": function (data, event) {
+                                self.duplicateInSet(true);
+                                self.openDashboardDuplicateDialog();
+                            },
+                            "disabled": false,
+                            "showOnMobile": true,
+                            "showSubMenu": false,
+                            "endOfGroup": false
+                        },
+                        {
+                            "label": getNlsString('DBS_BUILDER_NOT_ADDTOSET'),
+                            "url": "#",
+                            "id": "emcpdf_dsbopts_notAddToSet" + self.toolBarGuid,
+                            "icon": "",
+                            "title": "",
+                            "onclick": function (data, event) {
+                                self.duplicateInSet(false);
+                                self.openDashboardDuplicateDialog();
+                            },
+                            "disabled": false,
+                            "showOnMobile": true,
+                            "showSubMenu": false,
+                            "endOfGroup": false
+                        }
+                    ]
                 },
                 {
                     "label": self.favoriteLabel,
@@ -851,6 +891,7 @@ define(['knockout',
                     "title": "", //self.favoriteLabel,
                     "disabled": false,
                     "showOnMobile": true,
+                    "showSubMenu": false,
                     "endOfGroup": false
                 },
                 {
@@ -862,6 +903,7 @@ define(['knockout',
                     "title": "", //self.setAsHomeLabel,
                     "disabled": false,
                     "showOnMobile": true,
+                    "showSubMenu": false,
                     "endOfGroup": false
                 },
                 {
@@ -873,6 +915,7 @@ define(['knockout',
                     "title": "", //getNlsString('DBS_BUILDER_AUTOREFRESH_REFRESH'),
                     "disabled": false,
                     "showOnMobile": true,
+                    "showSubMenu": true,
                     "endOfGroup": false,
                     "subItems": [
                         {
@@ -893,6 +936,7 @@ define(['knockout',
                             },
                             "disabled": false,
                             "showOnMobile": true,
+                            "showSubMenu": false,
                             "endOfGroup": false
                         },
                         {
@@ -912,6 +956,7 @@ define(['knockout',
                             },
                             "disabled": false,
                             "showOnMobile": true,
+                            "showSubMenu": false,
                             "endOfGroup": false
                         }
                     ]

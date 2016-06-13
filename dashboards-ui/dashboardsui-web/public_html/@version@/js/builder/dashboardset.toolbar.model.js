@@ -57,7 +57,7 @@ define(['knockout',
                 "refresh":ko.observable(dashboardInst.enableRefresh()),
                 "refreshOffIcon":ko.observable("dbd-noselected"),
                 "refreshOnIcon":ko.observable("dbd-icon-check"),
-                "share": ko.observable(ko.unwrap(dashboardInst.sharePublic) ? "on" : "off")
+                "share": ko.observable(ko.unwrap(dashboardInst.sharePublic) ? "on" : "off"),
             };
             
             self.dashboardsetConfig.setHome = ko.observable(true);
@@ -67,7 +67,7 @@ define(['knockout',
                 async: false,
                 success: function(resp) {
                     var value = prefUtil.getPreferenceValue(resp, prefKeyHomeDashboardId);
-                    if (value == ko.unwrap(dashboardInst.id)) {
+                    if (value === ko.unwrap(dashboardInst.id)) {
                         self.dashboardsetConfig.setHome = ko.observable(false);
                     }
                 }
@@ -102,7 +102,7 @@ define(['knockout',
             
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             
-            self.dashboardsetConfigMenu =function(event,data){
+            self.dashboardsetConfigMenu =function(event,data){ 
                 var configId = data.item.attr('id');
                 switch (configId) {
                     case 'dbs-edit':
@@ -243,14 +243,23 @@ define(['knockout',
                     $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + selectedDashboard.dashboardId});
                     $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
                     $("#dbd-tabs-container").ojTabs("refresh");   
+                }else if(dashboardPickerId==='addDuplicate'){
+                    self.dashboardsetItems.push(selectedDashboard);
+                    self.reorderedDbsSetItems.push(selectedDashboard);
+                    addNewTab(selectedDashboard.name(), selectedDashboard.dashboardId, reorderedResult.removeIndex);
+                    self.selectedDashboardItem(selectedDashboard);
+                    $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + selectedDashboard.dashboardId});
+                    $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
+                    $("#dbd-tabs-container").ojTabs("refresh");
                 }
                 self.saveDashboardSet();
                 self.noDashboardHome(true);
             };
             
+            
             self.removeDashboard = function(){
                 $('#deleteDashboard').ojDialog("close"); 
-                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId)
+                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId);
                 highlightNextTab(self.selectedDashboardItem().dashboardId, removeTab);
                 $("#dbd-tabs-container").ojTabs("refresh");
                 
@@ -258,7 +267,7 @@ define(['knockout',
             self.saveAndRemoveDashboard = function(){
                 $('#deleteDashboard').ojDialog("close"); 
                 self.dashboardInstMap[self.selectedDashboardItem().dashboardId].toolBarModel.handleDashboardSave();
-                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId)
+                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId);
                 highlightNextTab(self.selectedDashboardItem().dashboardId, removeTab);
                 $("#dbd-tabs-container").ojTabs("refresh"); 
             };
@@ -268,7 +277,7 @@ define(['knockout',
             
             self.removeDashboard = function(){
                 $('#deleteDashboard').ojDialog("close"); 
-                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId)
+                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId);
                 highlightNextTab(self.selectedDashboardItem().dashboardId, removeTab);
                 $("#dbd-tabs-container").ojTabs("refresh");
                 
@@ -276,7 +285,7 @@ define(['knockout',
             self.saveAndRemoveDashboard = function(){
                 $('#deleteDashboard').ojDialog("close"); 
                 self.dashboardInstMap[self.selectedDashboardItem().dashboardId].toolBarModel.handleDashboardSave();
-                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId)
+                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId);
                 highlightNextTab(self.selectedDashboardItem().dashboardId, removeTab);
                 $("#dbd-tabs-container").ojTabs("refresh"); 
             };
@@ -286,7 +295,7 @@ define(['knockout',
             
             self.removeDashboard = function(){
                 $('#deleteDashboard').ojDialog("close"); 
-                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId)
+                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId);
                 highlightNextTab(self.selectedDashboardItem().dashboardId, removeTab);
                 $("#dbd-tabs-container").ojTabs("refresh");
                 
@@ -294,12 +303,20 @@ define(['knockout',
             self.saveAndRemoveDashboard = function(){
                 $('#deleteDashboard').ojDialog("close"); 
                 self.dashboardInstMap[self.selectedDashboardItem().dashboardId].toolBarModel.handleDashboardSave();
-                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId)
+                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId);
                 highlightNextTab(self.selectedDashboardItem().dashboardId, removeTab);
                 $("#dbd-tabs-container").ojTabs("refresh"); 
             };
             self.cancelRemoveDashboard = function(){
                 $('#deleteDashboard').ojDialog("close"); 
+            };
+            
+            self.toolbarDuplcateInSet = function (duplicateData) {
+                self.pickDashboard('addDuplicate', {
+                    id: ko.observable(duplicateData.id),
+                    name: ko.observable(duplicateData.name)
+                });
+                $('#duplicateDsbDialog').ojDialog('close');
             };
                     
             self.dbConfigMenuClick = new dbConfigMenuClick();  

@@ -197,7 +197,8 @@ define([
                         type: "included",
                         $b: $b,
                         toolBarModel: toolBarModel,
-                        tilesViewModel: tilesViewModel
+                        tilesViewModel: tilesViewModel,
+                        dashboardsetToolBar:dashboardsetToolBarModel
                     };
                     self.selectedDashboardInst(dashboardInstMap[dsbId]);
 
@@ -215,8 +216,8 @@ define([
                         $b.findEl('.head-bar-container').css("border-bottom", "0");
 
                         //hide some drop-down menu options
-                        $b.findEl('.dropdown-menu li').each(function (index, element) {
-                            if (($(element).attr('data-singledb-option') !== 'Edit') && ($(element).attr('data-singledb-option') !== 'Print')) {
+                        $b.findEl('.dropdown-menu>li').each(function (index, element) {
+                            if (($(element).attr('data-singledb-option') !== 'Edit') && ($(element).attr('data-singledb-option') !== 'Print') && ($(element).attr('data-singledb-option') !== 'Duplicate')) {
                                 $(element).css({display: "none"});
                             }
                         });

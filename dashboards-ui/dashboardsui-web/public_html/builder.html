@@ -246,13 +246,7 @@
                                  <h1 data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></h1>
                                  <br/><span data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_DETAIL')"></span><br/>
                     </div>-->
-                </div>
-                    <!-- edit Dashboard dilog start -->
-
-                    <!-- edit Dashboard dilog end -->
-                    <!-- delete dilog start -->
-
-                    <!-- delete dilog end -->
+                </div>                
                      <!-- confirm leave dilog start ->
                     <div style="display:none" class="cfmleaveDialog"
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
@@ -1179,7 +1173,7 @@
                             <span class="oj-menu-item-icon oj-fwk-icon dbd-toolbar-fa-icon" data-bind="css: icon"></span>
                             <span data-bind="text: label"></span>
                         </a>
-                        <!-- ko if: $data.subItems -->
+                        <!-- ko if: $data.showSubMenu -->
                         <ul data-bind="template: {name: 'dsbOptsMenuItemTemplate', foreach: subItems}"></ul>
                         <!-- /ko -->
                     </li>
@@ -1191,6 +1185,7 @@
             
             <div id="popUp-dialog" data-bind="with:selectedDashboardInst">
                 <!--ko if: $data.type === 'included'-->
+                   <!-- delete dilog start -->
                 <div style="display:none" id="delete-dashboard"
                      data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
                                         cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
@@ -1207,6 +1202,7 @@
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'), rootAttributes: {style:'margin-right:5px'}}"></button>
                     </div>
                 </div>
+                <!-- delete dilog end -->   
                 <!-- Duplicate Dashboard dialog start -->
                 <div style="display:none" id="duplicateDsbDialog"
                      data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon',
@@ -1215,13 +1211,17 @@
                     <div class="oj-dialog-header oj-helper-clearfix">
                         <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_BUILDER_DUPLICATE_DIALOG_TITLE')"></span>
                     </div>
-                    <div class="oj-dialog-body">
+                    <div class="oj-dialog-body" style="margin-left: 3%;">
                         <div class="oj-form oj-md-odd-cols-2 oj-md-labels-inline" >
                             <div class="oj-row">
-                                <div class="oj-col">
-                                    <label for="dupDsbNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
-                                </div>
-                                <div class="oj-col">
+                                <form class="oj-form">
+                                    <label data-bind="text:getNlsString('DBS_HOME_DASHBOARDS_SET_CREATE_TYPE')" style="font-weight: bold"></label>
+                                    <div style=" padding: 10px 0 20px 0; padding-left: 0;" data-bind="text: getNlsString('DBS_HOME_CREATE_TYPE_DASHBOARDS')">
+                                    </div>
+                                </form>
+                            </div>                         
+                             <div class="oj-row">
+                                <label for="dupDsbNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>                             
                                     <input id="dupDsbNameIn" class="dupDsbNameIn" required
                                            data-bind="ojComponent: { component: 'ojInputText', invalidComponentTracker: toolBarModel.duplicateDashboardModel.tracker,
                                                        messagesCustom: toolBarModel.duplicateDashboardModel.errorMessages, value: toolBarModel.duplicateDashboardModel.name,
@@ -1230,37 +1230,35 @@
                                                             pattern: '.{1,64}',
                                                             messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME_SUM'),
                                                             messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME')}}],
-                                                       rootAttributes: {style:'max-width:420px;'},
+                                                       rootAttributes: {style:'max-width:95%;'},
                                                        translations: {'required': {
                                                                 hint: '',
                                                                 messageSummary: getNlsString('COMMON_REQUIRE_ERROR', '{label}'),
                                                                 messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME')
                                                        }
-                                                     }}">
-                                </div>
+                                                     }}">                            
                             </div>
                             <div class="oj-row">
-                                <div class="oj-col">
                                     <label for="dupDsbDescIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
-                                </div>
-                                <div class="oj-col">
                                     <textarea id="dupDsbDescIn" class="dupDsbDescIn" rows="6"
-                                              data-bind="ojComponent: {component: 'ojTextArea', value: toolBarModel.duplicateDashboardModel.description, rootAttributes: {style:'max-width:420px;'},
+                                              data-bind="ojComponent: {component: 'ojTextArea', value: toolBarModel.duplicateDashboardModel.description, rootAttributes: {style:'max-width:95%;'},
                                                                         invalidComponentTracker: toolBarModel.duplicateDashboardModel.tracker,
                                                                         validators : [{type: 'regExp', options : {
                                                                                pattern: '(.|\\b|\\s){0,256}',
                                                                                messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
                                                                                messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES')}}]
                                                     }"></textarea>
-                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="createDialogFooter-1 oj-dialog-footer">
-                        <button class="createDsb-1" data-bind="click: toolBarModel.duplicateDashboardModel.duplicateDashboardConfirmed, ojComponent: {
+                        <button class="createDsb-1" data-bind="click: toolBarModel.duplicateDashboardModel.duplicateDashboardConfirmed(), ojComponent: {
                                                      component: 'ojButton', label: getNlsString('COMMON_BTN_SAVE'),
                                                      disabled: toolBarModel.duplicateDashboardModel.saveBtnDisabled,
-                                                     rootAttributes: {style:'margin-right:5px'} }"></button>
+                                                     rootAttributes: {style:'margin-right:10px'} }"></button>
+                        <button class="cancelCreateDsb" data-bind="click:toolBarModel.duplicateDashboardModel.cancelDuplicateDashboard,ojComponent: {
+                                component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'),
+                                rootAttributes: {style:'margin-right:31px'} }"></button>
                     </div>
                 </div>
                 <!-- Duplicate Dashboard dialog end -->
