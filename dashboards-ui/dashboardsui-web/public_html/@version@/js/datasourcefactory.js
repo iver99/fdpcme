@@ -1,6 +1,6 @@
 
 
-define(['dbs/dashboardmodel', 'dbs/dashboardcollection', 'dbs/dashboardpaging', 'ojs/ojcore', 'knockout', 'jquery', 
+define(['dashboards/dashboardmodel', 'dashboards/dashboardcollection', 'dashboards/dashboardpaging', 'ojs/ojcore', 'knockout', 'jquery', 
     'ojs/ojknockout', 'ojs/ojmodel','ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'], 
 function(dm, dc, dp, oj, ko, $)

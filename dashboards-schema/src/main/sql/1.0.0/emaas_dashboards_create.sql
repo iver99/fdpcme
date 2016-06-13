@@ -17,7 +17,7 @@ Rem
 Rem DASHBOARD_ID - Id of the dashboard
 Rem NAME - name of the dashboard
 Rem DESCRIPTION - description of the dashboard
-Rem TYPE - type of the dashboard. 0: nomal dashboard, 1: one page dashboard
+Rem TYPE - type of the dashboard. 0: nomal dashboard, 1: one page dashboard, 2: dashboard set
 Rem CREATION_DATE - creation date of the dashboard
 Rem LAST_MODIFICATION_DATE - modification date of the dashboard
 Rem LAST_MODIFIED_BY - latest user to modify the dashboard

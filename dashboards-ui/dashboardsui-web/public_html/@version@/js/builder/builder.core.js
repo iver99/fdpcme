@@ -53,10 +53,26 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
     
     window.Builder = Builder;
     
-    function DashboardBuilder(dashboard) {
+    function DashboardBuilder(dashboard, $dashboardEl) {
         var self = this;
         
         self.dashboard = dashboard;
+        
+        self.findEl = function (expr) {
+            if (arguments.length === 0) {
+                return $dashboardEl;
+            }
+
+            var $foundEl = $dashboardEl.find(expr);
+            // TODO should be removed in production. Just for checking if missing 
+            // elements after migrating dashboard to dashboardsets.
+            var whiteNameList = [".dbd-widget", ".dbd-left-panel-widget-text", ".tooltip-add-widget"];
+            if ($foundEl.length === 0 && (whiteNameList.indexOf(expr) < 0)) {
+                console.error(expr + " is not found in dashboard container element");
+            }
+            return $foundEl;
+        };
+        
         self.isDashboardUpdated = ko.observable(false);
         
         // module objects registration
@@ -153,11 +169,18 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         self.triggerBuilderResizeEvent = function(message) {
             var height = $(window).height()/* - $('#headerWrapper').outerHeight() 
                     - $('#head-bar-container').outerHeight()*/;
-            var width = $(window).width();//$('#main-container').width() - parseInt($('#main-container').css("marginLeft"), 0);
-            var panelWidth = $('.dbd-left-panel').is(":visible") ? $('.dbd-left-panel').width() : 0;
-            var togglerWidth = $('.right-panel-toggler').is(":visible") ? $('.right-panel-toggler').outerWidth() : 0;
+            var width = $(window).width();
+            var $visibleDashboard = $("#dashboards-tabs-contents .dashboard-content:visible");
+            var $rightPanelToggler = $visibleDashboard.find('.right-panel-toggler');
+            var $dbdLeftPanel = $visibleDashboard.find('.dbd-left-panel');
+            var panelWidth = $dbdLeftPanel.is(":visible") ? $dbdLeftPanel.width() : 0;
+            var togglerWidth = $rightPanelToggler.is(":visible") ? $rightPanelToggler.outerWidth() : 0;
             var leftWidth = panelWidth + togglerWidth;
-            var topHeight = $('#headerWrapper').outerHeight() + $('#head-bar-container').outerHeight();
+            var $dbdSetTabs = $('#dbd-set-tabs');
+            var tabSetHeight = $dbdSetTabs.is(":visible") ? $dbdSetTabs.height() : 0;
+            var topHeight = $('#headerWrapper').outerHeight() + 
+                    tabSetHeight + 
+                    $visibleDashboard.find('.head-bar-container').outerHeight();
             self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth, topHeight);
             if (previousWidth && width >= NORMAL_MIN_WIDTH && previousWidth < NORMAL_MIN_WIDTH)
                 self.triggerEvent(self.EVENT_ENTER_NORMAL_MODE, null, width, height, leftWidth, topHeight);

@@ -289,7 +289,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                             textMaxWidth = Math.max(textMaxWidth, rowWidth);
                         }                        
                     });
-                    if($("#widget-area") && (textMaxWidth+78)>widgetContainerWidth) {
+                    if($b.findEl(".widget-area") && (textMaxWidth+78)>widgetContainerWidth) {
                         textMaxWidth = widgetContainerWidth-78;
                     }
                     $("#textContentWrapper_"+self.randomId+" #textWidgetEditBtns_"+self.randomId).css("left", textMaxWidth);

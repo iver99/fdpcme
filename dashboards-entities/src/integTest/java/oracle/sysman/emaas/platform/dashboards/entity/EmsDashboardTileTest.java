@@ -12,9 +12,9 @@ import static org.testng.Assert.*;
  * Created by Troy on 2016/1/20.
  */
 @Test(groups={"s1"})
-public class EmsDashboardTileTest {
+public class EmsDashboardTileTest { 
     Date now = new Date();
-    private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10, now,
+    private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10,10,10, now,
             "elephant","elephant","elephant","elephant",10,10);
 
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
@@ -72,9 +72,9 @@ public class EmsDashboardTileTest {
     }
 
     @Test
-    public void testGetCreationDate() throws Exception {
+    public void testGetCreationDate() throws Exception { 
         emsDashboardTile.setCreationDate(now);
-        assertEquals(emsDashboardTile.getCreationDate(), now);
+        assertEquals(emsDashboardTile.getCreationDate(), now); 
     }
 
     @Test

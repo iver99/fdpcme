@@ -32,7 +32,7 @@ requirejs.config({
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
-        'dbs': '.',
+        'dashboards': '.',
         'dfutil':'internaldfcommon/js/util/internal-df-util',
         'prefutil':'/emsaasui/uifwk/js/util/preference-util',
         'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
@@ -74,13 +74,15 @@ requirejs.config({
  * by the modules themselves), we are listing them explicitly to get the references to the 'oj' and 'ko'
  * objects in the callback
  */
-require(['dbs/dbsmodel',
+require(['dashboards/dbsmodel',
     'knockout',
     'jquery',
     'ojs/ojcore',
     'dfutil',
     'uifwk/js/util/df-util',
+    'dashboards/dashboardhome-impl',
     'loggingutil',
+    'common.uifwk',
     'ojs/ojmodel',
     'ojs/ojknockout',
     'ojs/ojknockout-model',
@@ -90,13 +92,13 @@ require(['dbs/dbsmodel',
     'ojs/ojinputtext',
     'ojs/ojknockout-validation',
     'ojs/ojpopup',
-    'dbs/dbstypeahead',
-    'dbs/dbsdashboardpanel',
+    'dashboards/dbstypeahead',
+    'dashboards/dbsdashboardpanel',
     'ojs/ojselectcombobox',
     'ojs/ojmenu',
     'ojs/ojtable'
 ],
-        function(model, ko, $, oj, dfu, dfumodel, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
+        function(model, ko, $, oj, dfu, dfumodel, dashboardhome_impl, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
         {
             var logger = new _emJETCustomLogger();
 //            var dfRestApi = dfu.discoverDFRestApiUrl();
@@ -115,6 +117,19 @@ require(['dbs/dbsmodel',
                     template:{require:'text!/emsaasui/uifwk/js/widgets/brandingbar/html/brandingbar.html'}
                 });
             }
+            
+            if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
+                ko.components.register("df-oracle-dashboard-list",{
+                    viewModel:dashboardhome_impl,
+                    template:{require:'text!/emsaasui/emcpdfui/dashboardhome.html'}
+                });
+            }
+            ko.bindingHandlers.stopBinding = {
+                init: function () {
+                    return {controlsDescendantBindings: true};
+                }
+            };
+            ko.virtualElements.allowedBindings.stopBinding = true;
             
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             
@@ -149,7 +164,7 @@ require(['dbs/dbsmodel',
 
                 var predataModel = new model.PredataModel();
                 function init() {
-                    var dashboardsViewModle = new model.ViewModel(predataModel);
+                    var dashboardsViewModle = new model.ViewModel(predataModel, "mainContent");
                     ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
                     $('#mainContent').show();
                     

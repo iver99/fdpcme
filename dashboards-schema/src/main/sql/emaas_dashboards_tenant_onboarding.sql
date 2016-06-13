@@ -16,8 +16,7 @@ Rem    NOTES
 Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
-Rem    aduan      5/13/2016 Changes for version 1.7.5
-Rem    miayu      1/26/2015  Created
+Rem    miayu   1/26/1015  Created
 
 WHENEVER SQLERROR EXIT ROLLBACK
 SET FEEDBACK ON
@@ -64,6 +63,8 @@ END;
 
 @&EMSAAS_SQL_ROOT/1.7.5/emaas_dashboards_seed_data.sql &TENANT_ID
 
+@&EMSAAS_SQL_ROOT/1.7.6/emaas_dashboards_seed_data.sql &TENANT_ID
+
 @&EMSAAS_SQL_ROOT/1.8.0/emaas_dashboards_seed_data.sql &TENANT_ID
 
 COMMIT;
@@ -72,6 +73,4 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE('Inserting OOB dashboards for &TENANT_ID is completed');
 END;
 /
-
-
 

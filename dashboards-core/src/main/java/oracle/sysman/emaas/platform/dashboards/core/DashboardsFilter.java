@@ -24,7 +24,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 public class DashboardsFilter
 {
 	// reserved actual strings for used in query
-	private static final List<String> typeFilterStrings = Arrays.asList(new String[] { Dashboard.DASHBOARD_TYPE_NORMAL,
+	private static final List<String> typeFilterStrings = Arrays.asList(new String[] { Dashboard.DASHBOARD_TYPE_NORMAL, Dashboard.DASHBOARD_TYPE_SET,
 			Dashboard.DASHBOARD_TYPE_SINGLEPAGE });
 	private static final List<String> appFilterStrings = Arrays.asList(new String[] { DashboardApplicationType.APM_STRING,
 			DashboardApplicationType.ITA_SRING, DashboardApplicationType.LA_STRING });
