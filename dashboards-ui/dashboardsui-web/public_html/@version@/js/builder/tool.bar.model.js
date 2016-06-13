@@ -889,6 +889,7 @@ define(['knockout',
 
                                 event.stopPropagation();
                                 self.autoRefreshInterval(0);
+                                dfu.showMessage({type: 'confirm', summary: getNlsString('DBS_BUILDER_MSG_AUTO_REFRESH_OFF'), detail: '', removeDelayTime: 5000});
                             },
                             "disabled": false,
                             "showOnMobile": true,
@@ -907,6 +908,7 @@ define(['knockout',
                                 $(event.currentTarget).find(".oj-menu-item-icon").addClass("fa-check");
                                 event.stopPropagation();
                                 self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);// 5 minutes
+                                dfu.showMessage({type: 'confirm', summary: getNlsString('DBS_BUILDER_MSG_AUTO_REFRESH_ON'), detail: '', removeDelayTime: 5000});
                             },
                             "disabled": false,
                             "showOnMobile": true,

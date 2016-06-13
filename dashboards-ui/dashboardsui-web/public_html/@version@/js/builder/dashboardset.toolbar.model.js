@@ -658,11 +658,13 @@ define(['knockout',
                             dbsToolBar.dashboardsetConfig.refreshOnIcon("dbd-icon-check");
                             dbsToolBar.dashboardsetConfig.refreshOffIcon("dbd-noselected");
                             self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
+                            dfu.showMessage({type: 'confirm', summary: getNlsString('DBS_BUILDER_MSG_AUTO_REFRESH_ON'), detail: '', removeDelayTime: 5000});
                         }
                         if(option === 'off'){
                             dbsToolBar.dashboardsetConfig.refreshOnIcon("dbd-noselected");
                             dbsToolBar.dashboardsetConfig.refreshOffIcon("dbd-icon-check");
                             self.autoRefreshInterval(0);
+                            dfu.showMessage({type: 'confirm', summary: getNlsString('DBS_BUILDER_MSG_AUTO_REFRESH_OFF'), detail: '', removeDelayTime: 5000});
                         }
                     }
                     self.saveUserOptions();

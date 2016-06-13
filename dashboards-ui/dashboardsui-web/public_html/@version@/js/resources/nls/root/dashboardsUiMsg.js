@@ -283,7 +283,8 @@ define({
       "DBS_BUILDER_MSG_ERROR_IN_DUPLICATING": "Error occurred when duplicating the dashboard. Check console log or server log for details.",
       "DBS_BUILDER_MSG_ERROR_NAME_DUPLICATED_SUMMARY": "Dashboard name already exists.",
       "DBS_BUILDER_MSG_ERROR_NAME_DUPLICATED_DETAIL": "Provide a unique name.",
-      
+      "DBS_BUILDER_MSG_AUTO_REFRESH_ON": "Auto-refresh enabled.",
+      "DBS_BUILDER_MSG_AUTO_REFRESH_OFF": "Auto-refresh disabled.",
       
       "TEXT_WIDGET_IFRAME_HINT":"Please change the URL and click \"Change\" to apply: ",
       "TEXT_WIDGET_IFRAME_CONFIGURATION":"Configuration",
