@@ -633,7 +633,7 @@ define(['knockout',
                 var rpt = $b.findEl(".right-panel-toggler");
                 var tile = null;
                 var pos = {top: u.helper.offset().top - $b.findEl('.tiles-wrapper').offset().top, left: u.helper.offset().left - $b.findEl('.tiles-wrapper').offset().left};
-
+                
                 tile = u.helper.tile;
                 //use newly created tile to simulate helper attached to mouse
                     if(tile) {
@@ -643,6 +643,12 @@ define(['knockout',
                         if(!$('#tile'+tile.clientGuid).hasClass(draggingTileClass)) {
                             $('#tile'+tile.clientGuid).addClass(draggingTileClass);
                         }
+                    }else {
+                        //set position of placeholder when start dragging tile from right drawer
+                        $b.findEl('.tile-dragging-placeholder').css({
+                            left: pos.left,
+                            top: pos.top
+                        });
                     }
                 if (e.clientY <= tcc.offset().top || e.clientX >= rpt.offset().left) {
                     if (self.isEmpty()) {
