@@ -322,6 +322,9 @@ define(['knockout',
                 if(rowDiff <= 0) {
                     return;
                 }
+                //set flag for moved tile
+                tile.moved = true;
+                
                 var actualRow = self.mode.getModeRow(tile);
                 
                 var nextRow = actualRow +rowDiff;
@@ -361,6 +364,9 @@ define(['knockout',
                 if(rowDiff <= 0) {
                     return;
                 }
+                //set flag for moved tile
+                tile.moved = true;
+                
                 var actualRow = self.mode.getModeRow(tile);                               
                                 
                 var nextRow = actualRow - rowDiff;
@@ -439,6 +445,13 @@ define(['knockout',
                 var iTile, j;
                 for(var i=0; i<self.tiles().length; i++) {
                     iTile = self.tiles()[i];
+                    
+                    //do not move the current dragging tile or tiles not moved in this dragging
+                    if(iTile === self.draggingTile || iTile.moved !== true) {
+                        self.draggingTile && (self.draggingTile.moved = false);
+                        continue;
+                    }
+                    
                     for(j=self.mode.getModeRow(iTile)-1; j>=0; j--) {
                         if(self.canMoveToRow(iTile, j)){
                             continue;
@@ -478,10 +491,15 @@ define(['knockout',
                 //reset rows of tiles below empty rows
                 for(var i=0; i<self.tiles().length; i++) {
                     var iRow = self.mode.getModeRow(self.tiles()[i]);
-                    var iTile = self.tiles()[i];
+                    var iTile = self.tiles()[i];                  
+                                        
+                    iTile.moved = false;
+                    
                     for(var j=0; j<emptyRows.length; j++) {
                         if(iRow > emptyRows[j]) {
-                            self.updateTilePosition(iTile, iRow-j-1, self.mode.getModeColumn(iTile));
+                            if(self.canMoveToRow(iTile, iRow-j-1)) {
+                                self.updateTilePosition(iTile, iRow-j-1, self.mode.getModeColumn(iTile));
+                            }
                         }
                     }
                 }

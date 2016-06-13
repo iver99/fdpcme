@@ -561,8 +561,8 @@ define(['knockout',
                 }).show();
 
                 var tileInCell = self.editor.tilesGrid.tileGrid[cell.row] ? self.editor.tilesGrid.tileGrid[cell.row][cell.column] : null;
-                if((self.previousDragCell) && cell.column+self.editor.mode.getModeWidth(tile) <= self.editor.mode.MODE_MAX_COLUMNS && 
-                        (!tileInCell || (tileInCell && tileInCell !== tile && self.editor.mode.getModeRow(tileInCell) === cell.row && self.editor.mode.getModeColumn(tileInCell) === cell.column))) {                                      
+                if((self.previousDragCell) && cell.column+self.editor.mode.getModeWidth(tile) <= self.editor.mode.MODE_MAX_COLUMNS /*&& 
+                        (!tileInCell || (tileInCell && tileInCell !== tile && self.editor.mode.getModeRow(tileInCell) === cell.row && self.editor.mode.getModeColumn(tileInCell) === cell.column))*/) {                                      
                     var cellsOccupiedByTile = self.editor.getCellsOccupied(cell.row, cell.column, self.editor.mode.getModeWidth(tile), self.editor.mode.getModeHeight(tile));
                     var tilesUnderCell = self.editor.getTilesUnder(cellsOccupiedByTile, tile);
                     var tilesBelowOriginalCell = self.editor.getTilesBelow(tile);
@@ -573,7 +573,7 @@ define(['knockout',
                         rowDiff = cell.row - self.editor.mode.getModeRow(iTile) + self.editor.mode.getModeHeight(tile);
                         self.editor.moveTileDown(iTile, rowDiff);
                     }
-                    self.editor.draggingTile = null;
+                    
                     self.editor.updateTilePosition(tile, cell.row, cell.column);
                     
                     rowDiff = Math.abs(cell.row - dragStartRow);
@@ -613,9 +613,8 @@ define(['knockout',
                 }
                 ui.helper.css({left:tile.left(), top:tile.top()});
 
-                self.editor.draggingTile = null;
-                self.editor.tilesReorder();
-                self.showTiles();
+//                self.editor.tilesReorder();
+//                self.showTiles();
                 $(ui.helper).css("opacity", 1);
                 
                 $b.findEl('.tile-dragging-placeholder').hide();
@@ -624,6 +623,7 @@ define(['knockout',
                 }
                 dragStartRow = null;
                 self.previousDragCell = null;
+                self.editor.draggingTile = null;
 //                tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
                 $b.triggerEvent($b.EVENT_TILE_MOVE_STOPED, null);
             };
@@ -683,6 +683,8 @@ define(['knockout',
                     if(tileInCell && self.editor.mode.getModeRow(tileInCell) !== cell.row) {
                         return;
                     }
+                    
+                    self.editor.draggingTile = tile;
                     var cells = self.editor.getCellsOccupied(cell.row, cell.column, width, height);
                     var tilesToMove = self.editor.getTilesUnder(cells, tile);
                     for(var i in tilesToMove) {
@@ -712,8 +714,8 @@ define(['knockout',
                             height: self.getDisplayHeightForTile(height) - 10
                         });
                     }, 200);
+                    
                     self.previousDragCell = cell;
-                    self.editor.draggingTile = tile;
                 }
                 
             };
