@@ -317,6 +317,8 @@ define({
       "LANDING_HOME_ITA_DB_RESOURCE": "Resource Analytics - Database",
       "LANDING_HOME_ITA_MIDDLEWARE_PERFORMANCE": "Performance Analytics - Middleware",
       "LANDING_HOME_ITA_MIDDLEWARE_RESOURCE": "Resource Analytics - Middleware",
+      "LANDING_HOME_ITA_APPLICATION_PERFORMANCE": "Performance Analytics - Application",
+      "LANDING_HOME_ITA_AVAIL_ANALYTICS": "Availability Analytics",
       "LANDING_HOME_DASHBOARDS": "Dashboards",
       "LANDING_HOME_DASHBOARDS_DESC": "Build custom dashboards using out-of-the-box widgets or your own visualization of data",
       "LANDING_HOME_DATA_EXPLORERS": "Data Explorers",
