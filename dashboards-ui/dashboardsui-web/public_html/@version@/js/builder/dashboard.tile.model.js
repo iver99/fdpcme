@@ -463,11 +463,13 @@ define(['knockout',
                 $('.dbd-resize-handler').on('mousedown', function (event) {
                     var targetHandler = $(event.currentTarget),resizeMode = null;
                     if ($(targetHandler).hasClass('dbd-resize-handler-right')) {
-                        resizeMode = 'x';
+                        resizeMode = self.editor.RESIZE_OPTIONS.EAST;
+                    } else if ($(targetHandler).hasClass('dbd-resize-handler-left')) {
+                        resizeMode = self.editor.RESIZE_OPTIONS.WEST;
                     } else if ($(targetHandler).hasClass('dbd-resize-handler-bottom')) {
-                        resizeMode = 'y';
-                    } else if($(targetHandler).hasClass('dbd-resize-handler-right-bottom')){
-                        resizeMode = 'xy';
+                        resizeMode = self.editor.RESIZE_OPTIONS.SOUTH;
+                    } else if ($(targetHandler).hasClass('dbd-resize-handler-right-bottom')) {
+                        resizeMode = self.editor.RESIZE_OPTIONS.SOUTH_EAST;
                     }
                     
                     var isResizing =  resizeMode !== null;
@@ -481,12 +483,14 @@ define(['knockout',
 
                 $('#globalBody').on('mousemove', function (event) {
                    if (self.resizingOptions()) {
-                        if(self.resizingOptions().mode === 'x') {
-                            $(this).css('cursor','ew-resize');
-                        }else if(self.resizingOptions().mode === 'y'){
-                            $(this).css('cursor','ns-resize');
-                        }else if(self.resizingOptions().mode === 'xy'){
-                            $(this).css('cursor','se-resize');
+                        if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.EAST) {
+                            $(this).css('cursor', 'ew-resize');
+                        } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.WEST) {
+                            $(this).css('cursor', 'ew-resize');
+                        } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.SOUTH) {
+                            $(this).css('cursor', 'ns-resize');
+                        } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.SOUTH_EAST) {
+                            $(this).css('cursor', 'se-resize');
                         }
                         var clonedTarget = $.extend(self.resizingOptions(), {left: event.clientX, top: event.clientY});
                         self.resizingOptions(clonedTarget);

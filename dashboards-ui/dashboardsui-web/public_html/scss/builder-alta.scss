@@ -693,6 +693,14 @@ body, html {
         cursor:ew-resize;
     }
     
+     .dbd-resize-handler-left {
+        width:6px;
+        height:100%;
+        left:-5px;
+        top:0px;
+        cursor:ew-resize;
+    }
+    
     .dbd-resize-handler-bottom{
         height: 6px;
         width:100%;
