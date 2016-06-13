@@ -14,7 +14,7 @@ Rem    NOTES
 Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
-Rem    aduan      3/15/2016 - Created
+Rem    jishshi  1/27/16 - Created
 Rem
 
 DEFINE TENANT_ID = '&1'
@@ -48,6 +48,7 @@ BEGIN
 
 SELECT COUNT(1) INTO V_COUNT from EMS_DASHBOARD WHERE TENANT_ID='&TENANT_ID' AND DASHBOARD_ID IN (11, 12, 13);
 IF (V_COUNT>0) THEN
+  DELETE FROM EMS_DASHBOARD_USER_OPTIONS WHERE TENANT_ID='&TENANT_ID' AND DASHBOARD_ID IN (11, 12, 13);
   DELETE FROM EMS_DASHBOARD_FAVORITE WHERE TENANT_ID='&TENANT_ID' AND DASHBOARD_ID IN (11, 12, 13);
   DELETE FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID='&TENANT_ID' AND DASHBOARD_ID IN (11, 12, 13);
   DELETE FROM EMS_DASHBOARD_TILE WHERE TENANT_ID='&TENANT_ID' AND DASHBOARD_ID IN (11, 12, 13);
@@ -66,24 +67,5 @@ EXCEPTION
 END;
 /
 
-DECLARE
-  V_COUNT number;
-BEGIN
 
-SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID='&TENANT_ID' AND PROVIDER_NAME='LoganService';
-IF (V_COUNT>0) THEN
-  UPDATE EMS_DASHBOARD_TILE SET PROVIDER_NAME='LogAnalyticsUI' WHERE TENANT_ID='&TENANT_ID' AND PROVIDER_NAME='LoganService';
-  COMMIT;
-  DBMS_OUTPUT.PUT_LINE('Provider name of LogAnalytics has been upgraded from [LoganService] to [LogAnalyticsUI] successfully for tenant: &TENANT_ID ! Upgraded records: '||V_COUNT);
-ELSE
-  DBMS_OUTPUT.PUT_LINE('Provider name of LogAnalytics has been upgraded from [LoganService] to [LogAnalyticsUI] for tenant: &TENANT_ID before, no need to upgrade again');
-END IF;
-
-EXCEPTION
-  WHEN OTHERS THEN
-    ROLLBACK;
-    DBMS_OUTPUT.PUT_LINE('Failed to upgrade provider name of LogAnalytics from [LoganService] to [LogAnalyticsUI] for tenant: &TENANT_ID due to '||SQLERRM);
-    RAISE;
-END;
-/
 
