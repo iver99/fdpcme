@@ -167,9 +167,9 @@ define(['knockout',
                     $b.getRightPanelModel().dbeditorIsExpanded(true);
                 } else {
                     $b.getRightPanelModel().editPanelContent(panelTarget);
-                    $b.getRightPanelModel().dbeditorIsExpanded(true);
+                    $b.getRightPanelModel().dbeditorIsExpanded(true);  
                 }
-                
+                $b.triggerBuilderResizeEvent('resize right panel');
             };
             
 //            self.appendTextTile = function () {
