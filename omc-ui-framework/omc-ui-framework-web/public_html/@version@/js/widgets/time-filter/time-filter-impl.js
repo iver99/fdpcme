@@ -27,7 +27,15 @@ define([
         self.monthsChecked = ko.observableArray(self.monthsArray);
         
         self.showHoursFilterErrorMsg = ko.observable(true);
-        self.hoursFilterErrorMsg = nls.TIME_FILTER_HOURS_FILTER_MSG;
+        self.hoursFilterErrorMsg = nls.TIME_FILTER_HOURS_FILTER_ERRMSG;
+        
+        self.showDaysFilterErrorMsg = ko.observable(true);
+        self.daysFilterErrorMsg = nls.TIME_FILTER_DAYS_FILTER_ERRMSG;
+        
+        self.showMonthsFilterErrorMsg = ko.observable(true);
+        self.monthsFilterErrorMsg = nls.TIME_FILTER_MONTHS_FILTER_ERRMSG;
+        
+        self.showTimeFilterError = ko.observable();
         
         self.tfChangedCallback = params ? params.tfChangedCallback : null;
 
@@ -96,6 +104,20 @@ define([
             return true;
         };
         
+        self.isDaysFilterValid = function(daysFilterValue) {
+            if(daysFilterValue.length === 0) {
+                return false;
+            }
+            return true;
+        };
+        
+        self.isMonthsFilterValid = function(monthsFilterValue) {
+            if(monthsFilterValue.length === 0) {
+                return false;
+            }
+            return true;
+        };
+        
         self.tfChangedSubscriber = ko.computed(function() {
             if(!self.isHoursFilterValid(self.timeFilterValue())) {
                 self.showHoursFilterErrorMsg(true);
@@ -108,7 +130,22 @@ define([
                     $("#hoursFilter_"+self.randomId+" input").removeClass("tf-errorBorder");
                 }
             }
-            postbox && postbox.notifySubscribers({"showTimeFilterError": self.showHoursFilterErrorMsg, "timeFilterValue": self.timeFilterValue, "daysChecked": self.daysChecked, "monthsChecked": self.monthsChecked}, "tfChanged");
+            
+            if(!self.isDaysFilterValid(self.daysChecked())) {
+                self.showDaysFilterErrorMsg(true);
+            }else {
+                self.showDaysFilterErrorMsg(false);
+            }
+            
+            if(!self.isMonthsFilterValid(self.monthsChecked())) {
+                self.showMonthsFilterErrorMsg(true);
+            }else {
+                self.showMonthsFilterErrorMsg(false);
+            }
+            
+            self.showTimeFilterError(self.showHoursFilterErrorMsg() || self.showDaysFilterErrorMsg() || self.showMonthsFilterErrorMsg());
+                    
+            postbox && postbox.notifySubscribers({"showTimeFilterError": self.showTimeFilterError, "timeFilterValue": self.timeFilterValue, "daysChecked": self.daysChecked, "monthsChecked": self.monthsChecked}, "tfChanged");
             return {
                 "timeFilterValule": self.timeFilterValue(),
                 "daysChecked" : self.daysChecked(),

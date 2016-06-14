@@ -140,6 +140,8 @@ define({
       "TIME_FILTER_DAYS_LABEL": "Days",
       "TIME_FILTER_MONTHS_LABEL": "Months",
       "TIME_FILTER_OPTION_ALL": "All",
-      "TIME_FILTER_HOURS_FILTER_MSG": "Time range format is wrong. Please enter time range according to hint above."
+      "TIME_FILTER_HOURS_FILTER_ERRMSG": "Time range format is wrong. Please enter time range according to hint above.",
+      "TIME_FILTER_DAYS_FILTER_ERRMSG": "Please check at least one day.",
+      "TIME_FILTER_MONTHS_FILTER_ERRMSG": "Please check at least one month."
 });
 
