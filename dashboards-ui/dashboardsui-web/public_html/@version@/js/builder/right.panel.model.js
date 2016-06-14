@@ -395,13 +395,14 @@ define(['knockout',
                 var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
                 var popupContent=$(widgetItem).find('.dbd-left-panel-img-pop');
                 $b.findEl(".dbd-right-panel-build-container i.fa-plus").hide();
+                $(".dbd-left-panel-img-pop").ojPopup("close");
                 $(widgetItem).find('i').show();
                 if (!popupContent.ojPopup("isOpen")) {
                    $(popupContent).ojPopup("open", $(widgetItem), 
                    {
                        my : "end center", at : "start center"
                    });
-               }
+                }
             };
 
             self.widgetMouseOutHandler = function(widget,event) {              
@@ -420,8 +421,10 @@ define(['knockout',
             
             self.widgetShowPlusIcon = function(widget, event) {
                 $b.findEl(".dbd-right-panel-build-container i.fa-plus").hide();
+                $(".dbd-left-panel-img-pop").ojPopup("close");
                 var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
                 $(widgetItem).find('i').show();
+                self.widgetMouseOverHandler(widget,event);
             };
             
             self.widgetHidePlusIcon = function(widget, event) {
