@@ -69,9 +69,9 @@ define(['knockout',
             
             self.editDashboardDialogModel = new ed.EditDashboardDialogModel($b, toolBarModel);
             
-            self.dbfiltersIsExpanded = ko.observable(false);
-            self.sharesettingsIsExpanded = ko.observable(false);
-            self.dbeditorIsExpanded = ko.observable(true);
+            $('.dbd-right-panel-editdashboard-filters').ojCollapsible( { "expanded": false } ); 
+            $('.dbd-right-panel-editdashboard-share').ojCollapsible( { "expanded": false } );
+            $('.dbd-right-panel-editdashboard-general').ojCollapsible( { "expanded": false } );
             
             var scrollInstantStore = ko.observable();
             var scrollDelay = ko.computed(function() { 
@@ -380,7 +380,7 @@ define(['knockout',
                     $b.triggerBuilderResizeEvent('hide left panel');
                 } 
                 else {
-                    self.dbeditorIsExpanded(true);
+                    self.expandDBEditor(true);
                     self.completelyHidden(false);
                     self.initDraggable();
                     $b.triggerBuilderResizeEvent('show left panel');
@@ -458,31 +458,31 @@ define(['knockout',
             self.deleteDashboardClicked = function(){
                 toolBarModel.openDashboardDeleteConfirmDialog();
             };        
-
-            self.dbfiltersIsExpanded.subscribe(function(val){
-                if(val){
-                    if(!self.dashboardsetToolBarModel.isDashboardSet()){
-                        self.dbfiltersIsExpanded(true);
-                    }
-                    self.sharesettingsIsExpanded(false);
-                    self.dbeditorIsExpanded(false);
-                }
-            });
-            self.sharesettingsIsExpanded.subscribe(function(val){
-                if(val){
-                    self.dbfiltersIsExpanded(false);
-                    self.dbeditorIsExpanded(false);
-                }
-            });
-            self.dbeditorIsExpanded.subscribe(function(val){
-                if(val){
-                    self.dbfiltersIsExpanded(false);
-                    self.sharesettingsIsExpanded(false);
-                }else{
-                    toolBarModel.onNameOrDescriptionEditing = false;
+            
+            $('.dbd-right-panel-editdashboard-general').on({
+                "ojexpand":function(event,ui){
+                    $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option","expanded",false);
+                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option","expanded",false);
                 }
             });
             
+            $('.dbd-right-panel-editdashboard-filters').on({
+                "ojexpand":function(event,ui){
+                    $('.dbd-right-panel-editdashboard-general').ojCollapsible("option","expanded",false);
+                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option","expanded",false);
+                }
+            });
+            
+            $('.dbd-right-panel-editdashboard-share').on({
+                "ojexpand":function(event,ui){
+                    $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option","expanded",false);
+                    $('.dbd-right-panel-editdashboard-general').ojCollapsible("option","expanded",false);
+                }
+            });
+
+            self.expandDBEditor = function(isToExpand){
+                $('.dbd-right-panel-editdashboard-general').ojCollapsible("option","expanded",isToExpand);
+            };
 
             self.showdbOnHomePage = ko.observable([]);
             
@@ -594,17 +594,12 @@ define(['knockout',
             self.switchEditPanelContent = function(data,event){    
                 if ($(event.currentTarget).hasClass('edit-dsb-link')) {
                     self.editPanelContent("edit");
-                    self.dbeditorIsExpanded(true);
+                    self.expandDBEditor(true);
                 } else if ($(event.currentTarget).hasClass('edit-dsbset-link')) {
                     self.editPanelContent("editset");
-                    self.dbeditorIsExpanded(true);
+                    self.expandDBEditor(true);
                 } else {
-                    self.sharesettingsIsExpanded(false);
-                    self.dbfiltersIsExpanded(false);
-                    self.dbeditorIsExpanded(false);
                     self.editPanelContent("settings");
-                    $(".dbd-right-panel-editdashboard-share>div").css("display", "none");
-                    $(".dbd-right-panel-editdashboard-filters>div").css("display", "none");
                 }
                 $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
         };

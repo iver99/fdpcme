@@ -164,10 +164,10 @@ define(['knockout',
                     $b.getRightPanelModel().toggleLeftPanel();
                     self.rightPanelShown(!self.rightPanelShown());
                     $b.getRightPanelModel().editPanelContent(panelTarget);
-                    $b.getRightPanelModel().dbeditorIsExpanded(true);
+                    $b.getRightPanelModel().expandDBEditor(true);
                 } else {
                     $b.getRightPanelModel().editPanelContent(panelTarget);
-                    $b.getRightPanelModel().dbeditorIsExpanded(true);  
+                    $b.getRightPanelModel().expandDBEditor(true);  
                 }
                 $b.triggerBuilderResizeEvent('resize right panel');
             };
