@@ -462,26 +462,42 @@ define(['knockout',
             $('.dbd-right-panel-editdashboard-general').on({
                 "ojexpand":function(event,ui){
                     $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option","expanded",false);
-                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option","expanded",false);
+//                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option","expanded",false);
+                }
+            });
+            
+            $('.dbd-right-panel-editdashboard-set-general').on({
+                "ojexpand":function(event,ui){
+                    $('.dbd-right-panel-editdashboard-set-share').ojCollapsible("option","expanded",false);
                 }
             });
             
             $('.dbd-right-panel-editdashboard-filters').on({
                 "ojexpand":function(event,ui){
                     $('.dbd-right-panel-editdashboard-general').ojCollapsible("option","expanded",false);
-                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option","expanded",false);
+//                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option","expanded",false);
                 }
             });
             
-            $('.dbd-right-panel-editdashboard-share').on({
+//            $('.dbd-right-panel-editdashboard-share').on({
+//                "ojexpand":function(event,ui){
+//                    $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option","expanded",false);
+//                    $('.dbd-right-panel-editdashboard-general').ojCollapsible("option","expanded",false);
+//                }
+//            });
+            
+            $('.dbd-right-panel-editdashboard-set-share').on({
                 "ojexpand":function(event,ui){
-                    $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option","expanded",false);
-                    $('.dbd-right-panel-editdashboard-general').ojCollapsible("option","expanded",false);
+                    $('.dbd-right-panel-editdashboard-set-general').ojCollapsible("option","expanded",false);
                 }
             });
 
-            self.expandDBEditor = function(isToExpand){
-                $('.dbd-right-panel-editdashboard-general').ojCollapsible("option","expanded",isToExpand);
+            self.expandDBEditor = function(target,isToExpand){
+                if("singleDashboard-edit" === target){
+                    $('.dbd-right-panel-editdashboard-general').ojCollapsible("option","expanded",isToExpand);
+                }else if("dashboardset-edit" === target){
+                    $('.dbd-right-panel-editdashboard-set-general').ojCollapsible("option","expanded",isToExpand);
+                }
             };
 
             self.showdbOnHomePage = ko.observable([]);
@@ -591,10 +607,10 @@ define(['knockout',
             self.switchEditPanelContent = function(data,event){    
                 if ($(event.currentTarget).hasClass('edit-dsb-link')) {
                     self.editPanelContent("edit");
-                    self.expandDBEditor(true);
+                    self.expandDBEditor("singleDashboard-edit",true);
                 } else if ($(event.currentTarget).hasClass('edit-dsbset-link')) {
                     self.editPanelContent("editset");
-                    self.expandDBEditor(true);
+                    self.expandDBEditor("dashboardset-edit",true);
                 } else {
                     self.editPanelContent("settings");
                 }
