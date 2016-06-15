@@ -586,10 +586,7 @@ define(['knockout',
                 };
             }
 
-            self.editPanelContent = ko.observable(function(){
-                var content = "settings";
-                return content;
-            }());
+            self.editPanelContent = ko.observable("settings");
             
             self.switchEditPanelContent = function(data,event){    
                 if ($(event.currentTarget).hasClass('edit-dsb-link')) {
