@@ -419,6 +419,10 @@ define(['knockout',
                 }
             };
             
+            self.widgetPlusClicked = function(widget, event) {
+                tilesViewModel.appendNewTile(widget.WIDGET_NAME(), "", 4, 2, ko.toJS(widget));
+            };
+            
             self.widgetShowPlusIcon = function(widget, event) {
                 $b.findEl(".dbd-right-panel-build-container i.fa-plus").hide();
                 $(".dbd-left-panel-img-pop").ojPopup("close");
