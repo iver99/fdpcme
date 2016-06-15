@@ -358,6 +358,7 @@ define({
       
       //dashoard set message
       "DBSSET_BUILDER_DASHBOARDSET":"Dashboard Set",
+      "DBSSET_BUILDER_ADD_DASHBOARD_TOSET":"Add a dashboard",
       "DBSSET_BUILDER_EDIT_DASHBOARDSET":"Edit Dashboard Set",
       "DBSSET_BUILDER_DELETE_WARNING":"<b>Note:</b> Deleting the dashboard set does not delete any of the individual dashboards you created and included in the set",
       "DBSSET_BUILDER_DASHBOARDSET_OPTIONS":"Dashboard Set options",

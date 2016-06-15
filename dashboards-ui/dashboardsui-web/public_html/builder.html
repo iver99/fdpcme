@@ -44,7 +44,7 @@
                     </ul>
 
                     <div class="oj-tabs-facet demo-tabs-facet-flex" data-bind="visible:dashboardsetConfig.isCreator && noDashboardHome">
-                         <span id="add-nav" data-bind="click:addNewDashboard">
+                         <span id="add-nav" data-bind="click:addNewDashboard,attr: {title: getNlsString('DBSSET_BUILDER_ADD_DASHBOARD_TOSET')">
                              <i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i>
                          </span>
                     </div>
@@ -604,7 +604,8 @@
                             data-bind="ojComponent: {
                                     component:'ojButton', 
                                     display: 'icons', 
-                                    icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 dbd-wrench'}  
+                                    icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 dbd-wrench'},
+                                    label:getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_TITLE')
                             },
                             click: toggleRightPanel,
                             css:{
@@ -616,7 +617,7 @@
                                     component:'ojButton', 
                                     display: 'icons', 
                                     icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-pencil'}, 
-                                    label: getNlsString(rightPanelIcon() ? 'DBS_BUILDER_LEFT_PANEL_BTN_HIDE_LABEL' : 'DBS_BUILDER_LEFT_PANEL_BTN_SHOW_LABEL')
+                                    label: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_SETTINGS_TITLE')
                                 }, 
                                 click: toggleRightPanel,
                                 css: {
