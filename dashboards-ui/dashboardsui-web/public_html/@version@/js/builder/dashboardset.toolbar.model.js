@@ -54,10 +54,10 @@ define(['knockout',
 
 
             self.dashboardsetConfig = {
-                "refresh":ko.observable(dashboardInst.enableRefresh()),
-                "refreshOffIcon":ko.observable("dbd-noselected"),
-                "refreshOnIcon":ko.observable("dbd-icon-check"),
-                "share": ko.observable(ko.unwrap(dashboardInst.sharePublic) ? "on" : "off"),
+                refresh:ko.observable(dashboardInst.enableRefresh()),
+                refreshOffIcon:ko.observable("dbd-noselected"),
+                refreshOnIcon:ko.observable("dbd-icon-check"),
+                share: ko.observable(ko.unwrap(dashboardInst.sharePublic) ? "on" : "off")
             };
             
             self.dashboardsetConfig.setHome = ko.observable(true);
@@ -502,7 +502,7 @@ define(['knockout',
                     self.raw = obj;
                 } else {
                     self.type = "new";
-                    self.name = ko.observable("Select a dashboard");
+                    self.name = ko.observable(getNlsString('DBSSET_BUILDER_SELECT_TAB_NAME'));
                     self.dashboardId = Builder.getGuid();
                     self.raw = null;
                 }
