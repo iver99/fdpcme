@@ -479,7 +479,11 @@ define(['knockout',
                 //check for empry rows
                 var rows = self.tilesGrid.size();
                 var emptyRows = [];
-                for(i=0; i< rows; i++) {
+                var i = 0;
+                if(self.draggingTile) {
+                    i = self.draggingTile.row() + self.draggingTile.height();
+                }
+                for( ; i< rows; i++) {
                      if(self.tilesGrid.isEmptyRow(i)) {
                          emptyRows.push(i);
                      }

@@ -693,15 +693,24 @@ define(['knockout',
                     self.editor.draggingTile = tile;
                     var cells = self.editor.getCellsOccupied(cell.row, cell.column, width, height);
                     var tilesToMove = self.editor.getTilesUnder(cells, tile);
+                    var tilesBelowOriginalCell = self.editor.getTilesBelow(tile);
                     for(var i in tilesToMove) {
                         var rowDiff = cell.row-self.editor.mode.getModeRow(tilesToMove[i])+self.editor.mode.getModeHeight(tile);
                         self.editor.moveTileDown(tilesToMove[i], rowDiff);
                     }
+                    
                     self.editor.updateTilePosition(tile, cell.row, cell.column);
+
+                    var rowDiff = Math.abs(cell.row - self.editor.mode.getModeRow(tile));
+                    for(i in tilesBelowOriginalCell) {
+                        var iTile = tilesBelowOriginalCell[i];
+                        rowDiff = (rowDiff===0) ? self.editor.mode.getModeHeight(tile) : rowDiff;
+                        self.editor.moveTileUp(iTile, rowDiff);
+                    }
 
                     self.editor.tilesReorder();
                     self.show();
-                    
+                                        
                     //restore simulated helper after show()
                     tile.left(pos.left-tile.cssWidth()/2);
                     tile.top(pos.top-15);
@@ -719,7 +728,7 @@ define(['knockout',
                             width: self.getDisplayWidthForTile(width) - 10,
                             height: self.getDisplayHeightForTile(height) - 10
                         });
-                    }, 200);
+                    }, 0);
                     
                     self.previousDragCell = cell;
                 }
