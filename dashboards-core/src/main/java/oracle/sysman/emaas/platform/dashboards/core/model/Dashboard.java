@@ -340,6 +340,9 @@ public class Dashboard
 	@JsonProperty("subDashboards")
 	private List<Dashboard> subDashboards;
 
+	@JsonProperty("dashboardSets")
+	private List<Dashboard> dashboardSets;
+
 	public Dashboard()
 	{
 		// defaults for non-null values
@@ -687,7 +690,15 @@ public class Dashboard
 		this.type = type;
 	}
 
-	private void removeUnsharedDashboards(EmsDashboard ed)
+    public List<Dashboard> getDashboardSets() {
+        return dashboardSets;
+    }
+
+    public void setDashboardSets(List<Dashboard> dashboardSets) {
+        this.dashboardSets = dashboardSets;
+    }
+
+    private void removeUnsharedDashboards(EmsDashboard ed)
 	{
 		if (ed.getSharePublic() == 0) {
 			Long tenantId = ed.getTenantId();
