@@ -11,12 +11,16 @@
 package oracle.sysman.emaas.platform.dashboards.ui.webutils.services;
 
 import java.lang.management.ManagementFactory;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 import mockit.Expectations;
+import mockit.Mock;
+import mockit.MockUp;
 import mockit.Mocked;
 
 import org.testng.AssertJUnit;
@@ -28,6 +32,8 @@ import org.testng.annotations.Test;
 public class LoggingServiceManagerTest
 {
 	LoggingServiceManager lsm = new LoggingServiceManager();
+	@Mocked
+	private URL _url;
 
 	@Test(groups = { "s1" })
 	public void testGetName()
@@ -38,6 +44,18 @@ public class LoggingServiceManagerTest
 	@Test(groups = { "s2" })
 	public void testStartStop(@Mocked final MBeanServer anyMbs, @Mocked final ManagementFactory anyMf) throws Exception
 	{
+		new MockUp<Class<LoggingServiceManager>>() {
+			@Mock
+			public URL getResource(String path)
+			{
+				try {
+					return new URL("TestURL1");
+				}
+				catch (MalformedURLException e) {
+					return null;
+				}
+			}
+		};
 		new Expectations() {
 			{
 				ManagementFactory.getPlatformMBeanServer();
@@ -55,6 +73,18 @@ public class LoggingServiceManagerTest
 	public void testStartStopExceptions(@Mocked final MBeanServer anyMbs, @Mocked final ManagementFactory anyMf,
 			@Mocked final ObjectName anyObjName)
 	{
+		new MockUp<Class<LoggingServiceManager>>() {
+			@Mock
+			public URL getResource(String path)
+			{
+				try {
+					return new URL("TestURL1");
+				}
+				catch (MalformedURLException e) {
+					return null;
+				}
+			}
+		};
 		try {
 			final ObjectName objName1 = new ObjectName(LoggingServiceManager.MBEAN_NAME);
 			new Expectations() {

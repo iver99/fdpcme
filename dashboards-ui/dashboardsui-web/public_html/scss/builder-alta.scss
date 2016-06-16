@@ -31,6 +31,7 @@ and open the template in the editor.
   box-sizing: content-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: inherit !important;
 } 
 
 .fa-icon-font-16 {
@@ -130,7 +131,8 @@ body, html {
 .builder-dbd-name {
   font-size: 1.286rem;
   font-family: inherit;
-  line-height: 1.4em;
+  line-height: 36px;
+  vertical-align: middle;
   color: #252525;
 }
 
@@ -478,7 +480,10 @@ body, html {
 }
 
 .dbd-pull-right {
-  float: right!important;
+    float: right!important;
+    button {
+        margin-bottom: 0;
+    }
 }
 
 .dbd-pull-middle {
@@ -809,7 +814,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .dbd-left-panel-header-search-input {
     float: left; 
     height: 30px;
-    width: 228px;
+    width: 190px;
 }
 
 .dbd-left-panel-header-search-input input {
@@ -1152,7 +1157,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
             color: white!important;
             font-weight: bold;
             font-size: 15px;
-            padding-left: 30px;
+            padding-left: 16px;
             min-width: 180px;
         }
         #tabs-gear{

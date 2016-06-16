@@ -97,10 +97,12 @@ public class CommonUIUtils
 				}
 			}
 			else if (sProperty.equals("SSO_PASSWORD")) {
+				//	below password is being using in tests/dev mode only
 				sPropertyValue = emaasProp.getProperty("SSO_PASSWORD");
 				if (sPropertyValue == null) {
 					CommonUIUtils
 					.commonUITestLog("The SSO_PASSWORD property value is null ... set it to a different value -- 'Welcome1!'.");
+					//below hard coded password is being using in tests/dev mode only
 					sPropertyValue = "Welcome1!";
 				}
 			}

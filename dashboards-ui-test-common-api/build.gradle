@@ -1,20 +1,26 @@
-version = "1.6.0" + "-$buildTimestamp"
+version = "1.8.0" + "-$buildTimestamp"
+
+apply plugin: 'eclipse'
+
+project.ext.intgRun = hasProperty('IFARM_RUN') && IFARM_RUN != '' ? IFARM_RUN : 0
+project.ext.buildBranch = hasProperty('BUILD_BRANCH') && BUILD_BRANCH != '' ? BUILD_BRANCH : 'master'
+project.ext.forcePublishSdk = hasProperty('FORCE_PUBLISH_SDK') && FORCE_PUBLISH_SDK != '' ? FORCE_PUBLISH_SDK : 0
 sourceSets {
-integTest {
+	integTest {
         java.srcDir 'src/integTest/java'
-
-    
         compileClasspath = configurations.testConfig + configurations.webdriver + configurations.testNG
-        }
-    }
-
+	}
+}
+        
 clean{
   delete 'build'
 }
 
-task integTestJar (type:Jar) {
+task integTestJar (type:Jar, dependsOn: [':omc-ui-framework:omc-ui-framework-web:unpackTargetSelectorFromArtifactory']) {
     from sourceSets.integTest.output
-   
+    //Add the Target Selector Test API classes 
+    from fileTree(dir: '../omc-ui-framework/omc-ui-framework-web/build/stage_tsel')   
+  
 }
 
 
@@ -28,7 +34,6 @@ ext.customPomDefinition = {
             dependency.appendNode('groupId', dep.group)
             dependency.appendNode('artifactId', dep.name)
             dependency.appendNode('version', dep.version)
-	     
         }
     }
 }
@@ -42,13 +47,17 @@ publishing.publications {
     
 }
 
-
-
 artifactoryPublish {
-publications ('integTest')
-
+    if ( forcePublishSdk == "1" || (intgRun == "1" && buildBranch == "master")) {
+	publications ('integTest')
     }
+}
+
 
 dependencies {
-testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+	
+	testCompile configurations.testConfig
+    testCompile configurations.webdriver
+    testCompile configurations.testNG
 }

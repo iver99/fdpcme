@@ -5,6 +5,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import java.text.SimpleDateFormat
 import java.util.Date
 
+apply plugin: 'eclipse-wtp'
 apply plugin: 'war'
 apply plugin: 'compass'
 apply from: 'test.gradle'
@@ -25,14 +26,18 @@ def File sourceTargetSelectorDestDir = new File(sourceWebappDir, 'libs/emcstgtse
 
 def stagingDir = buildDir.absolutePath+'/staging/public_html'
 def compiledDir = buildDir.absolutePath+'/public_html'
+def File sourceTargetSelectorAPIDestDir = new File(buildDir.absolutePath+'/stage_tsel')
 def webRootSourceDir = 'public_html'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 configurations{
+	jscover { transitive = false }
 	compass
 }
+
+def jscc = "1".equals(System.getenv()['ENABLE_CC_JS'])
 
 def tselVersion 
 if (project.hasProperty("debugTsel"))
@@ -46,7 +51,7 @@ if (project.hasProperty("debugTsel"))
 }
 else
 {
-    tselVersion =  getDependentSdkVersion('com.oracle.emaas.emctas.tgtsel', 'emcs-targetselector', '1.5+')
+    tselVersion =  getDependentSdkVersion('com.oracle.emaas.emctas.tgtsel', 'emcs-targetselector', '1.7.+')
 }
 
 dependencies {
@@ -60,6 +65,7 @@ dependencies {
         compile(group: 'com.oracle.emaas.emctas.tgtsel', name:'emcs-targetselector', version:tselVersion, ext:'zip'){ transitive = false }
 	providedCompile project(':dashboards-ui-test-common-api')  { transitive = false }
         compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')	
+	jscover (group:'com.github.tntim96', name:'JSCover-all', version:'1.0.19')
 }
 
 task cleanJs(type:Delete) {
@@ -266,7 +272,34 @@ javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
     }
 }
 
-task individualMinify(dependsOn: [copyJsSource, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
+task jsCodeCoverage(type:JavaExec, dependsOn:[cleanJs, copyJsSource]) {
+
+    //vmArgs '-Dfile.encoding=UTF-8'
+    main '-jar'
+    configurations.jscover.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+	logger.lifecycle("filepath:  "+artifact.name)
+        if (artifact.name.equals('JSCover-all')) {
+		logger.lifecycle("filepath"+artifact.file.absolutePath)
+		//args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/ckeditor\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
+		args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/d3\\/.*', '--no-instrument-reg=.*\\/canvg\\/.*', '--no-instrument-reg=.*\\/html2canvas\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*', '--no-instrument-reg=.*\\/ita-tool\\/.*', '--no-instrument-reg=.*\\/ckeditor\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
+            }
+	}      
+    
+    doLast {
+        //delete uninstrumented source
+        //delete stagingDir+'/js'
+	delete stagingDir
+        //rename instrumented source to source folder
+        //file(stagingDir+'/jscc').renameTo(file(stagingDir+'/js'))
+	file(buildDir.absolutePath+'/staging/public_htmlcc').renameTo(file(stagingDir))
+        //now zip up original-src so we can download and generate reports
+        //ant.zip(destfile: stagingDir+'/js/original-src.zip',basedir: stagingDir+'/js/original-src/');
+	ant.zip(destfile: stagingDir+'/original-src.zip',basedir: stagingDir+'/original-src/');
+   }
+}
+jsCodeCoverage.onlyIf{jscc}
+
+task individualMinify(dependsOn: [copyJsSource, jsCodeCoverage, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
 
 compass {
     // We package the gems into the .jar file (see compass dependencies)
@@ -434,6 +467,7 @@ project.task("unpackTargetSelectorFromArtifactory") << {
     def File buildTargetSelectorUnzipDir = new File(buildDir.absolutePath, 'emcs-targetselector')
     //first time or if custom cleans removes it
     sourceTargetSelectorDestDir.mkdirs()
+    sourceTargetSelectorAPIDestDir.mkdirs()
 
     //project.configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
     configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
@@ -444,12 +478,41 @@ project.task("unpackTargetSelectorFromArtifactory") << {
                 from project.zipTree(artifact.file.absolutePath)
                 into buildTargetSelectorUnzipDir.absolutePath
             }
-            // Copy each of the unzipped directories to
-            // the appropriate source directories
-            // 1. build >> public_html/emcsDependencies/libs/emcstgtsel/
-            project.copy {
-                from  buildTargetSelectorUnzipDir
-                into sourceTargetSelectorDestDir.absolutePath
+
+            if (!files(buildTargetSelectorUnzipDir.listFiles().findAll{
+                        it.name.startsWith('TargetSelectorUtil')
+                    }).isEmpty())
+            {
+                logger.lifecycle("Target Selector artifact contains Source and Test API Zip")
+                logger.lifecycle("Unpacking Test API..")
+                //Copy the Test API classes to a dir so they can be added to the distributed jar
+                project.copy {
+                    from buildTargetSelectorUnzipDir.listFiles().findAll{
+                        it.name.startsWith('TargetSelectorUtil')
+                    }.collect {
+                        zipTree(it)
+                    }
+                    into sourceTargetSelectorAPIDestDir
+                }
+	
+                logger.lifecycle("Unpacking Source..")
+                //Copy Tsel source code to destination dir
+                project.copy {
+                    from buildTargetSelectorUnzipDir.listFiles().findAll{
+                        it.name.startsWith('emcs-targetselector')
+                    }.collect {
+                        zipTree(it)
+                    }
+                    into sourceTargetSelectorDestDir
+                }
+            }
+            else
+            {
+                logger.lifecycle("Unpacking Source..")
+                project.copy {
+                    from buildTargetSelectorUnzipDir
+                    into sourceTargetSelectorDestDir
+                }
             }
             
             //finally delete the build directory
@@ -462,6 +525,8 @@ project.task("cleanTargetSelector") << {
     println 'Cleaning up target selector directories ...'
     println 'target selector dir: ' + sourceTargetSelectorDestDir.absolutePath
     sourceTargetSelectorDestDir.deleteDir()
+    println 'target selector API dir: ' + sourceTargetSelectorAPIDestDir.absolutePath
+    sourceTargetSelectorAPIDestDir.deleteDir()
 }
 
 
@@ -472,7 +537,7 @@ war.archiveName "omc-ui-framework-web.war"
 copyJsSource.dependsOn unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory, unpackTargetSelectorFromArtifactory
 
 //copy files without minify when -PdevMode enabled
-task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory,compileSass, unpackTargetSelectorFromArtifactory]){
+task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory,compileSass, unpackTargetSelectorFromArtifactory,jsCodeCoverage]){
     from(webRootSourceDir) {
 	include "**/*"
     }

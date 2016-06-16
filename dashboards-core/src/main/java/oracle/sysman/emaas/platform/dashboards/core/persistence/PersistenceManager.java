@@ -130,6 +130,7 @@ public class PersistenceManager
 				}
 
 				props.put("javax.persistence.jdbc.user", schemaName);
+				//	below hard coded password is being using in tests/dev mode only
 				String password = "welcome1";
 				props.put("javax.persistence.jdbc.password", password);
 

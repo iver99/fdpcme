@@ -13,7 +13,9 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil.TimeRange;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.WidgetSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -33,7 +35,6 @@ public class TestDashBoard extends LoginAndLogout
 {
 	private String dbName_noDesc = "";
 	private String dbName_noWidgetGrid = "";
-	private String dbName_noTimeRefresh = "";
 	private String dbName_noWidgetList = "";
 	private String dbName_withWidgetGrid = "";
 	private String dbName_setHome = "";
@@ -111,7 +112,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//create dashboard
 		webd.getLogger().info("Create a dashboard: no description, with time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_noDesc, null, true);
+		DashboardHomeUtil.createDashboard(webd, dbName_noDesc, null, DashboardHomeUtil.DASHBOARD);
 		webd.getLogger().info("verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noDesc, null, true), "Create dashboard failed!");
 
@@ -158,41 +159,10 @@ public class TestDashBoard extends LoginAndLogout
 
 		//create dashboard
 		webd.getLogger().info("Create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_noWidgetGrid, dbDesc, true);
+		DashboardHomeUtil.createDashboard(webd, dbName_noWidgetGrid, dbDesc, DashboardHomeUtil.DASHBOARD);
 		webd.getLogger().info("verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noWidgetGrid, dbDesc, true),
 				"Create dashboard failed!");
-	}
-
-	@Test
-	public void testCreateDashboard_noTimeRefresh() throws Exception
-	{
-		dbName_noTimeRefresh = "noTimeselector-" + generateTimeStamp();
-		String dbDesc = "Test Dashboard no timeselector description";
-
-		//Initialize the test
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testCreateDashboard_noTimeRefresh");
-
-		//reset the home page
-		webd.getLogger().info("Reset all filter options in the home page");
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-		//switch to Grid View
-		webd.getLogger().info("Switch to grid view");
-		DashboardHomeUtil.gridView(webd);
-
-		//create dashboard
-		webd.getLogger().info("Create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_noTimeRefresh, dbDesc, false);
-		webd.getLogger().info("verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noTimeRefresh, dbDesc, false),
-				"Create dashboard failed!");
-
-		//delete the dashboard
-		webd.getLogger().info("start to delete dashboard in builder page");
-		DashboardBuilderUtil.deleteDashboard(webd);
-
 	}
 
 	@Test
@@ -215,7 +185,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//create dashboard
 		webd.getLogger().info("create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_noWidgetList, dbDesc, true);
+		DashboardHomeUtil.createDashboard(webd, dbName_noWidgetList, dbDesc, DashboardHomeUtil.DASHBOARD);
 		webd.getLogger().info("verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noWidgetList, dbDesc, true),
 				"Create dashboard failed!");
@@ -238,7 +208,7 @@ public class TestDashBoard extends LoginAndLogout
 		//create dashboard
 		webd.getLogger().info("Start to create dashboard in grid view");
 		DashboardHomeUtil.gridView(webd);
-		DashboardHomeUtil.createDashboard(webd, dbName_withWidgetGrid, dbDesc, true);
+		DashboardHomeUtil.createDashboard(webd, dbName_withWidgetGrid, dbDesc, DashboardHomeUtil.DASHBOARD);
 
 		//verify dashboard in builder page
 		webd.getLogger().info("Verify the dashboard created Successfully");
@@ -247,10 +217,12 @@ public class TestDashBoard extends LoginAndLogout
 
 		//add widget
 		webd.getLogger().info("Start to add Widget into the dashboard");
-		DashboardBuilderUtil.addWidgetByRightDrawer(webd, "Database Errors Trend");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "Database Errors Trend");
 		webd.getLogger().info("Add widget finished");
+
 		//verify if the widget added successfully
-		//TODO
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, "Database Errors Trend"),
+				"Widget 'Database Errors Trend' not found");
 
 		//save dashboard
 		webd.getLogger().info("save the dashboard");
@@ -292,14 +264,14 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
-	public void testDuplicateDashbaord() throws Exception
+	public void testDuplicateDashboard() throws Exception
 	{
 
 		String dbName = "Test_Dashboard_duplicate";
 		String dbDesc = "Test_Dashboard_duplicate_desc";
 
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testDuplicateDashbaord");
+		webd.getLogger().info("start to test in testDuplicateDashboard");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -327,6 +299,25 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
+	/*@Test
+	public void testErrorPage() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testErrorPage");
+
+		//ErrorPage link
+		//BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_Erpge);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = " + url);
+	           	webd.getWebDriver().navigate()
+	                             .to(url.substring(0, url.indexOf("emsaasui")) + "emcpdfui/error.html?invalidUrl=https%3A%2F%2Fden00bve.us.oracle.com%3A4443%2Femsaasui%2Femcpdfui%2Fbuilder.html%3FdashboardId%3D80");
+
+		//Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcpdfui/builder.html?dashboardId=80");
+		WaitUtil.waitForPageFullyLoaded(webd);
+		//validating Error page
+		ErrorPageUtil.signOut(webd);
+	}*/
+
 	@Test
 	public void testFavorite() throws Exception
 	{
@@ -347,7 +338,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//create dashboard
 		webd.getLogger().info("Create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_favorite, dbDesc, true);
+		DashboardHomeUtil.createDashboard(webd, dbName_favorite, dbDesc, DashboardHomeUtil.DASHBOARD);
 
 		//verify dashboard in builder page
 		webd.getLogger().info("Verify the dashboard created Successfully");
@@ -452,12 +443,20 @@ public class TestDashBoard extends LoginAndLogout
 
 		//add the widget into the dashboard
 		webd.getLogger().info("Start to add Widget into the dashboard");
+
 		webd.getLogger().info("Add Widget 'Top Hosts by Log Entries' into the dashboard");
-		DashboardBuilderUtil.addWidgetByRightDrawer(webd, WidgetName_1);
+		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_1);
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_1), "Widget '" + WidgetName_1 + "' not found");
+
 		webd.getLogger().info("Add Widget 'Top 10 Listeners by Load' into the dashboard");
-		DashboardBuilderUtil.addWidgetByRightDrawer(webd, WidgetName_2);
+		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_2);
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_2), "Widget '" + WidgetName_2 + "' not found");
+
 		webd.getLogger().info("Add Widget 'Top Hosts by Log Entries' into the dashboard");
-		DashboardBuilderUtil.addWidgetByRightDrawer(webd, WidgetName_1);
+		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_1);
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_1, 1), "The second Widget '" + WidgetName_1
+				+ "' not found");
+
 		webd.getLogger().info("Add widget finished");
 
 		//save dashboard
@@ -466,7 +465,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc", "testShareDashboard",
-			"testStopShareDashboard", "testDuplicateDashbaord" })
+			"testStopShareDashboard", "testDuplicateDashboard" })
 	public void testRemoveDashboard_GridView() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -537,7 +536,7 @@ public class TestDashBoard extends LoginAndLogout
 		//verify if in the home page
 		webd.getLogger().info("verify delete successfully and back to the home page");
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), 900L);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.id(PageId.DashboardDisplayPanelID)));
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DashboardDisplayPanelCss)));
 	}
 
 	@Test
@@ -559,14 +558,14 @@ public class TestDashBoard extends LoginAndLogout
 
 		//create a dashboard
 		webd.getLogger().info("create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName, null, true);
+		DashboardHomeUtil.createDashboard(webd, dbName, null, DashboardHomeUtil.DASHBOARD);
 		//verify dashboard in builder page
 		webd.getLogger().info("Verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, null, true), "Create dashboard failed!");
 
 		//edit the dashboard
 		webd.getLogger().info("add a widget to the dashboard");
-		DashboardBuilderUtil.addWidgetByRightDrawer(webd, "Database Errors Trend");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "Database Errors Trend");
 
 		//leave the builder page
 		webd.getLogger().info("return to dashboard home page");
@@ -578,7 +577,7 @@ public class TestDashBoard extends LoginAndLogout
 		//verify if in the home page
 		webd.getLogger().info("Verify if in the home page");
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), 900L);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.id(PageId.DashboardDisplayPanelID)));
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DashboardDisplayPanelCss)));
 	}
 
 	@Test
@@ -590,7 +589,7 @@ public class TestDashBoard extends LoginAndLogout
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test in testCreateDashboad_noWidget_GridView");
-
+		WaitUtil.waitForPageFullyLoaded(webd);
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -601,7 +600,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//create dashboard
 		webd.getLogger().info("create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_setHome, dbDesc, true);
+		DashboardHomeUtil.createDashboard(webd, dbName_setHome, dbDesc, DashboardHomeUtil.DASHBOARD);
 
 		//verify dashboard in builder page
 		webd.getLogger().info("Verify the dashboard created Successfully");
@@ -692,7 +691,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//create dashboard
 		webd.getLogger().info("Create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_timepicker, dbDesc, true);
+		DashboardHomeUtil.createDashboard(webd, dbName_timepicker, dbDesc, DashboardHomeUtil.DASHBOARD);
 
 		//verify dashboard in builder page
 		webd.getLogger().info("Verify the dashboard created Successfully");
@@ -700,7 +699,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//Add the widget to the dashboard
 		webd.getLogger().info("Start to add Widget into the dashboard");
-		DashboardBuilderUtil.addWidgetByRightDrawer(webd, "Database Errors Trend");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "Database Errors Trend");
 		webd.getLogger().info("Add widget finished");
 
 		//save dashboard
@@ -756,6 +755,8 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
+	//Testcase for validating Error page
+
 	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView", "testModifyDashboard_widget" })
 	public void testWidgetConfiguration() throws Exception
 	{
@@ -790,6 +791,38 @@ public class TestDashBoard extends LoginAndLogout
 		//save the dashboard
 		webd.getLogger().info("save the dashboard");
 		DashboardBuilderUtil.saveDashboard(webd);
+	}
+
+	//Testcase for adding widget using widgetselector
+
+	@Test
+	public void testWidgetSelector() throws Exception
+	{
+		String WidgetName_1 = "Database Errors Trend";
+
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in WidgetSelectorPage");
+
+		//ErrorPage link
+		//BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_WidgetSelector);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = " + url);
+		String testUrl = url.substring(0, url.indexOf("emsaasui")) + "emsaasui/uifwk/test.html";
+		webd.getLogger().info("test page url is " + testUrl);
+		webd.getWebDriver().navigate().to(testUrl);
+
+		//Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "uifwk/test.html");
+		// let's try to wait until page is loaded and jquery loaded before calling waitForPageFullyLoaded
+		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait.until(ExpectedConditions.elementToBeClickable(By.id(DashBoardPageId.WidgetSelector_AddButtonId)));
+		WaitUtil.waitForPageFullyLoaded(webd);
+		//click on Add button
+		webd.click("id=" + DashBoardPageId.WidgetSelector_AddButtonId);
+		webd.takeScreenShot();
+		//Adding widgets using widgetSElector diagoue
+		webd.getLogger().info("satrt widget selector dialogue box opens");
+		WidgetSelectorUtil.addWidget(webd, WidgetName_1);
+
 	}
 
 	private String generateTimeStamp()

@@ -105,6 +105,7 @@ public class AvailabilityNotification implements NotificationListener
 		// now all checking is OK
 		try {
 			rsm.markServiceUp();
+			GlobalStatus.setDashboardUpStatus();
 			logger.debug("Dashboards service is up");
 		}
 		catch (Exception e) {

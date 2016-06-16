@@ -14,7 +14,7 @@ import static org.testng.Assert.*;
 @Test(groups={"s1"})
 public class EmsDashboardTest {
      Date now = new Date();
-    private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10,10, now,
+    private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10,10,10, now,
              "elephant","elephant","elephant","elephant",10,10);
 
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
@@ -110,11 +110,11 @@ public class EmsDashboardTest {
         assertEquals(emsDashboard.getEnableDescription(),new Integer(10));
     }
     
-//    @Test
-//    public void testGetEnableEntityFilter() throws Exception {
-//        emsDashboard.setEnableEntityFilter(10);
-//        assertEquals(emsDashboard.getEnableEntityFilter(),new Integer(10));
-//    }
+    @Test
+    public void testGetEnableEntityFilter() throws Exception {
+        emsDashboard.setEnableEntityFilter(10);
+        assertEquals(emsDashboard.getEnableEntityFilter(),new Integer(10));
+    }
     
     @Test
     public void testGetEnableTimeRange() throws Exception {
@@ -228,10 +228,10 @@ public class EmsDashboardTest {
 
     }
     
-//    @Test
-//    public void testSetEnableEntityFilter() throws Exception {
-//
-//    }
+    @Test
+    public void testSetEnableEntityFilter() throws Exception {
+
+    }
 
     @Test
     public void testSetEnableTimeRange() throws Exception {

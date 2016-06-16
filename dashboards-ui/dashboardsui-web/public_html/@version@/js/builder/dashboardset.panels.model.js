@@ -25,7 +25,7 @@ define([
 
             var self = this;
             
-            var dashboardInstMap = {};
+            var dashboardInstMap =dashboardsetToolBarModel.dashboardInstMap = {};
             var options = {"autoRefreshInterval":dashboardsetToolBarModel.autoRefreshInterval};
             
             window.selectedDashboardInst = self.selectedDashboardInst = ko.observable(null);
@@ -66,22 +66,31 @@ define([
                 $("#dashboards-tabs-contents").append($includingEl);
                 $includingEl.attr("id", "dashboard-" + guid);
 
-                var predataModel = new model.PredataModel();
+                //var predataModel = new model.PredataModel();
                 
-                function init() {
-                    var dashboardsViewModle = new model.ViewModel(predataModel, "dashboard-" + guid ,['Me','Oracle','NORMAL','Share']);
+                function init() {              
+                    var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share'],dashboardsetToolBarModel.reorderedDbsSetItems);
                     
                     dashboardsViewModle.showExploreDataBtn(false);
                     
                     dashboardsViewModle.handleDashboardClicked = function(event, data) {
                         
                         var hasDuplicatedDashboard = false;
-                        dashboardsetToolBarModel.dashboardsetItems.forEach(function(dashboardItem) {
-                            if (dashboardItem.dashboardId === data.dashboard.id) {
+                        var dataId;
+                        var dataName;
+                            if(typeof(data.dashboard)!=='undefined'){
+                               dataId= data.dashboard.id;
+                               dataName=data.dashboard.name;
+                            }else{
+                               dataId= data.id;
+                               dataName=data.name; 
+                            }
+                        dashboardsetToolBarModel.dashboardsetItems.forEach(function(dashboardItem) {                         
+                            if (dashboardItem.dashboardId === dataId) {
                                 hasDuplicatedDashboard = true;
                                     dfu.showMessage({
                                         type: 'warn',
-                                        summary: oj.Translations.getTranslatedString("DBS_BUILDER_DASHBOARD_SET_DUPLICATED_DASHBOARD", data.dashboard.name),
+                                        summary: oj.Translations.getTranslatedString("DBS_BUILDER_DASHBOARD_SET_DUPLICATED_DASHBOARD", dataName),
                                         detail: '',
                                         removeDelayTime: 5000});
                                 }
@@ -89,8 +98,8 @@ define([
                         
                         if (!hasDuplicatedDashboard) {
                             dashboardsetToolBarModel.pickDashboard(guid, {
-                                id: ko.observable(data.dashboard.id),
-                                name: ko.observable(data.dashboard.name)
+                                id: ko.observable(dataId),
+                                name: ko.observable(dataName)
                             });
                         }
                     };
@@ -102,7 +111,8 @@ define([
                 dashboardInstMap[guid] = dashboardInst;
                 self.selectedDashboardInst(dashboardInst);
                 
-                predataModel.loadAll().then(init, init); //nomatter there is error in predata loading, initiating
+                //predataModel.loadAll().then(init, init); //nomatter there is error in predata loading, initiating
+                init();
             };
 
             self.loadDashboard = function (dsbId) {
@@ -141,7 +151,7 @@ define([
                             if (tile.type() === "TEXT_WIDGET") {
                                 Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.editor.tiles.deleteTile, Builder.isContentLengthValid);
                             } else {
-                                Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, true);
+                                Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, true);
                             }
                         }
                     }

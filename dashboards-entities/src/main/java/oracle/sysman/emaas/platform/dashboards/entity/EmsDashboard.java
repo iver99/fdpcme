@@ -52,8 +52,8 @@ public class EmsDashboard implements Serializable
 	private Integer enableRefresh;
 	@Column(name = "ENABLE_DESCRIPTION", nullable = false)
 	private Integer enableDescription;
-	//	@Column(name = "ENABLE_ENTITY_FILTER", nullable = false)
-	//	private Integer enableEntityFilter;
+	@Column(name = "ENABLE_ENTITY_FILTER", nullable = false)
+	private Integer enableEntityFilter;
 	@Column(name = "IS_SYSTEM", nullable = false)
 	private Integer isSystem;
 	@Column(name = "SHARE_PUBLIC", nullable = false)
@@ -96,7 +96,7 @@ public class EmsDashboard implements Serializable
 	}
 
 	public EmsDashboard(Date creationDate, Long dashboardId, Long deleted, String description, Integer enableTimeRange,
-			Integer enableRefresh, Integer enableDescription, /*Integer enableEntityFilter,*/Integer isSystem,
+			Integer enableRefresh, Integer enableDescription, Integer enableEntityFilter, Integer isSystem,
 			Integer sharePublic, Date lastModificationDate, String lastModifiedBy, String name, String owner, String screenShot,
 			Integer type, Integer applicationType)
 	{
@@ -107,7 +107,7 @@ public class EmsDashboard implements Serializable
 		this.enableTimeRange = enableTimeRange;
 		this.enableRefresh = enableRefresh;
 		this.enableDescription = enableDescription;
-		//		this.enableEntityFilter = enableEntityFilter;
+		this.enableEntityFilter = enableEntityFilter;
 		this.isSystem = isSystem;
 		this.sharePublic = sharePublic;
 		this.lastModificationDate = lastModificationDate;
@@ -174,10 +174,10 @@ public class EmsDashboard implements Serializable
 		return enableDescription;
 	}
 
-	//	public Integer getEnableEntityFilter()
-	//	{
-	//		return enableEntityFilter;
-	//	}
+	public Integer getEnableEntityFilter()
+	{
+		return enableEntityFilter;
+	}
 
 	/**
 	 * @return the enableRefresh
@@ -298,10 +298,10 @@ public class EmsDashboard implements Serializable
 		this.enableDescription = enableDescription;
 	}
 
-	//	public void setEnableEntityFilter(Integer enableEntityFilter)
-	//	{
-	//		this.enableEntityFilter = enableEntityFilter;
-	//	}
+	public void setEnableEntityFilter(Integer enableEntityFilter)
+	{
+		this.enableEntityFilter = enableEntityFilter;
+	}
 
 	/**
 	 * @param enableRefresh

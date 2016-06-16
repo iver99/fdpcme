@@ -69,7 +69,7 @@ define([
                 appMap[appIdITAnalytics] = {
                     "appId": "ITAnalytics",
                     "appName": "BRANDING_BAR_APP_NAME_IT_ANALYTICS", 
-                    "serviceName": "EmcitasApplications",
+                    "serviceName": "emcitas-ui-apps",
                     "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_it_gs"
                 };
@@ -188,9 +188,8 @@ define([
                     //Clear interval for extending user session
                     /* globals clearInterval*/
                     if (window.intervalToExtendCurrentUserSession)
-                        clearInterval(window.intervalToExtendCurrentUserSession);
-                    
-                    var ssoLogoutEndUrl = window.location.protocol + '//' + window.location.host + dfWelcomeUrl;
+                        clearInterval(window.intervalToExtendCurrentUserSession);                    
+                    var ssoLogoutEndUrl = encodeURI(window.location.protocol + '//' + window.location.host + dfWelcomeUrl); 
                     var logoutUrlDiscovered = dfu.discoverLogoutUrl();
                     //If session timed out, redirect to sso login page and go to home page after re-login.
                     if (window.currentUserSessionExpired === true && logoutUrlDiscovered === null) {
