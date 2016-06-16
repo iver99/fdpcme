@@ -970,7 +970,7 @@
                                     <!--/ko-->
                                 <!--ko if: $data.tilesViewModel.dashboard.tiles().length>0-->
                                 <span class="edit-setting-head">Widgets</span>
-                                    <!--ko foreach:tilesViewModel.dashboard.tiles-->
+                                    <!--ko foreach:sortedTiles-->
                                 <span class="edit-setting-link" data-bind="text:WIDGET_NAME"></span>
                                     <!--/ko-->
                                 <!--/ko-->
@@ -980,7 +980,7 @@
                                 <span class="edit-setting-link edit-dsb-link" data-bind="text: dashboard.name, click: switchEditPanelContent"></span>
                                 <!--ko if: $data.tilesViewModel.dashboard.tiles().length>0-->
                                 <span class="edit-setting-head">Widgets</span>
-                                    <!--ko foreach: tilesViewModel.dashboard.tiles -->
+                                    <!--ko foreach: sortedTiles -->
                                 <span class="edit-setting-link"  data-bind="text:WIDGET_NAME"></span>
                                     <!--/ko-->
                                <!--/ko-->

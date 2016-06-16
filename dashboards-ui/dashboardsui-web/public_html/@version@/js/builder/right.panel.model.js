@@ -52,6 +52,12 @@ define(['knockout',
             self.dashboardsetToolBarModel = dashboardsetToolBarModel;
             self.dashboard = $b.dashboard;
             self.tilesViewModel = tilesViewModel;
+            self.sortedTiles = ko.pureComputed(function(){
+                return self.dashboard.tiles() ? self.dashboard.tiles().sort(function (tileA, tileB) {
+                    return tileA.WIDGET_NAME() > tileB.WIDGET_NAME();
+                }):[];
+            });
+            
             $b.registerObject(this, 'RightPanelModel');
 
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
