@@ -138,7 +138,7 @@ define({
       "DBS_BUILDER_NOT_ADDTOSET":"Do not add to set",
       "DBS_BUILDER_BTN_EDIT_TITLE": "Edit dashboard",
       "DBS_BUILDER_EDIT_DSB_NAME": "Dashboard Name",
-      "DBS_BUILDER_EDIT_SHOW_DSB_DESC": "Show dashboard description",
+      "DBS_BUILDER_EDIT_SHOW_DSB_DESC": "Show description on the dashboard page",
       "DBS_BUILDER_EDIT_ENTITY_FILTER": "Entity filter",
       "DBS_BUILDER_EDIT_SHOW_ENTITY_FILTER": "Show Entity filter",
       "DBS_BUILDER_EDIT_TIME_FILTER": "Time Range filter",
