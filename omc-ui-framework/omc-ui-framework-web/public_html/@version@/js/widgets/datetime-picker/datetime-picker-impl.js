@@ -1004,6 +1004,17 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                                 end = curDate;
                                 self.setTimePeriodChosen(tp);
                                 self.setTimePeriodToLastX(tp, start, end, 1);
+                            }else if(tp === self.timePeriodCustom) {
+                                if(self.startDateTime && self.endDateTime) {
+                                    sdt = self.getParam(self.startDateTime);
+                                    edt = self.getParam(self.endDateTime);
+                                    start = newDateWithMilliseconds(sdt);
+                                    end = newDateWithMilliseconds(edt);
+                                    customClick(0);
+                                }else {
+                                    console.error('Error: set timePeriod to "Custom" without time range specified!');
+                                    return;
+                                }
                             }else {                            
                                 start = newDateWithMilliseconds(new Date() - self.timePeriodObject()[tp][1]);
                                 end = new Date();
