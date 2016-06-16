@@ -419,6 +419,10 @@ define(['knockout',
                 }
             };
             
+            self.resetFocus = function(widget, event){
+                event.currentTarget.focus();
+            };
+            
             self.widgetPlusClicked = function(widget, event) {
                 tilesViewModel.appendNewTile(widget.WIDGET_NAME(), "", 4, 2, ko.toJS(widget));
             };

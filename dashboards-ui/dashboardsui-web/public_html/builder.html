@@ -1025,7 +1025,7 @@
                                 <div data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
                                 <div class="dbd-left-panel-widget-text"
                                             >
-                                    <span tabindex="0" data-bind="text:WIDGET_NAME, event: {keypress: $root.widgetKeyPress, focus: $root.widgetShowPlusIcon},attr:{'data-rightpanel-items':WIDGET_NAME,'aria-label':WIDGET_NAME}"></span>
+                                    <span tabindex="0" data-bind="text:WIDGET_NAME, click: $root.resetFocus, event: {keypress: $root.widgetKeyPress, focus: $root.widgetShowPlusIcon},attr:{'data-rightpanel-items':WIDGET_NAME,'aria-label':WIDGET_NAME}"></span>
                                 </div>
                                 <i class="dbd-toolbar-fa-icon fa-plus" aria-hidden="false" tabindex="0" data-bind="click: $root.widgetPlusClicked, event: {keypress: $root.widgetKeyPress, blur: $root.widgetHidePlusIcon},attr:{'data-rightpanel-items':WIDGET_NAME,'aria-label':WIDGET_NAME,'title': getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_BUTTON_PLUS')}"></i> 
                                 </div>
