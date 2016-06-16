@@ -470,7 +470,10 @@ define(['knockout',
 //            };
 
             self.deleteDashboardClicked = function(){
-                toolBarModel.openDashboardDeleteConfirmDialog();
+                queryDashboardSetsBySubId(self.dashboard.id(),function(resp){
+                    window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(resp.dashboardSets || []); 
+                    toolBarModel.openDashboardDeleteConfirmDialog();
+                });
             };        
             
             $('.dbd-right-panel-editdashboard-general').on({
@@ -547,11 +550,37 @@ define(['knockout',
                 self.filterSettingModified(false);
             };
             
+            
+            function queryDashboardSetsBySubId(dashboardId,callback){
+                var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
+                 dfu.ajaxWithRetry(_url + dashboardId + "/dashboardsets", {
+                        type: 'GET',
+                        headers: dfu.getDashboardsRequestHeader(), //{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
+                        success: function (resp) {
+                           callback(resp);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log(errorThrown);
+                        }
+                    });
+            }
+            
             self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
             self.dashboardSharing.subscribe(function(val){
-                if("notShared"===val){
-                    toolBarModel.handleShareUnshare(false);
-                }else{
+                if ("notShared" === val) {
+                    queryDashboardSetsBySubId(self.dashboard.id(), function (resp) {
+                        if (resp.dashboardSets && resp.dashboardSets.length > 0) {
+                            window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(resp.dashboardSets);
+                            toolBarModel.openDashboardUnshareConfirmDialog(function(isShared){
+                                if(isShared){
+                                   self.dashboardSharing(true); 
+                                }
+                            });
+                        }else{
+                            toolBarModel.handleShareUnshare(false);
+                        }
+                    });
+                } else {
                     toolBarModel.handleShareUnshare(true);
                 }
             });

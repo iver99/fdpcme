@@ -198,10 +198,11 @@ define([
                         $b: $b,
                         toolBarModel: toolBarModel,
                         tilesViewModel: tilesViewModel,
-                        dashboardsetToolBar:dashboardsetToolBarModel
+                        dashboardsetToolBar:dashboardsetToolBarModel,
+                        dashboardSets: ko.observable(null)
                     };
                     self.selectedDashboardInst(dashboardInstMap[dsbId]);
-
+                    
                     ko.applyBindings(tilesViewModel, $dashboardEl.find('.dashboard-content-main')[0]);
                     
                     var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel, toolBarModel,dashboardsetToolBarModel);
