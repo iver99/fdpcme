@@ -45,6 +45,21 @@
                                 </div>
                             </a>
                         </li>
+                        <!-- ko if: showInfraMonitoring -->
+                        <li class="box-list-li box-list-a">
+                            <a id="infra_mon_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openInfraMonitoring">
+                                <div class="service-box-wrapper">
+                                    <div class="landing-home-box-img infra-mon-box">
+                                        <img class="app-image" src="@version@/images/InfraMonitoring_w_92px.png" data-bind="attr: {alt: infraMonitoring}"/>
+                                    </div>
+                                    <div class="landing-home-box-content">
+                                        <div class="landing-home-box-content-head" data-bind="text: infraMonitoring"></div>
+                                        <div class="landing-home-box-content-desc" data-bind="text: infraMonitoringDesc"></div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <!-- /ko -->
                         <li class="box-list-li box-list-a">
                             <a id="LA_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openLogAnalytics">
                                 <div class="service-box-wrapper">
@@ -82,21 +97,6 @@
                                 </div>
                             <!--</a>-->
                         </li>
-                        <!-- ko if: showInfraMonitoring -->
-                        <li class="box-list-li box-list-a">
-                            <a id="infra_mon_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openInfraMonitoring">
-                                <div class="service-box-wrapper">
-                                    <div class="landing-home-box-img infra-mon-box">
-                                        <img class="app-image" src="@version@/images/InfraMonitoring_w_92px.png" data-bind="attr: {alt: infraMonitoring}"/>
-                                    </div>
-                                    <div class="landing-home-box-content">
-                                        <div class="landing-home-box-content-head" data-bind="text: infraMonitoring"></div>
-                                        <div class="landing-home-box-content-desc" data-bind="text: infraMonitoringDesc"></div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <!-- /ko -->
                         <li class="box-list-li box-list-a">
                             <a id="dashboards_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openDashboards">
                                 <div class="service-box-wrapper">
