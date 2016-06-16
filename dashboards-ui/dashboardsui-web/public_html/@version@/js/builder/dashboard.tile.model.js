@@ -963,7 +963,8 @@ define(['knockout',
                 }
             };
             
-            self.returnFromTargetSelector = function(targets) {
+          
+            self.returnFromPageTsel = function(targets) {
 //                if(targets.targets) {
 //                    if(targets.targets.length === 1) {
 //                        self.tgtSelLabel(getNlsString('DBS_BUILDER_ONE_TARGET_SELECTED'));
@@ -976,16 +977,60 @@ define(['knockout',
                 Builder.fireDashboardItemChangeEvent(self.dashboard.tiles(), dashboardItemChangeEvent);
             };
             
-            self.selectionMode = ko.observable(["byCriteria"]);
+            self.whichTselLauncher = ko.observable(0); //0 for page, 1 for right drawer
+            self.selectionMode = ko.observable("byCriteria");
             self.returnMode = ko.observable('criteria');
             self.dropdownInitialLabel = ko.observable(getNlsString("DBS_BUILDER_ALL_TARGETS"));
             self.dropdownResultLabel = ko.observable(getNlsString("DBS_BUILDER_TARGETS_SELECTED"));
+            self.showMoreQuickPick = ko.observable(true);
             
             self.getInputCriteria = function() {
                 if(self.targets()) {
                     return self.targets.criteria;
                 }
                 return '';
+            }
+            
+            self.getQuickPickers = function() {
+                var quickPickers = [{
+                        "title" : "All Hosts",
+                        "type" : "byTargetType",
+                        "value" : ["host"],
+                        "selected" : true
+                    }, {
+                        "title" : "All Linux",
+                        "resultLabel" : "Linux",
+                        "type" : "byTargetType",
+                        "value" : ["usr_host_linux"]
+                    }, {
+                        "title" : "All Windows",
+                        "resultLabel" : "Windows",
+                        "type" : "byTargetType",
+                        "value" : ["usr_host_windows"]
+                    }, {
+                        "title" : "All Docker",
+                        "resultLabel" : "Docker",
+                        "type" : "byTargetType",
+                        "value" : ["oracle_vm_guest"]
+                    }          
+                ];
+                return quickPickers;
+            }
+            
+            self.quickPickers = ko.computed(function() {
+                if(self.selectionMode() === "byCriteria") {
+                    return self.getQuickPickers();
+                }else {
+                    return [];
+                }
+            });
+            
+            self.returnFromTsel = function(targets) {
+                if(self.whichTselLauncher() === 0) {
+                    self.returnFromPageTsel(targets);
+                }else if(self.whichTselLauncher() === 1) {
+                   $b.getRightPanelModel().returnFromRightDrawerTsel(targets);
+                }
             }
 
             var timeSelectorChangelistener = ko.computed(function(){

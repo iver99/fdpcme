@@ -402,16 +402,18 @@
                             <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator no-print"></span>
                             <div class="df-targte-selector" data-bind="visible: dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE'">
                                 <emcta-target-selector data-bind="attr: {id: 'tsel_'+dashboard.id()}"
-                                                       params="returnFunction: returnFromTargetSelector,
+                                                       params="returnFunction: returnFromTsel,
                                                            config:{
-                                                               selectionMode: selectionMode()[0],
+                                                               selectionMode: selectionMode(),
                                                                returnMode: returnMode,
                                                                inputCriteria: getInputCriteria(),
                                                                ui: {
                                                                    showLaunchButton: true,
                                                                    dropdownInitialLabel: dropdownInitialLabel(),
-                                                                   dropdownResultLabel: dropdownResultLabel()
-                                                               }
+                                                                   dropdownResultLabel: dropdownResultLabel(),
+                                                                   showMoreQuickPick: showMoreQuickPick()
+                                                               },
+                                                               quickPickers: quickPickers()
                                                            }"></emcta-target-selector>
                             </div>
                             <div class="df-date-time-picker" data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>
@@ -832,7 +834,7 @@
                                                             <div class="oj-flex-item">
                                                                 <div data-bind="ojComponent: {component: 'ojRadioset', value: instanceSupport, disabled: !enableEntityFilter()}" >
                                                                    <span class="oj-choice-row">
-                                                                       <input id="multipleInstanceSupport" type="radio" name="instanceSupport" value="multiple">
+                                                                       <input id="multipleInstanceSupport" type="radio" name="instanceSupport" value="byCriteria">
                                                                        <label for="multipleInstanceSupport">Dashboard supports multiple instances</label>
                                                                    </span>
                                                                    <span class="oj-choice-row">
@@ -855,6 +857,8 @@
                                                                   <option value="allHosts">All Hosts</option>
                                                                   <option value="allLinux">All Linux</option>
                                                                   <option value="allWindows">All Windows</option>
+                                                                  <option value="allDocker">All Docker</option>
+                                                                  <option value="more">More</option>
                                                                 </select>
                                                             </div>
                                                         </div>

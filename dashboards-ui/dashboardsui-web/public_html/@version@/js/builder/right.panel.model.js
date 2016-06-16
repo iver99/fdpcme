@@ -511,9 +511,10 @@ define(['knockout',
             });
             
             self.enableEntityFilter = ko.observable(self.dashboard.enableEntityFilter() === 'TRUE');
-            self.instanceSupport = ko.observable("multiple");
+            self.instanceSupport = $b.getDashboardTilesViewModel().selectionMode;
             self.enableTimeRangeFilter = ko.observable(self.dashboard.enableTimeRange() === 'TRUE');
             self.defaultEntityValue = ko.observable("allEntities");
+            self.defaultEntityValueForMore = ko.observable();
             self.enableEntityFilter.subscribe(function(val){
                 self.dashboard.enableEntityFilter(val ? 'TRUE' : 'FALSE');
             });
@@ -528,6 +529,22 @@ define(['knockout',
             filterSettingModified.subscribe(function(val){
                 self.filterSettingModified(true);
             });
+            
+            self.returnFromRightDrawerTsel = function(targets) {
+                self.defaultEntityValueForMore(targets);
+            }
+            
+            self.defaultEntityValueChanged = ko.computed(function() {
+                if(self.defaultEntityValue()[0] === "more") {
+                    require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
+                        self.tilesViewModel.whichTselLauncher(1);
+                        TargetSelectorUtils.launchTargetSelector("tsel_"+self.tilesViewModel.dashboard.id());
+                    });
+                }
+            });
+            
+            self.defaultEntityValueChanged.extend({rateLimit: {timeout: 800}});
+            
             self.applyFilterSetting = function(){
                 //add save filter setting logic here
                 self.filterSettingModified(false);
