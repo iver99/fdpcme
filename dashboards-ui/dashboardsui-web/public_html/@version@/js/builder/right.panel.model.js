@@ -466,7 +466,7 @@ define(['knockout',
             $('.dbd-right-panel-editdashboard-general').on({
                 "ojexpand":function(event,ui){
                     $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option","expanded",false);
-//                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option","expanded",false);
+                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option","expanded",false);
                 }
             });
             
@@ -479,16 +479,16 @@ define(['knockout',
             $('.dbd-right-panel-editdashboard-filters').on({
                 "ojexpand":function(event,ui){
                     $('.dbd-right-panel-editdashboard-general').ojCollapsible("option","expanded",false);
-//                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option","expanded",false);
+                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option","expanded",false);
                 }
             });
             
-//            $('.dbd-right-panel-editdashboard-share').on({
-//                "ojexpand":function(event,ui){
-//                    $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option","expanded",false);
-//                    $('.dbd-right-panel-editdashboard-general').ojCollapsible("option","expanded",false);
-//                }
-//            });
+            $('.dbd-right-panel-editdashboard-share').on({
+                "ojexpand":function(event,ui){
+                    $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option","expanded",false);
+                    $('.dbd-right-panel-editdashboard-general').ojCollapsible("option","expanded",false);
+                }
+            });
             
             $('.dbd-right-panel-editdashboard-set-share').on({
                 "ojexpand":function(event,ui){
