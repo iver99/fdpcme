@@ -46,7 +46,7 @@ public class DashboardsUiCORSFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-	ServletException
+			ServletException
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
@@ -148,6 +148,25 @@ public class DashboardsUiCORSFilter implements Filter
 						}
 						else {
 							logger.warn("Retrieved an empty APM home linke for service: 'ApmUI', '1.0+', 'home' from service manager");
+						}
+					}
+					else if (TenantSubscriptionUtil.isMonitoringServiceOnly(apps)) {
+						// redirect to monitoring service home
+						Link monitoringLink = RegistryLookupUtil.getServiceExternalLink(RegistryLookupUtil.MONITORING_SERVICE,
+								"1.5+", "home", opcTenantId);
+						if (monitoringLink != null && !StringUtil.isEmpty(monitoringLink.getHref())) {
+							logger.info("Tenant subscribes to Monitoring service only, and redirecting dashboard home page to Monitoring home: "
+									+ monitoringLink.getHref());
+							String targetUrl = RegistryLookupUtil.replaceWithVanityUrl(monitoringLink.getHref(), opcTenantId,
+									RegistryLookupUtil.MONITORING_SERVICE);
+							logger.info(
+									"The Monitoring service link is replaced with vanity URL from original url: \"{}\" to final url: \"{}\"",
+									monitoringLink.getHref(), targetUrl);
+							hRes.sendRedirect(targetUrl);
+							return;
+						}
+						else {
+							logger.warn("Retrieved an empty Monitoring home linke for service: 'MonitoringServiceUI', '1.5+', 'home' from service manager");
 						}
 					}
 				}
