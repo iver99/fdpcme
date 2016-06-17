@@ -1198,10 +1198,10 @@
                         <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB')"></span>
                     </div>
                     <div class="oj-dialog-body">
-                        <!-- ko ifnot:dashboardSets -->
+                        <!-- ko ifnot:dashboardSets() && dashboardSets().length > 0  -->
                             <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG', toolBarModel.dashboardName())"></p>
                         <!-- /ko -->
-                        <!-- ko if:dashboardSets -->
+                        <!-- ko if:dashboardSets() && dashboardSets().length > 0 -->
                             <p data-bind="html: getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_HEAD')"></p>
                             <ul>
                                 <!-- ko foreach:dashboardSets -->
@@ -1228,7 +1228,7 @@
                         <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_HOME_CFM_DLG_UNSHARE_DSB')"></span>
                     </div>
                     <div class="oj-dialog-body">
-                        <!-- ko if:dashboardSets -->
+                        <!-- ko if:dashboardSets() && dashboardSets().length > 0  -->
                             <p data-bind="html: getNlsString('COMMON_UNSHAER_USED_DASHBOARD_MSG_HEAD')"></p>
                             <ul>
                                 <!-- ko foreach:dashboardSets -->
