@@ -541,10 +541,22 @@ define(['knockout',
                         TargetSelectorUtils.launchTargetSelector("tsel_"+self.tilesViewModel.dashboard.id());
                     });
                 }
+                return self.defaultEntityValue();
+            }).extend({notify: 'always', rateLimit: {timeout: 1000}});
+            
+            self.instanceSupportChanged = ko.computed(function() {
+                if(self.instanceSupport() === "single") {
+                    self.defaultEntityValue("singleInstVal");
+                    require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
+                        self.tilesViewModel.whichTselLauncher(1);
+                        TargetSelectorUtils.launchTargetSelector("tsel_"+self.tilesViewModel.dashboard.id());
+                    });
+                }else if(self.instanceSupport() === "byCriteria") {
+                    self.defaultEntityValue("allEntities");
+                }
+                return self.instanceSupport();
             });
-            
-            self.defaultEntityValueChanged.extend({rateLimit: {timeout: 800}});
-            
+                        
             self.applyFilterSetting = function(){
                 //add save filter setting logic here
                 self.filterSettingModified(false);

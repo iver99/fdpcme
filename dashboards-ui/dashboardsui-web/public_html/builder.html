@@ -852,13 +852,18 @@
                                                         <div class="oj-flex">  
                                                             <div class="oj-flex-item">
                                                                 <select data-bind="ojComponent: {component: 'ojSelect',disabled: !enableEntityFilter(),
-                                                                                                 value: defaultEntityValue,rootAttributes: {style:'max-width:20em'}}">
+                                                                                                 value: defaultEntityValue,rootAttributes: {style:'max-width:20em'}}">                                          
+                                                                <!--ko if:instanceSupport() === "byCriteria"--> 
                                                                   <option value="allEntities">All Entities</option>
                                                                   <option value="allHosts">All Hosts</option>
                                                                   <option value="allLinux">All Linux</option>
                                                                   <option value="allWindows">All Windows</option>
                                                                   <option value="allDocker">All Docker</option>
                                                                   <option value="more">More</option>
+                                                                <!-- /ko --> 
+                                                                <!-- ko if: instanceSupport() === "single" --> 
+                                                                  <option value="singleInstVal">Select an instance...</option>
+                                                                 <!--/ko-->
                                                                 </select>
                                                             </div>
                                                         </div>
