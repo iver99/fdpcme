@@ -27,6 +27,9 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Sanitized
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter.ApplicationOPCName;
+import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
+import oracle.sysman.emaas.platform.dashboards.core.cache.ICacheFetchFactory;
+import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
@@ -126,32 +129,46 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getAdminLinks()
 	{
-		List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(), UserContext.getCurrentUser());
-		if (!PrivilegeChecker.isAdminUser(userRoles)) {
+		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
+		try {
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_ADMIN_LINKS, new ICacheFetchFactory() {
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(), UserContext.getCurrentUser());
+							if (!PrivilegeChecker.isAdminUser(userRoles)) {
+								return null;
+							}
+
+							List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
+							List<LinkEntity> filteredAdminLinks = filterAdminLinksByUserRoles(registeredAdminLinks, userRoles);
+							// Try to find Administration Console link
+							LinkEntity adminConsoleLink = null;
+							for (LinkEntity le : filteredAdminLinks) {
+								if (ADMIN_CONSOLE_UI_SERVICENAME.equals(le.getServiceName())) {
+									adminConsoleLink = le;
+									filteredAdminLinks.remove(le);
+									break;
+								}
+							}
+
+							List<LinkEntity> sortedAdminLinks = new ArrayList<LinkEntity>();
+							// The Administration Console link should be always shown at the top
+							if (adminConsoleLink != null) {
+								sortedAdminLinks.add(adminConsoleLink);
+							}
+							// The others should be sorted in alphabetical order
+							sortedAdminLinks.addAll(sortServiceLinks(filteredAdminLinks));
+
+							return sortedAdminLinks;
+						}
+					});
+		}
+		catch (Exception e) {
+			logger.error(e);
 			return null;
 		}
-
-		List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
-		List<LinkEntity> filteredAdminLinks = filterAdminLinksByUserRoles(registeredAdminLinks, userRoles);
-		// Try to find Administration Console link
-		LinkEntity adminConsoleLink = null;
-		for (LinkEntity le : filteredAdminLinks) {
-			if (ADMIN_CONSOLE_UI_SERVICENAME.equals(le.getServiceName())) {
-				adminConsoleLink = le;
-				filteredAdminLinks.remove(le);
-				break;
-			}
-		}
-
-		List<LinkEntity> sortedAdminLinks = new ArrayList<LinkEntity>();
-		// The Administration Console link should be always shown at the top
-		if (adminConsoleLink != null) {
-			sortedAdminLinks.add(adminConsoleLink);
-		}
-		// The others should be sorted in alphabetical order
-		sortedAdminLinks.addAll(sortServiceLinks(filteredAdminLinks));
-
-		return sortedAdminLinks;
 	}
 
 	/**
@@ -166,7 +183,19 @@ public class RegistrationEntity implements Serializable
 	public List<LinkEntity> getCloudServices()
 	{
 		String tenantName = TenantContext.getCurrentTenant();
-		List<LinkEntity> list = new ArrayList<LinkEntity>();
+		Tenant cacheTenant = new Tenant(tenantName);
+		List<LinkEntity> list = null;
+		try {
+			list = (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS);
+			if (list != null) {
+				return list;
+			}
+		}
+		catch (Exception e) {
+			logger.error(e);
+		}
+		list = new ArrayList<LinkEntity>();
 		Set<String> subscribedApps = getTenantSubscribedApplicationSet(false);
 		for (String app : subscribedApps) {
 			try {
@@ -211,6 +240,8 @@ public class RegistrationEntity implements Serializable
 			}
 		}
 		list = sortServiceLinks(list);
+		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+				CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS, list);
 		return list;
 	}
 
@@ -235,7 +266,21 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getHomeLinks()
 	{
-		return sortServiceLinks(lookupLinksWithRelPrefix(NAME_HOME_LINK));
+		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
+		try {
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS, new ICacheFetchFactory() {
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_HOME_LINK));
+						}
+					});
+		}
+		catch (Exception e) {
+			logger.error(e);
+		}
+		return null;
 	}
 
 	public String getSessionExpiryTime()
@@ -305,9 +350,24 @@ public class RegistrationEntity implements Serializable
 	/**
 	 * @return Visual analyzer links discovered from service manager
 	 */
+	@SuppressWarnings("all")
 	public List<LinkEntity> getVisualAnalyzers()
 	{
-		return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
+		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
+		try {
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_VISUAL_ANALYZER, new ICacheFetchFactory() {
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
+						}
+					});
+		}
+		catch (Exception e) {
+			logger.error(e);
+			return null;
+		}
 	}
 
 	private void addToLinksMap(Map<String, LinkEntity> linksMap, List<Link> links, String serviceName, String version)

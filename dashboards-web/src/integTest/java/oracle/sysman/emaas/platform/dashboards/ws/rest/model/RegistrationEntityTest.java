@@ -11,6 +11,8 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Sanitized
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
+import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
+import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
@@ -133,6 +135,8 @@ public class RegistrationEntityTest
 
 			}
 		};
+		CacheManager.getInstance().removeCacheable(new Tenant(TenantContext.getCurrentTenant()), CacheManager.CACHES_LOOKUP_CACHE,
+				CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS);
 		Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getHomeLinks()));
 
 	}
