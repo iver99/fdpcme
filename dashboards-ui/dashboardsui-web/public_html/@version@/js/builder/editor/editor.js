@@ -134,7 +134,7 @@ define(['knockout',
             
             self.narrowTile = function(tile) {
                 var width = self.mode.getModeWidth(tile);
-                if (width <= 1)
+                if (width <= self.mode.MODE_MIN_COLUMNS)
                     return;
                 width--;
                 self.tilesGrid.updateTileSize(tile, width, self.mode.getModeHeight(tile));
@@ -501,7 +501,7 @@ define(['knockout',
                 return new Builder.Cell(row, column);
             };
             
-            self.createNewTile = function(name, description, width, height, widget, timeSelectorModel, targets, loadImmediately) {
+            self.createNewTile = function(name, description, width, height, widget, timeSelectorModel, targets, loadImmediately, dashboardInst) {
                 if (!widget)
                     return null;
                 
@@ -539,7 +539,7 @@ define(['knockout',
                                 oj.Logger.log("widget viewmodel:: "+assetRoot+viewmodel);    
                             }
 
-                            newTile =new Builder.DashboardTile(self.mode, $b.dashboard, koc_name, name, description, widget, timeSelectorModel, targets, loadImmediately);
+                            newTile =new Builder.DashboardTile(self.mode, $b.dashboard, koc_name, name, description, widget, timeSelectorModel, targets, loadImmediately, dashboardInst);
                             var tileCell;
                             if(!(self.tiles && self.tiles().length > 0)) {
                                 tileCell = new Builder.Cell(0, 0);

@@ -437,6 +437,8 @@ define([
                                 var widget = data[i];
                                 widget.index = widgetIndex;
                                 widget.WIDGET_VISUAL = ko.observable();
+                                widget.imgWidth = ko.observable("190px");
+                                widget.imgHeight = ko.observable("140px");
 
                                 if (!widget.WIDGET_DESCRIPTION)
                                     widget.WIDGET_DESCRIPTION = "";
@@ -483,6 +485,12 @@ define([
                             widget.WIDGET_VISUAL(itaImagePath); //default image
                         }
                     }
+                    
+                    //resize widget screenshot according to aspect ratio
+                    dfu.getScreenshotSizePerRatio(190, 140, widget.WIDGET_VISUAL(), function(imgWidth, imgHeight) {
+                        widget.imgWidth(imgWidth + "px");
+                        widget.imgHeight(imgHeight + "px");
+                    });
                 }
                 
                 function loadWidgetBase64Screenshot(widget) {
@@ -514,6 +522,7 @@ define([
                                         widget.WIDGET_VISUAL(itaImagePath); //default image
                                     }
                                 }
+                               
                                 widgetArray[widget.index].WIDGET_VISUAL(widget.WIDGET_VISUAL());
                                 widget.isScreenshotLoaded = true;
                                 widgetArray[widget.index].isScreenshotLoaded = true;

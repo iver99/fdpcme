@@ -21,21 +21,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter.ApplicationOPCName;
+import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
+import oracle.sysman.emaas.platform.dashboards.core.cache.ICacheFetchFactory;
+import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author miao
@@ -77,6 +80,13 @@ public class RegistrationEntity implements Serializable
 	//	public static final String TA_URL = "/emsaasui/emcta/ta/analytics.html";
 	public static final String TMUI_SERVICENAME = "TenantManagementUI";
 	public static final String EVENTUI_SERVICENAME = "EventUI";
+	public static final String ADMIN_CONSOLE_UI_SERVICENAME = "AdminConsoleSaaSUi";
+
+	// Infrastructure Monitoring service
+	public static final String MONITORING_OPC_APPNAME = "Monitoring";
+	public static final String MONITORING_SERVICENAME = "MonitoringServiceUI";
+	public static final String MONITORING_VERSION = "1.5+";
+	public static final String MONITORING_HOME_LINK = "sso.home";
 
 	private static final Logger _logger = LogManager.getLogger(RegistrationEntity.class);
 	//	private String registryUrls;
@@ -119,15 +129,46 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getAdminLinks()
 	{
-							List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
-									UserContext.getCurrentUser());
+		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
+		try {
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_ADMIN_LINKS, new ICacheFetchFactory() {
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(), UserContext.getCurrentUser());
 							if (!PrivilegeChecker.isAdminUser(userRoles)) {
 								return null;
 							}
 
 							List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
 							List<LinkEntity> filteredAdminLinks = filterAdminLinksByUserRoles(registeredAdminLinks, userRoles);
-							return sortServiceLinks(filteredAdminLinks);
+							// Try to find Administration Console link
+							LinkEntity adminConsoleLink = null;
+							for (LinkEntity le : filteredAdminLinks) {
+								if (ADMIN_CONSOLE_UI_SERVICENAME.equals(le.getServiceName())) {
+									adminConsoleLink = le;
+									filteredAdminLinks.remove(le);
+									break;
+								}
+							}
+
+							List<LinkEntity> sortedAdminLinks = new ArrayList<LinkEntity>();
+							// The Administration Console link should be always shown at the top
+							if (adminConsoleLink != null) {
+								sortedAdminLinks.add(adminConsoleLink);
+							}
+							// The others should be sorted in alphabetical order
+							sortedAdminLinks.addAll(sortServiceLinks(filteredAdminLinks));
+
+							return sortedAdminLinks;
+						}
+					});
+		}
+		catch (Exception e) {
+			logger.error(e);
+			return null;
+		}
 	}
 
 	/**
@@ -142,7 +183,19 @@ public class RegistrationEntity implements Serializable
 	public List<LinkEntity> getCloudServices()
 	{
 		String tenantName = TenantContext.getCurrentTenant();
-		List<LinkEntity> list = new ArrayList<LinkEntity>();
+		Tenant cacheTenant = new Tenant(tenantName);
+		List<LinkEntity> list = null;
+		try {
+			list = (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS);
+			if (list != null) {
+				return list;
+			}
+		}
+		catch (Exception e) {
+			logger.error(e);
+		}
+		list = new ArrayList<LinkEntity>();
 		Set<String> subscribedApps = getTenantSubscribedApplicationSet(false);
 		for (String app : subscribedApps) {
 			try {
@@ -169,12 +222,26 @@ public class RegistrationEntity implements Serializable
 					list.add(new LinkEntity(ApplicationOPCName.ITAnalytics.toString(), ITA_URL, ITA_SERVICENAME, ITA_VERSION)); //version is hard coded now
 
 				}
+				else if (MONITORING_SERVICENAME.equals(app)) {
+					Link l = RegistryLookupUtil.getServiceExternalLink(MONITORING_SERVICENAME, MONITORING_VERSION,
+							MONITORING_HOME_LINK, tenantName);
+					if (l == null) {
+						throw new Exception("Link for " + app + "return null");
+					}
+					//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
+					LinkEntity le = new LinkEntity(MONITORING_OPC_APPNAME, l.getHref(), MONITORING_SERVICENAME,
+							MONITORING_VERSION);
+					le = replaceWithVanityUrl(le, tenantName, MONITORING_SERVICENAME);
+					list.add(le);
+				}
 			}
 			catch (Exception e) {
 				_logger.error("Failed to discover link of cloud service: " + app, e);
 			}
 		}
 		list = sortServiceLinks(list);
+		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+				CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS, list);
 		return list;
 	}
 
@@ -199,7 +266,21 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getHomeLinks()
 	{
+		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
+		try {
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS, new ICacheFetchFactory() {
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
 							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_HOME_LINK));
+						}
+					});
+		}
+		catch (Exception e) {
+			logger.error(e);
+		}
+		return null;
 	}
 
 	public String getSessionExpiryTime()
@@ -269,9 +350,24 @@ public class RegistrationEntity implements Serializable
 	/**
 	 * @return Visual analyzer links discovered from service manager
 	 */
+	@SuppressWarnings("all")
 	public List<LinkEntity> getVisualAnalyzers()
 	{
+		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
+		try {
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_VISUAL_ANALYZER, new ICacheFetchFactory() {
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
 							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
+						}
+					});
+		}
+		catch (Exception e) {
+			logger.error(e);
+			return null;
+		}
 	}
 
 	private void addToLinksMap(Map<String, LinkEntity> linksMap, List<Link> links, String serviceName, String version)
@@ -306,6 +402,10 @@ public class RegistrationEntity implements Serializable
 					resultLinks.add(le);
 				}
 				else if (le.getServiceName().equals(LA_SERVICENAME) && roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_LA)) {
+					resultLinks.add(le);
+				}
+				else if (le.getServiceName().equals(MONITORING_SERVICENAME)
+						&& roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_MONITORING)) {
 					resultLinks.add(le);
 				}
 				else if (le.getServiceName().equals(EVENTUI_SERVICENAME) || le.getServiceName().equals(TMUI_SERVICENAME)) {
@@ -380,13 +480,18 @@ public class RegistrationEntity implements Serializable
 			else if (ApplicationOPCName.LogAnalytics.toString().equals(app)) {
 				appSet.add(LA_SERVICENAME);
 			}
-		}
-		//if any of APM/LA/TA is subscribed, TenantManagementUI/EventUI should be subscribed accordingly as agreement now
-		if (appSet.size() > 0) {
-			if (isAdmin) {
-				appSet.add(TMUI_SERVICENAME);
+			//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
+			else if (MONITORING_OPC_APPNAME.equals(app)) {
+				appSet.add(MONITORING_SERVICENAME);
 			}
+		}
+		//if any of APM/LA/TA is subscribed, TenantManagementUI/EventUI/AdminConsoleSaaSUi should be subscribed accordingly as agreement now
+		if (appSet.size() > 0) {
+			//			if (isAdmin) {
+			appSet.add(TMUI_SERVICENAME);
+			//			}
 			appSet.add(EVENTUI_SERVICENAME);
+			appSet.add(ADMIN_CONSOLE_UI_SERVICENAME);
 		}
 		return appSet;
 	}
@@ -414,8 +519,8 @@ public class RegistrationEntity implements Serializable
 			try {
 				SanitizedInstanceInfo sanitizedInstance = null;
 				if (!StringUtil.isEmpty(tenantName)) {
-					sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance,
-							tenantName);
+					sanitizedInstance = LookupManager.getInstance().getLookupClient()
+							.getSanitizedInstanceInfo(internalInstance, tenantName);
 					logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
 							sanitizedInstance, tenantName);
 				}
@@ -427,8 +532,6 @@ public class RegistrationEntity implements Serializable
 				}
 			}
 			catch (Exception e) {
-				// TODO Auto-generated catch block
-				//				e.printStackTrace();
 				_logger.error("Error to get SanitizedInstanceInfo", e);
 			}
 			if (NAME_DASHBOARD_UI_SERVICENAME.equals(internalInstance.getServiceName())
