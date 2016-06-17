@@ -354,13 +354,36 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         };
         
         self.handleDashboardDeleted = function(event, data) {
-            //console.log(data);
-            //self.selectedDashboard(data);
             var _sd = self.selectedDashboard();
-            self.confirmDialogModel.show(getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB'), 
+            var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
+            dfu.ajaxWithRetry(_url + _sd.dashboard.id + "/dashboardsets", {
+                type: 'GET',
+                headers: dfu.getDashboardsRequestHeader(),
+                success: function (resp) {
+                    var isMemberOfDashboards = resp.dashboardSets && resp.dashboardSets.length > 0;
+                    if(isMemberOfDashboards){
+                        var _name =  _sd.dashboard.name,_sets =  resp.dashboardSets;
+                        var _message =  getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_HEAD',_name) + "<br>";
+                        for(var i = 0; i < _sets.length ; i++ ){
+                            _message += "<br>"+"&lt;" + _sets[i].name +"&gt;";
+                        }
+                        _message += "<br><br>"+ getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_TAILE', _name);
+                        self.confirmDialogModel.show(
+                                getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB'),
+                                getNlsString('COMMON_BTN_DELETE'),
+                                _message,
+                                self.confirmDashboardDelete, true);
+                    }else{
+                         self.confirmDialogModel.show(getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB'), 
                          getNlsString('COMMON_BTN_DELETE'), 
-                         getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB_MSG', _sd.dashboard.name),
+                         getNlsString('COMMON_DELETE_DASHBOARD_MSG', _sd.dashboard.name),
                          self.confirmDashboardDelete, true);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                }
+            });
         };
         
         self.confirmDashboardDelete = function() {

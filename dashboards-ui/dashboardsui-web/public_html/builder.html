@@ -1208,9 +1208,8 @@
                                     <li style="list-style-type:none;" data-bind="text: '<'+$data.name+'>'"></li>
                                 <!-- /ko -->
                             </ul>
+                            <p data-bind="html: getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_TAILE', toolBarModel.dashboardName())"></p>
                         <!-- /ko -->
-                        
-                        <p data-bind="html: getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_TAILE', toolBarModel.dashboardName())"></p>
                     </div>
                     <div class="oj-dialog-footer">
                         <button data-bind="click: toolBarModel.handleDeleteDashboardClicked,
@@ -1235,8 +1234,8 @@
                                     <li style="list-style-type:none;" data-bind="text: '<'+$data.name+'>'"></li>
                                 <!-- /ko -->
                             </ul>
+                             <p data-bind="html: getNlsString('COMMON_UNSHAER_USED_DASHBOARD_MSG_TAILE', toolBarModel.dashboardName())"></p>
                         <!-- /ko -->
-                        <p data-bind="html: getNlsString('COMMON_UNSHAER_USED_DASHBOARD_MSG_TAILE', toolBarModel.dashboardName())"></p>
                     </div>
                     <div class="oj-dialog-footer">
                         <button data-bind="click: toolBarModel.handleUnshareDashboardClicked,
