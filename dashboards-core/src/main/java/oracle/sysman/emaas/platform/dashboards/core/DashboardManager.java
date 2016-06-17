@@ -1002,6 +1002,12 @@ public class DashboardManager
 			if (ed == null) {
 				throw new DashboardNotFoundException();
 			}
+
+            Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
+			if (isDeleted != null && isDeleted.booleanValue()) {
+				throw new DashboardNotFoundException();
+			}
+
 			if (DataFormatUtils.integer2Boolean(ed.getIsSystem())) {
 				throw new CommonSecurityException(
 						MessageUtils.getDefaultBundleString(CommonSecurityException.NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR));
