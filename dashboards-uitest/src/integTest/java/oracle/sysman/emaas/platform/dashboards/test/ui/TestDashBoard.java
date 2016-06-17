@@ -231,7 +231,12 @@ public class TestDashBoard extends LoginAndLogout
 		//open the widget
 		webd.getLogger().info("open the widget");
 		DashboardBuilderUtil.openWidget(webd, "Database Errors Trend");
+
 		webd.switchToWindow();
+		//WaitUtil.waitForPageFullyLoaded(webd);
+		webd.getLogger().info("Wait for the widget loading....");
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), 900L);
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
 
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
@@ -239,6 +244,49 @@ public class TestDashBoard extends LoginAndLogout
 				"emlacore/html/log-analytics-search.html?widgetId=2013&dashboardId")) {
 			Assert.fail("NOT open the correct widget");
 		}
+	}
+
+	@Test
+	public void testDashboardWith12Columns() throws Exception
+	{
+		String name = "DashboardWith12Columns" + generateTimeStamp();
+		String desc = "Description for " + name;
+
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testDashboardWith12Columns");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//create dashboard
+		webd.getLogger().info("Start to create dashboard");
+		DashboardHomeUtil.createDashboard(webd, name, desc, DashboardHomeUtil.DASHBOARD);
+
+		//verify dashboard in builder page
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, name, desc, true),
+				"Failed to verify the created dashboard. Probably the creation failed, or name/description is wrongly specified!");
+
+		String widgetName = "Database Errors Trend";
+		//add widget
+		webd.getLogger().info("Start to add Widget into the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, widgetName);
+		webd.getLogger().info("Add widget finished");
+
+		webd.getLogger().info("Get narrower widgets");
+		for (int i = 1; i <= 4; i++) {
+			DashboardBuilderUtil.resizeWidget(webd, widgetName, DashboardBuilderUtil.TILE_NARROWER);
+			webd.takeScreenShot();
+		}
+		webd.getLogger().info("Finished to get narrower widgets");
+
+		webd.getLogger().info("Get wider widgets");
+		for (int i = 1; i <= 10; i++) {
+			DashboardBuilderUtil.resizeWidget(webd, widgetName, DashboardBuilderUtil.TILE_WIDER);
+			webd.takeScreenShot();
+		}
+		webd.getLogger().info("Finished to get wider widgets");
 	}
 
 	@Test
@@ -745,6 +793,10 @@ public class TestDashBoard extends LoginAndLogout
 
 		//verify the url
 		webd.switchToWindow();
+		//WaitUtil.waitForPageFullyLoaded(webd);
+		webd.getLogger().info("Wait for the widget loading....");
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), 900L);
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
 
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
