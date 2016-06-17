@@ -307,6 +307,8 @@ define(['knockout',
                                     widgets[i].WIDGET_DESCRIPTION = null;
                                 var wgt = ko.mapping.fromJS(widgets[i]);
                                 wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
+                                wgt && !wgt.imgWidth && (wgt.imgWidth = ko.observable('120px'));
+                                wgt && !wgt.imgHeight && (wgt.imgHeight = ko.observable('120px'));
 //                                self.getWidgetScreenshot(wgt);
                                 self.widgets.push(wgt);
                             }
@@ -329,6 +331,12 @@ define(['knockout',
                 wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
                 url && wgt.WIDGET_VISUAL(url);
                 !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('@version@/images/sample-widget-histogram.png'));
+
+                //resize widget screenshot according to aspect ratio
+                dfu.getScreenshotSizePerRatio(120, 120, wgt.WIDGET_VISUAL(), function(imgWidth, imgHeight) {
+                    wgt.imgWidth(imgWidth + "px");
+                    wgt.imgHeight(imgHeight + "px");
+                });
             };
             
             self.getWidgetBase64Screenshot = function(wgt) {

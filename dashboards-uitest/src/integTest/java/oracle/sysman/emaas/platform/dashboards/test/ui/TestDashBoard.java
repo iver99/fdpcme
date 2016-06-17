@@ -231,7 +231,12 @@ public class TestDashBoard extends LoginAndLogout
 		//open the widget
 		webd.getLogger().info("open the widget");
 		DashboardBuilderUtil.openWidget(webd, "Database Errors Trend");
+
 		webd.switchToWindow();
+		//WaitUtil.waitForPageFullyLoaded(webd);
+		webd.getLogger().info("Wait for the widget loading....");
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), 900L);
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
 
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
@@ -270,14 +275,14 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Add widget finished");
 
 		webd.getLogger().info("Get narrower widgets");
-		for (int i = 1; i <= 5; i++) {
+		for (int i = 1; i <= 4; i++) {
 			DashboardBuilderUtil.resizeWidget(webd, widgetName, DashboardBuilderUtil.TILE_NARROWER);
 			webd.takeScreenShot();
 		}
 		webd.getLogger().info("Finished to get narrower widgets");
 
 		webd.getLogger().info("Get wider widgets");
-		for (int i = 1; i <= 11; i++) {
+		for (int i = 1; i <= 10; i++) {
 			DashboardBuilderUtil.resizeWidget(webd, widgetName, DashboardBuilderUtil.TILE_WIDER);
 			webd.takeScreenShot();
 		}
@@ -788,6 +793,10 @@ public class TestDashBoard extends LoginAndLogout
 
 		//verify the url
 		webd.switchToWindow();
+		//WaitUtil.waitForPageFullyLoaded(webd);
+		webd.getLogger().info("Wait for the widget loading....");
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), 900L);
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
 
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
@@ -874,4 +883,3 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 }
-

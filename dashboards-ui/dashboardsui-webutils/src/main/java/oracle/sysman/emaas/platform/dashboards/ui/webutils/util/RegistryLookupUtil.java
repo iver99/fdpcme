@@ -37,6 +37,7 @@ public class RegistryLookupUtil
 	public static final String ITA_SERVICE = "emcitas-ui-apps";
 	public static final String LA_SERVICE = "LoganService";
 	public static final String TA_SERVICE = "TargetAnalytics";
+	public static final String MONITORING_SERVICE = "MonitoringServiceUI";
 
 	public static Link getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
 	{
@@ -298,7 +299,8 @@ public class RegistryLookupUtil
 			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			if (result != null && result.size() > 0) {
 				for (InstanceInfo internalInstance : result) {
-					if (map.containsKey(APM_SERVICE) && map.containsKey(ITA_SERVICE) && map.containsKey(LA_SERVICE)) {
+					if (map.containsKey(APM_SERVICE) && map.containsKey(ITA_SERVICE) && map.containsKey(LA_SERVICE)
+							&& map.containsKey(MONITORING_SERVICE)) {
 						break;
 					}
 					if (!map.containsKey(APM_SERVICE)) {
@@ -337,6 +339,19 @@ public class RegistryLookupUtil
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
 							logger.debug("Tenant id is inserted into the base vanity URL for la. The URL is {}", url);
 							map.put(LA_SERVICE, url);
+						}
+					}
+					if (!map.containsKey(MONITORING_SERVICE)) {
+						List<Link> links = internalInstance.getLinksWithProtocol("vanity/monitoring", "https");
+						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
+
+						if (links != null && links.size() > 0) {
+							lk = links.get(0);
+							logger.debug("Retrieved base vanity URL for monitoring service: {} ", lk.getHref());
+							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
+							logger.debug("Tenant id is inserted into the base vanity URL for monitoring service. The URL is {}",
+									url);
+							map.put(MONITORING_SERVICE, url);
 						}
 					}
 				}

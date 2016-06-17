@@ -35,6 +35,7 @@ define([
                 self.affirmativeButtonLabel = affirmativeTxt ? affirmativeTxt : nls.WIDGET_SELECTOR_DEFAULT_AFFIRMATIVE_BTN_LABEL;
                 self.widgetScreenShotPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE;
                 self.widgetDescPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE;
+                self.widgetsLoadingHints = nls.WIDGET_SELECTOR_WIDGETS_LOADING_HINT;
                         
                 self.widgetGroupFilterVisible = ko.observable(widgetProviderName && widgetProviderVersion ? false : true);
                 self.searchText = ko.observable("");
@@ -69,6 +70,7 @@ define([
                 self.naviNextBtnEnabled=ko.observable(totalPage > 1 && curPage!== totalPage ? true:false);
                 self.currentWidget = ko.observable();
                 self.confirmBtnDisabled = ko.observable(true);
+                self.widgetOnLoading = ko.observable(true);
                 
                 // Initialize data and refresh
                 self.beforeOpenDialog = function(event, ui) {
@@ -333,7 +335,7 @@ define([
                                     oj.Logger.error('Error when fetching widgets by URL: '+widgetsUrl+'.');
                                 },
                                 async: true
-                            });  
+                            });
                         }
 
                         return ajaxCallDfd;
@@ -396,6 +398,7 @@ define([
                     self.currentWidget(null);
                     self.confirmBtnDisabled(true);
                     self.searchText("");
+                    self.widgetOnLoading(true);
                     refreshPageData();
                     
                     getWidgetGroups().done(function(data, textStatus, jqXHR){
@@ -412,6 +415,7 @@ define([
                             else {
                                 refreshPageData();
                             }
+                            self.widgetOnLoading(false);
                         })
                         .fail(function(xhr, textStatus, errorThrown){
                             oj.Logger.error("Failed to fetch widgets.");
@@ -431,6 +435,8 @@ define([
                                 var widget = data[i];
                                 widget.index = widgetIndex;
                                 widget.WIDGET_VISUAL = ko.observable();
+                                widget.imgWidth = ko.observable("190px");
+                                widget.imgHeight = ko.observable("140px");
 
                                 if (!widget.WIDGET_DESCRIPTION)
                                     widget.WIDGET_DESCRIPTION = "";
@@ -451,6 +457,41 @@ define([
                 };
                 
                 function loadWidgetScreenshot(widget) {
+                    var url = widget.WIDGET_SCREENSHOT_HREF;
+                    if (!url) { // backward compility if SSF doesn't support .png screenshot. to be removed once SSF changes are merged
+                        loadWidgetBase64Screenshot(widget);
+                        return;
+                    }
+                    if (!dfu.isDevMode()){
+                        url = dfu.getRelUrlFromFullUrl(url);
+                    } 
+                    widget && !widget.WIDGET_VISUAL && (widget.WIDGET_VISUAL = ko.observable(''));
+                    url && widget.WIDGET_VISUAL(url);
+                    if (!widget.WIDGET_VISUAL()) {
+                        var laImagePath = "/emsaasui/uifwk/@version@/images/widgets/sample-widget-histogram.png";
+                        var taImagePath = "/emsaasui/uifwk/@version@/images/widgets/sample-widget-histogram.png";
+                        var itaImagePath = "/emsaasui/uifwk/@version@/images/widgets/sample-widget-histogram.png";
+                        if ('LoganService' === widget.PROVIDER_NAME) {
+                            widget.WIDGET_VISUAL(laImagePath);
+                        }
+                        else if ('TargetAnalytics' === widget.PROVIDER_NAME) {
+                            widget.WIDGET_VISUAL(taImagePath);
+                        }
+                        else if ('EmcitasApplications' === widget.PROVIDER_NAME) {
+                            widget.WIDGET_VISUAL(itaImagePath);
+                        }else{
+                            widget.WIDGET_VISUAL(itaImagePath); //default image
+                        }
+                    }
+
+                    //resize widget screenshot according to aspect ratio
+                    dfu.getScreenshotSizePerRatio(190, 140, widget.WIDGET_VISUAL(), function(imgWidth, imgHeight) {
+                        widget.imgWidth(imgWidth + "px");
+                        widget.imgHeight(imgHeight + "px");
+                    });
+                }
+                
+                function loadWidgetBase64Screenshot(widget) {
                     if (!widget.isScreenshotLoaded) {
                         var widgetsUrl = '/sso.static/savedsearch.widgets';
                         if (dfu.isDevMode()){
@@ -479,6 +520,7 @@ define([
                                         widget.WIDGET_VISUAL(itaImagePath); //default image
                                     }
                                 }
+
                                 widgetArray[widget.index].WIDGET_VISUAL(widget.WIDGET_VISUAL());
                                 widget.isScreenshotLoaded = true;
                                 widgetArray[widget.index].isScreenshotLoaded = true;

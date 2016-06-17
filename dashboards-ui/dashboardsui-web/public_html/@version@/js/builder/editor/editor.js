@@ -22,7 +22,7 @@ define(['knockout',
                 SOUTH_EAST: "south-east",
                 SOUTH: "south"
             };
-      
+
             self.changeMode = function(newMode) {
                 if (newMode)
                     self.mode = newMode;
@@ -141,7 +141,7 @@ define(['knockout',
             
             self.narrowTile = function(tile,value) {
                 var width = self.mode.getModeWidth(tile),offsetValue = value || 1;
-                if (width <= 1)
+                if (width <= self.mode.MODE_MIN_COLUMNS)
                     return;
                 width = width - offsetValue;
                 self.tilesGrid.updateTileSize(tile, width, self.mode.getModeHeight(tile));
@@ -149,7 +149,7 @@ define(['knockout',
             };
             
             self.tallerTile = function(tile,value) {
-                var cells = self.getCellsOccupied(self.mode.getModeRow(tile)+self.mode.getModeHeight(tile), self.mode.getModeColumn(tile), self.mode.getModeWidth(tile), 1),                          
+                var cells = self.getCellsOccupied(self.mode.getModeRow(tile)+self.mode.getModeHeight(tile), self.mode.getModeColumn(tile), self.mode.getModeWidth(tile), 1),
                     offsetValue = value || 1;
                 var tilesToMove = self.getTilesUnder(cells, tile);
                 for(var i in tilesToMove) {                    
@@ -171,7 +171,7 @@ define(['knockout',
                 }
                 self.tilesReorder();
             };
-            
+
             self.resizeTile = function (tile,options) {
                 var isPositionValid = options && options.left && options.top;
                 var isResizeModeValid = options && options.mode === self.RESIZE_OPTIONS.EAST || options.mode === self.RESIZE_OPTIONS.SOUTH  || options.mode === self.RESIZE_OPTIONS.SOUTH_EAST || self.RESIZE_OPTIONS.WEST;
@@ -179,12 +179,12 @@ define(['knockout',
                       console.log("invalid resize options :"+JSON.parse(options));
                       return false;
                 }
-                
+
                 var widgetArea = $b.findEl('.widget-area'), widgetAreaWidth = widgetArea.width();
                 var columnGridWidth = widgetAreaWidth / self.mode.MODE_MAX_COLUMNS,columnGridHeight = Builder.DEFAULT_HEIGHT;
                 var currentWidth = tile.modeWidth() * columnGridWidth,currentHeight = tile.modeHeight() * columnGridHeight,
                     currentLeft = tile.modeColumn() * columnGridWidth,currentTop = tile.modeRow();
-                
+
                 switch (options.mode) {
                     case self.RESIZE_OPTIONS.EAST:
                         var leftOfContainer = widgetArea.offset().left;
@@ -205,7 +205,7 @@ define(['knockout',
                         var leftOfContainer = widgetArea.offset().left;
                         var offsetXValue = Math.round((options.left - leftOfContainer - currentLeft) / columnGridWidth);
                         var newColumnIndex =  Math.round((options.left - leftOfContainer) / columnGridWidth);
-                        
+
                         var isBroaden = offsetXValue < 0;
                         var isNarrow = offsetXValue > 0;
                         self.mode.setModeColumn(tile,newColumnIndex);
@@ -267,10 +267,10 @@ define(['knockout',
                     default:
                         break;
                 }
-                // print current ui handler position as a cell of grids 
+                // print current ui handler position as a cell of grids
                 console.log(self.getCellFromPosition(widgetAreaWidth,{left:options.left,top:options.top}));
             };
-                                   
+
             //reorder and re-register tiles
             self.tilesReorder = function() {
                 self.sortTilesByColumnsThenRows();
@@ -608,7 +608,7 @@ define(['knockout',
                 return new Builder.Cell(row, column);
             };
             
-            self.createNewTile = function(name, description, width, height, widget, timeSelectorModel, targets, loadImmediately) {
+            self.createNewTile = function(name, description, width, height, widget, timeSelectorModel, targets, loadImmediately, dashboardInst) {
                 if (!widget)
                     return null;
                 
@@ -646,7 +646,7 @@ define(['knockout',
                                 oj.Logger.log("widget viewmodel:: "+assetRoot+viewmodel);    
                             }
 
-                            newTile =new Builder.DashboardTile(self.mode, $b.dashboard, koc_name, name, description, widget, timeSelectorModel, targets, loadImmediately);
+                            newTile =new Builder.DashboardTile(self.mode, $b.dashboard, koc_name, name, description, widget, timeSelectorModel, targets, loadImmediately, dashboardInst);
                             var tileCell;
                             if(!(self.tiles && self.tiles().length > 0)) {
                                 tileCell = new Builder.Cell(0, 0);

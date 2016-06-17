@@ -25,7 +25,7 @@ public class DashboardsUiCORSFilterTest
 	@SuppressWarnings("unchecked")
 	@Test(groups = { "s2" })
 	public void testDoFilter(@Mocked final FilterChain chain, @Mocked final HttpServletRequest request,
-			@Mocked final HttpServletResponse response, @Mocked final TenantSubscriptionUtil tenantUtil, 
+			@Mocked final HttpServletResponse response, @Mocked final TenantSubscriptionUtil tenantUtil,
 			@Mocked final RegistryLookupUtil lookupUtil) throws Exception
 	{
 		final String test = "TEST";
@@ -35,9 +35,9 @@ public class DashboardsUiCORSFilterTest
 		final List<String> serviceList = Arrays.asList("APM", "LogAnalytics", "ITAnalytics");
 		final Link link = new Link();
 		link.withHref("http://xxxx/naming/entitynaming/v1/domains");
-		
+
 		DashboardsUiCORSFilter filter = new DashboardsUiCORSFilter();
-		
+
 		new MockUp<File>() {
 			@Mock
 			boolean exists()
@@ -49,38 +49,46 @@ public class DashboardsUiCORSFilterTest
 		new Expectations() {
 			{
 				request.getHeader(anyString);
-				returns(test, test, 	//1
-						test, tenant, 	//2
-						test, tenant, 	//3
-						test, tenant);	//4
-				
+				returns(test, test, //1
+						test, tenant, //2
+						test, tenant, //3
+						test, tenant, //4
+						test, tenant); //5
+
 				request.getRequestURI();
-				returns(test,									//1 
-						homePath, homePath, 					//2
-						builderPath, builderPath, builderPath, 	//3
-						homePath, homePath);					//4
-				
+				returns(test, //1
+						homePath, homePath, //2
+						builderPath, builderPath, builderPath, //3
+						homePath, homePath, //4
+						homePath, homePath); //5
+
 				TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
-				returns(new ArrayList<String>(),	//2 
-						new ArrayList<String>(), 	//3
-						serviceList);				//4
-				
+				returns(new ArrayList<String>(), //2
+						new ArrayList<String>(), //3
+						serviceList, //4
+						serviceList); //5
+
 				TenantSubscriptionUtil.isAPMServiceOnly((List<String>) any);
-				returns(true);//4
-				
+				returns(true, false); //4, 5
+
+				TenantSubscriptionUtil.isMonitoringServiceOnly((List<String>) any);
+				returns(true);//5
+
 				RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString);
-				returns(link);//4
+				returns(link, link); //4, 5
 			}
 		};
-		
-		filter.doFilter(request, response, chain);	//1
-		filter.doFilter(request, response, chain);	//2
-		filter.doFilter(request, response, chain);	//3
-		filter.doFilter(request, response, chain);	//4
-		
+
+		filter.doFilter(request, response, chain); //1
+		filter.doFilter(request, response, chain); //2
+		filter.doFilter(request, response, chain); //3
+		filter.doFilter(request, response, chain); //4
+		filter.doFilter(request, response, chain); //5
+
 		new Verifications() {
 			{
-				chain.doFilter(request, response); times = 1;
+				chain.doFilter(request, response);
+				times = 1;
 			}
 		};
 	}
