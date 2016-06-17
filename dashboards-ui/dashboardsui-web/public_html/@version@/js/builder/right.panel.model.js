@@ -569,8 +569,14 @@ define(['knockout',
             self.dashboardSharing.subscribe(function(val){
                 if ("notShared" === val) {
                     queryDashboardSetsBySubId(self.dashboard.id(), function (resp) {
-                        if (resp.dashboardSets && resp.dashboardSets.length > 0) {
-                            window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(resp.dashboardSets);
+                        var currentUser = dfu.getUserName();
+                        var setsSharedByOthers = resp.dashboardSets || [];
+                        setsSharedByOthers = setsSharedByOthers.filter(function(dbs){
+                            return dbs.owner !== currentUser;
+                        });
+                        
+                        if (setsSharedByOthers.length > 0) {
+                            window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(setsSharedByOthers);
                             toolBarModel.openDashboardUnshareConfirmDialog(function(isShared){
                                 if(isShared){
                                    self.dashboardSharing(true); 
