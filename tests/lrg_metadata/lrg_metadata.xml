@@ -17,5 +17,10 @@
             <pipeline name="PRODUCT"/>
              </pipelines>
      </lrg>
+	<lrg name="emcpdf_test_3n" launcher="tests/suites/emcpdf_test_3n.gradle" description="lrg for emcpdf 3n automation,running in farm">
+             <pipelines>
+            <pipeline name="STAGE"/>
+             </pipelines>
+     </lrg>
 
  </lrg-metadata>

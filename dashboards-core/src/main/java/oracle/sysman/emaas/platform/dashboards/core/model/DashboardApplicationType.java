@@ -29,11 +29,14 @@ public enum DashboardApplicationType
 	/**
 	 * The draft version is submitted for release
 	 */
-	LogAnalytics(3);
+	LogAnalytics(3),
+	// Infrastructure Monitoring service
+	Monitoring(4);
 
 	public static final String APM_STRING = "APM";
 	public static final String ITA_SRING = "ITAnalytics";
 	public static final String LA_STRING = "LogAnalytics";
+	public static final String MONITORING_STRING = "Monitoring";
 
 	@JsonCreator
 	public static DashboardApplicationType fromJsonValue(String value)
@@ -46,6 +49,9 @@ public enum DashboardApplicationType
 		}
 		if (LA_STRING.equals(value)) {
 			return LogAnalytics;
+		}
+		if (MONITORING_STRING.equals(value)) {
+			return Monitoring;
 		}
 		throw new IllegalArgumentException("Invalid DashboardApplicationType string value: " + value);
 	}
@@ -78,6 +84,9 @@ public enum DashboardApplicationType
 		}
 		if (value == LogAnalytics.value) {
 			return LA_STRING;
+		}
+		if (value == Monitoring.value) {
+			return MONITORING_STRING;
 		}
 		throw new IllegalArgumentException("Invalid DashboardApplicationType type value: " + value);
 	}
