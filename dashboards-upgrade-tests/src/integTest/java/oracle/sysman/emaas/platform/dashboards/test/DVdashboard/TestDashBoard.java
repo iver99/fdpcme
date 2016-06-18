@@ -16,6 +16,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.test.util.*;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.*;
 
@@ -36,6 +37,8 @@ public class TestDashBoard extends LoginAndLogout
          //private String dbName_withWidgetGrid = "";
          private String dbName_setHome = "";
          private String dbName_noWidgetGrid = "";
+         private String dbName_favorite = "";
+  
 
 
 	public void initTest(String testName) throws Exception
@@ -91,50 +94,86 @@ public void testSetHome() throws Exception
 				"It is NOT the home page!");
  
 	}
-	
 	@Test
-		public void testShareDashboard() throws Exception
-		{ 
-		        dbName_noWidgetGrid = "NoWidgetGridView-" + generateTimeStamp();   
-		   
-			initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-			webd.getLogger().info("start to test in testshareddashboard");
-	
-			DashboardHomeUtil.gridView(webd);
-			//search the dashboard and open it in builder page
-			webd.getLogger().info("search the dashboard");
-			DashboardHomeUtil.search(webd, dbName_noWidgetGrid + "-modify");
-			webd.getLogger().info("verify the dashboard is existed");
-			Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_noWidgetGrid + "-modify"), "Dashboard NOT found!");
-			webd.getLogger().info("open the dashboard");
-			DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid + "-modify");
-	
-			//sharing dashbaord
-			webd.getLogger().info("Share the dashboard");
-			Assert.assertTrue(DashboardBuilderUtil.toggleShareDashboard(webd), "Share dashboard failed!");
-	
+	public void testFavorite() throws Exception
+	{
+		dbName_favorite = "favoriteDashboard-" + generateTimeStamp();
+		String dbDesc = "favorite_testDashboard desc";
+
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testFavorite");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//create dashboard
+		webd.getLogger().info("Create a dashboard: with description, time refresh");
+		DashboardHomeUtil.createDashboard(webd, dbName_favorite, dbDesc, DashboardHomeUtil.DASHBOARD);
+
+		//verify dashboard in builder page
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_favorite, dbDesc, true), "Create dashboard failed!");
+
+		//set it to favorite
+		webd.getLogger().info("Set the dashboard to favorite");
+		Assert.assertTrue(DashboardBuilderUtil.favoriteOption(webd));
+
+		//verify the dashboard is favorite
+		webd.getLogger().info("Visit my favorite page");
+		BrandingBarUtil.visitMyFavorites(webd);
+
+		webd.getLogger().info("Verfiy the favortie checkbox is checked");
+		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "favorites"), "My Favorites option is NOT checked");
+		//		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
+		//		Assert.assertTrue(el.isSelected());
+
+		webd.getLogger().info("Verfiy the dashboard is favorite");
+		//DashboardHomeUtil.search(webd, dbName_favorite);
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_favorite), "Can not find the dashboard");
+
+		webd.getLogger().info("Open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, dbName_favorite);
+		webd.getLogger().info("Verify the dashboard in builder page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_favorite, dbDesc, true), "Create dashboard failed!");
+
+		//set it to not favorite
+		webd.getLogger().info("set the dashboard to not favorite");
+		Assert.assertFalse(DashboardBuilderUtil.favoriteOption(webd), "Set to not my favorite dashboard failed!");
+
+		//verify the dashboard is not favoite
+		webd.getLogger().info("visit my favorite page");
+		BrandingBarUtil.visitMyFavorites(webd);
+		webd.getLogger().info("Verfiy the favortie checkbox is checked");
+		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "favorites"), "My Favorites option is NOT checked");
+		//		el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
+		//		Assert.assertTrue(el.isSelected());
+		webd.getLogger().info("Verfiy the dashboard is not favorite");
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_favorite),
+				"The dashboard is still my favorite dashboard");
+				//		DashboardHomeUtil.search(webd, dbName_favorite);
+				//		Assert.assertEquals(webd.getAttribute(DashBoardPageId.DashboardSerachResult_panelID + "@childElementCount"), "0");
+				//		webd.getLogger().info("no favorite dashboard");
+
+		//delete the dashboard
+		webd.getLogger().info("start to delete the dashboard");
+
+		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
+		if (el.isSelected()) {
+			el.click();
 		}
-	
-		@Test(dependsOnMethods = { "testShareDashboard" })
-		public void testStopShareDashboard() throws Exception
-		{
-			initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-			webd.getLogger().info("start to test in testshareddashboard");
-	
-			DashboardHomeUtil.gridView(webd);
-	
-			//search the dashboard and open it in builder page
-			webd.getLogger().info("search the dashboard");
-			DashboardHomeUtil.search(webd, dbName_noWidgetGrid + "-modify");
-			webd.getLogger().info("verify the dashboard is existed");
-			Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_noWidgetGrid + "-modify"), "Dashboard NOT found!");
-			webd.getLogger().info("open the dashboard");
-			DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid + "-modify");
-	
-			//stop sharing dashbaord
-			webd.getLogger().info("Stop share the dashboard");
-			Assert.assertFalse(DashboardBuilderUtil.toggleShareDashboard(webd), "Stop sharing the dashboard failed!");
+		DashboardHomeUtil.deleteDashboard(webd, dbName_favorite, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+		webd.getLogger().info("the dashboard has been deleted");
 	}
+
+
+
+
 
 
       private String generateTimeStamp()

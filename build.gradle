@@ -217,7 +217,7 @@ runS1Tests.enabled = !project.disableBuildTests
 
 task runS2Tests(type: Exec) {
  executable = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
-    args 'do_lrg', '-Plrgs=emcpdf_l0_test'
+    args 'do_lrg', '-Plrgs=emcpdf_l1_test'
     if (project.hasProperty('BuildID')) {
         args "-PREPO_BID=${BuildID}"
     }

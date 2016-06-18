@@ -54,6 +54,23 @@ repositories {
     }
 dependencies {
 	testConfig configurations.webdriver
+	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
+	exclude('module':'groovy')}
+	testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5')  { transitive = false }
+    
+        testConfig(group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.17.1'){ transitive = false }
+        
+        testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
+
+
+        testConfig(group: 'commons-logging', name:'commons-logging', version:'1.1.1'){ transitive = false }
+        
+	
+
+	testConfig('com.sun.jersey:jersey-servlet:1.17.1') { transitive = false }
+	testConfig('com.sun.jersey:jersey-server:1.17.1') { transitive = false }
+
+
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core-integ-tests', version: "${REPO_BID}"){
 		exclude('module':'groovy')
 	}
@@ -126,9 +143,14 @@ dependencies {
 apply plugin: 'java'
 
 
+task DEVTest_ws(type:EMTest){ 
+	include "oracle/sysman/emaas/platform/dashboards/ws/*"
+	 include "oracle/sysman/emaas/platform/dashboards/ws/rest/*"
+	useRestAssured=true
+	ext.set("testType", "unit")
+}
 
-
-task DEVTest(type:EMTest){
+task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 
 	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest_S2.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/DBConnectionManagerTest.class"
