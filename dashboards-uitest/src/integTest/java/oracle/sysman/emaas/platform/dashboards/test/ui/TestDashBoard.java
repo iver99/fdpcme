@@ -165,6 +165,25 @@ public class TestDashBoard extends LoginAndLogout
 				"Create dashboard failed!");
 	}
 
+           @Test(dependsOnMethods = { "testCreateDashboard_noWidget_ListView"})
+	public void Test_targetselector() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test sort by dashboards  in list view");
+
+		//search the dashboard
+		webd.getLogger().info("search the dashboard");
+		DashboardHomeUtil.search(webd, "noWidgetListView");
+
+		//open the dashboard in builder page
+		webd.getLogger().info("open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "noWidgetListView");
+
+		//edit the dashboard in Target selector page
+		DashboardBuilderUtil.EditDashboard_targetselctor(webd, "noWidgetListView", "noWidgetListView desc2");
+	  	
+	}      
+
 	@Test
 	public void testCreateDashboard_noWidget_ListView() throws Exception
 	{
