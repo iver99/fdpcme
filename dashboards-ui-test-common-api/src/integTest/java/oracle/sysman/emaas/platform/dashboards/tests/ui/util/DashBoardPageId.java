@@ -218,6 +218,7 @@ public class DashBoardPageId
 	public static final String BuilderOptionsEditNameCSS = "dbsHNameIn";
 	public static final String BuilderOptionsEditDescriptionCSS = "dbsHDpIn";
 	public static final String BuilderOptionsEditSaveCSS = ".createDsb-2";
+        public static final String EntityfilterLocator = "ckbxEntityFilter";
 	public static final String BuilderOptionsShareLocatorCSS = "li[data-singledb-option=\"Share\"] a";
 	public static final String BuilderOptionsUnShareLocatorCSS = "li[data-singledb-option=\"Stop Sharing\"] a";
 	public static final String BuilderOptionsFavoriteLocatorCSS = "li[data-singledb-option=\"Add Favorite\"] a";
