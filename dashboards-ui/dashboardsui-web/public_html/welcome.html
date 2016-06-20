@@ -45,6 +45,21 @@
                                 </div>
                             </a>
                         </li>
+                        <!-- ko if: showInfraMonitoring -->
+                        <li class="box-list-li box-list-a">
+                            <a id="infra_mon_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openInfraMonitoring">
+                                <div class="service-box-wrapper">
+                                    <div class="landing-home-box-img infra-mon-box">
+                                        <img class="app-image" src="@version@/images/InfraMonitoring_w_92px.png" data-bind="attr: {alt: infraMonitoring}"/>
+                                    </div>
+                                    <div class="landing-home-box-content">
+                                        <div class="landing-home-box-content-head" data-bind="text: infraMonitoring"></div>
+                                        <div class="landing-home-box-content-desc" data-bind="text: infraMonitoringDesc"></div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <!-- /ko -->
                         <li class="box-list-li box-list-a">
                             <a id="LA_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openLogAnalytics">
                                 <div class="service-box-wrapper">
@@ -74,6 +89,8 @@
                                             <option value="mw_perf" id="ITA_mw_perf" data-bind="text: ITA_Middleware_Performance"></option>
                                             <option value="DB_resource" id="ITA_DB_resource" data-bind="text: ITA_DB_Resource"></option>
                                             <option value="mw_resource" id="ITA_mw_resource" data-bind="text: ITA_Middleware_Resource"></option>
+					    <option value="app_perf" id="ITA_app_perf" data-bind="text: ITA_Application_Performance"></option>
+ 					    <option value="avail-analytics" id="ITA_avail_analytics" data-bind="text: ITA_Avail_Analytics"></option>
                                             <!-- ko foreach: exploreDataInITA -->                                            
                                             <option data-bind="attr: {id: id}, value: name, text: name"></option>
                                             <!-- /ko -->

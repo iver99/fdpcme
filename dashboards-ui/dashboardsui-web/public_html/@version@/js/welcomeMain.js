@@ -131,6 +131,11 @@ require(['ojs/ojcore',
                 self.ITA_DB_Resource = getNlsString("LANDING_HOME_ITA_DB_RESOURCE");
                 self.ITA_Middleware_Performance = getNlsString("LANDING_HOME_ITA_MIDDLEWARE_PERFORMANCE");
                 self.ITA_Middleware_Resource = getNlsString("LANDING_HOME_ITA_MIDDLEWARE_RESOURCE");
+                self.ITA_Application_Performance = getNlsString("LANDING_HOME_ITA_APPLICATION_PERFORMANCE");
+                self.ITA_Avail_Analytics = getNlsString("LANDING_HOME_ITA_AVAIL_ANALYTICS");
+                
+                self.infraMonitoring = getNlsString("LANDING_HOME_INFRA_MONITORING");
+                self.infraMonitoringDesc = getNlsString("LANDING_HOME_INFRA_MONITORING_DESC");
 
                 self.dashboards = getNlsString("LANDING_HOME_DASHBOARDS");
                 self.dashboardsDesc = getNlsString("LANDING_HOME_DASHBOARDS_DESC");
@@ -147,7 +152,9 @@ require(['ojs/ojcore',
                 self.community = getNlsString("LANDING_HOME_COMMUNITY_LINK");
                 
                 self.ITA_Type = "select";
-                self.data_type = "select";                
+                self.data_type = "select";
+                
+                self.showInfraMonitoring = ko.observable(false);
                 
                 self.getServiceUrls = function() {
                     var serviceUrl = dfu.getRegistrationUrl();
@@ -173,13 +180,16 @@ require(['ojs/ojcore',
                     return url;
                 };
                 
-                function fetchServiceLinks(data) {
+                function fetchServiceLinks(data) { 
                     var landingHomeUrls = {};
                     var i;
                     if(data.cloudServices && data.cloudServices.length>0) {
                         var cloudServices = data.cloudServices;
                         var cloudServicesNum = cloudServices.length;
                         for(i=0; i<cloudServicesNum; i++) {
+                            if(cloudServices[i].name == "Monitoring") {
+                                self.showInfraMonitoring(true);
+                            }
                             landingHomeUrls[cloudServices[i].name] = cloudServices[i].href;
                         }
                     }
@@ -210,18 +220,27 @@ require(['ojs/ojcore',
                     landingHomeUrls["DB_resource"] = self.getITAVerticalAppUrl("verticalApplication.db-resource");
                     landingHomeUrls["mw_perf"] = self.getITAVerticalAppUrl("verticalApplication.mw-perf");
                     landingHomeUrls["mw_resource"] = self.getITAVerticalAppUrl("verticalApplication.mw-resource");
+                    landingHomeUrls["avail-analytics"] = self.getITAVerticalAppUrl("verticalApplication.avail-analytics");
+                    landingHomeUrls["app_perf"] = self.getITAVerticalAppUrl("verticalApplication.app-perf-analytics");
                     self.landingHomeUrls = landingHomeUrls;
                 }
                 self.getServiceUrls();
                                 
                 self.openAPM = function() {
+                    if(!self.landingHomeUrls) {
+                        console.log("---fetching service links is not finished yet!---");
+                        return;
+                    }
                     oj.Logger.info('Trying to open APM by URL: ' + self.landingHomeUrls.APM);
                     if(self.landingHomeUrls.APM) {
                         window.location.href = self.landingHomeUrls.APM;
                     }
                 };
                 self.openLogAnalytics = function (data, event) {
-
+                    if(!self.landingHomeUrls) {
+                        console.log("---fetching service links is not finished yet!---");
+                        return;
+                    }
                     oj.Logger.info('Trying to open Log Analytics by URL: ' + self.landingHomeUrls.LogAnalytics);
                     if (self.landingHomeUrls.LogAnalytics) {
                         window.location.href = self.landingHomeUrls.LogAnalytics;
@@ -230,7 +249,11 @@ require(['ojs/ojcore',
                 };
                 self.openITAnalytics = function(data, event) {
                     if (event.type === "click" || (event.type === "keypress" && event.keyCode === 13)) {
-                        oj.Logger.info('Trying to open Log Analytics by URL: ' + self.landingHomeUrls.LogAnalytics);
+                        if(!self.landingHomeUrls) {
+                            console.log("---fetching service links is not finished yet!---");
+                            return;
+                        }
+                        oj.Logger.info('Trying to open IT Analytics by URL: ' + self.landingHomeUrls.ITAnalytics);
                         if(self.landingHomeUrls.ITAnalytics) {
                             window.location.href = self.landingHomeUrls.ITAnalytics;
                         }
@@ -249,24 +272,38 @@ require(['ojs/ojcore',
                                 $("#ITA_options").focus();
                             }else {
                                 $(event.target).blur();
-                                $("#dashboards_wrapper").focus();
+                                $("#infra_mon_wrapper").focus();
                             }
                         }
                     }
                 };
                 self.ITAOptionChosen = function(event, data) {
+                    if(!self.landingHomeUrls) {
+                        console.log("---fetching service links is not finished yet!---");
+                        return;
+                    }
                     if(data.value && self.landingHomeUrls[data.value]) {
                         oj.Logger.info('Trying to open ' + data.value + ' by URL: ' + self.landingHomeUrls[data.value]);
                         window.location.href = self.landingHomeUrls[data.value];
                     }
                 };
+                self.openInfraMonitoring = function() {
+                    if (self.landingHomeUrls && self.landingHomeUrls.Monitoring) {
+                        oj.Logger.info("Trying to open Infrastructure Monitoring by URL: " + self.landingHomeUrls.Monitoring);
+                        window.location.href = self.landingHomeUrls.Monitoring;
+                    }
+                }
                 self.openDashboards = function() {
                     oj.Logger.info('Trying to open dashboards by URL: ' + self.dashboardsUrl);
                     if(self.dashboardsUrl) {
                         window.location.href = self.dashboardsUrl;
                     }
                 };
-                self.dataExplorersChosen = function (event, data) {                    
+                self.dataExplorersChosen = function (event, data) {
+                    if(!self.landingHomeUrls) {
+                        console.log("---fetching service links is not finished yet!---");
+                        return;
+                    }
                     if (data.value && self.landingHomeUrls[data.value]) {
                         oj.Logger.info('Trying to open ' + data.value + ' by URL: ' + self.landingHomeUrls[data.value]);
                         window.location.href = self.landingHomeUrls[data.value];
