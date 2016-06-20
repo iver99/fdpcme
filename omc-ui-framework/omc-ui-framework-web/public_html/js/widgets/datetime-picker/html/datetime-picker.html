@@ -21,7 +21,7 @@
                 <span data-bind="html: timeFilterInfo"></span>
             </div>
 
-            <div class="panel" style="display:inline-block" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none', beforeClose: setLastDatas}, attr: {id: 'panel_'+randomId}"> 
+            <div class="panel" style="display:inline-block; padding: 0px; margin: 0px;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none', beforeClose: setLastDatas}, attr: {id: 'panel_'+randomId}"> 
                 <!-- left of panel -->
                 <div class="drawers" data-bind="style: {height: leftDrawerHeight}">
                 <div data-bind="attr: {id: 'drawers_'+randomId}, click: chooseTimePeriod">

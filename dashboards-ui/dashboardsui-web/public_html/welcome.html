@@ -83,12 +83,13 @@
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: ITA"></div>
                                         <div class="landing-home-box-content-desc" data-bind="text: ITADesc"></div>
-                                        <select id="ITA_options" aria-label="IT Analytics" style="float: right; margin-top: 10px; margin-right: 10px; width: 235px;" data-bind="ojComponent: {component: 'ojSelect', value: ITA_Type, optionChange: ITAOptionChosen}">
+                                        <select id="ITA_options" aria-label="IT Analytics" style="float: right; margin-top: 10px; margin-right: 10px; width: 255px;" data-bind="ojComponent: {component: 'ojSelect', value: ITA_Type, optionChange: ITAOptionChosen}">
                                             <option value="select" id="ITA_Select" data-bind="text: select"></option>
                                             <option value="DB_perf" id="ITA_DB_perf" data-bind="text: ITA_DB_Performance"></option>
                                             <option value="mw_perf" id="ITA_mw_perf" data-bind="text: ITA_Middleware_Performance"></option>
                                             <option value="DB_resource" id="ITA_DB_resource" data-bind="text: ITA_DB_Resource"></option>
                                             <option value="mw_resource" id="ITA_mw_resource" data-bind="text: ITA_Middleware_Resource"></option>
+                                            <option value="svr_resource" id="ITA_svr_resource" data-bind="text: ITA_Server_Resource"></option>
 					    <option value="app_perf" id="ITA_app_perf" data-bind="text: ITA_Application_Performance"></option>
  					    <option value="avail-analytics" id="ITA_avail_analytics" data-bind="text: ITA_Avail_Analytics"></option>
                                             <!-- ko foreach: exploreDataInITA -->                                            
