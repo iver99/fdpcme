@@ -211,7 +211,7 @@ public class DashBoardPageId
 	public static final String BuilderOptionsAutoRefreshLocator = "//li[@data-singledb-option='Auto-refresh']/a";
 	public static final String BuilderOptionsAutoRefreshOffLocator = "//li[@data-singledb-option='Off']/a";
 	public static final String BuilderOptionsAutoRefreshOn5MinLocator = "//li[@data-singledb-option=\"On (Every 5 Minutes)\"]/a";
-	public static final String BuilderOptionsDeleteLocator = "//li[@data-singledb-option='Delete']/a";
+	public static final String BuilderOptionsDeleteLocator = "button.dbd-delete-single-dashboard";
 	//	public static final String BuilderOptionsDeleteMenuLocator = "//a[@id='emcpdf_dsbopts_delete']";
 	public static final String BuilderOptionsPrintLocatorCSS = "li[data-singledb-option=\"Print\"] a";
 	public static final String BuilderOptionsEditLocatorCSS = "li[data-singledb-option=\"Edit\"] a";
@@ -309,7 +309,10 @@ public class DashBoardPageId
 	//right drawer css locators
 	public static final String RightDrawerCSS = ".right-panel-toggler";
 	public static final String RightDrawerPanelCSS = ".dbd-left-panel";
-	public static final String RightDrawerToggleBtnCSS = ".right-panel-toggler button.toggle-right-panel-btn";
+	public static final String RightDrawerToggleWrenchBtnCSS = ".right-panel-toggler button.toggle-right-panel-btn.rightpanel-wrench";
+	public static final String RightDrawerTogglePencilBtnCSS = ".right-panel-toggler button.toggle-right-panel-btn.rightpanel-pencil";
+	public static final String RightDrawerEditSingleDBBtnCSS = ".edit-setting-link.edit-dsb-link";
+
 	public static final String RightDrawerSearchInputCSS = ".dbd-left-panel input.widget-search-input";
 	public static final String RightDrawerSearchButtonCSS = ".dbd-left-panel button.dbd-left-panel-header-search-btn";
 	public static final String RightDrawerWidgetToAreaCSS = ".tiles-wrapper";

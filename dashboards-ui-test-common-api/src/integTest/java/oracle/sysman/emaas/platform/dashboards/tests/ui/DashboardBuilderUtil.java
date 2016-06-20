@@ -32,6 +32,9 @@ public class DashboardBuilderUtil
 
 	private static final String DASHBOARD_SELECTION_TAB_NAME = "Dashboard";
 
+	public static final String PENCIL = "pencil";
+	public static final String WRENCH = "wrench";
+
 	public static void addNewDashboardToSet(WebDriver driver, String dashboardName) throws Exception
 	{
 		driver.getLogger().info("DashboardBuilderUtil.addNewDashboardToSet started for name=\"" + dashboardName + "\"");
@@ -101,7 +104,7 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("[DashboardHomeUtil] call addWidgetToDashboard with search string as " + searchString);
 
 		//show right drawer if it is hidden
-		DashboardBuilderUtil.showRightDrawer(driver);
+		DashboardBuilderUtil.showRightDrawer(driver, WRENCH);
 
 		WebElement searchInput = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchInputCSS);
 		// focus to search input box
@@ -164,19 +167,23 @@ public class DashboardBuilderUtil
 		DashboardBuilderUtil.hideRightDrawer(driver);// hide drawer;
 	}
 
-	public static void deleteDashboard(WebDriver driver)
-	{
+	public static void deleteDashboard(WebDriver driver) throws Exception {
 		driver.getLogger().info("DashboardBuilderUtil.deleteDashboard started");
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.BuilderOptionsMenuLocator)));
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
-		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
+		driver.waitForElementPresent("css="+ DashBoardPageId.RightDrawerTogglePencilBtnCSS);
+		showRightDrawer(driver, PENCIL);
 		driver.takeScreenShot();
 
-		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsDeleteLocator);
-		driver.click(DashBoardPageId.BuilderOptionsDeleteLocator);
+		By locatorOfEditEl = By.cssSelector(DashBoardPageId.RightDrawerEditSingleDBBtnCSS);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfEditEl));
+
+		driver.click("css="+DashBoardPageId.RightDrawerEditSingleDBBtnCSS);
+		driver.takeScreenShot();
+
+		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsDeleteLocator);
+		driver.click("css="+DashBoardPageId.BuilderOptionsDeleteLocator);
 		driver.takeScreenShot();
 
 		driver.waitForElementPresent(DashBoardPageId.BuilderDeleteDialogLocator);
@@ -1173,7 +1180,10 @@ public class DashboardBuilderUtil
 	{
 		driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerCSS);
 		if (DashboardBuilderUtil.isRightDrawerVisible(driver) == true) {
-			driver.click("css=" + DashBoardPageId.RightDrawerToggleBtnCSS);
+			driver.click("css=" + DashBoardPageId.RightDrawerToggleWrenchBtnCSS);
+			if(DashboardBuilderUtil.isRightDrawerVisible(driver) == true){
+				driver.click("css=" + DashBoardPageId.RightDrawerToggleWrenchBtnCSS);
+			}
 			driver.getLogger().info("[DashboardBuilderUtil] triggered hideRightDrawer.");
 		}
 		driver.takeScreenShot();
@@ -1191,14 +1201,26 @@ public class DashboardBuilderUtil
 		return isDisplayed && isWidthValid;
 	}
 
-	private static void showRightDrawer(WebDriver driver) throws Exception
+	//to open right drawer and show build dashboard
+	private static void showRightDrawer(WebDriver driver,String buttonName) throws Exception
 	{
 		driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerCSS);
-		if (DashboardBuilderUtil.isRightDrawerVisible(driver) == false) {
-			driver.click("css=" + DashBoardPageId.RightDrawerToggleBtnCSS);
-			driver.getLogger().info("[DashboardBuilderUtil] triggered showRightDrawer.");
-			WaitUtil.waitForPageFullyLoaded(driver);
+		if (DashboardBuilderUtil.isRightDrawerVisible(driver) != false) {
+			hideRightDrawer(driver);
 		}
+		switch (buttonName){
+			case PENCIL:
+				driver.click("css=" + DashBoardPageId.RightDrawerTogglePencilBtnCSS);
+				break;
+			case WRENCH:
+				driver.click("css=" + DashBoardPageId.RightDrawerToggleWrenchBtnCSS);
+				break;
+			default:
+				driver.takeScreenShot();
+				return;
+		}
+		driver.getLogger().info("[DashboardBuilderUtil] triggered showRightDrawer and show build dashboard.");
+		WaitUtil.waitForPageFullyLoaded(driver);
 		driver.takeScreenShot();
 	}
 }
