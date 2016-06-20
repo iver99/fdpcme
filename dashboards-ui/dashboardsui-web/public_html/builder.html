@@ -445,10 +445,11 @@
                                           <!-- ko if: !$root.dashboard.systemDashboard() || !linkedDashboard || linkedDashboard() === '#'-->
                                             <h2 class="dbd-tile-title" data-bind="text:hideTitle() === 'true' ? '': title, attr: {'data-tile-title': title}"></h2>
                                           <!-- /ko -->
-                                          <div class="dbd-pull-right" style="display: flex" data-bind="visible: $root.isMobileDevice !== 'true'">
+                                          <div class="dbd-pull-right" style="display: flex">
                                               <div class="dbd-btn-editor">                 
                                                   <button class="oj-button-half-chrome dbd-data-explore" tabindex="0"
                                                           data-bind="
+                                                             visible: $root.isMobileDevice !== 'true',
                                                              attr:{'id': 'editButton' + clientGuid,title: getNlsString('DBS_BUILDER_TILE_EDIT')},
                                                              click:$root.openInDataExplorer,
                                                              ojComponent: {
@@ -471,7 +472,7 @@
                                                 <div class="dbd-btn-group">
                                                     <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
                                                             data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
-                                                                       visible: ($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())),
+                                                                       visible: ($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true'),
                                                                        ojComponent: {component: 'ojButton', 
                                                                                      label: '', chroming: 'half',
                                                                                      icons: {start:'fa-icon-font fa-icon-font-16 dbd-tile-icon-option'},
