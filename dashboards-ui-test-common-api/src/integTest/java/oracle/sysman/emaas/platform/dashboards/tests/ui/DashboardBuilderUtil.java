@@ -317,27 +317,24 @@ public class DashboardBuilderUtil
 		Validator.notNull("editname", name);
 		Validator.notEmptyString("editname", name);
 
-		//open the edit dialog
+        driver.waitForElementPresent(DashBoardPageId.DashboardsetOptionsMenuID);
 		driver.getLogger().info("DashboardBuilderUtil.editDashboardSet started");
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.waitForElementPresent("id=" + DashBoardPageId.DashboardsetOptionsMenuID);
-		driver.click("id=" + DashBoardPageId.DashboardsetOptionsMenuID);
+
+        //open settings menu
+		driver.click(DashBoardPageId.DashboardsetOptionsMenuID);
+
+        // click edit option
 		driver.waitForElementPresent("css=" + DashBoardPageId.DashboardsetOptionsEditCSS);
 		driver.click("css=" + DashBoardPageId.DashboardsetOptionsEditCSS);
-		driver.takeScreenShot();
-		driver.waitForElementPresent("id=" + DashBoardPageId.DashboardsetOptionsEditDialogID);
+        driver.takeScreenShot();
 
-		//edit name and description
-		boolean editNameDescriptionElem = driver.isDisplayed("css=" + DashBoardPageId.DashboardsetOptionsNameCollapsibleCSS);
-		if (!editNameDescriptionElem) {
-			driver.click("id=" + DashBoardPageId.DashboardsetOptionsNameCollapsibleCSS);
-		}
-		//wait obj
 		By locatorOfEditDesEl = By.cssSelector(DashBoardPageId.DashboardsetOptionsEditNameCSS);
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfEditDesEl));
+        driver.takeScreenShot();
 
-		//edit name
+        //edit name
 		driver.getLogger().info("DashboardBuilderUtil.editDashboardSet start editing name");
 		driver.getElement("css=" + DashBoardPageId.DashboardsetOptionsEditNameCSS).clear();
 		driver.click("css=" + DashBoardPageId.DashboardsetOptionsEditNameCSS);
@@ -350,10 +347,8 @@ public class DashboardBuilderUtil
 		driver.sendKeys("css=" + DashBoardPageId.DashboardsetOptionsEditDescriptionCSS, descriptions);
 		driver.takeScreenShot();
 
-		//press save button
-		driver.waitForElementPresent("id=" + DashBoardPageId.DashboardsetOptionsEditSaveID);
-		driver.click("id=" + DashBoardPageId.DashboardsetOptionsEditSaveID);
-		driver.getLogger().info("DashboardBuilderUtil.editDashboardSet complete");
+		//hide settings panel
+		hideRightDrawer(driver);
 	}
 
 	public static Boolean favoriteOption(WebDriver driver) throws Exception

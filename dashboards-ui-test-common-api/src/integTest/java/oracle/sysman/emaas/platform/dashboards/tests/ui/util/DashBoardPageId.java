@@ -246,13 +246,13 @@ public class DashBoardPageId
 	public static final String DashboardSetDeleteDialogLocator = "id=deleteDashboardset";
 	public static final String DashboardSetDeleteDialogDeleteBtnLocator = "//button[@data-delete-set-dialog='Delete']";
 	public static final String DashboardSetPrintLoadingID = "printLoading";
-	public static final String DashboardsetOptionsMenuID = "tabs-gear";
+	public static final String DashboardsetOptionsMenuID = "tabs-caret";
 	public static final String DashboardsetOptionsEditCSS = "#dbs-edit a";
 	public static final String DashboardsetOptionsEditSaveID = "saveDsbInfo";
 	public static final String DashboardsetOptionsEditDialogID = "ojDialogWrapper-changeDashboardsetInfo";
 	public static final String DashboardsetOptionsNameCollapsibleCSS = "#nameDescription a.oj-collapsible-open-icon";
-	public static final String DashboardsetOptionsEditNameCSS = "#changeDashboardsetInfo #dbsInfoName";
-	public static final String DashboardsetOptionsEditDescriptionCSS = "#changeDashboardsetInfo #dbsInfoDescription";
+	public static final String DashboardsetOptionsEditNameCSS = "input#dbsHNameIn";
+	public static final String DashboardsetOptionsEditDescriptionCSS = "textarea#dbsHDpIn";
 	public static final String DashboardsetOptionsShareDiaOpenCSS = "#shareSettings .oj-collapsible-wrapper";
 	public static final String DashboardsetOptionsShareCollapsibleCSS = "#shareSettings .edit-dbsset-title";
 	public static final String DashboardsetOptionsShareOnJudgeCSS = "#shareSettings #share-on.oj-selected";
