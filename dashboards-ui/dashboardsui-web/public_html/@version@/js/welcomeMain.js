@@ -220,7 +220,7 @@ require(['ojs/ojcore',
                     landingHomeUrls["DB_perf"] = self.getITAVerticalAppUrl("verticalApplication.db-perf");
                     landingHomeUrls["DB_resource"] = self.getITAVerticalAppUrl("verticalApplication.db-resource");
                     landingHomeUrls["mw_perf"] = self.getITAVerticalAppUrl("verticalApplication.mw-perf");
-                    landingHomeUrls["mw_resource"] = self.getITAVerticalAppUrl("verticalApplication.mw-resource")
+                    landingHomeUrls["mw_resource"] = self.getITAVerticalAppUrl("verticalApplication.mw-resource");
                     landingHomeUrls["svr_resource"] = self.getITAVerticalAppUrl("verticalApplication.svr-resource");
                     landingHomeUrls["avail-analytics"] = self.getITAVerticalAppUrl("verticalApplication.avail-analytics");
                     landingHomeUrls["app_perf"] = self.getITAVerticalAppUrl("verticalApplication.app-perf-analytics");
