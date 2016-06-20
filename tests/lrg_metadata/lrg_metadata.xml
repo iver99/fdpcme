@@ -7,21 +7,16 @@
          </pipelines>
      </lrg>
 	
-  <lrg name="emcpdf_upgrade_test_3n" launcher="tests/suites/emcpdf_upgrade_test_3n.gradle" description="lrg for upgrade lrg">
+     <lrg name="emcpdf_upgrade_test_3n" launcher="tests/suites/emcpdf_upgrade_test_3n.gradle" description="lrg for upgrade lrg">
          <pipelines>
              <pipeline name="PRODUCT" />
          </pipelines>
      </lrg>
-	<lrg name="emcpdf_test_3n" launcher="tests/suites/emcpdf_test_3n.gradle" description="lrg for emcpdf 3n automation,running in farm">
+     <lrg name="emcpdf_test_3n" launcher="tests/suites/emcpdf_test_3n.gradle" description="lrg for emcpdf 3n automation,running in farm">
              <pipelines>
-            <pipeline name="PRODUCT"/>
-             <pipeline name="STAGE"/>
+                 <pipeline name="PRODUCT"/>
+                 <pipeline name="STAGE"/>
              </pipelines>
-     <!--/lrg>
-	<lrg name="emcpdf_test_3n" launcher="tests/suites/emcpdf_test_3n.gradle" description="lrg for emcpdf 3n automation,running in farm">
-             <pipelines>
-            <pipeline name="STAGE"/>
-             </pipelines>
-     </lrg-->
+     </lrg>
 
  </lrg-metadata>
