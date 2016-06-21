@@ -173,17 +173,16 @@ public class DashboardBuilderUtil
 
 	public static void deleteDashboard(WebDriver driver) throws Exception {
 		driver.getLogger().info("DashboardBuilderUtil.deleteDashboard started");
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		driver.waitForElementPresent("css="+ DashBoardPageId.RightDrawerTogglePencilBtnCSS);
-		showRightDrawer(driver, PENCIL);
+		WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
+		WebElement editOption = selectedDashboardEl.findElement(By.xpath(DashBoardPageId.BuilderOptionsMenuLocator));
+		editOption.click();
 		driver.takeScreenShot();
 
-		By locatorOfEditEl = By.cssSelector(DashBoardPageId.RightDrawerEditSingleDBBtnCSS);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfEditEl));
-
-		driver.click("css="+DashBoardPageId.RightDrawerEditSingleDBBtnCSS);
+		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsEditLocatorCSS);
+		driver.click("css="+DashBoardPageId.BuilderOptionsEditLocatorCSS);
 		driver.takeScreenShot();
 
 		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsDeleteLocator);
@@ -303,40 +302,50 @@ public class DashboardBuilderUtil
 
 	}
 
-	public static void editDashboard(WebDriver driver, String name, String descriptions) throws Exception
+	public static void editDashboard(WebDriver driver, String name, String descriptions, Boolean toShowDscptn) throws Exception
 	{
 		Validator.notNull("editname", name);
 		Validator.notEmptyString("editname", name);
 
 		driver.getLogger().info("DashboardBuilderUtil.edit started");
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
-		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
-		driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsEditLocatorCSS);
-		driver.click("css=" + DashBoardPageId.BuilderOptionsEditLocatorCSS);
+		WaitUtil.waitForPageFullyLoaded(driver);
+
+		WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
+		WebElement editOption = selectedDashboardEl.findElement(By.xpath(DashBoardPageId.BuilderOptionsMenuLocator));
+		editOption.click();
 		driver.takeScreenShot();
-		driver.waitForElementPresent("id=" + DashBoardPageId.BuilderOptionsEditNameCSS);
+
+		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsEditLocatorCSS);
+		driver.click("css="+DashBoardPageId.BuilderOptionsEditLocatorCSS);
+		driver.takeScreenShot();
 
 		//wait for 900s
-		By locatorOfEditDesEl = By.id(DashBoardPageId.BuilderOptionsEditDescriptionCSS);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		By locatorOfEditDesEl = By.cssSelector(DashBoardPageId.BuilderOptionsEditDescriptionCSS);
+//		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 
 		//add name and description
-		driver.getElement("id=" + DashBoardPageId.BuilderOptionsEditNameCSS).clear();
-		driver.click("id=" + DashBoardPageId.BuilderOptionsEditNameCSS);
+		driver.getElement("css=" + DashBoardPageId.BuilderOptionsEditNameCSS).clear();
+		driver.click("css=" + DashBoardPageId.BuilderOptionsEditNameCSS);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfEditDesEl));
-		driver.sendKeys("id=" + DashBoardPageId.BuilderOptionsEditNameCSS, name);
+		driver.sendKeys("css=" + DashBoardPageId.BuilderOptionsEditNameCSS, name);
 
-		driver.getElement("id=" + DashBoardPageId.BuilderOptionsEditDescriptionCSS).clear();
-		driver.click("id=" + DashBoardPageId.BuilderOptionsEditDescriptionCSS);
+		driver.getElement("css=" + DashBoardPageId.BuilderOptionsEditDescriptionCSS).clear();
+		driver.click("css=" + DashBoardPageId.BuilderOptionsEditDescriptionCSS);
 
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfEditDesEl));
-		driver.sendKeys("id=" + DashBoardPageId.BuilderOptionsEditDescriptionCSS, descriptions);
+		driver.sendKeys("css=" + DashBoardPageId.BuilderOptionsEditDescriptionCSS, descriptions);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfEditDesEl));
 		driver.takeScreenShot();
 
-		//press ok button
-		driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsEditSaveCSS);
-		driver.click("css=" + DashBoardPageId.BuilderOptionsEditSaveCSS);
+		driver.getElement("css=" + DashBoardPageId.BuilderOptionsEditShowDescriptionCSS);
+		if(toShowDscptn) {
+			driver.check("css=" + DashBoardPageId.BuilderOptionsEditShowDescriptionCSS);
+		}else{
+			driver.uncheck("css=" + DashBoardPageId.BuilderOptionsEditShowDescriptionCSS);
+		}
+
 		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.edit complete");
 	}
@@ -936,22 +945,34 @@ public class DashboardBuilderUtil
 	{
 		driver.getLogger().info("DashboardBuilderUtil.sharedashboard started");
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
-		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
+		WaitUtil.waitForPageFullyLoaded(driver);
+
+		WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
+		WebElement editOption = selectedDashboardEl.findElement(By.xpath(DashBoardPageId.BuilderOptionsMenuLocator));
+		editOption.click();
 		driver.takeScreenShot();
-		boolean shareElem = driver.isDisplayed("css=" + DashBoardPageId.BuilderOptionsShareLocatorCSS);
-		if (shareElem) {
-			driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsShareLocatorCSS);
-			driver.click("css=" + DashBoardPageId.BuilderOptionsShareLocatorCSS);
+
+		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsEditLocatorCSS);
+		driver.click("css="+DashBoardPageId.BuilderOptionsEditLocatorCSS);
+		driver.takeScreenShot();
+
+		driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerEditSingleDBShareCSS);
+		driver.click("css=" + DashBoardPageId.RightDrawerEditSingleDBShareCSS);
+
+		boolean shareFlagElem = driver.isDisplayed("css=" + DashBoardPageId.RightDrawerEditSingleDBToShareSelectedCSS);
+		if (shareFlagElem) {
+			driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerEditSingleDBNotShareCSS);
+			driver.click("css=" + DashBoardPageId.RightDrawerEditSingleDBNotShareCSS);
 			driver.takeScreenShot();
-			driver.getLogger().info("DashboardBuilderUtil share dashboard");
-			return true;
+			driver.getLogger().info("DashboardBuilderUtil unshare dashboardset");
+			return false;
 		}
 		else {
-			driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsUnShareLocatorCSS);
-			driver.click("css=" + DashBoardPageId.BuilderOptionsUnShareLocatorCSS);
+			driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerEditSingleDBToShareCSS);
+			driver.click("css=" + DashBoardPageId.RightDrawerEditSingleDBToShareCSS);
 			driver.takeScreenShot();
-			driver.getLogger().info("DashboardBuilderUtil unshare dashboard");
-			return false;
+			driver.getLogger().info("DashboardBuilderUtil share dashboardset");
+			return true;
 		}
 	}
 

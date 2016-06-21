@@ -215,8 +215,9 @@ public class DashBoardPageId
 	//	public static final String BuilderOptionsDeleteMenuLocator = "//a[@id='emcpdf_dsbopts_delete']";
 	public static final String BuilderOptionsPrintLocatorCSS = "li[data-singledb-option=\"Print\"] a";
 	public static final String BuilderOptionsEditLocatorCSS = "li[data-singledb-option=\"Edit\"] a";
-	public static final String BuilderOptionsEditNameCSS = "dbsHNameIn";
-	public static final String BuilderOptionsEditDescriptionCSS = "dbsHDpIn";
+	public static final String BuilderOptionsEditNameCSS = ".dbd-right-panel-editdashboard #dbsHNameIn";
+	public static final String BuilderOptionsEditDescriptionCSS = ".dbd-right-panel-editdashboard #dbsHDpIn";
+	public static final String BuilderOptionsEditShowDescriptionCSS = ".dbd-right-panel-editdashboard #showdbDescription";
 	public static final String BuilderOptionsEditSaveCSS = ".createDsb-2";
         public static final String EntityfilterLocator = "ckbxEntityFilter";
 	public static final String BuilderOptionsShareLocatorCSS = "li[data-singledb-option=\"Share\"] a";
@@ -316,11 +317,19 @@ public class DashBoardPageId
 	public static final String RightDrawerToggleWrenchBtnCSS = ".right-panel-toggler button.toggle-right-panel-btn.rightpanel-wrench";
 	public static final String RightDrawerTogglePencilBtnCSS = ".right-panel-toggler button.toggle-right-panel-btn.rightpanel-pencil";
 	public static final String RightDrawerEditSingleDBBtnCSS = ".edit-setting-link.edit-dsb-link";
+	public static final String RightDrawerEditSingleDBShareCSS = ".dbd-right-panel-editdashboard-share>span";
+
 
 	public static final String RightDrawerSearchInputCSS = ".dbd-left-panel input.widget-search-input";
 	public static final String RightDrawerSearchButtonCSS = ".dbd-left-panel button.dbd-left-panel-header-search-btn";
 	public static final String RightDrawerWidgetToAreaCSS = ".tiles-wrapper";
 	public static final String RightDrawerWidgetCSS = ".dbd-left-panel .dbd-left-panel-widget";
+
+	//right drawer setting
+	public static final String RightDrawerEditSingleDBToShareSelectedCSS = "#dashboardSharingShared.oj-selected";
+	public static final String RightDrawerEditSingleDBToShareCSS = "#dashboardSharingShared";
+	public static final String RightDrawerEditSingleDBNotShareCSS = "#dashboardSharingNotShared";
+
 
 	//time picker
 	public static final String TimePickerID = "/html/body/div[*]/div[2]/div[1]/div[1]/div/div[2]/div/span/span";//"/html/body/div[*]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";//"/html/body/div[3]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";///html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";//"
