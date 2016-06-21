@@ -207,7 +207,7 @@ public class DashBoardPageId
 	public static final String BuilderTileHideLocator = "//ul[not(contains(@style,'display:none'))]/li[@data-option='showhide-title']/a[@data-show-hide-title='hide']";
 
 	//dashboard builder options
-	public static final String BuilderOptionsMenuLocator = "//button[contains(@class, 'dashboardOptsBtn')]";
+	public static final String BuilderOptionsMenuLocator = ".df-toolbar .dashboardOptsBtn[title=\"Options\"]";
 	public static final String BuilderOptionsAutoRefreshLocator = "//li[@data-singledb-option='Auto-refresh']/a";
 	public static final String BuilderOptionsAutoRefreshOffLocator = "//li[@data-singledb-option='Off']/a";
 	public static final String BuilderOptionsAutoRefreshOn5MinLocator = "//li[@data-singledb-option=\"On (Every 5 Minutes)\"]/a";
@@ -227,6 +227,8 @@ public class DashBoardPageId
 	public static final String BuilderOptionsRemoveHomeLocatorCSS = "li[data-singledb-option=\"Remove as Home\"] a";
 	public static final String BuilderOptionsSetHomeSaveCSS = "#btnComfirmSetAsHome";
 	public static final String BuilderOptionsDuplicateLocatorCSS = "li[data-singledb-option=\"Duplicate\"] a";
+	public static final String BuilderOptionsDuplicateToSetCSS = "li[data-singledb-option=\"Add to set\"] a";
+	public static final String BuilderOptionsDuplicateNotToSetCSS = "li[data-singledb-option=\"Do not add to set\"] a";
 	public static final String BuilderOptionsDuplicateNameCSS = "dupDsbNameIn";
 	public static final String BuilderOptionsDuplicateDescriptionCSS = "dupDsbDescIn";
 	public static final String BuilderOptionsDuplicateSaveCSS = ".createDsb-1";
