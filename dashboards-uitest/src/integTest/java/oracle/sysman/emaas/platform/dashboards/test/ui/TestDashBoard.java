@@ -102,7 +102,7 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("all dashboards have been deleted");
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboard_noWidget_ListView" })
+	//@Test(dependsOnMethods = { "testCreateDashboard_noWidget_ListView" })
 	public void Test_targetselector() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
