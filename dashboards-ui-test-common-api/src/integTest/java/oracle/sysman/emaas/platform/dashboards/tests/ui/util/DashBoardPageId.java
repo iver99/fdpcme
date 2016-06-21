@@ -244,7 +244,7 @@ public class DashBoardPageId
 	public static final String DashboardSetAutoRefreshOffSelectedLocator = "//li[@id='refresh-off']/a/span[contains(@class, 'dbd-icon-check')]";
 	public static final String DashboardSetOptionsAutoRefreshOn5MinLocator = "id=refresh-time";
 	public static final String DashboardSetAutoRefreshOn5MinSelectedLocator = "//li[@id='refresh-time']/a/span[contains(@class, 'dbd-icon-check')]";
-	public static final String DashboardSetOptionsDeleteLocator = "//button[contains(@class.'dbd-delete-dashboardset')]";
+	public static final String DashboardSetOptionsDeleteLocator = "//button[contains(@class,'dbd-delete-dashboardset')]";
 	public static final String DashboardSetDeleteDialogLocator = "id=deleteDashboardset";
 	public static final String DashboardSetDeleteDialogDeleteBtnLocator = "//button[@data-delete-set-dialog='Delete']";
 	public static final String DashboardSetPrintLoadingID = "printLoading";
