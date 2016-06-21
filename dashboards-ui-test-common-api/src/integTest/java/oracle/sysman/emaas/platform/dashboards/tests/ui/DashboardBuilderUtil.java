@@ -1218,4 +1218,22 @@ public class DashboardBuilderUtil
 		WaitUtil.waitForPageFullyLoaded(driver);
 		driver.takeScreenShot();
 	}
+
+	/**
+	 * @param driver
+	 * @return current visible dashboard container
+     */
+	private static WebElement getSelectedDashboardEl(WebDriver driver) {
+		List<WebElement> dashboardContainers = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DashboardSetContainerCSS));
+		for (WebElement container : dashboardContainers) {
+			if(false == container.getCssValue("display").equals("none")){
+				driver.getLogger().info("[DashboardBuilderUtil] triggered getSelectedDashboardEl and get the dashboard successfully!");
+				return container;
+			}
+		}
+
+		driver.getLogger().info("[DashboardBuilderUtil] triggered getSelectedDashboardEl and fail to find visible dashboard!");
+		return null;
+
+	}
 }
