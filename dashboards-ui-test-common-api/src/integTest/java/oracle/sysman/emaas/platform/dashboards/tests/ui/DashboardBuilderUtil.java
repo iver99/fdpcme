@@ -199,20 +199,25 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil.deleteDashboardSet started");
 
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.DashboardSetOptionBtn)));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(DashBoardPageId.DashboardsetOptionsMenuID)));
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionBtn);
-		driver.click(DashBoardPageId.DashboardSetOptionBtn);
-		driver.takeScreenShot();
+        //open settings menu
+        driver.click(DashBoardPageId.DashboardsetOptionsMenuID);
 
-		driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionsDeleteLocator);
+        // click edit option
+        driver.waitForElementPresent("css=" + DashBoardPageId.DashboardsetOptionsEditCSS);
+        driver.click("css=" + DashBoardPageId.DashboardsetOptionsEditCSS);
+        driver.takeScreenShot();
+
+        driver.waitForElementPresent(DashBoardPageId.DashboardSetOptionsDeleteLocator);
 		driver.click(DashBoardPageId.DashboardSetOptionsDeleteLocator);
 		driver.takeScreenShot();
 
 		driver.waitForElementPresent(DashBoardPageId.DashboardSetDeleteDialogLocator);
 		driver.click(DashBoardPageId.DashboardSetDeleteDialogDeleteBtnLocator);
 		driver.takeScreenShot();
+        // wait until page redirect to dashboard home
 		driver.waitForElementPresent(DashBoardPageId.SearchDashboardInputLocator);
 
 		driver.getLogger().info("DashboardBuilderUtil.deleteDashboardSet completed");
