@@ -880,6 +880,12 @@ public class DashboardBuilderUtil
 		}
 	}
 
+	/**
+	 *
+	 * @param driver
+	 * @return true if toggle to share the dashboardset
+	 * @throws Exception
+     */
 	public static Boolean toggleShareDashboardset(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("DashboardBuilderUtil.toggleShareDashboardset started");
@@ -887,42 +893,32 @@ public class DashboardBuilderUtil
 
 		//open the edit/share dialog
 		driver.getLogger().info("DashboardBuilderUtil.toggleShareDashboardset open share/edit dialog");
-		driver.waitForElementPresent("id=" + DashBoardPageId.DashboardsetOptionsMenuID);
-		driver.click("id=" + DashBoardPageId.DashboardsetOptionsMenuID);
+		driver.waitForElementPresent(DashBoardPageId.DashboardsetOptionsMenuID);
+		driver.click(DashBoardPageId.DashboardsetOptionsMenuID);
 		driver.waitForElementPresent("css=" + DashBoardPageId.DashboardsetOptionsEditCSS);
 		driver.click("css=" + DashBoardPageId.DashboardsetOptionsEditCSS);
 		driver.takeScreenShot();
-		driver.waitForElementPresent("id=" + DashBoardPageId.DashboardsetOptionsEditDialogID);
 
 		//open share collapsible
-		boolean editShareElem = driver.isDisplayed("css=" + DashBoardPageId.DashboardsetOptionsShareDiaOpenCSS);
-
+		boolean editShareElem = driver.isDisplayed("css=" + DashBoardPageId.DashboardsetOptionsShareContentCSS);
 		if (!editShareElem) {
 			driver.waitForElementPresent("css=" + DashBoardPageId.DashboardsetOptionsShareCollapsibleCSS);
 			driver.click("css=" + DashBoardPageId.DashboardsetOptionsShareCollapsibleCSS);
 		}
-		driver.getLogger().info("DashboardBuilderUtil.toggleShareDashboardset dialog has opened");
+		driver.getLogger().info("DashboardBuilderUtil.toggleShareDashboardset sharing form has opened");
 
 		//toggle share dashboardset
-		boolean shareFlagElem = driver.isDisplayed("css=" + DashBoardPageId.DashboardsetOptionsShareOnJudgeCSS);
-		if (shareFlagElem) {
-			driver.waitForElementPresent("css=" + DashBoardPageId.DashboardsetOptionsUnshareCSS);
+		driver.waitForElementPresent("css=" + DashBoardPageId.DashboardsetOptionsUnshareCSS);
+		boolean isSharedSelected = driver.isDisplayed("css=" + DashBoardPageId.DashboardsetOptionsShareStatusCSS);
+		if (isSharedSelected) {
 			driver.click("css=" + DashBoardPageId.DashboardsetOptionsUnshareCSS);
 			driver.takeScreenShot();
 			driver.getLogger().info("DashboardBuilderUtil unshare dashboardset");
-			driver.waitForElementPresent("id=" + DashBoardPageId.DashboardsetOptionsEditSaveID);
-			driver.click("id=" + DashBoardPageId.DashboardsetOptionsEditSaveID);
-			driver.getLogger().info("DashboardBuilderUtil toggleShareDashboardset completed");
 			return false;
-		}
-		else {
-			driver.waitForElementPresent("css=" + DashBoardPageId.DashboardsetOptionsShareCSS);
+		} else {
 			driver.click("css=" + DashBoardPageId.DashboardsetOptionsShareCSS);
 			driver.takeScreenShot();
 			driver.getLogger().info("DashboardBuilderUtil share dashboardset");
-			driver.waitForElementPresent("id=" + DashBoardPageId.DashboardsetOptionsEditSaveID);
-			driver.click("id=" + DashBoardPageId.DashboardsetOptionsEditSaveID);
-			driver.getLogger().info("DashboardBuilderUtil toggleShareDashboardset completed");
 			return true;
 		}
 	}

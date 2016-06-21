@@ -254,11 +254,11 @@ public class DashBoardPageId
 	public static final String DashboardsetOptionsNameCollapsibleCSS = "#nameDescription a.oj-collapsible-open-icon";
 	public static final String DashboardsetOptionsEditNameCSS = "input#dbsHNameIn";
 	public static final String DashboardsetOptionsEditDescriptionCSS = "textarea#dbsHDpIn";
-	public static final String DashboardsetOptionsShareDiaOpenCSS = "#shareSettings .oj-collapsible-wrapper";
-	public static final String DashboardsetOptionsShareCollapsibleCSS = "#shareSettings .edit-dbsset-title";
-	public static final String DashboardsetOptionsShareOnJudgeCSS = "#shareSettings #share-on.oj-selected";
-	public static final String DashboardsetOptionsShareCSS = "#shareSettings #share-on";
-	public static final String DashboardsetOptionsUnshareCSS = "#shareSettings #share-off";
+	public static final String DashboardsetOptionsShareContentCSS = ".dbd-right-panel-editdashboard-set-share .oj-collapsible-wrapper";
+	public static final String DashboardsetOptionsShareCollapsibleCSS = ".dbd-right-panel-editdashboard-set-share";
+	public static final String DashboardsetOptionsShareStatusCSS = "#dashboardSetSharingShared.oj-selected";
+	public static final String DashboardsetOptionsShareCSS = "#dashboardSetSharingShared";
+	public static final String DashboardsetOptionsUnshareCSS = "#dashboardSetSharingNotShared";
 	public static final String DashboardsetOptionsPrintCSS = "#dbs-print a";
 	public static final String DashboardsetOptionsfavoriteCSS = "#dbs-favorite a";
 	public static final String DashboardsetOptionsRemoveFavoriteCSS = "#dbs-favorite a[dashboardset-option=\"Remove Favorite\"]";
