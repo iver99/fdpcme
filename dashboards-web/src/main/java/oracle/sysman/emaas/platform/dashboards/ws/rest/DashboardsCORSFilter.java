@@ -46,7 +46,7 @@ public class DashboardsCORSFilter implements Filter
 		private String tenant = null;
 		private Vector<String> headerNames = null;
 
-                @SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		public OAMHttpRequestWrapper(HttpServletRequest request)
 		{
 			super(request);
@@ -102,7 +102,7 @@ public class DashboardsCORSFilter implements Filter
 		}
 
 		@Override
-                @SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		public Enumeration<String> getHeaderNames()
 		{
 			if (headerNames != null) {
@@ -114,7 +114,7 @@ public class DashboardsCORSFilter implements Filter
 		}
 
 		@Override
-                @SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		public Enumeration<String> getHeaders(String name)
 		{
 			if (X_REMOTE_USER_HEADER.equals(name) && oam_remote_user != null) {
@@ -142,20 +142,30 @@ public class DashboardsCORSFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException
+	ServletException
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
 		HttpServletRequest oamRequest = new OAMHttpRequestWrapper(hReq);
+
+		StringBuilder sb = new StringBuilder();
+		Enumeration headerNames = hReq.getHeaderNames();
+		while (headerNames.hasMoreElements()) {
+			String key = (String) headerNames.nextElement();
+			String value = hReq.getHeader(key);
+			sb.append("[" + key + " : " + value + "]");
+		}
+		logger.error("Headers: " + sb.toString());
+
 		// Only add CORS headers if the developer mode is enabled to add them
 		if (!new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists()) {
 			try {
-			        chain.doFilter(oamRequest, response);
-		        }
-		        catch (Exception e) {
-			        logger.error(e.getLocalizedMessage(), e);
-			        hRes.sendError(500, MessageUtils.getDefaultBundleString("REST_API_EXCEPTION"));
-		        }
+				chain.doFilter(oamRequest, response);
+			}
+			catch (Exception e) {
+				logger.error(e.getLocalizedMessage(), e);
+				hRes.sendError(500, MessageUtils.getDefaultBundleString("REST_API_EXCEPTION"));
+			}
 			logger.debug("developer mode is NOT enabled on server side");
 			return;
 		}
