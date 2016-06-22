@@ -376,7 +376,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 		//remove a dashboard from the dashboard set
 		webd.getLogger().info("Remove a dashboard from the dashborad set");
-		DashboardBuilderUtil.removeDashboardInSet(webd, dbName);
+		DashboardBuilderUtil.removeDashboardFromSet(webd, dbName);
 		//verify the dashboard has been added to the dashboard set
 		webd.getLogger().info("Verify if the dashboard exists in the dashborad set");
 		Assert.assertFalse(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName), "Dashboard is in the dashboard set");
