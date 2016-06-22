@@ -977,59 +977,84 @@ define(['knockout',
                 Builder.fireDashboardItemChangeEvent(self.dashboard.tiles(), dashboardItemChangeEvent);
             };
             
-            self.whichTselLauncher = ko.observable(0); //0 for page, 1 for right drawer
+            self.whichTselLauncher = ko.observable(0); //0 for page, 1 for right drawer->more, 2 for right drawer->quick pickers
             self.selectionMode = ko.observable("byCriteria");
             self.returnMode = ko.observable('criteria');
             self.dropdownInitialLabel = ko.observable(getNlsString("DBS_BUILDER_ALL_TARGETS"));
             self.dropdownResultLabel = ko.observable(getNlsString("DBS_BUILDER_TARGETS_SELECTED"));
             self.showMoreQuickPick = ko.observable(true);
             
-            self.getInputCriteria = function() {
-                if(self.targets()) {
-                    return self.targets.criteria;
+            self.getInputCriteria = ko.computed(function() {
+                if(self.targets && self.targets()) {
+                    return self.targets().criteria;
                 }
                 return '';
-            }
+            });
             
-            self.getQuickPickers = function() {
-                var quickPickers = [{
+            self.quickPickers = ko.observable(
+                    [{
                         "title" : "All Hosts",
                         "type" : "byTargetType",
                         "value" : ["host"],
-                        "selected" : true
+                        "selected" : false
                     }, {
                         "title" : "All Linux",
                         "resultLabel" : "Linux",
                         "type" : "byTargetType",
-                        "value" : ["usr_host_linux"]
+                        "value" : ["usr_host_linux"],
+                        "selected": false
                     }, {
                         "title" : "All Windows",
                         "resultLabel" : "Windows",
                         "type" : "byTargetType",
-                        "value" : ["usr_host_windows"]
+                        "value" : ["usr_host_windows"],
+                        "selected": false
                     }, {
                         "title" : "All Docker",
                         "resultLabel" : "Docker",
                         "type" : "byTargetType",
-                        "value" : ["oracle_vm_guest"]
+                        "value" : ["oracle_vm_guest"],
+                        "selected": false
                     }          
-                ];
-                return quickPickers;
+            ]);
+                
+            self.setAllQuickPickersUnselected = function() {
+                for(var i=0; i<self.quickPickers().length; i++) {
+                    self.quickPickers()[i].selected = false;
+                }
             }
             
-            self.quickPickers = ko.computed(function() {
-                if(self.selectionMode() === "byCriteria") {
-                    return self.getQuickPickers();
-                }else {
-                    return [];
+            self.setQuickPickerSelected = function(value) {
+                for(var i=0; i<self.quickPickers().length; i++) {
+                    if((self.quickPickers()[i].value)[0] === value) {
+                        self.quickPickers()[i].selected = true;
+                    }
                 }
+            }
+            
+            self.notifyQuickPickerChange = ko.observable(new Date());
+
+            self.getQuickPickers = ko.computed(function() {
+                self.notifyQuickPickerChange();
+                if(self.whichTselLauncher() === 0 || self.whichTselLauncher() === 2) {
+                    if(self.selectionMode() === "byCriteria") {                       
+                        return self.quickPickers();
+                    }
+                }
+                return [];
             });
+            
+                        
+            self.setPageTsel = function() {
+                self.whichTselLauncher(0);
+            }
             
             self.returnFromTsel = function(targets) {
                 if(self.whichTselLauncher() === 0) {
                     self.returnFromPageTsel(targets);
-                }else if(self.whichTselLauncher() === 1) {
+                }else if(self.whichTselLauncher() === 1 || self.whichTselLauncher() === 2) {
                    $b.getRightPanelModel().returnFromRightDrawerTsel(targets);
+                   self.whichTselLauncher(0);
                 }
             }
 
@@ -1052,16 +1077,27 @@ define(['knockout',
             var initEnd = dfu_model.getUrlParam("endTime") ? new Date(parseInt(dfu_model.getUrlParam("endTime"))) : current;
             self.timeSelectorModel.viewStart(initStart);
             self.timeSelectorModel.viewEnd(initEnd);
+            self.timePeriod = ko.observable("Last 14 days");
             self.datetimePickerParams = {
                 startDateTime: initStart,
                 endDateTime: initEnd,
+                timePeriod: self.timePeriod,
                 hideMainLabel: true,
                 callbackAfterApply: function(start, end) {
                     self.timeSelectorModel.viewStart(start);
                     self.timeSelectorModel.viewEnd(end);
-                    self.timeSelectorModel.timeRangeChange(true);		
+                    self.timeSelectorModel.timeRangeChange(true);
+                    
+                    //change default time range value option text in right drawer
+                    if(self.whichTimeSelLauncher() === 1) {
+                        var pageTimeSelLabel = $("#dtpicker_"+self.dashboard.id()+ " span[id^='dropDown_']").text();
+                        $("#ojChoiceId_defaultTimeRange_" + self.dashboard.id() + "_selected").text(pageTimeSelLabel);
+                        self.whichTimeSelLauncher(0);
+                    }
                 }
             };
+            
+            self.whichTimeSelLauncher = ko.observable(0); // 0 for page, 1 for right drawer
             
             self.toolbarModel = null;
         }

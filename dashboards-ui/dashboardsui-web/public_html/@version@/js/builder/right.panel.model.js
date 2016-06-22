@@ -515,6 +515,7 @@ define(['knockout',
             self.enableTimeRangeFilter = ko.observable(self.dashboard.enableTimeRange() === 'TRUE');
             self.defaultEntityValue = ko.observable("allEntities");
             self.defaultEntityValueForMore = ko.observable();
+            self.tselLabelInSingle = ko.observable("Select an entity...");
             self.enableEntityFilter.subscribe(function(val){
                 self.dashboard.enableEntityFilter(val ? 'TRUE' : 'FALSE');
             });
@@ -531,31 +532,104 @@ define(['knockout',
             });
             
             self.returnFromRightDrawerTsel = function(targets) {
+                
+                var pageTselLabel = ko.contextFor($('#tsel_'+self.tilesViewModel.dashboard.id()).children().get(0)).$component.dropdownLabel();
+                if(self.instanceSupport() === "single") {
+                    self.tselLabelInSingle(pageTselLabel);                    
+                }else if(self.instanceSupport() === "byCriteria") {
+                    $("#ojChoiceId_defaultEntityValSel_"+self.tilesViewModel.dashboard.id()+"_selected").text(pageTselLabel);
+                }
                 self.defaultEntityValueForMore(targets);
             }
             
-            self.defaultEntityValueChanged = ko.computed(function() {
-                if(self.defaultEntityValue()[0] === "more") {
-                    require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
-                        self.tilesViewModel.whichTselLauncher(1);
-                        TargetSelectorUtils.launchTargetSelector("tsel_"+self.tilesViewModel.dashboard.id());
-                    });
+            self.defaultEntityValueChanged = function(event, data) {
+                if(data.option != "value") {
+                    return;
                 }
-                return self.defaultEntityValue();
-            }).extend({notify: 'always', rateLimit: {timeout: 1000}});
+                if(self.defaultEntityValue()[0] === "more") {
+                    self.launchTselFromRightPanel();                    
+                }else if(self.defaultEntityValue()[0] === "allEntities") {                    
+                    self.tilesViewModel.whichTselLauncher(2);
+                    self.tilesViewModel.setAllQuickPickersUnselected();
+                    self.tilesViewModel.notifyQuickPickerChange(new Date());
+                }else {
+                    self.tilesViewModel.whichTselLauncher(2);
+                    self.tilesViewModel.setAllQuickPickersUnselected();
+                    self.tilesViewModel.setQuickPickerSelected(self.defaultEntityValue()[0]);
+                    self.tilesViewModel.notifyQuickPickerChange(new Date());
+                }
+            }
             
             self.instanceSupportChanged = ko.computed(function() {
-                if(self.instanceSupport() === "single") {
-                    self.defaultEntityValue("singleInstVal");
-                    require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
-                        self.tilesViewModel.whichTselLauncher(1);
-                        TargetSelectorUtils.launchTargetSelector("tsel_"+self.tilesViewModel.dashboard.id());
-                    });
-                }else if(self.instanceSupport() === "byCriteria") {
+                if(self.instanceSupport() === "byCriteria") {
                     self.defaultEntityValue("allEntities");
+                }else {
+                    self.defaultEntityValue(null);
                 }
                 return self.instanceSupport();
             });
+            
+            self.launchTselFromRightPanel = function() {
+                require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
+                        self.tilesViewModel.whichTselLauncher(1);
+                        setTimeout(function() {TargetSelectorUtils.launchTargetSelector("tsel_"+self.tilesViewModel.dashboard.id())}, 1000);
+                    });
+            }
+            
+            self.defaultTimeRangeValue = ko.observable("last14days");
+            
+            self.defaultTimeRangeValueChanged = function(evet, data) {
+                if(data.option != "value") {
+                    return;
+                }
+                switch (self.defaultTimeRangeValue()[0]) {
+                    case "last15mins": 
+                        self.tilesViewModel.timePeriod("Last 15 minutes");
+                        break;
+                    case "last30mins": 
+                        self.tilesViewModel.timePeriod("Last 30 minutes");
+                        break;
+                    case "last60mins": 
+                        self.tilesViewModel.timePeriod("Last 60 minutes");
+                        break;
+                    case "last4hours": 
+                        self.tilesViewModel.timePeriod("Last 4 hours");
+                        break;
+                    case "last6hours": 
+                        self.tilesViewModel.timePeriod("Last 6 hours");
+                        break;
+                    case "last1day": 
+                        self.tilesViewModel.timePeriod("Last 1 day");
+                        break;
+                    case "last7days": 
+                        self.tilesViewModel.timePeriod("Last 7 days");
+                        break;
+                    case "last14days":
+                        self.tilesViewModel.timePeriod("Last 14 days");
+                        break;
+                    case "last30days": 
+                        self.tilesViewModel.timePeriod("Last 30 days");
+                        break;
+                    case "last90days": 
+                        self.tilesViewModel.timePeriod("Last 90 days");
+                        break;
+                    case "last1year": 
+                        self.tilesViewModel.timePeriod("Last 1 year");
+                        break;
+                    case "latest": 
+                        self.tilesViewModel.timePeriod("Latest");
+                        break;
+                    case "custom": 
+                        self.tilesViewModel.whichTimeSelLauncher(1);
+                        var ele = ".builder-main";
+                        var position = {"at": "center center", "collision": "none", "of": ele};
+                        ko.contextFor($("#dtpicker_"+self.dashboard.id()).children().get(0)).$component.launchTimePickerCustom(ele, position);
+                        break;
+                        
+                }
+                
+                return self.defaultTimeRangeValue()[0];
+            };
                         
             self.applyFilterSetting = function(){
                 //add save filter setting logic here

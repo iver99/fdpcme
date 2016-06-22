@@ -401,7 +401,7 @@
                             <!-- /ko -->
                             <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator no-print"></span>
                             <div class="df-targte-selector" data-bind="visible: dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE'">
-                                <emcta-target-selector data-bind="attr: {id: 'tsel_'+dashboard.id()}"
+                                <emcta-target-selector data-bind="attr: {id: 'tsel_'+dashboard.id()}, click: setPageTsel"
                                                        params="returnFunction: returnFromTsel,
                                                            config:{
                                                                selectionMode: selectionMode(),
@@ -413,10 +413,10 @@
                                                                    dropdownResultLabel: dropdownResultLabel(),
                                                                    showMoreQuickPick: showMoreQuickPick()
                                                                },
-                                                               quickPickers: quickPickers()
+                                                               quickPickers: getQuickPickers()
                                                            }"></emcta-target-selector>
                             </div>
-                            <div class="df-date-time-picker" data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>
+                            <div class="df-date-time-picker" data-bind="attr: {id: 'dtpicker_'+dashboard.id()}, component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>
                         </div>
                     </div>
 
@@ -827,7 +827,7 @@
                                                     <form class="oj-form checkboxControledContent">
                                                         <div class="oj-flex">  
                                                             <div class="oj-flex-item">
-                                                                <label class="oj-label enableEntityFilter" data-bind="css: {'dbd-right-panel-collapsible-disabled': !enableEntityFilter()}">Instance Support</label>
+                                                                <label class="oj-label enableEntityFilter" data-bind="css: {'dbd-right-panel-collapsible-disabled': !enableEntityFilter()}">Entity Support</label>
                                                             </div>
                                                         </div>
                                                         <div class="oj-flex">  
@@ -835,11 +835,11 @@
                                                                 <div data-bind="ojComponent: {component: 'ojRadioset', value: instanceSupport, disabled: !enableEntityFilter()}" >
                                                                    <span class="oj-choice-row">
                                                                        <input id="multipleInstanceSupport" type="radio" name="instanceSupport" value="byCriteria">
-                                                                       <label for="multipleInstanceSupport">Dashboard supports multiple instances</label>
+                                                                       <label for="multipleInstanceSupport">Dashboard supports multiple entities</label>
                                                                    </span>
                                                                    <span class="oj-choice-row">
                                                                        <input id="singleInstanceSupport" type="radio" name="instanceSupport" value="single">
-                                                                       <label for="singleInstanceSupport">Dashboard supports a single instace</label>
+                                                                       <label for="singleInstanceSupport">Dashboard supports a single entity</label>
                                                                    </span>
                                                                 </div>
                                                             </div>
@@ -851,20 +851,26 @@
                                                         </div>
                                                         <div class="oj-flex">  
                                                             <div class="oj-flex-item">
-                                                                <select data-bind="ojComponent: {component: 'ojSelect',disabled: !enableEntityFilter(),
-                                                                                                 value: defaultEntityValue,rootAttributes: {style:'max-width:20em'}}">                                          
                                                                 <!--ko if:instanceSupport() === "byCriteria"--> 
-                                                                  <option value="allEntities">All Entities</option>
-                                                                  <option value="allHosts">All Hosts</option>
-                                                                  <option value="allLinux">All Linux</option>
-                                                                  <option value="allWindows">All Windows</option>
-                                                                  <option value="allDocker">All Docker</option>
-                                                                  <option value="more">More</option>
-                                                                <!-- /ko --> 
-                                                                <!-- ko if: instanceSupport() === "single" --> 
-                                                                  <option value="singleInstVal">Select an instance...</option>
-                                                                 <!--/ko-->
-                                                                </select>
+                                                                    <select data-bind="attr: {id: 'defaultEntityValSel_'+tilesViewModel.dashboard.id()}, ojComponent: {component: 'ojSelect',disabled: !enableEntityFilter(), optionChange: defaultEntityValueChanged,
+                                                                                                     value: defaultEntityValue,rootAttributes: {style:'max-width:20em'}}">
+                                                                        <option value="allEntities">All Targets</option>
+                                                                        <option value="host">All Hosts</option>
+                                                                        <option value="usr_host_linux">All Linux</option>
+                                                                        <option value="usr_host_windows">All Windows</option>
+                                                                        <option value="oracle_vm_guest">All Docker</option>
+                                                                        <option value="more">More</option>                                                                                      
+                                                                    </select>
+                                                                <!-- /ko -->
+                                                                
+                                                                <!-- ko if: instanceSupport() === "single" -->
+                                                                    <div class="oj-select oj-component oj-enabled oj-select-jet oj-form-control">
+                                                                        <div class="oj-select-choice" tabindex="0"  style="width: 100%; display: inline-block; max-width: 20em;" data-bind="click: launchTselFromRightPanel, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {launchTselFromRightPanel();}}}"> 
+                                                                                <span class="oj-select-chosen" data-bind="text: tselLabelInSingle"></span>
+                                                                                <a class="oj-select-arrow oj-component-icon oj-clickable-icon-nocontext oj-select-open-icon"></a>
+                                                                        </div>
+                                                                    </div>    
+                                                                <!--/ko-->
                                                             </div>
                                                         </div>
                                                     </form>
@@ -892,14 +898,30 @@
                                                     </div>
                                                     <div class="oj-flex" >
                                                         <div class="oj-flex-item">
-                                                            <div class="oj-row fit-size-vertical-sibling df-computed-content-width"
+                                                            <select data-bind="attr: {id: 'defaultTimeRange_'+tilesViewModel.dashboard.id()}, ojComponent: {component: 'ojSelect',disabled: !enableTimeRangeFilter(), optionChange: defaultTimeRangeValueChanged, 
+                                                                                                 value: defaultTimeRangeValue,rootAttributes: {style:'max-width:20em'}}">
+                                                                <option value="last15mins">Last 15 mins</option>
+                                                                <option value="last30mins">Last 30 mins</option>
+                                                                <option value="last60mins">Last Hour</option>
+                                                                <option value="last4hours">Last 4 hours</option>
+                                                                <option value="last6hours">Last 6 hours</option>
+                                                                <option value="last1day">Last day</option>
+                                                                <option value="last7days">Last week</option>
+                                                                <option value="last14days">Last 14 days</option>
+                                                                <option value="last30days">Last 30 days</option>
+                                                                <option value="last90days">Last 90 days</option>
+                                                                <option value="last1year">Last year</option>
+                                                                <option value="latest">Latest</option>
+                                                                <option value="custom">Custom</option>
+                                                            </select>
+<!--                                                            <div class="oj-row fit-size-vertical-sibling df-computed-content-width"
                                                                  style="max-width: none;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0"
                                                                  data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
                                                                 <div class="oj-col oj-sm-12 oj-md-7" style="padding-left: 0;width: 100px;">
                                                                     <div data-bind="visible: !dashboard.enableTimeRange || dashboard.enableTimeRange() !== 'TRUE'">&nbsp;</div>
                                                                     <div style="width: 100px;" data-bind="component: {name: 'df-datetime-picker', params: tilesViewModel.datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'"></div>
                                                                 </div>
-                                                            </div>
+                                                            </div>-->
                                                         </div>
                                                     </div>
                                                 </form>

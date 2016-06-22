@@ -1397,6 +1397,28 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }
                 };
                 
+                /**
+                 * The function is used to launch right panel with calender to specific position
+                 * 
+                 * @param {type} ele The right panel popup will apear relative to this element
+                 * @param {type} position The location of the right panel popup 
+                 * @returns {undefined}
+                 */
+                self.launchTimePickerCustom = function(ele, position) {
+                    if(self.init === true) {
+                        self.init = false;
+                    }
+                    self.autoFocus("inputStartDate_" + self.randomId);
+                    self.lastFocus(1);
+                                                
+                    self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
+                    setTimeout(function(){self.updateRange(self.startDate(), self.endDate());}, 0);
+                        
+                    self.showRightPanel(true);
+                    $("#pickerPanel_"+self.randomId).ojPopup("open", ele,  position);
+                    self.showCalendar(true);
+                };
+                
                 self.isEnterPressed = function(data, event) {
                     var keyCode = event.which ? event.which : event.keyCode;
                     if(keyCode === 13) {
@@ -1540,6 +1562,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.lastStartTime(self.startTime());
                     self.lastEndTime(self.endTime());
                     self.lastTimePeriod(self.timePeriod());
+                    self.setMinMaxDate(null, null);
                     var start, end;
                     
                     if(self.enableTimeFilter()) {
