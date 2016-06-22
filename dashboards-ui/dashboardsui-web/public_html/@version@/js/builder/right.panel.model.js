@@ -656,10 +656,10 @@ define(['knockout',
                 return self.defaultTimeRangeValue()[0];
             };
                         
-            self.applyFilterSetting = function(){
-                //add save filter setting logic here
-                self.filterSettingModified(false);
-            };
+//            self.applyFilterSetting = function(){
+//                //add save filter setting logic here
+//                self.filterSettingModified(false);
+//            };
             
             
             function queryDashboardSetsBySubId(dashboardId,callback){

@@ -834,7 +834,7 @@
                                                     <div class="oj-flex" >
                                                         <div class="oj-flex-item">
                                                             <select data-bind="attr: {id: 'defaultTimeRange_'+tilesViewModel.dashboard.id()}, ojComponent: {component: 'ojSelect',disabled: !enableTimeRangeFilter(), optionChange: defaultTimeRangeValueChanged, 
-                                                                                                 value: defaultTimeRangeValue,rootAttributes: {style:'max-width:20em'}}">
+                                                                                                 minimumResultsForSearch: 20, value: defaultTimeRangeValue,rootAttributes: {style:'max-width:20em; min-width: 17em;'}}">
                                                                 <option value="last15mins">Last 15 mins</option>
                                                                 <option value="last30mins">Last 30 mins</option>
                                                                 <option value="last60mins">Last Hour</option>
@@ -861,7 +861,7 @@
                                                     </div>
                                                 </form>
                                             </div>
-                                            <div class="oj-flex" >
+<!--                                            <div class="oj-flex" >
                                                 <div class="oj-flex-item">
                                                     <button data-bind="click: applyFilterSetting(), ojComponent: { 
                                                                                     component: 'ojButton', label: 'Apply' , 
@@ -869,7 +869,7 @@
                                                                                     rootAttributes: {style:'float:right;margin:0 5px 5px 0;'} },
                                                                             css: {'oj-button-primary':filterSettingModified()}"></button>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                         </div>
                                     </div>
                                 </div>

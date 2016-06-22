@@ -1064,7 +1064,7 @@ define(['knockout',
                    self.whichTselLauncher(0);
                 }
             }
-
+            
             var timeSelectorChangelistener = ko.computed(function(){
                 return {
                     timeRangeChange:self.timeSelectorModel.timeRangeChange()
@@ -1097,8 +1097,8 @@ define(['knockout',
                     
                     //change default time range value option text in right drawer
                     if(self.whichTimeSelLauncher() === 1) {
-                        var pageTimeSelLabel = $("#dtpicker_"+self.dashboard.id()+ " span[id^='dropDown_']").text();
-                        $("#ojChoiceId_defaultTimeRange_" + self.dashboard.id() + "_selected").text(pageTimeSelLabel);
+                        var pageTimeSelLabel = $("#dtpicker_"+self.dashboard.id()+ " span[id^='dropDown_']").html();
+                        $("#ojChoiceId_defaultTimeRange_" + self.dashboard.id() + "_selected").html(pageTimeSelLabel);
                         self.whichTimeSelLauncher(0);
                     }
                 }
