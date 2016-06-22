@@ -206,7 +206,7 @@ public class DashboardBuilderUtil
 		WaitUtil.waitForPageFullyLoaded(driver);
 
         //open settings menu
-        driver.click(DashBoardPageId.DashboardsetOptionsMenuID);
+        driver.click("id="+DashBoardPageId.DashboardsetOptionsMenuID);
 
         // click edit option
         driver.waitForElementPresent("css=" + DashBoardPageId.DashboardsetOptionsEditCSS);
@@ -309,11 +309,11 @@ public class DashboardBuilderUtil
 
 		driver.getLogger().info("DashboardBuilderUtil.edit started");
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
+		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsMenuLocator);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
 		WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
-		WebElement editOption = selectedDashboardEl.findElement(By.xpath(DashBoardPageId.BuilderOptionsMenuLocator));
+		WebElement editOption = selectedDashboardEl.findElement(By.cssSelector(DashBoardPageId.BuilderOptionsMenuLocator));
 		editOption.click();
 		driver.takeScreenShot();
 
@@ -401,12 +401,12 @@ public class DashboardBuilderUtil
 		Validator.notNull("editname", name);
 		Validator.notEmptyString("editname", name);
 
-        driver.waitForElementPresent(DashBoardPageId.DashboardsetOptionsMenuID);
+        driver.waitForElementPresent("id="+DashBoardPageId.DashboardsetOptionsMenuID);
 		driver.getLogger().info("DashboardBuilderUtil.editDashboardSet started");
 		WaitUtil.waitForPageFullyLoaded(driver);
 
         //open settings menu
-		driver.click(DashBoardPageId.DashboardsetOptionsMenuID);
+		driver.click("id="+DashBoardPageId.DashboardsetOptionsMenuID);
 
         // click edit option
 		driver.waitForElementPresent("css=" + DashBoardPageId.DashboardsetOptionsEditCSS);
@@ -989,8 +989,8 @@ public class DashboardBuilderUtil
 
 		//open the edit/share dialog
 		driver.getLogger().info("DashboardBuilderUtil.toggleShareDashboardset open share/edit dialog");
-		driver.waitForElementPresent(DashBoardPageId.DashboardsetOptionsMenuID);
-		driver.click(DashBoardPageId.DashboardsetOptionsMenuID);
+		driver.waitForElementPresent("id="+DashBoardPageId.DashboardsetOptionsMenuID);
+		driver.click("id="+DashBoardPageId.DashboardsetOptionsMenuID);
 		driver.waitForElementPresent("css=" + DashBoardPageId.DashboardsetOptionsEditCSS);
 		driver.click("css=" + DashBoardPageId.DashboardsetOptionsEditCSS);
 		driver.takeScreenShot();
