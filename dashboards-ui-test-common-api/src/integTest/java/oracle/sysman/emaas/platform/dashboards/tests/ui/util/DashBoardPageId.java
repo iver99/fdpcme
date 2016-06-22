@@ -416,6 +416,7 @@ public class DashBoardPageId
 	public static final String DASHBOARD_HOME_DELETE_BUTTON = "dsbinfopop_delete";
 	public static final String DASHBOARD_HOME_DELETE_CONFIRM = "dbs_cfmDialog_delete";
 	public static final String DASHBOARD_HOME_DELETE_DIALOG = ".dbs_cfmDialog";
+	public static final String DASHBOARD_HOME_CREATINSET_BUTTON=".dashboard-picker-container .dbs-home-blue-button";
 
 	//error page
 	public static final String ErrorSignOutButtonId = "dbd_sign_out_button";
