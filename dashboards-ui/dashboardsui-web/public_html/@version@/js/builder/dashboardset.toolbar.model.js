@@ -23,6 +23,7 @@ define(['knockout',
         function DashboardsetToolBarModel(dashboardInst) {                     
             var self = this;
 
+            self.dashboardInst = dashboardInst;
             self.dashboardsetItems = [];
             self.reorderedDbsSetItems=ko.observableArray();
 
@@ -102,7 +103,7 @@ define(['knockout',
             
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             
-            self.dashboardsetConfigMenu =function(event,data){ 
+            self.dashboardsetConfigMenu =function(event,data){
                 var configId = data.item.attr('id');
                 switch (configId) {
                     case 'dbs-edit':
@@ -242,7 +243,7 @@ define(['knockout',
                     self.selectedDashboardItem(selectedDashboard);
                     $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + selectedDashboard.dashboardId});
                     $("#dbd-tabs-container").ojTabs("refresh");
-                    $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));                       
+                    $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
                 }else if(dashboardPickerId==='addDuplicate'){
                     self.dashboardsetItems.push(selectedDashboard);
                     self.reorderedDbsSetItems.push(selectedDashboard);
@@ -250,67 +251,30 @@ define(['knockout',
                     self.selectedDashboardItem(selectedDashboard);
                     $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + selectedDashboard.dashboardId});
                     $("#dbd-tabs-container").ojTabs("refresh");
-                    $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));                 
+                    $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
                 }
                 self.saveDashboardSet();
                 self.noDashboardHome(true);
             };
-            
-            
+
             self.removeDashboard = function(){
-                $('#deleteDashboard').ojDialog("close"); 
+                $('#deleteDashboard').ojDialog("close");
                 var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId);
                 highlightNextTab(self.selectedDashboardItem().dashboardId, removeTab);
                 $("#dbd-tabs-container").ojTabs("refresh");
-                
+
             };
             self.saveAndRemoveDashboard = function(){
-                $('#deleteDashboard').ojDialog("close"); 
+                $('#deleteDashboard').ojDialog("close");
                 self.dashboardInstMap[self.selectedDashboardItem().dashboardId].toolBarModel.handleDashboardSave();
-                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId);
-                highlightNextTab(self.selectedDashboardItem().dashboardId, removeTab);
-                $("#dbd-tabs-container").ojTabs("refresh"); 
-            };
-            self.cancelRemoveDashboard = function(){
-                $('#deleteDashboard').ojDialog("close"); 
-            };
-            
-            self.removeDashboard = function(){
-                $('#deleteDashboard').ojDialog("close"); 
                 var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId);
                 highlightNextTab(self.selectedDashboardItem().dashboardId, removeTab);
                 $("#dbd-tabs-container").ojTabs("refresh");
-                
-            };
-            self.saveAndRemoveDashboard = function(){
-                $('#deleteDashboard').ojDialog("close"); 
-                self.dashboardInstMap[self.selectedDashboardItem().dashboardId].toolBarModel.handleDashboardSave();
-                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId);
-                highlightNextTab(self.selectedDashboardItem().dashboardId, removeTab);
-                $("#dbd-tabs-container").ojTabs("refresh"); 
             };
             self.cancelRemoveDashboard = function(){
-                $('#deleteDashboard').ojDialog("close"); 
+                $('#deleteDashboard').ojDialog("close");
             };
-            
-            self.removeDashboard = function(){
-                $('#deleteDashboard').ojDialog("close"); 
-                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId);
-                highlightNextTab(self.selectedDashboardItem().dashboardId, removeTab);
-                $("#dbd-tabs-container").ojTabs("refresh");
-                
-            };
-            self.saveAndRemoveDashboard = function(){
-                $('#deleteDashboard').ojDialog("close"); 
-                self.dashboardInstMap[self.selectedDashboardItem().dashboardId].toolBarModel.handleDashboardSave();
-                var removeTab=$('#dashboardTab-'+self.selectedDashboardItem().dashboardId);
-                highlightNextTab(self.selectedDashboardItem().dashboardId, removeTab);
-                $("#dbd-tabs-container").ojTabs("refresh"); 
-            };
-            self.cancelRemoveDashboard = function(){
-                $('#deleteDashboard').ojDialog("close"); 
-            };
-            
+
             self.toolbarDuplcateInSet = function (duplicateData) {
                 self.pickDashboard('addDuplicate', {
                     id: ko.observable(duplicateData.id),
@@ -318,7 +282,7 @@ define(['knockout',
                 });
                 $('#duplicateDsbDialog').ojDialog('close');
             };
-                    
+
             self.dbConfigMenuClick = new dbConfigMenuClick();  
             
             self.dashboardsetMenu = ko.observableArray([
@@ -381,7 +345,7 @@ define(['knockout',
                     "icon": "dbd-icon-refresh",
                     "title": "",
                     "disabled": "",
-                    "endOfGroup": false,    
+                    "endOfGroup": false,
                     "showOnMobile": true,
                     "showOnViewer":true,
                     "visibility":visibilityOnDifDevice(true,true),
@@ -462,13 +426,13 @@ define(['knockout',
                             }
                             if(self.dashboardsetItems.length===1 && singleDashboardItem.type==='new'){
                                 self.noDashboardHome(false);
-                            }          
+                            }
                         });
                         
                         singleDashboardItem = self.dashboardsetItems[indexOfSelectedTabInUserOption];
                         self.selectedDashboardItem(singleDashboardItem);
                         $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + singleDashboardItem.dashboardId});
-                        $("#dbd-tabs-container").ojTabs("refresh");     
+                        $("#dbd-tabs-container").ojTabs("refresh");
                         $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
                     }
                     
@@ -794,7 +758,7 @@ define(['knockout',
                 } else {
                     highlightNextTab(removeDashboardId, ui.tab);
                     $("#dashboard-" + removeDashboardId).remove();
-                }  
+                }
                 if(self.dashboardInstMap[removeDashboardId].type === 'new' && self.dashboardsetItems.length > 0){
                     self.noDashboardHome(true);
                 }

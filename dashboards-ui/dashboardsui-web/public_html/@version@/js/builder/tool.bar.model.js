@@ -22,6 +22,7 @@ define(['knockout',
         function ToolBarModel($b,dashboardSetOptions) {
             var self = this;
             self.$b = $b;
+            $b.registerObject(self, 'ToolBarModel');
             self.dashboard = $b.dashboard;
             self.isUpdated = $b.isDashboardUpdated;
             self.tilesViewModel = $b.getDashboardTilesViewModel();
@@ -227,6 +228,18 @@ define(['knockout',
             
             self.handleDeleteDashboardCancelled = function() {
                 $('#delete-dashboard').ojDialog( "close" ); 
+            };
+            
+            self.handleUnshareDashboardClicked = function() {
+              self.handleShareUnshare(false);
+              $('#share-dashboard').ojDialog( "close" ); 
+            };
+            
+            self.handleUnshareDashboardCancelled = function() {
+                // revert change
+                var dashboardSharing = ko.dataFor($b.findEl(".share-settings")[0]).dashboardSharing;
+                dashboardSharing("shared");
+                $('#share-dashboard').ojDialog( "close" );
             };
 
             self.handleDashboardNameInputKeyPressed = function(vm, evt) {
@@ -509,18 +522,17 @@ define(['knockout',
             
             self.handleShareUnshare = function(isToShare) {
                 var _shareState = self.dashboard.sharePublic();
-                var _url = "/sso.static/dashboards.service/";
-                if (dfu.isDevMode()) {
-                        _url = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/");
+                if(_shareState === isToShare ) {
+                    return ;
                 }
+                var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
                 dfu.ajaxWithRetry(_url + self.dashboard.id() + "/quickUpdate", {
                         type: 'PUT',
                         dataType: "json",
                         contentType: 'application/json',
                         data: JSON.stringify({sharePublic: isToShare}),
-                        headers: dfu.getDashboardsRequestHeader(), //{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
+                        headers: dfu.getDashboardsRequestHeader(), 
                         success: function (result) {
-                            //self.sharePublic(_shareState === true ? false : true);
                             self.dashboard.sharePublic(isToShare);
                             if (self.dashboard.sharePublic() === true)
                             {
@@ -590,6 +602,11 @@ define(['knockout',
                 $('#delete-dashboard').ojDialog( "open" ); 
                 $('#delete-dashboard').focus();
             };
+            self.openDashboardUnshareConfirmDialog = function() {
+                $('#share-dashboard').ojDialog( "open" ); 
+                $('#share-dashboard').focus();
+            };
+            
             self.addDashboardToFavorites = function() {
                 function succCallback(data) {
                     dfu.showMessage({

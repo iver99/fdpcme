@@ -11,6 +11,7 @@ define(['knockout',
         function NormalEditorMode() {
             this.mode = "Normal Display Mode";
             this.MODE_MAX_COLUMNS = 12;
+            this.MODE_MIN_COLUMNS = 2;
             this.editable = true;
             this.POSITION_TYPE = Builder.EDITOR_POS_BASED_ON_ROW_COLUMN;
         }
@@ -75,6 +76,7 @@ define(['knockout',
         function TabletEditorMode() {
             this.mode = "Tablet Display Mode";
             this.MODE_MAX_COLUMNS = 2;
+            this.MODE_MIN_COLUMNS = 1;
             this.editable = false;
             this.POSITION_TYPE = Builder.EDITOR_POS_FIND_SUITABLE_SPACE;
         }

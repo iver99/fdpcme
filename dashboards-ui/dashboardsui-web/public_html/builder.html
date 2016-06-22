@@ -182,72 +182,6 @@
                               </div>
                         </div>                      
                     </div>
-                    <div data-bind="css: rightButtonsAreaClasses(),visible:false" class="builder-toolbar-right oj-toolbar-row">
-                        <!-- ko if: window.DEV_MODE -->
-<!--                        <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
-                                data-bind="click: changeMode, ojComponent: {
-                                      component:'ojButton', label: getNlsString('DBS_BUILDER_BTN_TOGGLE_MODE'),
-                                      icons: {start: 'dbd-toolbar-icon-add-widget'},
-                          }, attr: {title: getNlsString('DBS_BUILDER_BTN_TOGGLE_MODE')}">
-                        </button>-->
-                        <!-- /ko -->
-<!--                        <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
-                                data-bind="click: openAddWidgetDialog, ojComponent: {
-                                      component:'ojButton', label: getNlsString('DBS_BUILDER_BTN_ADD'),
-                                      icons: {start: 'dbd-toolbar-icon-add-widget'},
-                          }, attr: {title: getNlsString('DBS_BUILDER_BTN_ADD_WIDGET')}, visible: editDisabled() !== true">
-                        </button>-->
-                        
-                        <div style="position: absolute;overflow: hidden;left: -9999px;top: -9999px;height: 1px;width: 1px;">
-                            <span class="dbd-toolbar-icon-duplicate"></span>
-                            <span class="dbd-toolbar-icon-home"></span>
-                            <span class="dbd-toolbar-icon-delete"></span>
-                        </div>
-                        
-                        <button class="dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print toolbar-save"
-                                data-bind="click: handleDashboardSave, ojComponent: {
-                                        component:'ojButton', chroming: 'half', label: getNlsString('COMMON_BTN_SAVE'), disabled: disableSave, 
-                                        icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
-                            }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.tilesViewModel.isMobileDevice !== 'true'">
-                        </button>
-                        <button class='dashboardOptsBtn oj-button oj-default oj-button-half-chrome no-print'
-                                data-bind="visible: true, ojComponent: { component: 'ojButton', chroming: 'half', label: getNlsString('DBS_BUILDER_BTN_OPTIONS'), icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
-                                    menu: '#dashboardOptsMenu'+toolBarGuid},
-                                attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
-                        </button>
-
-                        <ul class="no-print dropdown-menu" data-bind="ojComponent: {component: 'ojMenu'},attr:{id:'dashboardOptsMenu'+toolBarGuid}" style="display: none;">
-                          <!-- ko template: {name: 'dsbOptsMenuItemTemplate', foreach: dashboardOptsMenuItems, as: 'item'} -->
-                          <!-- /ko -->
-                        </ul>
-
-                        <!--span  tabindex="0" data-bind="click: handleSettingsDialogOpen, enterpress: handleSettingsDialogOpen, visible: editDisabled() !== true">
-                          <button class="dashboard-settings oj-button oj-default oj-button-half-chrome dbd-gray"
-                                  data-bind="ojComponent: {
-                                        component:'ojButton', 
-                                        disabled: editDisabled,
-                                        icons: {start:'dbd-toolbar-icon-settings'}
-                            }" title="Change Settings">
-                            <img src="@version@/images/qual_hammergear_16_full.png" alt="Change Settings"/><span class="builder-toolbar-button-text">Settings</span>
-                          </button>
-                        </span-->
-                        <!--span  tabindex="0" data-bind="click: createNewWidget, enterpress: createNewWidget, visible: editDisabled() === false">
-                          <button class="dashboard-new-widget oj-button oj-default oj-button-half-chrome"
-                                  data-bind="ojComponent: {
-                                      disabled: editDisabled,  
-                                      component:'ojButton'
-                            }" title="Create new widget">
-                            <img src="@version@/images/tab_new_raised-24.png" alt="Create new widget" data-bind="css: {'dbd-not-gray': !editDisabled()}"/>
-                          </button>
-                        </span-->
-                    </div>
-<!--                    <div style="display:none; min-width:100px; min-height:50px;" class="add-widget-tooltip"
-                         data-bind="ojComponent: {component: 'ojPopup',
-                                              tail: 'simple',
-                                              position: {'my': 'right top', 'at': 'start bottom', 'of': '#add-widget-button'}}">
-                                 <h1 data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></h1>
-                                 <br/><span data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_DETAIL')"></span><br/>
-                    </div>-->
                 </div>                
                      <!-- confirm leave dilog start ->
                     <div style="display:none" class="cfmleaveDialog"
@@ -447,10 +381,11 @@
                                           <!-- ko if: !$root.dashboard.systemDashboard() || !linkedDashboard || linkedDashboard() === '#'-->
                                             <h2 class="dbd-tile-title" data-bind="text:hideTitle() === 'true' ? '': title, attr: {'data-tile-title': title}"></h2>
                                           <!-- /ko -->
-                                          <div class="dbd-pull-right" style="display: flex" data-bind="visible: $root.isMobileDevice !== 'true'">
+                                          <div class="dbd-pull-right" style="display: flex">
                                               <div class="dbd-btn-editor">                 
                                                   <button class="oj-button-half-chrome dbd-data-explore" tabindex="0"
                                                           data-bind="
+                                                             visible: $root.isMobileDevice !== 'true',
                                                              attr:{'id': 'editButton' + clientGuid,title: getNlsString('DBS_BUILDER_TILE_EDIT')},
                                                              click:$root.openInDataExplorer,
                                                              ojComponent: {
@@ -473,7 +408,7 @@
                                                 <div class="dbd-btn-group">
                                                     <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
                                                             data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
-                                                                       visible: ($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())),
+                                                                       visible: ($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true'),
                                                                        ojComponent: {component: 'ojButton', 
                                                                                      label: '', chroming: 'half',
                                                                                      icons: {start:'fa-icon-font fa-icon-font-16 dbd-tile-icon-option'},
@@ -640,7 +575,7 @@
                     <!--ko if: $data.dashboardsetToolBarModel.isDashboardSet-->
                         <div class="dbd-right-panel-editdashboardset" data-bind="visible:$data.tilesViewModel.rightPanelIcon()=='pencil'&&$data.editPanelContent()=='editset'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" >
-                                <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: switchEditPanelContent"style="color:#0572ce"></a>
+                                <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: switchEditPanelContent"style="color:#0572ce;margin-left: -5px;"></a>
                                 <span data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_DSBSET_TITLE')"></span>
                             </div>
                             <div class="dbd-right-panel-editdashboard-container fit-size" style="overflow-y: scroll">
@@ -650,8 +585,8 @@
                                         <div class="oj-form">
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
-                                                    <label for="dbsHNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
-                                                    <input id="dbsHNameIn" maxlength="64" required
+                                                    <label for="editDbdSetName" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
+                                                    <input id="editDbdSetName" maxlength="64" required
                                                            data-bind="ojComponent: { component: 'ojInputText', value: dashboardsetName, rawValue: dashboardsetNameInputed,
                                                validators : [{
                                                        type: 'regExp', options : {
@@ -670,8 +605,8 @@
                                             </div>
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
-                                                    <label for="dbsHDpIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
-                                                    <textarea id="dbsHDpIn" maxlength="256" rows="3" style="resize: vertical"
+                                                    <label for="editDbdSetDscp" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
+                                                    <textarea id="editDbdSetDscp" maxlength="256" rows="3" style="resize: vertical"
                                                               data-bind="ojComponent: {component: 'ojTextArea', value: dashboardsetDescription, rawValue: dashboardsetDescriptionInputed, rootAttributes: {style:'max-width:420px;'},
                                                                 validators : [{type: 'regExp', options : {
                                                                        pattern: '(.|\\b|\\s){0,256}', 
@@ -698,11 +633,11 @@
                                                     <div data-bind="ojComponent: {component: 'ojRadioset', value: dashboardsetShare}" >
                                                         <span class="oj-choice-row">
                                                             <input id="dashboardSetSharingNotShared" type="radio" name="dashboardSetSharing" value="off">
-                                                            <label for="dashboardSharingNotShared" data-bind="text: getNlsString('DBSSET_BUILDER_NOT_SHARED')"></label>
+                                                            <label for="dashboardSharingNotShared" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING_NOT_SHARED')"></label>
                                                         </span>
                                                         <span class="oj-choice-row">
                                                             <input id="dashboardSetSharingShared" type="radio" name="dashboardSetSharing" value="on">
-                                                            <label for="dashboardSharingShared" data-bind="text: getNlsString('DBSSET_BUILDER_SHARED')"></label>
+                                                            <label for="dashboardSharingShared" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING_SHARED')"></label>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -730,7 +665,7 @@
                                 </div>
                                 <hr/>
                                 <div>
-                                    <button data-bind="click: deleteDashboardSetClicked, ojComponent: { component: 'ojButton', label: 'Delete Dashboard Set' }"></button>
+                                    <button class="dbd-delete-dashboardset" data-bind="click: deleteDashboardSetClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_DELETE_SET_TITLE') }"></button>
                                 </div>
                             </div>
                         </div>
@@ -747,8 +682,8 @@
                                         <div class="oj-form">
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
-                                                    <label for="dbsHNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
-                                                    <input id="dbsHNameIn" maxlength="64" required
+                                                    <label for="editDbdName" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
+                                                    <input id="editDbdName" maxlength="64" required
                                                            data-bind="ojComponent: { component: 'ojInputText', value: editDashboardDialogModel.name, 
                                                rawValue: editDashboardDialogModel.nameInputed,
                                                validators : [{
@@ -769,8 +704,8 @@
                                             </div>
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
-                                                    <label for="dbsHDpIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
-                                                    <textarea id="dbsHDpIn" maxlength="256" rows="3" style="resize: vertical"
+                                                    <label for="editDbdDscp" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
+                                                    <textarea id="editDbdDscp" maxlength="256" rows="3" style="resize: vertical"
                                                               data-bind="ojComponent: {component: 'ojTextArea', value: editDashboardDialogModel.description,rawValue: editDashboardDialogModel.descriptionInputed, rootAttributes: {style:'max-width:420px;'},
                                                                 validators : [{type: 'regExp', options : {
                                                                        pattern: '(.|\\b|\\s){0,256}', 
@@ -938,8 +873,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <hr data-bind="visible:!$data.isUnderSet"/>
-                                <div class="dbd-right-panel-editdashboard-share" data-bind="ojComponent: {component: 'ojCollapsible'},visible:!$data.isUnderSet">
+                                <hr/>
+                                <div class="dbd-right-panel-editdashboard-share" data-bind="ojComponent: {component: 'ojCollapsible'}">
                                     <span class="dbd-right-panel-editdashboard-innertitle" data-bind="text: getNlsString('COMMON_TEXT_SHARE')"></span>
                                     <div class="share-settings oj-form-layout">
                                         <form class="oj-form">
@@ -983,9 +918,9 @@
                                         </form>
                                     </div>
                                 </div>
-                                <hr data-bind="visible:!$data.isUnderSet"/>
-                                <div data-bind="visible:!$data.isUnderSet">
-                                    <button data-bind="click: deleteDashboardClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_DELETE_TITLE') }"></button>
+                                <hr/>
+                                <div>
+                                    <button class="dbd-delete-single-dashboard" data-bind="click: deleteDashboardClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_DELETE_TITLE') }"></button>
                                 </div>
                             </div>
                         </div>
@@ -1001,7 +936,7 @@
                                     <!--/ko-->
                                 <!--ko if: $data.tilesViewModel.dashboard.tiles().length>0-->
                                 <span class="edit-setting-head">Widgets</span>
-                                    <!--ko foreach:tilesViewModel.dashboard.tiles-->
+                                    <!--ko foreach:sortedTiles-->
                                 <span class="edit-setting-link" data-bind="text:WIDGET_NAME"></span>
                                     <!--/ko-->
                                 <!--/ko-->
@@ -1011,7 +946,7 @@
                                 <span class="edit-setting-link edit-dsb-link" data-bind="text: dashboard.name, click: switchEditPanelContent"></span>
                                 <!--ko if: $data.tilesViewModel.dashboard.tiles().length>0-->
                                 <span class="edit-setting-head">Widgets</span>
-                                    <!--ko foreach: tilesViewModel.dashboard.tiles -->
+                                    <!--ko foreach: sortedTiles -->
                                 <span class="edit-setting-link"  data-bind="text:WIDGET_NAME"></span>
                                     <!--/ko-->
                                <!--/ko-->
@@ -1056,21 +991,21 @@
                                 <div data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
                                 <div class="dbd-left-panel-widget-text"
                                             >
-                                    <span tabindex="0" data-bind="text:WIDGET_NAME, event: {keypress: $root.widgetKeyPress, focus: $root.widgetShowPlusIcon},attr:{'data-rightpanel-items':WIDGET_NAME,'aria-label':WIDGET_NAME}"></span>
+                                    <span tabindex="0" data-bind="text:WIDGET_NAME, click: $root.resetFocus, event: {keypress: $root.widgetKeyPress, focus: $root.widgetShowPlusIcon},attr:{'data-rightpanel-items':WIDGET_NAME,'aria-label':WIDGET_NAME}"></span>
                                 </div>
-                                <i class="dbd-toolbar-fa-icon fa-plus" aria-hidden="false" tabindex="0" data-bind="event: {keypress: $root.widgetKeyPress, blur: $root.widgetHidePlusIcon},attr:{'data-rightpanel-items':WIDGET_NAME,'aria-label':WIDGET_NAME,'title': getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_BUTTON_PLUS')}"></i> 
+                                <i class="dbd-toolbar-fa-icon fa-plus" aria-hidden="false" tabindex="0" data-bind="click: $root.widgetPlusClicked, event: {keypress: $root.widgetKeyPress, blur: $root.widgetHidePlusIcon},attr:{'data-rightpanel-items':WIDGET_NAME,'aria-label':WIDGET_NAME,'title': getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_BUTTON_PLUS')}"></i> 
                                 </div>
                                 <div data-bind="css:'widget-'+WIDGET_UNIQUE_ID(),
                                                 ojComponent:{component: 'ojPopup',tail: 'simple'}" class="dbd-left-panel-img-pop">
                                     <div class="oj-row">
                                         <div class="oj-col oj-sm-12 oj-md-12">
-                                            <h2 data-bind="text:WIDGET_NAME"></h2>
+                                            <h4 data-bind="text:WIDGET_NAME"></h4>
                                         </div>
                                     </div>
                                     <hr>
                                     <div class="oj-row">
-                                        <div class="oj-col oj-sm-4 oj-md-4">
-                                            <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL}" style="height:120px;width:120px;"/>
+                                        <div class="oj-col oj-sm-4 oj-md-4" style="vertical-align:middle; line-height: 120px;">
+                                            <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL, width: imgWidth, height: imgHeight}" style="vertical-align: middle;"/>
                                         </div>
                                         <div class="oj-col oj-sm-8 oj-md-8">
                                             <span data-bind="text:WIDGET_DESCRIPTION" style="color: #9e9e9e;"></span>
@@ -1221,7 +1156,7 @@
             
             <div id="popUp-dialog" data-bind="with:selectedDashboardInst">
                 <!--ko if: $data.type === 'included'-->
-                   <!-- delete dilog start -->
+                <!-- delete dilog start -->
                 <div style="display:none" id="delete-dashboard"
                      data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
                                         cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
@@ -1229,16 +1164,53 @@
                         <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB')"></span>
                     </div>
                     <div class="oj-dialog-body">
-                        <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG', toolBarModel.dashboardName())"></p>
+                        <!-- ko ifnot:dashboardSets() && dashboardSets().length > 0  -->
+                            <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG', toolBarModel.dashboardName())"></p>
+                        <!-- /ko -->
+                        <!-- ko if:dashboardSets() && dashboardSets().length > 0 -->
+                            <p data-bind="html: getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_HEAD')"></p>
+                            <ul>
+                                <!-- ko foreach:dashboardSets -->
+                                    <li style="list-style-type:none;" data-bind="text: '<'+$data.name+'>'"></li>
+                                <!-- /ko -->
+                            </ul>
+                            <p data-bind="html: getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_TAILE', toolBarModel.dashboardName())"></p>
+                        <!-- /ko -->
                     </div>
                     <div class="oj-dialog-footer">
-                        <button data-bind="click: toolBarModel.handleDeleteDashboardClicked,
+                        <button data-delete-dialog='Delete' data-bind="click: toolBarModel.handleDeleteDashboardClicked,
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_DELETE'), rootAttributes: {style:'margin-right:5px'}}"></button>
                         <button class="dbs_dcbtn" data-bind="click: toolBarModel.handleDeleteDashboardCancelled,
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'), rootAttributes: {style:'margin-right:5px'}}"></button>
                     </div>
                 </div>
-                <!-- delete dilog end -->   
+                <!-- delete dilog end -->
+                 <!-- share dilog start -->
+                <div style="display:none" id="share-dashboard"
+                     data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
+                                        cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
+                    <div class="oj-dialog-header oj-helper-clearfix">
+                        <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_HOME_CFM_DLG_UNSHARE_DSB')"></span>
+                    </div>
+                    <div class="oj-dialog-body">
+                        <!-- ko if:dashboardSets() && dashboardSets().length > 0  -->
+                            <p data-bind="html: getNlsString('COMMON_UNSHAER_USED_DASHBOARD_MSG_HEAD')"></p>
+                            <ul>
+                                <!-- ko foreach:dashboardSets -->
+                                    <li style="list-style-type:none;" data-bind="text: '<'+$data.name+'>'"></li>
+                                <!-- /ko -->
+                            </ul>
+                             <p data-bind="html: getNlsString('COMMON_UNSHAER_USED_DASHBOARD_MSG_TAILE', toolBarModel.dashboardName())"></p>
+                        <!-- /ko -->
+                    </div>
+                    <div class="oj-dialog-footer">
+                        <button data-bind="click: toolBarModel.handleUnshareDashboardClicked,
+                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_UNSHAER'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                        <button class="dbs_dcbtn" data-bind="click: toolBarModel.handleUnshareDashboardCancelled,
+                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                    </div>
+                </div>
+                <!-- share dilog end -->  
                 <!-- Duplicate Dashboard dialog start -->
                 <div style="display:none" id="duplicateDsbDialog"
                      data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon',

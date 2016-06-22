@@ -103,7 +103,7 @@ define([
                             });
                         }
                     };
-                    
+
                     dashboardsViewModle.afterConfirmDashboardCreate = function(_model, _resp, _options) {
                         var __data = {dashboard: {id : _model.get("id"), name: _model.get("name")}};
                         dashboardsViewModle.handleDashboardClicked(null, __data);
@@ -111,7 +111,7 @@ define([
                     };
                     ko.applyBindings(dashboardsViewModle, $includingEl[0]);
                 };
-                
+
                 var dashboardInst = {
                     type: "new"
                 };
@@ -133,7 +133,7 @@ define([
                     
                     var $b = new Builder.DashboardBuilder(dashboard, $dashboardEl);
                     var tilesView = new Builder.DashboardTilesView($b);
-                    var tilesViewModel = new Builder.DashboardTilesViewModel($b,options/*, tilesView, urlChangeView*/);
+                    var tilesViewModel = new Builder.DashboardTilesViewModel($b, dashboardsetToolBarModel.dashboardInst/*, tilesView, urlChangeView*/);
                     var toolBarModel = new Builder.ToolBarModel($b, options);
                     tilesViewModel.toolbarModel = toolBarModel;
 
@@ -159,7 +159,7 @@ define([
                             if (tile.type() === "TEXT_WIDGET") {
                                 Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.editor.tiles.deleteTile, Builder.isContentLengthValid);
                             } else {
-                                Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, true);
+                                Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, true, dashboardsetToolBarModel.dashboardInst);
                             }
                         }
                     }
@@ -198,13 +198,14 @@ define([
                         $b: $b,
                         toolBarModel: toolBarModel,
                         tilesViewModel: tilesViewModel,
-                        dashboardsetToolBar:dashboardsetToolBarModel
+                        dashboardsetToolBar:dashboardsetToolBarModel,
+                        dashboardSets: ko.observable(null)
                     };
                     self.selectedDashboardInst(dashboardInstMap[dsbId]);
 
                     ko.applyBindings(tilesViewModel, $dashboardEl.find('.dashboard-content-main')[0]);
-                    
-                    var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel, toolBarModel,dashboardsetToolBarModel);
+
+                    var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel,toolBarModel, dashboardsetToolBarModel);
                     ko.applyBindings(rightPanelModel, $dashboardEl.find('.dbd-left-panel')[0]);
                     rightPanelModel.initialize();
                     new Builder.ResizableView($b);
@@ -311,8 +312,8 @@ define([
                     var bodyHeight = $(window).height();
                     var titleToolbarHeight = target.position().top;
                     var newHeight = Number(bodyHeight) - Number(titleToolbarHeight);
-                    target.css({'height': newHeight}); 
-                    target.css({'overflow-y': 'scroll'}); 
+                    target.css({'height': newHeight});
+                    target.css({'overflow-y': 'scroll'});
             }
         }
         Builder.registerModule(DashboardsetPanelsModel, 'DashboardsetPanelsModel');

@@ -297,7 +297,7 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "ADashboard Test");
 
 		//edit the dashboard in builder page
-		DashboardBuilderUtil.editDashboard(webd, "ADashboard Test", "ADashboard Test desc2");
+		DashboardBuilderUtil.editDashboard(webd, "ADashboard Test", "ADashboard Test desc2",false);
 		DashboardBuilderUtil.saveDashboard(webd);
 
 		//back to home page
@@ -357,7 +357,7 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "ADashboard Test");
 
 		//edit the dashboard in builder page
-		DashboardBuilderUtil.editDashboard(webd, "ADashboard Test", "ADashboard Test desc1");
+		DashboardBuilderUtil.editDashboard(webd, "ADashboard Test", "ADashboard Test desc1",false);
 		DashboardBuilderUtil.saveDashboard(webd);
 
 		//back to home page
@@ -399,7 +399,7 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "ADashboard Test");
 
 		//edit the dashboard in builder page
-		DashboardBuilderUtil.editDashboard(webd, "ADashboard Test", "ADashboard Test desc2");
+		DashboardBuilderUtil.editDashboard(webd, "ADashboard Test", "ADashboard Test desc2",false);
 		DashboardBuilderUtil.saveDashboard(webd);
 
 		//back to home page

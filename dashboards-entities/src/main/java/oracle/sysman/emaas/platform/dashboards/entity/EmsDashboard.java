@@ -28,7 +28,10 @@ import org.eclipse.persistence.annotations.MultitenantType;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 @Entity
-@NamedQueries({ @NamedQuery(name = "EmsDashboard.findAll", query = "select o from EmsDashboard o where o.deleted=0") })
+@NamedQueries({@NamedQuery(name = "EmsDashboard.findAll", query = "select o from EmsDashboard o where o.deleted=0"),
+		@NamedQuery(name = "EmsDashboard.queryBySubDashboardID", query = "select a from EmsDashboard a ,EmsSubDashboard b " +
+							"where a.dashboardId = b.dashboardSetId and b.subDashboardId = :p")}
+)
 @Table(name = "EMS_DASHBOARD")
 @SequenceGenerator(name = "EmsDashboard_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_SEQ", allocationSize = 1)
 @Multitenant(MultitenantType.SINGLE_TABLE)

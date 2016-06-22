@@ -52,6 +52,12 @@ define(['knockout',
             self.dashboardsetToolBarModel = dashboardsetToolBarModel;
             self.dashboard = $b.dashboard;
             self.tilesViewModel = tilesViewModel;
+            self.sortedTiles = ko.pureComputed(function(){
+                return self.dashboard.tiles() ? self.dashboard.tiles().sort(function (tileA, tileB) {
+                    return tileA.WIDGET_NAME() > tileB.WIDGET_NAME();
+                }):[];
+            });
+            
             $b.registerObject(this, 'RightPanelModel');
 
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
@@ -301,6 +307,8 @@ define(['knockout',
                                     widgets[i].WIDGET_DESCRIPTION = null;
                                 var wgt = ko.mapping.fromJS(widgets[i]);
                                 wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
+                                wgt && !wgt.imgWidth && (wgt.imgWidth = ko.observable('120px'));
+                                wgt && !wgt.imgHeight && (wgt.imgHeight = ko.observable('120px'));
 //                                self.getWidgetScreenshot(wgt);
                                 self.widgets.push(wgt);
                             }
@@ -323,6 +331,12 @@ define(['knockout',
                 wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
                 url && wgt.WIDGET_VISUAL(url);
                 !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('@version@/images/sample-widget-histogram.png'));
+
+                //resize widget screenshot according to aspect ratio
+                dfu.getScreenshotSizePerRatio(120, 120, wgt.WIDGET_VISUAL(), function(imgWidth, imgHeight) {
+                    wgt.imgWidth(imgWidth + "px");
+                    wgt.imgHeight(imgHeight + "px");
+                });
             };
             
             self.getWidgetBase64Screenshot = function(wgt) {
@@ -419,6 +433,14 @@ define(['knockout',
                 }
             };
             
+            self.resetFocus = function(widget, event){
+                event.currentTarget.focus();
+            };
+            
+            self.widgetPlusClicked = function(widget, event) {
+                tilesViewModel.appendNewTile(widget.WIDGET_NAME(), "", 4, 2, ko.toJS(widget));
+            };
+            
             self.widgetShowPlusIcon = function(widget, event) {
                 $b.findEl(".dbd-right-panel-build-container i.fa-plus").hide();
                 $(".dbd-left-panel-img-pop").ojPopup("close");
@@ -456,13 +478,16 @@ define(['knockout',
 //            };
 
             self.deleteDashboardClicked = function(){
-                toolBarModel.openDashboardDeleteConfirmDialog();
+                queryDashboardSetsBySubId(self.dashboard.id(),function(resp){
+                    window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(resp.dashboardSets || []); 
+                    toolBarModel.openDashboardDeleteConfirmDialog();
+                });
             };        
             
             $('.dbd-right-panel-editdashboard-general').on({
                 "ojexpand":function(event,ui){
                     $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option","expanded",false);
-//                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option","expanded",false);
+                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option","expanded",false);
                 }
             });
             
@@ -475,16 +500,16 @@ define(['knockout',
             $('.dbd-right-panel-editdashboard-filters').on({
                 "ojexpand":function(event,ui){
                     $('.dbd-right-panel-editdashboard-general').ojCollapsible("option","expanded",false);
-//                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option","expanded",false);
+                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option","expanded",false);
                 }
             });
             
-//            $('.dbd-right-panel-editdashboard-share').on({
-//                "ojexpand":function(event,ui){
-//                    $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option","expanded",false);
-//                    $('.dbd-right-panel-editdashboard-general').ojCollapsible("option","expanded",false);
-//                }
-//            });
+            $('.dbd-right-panel-editdashboard-share').on({
+                "ojexpand":function(event,ui){
+                    $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option","expanded",false);
+                    $('.dbd-right-panel-editdashboard-general').ojCollapsible("option","expanded",false);
+                }
+            });
             
             $('.dbd-right-panel-editdashboard-set-share').on({
                 "ojexpand":function(event,ui){
@@ -636,11 +661,43 @@ define(['knockout',
                 self.filterSettingModified(false);
             };
             
+            
+            function queryDashboardSetsBySubId(dashboardId,callback){
+                var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
+                 dfu.ajaxWithRetry(_url + dashboardId + "/dashboardsets", {
+                        type: 'GET',
+                        headers: dfu.getDashboardsRequestHeader(), //{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
+                        success: function (resp) {
+                           callback(resp);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log(errorThrown);
+                        }
+                    });
+            }
+            
             self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
             self.dashboardSharing.subscribe(function(val){
-                if("notShared"===val){
-                    toolBarModel.handleShareUnshare(false);
-                }else{
+                if ("notShared" === val) {
+                    queryDashboardSetsBySubId(self.dashboard.id(), function (resp) {
+                        var currentUser = dfu.getUserName();
+                        var setsSharedByOthers = resp.dashboardSets || [];
+                        setsSharedByOthers = setsSharedByOthers.filter(function(dbs){
+                            return dbs.owner !== currentUser;
+                        });
+                        
+                        if (setsSharedByOthers.length > 0) {
+                            window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(setsSharedByOthers);
+                            toolBarModel.openDashboardUnshareConfirmDialog(function(isShared){
+                                if(isShared){
+                                   self.dashboardSharing(true); 
+                                }
+                            });
+                        }else{
+                            toolBarModel.handleShareUnshare(false);
+                        }
+                    });
+                } else {
                     toolBarModel.handleShareUnshare(true);
                 }
             });

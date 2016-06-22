@@ -165,6 +165,25 @@ public class TestDashBoard extends LoginAndLogout
 				"Create dashboard failed!");
 	}
 
+           @Test(dependsOnMethods = { "testCreateDashboard_noWidget_ListView"})
+	public void Test_targetselector() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test sort by dashboards  in list view");
+
+		//search the dashboard
+		webd.getLogger().info("search the dashboard");
+		DashboardHomeUtil.search(webd, "noWidgetListView");
+
+		//open the dashboard in builder page
+		webd.getLogger().info("open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "noWidgetListView");
+
+		//edit the dashboard in Target selector page
+		DashboardBuilderUtil.EditDashboard_targetselctor(webd, "noWidgetListView", "noWidgetListView desc2");
+	  	
+	}      
+
 	@Test
 	public void testCreateDashboard_noWidget_ListView() throws Exception
 	{
@@ -231,7 +250,12 @@ public class TestDashBoard extends LoginAndLogout
 		//open the widget
 		webd.getLogger().info("open the widget");
 		DashboardBuilderUtil.openWidget(webd, "Database Errors Trend");
+
 		webd.switchToWindow();
+		//WaitUtil.waitForPageFullyLoaded(webd);
+		webd.getLogger().info("Wait for the widget loading....");
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), 900L);
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
 
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
@@ -270,14 +294,14 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Add widget finished");
 
 		webd.getLogger().info("Get narrower widgets");
-		for (int i = 1; i <= 5; i++) {
+		for (int i = 1; i <= 4; i++) {
 			DashboardBuilderUtil.resizeWidget(webd, widgetName, DashboardBuilderUtil.TILE_NARROWER);
 			webd.takeScreenShot();
 		}
 		webd.getLogger().info("Finished to get narrower widgets");
 
 		webd.getLogger().info("Get wider widgets");
-		for (int i = 1; i <= 11; i++) {
+		for (int i = 1; i <= 10; i++) {
 			DashboardBuilderUtil.resizeWidget(webd, widgetName, DashboardBuilderUtil.TILE_WIDER);
 			webd.takeScreenShot();
 		}
@@ -337,7 +361,7 @@ public class TestDashBoard extends LoginAndLogout
 				"Test_Dashboard_no_Widget_GridView desc modify", true), "Dashboard NOT found");
 
 		//Duplicate dashbaord
-		DashboardBuilderUtil.duplicateDashboard(webd, dbName, dbDesc);
+		DashboardBuilderUtil.duplicateDashboard(webd, dbName, dbDesc,"duplicate_noSubMenu");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, dbDesc, true), "Duplicate failed!");
 
 	}
@@ -455,7 +479,7 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Open the dashboard to edit name and description");
 		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid);
 		DashboardBuilderUtil
-		.editDashboard(webd, dbName_noWidgetGrid + "-modify", "Test_Dashboard_no_Widget_GridView desc modify");
+		.editDashboard(webd, dbName_noWidgetGrid + "-modify", "Test_Dashboard_no_Widget_GridView desc modify",false);
 
 		//Verify the dashboard edited successfully
 		webd.getLogger().info("Verify the dashboard edited successfully");
@@ -788,6 +812,10 @@ public class TestDashBoard extends LoginAndLogout
 
 		//verify the url
 		webd.switchToWindow();
+		//WaitUtil.waitForPageFullyLoaded(webd);
+		webd.getLogger().info("Wait for the widget loading....");
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), 900L);
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
 
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
@@ -874,4 +902,3 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 }
-
