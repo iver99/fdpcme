@@ -565,6 +565,8 @@ define(['knockout',
                     $("#ojChoiceId_defaultEntityValSel_"+self.tilesViewModel.dashboard.id()+"_selected").text(pageTselLabel);
                 }
                 self.defaultEntityValueForMore(targets);
+                self.tilesViewModel.targets(targets);
+                self.tilesViewModel.timeSelectorModel.timeRangeChange(true);
             }
             
             self.defaultEntityValueChanged = function(event, data) {
@@ -607,51 +609,53 @@ define(['knockout',
                 if(data.option != "value") {
                     return;
                 }
-                switch (self.defaultTimeRangeValue()[0]) {
-                    case "last15mins": 
-                        self.tilesViewModel.timePeriod("Last 15 minutes");
-                        break;
-                    case "last30mins": 
-                        self.tilesViewModel.timePeriod("Last 30 minutes");
-                        break;
-                    case "last60mins": 
-                        self.tilesViewModel.timePeriod("Last 60 minutes");
-                        break;
-                    case "last4hours": 
-                        self.tilesViewModel.timePeriod("Last 4 hours");
-                        break;
-                    case "last6hours": 
-                        self.tilesViewModel.timePeriod("Last 6 hours");
-                        break;
-                    case "last1day": 
-                        self.tilesViewModel.timePeriod("Last 1 day");
-                        break;
-                    case "last7days": 
-                        self.tilesViewModel.timePeriod("Last 7 days");
-                        break;
-                    case "last14days":
-                        self.tilesViewModel.timePeriod("Last 14 days");
-                        break;
-                    case "last30days": 
-                        self.tilesViewModel.timePeriod("Last 30 days");
-                        break;
-                    case "last90days": 
-                        self.tilesViewModel.timePeriod("Last 90 days");
-                        break;
-                    case "last1year": 
-                        self.tilesViewModel.timePeriod("Last 1 year");
-                        break;
-                    case "latest": 
-                        self.tilesViewModel.timePeriod("Latest");
-                        break;
-                    case "custom": 
-                        self.tilesViewModel.whichTimeSelLauncher(1);
+                
+                if(self.defaultTimeRangeValue()[0] === "custom") {
+                    self.tilesViewModel.whichTimeSelLauncher(1);
                         var ele = ".builder-main";
                         var position = {"at": "center center", "collision": "none", "of": ele};
                         ko.contextFor($("#dtpicker_"+self.dashboard.id()).children().get(0)).$component.launchTimePickerCustom(ele, position);
-                        break;
-                        
-                }
+                } else {
+                    switch (self.defaultTimeRangeValue()[0]) {
+                        case "last15mins": 
+                            self.tilesViewModel.timePeriod("Last 15 minutes");
+                            break;
+                        case "last30mins": 
+                            self.tilesViewModel.timePeriod("Last 30 minutes");
+                            break;
+                        case "last60mins": 
+                            self.tilesViewModel.timePeriod("Last 60 minutes");
+                            break;
+                        case "last4hours": 
+                            self.tilesViewModel.timePeriod("Last 4 hours");
+                            break;
+                        case "last6hours": 
+                            self.tilesViewModel.timePeriod("Last 6 hours");
+                            break;
+                        case "last1day": 
+                            self.tilesViewModel.timePeriod("Last 1 day");
+                            break;
+                        case "last7days": 
+                            self.tilesViewModel.timePeriod("Last 7 days");
+                            break;
+                        case "last14days":
+                            self.tilesViewModel.timePeriod("Last 14 days");
+                            break;
+                        case "last30days": 
+                            self.tilesViewModel.timePeriod("Last 30 days");
+                            break;
+                        case "last90days": 
+                            self.tilesViewModel.timePeriod("Last 90 days");
+                            break;
+                        case "last1year": 
+                            self.tilesViewModel.timePeriod("Last 1 year");
+                            break;
+                        case "latest": 
+                            self.tilesViewModel.timePeriod("Latest");
+                            break;
+                    }
+                    self.tilesViewModel.timeSelectorModel.timeRangeChange(true);
+                }                
                 
                 return self.defaultTimeRangeValue()[0];
             };

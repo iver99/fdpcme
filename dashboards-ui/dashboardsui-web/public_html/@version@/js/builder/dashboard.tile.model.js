@@ -1096,9 +1096,12 @@ define(['knockout',
                     self.timeSelectorModel.timeRangeChange(true);
                     
                     //change default time range value option text in right drawer
-                    if(self.whichTimeSelLauncher() === 1) {
-                        var pageTimeSelLabel = $("#dtpicker_"+self.dashboard.id()+ " span[id^='dropDown_']").html();
-                        $("#ojChoiceId_defaultTimeRange_" + self.dashboard.id() + "_selected").html(pageTimeSelLabel);
+                    if(self.whichTimeSelLauncher() === 1) {                        
+                        var timePeriodInLabel = $($("#dtpicker_"+self.dashboard.id()+ " span[id^='dropDown_']>span>span")[0]).text()
+                        var pageTimeSelLabel = $("#dtpicker_"+self.dashboard.id()+ " span[id^='dropDown_'] span").text();
+                        pageTimeSelLabel = pageTimeSelLabel.replace(timePeriodInLabel, "");
+                        $("#ojChoiceId_defaultTimeRange_" + self.dashboard.id() + "_selected").text(pageTimeSelLabel);
+                        $("#ojChoiceId_defaultTimeRange_"+self.dashboard.id()+"_selected").css("padding-right", "20px");
                         self.whichTimeSelLauncher(0);
                     }
                 }
