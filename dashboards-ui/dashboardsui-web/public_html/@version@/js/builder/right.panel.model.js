@@ -600,13 +600,11 @@ define(['knockout',
                 require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
                         self.tilesViewModel.whichTselLauncher(1);
                         setTimeout(function() {
+                            //set position and modality for target selector launched from right drawer
+                            var popupId = '#' + ko.contextFor($('#tsel_'+self.tilesViewModel.dashboard.id()).children().get(0)).$component.id;
+                            $(popupId).ojPopup( "option", {"position": {at: 'center center', my: 'center center', of: '.builder-main' }, "modality": "modal"});
                             TargetSelectorUtils.launchTargetSelector("tsel_"+self.tilesViewModel.dashboard.id());
-//                            self.tilesViewModel.showMoreQuickPick(false);
-//                            self.tilesViewModel.getQuickPickers([]);
-//                            var popupId = '#' + ko.contextFor($('#tsel_'+self.tilesViewModel.dashboard.id()).children().get(0)).$component.id;
-//                            $(popupId).ojPopup( "option", {"position": {at: 'center center', my: 'center center', of: $('.builder-main') }, "modality": "modal"});
-//                            TargetSelectorUtils.launchTargetSelector("tsel_"+self.tilesViewModel.dashboard.id());$(popupId).ojPopup("open");
-                        }, 1000);
+                        }, 200);
                     });
             }
             

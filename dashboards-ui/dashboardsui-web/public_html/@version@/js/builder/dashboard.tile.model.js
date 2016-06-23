@@ -1053,9 +1053,9 @@ define(['knockout',
             
                         
             self.setPageTsel = function() {
-//                var popupId = '#' + ko.contextFor($('#tsel_'+self.dashboard.id()).children().get(0)).$component.id;
-//                $(popupId).ojPopup( "option", {"position": {at: 'left bottom', my: 'left top'}, "modality": "modeless"});
-//                self.showMoreQuickPick(true);
+                //recover position and modality for Tsel
+                var popupId = '#' + ko.contextFor($('#tsel_'+self.dashboard.id()).children().get(0)).$component.id;
+                $(popupId).ojPopup( "option", {"position": {at: 'left bottom', my: 'left top'}, "modality": "modeless"});
                 self.whichTselLauncher(0);
             }
             
