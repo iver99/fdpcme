@@ -599,7 +599,14 @@ define(['knockout',
             self.launchTselFromRightPanel = function() {
                 require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
                         self.tilesViewModel.whichTselLauncher(1);
-                        setTimeout(function() {TargetSelectorUtils.launchTargetSelector("tsel_"+self.tilesViewModel.dashboard.id())}, 1000);
+                        setTimeout(function() {
+                            TargetSelectorUtils.launchTargetSelector("tsel_"+self.tilesViewModel.dashboard.id());
+//                            self.tilesViewModel.showMoreQuickPick(false);
+//                            self.tilesViewModel.getQuickPickers([]);
+//                            var popupId = '#' + ko.contextFor($('#tsel_'+self.tilesViewModel.dashboard.id()).children().get(0)).$component.id;
+//                            $(popupId).ojPopup( "option", {"position": {at: 'center center', my: 'center center', of: $('.builder-main') }, "modality": "modal"});
+//                            TargetSelectorUtils.launchTargetSelector("tsel_"+self.tilesViewModel.dashboard.id());$(popupId).ojPopup("open");
+                        }, 1000);
                     });
             }
             
@@ -613,8 +620,14 @@ define(['knockout',
                 if(self.defaultTimeRangeValue()[0] === "custom") {
                     self.tilesViewModel.whichTimeSelLauncher(1);
                         var ele = ".builder-main";
-                        var position = {"at": "center center", "collision": "none", "of": ele};
-                        ko.contextFor($("#dtpicker_"+self.dashboard.id()).children().get(0)).$component.launchTimePickerCustom(ele, position);
+                        var position = {"at": "center-170 center", "my": "center center", "collision": "none", "of": ele};
+                        var option = {"modality": "modal"};
+                        ko.contextFor($("#dtpicker_"+self.dashboard.id()).children().get(0)).$component.launchTimePickerCustom(ele, position, option);
+                        
+//                        var ele = "#ojChoiceId_defaultTimeRange_"+self.tilesViewModel.dashboard.id()+"_selected";
+//                        var position = {"at": "left-38 top", "my": "right center", "collision": "none", "of": ele};
+//                        var option = {"tail": "simple"};
+//                        setTimeout(function() {ko.contextFor($("#dtpicker_"+self.dashboard.id()).children().get(0)).$component.launchTimePickerCustom(ele, position, option)}, 200);
                 } else {
                     switch (self.defaultTimeRangeValue()[0]) {
                         case "last15mins": 

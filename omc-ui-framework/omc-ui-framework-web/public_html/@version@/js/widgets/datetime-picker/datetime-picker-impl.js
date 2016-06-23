@@ -1415,7 +1415,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                  * @param {type} position The location of the right panel popup 
                  * @returns {undefined}
                  */
-                self.launchTimePickerCustom = function(ele, position) {
+                self.launchTimePickerCustom = function(ele, position, option) {
                     if(self.init === true) {
                         self.init = false;
                     }
@@ -1426,7 +1426,10 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     setTimeout(function(){self.updateRange(self.startDate(), self.endDate());}, 0);
                         
                     self.showRightPanel(true);
+                    
+                    $("#pickerPanel_"+self.randomId).ojPopup("option", option);
                     $("#pickerPanel_"+self.randomId).ojPopup("open", ele,  position);
+
                     self.showCalendar(true);
                 };
                 
@@ -1545,6 +1548,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         setTimeout(function() {self.applyClick();}, 0);
                     }else {
                         self.showRightPanel(true);
+                        //set modality to "modeless" in case it is set as "modal" in launchTimePickerCucstom function
+                        $("#pickerPanel_"+self.randomId).ojPopup("option", "modality", "modeless");
                         $("#pickerPanel_"+self.randomId).ojPopup("open", "#dateTimePicker_"+self.randomId+" .drawers", self.pickerPanelPosition);
                         self.showCalendar(true);
                     }
