@@ -270,7 +270,7 @@ public class DashBoardPageId
 	public static final String DashboardsetOptionsAddHomeCSS = "#dbs-home a[dashboardset-option=\"Set as Home\"]";
 
 	//dashboard tool bar
-	public static final String DashboardSaveCSS = "button.dashboard-screenshot";
+	public static final String DashboardSaveCSS = "button.dashboardSaveBtn";
 
 	//dashboard delete dialog
 	public static final String BuilderDeleteDialogLocator = "id=ojDialogWrapper-delete-dashboard";
