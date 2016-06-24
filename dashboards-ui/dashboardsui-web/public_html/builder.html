@@ -763,7 +763,7 @@
                                                     <form class="oj-form checkboxControledContent">
                                                         <div class="oj-flex">  
                                                             <div class="oj-flex-item">
-                                                                <label class="oj-label enableEntityFilter df-label" data-bind="css: {'dbd-right-panel-collapsible-disabled': !enableEntityFilter()}">Entity Support</label>
+                                                                <label class="oj-label enableEntityFilter df-label" data-bind="text: getNlsString('DBS_BUILDER_EDIT_ENTITY_SUPPORT'), css: {'dbd-right-panel-collapsible-disabled': !enableEntityFilter()}"></label>
                                                             </div>
                                                         </div>
                                                         <div class="oj-flex">  
@@ -771,18 +771,18 @@
                                                                 <div data-bind="ojComponent: {component: 'ojRadioset', value: instanceSupport, disabled: !enableEntityFilter()}" >
                                                                    <span class="oj-choice-row">
                                                                        <input id="multipleInstanceSupport" type="radio" name="instanceSupport" value="byCriteria">
-                                                                       <label for="multipleInstanceSupport">Dashboard supports multiple entities</label>
+                                                                       <label for="multipleInstanceSupport" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENTITY_SUPPORT_MULTI')"></label>
                                                                    </span>
                                                                    <span class="oj-choice-row">
                                                                        <input id="singleInstanceSupport" type="radio" name="instanceSupport" value="single">
-                                                                       <label for="singleInstanceSupport">Dashboard supports a single entity</label>
+                                                                       <label for="singleInstanceSupport" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENTITY_SUPPORT_SINGLE')"></label>
                                                                    </span>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="oj-flex">  
                                                             <div class="oj-flex-item">
-                                                                <label class="oj-label enableEntityFilter df-label"  style="margin: 10px 0 0 0;" data-bind="css: {'dbd-right-panel-collapsible-disabled': !enableEntityFilter()}">Default Entity Value</label>
+                                                                <label class="oj-label enableEntityFilter df-label"  style="margin: 10px 0 0 0;" data-bind="text: getNlsString('DSB_BUILDER_EDIT_DEFAULT_ENTITY_LABEL'), css: {'dbd-right-panel-collapsible-disabled': !enableEntityFilter()}"></label>
                                                             </div>
                                                         </div>
                                                         <div class="oj-flex">  
@@ -790,12 +790,12 @@
                                                                 <!--ko if:instanceSupport() === "byCriteria"--> 
                                                                     <select data-bind="attr: {id: 'defaultEntityValSel_'+tilesViewModel.dashboard.id()}, ojComponent: {component: 'ojSelect',disabled: !enableEntityFilter(), optionChange: defaultEntityValueChanged,
                                                                                                      value: defaultEntityValue,rootAttributes: {style:'width:17em'}}">
-                                                                        <option value="allEntities">All Targets</option>
-                                                                        <option value="host">All Hosts</option>
-                                                                        <option value="usr_host_linux">All Linux</option>
-                                                                        <option value="usr_host_windows">All Windows</option>
-                                                                        <option value="oracle_vm_guest">All Docker</option>
-                                                                        <option value="more">More</option>                                                                                      
+                                                                        <option value="allEntities" data-bind="text: getNlsString('DBS_BUILDER_ALL_ENTITIES')"></option>
+                                                                        <option value="host" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ALL_HOSTS')"></option>
+                                                                        <option value="usr_host_linux" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ALL_LINUX')"></option>
+                                                                        <option value="usr_host_windows" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ALL_WINDOWS')"></option>
+                                                                        <option value="oracle_vm_guest" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ALL_DOCKER')"></option>
+                                                                        <option value="more" data-bind="text: getNlsString('DSB_BUILDER_EDIT_MORE')"></option>                                                                                      
                                                                     </select>
                                                                 <!-- /ko -->
                                                                 
@@ -829,26 +829,26 @@
                                                 <form class="oj-form checkboxControledContent" style="overflow: hidden;">
                                                     <div class="oj-flex" style="margin-left: 5px">  
                                                         <div class="oj-flex-item">
-                                                            <label class="oj-label enableTimeRangeFilter df-label" data-bind="css: {'dbd-right-panel-collapsible-disabled': !enableTimeRangeFilter()}">Default Time Range Value</label>
+                                                            <label class="oj-label enableTimeRangeFilter df-label" data-bind="text: getNlsString('DSB_BUILDER_EDIT_DEFAULT_TIME_RANGE_LABEL'), css: {'dbd-right-panel-collapsible-disabled': !enableTimeRangeFilter()}"></label>
                                                         </div>
                                                     </div>
                                                     <div class="oj-flex" >
                                                         <div class="oj-flex-item">
                                                             <select data-bind="attr: {id: 'defaultTimeRange_'+tilesViewModel.dashboard.id()}, ojComponent: {component: 'ojSelect',disabled: !enableTimeRangeFilter(), optionChange: defaultTimeRangeValueChanged, 
                                                                                                  minimumResultsForSearch: 20, value: defaultTimeRangeValue,rootAttributes: {style:'width: 17em;'}}">
-                                                                <option value="last15mins">Last 15 mins</option>
-                                                                <option value="last30mins">Last 30 mins</option>
-                                                                <option value="last60mins">Last Hour</option>
-                                                                <option value="last4hours">Last 4 hours</option>
-                                                                <option value="last6hours">Last 6 hours</option>
-                                                                <option value="last1day">Last day</option>
-                                                                <option value="last7days">Last week</option>
-                                                                <option value="last14days">Last 14 days</option>
-                                                                <option value="last30days">Last 30 days</option>
-                                                                <option value="last90days">Last 90 days</option>
-                                                                <option value="last1year">Last year</option>
-                                                                <option value="latest">Latest</option>
-                                                                <option value="custom">Custom</option>
+                                                                <option value="last15mins" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS')"></option>
+                                                                <option value="last30mins" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS')"></option>
+                                                                <option value="last60mins" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS')"></option>
+                                                                <option value="last4hours" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_4_HOURS')"></option>
+                                                                <option value="last6hours" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_6_HOURS')"></option>
+                                                                <option value="last1day" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_DAY')"></option>
+                                                                <option value="last7days" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_7_DAYS')"></option>
+                                                                <option value="last14days" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_14_DAYS')"></option>
+                                                                <option value="last30days" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_DAYS')"></option>
+                                                                <option value="last90days" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_90_DAYS')"></option>
+                                                                <option value="last1year" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_YEAR')"></option>
+                                                                <option value="latest" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LATEST')"></option>
+                                                                <option value="custom" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM')"></option>
                                                             </select>
 <!--                                                            <div class="oj-row fit-size-vertical-sibling df-computed-content-width"
                                                                  style="max-width: none;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0"

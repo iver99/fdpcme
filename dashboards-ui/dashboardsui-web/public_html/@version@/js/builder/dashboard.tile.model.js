@@ -987,8 +987,8 @@ define(['knockout',
             self.whichTselLauncher = ko.observable(0); //0 for page, 1 for right drawer->more, 2 for right drawer->quick pickers
             self.selectionMode = ko.observable("byCriteria");
             self.returnMode = ko.observable('criteria');
-            self.dropdownInitialLabel = ko.observable(getNlsString("DBS_BUILDER_ALL_TARGETS"));
-            self.dropdownResultLabel = ko.observable(getNlsString("DBS_BUILDER_TARGETS_SELECTED"));
+            self.dropdownInitialLabel = ko.observable(getNlsString("DBS_BUILDER_ALL_ENTITIES"));
+            self.dropdownResultLabel = ko.observable(getNlsString("DBS_BUILDER_ENTITIES_SELECTED"));
             self.showMoreQuickPick = ko.observable(true);
             
             self.getInputCriteria = ko.computed(function() {
