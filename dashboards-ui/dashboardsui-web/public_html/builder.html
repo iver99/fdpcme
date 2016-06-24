@@ -328,7 +328,7 @@
                                         icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
                                         }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.isMobileDevice !== 'true'">
                             </button>
-                            <ul class="no-print dropdown-menu" data-bind="ojComponent: {component: 'ojMenu'},attr:{id:'dashboardOptsMenu'+toolBarGuid}" style="display: none;">
+                            <ul class="no-print dropdown-menu" data-bind="ojComponent: {component: 'ojMenu',select: optionMenuItemSelect},attr:{id:'dashboardOptsMenu'+toolBarGuid}" style="display: none;">
                                 <!-- ko template: {name: 'dsbOptsMenuItemTemplate', foreach: dashboardOptsMenuItems, as: 'item'} -->
                                 <!-- /ko -->
                             </ul>
@@ -1110,7 +1110,7 @@
             <script type="text/html" id="dsbOptsMenuItemTemplate">
                 <!-- ko if: !disabled  -->
                 <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile,attr:{'data-singledb-option':label}">
-                        <a data-bind="attr:{'id':id, 'title': title}, href: url, click: onclick">
+                        <a data-bind="attr:{'id':id, 'title': title}, href: url">
                             <span class="oj-menu-item-icon oj-fwk-icon dbd-toolbar-fa-icon" data-bind="css: icon"></span>
                             <span data-bind="text: label"></span>
                         </a>
