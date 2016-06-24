@@ -218,6 +218,7 @@ public class DashBoardPageId
 	public static final String BuilderOptionsEditNameCSS = "dbsHNameIn";
 	public static final String BuilderOptionsEditDescriptionCSS = "dbsHDpIn";
 	public static final String BuilderOptionsEditSaveCSS = ".createDsb-2";
+        public static final String EntityfilterLocator = "ckbxEntityFilter";
 	public static final String BuilderOptionsShareLocatorCSS = "li[data-singledb-option=\"Share\"] a";
 	public static final String BuilderOptionsUnShareLocatorCSS = "li[data-singledb-option=\"Stop Sharing\"] a";
 	public static final String BuilderOptionsFavoriteLocatorCSS = "li[data-singledb-option=\"Add Favorite\"] a";
@@ -342,6 +343,7 @@ public class DashBoardPageId
 	public static final String Welcome_APMLinkCSS = "APM_wrapper"; //".landing-home-box-content-head[data-bind='text: APM']";
 	public static final String Welcome_LALinkCSS = "LA_wrapper"; //".landing-home-box-content-head[data-bind='text: LA']";
 	public static final String Welcome_ITALinkID = "ITA_wrapper"; //".landing-home-box-content-head[data-bind='text: ITA']";
+	public static final String Welcome_InfraMonitoringID = "infra_mon_wrapper";
 	public static final String Welcome_DashboardsLinkID = "dashboards_wrapper"; //"/html/body/div[2]/div/div[2]/ul/li[4]/a/div/div[2]/div[1]";
 	public static final String Welcome_DataExp = "data_explore_wrapper"; //"/html/body/div[2]/div/div[2]/ul/li[5]/div/div/div[2]/div[1]";
 	public static final String Welcome_ITA_SelectID = "ITA_options"; //"ojChoiceId_ITA_options_selected";
@@ -353,6 +355,7 @@ public class DashBoardPageId
 	public static final String Welcome_ITA_PAMiddleware = "ITA_mw_perf"; //"/html/body/div[1]/div/div/ul/li[3]/div";//"oj-listbox-result-label-9";//ITA Select Item : Performance Analytics - Middleware
 	public static final String Welcome_ITA_RADatabase = "ITA_DB_resource"; //"/html/body/div[1]/div/div/ul/li[4]/div";//"oj-listbox-result-label-10";//ITA Select Item : Resource Analytics - Database
 	public static final String Welcome_ITA_RAMiddleware = "ITA_mw_resource"; //"/html/body/div[1]/div/div/ul/li[5]/div";//"oj-listbox-result-label-11";//ITA Select Item : Resource Analytics - Middleware
+	public static final String Welcome_ITA_RA_Host = "ITA_svr_resource";
 	public static final String Welcome_ITA_DEAnalyze = "ITA_Analyze"; //"/html/body/div[1]/div/div/ul/li[6]/div";//"oj-listbox-result-label-12";//ITA Select Item : Data Explorer - Analyze
 	public static final String Welcome_ITA_DE = "ITA_Search"; //"/html/body/div[1]/div/div/ul/li[7]/div";//"oj-listbox-result-label-13";//ITA Select Item : Data Explorer
 	public static final String Welcome_DataExp_Log = "dataExp_Log"; //"/html/body/div[1]/div/div/ul/li[2]/div";//"oj-listbox-result-label-4";//Data Explorers Select Item : Log

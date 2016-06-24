@@ -8,12 +8,6 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
@@ -22,8 +16,18 @@ import mockit.Verifications;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
+import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
+import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainsEntity;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil.RestClient;
+
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 /**
  * @author guobaochen
@@ -588,5 +592,29 @@ public class TenantSubscriptionUtilTest
 				anyBuilder.get(String.class);
 			}
 		};
+	}
+	
+	private void cleanCache(){
+
+		CacheManager cm = CacheManager.getInstance();
+		Tenant cacheTenant = new Tenant("emaastesttenant1");
+		cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+				CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+		cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+				ENTITY_NAMING_DOMAINS_URL);
+		cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+				TENANT_LOOKUP_URL);
+	}
+	
+	@AfterMethod(groups = { "s2" })
+	public void afterMethod() throws Exception
+	{
+		cleanCache();
+	}
+
+	@BeforeMethod(groups = { "s2" })
+	public void beforeMethod() throws Exception
+	{
+		cleanCache();
 	}
 }

@@ -167,7 +167,7 @@ define(['knockout',
          *  @param width width for the tile
          *  @param widget widget from which the tile is to be created
          */
-        function DashboardTile(mode, dashboard, type, title, description, widget, timeSelectorModel, targets, loadImmediately) {
+        function DashboardTile(mode, dashboard, type, title, description, widget, timeSelectorModel, targets, loadImmediately, dashboardInst) {
             var self = this;
             self.dashboard = dashboard;
             self.title = ko.observable(title);
@@ -191,7 +191,7 @@ define(['knockout',
             }
 
 
-            Builder.initializeTileAfterLoad(mode, dashboard, self, timeSelectorModel, targets, loadImmediately);
+            Builder.initializeTileAfterLoad(mode, dashboard, self, timeSelectorModel, targets, loadImmediately, dashboardInst);
         }
         Builder.registerModule(DashboardTile, 'DashboardTile');
 
@@ -225,7 +225,7 @@ define(['knockout',
         }
         Builder.registerFunction(initializeTextTileAfterLoad, 'initializeTextTileAfterLoad');*/
 
-        function initializeTileAfterLoad(mode, dashboard, tile, timeSelectorModel, targets, loadImmediately) {
+        function initializeTileAfterLoad(mode, dashboard, tile, timeSelectorModel, targets, loadImmediately, dashboardInst) {
             if (!tile)
                 return;
 
@@ -240,7 +240,7 @@ define(['knockout',
                 return mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS;
             });
             tile.narrowerEnabled = ko.computed(function() {
-                return mode.getModeWidth(tile) > 1;
+                return mode.getModeWidth(tile) > mode.MODE_MIN_COLUMNS;
             });
             tile.shorterEnabled = ko.computed(function() {
                 return mode.getModeHeight(tile) > 1;
@@ -369,7 +369,7 @@ define(['knockout',
                     if (url){
                         tile.configure = function(){
                             var widgetUrl = url;
-                            widgetUrl += "?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboard.id()+"&dashboardName="+dashboard.name();
+                            widgetUrl += "?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboardInst.id()+"&dashboardName="+dashboardInst.name();
                             if(dashboard.enableTimeRange() === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
                                 widgetUrl += "";
                             }else {
@@ -391,7 +391,7 @@ define(['knockout',
                                     }
                                     widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
                                 }
-                                window.open(widgetUrl);
+                                window.location = widgetUrl;
                             });
                         };
                     }

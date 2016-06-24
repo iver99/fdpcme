@@ -14,7 +14,15 @@ import java.io.Serializable;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = "EmsSubDashboard.removeBySubDashboardID", query = "delete from EmsSubDashboard o where o.subDashboardId = :p"),
-                @NamedQuery(name = "EmsSubDashboard.removeByDashboardSetID", query = "delete from EmsSubDashboard o where o.dashboardSetId = :p")})
+                @NamedQuery(name = "EmsSubDashboard.removeByDashboardSetID", query = "delete from EmsSubDashboard o where o.dashboardSetId = :p"),
+                @NamedQuery(name = "EmsSubDashboard.removeUnshared", query = "" +
+                        "delete from EmsSubDashboard b where b.dashboardSetId in (" +
+                        "select a.dashboardId from EmsDashboard a " +
+                        "where a.dashboardId = b.dashboardSetId " +
+                        "and b.subDashboardId = :p1 " +
+                        "and a.owner != :p2" +
+                        ")"),
+})
 @Table(name = "EMS_DASHBOARD_SET")
 @IdClass(EmsDashboardSetPK.class)
 @Multitenant(MultitenantType.SINGLE_TABLE)
