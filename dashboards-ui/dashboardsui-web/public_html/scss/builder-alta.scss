@@ -99,6 +99,8 @@ body, html {
     position: relative;
 
     .df-toolbar {
+        height:42px;
+        
         .oj-button {
             width:35px;
             margin-top: 5px;
@@ -133,7 +135,7 @@ body, html {
         }
 
         .oj-toolbar-separator {
-            margin: 8px 22px;
+            margin: 8px 8px 8px 8px;
             vertical-align: top;
         }
 
@@ -142,12 +144,13 @@ body, html {
             display: inline-block;
             vertical-align: top;
             margin-top: 5px;
+            margin-left:5px;
         }
         
         .df-targte-selector {
             display: inline-block;
-            padding-left:5px;
-            margin-top: 5px;
+            margin-top:5px;
+            margin-left:8px;
         }
     }
 }
@@ -793,14 +796,47 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     width: 32px;
 }
 
+@mixin dbd-standard{
+    font-weight: 500 !important;
+}
+
 .dbd-left-panel {
     height: 1000px;
-    /* position: absolute; */
     right: 0;
     top: 0;
     border-left: 1px solid #d6dfe6;
     background: #fff;
     position: absolute;
+    
+    .oj-listview-group-item {
+        @include dbd-standard;
+    }
+
+    .oj-collapsible-header {
+        @include dbd-standard;
+    }
+    
+    .oj-label label {
+        @include dbd-standard;
+    }
+    
+    button {
+        @include dbd-standard;
+    }
+    
+    .dbd-right-panel-editdashboard-container .oj-collapsible-wrapper{
+        margin-left: 16px;
+    }
+    
+    label[for='editDbdDscp'] {
+        margin-top: 8px;
+    }
+    
+    .df-label{
+        @include dbd-standard;
+        margin-bottom:0;
+    }
+    
 }
 
 .right-panel-toggler {
@@ -1501,11 +1537,12 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     width:240px;
     overflow: hidden; 
     font-family: Arial;
-    font-weight: 700; 
+    font-weight: 500; 
     font-size: 16px; 
     color:#99A5BC; 
     margin-top:10px; 
-    margin-left: 10px;        
+    margin-left: 10px;
+    margin-bottom: 10px;
 }
 .edit-setting-link{
     position:relative; 

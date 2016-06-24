@@ -241,7 +241,7 @@ public class DashBoardPageId
 	public static final String DashboardSetNavsCSS = ".dbd-tabs-nav .oj-tabs-tab";
 	public static final String DashboardSetNavRemoveBtnCSS = ".oj-tabs-close-icon";
 	public static final String DashboardSetNavAddBtnCSS = "#add-nav";
-	public static final String DashboardSetOptionBtn = "//button[contains(@class, 'dbd-set-option-btn')]";
+	public static final String DashboardSetOptionBtn = "//button[contains(@id, 'tabs-caret')]";
 	public static final String DashboardSetOptionsAutoRefreshLocator = "id=dbs-refresh";
 	public static final String DashboardSetOptionsAutoRefreshOffLocator = "id=refresh-off";
 	public static final String DashboardSetAutoRefreshOffSelectedLocator = "//li[@id='refresh-off']/a/span[contains(@class, 'dbd-icon-check')]";
@@ -259,7 +259,7 @@ public class DashBoardPageId
 	public static final String DashboardsetOptionsEditNameCSS = "input#editDbdSetName";
 	public static final String DashboardsetOptionsEditDescriptionCSS = "textarea#editDbdSetDscp";
 	public static final String DashboardsetOptionsShareContentCSS = ".dbd-right-panel-editdashboard-set-share .oj-collapsible-wrapper";
-	public static final String DashboardsetOptionsShareCollapsibleCSS = ".dbd-right-panel-editdashboard-set-share";
+	public static final String DashboardsetOptionsShareCollapsibleCSS = ".dbd-right-panel-editdashboard-set-share >span";
 	public static final String DashboardsetOptionsShareStatusCSS = "#dashboardSetSharingShared.oj-selected";
 	public static final String DashboardsetOptionsShareCSS = "#dashboardSetSharingShared";
 	public static final String DashboardsetOptionsUnshareCSS = "#dashboardSetSharingNotShared";
@@ -416,6 +416,7 @@ public class DashBoardPageId
 	public static final String DASHBOARD_HOME_DELETE_BUTTON = "dsbinfopop_delete";
 	public static final String DASHBOARD_HOME_DELETE_CONFIRM = "dbs_cfmDialog_delete";
 	public static final String DASHBOARD_HOME_DELETE_DIALOG = ".dbs_cfmDialog";
+	public static final String DASHBOARD_HOME_CREATINSET_BUTTON=".dashboard-picker-container .dbs-home-blue-button";
 
 	//error page
 	public static final String ErrorSignOutButtonId = "dbd_sign_out_button";

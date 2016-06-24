@@ -625,11 +625,11 @@
                                         <form class="oj-form">
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label class="oj-label" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING')"></label>
+                                                    <label class="oj-label df-label" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING')"></label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
-                                                <div class="oj-flex-item">
+                                                <div class="oj-flex-item" style="margin-top: 10px">
                                                     <div data-bind="ojComponent: {component: 'ojRadioset', value: dashboardsetShare}" >
                                                         <span class="oj-choice-row">
                                                             <input id="dashboardSetSharingNotShared" type="radio" name="dashboardSetSharing" value="off">
@@ -642,7 +642,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="oj-flex">  
+<!--                                         This function is under deveploping-->
+<!--                                            <div class="oj-flex">  
                                                 <div class="oj-flex-item">
                                                     <label class="oj-label enableSetShareAutoRefresh" style="margin: 10px 0 0 0;" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardsetShare() === 'off'},text: getNlsString('DBSSET_BUILDER_DEFAULT_REFRESH')"></label>
                                                 </div>
@@ -659,7 +660,7 @@
                                                         <option value="every15minutes">On(Every 15 Minutes)</option>
                                                     </select>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                         </form>
                                     </div>
                                 </div>
@@ -752,7 +753,7 @@
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
                                                     <span class="oj-choice-row" style="margin: 8px 0 12px 0;">
-                                                        <input id="showEntityFilter" type="checkbox" data-bind="checked: enableEntityFilter">
+                                                        <input id="showEntityFilter" class="oj-checkbox" type="checkbox" data-bind="checked: enableEntityFilter">
                                                         <label for="showEntityFilter" data-bind="text: getNlsString('DBS_BUILDER_EDIT_SHOW_ENTITY_FILTER')"></label>
                                                     </span>
                                                 </div>
@@ -762,7 +763,7 @@
                                                     <form class="oj-form checkboxControledContent">
                                                         <div class="oj-flex">  
                                                             <div class="oj-flex-item">
-                                                                <label class="oj-label enableEntityFilter" data-bind="css: {'dbd-right-panel-collapsible-disabled': !enableEntityFilter()}">Entity Support</label>
+                                                                <label class="oj-label enableEntityFilter df-label" data-bind="css: {'dbd-right-panel-collapsible-disabled': !enableEntityFilter()}">Entity Support</label>
                                                             </div>
                                                         </div>
                                                         <div class="oj-flex">  
@@ -781,11 +782,11 @@
                                                         </div>
                                                         <div class="oj-flex">  
                                                             <div class="oj-flex-item">
-                                                                <label class="oj-label enableEntityFilter"  style="margin: 10px 0 0 0;" data-bind="css: {'dbd-right-panel-collapsible-disabled': !enableEntityFilter()}">Default Entity Value</label>
+                                                                <label class="oj-label enableEntityFilter df-label"  style="margin: 10px 0 0 0;" data-bind="css: {'dbd-right-panel-collapsible-disabled': !enableEntityFilter()}">Default Entity Value</label>
                                                             </div>
                                                         </div>
                                                         <div class="oj-flex">  
-                                                            <div class="oj-flex-item">
+                                                            <div class="oj-flex-item" style="margin-top: 10px">
                                                                 <!--ko if:instanceSupport() === "byCriteria"--> 
                                                                     <select data-bind="attr: {id: 'defaultEntityValSel_'+tilesViewModel.dashboard.id()}, ojComponent: {component: 'ojSelect',disabled: !enableEntityFilter(), optionChange: defaultEntityValueChanged,
                                                                                                      value: defaultEntityValue,rootAttributes: {style:'width:17em'}}">
@@ -813,22 +814,22 @@
                                             </div>
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
-                                                    <label class="oj-label"  style="margin: 10px 0 0 0;" data-bind="text: getNlsString('DBS_BUILDER_EDIT_TIME_FILTER')"></label>
+                                                    <label class="oj-label"  style="margin: 30px 0 0 0;" data-bind="text: getNlsString('DBS_BUILDER_EDIT_TIME_FILTER')"></label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
                                                     <span class="oj-choice-row"  style="margin: 8px 0 12px 0;">
-                                                        <input id="showTimeRangeFilter" type="checkbox" data-bind="checked: enableTimeRangeFilter">
+                                                        <input class="oj-checkbox" id="showTimeRangeFilter" type="checkbox" data-bind="checked: enableTimeRangeFilter">
                                                         <label for="showTimeRangeFilter" data-bind="text: getNlsString('DBS_BUILDER_EDIT_SHOW_TIME_FILTER')"></label>
                                                     </span>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">
                                                 <form class="oj-form checkboxControledContent" style="overflow: hidden;">
-                                                    <div class="oj-flex">  
+                                                    <div class="oj-flex" style="margin-left: 5px">  
                                                         <div class="oj-flex-item">
-                                                            <label class="oj-label enableTimeRangeFilter" data-bind="css: {'dbd-right-panel-collapsible-disabled': !enableTimeRangeFilter()}">Default Time Range Value</label>
+                                                            <label class="oj-label enableTimeRangeFilter df-label" data-bind="css: {'dbd-right-panel-collapsible-disabled': !enableTimeRangeFilter()}">Default Time Range Value</label>
                                                         </div>
                                                     </div>
                                                     <div class="oj-flex" >
@@ -880,11 +881,11 @@
                                         <form class="oj-form">
                                             <div class="oj-flex">  
                                                 <div class="oj-flex-item">
-                                                    <label class="oj-label" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING')"></label>
+                                                    <label class="oj-label df-label" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING')"></label>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">  
-                                                <div class="oj-flex-item">
+                                                <div class="oj-flex-item" style="margin-top:10px">
                                                     <div data-bind="ojComponent: {component: 'ojRadioset', value: dashboardSharing}" >
                                                         <span class="oj-choice-row">
                                                             <input id="dashboardSharingNotShared" type="radio" name="dashboardSharing" value="notShared">
@@ -897,12 +898,12 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="oj-flex">  
+                                            <div class="oj-flex" style="display: none">  
                                                 <div class="oj-flex-item">
                                                     <label class="oj-label enableShareAutoRefresh" style="margin: 10px 0 0 0;" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardSharing() === 'notShared'}" data-bind="text: getNlsString('DBS_BUILDER_DSB_DEFAULT_REFRESH')"></label>
                                                 </div>
                                             </div>
-                                            <div class="oj-flex">  
+                                            <div class="oj-flex" style="display: none">  
                                                 <div class="oj-flex-item">
                                                     <label class="enableShareAutoRefresh" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardSharing() === 'notShared'}" data-bind="text: getNlsString('DBS_BUILDER_DSB_DEFAULT_REFRESH_DESC')"></label>
                                                 </div>
