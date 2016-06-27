@@ -12,6 +12,8 @@ define({
       "DBS_HOME_DASHBOARDS_SET_CREATE_TYPE":"Type",
       "DBS_HOME_TITLE_HOME": "Home",
       "DBS_HOME_TITLE_DASHBOARDS": "Dashboards",
+      "DBS_HOME_TILES_NO_DASHBOARDS": "No dashboards found.",
+      "DBS_HOME_TILES_INTERNAL_ERROR": "Internal error. Try again.",
       "COMMON_BTN_OK": "OK",
       "COMMON_BTN_CANCEL": "Cancel",
       "COMMON_BTN_DISCARD": "Discard",
