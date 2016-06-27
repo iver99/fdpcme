@@ -119,59 +119,6 @@ define(['knockout',
                 $('#dashboardBuilderAddWidgetDialog').ojDialog('open');
             };
             
-            self.rightPanelShown = ko.observable(self.isEmpty());
-            
-            self.rightPanelIcon = ko.observable(function(){
-                var icon="none";
-                if (self.isEmpty()){
-                    icon="wrench";
-                }
-                return icon;  
-            }());  
-            
-            self.toggleRightPanel = function (data, event, target) {
-                var clickedIcon;
-                if ($(event.currentTarget).hasClass('rightpanel-pencil')) {
-                    clickedIcon = "pencil";
-                } else if ($(event.currentTarget).hasClass('rightpanel-wrench')) {
-                    clickedIcon = "wrench";
-                }
-
-                if (self.rightPanelShown() && clickedIcon !== self.rightPanelIcon()) {
-                    self.rightPanelIcon(clickedIcon);
-                }
-                else if (self.rightPanelShown()) {
-                    self.rightPanelIcon("none");
-                    $b.getRightPanelModel().toggleLeftPanel();
-                    self.rightPanelShown(!self.rightPanelShown());
-                } else {
-                    self.rightPanelIcon(clickedIcon);
-                    $b.getRightPanelModel().toggleLeftPanel();
-                    self.rightPanelShown(!self.rightPanelShown());
-                }
-            };
-            
-            self.editRightpanelLinkage = function(target){
-                var highlightIcon = "pencil";
-                var panelTarget;
-                if (target === "singleDashboard-edit") {
-                    panelTarget = "edit";
-                } else if (target === "dashboardset-edit") {
-                    panelTarget = "editset";
-                }
-                self.rightPanelIcon(highlightIcon);
-                if (!self.rightPanelShown()) {
-                    $b.getRightPanelModel().toggleLeftPanel();
-                    self.rightPanelShown(!self.rightPanelShown());
-                    $b.getRightPanelModel().editPanelContent(panelTarget);
-                    $b.getRightPanelModel().expandDBEditor(target,true);
-                } else {
-                    $b.getRightPanelModel().editPanelContent(panelTarget);
-                    $b.getRightPanelModel().expandDBEditor(target,true);  
-                }
-                $b.triggerBuilderResizeEvent('resize right panel');
-            };
-            
 //            self.appendTextTile = function () {
 //                var newTextTile;
 //                var widget = Builder.createTextWidget(self.editor.mode.MODE_MAX_COLUMNS);

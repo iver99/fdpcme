@@ -57,23 +57,81 @@ define(['knockout',
                     return tileA.WIDGET_NAME() > tileB.WIDGET_NAME();
                 }):[];
             });
-            
+
             $b.registerObject(this, 'RightPanelModel');
 
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
-            self.isUnderSet = ko.dataFor($("#dbd-set-tabs")[0]).isDashboardSet();
+            self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
             self.scrollbarWidth = uiutil.getScrollbarWidth();
+
+            self.showRightPanelToggler =  ko.pureComputed(function(){
+                if(self.dashboard.type() === "SET") {
+                    false;
+                }else {
+                    return self.isMobileDevice !== 'true' && !self.dashboard.systemDashboard() &&tilesViewModel && tilesViewModel.showRightPanelToggler() && tilesViewModel.isCreator === true;
+                }
+            });
             
+            self.showRightPanel = ko.observable(false);
+
+            self.rightPanelIcon = ko.observable(tilesViewModel && tilesViewModel.isEmpty() ? "wrench" : "none");
+
+            self.editRightpanelLinkage = function(target){
+                var highlightIcon = "pencil";
+                var panelTarget;
+                if (target === "singleDashboard-edit") {
+                    panelTarget = "edit";
+                } else if (target === "dashboardset-edit") {
+                    panelTarget = "editset";
+                }
+                self.rightPanelIcon(highlightIcon);
+                if (!self.showRightPanel()) {
+                    self.toggleLeftPanel();
+                    self.showRightPanel(!self.showRightPanel());
+                    self.editPanelContent(panelTarget);
+                    self.expandDBEditor(target,true);
+                } else {
+                    self.editPanelContent(panelTarget);
+                    self.expandDBEditor(target,true);
+                }
+                $b.triggerBuilderResizeEvent('resize right panel');
+            };
+
+            self.toggleRightPanel = function (data, event, target) {
+                var clickedIcon;
+                if ($(event.currentTarget).hasClass('rightpanel-pencil')) {
+                    clickedIcon = "pencil";
+                } else if ($(event.currentTarget).hasClass('rightpanel-wrench')) {
+                    clickedIcon = "wrench";
+                }
+
+                if (self.showRightPanel() && clickedIcon !== self.rightPanelIcon()) {
+                    self.rightPanelIcon(clickedIcon);
+                }
+                else if (self.showRightPanel()) {
+                    self.rightPanelIcon("none");
+                    self.toggleLeftPanel();
+                    self.showRightPanel(!self.showRightPanel());
+                } else {
+                    self.rightPanelIcon(clickedIcon);
+                    self.toggleLeftPanel();
+                    self.showRightPanel(!self.showRightPanel());
+                }
+            };
+
+            self.datetimePickerParams = tilesViewModel && tilesViewModel.datetimePickerParams;
+
             self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
             
             self.keyword = ko.observable('');
             self.clearRightPanelSearch=ko.observable(false);
             self.widgets = ko.observableArray([]);
 
-            self.completelyHidden = ko.observable(self.isMobileDevice === 'true' || !self.emptyDashboard);
+            self.completelyHidden = ko.observable(false);
             self.maximized = ko.observable(false);
-            
-            self.editDashboardDialogModel = new ed.EditDashboardDialogModel($b, toolBarModel);
+
+            if(toolBarModel)
+                self.editDashboardDialogModel = new ed.EditDashboardDialogModel($b, toolBarModel);
             
             $('.dbd-right-panel-editdashboard-filters').ojCollapsible( { "expanded": false } ); 
             $('.dbd-right-panel-editdashboard-share').ojCollapsible( { "expanded": false } );
@@ -90,7 +148,7 @@ define(['knockout',
             };
             
             var widgetListHeight = ko.observable($(".dbd-left-panel-widgets").height());
-            var $dbdLeftPanelWidgets = $b.findEl(".dbd-left-panel-widgets");
+            var $dbdLeftPanelWidgets = $(".dbd-left-panel-widgets");
             if(typeof window.MutationObserver !== 'undefined'){
                 var widgetListHeightChangeObserver = new MutationObserver(function(){
                     widgetListHeight($dbdLeftPanelWidgets.height());
@@ -123,60 +181,65 @@ define(['knockout',
                 loadSeeableWidgetScreenshots(val);
             });
             
+            /**
+            self.showTimeControl = ko.observable(false);
+            observable variable possibly updated by other events
+            self.enableTimeControl = ko.observable(false);
+            self.computedEnableTimeControl = ko.pureComputed({
+                read: function() {
+                    console.debug('LeftPanel enableTimeControl is ' + self.enableTimeControl() + ', ' + (self.enableTimeControl()?'Enable':'Disable')+' time control settings accordingly');
+                    return self.enableTimeControl();
+                },
+                write: function(value) {
+                    console.debug('Time control settings is set to ' + value + ' manually');
+                    self.enableTimeControl(value);
+                    self.dashboard.enableTimeRange(value?'TRUE':'FALSE');
+                    $b.triggerEvent($b.EVENT_DSB_ENABLE_TIMERANGE_CHANGED, null);
+                }
+            });
 
-//            self.showTimeControl = ko.observable(false);
-            // observable variable possibly updated by other events
-//            self.enableTimeControl = ko.observable(false);
-//            self.computedEnableTimeControl = ko.pureComputed({
-//                read: function() {
-//                    console.debug('LeftPanel enableTimeControl is ' + self.enableTimeControl() + ', ' + (self.enableTimeControl()?'Enable':'Disable')+' time control settings accordingly');
-//                    return self.enableTimeControl();
-//                },
-//                write: function(value) {
-//                    console.debug('Time control settings is set to ' + value + ' manually');
-//                    self.enableTimeControl(value);
-//                    self.dashboard.enableTimeRange(value?'TRUE':'FALSE');
-//                    $b.triggerEvent($b.EVENT_DSB_ENABLE_TIMERANGE_CHANGED, null);
-//                }
-//            });
+            self.dashboardTileExistsChangedHandler = function(anyTileExists) {
+                console.debug('Received event EVENT_TILE_EXISTS_CHANGED with value of ' + anyTileExists + '. ' + (anyTileExists?'Show':'Hide') + ' time control settings accordingly');
+                //                self.showTimeControl(anyTileExists);
+            };
 
-//            self.dashboardTileExistsChangedHandler = function(anyTileExists) {
-//                console.debug('Received event EVENT_TILE_EXISTS_CHANGED with value of ' + anyTileExists + '. ' + (anyTileExists?'Show':'Hide') + ' time control settings accordingly');
-//    //                self.showTimeControl(anyTileExists);
-//            };
-
-//            self.dashboardTileSupportTimeControlHandler = function(exists) {
-//                console.debug('Received event EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL with value of ' + exists + '. ' + (exists?'Show':'Hide') + ' time control settings accordingly');
-//                if (self.dashboard.enableTimeRange() === 'AUTO') {
-//                    console.debug('As dashboard enable time range is AUTO, '+(exists?'enable':'disable') + ' time control settings based result if tile supporting time control exists. Its value is ' + exists);
-//                    self.enableTimeControl(exists);
-//                }
-//                else {
-//                    console.debug((self.dashboard.enableTimeRange()==='TRUE'?'Enable':'Disable') + ' time control based on dashboard enableTimeRange value: ' + self.dashboard.enableTimeRange());
-//                    self.enableTimeControl(self.dashboard.enableTimeRange() === 'TRUE');
-//                }
-//                console.debug('Exists tile supporting time control? ' + exists + ' ' + (exists?'Show':'Hide') + ' time control setting accordingly');
-//                self.showTimeControl(exists);
-//            };
+            self.dashboardTileSupportTimeControlHandler = function(exists) {
+                console.debug('Received event EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL with value of ' + exists + '. ' + (exists?'Show':'Hide') + ' time control settings accordingly');
+                if (self.dashboard.enableTimeRange() === 'AUTO') {
+                    console.debug('As dashboard enable time range is AUTO, '+(exists?'enable':'disable') + ' time control settings based result if tile supporting time control exists. Its value is ' + exists);
+                    self.enableTimeControl(exists);
+                }
+                else {
+                    console.debug((self.dashboard.enableTimeRange()==='TRUE'?'Enable':'Disable') + ' time control based on dashboard enableTimeRange value: ' + self.dashboard.enableTimeRange());
+                    self.enableTimeControl(self.dashboard.enableTimeRange() === 'TRUE');
+                }
+                console.debug('Exists tile supporting time control? ' + exists + ' ' + (exists?'Show':'Hide') + ' time control setting accordingly');
+                self.showTimeControl(exists);
+            };
+             **/
 
             self.initialize = function() {
-                    if (self.dashboard.type() === 'SINGLEPAGE' || self.dashboard.systemDashboard()) {
+                    if (self.isMobileDevice === 'true' || self.dashboard.systemDashboard && self.dashboard.systemDashboard() ) {
                         self.completelyHidden(true);
                         $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
                     }
-//                self.completelyHidden(true);
-//                $b.triggerBuilderResizeEvent('Hide left panel in sprint47');
-
+                    
+                    if(self.emptyDashboard) {
+                        self.showRightPanel(true);
+                    }
+                    
                     self.initEventHandlers();
                     self.loadWidgets();
                     self.initDraggable();
 //                    self.checkAndDisableLinkDraggable();
 
-                    $b.findEl('.widget-search-input').autocomplete({
+                    $('.widget-search-input').autocomplete({
                         source: self.autoSearchWidgets,
                         delay: 700,
                         minLength: 0
                     });
+
+                    ResizableView($b);
             };
 
             self.initEventHandlers = function() {
@@ -196,7 +259,7 @@ define(['knockout',
             };
 
             self.initWidgetDraggable = function() {
-                $b.findEl(".dbd-left-panel-widget-text").draggable({
+                $(".dbd-left-panel-widget-text").draggable({
                     helper: "clone",
                     scroll: false,
                     start: function(e, t) {
@@ -389,13 +452,13 @@ define(['knockout',
             };
             
             self.toggleLeftPanel = function() {
-                if (!self.completelyHidden()) {
-                    self.completelyHidden(true);
+                if (!self.showRightPanel()) {
+                    self.showRightPanel(true);
                     $b.triggerBuilderResizeEvent('hide left panel');
                 } 
                 else {
                     self.expandDBEditor(true);
-                    self.completelyHidden(false);
+                    self.showRightPanel(false);
                     self.initDraggable();
                     $b.triggerBuilderResizeEvent('show left panel');
                 }
@@ -408,7 +471,7 @@ define(['knockout',
                     self.getWidgetScreenshot(widget);
                 var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
                 var popupContent=$(widgetItem).find('.dbd-left-panel-img-pop');
-                $b.findEl(".dbd-right-panel-build-container i.fa-plus").hide();
+                $(".dbd-right-panel-build-container i.fa-plus").hide();
                 $(".dbd-left-panel-img-pop").ojPopup("close");
                 $(widgetItem).find('i').show();
                 if (!popupContent.ojPopup("isOpen")) {
@@ -442,23 +505,23 @@ define(['knockout',
             };
             
             self.widgetShowPlusIcon = function(widget, event) {
-                $b.findEl(".dbd-right-panel-build-container i.fa-plus").hide();
+                $(".dbd-right-panel-build-container i.fa-plus").hide();
                 $(".dbd-left-panel-img-pop").ojPopup("close");
                 var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
                 $(widgetItem).find('i').show();
                 self.widgetMouseOverHandler(widget,event);
             };
-            
-            self.widgetHidePlusIcon = function(widget, event) {
-                var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
+
+            self.widgetHidePlusIcon = function (widget, event) {
+                var widgetItem = $(event.currentTarget).closest('.widget-item-' + widget.WIDGET_UNIQUE_ID());
                 $(widgetItem).find('i').hide();
             };
             
             self.containerMouseOverHandler = function() {
                 if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
                     return;
-                if (!$b.findEl('.right-container-pop').ojPopup("isOpen")) {
-                   $b.findEl('.right-container-pop').ojPopup("open", $b.findEl('.dbd-left-panel-footer-contain'), 
+                if (!$('.right-container-pop').ojPopup("isOpen")) {
+                   $('.right-container-pop').ojPopup("open", $('.dbd-left-panel-footer-contain'),
                    {
                        my : "end bottom", at : "start-25 bottom"
                    });
@@ -466,8 +529,8 @@ define(['knockout',
             };
 
             self.containerMouseOutHandler = function() {
-                if ($b.findEl('.right-container-pop').ojPopup("isOpen")) {
-                    $b.findEl('.right-container-pop').ojPopup("close");
+                if ($('.right-container-pop').ojPopup("isOpen")) {
+                    $('.right-container-pop').ojPopup("close");
                 }
             };
 
@@ -526,83 +589,82 @@ define(['knockout',
             };
 
             self.showdbOnHomePage = ko.observable([]);
-            
-            var dsbSaveDelay = ko.computed(function(){
-                return self.editDashboardDialogModel.showdbDescription()+self.editDashboardDialogModel.name()+self.editDashboardDialogModel.description()+self.showdbOnHomePage();
-            });
-            dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } }); 
-            dsbSaveDelay.subscribe(function(){
-                self.editDashboardDialogModel.save();
-            });
-            
-            self.enableEntityFilter = ko.observable(self.dashboard.enableEntityFilter() === 'TRUE');
-            self.instanceSupport = ko.observable("multiple");
-            self.enableTimeRangeFilter = ko.observable(self.dashboard.enableTimeRange() === 'TRUE');
-            self.defaultEntityValue = ko.observable("allEntities");
-            self.enableEntityFilter.subscribe(function(val){
-                self.dashboard.enableEntityFilter(val ? 'TRUE' : 'FALSE');
-            });
-            self.enableTimeRangeFilter.subscribe(function(val){
-                self.dashboard.enableTimeRange(val ? 'TRUE' : 'FALSE');
-            });
-            
-            self.filterSettingModified = ko.observable(false);
-            var filterSettingModified = ko.computed(function(){
-                return self.instanceSupport()+self.enableEntityFilter()+self.enableTimeRangeFilter()+self.defaultEntityValue();
-            });
-            filterSettingModified.subscribe(function(val){
-                self.filterSettingModified(true);
-            });
-            self.applyFilterSetting = function(){
-                //add save filter setting logic here
-                self.filterSettingModified(false);
-            };
-            
-            
-            function queryDashboardSetsBySubId(dashboardId,callback){
-                var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
-                 dfu.ajaxWithRetry(_url + dashboardId + "/dashboardsets", {
+
+            if(self.dashboard.type() !== "SET") {
+                var dsbSaveDelay = ko.computed(function(){
+                    if(self.editDashboardDialogModel)
+                        return self.editDashboardDialogModel.showdbDescription()+self.editDashboardDialogModel.name()+self.editDashboardDialogModel.description()+self.showdbOnHomePage();
+                });
+                dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } });
+                dsbSaveDelay.subscribe(function(){
+                    self.editDashboardDialogModel.save();
+                });
+
+                self.enableEntityFilter = ko.observable(self.dashboard.enableEntityFilter() === 'TRUE');
+                self.instanceSupport = ko.observable("multiple");
+                self.enableTimeRangeFilter = ko.observable(self.dashboard.enableTimeRange() === 'TRUE');
+                self.defaultEntityValue = ko.observable("allEntities");
+                self.enableEntityFilter.subscribe(function(val){
+                    self.dashboard.enableEntityFilter(val ? 'TRUE' : 'FALSE');
+                });
+                self.enableTimeRangeFilter.subscribe(function(val){
+                    self.dashboard.enableTimeRange(val ? 'TRUE' : 'FALSE');
+                });
+
+                self.filterSettingModified = ko.observable(false);
+                var filterSettingModified = ko.computed(function(){
+                    return self.instanceSupport()+self.enableEntityFilter()+self.enableTimeRangeFilter()+self.defaultEntityValue();
+                });
+                filterSettingModified.subscribe(function(val){
+                    self.filterSettingModified(true);
+                });
+                self.applyFilterSetting = function(){
+                    //add save filter setting logic here
+                    self.filterSettingModified(false);
+                };
+                function queryDashboardSetsBySubId(dashboardId,callback){
+                    var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
+                    dfu.ajaxWithRetry(_url + dashboardId + "/dashboardsets", {
                         type: 'GET',
                         headers: dfu.getDashboardsRequestHeader(), //{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
                         success: function (resp) {
-                           callback(resp);
+                            callback(resp);
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             console.log(errorThrown);
                         }
                     });
-            }
-            
-            self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
-            self.dashboardSharing.subscribe(function(val){
-                if ("notShared" === val) {
-                    queryDashboardSetsBySubId(self.dashboard.id(), function (resp) {
-                        var currentUser = dfu.getUserName();
-                        var setsSharedByOthers = resp.dashboardSets || [];
-                        setsSharedByOthers = setsSharedByOthers.filter(function(dbs){
-                            return dbs.owner !== currentUser;
-                        });
-                        
-                        if (setsSharedByOthers.length > 0) {
-                            window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(setsSharedByOthers);
-                            toolBarModel.openDashboardUnshareConfirmDialog(function(isShared){
-                                if(isShared){
-                                   self.dashboardSharing(true); 
-                                }
-                            });
-                        }else{
-                            toolBarModel.handleShareUnshare(false);
-                        }
-                    });
-                } else {
-                    toolBarModel.handleShareUnshare(true);
                 }
-            });
-            self.defaultAutoRefreshValue = ko.observable("every5minutes");
 
-            if (self.dashboardsetToolBarModel.isDashboardSet()) {
-                
-                
+                self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
+                self.dashboardSharing.subscribe(function(val){
+                    if ("notShared" === val) {
+                        queryDashboardSetsBySubId(self.dashboard.id(), function (resp) {
+                            var currentUser = dfu.getUserName();
+                            var setsSharedByOthers = resp.dashboardSets || [];
+                            setsSharedByOthers = setsSharedByOthers.filter(function(dbs){
+                                return dbs.owner !== currentUser;
+                            });
+
+                            if (setsSharedByOthers.length > 0) {
+                                window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(setsSharedByOthers);
+                                toolBarModel.openDashboardUnshareConfirmDialog(function(isShared){
+                                    if(isShared){
+                                        self.dashboardSharing(true);
+                                    }
+                                });
+                            }else{
+                                toolBarModel.handleShareUnshare(false);
+                            }
+                        });
+                    } else {
+                        toolBarModel.handleShareUnshare(true);
+                    }
+                });
+                self.defaultAutoRefreshValue = ko.observable("every5minutes");
+            }
+
+            if (self.isDashboardSet()) {
                 self.dashboardsetName = ko.observable(self.dashboardsetToolBarModel.dashboardsetName());
                 self.dashboardsetDescription = ko.observable(self.dashboardsetToolBarModel.dashboardsetDescription());
                 self.dashboardsetNameInputed = ko.observable(self.dashboardsetName());

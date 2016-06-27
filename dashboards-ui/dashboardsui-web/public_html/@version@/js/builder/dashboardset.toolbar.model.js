@@ -108,7 +108,7 @@ define(['knockout',
                 switch (configId) {
                     case 'dbs-edit':
                         if (self.dashboardInstMap[self.selectedDashboardItem().dashboardId].type !== 'new') {
-                            self.dashboardInstMap[self.selectedDashboardItem().dashboardId].tilesViewModel.editRightpanelLinkage("dashboardset-edit");
+                            self.dashboardInstMap[self.selectedDashboardItem().dashboardId].rightPanel.editRightpanelLinkage("dashboardset-edit");
                         }
                         break;
                     case 'refresh-off':

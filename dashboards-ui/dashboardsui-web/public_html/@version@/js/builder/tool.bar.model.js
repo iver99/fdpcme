@@ -31,7 +31,7 @@ define(['knockout',
             self.duplicateDashboardModel = new dd.DuplicateDashboardModel($b);
             self.toolBarGuid = Builder.getGuid();
             self.isUnderSet = ko.dataFor($("#dbd-set-tabs")[0]).isDashboardSet();
-            self.duplicateInSet=ko.observable(false);
+            self.duplicateInSet = ko.observable(false);
 
             if (self.dashboard.id && self.dashboard.id())
                 self.dashboardId = self.dashboard.id();
@@ -593,7 +593,7 @@ define(['knockout',
             checkDashboardAsHomeSettings();
             
             self.openDashboardEditDialog = function() {
-                self.tilesViewModel.editRightpanelLinkage("singleDashboard-edit");
+                self.rightPanel.editRightpanelLinkage("singleDashboard-edit");
             };
             self.openDashboardDuplicateDialog = function() {
                 $('#duplicateDsbDialog').ojDialog('open');

@@ -55,9 +55,17 @@ define([
                             var $target = $('#dashboard-' + dashboardsetToolBarModel.selectedDashboardItem().dashboardId);
                             homeScrollbarReset($target);                   
                     }, 2000);
+                        var $b = new Builder.DashboardBuilder(dashboardsetToolBarModel.dashboardInst,$('body'));
+                        //var tilesView = new Builder.DashboardTilesView($b);
+                        //var tilesViewModel = new Builder.DashboardTilesViewModel($b, dashboardsetToolBarModel.dashboardInst/*, tilesView, urlChangeView*/);
+                        //var toolBarModel = new Builder.ToolBarModel($b, options);
+                        var rightPanelModel = new Builder.RightPanelModel($b, null, null, dashboardsetToolBarModel);
+                        ko.cleanNode( $('.df-right-panel')[0]);
+                        ko.applyBindings(rightPanelModel, $('.df-right-panel')[0]);
+                        rightPanelModel.initialize();
                     } else {
                         self.loadDashboard(dashboardId);
-                        }
+                    }
                 }
             };
             
@@ -206,9 +214,9 @@ define([
                     ko.applyBindings(tilesViewModel, $dashboardEl.find('.dashboard-content-main')[0]);
 
                     var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel,toolBarModel, dashboardsetToolBarModel);
-                    ko.applyBindings(rightPanelModel, $dashboardEl.find('.dbd-left-panel')[0]);
+                    ko.cleanNode($('.df-right-panel')[0]);
+                    ko.applyBindings(rightPanelModel, $('.df-right-panel')[0]);
                     rightPanelModel.initialize();
-                    new Builder.ResizableView($b);
 
                     $("#loading").hide();
                     $('#globalBody').show();
@@ -302,12 +310,11 @@ define([
                 if ($('.dbs-list-container').length !== 0 && self.selectedDashboardInst().type === 'new') {
                     var $target=$('.dashboard-picker-container:visible');
                     homeScrollbarReset($target);
-                } 
-                else if (self.selectedDashboardInst().type === 'included') {              
+                }  else if (self.selectedDashboardInst() && self.selectedDashboardInst().type === 'included') {
                     self.selectedDashboardInst().tilesViewModel.notifyWindowResize();
                     self.selectedDashboardInst().$b.triggerBuilderResizeEvent();
                 }
-            }; 
+            }
             function homeScrollbarReset(target){
                     var bodyHeight = $(window).height();
                     var titleToolbarHeight = target.position().top;
