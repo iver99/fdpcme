@@ -52,6 +52,7 @@ define(['knockout',
             self.dashboardsetToolBarModel = dashboardsetToolBarModel;
             self.dashboard = $b.dashboard;
             self.tilesViewModel = tilesViewModel;
+            self.toolBarModel = toolBarModel;
             self.sortedTiles = ko.pureComputed(function(){
                 return self.dashboard.tiles() ? self.dashboard.tiles().sort(function (tileA, tileB) {
                     return tileA.WIDGET_NAME() > tileB.WIDGET_NAME();
@@ -68,9 +69,11 @@ define(['knockout',
                 if(self.dashboard.type() === "SET") {
                     false;
                 }else {
-                    return self.isMobileDevice !== 'true' && !self.dashboard.systemDashboard() &&tilesViewModel && tilesViewModel.showRightPanelToggler() && tilesViewModel.isCreator === true;
+                    return self.isMobileDevice !== 'true' ;
                 }
             });
+            
+            self.dashboardEditDisabled = ko.observable(self.toolBarModel &&  self.toolBarModel.editDisabled());
             
             self.showRightPanel = ko.observable(false);
 
@@ -87,7 +90,6 @@ define(['knockout',
                 self.rightPanelIcon(highlightIcon);
                 if (!self.showRightPanel()) {
                     self.toggleLeftPanel();
-                    self.showRightPanel(!self.showRightPanel());
                     self.editPanelContent(panelTarget);
                     self.expandDBEditor(target,true);
                 } else {
@@ -107,15 +109,12 @@ define(['knockout',
 
                 if (self.showRightPanel() && clickedIcon !== self.rightPanelIcon()) {
                     self.rightPanelIcon(clickedIcon);
-                }
-                else if (self.showRightPanel()) {
+                } else if (self.showRightPanel()) {
                     self.rightPanelIcon("none");
                     self.toggleLeftPanel();
-                    self.showRightPanel(!self.showRightPanel());
                 } else {
                     self.rightPanelIcon(clickedIcon);
                     self.toggleLeftPanel();
-                    self.showRightPanel(!self.showRightPanel());
                 }
             };
 
@@ -130,8 +129,21 @@ define(['knockout',
             self.completelyHidden = ko.observable(false);
             self.maximized = ko.observable(false);
 
-            if(toolBarModel)
-                self.editDashboardDialogModel = new ed.EditDashboardDialogModel($b, toolBarModel);
+            self.loadToolBarModel = function(toolBarModel){
+                self.toolBarModel = toolBarModel;
+                if(toolBarModel)
+                    self.editDashboardDialogModel =  new ed.EditDashboardDialogModel($b,toolBarModel);
+                self.dashboardEditDisabled(toolBarModel && toolBarModel.editDisabled()) ;
+            };
+            
+            self.loadToolBarModel(toolBarModel);
+            
+            self.loadTilesViewModel = function(tilesViewModel){
+                self.tilesViewModel = tilesViewModel;
+                self.datetimePickerParams = tilesViewModel && tilesViewModel.datetimePickerParams;
+                self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
+                self.rightPanelIcon(self.emptyDashboard ? "wrench" : "none");
+            };
             
             $('.dbd-right-panel-editdashboard-filters').ojCollapsible( { "expanded": false } ); 
             $('.dbd-right-panel-editdashboard-share').ojCollapsible( { "expanded": false } );
@@ -221,7 +233,7 @@ define(['knockout',
             self.initialize = function() {
                     if (self.isMobileDevice === 'true' || self.dashboard.systemDashboard && self.dashboard.systemDashboard() ) {
                         self.completelyHidden(true);
-                        $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
+                        $b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
                     }
                     
                     if(self.emptyDashboard) {
@@ -454,13 +466,12 @@ define(['knockout',
             self.toggleLeftPanel = function() {
                 if (!self.showRightPanel()) {
                     self.showRightPanel(true);
-                    $b.triggerBuilderResizeEvent('hide left panel');
-                } 
-                else {
+                    $b.triggerBuilderResizeEvent('hide right panel');
+                } else {
                     self.expandDBEditor(true);
                     self.showRightPanel(false);
                     self.initDraggable();
-                    $b.triggerBuilderResizeEvent('show left panel');
+                    $b.triggerBuilderResizeEvent('show right panel');
                 }
             };
 
@@ -492,7 +503,7 @@ define(['knockout',
             
             self.widgetKeyPress = function(widget, event) {
                 if (event.keyCode === 13) {
-                   tilesViewModel.appendNewTile(widget.WIDGET_NAME(), "", 4, 2, ko.toJS(widget));
+                   self.tilesViewModel.appendNewTile(widget.WIDGET_NAME(), "", 4, 2, ko.toJS(widget));
                 }
             };
             
@@ -501,7 +512,7 @@ define(['knockout',
             };
             
             self.widgetPlusClicked = function(widget, event) {
-                tilesViewModel.appendNewTile(widget.WIDGET_NAME(), "", 4, 2, ko.toJS(widget));
+                self.tilesViewModel.appendNewTile(widget.WIDGET_NAME(), "", 4, 2, ko.toJS(widget));
             };
             
             self.widgetShowPlusIcon = function(widget, event) {
@@ -648,17 +659,17 @@ define(['knockout',
 
                             if (setsSharedByOthers.length > 0) {
                                 window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(setsSharedByOthers);
-                                toolBarModel.openDashboardUnshareConfirmDialog(function(isShared){
+                                self.toolBarModel.openDashboardUnshareConfirmDialog(function(isShared){
                                     if(isShared){
                                         self.dashboardSharing(true);
                                     }
                                 });
                             }else{
-                                toolBarModel.handleShareUnshare(false);
+                                self.toolBarModel.handleShareUnshare(false);
                             }
                         });
                     } else {
-                        toolBarModel.handleShareUnshare(true);
+                        self.toolBarModel.handleShareUnshare(true);
                     }
                 });
                 self.defaultAutoRefreshValue = ko.observable("every5minutes");

@@ -32,7 +32,21 @@ define([
             
             self.windowWidth=ko.observable($(window).width());
             self.windowHeight=ko.observable($(window).height());
-
+            
+            self.rightPanelModel = null;
+            self.loadRightPanelModel = function (toolBarModel, tilesViewModel, $b) {
+                if (self.rightPanelModel) {
+                    self.rightPanelModel.loadToolBarModel(toolBarModel);
+                    self.rightPanelModel.loadTilesViewModel(tilesViewModel);
+                } else {
+                    var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel, toolBarModel, dashboardsetToolBarModel);
+                    ko.applyBindings(rightPanelModel, $('.df-right-panel')[0]);
+                    self.rightPanelModel = rightPanelModel;
+                }
+                self.rightPanelModel.showRightPanel(false);
+                self.rightPanelModel.initialize();
+            };
+            
             self.showDashboard = function (dashboardItem) {
                 var dashboardId = dashboardItem.dashboardId;
                 var divId = "dashboard-" + dashboardId;
@@ -43,9 +57,11 @@ define([
                         setTimeout(function() {
                             $(window).trigger("resize");
                         }, 200);
+                        self.loadRightPanelModel(self.selectedDashboardInst().toolBarModel,self.selectedDashboardInst().tilesViewModel);
                     }else{
                         var $target =$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId);
                         homeScrollbarReset($target);
+                        self.loadRightPanelModel(null,null);
                     }
                 } else {
                     if (dashboardItem.type === "new") {
@@ -53,16 +69,10 @@ define([
                         //new dashboard home css change:align
                         setTimeout(function () {
                             var $target = $('#dashboard-' + dashboardsetToolBarModel.selectedDashboardItem().dashboardId);
-                            homeScrollbarReset($target);                   
-                    }, 2000);
-                        var $b = new Builder.DashboardBuilder(dashboardsetToolBarModel.dashboardInst,$('body'));
-                        //var tilesView = new Builder.DashboardTilesView($b);
-                        //var tilesViewModel = new Builder.DashboardTilesViewModel($b, dashboardsetToolBarModel.dashboardInst/*, tilesView, urlChangeView*/);
-                        //var toolBarModel = new Builder.ToolBarModel($b, options);
-                        var rightPanelModel = new Builder.RightPanelModel($b, null, null, dashboardsetToolBarModel);
-                        ko.cleanNode( $('.df-right-panel')[0]);
-                        ko.applyBindings(rightPanelModel, $('.df-right-panel')[0]);
-                        rightPanelModel.initialize();
+                            homeScrollbarReset($target);
+                        }, 2000);
+                            var $b = new Builder.DashboardBuilder(dashboardsetToolBarModel.dashboardInst, $('body'));
+                            self.loadRightPanelModel(null,null,$b);
                     } else {
                         self.loadDashboard(dashboardId);
                     }
@@ -213,11 +223,8 @@ define([
 
                     ko.applyBindings(tilesViewModel, $dashboardEl.find('.dashboard-content-main')[0]);
 
-                    var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel,toolBarModel, dashboardsetToolBarModel);
-                    ko.cleanNode($('.df-right-panel')[0]);
-                    ko.applyBindings(rightPanelModel, $('.df-right-panel')[0]);
-                    rightPanelModel.initialize();
-
+                    self.loadRightPanelModel(toolBarModel,tilesViewModel,$b);
+                    
                     $("#loading").hide();
                     $('#globalBody').show();
                     $dashboardEl.css("visibility", "visible");

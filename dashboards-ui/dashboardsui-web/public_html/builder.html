@@ -716,7 +716,7 @@
                 <div class="right-panel-toggler no-print" data-bind="
                         visible:showRightPanelToggler,
                         style: {
-                                 right: showRightPanelToggler() ?
+                                 right: showRightPanel() ?
                                 (323 + $root.scrollbarWidth) + 'px' :
                                 $root.scrollbarWidth + 'px'
                         }">
@@ -728,6 +728,7 @@
                                     label:getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_TITLE')
                             },
                             click: toggleRightPanel,
+                            visible:!dashboardEditDisabled(),
                             css:{
                                'df-selected':rightPanelIcon()=='wrench'
                             }"/>
@@ -755,8 +756,8 @@
                 </div>
                 
                 <div class="dbd-left-panel no-print"
-                        data-bind="css: { 'dbd-left-panel-show' :'dbd-left-panel-hide'},
-                                        style: {right: $root.scrollbarWidth + 'px'}">
+                        data-bind="css: {'dbd-left-panel-show' : showRightPanel(), 'dbd-left-panel-hide' : !showRightPanel()},
+                                   style: {right: $root.scrollbarWidth + 'px'}">
                     <div class="dbd-right-panel-contents">
                         <!-- ko if: $data.isDashboardSet -->
                         <div class="dbd-right-panel-editdashboardset" data-bind="visible:rightPanelIcon()=='pencil'&&$data.editPanelContent()=='editset'">
@@ -1087,21 +1088,21 @@
                         <div id="dbd-right-panel-editsettings"  class="dbd-right-panel-editsettings"  data-bind="visible:rightPanelIcon()=='pencil'&&$data.editPanelContent()=='settings'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_SETTINGS_TITLE')"></div>
                             <div id="dbd-edit-settings-container" class="dbd-edit-settings-container">
-                                <!--ko if: $data.isDashboardSet-->
+                                <!-- ko if:isDashboardSet -->
                                     <span class="edit-setting-head" data-bind="text: getNlsString('DBSSET_BUILDER_DASHBOARDSET')"></span>
                                     <span class="edit-setting-link edit-dsbset-link" data-bind="text:$data.dashboardsetToolBarModel.dashboardsetName(), click: switchEditPanelContent"></span>
-                                    <!--ko if: $data.dashboardsetToolBarModel.dashboardsetItems.length>0-->
-                                    <span class="edit-setting-head" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_SELECTED_DSB')"></span>
-                                    <span class="edit-setting-link edit-dsb-link" data-bind="text:$data.dashboardsetToolBarModel.selectedDashboardItem().name, click: switchEditPanelContent"></span>
-                                    <!--/ko-->
-                                    <!--ko if: $data.dashboard.tiles && $data.dashboard.tiles().length>0-->
-                                        <span class="edit-setting-head">Widgets</span>
-                                        <!--ko foreach:sortedTiles-->
-                                            <span class="edit-setting-link" data-bind="text:WIDGET_NAME"></span>
+                                    <!--ko if: !dashboardEditDisabled() && dashboardsetToolBarModel.dashboardsetItems.length>0-->
+                                        <span class="edit-setting-head" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_SELECTED_DSB')"></span>
+                                        <span class="edit-setting-link edit-dsb-link" data-bind="text:$data.dashboardsetToolBarModel.selectedDashboardItem().name, click: switchEditPanelContent"></span>
+                                        <!--ko if: $data.dashboard.tiles && $data.dashboard.tiles().length>0-->
+                                            <span class="edit-setting-head">Widgets</span>
+                                            <!--ko foreach:sortedTiles-->
+                                                <span class="edit-setting-link" data-bind="text:WIDGET_NAME"></span>
+                                            <!--/ko-->
                                         <!--/ko-->
-                                    <!--/ko-->
+                                    <!-- /ko -->
                                 <!--/ko-->
-                                <!--ko ifnot: $data.isDashboardSet-->
+                                <!--ko if: isDashboardSet() === false && !dashboardEditDiabled()-->
                                 <span class="edit-setting-head">Dashboard</span>
                                     <span class="edit-setting-link edit-dsb-link" data-bind="text: dashboard.name, click: switchEditPanelContent"></span>
                                     <!--ko if: $data.dashboard.tiles().length>0-->
@@ -1149,8 +1150,7 @@
                                     <div class="oj-col stretch-width" data-bind="foreach: widgets">
                                         <div class="dbd-left-panel-widget" data-bind="css: 'widget-item-'+WIDGET_UNIQUE_ID()">
                                             <div data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
-                                                <div class="dbd-left-panel-widget-text"
-                                                >
+                                                <div class="dbd-left-panel-widget-text">
                                                     <span tabindex="0" data-bind="text:WIDGET_NAME, click: $root.resetFocus, event: {keypress: $root.widgetKeyPress, focus: $root.widgetShowPlusIcon},attr:{'data-rightpanel-items':WIDGET_NAME,'aria-label':WIDGET_NAME}"></span>
                                                 </div>
                                                 <i class="dbd-toolbar-fa-icon fa-plus" aria-hidden="false" tabindex="0" data-bind="click: $root.widgetPlusClicked, event: {keypress: $root.widgetKeyPress, blur: $root.widgetHidePlusIcon},attr:{'data-rightpanel-items':WIDGET_NAME,'aria-label':WIDGET_NAME,'title': getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_BUTTON_PLUS')}"></i>
