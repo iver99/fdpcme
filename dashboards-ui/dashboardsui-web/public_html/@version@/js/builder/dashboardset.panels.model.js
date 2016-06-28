@@ -40,6 +40,7 @@ define([
                     self.rightPanelModel.loadTilesViewModel(tilesViewModel);
                     if ($b && $b.dashboard && $b.dashboard.type() !== "SET") {
                         self.rightPanelModel.selectedDashboard($b && $b.dashboard);
+                        self.$b = $b;
                     } else {
                         self.rightPanelModel.selectedDashboard(null);
                     }

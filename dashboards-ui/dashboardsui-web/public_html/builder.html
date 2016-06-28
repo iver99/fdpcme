@@ -126,7 +126,7 @@
 
             <script id="dashboard-content-template" type="text/html">
             <div class="dashboard-content page-break" style="visibility: hidden">
-            <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container" style="padding-left:10px;" data-bind="visible:!$data.isUnderSet">
+            <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container fit-size-vertical-sibling" style="padding-left:10px;" data-bind="visible:!$data.isUnderSet">
                 <div class="builder-toolbar oj-component oj-component-initnode" aria-label="Builder toolbar" >
                     <div class="builder-toolbar-left dbd-pull-left single-dbd-description">
                         <div class="builder-dbd-name">
@@ -712,7 +712,7 @@
                 <!--/ko-->
             </div>
 
-            <div class="df-right-panel no-print" data-bind="style:{top:selectedDashboard() && isDashboardSet() ? '136px':'100px'}">
+            <div class="df-right-panel no-print" data-bind="style:{top:isDashboardSet() ?'100px':'91px'}">
                 <div class="right-panel-toggler no-print" data-bind="
                         visible:showRightPanelToggler,
                         style: {
@@ -753,8 +753,8 @@
                                             label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')}">
 
                     </button>
-                </div>
-                
+        </div>
+        
                 <div class="dbd-left-panel no-print"
                         data-bind="css: {'dbd-left-panel-show' : showRightPanel(), 'dbd-left-panel-hide' : !showRightPanel()},
                                    style: {right: $root.scrollbarWidth + 'px'}">

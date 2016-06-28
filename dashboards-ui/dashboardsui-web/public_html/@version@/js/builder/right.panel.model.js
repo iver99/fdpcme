@@ -60,6 +60,8 @@ define(['knockout',
             });
 
             $b.registerObject(this, 'RightPanelModel');
+            
+            self.$b = $b;
 
             self.selectedDashboard = ko.observable(self.dashboard);
             
@@ -94,7 +96,7 @@ define(['knockout',
                     self.editPanelContent(panelTarget);
                     self.expandDBEditor(target,true);
                 }
-                $b.triggerBuilderResizeEvent('resize right panel');
+                self.$b.triggerBuilderResizeEvent('resize right panel');
             };
 
             self.toggleRightPanel = function (data, event, target) {
@@ -130,7 +132,7 @@ define(['knockout',
             self.loadToolBarModel = function(toolBarModel){
                 self.toolBarModel = toolBarModel;
                 if(toolBarModel) {
-                    self.editDashboardDialogModel =  new ed.EditDashboardDialogModel($b,toolBarModel);
+                    self.editDashboardDialogModel =  new ed.EditDashboardDialogModel(self.$b,toolBarModel);
                     self.dashboardEditDisabled(toolBarModel.editDisabled()) ;
                 }else{
                     self.dashboardEditDisabled(true) ;
@@ -171,7 +173,7 @@ define(['knockout',
                     attrbuteFilter: ['style']
                 });
             }else{
-                $b.addBuilderResizeListener(function(){
+                self.$b.addBuilderResizeListener(function(){
                     widgetListHeight($dbdLeftPanelWidgets.height());
                 });
             }
@@ -234,7 +236,7 @@ define(['knockout',
             self.initialize = function() {
                     if (self.isMobileDevice === 'true' || self.dashboard.systemDashboard && self.dashboard.systemDashboard() ) {
                         self.completelyHidden(true);
-                        $b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
+                        self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
                     }
                     
                     if(self.emptyDashboard) {
@@ -252,13 +254,13 @@ define(['knockout',
                         minLength: 0
                     });
 
-                    ResizableView($b);
+                    ResizableView(self.$b);
             };
 
             self.initEventHandlers = function() {
 //                $b.addBuilderResizeListener(self.resizeEventHandler);
-                $b.addEventListener($b.EVENT_TILE_MAXIMIZED, self.tileMaximizedHandler);
-                $b.addEventListener($b.EVENT_TILE_RESTORED, self.tileRestoredHandler);
+                self.$b.addEventListener(self.$b.EVENT_TILE_MAXIMIZED, self.tileMaximizedHandler);
+                self.$b.addEventListener(self.$b.EVENT_TILE_RESTORED, self.tileRestoredHandler);
 //                $b.addEventListener($b.EVENT_TILE_ADDED, self.tileAddedHandler);
 //                $b.addEventListener($b.EVENT_TILE_DELETED, self.tileDeletedHandler);
 //                $b.addEventListener($b.EVENT_TILE_EXISTS_CHANGED, self.dashboardTileExistsChangedHandler);
@@ -276,13 +278,13 @@ define(['knockout',
                     helper: "clone",
                     scroll: false,
                     start: function(e, t) {
-                        $b.triggerEvent($b.EVENT_NEW_WIDGET_START_DRAGGING, null, e, t);
+                        self.$b.triggerEvent(self.$b.EVENT_NEW_WIDGET_START_DRAGGING, null, e, t);
                     },
                     drag: function(e, t) {
-                        $b.triggerEvent($b.EVENT_NEW_WIDGET_DRAGGING, null, e, t);
+                        self.$b.triggerEvent(self.$b.EVENT_NEW_WIDGET_DRAGGING, null, e, t);
                     },
                     stop: function(e, t) {
-                        $b.triggerEvent($b.EVENT_NEW_WIDGET_STOP_DRAGGING, null, e, t);
+                        self.$b.triggerEvent(self.$b.EVENT_NEW_WIDGET_STOP_DRAGGING, null, e, t);
                     }
                 });
             };
@@ -326,13 +328,13 @@ define(['knockout',
 
             self.tileMaximizedHandler = function() {
                 self.maximized(true);
-                $b.triggerBuilderResizeEvent('tile maximized and completely hide left panel');
+                self.$b.triggerBuilderResizeEvent('tile maximized and completely hide left panel');
             };
 
             self.tileRestoredHandler = function() {
                 self.maximized(false);
                 self.initDraggable();
-                $b.triggerBuilderResizeEvent('hide left panel because restore');
+                self.$b.triggerBuilderResizeEvent('hide left panel because restore');
             };
             
 //            self.tileAddedHandler = function(tile) {
@@ -358,7 +360,7 @@ define(['knockout',
                     attributeFilter: ['style']
                 });
             } else {
-                $b.addBuilderResizeListener(function () {
+                self.$b.addBuilderResizeListener(function () {
                     widgetListHeight($(".dbd-left-panel-widgets").height());
                 });
             }
@@ -468,13 +470,13 @@ define(['knockout',
                 if (!self.showRightPanel()) {
                     self.showRightPanel(true);
                     $(".dashboard-picker-container:visible").addClass("df-collaps");
-                    $b.triggerBuilderResizeEvent('hide right panel');
+                    self.$b.triggerBuilderResizeEvent('show right panel');
                 } else {
                     self.expandDBEditor(true);
                     self.showRightPanel(false);
                     self.initDraggable();
                     $(".dashboard-picker-container:visible").removeClass("df-collaps");
-                    $b.triggerBuilderResizeEvent('show right panel');
+                    self.$b.triggerBuilderResizeEvent('hide right panel');
                 }
             };
 
@@ -747,7 +749,7 @@ define(['knockout',
                 } else {
                     self.editPanelContent("settings");
                 }
-                $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
+                self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
         };
         }
         

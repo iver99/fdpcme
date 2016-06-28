@@ -687,7 +687,7 @@ define(['knockout',
            
             self.onNewWidgetDragging = function(e, u) {
                 var tcc = $b.findEl(".tiles-col-container");
-                var rpt = $b.findEl(".right-panel-toggler");
+                var rpt = $(".right-panel-toggler");
                 var tile = null;
                 var pos = {top: u.helper.offset().top - $b.findEl('.tiles-wrapper').offset().top, left: u.helper.offset().left - $b.findEl('.tiles-wrapper').offset().left};
 
@@ -770,7 +770,7 @@ define(['knockout',
             
             self.onNewWidgetStopDragging = function(e, u) {
                 var tcc = $b.findEl(".tiles-col-container");
-                var rpt = $b.findEl(".right-panel-toggler");
+                var rpt = $(".right-panel-toggler");
                 var tile = u.helper.tile; 
                 
                 if(u.helper.tile) {
