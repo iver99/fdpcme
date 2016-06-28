@@ -29,7 +29,7 @@
             </header>
 
             <div id="dbd-set-tabs" data-bind="visible: isDashboardSet" class="no-print">
-                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',truncation:'progressive',removable:dashboardsetConfig.isCreator,reorderable:dashboardsetConfig.isCreator}">
+                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',truncation:'none',removable:dashboardsetConfig.isCreator,reorderable:dashboardsetConfig.isCreator}">
                     <div id="dbd-set-name" class="oj-tabs-facet">
                             <span data-bind="text:dashboardsetName()"></span>
                             <button id="tabs-caret"
@@ -328,7 +328,7 @@
                                         icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
                                         }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.isMobileDevice !== 'true'">
                             </button>
-                            <ul class="no-print dropdown-menu" data-bind="ojComponent: {component: 'ojMenu'},attr:{id:'dashboardOptsMenu'+toolBarGuid}" style="display: none;">
+                            <ul class="no-print dropdown-menu" data-bind="ojComponent: {component: 'ojMenu',select: optionMenuItemSelect},attr:{id:'dashboardOptsMenu'+toolBarGuid}" style="display: none;">
                                 <!-- ko template: {name: 'dsbOptsMenuItemTemplate', foreach: dashboardOptsMenuItems, as: 'item'} -->
                                 <!-- /ko -->
                             </ul>
@@ -533,7 +533,7 @@
 
             <script id="dashboard-include-template" type="text/html">
                 <div class="dashboard-content dashboard-picker-container">
-                    <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container" 
+                    <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container"
                          style="padding-left: 30px;border-bottom: 0">
                         <div class="builder-toolbar" aria-label="Builder toolbar">
                             <div class="builder-toolbar-left dbd-pull-left tooltip-description">
@@ -552,7 +552,7 @@
                         <div class="dashboard-picker dbs-tiles-container-full-sm dbs-tiles-container-full-md dbs-tiles-container-full-lg dbs-tiles-container-full-xl" style="margin-bottom: 100px;"
                              data-bind="component: {
                              name: 'df-oracle-dashboard-list',
-                             params: $data}"> 
+                             params: $data}">
                         </div>
                     </div>
                 </div>
@@ -574,7 +574,7 @@
                     <!-- /ko -->
                 <!-- /ko -->
             </script>
-            
+
             <div id="popUp-dialog" data-bind="with:selectedDashboardInst">
                 <!--ko if: $data.type === 'included'-->
                 <!-- delete dilog start -->
@@ -631,7 +631,7 @@
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'), rootAttributes: {style:'margin-right:5px'}}"></button>
                     </div>
                 </div>
-                <!-- share dilog end -->  
+                <!-- share dilog end -->
                 <!-- Duplicate Dashboard dialog start -->
                 <div style="display:none" id="duplicateDsbDialog"
                      data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon',
@@ -648,9 +648,9 @@
                                     <div style=" padding: 10px 0 20px 0; padding-left: 0;" data-bind="text: getNlsString('DBS_HOME_CREATE_TYPE_DASHBOARDS')">
                                     </div>
                                 </form>
-                            </div>                         
+                            </div>
                              <div class="oj-row">
-                                <label for="dupDsbNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>                             
+                                <label for="dupDsbNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
                                     <input id="dupDsbNameIn" class="dupDsbNameIn" required
                                            data-bind="ojComponent: { component: 'ojInputText', invalidComponentTracker: toolBarModel.duplicateDashboardModel.tracker,
                                                        messagesCustom: toolBarModel.duplicateDashboardModel.errorMessages, value: toolBarModel.duplicateDashboardModel.name,
@@ -665,7 +665,7 @@
                                                                 messageSummary: getNlsString('COMMON_REQUIRE_ERROR', '{label}'),
                                                                 messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME')
                                                        }
-                                                     }}">                            
+                                                     }}">
                             </div>
                             <div class="oj-row">
                                     <label for="dupDsbDescIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
@@ -708,7 +708,7 @@
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_NO'), rootAttributes: {style:'margin-right:5px'}}"></button>
                     </div>
                 </div>
-                <!-- set as home confirm dilog end -->                   
+                <!-- set as home confirm dilog end -->
                 <!--/ko-->
             </div>
 
@@ -754,7 +754,7 @@
 
                     </button>
         </div>
-        
+
                 <div class="dbd-left-panel no-print"
                         data-bind="css: {'dbd-left-panel-show' : showRightPanel(), 'dbd-left-panel-hide' : !showRightPanel()},
                                    style: {right: $root.scrollbarWidth + 'px'}">
@@ -829,26 +829,25 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!--
-                                            <div class="oj-flex">
+<!--                                         This function is under deveploping-->
+<!--                                            <div class="oj-flex">  
                                                 <div class="oj-flex-item">
                                                     <label class="oj-label enableSetShareAutoRefresh" style="margin: 10px 0 0 0;" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardsetShare() === 'off'},text: getNlsString('DBSSET_BUILDER_DEFAULT_REFRESH')"></label>
                                                 </div>
                                             </div>
-                                            <div class="oj-flex">
+                                            <div class="oj-flex">  
                                                 <div class="oj-flex-item">
                                                     <label class="enableSetShareAutoRefresh" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardsetShare() === 'off'},text: getNlsString('DBS_BUILDER_DSB_DEFAULT_REFRESH_DESC')">Specify the default for other users</label>
                                                 </div>
                                             </div>
-                                            <div class="oj-flex">
+                                            <div class="oj-flex">  
                                                 <div class="oj-flex-item">
                                                     <select data-bind="ojComponent: {component: 'ojSelect', value: defaultSetAutoRefreshValue,disabled:dashboardsetShare() === 'off',rootAttributes: {style:'max-width:20em'}}">
                                                         <option value="every5minutes">On(Every 5 Minutes)</option>
                                                         <option value="every15minutes">On(Every 15 Minutes)</option>
                                                     </select>
                                                 </div>
-                                            </div>
-                                            -->
+                                            </div>-->
                                         </form>
                                     </div>
                                 </div>
@@ -992,7 +991,6 @@
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
                                                     <label class="oj-label"  style="margin: 30px 0 0 0;" data-bind="text: getNlsString('DBS_BUILDER_EDIT_TIME_FILTER')"></label>
-
                                                 </div>
                                             </div>
                                             <div class="oj-flex" >
@@ -1006,7 +1004,7 @@
                                             <div class="oj-flex">
                                                 <form class="oj-form checkboxControledContent" style="overflow: hidden;">
                                                     <div class="oj-flex">
-                                                        <div class="oj-flex" style="margin-left: 5px">  
+                                                        <div class="oj-flex" style="margin-left: 5px">
                                                             <label class="oj-label enableTimeRangeFilter df-label" data-bind="css: {'dbd-right-panel-collapsible-disabled': !enableTimeRangeFilter()}">Default Time Range Value</label>
                                                         </div>
                                                     </div>
@@ -1061,7 +1059,7 @@
                                                 </div>
                                             </div>
                                             <!--
-                                            <div class="oj-flex">  
+                                            <div class="oj-flex">
                                                 <div class="oj-flex-item">
                                                     <label class="oj-label enableShareAutoRefresh" style="margin: 10px 0 0 0;" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardSharing() === 'notShared'}" data-bind="text: getNlsString('DBS_BUILDER_DSB_DEFAULT_REFRESH')"></label>
                                                 </div>
