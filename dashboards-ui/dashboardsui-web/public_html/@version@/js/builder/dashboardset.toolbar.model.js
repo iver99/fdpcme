@@ -775,7 +775,7 @@ define(['knockout',
                         }
                     });           
                     self.saveDashboardSet();
-                    $("#dbd-tabs-container").ojTabs("refresh"); 
+                    //$("#dbd-tabs-container").ojTabs("refresh"); 
                     //scroll-bar reset
                     $('#dashboard-'+selectedDashboardId).find('.tiles-col-container').css({"overflow":"auto"});               
                 }             
