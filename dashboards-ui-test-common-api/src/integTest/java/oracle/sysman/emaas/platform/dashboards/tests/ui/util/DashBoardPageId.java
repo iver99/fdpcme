@@ -49,7 +49,7 @@ public class DashBoardPageId
 	//public static final String Database_Health_Summary_CSS = ".dbs-summary-page-image[alt='Database Health Summary']";
 	//public static final String Host_Health_Summary_CSS = ".dbs-summary-page-image[alt='Host Health Summary']";
 	public static final String Database_Performance_Analytics_CSS = ".dbs-summary-page-image[alt='Performance Analytics: Database']";
-	public static final String Middleware_Performance_Analytics_CSS = ".dbs-summary-page-image[alt='Performance Analytics: Middleware']";
+	public static final String Middleware_Performance_Analytics_CSS = ".dbs-summary-page-image[alt='Performance Analytics Application Server']";
 	//public static final String Middleware_Datasource_Performance_Analytics_ID = "//div[@aria-dashboard='19']";
 	public static final String Database_Resource_Analytics_CSS = ".dbs-summary-page-image[alt='Resource Analytics: Database']";
 	public static final String Middleware_Resource_Analytics_CSS = ".dbs-summary-page-image[alt='Resource Analytics: Middleware']";
