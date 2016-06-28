@@ -414,7 +414,7 @@ define(['knockout',
                 if (!popupContent.ojPopup("isOpen")) {
                    $(popupContent).ojPopup("open", $(widgetItem), 
                    {
-                       my : "end center", at : "start center"
+                       my : "right bottom", at : "start center"
                    });
                 }
             };
