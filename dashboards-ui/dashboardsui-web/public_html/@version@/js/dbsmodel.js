@@ -249,12 +249,12 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), filterString);
         self.datasourceCallback = function (_event) {
                     var _i = 0, _rawdbs = [];
-                    if (self.datasource['serverError'] === true)
-                    {
-                        self.showTilesMsg(true);
-                        self.tilesMsg(getNlsString('DBS_HOME_TILES_INTERNAL_ERROR'));
-                        return;
-                    }
+//                    if (self.datasource['serverError'] === true)
+//                    {
+//                        self.showTilesMsg(true);
+//                        self.tilesMsg(getNlsString('DBS_HOME_TILES_INTERNAL_ERROR'));
+//                        return;
+//                    }
                     if (_event['data'])
                     {
                         for (_i = 0; _i < _event['data'].length; _i++)
