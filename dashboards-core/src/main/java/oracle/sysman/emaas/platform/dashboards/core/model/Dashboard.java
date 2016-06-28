@@ -241,6 +241,7 @@ public class Dashboard
 		// by default, we'll not load screenshot for query
 		//		to.setScreenShot(from.getScreenShot());
 		to.setType(DataFormatUtils.dashboardTypeInteger2String(from.getType()));
+		to.setExtendedOptions(from.getExtendedOptions());
 		if (from.getType().equals(DASHBOARD_TYPE_CODE_SET)) {
 			to.setEnableTimeRange(null);
 			to.setIsSystem(null);
@@ -333,6 +334,8 @@ public class Dashboard
 	private String type;
 
 	private DashboardApplicationType appicationType;
+	
+	private String extendedOptions;
 
 	@JsonProperty("tiles")
 	private List<Tile> tileList;
@@ -344,7 +347,7 @@ public class Dashboard
 	private List<Dashboard> dashboardSets;
 
 	public Dashboard()
-	{
+	{		
 		// defaults for non-null values
 		type = Dashboard.DASHBOARD_TYPE_NORMAL;
 		enableTimeRange = Dashboard.DASHBOARD_ENABLE_TIME_RANGE_DEFAULT;
@@ -407,6 +410,11 @@ public class Dashboard
 	public Boolean getEnableRefresh()
 	{
 		return enableRefresh;
+	}
+	
+	public String getExtendedOptions() 
+	{
+		return extendedOptions;
 	}
 
 	public EnableTimeRangeState getEnableTimeRange()
@@ -475,7 +483,7 @@ public class Dashboard
 		if (ed == null) {
 			ed = new EmsDashboard(creationDate, dashboardId, 0L, htmlEcodedDesc, isEnableTimeRange, isEnableRefresh,
 					isEnableDescription, isEnableEntityFilter, isIsSystem, isShare, lastModificationDate, lastModifiedBy,
-					htmlEcodedName, owner, screenShot, dashboardType, appType);
+					htmlEcodedName, owner, screenShot, dashboardType, appType, extendedOptions);
 
 			if (type.equals(Dashboard.DASHBOARD_TYPE_SET)) {
 				// support create subDashboards
@@ -515,6 +523,7 @@ public class Dashboard
 			ed.setScreenShot(screenShot);
 			ed.setApplicationType(appType);
 			ed.setSharePublic(isShare);
+			ed.setExtendedOptions(extendedOptions);
 			if (ed.getType() != null && dashboardType != null && !dashboardType.equals(ed.getType())) {
 				throw new CommonResourceException(
 						MessageUtils.getDefaultBundleString(CommonResourceException.NOT_SUPPORT_UPDATE_TYPE_FIELD));
@@ -618,6 +627,11 @@ public class Dashboard
 	public void setEnableTimeRange(EnableTimeRangeState enableTimeRange)
 	{
 		this.enableTimeRange = enableTimeRange;
+	}
+	
+	public void setExtendedOptions(String extendedOptions)
+	{
+		this.extendedOptions = extendedOptions;
 	}
 
 	public void setHref(String href)

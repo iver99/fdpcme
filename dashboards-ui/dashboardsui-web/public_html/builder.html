@@ -768,14 +768,14 @@
                                                         </div>
                                                         <div class="oj-flex">  
                                                             <div class="oj-flex-item">
-                                                                <div data-bind="ojComponent: {component: 'ojRadioset', value: instanceSupport, disabled: !enableEntityFilter()}" >
+                                                                <div data-bind="ojComponent: {component: 'ojRadioset', value: entitySupport, disabled: !enableEntityFilter()}" >
                                                                    <span class="oj-choice-row">
-                                                                       <input id="multipleInstanceSupport" type="radio" name="instanceSupport" value="byCriteria">
-                                                                       <label for="multipleInstanceSupport" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENTITY_SUPPORT_MULTI')"></label>
+                                                                       <input id="multipleEntitySupport" type="radio" name="entitySupport" value="byCriteria">
+                                                                       <label for="multipleEntitySupport" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENTITY_SUPPORT_MULTI')"></label>
                                                                    </span>
                                                                    <span class="oj-choice-row">
-                                                                       <input id="singleInstanceSupport" type="radio" name="instanceSupport" value="single">
-                                                                       <label for="singleInstanceSupport" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENTITY_SUPPORT_SINGLE')"></label>
+                                                                       <input id="singleEntitySupport" type="radio" name="entitySupport" value="single">
+                                                                       <label for="singleEntitySupport" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENTITY_SUPPORT_SINGLE')"></label>
                                                                    </span>
                                                                 </div>
                                                             </div>
@@ -787,7 +787,7 @@
                                                         </div>
                                                         <div class="oj-flex">  
                                                             <div class="oj-flex-item" style="margin-top: 10px">
-                                                                <!--ko if:instanceSupport() === "byCriteria"--> 
+                                                                <!--ko if:entitySupport() === "byCriteria"--> 
                                                                     <select data-bind="attr: {id: 'defaultEntityValSel_'+tilesViewModel.dashboard.id()}, ojComponent: {component: 'ojSelect',disabled: !enableEntityFilter(), optionChange: defaultEntityValueChanged,
                                                                                                      value: defaultEntityValue,rootAttributes: {style:'width:17em'}}">
                                                                         <option value="allEntities" data-bind="text: getNlsString('DBS_BUILDER_ALL_ENTITIES')"></option>
@@ -799,7 +799,7 @@
                                                                     </select>
                                                                 <!-- /ko -->
                                                                 
-                                                                <!-- ko if: instanceSupport() === "single" -->
+                                                                <!-- ko if: entitySupport() === "single" -->
                                                                     <div class="oj-select oj-component oj-enabled oj-select-jet oj-form-control">
                                                                         <div class="oj-select-choice" tabindex="0"  style="width: 100%; display: inline-block; max-width: 20em;" data-bind="click: launchTselFromRightPanel, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {launchTselFromRightPanel();}}}"> 
                                                                                 <span class="oj-select-chosen" data-bind="text: tselLabelInSingle"></span>

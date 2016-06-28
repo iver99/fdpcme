@@ -1106,6 +1106,9 @@ define(['knockout',
                         $("#ojChoiceId_defaultTimeRange_" + self.dashboard.id() + "_selected").text(pageTimeSelLabel);
                         $("#ojChoiceId_defaultTimeRange_"+self.dashboard.id()+"_selected").css("padding-right", "20px");
                         self.whichTimeSelLauncher(0);
+                        
+                        $b.getRightPanelModel().extendedOptions.timeSel.start = start.getTime();
+                        $b.getRightPanelModel().extendedOptions.timeSel.end = end.getTime();
                     }
                 }
             };

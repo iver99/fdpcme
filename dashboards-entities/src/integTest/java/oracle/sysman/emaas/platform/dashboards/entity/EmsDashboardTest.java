@@ -1,11 +1,12 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import static org.testng.Assert.*;
+
+import org.testng.annotations.Test;
 
 
 /**
@@ -15,7 +16,7 @@ import static org.testng.Assert.*;
 public class EmsDashboardTest {
      Date now = new Date();
     private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10,10,10, now,
-             "elephant","elephant","elephant","elephant",10,10);
+             "elephant","elephant","elephant","elephant",10,10, "{}");
 
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
             now,
@@ -114,6 +115,12 @@ public class EmsDashboardTest {
     public void testGetEnableEntityFilter() throws Exception {
         emsDashboard.setEnableEntityFilter(10);
         assertEquals(emsDashboard.getEnableEntityFilter(),new Integer(10));
+    }
+    
+    @Test
+    public void testGetExtendedOptions() throws Exception {
+    	emsDashboard.setExtendedOptions("elephant");
+    	assertEquals(emsDashboard.getExtendedOptions(), "elephant");
     }
     
     @Test
@@ -236,6 +243,11 @@ public class EmsDashboardTest {
     @Test
     public void testSetEnableTimeRange() throws Exception {
 
+    }
+    
+    @Test
+    public void testSetExtendedOptions() throws Exception {
+    	
     }
 
     @Test

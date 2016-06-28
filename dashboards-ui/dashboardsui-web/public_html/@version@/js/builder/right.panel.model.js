@@ -534,38 +534,86 @@ define(['knockout',
             dsbSaveDelay.subscribe(function(){
                 self.editDashboardDialogModel.save();
             });
+           
+            var defaultSettings = {
+                    tsel: 
+                        {entitySupport: "byCriteria", defaultValue: "allEntities", entityContext: ""},
+                    timeSel: 
+                        {defaultValue: "last14days", start: "", end: ""}
+            };
+            self.extendedOptions = self.dashboard.extendedOptions ? JSON.parse(self.dashboard.extendedOptions()) : defaultSettings;
+            
+            self.extendedOptions.tsel.entitySupport && $b.getDashboardTilesViewModel().selectionMode(self.extendedOptions.tsel.entitySupport);
             
             self.enableEntityFilter = ko.observable(self.dashboard.enableEntityFilter() === 'TRUE');
-            self.instanceSupport = $b.getDashboardTilesViewModel().selectionMode;
             self.enableTimeRangeFilter = ko.observable(self.dashboard.enableTimeRange() === 'TRUE');
-            self.defaultEntityValue = ko.observable("allEntities");
-            self.defaultEntityValueForMore = ko.observable();
+            
+            self.entitySupport = $b.getDashboardTilesViewModel().selectionMode;
+            self.defaultEntityValue = ko.observable(self.extendedOptions.tsel.defaultValue ? self.extendedOptions.tsel.defaultValue : "allEntities");
+            self.defaultEntityContext = ko.observable(self.extendedOptions.tsel.entityContext);
+            self.defaultSingleEntityContext = ko.observable();
+            self.defaultMultiEntitiesContext = ko.observable();
+            if(self.entitySupport() === "byCriteria") {
+                self.defaultMultiEntitiesContext(self.extendedOptions.tsel.entityContext);
+            }else {
+                self.defaultSingleEntityContext(self.extendedOptions.tsel.entityContext);
+            }
+            
+            self.defaultTimeRangeValue = ko.observable(self.extendedOptions.timeSel.defaultValue);
+            //to do: set text for custom
+            if(self.defaultTimeRangeValue() === "custom") {
+                self.defaultStartTime = ko.observable(parseInt(self.extendedOptions.timeSel.start));
+                self.defaultEndTime = ko.observable(parseInt(self.extendedOptions.timeSel.end));
+            }
+            
             self.tselLabelInSingle = ko.observable("Select an entity...");
+            
             self.enableEntityFilter.subscribe(function(val){
                 self.dashboard.enableEntityFilter(val ? 'TRUE' : 'FALSE');
             });
+            
+            self.entitySupport.subscribe(function(val) {
+                self.extendedOptions.tsel.entitySupport = val;
+                if(val === "byCriteria") {
+                    self.extendedOptions.tsel.defaultValue = self.defaultEntityValue();
+                    self.extendedOptions.tsel.entityContext = self.defaultMultiEntitiesContext();
+                }else {
+                    self.extendedOptions.tsel.defaultValue = "";
+                    self.extendedOptions.tsel.entityContext = self.defaultSingleEntityContext();
+                }
+                
+//                if(self.entitySupport() === "byCriteria") {
+//                    self.defaultEntityValue("allEntities");
+//                }else {
+//                    self.defaultEntityValue(null);
+//                }
+            });
+                    
             self.enableTimeRangeFilter.subscribe(function(val){
                 self.dashboard.enableTimeRange(val ? 'TRUE' : 'FALSE');
             });
             
-            self.filterSettingModified = ko.observable(false);
-            var filterSettingModified = ko.computed(function(){
-                return self.instanceSupport()+self.enableEntityFilter()+self.enableTimeRangeFilter()+self.defaultEntityValue();
-            });
-            filterSettingModified.subscribe(function(val){
-                self.filterSettingModified(true);
-            });
+//            self.filterSettingModified = ko.observable(false);
+//            var filterSettingModified = ko.computed(function(){
+//                return self.entitySupport()+self.enableEntityFilter()+self.enableTimeRangeFilter()+self.defaultEntityValue();
+//            });
+//            filterSettingModified.subscribe(function(val){
+//                self.filterSettingModified(true);
+//            });
             
             self.returnFromRightDrawerTsel = function(targets) {
                 
-                var pageTselLabel = ko.contextFor($('#tsel_'+self.tilesViewModel.dashboard.id()).children().get(0)).$component.dropdownLabel();
-                if(self.instanceSupport() === "single") {
-                    self.tselLabelInSingle(pageTselLabel);                    
-                }else if(self.instanceSupport() === "byCriteria") {
-                    $("#ojChoiceId_defaultEntityValSel_"+self.tilesViewModel.dashboard.id()+"_selected").text(pageTselLabel);
+//                var pageTselLabel = ko.contextFor($('#tsel_'+self.tilesViewModel.dashboard.id()).children().get(0)).$component.dropdownLabel();
+                if(self.entitySupport() === "single") {
+                    self.tselLabelInSingle("Entities Selected(1)");
+                    self.defaultSingleEntityContext(targets);
+                }else if(self.entitySupport() === "byCriteria") {
+//                    $("#ojChoiceId_defaultEntityValSel_"+self.tilesViewModel.dashboard.id()+"_selected").text(pageTselLabel);
+                    self.defaultMultiEntitiesContext(targets);
                 }
-                self.defaultEntityValueForMore(targets);
+                
                 self.tilesViewModel.targets(targets);
+                self.defaultEntityContext(targets);
                 self.tilesViewModel.timeSelectorModel.timeRangeChange(true);
             }
             
@@ -585,16 +633,25 @@ define(['knockout',
                     self.tilesViewModel.setQuickPickerSelected(self.defaultEntityValue()[0]);
                     self.tilesViewModel.notifyQuickPickerChange(new Date());
                 }
+                
+                self.extendedOptions.tsel.defaultValue = self.defaultEntityValue()[0];
             }
             
-            self.instanceSupportChanged = ko.computed(function() {
-                if(self.instanceSupport() === "byCriteria") {
-                    self.defaultEntityValue("allEntities");
-                }else {
-                    self.defaultEntityValue(null);
-                }
-                return self.instanceSupport();
+            self.defaultEntityContext.subscribe(function(val) {
+                require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
+                    var compressedTargets = TargetSelectorUtils.compress(val);
+                    self.extendedOptions.tsel.entityContext = compressedTargets;
+                });
             });
+            
+//            self.entitySupportChanged = ko.computed(function() {
+//                if(self.entitySupport() === "byCriteria") {
+//                    self.defaultEntityValue("allEntities");
+//                }else {
+//                    self.defaultEntityValue(null);
+//                }
+//                return self.entitySupport();
+//            });
             
             self.launchTselFromRightPanel = function() {
                 require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
@@ -607,8 +664,6 @@ define(['knockout',
                         }, 200);
                     });
             }
-            
-            self.defaultTimeRangeValue = ko.observable("last14days");
             
             self.defaultTimeRangeValueChanged = function(evet, data) {
                 if(data.option != "value") {
@@ -666,7 +721,9 @@ define(['knockout',
                             break;
                     }
                     self.tilesViewModel.timeSelectorModel.timeRangeChange(true);
-                }                
+                }
+                
+                self.extendedOptions.timeSel.defaultValue = self.defaultTimeRangeValue()[0];
                 
                 return self.defaultTimeRangeValue()[0];
             };
@@ -675,8 +732,48 @@ define(['knockout',
 //                //add save filter setting logic here
 //                self.filterSettingModified(false);
 //            };
+
+            //handle with auto-saving of filter setting in right drawer
+            self.dsbRtDrFiltersSaveDelay = ko.computed(function() {
+                return self.enableEntityFilter() + self.entitySupport() + self.defaultEntityValue() + self.defaultEntityContext() +
+                        self.enableTimeRangeFilter() + self.defaultTimeRangeValue();
+            });
             
+            self.dsbRtDrFiltersSaveDelay.extend({rateLimit: {method: "notifyWhenChangesStop", timeout: 800}});
             
+            self.dsbRtDrFiltersSaveDelay.subscribe(function() {
+                var fieldsToUpdate = {
+                    "enableEntityFilter": self.dashboard.enableEntityFilter(),
+                    "extendedOptions": JSON.stringify(self.extendedOptions),
+                    "enableTimeRange": self.dashboard.enableTimeRange()
+                }
+                self.saveDsbFilterSettings(fieldsToUpdate, function() {console.log("***success");}, function() {console.log("***error");});
+            });
+            
+            self.saveDsbFilterSettings = function(fieldsToUpdate, succCallback, errorCallback) {
+                var newDashboardJs = ko.mapping.toJS(self.dashboard, {
+                    // TODO make sure the properties that should be included or excluded with Guobao
+//                        'include': ['screenShot', 'description', 'height',
+//                            'isMaximized', 'title', 'type', 'width',
+//                            'tileParameters', 'name', 'systemParameter',
+//                            'tileId', 'value', 'content', 'linkText',
+//                            'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
+                    'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight",
+                        "modeColumn", "modeRow", "screenShotHref", "systemDashboard",
+                        "customParameters", "clientGuid", "dashboard",
+                        "fireDashboardItemChangeEvent", "getParameter",
+                        "maximizeEnabled", "narrowerEnabled",
+                        "onDashboardItemChangeEvent", "restoreEnabled",
+                        "setParameter", "shouldHide", "systemParameters",
+                        "tileDisplayClass", "widerEnabled", "widget",
+                        "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
+                });
+                
+                $.extend(newDashboardJs, fieldsToUpdate);
+                Builder.updateDashboard(self.dashboard.id(), JSON.stringify(newDashboardJs), succCallback, errorCallback);
+            }
+
+                 
             function queryDashboardSetsBySubId(dashboardId,callback){
                 var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
                  dfu.ajaxWithRetry(_url + dashboardId + "/dashboardsets", {

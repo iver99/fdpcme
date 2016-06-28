@@ -63,6 +63,8 @@ public class EmsDashboard implements Serializable
 	private Integer sharePublic;
 	@Column(name = "APPLICATION_TYPE")
 	private Integer applicationType;
+	@Column(name = "EXTENDED_OPTIONS", length = 128)
+	private String extendedOptions;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATION_DATE", nullable = false)
@@ -101,7 +103,7 @@ public class EmsDashboard implements Serializable
 	public EmsDashboard(Date creationDate, Long dashboardId, Long deleted, String description, Integer enableTimeRange,
 			Integer enableRefresh, Integer enableDescription, Integer enableEntityFilter, Integer isSystem,
 			Integer sharePublic, Date lastModificationDate, String lastModifiedBy, String name, String owner, String screenShot,
-			Integer type, Integer applicationType)
+			Integer type, Integer applicationType, String extendedOptions)
 	{
 		this.creationDate = creationDate;
 		this.dashboardId = dashboardId;
@@ -120,6 +122,7 @@ public class EmsDashboard implements Serializable
 		this.screenShot = screenShot;
 		this.type = type;
 		this.applicationType = applicationType;
+		this.extendedOptions = extendedOptions;
 	}
 
 	public EmsDashboardTile addEmsDashboardTile(EmsDashboardTile emsDashboardTile)
@@ -193,6 +196,11 @@ public class EmsDashboard implements Serializable
 	public Integer getEnableTimeRange()
 	{
 		return enableTimeRange;
+	}
+	
+	public String getExtendedOptions()
+	{
+		return extendedOptions;
 	}
 
 	public Integer getIsSystem()
@@ -318,6 +326,11 @@ public class EmsDashboard implements Serializable
 	public void setEnableTimeRange(Integer enableTimeRange)
 	{
 		this.enableTimeRange = enableTimeRange;
+	}
+	
+	public void setExtendedOptions(String extendedOptions)
+	{
+		this.extendedOptions = extendedOptions;
 	}
 
 	public void setIsSystem(Integer isSystem)
