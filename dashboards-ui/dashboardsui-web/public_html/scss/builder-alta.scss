@@ -796,6 +796,8 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 
 .df-right-panel {
+    position: absolute;
+    right: 0;
 
   .right-panel-toggler {
     margin-top: 10px;
@@ -1291,6 +1293,11 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
         /*margin: 23cm;*/
     }
 }
+
+.dashboard-picker-container.df-collaps {
+    margin-right: 380px;
+}
+
 //new dashbord set css
 #dbd-tabs-container{
     .oj-tabs-nav-root{

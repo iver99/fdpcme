@@ -61,19 +61,17 @@ define(['knockout',
 
             $b.registerObject(this, 'RightPanelModel');
 
+            self.selectedDashboard = ko.observable(self.dashboard);
+            
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
             self.scrollbarWidth = uiutil.getScrollbarWidth();
 
             self.showRightPanelToggler =  ko.pureComputed(function(){
-                if(self.dashboard.type() === "SET") {
-                    false;
-                }else {
-                    return self.isMobileDevice !== 'true' ;
-                }
+                return self.isMobileDevice !== 'true' ;
             });
             
-            self.dashboardEditDisabled = ko.observable(self.toolBarModel &&  self.toolBarModel.editDisabled());
+            self.dashboardEditDisabled = ko.observable(self.toolBarModel ? self.toolBarModel.editDisabled() : true);
             
             self.showRightPanel = ko.observable(false);
 
@@ -131,9 +129,12 @@ define(['knockout',
 
             self.loadToolBarModel = function(toolBarModel){
                 self.toolBarModel = toolBarModel;
-                if(toolBarModel)
+                if(toolBarModel) {
                     self.editDashboardDialogModel =  new ed.EditDashboardDialogModel($b,toolBarModel);
-                self.dashboardEditDisabled(toolBarModel && toolBarModel.editDisabled()) ;
+                    self.dashboardEditDisabled(toolBarModel.editDisabled()) ;
+                }else{
+                    self.dashboardEditDisabled(true) ;
+                }
             };
             
             self.loadToolBarModel(toolBarModel);
@@ -466,11 +467,13 @@ define(['knockout',
             self.toggleLeftPanel = function() {
                 if (!self.showRightPanel()) {
                     self.showRightPanel(true);
+                    $(".dashboard-picker-container:visible").addClass("df-collaps");
                     $b.triggerBuilderResizeEvent('hide right panel');
                 } else {
                     self.expandDBEditor(true);
                     self.showRightPanel(false);
                     self.initDraggable();
+                    $(".dashboard-picker-container:visible").removeClass("df-collaps");
                     $b.triggerBuilderResizeEvent('show right panel');
                 }
             };

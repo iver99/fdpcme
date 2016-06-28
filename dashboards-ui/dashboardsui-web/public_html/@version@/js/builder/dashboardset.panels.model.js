@@ -38,6 +38,11 @@ define([
                 if (self.rightPanelModel) {
                     self.rightPanelModel.loadToolBarModel(toolBarModel);
                     self.rightPanelModel.loadTilesViewModel(tilesViewModel);
+                    if ($b && $b.dashboard && $b.dashboard.type() !== "SET") {
+                        self.rightPanelModel.selectedDashboard($b && $b.dashboard);
+                    } else {
+                        self.rightPanelModel.selectedDashboard(null);
+                    }
                 } else {
                     var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel, toolBarModel, dashboardsetToolBarModel);
                     ko.applyBindings(rightPanelModel, $('.df-right-panel')[0]);
@@ -57,11 +62,12 @@ define([
                         setTimeout(function() {
                             $(window).trigger("resize");
                         }, 200);
-                        self.loadRightPanelModel(self.selectedDashboardInst().toolBarModel,self.selectedDashboardInst().tilesViewModel);
+                        var _dashboard = self.selectedDashboardInst();
+                        self.loadRightPanelModel(_dashboard.toolBarModel,_dashboard.tilesViewModel,_dashboard);
                     }else{
                         var $target =$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId);
                         homeScrollbarReset($target);
-                        self.loadRightPanelModel(null,null);
+                        self.loadRightPanelModel(null,null,null);
                     }
                 } else {
                     if (dashboardItem.type === "new") {

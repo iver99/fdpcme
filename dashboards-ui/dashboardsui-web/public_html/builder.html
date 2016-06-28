@@ -712,7 +712,7 @@
                 <!--/ko-->
             </div>
 
-            <div class="df-right-panel">
+            <div class="df-right-panel no-print" data-bind="style:{top:selectedDashboard() && isDashboardSet() ? '136px':'100px'}">
                 <div class="right-panel-toggler no-print" data-bind="
                         visible:showRightPanelToggler,
                         style: {
@@ -1107,7 +1107,7 @@
                                         <!--/ko-->
                                     <!-- /ko -->
                                 <!--/ko-->
-                                <!--ko if: isDashboardSet() === false && !dashboardEditDiabled()-->
+                                <!--ko if: isDashboardSet() === false && !dashboardEditDisabled()-->
                                 <span class="edit-setting-head">Dashboard</span>
                                     <span class="edit-setting-link edit-dsb-link" data-bind="text: dashboard.name, click: switchEditPanelContent"></span>
                                     <!--ko if: $data.dashboard.tiles().length>0-->
