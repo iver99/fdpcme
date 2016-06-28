@@ -41,7 +41,7 @@ define(['knockout',
             };
             
             self.rebuildElementSet = function() {
-                self.$list = $b.findEl(".fit-size");
+                self.$list = $([].concat.apply($b.findEl(".fit-size"),$(".dbd-left-panel .fit-size")));
             };
             
             self.initialize();
