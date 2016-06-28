@@ -1103,12 +1103,19 @@ define(['knockout',
                         var timePeriodInLabel = $($("#dtpicker_"+self.dashboard.id()+ " span[id^='dropDown_']>span>span")[0]).text()
                         var pageTimeSelLabel = $("#dtpicker_"+self.dashboard.id()+ " span[id^='dropDown_'] span").text();
                         pageTimeSelLabel = pageTimeSelLabel.replace(timePeriodInLabel, "");
-                        $("#ojChoiceId_defaultTimeRange_" + self.dashboard.id() + "_selected").text(pageTimeSelLabel);
-                        $("#ojChoiceId_defaultTimeRange_"+self.dashboard.id()+"_selected").css("padding-right", "20px");
+//                        $("#ojChoiceId_defaultTimeRange_" + self.dashboard.id() + "_selected").text(pageTimeSelLabel);
+//                        $("#ojChoiceId_defaultTimeRange_"+self.dashboard.id()+"_selected").css("padding-right", "20px");
                         self.whichTimeSelLauncher(0);
                         
                         $b.getRightPanelModel().extendedOptions.timeSel.start = start.getTime();
                         $b.getRightPanelModel().extendedOptions.timeSel.end = end.getTime();
+                        
+                        if($b.getRightPanelModel().timeRangeOptions().length > 13) {
+                            $b.getRightPanelModel().timeRangeOptions($b.getRightPanelModel().timeRangeOptions.slice(0, 13));
+                        }
+                        $b.getRightPanelModel().timeRangeOptions.push({value: 'custom1', label: pageTimeSelLabel});
+                        $b.getRightPanelModel().defaultTimeRangeValue(['custom1']);
+                        $b.getRightPanelModel().extendedOptions.timeSel.defaultValue = $b.getRightPanelModel().defaultTimeRangeValue()[0];
                     }
                 }
             };

@@ -534,6 +534,36 @@ define(['knockout',
             dsbSaveDelay.subscribe(function(){
                 self.editDashboardDialogModel.save();
             });
+            
+            self.multiEntityOptions = ko.observableArray([
+                {value: 'allEntities', label: getNlsString('DBS_BUILDER_ALL_ENTITIES')},  
+                {value: 'host', label: getNlsString('DSB_BUILDER_EDIT_ALL_HOSTS')}, 
+                {value: 'usr_host_linux', label: getNlsString('DSB_BUILDER_EDIT_ALL_LINUX')}, 
+                {value: 'usr_host_windows', label: getNlsString('DSB_BUILDER_EDIT_ALL_WINDOWS')}, 
+                {value: 'oracle_vm_guest', label: getNlsString('DSB_BUILDER_EDIT_ALL_DOCKER')},
+                {value: 'more', label: getNlsString('DSB_BUILDER_EDIT_MORE')}
+            ]);
+        
+            self.singleEntityOptions = ko.observableArray([
+                {value: 'anEntity', label: getNlsString('DSB_BUILDER_EDIT_SELECT_AN_ENTITY')},
+                {value: "anEntity2", label: "Entity Selected (0)"}
+            ]);
+            
+            self.timeRangeOptions = ko.observableArray([
+                {value: 'last15mins', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS')},
+                {value: 'last30mins', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS')},
+                {value: 'last60mins', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS')},
+                {value: 'last4hours', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_4_HOURS')},
+                {value: 'last6hours', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_6_HOURS')},
+                {value: 'last1day', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_DAY')},
+                {value: 'last7days', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_7_DAYS')},
+                {value: 'last14days', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_14_DAYS')},
+                {value: 'last30days', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_DAYS')},
+                {value: 'last90days', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_90_DAYS')},
+                {value: 'last1year', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_YEAR')},
+                {value: 'latest', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LATEST')},
+                {value: 'custom', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM')}
+            ]);
            
             var defaultSettings = {
                     tsel: 
@@ -549,24 +579,40 @@ define(['knockout',
             self.enableTimeRangeFilter = ko.observable(self.dashboard.enableTimeRange() === 'TRUE');
             
             self.entitySupport = $b.getDashboardTilesViewModel().selectionMode;
-            self.defaultEntityValue = ko.observable(self.extendedOptions.tsel.defaultValue ? self.extendedOptions.tsel.defaultValue : "allEntities");
+            
+            self.defaultEntityValue = ko.observable(self.extendedOptions.tsel.defaultValue);
+            self.defaultMultiEntityValue = ko.observable(["allEntities"]);
+            self.defaultSingleEntityValue = ko.observable(["anEntity2"]);
+            
             self.defaultEntityContext = ko.observable(self.extendedOptions.tsel.entityContext);
             self.defaultSingleEntityContext = ko.observable();
             self.defaultMultiEntitiesContext = ko.observable();
             if(self.entitySupport() === "byCriteria") {
+                self.defaultMultiEntityValue([self.extendedOptions.tsel.defaultValue]);
                 self.defaultMultiEntitiesContext(self.extendedOptions.tsel.entityContext);
+                if(self.defaultMultiEntityValue()[0] === "more1") {
+                    self.multiEntityOptions.push({value: "more1", label: "Entity Selected (N)"});
+                }
             }else {
+                self.defaultSingleEntityValue([self.extendedOptions.tsel.defaultValue]);
                 self.defaultSingleEntityContext(self.extendedOptions.tsel.entityContext);
+                if(self.defaultSingleEntityValue()[0] === "anEntity") {
+                    self.defaultSingleEntityValue(["anEntity2"]);
+                }else if(self.defaultSingleEntityValue()[0] === "anEntity1") {
+                    if(self.singleEntityOptions().length >1) {
+                        self.singleEntityOptions(self.singleEntityOptions.slice(0, 1));
+                    }
+                    self.singleEntityOptions.push({value: "anEntity1", label: "Entity Selected (1)"});
+                }
             }
             
-            self.defaultTimeRangeValue = ko.observable(self.extendedOptions.timeSel.defaultValue);
+            self.defaultTimeRangeValue = ko.observable([self.extendedOptions.timeSel.defaultValue]);
             //to do: set text for custom
-            if(self.defaultTimeRangeValue() === "custom") {
+            if(self.defaultTimeRangeValue()[0] === "custom1") {
                 self.defaultStartTime = ko.observable(parseInt(self.extendedOptions.timeSel.start));
                 self.defaultEndTime = ko.observable(parseInt(self.extendedOptions.timeSel.end));
+                self.timeRangeOptions.push({value: "custom1", label: new Date(self.defaultStartTime())+'-'+new Date(self.defaultEndTime())});
             }
-            
-            self.tselLabelInSingle = ko.observable("Select an entity...");
             
             self.enableEntityFilter.subscribe(function(val){
                 self.dashboard.enableEntityFilter(val ? 'TRUE' : 'FALSE');
@@ -575,18 +621,13 @@ define(['knockout',
             self.entitySupport.subscribe(function(val) {
                 self.extendedOptions.tsel.entitySupport = val;
                 if(val === "byCriteria") {
-                    self.extendedOptions.tsel.defaultValue = self.defaultEntityValue();
+                    self.extendedOptions.tsel.defaultValue = self.defaultMultiEntityValue()[0];
                     self.extendedOptions.tsel.entityContext = self.defaultMultiEntitiesContext();
                 }else {
-                    self.extendedOptions.tsel.defaultValue = "";
+                    self.extendedOptions.tsel.defaultValue = self.defaultSingleEntityValue()[0];
                     self.extendedOptions.tsel.entityContext = self.defaultSingleEntityContext();
                 }
                 
-//                if(self.entitySupport() === "byCriteria") {
-//                    self.defaultEntityValue("allEntities");
-//                }else {
-//                    self.defaultEntityValue(null);
-//                }
             });
                     
             self.enableTimeRangeFilter.subscribe(function(val){
@@ -605,36 +646,70 @@ define(['knockout',
                 
 //                var pageTselLabel = ko.contextFor($('#tsel_'+self.tilesViewModel.dashboard.id()).children().get(0)).$component.dropdownLabel();
                 if(self.entitySupport() === "single") {
-                    self.tselLabelInSingle("Entities Selected(1)");
                     self.defaultSingleEntityContext(targets);
+                    if(self.singleEntityOptions().length>1) {
+                        self.singleEntityOptions(self.singleEntityOptions.slice(0, 1));
+                    }
+                    self.singleEntityOptions.push({value: "anEntity1", label: "Entity Selected (1)"});
+                    self.defaultSingleEntityValue(["anEntity1"]);
+                    self.extendedOptions.tsel.defaultValue = self.defaultSingleEntityValue()[0];
                 }else if(self.entitySupport() === "byCriteria") {
 //                    $("#ojChoiceId_defaultEntityValSel_"+self.tilesViewModel.dashboard.id()+"_selected").text(pageTselLabel);
                     self.defaultMultiEntitiesContext(targets);
+                    if(self.defaultMultiEntityValue()[0] === "more") {
+                        if(self.multiEntityOptions().length > 6) {
+                            self.multiEntityOptions(self.multiEntityOptions.slice(0, 6));
+                        }
+                        self.multiEntityOptions.push({value: "more1", label: "Entity Selected (N)"});
+                        self.defaultMultiEntityValue(["more1"]);
+                    }
+                    self.extendedOptions.tsel.defaultValue = self.defaultMultiEntityValue()[0];
                 }
                 
                 self.tilesViewModel.targets(targets);
                 self.defaultEntityContext(targets);
+                self.defaultEntityValue(self.extendedOptions.tsel.defaultValue);
                 self.tilesViewModel.timeSelectorModel.timeRangeChange(true);
             }
             
-            self.defaultEntityValueChanged = function(event, data) {
+            self.defaultMultiEntityValueChanged = function(event, data) {
                 if(data.option != "value") {
                     return;
                 }
-                if(self.defaultEntityValue()[0] === "more") {
+                if(self.defaultMultiEntityValue()[0] === "more1") {
+                    self.extendedOptions.tsel.defaultValue = self.defaultMultiEntityValue()[0];
+                    return;
+                }
+                
+                if(self.defaultMultiEntityValue()[0] === "more") {
                     self.launchTselFromRightPanel();                    
-                }else if(self.defaultEntityValue()[0] === "allEntities") {                    
+                }else if(self.defaultMultiEntityValue()[0] === "allEntities") {                    
                     self.tilesViewModel.whichTselLauncher(2);
                     self.tilesViewModel.setAllQuickPickersUnselected();
                     self.tilesViewModel.notifyQuickPickerChange(new Date());
+                    self.multiEntityOptions(self.multiEntityOptions.slice(0, 6));
+                    self.extendedOptions.tsel.defaultValue = self.defaultMultiEntityValue()[0];
                 }else {
                     self.tilesViewModel.whichTselLauncher(2);
                     self.tilesViewModel.setAllQuickPickersUnselected();
-                    self.tilesViewModel.setQuickPickerSelected(self.defaultEntityValue()[0]);
+                    self.tilesViewModel.setQuickPickerSelected(self.defaultMultiEntityValue()[0]);
                     self.tilesViewModel.notifyQuickPickerChange(new Date());
+                    self.multiEntityOptions(self.multiEntityOptions.slice(0, 6));
+                    self.extendedOptions.tsel.defaultValue = self.defaultMultiEntityValue()[0];
                 }
                 
-                self.extendedOptions.tsel.defaultValue = self.defaultEntityValue()[0];
+            }
+            
+            self.defaultSingleEntityValueChanged = function(event, data) {
+                if(data.option != "value") {
+                    return;
+                }
+                
+                if(self.defaultSingleEntityValue()[0] === "anEntity") {
+                    self.launchTselFromRightPanel();
+                }
+                
+                self.extendedOptions.tsel.defaultValue = self.defaultSingleEntityValue()[0];
             }
             
             self.defaultEntityContext.subscribe(function(val) {
@@ -667,6 +742,11 @@ define(['knockout',
             
             self.defaultTimeRangeValueChanged = function(evet, data) {
                 if(data.option != "value") {
+                    return;
+                }
+                
+                if(self.defaultTimeRangeValue()[0] === "custom1") {
+                    self.extendedOptions.timeSel.defaultValue = self.defaultTimeRangeValue()[0];
                     return;
                 }
                 
@@ -720,10 +800,10 @@ define(['knockout',
                             self.tilesViewModel.timePeriod("Latest");
                             break;
                     }
+                    self.timeRangeOptions(self.timeRangeOptions.slice(0, 13));
                     self.tilesViewModel.timeSelectorModel.timeRangeChange(true);
+                    self.extendedOptions.timeSel.defaultValue = self.defaultTimeRangeValue()[0];
                 }
-                
-                self.extendedOptions.timeSel.defaultValue = self.defaultTimeRangeValue()[0];
                 
                 return self.defaultTimeRangeValue()[0];
             };

@@ -158,6 +158,7 @@ define({
       "DSB_BUILDER_EDIT_ALL_WINDOWS": "All Windows",
       "DSB_BUILDER_EDIT_ALL_DOCKER": "All Docker",
       "DSB_BUILDER_EDIT_MORE": "More",
+      "DSB_BUILDER_EDIT_SELECT_AN_ENTITY": "Select an entity...",
       "DBS_BUILDER_EDIT_TIME_FILTER": "Time Range Filter",
       "DBS_BUILDER_EDIT_SHOW_TIME_FILTER": "Show Time Range filter",
       "DSB_BUILDER_EDIT_DEFAULT_TIME_RANGE_LABEL": "Default Time Range Value",

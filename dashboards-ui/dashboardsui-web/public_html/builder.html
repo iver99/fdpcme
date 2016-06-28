@@ -788,24 +788,15 @@
                                                         <div class="oj-flex">  
                                                             <div class="oj-flex-item" style="margin-top: 10px">
                                                                 <!--ko if:entitySupport() === "byCriteria"--> 
-                                                                    <select data-bind="attr: {id: 'defaultEntityValSel_'+tilesViewModel.dashboard.id()}, ojComponent: {component: 'ojSelect',disabled: !enableEntityFilter(), optionChange: defaultEntityValueChanged,
-                                                                                                     value: defaultEntityValue,rootAttributes: {style:'width:17em'}}">
-                                                                        <option value="allEntities" data-bind="text: getNlsString('DBS_BUILDER_ALL_ENTITIES')"></option>
-                                                                        <option value="host" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ALL_HOSTS')"></option>
-                                                                        <option value="usr_host_linux" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ALL_LINUX')"></option>
-                                                                        <option value="usr_host_windows" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ALL_WINDOWS')"></option>
-                                                                        <option value="oracle_vm_guest" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ALL_DOCKER')"></option>
-                                                                        <option value="more" data-bind="text: getNlsString('DSB_BUILDER_EDIT_MORE')"></option>                                                                                      
-                                                                    </select>
+                                                                    <select data-bind="attr: {id: 'defaultEntityValSel_'+tilesViewModel.dashboard.id()}, ojComponent: {component: 'ojSelect',disabled: !enableEntityFilter(), optionChange: defaultMultiEntityValueChanged,
+                                                                                                     options: multiEntityOptions, value: defaultMultiEntityValue,rootAttributes: {style:'width:17em'}}">
+                                                                    </select>         
                                                                 <!-- /ko -->
                                                                 
                                                                 <!-- ko if: entitySupport() === "single" -->
-                                                                    <div class="oj-select oj-component oj-enabled oj-select-jet oj-form-control">
-                                                                        <div class="oj-select-choice" tabindex="0"  style="width: 100%; display: inline-block; max-width: 20em;" data-bind="click: launchTselFromRightPanel, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {launchTselFromRightPanel();}}}"> 
-                                                                                <span class="oj-select-chosen" data-bind="text: tselLabelInSingle"></span>
-                                                                                <a class="oj-select-arrow oj-component-icon oj-clickable-icon-nocontext oj-select-open-icon"></a>
-                                                                        </div>
-                                                                    </div>    
+                                                                <select data-bind="attr: {id: 'defaultSingleEntityValSel_'+tilesViewModel.dashboard.id()}, ojComponent: {component: 'ojSelect',disabled: !enableEntityFilter(), optionChange: defaultSingleEntityValueChanged,
+                                                                                                     options: singleEntityOptions, value: defaultSingleEntityValue,rootAttributes: {style:'width:17em'}}">
+                                                                </select>
                                                                 <!--/ko-->
                                                             </div>
                                                         </div>
@@ -835,20 +826,7 @@
                                                     <div class="oj-flex" >
                                                         <div class="oj-flex-item">
                                                             <select data-bind="attr: {id: 'defaultTimeRange_'+tilesViewModel.dashboard.id()}, ojComponent: {component: 'ojSelect',disabled: !enableTimeRangeFilter(), optionChange: defaultTimeRangeValueChanged, 
-                                                                                                 minimumResultsForSearch: 20, value: defaultTimeRangeValue,rootAttributes: {style:'width: 17em;'}}">
-                                                                <option value="last15mins" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS')"></option>
-                                                                <option value="last30mins" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS')"></option>
-                                                                <option value="last60mins" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS')"></option>
-                                                                <option value="last4hours" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_4_HOURS')"></option>
-                                                                <option value="last6hours" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_6_HOURS')"></option>
-                                                                <option value="last1day" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_DAY')"></option>
-                                                                <option value="last7days" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_7_DAYS')"></option>
-                                                                <option value="last14days" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_14_DAYS')"></option>
-                                                                <option value="last30days" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_DAYS')"></option>
-                                                                <option value="last90days" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_90_DAYS')"></option>
-                                                                <option value="last1year" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_YEAR')"></option>
-                                                                <option value="latest" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LATEST')"></option>
-                                                                <option value="custom" data-bind="text: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM')"></option>
+                                                                                                 options: timeRangeOptions, value: defaultTimeRangeValue, minimumResultsForSearch: 20, value: defaultTimeRangeValue,rootAttributes: {style:'width: 17em;'}}">
                                                             </select>
 <!--                                                            <div class="oj-row fit-size-vertical-sibling df-computed-content-width"
                                                                  style="max-width: none;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0"
