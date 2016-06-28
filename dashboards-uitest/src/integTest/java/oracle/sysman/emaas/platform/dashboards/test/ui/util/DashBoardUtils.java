@@ -60,7 +60,10 @@ public class DashBoardUtils
 		DashboardHomeUtil.gridView(driver);
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Performance Analytics: Database");
 
-		//Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Analytics"));
+                Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Availability Analytics"));
+                Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Host"));
+                //Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
 		//Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Host Health Summary"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Performance Analytics: Database"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Performance Analytics: Middleware"));
