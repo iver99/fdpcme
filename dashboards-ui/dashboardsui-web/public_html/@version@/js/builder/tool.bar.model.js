@@ -219,8 +219,15 @@ define(['knockout',
                 dfu.ajaxWithRetry(_url + self.dashboard.id(), {
                     type: 'DELETE',
                     headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
-                    success: function(result) {
-                        window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
+                    success: function (result) {
+                        if (selectedDashboardInst().toolBarModel.isUnderSet) {   
+                            var removeId=selectedDashboardInst().toolBarModel.dashboardId;     
+                            var selectedTab = $('#dashboardTab-'+removeId);
+                            $('#delete-dashboard').ojDialog( "close" );
+                            selectedDashboardInst().dashboardsetToolBar.removeDashboardInSet(removeId,selectedTab,event,true);
+                        } else {
+                            window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
+                        }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {}
                 });

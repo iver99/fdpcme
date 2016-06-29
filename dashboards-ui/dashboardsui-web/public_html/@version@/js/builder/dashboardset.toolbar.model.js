@@ -748,20 +748,25 @@ define(['knockout',
                     self.saveDashboardSet();
                 }  
             }
-                                           
-            $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
-                var removeDashboardId = Number(ui.tab.attr('id').split(/dashboardTab-/)[1]) || (ui.tab.attr('id').split(/dashboardTab-/)[1]);
-
-                if (self.dashboardInstMap[removeDashboardId].type !== 'new' && self.dashboardInstMap[removeDashboardId].$b.isDashboardUpdated() === true) {
+            
+           self.removeDashboardInSet = function (removeId,currentSelectedItem,event,whetherDelete){
+                if (self.dashboardInstMap[removeId].type !== 'new' && self.dashboardInstMap[removeId].$b.isDashboardUpdated() === true && !whetherDelete) {
                     $('#deleteDashboard').ojDialog("open");
                     event.preventDefault();
                 } else {
-                    highlightNextTab(removeDashboardId, ui.tab);
-                    $("#dashboard-" + removeDashboardId).remove();
+                    highlightNextTab(removeId, currentSelectedItem);
+                    $("#dashboard-" + removeId).remove();
                 }
-                if(self.dashboardInstMap[removeDashboardId].type === 'new' && self.dashboardsetItems.length > 0){
+                if(self.dashboardInstMap[removeId].type === 'new' && self.dashboardsetItems.length > 0){
                     self.noDashboardHome(true);
                 }
+            }
+                                           
+            $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
+                var removeDashboardId = Number(ui.tab.attr('id').split(/dashboardTab-/)[1]) || (ui.tab.attr('id').split(/dashboardTab-/)[1]);
+                var selectedItem = ui.tab;
+                
+                self.removeDashboardInSet(removeDashboardId,selectedItem,event,false)
             } );
                         
             $("#dbd-tabs-container").on("ojdeselect", function (event, ui) {
