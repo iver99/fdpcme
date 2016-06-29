@@ -234,14 +234,20 @@ define(['knockout',
              **/
 
             self.initialize = function() {
-                    if (self.isMobileDevice === 'true' || self.dashboard.systemDashboard && self.dashboard.systemDashboard() ) {
+                    if (self.isMobileDevice === 'true' ) {
                         self.completelyHidden(true);
                         self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
+                    } else {
+                        self.completelyHidden(false);
+                        if (self.emptyDashboard) {
+                            self.showRightPanel(true);
+                        } else {
+                            self.showRightPanel(false);
+                        }
+                        self.$b.triggerBuilderResizeEvent('Initialize right panel');
                     }
                     
-                    if(self.emptyDashboard) {
-                        self.showRightPanel(true);
-                    }
+
                     
                     self.initEventHandlers();
                     self.loadWidgets();

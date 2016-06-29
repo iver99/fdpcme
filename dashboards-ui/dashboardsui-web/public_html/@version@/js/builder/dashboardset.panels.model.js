@@ -36,6 +36,7 @@ define([
             self.rightPanelModel = null;
             self.loadRightPanelModel = function (toolBarModel, tilesViewModel, $b) {
                 if (self.rightPanelModel) {
+                    self.rightPanelModel.completelyHidden(true);
                     self.rightPanelModel.loadToolBarModel(toolBarModel);
                     self.rightPanelModel.loadTilesViewModel(tilesViewModel);
                     if($b)

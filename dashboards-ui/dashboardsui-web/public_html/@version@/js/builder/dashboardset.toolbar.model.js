@@ -775,10 +775,6 @@ define(['knockout',
                     });           
                     self.saveDashboardSet();
                     // hide right expanded panel
-                    var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
-                    if(rightPanelModel && rightPanelModel.showRightPanel()){
-                        rightPanelModel.toggleLeftPanel();
-                    }
                     //$("#dbd-tabs-container").ojTabs("refresh"); 
                     //scroll-bar reset
                     $('#dashboard-'+selectedDashboardId).find('.tiles-col-container').css({"overflow":"auto"});

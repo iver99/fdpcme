@@ -712,7 +712,7 @@
                 <!--/ko-->
             </div>
 
-            <div class="df-right-panel no-print" data-bind="style:{top:isDashboardSet() ?'100px':'91px'}">
+            <div class="df-right-panel no-print" data-bind="style:{top:isDashboardSet() ?'100px':'91px'},visible:!completelyHidden()">
                 <div class="right-panel-toggler no-print" data-bind="
                         visible:showRightPanelToggler,
                         style: {
