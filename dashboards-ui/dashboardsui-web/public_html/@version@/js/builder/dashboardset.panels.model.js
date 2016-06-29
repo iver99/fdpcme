@@ -38,18 +38,13 @@ define([
                 if (self.rightPanelModel) {
                     self.rightPanelModel.loadToolBarModel(toolBarModel);
                     self.rightPanelModel.loadTilesViewModel(tilesViewModel);
-                    if ($b && $b.dashboard && $b.dashboard.type() !== "SET") {
-                        self.rightPanelModel.selectedDashboard($b && $b.dashboard);
-                        self.$b = $b;
-                    } else {
-                        self.rightPanelModel.selectedDashboard(null);
-                    }
+                    if($b)
+                        self.rightPanelModel.$b = $b;
                 } else {
                     var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel, toolBarModel, dashboardsetToolBarModel);
                     ko.applyBindings(rightPanelModel, $('.df-right-panel')[0]);
                     self.rightPanelModel = rightPanelModel;
                 }
-                self.rightPanelModel.showRightPanel(false);
                 self.rightPanelModel.initialize();
             };
             
@@ -64,7 +59,7 @@ define([
                             $(window).trigger("resize");
                         }, 200);
                         var _dashboard = self.selectedDashboardInst();
-                        self.loadRightPanelModel(_dashboard.toolBarModel,_dashboard.tilesViewModel,_dashboard);
+                        self.loadRightPanelModel(_dashboard.toolBarModel,_dashboard.tilesViewModel,_dashboard.$b);
                     }else{
                         var $target =$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId);
                         homeScrollbarReset($target);

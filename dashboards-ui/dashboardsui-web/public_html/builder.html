@@ -740,7 +740,11 @@
                                     icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-pencil'},
                                     label: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_SETTINGS_TITLE')
                                 },
+                                visible:!dashboardEditDisabled() || isDashboardSet(),
                                 click: toggleRightPanel,
+                                style:{
+                                    borderTop:dashboardEditDisabled() ? '1px solid #e4e8ea' : '0'
+                                },
                                 css: {
                                     'df-selected': rightPanelIcon()=='pencil'
                                 }"/>
@@ -753,7 +757,7 @@
                                             label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')}">
 
                     </button>
-        </div>
+            </div>
 
                 <div class="dbd-left-panel no-print"
                         data-bind="css: {'dbd-left-panel-show' : showRightPanel(), 'dbd-left-panel-hide' : !showRightPanel()},
