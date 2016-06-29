@@ -171,8 +171,8 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
                     - $('#head-bar-container').outerHeight()*/;
             var width = $(window).width();
             var $visibleDashboard = $("#dashboards-tabs-contents .dashboard-content:visible");
-            var $rightPanelToggler = $visibleDashboard.find('.right-panel-toggler');
-            var $dbdLeftPanel = $visibleDashboard.find('.dbd-left-panel');
+            var $rightPanelToggler = $('.right-panel-toggler');
+            var $dbdLeftPanel = $('.dbd-left-panel');
             var panelWidth = $dbdLeftPanel.is(":visible") ? $dbdLeftPanel.width() : 0;
             var togglerWidth = $rightPanelToggler.is(":visible") ? $rightPanelToggler.outerWidth() : 0;
             var leftWidth = panelWidth + togglerWidth;

@@ -32,7 +32,23 @@ define([
             
             self.windowWidth=ko.observable($(window).width());
             self.windowHeight=ko.observable($(window).height());
-
+            
+            self.rightPanelModel = null;
+            self.loadRightPanelModel = function (toolBarModel, tilesViewModel, $b) {
+                if (self.rightPanelModel) {
+                    self.rightPanelModel.completelyHidden(true);
+                    self.rightPanelModel.loadToolBarModel(toolBarModel);
+                    self.rightPanelModel.loadTilesViewModel(tilesViewModel);
+                    if($b)
+                        self.rightPanelModel.$b = $b;
+                } else {
+                    var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel, toolBarModel, dashboardsetToolBarModel);
+                    ko.applyBindings(rightPanelModel, $('.df-right-panel')[0]);
+                    self.rightPanelModel = rightPanelModel;
+                }
+                self.rightPanelModel.initialize();
+            };
+            
             self.showDashboard = function (dashboardItem) {
                 var dashboardId = dashboardItem.dashboardId;
                 var divId = "dashboard-" + dashboardId;
@@ -43,9 +59,12 @@ define([
                         setTimeout(function() {
                             $(window).trigger("resize");
                         }, 200);
+                        var _dashboard = self.selectedDashboardInst();
+                        self.loadRightPanelModel(_dashboard.toolBarModel,_dashboard.tilesViewModel,_dashboard.$b);
                     }else{
                         var $target =$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId);
                         homeScrollbarReset($target);
+                        self.loadRightPanelModel(null,null,null);
                     }
                 } else {
                     if (dashboardItem.type === "new") {
@@ -53,11 +72,13 @@ define([
                         //new dashboard home css change:align
                         setTimeout(function () {
                             var $target = $('#dashboard-' + dashboardsetToolBarModel.selectedDashboardItem().dashboardId);
-                            homeScrollbarReset($target);                   
-                    }, 2000);
+                            homeScrollbarReset($target);
+                        }, 2000);
+                            var $b = new Builder.DashboardBuilder(dashboardsetToolBarModel.dashboardInst, $('body'));
+                            self.loadRightPanelModel(null,null,$b);
                     } else {
                         self.loadDashboard(dashboardId);
-                        }
+                    }
                 }
             };
             
@@ -205,11 +226,8 @@ define([
 
                     ko.applyBindings(tilesViewModel, $dashboardEl.find('.dashboard-content-main')[0]);
 
-                    var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel,toolBarModel, dashboardsetToolBarModel);
-                    ko.applyBindings(rightPanelModel, $dashboardEl.find('.dbd-left-panel')[0]);
-                    rightPanelModel.initialize();
-                    new Builder.ResizableView($b);
-
+                    self.loadRightPanelModel(toolBarModel,tilesViewModel,$b);
+                    
                     $("#loading").hide();
                     $('#globalBody').show();
                     $dashboardEl.css("visibility", "visible");
@@ -302,12 +320,11 @@ define([
                 if ($('.dbs-list-container').length !== 0 && self.selectedDashboardInst().type === 'new') {
                     var $target=$('.dashboard-picker-container:visible');
                     homeScrollbarReset($target);
-                } 
-                else if (self.selectedDashboardInst().type === 'included') {              
+                }  else if (self.selectedDashboardInst() && self.selectedDashboardInst().type === 'included') {
                     self.selectedDashboardInst().tilesViewModel.notifyWindowResize();
                     self.selectedDashboardInst().$b.triggerBuilderResizeEvent();
                 }
-            }; 
+            }
             function homeScrollbarReset(target){
                     var bodyHeight = $(window).height();
                     var titleToolbarHeight = target.position().top;

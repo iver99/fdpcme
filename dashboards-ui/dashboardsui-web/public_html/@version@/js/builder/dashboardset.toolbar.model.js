@@ -107,9 +107,8 @@ define(['knockout',
                 var configId = data.item.attr('id');
                 switch (configId) {
                     case 'dbs-edit':
-                        if (self.dashboardInstMap[self.selectedDashboardItem().dashboardId].type !== 'new') {
-                            self.dashboardInstMap[self.selectedDashboardItem().dashboardId].tilesViewModel.editRightpanelLinkage("dashboardset-edit");
-                        }
+                        var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
+                        rightPanelModel && rightPanelModel.editRightpanelLinkage("dashboardset-edit");
                         break;
                     case 'refresh-off':
                         self.dbConfigMenuClick.refreshDbs(self,'off');       
@@ -780,9 +779,10 @@ define(['knockout',
                         }
                     });           
                     self.saveDashboardSet();
+                    // hide right expanded panel
                     //$("#dbd-tabs-container").ojTabs("refresh"); 
                     //scroll-bar reset
-                    $('#dashboard-'+selectedDashboardId).find('.tiles-col-container').css({"overflow":"auto"});               
+                    $('#dashboard-'+selectedDashboardId).find('.tiles-col-container').css({"overflow":"auto"});
                 }             
             });
             
