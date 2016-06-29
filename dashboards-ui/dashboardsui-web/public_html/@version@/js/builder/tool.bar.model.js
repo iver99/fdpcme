@@ -59,7 +59,8 @@ define(['knockout',
             self.editDisabled = ko.observable(self.dashboard.type() === SINGLEPAGE_TYPE || self.dashboard.systemDashboard() || self.currentUser !== self.dashboard.owner());
             self.disableSave = ko.observable(false);
 
-            self.hasUserOptionInDB = ko.observable(false); 
+            self.hasUserOptionInDB = ko.observable(false);
+            self.extendedOptions = {};
             if(dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)){
                 self.autoRefreshInterval = dashboardSetOptions.autoRefreshInterval;
             }else {
@@ -796,6 +797,7 @@ define(['knockout',
                 // update 
                 var optionsJson = {
                     "dashboardId": self.dashboard.id(),
+                    "extendedOptions": JSON.stringify(self.extendedOptions),
                     "autoRefreshInterval": self.autoRefreshInterval()
                 };
                 //save user options if it is in single dashboard mode

@@ -895,7 +895,7 @@ define(['knockout',
                         var ele = ".builder-main";
                         var position = {"at": "center-170 center", "my": "center center", "collision": "none", "of": ele};
                         var option = {"modality": "modal"};
-                        ko.contextFor($("#dtpicker_"+self.dashboard.id()).children().get(0)).$component.launchTimePickerCustom(ele, position, option);
+                        setTimeout(function() {ko.contextFor($("#dtpicker_"+self.dashboard.id()).children().get(0)).$component.launchTimePickerCustom(ele, position, option)}, 500);
 
 //                        var ele = "#ojChoiceId_defaultTimeRange_"+self.tilesViewModel.dashboard.id()+"_selected";
 //                        var position = {"at": "left-38 top", "my": "right center", "collision": "none", "of": ele};

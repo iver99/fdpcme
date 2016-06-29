@@ -27,11 +27,10 @@ define(['knockout',
         ko.mapping = km;
         var draggingTileClass = 'dbd-tile-in-dragging';
         
-        function DashboardTilesViewModel($b, dashboardsetToolBarModel) {        
+        function DashboardTilesViewModel($b, dashboardInst) {        
         
             var widgetAreaWidth = 0;
             var widgetAreaContainer = null;
-            var dashboardInst = dashboardsetToolBarModel.dashboardInst;
 
             var dragStartRow = null;
         
@@ -917,21 +916,21 @@ define(['knockout',
                     }
                 }
             };
-                        
-          
+            
+
             self.returnFromPageTsel = function(targets) {
                 self.targets(targets);
                 var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()), self.targets, null, null, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
                 Builder.fireDashboardItemChangeEvent(self.dashboard.tiles(), dashboardItemChangeEvent);
                 
-                if(!dashboardsetToolBarModel.extendedOptions.tsel) {
-                    dashboardsetToolBarModel.extendedOptions.tsel = {};
+                if(!self.toolbarModel.extendedOptions.tsel) {
+                    self.toolbarModel.extendedOptions.tsel = {};
                 }
                 
                 require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
                     var compressedTargets = TargetSelectorUtils.compress(targets);
-                    dashboardsetToolBarModel.extendedOptions.tsel.quickPick = self.getSelectedQuickPicker();
-                    dashboardsetToolBarModel.extendedOptions.tsel.entityContext = compressedTargets;
+                    self.toolbarModel.extendedOptions.tsel.quickPick = self.getSelectedQuickPicker();
+                    self.toolbarModel.extendedOptions.tsel.entityContext = compressedTargets;
                     self.saveUserFilterOptions();
                 });
                 
@@ -1061,12 +1060,12 @@ define(['knockout',
                     self.timeSelectorModel.viewEnd(end);
                     self.timeSelectorModel.timeRangeChange(true);
                     
-                    if(!dashboardsetToolBarModel.extendedOptions.timeSel) {
-                        dashboardsetToolBarModel.extendedOptions.timeSel = {};
+                    if(!self.toolbarModel.extendedOptions.timeSel) {
+                        self.toolbarModel.extendedOptions.timeSel = {};
                     }
-                    dashboardsetToolBarModel.extendedOptions.timeSel.timePeriod = tp;
-                    dashboardsetToolBarModel.extendedOptions.timeSel.start = start.getTime();
-                    dashboardsetToolBarModel.extendedOptions.timeSel.end = end.getTime();
+                    self.toolbarModel.extendedOptions.timeSel.timePeriod = tp;
+                    self.toolbarModel.extendedOptions.timeSel.start = start.getTime();
+                    self.toolbarModel.extendedOptions.timeSel.end = end.getTime();
                     self.saveUserFilterOptions();
                     
                     //change default time range value option text in right drawer
@@ -1092,14 +1091,14 @@ define(['knockout',
             self.saveUserFilterOptions = function() {
                 var userFilterOptions = {
                     dashboardId: self.dashboard.id(),
-                    extendedOptions: JSON.stringify(dashboardsetToolBarModel.extendedOptions),
-                    autoRefreshInterval: dashboardsetToolBarModel.autoRefreshInterval()
+                    extendedOptions: JSON.stringify(self.toolbarModel.extendedOptions),
+                    autoRefreshInterval: self.toolbarModel.autoRefreshInterval()
                 };
-                if(dashboardsetToolBarModel.hasUserOptionInDB) {
+                if(self.toolbarModel.hasUserOptionInDB) {
                     Builder.updateDashboardOptions(userFilterOptions);
                 }else {
                     Builder.saveDashboardOptions(userFilterOptions);
-                    dashboardsetToolBarModel.hasUserOptionInDB = true;
+                    self.toolbarModel.hasUserOptionInDB = true;
                 }
             }
             
