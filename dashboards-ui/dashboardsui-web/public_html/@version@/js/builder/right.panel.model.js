@@ -28,7 +28,7 @@ define(['knockout',
                     var elem = $(this)
                     , v_siblings = elem.siblings(".fit-size-vertical-sibling:visible")
                     , h = 52;
-                    if(v_siblings && 1 === v_siblings.length && v_siblings.attr("class").indexOf("dbd-right-panel-title")>-1){
+                    if(v_siblings && 1 === v_siblings.length && v_siblings.hasClass("dbd-right-panel-title")){
                         h = 0;
                     }
                     if (v_siblings && v_siblings.length > 0) {
@@ -37,11 +37,19 @@ define(['knockout',
                         }
                         elem.height(height - topHeight - h);
                     }
+                    if(elem.hasClass("dbd-left-panel")||elem.hasClass("right-panel-toggler")){
+                        var _top = elem.css("top");
+                        if(ko.dataFor($('.df-right-panel')[0]).isDashboardSet()){
+                            elem.css("top",topHeight-100);
+                        }else{
+                            elem.css("top",topHeight-91);
+                        }
+                    }
                 });
             };
             
             self.rebuildElementSet = function() {
-                self.$list = $([].concat.apply($b.findEl(".fit-size"),$(".dbd-left-panel .fit-size")));
+                self.$list = $([].concat.apply($b.findEl(".fit-size"),$(".df-right-panel .fit-size")));
             };
             
             self.initialize();

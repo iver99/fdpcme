@@ -713,7 +713,7 @@
             </div>
 
             <div class="df-right-panel no-print" data-bind="style:{top:isDashboardSet() ?'100px':'91px'},visible:!completelyHidden()">
-                <div class="right-panel-toggler no-print" data-bind="
+                <div class="right-panel-toggler no-print fit-size" data-bind="
                         visible:showRightPanelToggler,
                         style: {
                                  right: showRightPanel() ?
@@ -759,7 +759,7 @@
                     </button>
             </div>
 
-                <div class="dbd-left-panel no-print"
+                <div class="dbd-left-panel no-print fit-size"
                         data-bind="css: {'dbd-left-panel-show' : showRightPanel(), 'dbd-left-panel-hide' : !showRightPanel()},
                                    style: {right: $root.scrollbarWidth + 'px'}">
                     <div class="dbd-right-panel-contents">
