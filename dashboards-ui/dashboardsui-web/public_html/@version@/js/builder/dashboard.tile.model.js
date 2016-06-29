@@ -27,10 +27,11 @@ define(['knockout',
         ko.mapping = km;
         var draggingTileClass = 'dbd-tile-in-dragging';
         
-        function DashboardTilesViewModel($b, dashboardInst) {        
+        function DashboardTilesViewModel($b, dashboardsetToolBarModel) {        
         
             var widgetAreaWidth = 0;
             var widgetAreaContainer = null;
+            var dashboardInst = dashboardsetToolBarModel.dashboardInst;
 
             var dragStartRow = null;
         
@@ -969,19 +970,24 @@ define(['knockout',
                     }
                 }
             };
-            
+                        
           
             self.returnFromPageTsel = function(targets) {
-//                if(targets.targets) {
-//                    if(targets.targets.length === 1) {
-//                        self.tgtSelLabel(getNlsString('DBS_BUILDER_ONE_TARGET_SELECTED'));
-//                    }else {
-//                        self.tgtSelLabel(getNlsString('DBS_BUILDER_MULTI_TARGETS_SELECTED', targets.targets.length));
-//                    }
-//                }
                 self.targets(targets);
                 var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()), self.targets, null, null, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
                 Builder.fireDashboardItemChangeEvent(self.dashboard.tiles(), dashboardItemChangeEvent);
+                
+                if(!dashboardsetToolBarModel.extendedOptions.tsel) {
+                    dashboardsetToolBarModel.extendedOptions.tsel = {};
+                }
+                
+                require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
+                    var compressedTargets = TargetSelectorUtils.compress(targets);
+                    dashboardsetToolBarModel.extendedOptions.tsel.quickPick = self.getSelectedQuickPicker();
+                    dashboardsetToolBarModel.extendedOptions.tsel.entityContext = compressedTargets;
+                    self.saveUserFilterOptions();
+                });
+                
             };
             
             self.whichTselLauncher = ko.observable(0); //0 for page, 1 for right drawer->more, 2 for right drawer->quick pickers
@@ -1039,6 +1045,16 @@ define(['knockout',
                 }
             }
             
+            self.getSelectedQuickPicker = function() {
+                var quickPicker = "more";
+                for(var i=0; i<self.quickPickers().length; i++) {
+                    if(self.quickPickers()[i].selected) {
+                        quickPicker = (self.quickPickers()[i].value)[0];
+                    }
+                }
+                return quickPicker;
+            }
+            
             self.notifyQuickPickerChange = ko.observable(new Date());
 
             self.getQuickPickers = ko.computed(function() {
@@ -1093,10 +1109,18 @@ define(['knockout',
                 endDateTime: initEnd,
                 timePeriod: self.timePeriod,
                 hideMainLabel: true,
-                callbackAfterApply: function(start, end) {
+                callbackAfterApply: function(start, end, tp) {
                     self.timeSelectorModel.viewStart(start);
                     self.timeSelectorModel.viewEnd(end);
                     self.timeSelectorModel.timeRangeChange(true);
+                    
+                    if(!dashboardsetToolBarModel.extendedOptions.timeSel) {
+                        dashboardsetToolBarModel.extendedOptions.timeSel = {};
+                    }
+                    dashboardsetToolBarModel.extendedOptions.timeSel.timePeriod = tp;
+                    dashboardsetToolBarModel.extendedOptions.timeSel.start = start.getTime();
+                    dashboardsetToolBarModel.extendedOptions.timeSel.end = end.getTime();
+                    self.saveUserFilterOptions();
                     
                     //change default time range value option text in right drawer
                     if(self.whichTimeSelLauncher() === 1) {
@@ -1117,6 +1141,20 @@ define(['knockout',
             };
             
             self.whichTimeSelLauncher = ko.observable(0); // 0 for page, 1 for right drawer
+            
+            self.saveUserFilterOptions = function() {
+                var userFilterOptions = {
+                    dashboardId: self.dashboard.id(),
+                    extendedOptions: JSON.stringify(dashboardsetToolBarModel.extendedOptions),
+                    autoRefreshInterval: dashboardsetToolBarModel.autoRefreshInterval()
+                };
+                if(dashboardsetToolBarModel.hasUserOptionInDB) {
+                    Builder.updateDashboardOptions(userFilterOptions);
+                }else {
+                    Builder.saveDashboardOptions(userFilterOptions);
+                    dashboardsetToolBarModel.hasUserOptionInDB = true;
+                }
+            }
             
             self.toolbarModel = null;
         }
