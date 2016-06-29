@@ -1039,6 +1039,7 @@
                                     </div>
                                 </div>
                                 <hr/>
+                                <!-- ko ifnot:isDashboardSet -->
                                 <div class="dbd-right-panel-editdashboard-share" data-bind="ojComponent: {component: 'ojCollapsible'}">
                                     <span class="dbd-right-panel-editdashboard-innertitle" data-bind="text: getNlsString('COMMON_TEXT_SHARE')"></span>
                                     <div class="share-settings oj-form-layout">
@@ -1086,6 +1087,7 @@
                                     </div>
                                 </div>
                                 <hr/>
+                                <!-- /ko -->
                                 <div>
                                     <button class="dbd-delete-single-dashboard" data-bind="click: deleteDashboardClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_DELETE_TITLE') }"></button>
                                 </div>
