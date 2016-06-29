@@ -535,6 +535,61 @@ define(['knockout',
                 self.editDashboardDialogModel.save();
             });
             
+            self.dateConverter = oj.Validation.converterFactory("dateTime").createConverter({formatType: "date", dateFormat: "medium"});
+            self.timeConverter = oj.Validation.converterFactory("dateTime").createConverter({formatType: "time", timeFormat: "short"});
+            self.today = "Today";
+            self.yesterday = "Yesterday";
+            
+            self.adjustDateMoreFriendly = function(date) {
+                var today = oj.IntlConverterUtils.dateToLocalIso(new Date()).slice(0, 10);
+                var yesterday = oj.IntlConverterUtils.dateToLocalIso(new Date(new Date()-24*60*60*1000)).slice(0, 10);
+                if(today === date) {
+                    return self.today;
+                }else if(yesterday === date) {
+                    return self.yesterday;
+                }else {
+                    return self.dateConverter.format(date);
+                }
+            };
+            
+            self.getGMTTimezone = function(date) {
+                var timezoneOffset = date.getTimezoneOffset()/60;
+                timezoneOffset = timezoneOffset>0 ? ("GMT-"+timezoneOffset) : ("GMT+"+Math.abs(timezoneOffset));
+                return timezoneOffset;
+            }
+                
+            self.getTimeInfo = function(startTimeStamp, endTimeStamp) {
+                var startISO = oj.IntlConverterUtils.dateToLocalIso(new Date(startTimeStamp));
+                var endISO = oj.IntlConverterUtils.dateToLocalIso(new Date(endTimeStamp));
+                var startDate = startISO.slice(0, 10);
+                var endDate = endISO.slice(0, 10);
+                var startTime = startISO.slice(10, 16);
+                var endTime = endISO.slice(10, 16);
+                
+                var dateTimeInfo;
+                var start = self.adjustDateMoreFriendly(startDate);
+                var end = self.adjustDateMoreFriendly(endDate);
+                //show "Today/Yesterday" only once
+                if(start === end) {
+                    end = "";
+                }
+                    
+                start = start + " " + self.timeConverter.format(startTime);
+                end = end + " " + self.timeConverter.format(endTime);
+                        
+                //add timezone for time ranges less than 1 day if the start&end time are in different timezone due to daylight saving time.
+                var tmpStart = oj.IntlConverterUtils.isoToLocalDate(startDate+startTime);
+                var tmpEnd = oj.IntlConverterUtils.isoToLocalDate(endDate+endTime);
+                if(tmpStart.getTimezoneOffset() !== tmpEnd.getTimezoneOffset() && self.isTimePeriodLessThan1day(self.timePeriod())) {
+                    start += " (" + self.getGMTTimezone(tmpStart) + ")";
+                    end += " (" + self.getGMTTimezone(tmpEnd) + ")";
+                }
+                    
+                dateTimeInfo = start + " - " + end;
+                return dateTimeInfo;
+            }
+
+            
             self.multiEntityOptions = ko.observableArray([
                 {value: 'allEntities', label: getNlsString('DBS_BUILDER_ALL_ENTITIES')},  
                 {value: 'host', label: getNlsString('DSB_BUILDER_EDIT_ALL_HOSTS')}, 
@@ -607,11 +662,11 @@ define(['knockout',
             }
             
             self.defaultTimeRangeValue = ko.observable([self.extendedOptions.timeSel.defaultValue]);
-            //to do: set text for custom
+
             if(self.defaultTimeRangeValue()[0] === "custom1") {
                 self.defaultStartTime = ko.observable(parseInt(self.extendedOptions.timeSel.start));
                 self.defaultEndTime = ko.observable(parseInt(self.extendedOptions.timeSel.end));
-                self.timeRangeOptions.push({value: "custom1", label: new Date(self.defaultStartTime())+'-'+new Date(self.defaultEndTime())});
+                self.timeRangeOptions.push({value: "custom1", label: self.getTimeInfo(self.defaultStartTime(), self.defaultEndTime())});
             }
             
             self.enableEntityFilter.subscribe(function(val){

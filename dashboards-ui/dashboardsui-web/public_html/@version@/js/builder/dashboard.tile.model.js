@@ -1099,12 +1099,7 @@ define(['knockout',
                     self.timeSelectorModel.timeRangeChange(true);
                     
                     //change default time range value option text in right drawer
-                    if(self.whichTimeSelLauncher() === 1) {                        
-                        var timePeriodInLabel = $($("#dtpicker_"+self.dashboard.id()+ " span[id^='dropDown_']>span>span")[0]).text()
-                        var pageTimeSelLabel = $("#dtpicker_"+self.dashboard.id()+ " span[id^='dropDown_'] span").text();
-                        pageTimeSelLabel = pageTimeSelLabel.replace(timePeriodInLabel, "");
-//                        $("#ojChoiceId_defaultTimeRange_" + self.dashboard.id() + "_selected").text(pageTimeSelLabel);
-//                        $("#ojChoiceId_defaultTimeRange_"+self.dashboard.id()+"_selected").css("padding-right", "20px");
+                    if(self.whichTimeSelLauncher() === 1) {
                         self.whichTimeSelLauncher(0);
                         
                         $b.getRightPanelModel().extendedOptions.timeSel.start = start.getTime();
@@ -1113,7 +1108,8 @@ define(['knockout',
                         if($b.getRightPanelModel().timeRangeOptions().length > 13) {
                             $b.getRightPanelModel().timeRangeOptions($b.getRightPanelModel().timeRangeOptions.slice(0, 13));
                         }
-                        $b.getRightPanelModel().timeRangeOptions.push({value: 'custom1', label: pageTimeSelLabel});
+                        var label = $b.getRightPanelModel().getTimeInfo(start.getTime(), end.getTime());
+                        $b.getRightPanelModel().timeRangeOptions.push({value: 'custom1', label: label});
                         $b.getRightPanelModel().defaultTimeRangeValue(['custom1']);
                         $b.getRightPanelModel().extendedOptions.timeSel.defaultValue = $b.getRightPanelModel().defaultTimeRangeValue()[0];
                     }
