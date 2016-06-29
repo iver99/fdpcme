@@ -298,6 +298,8 @@ public class DashboardBuilderUtil
 
 		driver.click("css=" + DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
 		driver.takeScreenShot();
+		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsMenuLocator);
+		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.duplicate completed");
 
 	}

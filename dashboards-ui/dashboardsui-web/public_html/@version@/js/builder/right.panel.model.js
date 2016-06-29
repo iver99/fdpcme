@@ -41,7 +41,7 @@ define(['knockout',
             };
             
             self.rebuildElementSet = function() {
-                self.$list = $b.findEl(".fit-size");
+                self.$list = $([].concat.apply($b.findEl(".fit-size"),$(".dbd-left-panel .fit-size")));
             };
             
             self.initialize();
@@ -52,28 +52,101 @@ define(['knockout',
             self.dashboardsetToolBarModel = dashboardsetToolBarModel;
             self.dashboard = $b.dashboard;
             self.tilesViewModel = tilesViewModel;
+            self.toolBarModel = toolBarModel;
             self.sortedTiles = ko.pureComputed(function(){
                 return self.dashboard.tiles() ? self.dashboard.tiles().sort(function (tileA, tileB) {
                     return tileA.WIDGET_NAME() > tileB.WIDGET_NAME();
                 }):[];
             });
-            
+
             $b.registerObject(this, 'RightPanelModel');
 
+            self.$b = $b;
+
+            self.selectedDashboard = ko.observable(self.dashboard);
+
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
-            self.isUnderSet = ko.dataFor($("#dbd-set-tabs")[0]).isDashboardSet();
+            self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
             self.scrollbarWidth = uiutil.getScrollbarWidth();
-            
+
+            self.showRightPanelToggler =  ko.pureComputed(function(){
+                return self.isMobileDevice !== 'true' ;
+            });
+
+            self.dashboardEditDisabled = ko.observable(self.toolBarModel ? self.toolBarModel.editDisabled() : true);
+
+            self.showRightPanel = ko.observable(false);
+
+            self.rightPanelIcon = ko.observable(tilesViewModel && tilesViewModel.isEmpty() ? "wrench" : "none");
+
+            self.editRightpanelLinkage = function(target){
+                var highlightIcon = "pencil";
+                var panelTarget;
+                if (target === "singleDashboard-edit") {
+                    panelTarget = "edit";
+                } else if (target === "dashboardset-edit") {
+                    panelTarget = "editset";
+                }
+                self.rightPanelIcon(highlightIcon);
+                if (!self.showRightPanel()) {
+                    self.toggleLeftPanel();
+                    self.editPanelContent(panelTarget);
+                    self.expandDBEditor(target,true);
+                } else {
+                    self.editPanelContent(panelTarget);
+                    self.expandDBEditor(target,true);
+                }
+                self.$b.triggerBuilderResizeEvent('resize right panel');
+            };
+
+            self.toggleRightPanel = function (data, event, target) {
+                var clickedIcon;
+                if ($(event.currentTarget).hasClass('rightpanel-pencil')) {
+                    clickedIcon = "pencil";
+                } else if ($(event.currentTarget).hasClass('rightpanel-wrench')) {
+                    clickedIcon = "wrench";
+                }
+
+                if (self.showRightPanel() && clickedIcon !== self.rightPanelIcon()) {
+                    self.rightPanelIcon(clickedIcon);
+                } else if (self.showRightPanel()) {
+                    self.rightPanelIcon("none");
+                    self.toggleLeftPanel();
+                } else {
+                    self.rightPanelIcon(clickedIcon);
+                    self.toggleLeftPanel();
+                }
+            };
+
+            self.datetimePickerParams = tilesViewModel && tilesViewModel.datetimePickerParams;
+
             self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
             
             self.keyword = ko.observable('');
             self.clearRightPanelSearch=ko.observable(false);
             self.widgets = ko.observableArray([]);
 
-            self.completelyHidden = ko.observable(self.isMobileDevice === 'true' || !self.emptyDashboard);
+            self.completelyHidden = ko.observable(false);
             self.maximized = ko.observable(false);
-            
-            self.editDashboardDialogModel = new ed.EditDashboardDialogModel($b, toolBarModel);
+
+            self.loadToolBarModel = function(toolBarModel){
+                self.toolBarModel = toolBarModel;
+                if(toolBarModel) {
+                    self.editDashboardDialogModel =  new ed.EditDashboardDialogModel(self.$b,toolBarModel);
+                    self.dashboardEditDisabled(toolBarModel.editDisabled()) ;
+                }else{
+                    self.dashboardEditDisabled(true) ;
+                }
+            };
+
+            self.loadToolBarModel(toolBarModel);
+
+            self.loadTilesViewModel = function(tilesViewModel){
+                self.tilesViewModel = tilesViewModel;
+                self.datetimePickerParams = tilesViewModel && tilesViewModel.datetimePickerParams;
+                self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
+                self.rightPanelIcon(self.emptyDashboard ? "wrench" : "none");
+            };
             
             $('.dbd-right-panel-editdashboard-filters').ojCollapsible( { "expanded": false } ); 
             $('.dbd-right-panel-editdashboard-share').ojCollapsible( { "expanded": false } );
@@ -90,7 +163,7 @@ define(['knockout',
             };
             
             var widgetListHeight = ko.observable($(".dbd-left-panel-widgets").height());
-            var $dbdLeftPanelWidgets = $b.findEl(".dbd-left-panel-widgets");
+            var $dbdLeftPanelWidgets = $(".dbd-left-panel-widgets");
             if(typeof window.MutationObserver !== 'undefined'){
                 var widgetListHeightChangeObserver = new MutationObserver(function(){
                     widgetListHeight($dbdLeftPanelWidgets.height());
@@ -100,7 +173,7 @@ define(['knockout',
                     attrbuteFilter: ['style']
                 });
             }else{
-                $b.addBuilderResizeListener(function(){
+                self.$b.addBuilderResizeListener(function(){
                     widgetListHeight($dbdLeftPanelWidgets.height());
                 });
             }
@@ -123,66 +196,77 @@ define(['knockout',
                 loadSeeableWidgetScreenshots(val);
             });
             
+            /**
+            self.showTimeControl = ko.observable(false);
+            observable variable possibly updated by other events
+            self.enableTimeControl = ko.observable(false);
+            self.computedEnableTimeControl = ko.pureComputed({
+                read: function() {
+                    console.debug('LeftPanel enableTimeControl is ' + self.enableTimeControl() + ', ' + (self.enableTimeControl()?'Enable':'Disable')+' time control settings accordingly');
+                    return self.enableTimeControl();
+                },
+                write: function(value) {
+                    console.debug('Time control settings is set to ' + value + ' manually');
+                    self.enableTimeControl(value);
+                    self.dashboard.enableTimeRange(value?'TRUE':'FALSE');
+                    $b.triggerEvent($b.EVENT_DSB_ENABLE_TIMERANGE_CHANGED, null);
+                }
+            });
 
-//            self.showTimeControl = ko.observable(false);
-            // observable variable possibly updated by other events
-//            self.enableTimeControl = ko.observable(false);
-//            self.computedEnableTimeControl = ko.pureComputed({
-//                read: function() {
-//                    console.debug('LeftPanel enableTimeControl is ' + self.enableTimeControl() + ', ' + (self.enableTimeControl()?'Enable':'Disable')+' time control settings accordingly');
-//                    return self.enableTimeControl();
-//                },
-//                write: function(value) {
-//                    console.debug('Time control settings is set to ' + value + ' manually');
-//                    self.enableTimeControl(value);
-//                    self.dashboard.enableTimeRange(value?'TRUE':'FALSE');
-//                    $b.triggerEvent($b.EVENT_DSB_ENABLE_TIMERANGE_CHANGED, null);
-//                }
-//            });
+            self.dashboardTileExistsChangedHandler = function(anyTileExists) {
+                console.debug('Received event EVENT_TILE_EXISTS_CHANGED with value of ' + anyTileExists + '. ' + (anyTileExists?'Show':'Hide') + ' time control settings accordingly');
+                //                self.showTimeControl(anyTileExists);
+            };
 
-//            self.dashboardTileExistsChangedHandler = function(anyTileExists) {
-//                console.debug('Received event EVENT_TILE_EXISTS_CHANGED with value of ' + anyTileExists + '. ' + (anyTileExists?'Show':'Hide') + ' time control settings accordingly');
-//    //                self.showTimeControl(anyTileExists);
-//            };
-
-//            self.dashboardTileSupportTimeControlHandler = function(exists) {
-//                console.debug('Received event EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL with value of ' + exists + '. ' + (exists?'Show':'Hide') + ' time control settings accordingly');
-//                if (self.dashboard.enableTimeRange() === 'AUTO') {
-//                    console.debug('As dashboard enable time range is AUTO, '+(exists?'enable':'disable') + ' time control settings based result if tile supporting time control exists. Its value is ' + exists);
-//                    self.enableTimeControl(exists);
-//                }
-//                else {
-//                    console.debug((self.dashboard.enableTimeRange()==='TRUE'?'Enable':'Disable') + ' time control based on dashboard enableTimeRange value: ' + self.dashboard.enableTimeRange());
-//                    self.enableTimeControl(self.dashboard.enableTimeRange() === 'TRUE');
-//                }
-//                console.debug('Exists tile supporting time control? ' + exists + ' ' + (exists?'Show':'Hide') + ' time control setting accordingly');
-//                self.showTimeControl(exists);
-//            };
+            self.dashboardTileSupportTimeControlHandler = function(exists) {
+                console.debug('Received event EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL with value of ' + exists + '. ' + (exists?'Show':'Hide') + ' time control settings accordingly');
+                if (self.dashboard.enableTimeRange() === 'AUTO') {
+                    console.debug('As dashboard enable time range is AUTO, '+(exists?'enable':'disable') + ' time control settings based result if tile supporting time control exists. Its value is ' + exists);
+                    self.enableTimeControl(exists);
+                }
+                else {
+                    console.debug((self.dashboard.enableTimeRange()==='TRUE'?'Enable':'Disable') + ' time control based on dashboard enableTimeRange value: ' + self.dashboard.enableTimeRange());
+                    self.enableTimeControl(self.dashboard.enableTimeRange() === 'TRUE');
+                }
+                console.debug('Exists tile supporting time control? ' + exists + ' ' + (exists?'Show':'Hide') + ' time control setting accordingly');
+                self.showTimeControl(exists);
+            };
+             **/
 
             self.initialize = function() {
-                    if (self.dashboard.type() === 'SINGLEPAGE' || self.dashboard.systemDashboard()) {
+                    if (self.isMobileDevice === 'true' ) {
                         self.completelyHidden(true);
-                        $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
+                        self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
+                    } else {
+                        self.completelyHidden(false);
+                        if (self.emptyDashboard) {
+                            self.showRightPanel(true);
+                        } else {
+                            self.showRightPanel(false);
+                        }
+                        self.$b.triggerBuilderResizeEvent('Initialize right panel');
                     }
-//                self.completelyHidden(true);
-//                $b.triggerBuilderResizeEvent('Hide left panel in sprint47');
+
+
 
                     self.initEventHandlers();
                     self.loadWidgets();
                     self.initDraggable();
 //                    self.checkAndDisableLinkDraggable();
 
-                    $b.findEl('.widget-search-input').autocomplete({
+                    $('.widget-search-input').autocomplete({
                         source: self.autoSearchWidgets,
                         delay: 700,
                         minLength: 0
                     });
+
+                    ResizableView(self.$b);
             };
 
             self.initEventHandlers = function() {
 //                $b.addBuilderResizeListener(self.resizeEventHandler);
-                $b.addEventListener($b.EVENT_TILE_MAXIMIZED, self.tileMaximizedHandler);
-                $b.addEventListener($b.EVENT_TILE_RESTORED, self.tileRestoredHandler);
+                self.$b.addEventListener(self.$b.EVENT_TILE_MAXIMIZED, self.tileMaximizedHandler);
+                self.$b.addEventListener(self.$b.EVENT_TILE_RESTORED, self.tileRestoredHandler);
 //                $b.addEventListener($b.EVENT_TILE_ADDED, self.tileAddedHandler);
 //                $b.addEventListener($b.EVENT_TILE_DELETED, self.tileDeletedHandler);
 //                $b.addEventListener($b.EVENT_TILE_EXISTS_CHANGED, self.dashboardTileExistsChangedHandler);
@@ -196,17 +280,17 @@ define(['knockout',
             };
 
             self.initWidgetDraggable = function() {
-                $b.findEl(".dbd-left-panel-widget-text").draggable({
+                $(".dbd-left-panel-widget-text").draggable({
                     helper: "clone",
                     scroll: false,
                     start: function(e, t) {
-                        $b.triggerEvent($b.EVENT_NEW_WIDGET_START_DRAGGING, null, e, t);
+                        self.$b.triggerEvent(self.$b.EVENT_NEW_WIDGET_START_DRAGGING, null, e, t);
                     },
                     drag: function(e, t) {
-                        $b.triggerEvent($b.EVENT_NEW_WIDGET_DRAGGING, null, e, t);
+                        self.$b.triggerEvent(self.$b.EVENT_NEW_WIDGET_DRAGGING, null, e, t);
                     },
                     stop: function(e, t) {
-                        $b.triggerEvent($b.EVENT_NEW_WIDGET_STOP_DRAGGING, null, e, t);
+                        self.$b.triggerEvent(self.$b.EVENT_NEW_WIDGET_STOP_DRAGGING, null, e, t);
                     }
                 });
             };
@@ -250,13 +334,13 @@ define(['knockout',
 
             self.tileMaximizedHandler = function() {
                 self.maximized(true);
-                $b.triggerBuilderResizeEvent('tile maximized and completely hide left panel');
+                self.$b.triggerBuilderResizeEvent('tile maximized and completely hide left panel');
             };
 
             self.tileRestoredHandler = function() {
                 self.maximized(false);
                 self.initDraggable();
-                $b.triggerBuilderResizeEvent('hide left panel because restore');
+                self.$b.triggerBuilderResizeEvent('hide left panel because restore');
             };
             
 //            self.tileAddedHandler = function(tile) {
@@ -282,7 +366,7 @@ define(['knockout',
                     attributeFilter: ['style']
                 });
             } else {
-                $b.addBuilderResizeListener(function () {
+                self.$b.addBuilderResizeListener(function () {
                     widgetListHeight($(".dbd-left-panel-widgets").height());
                 });
             }
@@ -330,7 +414,7 @@ define(['knockout',
                 } 
                 wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
                 url && wgt.WIDGET_VISUAL(url);
-                !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('@version@/images/sample-widget-histogram.png'));
+                !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('@version@/images/no-image-available.png'));
 
                 //resize widget screenshot according to aspect ratio
                 dfu.getScreenshotSizePerRatio(120, 120, wgt.WIDGET_VISUAL(), function(imgWidth, imgHeight) {
@@ -349,11 +433,11 @@ define(['knockout',
                     headers: dfu.getSavedSearchRequestHeader(),
                     success: function(data) {
                         data && (wgt.WIDGET_VISUAL(data.screenShot));
-                        !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('@version@/images/sample-widget-histogram.png'));
+                        !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('@version@/images/no-image-available.png'));
                     },
                     error: function() {
                         oj.Logger.error('Error to get widget screen shot for widget with unique id: ' + wgt.WIDGET_UNIQUE_ID);
-                        !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('@version@/images/sample-widget-histogram.png'));
+                        !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('@version@/images/no-image-available.png'));
                     },
                     async: true
                 });
@@ -389,15 +473,16 @@ define(['knockout',
             };
             
             self.toggleLeftPanel = function() {
-                if (!self.completelyHidden()) {
-                    self.completelyHidden(true);
-                    $b.triggerBuilderResizeEvent('hide left panel');
-                } 
-                else {
+                if (!self.showRightPanel()) {
+                    self.showRightPanel(true);
+                    $(".dashboard-picker-container:visible").addClass("df-collaps");
+                    self.$b.triggerBuilderResizeEvent('show right panel');
+                } else {
                     self.expandDBEditor(true);
-                    self.completelyHidden(false);
+                    self.showRightPanel(false);
                     self.initDraggable();
-                    $b.triggerBuilderResizeEvent('show left panel');
+                    $(".dashboard-picker-container:visible").removeClass("df-collaps");
+                    self.$b.triggerBuilderResizeEvent('hide right panel');
                 }
             };
 
@@ -408,13 +493,13 @@ define(['knockout',
                     self.getWidgetScreenshot(widget);
                 var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
                 var popupContent=$(widgetItem).find('.dbd-left-panel-img-pop');
-                $b.findEl(".dbd-right-panel-build-container i.fa-plus").hide();
+                $(".dbd-right-panel-build-container i.fa-plus").hide();
                 $(".dbd-left-panel-img-pop").ojPopup("close");
                 $(widgetItem).find('i').show();
                 if (!popupContent.ojPopup("isOpen")) {
                    $(popupContent).ojPopup("open", $(widgetItem), 
                    {
-                       my : "end center", at : "start center"
+                       my : "right bottom", at : "start center"
                    });
                 }
             };
@@ -429,7 +514,7 @@ define(['knockout',
             
             self.widgetKeyPress = function(widget, event) {
                 if (event.keyCode === 13) {
-                   tilesViewModel.appendNewTile(widget.WIDGET_NAME(), "", 4, 2, ko.toJS(widget));
+                   self.tilesViewModel.appendNewTile(widget.WIDGET_NAME(), "", 4, 2, ko.toJS(widget));
                 }
             };
             
@@ -438,27 +523,27 @@ define(['knockout',
             };
             
             self.widgetPlusClicked = function(widget, event) {
-                tilesViewModel.appendNewTile(widget.WIDGET_NAME(), "", 4, 2, ko.toJS(widget));
+                self.tilesViewModel.appendNewTile(widget.WIDGET_NAME(), "", 4, 2, ko.toJS(widget));
             };
             
             self.widgetShowPlusIcon = function(widget, event) {
-                $b.findEl(".dbd-right-panel-build-container i.fa-plus").hide();
+                $(".dbd-right-panel-build-container i.fa-plus").hide();
                 $(".dbd-left-panel-img-pop").ojPopup("close");
                 var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
                 $(widgetItem).find('i').show();
                 self.widgetMouseOverHandler(widget,event);
             };
-            
-            self.widgetHidePlusIcon = function(widget, event) {
-                var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
+
+            self.widgetHidePlusIcon = function (widget, event) {
+                var widgetItem = $(event.currentTarget).closest('.widget-item-' + widget.WIDGET_UNIQUE_ID());
                 $(widgetItem).find('i').hide();
             };
             
             self.containerMouseOverHandler = function() {
                 if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
                     return;
-                if (!$b.findEl('.right-container-pop').ojPopup("isOpen")) {
-                   $b.findEl('.right-container-pop').ojPopup("open", $b.findEl('.dbd-left-panel-footer-contain'), 
+                if (!$('.right-container-pop').ojPopup("isOpen")) {
+                   $('.right-container-pop').ojPopup("open", $('.dbd-left-panel-footer-contain'),
                    {
                        my : "end bottom", at : "start-25 bottom"
                    });
@@ -466,8 +551,8 @@ define(['knockout',
             };
 
             self.containerMouseOutHandler = function() {
-                if ($b.findEl('.right-container-pop').ojPopup("isOpen")) {
-                    $b.findEl('.right-container-pop').ojPopup("close");
+                if ($('.right-container-pop').ojPopup("isOpen")) {
+                    $('.right-container-pop').ojPopup("close");
                 }
             };
 
@@ -539,7 +624,7 @@ define(['knockout',
             self.timeConverter = oj.Validation.converterFactory("dateTime").createConverter({formatType: "time", timeFormat: "short"});
             self.today = "Today";
             self.yesterday = "Yesterday";
-            
+
             self.adjustDateMoreFriendly = function(date) {
                 var today = oj.IntlConverterUtils.dateToLocalIso(new Date()).slice(0, 10);
                 var yesterday = oj.IntlConverterUtils.dateToLocalIso(new Date(new Date()-24*60*60*1000)).slice(0, 10);
@@ -551,13 +636,13 @@ define(['knockout',
                     return self.dateConverter.format(date);
                 }
             };
-            
+
             self.getGMTTimezone = function(date) {
                 var timezoneOffset = date.getTimezoneOffset()/60;
                 timezoneOffset = timezoneOffset>0 ? ("GMT-"+timezoneOffset) : ("GMT+"+Math.abs(timezoneOffset));
                 return timezoneOffset;
             }
-                
+
             self.getTimeInfo = function(startTimeStamp, endTimeStamp) {
                 var startISO = oj.IntlConverterUtils.dateToLocalIso(new Date(startTimeStamp));
                 var endISO = oj.IntlConverterUtils.dateToLocalIso(new Date(endTimeStamp));
@@ -565,7 +650,7 @@ define(['knockout',
                 var endDate = endISO.slice(0, 10);
                 var startTime = startISO.slice(10, 16);
                 var endTime = endISO.slice(10, 16);
-                
+
                 var dateTimeInfo;
                 var start = self.adjustDateMoreFriendly(startDate);
                 var end = self.adjustDateMoreFriendly(endDate);
@@ -573,10 +658,10 @@ define(['knockout',
                 if(start === end) {
                     end = "";
                 }
-                    
+
                 start = start + " " + self.timeConverter.format(startTime);
                 end = end + " " + self.timeConverter.format(endTime);
-                        
+
                 //add timezone for time ranges less than 1 day if the start&end time are in different timezone due to daylight saving time.
                 var tmpStart = oj.IntlConverterUtils.isoToLocalDate(startDate+startTime);
                 var tmpEnd = oj.IntlConverterUtils.isoToLocalDate(endDate+endTime);
@@ -584,26 +669,26 @@ define(['knockout',
                     start += " (" + self.getGMTTimezone(tmpStart) + ")";
                     end += " (" + self.getGMTTimezone(tmpEnd) + ")";
                 }
-                    
+
                 dateTimeInfo = start + " - " + end;
                 return dateTimeInfo;
             }
 
-            
+
             self.multiEntityOptions = ko.observableArray([
-                {value: 'allEntities', label: getNlsString('DBS_BUILDER_ALL_ENTITIES')},  
-                {value: 'host', label: getNlsString('DSB_BUILDER_EDIT_ALL_HOSTS')}, 
-                {value: 'usr_host_linux', label: getNlsString('DSB_BUILDER_EDIT_ALL_LINUX')}, 
-                {value: 'usr_host_windows', label: getNlsString('DSB_BUILDER_EDIT_ALL_WINDOWS')}, 
+                {value: 'allEntities', label: getNlsString('DBS_BUILDER_ALL_ENTITIES')},
+                {value: 'host', label: getNlsString('DSB_BUILDER_EDIT_ALL_HOSTS')},
+                {value: 'usr_host_linux', label: getNlsString('DSB_BUILDER_EDIT_ALL_LINUX')},
+                {value: 'usr_host_windows', label: getNlsString('DSB_BUILDER_EDIT_ALL_WINDOWS')},
                 {value: 'oracle_vm_guest', label: getNlsString('DSB_BUILDER_EDIT_ALL_DOCKER')},
                 {value: 'more', label: getNlsString('DSB_BUILDER_EDIT_MORE')}
             ]);
-        
+
             self.singleEntityOptions = ko.observableArray([
                 {value: 'anEntity', label: getNlsString('DSB_BUILDER_EDIT_SELECT_AN_ENTITY')},
                 {value: "anEntity2", label: "Entity Selected (0)"}
             ]);
-            
+
             self.timeRangeOptions = ko.observableArray([
                 {value: 'last15mins', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS')},
                 {value: 'last30mins', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS')},
@@ -619,26 +704,26 @@ define(['knockout',
                 {value: 'latest', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LATEST')},
                 {value: 'custom', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM')}
             ]);
-           
+
             var defaultSettings = {
-                    tsel: 
+                    tsel:
                         {entitySupport: "byCriteria", defaultValue: "allEntities", entityContext: ""},
-                    timeSel: 
+                    timeSel:
                         {defaultValue: "last14days", start: "", end: ""}
             };
             self.extendedOptions = self.dashboard.extendedOptions ? JSON.parse(self.dashboard.extendedOptions()) : defaultSettings;
-            
+
             self.extendedOptions.tsel.entitySupport && $b.getDashboardTilesViewModel().selectionMode(self.extendedOptions.tsel.entitySupport);
-            
+
             self.enableEntityFilter = ko.observable(self.dashboard.enableEntityFilter() === 'TRUE');
             self.enableTimeRangeFilter = ko.observable(self.dashboard.enableTimeRange() === 'TRUE');
-            
+
             self.entitySupport = $b.getDashboardTilesViewModel().selectionMode;
-            
+
             self.defaultEntityValue = ko.observable(self.extendedOptions.tsel.defaultValue);
             self.defaultMultiEntityValue = ko.observable(["allEntities"]);
             self.defaultSingleEntityValue = ko.observable(["anEntity2"]);
-            
+
             self.defaultEntityContext = ko.observable(self.extendedOptions.tsel.entityContext);
             self.defaultSingleEntityContext = ko.observable();
             self.defaultMultiEntitiesContext = ko.observable();
@@ -660,7 +745,7 @@ define(['knockout',
                     self.singleEntityOptions.push({value: "anEntity1", label: "Entity Selected (1)"});
                 }
             }
-            
+
             self.defaultTimeRangeValue = ko.observable([self.extendedOptions.timeSel.defaultValue]);
 
             if(self.defaultTimeRangeValue()[0] === "custom1") {
@@ -668,11 +753,11 @@ define(['knockout',
                 self.defaultEndTime = ko.observable(parseInt(self.extendedOptions.timeSel.end));
                 self.timeRangeOptions.push({value: "custom1", label: self.getTimeInfo(self.defaultStartTime(), self.defaultEndTime())});
             }
-            
+
             self.enableEntityFilter.subscribe(function(val){
                 self.dashboard.enableEntityFilter(val ? 'TRUE' : 'FALSE');
             });
-            
+
             self.entitySupport.subscribe(function(val) {
                 self.extendedOptions.tsel.entitySupport = val;
                 if(val === "byCriteria") {
@@ -682,13 +767,13 @@ define(['knockout',
                     self.extendedOptions.tsel.defaultValue = self.defaultSingleEntityValue()[0];
                     self.extendedOptions.tsel.entityContext = self.defaultSingleEntityContext();
                 }
-                
+
             });
-                    
+
             self.enableTimeRangeFilter.subscribe(function(val){
                 self.dashboard.enableTimeRange(val ? 'TRUE' : 'FALSE');
             });
-            
+
 //            self.filterSettingModified = ko.observable(false);
 //            var filterSettingModified = ko.computed(function(){
 //                return self.entitySupport()+self.enableEntityFilter()+self.enableTimeRangeFilter()+self.defaultEntityValue();
@@ -696,9 +781,9 @@ define(['knockout',
 //            filterSettingModified.subscribe(function(val){
 //                self.filterSettingModified(true);
 //            });
-            
+
             self.returnFromRightDrawerTsel = function(targets) {
-                
+
 //                var pageTselLabel = ko.contextFor($('#tsel_'+self.tilesViewModel.dashboard.id()).children().get(0)).$component.dropdownLabel();
                 if(self.entitySupport() === "single") {
                     self.defaultSingleEntityContext(targets);
@@ -720,13 +805,13 @@ define(['knockout',
                     }
                     self.extendedOptions.tsel.defaultValue = self.defaultMultiEntityValue()[0];
                 }
-                
+
                 self.tilesViewModel.targets(targets);
                 self.defaultEntityContext(targets);
                 self.defaultEntityValue(self.extendedOptions.tsel.defaultValue);
                 self.tilesViewModel.timeSelectorModel.timeRangeChange(true);
             }
-            
+
             self.defaultMultiEntityValueChanged = function(event, data) {
                 if(data.option != "value") {
                     return;
@@ -735,10 +820,10 @@ define(['knockout',
                     self.extendedOptions.tsel.defaultValue = self.defaultMultiEntityValue()[0];
                     return;
                 }
-                
+
                 if(self.defaultMultiEntityValue()[0] === "more") {
-                    self.launchTselFromRightPanel();                    
-                }else if(self.defaultMultiEntityValue()[0] === "allEntities") {                    
+                    self.launchTselFromRightPanel();
+                }else if(self.defaultMultiEntityValue()[0] === "allEntities") {
                     self.tilesViewModel.whichTselLauncher(2);
                     self.tilesViewModel.setAllQuickPickersUnselected();
                     self.tilesViewModel.notifyQuickPickerChange(new Date());
@@ -752,28 +837,28 @@ define(['knockout',
                     self.multiEntityOptions(self.multiEntityOptions.slice(0, 6));
                     self.extendedOptions.tsel.defaultValue = self.defaultMultiEntityValue()[0];
                 }
-                
+
             }
-            
+
             self.defaultSingleEntityValueChanged = function(event, data) {
                 if(data.option != "value") {
                     return;
                 }
-                
+
                 if(self.defaultSingleEntityValue()[0] === "anEntity") {
                     self.launchTselFromRightPanel();
                 }
-                
+
                 self.extendedOptions.tsel.defaultValue = self.defaultSingleEntityValue()[0];
             }
-            
+
             self.defaultEntityContext.subscribe(function(val) {
                 require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
                     var compressedTargets = TargetSelectorUtils.compress(val);
                     self.extendedOptions.tsel.entityContext = compressedTargets;
                 });
             });
-            
+
 //            self.entitySupportChanged = ko.computed(function() {
 //                if(self.entitySupport() === "byCriteria") {
 //                    self.defaultEntityValue("allEntities");
@@ -782,7 +867,7 @@ define(['knockout',
 //                }
 //                return self.entitySupport();
 //            });
-            
+
             self.launchTselFromRightPanel = function() {
                 require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
                         self.tilesViewModel.whichTselLauncher(1);
@@ -794,64 +879,64 @@ define(['knockout',
                         }, 200);
                     });
             }
-            
+
             self.defaultTimeRangeValueChanged = function(evet, data) {
                 if(data.option != "value") {
                     return;
                 }
-                
+
                 if(self.defaultTimeRangeValue()[0] === "custom1") {
                     self.extendedOptions.timeSel.defaultValue = self.defaultTimeRangeValue()[0];
                     return;
                 }
-                
+
                 if(self.defaultTimeRangeValue()[0] === "custom") {
                     self.tilesViewModel.whichTimeSelLauncher(1);
                         var ele = ".builder-main";
                         var position = {"at": "center-170 center", "my": "center center", "collision": "none", "of": ele};
                         var option = {"modality": "modal"};
                         ko.contextFor($("#dtpicker_"+self.dashboard.id()).children().get(0)).$component.launchTimePickerCustom(ele, position, option);
-                        
+
 //                        var ele = "#ojChoiceId_defaultTimeRange_"+self.tilesViewModel.dashboard.id()+"_selected";
 //                        var position = {"at": "left-38 top", "my": "right center", "collision": "none", "of": ele};
 //                        var option = {"tail": "simple"};
 //                        setTimeout(function() {ko.contextFor($("#dtpicker_"+self.dashboard.id()).children().get(0)).$component.launchTimePickerCustom(ele, position, option)}, 200);
                 } else {
                     switch (self.defaultTimeRangeValue()[0]) {
-                        case "last15mins": 
+                        case "last15mins":
                             self.tilesViewModel.timePeriod("Last 15 minutes");
                             break;
-                        case "last30mins": 
+                        case "last30mins":
                             self.tilesViewModel.timePeriod("Last 30 minutes");
                             break;
-                        case "last60mins": 
+                        case "last60mins":
                             self.tilesViewModel.timePeriod("Last 60 minutes");
                             break;
-                        case "last4hours": 
+                        case "last4hours":
                             self.tilesViewModel.timePeriod("Last 4 hours");
                             break;
-                        case "last6hours": 
+                        case "last6hours":
                             self.tilesViewModel.timePeriod("Last 6 hours");
                             break;
-                        case "last1day": 
+                        case "last1day":
                             self.tilesViewModel.timePeriod("Last 1 day");
                             break;
-                        case "last7days": 
+                        case "last7days":
                             self.tilesViewModel.timePeriod("Last 7 days");
                             break;
                         case "last14days":
                             self.tilesViewModel.timePeriod("Last 14 days");
                             break;
-                        case "last30days": 
+                        case "last30days":
                             self.tilesViewModel.timePeriod("Last 30 days");
                             break;
-                        case "last90days": 
+                        case "last90days":
                             self.tilesViewModel.timePeriod("Last 90 days");
                             break;
-                        case "last1year": 
+                        case "last1year":
                             self.tilesViewModel.timePeriod("Last 1 year");
                             break;
-                        case "latest": 
+                        case "latest":
                             self.tilesViewModel.timePeriod("Latest");
                             break;
                     }
@@ -859,10 +944,10 @@ define(['knockout',
                     self.tilesViewModel.timeSelectorModel.timeRangeChange(true);
                     self.extendedOptions.timeSel.defaultValue = self.defaultTimeRangeValue()[0];
                 }
-                
+
                 return self.defaultTimeRangeValue()[0];
             };
-                        
+
 //            self.applyFilterSetting = function(){
 //                //add save filter setting logic here
 //                self.filterSettingModified(false);
@@ -873,9 +958,9 @@ define(['knockout',
                 return self.enableEntityFilter() + self.entitySupport() + self.defaultEntityValue() + self.defaultEntityContext() +
                         self.enableTimeRangeFilter() + self.defaultTimeRangeValue();
             });
-            
+
             self.dsbRtDrFiltersSaveDelay.extend({rateLimit: {method: "notifyWhenChangesStop", timeout: 800}});
-            
+
             self.dsbRtDrFiltersSaveDelay.subscribe(function() {
                 var fieldsToUpdate = {
                     "enableEntityFilter": self.dashboard.enableEntityFilter(),
@@ -884,7 +969,7 @@ define(['knockout',
                 }
                 self.saveDsbFilterSettings(fieldsToUpdate, function() {console.log("***success");}, function() {console.log("***error");});
             });
-            
+
             self.saveDsbFilterSettings = function(fieldsToUpdate, succCallback, errorCallback) {
                 var newDashboardJs = ko.mapping.toJS(self.dashboard, {
                     // TODO make sure the properties that should be included or excluded with Guobao
@@ -903,56 +988,54 @@ define(['knockout',
                         "tileDisplayClass", "widerEnabled", "widget",
                         "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
                 });
-                
+
                 $.extend(newDashboardJs, fieldsToUpdate);
                 Builder.updateDashboard(self.dashboard.id(), JSON.stringify(newDashboardJs), succCallback, errorCallback);
             }
 
-                 
+
             function queryDashboardSetsBySubId(dashboardId,callback){
                 var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
                  dfu.ajaxWithRetry(_url + dashboardId + "/dashboardsets", {
                         type: 'GET',
                         headers: dfu.getDashboardsRequestHeader(), //{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
                         success: function (resp) {
-                           callback(resp);
+                            callback(resp);
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             console.log(errorThrown);
                         }
                     });
-            }
-            
-            self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
-            self.dashboardSharing.subscribe(function(val){
-                if ("notShared" === val) {
-                    queryDashboardSetsBySubId(self.dashboard.id(), function (resp) {
-                        var currentUser = dfu.getUserName();
-                        var setsSharedByOthers = resp.dashboardSets || [];
-                        setsSharedByOthers = setsSharedByOthers.filter(function(dbs){
-                            return dbs.owner !== currentUser;
-                        });
-                        
-                        if (setsSharedByOthers.length > 0) {
-                            window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(setsSharedByOthers);
-                            toolBarModel.openDashboardUnshareConfirmDialog(function(isShared){
-                                if(isShared){
-                                   self.dashboardSharing(true); 
-                                }
-                            });
-                        }else{
-                            toolBarModel.handleShareUnshare(false);
-                        }
-                    });
-                } else {
-                    toolBarModel.handleShareUnshare(true);
                 }
-            });
-            self.defaultAutoRefreshValue = ko.observable("every5minutes");
 
-            if (self.dashboardsetToolBarModel.isDashboardSet()) {
-                
-                
+                self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
+                self.dashboardSharing.subscribe(function(val){
+                    if ("notShared" === val) {
+                        queryDashboardSetsBySubId(self.dashboard.id(), function (resp) {
+                            var currentUser = dfu.getUserName();
+                            var setsSharedByOthers = resp.dashboardSets || [];
+                            setsSharedByOthers = setsSharedByOthers.filter(function(dbs){
+                                return dbs.owner !== currentUser;
+                            });
+
+                            if (setsSharedByOthers.length > 0) {
+                                window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(setsSharedByOthers);
+                                self.toolBarModel.openDashboardUnshareConfirmDialog(function(isShared){
+                                    if(isShared){
+                                        self.dashboardSharing(true);
+                                    }
+                                });
+                            }else{
+                                self.toolBarModel.handleShareUnshare(false);
+                            }
+                        });
+                    } else {
+                        self.toolBarModel.handleShareUnshare(true);
+                    }
+                });
+                self.defaultAutoRefreshValue = ko.observable("every5minutes");
+
+            if (self.isDashboardSet()) {
                 self.dashboardsetName = ko.observable(self.dashboardsetToolBarModel.dashboardsetName());
                 self.dashboardsetDescription = ko.observable(self.dashboardsetToolBarModel.dashboardsetDescription());
                 self.dashboardsetNameInputed = ko.observable(self.dashboardsetName());
@@ -1021,7 +1104,7 @@ define(['knockout',
                 } else {
                     self.editPanelContent("settings");
                 }
-                $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
+                self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
         };
         }
         
