@@ -600,7 +600,8 @@ define(['knockout',
             checkDashboardAsHomeSettings();
             
             self.openDashboardEditDialog = function() {
-                self.rightPanel.editRightpanelLinkage("singleDashboard-edit");
+                var rightPanel = ko.dataFor($('.df-right-panel')[0]);
+                rightPanel && rightPanel.editRightpanelLinkage("singleDashboard-edit");
             };
             self.openDashboardDuplicateDialog = function() {
                 $('#duplicateDsbDialog').ojDialog('open');
