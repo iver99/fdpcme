@@ -333,7 +333,8 @@ public class WelcomeUtil
 	 * @param driver
 	 * @param selection
 	 * 		default | performanceAnayticsDatabase | performanceAnalyticsMiddleware | 
-	 * 		resourceAnalyticsDatabase | resourceAnalyticsMiddleware | dataExplorerAnalyze | dataExplorer
+	 * 		resourceAnalyticsDatabase | resourceAnalyticsMiddleware | resourceAnalyticsHost | 
+	 *  	dataExplorerAnalyze | dataExplorer
 	 * @throws Exception
 	 */
 	public static void visitITA(WebDriver driver, String selection) throws Exception
@@ -342,7 +343,7 @@ public class WelcomeUtil
 
 		Validator.fromValidValues("ITASelection", selection, ITA_DEFAULT, ITA_PERFORMANCE_ANALYTICS_DATABASE,
 				ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE, ITA_RESOURCE_ANALYTICS_DATABASE, ITA_RESOURCE_ANALYTICS_MIDDLEWARE,
-				ITA_DATA_EXPLORER_ANALYZE, ITA_DATA_EXPLORER);
+				ITA_RESOURCE_ANALYTICS_HOST, ITA_DATA_EXPLORER_ANALYZE, ITA_DATA_EXPLORER);
 
 
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -373,6 +374,10 @@ public class WelcomeUtil
 				case ITA_RESOURCE_ANALYTICS_MIDDLEWARE:
 					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
 							DashBoardPageId.Welcome_ITA_RAMiddleware);
+					break;
+				case ITA_RESOURCE_ANALYTICS_HOST:
+					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
+							DashBoardPageId.Welcome_ITA_RA_Host);
 					break;
 				case ITA_DATA_EXPLORER_ANALYZE:
 					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
@@ -413,6 +418,7 @@ public class WelcomeUtil
 	public static final String ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE = "performanceAnalyticsMiddleware";
 	public static final String ITA_RESOURCE_ANALYTICS_DATABASE = "resourceAnalyticsDatabase";
 	public static final String ITA_RESOURCE_ANALYTICS_MIDDLEWARE = "resourceAnalyticsMiddleware";
+	public static final String ITA_RESOURCE_ANALYTICS_HOST = "resourceAnalyticsHost";
 	public static final String ITA_DATA_EXPLORER_ANALYZE = "dataExplorerAnalyze";
 	public static final String ITA_DATA_EXPLORER = "dataExplorer";
 

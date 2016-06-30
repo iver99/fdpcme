@@ -673,7 +673,7 @@ define(['knockout',
                         cell.column = self.editor.mode.MODE_MAX_COLUMNS-width;
                     }
                     if (!tile) {
-                        tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targets, false, dashboardInst);
+                        tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targets, true, dashboardInst);
                         u.helper.tile = tile;
                         self.editor.tiles.push(tile);
                         $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
@@ -745,8 +745,7 @@ define(['knockout',
                 self.editor.draggingTile = null;
                 u.helper.tile = null;
                 self.previousDragCell = null;
-                tile && tile.WIDGET_SUPPORT_TIME_CONTROL && self.triggerTileTimeControlSupportEvent(tile.WIDGET_SUPPORT_TIME_CONTROL()?true:null);                
-                setTimeout(function() {Builder.initializeTileAfterLoad(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targets, true, dashboardInst)}, 500);
+                tile && tile.WIDGET_SUPPORT_TIME_CONTROL && self.triggerTileTimeControlSupportEvent(tile.WIDGET_SUPPORT_TIME_CONTROL()?true:null);
             };
             
 //            self.onNewTextDragging = function(e, u) {

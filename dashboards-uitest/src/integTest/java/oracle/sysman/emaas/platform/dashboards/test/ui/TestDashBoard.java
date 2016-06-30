@@ -40,6 +40,7 @@ public class TestDashBoard extends LoginAndLogout
 	private String dbName_setHome = "";
 	private String dbName_favorite = "";
 	private String dbName_timepicker = "";
+	private String dbName_columncheck = "";
 
 	public void initTest(String testName) throws Exception
 	{
@@ -90,7 +91,34 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("verify if the dashboard has been deleted");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, "Test_Dashboard_duplicate"), "Dashboard NOT removed");
 
+		webd.getLogger().info("Delete dashboard: " + dbName_columncheck);
+		DashboardHomeUtil.search(webd, dbName_columncheck);
+		if (DashboardHomeUtil.isDashboardExisted(webd, dbName_columncheck)) {
+			DashboardHomeUtil.deleteDashboard(webd, dbName_columncheck, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+		}
+		webd.getLogger().info("verify if the dashboard has been deleted");
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_columncheck), "Dashboard NOT removed");
+
 		webd.getLogger().info("all dashboards have been deleted");
+	}
+
+	//@Test(dependsOnMethods = { "testCreateDashboard_noWidget_ListView" })
+	public void Test_targetselector() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test sort by dashboards  in list view");
+
+		//search the dashboard
+		webd.getLogger().info("search the dashboard");
+		DashboardHomeUtil.search(webd, "noWidgetListView");
+
+		//open the dashboard in builder page
+		webd.getLogger().info("open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "noWidgetListView");
+
+		//edit the dashboard in Target selector page
+		DashboardBuilderUtil.EditDashboard_targetselctor(webd, "noWidgetListView", "noWidgetListView desc2");
+
 	}
 
 	@Test
@@ -249,8 +277,8 @@ public class TestDashBoard extends LoginAndLogout
 	@Test
 	public void testDashboardWith12Columns() throws Exception
 	{
-		String name = "DashboardWith12Columns" + generateTimeStamp();
-		String desc = "Description for " + name;
+		dbName_columncheck = "DashboardWith12Columns" + generateTimeStamp();
+		String desc = "Description for " + dbName_columncheck;
 
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test in testDashboardWith12Columns");
@@ -261,11 +289,11 @@ public class TestDashBoard extends LoginAndLogout
 
 		//create dashboard
 		webd.getLogger().info("Start to create dashboard");
-		DashboardHomeUtil.createDashboard(webd, name, desc, DashboardHomeUtil.DASHBOARD);
+		DashboardHomeUtil.createDashboard(webd, dbName_columncheck, desc, DashboardHomeUtil.DASHBOARD);
 
 		//verify dashboard in builder page
 		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, name, desc, true),
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_columncheck, desc, true),
 				"Failed to verify the created dashboard. Probably the creation failed, or name/description is wrongly specified!");
 
 		String widgetName = "Database Errors Trend";
