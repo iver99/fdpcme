@@ -917,6 +917,22 @@ define(['knockout',
                 }
             };
             
+            self.initUserFilterOptions = function() {
+                Builder.fetchDashboardOptions(
+                    self.dashboard.id(),
+                    function (data) {
+                        //sucessfully get extended options for page filters
+                        self.userExtendedOptions = data["extendedOptions"] ? JSON.parse(data["extendedOptions"]) : null;                        
+                    },
+                    function (jqXHR, textStatus, errorThrown) {
+                        if(jqXHR.status === 404){
+                            self.userExtendedOptions = {};
+                        }
+                    });
+            }
+            
+            self.initUserFilterOptions();
+            self.dashboardExtendedOptions = self.dashboard.etendedOptions ? JSON.parse(self.dashboard.extendedOptions()) : null;
 
             self.returnFromPageTsel = function(targets) {
                 self.targets(targets);
@@ -937,7 +953,7 @@ define(['knockout',
             };
             
             self.whichTselLauncher = ko.observable(0); //0 for page, 1 for right drawer->more, 2 for right drawer->quick pickers
-            self.selectionMode = ko.observable("byCriteria");
+            self.selectionMode = ko.observable("byCriteria");            
             self.returnMode = ko.observable('criteria');
             self.dropdownInitialLabel = ko.observable(getNlsString("DBS_BUILDER_ALL_ENTITIES"));
             self.dropdownResultLabel = ko.observable(getNlsString("DBS_BUILDER_ENTITIES_SELECTED"));
@@ -976,7 +992,7 @@ define(['knockout',
                         "selected": false
                     }          
             ]);
-                
+                            
             self.setAllQuickPickersUnselected = function() {
                 for(var i=0; i<self.quickPickers().length; i++) {
                     self.quickPickers()[i].selected = false;
@@ -1030,6 +1046,26 @@ define(['knockout',
                 }
             }
             
+            var compressedTargets;
+            //set initial targets selector options. priority: user extendedOptions > dashboard extendedOptions
+            //1. set selectionMode: byCriteria/single. Default is "byCriteria"
+            if(self.dashboardExtendedOptions && self.dashboardExtendedOptions.tsel) {
+                self.selectionMode(self.dashboardExtendedOptions.tsel.entitySupport);
+            }
+            //2. set quickPicker and selected targets/entityContext
+            if(self.userExtendedOptions && self.userExtendedOptions.tsel) {
+                self.setQuickPickerSelected(self.userExtendedOptions.tsel.quickPick);
+                compressedTargets = self.userExtendedOptions.tsel.entityContext;
+            }else if(self.dashboardExtendedOptions && self.dashboardExtendedOptions.tsel) {
+                self.setQuickPickerSelected(self.dashboardExtendedOptions.tsel.defaultValue);
+                compressedTargets = self.dashboardExtendedOptions.tsel.entityContext;
+            }
+            
+            require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
+                    var targets = TargetSelectorUtils.decompress(compressedTargets);
+                    self.targets(targets);
+                });
+            
             var timeSelectorChangelistener = ko.computed(function(){
                 return {
                     timeRangeChange:self.timeSelectorModel.timeRangeChange()
@@ -1045,11 +1081,28 @@ define(['knockout',
             });
 
             var current = new Date();
-            var initStart = dfu_model.getUrlParam("startTime") ? new Date(parseInt(dfu_model.getUrlParam("startTime"))) : new Date(current - 24*60*60*1000);
-            var initEnd = dfu_model.getUrlParam("endTime") ? new Date(parseInt(dfu_model.getUrlParam("endTime"))) : current;
+            var initStart = dfu_model.getUrlParam("startTime") ? new Date(parseInt(dfu_model.getUrlParam("startTime"))) : null;
+            var initEnd = dfu_model.getUrlParam("endTime") ? new Date(parseInt(dfu_model.getUrlParam("endTime"))) : null;
+            self.timePeriod = ko.observable("custom");
+            //initialize time selector. priority: time in url > time in user extendedOptions > time in dashboard extendedOptions > default time
+            if(initStart === null || initEnd === null) {
+                if(self.userExtendedOptions && self.userExtendedOptions.timeSel) {
+                    initStart = new Date(parseInt(self.userExtendedOptions.timeSel.start));
+                    initEnd = new Date(parseInt(self.userExtendedOptions.timeSel.end));
+                    self.timePeriod(self.userExtendedOptions.timeSel.timePeriod);
+                }else if(self.dashboardExtendedOptions && self.dashboardExtendedOptions.timeSel) {
+                    initStart = new Date(parseInt(self.dashboardExtendedOptions.timeSel.start));
+                    initEnd = new Date(parseInt(self.dashboardExtendedOptions.timeSel.end));
+                    self.timePeriod((self.dashboardUserExtendedOptions.defaultValue === "custom1") ? "custom" : self.dashboardUserExtendedOptions.defaultValue);
+                }else {
+                    initStart = new Date(current - 14*24*60*60*1000);
+                    initEnd = current;
+                    self.timePeriod("Last 14 days");
+                }
+            }
+            
             self.timeSelectorModel.viewStart(initStart);
             self.timeSelectorModel.viewEnd(initEnd);
-            self.timePeriod = ko.observable("Last 14 days");
             self.datetimePickerParams = {
                 startDateTime: initStart,
                 endDateTime: initEnd,

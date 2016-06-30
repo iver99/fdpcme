@@ -361,7 +361,8 @@ define(['knockout',
                 error: function(jqXHR, textStatus, errorThrown) {
                     if (errorCallBack)
                         errorCallBack(jqXHR, textStatus, errorThrown);
-                }
+                },
+                async: false
             });
         }
         

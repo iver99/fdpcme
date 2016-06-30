@@ -60,7 +60,7 @@ define(['knockout',
             self.disableSave = ko.observable(false);
 
             self.hasUserOptionInDB = ko.observable(false);
-            self.extendedOptions = {};
+            self.extendedOptions = self.tilesViewModel.userExtendedOptions;
             if(dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)){
                 self.autoRefreshInterval = dashboardSetOptions.autoRefreshInterval;
             }else {
