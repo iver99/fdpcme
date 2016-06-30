@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.UUID;
 import java.util.Vector;
 
 import javax.servlet.Filter;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -142,7 +144,7 @@ public class DashboardsCORSFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-	ServletException
+			ServletException
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
@@ -156,6 +158,20 @@ public class DashboardsCORSFilter implements Filter
 			sb.append("[" + key + " : " + value + "]");
 		}
 		logger.error("Headers: " + sb.toString());
+
+		ZDTContext.clear();
+		String requestIdHeader = hReq.getHeader("X-ORCL-OMC-APIGW-REQGUID");
+		String requestTimeHeader = hReq.getHeader("X-ORCL-OMC-APIGW-REQTIME");
+		if (requestIdHeader != null) {
+			logger.debug("X-ORCL-OMC-APIGW-REQGUID : " + requestIdHeader);
+			UUID uuid = UUID.fromString(requestIdHeader);
+			ZDTContext.setRequestId(uuid);
+		}
+		if (requestTimeHeader != null) {
+			logger.debug("X-ORCL-OMC-APIGW-REQTIME : " + requestTimeHeader);
+			Long time = Long.valueOf(requestTimeHeader);
+			ZDTContext.setRequestTime(time);
+		}
 
 		// Only add CORS headers if the developer mode is enabled to add them
 		if (!new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists()) {
