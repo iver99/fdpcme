@@ -1,8 +1,3 @@
-Rem
-Rem    MODIFIED   (MM/DD/YY)
-Rem    ADUAN      6/13/2016 - Created
-Rem
-
 DEFINE TENANT_ID = '&1'
 
 REM --update OOB data

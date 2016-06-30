@@ -99,6 +99,20 @@ public class TestWelcomePage extends LoginAndLogout
 	//	}
 
 
+//	@Test
+//	public void testOpenInfraMonitoring() throws Exception
+//	{
+//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+//		webd.getLogger().info("Start to test open Infrastructure Monitoring in welcome page...");
+//		
+//		BrandingBarUtil.visitWelcome(webd);
+//		WelcomeUtil.visitInfraMonitoring(webd);
+//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+//		webd.getLogger().info("Open Infrastructure Monitoring by url: " + tmpUrl);
+//		urlVerification(tmpUrl, "monitoringservicesui/cms/index.html");
+//		webd.getLogger().info("Test open Infrastructure Monitoring in welcome page finished!!!");
+//	}
+	
 	@Test
 	public void testOpenITA_DEPage() throws Exception
 	{
@@ -154,6 +168,20 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Open ITA: Resource Analytics-Database by url: " + tmpUrl);
 		urlVerification(tmpUrl, "emcitas/db-analytics-war/html/db-analytics-resource-planner.html");
 		webd.getLogger().info("Test opening ITA: Resource Analytics-Database in welcome page finished!!!");
+	}
+	
+	@Test
+	public void testOpenITA_RAHostPage() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA: Resource Analytics-Host in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "resourceAnalyticsHost");
+		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("Open ITA: Resource Analytics-Host by url: " + tmpUrl);
+		urlVerification(tmpUrl, "emcitas/resource-analytics/html/server-resource-analytics.html");
+		webd.getLogger().info("Test opening ITA: Resource Analytics-Host in welcome page finished!!!");
 	}
 
 	@Test

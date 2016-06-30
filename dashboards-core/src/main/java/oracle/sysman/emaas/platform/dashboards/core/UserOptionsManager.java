@@ -31,6 +31,7 @@ public class UserOptionsManager {
     private static final Logger logger = LogManager.getLogger(UserOptionsManager.class);
 
     private static final UserOptionsManager instance = new UserOptionsManager();
+    public static final Long DEFAULT_REFRESH_INTERVAL = 300000L;
 
     public static UserOptionsManager getInstance() {
         return instance;

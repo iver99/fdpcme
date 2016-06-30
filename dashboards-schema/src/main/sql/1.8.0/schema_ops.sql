@@ -1,5 +1,5 @@
 Rem ----------------------------------------------------------------
-Rem 6/13/2016	aduan	Created file
+Rem 5/27/2016	jishshi	Created file
 Rem Extract unique teant IDs from tables EMS_DASHBOARD & append that ID next to upgrade implementation file & run that file
 Rem ----------------------------------------------------------------
 
@@ -17,4 +17,3 @@ SET FEEDBACK ON
 WHENEVER SQLERROR EXIT ROLLBACK
 
 @&EMSAAS_SQL_ROOT/1.8.0/upgrade_impl_dml_tmp.sql
-

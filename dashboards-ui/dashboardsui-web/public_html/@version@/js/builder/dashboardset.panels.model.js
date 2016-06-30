@@ -126,7 +126,7 @@ define([
                     
                     var $b = new Builder.DashboardBuilder(dashboard, $dashboardEl);
                     var tilesView = new Builder.DashboardTilesView($b);
-                    var tilesViewModel = new Builder.DashboardTilesViewModel($b/*, tilesView, urlChangeView*/);
+                    var tilesViewModel = new Builder.DashboardTilesViewModel($b, dashboardsetToolBarModel.dashboardInst/*, tilesView, urlChangeView*/);
                     var toolBarModel = new Builder.ToolBarModel($b, options);
 
                     //change dashboard name
@@ -151,7 +151,7 @@ define([
                             if (tile.type() === "TEXT_WIDGET") {
                                 Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.editor.tiles.deleteTile, Builder.isContentLengthValid);
                             } else {
-                                Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, true);
+                                Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, true, dashboardsetToolBarModel.dashboardInst);
                             }
                         }
                     }

@@ -163,6 +163,7 @@ require(['knockout',
                 var appIdDashboard = "Dashboard";
                 var appIdTenantManagement = "TenantManagement";
                 var appIdError = "Error";
+                var appIdMonitoring = "Monitoring";
                 var appMap = {};
                 appMap[appIdAPM] = {
                     "providerName": null,
@@ -187,7 +188,11 @@ require(['knockout',
                 appMap[appIdError] = {
                     "providerName": null,
                     "providerVersion": null
-                };    
+                };  
+                appMap[appIdMonitoring] = {
+                    "providerName": null,
+                    "providerVersion": null
+                };
                 
                 self.addSelectedWidgetToDashboard = function(widget) {
                     widgetArray.push(widget);
