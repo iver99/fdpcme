@@ -118,7 +118,7 @@ define([
                         });
                         
                         if (!hasDuplicatedDashboard) {
-                            dashboardsetToolBarModel.pickDashboard(guid, {
+                            dashboardsetToolBarModel.pickDashboard(selectedDashboardInst().guid, {
                                 id: ko.observable(dataId),
                                 name: ko.observable(dataName)
                             });
@@ -134,7 +134,8 @@ define([
                 };
 
                 var dashboardInst = {
-                    type: "new"
+                    type: "new",
+                    guid:guid
                 };
                 dashboardInstMap[guid] = dashboardInst;
                 self.selectedDashboardInst(dashboardInst);
