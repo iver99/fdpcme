@@ -225,6 +225,7 @@ define(['knockout',
                             var selectedTab = $('#dashboardTab-'+removeId);
                             $('#delete-dashboard').ojDialog( "close" );
                             selectedDashboardInst().dashboardsetToolBar.removeDashboardInSet(removeId,selectedTab,event,true);
+                            $("#dbd-tabs-container").ojTabs("refresh"); 
                         } else {
                             window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
                         }
