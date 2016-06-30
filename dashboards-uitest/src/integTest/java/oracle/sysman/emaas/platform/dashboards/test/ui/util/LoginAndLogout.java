@@ -5,22 +5,11 @@ import oracle.sysman.emsaas.login.PageUtils;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterTest;
 
 public class LoginAndLogout
 {
 	public static WebDriver webd = null;
-
-	@AfterClass
-	public static void logout()
-	{
-		if (webd != null) {
-			webd.shutdownBrowser(true);
-
-		}
-	}
 
 	@AfterMethod
 	public static void logout_method()
@@ -29,15 +18,6 @@ public class LoginAndLogout
 			LoginUtils.doLogout(webd);
 			webd.shutdownBrowser(true);
 
-		}
-	}
-
-	@AfterTest
-	public static void testblockLogout()
-	{
-		if (webd != null) {
-			LoginUtils.doLogout(webd);
-			webd.shutdownBrowser(true);
 		}
 	}
 
@@ -105,12 +85,8 @@ public class LoginAndLogout
 		webd.getLogger().info("after::start to test in LoginAndOut");
 		// if the ui have been login, do not login ,again
 		if (!webd.getWebDriver().getCurrentUrl().equals(url)) {
-			try {
-				LoginUtils.doLogin(webd, username, password, tenantId, url);
-			}
-			catch (Exception e) {
-				webd.getLogger().info("LogUtils is null");
-			}
+
+			LoginUtils.doLogin(webd, username, password, tenantId, url);
 		}
 	}
 
