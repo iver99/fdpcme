@@ -759,13 +759,12 @@ define(['knockout',
                 if(self.dashboardInstMap[removeId].type === 'new' && self.dashboardsetItems.length > 0){
                     self.noDashboardHome(true);
                 }
-            }
+            };
                                            
             $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
                 var removeDashboardId = Number(ui.tab.attr('id').split(/dashboardTab-/)[1]) || (ui.tab.attr('id').split(/dashboardTab-/)[1]);
-                var selectedItem = ui.tab;
-                
-                self.removeDashboardInSet(removeDashboardId,selectedItem,event,false)
+                var selectedItem = ui.tab;              
+                self.removeDashboardInSet(removeDashboardId,selectedItem,event,false);
             } );
                         
             $("#dbd-tabs-container").on("ojdeselect", function (event, ui) {

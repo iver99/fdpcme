@@ -26,22 +26,34 @@ define(['knockout',
                 self.rebuildElementSet(),
                 self.$list.each(function() {
                     var elem = $(this)
+                    ,_topHeight = topHeight
                     , v_siblings = elem.siblings(".fit-size-vertical-sibling:visible")
                     , h = 52;
-                    if(v_siblings && 1 === v_siblings.length && v_siblings.attr("class").indexOf("dbd-right-panel-title")>-1){
+                    if(v_siblings && 1 === v_siblings.length && v_siblings.hasClass("dbd-right-panel-title")){
                         h = 0;
+                    }
+                    if($(".builder-dbd-select-tip").outerHeight()>0){
+                        _topHeight = _topHeight-2-$(".builder-dbd-select-tip").height();
                     }
                     if (v_siblings && v_siblings.length > 0) {
                         for (var i = 0; i < v_siblings.length; i++) {
                             h += $(v_siblings[i]).outerHeight();
                         }
-                        elem.height(height - topHeight - h);
+                        elem.height(height - _topHeight - h);
+                    }
+                    if(elem.hasClass("dbd-left-panel")||elem.hasClass("right-panel-toggler")){
+                        var _top = elem.css("top");
+                        if(ko.dataFor($('.df-right-panel')[0]).isDashboardSet()){
+                            elem.css("top",_topHeight-99);
+                        }else{
+                            elem.css("top",_topHeight-91);
+                        }
                     }
                 });
             };
             
             self.rebuildElementSet = function() {
-                self.$list = $([].concat.apply($b.findEl(".fit-size"),$(".dbd-left-panel .fit-size")));
+                self.$list = $([].concat.apply($b.findEl(".fit-size"),$(".df-right-panel .fit-size")));
             };
             
             self.initialize();

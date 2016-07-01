@@ -74,7 +74,7 @@ define([
                             var $target = $('#dashboard-' + dashboardsetToolBarModel.selectedDashboardItem().dashboardId);
                             homeScrollbarReset($target);
                         }, 2000);
-                            var $b = new Builder.DashboardBuilder(dashboardsetToolBarModel.dashboardInst, $('body'));
+                            var $b = new Builder.DashboardBuilder(dashboardsetToolBarModel.dashboardInst, $($("#dashboard-content-template").text()));
                             self.loadRightPanelModel(null,null,$b);
                     } else {
                         self.loadDashboard(dashboardId);
@@ -118,7 +118,7 @@ define([
                         });
                         
                         if (!hasDuplicatedDashboard) {
-                            dashboardsetToolBarModel.pickDashboard(guid, {
+                            dashboardsetToolBarModel.pickDashboard(selectedDashboardInst().guid, {
                                 id: ko.observable(dataId),
                                 name: ko.observable(dataName)
                             });
@@ -134,7 +134,8 @@ define([
                 };
 
                 var dashboardInst = {
-                    type: "new"
+                    type: "new",
+                    guid:guid
                 };
                 dashboardInstMap[guid] = dashboardInst;
                 self.selectedDashboardInst(dashboardInst);

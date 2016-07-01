@@ -715,7 +715,7 @@
             </div>
 
             <div class="df-right-panel no-print" data-bind="style:{top:isDashboardSet() ?'100px':'91px'},visible:!completelyHidden()">
-                <div class="right-panel-toggler no-print" data-bind="
+                <div class="right-panel-toggler no-print fit-size" data-bind="
                         visible:showRightPanelToggler,
                         style: {
                                  right: showRightPanel() ?
@@ -761,7 +761,7 @@
                     </button>
             </div>
 
-                <div class="dbd-left-panel no-print"
+                <div class="dbd-left-panel no-print fit-size"
                         data-bind="css: {'dbd-left-panel-show' : showRightPanel(), 'dbd-left-panel-hide' : !showRightPanel()},
                                    style: {right: $root.scrollbarWidth + 'px'}">
                     <div class="dbd-right-panel-contents">
@@ -826,11 +826,11 @@
                                                     <div data-bind="ojComponent: {component: 'ojRadioset', value: dashboardsetShare}" >
                                                         <span class="oj-choice-row">
                                                             <input id="dashboardSetSharingNotShared" type="radio" name="dashboardSetSharing" value="off">
-                                                            <label for="dashboardSharingNotShared" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING_NOT_SHARED')"></label>
+                                                            <label for="dashboardSetSharingNotShared" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING_NOT_SHARED')"></label>
                                                         </span>
                                                         <span class="oj-choice-row">
                                                             <input id="dashboardSetSharingShared" type="radio" name="dashboardSetSharing" value="on">
-                                                            <label for="dashboardSharingShared" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING_SHARED')"></label>
+                                                            <label for="dashboardSetSharingShared" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING_SHARED')"></label>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -1048,6 +1048,7 @@
                                     </div>
                                 </div>
                                 <hr/>
+                                <!-- ko ifnot:isDashboardSet -->
                                 <div class="dbd-right-panel-editdashboard-share" data-bind="ojComponent: {component: 'ojCollapsible'}">
                                     <span class="dbd-right-panel-editdashboard-innertitle" data-bind="text: getNlsString('COMMON_TEXT_SHARE')"></span>
                                     <div class="share-settings oj-form-layout">
@@ -1093,6 +1094,7 @@
                                     </div>
                                 </div>
                                 <hr/>
+                                <!-- /ko -->
                                 <div>
                                     <button class="dbd-delete-single-dashboard" data-bind="click: deleteDashboardClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_DELETE_TITLE') }"></button>
                                 </div>

@@ -215,8 +215,9 @@ require(['knockout',
                 if (self.headerHeight === height)
                     return;
                 var $visibleHeaderBar = $(".dashboard-content:visible .head-bar-container");
-                if ($visibleHeaderBar.length > 0) {
-                    var $b = ko.dataFor($visibleHeaderBar[0]) && ko.dataFor($visibleHeaderBar[0]).$b;
+                var $visibleRightDrawer = $(".dbd-left-panel:visible");
+                if ($visibleHeaderBar.length > 0||$visibleRightDrawer.length > 0) {
+                    var $b = (ko.dataFor($visibleHeaderBar[0]) && ko.dataFor($visibleHeaderBar[0]).$b) || (ko.dataFor($visibleRightDrawer[0]) && ko.dataFor($visibleRightDrawer[0]).$b);
                     $b && $b.triggerBuilderResizeEvent('header wrapper bar height changed');
                 }
                 self.headerHeight = height;
