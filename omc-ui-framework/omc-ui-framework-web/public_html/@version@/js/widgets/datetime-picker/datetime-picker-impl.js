@@ -46,7 +46,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 var self = this;
                 var msgUtil = new msgUtilModel();
                 console.log("Initialize date time picker! The params are: ");
-                console.log(params);
+                console.log(ko.mapping.toJS(params));
                 
                 var start, end;
                 var timeDiff, dateTimeDiff;
@@ -57,6 +57,11 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.randomId = params.appId;
                 }else {
                     self.randomId = new Date().getTime(); 
+                }
+                
+                self.changeLabel = ko.observable(true);
+                if(params.changeLabel) {
+                    self.changeLabel = params.changeLabel;
                 }
                 
                 self.postbox = new ko.subscribable();
@@ -730,6 +735,10 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 
                 if (params.callbackAfterApply && typeof params.callbackAfterApply === "function") {
                     self.callbackAfterApply = params.callbackAfterApply;
+                }
+                
+                if(params.callbackAfterCancel && typeof params.callbackAfterCancel === "function") {
+                    self.callbackAfterCancel = params.callbackAfterCancel;
                 }
 
                 self.timePeriodObject = ko.computed(function () {
@@ -1594,8 +1603,10 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         start = oj.IntlConverterUtils.isoToLocalDate(self.startDateISO().slice(0, 10));
                         end = oj.IntlConverterUtils.isoToLocalDate(self.endDateISO().slice(0, 10));
                     }
-                                                          
-                    self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO().slice(0, 10), self.endDateISO().slice(0, 10), self.startTime(), self.endTime()));
+                    
+                    if(self.getParam(self.changeLabel)) {
+                        self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO().slice(0, 10), self.endDateISO().slice(0, 10), self.startTime(), self.endTime()));
+                    }       
                     self.closeAllPopups();
                     var timePeriod = self.getTimePeriodString(self.timePeriod());
                     
@@ -1646,7 +1657,18 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                 self.cancelClick = function () {
                     self.closeAllPopups();
-                    return;
+                    if(self.callbackAfterCancel) {
+                        $.ajax({
+                            url: "/emsaasui/uifwk/empty.html",
+                            success: function () {
+                                self.callbackAfterCancel();
+                            },
+                            error: function () {
+                                console.log(self.errorMsg);
+                            }
+                        });
+                    }
+                    return false;
                 };
                 
                 self.renderDateRange = function (startRange, endRange) {

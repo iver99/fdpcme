@@ -92,6 +92,7 @@ require(['ojs/ojcore',
                 self.timePeriodsNotToShow = ko.observableArray([]);
                 self.timeDisplay = ko.observable("short");
                 self.timePeriodPre = ko.observable("Last 7 days");
+                self.changeLabel = ko.observable(true);
                 
                 self.isTimePeriodLessThan1day = function(timePeriod) {
                     if(timePeriod==="Last 15 minutes" || timePeriod==="Last 30 minutes" || timePeriod==="Last 60 minutes" ||
@@ -113,6 +114,7 @@ require(['ojs/ojcore',
                     timePeriodsNotToShow: /*["Last 30 days", "Last 90 days"],*/ self.timePeriodsNotToShow,
                     enableTimeFilter: true,
                     hideMainLabel: true,
+//                    changeLabel: self.changeLabel, //knockout observable to determine whether label changes when use select a specific time range. The default value is true
 //                    timeDisplay: self.timeDisplay,
 //                    customTimeBack: 90*24*60*60*1000,
 //                    appId: "APM",
@@ -140,6 +142,9 @@ require(['ojs/ojcore',
                         var eles = $('div').filter(function(){return this.id.match(/tfInfo_.*\d$/);});
                         self.filterInfo($(eles[0]).find("span").text());
                         self.generateData(start, end);
+                    },
+                    callbackAfterCancel: function() { //calback after "Cancel" is clicked
+                        console.log("***");
                     }
                 };
                 
@@ -173,7 +178,8 @@ require(['ojs/ojcore',
                     }
                 };
                 
-                self.changeOption = function() {        
+                self.changeOption = function() { 
+                    self.changeLabel(false);
                     self.initStart(new Date(new Date() - 48*60*60*1000));
                     self.initEnd(new Date(new Date() - 3*60*60*1000));
                     self.timePeriodsNotToShow(["Last 90 days", "Latest"]);

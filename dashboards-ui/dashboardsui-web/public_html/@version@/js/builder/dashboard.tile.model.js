@@ -922,17 +922,25 @@ define(['knockout',
                     self.dashboard.id(),
                     function (data) {
                         //sucessfully get extended options for page filters
-                        self.userExtendedOptions = data["extendedOptions"] ? JSON.parse(data["extendedOptions"]) : null;                        
+                        self.userExtendedOptions = data["extendedOptions"] ? JSON.parse(data["extendedOptions"]) : {};
+                        if(!self.userExtendedOptions.tsel) {
+                            self.userExtendedOptions.tsel = {quickPick: "allEntities", entityContext: ""};
+                        }
+                        if(!self.userExtendedOptions.timeSel) {
+                            self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: "", end: ""};
+                        }
                     },
                     function (jqXHR, textStatus, errorThrown) {
                         if(jqXHR.status === 404){
                             self.userExtendedOptions = {};
+                            self.userExtendedOptions.tsel = {quickPick: "allEntities", entityContext: ""};
+                            self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: "", end: ""};
                         }
                     });
             }
             
             self.initUserFilterOptions();
-            self.dashboardExtendedOptions = self.dashboard.etendedOptions ? JSON.parse(self.dashboard.extendedOptions()) : null;
+            self.dashboardExtendedOptions = self.dashboard.extendedOptions ? JSON.parse(self.dashboard.extendedOptions()) : null;
 
             self.returnFromPageTsel = function(targets) {
                 self.targets(targets);
@@ -945,7 +953,7 @@ define(['knockout',
                 
                 require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
                     var compressedTargets = TargetSelectorUtils.compress(targets);
-                    self.toolbarModel.extendedOptions.tsel.quickPick = self.getSelectedQuickPicker();
+                    self.toolbarModel.extendedOptions.tsel.quickPick = "more"; //to do: set quick pick value to persist. self.getSelectedQuickPicker();
                     self.toolbarModel.extendedOptions.tsel.entityContext = compressedTargets;
                     self.saveUserFilterOptions();
                 });
@@ -968,25 +976,25 @@ define(['knockout',
             
             self.quickPickers = ko.observable(
                     [{
-                        "title" : "All Hosts",
+                        "title" : getNlsString("DSB_BUILDER_EDIT_ALL_HOSTS"),
                         "type" : "byTargetType",
                         "value" : ["host"],
                         "selected" : false
                     }, {
-                        "title" : "All Linux",
-                        "resultLabel" : "Linux",
+                        "title" : getNlsString("DSB_BUILDER_EDIT_ALL_LINUX"),
+//                        "resultLabel" : "Linux",
                         "type" : "byTargetType",
                         "value" : ["usr_host_linux"],
                         "selected": false
                     }, {
-                        "title" : "All Windows",
-                        "resultLabel" : "Windows",
+                        "title" : getNlsString("DSB_BUILDER_EDIT_ALL_WINDOWS"),
+//                        "resultLabel" : "Windows",
                         "type" : "byTargetType",
                         "value" : ["usr_host_windows"],
                         "selected": false
                     }, {
-                        "title" : "All Docker",
-                        "resultLabel" : "Docker",
+                        "title" : getNlsString("DSB_BUILDER_EDIT_ALL_DOCKER"),
+//                        "resultLabel" : "Docker",
                         "type" : "byTargetType",
                         "value" : ["oracle_vm_guest"],
                         "selected": false
@@ -1000,6 +1008,7 @@ define(['knockout',
             }
             
             self.setQuickPickerSelected = function(value) {
+                self.setAllQuickPickersUnselected();
                 for(var i=0; i<self.quickPickers().length; i++) {
                     if((self.quickPickers()[i].value)[0] === value) {
                         self.quickPickers()[i].selected = true;
@@ -1049,9 +1058,7 @@ define(['knockout',
             var compressedTargets;
             //set initial targets selector options. priority: user extendedOptions > dashboard extendedOptions
             //1. set selectionMode: byCriteria/single. Default is "byCriteria"
-            if(self.dashboardExtendedOptions && self.dashboardExtendedOptions.tsel) {
-                self.selectionMode(self.dashboardExtendedOptions.tsel.entitySupport);
-            }
+            //selectionMode is set in right.panel.model.js
             //2. set quickPicker and selected targets/entityContext
             if(self.userExtendedOptions && self.userExtendedOptions.tsel) {
                 self.setQuickPickerSelected(self.userExtendedOptions.tsel.quickPick);
@@ -1062,8 +1069,11 @@ define(['knockout',
             }
             
             require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
-                    var targets = TargetSelectorUtils.decompress(compressedTargets);
-                    self.targets(targets);
+                var targets = "";
+                if(compressedTargets) {
+                    targets = TargetSelectorUtils.decompress(compressedTargets);
+                }
+                self.targets(targets);
                 });
             
             var timeSelectorChangelistener = ko.computed(function(){
@@ -1089,11 +1099,13 @@ define(['knockout',
                 if(self.userExtendedOptions && self.userExtendedOptions.timeSel) {
                     initStart = new Date(parseInt(self.userExtendedOptions.timeSel.start));
                     initEnd = new Date(parseInt(self.userExtendedOptions.timeSel.end));
-                    self.timePeriod(self.userExtendedOptions.timeSel.timePeriod);
+                    var tp = (self.userExtendedOptions.timeSel.timePeriod === "custom1") ? "custom" : self.userExtendedOptions.timeSel.timePeriod;
+                    self.timePeriod(Builder.getTimePeriodString(tp));
                 }else if(self.dashboardExtendedOptions && self.dashboardExtendedOptions.timeSel) {
                     initStart = new Date(parseInt(self.dashboardExtendedOptions.timeSel.start));
                     initEnd = new Date(parseInt(self.dashboardExtendedOptions.timeSel.end));
-                    self.timePeriod((self.dashboardUserExtendedOptions.defaultValue === "custom1") ? "custom" : self.dashboardUserExtendedOptions.defaultValue);
+                    var tp = (self.dashboardExtendedOptions.timeSel.defaultValue === "custom1") ? "custom" : self.dashboardExtendedOptions.timeSel.defaultValue;
+                    self.timePeriod(Builder.getTimePeriodString(tp));
                 }else {
                     initStart = new Date(current - 14*24*60*60*1000);
                     initEnd = current;
@@ -1101,40 +1113,52 @@ define(['knockout',
                 }
             }
             
+            self.initStart = ko.observable(initStart);
+            self.initEnd = ko.observable(initEnd);
             self.timeSelectorModel.viewStart(initStart);
             self.timeSelectorModel.viewEnd(initEnd);
+            self.changeLabel = ko.observable(true);
             self.datetimePickerParams = {
-                startDateTime: initStart,
-                endDateTime: initEnd,
+                startDateTime: self.initStart,
+                endDateTime: self.initEnd,
                 timePeriod: self.timePeriod,
                 hideMainLabel: true,
+                changeLabel: self.changeLabel,
                 callbackAfterApply: function(start, end, tp) {
-                    self.timeSelectorModel.viewStart(start);
-                    self.timeSelectorModel.viewEnd(end);
-                    self.timeSelectorModel.timeRangeChange(true);
-                    
-                    if(!self.toolbarModel.extendedOptions.timeSel) {
-                        self.toolbarModel.extendedOptions.timeSel = {};
-                    }
-                    self.toolbarModel.extendedOptions.timeSel.timePeriod = tp;
-                    self.toolbarModel.extendedOptions.timeSel.start = start.getTime();
-                    self.toolbarModel.extendedOptions.timeSel.end = end.getTime();
-                    self.saveUserFilterOptions();
-                    
-                    //change default time range value option text in right drawer
-                    if(self.whichTimeSelLauncher() === 1) {
-                        self.whichTimeSelLauncher(0);
+                    if(self.whichTimeSelLauncher() === 0) {
+                        self.timePeriod(tp);
+                        self.timeSelectorModel.viewStart(start);
+                        self.timeSelectorModel.viewEnd(end);
+                        self.timeSelectorModel.timeRangeChange(true);
+
+                        if(!self.toolbarModel.extendedOptions.timeSel) {
+                            self.toolbarModel.extendedOptions.timeSel = {};
+                        }
+                        self.toolbarModel.extendedOptions.timeSel.timePeriod = Builder.getTimePeriodValue(tp);
+                        self.toolbarModel.extendedOptions.timeSel.start = start.getTime();
+                        self.toolbarModel.extendedOptions.timeSel.end = end.getTime();
+                        self.saveUserFilterOptions();
+                    }else if(self.whichTimeSelLauncher() === 1) {
+                        //change default time range value option text in right drawer
+                        $b.getRightPanelModel().defaultTimeRangeValue(['custom1']);
+                        $b.getRightPanelModel().initDefaultTimeRangeValueForCustom(start.getTime(), end.getTime());
                         
+                        //set timeSel settings to save
                         $b.getRightPanelModel().extendedOptions.timeSel.start = start.getTime();
                         $b.getRightPanelModel().extendedOptions.timeSel.end = end.getTime();
-                        
-                        if($b.getRightPanelModel().timeRangeOptions().length > 13) {
-                            $b.getRightPanelModel().timeRangeOptions($b.getRightPanelModel().timeRangeOptions.slice(0, 13));
-                        }
-                        var label = $b.getRightPanelModel().getTimeInfo(start.getTime(), end.getTime());
-                        $b.getRightPanelModel().timeRangeOptions.push({value: 'custom1', label: label});
-                        $b.getRightPanelModel().defaultTimeRangeValue(['custom1']);
                         $b.getRightPanelModel().extendedOptions.timeSel.defaultValue = $b.getRightPanelModel().defaultTimeRangeValue()[0];
+                        
+                        //recover timeSel launcher to the one on the page
+                        self.whichTimeSelLauncher(0);
+                        self.changeLabel(true);
+                    }
+                },
+                callbackAfterCancel: function() {
+                    if(self.whichTimeSelLauncher() === 1) {
+                        //recover default time range value to the former one if it is "custom" when "Cancel" clicked
+                        $b.getRightPanelModel().defaultTimeRangeValue($b.getRightPanelModel().prevDefaultTimeRangeValue());
+                        self.whichTimeSelLauncher(0);
+                        self.changeLabel(true);
                     }
                 }
             };
