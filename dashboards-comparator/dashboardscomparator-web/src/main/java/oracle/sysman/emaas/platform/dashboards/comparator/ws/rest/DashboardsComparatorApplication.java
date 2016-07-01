@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.ws.rest;
+package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,20 +20,12 @@ import javax.ws.rs.core.Application;
  * @author guobaochen
  */
 @ApplicationPath("api")
-public class DashboardsApplication extends Application
+public class DashboardsComparatorApplication extends Application
 {
 	@Override
 	public Set<Class<?>> getClasses()
 	{
 		Set<Class<?>> hs = new HashSet<Class<?>>();
-		hs.add(DashboardAPI.class);
-		hs.add(FavoriteAPI.class);
-		hs.add(PreferenceAPI.class);
-		hs.add(LoggingAPI.class);
-		hs.add(LoggingConfigAPI.class);
-		hs.add(TenantSubscriptionsAPI.class);
-		hs.add(ConfigurationAPI.class);
-		hs.add(RegistryLookupAPI.class);
 		hs.add(ZDTAPI.class);
 		return hs;
 	}

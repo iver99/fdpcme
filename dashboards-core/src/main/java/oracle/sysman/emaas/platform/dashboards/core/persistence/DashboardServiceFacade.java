@@ -7,24 +7,36 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
-import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreferencePK;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptionsPK;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
 public class DashboardServiceFacade
 {
 	private final EntityManager em;
 
-	public DashboardServiceFacade(Long tenantId)
+	/**
+	 * constructor without specifying the tenant id
+	 */
+	public DashboardServiceFacade()
 	{
 		final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		em = emf.createEntityManager();
+	}
+
+	/**
+	 * constructor with tenant id specified
+	 * 
+	 * @param tenantId
+	 */
+	public DashboardServiceFacade(Long tenantId)
+	{
+		this();
 		em.setProperty("tenant.id", tenantId);
 	}
 
@@ -321,8 +333,8 @@ public class DashboardServiceFacade
 
 	public void removeEmsPreference(EmsPreference emsPreference)
 	{
-		emsPreference = em
-				.find(EmsPreference.class, new EmsPreferencePK(emsPreference.getPrefKey(), emsPreference.getUserName()));
+		emsPreference = em.find(EmsPreference.class,
+				new EmsPreferencePK(emsPreference.getPrefKey(), emsPreference.getUserName()));
 		em.remove(emsPreference);
 		commitTransaction();
 	}
@@ -345,21 +357,21 @@ public class DashboardServiceFacade
 		return deleteCout;
 	}
 
-    public int removeUnsharedEmsSubDashboard(long subDashboardId, String owner)
-    {
-        getEntityManager().getTransaction().begin();
-        int deleteCout = em.createNamedQuery("EmsSubDashboard.removeUnshared").setParameter("p1", subDashboardId).setParameter("p2", owner)
-                .executeUpdate();
-        commitTransaction();
-        return deleteCout;
-    }
-
 	public void removeEmsUserOptions(EmsUserOptions emsUserOptions)
 	{
 		emsUserOptions = em.find(EmsUserOptions.class,
 				new EmsUserOptionsPK(emsUserOptions.getUserName(), emsUserOptions.getDashboardId()));
 		em.remove(emsUserOptions);
 		commitTransaction();
+	}
+
+	public int removeUnsharedEmsSubDashboard(long subDashboardId, String owner)
+	{
+		getEntityManager().getTransaction().begin();
+		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeUnshared").setParameter("p1", subDashboardId)
+				.setParameter("p2", owner).executeUpdate();
+		commitTransaction();
+		return deleteCout;
 	}
 
 }

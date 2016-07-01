@@ -10,6 +10,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotData;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
@@ -31,10 +35,6 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class DashboardManager
 {
@@ -202,13 +202,13 @@ public class DashboardManager
 				ed.setDeleted(dashboardId);
 				dsf.mergeEmsDashboard(ed);
 				dsf.removeEmsSubDashboardBySubId(dashboardId);
-                dsf.removeEmsSubDashboardBySetId(dashboardId);
+				dsf.removeEmsSubDashboardBySetId(dashboardId);
 			}
 			else {
 				dsf.removeAllEmsUserOptions(dashboardId);
 				dsf.removeEmsSubDashboardBySubId(dashboardId);
-                dsf.removeEmsSubDashboardBySetId(dashboardId);
-                dsf.removeEmsDashboard(ed);
+				dsf.removeEmsSubDashboardBySetId(dashboardId);
+				dsf.removeEmsDashboard(ed);
 			}
 		}
 		finally {
@@ -228,6 +228,21 @@ public class DashboardManager
 	public void deleteDashboard(Long dashboardId, Long tenantId) throws DashboardException
 	{
 		deleteDashboard(dashboardId, false, tenantId);
+	}
+
+	/**
+	 * Retrieves total count for all dashbaord from all tenants
+	 *
+	 * @return
+	 */
+	public long getAllDashboardsCount()
+	{
+		DashboardServiceFacade dsf = new DashboardServiceFacade();
+		EntityManager em = dsf.getEntityManager();
+		String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD WHERE DELETED <> 1";
+		Query query = em.createNativeQuery(sql);
+		long count = ((Number) query.getSingleResult()).longValue();
+		return count;
 	}
 
 	public ScreenshotData getDashboardBase64ScreenShotById(Long dashboardId, Long tenantId) throws DashboardException
@@ -566,7 +581,7 @@ public class DashboardManager
 						filteredTypes.add(type);
 					}
 				}
-
+		
 				for (DashboardApplicationType type : filteredTypes) {
 					apps.remove(type);
 				}
@@ -587,8 +602,8 @@ public class DashboardManager
 			joinOptions = true;
 		}
 		if (joinOptions) {
-			sb.append("left join Ems_Dashboard_User_Options le on (p.dashboard_Id =le.dashboard_Id and le.user_name = ?"
-					+ index++ + " and p.tenant_Id = le.tenant_Id) ");
+			sb.append("left join Ems_Dashboard_User_Options le on (p.dashboard_Id =le.dashboard_Id and le.user_name = ?" + index++
+					+ " and p.tenant_Id = le.tenant_Id) ");
 			paramList.add(currentUser);
 		}
 

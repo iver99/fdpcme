@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Dashboards_TestSuite" verbose="1">
+	<test name="DashboardsRestApi">
+		<packages>
+			<package name="oracle.sysman.emaas.platform.dashboards.test.*" />
+		</packages>
+		<classes>
+		    <class name="oracle.sysman.emaas.platform.dashboards.ws.ErrorEntityTest" />
+		</classes>
+	</test>
+</suite> 

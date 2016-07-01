@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="dashboardsui-webutils" parallel="tests">
+	<test name="dashboards UI Web Utils">
+		<classes>
+		    <class name="oracle.sysman.emaas.platform.dashboards.ui.webutils.util.JsonUtilTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.ui.webutils.util.TenantSubscriptionUtilTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.management.AppLoggingManageMXBeanTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.ui.webutils.util.LogUtilTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtilTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtilTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.ui.targetmodel.services.DashboardUIStatusTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.ui.targetmodel.services.JMXUtilTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.ui.webutils.services.AvailabilityServiceManagerTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.ui.webutils.services.DashboardUiLifecycleServiceTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.ui.webutils.services.EMTargetInitializerTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.ui.webutils.services.EMTargetMXBeanTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.ui.webutils.services.LoggingServiceManagerTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.ui.webutils.services.PropertyReaderTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.ui.webutils.services.RegistryServiceManagerTest" />
+		</classes>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->
