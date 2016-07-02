@@ -740,7 +740,40 @@ define([
                 }else{
                     return '/sso.static/dashboards.preferences';
                 }
-            }; 
+            };
+            
+            /**
+             * 
+             * @param {number} pWidth The width of the container to put screenshot
+             * @param {number} pHeight The height of the container to put screenshot
+             * @param {type} scrshotHref The url of screenshot
+             * @param {function} callback The callback after image is loaded
+             * @returns {undefined}
+             */
+            self.getScreenshotSizePerRatio = function(pWidth, pHeight, scrshotHref, callback) {
+                var ratio = pWidth / pHeight;
+                
+                var tmpImage = new Image();
+                tmpImage.src = scrshotHref;
+                
+                tmpImage.onload = function() {
+                    var imgWidth = tmpImage.width;
+                    var imgHeight = tmpImage.height;
+                    var imgRatio = imgWidth / imgHeight;
+                    
+                    if(imgRatio > ratio) {
+                        imgHeight = imgHeight * pWidth / imgWidth;
+                        imgWidth = pWidth;
+                    } else {
+                        imgWidth =  imgWidth * pHeight / imgHeight;
+                        imgHeight = pHeight;
+                    }
+                    
+                    if(callback) {
+                        callback(imgWidth, imgHeight);
+                    }
+                };
+            };
             
             function showSessionTimeoutWarningDialog(warningDialogId) {
                 //Clear interval for extending user session

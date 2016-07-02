@@ -2,11 +2,6 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
 import java.util.ArrayList;
 
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import org.testng.collections.CollectionUtils;
-
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
@@ -16,9 +11,16 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Sanitized
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
+import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
+import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
+
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import org.testng.collections.CollectionUtils;
 
 /**
  * @author jishshi
@@ -57,10 +59,12 @@ public class RegistrationEntityTest
 				final String APM_SERVICENAME = "APM";
 				final String LA_SERVICENAME = "LogAnalytics";
 				final String ITA_SERVICENAME = "ITAnalytics";
+				final String MONITORING_SERVICENAME = "Monitoring";
 				ArrayList<String> apps = new ArrayList<>();
 				apps.add(APM_SERVICENAME);
 				apps.add(LA_SERVICENAME);
 				apps.add(ITA_SERVICENAME);
+				apps.add(MONITORING_SERVICENAME);
 
 				TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
 				result = apps;
@@ -131,6 +135,8 @@ public class RegistrationEntityTest
 
 			}
 		};
+		CacheManager.getInstance().removeCacheable(new Tenant(TenantContext.getCurrentTenant()), CacheManager.CACHES_LOOKUP_CACHE,
+				CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS);
 		Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getHomeLinks()));
 
 	}

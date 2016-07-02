@@ -10,20 +10,23 @@
 
 package oracle.sysman.emaas.platform.uifwk.ui.webutils.services;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emaas.platform.uifwk.ui.target.services.GlobalStatus;
 import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.StringUtil;
 import oracle.sysman.emaas.platform.uifwk.ui.webutils.wls.lifecycle.ApplicationServiceManager;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import oracle.sysman.emaas.platform.uifwk.ui.target.services.GlobalStatus;
 import weblogic.application.ApplicationLifecycleEvent;
 import weblogic.management.timer.Timer;
 
@@ -32,17 +35,17 @@ import weblogic.management.timer.Timer;
  */
 public class AvailabilityServiceManager implements ApplicationServiceManager, NotificationListener
 {
-	private final Logger logger = LogManager.getLogger(AvailabilityServiceManager.class);
-
 	private static final long PERIOD = Timer.ONE_MINUTE;
 
 	private static final String DASHBOARD_API_SERVICE_NAME = "Dashboard-API";
+
 	private static final String DASHBOARD_API_SERVICE_VERSION = "1.0+";
 	private static final String DASHBOARD_API_SERVICE_REL = "base";
-
 	private static final String SAVED_SEARCH_SERVICE_NAME = "SavedSearch";
+
 	private static final String SAVED_SEARCH_SERVICE_VERSION = "1.0+";
 	private static final String SAVED_SEARCH_SERVICE_REL = "search";
+	private final Logger logger = LogManager.getLogger(AvailabilityServiceManager.class);
 
 	private Timer timer;
 	private Integer notificationId;
@@ -76,7 +79,8 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		// check if service manager is up and registration is complete
 		if (!rsm.isRegistrationComplete() && !rsm.registerService()) {
-			logger.info("OMC UI Framework service registration is not completed. Ignore dependant services availability checking");
+			logger.info(
+					"OMC UI Framework service registration is not completed. Ignore dependant services availability checking");
 			return;
 
 		}
@@ -90,10 +94,15 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			logger.error(e.getLocalizedMessage(), e);
 		}
 		if (!isSSFAvailable) {
-			rsm.markOutOfService();
+			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
+			InstanceInfo ii = new InstanceInfo();
+			ii.setServiceName(SAVED_SEARCH_SERVICE_NAME);
+			ii.setVersion(SAVED_SEARCH_SERVICE_VERSION);
+			services.add(ii);
+			rsm.markOutOfService(services, null, null);
 			GlobalStatus.setOmcUiDownStatus();
 			logger.error("OMC UI Framework service is out of service because Saved Search API service is unavailable");
-                        return;
+			return;
 		}
 
 		// check df api service's availability
@@ -106,10 +115,15 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			logger.error(e.getLocalizedMessage(), e);
 		}
 		if (!isDFApiAvailable) {
-			rsm.markOutOfService();
+			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
+			InstanceInfo ii = new InstanceInfo();
+			ii.setServiceName(DASHBOARD_API_SERVICE_NAME);
+			ii.setVersion(DASHBOARD_API_SERVICE_VERSION);
+			services.add(ii);
+			rsm.markOutOfService(services, null, null);
 			GlobalStatus.setOmcUiDownStatus();
-                        logger.error("OMC UI Framework service is out of service because Dashboard API service is unavailable");
-                        return;
+			logger.error("OMC UI Framework service is out of service because Dashboard API service is unavailable");
+			return;
 		}
 
 		// now all checking is OK

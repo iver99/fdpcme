@@ -51,7 +51,7 @@ if (project.hasProperty("debugTsel"))
 }
 else
 {
-    tselVersion =  getDependentSdkVersion('com.oracle.emaas.emctas.tgtsel', 'emcs-targetselector', '1.7.+')
+    tselVersion =  getDependentSdkVersion('com.oracle.emaas.emctas.tgtsel', 'emcs-targetselector', '1.8.+')
 }
 
 dependencies {
@@ -79,6 +79,7 @@ project.task("cleanCompassCss")<<{
 task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass]) {
     from (webRootSourceDir) {
         include "**/*"
+        exclude "**/uifwkCommonMsg.js"
             eachFile {
                 fileCopyDetails ->
                 fileCopyDetails.path = fileCopyDetails.path.replaceAll(/(.*\/|.*)@version@\/(.*)/, '$1/'+versionPathElement+'/$2')
@@ -93,6 +94,16 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass]) {
             }	
 	    filesMatching("**/*.css") {
                 filter(ReplaceTokens, tokens: [version: versionPathElement])
+            }
+    }
+    into stagingDir
+
+    from (webRootSourceDir) {
+        include "**/uifwkCommonMsg.js"
+            eachFile {
+                fileCopyDetails ->
+                fileCopyDetails.path = fileCopyDetails.path.replaceAll(/(.*\/|.*)@version@\/(.*)/, '$1/'+versionPathElement+'/$2')
+                fileCopyDetails.name = fileCopyDetails.name.replaceAll(/(.*)@version@(.*)/, '$1'+versionPathElement+'$2')
             }
     }
     into stagingDir

@@ -22,6 +22,7 @@ define(['knockout',
         function ToolBarModel($b,dashboardSetOptions) {
             var self = this;
             self.$b = $b;
+            $b.registerObject(self, 'ToolBarModel');
             self.dashboard = $b.dashboard;
             self.isUpdated = $b.isDashboardUpdated;
             self.tilesViewModel = $b.getDashboardTilesViewModel();

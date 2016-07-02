@@ -27,7 +27,7 @@ define(['knockout',
         ko.mapping = km;
         var draggingTileClass = 'dbd-tile-in-dragging';
         
-        function DashboardTilesViewModel($b) {        
+        function DashboardTilesViewModel($b, dashboardInst) {        
         
             var widgetAreaWidth = 0;
             var widgetAreaContainer = null;
@@ -127,7 +127,7 @@ define(['knockout',
             
             self.appendNewTile = function(name, description, width, height, widget) {
                 if (widget) {
-                    var newTile = self.editor.createNewTile(name, description, width, height, widget, self.timeSelectorModel, self.targets, true);
+                    var newTile = self.editor.createNewTile(name, description, width, height, widget, self.timeSelectorModel, self.targets, true, dashboardInst);
                     if (newTile){
                        self.editor.tiles.push(newTile);
                        self.show();
@@ -178,8 +178,15 @@ define(['knockout',
                 $("#tile" + clientGuid + " .dbd-btn-maxminToggle").css("display", "none");
             };
             self.openInDataExplorer = function (event, ui) {
-                var tile = ko.dataFor(ui.currentTarget);
-                self.editor.configure(tile);
+		if (!self.dashboard.systemDashboard())
+                	$b.getToolBarModel().handleDashboardSave();
+                var iId = setInterval(function() {
+                    if (!$b.isDashboardUpdated()) {
+                        clearInterval(iId);
+                        var tile = ko.dataFor(ui.currentTarget);
+                        self.editor.configure(tile);
+                    }
+                }, 300);
             };
             
             self.maxMinToggle = function (event, ui) {
@@ -679,7 +686,7 @@ define(['knockout',
                         cell.column = self.editor.mode.MODE_MAX_COLUMNS-width;
                     }
                     if (!tile) {
-                        tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targets, false);                        
+                        tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targets, true, dashboardInst);
                         u.helper.tile = tile;
                         self.editor.tiles.push(tile);
                         $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
@@ -762,8 +769,7 @@ define(['knockout',
                 self.editor.draggingTile = null;
                 u.helper.tile = null;
                 self.previousDragCell = null;
-                tile && tile.WIDGET_SUPPORT_TIME_CONTROL && self.triggerTileTimeControlSupportEvent(tile.WIDGET_SUPPORT_TIME_CONTROL()?true:null);                
-                setTimeout(function() {Builder.initializeTileAfterLoad(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targets, true)}, 500);
+                tile && tile.WIDGET_SUPPORT_TIME_CONTROL && self.triggerTileTimeControlSupportEvent(tile.WIDGET_SUPPORT_TIME_CONTROL()?true:null);
             };
             
 //            self.onNewTextDragging = function(e, u) {
