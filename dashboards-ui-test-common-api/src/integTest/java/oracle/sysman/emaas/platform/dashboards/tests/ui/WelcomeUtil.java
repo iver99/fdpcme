@@ -56,7 +56,7 @@ public class WelcomeUtil
 	 * Get text of each service or item shown in welcome page.
 	 * 
 	 * @param serviceName
-	 * 		APM | LA | ITA | dashboards | dataExplorers | getStarted | videos | serviceOfferings
+	 * 		APM | LA | ITA | infraMonitoring | dashboards | dataExplorers | getStarted | videos | serviceOfferings
 	 * @return
 	 */
 	private static String getExpectedText(String serviceName)
@@ -71,6 +71,9 @@ public class WelcomeUtil
 				break;
 			case SERVICE_NAME_ITA:
 				expectedName = "IT Analytics";
+				break;
+			case SERVICE_NAME_INFRA_MONITORING:
+				expectedName = "Infrastructure Monitoring";
 				break;
 			case SERVICE_NAME_DASHBOARDS:
 				expectedName = "Dashboards";
@@ -140,7 +143,7 @@ public class WelcomeUtil
 	 * Get wrapper id of each service
 	 * 
 	 * @param serviceName
-	 * 		APM | LA | ITA | dashboards | dataExplorers
+	 * 		APM | LA | ITA | infraMonitoring | dashboards | dataExplorers
 	 * @return
 	 */
 	private static String getServiceWrapperId(String serviceName)
@@ -155,6 +158,9 @@ public class WelcomeUtil
 				break;
 			case SERVICE_NAME_ITA:
 				serviceWrapperId = DashBoardPageId.Welcome_ITALinkID;
+				break;
+			case SERVICE_NAME_INFRA_MONITORING:
+				serviceWrapperId = DashBoardPageId.Welcome_InfraMonitoringID;
 				break;
 			case SERVICE_NAME_DASHBOARDS:
 				serviceWrapperId = DashBoardPageId.Welcome_DashboardsLinkID;
@@ -199,7 +205,7 @@ public class WelcomeUtil
 	 * 
 	 * @param driver
 	 * @param serviceName
-	 * 			APM | LA | ITA | dashboards | dataExplorers 
+	 * 			APM | LA | ITA | infraMonitoring| dashboards | dataExplorers 
 	 * @return
 	 * @throws Exception
 	 */
@@ -208,7 +214,7 @@ public class WelcomeUtil
 		driver.getLogger().info("Start to check if service: " + serviceName + " is existed in welcome page...");
 
 		Validator.fromValidValues("serviceName", serviceName, SERVICE_NAME_APM, SERVICE_NAME_LA, SERVICE_NAME_ITA,
-				SERVICE_NAME_DASHBOARDS, SERVICE_NAME_DATA_EXPLORERS);
+				SERVICE_NAME_INFRA_MONITORING, SERVICE_NAME_DASHBOARDS, SERVICE_NAME_DATA_EXPLORERS);
 
 		boolean isExisted = false;
 		String serviceWrapperId = WelcomeUtil.getServiceWrapperId(serviceName);
@@ -306,12 +312,29 @@ public class WelcomeUtil
 	}
 
 	/**
+	 * Visit "Infrustructure Monitoring" in welcome
+	 * 
+	 * @param driver
+	 * @throws Exception
+	 */
+	public static void visitInfraMonitoring(WebDriver driver) throws Exception
+	{
+		driver.getLogger().info("Visit Infrastructure Monitoring from Welcome page..");
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
+		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_InfraMonitoringID);
+		driver.click("id=" + DashBoardPageId.Welcome_InfraMonitoringID);
+		driver.takeScreenShot();
+	}	
+	
+	/**
 	 * Visit specific item in IT Analytics in welcome
 	 * 
 	 * @param driver
 	 * @param selection
 	 * 		default | performanceAnayticsDatabase | performanceAnalyticsMiddleware | 
-	 * 		resourceAnalyticsDatabase | resourceAnalyticsMiddleware | dataExplorerAnalyze | dataExplorer
+	 * 		resourceAnalyticsDatabase | resourceAnalyticsMiddleware | resourceAnalyticsHost | 
+	 *  	dataExplorerAnalyze | dataExplorer
 	 * @throws Exception
 	 */
 	public static void visitITA(WebDriver driver, String selection) throws Exception
@@ -320,7 +343,7 @@ public class WelcomeUtil
 
 		Validator.fromValidValues("ITASelection", selection, ITA_DEFAULT, ITA_PERFORMANCE_ANALYTICS_DATABASE,
 				ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE, ITA_RESOURCE_ANALYTICS_DATABASE, ITA_RESOURCE_ANALYTICS_MIDDLEWARE,
-				ITA_DATA_EXPLORER_ANALYZE, ITA_DATA_EXPLORER);
+				ITA_RESOURCE_ANALYTICS_HOST, ITA_DATA_EXPLORER_ANALYZE, ITA_DATA_EXPLORER);
 
 
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -351,6 +374,10 @@ public class WelcomeUtil
 				case ITA_RESOURCE_ANALYTICS_MIDDLEWARE:
 					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
 							DashBoardPageId.Welcome_ITA_RAMiddleware);
+					break;
+				case ITA_RESOURCE_ANALYTICS_HOST:
+					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
+							DashBoardPageId.Welcome_ITA_RA_Host);
 					break;
 				case ITA_DATA_EXPLORER_ANALYZE:
 					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
@@ -391,6 +418,7 @@ public class WelcomeUtil
 	public static final String ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE = "performanceAnalyticsMiddleware";
 	public static final String ITA_RESOURCE_ANALYTICS_DATABASE = "resourceAnalyticsDatabase";
 	public static final String ITA_RESOURCE_ANALYTICS_MIDDLEWARE = "resourceAnalyticsMiddleware";
+	public static final String ITA_RESOURCE_ANALYTICS_HOST = "resourceAnalyticsHost";
 	public static final String ITA_DATA_EXPLORER_ANALYZE = "dataExplorerAnalyze";
 	public static final String ITA_DATA_EXPLORER = "dataExplorer";
 
@@ -401,6 +429,7 @@ public class WelcomeUtil
 	public static final String SERVICE_NAME_APM = "APM";
 	public static final String SERVICE_NAME_LA = "LA";
 	public static final String SERVICE_NAME_ITA = "ITA";
+	public static final String SERVICE_NAME_INFRA_MONITORING = "infraMonitoring";
 	public static final String SERVICE_NAME_DASHBOARDS = "dashboards";
 	public static final String SERVICE_NAME_DATA_EXPLORERS = "dataExplorers";
 

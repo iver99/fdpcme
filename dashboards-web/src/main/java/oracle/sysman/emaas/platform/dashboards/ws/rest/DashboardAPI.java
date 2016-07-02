@@ -32,18 +32,15 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONObject;
-
-import com.sun.jersey.core.util.Base64;
-
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
+import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
+import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotCacheManager;
 import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotData;
+import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotElement;
 import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotPathGenerator;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
@@ -56,12 +53,15 @@ import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONObject;
+
+import com.sun.jersey.core.util.Base64;
 
 /**
  * @author wenjzhu
@@ -205,12 +205,59 @@ public class DashboardAPI extends APIBase
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		ScreenshotCacheManager scm = ScreenshotCacheManager.getInstance();
+		Tenant cacheTenant = new Tenant(tenantId, TenantContext.getCurrentTenant());
 		CacheControl cc = new CacheControl();
 		cc.setMaxAge(2592000); //browser side keeps screenshot image in cache for 30 days
+		//try to get from cache
+		try {
+			final ScreenshotElement se = scm.getScreenshotFromCache(cacheTenant, dashboardId, fileName);
+			if (se != null) {
+				if (fileName.equals(se.getFileName())) {
+					return Response.ok(new StreamingOutput() {
+						/* (non-Javadoc)
+						 * @see javax.ws.rs.core.StreamingOutput#write(java.io.OutputStream)
+						 */
+						@Override
+						public void write(OutputStream os) throws IOException, WebApplicationException
+						{
+							os.write(se.getBuffer().getData());
+//							se.getBuffer().writeTo(os);
+							os.flush();
+							os.close();
+						}
+
+					}).cacheControl(cc).build();
+				}
+				else { // invalid screenshot file name
+					if (!ScreenshotPathGenerator.getInstance().validFileName(dashboardId, fileName, se.getFileName())) {
+						logger.error("The requested screenshot file name {} for tenant={}, dashboard id={} is not a valid name",
+								fileName, TenantContext.getCurrentTenant(), dashboardId, se.getFileName());
+						return Response.status(Status.NOT_FOUND).build();
+					}
+					logger.debug("The request screenshot file name is not equal to the file name in cache, but it is valid. "
+							+ "Try to query from database to see if screenshot is actually updated already");
+				}
+			}
+		}
+		catch (Exception e) {
+			logger.error("Exception when getting screenshot from cache. Continue to get from database", e);
+		}
+		//try to get from persist layer
 		try {
 			final ScreenshotData ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
 			if (ss == null || ss.getScreenshot() == null) {
 				logger.error("Does not retrieved base64 screenshot data");
+				return Response.status(Status.NOT_FOUND).build();
+			}
+			final ScreenshotElement se = scm.storeBase64ScreenshotToCache(cacheTenant, dashboardId, ss);
+			if (se == null || se.getBuffer() == null) {
+				logger.debug("Does not retrieved base64 screenshot data after store to cache. return 404 then");
+				return Response.status(Status.NOT_FOUND).build();
+			}
+			if (!fileName.equals(se.getFileName())) {
+				logger.error("The requested screenshot file name {} for tenant={}, dashboard id={} does not exist", fileName,
+						TenantContext.getCurrentTenant(), dashboardId, se.getFileName());
 				return Response.status(Status.NOT_FOUND).build();
 			}
 			logger.debug(

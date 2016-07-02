@@ -10,32 +10,33 @@
 
 package oracle.sysman.emaas.platform.dashboards.webutils.services;
 
+import java.util.List;
 import java.util.Properties;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InfoManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.InstanceStatus;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.NonServiceResource;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
  * @author aduan
  */
 public class RegistryServiceManagerTest
 {
+	private final static String VERSION = "1.0+";
 	RegistryServiceManager rsm = new RegistryServiceManager();
-        private final static String VERSION="1.0+";
+
 	@Test(groups = { "s1" })
 	public void testGetName()
 	{
@@ -51,16 +52,17 @@ public class RegistryServiceManagerTest
 		Assert.assertFalse(rsm.isRegistrationComplete());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test(groups = { "s2" })
 	public void testMarkServiceStatus(@Mocked final RegistrationManager anyRm, @Mocked final RegistrationClient anyClient)
 	{
 		new Expectations() {
 			{
-				anyClient.updateStatus((InstanceStatus) any);
+				anyClient.outOfServiceCausedBy((List<InstanceInfo>) any, (List<NonServiceResource>) any, (List<String>) any);
 				times = 1;
 			}
 		};
-		rsm.markOutOfService();
+		rsm.markOutOfService(null, null, null);
 
 		new Expectations() {
 			{
@@ -100,14 +102,14 @@ public class RegistryServiceManagerTest
 			Assert.assertTrue(rsm.isRegistrationComplete());
 			rsm.preStop(null);
 
-//			new Expectations() {
-//				{
-//					RegistryLookupUtil.getServiceInternalLink("RegistryService", VERSION, "collection/instances", anyString);
-//					result = null;
-//				}
-//			};
-//			rsm.postStart(null);
-//			Assert.assertFalse(rsm.isRegistrationComplete());
+			//			new Expectations() {
+			//				{
+			//					RegistryLookupUtil.getServiceInternalLink("RegistryService", VERSION, "collection/instances", anyString);
+			//					result = null;
+			//				}
+			//			};
+			//			rsm.postStart(null);
+			//			Assert.assertFalse(rsm.isRegistrationComplete());
 
 			new Expectations() {
 				{

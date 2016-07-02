@@ -692,7 +692,7 @@ public class Dashboard
 		if (ed.getSharePublic() == 0) {
 			Long tenantId = ed.getTenantId();
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-			dsf.removeEmsSubDashboardBySubId(ed.getDashboardId());
+            dsf.removeUnsharedEmsSubDashboard(ed.getDashboardId(),ed.getOwner());
 		}
 	}
 

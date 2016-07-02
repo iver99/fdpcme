@@ -14,7 +14,7 @@ define(['knockout',
     ], 
     function(ko, $, oj, dfu, dtm, dfumodel) {
         function getTileDefaultWidth(wgt, mode) {
-            if (wgt && (typeof wgt.WIDGET_DEFAULT_WIDTH==='number') && (wgt.WIDGET_DEFAULT_WIDTH%1)===0 && wgt.WIDGET_DEFAULT_WIDTH >= 1 && wgt.WIDGET_DEFAULT_WIDTH <= mode.MODE_MAX_COLUMNS)
+            if (wgt && (typeof wgt.WIDGET_DEFAULT_WIDTH==='number') && (wgt.WIDGET_DEFAULT_WIDTH%1)===0 && wgt.WIDGET_DEFAULT_WIDTH >= mode.MODE_MIN_COLUMNS && wgt.WIDGET_DEFAULT_WIDTH <= mode.MODE_MAX_COLUMNS)
                     return wgt.WIDGET_DEFAULT_WIDTH;
             return Builder.BUILDER_DEFAULT_TILE_WIDTH;
         }
@@ -413,5 +413,51 @@ define(['knockout',
         
         Builder.registerFunction(saveDashboardOptions, 'saveDashboardOptions');
         Builder.registerFunction(isTimeRangeAvailInUrl, 'isTimeRangeAvailInUrl');
+        
+        function removeScreenshotElementClone(clone) {
+            if (!(clone instanceof $))
+                throw new RangeError("Invalid clone element to remove: jquery object expected");
+            var cloneId = clone.attr('id');
+            var maskId = cloneId + "-mask";
+            var mask = $('#' + maskId);
+            document.body.removeChild(mask[0]);
+            document.body.removeChild(clone[0]);
+        }
+        Builder.registerFunction(removeScreenshotElementClone, 'removeScreenshotElementClone');
+        
+        function createScreenshotElementClone(src) {
+            function createMask(id, width, height) {
+                var mask = $(document.createElement('div'));
+                mask.css({
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    width: width,
+                    height: height,
+                    'background-color': 'rgb(247, 247, 247)',
+                    'z-index': -100
+                });
+                mask.attr('id', id);
+                document.body.appendChild(mask[0]);
+                return mask;
+            }
+            if (!(src instanceof $))
+                throw new RangeError("Invalid source element to remove: jquery object expected");
+            var cloneId = Builder.getGuid();
+            var maskId = cloneId + "-mask";
+            createMask(maskId, src.width(), src.height());
+            var clone = src.clone(true);
+            clone.css({
+                position: 'absolute',
+                left: 0,
+                top: 0,
+                'background-color': 'rgb(247, 247, 247)',
+                'z-index': -200
+            });
+            clone.attr('id', cloneId);
+            document.body.appendChild(clone[0]);
+            return clone;
+        }
+        Builder.registerFunction(createScreenshotElementClone, 'createScreenshotElementClone');
     }
 );
