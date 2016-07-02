@@ -459,5 +459,33 @@ define(['knockout',
             return clone;
         }
         Builder.registerFunction(createScreenshotElementClone, 'createScreenshotElementClone');
+        
+        var assetRoots = [];
+        function getWidgetAssetRoot(provider_name, provider_version, provider_asset_root) {
+            for(var i=0; i<assetRoots.length; i++) {
+                var art = assetRoots[i];
+                if((art.provider_name === provider_name) && (art.provider_version === provider_version) && (art.provider_asset_root === provider_asset_root)) {
+                    return art.asset_root;
+                }
+            }
+            return null;
+        };
+        Builder.registerFunction(getWidgetAssetRoot, "getWidgetAssetRoot");
+            
+        function getAllWidgetsAssetRoot(widgets) {
+            var asset_root;                
+            assetRoots = [];
+            for(var i=0; i<widgets.length; i++) {
+                var wgt = widgets[i];
+                var provider_name = wgt.PROVIDER_NAME();
+                var provider_version = wgt.PROVIDER_VERSION();
+                var provider_asset_root = wgt.PROVIDER_ASSET_ROOT();
+                if (getWidgetAssetRoot(provider_name, provider_version, provider_asset_root) === null) {
+                    asset_root = dfu.df_util_widget_lookup_assetRootUrl(provider_name, provider_version, provider_asset_root, true);
+                    assetRoots.push({provider_name: provider_name, provider_version: provider_version, provider_asset_root: provider_asset_root, asset_root: asset_root});
+                }
+            }                                
+        }
+        Builder.registerFunction(getAllWidgetsAssetRoot, "getAllWidgetsAssetRoot");
     }
 );

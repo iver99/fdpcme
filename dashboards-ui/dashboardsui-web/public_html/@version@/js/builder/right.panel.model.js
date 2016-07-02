@@ -56,7 +56,6 @@ define(['knockout',
             self.keyword = ko.observable('');
             self.clearRightPanelSearch=ko.observable(false);
             self.widgets = ko.observableArray([]);
-            self.assetRoots = ko.observableArray([]);
 
             self.completelyHidden = ko.observable(self.isMobileDevice === 'true' || !self.emptyDashboard);
             self.maximized = ko.observable(false);
@@ -153,7 +152,7 @@ define(['knockout',
 
                     self.initEventHandlers();
                     self.loadWidgets();
-                    self.getAllWidgetsAssetRoot();
+                    Builder.getAllWidgetsAssetRoot(self.widgets());
                     self.initDraggable();
 //                    self.checkAndDisableLinkDraggable();
 
@@ -278,30 +277,6 @@ define(['knockout',
                 self.loadWidgets(null, AUTO_PAGE_NAV);
             });
             
-            self.getWidgetAssetRoot = function (provider_name, provider_version, provider_asset_root) {
-                for(var i=0; i<self.assetRoots().length; i++) {
-                    var art = self.assetRoots()[i];
-                    if((art.provider_name === provider_name) && (art.provider_version === provider_version) && (art.provider_asset_root === provider_asset_root)) {
-                        return art.asset_root;
-                    }
-                }
-                return null;
-            };
-            
-            self.getAllWidgetsAssetRoot = function() {
-                var asset_root;                
-                self.assetRoots([]);
-                for(var i=0; i<self.widgets().length; i++) {
-                    var wgt = self.widgets()[i];
-                    var provider_name = wgt.PROVIDER_NAME();
-                    var provider_version = wgt.PROVIDER_VERSION();
-                    var provider_asset_root = wgt.PROVIDER_ASSET_ROOT();
-                    if (self.getWidgetAssetRoot(provider_name, provider_version, provider_asset_root) === null) {
-                        asset_root = dfu.df_util_widget_lookup_assetRootUrl(provider_name, provider_version, provider_asset_root, true);
-                        self.assetRoots.push({provider_name: provider_name, provider_version: provider_version, provider_asset_root: provider_asset_root, asset_root: asset_root});
-                    }
-                }                                
-            }
 
             self.loadWidgets = function(req) {                
                 var widgetDS = new Builder.WidgetDataSource();
