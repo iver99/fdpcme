@@ -137,17 +137,17 @@ define(['knockout',
             self.completelyHidden = ko.observable(false);
             self.maximized = ko.observable(false);
 
-            self.loadToolBarModel = function(toolBarModel){
+            self.loadToolBarModel = function(toolBarModel,_$b){
                 self.toolBarModel = toolBarModel;
-                if(toolBarModel) {
-                    self.editDashboardDialogModel =  new ed.EditDashboardDialogModel(self.$b,toolBarModel);
+                if(toolBarModel) {      
+                    self.editDashboardDialogModel =  new ed.EditDashboardDialogModel(_$b,toolBarModel);                 
                     self.dashboardEditDisabled(toolBarModel.editDisabled()) ;
                 }else{
                     self.dashboardEditDisabled(true) ;
                 }
             };
             
-            self.loadToolBarModel(toolBarModel);
+            self.loadToolBarModel(toolBarModel,self.$b);
             
             self.loadTilesViewModel = function(tilesViewModel){
                 self.tilesViewModel = tilesViewModel;
@@ -627,7 +627,7 @@ define(['knockout',
                 });
                 dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } });
                 dsbSaveDelay.subscribe(function(){
-                    self.editDashboardDialogModel.save();
+                        self.editDashboardDialogModel.save();
                 });
 
                 self.enableEntityFilter = ko.observable(self.dashboard.enableEntityFilter() === 'TRUE');
