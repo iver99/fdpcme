@@ -93,6 +93,7 @@ define(['knockout',
 
             self.editRightpanelLinkage = function(target){
                 var highlightIcon = "pencil";
+                self.completelyHidden(false);
                 var panelTarget;
                 if (target === "singleDashboard-edit") {
                     panelTarget = "edit";
@@ -124,6 +125,9 @@ define(['knockout',
                 } else if (self.showRightPanel()) {
                     self.rightPanelIcon("none");
                     self.toggleLeftPanel();
+                    if("NORMAL"!==self.$b.dashboard.type() || self.$b.dashboard.systemDashboard()){
+                        self.completelyHidden(true);
+                    }
                 } else {
                     self.rightPanelIcon(clickedIcon);
                     self.toggleLeftPanel();
@@ -258,9 +262,11 @@ define(['knockout',
                         } else {
                             self.showRightPanel(false);
                         }
+                        if("NORMAL"!==self.$b.dashboard.type() || self.$b.dashboard.systemDashboard()){
+                            self.completelyHidden(true);
+                        }
                         self.$b.triggerBuilderResizeEvent('Initialize right panel');
                     }
-                    
 
                     
                     self.initEventHandlers();
