@@ -46,7 +46,11 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 var self = this;
                 var msgUtil = new msgUtilModel();
                 console.log("Initialize date time picker! The params are: ");
-                console.log(ko.mapping.toJS(params));
+                if(ko.mapping && ko.mapping.toJS) {
+                    console.log(ko.mapping.toJS(params));
+                }else {
+                    console.log(params);
+                }
                 
                 var start, end;
                 var timeDiff, dateTimeDiff;
