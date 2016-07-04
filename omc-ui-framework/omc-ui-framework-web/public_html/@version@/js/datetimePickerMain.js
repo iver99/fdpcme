@@ -248,6 +248,13 @@ require(['ojs/ojcore',
                     }
 
                     //series
+                    function securedRandom(){
+                        var arr = new Uint32Array(1);
+                        var crypto = window.crypto || window.msCrypto;
+                        crypto.getRandomValues(arr);
+                        var result = arr[0] * Math.pow(2,-32);
+                        return result;
+                    }
                     var seriesNames = ["p1", "p2", "p3"];
                     var seriesMax = [30, 50, 100];
                     var seriesNumber = seriesNames.length;
@@ -255,7 +262,7 @@ require(['ojs/ojcore',
                         var max = seriesMax[i];
                         var itemsValues = [];
                         for (var j = 0; j < n; j++) {
-                            itemsValues.push(Math.floor(Math.random() * max));
+                            itemsValues.push(Math.floor(securedRandom() * max));
                         }
                         lineSeries.push({name: seriesNames[i], items: itemsValues});
                     }
