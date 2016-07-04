@@ -29,6 +29,8 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.net.URLCodec;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -104,8 +106,16 @@ public class HomePageFilter implements Filter
 									logger.info("Redirecting to the dashboard page which has been set as Home. URL: \"{}\"",
 											redirectUrl);
 								}
-
-								httpRes.sendRedirect(redirectUrl);
+								
+								URLCodec codec = new URLCodec();
+								String urlEscaped = "";
+								try {
+									urlEscaped = codec.encode(redirectUrl);
+									httpRes.sendRedirect(urlEscaped);
+								}
+								catch (EncoderException e) {
+									logger.error("Failed to encode:" + redirectUrl);
+								}
 								return;
 							}
 						}
@@ -163,8 +173,12 @@ public class HomePageFilter implements Filter
 			}
 			finally {
 				try {
-					instream.close();
-					response.close();
+					if(instream != null) {
+						instream.close();
+					}
+					if(response != null) {
+						response.close();
+					}
 				}
 				catch (IOException e) {
 					logger.error(e.getLocalizedMessage(), e);
@@ -177,22 +191,32 @@ public class HomePageFilter implements Filter
 	private String getStrFromInputSteam(InputStream in)
 	{
 		BufferedReader bf = null;
-		try {
-			bf = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-		}
-		catch (UnsupportedEncodingException e) {
-			logger.error(e.getLocalizedMessage(), e);
-		}
 		StringBuffer buffer = new StringBuffer();
 		String line = "";
 		try {
+			bf = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 			while ((line = bf.readLine()) != null) {
 				buffer.append(line);
 			}
 		}
-		catch (IOException e) {
-			logger.error(e.getLocalizedMessage(), e);
+		catch (UnsupportedEncodingException e1) {
+			logger.error(e1.getLocalizedMessage(), e1);
 		}
+		catch (IOException e2) {
+			logger.error(e2.getLocalizedMessage(), e2);
+		} catch (Exception e3) {
+			logger.error(e3.getLocalizedMessage(), e3);
+		} finally {
+			if(bf != null) {
+				try {
+					bf.close();
+				}
+				catch (IOException e) {
+					logger.error(e.getLocalizedMessage(), e);
+				}
+			}
+		}
+		
 		return buffer.toString();
 	}
 
