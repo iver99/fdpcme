@@ -81,9 +81,7 @@ define(['knockout',
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
             self.scrollbarWidth = uiutil.getScrollbarWidth();
 
-            self.showRightPanelToggler =  ko.pureComputed(function(){
-                return self.isMobileDevice !== 'true' ;
-            });
+            self.showRightPanelToggler =  ko.observable(self.isMobileDevice !== 'true');
             
             self.dashboardEditDisabled = ko.observable(self.toolBarModel ? self.toolBarModel.editDisabled() : true);
             
@@ -267,8 +265,10 @@ define(['knockout',
                         }
                         self.$b.triggerBuilderResizeEvent('Initialize right panel');
                     }
-
                     
+
+
+
                     self.initEventHandlers();
                     self.loadWidgets();
                     self.initDraggable();
@@ -354,11 +354,16 @@ define(['knockout',
 
             self.tileMaximizedHandler = function() {
                 self.maximized(true);
+                self.completelyHidden(true);
                 self.$b.triggerBuilderResizeEvent('tile maximized and completely hide left panel');
             };
 
             self.tileRestoredHandler = function() {
                 self.maximized(false);
+                if(self.isMobileDevice !== 'true') {
+                    self.completelyHidden(false);
+                }
+
                 self.initDraggable();
                 self.$b.triggerBuilderResizeEvent('hide left panel because restore');
             };
