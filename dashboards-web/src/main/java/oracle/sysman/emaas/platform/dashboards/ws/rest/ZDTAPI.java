@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import oracle.sysman.emaas.platform.dashboards.core.zdt.DataManager;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.ZDTEntity;
 
 /**
@@ -39,10 +40,12 @@ public class ZDTAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getEntitiesCoung()
 	{
-		//		long dashboardCount = DashboardManager.getInstance().getAllDashboardsCount();
-		long dashboardCount = 33;
-		ZDTEntity zdte = new ZDTEntity();
-		zdte.setCountOfDashboards(dashboardCount);
+		long dashboardCount = DataManager.getInstance().getAllDashboardsCount();
+		long favoriteCount = DataManager.getInstance().getAllFavoriteCount();
+		long preferenceCount = DataManager.getInstance().getAllPreferencessCount();
+		logger.debug("ZDT counters: dashboards count - {}, favorite count - {}, preference count - {}", dashboardCount,
+				favoriteCount, preferenceCount);
+		ZDTEntity zdte = new ZDTEntity(dashboardCount, favoriteCount, preferenceCount);
 		return Response.ok(getJsonUtil().toJson(zdte)).build();
 	}
 }

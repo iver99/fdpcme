@@ -230,21 +230,6 @@ public class DashboardManager
 		deleteDashboard(dashboardId, false, tenantId);
 	}
 
-	/**
-	 * Retrieves total count for all dashbaord from all tenants
-	 *
-	 * @return
-	 */
-	public long getAllDashboardsCount()
-	{
-		DashboardServiceFacade dsf = new DashboardServiceFacade();
-		EntityManager em = dsf.getEntityManager();
-		String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD WHERE DELETED <> 1";
-		Query query = em.createNativeQuery(sql);
-		long count = ((Number) query.getSingleResult()).longValue();
-		return count;
-	}
-
 	public ScreenshotData getDashboardBase64ScreenShotById(Long dashboardId, Long tenantId) throws DashboardException
 	{
 		EntityManager em = null;
