@@ -141,10 +141,12 @@ define(['knockout',
             self.completelyHidden = ko.observable(false);
             self.maximized = ko.observable(false);
 
+            self.editDashboardDialogModel = ko.observable(null);
+            
             self.loadToolBarModel = function(toolBarModel,_$b){
                 self.toolBarModel = toolBarModel;
-                if(toolBarModel) {      
-                    self.editDashboardDialogModel =  new ed.EditDashboardDialogModel(_$b,toolBarModel);                 
+                if(toolBarModel) {
+                    self.editDashboardDialogModel(new ed.EditDashboardDialogModel(_$b,toolBarModel));                 
                     self.dashboardEditDisabled(toolBarModel.editDisabled()) ;
                 }else{
                     self.dashboardEditDisabled(true) ;
@@ -626,12 +628,12 @@ define(['knockout',
 
             if(self.dashboard.type() !== "SET") {
                 var dsbSaveDelay = ko.computed(function(){
-                    if(self.editDashboardDialogModel)
-                        return self.editDashboardDialogModel.showdbDescription()+self.editDashboardDialogModel.name()+self.editDashboardDialogModel.description()+self.showdbOnHomePage();
+                    if(self.editDashboardDialogModel())
+                        return self.editDashboardDialogModel().showdbDescription() + self.editDashboardDialogModel().name() + self.editDashboardDialogModel().description() + self.showdbOnHomePage();
                 });
                 dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } });
                 dsbSaveDelay.subscribe(function(){
-                        self.editDashboardDialogModel.save();
+                        self.editDashboardDialogModel() && self.editDashboardDialogModel().save();
                 });
 
                 self.enableEntityFilter = ko.observable(self.dashboard.enableEntityFilter() === 'TRUE');
