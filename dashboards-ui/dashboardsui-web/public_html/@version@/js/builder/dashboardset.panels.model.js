@@ -342,7 +342,7 @@ define([
                 var bodyHeight = $(window).height();
                 var titleToolbarHeight = target.position().top;
                 var newHeight = Number(bodyHeight) - Number(titleToolbarHeight);
-                var targetContainer = target.closest('#dashboards-tabs-contents')
+                var targetContainer = target.closest('#dashboards-tabs-contents');
                 targetContainer.css({'height': newHeight});
                 targetContainer.css({'overflow-y': 'scroll'});
             }

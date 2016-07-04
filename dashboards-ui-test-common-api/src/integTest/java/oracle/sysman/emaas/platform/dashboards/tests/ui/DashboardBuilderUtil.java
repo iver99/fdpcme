@@ -39,6 +39,25 @@ public class DashboardBuilderUtil
 	public static final String DUP_DASHBOARD_TOSET = "duplicate_addToSet";
 	public static final String DUP_SHBOARDSET_NOTTOSET="duplicate_notAddToSet";
 
+	public static void createDashboardInsideSet(WebDriver driver, String name, String descriptions) throws Exception
+	{
+		driver.waitForElementPresent("id="+DashBoardPageId.DashboardsetOptionsMenuID);
+		WaitUtil.waitForPageFullyLoaded(driver);
+		driver.getLogger().info("DashboardBuilderUtil.createDashboardInsideSet : " + name);
+		Validator.notEmptyString("name", name);
+		driver.click("css="+DashBoardPageId.DASHBOARD_HOME_CREATINSET_BUTTON);
+
+		if (name != null && !name.isEmpty()) {
+			driver.sendKeys("id="+DashBoardPageId.DashBoardNameBoxID, name);
+		}
+		if (descriptions != null && !descriptions.isEmpty()) {
+			driver.sendKeys("id="+DashBoardPageId.DashBoardDescBoxID, descriptions);
+		}
+		driver.takeScreenShot();
+		driver.click("id="+DashBoardPageId.DashOKButtonID);
+		driver.getLogger().info("DashboardBuilderUtil.createDashboardInsideSet completed");
+	}
+
 	public static void addNewDashboardToSet(WebDriver driver, String dashboardName) throws Exception
 	{
 		driver.getLogger().info("DashboardBuilderUtil.addNewDashboardToSet started for name=\"" + dashboardName + "\"");
@@ -226,82 +245,15 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil.deleteDashboardSet completed");
 	}
 
-	public static void duplicateDashboard(WebDriver driver, String name, String descriptions ,String operationName) throws Exception
-	{
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		Validator.notNull("duplicatename", name);
-		Validator.notEmptyString("duplicatename", name);
-		Validator.notEmptyString("duplicatedescription", descriptions);
-
-		Validator.notEmptyString("duplicatename", name);
-
-		driver.getLogger().info("DashboardBuilderUtil.duplicate started");
-		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsMenuLocator);
-		WaitUtil.waitForPageFullyLoaded(driver);
-		WebElement visibleContainer=getSelectedDashboardEl(driver);
-		WebElement visbleOptionMenu =visibleContainer.findElement(By.cssSelector(DashBoardPageId.BuilderOptionsMenuLocator));
-		visbleOptionMenu.click();
-		driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsDuplicateLocatorCSS);
-
-		// add to set or not,or no dropdownmenu just add
-		switch (operationName){
-			case DUP_DASHBOARD_NODSUBMENU:
-				driver.click("css=" + DashBoardPageId.BuilderOptionsDuplicateLocatorCSS);
-				break;
-			case DUP_DASHBOARD_TOSET:
-				driver.click("css=" + DashBoardPageId.BuilderOptionsDuplicateLocatorCSS);
-				driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsDuplicateToSetCSS);
-				driver.click("css="+DashBoardPageId.BuilderOptionsDuplicateToSetCSS);
-				break;
-			case DUP_SHBOARDSET_NOTTOSET:
-				driver.click("css=" + DashBoardPageId.BuilderOptionsDuplicateLocatorCSS);
-				driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsDuplicateNotToSetCSS);
-				driver.click("css="+DashBoardPageId.BuilderOptionsDuplicateNotToSetCSS);
-				break;
+	public static void duplicateDashboard(WebDriver driver, String name, String descriptions) throws Exception {
+		duplicateDashboardCommonUse(driver,name, descriptions ,DUP_DASHBOARD_NODSUBMENU);
+	}
+	public static void duplicateDashboardInsideSet(WebDriver driver, String name, String descriptions,boolean addToSet) throws Exception {
+		if(addToSet){
+			duplicateDashboardCommonUse(driver,name, descriptions ,DUP_DASHBOARD_TOSET);
+		}else{
+			duplicateDashboardCommonUse(driver,name, descriptions ,DUP_SHBOARDSET_NOTTOSET);
 		}
-
-		driver.takeScreenShot();
-		driver.waitForElementPresent("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("ojDialogWrapper-duplicateDsbDialog")));
-		//add name and description
-		driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS).clear();
-		driver.click("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS);
-		By locatorOfDuplicateNameEl = By.id(DashBoardPageId.BuilderOptionsDuplicateNameCSS);
-
-		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateNameEl));
-		driver.sendKeys("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS, name);
-		driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS).clear();
-		driver.click("id=" + DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateNameEl));
-		if (descriptions == null) {
-			driver.sendKeys("id=" + DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS, "");
-		}
-		else {
-			driver.sendKeys("id=" + DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS, descriptions);
-		}
-		driver.takeScreenShot();
-
-		//press ok button
-		By locatorOfDuplicateSaveEl = By.cssSelector(DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateSaveEl));
-		wait.until(ExpectedConditions.elementToBeClickable(locatorOfDuplicateSaveEl));
-
-		By locatorOfDuplicateDesEl = By.id(DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS);
-		driver.getWebDriver().findElement(locatorOfDuplicateDesEl).sendKeys(Keys.TAB);
-
-		WebElement saveButton = driver.getElement("css=" + DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
-		Actions actions = new Actions(driver.getWebDriver());
-		actions.moveToElement(saveButton).build().perform();
-
-		driver.takeScreenShot();
-		driver.getLogger().info("DashboardBuilderUtil.duplicate save button has been focused");
-
-		driver.click("css=" + DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
-		driver.takeScreenShot();
-		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsMenuLocator);
-		driver.takeScreenShot();
-		driver.getLogger().info("DashboardBuilderUtil.duplicate completed");
-
 	}
 
 	public static void editDashboard(WebDriver driver, String name, String descriptions, Boolean toShowDscptn) throws Exception
@@ -1346,6 +1298,84 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("[DashboardBuilderUtil] triggered showRightDrawer and show build dashboard.");
 		WaitUtil.waitForPageFullyLoaded(driver);
 		driver.takeScreenShot();
+	}
+
+	private static void duplicateDashboardCommonUse(WebDriver driver, String name, String descriptions ,String operationName) throws Exception
+	{
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		Validator.notNull("duplicatename", name);
+		Validator.notEmptyString("duplicatename", name);
+		Validator.notEmptyString("duplicatedescription", descriptions);
+
+		Validator.notEmptyString("duplicatename", name);
+
+		driver.getLogger().info("DashboardBuilderUtil.duplicate started");
+		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsMenuLocator);
+		WaitUtil.waitForPageFullyLoaded(driver);
+		WebElement visibleContainer=getSelectedDashboardEl(driver);
+		WebElement visbleOptionMenu =visibleContainer.findElement(By.cssSelector(DashBoardPageId.BuilderOptionsMenuLocator));
+		visbleOptionMenu.click();
+		driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsDuplicateLocatorCSS);
+
+		// add to set or not,or no dropdownmenu just add
+		switch (operationName){
+			case DUP_DASHBOARD_NODSUBMENU:
+				driver.click("css=" + DashBoardPageId.BuilderOptionsDuplicateLocatorCSS);
+				break;
+			case DUP_DASHBOARD_TOSET:
+				driver.click("css=" + DashBoardPageId.BuilderOptionsDuplicateLocatorCSS);
+				driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsDuplicateToSetCSS);
+				driver.click("css="+DashBoardPageId.BuilderOptionsDuplicateToSetCSS);
+				break;
+			case DUP_SHBOARDSET_NOTTOSET:
+				driver.click("css=" + DashBoardPageId.BuilderOptionsDuplicateLocatorCSS);
+				driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsDuplicateNotToSetCSS);
+				driver.click("css="+DashBoardPageId.BuilderOptionsDuplicateNotToSetCSS);
+				break;
+		}
+
+		driver.takeScreenShot();
+		driver.waitForElementPresent("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("ojDialogWrapper-duplicateDsbDialog")));
+		//add name and description
+		driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS).clear();
+		driver.click("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS);
+		By locatorOfDuplicateNameEl = By.id(DashBoardPageId.BuilderOptionsDuplicateNameCSS);
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateNameEl));
+		driver.sendKeys("id=" + DashBoardPageId.BuilderOptionsDuplicateNameCSS, name);
+		driver.getElement("id=" + DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS).clear();
+		driver.click("id=" + DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateNameEl));
+		if (descriptions == null) {
+			driver.sendKeys("id=" + DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS, "");
+		}
+		else {
+			driver.sendKeys("id=" + DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS, descriptions);
+		}
+		driver.takeScreenShot();
+
+		//press ok button
+		By locatorOfDuplicateSaveEl = By.cssSelector(DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateSaveEl));
+		wait.until(ExpectedConditions.elementToBeClickable(locatorOfDuplicateSaveEl));
+
+		By locatorOfDuplicateDesEl = By.id(DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS);
+		driver.getWebDriver().findElement(locatorOfDuplicateDesEl).sendKeys(Keys.TAB);
+
+		WebElement saveButton = driver.getElement("css=" + DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
+		Actions actions = new Actions(driver.getWebDriver());
+		actions.moveToElement(saveButton).build().perform();
+
+		driver.takeScreenShot();
+		driver.getLogger().info("DashboardBuilderUtil.duplicate save button has been focused");
+
+		driver.click("css=" + DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
+		driver.takeScreenShot();
+		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsMenuLocator);
+		driver.takeScreenShot();
+		driver.getLogger().info("DashboardBuilderUtil.duplicate completed");
+
 	}
 
 	/**

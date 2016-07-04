@@ -77,22 +77,6 @@ public class DashboardHomeUtil
 		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.DashOKButtonID));
 	}
 
-	public static void createDashboardInSet(WebDriver driver, String name, String descriptions) throws Exception
-	{
-		driver.waitForElementPresent("id="+DashBoardPageId.DashboardsetOptionsMenuID);
-		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.getLogger().info("[DashboardHomeUtil] call createDashboardInSet : " + name);
-		driver.click(DashboardHomeUtil.convertCss(DashBoardPageId.DASHBOARD_HOME_CREATINSET_BUTTON));
-
-		if (name != null && !name.isEmpty()) {
-			driver.sendKeys(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardNameBoxID), name);
-		}
-		if (descriptions != null && !descriptions.isEmpty()) {
-			driver.sendKeys(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardDescBoxID), descriptions);
-		}
-		driver.takeScreenShot();
-		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.DashOKButtonID));
-	}
 	/**
 	 * Delete one dashboard by name
 	 *
