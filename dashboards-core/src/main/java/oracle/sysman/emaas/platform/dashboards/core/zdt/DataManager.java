@@ -56,7 +56,7 @@ public class DataManager
 	{
 		DashboardServiceFacade dsf = new DashboardServiceFacade();
 		EntityManager em = dsf.getEntityManager();
-		String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_FAVORITE";
+		String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD d, EMS_DASHBOARD_USER_OPTIONS uo WHERE d.DASHBOARD_ID=uo.DASHBOARD_ID AND d.TENANT_ID=uo.TENANT_ID AND d.DELETED<>1 AND IS_FAVORITE=1";
 		Query query = em.createNativeQuery(sql);
 		long count = ((Number) query.getSingleResult()).longValue();
 		return count;
