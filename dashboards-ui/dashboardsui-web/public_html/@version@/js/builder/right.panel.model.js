@@ -141,18 +141,20 @@ define(['knockout',
             self.completelyHidden = ko.observable(false);
             self.maximized = ko.observable(false);
 
-            self.loadToolBarModel = function(toolBarModel){
+            self.editDashboardDialogModel = ko.observable(null);
+            
+            self.loadToolBarModel = function(toolBarModel,_$b){
                 self.toolBarModel = toolBarModel;
                 if(toolBarModel) {
-                    self.editDashboardDialogModel =  new ed.EditDashboardDialogModel(self.$b,toolBarModel);
+                    self.editDashboardDialogModel(new ed.EditDashboardDialogModel(_$b,toolBarModel));                 
                     self.dashboardEditDisabled(toolBarModel.editDisabled()) ;
                 }else{
                     self.dashboardEditDisabled(true) ;
                 }
             };
-
-            self.loadToolBarModel(toolBarModel);
-
+            
+            self.loadToolBarModel(toolBarModel,self.$b);
+            
             self.loadTilesViewModel = function(tilesViewModel){
                 if(!tilesViewModel) {
                     return;
@@ -653,13 +655,23 @@ define(['knockout',
 
             self.showdbOnHomePage = ko.observable([]);
             
-            var dsbSaveDelay = ko.computed(function(){
-                return self.editDashboardDialogModel.showdbDescription()+self.editDashboardDialogModel.name()+self.editDashboardDialogModel.description()+self.showdbOnHomePage();
-            });
-            dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } }); 
-            dsbSaveDelay.subscribe(function(){
-                self.editDashboardDialogModel.save();
-            });
+            if(self.dashboard.type() !== "SET") {
+                var dsbSaveDelay = ko.computed(function(){
+                    if(self.editDashboardDialogModel())
+                        return self.editDashboardDialogModel().showdbDescription() + self.editDashboardDialogModel().name() + self.editDashboardDialogModel().description() + self.showdbOnHomePage();
+                });
+                dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } });
+                dsbSaveDelay.subscribe(function(){
+                        self.editDashboardDialogModel() && self.editDashboardDialogModel().save();
+                });
+                
+//            var dsbSaveDelay = ko.computed(function(){
+//                return self.editDashboardDialogModel.showdbDescription()+self.editDashboardDialogModel.name()+self.editDashboardDialogModel.description()+self.showdbOnHomePage();
+//            });
+//            dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } }); 
+//            dsbSaveDelay.subscribe(function(){
+//                self.editDashboardDialogModel.save();
+//            });
             
             //Convert persisted time range to make them easier to read
             self.dateConverter = oj.Validation.converterFactory("dateTime").createConverter({formatType: "date", dateFormat: "medium"});
@@ -1078,6 +1090,7 @@ define(['knockout',
                     }
                 });
                 self.defaultAutoRefreshValue = ko.observable("every5minutes");
+            }
 
             if (self.isDashboardSet()) {
                 self.dashboardsetName = ko.observable(self.dashboardsetToolBarModel.dashboardsetName());

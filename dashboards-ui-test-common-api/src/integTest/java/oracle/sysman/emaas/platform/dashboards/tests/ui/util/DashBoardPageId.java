@@ -215,7 +215,7 @@ public class DashBoardPageId
 	//	public static final String BuilderOptionsDeleteMenuLocator = "//a[@id='emcpdf_dsbopts_delete']";
 	public static final String BuilderOptionsPrintLocatorCSS = "li[data-singledb-option=\"Print\"] a";
 	public static final String BuilderOptionsEditLocatorCSS = "li[data-singledb-option=\"Edit\"] a";
-	public static final String BuilderOptionsEditNameCSS = ".dbd-right-panel-editdashboard #editDbdName";
+	public static final String BuilderOptionsEditNameCSS = ".dbd-right-panel-editdashboard #dbsHNameIn";
 	public static final String BuilderOptionsEditDescriptionCSS = ".dbd-right-panel-editdashboard #editDbdDscp";
 	public static final String BuilderOptionsEditShowDescriptionCSS = ".dbd-right-panel-editdashboard #showdbDescription";
 	public static final String BuilderOptionsEditSaveCSS = ".createDsb-2";
@@ -256,7 +256,7 @@ public class DashBoardPageId
 	public static final String DashboardsetOptionsEditSaveID = "saveDsbInfo";
 	public static final String DashboardsetOptionsEditDialogID = "ojDialogWrapper-changeDashboardsetInfo";
 	public static final String DashboardsetOptionsNameCollapsibleCSS = "#nameDescription a.oj-collapsible-open-icon";
-	public static final String DashboardsetOptionsEditNameCSS = "input#editDbdSetName";
+	public static final String DashboardsetOptionsEditNameCSS = "input#dbsSetHNameIn";
 	public static final String DashboardsetOptionsEditDescriptionCSS = "textarea#editDbdSetDscp";
 	public static final String DashboardsetOptionsShareContentCSS = ".dbd-right-panel-editdashboard-set-share .oj-collapsible-wrapper";
 	public static final String DashboardsetOptionsShareCollapsibleCSS = ".dbd-right-panel-editdashboard-set-share >span";
