@@ -81,9 +81,7 @@ define(['knockout',
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
             self.scrollbarWidth = uiutil.getScrollbarWidth();
 
-            self.showRightPanelToggler =  ko.pureComputed(function(){
-                return self.isMobileDevice !== 'true' ;
-            });
+            self.showRightPanelToggler =  ko.observable(self.isMobileDevice !== 'true');
             
             self.dashboardEditDisabled = ko.observable(self.toolBarModel ? self.toolBarModel.editDisabled() : true);
             
@@ -93,6 +91,7 @@ define(['knockout',
 
             self.editRightpanelLinkage = function(target){
                 var highlightIcon = "pencil";
+                self.completelyHidden(false);
                 var panelTarget;
                 if (target === "singleDashboard-edit") {
                     panelTarget = "edit";
@@ -124,6 +123,9 @@ define(['knockout',
                 } else if (self.showRightPanel()) {
                     self.rightPanelIcon("none");
                     self.toggleLeftPanel();
+                    if("NORMAL"!==self.$b.dashboard.type() || self.$b.dashboard.systemDashboard()){
+                        self.completelyHidden(true);
+                    }
                 } else {
                     self.rightPanelIcon(clickedIcon);
                     self.toggleLeftPanel();
@@ -258,11 +260,15 @@ define(['knockout',
                         } else {
                             self.showRightPanel(false);
                         }
+                        if("NORMAL"!==self.$b.dashboard.type() || self.$b.dashboard.systemDashboard()){
+                            self.completelyHidden(true);
+                        }
                         self.$b.triggerBuilderResizeEvent('Initialize right panel');
                     }
                     
 
-                    
+
+
                     self.initEventHandlers();
                     self.loadWidgets();
                     self.initDraggable();
@@ -348,11 +354,16 @@ define(['knockout',
 
             self.tileMaximizedHandler = function() {
                 self.maximized(true);
+                self.completelyHidden(true);
                 self.$b.triggerBuilderResizeEvent('tile maximized and completely hide left panel');
             };
 
             self.tileRestoredHandler = function() {
                 self.maximized(false);
+                if(self.isMobileDevice !== 'true') {
+                    self.completelyHidden(false);
+                }
+
                 self.initDraggable();
                 self.$b.triggerBuilderResizeEvent('hide left panel because restore');
             };
