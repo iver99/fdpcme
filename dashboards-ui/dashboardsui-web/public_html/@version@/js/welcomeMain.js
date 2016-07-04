@@ -124,7 +124,7 @@ require(['ojs/ojcore',
                 self.APMDesc = getNlsString("LANDING_HOME_APM_DESC");
                 self.LA = getNlsString("LANDING_HOME_LA");
                 self.LADesc = getNlsString("LANDING_HOME_LA_DESC");
-                self.ITA = getNlsString("LANDING_HOME_ITA");
+                self.ITA = getNlsString("LANDING_HOME_ITA");                
                 self.ITADesc = getNlsString("LANDING_HOME_ITA_DESC");
                 self.select = getNlsString("LANDING_HOME_SELECT");
                 self.ITA_DB_Performance = getNlsString("LANDING_HOME_ITA_DB_PERFORMANCE");
