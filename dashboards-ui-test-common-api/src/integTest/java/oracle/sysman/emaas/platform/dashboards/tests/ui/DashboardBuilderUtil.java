@@ -1304,9 +1304,9 @@ public class DashboardBuilderUtil
 	{
 		driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerCSS);
 		if (DashboardBuilderUtil.isRightDrawerVisible(driver) == true) {
-			driver.click("css=" + DashBoardPageId.RightDrawerToggleWrenchBtnCSS);
+			driver.click("css=" + DashBoardPageId.RightDrawerTogglePencilBtnCSS);
 			if(DashboardBuilderUtil.isRightDrawerVisible(driver) == true){
-				driver.click("css=" + DashBoardPageId.RightDrawerToggleWrenchBtnCSS);
+				driver.click("css=" + DashBoardPageId.RightDrawerTogglePencilBtnCSS);
 			}
 			driver.getLogger().info("[DashboardBuilderUtil] triggered hideRightDrawer.");
 		}
