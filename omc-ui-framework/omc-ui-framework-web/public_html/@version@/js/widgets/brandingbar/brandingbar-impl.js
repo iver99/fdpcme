@@ -59,6 +59,7 @@ define([
                 self.MONITORING_SERVICE_VERSION=encodeURIComponent('1.5+');
                 var appIdEventUI = "EventUI";
                 var appIdMonitoring = "Monitoring";
+                var appIdSecurityAnalytics = "SecurityAnalytics";
                 var appMap = {};
                 appMap[appIdAPM] = {
                     "appId": "APM",
@@ -117,6 +118,13 @@ define([
                     "version": self.MONITORING_SERVICE_VERSION,
                     "helpTopicId": "em_moncs"
                 }; 
+                appMap[appIdSecurityAnalytics] = {
+                        "appId": appIdSecurityAnalytics,
+                        "appName": "BRANDING_BAR_APP_NAME_SECURITY_ANALYTICS", 
+                        "serviceName": "SecurityAnalyticsUI",
+                        "version": self.SERVICE_VERSION,
+                        "helpTopicId": "em_samcs"
+                    }; 
             
                 self.appId = $.isFunction(params.appId) ? params.appId() : params.appId;
                 self.relNotificationCheck = $.isFunction(params.relNotificationCheck) ? params.relNotificationCheck() : params.relNotificationCheck;

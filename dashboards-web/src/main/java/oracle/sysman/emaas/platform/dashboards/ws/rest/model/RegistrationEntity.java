@@ -88,6 +88,12 @@ public class RegistrationEntity implements Serializable
 	public static final String MONITORING_VERSION = "1.5+";
 	public static final String MONITORING_HOME_LINK = "sso.home";
 
+	// Security Analytics service
+	public static final String SECURITY_ANALYTICS_OPC_APPNAME = "SecurityAnalytics";
+	public static final String SECURITY_ANALYTICS_SERVICENAME = "SecurityAnalyticsUI";
+	public static final String SECURITY_ANALYTICS_VERSION = "1.0+";
+	public static final String SECURITY_ANALYTICS_HOME_LINK = "sso.analytics-ui";
+
 	private static final Logger _logger = LogManager.getLogger(RegistrationEntity.class);
 	//	private String registryUrls;
 
@@ -136,7 +142,8 @@ public class RegistrationEntity implements Serializable
 						@Override
 						public Object fetchCachable(Object key) throws Exception
 						{
-							List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(), UserContext.getCurrentUser());
+							List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
+							UserContext.getCurrentUser());
 							if (!PrivilegeChecker.isAdminUser(userRoles)) {
 								return null;
 							}
@@ -232,6 +239,18 @@ public class RegistrationEntity implements Serializable
 					LinkEntity le = new LinkEntity(MONITORING_OPC_APPNAME, l.getHref(), MONITORING_SERVICENAME,
 							MONITORING_VERSION);
 					le = replaceWithVanityUrl(le, tenantName, MONITORING_SERVICENAME);
+					list.add(le);
+				}
+				else if (SECURITY_ANALYTICS_SERVICENAME.equals(app)) {
+					Link l = RegistryLookupUtil.getServiceExternalLink(SECURITY_ANALYTICS_SERVICENAME,
+							SECURITY_ANALYTICS_VERSION, SECURITY_ANALYTICS_HOME_LINK, tenantName);
+					if (l == null) {
+						throw new Exception("Link for " + app + "return null");
+					}
+					//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
+					LinkEntity le = new LinkEntity(SECURITY_ANALYTICS_OPC_APPNAME, l.getHref(), SECURITY_ANALYTICS_SERVICENAME,
+							SECURITY_ANALYTICS_VERSION);
+					le = replaceWithVanityUrl(le, tenantName, SECURITY_ANALYTICS_SERVICENAME);
 					list.add(le);
 				}
 			}
@@ -408,6 +427,10 @@ public class RegistrationEntity implements Serializable
 						&& roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_MONITORING)) {
 					resultLinks.add(le);
 				}
+				else if (le.getServiceName().equals(SECURITY_ANALYTICS_SERVICENAME)
+						&& roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_SECURITY)) {
+					resultLinks.add(le);
+				}
 				else if (le.getServiceName().equals(EVENTUI_SERVICENAME) || le.getServiceName().equals(TMUI_SERVICENAME)) {
 					resultLinks.add(le);
 				}
@@ -483,6 +506,10 @@ public class RegistrationEntity implements Serializable
 			//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
 			else if (MONITORING_OPC_APPNAME.equals(app)) {
 				appSet.add(MONITORING_SERVICENAME);
+			}
+			//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
+			else if (SECURITY_ANALYTICS_OPC_APPNAME.equals(app)) {
+				appSet.add(SECURITY_ANALYTICS_SERVICENAME);
 			}
 		}
 		//if any of APM/LA/TA is subscribed, TenantManagementUI/EventUI/AdminConsoleSaaSUi should be subscribed accordingly as agreement now
