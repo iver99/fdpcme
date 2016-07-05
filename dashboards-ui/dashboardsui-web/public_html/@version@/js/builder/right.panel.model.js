@@ -260,7 +260,10 @@ define(['knockout',
                         } else {
                             self.showRightPanel(false);
                         }
-                        if("NORMAL"!==self.$b.dashboard.type() || self.$b.dashboard.systemDashboard()){
+                        
+                        if ("NORMAL" !== self.$b.dashboard.type()
+                                || true === self.$b.dashboard.systemDashboard()
+                                || false === self.dashboardsetToolBarModel.dashboardsetConfig.isCreator()) {
                             self.completelyHidden(true);
                         }
                         self.$b.triggerBuilderResizeEvent('Initialize right panel');
