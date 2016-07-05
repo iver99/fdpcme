@@ -93,6 +93,25 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("all dashboards have been deleted");
 	}
 
+	//@Test(dependsOnMethods = { "testCreateDashboard_noWidget_ListView"})
+	public void Test_targetselector() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test sort by dashboards  in list view");
+
+		//search the dashboard
+		webd.getLogger().info("search the dashboard");
+		DashboardHomeUtil.search(webd, "noWidgetListView");
+
+		//open the dashboard in builder page
+		webd.getLogger().info("open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "noWidgetListView");
+
+		//edit the dashboard in Target selector page
+		DashboardBuilderUtil.EditDashboard_targetselctor(webd, "noWidgetListView", "noWidgetListView desc2");
+
+	}
+
 	@Test
 	public void testCreateDashboad_noDesc_GridView() throws Exception
 	{
@@ -164,25 +183,6 @@ public class TestDashBoard extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noWidgetGrid, dbDesc, true),
 				"Create dashboard failed!");
 	}
-
-           @Test(dependsOnMethods = { "testCreateDashboard_noWidget_ListView"})
-	public void Test_targetselector() throws Exception
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test sort by dashboards  in list view");
-
-		//search the dashboard
-		webd.getLogger().info("search the dashboard");
-		DashboardHomeUtil.search(webd, "noWidgetListView");
-
-		//open the dashboard in builder page
-		webd.getLogger().info("open the dashboard");
-		DashboardHomeUtil.selectDashboard(webd, "noWidgetListView");
-
-		//edit the dashboard in Target selector page
-		DashboardBuilderUtil.EditDashboard_targetselctor(webd, "noWidgetListView", "noWidgetListView desc2");
-	  	
-	}      
 
 	@Test
 	public void testCreateDashboard_noWidget_ListView() throws Exception
@@ -361,7 +361,7 @@ public class TestDashBoard extends LoginAndLogout
 				"Test_Dashboard_no_Widget_GridView desc modify", true), "Dashboard NOT found");
 
 		//Duplicate dashbaord
-		DashboardBuilderUtil.duplicateDashboard(webd, dbName, dbDesc,"duplicate_noSubMenu");
+		DashboardBuilderUtil.duplicateDashboard(webd, dbName, dbDesc, "duplicate_noSubMenu");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, dbDesc, true), "Duplicate failed!");
 
 	}
@@ -478,14 +478,26 @@ public class TestDashBoard extends LoginAndLogout
 		//Open the dashboard
 		webd.getLogger().info("Open the dashboard to edit name and description");
 		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid);
-		DashboardBuilderUtil
-		.editDashboard(webd, dbName_noWidgetGrid + "-modify", "Test_Dashboard_no_Widget_GridView desc modify",false);
+
+		//edit the dashboard
+		webd.getLogger().info("Edit the dashboard's name and description, display the description");
+		DashboardBuilderUtil.editDashboard(webd, dbName_noWidgetGrid + "-modify",
+				"Test_Dashboard_no_Widget_GridView desc modify-displayed", true);
 
 		//Verify the dashboard edited successfully
 		webd.getLogger().info("Verify the dashboard edited successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noWidgetGrid + "-modify",
-				"Test_Dashboard_no_Widget_GridView desc modify", true), "Dashboard edit failed!");
+				"Test_Dashboard_no_Widget_GridView desc modify-displayed", true), "Dashboard edit failed!");
 
+		//edit the dashboard
+		webd.getLogger().info("Edit the dashboard's name and description, display the description");
+		DashboardBuilderUtil.editDashboard(webd, dbName_noWidgetGrid + "-modify",
+				"Test_Dashboard_no_Widget_GridView desc modify-not displayed", false);
+
+		//Verify the dashboard edited successfully
+		webd.getLogger().info("Verify the dashboard edited successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noWidgetGrid + "-modify",
+				"Test_Dashboard_no_Widget_GridView desc modify-not displayed", true), "Dashboard edit failed!");
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView" })
@@ -763,6 +775,17 @@ public class TestDashBoard extends LoginAndLogout
 		//verify dashboard in builder page
 		webd.getLogger().info("Verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_timepicker, dbDesc, true), "Create dashboard failed!");
+
+		//disable time selector
+		//TODO
+		//verify the dashboard, the time selector no display
+		//		webd.getLogger().info("Verify the time selector is not diplayed in dashboard");
+		//		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_timepicker, dbDesc, false), "Time selector component is still displayed!");
+		//enable time selector
+		//TODO
+		//verify the dashboard, the time selector is displayed
+		//		webd.getLogger().info("Verify the time selector is diplayed in dashboard");
+		//		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_timepicker, dbDesc, true), "Time selector component is not displayed!");
 
 		//Add the widget to the dashboard
 		webd.getLogger().info("Start to add Widget into the dashboard");
