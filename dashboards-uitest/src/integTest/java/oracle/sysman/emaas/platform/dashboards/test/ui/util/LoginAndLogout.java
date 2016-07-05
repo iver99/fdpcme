@@ -16,8 +16,11 @@ public class LoginAndLogout
 	{
 		if (webd != null) {
 			LoginUtils.doLogout(webd);
-			webd.shutdownBrowser(true);
-
+			try{
+                             webd.shutdownBrowser(true);
+                        }catch(Exception e){
+                             webd.getLogger().warning("Failed to shutdown browser"+e.getMessage());
+                        }
 		}
 	}
 
