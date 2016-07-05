@@ -718,7 +718,7 @@
                         style: {
                                  right: showRightPanel() ?
                                 (323 + $root.scrollbarWidth) + 'px' :
-                                $root.scrollbarWidth + 'px'
+                                $root.scrollbarWidth+ 3 + 'px'
                         }">
                     <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn rightpanel-wrench" style="display: block;"
                             data-bind="ojComponent: {
@@ -878,39 +878,39 @@
                                                 <div class="oj-flex-item">
                                                     <label for="dbsHNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
                                                     <input id="dbsHNameIn" maxlength="64" required
-                                                           data-bind="ojComponent: { component: 'ojInputText', value: editDashboardDialogModel.name,
-                                               rawValue: editDashboardDialogModel.nameInputed,
+                                                           data-bind="ojComponent: { component: 'ojInputText', value: editDashboardDialogModel().name,
+                                               rawValue: editDashboardDialogModel().nameInputed,
                                                validators : [{
                                                        type: 'regExp', options : {
                                                        pattern: '.{1,64}',
                                                        messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME_SUM'),
                                                        messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME')}
                                                     },
-                                                    editDashboardDialogModel.noSameNameValidator],
+                                                    editDashboardDialogModel().noSameNameValidator],
                                                rootAttributes: {style:'max-width:420px;'},
                                                translations: {'required': {
                                                         hint: '',
                                                         messageSummary: getNlsString('COMMON_REQUIRE_ERROR', '{label}'),
                                                         messageDetail: ''
                                                }
-                                             }},hasFocus: editDashboardDialogModel.nameFocused">
+                                             }},hasFocus: editDashboardDialogModel().nameFocused">
                                                 </div>
                                             </div>
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
                                                     <label for="editDbdDscp" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
                                                     <textarea id="editDbdDscp" maxlength="256" rows="3" style="resize: vertical"
-                                                              data-bind="ojComponent: {component: 'ojTextArea', value: editDashboardDialogModel.description,rawValue: editDashboardDialogModel.descriptionInputed, rootAttributes: {style:'max-width:420px;'},
+                                                              data-bind="ojComponent: {component: 'ojTextArea', value: editDashboardDialogModel().description,rawValue: editDashboardDialogModel().descriptionInputed, rootAttributes: {style:'max-width:420px;'},
                                                                 validators : [{type: 'regExp', options : {
                                                                        pattern: '(.|\\b|\\s){0,256}',
                                                                        messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
                                                                        messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES')}}]
-                                            },hasFocus: editDashboardDialogModel.descriptionFocused"></textarea>
+                                            },hasFocus: editDashboardDialogModel().descriptionFocused"></textarea>
                                                 </div>
                                             </div>
                                             <div class="oj-flex">
                                                 <div class="oj-flex-item">
-                                                    <div data-bind="ojComponent: {component: 'ojCheckboxset', value: editDashboardDialogModel.showdbDescription}" >
+                                                    <div data-bind="ojComponent: {component: 'ojCheckboxset', value: editDashboardDialogModel().showdbDescription}" >
                                                         <span class="oj-choice-row">
                                                             <input id="showdbDescription" type="checkbox" value="showdbDescription">
                                                             <label for="showdbDescription" data-bind="text: getNlsString('DBS_BUILDER_EDIT_SHOW_DSB_DESC')"></label>

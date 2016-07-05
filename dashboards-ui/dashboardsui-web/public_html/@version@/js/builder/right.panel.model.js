@@ -81,9 +81,7 @@ define(['knockout',
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
             self.scrollbarWidth = uiutil.getScrollbarWidth();
 
-            self.showRightPanelToggler =  ko.pureComputed(function(){
-                return self.isMobileDevice !== 'true' ;
-            });
+            self.showRightPanelToggler =  ko.observable(self.isMobileDevice !== 'true');
             
             self.dashboardEditDisabled = ko.observable(self.toolBarModel ? self.toolBarModel.editDisabled() : true);
             
@@ -93,6 +91,7 @@ define(['knockout',
 
             self.editRightpanelLinkage = function(target){
                 var highlightIcon = "pencil";
+                self.completelyHidden(false);
                 var panelTarget;
                 if (target === "singleDashboard-edit") {
                     panelTarget = "edit";
@@ -124,6 +123,9 @@ define(['knockout',
                 } else if (self.showRightPanel()) {
                     self.rightPanelIcon("none");
                     self.toggleLeftPanel();
+                    if("NORMAL"!==self.$b.dashboard.type() || self.$b.dashboard.systemDashboard()){
+                        self.completelyHidden(true);
+                    }
                 } else {
                     self.rightPanelIcon(clickedIcon);
                     self.toggleLeftPanel();
@@ -141,17 +143,19 @@ define(['knockout',
             self.completelyHidden = ko.observable(false);
             self.maximized = ko.observable(false);
 
-            self.loadToolBarModel = function(toolBarModel){
+            self.editDashboardDialogModel = ko.observable(null);
+            
+            self.loadToolBarModel = function(toolBarModel,_$b){
                 self.toolBarModel = toolBarModel;
                 if(toolBarModel) {
-                    self.editDashboardDialogModel =  new ed.EditDashboardDialogModel(self.$b,toolBarModel);
+                    self.editDashboardDialogModel(new ed.EditDashboardDialogModel(_$b,toolBarModel));                 
                     self.dashboardEditDisabled(toolBarModel.editDisabled()) ;
                 }else{
                     self.dashboardEditDisabled(true) ;
                 }
             };
             
-            self.loadToolBarModel(toolBarModel);
+            self.loadToolBarModel(toolBarModel,self.$b);
             
             self.loadTilesViewModel = function(tilesViewModel){
                 self.tilesViewModel = tilesViewModel;
@@ -256,11 +260,15 @@ define(['knockout',
                         } else {
                             self.showRightPanel(false);
                         }
+                        if("NORMAL"!==self.$b.dashboard.type() || self.$b.dashboard.systemDashboard()){
+                            self.completelyHidden(true);
+                        }
                         self.$b.triggerBuilderResizeEvent('Initialize right panel');
                     }
                     
 
-                    
+
+
                     self.initEventHandlers();
                     self.loadWidgets();
                     self.initDraggable();
@@ -346,11 +354,16 @@ define(['knockout',
 
             self.tileMaximizedHandler = function() {
                 self.maximized(true);
+                self.completelyHidden(true);
                 self.$b.triggerBuilderResizeEvent('tile maximized and completely hide left panel');
             };
 
             self.tileRestoredHandler = function() {
                 self.maximized(false);
+                if(self.isMobileDevice !== 'true') {
+                    self.completelyHidden(false);
+                }
+
                 self.initDraggable();
                 self.$b.triggerBuilderResizeEvent('hide left panel because restore');
             };
@@ -626,12 +639,12 @@ define(['knockout',
 
             if(self.dashboard.type() !== "SET") {
                 var dsbSaveDelay = ko.computed(function(){
-                    if(self.editDashboardDialogModel)
-                        return self.editDashboardDialogModel.showdbDescription()+self.editDashboardDialogModel.name()+self.editDashboardDialogModel.description()+self.showdbOnHomePage();
+                    if(self.editDashboardDialogModel())
+                        return self.editDashboardDialogModel().showdbDescription() + self.editDashboardDialogModel().name() + self.editDashboardDialogModel().description() + self.showdbOnHomePage();
                 });
                 dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } });
                 dsbSaveDelay.subscribe(function(){
-                    self.editDashboardDialogModel.save();
+                        self.editDashboardDialogModel() && self.editDashboardDialogModel().save();
                 });
 
                 self.enableEntityFilter = ko.observable(self.dashboard.enableEntityFilter() === 'TRUE');

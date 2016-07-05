@@ -361,7 +361,7 @@ public class TestDashBoard extends LoginAndLogout
 				"Test_Dashboard_no_Widget_GridView desc modify", true), "Dashboard NOT found");
 
 		//Duplicate dashbaord
-		DashboardBuilderUtil.duplicateDashboard(webd, dbName, dbDesc, "duplicate_noSubMenu");
+		DashboardBuilderUtil.duplicateDashboard(webd, dbName, dbDesc);
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, dbDesc, true), "Duplicate failed!");
 
 	}
