@@ -254,7 +254,7 @@ public class TestDashBoard extends LoginAndLogout
 		webd.switchToWindow();
 		//WaitUtil.waitForPageFullyLoaded(webd);
 		webd.getLogger().info("Wait for the widget loading....");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), 900L);
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
 
 		String url = webd.getWebDriver().getCurrentUrl();
@@ -358,7 +358,7 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("open the dashboard");
 		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid + "-modify");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noWidgetGrid + "-modify",
-				"Test_Dashboard_no_Widget_GridView desc modify", true), "Dashboard NOT found");
+				"Test_Dashboard_no_Widget_GridView desc modify-not displayed", true), "Dashboard NOT found");
 
 		//Duplicate dashbaord
 		DashboardBuilderUtil.duplicateDashboard(webd, dbName, dbDesc);
@@ -614,7 +614,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//verify if in the home page
 		webd.getLogger().info("verify delete successfully and back to the home page");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), 900L);
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DashboardDisplayPanelCss)));
 	}
 
@@ -655,7 +655,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//verify if in the home page
 		webd.getLogger().info("Verify if in the home page");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), 900L);
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DashboardDisplayPanelCss)));
 	}
 
@@ -837,7 +837,7 @@ public class TestDashBoard extends LoginAndLogout
 		webd.switchToWindow();
 		//WaitUtil.waitForPageFullyLoaded(webd);
 		webd.getLogger().info("Wait for the widget loading....");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), 900L);
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
 
 		String url = webd.getWebDriver().getCurrentUrl();
