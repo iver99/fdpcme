@@ -177,7 +177,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//open the dashboard in builder page
 		webd.getLogger().info("open the dashboard");
-		DashboardHomeUtil.selectDashboard(webd, "noWidgetListView");
+		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetList);
 
 		//edit the dashboard in Target selector page
 		DashboardBuilderUtil.EditDashboard_targetselctor(webd, "noWidgetListView", "noWidgetListView desc2");
