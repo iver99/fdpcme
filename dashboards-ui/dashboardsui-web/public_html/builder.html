@@ -934,7 +934,7 @@
                                     </div>
                                 </div>
                                 <hr/>
-                                <div class="dbd-right-panel-editdashboard-filters" data-bind="ojComponent: {component: 'ojCollapsible'}">
+                                <div class="dbd-right-panel-editdashboard-filters" data-bind="ojComponent: {component: 'ojCollapsible'},visible:enableEntityFilter && enableEntityFilter === 'TRUE'">
                                     <span  class="dbd-right-panel-editdashboard-innertitle"  data-bind="text: getNlsString('DBS_BUILDER_FILTERS')"></span>
                                     <div class="filter-settings oj-form-layout">
                                         <div class="oj-form">
