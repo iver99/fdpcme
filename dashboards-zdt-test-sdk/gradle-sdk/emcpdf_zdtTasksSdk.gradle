@@ -1,0 +1,26 @@
+/*
+ * NOTE that for version value of your test-dependency, you cannot use REPO_BID as that would be specific to
+ * repository where it is run. You need to use getRepoBuildIDInProduct api provided by DevTools to get the correct build id.
+ * Make sure to add <repoName> prefix to the variable to define the namespace so it does not conflict with any property
+ * created by LRG using your tasks file.
+ * NOTE that the below code expects SAAS_VERSION environment variable to be set correctly.
+ */
+ext.emcpdf_REPO_BID = getRepoBuildIDInProduct(System.env.SAAS_VERSION, emcpdf)
+dependencies {
+    
+}
+ 
+task emcpdf_zdtPlay(type: EMTest) {
+    options.suiteXmlBuilder().suite('name': "${project.name}-${name}") {
+        test('name': "${project.name}-${name}") {
+            // The tests to be run
+        }
+    }
+}
+ 
+task emcpdf_zdtPlaySaveState(type: EMTest)
+ 
+task emcpdf_zdtReplaySaveState(type: EMTest)
+ 
+task emcpdf_zdtCompare(type: EMTest)
+
