@@ -418,7 +418,7 @@ define(['knockout',
 
                             self.dashboardsetItems.push(singleDashboardItem);
                             self.reorderedDbsSetItems.push(singleDashboardItem);
-                            addNewTab(singleDashboardItem.name(), singleDashboardItem.dashboardId, -1);
+                            addNewTab(singleDashboardItem.name(), singleDashboardItem.dashboardId, -1,singleDashboardItem.type);
 
                             if (self.extendedOptions && self.extendedOptions.selectedTab === singleDashboardItem.dashboardId) {
                                 indexOfSelectedTabInUserOption = index;
@@ -474,7 +474,7 @@ define(['knockout',
                 function addNewTab(tabName, dashboardId, insertIndex, type) {                    
                     var tabContent;
                     if (type === "new") {
-                        tabContent = $("<li class='other-nav' id='dashboardTab-" + dashboardId + "' data-tabs-name='" + tabName + "'><span class='tabs-name'>" + tabName + "</span></li>");
+                        tabContent = $("<li class='other-nav' id='dashboardTab-" + dashboardId + "' data-tabs-name='Dashboard'><span class='tabs-name'>" + tabName + "</span></li>");
                     } else {
                         tabContent = $("<li class='other-nav' id='dashboardTab-" + dashboardId + "' data-tabs-name='" + tabName + "'data-dashboard-name-in-set='" + tabName + "'><span class='tabs-name'>" + tabName + "</span></li>");
                     }
