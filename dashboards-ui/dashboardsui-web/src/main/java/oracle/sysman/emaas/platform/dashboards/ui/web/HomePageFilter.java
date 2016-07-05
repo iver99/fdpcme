@@ -94,7 +94,16 @@ public class HomePageFilter implements Filter
 							String value = preference.substring(flag + 8, preference.length() - 2);
 							logger.info("The ID of the dashboard which has been set as Home is: \"{}\"", value);
 							if (!value.equals("")) {
-								String redirectUrl = "./builder.html?dashboardId=" + value;
+								URLCodec codec = new URLCodec();
+								String urlEscaped = "";
+								try {
+									urlEscaped = codec.encode(value);
+									logger.info("The ID of the dashboard which has been set as Home has been encode as: \"{}\"", urlEscaped);
+								}
+								catch (EncoderException e) {
+									logger.error("Failed to encode:" + value);
+								}
+								String redirectUrl = "./builder.html?dashboardId=" + urlEscaped;
 								if (!isHomeDashboardExists(domainName, authorization, userTenant, value)) {
 									logger.info("The dashboard which has been set as Home is not existed. Id: \"{}\"", value);
 									logger.info("Removing the dashboard as Home from the user preferences...");
@@ -107,15 +116,8 @@ public class HomePageFilter implements Filter
 											redirectUrl);
 								}
 								
-								URLCodec codec = new URLCodec();
-								String urlEscaped = "";
-								try {
-									urlEscaped = codec.encode(redirectUrl);
-									httpRes.sendRedirect(urlEscaped);
-								}
-								catch (EncoderException e) {
-									logger.error("Failed to encode:" + redirectUrl);
-								}
+								httpRes.sendRedirect(redirectUrl);
+								
 								return;
 							}
 						}
