@@ -1031,6 +1031,12 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
       }
 
     }
+    
+    .dbd-right-panel-editdashboard-general,.dbd-right-panel-editdashboard-set-general{
+        .oj-label-required-icon{
+            margin-left: 0;
+        }
+    }
 
   }
 
