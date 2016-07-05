@@ -35,8 +35,9 @@ public class ZDTAPI
 
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response compareAndSynOnDF()
+	public Response compareOnDF()
 	{
+		// TODO: as there is no environment to verify comparator service and APIs, now put an empty API here
 		logger.info("There is an incoming call from comparator ZDT API");
 		return Response.status(Status.NO_CONTENT).build();
 	}
