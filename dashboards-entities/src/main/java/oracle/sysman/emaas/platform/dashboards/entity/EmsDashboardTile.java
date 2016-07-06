@@ -421,6 +421,11 @@ public class EmsDashboardTile implements Serializable
 		this.row = row;
 	}
 
+	public void setTileId(BigInteger tileId)
+	{
+		this.tileId = tileId;
+	}
+
 	public void setTitle(String title)
 	{
 		this.title = title;
