@@ -194,7 +194,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testCreateDashboardSet");
+		webd.getLogger().info("Start the test case: testCreateDashboardInSet");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -213,10 +213,12 @@ public class TestDashboardSet extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_Test1), "Dashboard set NOT found!");
 
 		//create a dashboard in dashboard set
+		webd.getLogger().info("Create a dashboard inside dashboard set");
 		DashboardBuilderUtil.createDashboardInsideSet(webd, dbName_InSet, null);
 
 		//verify the dashboard is in the dashboard set
-		DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet);
+		webd.getLogger().info("Verify the created dashboard is in the dashboard set");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet), "Dashboard NOT found in the set");
 
 	}
 
@@ -253,7 +255,7 @@ public class TestDashboardSet extends LoginAndLogout
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testRemoveDashboardFromDashboardSet");
+		webd.getLogger().info("Start the test case: testDeleteDashboardInSet");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -291,7 +293,7 @@ public class TestDashboardSet extends LoginAndLogout
 		dbName_InSet = "DashboardInSet-" + generateTimeStamp();
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testRemoveDashboardFromDashboardSet");
+		webd.getLogger().info("Start the test case: testDuplicateDashboardAddToSet");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -340,7 +342,7 @@ public class TestDashboardSet extends LoginAndLogout
 		dbName_OutSet = "DashboardOutSet-" + generateTimeStamp();
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testRemoveDashboardFromDashboardSet");
+		webd.getLogger().info("Start the test case: testDuplicateDashboardNotAddToSet");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -646,7 +648,7 @@ public class TestDashboardSet extends LoginAndLogout
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testRemoveDashboardFromDashboardSet");
+		webd.getLogger().info("Start the test case: testSearchDashboardInSet");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -670,7 +672,7 @@ public class TestDashboardSet extends LoginAndLogout
 				+ "' NOT found");
 
 		//delete the dashboard
-		String InfoBtn_xpath = "//div[contains(@aria-label, 'dashboardInSet')]//button";
+		String InfoBtn_xpath = "//div[contains(@aria-label, 'DashboardInSet')]//button";
 		webd.getLogger().info("Verfiy the current dashboard can not be deleted");
 		webd.click(InfoBtn_xpath);
 		WebElement removeButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.RmBtnID));
