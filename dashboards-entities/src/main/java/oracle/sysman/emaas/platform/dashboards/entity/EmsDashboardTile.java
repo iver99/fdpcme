@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,8 +10,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
@@ -18,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,7 +28,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @Entity
 @NamedQueries({ @NamedQuery(name = "EmsDashboardTile.findAll", query = "select o from EmsDashboardTile o") })
 @Table(name = "EMS_DASHBOARD_TILE")
-@SequenceGenerator(name = "EmsDashboardTile_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_TILE_SEQ", allocationSize = 1)
+//@SequenceGenerator(name = "EmsDashboardTile_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_TILE_SEQ", allocationSize = 1)
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
 public class EmsDashboardTile implements Serializable
@@ -39,8 +37,8 @@ public class EmsDashboardTile implements Serializable
 
 	@Id
 	@Column(name = "TILE_ID", nullable = false)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EmsDashboardTile_Id_Seq_Gen")
-	private Long tileId;
+	//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EmsDashboardTile_Id_Seq_Gen")
+	private BigInteger tileId;
 	@Column(nullable = false, length = 64)
 	private String title;
 	@Column(name = "TILE_ROW")
@@ -104,7 +102,7 @@ public class EmsDashboardTile implements Serializable
 	@Column(name = "WIDGET_SUPPORT_TIME_CONTROL", nullable = false)
 	private Integer widgetSupportTimeControl;
 	@Column(name = "WIDGET_LINKED_DASHBOARD")
-	private Long widgetLinkedDashboard;
+	private BigInteger widgetLinkedDashboard;
 	@ManyToOne
 	@JoinColumns(value = { @JoinColumn(name = "DASHBOARD_ID", referencedColumnName = "DASHBOARD_ID"),
 			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
@@ -118,13 +116,12 @@ public class EmsDashboardTile implements Serializable
 	}
 
 	public EmsDashboardTile(Date creationDate, EmsDashboard emsDashboard1, Integer type, Integer row, Integer column,
-			Integer height, Integer isMaximized, Date lastModificationDate, String lastModifiedBy,
-			String owner, /*Integer position, */
-			String providerAssetRoot, String providerName, String providerVersion, Long tileId, String title,
+			Integer height, Integer isMaximized, Date lastModificationDate, String lastModifiedBy, String owner, /*Integer position, */
+			String providerAssetRoot, String providerName, String providerVersion, BigInteger tileId, String title,
 			String widgetCreationTime, String widgetDescription, String widgetGroupName, String widgetHistogram,
 			String widgetIcon, String widgetKocName, String widgetName, String widgetOwner, Integer widgetSource,
 			String widgetTemplate, String widgetUniqueId, String widgetViewmode, Integer widgetSupportTimeControl, Integer width,
-			Long widgetLinkedDashboard)
+			BigInteger widgetLinkedDashboard)
 	{
 		this.creationDate = creationDate;
 		dashboard = emsDashboard1;
@@ -245,7 +242,7 @@ public class EmsDashboardTile implements Serializable
 		return row;
 	}
 
-	public Long getTileId()
+	public BigInteger getTileId()
 	{
 		return tileId;
 	}
@@ -293,7 +290,7 @@ public class EmsDashboardTile implements Serializable
 		return widgetKocName;
 	}
 
-	public Long getWidgetLinkedDashboard()
+	public BigInteger getWidgetLinkedDashboard()
 	{
 		return widgetLinkedDashboard;
 	}
@@ -424,6 +421,11 @@ public class EmsDashboardTile implements Serializable
 		this.row = row;
 	}
 
+	public void setTileId(BigInteger tileId)
+	{
+		this.tileId = tileId;
+	}
+
 	public void setTitle(String title)
 	{
 		this.title = title;
@@ -468,7 +470,7 @@ public class EmsDashboardTile implements Serializable
 		this.widgetKocName = widgetKocName;
 	}
 
-	public void setWidgetLinkedDashboard(Long widgetLinkedDashboard)
+	public void setWidgetLinkedDashboard(BigInteger widgetLinkedDashboard)
 	{
 		this.widgetLinkedDashboard = widgetLinkedDashboard;
 	}

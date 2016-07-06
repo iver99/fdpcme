@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonF
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
+import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
@@ -22,6 +24,7 @@ import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonValue;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 public class Dashboard
 {
@@ -79,7 +82,7 @@ public class Dashboard
 	public static enum EnableEntityFilterState
 	{
 		FALSE("FALSE", 0), TRUE("TRUE", 1), AUTO("AUTO", 2);
-	
+
 		@JsonCreator
 		public static EnableEntityFilterState fromName(String name)
 		{
@@ -93,7 +96,7 @@ public class Dashboard
 			}
 			return null;
 		}
-	
+
 		public static EnableEntityFilterState fromValue(Integer value)
 		{
 			for (EnableEntityFilterState eefs : EnableEntityFilterState.values()) {
@@ -103,24 +106,24 @@ public class Dashboard
 			}
 			return null;
 		}
-	
+
 		private String name;
-	
+
 		@JsonIgnore
 		private Integer value;
-	
+
 		private EnableEntityFilterState(String name, Integer value)
 		{
 			this.name = name;
 			this.value = value;
 		}
-	
+
 		@JsonValue
 		public String getName()
 		{
 			return name;
 		}
-	
+
 		public Integer getValue()
 		{
 			return value;
@@ -226,7 +229,7 @@ public class Dashboard
 		}
 		to.setCreationDate(from.getCreationDate());
 		to.setDashboardId(from.getDashboardId());
-		to.setDeleted(from.getDeleted() == null ? null : from.getDeleted() > 0);
+		to.setDeleted(from.getDeleted() == null ? null : from.getDeleted().compareTo(BigInteger.ZERO) > 0);
 		to.setDescription(from.getDescription());
 		to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
 		to.setEnableEntityFilter(EnableEntityFilterState.fromValue(from.getEnableEntityFilter()));
@@ -256,7 +259,7 @@ public class Dashboard
 						dbd.setSharePublic(null);
 						dbd.setType(null);
 
-						Long subDashboardId = esd.getSubDashboardId();
+						BigInteger subDashboardId = esd.getSubDashboardId();
 						Long tenantId = from.getTenantId();
 						DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 						EmsDashboard ed = dsf.getEmsDashboardById(subDashboardId);
@@ -269,7 +272,8 @@ public class Dashboard
 					to.setSubDashboards(subDashboardList);
 				}
 			}
-		}else {
+		}
+		else {
 			to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
 
 			if (alwaysLoadTiles || Dashboard.DASHBOARD_TYPE_SINGLEPAGE.equals(to.getType())) {
@@ -290,7 +294,8 @@ public class Dashboard
 	}
 
 	@JsonProperty("id")
-	private Long dashboardId;
+	@JsonSerialize(using = BigIntegerSerializer.class)
+	private BigInteger dashboardId;
 
 	private String name;
 
@@ -373,7 +378,7 @@ public class Dashboard
 		return creationDate;
 	}
 
-	public Long getDashboardId()
+	public BigInteger getDashboardId()
 	{
 		return dashboardId;
 	}
@@ -470,7 +475,7 @@ public class Dashboard
 		String htmlEcodedDesc = description == null ? null : StringEscapeUtils.escapeHtml4(description);
 
 		if (ed == null) {
-			ed = new EmsDashboard(creationDate, dashboardId, 0L, htmlEcodedDesc, isEnableTimeRange, isEnableRefresh,
+			ed = new EmsDashboard(creationDate, dashboardId, BigInteger.ZERO, htmlEcodedDesc, isEnableTimeRange, isEnableRefresh,
 					isEnableDescription, isEnableEntityFilter, isIsSystem, isShare, lastModificationDate, lastModifiedBy,
 					htmlEcodedName, owner, screenShot, dashboardType, appType);
 
@@ -496,7 +501,7 @@ public class Dashboard
 		}
 		else {
 			ed.getScreenShot();
-			ed.setDeleted(deleted ? getDashboardId() : 0);
+			ed.setDeleted(deleted ? getDashboardId() : BigInteger.ZERO);
 			ed.setDescription(htmlEcodedDesc);
 			ed.setEnableTimeRange(isEnableTimeRange);
 			ed.setEnableDescription(isEnableDescription);
@@ -578,7 +583,7 @@ public class Dashboard
 		this.creationDate = creationDate;
 	}
 
-	public void setDashboardId(Long dashboardId)
+	public void setDashboardId(BigInteger dashboardId)
 	{
 		this.dashboardId = dashboardId;
 	}
@@ -692,7 +697,7 @@ public class Dashboard
 		if (ed.getSharePublic() == 0) {
 			Long tenantId = ed.getTenantId();
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-            dsf.removeUnsharedEmsSubDashboard(ed.getDashboardId(),ed.getOwner());
+			dsf.removeUnsharedEmsSubDashboard(ed.getDashboardId(), ed.getOwner());
 		}
 	}
 
@@ -708,7 +713,7 @@ public class Dashboard
 				boolean isDeleted = true;
 				if (tiles != null) {
 					for (Tile tile : tiles) {
-						if (tile.getTileId() != null && tile.getTileId().equals(edt.getTileId())) {
+						if (tile.getTileId() != null && tile.getTileId().compareTo(edt.getTileId()) == 0) {
 							isDeleted = false;
 							rows.put(tile, edt);
 							break;
@@ -728,10 +733,10 @@ public class Dashboard
 			Tile tile = tiles.get(i);
 			EmsDashboardTile edt = null;
 			if (!rows.containsKey(tile)) {
-				if (tile.getTileId() != null) {
-					throw new CommonFunctionalException(MessageUtils.getDefaultBundleString(
-							CommonFunctionalException.DASHBOARD_TILE_INVALID_ID, String.valueOf(tile.getTileId())));
-				}
+				//				if (tile.getTileId() != null) {
+				//					throw new CommonFunctionalException(MessageUtils.getDefaultBundleString(
+				//							CommonFunctionalException.DASHBOARD_TILE_INVALID_ID, String.valueOf(tile.getTileId())));
+				//				}
 				edt = tile.getPersistenceEntity(null);
 				ed.addEmsDashboardTile(edt);
 				rows.put(tile, edt);
@@ -766,7 +771,7 @@ public class Dashboard
 			Long tenantId = ed.getTenantId();
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 
-			Long subDashboardId = subDashboard.getDashboardId();
+			BigInteger subDashboardId = subDashboard.getDashboardId();
 			EmsDashboard subbed = dsf.getEmsDashboardById(subDashboardId);
 
 			if (subbed != null) {

@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.core.cache.screenshot;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
@@ -45,9 +46,9 @@ public class ScreenshotCacheManager
 		cm = CacheManager.getInstance();
 	}
 
-	public ScreenshotElement getScreenshotFromCache(Tenant tenant, Long dashboardId, String fileName) throws Exception
+	public ScreenshotElement getScreenshotFromCache(Tenant tenant, BigInteger dashboardId, String fileName) throws Exception
 	{
-		if (dashboardId == null || dashboardId <= 0) {
+		if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
 			logger.error("Unexpected dashboard id to get screenshot from cache for tenant={}, dashboard id={}, fileName={}",
 					tenant, dashboardId, fileName);
 			return null;
@@ -56,8 +57,8 @@ public class ScreenshotCacheManager
 			logger.error("Unexpected empty screenshot file name for tenant={}, dashboard id={}", tenant, dashboardId);
 			return null;
 		}
-		ScreenshotElement se = (ScreenshotElement) cm.getCacheable(tenant, CacheManager.CACHES_SCREENSHOT_CACHE,
-				new Keys(dashboardId));
+		ScreenshotElement se = (ScreenshotElement) cm.getCacheable(tenant, CacheManager.CACHES_SCREENSHOT_CACHE, new Keys(
+				dashboardId));
 		if (se == null) {
 			logger.error("Retrieved null screenshot element from cache for tenant={}, dashboard id={}, fileName={}", tenant,
 					dashboardId, fileName);
@@ -66,8 +67,8 @@ public class ScreenshotCacheManager
 		return se;
 	}
 
-	public ScreenshotElement storeBase64ScreenshotToCache(Tenant tenant, Long dashboardId, Date creation, Date modification,
-			String screenshot)
+	public ScreenshotElement storeBase64ScreenshotToCache(Tenant tenant, BigInteger dashboardId, Date creation,
+			Date modification, String screenshot)
 	{
 		if (screenshot == null) {
 			return null;
@@ -90,7 +91,7 @@ public class ScreenshotCacheManager
 		return se;
 	}
 
-	public ScreenshotElement storeBase64ScreenshotToCache(Tenant tenant, Long dashboardId, ScreenshotData ssd)
+	public ScreenshotElement storeBase64ScreenshotToCache(Tenant tenant, BigInteger dashboardId, ScreenshotData ssd)
 	{
 		if (ssd == null) {
 			return null;

@@ -12,14 +12,15 @@ package oracle.sysman.emaas.platform.dashboards.core.cache.screenshot;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.Properties;
+
+import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 
 /**
  * @author guochen
@@ -44,7 +45,7 @@ public class ScreenshotPathGenerator
 		initialize();
 	}
 
-	public String generateFileName(Long dashboardId, Date creation, Date modification)
+	public String generateFileName(BigInteger dashboardId, Date creation, Date modification)
 	{
 		if (dashboardId == null) {
 			logger.error(
@@ -69,7 +70,7 @@ public class ScreenshotPathGenerator
 		return sb.toString();
 	}
 
-	public String generateScreenshotUrl(String baseUrl, Long dashboardId, Date creation, Date modification)
+	public String generateScreenshotUrl(String baseUrl, BigInteger dashboardId, Date creation, Date modification)
 	{
 		if (StringUtil.isEmpty(baseUrl)) {
 			logger.error("Unexpected null/empty base url to generate screenshot URL");
@@ -87,7 +88,7 @@ public class ScreenshotPathGenerator
 				+ fileName;
 	}
 
-	public boolean validFileName(Long dashboardId, String fileNameToValid, String fileNameFromCache)
+	public boolean validFileName(BigInteger dashboardId, String fileNameToValid, String fileNameFromCache)
 	{
 		if (StringUtil.isEmpty(fileNameToValid)) {
 			logger.debug("Invalid file name as it is empty");

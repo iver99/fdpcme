@@ -10,14 +10,20 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import java.math.BigInteger;
+
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
+
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  * @author wenjzhu
  */
 public class FavoriteEntity
 {
-	Long id;
+	@JsonSerialize(using = BigIntegerSerializer.class)
+	BigInteger id;
 	String name;
 	String href;
 
@@ -44,7 +50,7 @@ public class FavoriteEntity
 	/**
 	 * @return the id
 	 */
-	public Long getId()
+	public BigInteger getId()
 	{
 		return id;
 	}
@@ -70,7 +76,7 @@ public class FavoriteEntity
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(Long id)
+	public void setId(BigInteger id)
 	{
 		this.id = id;
 	}
