@@ -150,14 +150,14 @@ public class DashboardsCORSFilter implements Filter
 		HttpServletRequest hReq = (HttpServletRequest) request;
 		HttpServletRequest oamRequest = new OAMHttpRequestWrapper(hReq);
 
-		StringBuilder sb = new StringBuilder();
-		Enumeration headerNames = hReq.getHeaderNames();
-		while (headerNames.hasMoreElements()) {
-			String key = (String) headerNames.nextElement();
-			String value = hReq.getHeader(key);
-			sb.append("[" + key + " : " + value + "]");
-		}
-		logger.error("Headers: " + sb.toString());
+		//		StringBuilder sb = new StringBuilder();
+		//		Enumeration headerNames = hReq.getHeaderNames();
+		//		while (headerNames.hasMoreElements()) {
+		//			String key = (String) headerNames.nextElement();
+		//			String value = hReq.getHeader(key);
+		//			sb.append("[" + key + " : " + value + "]");
+		//		}
+		//		logger.debug("Headers: " + sb.toString());
 
 		ZDTContext.clear();
 		String requestIdHeader = hReq.getHeader("X-ORCL-OMC-APIGW-REQGUID");
