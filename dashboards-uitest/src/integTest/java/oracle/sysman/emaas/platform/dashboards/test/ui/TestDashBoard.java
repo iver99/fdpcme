@@ -177,7 +177,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//open the dashboard in builder page
 		webd.getLogger().info("open the dashboard");
-		DashboardHomeUtil.selectDashboard(webd, "noWidgetListView");
+		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetList);
 
 		//edit the dashboard in Target selector page
 		DashboardBuilderUtil.EditDashboard_targetselctor(webd, "noWidgetListView", "noWidgetListView desc2");
@@ -361,7 +361,7 @@ public class TestDashBoard extends LoginAndLogout
 				"Test_Dashboard_no_Widget_GridView desc modify", true), "Dashboard NOT found");
 
 		//Duplicate dashbaord
-		DashboardBuilderUtil.duplicateDashboard(webd, dbName, dbDesc,"duplicate_noSubMenu");
+		DashboardBuilderUtil.duplicateDashboard(webd, dbName, dbDesc);
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, dbDesc, true), "Duplicate failed!");
 
 	}

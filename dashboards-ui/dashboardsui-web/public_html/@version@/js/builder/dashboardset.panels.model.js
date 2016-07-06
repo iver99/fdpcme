@@ -36,11 +36,9 @@ define([
             self.rightPanelModel = null;
             self.loadRightPanelModel = function (toolBarModel, tilesViewModel, $b) {
                 if (self.rightPanelModel) {
-                    self.rightPanelModel.completelyHidden(true);
-                    self.rightPanelModel.loadToolBarModel(toolBarModel, $b);
+                    self.rightPanelModel.$b = $b;
+                    self.rightPanelModel.loadToolBarModel(toolBarModel,$b);
                     self.rightPanelModel.loadTilesViewModel(tilesViewModel);
-                    if($b)
-                        self.rightPanelModel.$b = $b;
                 } else {
                     var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel, toolBarModel, dashboardsetToolBarModel);
                     ko.applyBindings(rightPanelModel, $('.df-right-panel')[0]);
@@ -74,7 +72,6 @@ define([
                     }else{
                         var $target =$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId);
                         homeScrollbarReset($target);
-                        self.loadRightPanelModel(null,null,null);
                     }
                 } else {
                     if (dashboardItem.type === "new") {
@@ -342,7 +339,7 @@ define([
                 var bodyHeight = $(window).height();
                 var titleToolbarHeight = target.position().top;
                 var newHeight = Number(bodyHeight) - Number(titleToolbarHeight);
-                var targetContainer = target.closest('#dashboards-tabs-contents')
+                var targetContainer = target.closest('#dashboards-tabs-contents');
                 targetContainer.css({'height': newHeight});
                 targetContainer.css({'overflow-y': 'scroll'});
             }
