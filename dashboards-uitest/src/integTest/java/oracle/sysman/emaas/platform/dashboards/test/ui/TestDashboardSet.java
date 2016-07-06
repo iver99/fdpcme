@@ -210,10 +210,10 @@ public class TestDashboardSet extends LoginAndLogout
 
 		//verify the dashboardset
 		webd.getLogger().info("Verify if the dashboard set existed in builder page");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_Test), "Dashboard set NOT found!");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_Test1), "Dashboard set NOT found!");
 
 		//create a dashboard in dashboard set
-		DashboardHomeUtil.createDashboard(webd, dbName_InSet, null, DashboardHomeUtil.DASHBOARD);
+		DashboardBuilderUtil.createDashboardInsideSet(webd, dbName_InSet, null);
 
 		//verify the dashboard is in the dashboard set
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet);
