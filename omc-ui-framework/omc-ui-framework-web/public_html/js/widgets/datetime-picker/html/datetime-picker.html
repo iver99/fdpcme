@@ -98,7 +98,7 @@
                     
                     <!-- Apply & Cancel button -->
                     <div class="buttons">
-                        <button data-bind="click: applyClick, ojComponent:{component: 'ojButton', label: applyButton}, attr: {id: 'applyButton_'+randomId}">
+                        <button data-bind="click: applyClick, ojComponent:{component: 'ojButton', label: applyButton, disabled: applyButtonDisable}, attr: {id: 'applyButton_'+randomId}">
                         </button>
                         <button data-bind="click: cancelClick, ojComponent:{component: 'ojButton', label: cancelButton}, attr: {id: 'cancelButton_'+randomId}"> 
                         </button>
@@ -116,7 +116,7 @@
                     <!-- pop up for time filter-->
                     <div style="display: none; width: 560px; height: 412px; margin: auto; border: 1px solid #f0f0f0; background: #FFFFFF;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'timeFilter_'+randomId}">
                         <!-- ko if: enableTimeFilter -->
-                        <div style="padding-top: 30px;" data-bind="component: {name: 'time-filter', params: tfParams}"></div>
+                        <div style="padding-top: 15px;" data-bind="component: {name: 'time-filter', params: tfParams}"></div>
                         <!-- /ko -->
                     </div>
                 </div>
