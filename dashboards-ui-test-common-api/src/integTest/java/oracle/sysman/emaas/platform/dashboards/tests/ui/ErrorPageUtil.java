@@ -1,19 +1,21 @@
 package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IErrorPageUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.UtilLoader;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class ErrorPageUtil
 {
-	//error page sign out button
+	/**
+	 * click error page sign out button
+	 *
+	 * @param driver
+	 * @throws Exception
+	 */
 	public static void signOut(WebDriver driver) throws Exception
 	{
-		driver.getLogger().info("ErrorPageUtil click signOut button started");
-		driver.waitForElementPresent("id=" + DashBoardPageId.ErrorSignOutButtonId);
-		driver.takeScreenShot();
-		driver.click("id=" + DashBoardPageId.ErrorSignOutButtonId);
-		driver.takeScreenShot();
-		driver.getLogger().info("ErrorUtil click signOut button completed!");
+		IErrorPageUtil epu = new UtilLoader<IErrorPageUtil>().loadUtil(driver, IErrorPageUtil.class);
+		epu.signOut(driver);
 	}
 
 }
