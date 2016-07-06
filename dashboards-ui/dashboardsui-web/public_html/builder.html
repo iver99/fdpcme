@@ -43,7 +43,7 @@
                     <ul class="dbd-tabs-nav">
                     </ul>
 
-                    <div class="oj-tabs-facet demo-tabs-facet-flex" data-bind="visible:dashboardsetConfig.isCreator && noDashboardHome">
+                    <div class="oj-tabs-facet demo-tabs-facet-flex" data-bind="visible:dashboardsetConfig.isCreator() && noDashboardHome()">
                          <span id="add-nav" data-bind="click:addNewDashboard,attr: {title: getNlsString('DBSSET_BUILDER_ADD_DASHBOARD_TOSET')">
                              <i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i>
                          </span>
@@ -934,6 +934,7 @@
                                     </div>
                                 </div>
                                 <hr/>
+                                <!-- ko if:$data.enableEntityFilter -->
                                 <div class="dbd-right-panel-editdashboard-filters" data-bind="ojComponent: {component: 'ojCollapsible'}">
                                     <span  class="dbd-right-panel-editdashboard-innertitle"  data-bind="text: getNlsString('DBS_BUILDER_FILTERS')"></span>
                                     <div class="filter-settings oj-form-layout">
@@ -1039,6 +1040,7 @@
                                     </div>
                                 </div>
                                 <hr/>
+                                <!-- /ko -->
                                 <!-- ko ifnot:isDashboardSet -->
                                 <div class="dbd-right-panel-editdashboard-share" data-bind="ojComponent: {component: 'ojCollapsible'}">
                                     <span class="dbd-right-panel-editdashboard-innertitle" data-bind="text: getNlsString('COMMON_TEXT_SHARE')"></span>
