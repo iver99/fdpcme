@@ -325,6 +325,10 @@ define({
       "LANDING_HOME_INFRA_MONITORING_DESC": "Monitor your entire IT infrastructure - on-premise or on the cloud - from one unified platform",
 
       "LANDING_HOME_DASHBOARDS": "Dashboards",
+      
+      "LANDING_HOME_ORCHESTRATION": "Orchestration",
+      "LANDING_HOME_ORCHESTRATION_DESC": "Schedule, execute and report on tasks at scale",
+      
       "LANDING_HOME_DASHBOARDS_DESC": "Build custom dashboards using out-of-the-box widgets or your own visualization of data",
       "LANDING_HOME_DATA_EXPLORERS": "Data Explorers",
       "LANDING_HOME_DATA_EXPLORERS_DESC": "Search, analyze, and visualize data",

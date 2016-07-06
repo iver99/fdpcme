@@ -139,6 +139,10 @@ require(['ojs/ojcore',
                 self.infraMonitoringDesc = getNlsString("LANDING_HOME_INFRA_MONITORING_DESC");
 
                 self.dashboards = getNlsString("LANDING_HOME_DASHBOARDS");
+                
+                self.orchestration = getNlsString("LANDING_HOME_ORCHESTRATION");
+                self.orchestrationDesc = getNlsString("LANDING_HOME_ORCHESTRATION_DESC");
+                
                 self.dashboardsDesc = getNlsString("LANDING_HOME_DASHBOARDS_DESC");
                 self.dataExplorers = getNlsString("LANDING_HOME_DATA_EXPLORERS");
                 self.dataExplorersDesc = getNlsString("LANDING_HOME_DATA_EXPLORERS_DESC");
@@ -156,6 +160,7 @@ require(['ojs/ojcore',
                 self.data_type = "select";
                 
                 self.showInfraMonitoring = ko.observable(false);
+                self.showOrchestration = ko.observable(false);
                 
                 self.getServiceUrls = function() {
                     var serviceUrl = dfu.getRegistrationUrl();
@@ -190,6 +195,9 @@ require(['ojs/ojcore',
                         for(i=0; i<cloudServicesNum; i++) {
                             if(cloudServices[i].name == "Monitoring") {
                                 self.showInfraMonitoring(true);
+                            }
+                            if(cloudServices[i].name == "OCS") {
+                                self.showOrchetration(true);
                             }
                             landingHomeUrls[cloudServices[i].name] = cloudServices[i].href;
                         }
@@ -299,6 +307,16 @@ require(['ojs/ojcore',
                     oj.Logger.info('Trying to open dashboards by URL: ' + self.dashboardsUrl);
                     if(self.dashboardsUrl) {
                         window.location.href = self.dashboardsUrl;
+                    }
+                };
+                self.openOrchestration = function() {
+                    if(!self.landingHomeUrls) {
+                        console.log("---fetching service links is not finished yet!---");
+                        return;
+                    }
+                    oj.Logger.info('Trying to open APM by URL: ' + self.landingHomeUrls.OCS);
+                    if(self.landingHomeUrls.OCS) {
+                        window.location.href = self.landingHomeUrls.OCS;
                     }
                 };
                 self.dataExplorersChosen = function (event, data) {
