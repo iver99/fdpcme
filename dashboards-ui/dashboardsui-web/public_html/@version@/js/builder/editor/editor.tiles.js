@@ -17,8 +17,8 @@ define(['knockout',
             self.height = ko.observable();
             self.left = ko.observable(0);
             self.top = ko.observable(0);
-            self.cssWidth = ko.observable(0);
-            self.cssHeight = ko.observable(0);
+            self.cssWidth = ko.observable(10);
+            self.cssHeight = ko.observable(45);
             //self.linkText = ko.observable('');
             //self.linkUrl = ko.observable('');
             self.hideTitle = ko.observable("false");
