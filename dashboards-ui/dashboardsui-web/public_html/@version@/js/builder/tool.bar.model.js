@@ -832,7 +832,7 @@ define(['knockout',
                         });
                         break;
                     case "Duplicate":
-                        if (!self.isUnderSet) {
+                        if ((!self.isUnderSet) || (self.currentUser !== self.dashboard.owner())) {
                             self.openDashboardDuplicateDialog();
                         }
                         break;
@@ -917,7 +917,13 @@ define(['knockout',
                     "disabled": false,
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
                     "endOfGroup": true,
-                    "showSubMenu": self.isUnderSet,
+                    "showSubMenu": function () {
+                        if (self.currentUser !== self.dashboard.owner()) {
+                            return false;
+                        } else {
+                            return self.isUnderSet;
+                        }
+                    }(),
                     "subItems": [
                         {
                             "label": getNlsString('DBS_BUILDER_ADDTOSET'),
