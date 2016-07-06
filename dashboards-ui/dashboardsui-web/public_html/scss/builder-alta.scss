@@ -845,6 +845,11 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
       border-top: 0;
     }
 
+    .oj-focus,oj-focus-only{
+       outline: dotted 1px;
+       outline: -webkit-focus-ring-color auto;
+    }
+
   }
 
     @mixin dbd-standard{

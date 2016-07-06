@@ -55,6 +55,7 @@ public class DashboardBuilderUtil
 		}
 		driver.takeScreenShot();
 		driver.click("id="+DashBoardPageId.DashOKButtonID);
+		WaitUtil.waitForPageFullyLoaded(driver);
 		driver.getLogger().info("DashboardBuilderUtil.createDashboardInsideSet completed");
 	}
 
@@ -67,7 +68,7 @@ public class DashboardBuilderUtil
 				By.cssSelector(DashBoardPageId.DashboardSetNavsContainerCSS));
 		if (dashboardSetContainer == null) {
 			throw new NoSuchElementException(
-					"DashboardBuilderUtil.removeDashboardFromSet: the dashboard navigator container is not found");
+					"DashboardBuilderUtil.addNewDashboardToSet: the dashboard navigator container is not found");
 		}
 
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
@@ -95,7 +96,7 @@ public class DashboardBuilderUtil
 			WebElement addNav = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.DashboardSetNavAddBtnCSS));
 			if (addNav == null) {
 				throw new NoSuchElementException(
-						"DashboardBuilderUtil.removeDashboardFromSet: the dashboard 'add' button  is not found");
+						"DashboardBuilderUtil.addNewDashboardToSet: the dashboard 'add' button  is not found");
 			}
 			addNav.click();
 			WaitUtil.waitForPageFullyLoaded(driver); // wait for all dashboards loaded
@@ -103,8 +104,9 @@ public class DashboardBuilderUtil
 
 		driver.takeScreenShot();
 		DashboardHomeUtil.selectDashboard(driver, dashboardName);
+		WaitUtil.waitForPageFullyLoaded(driver);
 		driver.getLogger().info(
-				"DashboardBuilderUtil.removeDashboardFromSet has selected the dashboard named with \"" + dashboardName + "\"");
+				"DashboardBuilderUtil.addNewDashboardToSet has selected the dashboard named with \"" + dashboardName + "\"");
 
 		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.addNewDashboardToSet completed and returns true");
@@ -560,12 +562,12 @@ public class DashboardBuilderUtil
 				By.cssSelector(DashBoardPageId.DashboardSetNavsContainerCSS));
 		if (dashboardSetContainer == null) {
 			throw new NoSuchElementException(
-					"DashboardBuilderUtil.removeDashboardFromSet: the dashboard navigator container is not found");
+					"DashboardBuilderUtil.printDashboardSet: the dashboard navigator container is not found");
 		}
 
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DashboardSetNavsCSS));
 		if (navs == null || navs.size() == 0) {
-			throw new NoSuchElementException("DashboardBuilderUtil.addNewDashboardToSet: the dashboard navigators is not found");
+			throw new NoSuchElementException("DashboardBuilderUtil.printDashboardSet: the dashboard navigators is not found");
 		}
 		for (WebElement nav : navs) {
 			nav.click();
@@ -583,7 +585,7 @@ public class DashboardBuilderUtil
 		driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.DashboardsetOptionsPrintCSS)).click();
 		//have to use thread sleep to wait for the print window(windows dialog) to appear
 		Thread.sleep(waitTime);
-		driver.getLogger().info("DashboardBuilderUtil print set completed");
+		driver.getLogger().info("DashboardBuilderUtil.printDashboardSet: print set completed");
 	}
 
 	public static void refreshDashboard(WebDriver driver, String refreshSettings)
@@ -1100,7 +1102,7 @@ public class DashboardBuilderUtil
 		else {
 			driver.getLogger().info("DashboardBuilderUtil.verifyDashboardInsideSet name=\"" + dashboardName + "\" has not found");
 		}
-		driver.getLogger().info("DashboardBuilderUtil.removeDashboardFromSet completed");
+		driver.getLogger().info("DashboardBuilderUtil.verifyDashboardInsideSet completed");
 		return hasFound;
 	}
 

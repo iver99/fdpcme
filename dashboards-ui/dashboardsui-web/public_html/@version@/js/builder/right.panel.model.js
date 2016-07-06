@@ -297,8 +297,12 @@ define(['knockout',
                         }
                         self.$b.triggerBuilderResizeEvent('Initialize right panel');
                     }
-
-
+                    
+                    if(self.isDashboardSet()){
+                        var isOnlyDashboardPicker = self.dashboardsetToolBarModel.dashboardsetItems.length === 1 && self.dashboardsetToolBarModel.dashboardsetItems[0].type === "new";
+                        self.dashboardsetShareDisabled(isOnlyDashboardPicker);
+                    }
+                    
 
                     self.initEventHandlers();
                     self.loadWidgets();
@@ -1113,6 +1117,7 @@ define(['knockout',
                 
                 var prevSharePublic = self.dashboardsetToolBarModel.dashboardsetConfig.share();
                 self.dashboardsetShare = ko.observable(prevSharePublic);
+                self.dashboardsetShareDisabled = ko.observable(self.dashboardsetToolBarModel.dashboardsetItems.length === 0);
 
                 self.defaultSetAutoRefreshValue = ko.observable("every5minutes"); // todo get from instance
                 
