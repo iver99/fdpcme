@@ -821,7 +821,7 @@
                                             </div>
                                             <div class="oj-flex">
                                                 <div class="oj-flex-item" style="margin-top: 10px">
-                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: dashboardsetShare}" >
+                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: dashboardsetShare,disabled:dashboardsetShareDisabled}" >
                                                         <span class="oj-choice-row">
                                                             <input id="dashboardSetSharingNotShared" type="radio" name="dashboardSetSharing" value="off">
                                                             <label for="dashboardSetSharingNotShared" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING_NOT_SHARED')"></label>
@@ -934,7 +934,6 @@
                                     </div>
                                 </div>
                                 <hr/>
-                                <!-- ko if:$data.enableEntityFilter -->
                                 <div class="dbd-right-panel-editdashboard-filters" data-bind="ojComponent: {component: 'ojCollapsible'}">
                                     <span  class="dbd-right-panel-editdashboard-innertitle"  data-bind="text: getNlsString('DBS_BUILDER_FILTERS')"></span>
                                     <div class="filter-settings oj-form-layout">
@@ -1040,7 +1039,6 @@
                                     </div>
                                 </div>
                                 <hr/>
-                                <!-- /ko -->
                                 <!-- ko ifnot:isDashboardSet -->
                                 <div class="dbd-right-panel-editdashboard-share" data-bind="ojComponent: {component: 'ojCollapsible'}">
                                     <span class="dbd-right-panel-editdashboard-innertitle" data-bind="text: getNlsString('COMMON_TEXT_SHARE')"></span>
