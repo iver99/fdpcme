@@ -56,6 +56,7 @@ public class DashboardBuilderUtil
 		driver.takeScreenShot();
 		driver.click("id="+DashBoardPageId.DashOKButtonID);
 		WaitUtil.waitForPageFullyLoaded(driver);
+		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.getLogger().info("DashboardBuilderUtil.createDashboardInsideSet completed");
 	}
 
