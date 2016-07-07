@@ -568,8 +568,8 @@ define(['knockout',
                 }).show();
 
                 var tileInCell = self.editor.tilesGrid.tileGrid[cell.row] ? self.editor.tilesGrid.tileGrid[cell.row][cell.column] : null;
-                if((self.previousDragCell) && cell.column+self.editor.mode.getModeWidth(tile) <= self.editor.mode.MODE_MAX_COLUMNS && 
-                        (!tileInCell || (tileInCell && tileInCell !== tile && self.editor.mode.getModeRow(tileInCell) === cell.row && self.editor.mode.getModeColumn(tileInCell) === cell.column))) {                                      
+                if((self.previousDragCell) && cell.column+self.editor.mode.getModeWidth(tile) <= self.editor.mode.MODE_MAX_COLUMNS /*&& 
+                        (!tileInCell || (tileInCell && tileInCell !== tile && self.editor.mode.getModeRow(tileInCell) === cell.row && self.editor.mode.getModeColumn(tileInCell) === cell.column))*/) {                                      
                     var cellsOccupiedByTile = self.editor.getCellsOccupied(cell.row, cell.column, self.editor.mode.getModeWidth(tile), self.editor.mode.getModeHeight(tile));
                     var tilesUnderCell = self.editor.getTilesUnder(cellsOccupiedByTile, tile);
                     var tilesBelowOriginalCell = self.editor.getTilesBelow(tile);
@@ -580,7 +580,7 @@ define(['knockout',
                         rowDiff = cell.row - self.editor.mode.getModeRow(iTile) + self.editor.mode.getModeHeight(tile);
                         self.editor.moveTileDown(iTile, rowDiff);
                     }
-                    self.editor.draggingTile = null;
+                    
                     self.editor.updateTilePosition(tile, cell.row, cell.column);
                     
                     rowDiff = Math.abs(cell.row - dragStartRow);
@@ -620,9 +620,8 @@ define(['knockout',
                 }
                 ui.helper.css({left:tile.left(), top:tile.top()});
 
-                self.editor.draggingTile = null;
-                self.editor.tilesReorder();
-                self.showTiles();
+//                self.editor.tilesReorder();
+//                self.showTiles();
                 $(ui.helper).css("opacity", 1);
                 
                 $b.findEl('.tile-dragging-placeholder').hide();
@@ -631,6 +630,7 @@ define(['knockout',
                 }
                 dragStartRow = null;
                 self.previousDragCell = null;
+                self.editor.draggingTile = null;
 //                tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
                 $b.triggerEvent($b.EVENT_TILE_MOVE_STOPED, null);
             };
@@ -640,7 +640,7 @@ define(['knockout',
                 var rpt = $b.findEl(".right-panel-toggler");
                 var tile = null;
                 var pos = {top: u.helper.offset().top - $b.findEl('.tiles-wrapper').offset().top, left: u.helper.offset().left - $b.findEl('.tiles-wrapper').offset().left};
-
+                
                 tile = u.helper.tile;
                 //use newly created tile to simulate helper attached to mouse
                     if(tile) {
@@ -650,6 +650,12 @@ define(['knockout',
                         if(!$('#tile'+tile.clientGuid).hasClass(draggingTileClass)) {
                             $('#tile'+tile.clientGuid).addClass(draggingTileClass);
                         }
+                    }else {
+                        //set position of placeholder when start dragging tile from right drawer
+                        $b.findEl('.tile-dragging-placeholder').css({
+                            left: pos.left,
+                            top: pos.top
+                        });
                     }
                 if (e.clientY <= tcc.offset().top || e.clientX >= rpt.offset().left) {
                     if (self.isEmpty()) {
@@ -660,7 +666,14 @@ define(['knockout',
                     return;
                 }else {
                     if (self.isEmpty()) $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging into edit area (stopped dragging)", true);
-                    var cell = self.editor.getCellFromPosition(widgetAreaWidth, pos); 
+                    //use tile's left as the cursor's left to calculate the cell so that placeholder closely follow users' mouse
+                    var cellPos = {};
+                    cellPos.left = pos.left;
+                    cellPos.top = pos.top;
+                    if(tile) {
+                        cellPos.left = cellPos.left - tile.cssWidth()/2;
+                    }
+                    var cell = self.editor.getCellFromPosition(widgetAreaWidth, cellPos); 
                     if (!cell) return;
                     
                     if(self.previousDragCell && self.previousDragCell.row === cell.row && self.previousDragCell.column === cell.column) {
@@ -683,17 +696,28 @@ define(['knockout',
                     if(tileInCell && self.editor.mode.getModeRow(tileInCell) !== cell.row) {
                         return;
                     }
+                    
+                    self.editor.draggingTile = tile;
                     var cells = self.editor.getCellsOccupied(cell.row, cell.column, width, height);
                     var tilesToMove = self.editor.getTilesUnder(cells, tile);
+                    var tilesBelowOriginalCell = self.editor.getTilesBelow(tile);
                     for(var i in tilesToMove) {
                         var rowDiff = cell.row-self.editor.mode.getModeRow(tilesToMove[i])+self.editor.mode.getModeHeight(tile);
                         self.editor.moveTileDown(tilesToMove[i], rowDiff);
                     }
+                    
                     self.editor.updateTilePosition(tile, cell.row, cell.column);
+
+                    var rowDiff = Math.abs(cell.row - self.editor.mode.getModeRow(tile));
+                    for(i in tilesBelowOriginalCell) {
+                        var iTile = tilesBelowOriginalCell[i];
+                        rowDiff = (rowDiff===0) ? self.editor.mode.getModeHeight(tile) : rowDiff;
+                        self.editor.moveTileUp(iTile, rowDiff);
+                    }
 
                     self.editor.tilesReorder();
                     self.show();
-                    
+                                        
                     //restore simulated helper after show()
                     tile.left(pos.left-tile.cssWidth()/2);
                     tile.top(pos.top-15);
@@ -711,9 +735,9 @@ define(['knockout',
                             width: self.getDisplayWidthForTile(width) - 10,
                             height: self.getDisplayHeightForTile(height) - 10
                         });
-                    }, 200);
+                    }, 0);
+                    
                     self.previousDragCell = cell;
-                    self.editor.draggingTile = tile;
                 }
                 
             };
