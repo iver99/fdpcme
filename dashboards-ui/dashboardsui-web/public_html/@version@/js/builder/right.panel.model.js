@@ -278,6 +278,7 @@ define(['knockout',
 
                     self.initEventHandlers();
                     self.loadWidgets();
+                    Builder.getAllWidgetsAssetRoot(self.widgets());
                     self.initDraggable();
 //                    self.checkAndDisableLinkDraggable();
 
@@ -408,7 +409,7 @@ define(['knockout',
                 console.log("loaded");
                 self.loadWidgets(null, AUTO_PAGE_NAV);
             });
-
+            
 
             self.loadWidgets = function(req) {                
                 var widgetDS = new Builder.WidgetDataSource();

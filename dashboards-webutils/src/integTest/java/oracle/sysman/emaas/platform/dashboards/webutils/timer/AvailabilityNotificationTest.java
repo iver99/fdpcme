@@ -10,24 +10,29 @@
 
 package oracle.sysman.emaas.platform.dashboards.webutils.timer;
 
+import java.util.List;
+
 import javax.management.Notification;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import mockit.Expectations;
 import mockit.Mocked;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.NonServiceResource;
 import oracle.sysman.emaas.platform.dashboards.core.DBConnectionManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.targetmodel.services.GlobalStatus;
 import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
  * @author aduan
  */
 public class AvailabilityNotificationTest
 {
+	@SuppressWarnings("unchecked")
 	@Test(groups = { "s2" })
 	public void testHandleNotification(@Mocked final Notification anyNoti, @Mocked final RegistryServiceManager anyRsm,
 			@Mocked final DBConnectionManager anyDcm, @Mocked final RegistryLookupUtil anyLookupUtil)
@@ -84,6 +89,7 @@ public class AvailabilityNotificationTest
 				result = true;
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, null);
 				result = null;
+				anyRsm.markOutOfService((List<InstanceInfo>) any, (List<NonServiceResource>) any, (List<String>) any);
 			}
 		};
 		an.handleNotification(anyNoti, null);
@@ -108,6 +114,7 @@ public class AvailabilityNotificationTest
 				result = true;
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, null);
 				result = new Exception();
+				anyRsm.markOutOfService((List<InstanceInfo>) any, (List<NonServiceResource>) any, (List<String>) any);
 			}
 		};
 		an.handleNotification(anyNoti, null);

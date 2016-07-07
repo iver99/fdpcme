@@ -683,6 +683,7 @@ public class DashboardBuilderUtil
 			if (nav.getAttribute("data-tabs-name").trim().equals(dashboardName)) {
 				hasFound = true;
 				nav.findElement(By.cssSelector(DashBoardPageId.DashboardSetNavRemoveBtnCSS)).click();
+				WaitUtil.waitForPageFullyLoaded(driver);
 				driver.getLogger().info(
 						"DashboardBuilderUtil.removeDashboardFromSet has found and removed the dashboard named with \""
 								+ dashboardName + "\"");
