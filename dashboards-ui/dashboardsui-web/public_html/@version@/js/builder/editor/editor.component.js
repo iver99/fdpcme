@@ -354,7 +354,8 @@ define(['knockout',
             };
 
             if (loadImmediately) {
-                var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION(), tile.PROVIDER_ASSET_ROOT(), true);
+//                var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION(), tile.PROVIDER_ASSET_ROOT(), true);
+                var assetRoot = Builder.getWidgetAssetRoot(tile.PROVIDER_NAME(),tile.PROVIDER_VERSION(),tile.PROVIDER_ASSET_ROOT());
                 var kocVM = tile.WIDGET_VIEWMODEL();
                 if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
                     kocVM = assetRoot + kocVM;

@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/png" href="/emsaasui/uifwk/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
-        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v1.2.0/alta/oj-alta-min.css" type="text/css"/>
+        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v2.0.1/alta/oj-alta-min.css" type="text/css"/>
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
@@ -439,7 +439,7 @@
                                                                 <li data-option="wider" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_window_wider_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_WIDER')}"/>
+                                                                            <img src="@version@/images/func_window_wider_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_WIDER')}, css: { 'dbd-icon-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}"/>
                                                                         </span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_WIDER')"></span>
                                                                     </a>
@@ -447,7 +447,7 @@
                                                                 <li data-option="narrower" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !narrowerEnabled() || !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_window_narrower_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_NARROWER')}"/>
+                                                                            <img src="@version@/images/func_window_narrower_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_NARROWER')}, css: { 'dbd-icon-disabled': !narrowerEnabled() || !maximizeEnabled() || editDisabled()}"/>
                                                                         </span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_NARROWER')"></span>
                                                                     </a>
@@ -455,7 +455,7 @@
                                                                 <li data-option="taller" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_window_taller_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_TALLER')}"/>
+                                                                            <img src="@version@/images/func_window_taller_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_TALLER')}, css: {'dbd-icon-disabled': !maximizeEnabled() || editDisabled()}"/>
                                                                         </span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_TALLER')"></span>
                                                                     </a>
@@ -463,7 +463,7 @@
                                                                 <li data-option="shorter" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !shorterEnabled() || !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_window_shorter_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}"/>
+                                                                            <img src="@version@/images/func_window_shorter_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}, css: {'dbd-icon-disabled': !shorterEnabled() || !maximizeEnabled() || editDisabled()}"/>
                                                                         </span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_SHORTER')"></span>
                                                                     </a>
