@@ -1046,7 +1046,15 @@ define(['knockout',
                     "extendedOptions": JSON.stringify(self.extendedOptions),
                     "enableTimeRange": self.dashboard.enableTimeRange()
                 }
-                self.saveDsbFilterSettings(fieldsToUpdate, function() {self.dashboard.extendedOptions(JSON.stringify(self.extendedOptions))}, function() {console.log("***error");});
+                self.saveDsbFilterSettings(fieldsToUpdate, function() {
+                    if(!self.dashboard.extendedOptions) {
+                        self.dashboard.extendedOptions = ko.observable();
+                    }
+                    self.dashboard.extendedOptions(JSON.stringify(self.extendedOptions))
+                }, 
+                function() {
+                    console.log("***error");
+                });
             });
 
             self.saveDsbFilterSettings = function(fieldsToUpdate, succCallback, errorCallback) {
