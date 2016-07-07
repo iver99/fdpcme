@@ -150,10 +150,11 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Switch to the grid view");
 		DashboardHomeUtil.gridView(webd);
 		DashboardBuilderUtil.addNewDashboardToSet(webd, dbName);
+		Thread.sleep(5000);
 		//verify the dashboard has been added to the dashboard set
 		webd.getLogger().info("Verify if the dashboard exists in the dashborad set");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName), "Dashboard is NOT in the dashboard set");
-
+		Thread.sleep(5000);
 	}
 
 	@Test(groups = "third run", dependsOnMethods = { "testRemoveDashboardFromDashboardSet" })
@@ -178,10 +179,11 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Switch to the list view");
 		DashboardHomeUtil.listView(webd);
 		DashboardBuilderUtil.addNewDashboardToSet(webd, dbName);
+		Thread.sleep(5000);
 		//verify the dashboard has been added to the dashboard set
 		webd.getLogger().info("Verify if the dashboard exists in the dashborad set");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName), "Dashboard is NOT in the dashboard set");
-
+		Thread.sleep(5000);
 	}
 
 	@Test(groups = "forth run", dependsOnGroups = { "third run" })
@@ -215,11 +217,11 @@ public class TestDashboardSet extends LoginAndLogout
 		//create a dashboard in dashboard set
 		webd.getLogger().info("Create a dashboard inside dashboard set");
 		DashboardBuilderUtil.createDashboardInsideSet(webd, dbName_InSet, null);
-
+		Thread.sleep(5000);
 		//verify the dashboard is in the dashboard set
 		webd.getLogger().info("Verify the created dashboard is in the dashboard set");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet), "Dashboard NOT found in the set");
-
+		Thread.sleep(5000);
 	}
 
 	@Test(groups = "first run")
@@ -553,10 +555,11 @@ public class TestDashboardSet extends LoginAndLogout
 		//remove a dashboard from the dashboard set
 		webd.getLogger().info("Remove a dashboard from the dashborad set");
 		DashboardBuilderUtil.removeDashboardFromSet(webd, dbName);
+		Thread.sleep(5000);
 		//verify the dashboard has been added to the dashboard set
 		webd.getLogger().info("Verify if the dashboard exists in the dashborad set");
 		Assert.assertFalse(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName), "Dashboard is in the dashboard set");
-
+		Thread.sleep(5000);
 	}
 
 	@Test(groups = "first run", dependsOnMethods = { "testCreateDashboardSet", "testModifyDashboardSet" })
