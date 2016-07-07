@@ -716,7 +716,7 @@ public class TestDashboardSet extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_setHome), "DashboarSet is NOT set to home page");
 	}
 
-	@Test(groups = "third run", dependsOnGroups = { "testAddDashboardInListView" })
+	@Test(groups = "third run", dependsOnMethods = { "testAddDashboardInListView" })
 	public void testShare() throws Exception
 	{
 		//init the test
