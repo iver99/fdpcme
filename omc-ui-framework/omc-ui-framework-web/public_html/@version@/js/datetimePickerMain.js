@@ -11,9 +11,9 @@ requirejs.config({
         'jqueryui-amd': '../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/min',
-        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/ojL10n',
-        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/resources',
+        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/min',
+        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/ojL10n',
+        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/resources',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../../libs/@version@/js/oraclejet/js/libs/history/history.iegte8.min',
@@ -254,6 +254,13 @@ require(['ojs/ojcore',
                     }
 
                     //series
+                    function securedRandom(){
+                        var arr = new Uint32Array(1);
+                        var crypto = window.crypto || window.msCrypto;
+                        crypto.getRandomValues(arr);
+                        var result = arr[0] * Math.pow(2,-32);
+                        return result;
+                    }
                     var seriesNames = ["p1", "p2", "p3"];
                     var seriesMax = [30, 50, 100];
                     var seriesNumber = seriesNames.length;
@@ -261,7 +268,7 @@ require(['ojs/ojcore',
                         var max = seriesMax[i];
                         var itemsValues = [];
                         for (var j = 0; j < n; j++) {
-                            itemsValues.push(Math.floor(Math.random() * max));
+                            itemsValues.push(Math.floor(securedRandom() * max));
                         }
                         lineSeries.push({name: seriesNames[i], items: itemsValues});
                     }

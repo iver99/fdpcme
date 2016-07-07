@@ -55,7 +55,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 var start, end;
                 var timeDiff, dateTimeDiff;
 
-                self.tfInstance = {"timeFilterValue": ko.observable("0-23"), "daysChecked": ko.observableArray(["1", "2", "3", "4", "5", "6", "7"]), "monthsChecked": ko.observableArray(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"])};
+                self.tfInstance = {"showTimeFilterError": ko.observable(false), "timeFilterValue": ko.observable("0-23"), "daysChecked": ko.observableArray(["1", "2", "3", "4", "5", "6", "7"]), "monthsChecked": ko.observableArray(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"])};
+                self.showTimeFilterError = ko.observable(self.tfInstance.showTimeFilterError());
 
                 if(params.appId) {
                     self.randomId = params.appId;
@@ -71,6 +72,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.postbox = new ko.subscribable();
                 self.postbox.subscribe(function(newValue) {
                     self.tfInstance = newValue;
+                    self.showTimeFilterError(self.tfInstance.showTimeFilterError());
                 }, null, "tfChanged");
                 
                 self.enableTimeFilter = ko.observable(false);
@@ -286,7 +288,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                 self.applyButtonDisable = ko.computed(function() {
                     return self.startDateError() || self.endDateError() || self.startTimeError() || self.endTimeError() || 
-                            self.timeValidateError() || self.beyondWindowLimitError();
+                            self.timeValidateError() || self.beyondWindowLimitError() || self.showTimeFilterError();
                 }, self);
 
                 self.startDateSubscriber = ko.computed(function () {
@@ -1228,9 +1230,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             self.updateRange(self.startDate(), self.endDate());
                         }
                         timeValidate();
-                        if (self.pickerPanelId) {
-                            $(self.pickerPanelId + " #applyButton_"+self.randomId).ojButton({"disabled": self.applyButtonDisable()});
-                        }
+//                        if (self.pickerPanelId) {
+//                            $(self.pickerPanelId + " #applyButton_"+self.randomId).ojButton({"disabled": self.applyButtonDisable()});
+//                        }
                     } catch (e) {
                         if (value === 1) {
                             self.startDateError(true);
@@ -1264,9 +1266,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         customClick(1);
                     }
                     timeValidate();
-                    if (self.pickerPanelId) {
-                        $(self.pickerPanelId + " #applyButton_"+self.randomId).ojButton({"disabled": self.applyButtonDisable()});
-                    }
+//                    if (self.pickerPanelId) {
+//                        $(self.pickerPanelId + " #applyButton_"+self.randomId).ojButton({"disabled": self.applyButtonDisable()});
+//                    }
                 };
                 
                 self.changeTimeError = function (event, data, whichTime) {

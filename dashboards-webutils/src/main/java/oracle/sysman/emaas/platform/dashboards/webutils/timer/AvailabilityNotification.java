@@ -10,12 +10,16 @@
 
 package oracle.sysman.emaas.platform.dashboards.webutils.timer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.DBConnectionManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
@@ -69,7 +73,9 @@ public class AvailabilityNotification implements NotificationListener
 			logger.error(e.getLocalizedMessage(), e);
 		}
 		if (!isDBAvailable) {
-			rsm.markOutOfService();
+			List<String> otherReasons = new ArrayList<String>();
+			otherReasons.add("Dashboard-API service database is unavailable");
+			rsm.markOutOfService(null, null, otherReasons);
 			GlobalStatus.setDashboardDownStatus();
 			logger.error("Dashboards service is out of service because database is unavailable");
 			return;
@@ -85,7 +91,12 @@ public class AvailabilityNotification implements NotificationListener
 			logger.error(e.getLocalizedMessage(), e);
 		}
 		if (!isEntityNamingAvailable) {
-			rsm.markOutOfService();
+			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
+			InstanceInfo ii = new InstanceInfo();
+			ii.setServiceName(ENTITY_NAMING_SERVICE_NAME);
+			ii.setVersion(ENTITY_NAMING_SERVICE_VERSION);
+			services.add(ii);
+			rsm.markOutOfService(services, null, null);
 			GlobalStatus.setDashboardDownStatus();
 			logger.error("Dashboards service is out of service because entity naming service is unavailable");
 			return;
