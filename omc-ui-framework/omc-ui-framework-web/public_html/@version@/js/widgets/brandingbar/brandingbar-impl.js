@@ -121,6 +121,7 @@ define([
                 appMap[appIdSecurityAnalytics] = {
                         "appId": appIdSecurityAnalytics,
                         "appName": "BRANDING_BAR_APP_NAME_SECURITY_ANALYTICS", 
+                        "serviceDisplayName": "BRANDING_BAR_CLOUD_SERVICE_NAME_SA",
                         "serviceName": "SecurityAnalyticsUI",
                         "version": self.SERVICE_VERSION,
                         "helpTopicId": "em_samcs"
