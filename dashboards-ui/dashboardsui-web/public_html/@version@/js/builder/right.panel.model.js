@@ -168,6 +168,9 @@ define(['knockout',
                 
                 //reset filter settings in right drawer when selected dashboard is changed
                 var dashboard = tilesViewModel.dashboard;
+                if(!dashboard.extendedOptions) {
+                    dashboard.extendedOptions = ko.observable("{\"tsel\": {\"entitySupport\": \"byCriteria\", \"defaultValue\": \"allEntities\", \"entityContext\": \"\"}, \"timeSel\": {\"defaultValue\": \"last14days\", \"start\": 0, \"end\": 0}}");
+                }
                 self.dashboard = dashboard;
                 var extendedOptions = JSON.parse(dashboard.extendedOptions());
                 self.extendedOptions = extendedOptions ? extendedOptions : self.extendedOptions;

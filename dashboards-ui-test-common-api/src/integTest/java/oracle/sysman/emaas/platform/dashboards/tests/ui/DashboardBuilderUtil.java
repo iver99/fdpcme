@@ -1,9 +1,15 @@
 package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil.TimeRange;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DelayedPressEnterThread;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorConverter;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorUIControls;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
@@ -38,6 +44,20 @@ public class DashboardBuilderUtil
 	public static final String DUP_DASHBOARD_NODSUBMENU = "duplicate_noSubMenu";
 	public static final String DUP_DASHBOARD_TOSET = "duplicate_addToSet";
 	public static final String DUP_SHBOARDSET_NOTTOSET="duplicate_notAddToSet";
+	
+	public static final String DEFAULT_TIME_RANGE_OPTION_LAST15MINS = "last15mins";
+	public static final String DEFAULT_TIME_RANGE_OPTION_LAST30MINS = "last30mins";
+	public static final String DEFAULT_TIME_RANGE_OPTION_LAST60MINS = "last60mins";
+	public static final String DEFAULT_TIME_RANGE_OPTION_LAST4HOURS = "last4hours";
+	public static final String DEFAULT_TIME_RANGE_OPTION_LAST6HOURS = "last6hours";
+	public static final String DEFAULT_TIME_RANGE_OPTION_LAST1DAY = "last1day";
+	public static final String DEFAULT_TIME_RANGE_OPTION_LAST7DAYS = "last7days";
+	public static final String DEFAULT_TIME_RANGE_OPTION_LAST14DAYS = "last14days";
+	public static final String DEFAULT_TIME_RANGE_OPTION_LAST30DAYS = "last30days";
+	public static final String DEFAULT_TIME_RANGE_OPTION_LAST90DAYS = "last90days";
+	public static final String DEFAULT_TIME_RANGE_OPTION_LAST1YEAR = "last1year";
+	public static final String DEFAULT_TIME_RANGE_OPTION_LATEST = "latest";
+	public static final String DEFAULT_TIME_RANGE_OPTION_CUSTOM = "custom";
 
 	public static void createDashboardInsideSet(WebDriver driver, String name, String descriptions) throws Exception
 	{
@@ -785,6 +805,176 @@ public class DashboardBuilderUtil
 	{
 		DashboardHomeUtil.selectDashboard(driver, dashboardName);
 	}
+	
+	public static void selectDefaultEntityValue(WebDriver driver, String mode, String option) throws Exception
+	{
+		
+	}
+	
+	public static void selectDefaultEntityValue(WebDriver driver, String mode, String option, String value) throws Exception
+	{
+		
+	}
+	
+	public static String selectDefaultTimeRange(WebDriver driver, String option) throws Exception
+	{
+		driver.getLogger().info("DashboardBuilderUtil.selectDefaultTimeRange started");
+		
+		Validator.fromValidValues("defaultTimeRangeOptions", option, DEFAULT_TIME_RANGE_OPTION_LAST15MINS, DEFAULT_TIME_RANGE_OPTION_LAST30MINS, 
+				DEFAULT_TIME_RANGE_OPTION_LAST60MINS, DEFAULT_TIME_RANGE_OPTION_LAST4HOURS, DEFAULT_TIME_RANGE_OPTION_LAST6HOURS, 
+				DEFAULT_TIME_RANGE_OPTION_LAST1DAY, DEFAULT_TIME_RANGE_OPTION_LAST7DAYS, DEFAULT_TIME_RANGE_OPTION_LAST14DAYS, 
+				DEFAULT_TIME_RANGE_OPTION_LAST30DAYS, DEFAULT_TIME_RANGE_OPTION_LAST90DAYS, DEFAULT_TIME_RANGE_OPTION_LAST1YEAR, 
+				DEFAULT_TIME_RANGE_OPTION_LATEST);
+		
+		driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsMenuLocator);
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
+		DashboardBuilderUtil.OpenFiltersInRightPanel(driver);
+		driver.takeScreenShot();
+		DashboardBuilderUtil.showTimeRangeFilter(driver, true);
+		driver.takeScreenShot();
+		
+		//click to open select dropdown
+		driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerEditDBDefaultTimeRangeSelect);
+		driver.click("css=" + DashBoardPageId.RightDrawerEditDBDefaultTimeRangeSelect);
+		driver.takeScreenShot();
+		
+		if(DashboardBuilderUtil.DEFAULT_TIME_RANGE_OPTION_LAST15MINS.equals(option)) {
+			driver.waitForElementPresent(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST15MINS);
+			driver.click(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST15MINS);
+			WaitUtil.waitForPageFullyLoaded(driver);
+		}else if(DashboardBuilderUtil.DEFAULT_TIME_RANGE_OPTION_LAST30MINS.equals(option)) {
+			driver.waitForElementPresent(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST30MINS);
+			driver.click(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST30MINS);
+			WaitUtil.waitForPageFullyLoaded(driver);
+		}else if(DashboardBuilderUtil.DEFAULT_TIME_RANGE_OPTION_LAST60MINS.equals(option)) {
+			driver.waitForElementPresent(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST60MINS);
+			driver.click(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST60MINS);
+			WaitUtil.waitForPageFullyLoaded(driver);
+		}else if(DashboardBuilderUtil.DEFAULT_TIME_RANGE_OPTION_LAST4HOURS.equals(option)) {
+			driver.waitForElementPresent(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST4HOURS);
+			driver.click(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST4HOURS);
+			WaitUtil.waitForPageFullyLoaded(driver);
+		}else if(DashboardBuilderUtil.DEFAULT_TIME_RANGE_OPTION_LAST6HOURS.equals(option)) {
+			driver.waitForElementPresent(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST6HOURS);
+			driver.click(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST6HOURS);
+			WaitUtil.waitForPageFullyLoaded(driver);
+		}else if(DashboardBuilderUtil.DEFAULT_TIME_RANGE_OPTION_LAST1DAY.equals(option)) {
+			driver.waitForElementPresent(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST1DAY);
+			driver.click(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST1DAY);
+			WaitUtil.waitForPageFullyLoaded(driver);
+		}else if(DashboardBuilderUtil.DEFAULT_TIME_RANGE_OPTION_LAST7DAYS.equals(option)) {
+			driver.waitForElementPresent(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST7DAYS);
+			driver.click(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST7DAYS);
+			WaitUtil.waitForPageFullyLoaded(driver);
+		}else if(DashboardBuilderUtil.DEFAULT_TIME_RANGE_OPTION_LAST14DAYS.equals(option)) {
+			driver.waitForElementPresent(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST14DAYS);
+			driver.click(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST14DAYS);
+			WaitUtil.waitForPageFullyLoaded(driver);
+		}else if(DashboardBuilderUtil.DEFAULT_TIME_RANGE_OPTION_LAST30DAYS.equals(option)) {
+			driver.waitForElementPresent(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST30DAYS);
+			driver.click(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST30DAYS);
+			WaitUtil.waitForPageFullyLoaded(driver);
+		}else if(DashboardBuilderUtil.DEFAULT_TIME_RANGE_OPTION_LAST90DAYS.equals(option)) {
+			driver.waitForElementPresent(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST90DAYS);
+			driver.click(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST90DAYS);
+			WaitUtil.waitForPageFullyLoaded(driver);
+		}else if(DashboardBuilderUtil.DEFAULT_TIME_RANGE_OPTION_LAST1YEAR.equals(option)) {
+			driver.waitForElementPresent(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST1YEAR);
+			driver.click(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLAST1YEAR);
+			WaitUtil.waitForPageFullyLoaded(driver);
+		}else if(DashboardBuilderUtil.DEFAULT_TIME_RANGE_OPTION_LATEST.equals(option)) {
+			driver.waitForElementPresent(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLATEST);
+			driver.click(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeLATEST);
+			WaitUtil.waitForPageFullyLoaded(driver);
+		}
+		driver.takeScreenShot();
+		return driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeResultLabel)).getText();
+	}
+	
+	public static String selectDefaultTimeRange(WebDriver driver, String option, String startDateTime, String endDateTime) throws Exception
+	{
+		driver.getLogger().info("DashboardBuilderUtil.selectDefaultTimeRange started");
+		
+		Validator.fromValidValues("defaultTimeRangeOption", option, DEFAULT_TIME_RANGE_OPTION_LAST15MINS, DEFAULT_TIME_RANGE_OPTION_LAST30MINS, 
+				DEFAULT_TIME_RANGE_OPTION_LAST60MINS, DEFAULT_TIME_RANGE_OPTION_LAST4HOURS, DEFAULT_TIME_RANGE_OPTION_LAST6HOURS, 
+				DEFAULT_TIME_RANGE_OPTION_LAST1DAY, DEFAULT_TIME_RANGE_OPTION_LAST7DAYS, DEFAULT_TIME_RANGE_OPTION_LAST14DAYS, 
+				DEFAULT_TIME_RANGE_OPTION_LAST30DAYS, DEFAULT_TIME_RANGE_OPTION_LAST90DAYS, DEFAULT_TIME_RANGE_OPTION_LAST1YEAR, 
+				DEFAULT_TIME_RANGE_OPTION_LATEST, DEFAULT_TIME_RANGE_OPTION_CUSTOM);
+		
+		driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsMenuLocator);
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
+		DashboardBuilderUtil.OpenFiltersInRightPanel(driver);
+		driver.takeScreenShot();
+		DashboardBuilderUtil.showTimeRangeFilter(driver, true);
+		driver.takeScreenShot();
+		
+		//click to open select dropdown
+		driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerEditDBDefaultTimeRangeSelect);
+		driver.click("css=" + DashBoardPageId.RightDrawerEditDBDefaultTimeRangeSelect);
+		
+		if(DashboardBuilderUtil.DEFAULT_TIME_RANGE_OPTION_CUSTOM.equals(option)) {
+			driver.waitForElementPresent(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeCUSTOM);
+			driver.click(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeCUSTOM);
+			WaitUtil.waitForPageFullyLoaded(driver);
+			driver.takeScreenShot();
+			
+			//set startDateTime and endDateTime
+			TimeSelectorConverter.setDateTimeRange(driver, startDateTime, endDateTime);		
+			if(driver.isDisplayed(TimeSelectorUIControls.sErrorMsg)) 
+			{
+				throw new Exception(driver.getText(TimeSelectorUIControls.sErrorMsg));
+			}
+			else {
+				TimeSelectorConverter.clickApplyButton(driver);
+				driver.waitForElementPresent("xpath=" + DashBoardPageId.RightDrawerEditDBDefaultTimeRangeCusomResult);
+				String returnTimeRange = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.RightDrawerEditDBDefaultTimeRangeCusomResult)).getText();
+				System.out.println("***"+returnTimeRange);
+				return TimeSelectorConverter.dateConvert(driver, returnTimeRange, TimeRange.Custom);
+			}
+		}
+		else {
+			return DashboardBuilderUtil.selectDefaultTimeRange(driver, option);
+		}
+	}
+	
+	public static void showEntityFilter(WebDriver driver, boolean showEntityFilter) throws Exception
+	{
+		driver.getLogger().info("DashboardBuilderUtil.showEntityFilter started");
+		driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsMenuLocator);
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
+		DashboardBuilderUtil.OpenFiltersInRightPanel(driver);
+		
+		driver.getElement("css=" + DashBoardPageId.RightDrawerEditDBShowEntityFilterCSS);
+		if(showEntityFilter) {
+			driver.check("css=" + DashBoardPageId.RightDrawerEditDBShowEntityFilterCSS);
+		}else {
+			driver.uncheck("css=" + DashBoardPageId.RightDrawerEditDBShowEntityFilterCSS);
+		}
+		driver.takeScreenShot();
+		driver.getLogger().info("DashboardBuilderUtil.showEntityFilter finished!!");
+	}
+	
+	public static void showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) throws Exception
+	{
+		driver.getLogger().info("DashboardBuilderUtil.showTimeRangeFilter started");
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsMenuLocator);
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
+		DashboardBuilderUtil.OpenFiltersInRightPanel(driver);
+		
+		driver.getElement("css=" + DashBoardPageId.RightDrawerEditDBShowTimeRangeFilterCSS);
+		if(showTimeRangeFilter) {
+			driver.check("css=" + DashBoardPageId.RightDrawerEditDBShowTimeRangeFilterCSS);
+		}else {
+			driver.uncheck("css=" + DashBoardPageId.RightDrawerEditDBShowTimeRangeFilterCSS);
+		}
+		driver.takeScreenShot();
+		driver.getLogger().info("DashboardBuilderUtil.showTimeRangeFilter finished");
+	}
 
 	public static void showWidgetTitle(WebDriver driver, String widgetName, boolean visibility) throws Exception
 	{
@@ -1397,5 +1587,25 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("[DashboardBuilderUtil] triggered getSelectedDashboardEl and fail to find visible dashboard!");
 		return null;
 
+	}
+	
+	private static void OpenFiltersInRightPanel(WebDriver driver)
+	{
+		driver.getLogger().info("DashboardBuilderUtil.openFiltersInRightPanel start");
+		//click Options to open Options menu
+		WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
+		WebElement editOption = selectedDashboardEl.findElement(By.cssSelector(DashBoardPageId.BuilderOptionsMenuLocator));
+		editOption.click();
+		driver.takeScreenShot();
+
+		//click Options->edit to open right panel
+		driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsEditLocatorCSS);
+		driver.click("css=" + DashBoardPageId.BuilderOptionsEditLocatorCSS);
+		driver.takeScreenShot();
+				
+		//click Right panel->filters
+		driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerEditDBFilterCSS);
+		driver.click("css=" + DashBoardPageId.RightDrawerEditDBFilterCSS);
+		driver.takeScreenShot();
 	}
 }

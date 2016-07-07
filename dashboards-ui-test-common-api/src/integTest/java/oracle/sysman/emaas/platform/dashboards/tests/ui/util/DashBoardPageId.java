@@ -318,6 +318,7 @@ public class DashBoardPageId
 	public static final String RightDrawerTogglePencilBtnCSS = ".right-panel-toggler button.toggle-right-panel-btn.rightpanel-pencil";
 	public static final String RightDrawerEditSingleDBBtnCSS = ".edit-setting-link.edit-dsb-link";
 	public static final String RightDrawerEditSingleDBShareCSS = ".dbd-right-panel-editdashboard-share>span";
+	public static final String RightDrawerEditDBFilterCSS = ".dbd-right-panel-editdashboard-filters>span";
 
 
 	public static final String RightDrawerSearchInputCSS = ".dbd-left-panel input.widget-search-input";
@@ -326,6 +327,25 @@ public class DashBoardPageId
 	public static final String RightDrawerWidgetCSS = ".dbd-left-panel .dbd-left-panel-widget";
 
 	//right drawer setting
+	public static final String RightDrawerEditDBShowEntityFilterCSS = "#showEntityFilter";
+	public static final String RightDrawerEditDBShowTimeRangeFilterCSS = "#showTimeRangeFilter";
+	public static final String RightDrawerEditDBDefaultTimeRangeSelect = "div[id^='oj-select-choice-defaultTimeRange_']";
+	public static final String RightDrawerEditDBDefaultTimeRangeResultLabel = "span[id^='ojChoiceId_defaultTimeRange_']";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST15MINS = "/html/body/div/div/div/ul/li[1]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST30MINS = "/html/body/div/div/div/ul/li[2]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST60MINS = "/html/body/div/div/div/ul/li[3]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST4HOURS = "/html/body/div/div/div/ul/li[4]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST6HOURS = "/html/body/div/div/div/ul/li[5]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST1DAY = "/html/body/div/div/div/ul/li[6]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST7DAYS = "/html/body/div/div/div/ul/li[7]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST14DAYS = "/html/body/div/div/div/ul/li[8]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST30DAYS = "/html/body/div/div/div/ul/li[9]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST90DAYS = "/html/body/div/div/div/ul/li[10]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST1YEAR = "/html/body/div/div/div/ul/li[11]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLATEST = "/html/body/div/div/div/ul/li[12]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeCUSTOM = "/html/body/div/div/div/ul/li[13]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeCusomResult = "/html/body/div/div/div/ul/li[14]/div";
+	
 	public static final String RightDrawerEditSingleDBToShareSelectedCSS = "#dashboardSharingShared.oj-selected";
 	public static final String RightDrawerEditSingleDBToShareCSS = "#dashboardSharingShared";
 	public static final String RightDrawerEditSingleDBNotShareCSS = "#dashboardSharingNotShared";
