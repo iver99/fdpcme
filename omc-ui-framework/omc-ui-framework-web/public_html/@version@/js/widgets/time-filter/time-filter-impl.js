@@ -26,6 +26,17 @@ define([
         self.daysChecked = ko.observableArray(self.daysArray);
         self.monthsChecked = ko.observableArray(self.monthsArray);
         
+        self.showHoursFilterErrorMsg = ko.observable(true);
+        self.hoursFilterErrorMsg = nls.TIME_FILTER_HOURS_FILTER_ERRMSG;
+        
+        self.showDaysFilterErrorMsg = ko.observable(true);
+        self.daysFilterErrorMsg = nls.TIME_FILTER_DAYS_FILTER_ERRMSG;
+        
+        self.showMonthsFilterErrorMsg = ko.observable(true);
+        self.monthsFilterErrorMsg = nls.TIME_FILTER_MONTHS_FILTER_ERRMSG;
+        
+        self.showTimeFilterError = ko.observable();
+        
         self.tfChangedCallback = params ? params.tfChangedCallback : null;
 
         self.daysOptionAllChecked = ko.computed({
@@ -64,8 +75,77 @@ define([
             owner: self
         });
         
+        self.isHoursFilterValid = function(hoursFilterValue) {
+            var hoursFilterArray = hoursFilterValue.split(",");
+            for(var i=0; i<hoursFilterArray.length; i++) {
+                var tmp = hoursFilterArray[i];
+                var tmpArray = tmp.split("-");
+                if(tmpArray.length !== 2) {
+                    return false;
+                }
+                var tmpStart = tmpArray[0].trim();
+                var tmpEnd = tmpArray[1].trim();
+                
+                if(!(/^\d+$/.test(tmpStart))) {
+                    return false;
+                }else {
+                    tmpStart = parseInt(tmpStart);
+                }
+                if(!(/^\d+$/.test(tmpEnd))) {
+                    return false;
+                }else {
+                    tmpEnd = parseInt(tmpEnd);
+                }
+                
+                if(tmpStart>23 || tmpStart<0 || tmpEnd>23 || tmpEnd<0 || tmpStart>tmpEnd) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        
+        self.isDaysFilterValid = function(daysFilterValue) {
+            if(daysFilterValue.length === 0) {
+                return false;
+            }
+            return true;
+        };
+        
+        self.isMonthsFilterValid = function(monthsFilterValue) {
+            if(monthsFilterValue.length === 0) {
+                return false;
+            }
+            return true;
+        };
+        
         self.tfChangedSubscriber = ko.computed(function() {
-            postbox && postbox.notifySubscribers({"timeFilterValue": self.timeFilterValue, "daysChecked": self.daysChecked, "monthsChecked": self.monthsChecked}, "tfChanged");
+            if(!self.isHoursFilterValid(self.timeFilterValue())) {
+                self.showHoursFilterErrorMsg(true);
+                if(!$("#hoursFilter_"+self.randomId+" input").hasClass("tf-errorBorder")) {
+                    $("#hoursFilter_"+self.randomId+" input").addClass("tf-errorBorder");
+                }
+            }else {
+                self.showHoursFilterErrorMsg(false);
+                if($("#hoursFilter_"+self.randomId+" input").hasClass("tf-errorBorder")) {
+                    $("#hoursFilter_"+self.randomId+" input").removeClass("tf-errorBorder");
+                }
+            }
+            
+            if(!self.isDaysFilterValid(self.daysChecked())) {
+                self.showDaysFilterErrorMsg(true);
+            }else {
+                self.showDaysFilterErrorMsg(false);
+            }
+            
+            if(!self.isMonthsFilterValid(self.monthsChecked())) {
+                self.showMonthsFilterErrorMsg(true);
+            }else {
+                self.showMonthsFilterErrorMsg(false);
+            }
+            
+            self.showTimeFilterError(self.showHoursFilterErrorMsg() || self.showDaysFilterErrorMsg() || self.showMonthsFilterErrorMsg());
+                    
+            postbox && postbox.notifySubscribers({"showTimeFilterError": self.showTimeFilterError, "timeFilterValue": self.timeFilterValue, "daysChecked": self.daysChecked, "monthsChecked": self.monthsChecked}, "tfChanged");
             return {
                 "timeFilterValule": self.timeFilterValue(),
                 "daysChecked" : self.daysChecked(),

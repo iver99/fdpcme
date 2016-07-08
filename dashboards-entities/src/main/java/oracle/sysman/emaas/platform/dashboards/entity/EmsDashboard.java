@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,15 +11,12 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,7 +28,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @Entity
 @NamedQueries({ @NamedQuery(name = "EmsDashboard.findAll", query = "select o from EmsDashboard o where o.deleted=0") })
 @Table(name = "EMS_DASHBOARD")
-@SequenceGenerator(name = "EmsDashboard_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_SEQ", allocationSize = 1)
+//@SequenceGenerator(name = "EmsDashboard_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_SEQ", allocationSize = 1)
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
 public class EmsDashboard implements Serializable
@@ -39,11 +37,11 @@ public class EmsDashboard implements Serializable
 
 	@Id
 	@Column(name = "DASHBOARD_ID", nullable = false)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EmsDashboard_Id_Seq_Gen")
-	private Long dashboardId;
+	//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EmsDashboard_Id_Seq_Gen")
+	private BigInteger dashboardId;
 
 	@Column(name = "DELETED")
-	private Long deleted;
+	private BigInteger deleted;
 	@Column(name = "DESCRIPTION", length = 1280)
 	private String description;
 	@Column(name = "ENABLE_TIME_RANGE", nullable = false)
@@ -95,10 +93,10 @@ public class EmsDashboard implements Serializable
 	{
 	}
 
-	public EmsDashboard(Date creationDate, Long dashboardId, Long deleted, String description, Integer enableTimeRange,
-			Integer enableRefresh, Integer enableDescription, Integer enableEntityFilter, Integer isSystem,
-			Integer sharePublic, Date lastModificationDate, String lastModifiedBy, String name, String owner, String screenShot,
-			Integer type, Integer applicationType)
+	public EmsDashboard(Date creationDate, BigInteger dashboardId, BigInteger deleted, String description,
+			Integer enableTimeRange, Integer enableRefresh, Integer enableDescription, Integer enableEntityFilter,
+			Integer isSystem, Integer sharePublic, Date lastModificationDate, String lastModifiedBy, String name, String owner,
+			String screenShot, Integer type, Integer applicationType)
 	{
 		this.creationDate = creationDate;
 		this.dashboardId = dashboardId;
@@ -149,7 +147,7 @@ public class EmsDashboard implements Serializable
 		return creationDate;
 	}
 
-	public Long getDashboardId()
+	public BigInteger getDashboardId()
 	{
 		return dashboardId;
 	}
@@ -159,7 +157,7 @@ public class EmsDashboard implements Serializable
 		return dashboardTileList;
 	}
 
-	public Long getDeleted()
+	public BigInteger getDeleted()
 	{
 		return deleted;
 	}
@@ -273,7 +271,7 @@ public class EmsDashboard implements Serializable
 	 * @param dashboardId
 	 *            the dashboardId to set
 	 */
-	public void setDashboardId(Long dashboardId)
+	public void setDashboardId(BigInteger dashboardId)
 	{
 		this.dashboardId = dashboardId;
 	}
@@ -283,7 +281,7 @@ public class EmsDashboard implements Serializable
 		dashboardTileList = emsDashboardTileList;
 	}
 
-	public void setDeleted(Long deleted)
+	public void setDeleted(BigInteger deleted)
 	{
 		this.deleted = deleted;
 	}

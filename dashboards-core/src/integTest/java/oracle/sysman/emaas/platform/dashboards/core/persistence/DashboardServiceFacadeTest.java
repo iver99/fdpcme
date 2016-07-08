@@ -3,6 +3,7 @@
  */
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 import javax.persistence.EntityManager;
@@ -107,7 +108,7 @@ public class DashboardServiceFacadeTest
 		EmsDashboard d = new EmsDashboard();
 		d.setName("test" + System.currentTimeMillis());
 		d.setCreationDate(DateUtil.getCurrentUTCTime());
-		d.setDeleted(0L);
+		d.setDeleted(BigInteger.ZERO);
 		d.setDescription("test");
 		d.setEnableTimeRange(1);
 		d.setEnableRefresh(1);
@@ -150,7 +151,7 @@ public class DashboardServiceFacadeTest
 		tile.setWidgetViewmode("widgetViewmode");
 		tile.setWidgetHistogram("widgetHistogram");
 		tile.setWidgetSupportTimeControl(1);
-		tile.setWidgetLinkedDashboard(1L);
+		tile.setWidgetLinkedDashboard(BigInteger.valueOf(1L));
 		return tile;
 	}
 
