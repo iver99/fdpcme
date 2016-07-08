@@ -17,6 +17,7 @@ import java.util.TimeZone;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil.TimeRange;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
@@ -702,6 +703,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		//set time range
 		webdriver.getLogger().info("set timerange as Last 90 days");
 		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, TimeRange.Last90Days);
+                WaitUtil.waitForPageFullyLoaded(webdriver);
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
