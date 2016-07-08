@@ -344,7 +344,7 @@ define({
       "LANDING_HOME_ITA_MIDDLEWARE_PERFORMANCE": "Performance Analytics - Middleware",
       "LANDING_HOME_ITA_MIDDLEWARE_RESOURCE": "Resource Analytics - Middleware",
       "LANDING_HOME_ITA_SERVER_RESOURCE": "Resource Analytics - Host",
-      "LANDING_HOME_ITA_APPLICATION_PERFORMANCE": "Performance Analytics - Application",
+      "LANDING_HOME_ITA_APPLICATION_PERFORMANCE": "Application Performance Analytics",
       "LANDING_HOME_ITA_AVAIL_ANALYTICS": "Availability Analytics",
 
       "LANDING_HOME_INFRA_MONITORING": "Infrastructure Monitoring",

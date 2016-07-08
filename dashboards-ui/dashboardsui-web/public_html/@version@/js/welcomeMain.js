@@ -12,9 +12,9 @@ requirejs.config({
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/min',
-        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/ojL10n',
-        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/resources',
+        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/min',
+        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/ojL10n',
+        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/resources',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
@@ -124,7 +124,7 @@ require(['ojs/ojcore',
                 self.APMDesc = getNlsString("LANDING_HOME_APM_DESC");
                 self.LA = getNlsString("LANDING_HOME_LA");
                 self.LADesc = getNlsString("LANDING_HOME_LA_DESC");
-                self.ITA = getNlsString("LANDING_HOME_ITA");
+                self.ITA = getNlsString("LANDING_HOME_ITA");                
                 self.ITADesc = getNlsString("LANDING_HOME_ITA_DESC");
                 self.select = getNlsString("LANDING_HOME_SELECT");
                 self.ITA_DB_Performance = getNlsString("LANDING_HOME_ITA_DB_PERFORMANCE");

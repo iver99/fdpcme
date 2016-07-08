@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.ui.webutils.services;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -97,7 +98,12 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			logger.error(e.getLocalizedMessage(), e);
 		}
 		if (!isSSFAvailable) {
-			rsm.markOutOfService();
+			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
+			InstanceInfo ii = new InstanceInfo();
+			ii.setServiceName(SAVED_SEARCH_SERVICE_NAME);
+			ii.setVersion(SAVED_SEARCH_SERVICE_VERSION);
+			services.add(ii);
+			rsm.markOutOfService(services, null, null);
 			GlobalStatus.setDashboardUIDownStatus();
 			logger.error("Dashboards UI service is out of service because Saved Search API service is unavailable");
 			return;
@@ -113,7 +119,12 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			logger.error(e.getLocalizedMessage(), e);
 		}
 		if (!isDFApiAvailable) {
-			rsm.markOutOfService();
+			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
+			InstanceInfo ii = new InstanceInfo();
+			ii.setServiceName(DASHBOARD_API_SERVICE_NAME);
+			ii.setVersion(DASHBOARD_API_SERVICE_VERSION);
+			services.add(ii);
+			rsm.markOutOfService(services, null, null);
 			GlobalStatus.setDashboardUIDownStatus();
 			logger.error("Dashboards UI service is out of service because Dashboard API service is unavailable");
 			return;
@@ -129,7 +140,12 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			logger.error(e.getLocalizedMessage(), e);
 		}
 		if (!isCommonUIAvailable) {
-			rsm.markOutOfService();
+			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
+			InstanceInfo ii = new InstanceInfo();
+			ii.setServiceName(DASHBOARD_COMMON_UI_SERVICE_NAME);
+			ii.setVersion(DASHBOARD_COMMON_UI_SERVICE_VERSION);
+			services.add(ii);
+			rsm.markOutOfService(services, null, null);
 			GlobalStatus.setDashboardUIDownStatus();
 			logger.info("Dashboards UI service is out of service because OMC UI Framework service is unavailable");
 			return;
