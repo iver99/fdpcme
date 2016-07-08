@@ -33,7 +33,7 @@ public class TestDateTimePicker extends CommonUIUtils
 			String EndLabelLocator) throws Exception
 	{
 
-                WaitUtil.waitForPageFullyLoaded(webdriver);
+                WaitUtil.waitForPageFullyLoaded(driver);
 		String timeRange = option.getRangeOption();
 
 		String sTmpStartDateTime = driver.getText(StartLabelLocator);
