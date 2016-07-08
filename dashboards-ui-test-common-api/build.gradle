@@ -1,4 +1,4 @@
-version = "1.9.7" + "-$buildTimestamp"
+version = "1.9.1" + "-$buildTimestamp"
 
 apply plugin: 'eclipse'
 
