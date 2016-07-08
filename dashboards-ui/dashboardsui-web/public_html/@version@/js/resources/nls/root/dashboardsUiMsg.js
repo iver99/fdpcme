@@ -325,8 +325,8 @@ define({
       "LANDING_HOME_INFRA_MONITORING_DESC": "Monitor your entire IT infrastructure - on-premise or on the cloud - from one unified platform",
 
       "LANDING_HOME_DASHBOARDS": "Dashboards",
-      "LANDING_HOME_SECURITY_ANALYTICS": "Security Analytics",
-      "LANDING_HOME_SECURITY_ANALYTICS_DESC": "description for security service",
+      "LANDING_HOME_SECURITY_ANALYTICS": "Security Monitoring and Analytics",
+      "LANDING_HOME_SECURITY_ANALYTICS_DESC": "Detect, investigate and mitigate security threats",
       "LANDING_HOME_DASHBOARDS_DESC": "Build custom dashboards using out-of-the-box widgets or your own visualization of data",
       "LANDING_HOME_DATA_EXPLORERS": "Data Explorers",
       "LANDING_HOME_DATA_EXPLORERS_DESC": "Search, analyze, and visualize data",
