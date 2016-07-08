@@ -53,7 +53,7 @@ define({
       "BRANDING_BAR_MESSAGE_BOX_TITLE_SHOW_MORE":"Click to show all messages",
       "BRANDING_BAR_MESSAGE_BOX_TITLE_SHOW_FIRST":"Click to show first {0} messages only",
       "BRANDING_BAR_CLOUD_SERVICE_NAME_APM": "APM",
-      "BRANDING_BAR_CLOUD_SERVICE_NAME_SA": "Security Analytics",
+      "BRANDING_BAR_CLOUD_SERVICE_NAME_SA": "Security",
       "BRANDING_BAR_SESSION_TIMEOUT_DIALOG_TILE": "Session Expired",
       "BRANDING_BAR_SESSION_TIMEOUT_MSG": "Your current session has expired. Click \'OK\' and sign in again.",
       "BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK": "OK",
