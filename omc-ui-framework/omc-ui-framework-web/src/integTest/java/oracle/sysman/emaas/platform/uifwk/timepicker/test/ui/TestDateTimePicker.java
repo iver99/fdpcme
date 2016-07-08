@@ -33,6 +33,7 @@ public class TestDateTimePicker extends CommonUIUtils
 			String EndLabelLocator) throws Exception
 	{
 
+                WaitUtil.waitForPageFullyLoaded(webdriver);
 		String timeRange = option.getRangeOption();
 
 		String sTmpStartDateTime = driver.getText(StartLabelLocator);
@@ -703,7 +704,6 @@ public class TestDateTimePicker extends CommonUIUtils
 		//set time range
 		webdriver.getLogger().info("set timerange as Last 90 days");
 		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, TimeRange.Last90Days);
-                WaitUtil.waitForPageFullyLoaded(webdriver);
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
