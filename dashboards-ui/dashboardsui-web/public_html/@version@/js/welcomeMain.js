@@ -196,7 +196,7 @@ require(['ojs/ojcore',
                             if(cloudServices[i].name == "Monitoring") {
                                 self.showInfraMonitoring(true);
                             }
-                            if(cloudServices[i].name == "OCS") {
+                            if(cloudServices[i].name == "Orchestration") {
                                 self.showOrchetration(true);
                             }
                             landingHomeUrls[cloudServices[i].name] = cloudServices[i].href;
