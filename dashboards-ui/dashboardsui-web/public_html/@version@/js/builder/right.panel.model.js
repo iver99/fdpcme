@@ -132,7 +132,7 @@ define(['knockout',
                 }
             };
 
-            self.datetimePickerParams = tilesViewModel && tilesViewModel.datetimePickerParams;
+//            self.datetimePickerParams = ko.observable(tilesViewModel && tilesViewModel.datetimePickerParams);
 
             self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
             
@@ -146,9 +146,9 @@ define(['knockout',
             self.editDashboardDialogModel = ko.observable(null);
             
             self.loadToolBarModel = function(toolBarModel,_$b){
-                self.toolBarModel = toolBarModel;
+                self.toolBarModel = toolBarModel;                  
+                self.editDashboardDialogModel(new ed.EditDashboardDialogModel(_$b,toolBarModel));                 
                 if(toolBarModel) {
-                    self.editDashboardDialogModel(new ed.EditDashboardDialogModel(_$b,toolBarModel));                 
                     self.dashboardEditDisabled(toolBarModel.editDisabled()) ;
                 }else{
                     self.dashboardEditDisabled(true) ;
@@ -162,7 +162,7 @@ define(['knockout',
                     return;
                 }
                 self.tilesViewModel = tilesViewModel;
-                self.datetimePickerParams = tilesViewModel && tilesViewModel.datetimePickerParams;
+//                self.datetimePickerParams(tilesViewModel && tilesViewModel.datetimePickerParams);
                 self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
                 self.rightPanelIcon(self.emptyDashboard ? "wrench" : "none");
                 
@@ -194,6 +194,7 @@ define(['knockout',
                 //3. disable apply filter settings button
                 self.filterSettingModified(false);
                                 
+                self.dashboardSharing(self.dashboard.sharePublic() ? "shared" : "notShared");
             };
             
             $('.dbd-right-panel-editdashboard-filters').ojCollapsible( { "expanded": false } ); 
@@ -676,23 +677,14 @@ define(['knockout',
 
             self.showdbOnHomePage = ko.observable([]);
             
-            if(self.dashboard.type() !== "SET") {
-                var dsbSaveDelay = ko.computed(function(){
-                    if(self.editDashboardDialogModel())
-                        return self.editDashboardDialogModel().showdbDescription() + self.editDashboardDialogModel().name() + self.editDashboardDialogModel().description() + self.showdbOnHomePage();
-                });
-                dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } });
-                dsbSaveDelay.subscribe(function(){
-                        self.editDashboardDialogModel() && self.editDashboardDialogModel().save();
-                });
-                
-//            var dsbSaveDelay = ko.computed(function(){
-//                return self.editDashboardDialogModel.showdbDescription()+self.editDashboardDialogModel.name()+self.editDashboardDialogModel.description()+self.showdbOnHomePage();
-//            });
-//            dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } }); 
-//            dsbSaveDelay.subscribe(function(){
-//                self.editDashboardDialogModel.save();
-//            });
+            var dsbSaveDelay = ko.computed(function(){
+                if(self.editDashboardDialogModel())
+                    return self.editDashboardDialogModel().showdbDescription() + self.editDashboardDialogModel().name() + self.editDashboardDialogModel().description() + self.showdbOnHomePage();
+            });
+            dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } });
+            dsbSaveDelay.subscribe(function(){
+                self.editDashboardDialogModel() && self.editDashboardDialogModel().save();
+            });
             
             //Convert persisted time range to make them easier to read
             self.dateConverter = oj.Validation.converterFactory("dateTime").createConverter({formatType: "date", dateFormat: "medium"});
@@ -789,12 +781,13 @@ define(['knockout',
             self.extendedOptions = self.dashboard.extendedOptions ? JSON.parse(self.dashboard.extendedOptions()) : defaultSettings;
 
             //set entity support/selectionMode
-            self.extendedOptions.tsel.entitySupport && $b.getDashboardTilesViewModel().selectionMode(self.extendedOptions.tsel.entitySupport);
+            self.extendedOptions.tsel.entitySupport && $b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel().selectionMode(self.extendedOptions.tsel.entitySupport);
 
             self.enableEntityFilter = ko.observable(self.dashboard.enableEntityFilter() === 'TRUE');
-            self.enableTimeRangeFilter = ko.observable(self.dashboard.enableTimeRange() === 'TRUE');
+            self.enableTimeRangeFilter = ko.observable(self.dashboard.enableTimeRange && self.dashboard.enableTimeRange() === 'TRUE');
 
-            self.entitySupport = $b.getDashboardTilesViewModel().selectionMode;
+self.entitySupport = ko.observable("byCriteria");
+            $b.getDashboardTilesViewModel && (self.entitySupport = $b.getDashboardTilesViewModel().selectionMode);
 
             self.defaultEntityValue = ko.observable(self.extendedOptions.tsel.defaultValue);
             self.defaultMultiEntityValue = ko.observable(["allEntities"]);
@@ -829,7 +822,7 @@ define(['knockout',
                     }
                 }
             };
-            self.initDefaultEntityValueForMore(self.entitySupport());
+                self.initDefaultEntityValueForMore(self.entitySupport());
 
             //set default time range value
             //handlehow to show when the value is "custom*"
@@ -1093,33 +1086,32 @@ define(['knockout',
                     });
                 }
 
-                self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
-                self.dashboardSharing.subscribe(function(val){
-                    if ("notShared" === val) {
-                        queryDashboardSetsBySubId(self.dashboard.id(), function (resp) {
-                            var currentUser = dfu.getUserName();
-                            var setsSharedByOthers = resp.dashboardSets || [];
-                            setsSharedByOthers = setsSharedByOthers.filter(function(dbs){
-                                return dbs.owner !== currentUser;
-                            });
-
-                            if (setsSharedByOthers.length > 0) {
-                                window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(setsSharedByOthers);
-                                self.toolBarModel.openDashboardUnshareConfirmDialog(function(isShared){
-                                    if(isShared){
-                                        self.dashboardSharing(true);
-                                    }
-                                });
-                            }else{
-                                self.toolBarModel.handleShareUnshare(false);
-                            }
+            self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
+            self.dashboardSharing.subscribe(function(val){
+                if ("notShared" === val) {
+                    queryDashboardSetsBySubId(self.dashboard.id(), function (resp) {
+                        var currentUser = dfu.getUserName();
+                        var setsSharedByOthers = resp.dashboardSets || [];
+                        setsSharedByOthers = setsSharedByOthers.filter(function(dbs){
+                            return dbs.owner !== currentUser;
                         });
-                    } else {
-                        self.toolBarModel.handleShareUnshare(true);
-                    }
-                });
-                self.defaultAutoRefreshValue = ko.observable("every5minutes");
-            }
+
+                        if (setsSharedByOthers.length > 0) {
+                            window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(setsSharedByOthers);
+                            self.toolBarModel.openDashboardUnshareConfirmDialog(function(isShared){
+                                if(isShared){
+                                    self.dashboardSharing(true);
+                                }
+                            });
+                        }else{
+                            self.toolBarModel.handleShareUnshare(false);
+                        }
+                    });
+                } else {
+                    self.toolBarModel.handleShareUnshare(true);
+                }
+            });
+            self.defaultAutoRefreshValue = ko.observable("every5minutes");
 
             if (self.isDashboardSet()) {
                 self.dashboardsetName = ko.observable(self.dashboardsetToolBarModel.dashboardsetName());

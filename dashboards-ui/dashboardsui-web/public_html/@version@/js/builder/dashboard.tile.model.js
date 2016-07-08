@@ -1164,13 +1164,14 @@ define(['knockout',
                         self.saveUserFilterOptions();
                     }else if(self.whichTimeSelLauncher() === 1) {
                         //change default time range value option text in right drawer
-                        $b.getRightPanelModel().defaultTimeRangeValue(['custom1']);
-                        $b.getRightPanelModel().initDefaultTimeRangeValueForCustom(start.getTime(), end.getTime());
+                        var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
+                        rightPanelModel.defaultTimeRangeValue(['custom1']);
+                        rightPanelModel.initDefaultTimeRangeValueForCustom(start.getTime(), end.getTime());
                         
                         //set timeSel settings to save
-                        $b.getRightPanelModel().extendedOptions.timeSel.start = start.getTime();
-                        $b.getRightPanelModel().extendedOptions.timeSel.end = end.getTime();
-                        $b.getRightPanelModel().extendedOptions.timeSel.defaultValue = $b.getRightPanelModel().defaultTimeRangeValue()[0];
+                        rightPanelModel.extendedOptions.timeSel.start = start.getTime();
+                        rightPanelModel.extendedOptions.timeSel.end = end.getTime();
+                        rightPanelModel.extendedOptions.timeSel.defaultValue = rightPanelModel.defaultTimeRangeValue()[0];
                         
                         //recover timeSel launcher to the one on the page
                         self.whichTimeSelLauncher(0);

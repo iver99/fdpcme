@@ -52,42 +52,45 @@ define(['knockout',
 //                }
 //            });
 //            
-            self.nameInputed.subscribe(function(val){
-                self.dashboard.name(val);
-                self.tbModel.dashboardName(val);
-                self.name(val);
-            } );
-            
-            self.descriptionInputed.subscribe(function(val){
-                if (self.dashboard.description){
+            if (self.tbModel) {
+                self.nameInputed.subscribe(function (val) {
+                    self.dashboard.name(val);
+                    self.tbModel && self.tbModel.dashboardName(val);
+                    self.name(val);
+                });
+                self.tbModel && self.tbModel.dashboardDescription.subscribe(function (val) {
+                    self.dashboard.description && self.dashboard.description(val);
+                    if (!self.tbModel.dashboardDescription()) {
+                        self.showdbDescription([]);
+                    } else {
+                        self.showdbDescription(["showdbDescription"]);
+                    }
+                });
+
+                self.showdbDescription.subscribe(function (val) {
+                    if (val.indexOf("showdbDescription") >= 0) {
+                        self.descriptionValue("ON");
+                        self.tbModel && self.tbModel.dashboardDescriptionEnabled("TRUE");
+                    } else {
+                        self.descriptionValue("OFF");
+                        self.tbModel && self.tbModel.dashboardDescriptionEnabled("FALSE");
+                    }
+                });
+
+                self.descriptionInputed.subscribe(function (val) {
+                    if (self.dashboard.description) {
+                        self.dashboard.description(val);
+                    } else {
+                        self.dashboard.description = ko.observable(val);
+                    }
                     self.dashboard.description(val);
-                }
-                else{
-                    self.dashboard.description = ko.observable(val);
-                }
-                self.dashboard.description(val);
-                self.tbModel.dashboardDescription(val);
-                self.description(val);
-            } );
+                    self.tbModel.dashboardDescription(val);
+                    self.description(val);
+                });
+            }
+          
             
-            self.tbModel.dashboardDescription.subscribe(function(val){
-                self.dashboard.description && self.dashboard.description(val);
-                if(!self.tbModel.dashboardDescription()){
-                    self.showdbDescription([]);
-                }else{
-                    self.showdbDescription(["showdbDescription"]);
-                }
-            });
-        
-            self.showdbDescription.subscribe(function(val){
-                if(val.indexOf("showdbDescription")>=0){
-                    self.descriptionValue("ON");
-                    self.tbModel.dashboardDescriptionEnabled("TRUE");
-                }else{
-                    self.descriptionValue("OFF");
-                    self.tbModel.dashboardDescriptionEnabled("FALSE");
-                }
-            });
+          
             
             self.noSameNameValidator = {
                     'validate' : function (value) {
@@ -124,7 +127,7 @@ define(['knockout',
                         headers: dfu.getDashboardsRequestHeader(), //{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
                         success: function (result) {
                             self.dashboard.name(self.name());
-                            self.tbModel.dashboardName(self.name());
+                            self.tbModel && self.tbModel.dashboardName(self.name());
                             if (self.dashboard.description)
                             {
                                 self.dashboard.description(self.description());
