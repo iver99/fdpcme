@@ -1309,9 +1309,6 @@ public class DashboardBuilderUtil
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		Validator.notNull("duplicatename", name);
 		Validator.notEmptyString("duplicatename", name);
-		Validator.notEmptyString("duplicatedescription", descriptions);
-
-		Validator.notEmptyString("duplicatename", name);
 
 		driver.getLogger().info("DashboardBuilderUtil.duplicate started");
 		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsMenuLocator);
