@@ -948,14 +948,22 @@ define(['knockout',
                         //sucessfully get extended options for page filters
                         self.userExtendedOptions = data["extendedOptions"] ? JSON.parse(data["extendedOptions"]) : {};
                         if(!self.userExtendedOptions.tsel) {
+                            self.userTsel = false;
                             self.userExtendedOptions.tsel = {quickPick: "allEntities", entityContext: ""};
+                        }else {
+                            self.userTsel= true;
                         }
                         if(!self.userExtendedOptions.timeSel) {
+                            self.userTimeSel = false;
                             self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: "", end: ""};
+                        }else {
+                            self.userTimeSel = true;
                         }
                     },
                     function (jqXHR, textStatus, errorThrown) {
                         if(jqXHR.status === 404){
+                            self.userTsel = false;
+                            self.userTimeSel = false;
                             self.userExtendedOptions = {};
                             self.userExtendedOptions.tsel = {quickPick: "allEntities", entityContext: ""};
                             self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: "", end: ""};
@@ -963,6 +971,8 @@ define(['knockout',
                     });
             }
             
+            self.userTsel = false;
+            self.userTimeSel = false;
             self.initUserFilterOptions();
             self.dashboardExtendedOptions = self.dashboard.extendedOptions ? JSON.parse(self.dashboard.extendedOptions()) : null;
 
@@ -1084,7 +1094,7 @@ define(['knockout',
             //1. set selectionMode: byCriteria/single. Default is "byCriteria"
             //selectionMode is set in right.panel.model.js
             //2. set quickPicker and selected targets/entityContext
-            if(self.userExtendedOptions && self.userExtendedOptions.tsel) {
+            if(self.userTsel && self.userExtendedOptions && self.userExtendedOptions.tsel) {
                 self.setQuickPickerSelected(self.userExtendedOptions.tsel.quickPick);
                 compressedTargets = self.userExtendedOptions.tsel.entityContext;
             }else if(self.dashboardExtendedOptions && self.dashboardExtendedOptions.tsel) {
@@ -1120,7 +1130,7 @@ define(['knockout',
             self.timePeriod = ko.observable("custom");
             //initialize time selector. priority: time in url > time in user extendedOptions > time in dashboard extendedOptions > default time
             if(initStart === null || initEnd === null) {
-                if(self.userExtendedOptions && self.userExtendedOptions.timeSel) {
+                if(self.userTimeSel && self.userExtendedOptions && self.userExtendedOptions.timeSel) {
                     initStart = new Date(parseInt(self.userExtendedOptions.timeSel.start));
                     initEnd = new Date(parseInt(self.userExtendedOptions.timeSel.end));
                     var tp = (self.userExtendedOptions.timeSel.timePeriod === "custom1") ? "custom" : self.userExtendedOptions.timeSel.timePeriod;
