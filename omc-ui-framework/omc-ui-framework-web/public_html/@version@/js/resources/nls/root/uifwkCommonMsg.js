@@ -140,6 +140,9 @@ define({
       "TIME_FILTER_TIME_HINT": "Hint : Enter time ranges you want to include in 24 hr format. For multiple time ranges separate them with ',' Ex: 1-7,13-17",
       "TIME_FILTER_DAYS_LABEL": "Days",
       "TIME_FILTER_MONTHS_LABEL": "Months",
-      "TIME_FILTER_OPTION_ALL": "All"      
+      "TIME_FILTER_OPTION_ALL": "All",
+      "TIME_FILTER_HOURS_FILTER_ERRMSG": "Time range format invalid. Re-enter time range(s).",
+      "TIME_FILTER_DAYS_FILTER_ERRMSG": "Select at least one day.",
+      "TIME_FILTER_MONTHS_FILTER_ERRMSG": "Select at least one month."
 });
 

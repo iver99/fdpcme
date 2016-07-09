@@ -381,8 +381,8 @@ public class SchemaUtil
 			}
 		}
 		catch (IOException e) {
-
-			System.out.println("an error occureed while getting details by url" + " ::" + url + "  " + e.toString());
+			logger.error("an error occureed while getting details by url" + " ::" + url + "  " + e.toString());
+		} finally {
 			try {
 				if (in != null) {
 					in.close();
@@ -394,7 +394,6 @@ public class SchemaUtil
 			catch (IOException ioEx) {
 				//ignore
 			}
-
 		}
 		return response.toString();
 	}

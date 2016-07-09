@@ -166,8 +166,15 @@ define(['knockout',
             };
             
             self.guid = function(){
+                function securedRandom(){
+                    var arr = new Uint32Array(1);
+                    var crypto = window.crypto || window.msCrypto;
+                    crypto.getRandomValues(arr);
+                    var result = arr[0] * Math.pow(2,-32);
+                    return result;
+                }
                 function S4() {
-                   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+                   return (((1+securedRandom())*0x10000)|0).toString(16).substring(1);
                 }
                 
                 return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
@@ -178,7 +185,14 @@ define(['knockout',
             * Using Math.round() will give you a non-uniform distribution!
             */
             self.getRandomInt = function(min,max){
-                return Math.floor(Math.random() * (max - min + 1)) + min;
+                function securedRandom(){
+                    var arr = new Uint32Array(1);
+                    var crypto = window.crypto || window.msCrypto;
+                    crypto.getRandomValues(arr);
+                    var result = arr[0] * Math.pow(2,-32);
+                    return result;
+                }
+                return Math.floor(securedRandom() * (max - min + 1)) + min;
             };
             
             /**
