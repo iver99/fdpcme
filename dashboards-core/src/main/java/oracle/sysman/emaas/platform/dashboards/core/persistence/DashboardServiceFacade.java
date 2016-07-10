@@ -7,6 +7,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
+import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
+import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreferencePK;
@@ -228,7 +230,7 @@ public class DashboardServiceFacade
 	public EmsUserOptions persistEmsUserOptions(EmsUserOptions emsUserOptions)
 	{
 		if (emsUserOptions.getAutoRefreshInterval() == null) {
-			emsUserOptions.setAutoRefreshInterval(0L);
+			emsUserOptions.setAutoRefreshInterval(UserOptionsManager.DEFAULT_REFRESH_INTERVAL);
 		}
 		if (emsUserOptions.getIsFavorite() == null) {
 			emsUserOptions.setIsFavorite(0);

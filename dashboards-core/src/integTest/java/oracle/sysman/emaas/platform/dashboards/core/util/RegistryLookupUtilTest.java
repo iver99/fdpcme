@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.logging.log4j.Logger;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import mockit.Deencapsulation;
 import mockit.Delegate;
 import mockit.Expectations;
@@ -22,6 +18,10 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+
+import org.apache.logging.log4j.Logger;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class RegistryLookupUtilTest
 {
@@ -317,8 +317,7 @@ public class RegistryLookupUtilTest
 				lkAPM.withHref("http://den00hvb.us.oracle.com:7028/emsaasui/apmUi/index.html");
 				lkAPM.withRel("home");
 				Link lkITA = new Link();
-				lkITA.withHref(
-						"http://den00hvb.us.oracle.com:7019/emsaasui/emcitas/worksheet/html/displaying/worksheet-list.html");
+				lkITA.withHref("http://den00hvb.us.oracle.com:7019/emsaasui/emcitas/worksheet/html/displaying/worksheet-list.html");
 				lkITA.withRel("home");
 				Link lkLA = new Link();
 				lkLA.withHref("http://den00yse.us.oracle.com:7004/emsaasui/emlacore/resources/");
@@ -361,15 +360,20 @@ public class RegistryLookupUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testReplaceWithVanityUrlForString_S2(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
-			@Mocked final LookupManager anyLockupManager, @Mocked final LookupClient anyClient,
-			@Mocked final InstanceQuery anyInstanceQuery) throws Exception
+	public void testReplaceWithVanityUrlForString_S2(@Mocked final Builder anyBuilder,
+			@Mocked final InstanceInfo anyInstanceInfo, @Mocked final LookupManager anyLockupManager,
+			@Mocked final LookupClient anyClient, @Mocked final InstanceQuery anyInstanceQuery) throws Exception
 	{
 		testReplaceWithVanityUrlExpectations(anyBuilder, anyInstanceInfo, anyLockupManager, anyClient, anyInstanceQuery);
 
 		String href = "https://tenant3.ita.original.link/somepage.html";
 		String replacedHref = RegistryLookupUtil.replaceWithVanityUrl(href, "tenant3", RegistryLookupUtil.ITA_SERVICE);
 		Assert.assertEquals(replacedHref, "https://tenant3.ita.replaced.link/somepage.html");
+
+		testReplaceWithVanityUrlExpectations(anyBuilder, anyInstanceInfo, anyLockupManager, anyClient, anyInstanceQuery);
+		href = "https://tenant4.monitoring.original.link/somepage.html";
+		replacedHref = RegistryLookupUtil.replaceWithVanityUrl(href, "tenant4", RegistryLookupUtil.MONITORING_SERVICE);
+		Assert.assertEquals(replacedHref, "https://tenant4.monitoring.replaced.link/somepage.html");
 	}
 
 	private void testReplaceWithVanityUrlExpectations(final Builder anyBuilder, final InstanceInfo anyInstanceInfo,
@@ -396,7 +400,7 @@ public class RegistryLookupUtilTest
 					List<InstanceInfo> lookup(InstanceQuery query)
 					{
 						List<InstanceInfo> list = new ArrayList<InstanceInfo>();
-						for (int i = 0; i < 3; i++) {
+						for (int i = 0; i < 4; i++) {
 							list.add(anyInstanceInfo);
 						}
 						return list;
@@ -408,8 +412,10 @@ public class RegistryLookupUtilTest
 				lkITA.withHref("https://ita.replaced.link");
 				Link lkLA = new Link();
 				lkLA.withHref("https://la.replaced.link");
+				Link lkMonitoring = new Link();
+				lkMonitoring.withHref("https://monitoring.replaced.link");
 				anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
-				returns(Arrays.asList(lkAPM), Arrays.asList(lkITA), Arrays.asList(lkLA));
+				returns(Arrays.asList(lkAPM), Arrays.asList(lkITA), Arrays.asList(lkLA), Arrays.asList(lkMonitoring));
 			}
 		};
 	}

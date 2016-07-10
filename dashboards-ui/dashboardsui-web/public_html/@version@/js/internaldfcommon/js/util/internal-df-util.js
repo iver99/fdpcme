@@ -315,6 +315,18 @@ define(['knockout',
                 return ajaxUtil;
             };
             
+            /**
+             * 
+             * @param {number} pWidth The width of the container to put screenshot
+             * @param {number} pHeight The height of the container to put screenshot
+             * @param {type} scrshotHref The url of screenshot
+             * @param {function} callback The callback after image is loaded
+             * @returns {undefined}
+             */
+            self.getScreenshotSizePerRatio = function(pWidth, pHeight, scrshotHref, callback) {
+                dfu.getScreenshotSizePerRatio(pWidth, pHeight, scrshotHref, callback);
+            }
+            
         }
         return new InternalDashboardFrameworkUtility();
     }
