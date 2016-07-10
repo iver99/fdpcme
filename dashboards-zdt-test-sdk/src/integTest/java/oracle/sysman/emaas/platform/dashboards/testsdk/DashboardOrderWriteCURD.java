@@ -10,8 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.testsdk;
 
-import oracle.sysman.emaas.platform.dashboards.testsdk.CommonTest;
-
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -38,7 +36,7 @@ public class DashboardOrderWriteCURD
 	static String tenantid_2;
 	static String remoteuser;
 
-	static String dashboard_id="";
+	static String dashboard_id = "";
 
 	@BeforeClass
 	public static void setUp()
@@ -75,11 +73,11 @@ public class DashboardOrderWriteCURD
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 201);
 			System.out.println("											");
-			
+
 			//update the simple dashboard
-			dashboard_id = res1.jsonPath().getString("id");			
+			dashboard_id = res.jsonPath().getString("id");
 			System.out.println("PUT method is in-progress to update the newly created dashboard");
-			
+
 			System.out.println("											");
 			System.out.println("Update the created dashboard...");
 
@@ -170,7 +168,7 @@ public class DashboardOrderWriteCURD
 			Assert.assertEquals(res4.jsonPath().get("tiles.tileParameters[0].name[0]"), "WIDGET_CREATED_BY");
 			Assert.assertEquals(res4.jsonPath().get("tiles.tileParameters[0].type[0]"), "STRING");
 			Assert.assertEquals(res4.jsonPath().get("tiles.tileParameters[0].systemParameter[0]"), false);
-			
+
 			//query the dashboard
 			System.out.println("Verify that the dashboard will be queried...");
 			Response res5 = RestAssured
@@ -190,20 +188,198 @@ public class DashboardOrderWriteCURD
 			//Assert.assertEquals(res4.jsonPath().getString("tiles"), "[]");
 			System.out.println("											");
 		}
-		catch(Excetpion ex){
+		catch (Exception ex) {
+			Assert.fail(ex.getLocalizedMessage());
 		}
+	}
+
+	@Test
+	public void dashboardDelete()
+	{
+		try {
+			System.out.println("cleaning up the dashboard that is created above using DELETE method");
+			Response res = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
+			System.out.println(res.asString());
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 204);
+		}
+		catch (Exception ex) {
+			Assert.fail(ex.getLocalizedMessage());
+		}
+
+	}
+
+	@Test
+	public void dashboardLastAccess()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out
+			.println("Access the system dashboard, then verify the system dashboard is the first one in dashboard list");
+			Response res3 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().get("/dashboards/1");
+			System.out.println("Status code is: " + res3.getStatusCode());
+			Assert.assertTrue(res3.getStatusCode() == 200);
+
+			Response res4 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().get("/dashboards");
+			System.out.println("Status code is: " + res4.getStatusCode());
+			Assert.assertTrue(res4.getStatusCode() == 200);
+			Assert.assertEquals(res4.jsonPath().get("dashboards.name[0]"), "Enterprise Overview");
+			Assert.assertEquals(res4.jsonPath().getString("dashboards.id[0]"), "1");
+			Assert.assertEquals(res4.jsonPath().get("dashboards.name[1]"), "Test_LastAccess");
+			Assert.assertEquals(res4.jsonPath().getString("dashboards.id[1]"), dashboard_id);
+
+			System.out.println("Access the created dashboard, then verify the dashboard is the first one in dashboard list");
+			Response res5 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().put("/dashboards/2/quickUpdate");
+			System.out.println("Status code is: " + res5.getStatusCode());
+			Assert.assertTrue(res5.getStatusCode() == 200);
+
+			Response res6 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().get("/dashboards");
+			System.out.println("Status code is: " + res6.getStatusCode());
+			Assert.assertTrue(res6.getStatusCode() == 200);
+			Assert.assertEquals(res6.jsonPath().get("dashboards.name[0]"), "Performance Analytics: Database");
+			Assert.assertEquals(res6.jsonPath().getString("dashboards.id[0]"), "2");
+			Assert.assertEquals(res6.jsonPath().get("dashboards.name[1]"), "Enterprise Overview");
+			Assert.assertEquals(res6.jsonPath().getString("dashboards.id[1]"), "1");
+
+		}
+		catch (Exception ex) {
+			Assert.fail(ex.getLocalizedMessage());
+		}
+
 	}
 
 	@Test
 	public void optionsCRUD()
 	{
+		String tmp_dsbid = "";
+		try {
+			System.out.println("------------------------------------------");
+			//create simple dashboard for testing options API
+			System.out.println("POST method is in-progress to create a new dashboard");
 
+			String jsonString = "{ \"name\":\"Test_Dashboard_Options\"}";
+			Response res = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString).when().post("/dashboards");
+			System.out.println(res.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 201);
+			System.out.println("											");
+			tmp_dsbid = res.jsonPath().getString("id");
+
+			//create the options
+			String jsonString1 = "{  \"autoRefreshInterval\": 0}";
+			Response res1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString1).when().post("/" + tmp_dsbid + "/optionss");
+			System.out.println(res1.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 200);
+			System.out.println("											");
+			Assert.assertEquals(res1.jsonPath().getString("dashboardId"), tmp_dsbid);
+			Assert.assertEquals(res1.jsonPath().getInt("autoRefreshInterval"), 0);
+
+			//update the options
+			String jsonString2 = "{  \"autoRefreshInterval\": 30000}";
+			Response res2 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString2).when().put("/" + tmp_dsbid + "/optionss");
+			System.out.println(res2.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 200);
+			System.out.println("											");
+			Assert.assertEquals(res2.jsonPath().getString("dashboardId"), tmp_dsbid);
+			Assert.assertEquals(res2.jsonPath().getInt("autoRefreshInterval"), 30000);
+
+			//get the options
+			Response res3 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().get("/" + tmp_dsbid + "/options");
+			System.out.println(res3.asString());
+			System.out.println("==GET operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res3.getStatusCode());
+			Assert.assertTrue(res3.getStatusCode() == 200);
+			System.out.println("											");
+			Assert.assertEquals(res3.jsonPath().getString("dashboardId"), tmp_dsbid);
+			Assert.assertEquals(res3.jsonPath().getInt("autoRefreshInterval"), 30000);
+
+		}
+		catch (Exception ex) {
+			Assert.fail(ex.getLocalizedMessage());
+		}
+		finally {
+			if (!tmp_dsbid.equals("")) {
+				Response res = RestAssured
+						.given()
+						.contentType(ContentType.JSON)
+						.log()
+						.everything()
+						.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+								"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
+				System.out.println(res.asString());
+				System.out.println("Status code is: " + res.getStatusCode());
+				Assert.assertTrue(res.getStatusCode() == 204);
+			}
+		}
 	}
-	
+
 	@Test
 	public void preferenceCRUD()
 	{
-		try{
+		try {
 			System.out.println("Create preferences");
 			String jsonString = "{ \"value\":\"test preference\"}";
 			Response res1 = RestAssured
@@ -241,96 +417,19 @@ public class DashboardOrderWriteCURD
 			Assert.assertEquals(res2.jsonPath().get("value"), "test preference update");
 
 			System.out.println("Delete the preference which created");
-				Response res1 = RestAssured
-						.given()
-						.contentType(ContentType.JSON)
-						.log()
-						.everything()
-						.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-								"Authorization", authToken).when().delete("/preferences/TestPreference");
-				System.out.println("Status code is: " + res1.getStatusCode());
-				Assert.assertTrue(res1.getStatusCode() == 204);
-		}
-		catch(Exception ex){
-		}
-
-	}
-	@Test
-	public void dashboardDelete()
-	{
-		System.out.println("cleaning up the dashboard that is created above using DELETE method");
-				Response res5 = RestAssured
-						.given()
-						.contentType(ContentType.JSON)
-						.log()
-						.everything()
-						.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-								"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
-				System.out.println(res5.asString());
-				System.out.println("Status code is: " + res5.getStatusCode());
-				Assert.assertTrue(res5.getStatusCode() == 204);
-
-	}
-	@Test
-	public void dashboardLastAccess()
-	{
-			try {
-			System.out.println("------------------------------------------");			
-			System.out
-					.println("Access the system dashboard, then verify the system dashboard is the first one in dashboard list");
 			Response res3 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("/dashboards/1");
+							"Authorization", authToken).when().delete("/preferences/TestPreference");
 			System.out.println("Status code is: " + res3.getStatusCode());
-			Assert.assertTrue(res3.getStatusCode() == 200);
-
-			Response res4 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("/dashboards");
-			System.out.println("Status code is: " + res4.getStatusCode());
-			Assert.assertTrue(res4.getStatusCode() == 200);
-			Assert.assertEquals(res4.jsonPath().get("dashboards.name[0]"), "Enterprise Overview");
-			Assert.assertEquals(res4.jsonPath().getString("dashboards.id[0]"), "1");
-			Assert.assertEquals(res4.jsonPath().get("dashboards.name[1]"), "Test_LastAccess");
-			Assert.assertEquals(res4.jsonPath().getString("dashboards.id[1]"), dashboard_id);
-
-			System.out.println("Access the created dashboard, then verify the dashboard is the first one in dashboard list");
-			Response res5 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().put("/dashboards/2/quickUpdate);
-			System.out.println("Status code is: " + res5.getStatusCode());
-			Assert.assertTrue(res5.getStatusCode() == 200);
-
-			Response res6 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("/dashboards");
-			System.out.println("Status code is: " + res6.getStatusCode());
-			Assert.assertTrue(res6.getStatusCode() == 200);
-			Assert.assertEquals(res6.jsonPath().get("dashboards.name[0]"), "Test_LastAccess");
-			Assert.assertEquals(res6.jsonPath().getString("dashboards.id[0]"), dashboard_id);
-			Assert.assertEquals(res6.jsonPath().get("dashboards.name[1]"), "Enterprise Overview");
-			Assert.assertEquals(res6.jsonPath().getString("dashboards.id[1]"), "1");
-
+			Assert.assertTrue(res3.getStatusCode() == 204);
 		}
-		catch (Exception e) {
-			Assert.fail(e.getLocalizedMessage());
+		catch (Exception ex) {
+			Assert.fail(ex.getLocalizedMessage());
 		}
-	
+
 	}
 }
