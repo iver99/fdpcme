@@ -144,17 +144,20 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Open the dashboard in the builder page");
 		DashboardHomeUtil.selectDashboard(webd, dbsetName);
 
+		webd.getLogger().info("Set the refresh setting to OFF");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
+
 		//add a dashboard to the dashboard set
 		webd.getLogger().info("Add a dashboard into the dashborad set");
 		//switch to grid view
 		webd.getLogger().info("Switch to the grid view");
 		DashboardHomeUtil.gridView(webd);
 		DashboardBuilderUtil.addNewDashboardToSet(webd, dbName);
-		Thread.sleep(5000);
+
 		//verify the dashboard has been added to the dashboard set
 		webd.getLogger().info("Verify if the dashboard exists in the dashborad set");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName), "Dashboard is NOT in the dashboard set");
-		Thread.sleep(5000);
+
 	}
 
 	@Test(groups = "third run", dependsOnMethods = { "testRemoveDashboardFromDashboardSet" })
@@ -172,6 +175,9 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Open the dashboard in the builder page");
 		DashboardHomeUtil.selectDashboard(webd, dbsetName);
 
+		webd.getLogger().info("Set the refresh setting to OFF");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
+
 		//add a dashboard to the dashboard set
 		webd.getLogger().info("Add a dashboard into the dashborad set");
 
@@ -179,11 +185,11 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Switch to the list view");
 		DashboardHomeUtil.listView(webd);
 		DashboardBuilderUtil.addNewDashboardToSet(webd, dbName);
-		Thread.sleep(5000);
+
 		//verify the dashboard has been added to the dashboard set
 		webd.getLogger().info("Verify if the dashboard exists in the dashborad set");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName), "Dashboard is NOT in the dashboard set");
-		Thread.sleep(5000);
+
 	}
 
 	@Test(groups = "forth run", dependsOnGroups = { "third run" })
@@ -214,14 +220,17 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Verify if the dashboard set existed in builder page");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_Test1), "Dashboard set NOT found!");
 
+		webd.getLogger().info("Set the refresh setting to OFF");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
+
 		//create a dashboard in dashboard set
 		webd.getLogger().info("Create a dashboard inside dashboard set");
 		DashboardBuilderUtil.createDashboardInsideSet(webd, dbName_InSet, null);
-		Thread.sleep(5000);
+
 		//verify the dashboard is in the dashboard set
 		webd.getLogger().info("Verify the created dashboard is in the dashboard set");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet), "Dashboard NOT found in the set");
-		Thread.sleep(5000);
+
 	}
 
 	@Test(groups = "first run")
@@ -271,13 +280,16 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Open the dashboard in the builder page");
 		DashboardHomeUtil.selectDashboard(webd, dbsetName_Test1);
 
+		webd.getLogger().info("Set the refresh setting to OFF");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
+
 		//remove the dashboard from dashboard set
 		webd.getLogger().info("Remove the dashboard from the dashboard set");
 		DashboardBuilderUtil.removeDashboardFromSet(webd, dbName_InSet);
 
 		//click Add dashboard icon
-		webd.getLogger().info("Click Add Dashboard Icon");
-		webd.click("css=" + PageId.DashboardSetAddDashboardIcon_Css);
+		//webd.getLogger().info("Click Add Dashboard Icon");
+		//webd.click("css=" + PageId.DashboardSetAddDashboardIcon_Css);
 
 		//search the dashboard created in set
 		DashboardHomeUtil.search(webd, dbName_InSet);
@@ -309,9 +321,12 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Open the dashboard in the builder page");
 		DashboardHomeUtil.selectDashboard(webd, dbsetName_Test1);
 
+		webd.getLogger().info("Set the refresh setting to OFF");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
+
 		//create a dashboard in the dashboard set
 		webd.getLogger().info("create a dashboard in the set");
-		DashboardHomeUtil.createDashboard(webd, dbName_InSet, null, DashboardHomeUtil.DASHBOARD);
+		DashboardBuilderUtil.createDashboardInsideSet(webd, dbName_InSet, null);
 
 		//verify the dashboard is in the dashboard set
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet);
@@ -358,9 +373,12 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Open the dashboard in the builder page");
 		DashboardHomeUtil.selectDashboard(webd, dbsetName_Test1);
 
+		webd.getLogger().info("Set the refresh setting to OFF");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
+
 		//create a dashboard in the dashboard set
 		webd.getLogger().info("create a dashboard in the set");
-		DashboardHomeUtil.createDashboard(webd, dbName_OutSet, null, DashboardHomeUtil.DASHBOARD);
+		DashboardBuilderUtil.createDashboardInsideSet(webd, dbName_OutSet, null);
 
 		//verify the dashboard is in the dashboard set
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_OutSet);
@@ -555,11 +573,11 @@ public class TestDashboardSet extends LoginAndLogout
 		//remove a dashboard from the dashboard set
 		webd.getLogger().info("Remove a dashboard from the dashborad set");
 		DashboardBuilderUtil.removeDashboardFromSet(webd, dbName);
-		Thread.sleep(5000);
+
 		//verify the dashboard has been added to the dashboard set
 		webd.getLogger().info("Verify if the dashboard exists in the dashborad set");
 		Assert.assertFalse(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName), "Dashboard is in the dashboard set");
-		Thread.sleep(5000);
+
 	}
 
 	@Test(groups = "first run", dependsOnMethods = { "testCreateDashboardSet", "testModifyDashboardSet" })
@@ -664,6 +682,9 @@ public class TestDashboardSet extends LoginAndLogout
 		//open the dashboardset
 		webd.getLogger().info("Open the dashboard in the builder page");
 		DashboardHomeUtil.selectDashboard(webd, dbsetName_Test1);
+
+		webd.getLogger().info("Set the refresh setting to OFF");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
 
 		//click Add dashboard icon
 		webd.getLogger().info("Click Add Dashboard Icon");
