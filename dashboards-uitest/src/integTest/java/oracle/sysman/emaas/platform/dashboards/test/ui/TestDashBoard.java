@@ -103,7 +103,8 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	//@Test(dependsOnMethods = { "testCreateDashboard_noWidget_ListView" })
-	public void Test_targetselector() throws Exception
+	/*
+        public void Test_targetselector() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards  in list view");
@@ -120,6 +121,7 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardBuilderUtil.EditDashboard_targetselctor(webd, "noWidgetListView", "noWidgetListView desc2");
 
 	}
+        */
 
 	@Test
 	public void testCreateDashboad_noDesc_GridView() throws Exception
