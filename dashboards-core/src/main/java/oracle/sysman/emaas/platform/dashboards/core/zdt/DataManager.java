@@ -10,8 +10,15 @@
 
 package oracle.sysman.emaas.platform.dashboards.core.zdt;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+
+import org.codehaus.jettison.json.JSONArray;
+import org.eclipse.persistence.config.QueryHints;
+import org.eclipse.persistence.config.ResultType;
 
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 
@@ -75,5 +82,21 @@ public class DataManager
 		Query query = em.createNativeQuery(sql);
 		long count = ((Number) query.getSingleResult()).longValue();
 		return count;
+	}
+
+	public JSONArray getDashboardTableData()
+	{
+		JSONArray array = new JSONArray();
+		DashboardServiceFacade dsf = new DashboardServiceFacade();
+		EntityManager em = dsf.getEntityManager();
+		String sql = "SELECT * FROM EMS_DASHBOARD";
+		Query query = em.createNativeQuery(sql);
+		query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> list = query.getResultList();
+		for (Map<String, Object> row : list) {
+			array.put(row);
+		}
+		return array;
 	}
 }
