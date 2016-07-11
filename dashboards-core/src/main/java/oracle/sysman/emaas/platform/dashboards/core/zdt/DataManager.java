@@ -16,17 +16,21 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import org.codehaus.jettison.json.JSONArray;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.persistence.config.QueryHints;
 import org.eclipse.persistence.config.ResultType;
 
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 
 /**
  * @author guochen
  */
 public class DataManager
 {
+	private static final Logger logger = LogManager.getLogger(DataManager.class);
+
 	private static DataManager instance = new DataManager();
 
 	/**
@@ -84,19 +88,111 @@ public class DataManager
 		return count;
 	}
 
-	public JSONArray getDashboardTableData()
+	/**
+	 * Retrieves all dashboard favorite data rows for all tenant
+	 *
+	 * @return
+	 */
+	public List<Map<String, Object>> getDashboardFavoriteTableData()
 	{
-		JSONArray array = new JSONArray();
+		String sql = "select * FROM EMS_DASHBOARD_FAVORITE";
+		return getDatabaseTableData(sql);
+	}
+
+	/**
+	 * Retrieves all dashboard last access data rows for all tenant
+	 *
+	 * @return
+	 */
+	public List<Map<String, Object>> getDashboardLastAccessTableData()
+	{
+		String sql = "select * FROM EMS_DASHBOARD_LAST_ACCESS";
+		return getDatabaseTableData(sql);
+	}
+
+	/**
+	 * Retrieves all dashboard set data rows for all tenant
+	 *
+	 * @return
+	 */
+	public List<Map<String, Object>> getDashboardSetTableData()
+	{
+		String sql = "SELECT * FROM EMS_DASHBOARD_SET";
+		return getDatabaseTableData(sql);
+	}
+
+	/**
+	 * Retrieves all dashboard data rows for all tenant
+	 *
+	 * @return
+	 */
+	public List<Map<String, Object>> getDashboardTableData()
+	{
+		String sql = "SELECT * FROM EMS_DASHBOARD";
+		return getDatabaseTableData(sql);
+	}
+
+	/**
+	 * Retrieves all dashboard tile params data rows for all tenant
+	 *
+	 * @return
+	 */
+	public List<Map<String, Object>> getDashboardTileParamsTableData()
+	{
+		String sql = "SELECT * FROM EMS_DASHBOARD_TILE_PARAMS";
+		return getDatabaseTableData(sql);
+	}
+
+	/**
+	 * Retrieves all dashboard tile data rows for all tenant
+	 *
+	 * @return
+	 */
+	public List<Map<String, Object>> getDashboardTileTableData()
+	{
+		String sql = "SELECT * FROM EMS_DASHBOARD_TILE";
+		return getDatabaseTableData(sql);
+	}
+
+	/**
+	 * Retrieves all dashboard user options data rows for all tenant
+	 *
+	 * @return
+	 */
+	public List<Map<String, Object>> getDashboardUserOptionsTableData()
+	{
+		String sql = "SELECT * FROM EMS_DASHBOARD_USER_OPTIONS";
+		return getDatabaseTableData(sql);
+	}
+
+	/**
+	 * Retrieves all preference data rows for all tenant
+	 *
+	 * @return
+	 */
+	public List<Map<String, Object>> getPreferenceTableData()
+	{
+		String sql = "SELECT * FROM EMS_PREFERENCE";
+		return getDatabaseTableData(sql);
+	}
+
+	/**
+	 * Retrieves database data rows for specific native SQL for all tenant
+	 *
+	 * @return
+	 */
+	private List<Map<String, Object>> getDatabaseTableData(String nativeSql)
+	{
+		if (StringUtil.isEmpty(nativeSql)) {
+			logger.error("Can't query database table with null or empty SQL statement!");
+			return null;
+		}
 		DashboardServiceFacade dsf = new DashboardServiceFacade();
 		EntityManager em = dsf.getEntityManager();
-		String sql = "SELECT * FROM EMS_DASHBOARD";
-		Query query = em.createNativeQuery(sql);
+		Query query = em.createNativeQuery(nativeSql);
 		query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> list = query.getResultList();
-		for (Map<String, Object> row : list) {
-			array.put(row);
-		}
-		return array;
+		return list;
 	}
 }
