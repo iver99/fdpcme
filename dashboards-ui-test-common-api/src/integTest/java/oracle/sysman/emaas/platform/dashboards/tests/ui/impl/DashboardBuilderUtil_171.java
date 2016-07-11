@@ -280,6 +280,12 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.getLogger().info("duplicate save button has been focused");
 
 		driver.click("css=" + DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
+
+		//wait for redirect
+		String newTitleLocator = ".dbd-display-hover-area h1[title='" + name + "']";
+		driver.getLogger().info("DashboardBuilderUtil.duplicate : wait for redirect" + newTitleLocator);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(newTitleLocator)));
+
 		driver.takeScreenShot();
 		driver.getLogger().info("duplicate completed");
 
