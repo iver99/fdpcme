@@ -16,7 +16,8 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil.TimeRange;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
@@ -32,6 +33,7 @@ public class TestDateTimePicker extends CommonUIUtils
 			String EndLabelLocator) throws Exception
 	{
 
+                WaitUtil.waitForPageFullyLoaded(driver);
 		String timeRange = option.getRangeOption();
 
 		String sTmpStartDateTime = driver.getText(StartLabelLocator);

@@ -220,10 +220,12 @@ $.widget( "dbs.dbsTypeAhead", {
                                     //{
                                     //    __callback();
                                     //}
+                                    _dataSource.serverError = false;
                                     response(_dataSource);
                                 },
                                 error: function() {
                                     //console.log("[dbsTypeAhead] fetch failed");
+                                    _dataSource.serverError = true;
                                     response(_dataSource);
 				}
                             } );
