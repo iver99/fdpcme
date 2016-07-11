@@ -251,6 +251,7 @@ public class DashboardBuilderUtil
 	public static void duplicateDashboard(WebDriver driver, String name, String descriptions) throws Exception {
 		duplicateDashboardCommonUse(driver,name, descriptions ,DUP_DASHBOARD_NODSUBMENU);
 	}
+
 	public static void duplicateDashboardInsideSet(WebDriver driver, String name, String descriptions,boolean addToSet) throws Exception {
 		if(addToSet){
 			duplicateDashboardCommonUse(driver,name, descriptions ,DUP_DASHBOARD_TOSET);
@@ -1373,10 +1374,18 @@ public class DashboardBuilderUtil
 
 		driver.click("css=" + DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
 		driver.takeScreenShot();
-		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsMenuLocator);
+		//wait for direct
+        if(operationName.equals(DUP_DASHBOARD_TOSET)){
+			WaitUtil.waitForPageFullyLoaded(driver);
+			driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsMenuLocator);
+		}else{
+			String newTitleLocator = ".dbd-display-hover-area h1[title='"+name+"']";
+			driver.getLogger().info("DashboardBuilderUtil.duplicate : " + newTitleLocator);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(newTitleLocator)));
+			WaitUtil.waitForPageFullyLoaded(driver);
+		}
 		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.duplicate completed");
-
 	}
 
 	/**
