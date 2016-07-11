@@ -36,8 +36,6 @@ public class DashboardOrderWriteCURD
 	static String tenantid_2;
 	static String remoteuser;
 
-	static String dashboard_id = "";
-
 	@BeforeClass
 	public static void setUp()
 	{
@@ -52,8 +50,9 @@ public class DashboardOrderWriteCURD
 	}
 
 	@Test
-	public void dashboardCRU()
+	public void dashboardCRUD()
 	{
+		String dashboard_id = "";
 		try {
 			System.out.println("------------------------------------------");
 			//create the dashboard
@@ -191,28 +190,21 @@ public class DashboardOrderWriteCURD
 		catch (Exception ex) {
 			Assert.fail(ex.getLocalizedMessage());
 		}
-	}
-
-	@Test
-	public void dashboardDelete()
-	{
-		try {
+		finally {
 			System.out.println("cleaning up the dashboard that is created above using DELETE method");
-			Response res = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
-			System.out.println(res.asString());
-			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 204);
+			if (!dashboard_id.equals("")) {
+				Response res = RestAssured
+						.given()
+						.contentType(ContentType.JSON)
+						.log()
+						.everything()
+						.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+								"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
+				System.out.println(res.asString());
+				System.out.println("Status code is: " + res.getStatusCode());
+				Assert.assertTrue(res.getStatusCode() == 204);
+			}
 		}
-		catch (Exception ex) {
-			Assert.fail(ex.getLocalizedMessage());
-		}
-
 	}
 
 	@Test
@@ -221,7 +213,7 @@ public class DashboardOrderWriteCURD
 		try {
 			System.out.println("------------------------------------------");
 			System.out
-			.println("Access the system dashboard, then verify the system dashboard is the first one in dashboard list");
+					.println("Access the system dashboard, then verify the system dashboard is the first one in dashboard list");
 			Response res3 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
