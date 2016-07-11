@@ -314,7 +314,7 @@ require(['ojs/ojcore',
                         console.log("---fetching service links is not finished yet!---");
                         return;
                     }
-                    oj.Logger.info('Trying to open APM by URL: ' + self.landingHomeUrls.OCS);
+                    oj.Logger.info('Trying to open Orchestration by URL: ' + self.landingHomeUrls.Orchestration);
                     if(self.landingHomeUrls.Orchestration) {
                         window.location.href = self.landingHomeUrls.Orchestration;
                     }
