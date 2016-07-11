@@ -344,6 +344,7 @@ public class DashBoardPageId
 	public static final String Welcome_LALinkCSS = "LA_wrapper"; //".landing-home-box-content-head[data-bind='text: LA']";
 	public static final String Welcome_ITALinkID = "ITA_wrapper"; //".landing-home-box-content-head[data-bind='text: ITA']";
 	public static final String Welcome_InfraMonitoringID = "infra_mon_wrapper";
+	public static final String Welcome_OrchestrationID = "orchestration_wrapper";
 	public static final String Welcome_DashboardsLinkID = "dashboards_wrapper"; //"/html/body/div[2]/div/div[2]/ul/li[4]/a/div/div[2]/div[1]";
 	public static final String Welcome_DataExp = "data_explore_wrapper"; //"/html/body/div[2]/div/div[2]/ul/li[5]/div/div/div[2]/div[1]";
 	public static final String Welcome_ITA_SelectID = "ITA_options"; //"ojChoiceId_ITA_options_selected";

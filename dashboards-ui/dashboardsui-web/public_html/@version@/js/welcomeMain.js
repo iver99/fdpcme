@@ -315,8 +315,8 @@ require(['ojs/ojcore',
                         return;
                     }
                     oj.Logger.info('Trying to open APM by URL: ' + self.landingHomeUrls.OCS);
-                    if(self.landingHomeUrls.OCS) {
-                        window.location.href = self.landingHomeUrls.OCS;
+                    if(self.landingHomeUrls.Orchestration) {
+                        window.location.href = self.landingHomeUrls.Orchestration;
                     }
                 };
                 self.dataExplorersChosen = function (event, data) {
