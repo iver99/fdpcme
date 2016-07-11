@@ -1029,10 +1029,11 @@ self.entitySupport = ko.observable("byCriteria");
                 self.filterSettingModified(false);
             };
             
+            self.defaultValueChanged = ko.observable(new Date());
             //handle with auto-saving of filter setting in right drawer
             self.dsbRtDrFiltersSaveDelay = ko.computed(function() {
                 return self.enableEntityFilter() + self.entitySupport() + self.defaultEntityValue() + self.defaultEntityContext() +
-                        self.enableTimeRangeFilter() + self.defaultTimeRangeValue();
+                        self.enableTimeRangeFilter() + self.defaultTimeRangeValue() + self.defaultValueChanged();
             });
 
             self.dsbRtDrFiltersSaveDelay.extend({rateLimit: {method: "notifyWhenChangesStop", timeout: 800}});

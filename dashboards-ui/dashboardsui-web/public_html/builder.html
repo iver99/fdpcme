@@ -975,26 +975,26 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="oj-flex">
+<!--                                                        <div class="oj-flex">
                                                             <div class="oj-flex-item">
                                                                 <label class="oj-label enableEntityFilter df-label"  style="margin: 10px 0 0 0;" data-bind="text: getNlsString('DSB_BUILDER_EDIT_DEFAULT_ENTITY_LABEL'), css: {'dbd-right-panel-collapsible-disabled': !enableEntityFilter()}"></label>
                                                             </div>
                                                         </div>
                                                         <div class="oj-flex">
                                                             <div class="oj-flex-item" style="margin-top: 10px">
-                                                                <!--ko if:entitySupport() === "byCriteria"-->
+                                                                ko if:entitySupport() === "byCriteria"
                                                                     <select data-bind="attr: {id: 'defaultEntityValSel_'+dashboard.id()}, ojComponent: {component: 'ojSelect',disabled: !enableEntityFilter(), optionChange: defaultMultiEntityValueChanged,
                                                                                                      options: multiEntityOptions, value: defaultMultiEntityValue,rootAttributes: {style:'width:17em'}}">
                                                                     </select>
-                                                                <!-- /ko -->
+                                                                 /ko 
 
-                                                                <!-- ko if: entitySupport() === "single" -->
+                                                                 ko if: entitySupport() === "single" 
                                                                 <select data-bind="attr: {id: 'defaultSingleEntityValSel_'+dashboard.id()}, ojComponent: {component: 'ojSelect',disabled: !enableEntityFilter(), optionChange: defaultSingleEntityValueChanged,
                                                                                                      options: singleEntityOptions, value: defaultSingleEntityValue,rootAttributes: {style:'width:17em'}}">
                                                                 </select>
-                                                                <!--/ko-->
+                                                                /ko
                                                             </div>
-                                                        </div>
+                                                        </div>-->
                                                     </form>
                                                 </div>
                                             </div>
@@ -1011,7 +1011,7 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="oj-flex">
+<!--                                            <div class="oj-flex">
                                                 <form class="oj-form checkboxControledContent" style="overflow: hidden;">
                                                     <div class="oj-flex" style="margin-left: 5px">
                                                         <div class="oj-flex-item">
@@ -1023,14 +1023,14 @@
                                                             <select data-bind="attr: {id: 'defaultTimeRange_'+dashboard.id()}, ojComponent: {component: 'ojSelect',disabled: !enableTimeRangeFilter(), optionChange: defaultTimeRangeValueChanged,
                                                                                                  options: timeRangeOptions, value: defaultTimeRangeValue, minimumResultsForSearch: 20, value: defaultTimeRangeValue,rootAttributes: {style:'width: 17em;'}}">
                                                             </select>
-<!--                                                            <div class="oj-row fit-size-vertical-sibling df-computed-content-width"
+                                                            <div class="oj-row fit-size-vertical-sibling df-computed-content-width"
                                                                  style="max-width: none;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0"
                                                                  data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
                                                                 <div class="oj-col oj-sm-12 oj-md-7" style="padding-left: 0;width: 100px;">
                                                                     <div data-bind="visible: !dashboard.enableTimeRange || dashboard.enableTimeRange() !== 'TRUE'">&nbsp;</div>
                                                                     <div style="width: 100px;" data-bind="component: {name: 'df-datetime-picker', params: tilesViewModel.datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'"></div>
                                                                 </div>
-                                                            </div>-->
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -1043,7 +1043,7 @@
                                                                                     rootAttributes: {style:'float:right;margin:0 5px 5px 0;'} },
                                                                             css: {'oj-button-primary':filterSettingModified()}"></button>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                         </div>
                                     </div>
                                 </div>

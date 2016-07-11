@@ -1081,12 +1081,12 @@ define(['knockout',
             }
             
             self.returnFromTsel = function(targets) {
-                if(self.whichTselLauncher() === 0) {
+//                if(self.whichTselLauncher() === 0) {
                     self.returnFromPageTsel(targets);
-                }else if(self.whichTselLauncher() === 1 || self.whichTselLauncher() === 2) {
+//                }else if(self.whichTselLauncher() === 1 || self.whichTselLauncher() === 2) {
                    $b.getRightPanelModel().returnFromRightDrawerTsel(targets);
                    self.whichTselLauncher(0);
-                }
+//                }
             }
             
             var compressedTargets;
@@ -1159,7 +1159,7 @@ define(['knockout',
                 hideMainLabel: true,
                 changeLabel: self.changeLabel,
                 callbackAfterApply: function(start, end, tp) {
-                    if(self.whichTimeSelLauncher() === 0) {
+//                    if(self.whichTimeSelLauncher() === 0) {
                         self.timePeriod(tp);
                         self.timeSelectorModel.viewStart(start);
                         self.timeSelectorModel.viewEnd(end);
@@ -1172,21 +1172,22 @@ define(['knockout',
                         self.toolbarModel.extendedOptions.timeSel.start = start.getTime();
                         self.toolbarModel.extendedOptions.timeSel.end = end.getTime();
                         self.saveUserFilterOptions();
-                    }else if(self.whichTimeSelLauncher() === 1) {
+//                    }else if(self.whichTimeSelLauncher() === 1) {
                         //change default time range value option text in right drawer
                         var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
-                        rightPanelModel.defaultTimeRangeValue(['custom1']);
-                        rightPanelModel.initDefaultTimeRangeValueForCustom(start.getTime(), end.getTime());
+//                        rightPanelModel.defaultTimeRangeValue(['custom1']);
+//                        rightPanelModel.initDefaultTimeRangeValueForCustom(start.getTime(), end.getTime());
                         
                         //set timeSel settings to save
                         rightPanelModel.extendedOptions.timeSel.start = start.getTime();
                         rightPanelModel.extendedOptions.timeSel.end = end.getTime();
-                        rightPanelModel.extendedOptions.timeSel.defaultValue = rightPanelModel.defaultTimeRangeValue()[0];
+                        rightPanelModel.extendedOptions.timeSel.defaultValue = Builder.getTimePeriodValue(tp);
+                        rightPanelModel.defaultValueChanged(new Date());
                         
                         //recover timeSel launcher to the one on the page
                         self.whichTimeSelLauncher(0);
                         self.changeLabel(true);
-                    }
+//                    }
                 },
                 callbackAfterCancel: function() {
                     if(self.whichTimeSelLauncher() === 1) {
