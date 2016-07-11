@@ -153,6 +153,7 @@ define(['knockout',
                 }else{
                     self.dashboardEditDisabled(true) ;
                 }
+                self.dashboard = _$b.dashboard;
             };
             
             self.loadToolBarModel(toolBarModel,self.$b);
@@ -603,7 +604,7 @@ define(['knockout',
             self.deleteDashboardClicked = function(){
                 queryDashboardSetsBySubId(self.dashboard.id(),function(resp){
                     window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(resp.dashboardSets || []); 
-                    toolBarModel.openDashboardDeleteConfirmDialog();
+                    self.toolBarModel.openDashboardDeleteConfirmDialog();
                 });
             };        
             
