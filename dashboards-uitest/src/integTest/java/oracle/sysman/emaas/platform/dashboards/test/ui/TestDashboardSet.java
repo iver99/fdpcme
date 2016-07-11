@@ -260,7 +260,7 @@ public class TestDashboardSet extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_Test), "Dashboard set NOT found!");
 
 	}
-
+/*
 	@Test(groups = "forth run", dependsOnMethods = { "testSearchDashboardInSet" })
 	public void testDeleteDashboardInSet() throws Exception
 	{
@@ -402,7 +402,7 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Verify the duplicate dashboard: " + dbName_OutSet + " is not in the dashboard set");
 		Assert.assertFalse(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_OutSet + "-duplicate"),
 				"Dashboard has been duplicated and add to dashboard set");
-	}
+	}*/
 
 	@Test(groups = "second run", dependsOnGroups = { "first run" })
 	public void testFavorite() throws Exception
