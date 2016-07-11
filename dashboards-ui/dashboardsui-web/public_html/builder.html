@@ -496,7 +496,7 @@
                                 </div>
                             </div>
                             <div style="display: inline-block; float: left">
-                               <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>
+                               <div data-bind="attr: {id: 'dtpicker_'+dashboard.id()}, component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>
                             </div>
                         </div>
 
