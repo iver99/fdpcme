@@ -203,7 +203,7 @@ define({
       "DBS_BUILDER_CONFIRM_LEAVE_DIALOG_TITLE": "Unsaved Changes",
       "DBS_BUILDER_CONFIRM_LEAVE_DIALOG_CONTENT": "You have unsaved changes on this dashboard. Do you want to save your changes?",
       "DBS_BUILDER_BTN_ADD_HINT_TITLE": "Let's get started!",
-      "DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1": "Drag and drop content from the Edit Page panel on the right to build your dashboard.",
+      "DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1": "Drag content from the drawer at right to build your dashboard.",
       "DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_1": "Click ",
       "DBS_BUILDER_BTN_ADD_HINT_ADD_LINK": "Options->Add",
       "DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_2": " to get started",
