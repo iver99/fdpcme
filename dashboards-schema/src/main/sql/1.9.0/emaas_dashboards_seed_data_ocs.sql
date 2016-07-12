@@ -78,7 +78,7 @@ BEGIN
   SELECT COUNT(DASHBOARD_ID) INTO V_COUNT FROM EMS_DASHBOARD WHERE DASHBOARD_ID=22 AND TENANT_ID=V_TENANT_ID;
   IF (V_COUNT<1) THEN
       V_DASHBOARD_ID              := 22;
-      V_NAME                      := 'Workflow SubmissionsOrchestration';
+      V_NAME                      := 'Workflow Submissions';
       V_TYPE                      := 0;
       V_DESCRIPTION               := null;
       V_CREATION_DATE             := SYS_EXTRACT_UTC(SYSTIMESTAMP);
