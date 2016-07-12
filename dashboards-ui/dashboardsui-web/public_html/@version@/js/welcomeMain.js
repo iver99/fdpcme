@@ -203,7 +203,7 @@ require(['ojs/ojcore',
                                 self.showSecurityAnalytics(true);
                             }
                             if(cloudServices[i].name == "Orchestration") {
-                                self.showOrchetration(true);
+                                self.showOrchestration(true);
                             }
                             landingHomeUrls[cloudServices[i].name] = cloudServices[i].href;
                         }
