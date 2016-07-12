@@ -43,6 +43,7 @@ public class RegistryLookupUtil
 	public static final String LA_SERVICE = "LoganService";
 	public static final String TA_SERVICE = "TargetAnalytics";
 	public static final String MONITORING_SERVICE = "MonitoringServiceUI";
+	public static final String SECURITY_ANALYTICS_SERVICE = "SecurityAnalyticsUI";
 
 	public static List<Link> getLinksWithRelPrefix(String relPrefix, SanitizedInstanceInfo instance)
 	{
@@ -71,7 +72,7 @@ public class RegistryLookupUtil
 			if (!StringUtil.isEmpty(tenantName)) {
 				internalInstance = LookupManager.getInstance().getLookupClient().getInstanceForTenant(queryInfo, tenantName);
 				itrLogger
-						.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance, tenantName);
+				.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance, tenantName);
 				if (internalInstance == null) {
 					logger.error(
 							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
@@ -399,7 +400,7 @@ public class RegistryLookupUtil
 		catch (Exception e) {
 			logger.error("Error to retrieve external link from cache. Try to lookup the link", e);
 		}
-		
+
 		InstanceInfo.Builder builder = InstanceInfo.Builder.newBuilder().withServiceName(serviceName);
 		if (!StringUtil.isEmpty(version)) {
 			builder = builder.withVersion(version);
@@ -567,7 +568,7 @@ public class RegistryLookupUtil
 		catch (Exception e) {
 			logger.error("Error to retrieve internal link from cache. Try to lookup the link", e);
 		}
-		
+
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
@@ -617,6 +618,7 @@ public class RegistryLookupUtil
 			return lk;
 		}
 	}
+
 	@SuppressWarnings("unchecked")
 	private static Map<String, String> getVanityBaseURLs(String tenantName)
 	{
@@ -641,7 +643,7 @@ public class RegistryLookupUtil
 			if (result != null && result.size() > 0) {
 				for (InstanceInfo internalInstance : result) {
 					if (map.containsKey(APM_SERVICE) && map.containsKey(ITA_SERVICE) && map.containsKey(LA_SERVICE)
-							&& map.containsKey(MONITORING_SERVICE)) {
+							&& map.containsKey(MONITORING_SERVICE) && map.containsKey(SECURITY_ANALYTICS_SERVICE)) {
 						break;
 					}
 					if (!map.containsKey(APM_SERVICE)) {
@@ -693,6 +695,20 @@ public class RegistryLookupUtil
 							logger.debug("Tenant id is inserted into the base vanity URL for monitoring service. The URL is {}",
 									url);
 							map.put(MONITORING_SERVICE, url);
+						}
+					}
+					if (!map.containsKey(SECURITY_ANALYTICS_SERVICE)) {
+						List<Link> links = internalInstance.getLinksWithProtocol("vanity/security", "https");
+						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
+
+						if (links != null && links.size() > 0) {
+							lk = links.get(0);
+							logger.debug("Retrieved base vanity URL for Security Analytics service: {} ", lk.getHref());
+							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
+							logger.debug(
+									"Tenant id is inserted into the base vanity URL for Security Analytics service. The URL is {}",
+									url);
+							map.put(SECURITY_ANALYTICS_SERVICE, url);
 						}
 					}
 				}

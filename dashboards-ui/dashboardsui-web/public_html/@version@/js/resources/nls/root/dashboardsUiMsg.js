@@ -326,6 +326,8 @@ define({
       "LANDING_HOME_INFRA_MONITORING_DESC": "Monitor your entire IT infrastructure - on-premise or on the cloud - from one unified platform",
 
       "LANDING_HOME_DASHBOARDS": "Dashboards",
+      "LANDING_HOME_SECURITY_ANALYTICS": "Security Monitoring and Analytics",
+      "LANDING_HOME_SECURITY_ANALYTICS_DESC": "Detect, investigate and mitigate security threats",
       
       "LANDING_HOME_ORCHESTRATION": "Orchestration",
       "LANDING_HOME_ORCHESTRATION_DESC": "Schedule, execute and report on tasks at scale",
