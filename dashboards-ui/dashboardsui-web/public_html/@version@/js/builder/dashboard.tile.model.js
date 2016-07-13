@@ -945,8 +945,14 @@ define(['knockout',
                 hideMainLabel: true,
                 callbackAfterApply: function(start, end, tp) {
                     self.timeSelectorModel.viewStart(start);
-                    self.timeSelectorModel.viewEnd(end);
-                    self.timePeriod(tp);
+                    self.timeSelectorModel.viewEnd(end);                    
+                    if(tp === "Custom") {
+                        self.initStart(start);
+                        self.initEnd(end);                        
+                        self.timePeriod(tp);
+                    }else {
+                        self.timePeriod(tp);
+                    }
                     self.timeSelectorModel.timeRangeChange(true);		
                 }
             };
