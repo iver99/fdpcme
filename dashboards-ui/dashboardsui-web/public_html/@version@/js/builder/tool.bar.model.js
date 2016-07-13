@@ -138,7 +138,9 @@ define(['knockout',
                                 }, function () {
                             console.log("update dashboard name && description  failed !");
                         });
-                        $b.getDashboardTilesViewModel().initEnd(new Date());
+                        if($b.getDashboardTilesViewModel().timePeriod()!=="Custom") {                           
+                            $b.getDashboardTilesViewModel().initEnd(new Date()); 
+                        }
                         if($("#dtpicker_"+self.dashboardId).children().get(0)) {
                             ko.contextFor($("#dtpicker_"+self.dashboardId).children().get(0)).$component.applyClick();
                         }
