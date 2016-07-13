@@ -91,7 +91,7 @@ define(['knockout',
 
             self.editRightpanelLinkage = function(target){
                 var highlightIcon = "pencil";
-                self.completelyHidden(false);
+                self.completelyHidden(false);            
                 var panelTarget;
                 if (target === "singleDashboard-edit") {
                     panelTarget = "edit";
@@ -106,6 +106,7 @@ define(['knockout',
                 } else {
                     self.editPanelContent(panelTarget);
                     self.expandDBEditor(target,true);
+                    $(".dashboard-picker-container:visible").addClass("df-collaps");
                 }
                 self.$b.triggerBuilderResizeEvent('resize right panel');
             };

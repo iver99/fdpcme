@@ -57,6 +57,7 @@ define([
                 if (self.rightPanelModel) {
                     //resize right panel before shown
                     self.rightPanelModel.completelyHidden(true);
+                    $(".dashboard-picker-container").removeClass("df-collaps");
                 }
                 
                 if (alreadyLoaded) {
