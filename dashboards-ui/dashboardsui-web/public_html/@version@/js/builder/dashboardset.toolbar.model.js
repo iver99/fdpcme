@@ -64,15 +64,17 @@ define(['knockout',
             self.dashboardsetConfig.setHome = ko.observable(true);
             var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
             var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
-            prefUtil.getAllPreferences({
-                async: false,
-                success: function(resp) {
-                    var value = prefUtil.getPreferenceValue(resp, prefKeyHomeDashboardId);
-                    if (Number(value) === ko.unwrap(dashboardInst.id)) {
-                        self.dashboardsetConfig.setHome = ko.observable(false);
+            if("SET" === dashboardInst.type()){
+                prefUtil.getAllPreferences({
+                    async: false,
+                    success: function(resp) {
+                        var value = prefUtil.getPreferenceValue(resp, prefKeyHomeDashboardId);
+                        if (Number(value) === ko.unwrap(dashboardInst.id)) {
+                            self.dashboardsetConfig.setHome = ko.observable(false);
+                        }
                     }
-                }
-            });
+                });
+            }
            
             self.dashboardsetConfig.homeIcon = ko.observable("dbd-toolbar-icon-home");
             self.dashboardsetConfig.homeLabel = ko.pureComputed(function () {

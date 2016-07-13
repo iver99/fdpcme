@@ -791,7 +791,9 @@ define(['knockout',
                     success: succCallback,
                     error: errorCallback
                 };
-                prefUtil.getAllPreferences(options);
+                if(!self.isUnderSet){
+                    prefUtil.getAllPreferences(options);
+                }
             }
             
             self.autoRefreshInterval.subscribe(function (value) {
