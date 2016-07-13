@@ -275,9 +275,11 @@ define(['knockout',
                         self.$b.triggerBuilderResizeEvent('Initialize right panel');
                     }
                     
-                    if(self.isDashboardSet()){
-                        var isOnlyDashboardPicker = self.dashboardsetToolBarModel.dashboardsetItems.length === 1 && self.dashboardsetToolBarModel.dashboardsetItems[0].type === "new";
-                        self.dashboardsetShareDisabled(isOnlyDashboardPicker);
+                    if (self.isDashboardSet()) {
+                        self.dashboardsetToolBarModel.reorderedDbsSetItems.subscribe(function () {
+                            var isOnlyDashboardPicker = self.dashboardsetToolBarModel.dashboardsetItems.length === 1 && self.dashboardsetToolBarModel.dashboardsetItems[0].type === "new";
+                            self.dashboardsetShareDisabled(isOnlyDashboardPicker);
+                        });
                     }
 
 
