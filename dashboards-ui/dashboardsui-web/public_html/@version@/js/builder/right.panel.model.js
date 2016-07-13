@@ -177,15 +177,15 @@ define(['knockout',
                 var tsel = extendedOptions ? extendedOptions.tsel : {};
                 var timeSel = extendedOptions ? extendedOptions.timeSel : {};
                 //1. reset tsel in right drawer
-                self.enableEntityFilter(dashboard.enableEntityFilter() === 'TRUE');
+                self.enableEntityFilter((dashboard.enableEntityFilter() === 'TRUE')?'ON':'OFF');
                 
                 self.defaultEntityValue(tsel.defaultValue?tsel.defaultValue:"allEntities");
                 self.initDefaultEntityValueForMore && self.initDefaultEntityValueForMore(tsel.entitySupport);
                 
-                self.entitySupport(tsel.entitySupport?tsel.entitySupport:"byCriteria");
-                tilesViewModel.selectionMode(self.entitySupport());
+                self.entitySupport(tsel.entitySupport?(tsel.entitySupport==="byCriteria"?true:false):true);
+                tilesViewModel.selectionMode(self.entitySupport()?"byCriteria":"single");
                 //2. reset timeSel in right drawer
-                self.enableTimeRangeFilter(dashboard.enableTimeRange() === 'TRUE');
+                self.enableTimeRangeFilter((dashboard.enableTimeRange() === 'TRUE')?'ON':'OFF');
                 self.defaultTimeRangeValue([timeSel.defaultValue]);
                 self.defaultStartTime(parseInt(timeSel.start));
                 self.defaultEndTime(parseInt(timeSel.end));
@@ -327,6 +327,7 @@ define(['knockout',
 //                $b.addBuilderResizeListener(self.resizeEventHandler);
                 self.$b.addEventListener(self.$b.EVENT_TILE_MAXIMIZED, self.tileMaximizedHandler);
                 self.$b.addEventListener(self.$b.EVENT_TILE_RESTORED, self.tileRestoredHandler);
+                self.$b.addEventListener(self.$b.EVENT_AUTO_REFRESH_CHANGED, self.autoRefreshChanged);
 //                $b.addEventListener($b.EVENT_TILE_ADDED, self.tileAddedHandler);
 //                $b.addEventListener($b.EVENT_TILE_DELETED, self.tileDeletedHandler);
 //                $b.addEventListener($b.EVENT_TILE_EXISTS_CHANGED, self.dashboardTileExistsChangedHandler);
@@ -407,6 +408,20 @@ define(['knockout',
                 self.initDraggable();
                 self.$b.triggerBuilderResizeEvent('hide left panel because restore');
             };
+            
+            self.autoRefreshChanged = function(interval) {
+                if(self.dashboardSharing() !== "shared") {
+                    var value;
+                    if(interval === 0) {
+                        value = "off";
+                    }else if(interval === 300000) {
+                        value = "every5minutes";
+                    } 
+                    self.defaultAutoRefreshValue(value);
+                    self.extendedOptions.autoRefresh.defaultValue = interval;
+                    self.defaultValueChanged(new Date());
+                }
+            }
             
 //            self.tileAddedHandler = function(tile) {
 //                tile && tile.type() === "DEFAULT" && ($("#dbd-left-panel-link").draggable("enable"));
@@ -771,23 +786,40 @@ define(['knockout',
                 {value: 'latest', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LATEST')},
                 {value: 'custom', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM')}
             ]);
+            
+            self.getDefaultTimeRangeValueText = function(value) {
+                for(var i=0; i<self.timeRangeOptions().length; i++) {
+                    if(value === self.timeRangeOptions()[i].value) {
+                        return self.timeRangeOptions()[i].label;
+                    }
+                }
+                return null;
+            };
 
             var defaultSettings = {
                     tsel:
                         {entitySupport: "byCriteria", defaultValue: "allEntities", entityContext: ""},
                     timeSel:
-                        {defaultValue: "last14days", start: "", end: ""}
+                        {defaultValue: "last14days", start: "", end: ""},
+                    autoRefresh:
+                        {defaultValue: 300000}
             };
             self.extendedOptions = self.dashboard.extendedOptions ? JSON.parse(self.dashboard.extendedOptions()) : defaultSettings;
 
             //set entity support/selectionMode
             self.extendedOptions.tsel.entitySupport && $b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel().selectionMode(self.extendedOptions.tsel.entitySupport);
 
-            self.enableEntityFilter = ko.observable(self.dashboard.enableEntityFilter() === 'TRUE');
-            self.enableTimeRangeFilter = ko.observable(self.dashboard.enableTimeRange && self.dashboard.enableTimeRange() === 'TRUE');
+            self.enableEntityFilter = ko.observable((self.dashboard.enableEntityFilter() === 'TRUE')?'ON':'OFF');
+            self.enableTimeRangeFilter = ko.observable(self.dashboard.enableTimeRange && (self.dashboard.enableTimeRange() === 'TRUE'?'ON':'OFF'));
 
-self.entitySupport = ko.observable("byCriteria");
-            $b.getDashboardTilesViewModel && (self.entitySupport = $b.getDashboardTilesViewModel().selectionMode);
+            self.entitySupport = ko.observable(true);
+            if($b.getDashboardTilesViewModel) {
+                if($b.getDashboardTilesViewModel().selectionMode()==="byCriteria") {
+                    self.entitySupport(true);
+                }else {
+                    self.entitySupport(false);
+                }
+            }
 
             self.defaultEntityValue = ko.observable(self.extendedOptions.tsel.defaultValue);
             self.defaultMultiEntityValue = ko.observable(["allEntities"]);
@@ -796,6 +828,10 @@ self.entitySupport = ko.observable("byCriteria");
             self.defaultEntityContext = ko.observable(self.extendedOptions.tsel.entityContext);
             self.defaultSingleEntityContext = ko.observable();
             self.defaultMultiEntityContext = ko.observable();
+            
+            self.defaultEntityValueText = ko.computed(function() {
+                return "default entity value";
+            });
             
             //set defualt entity value and entity context in "byCriteria"/"single" mode
             //handle more on how to show when the default entity value is "more*" or z"anEntity*
@@ -822,13 +858,21 @@ self.entitySupport = ko.observable("byCriteria");
                     }
                 }
             };
-                self.initDefaultEntityValueForMore(self.entitySupport());
+                self.initDefaultEntityValueForMore(self.entitySupport()?"byCriteria":"single");
 
             //set default time range value
             //handlehow to show when the value is "custom*"
             self.defaultTimeRangeValue = ko.observable([self.extendedOptions.timeSel.defaultValue]);
             self.defaultStartTime = ko.observable(parseInt(self.extendedOptions.timeSel.start));
             self.defaultEndTime = ko.observable(parseInt(self.extendedOptions.timeSel.end));
+            
+            self.defaultTimeRangeValueText = ko.computed(function() {
+                if((self.defaultTimeRangeValue()[0] !== "custom") && (self.defaultTimeRangeValue()[0] !== "custom1")) {
+                    return self.getDefaultTimeRangeValueText(self.defaultTimeRangeValue()[0]);
+                }else {
+                    return self.getTimeInfo(self.defaultStartTime(), self.defaultEndTime());
+                }
+            });
 
             self.initDefaultTimeRangeValueForCustom = function(startTimeStamp, endTimeStamp) {
                 if(self.defaultTimeRangeValue()[0] === "custom1") {
@@ -842,11 +886,12 @@ self.entitySupport = ko.observable("byCriteria");
             self.initDefaultTimeRangeValueForCustom(self.defaultStartTime(), self.defaultEndTime());
 
             self.enableEntityFilter.subscribe(function(val){
-                self.dashboard.enableEntityFilter(val ? 'TRUE' : 'FALSE');
+                self.dashboard.enableEntityFilter((val==='ON') ? 'TRUE' : 'FALSE');
             });
 
             //reset default entity value and entity context when entity support is changed
             self.entitySupport.subscribe(function(val) {
+                val = val?"byCriteria":"single";
                 self.extendedOptions.tsel.entitySupport = val;
                 if(val === "byCriteria") {
                     self.extendedOptions.tsel.defaultValue = self.defaultMultiEntityValue()[0];
@@ -859,7 +904,7 @@ self.entitySupport = ko.observable("byCriteria");
             });
 
             self.enableTimeRangeFilter.subscribe(function(val){
-                self.dashboard.enableTimeRange(val ? 'TRUE' : 'FALSE');
+                self.dashboard.enableTimeRange((val==='ON') ? 'TRUE' : 'FALSE');
             });
 
             self.filterSettingModified = ko.observable(false);
@@ -874,7 +919,7 @@ self.entitySupport = ko.observable("byCriteria");
             self.returnFromRightDrawerTsel = function(targets) {
 
 //                var pageTselLabel = ko.contextFor($('#tsel_'+self.tilesViewModel.dashboard.id()).children().get(0)).$component.dropdownLabel();
-                if(self.entitySupport() === "single") {
+                if(self.entitySupport() === true) {
                     self.defaultSingleEntityContext(targets);
                     if(self.singleEntityOptions().length>1) {
                         self.singleEntityOptions(self.singleEntityOptions.slice(0, 1));
@@ -882,7 +927,7 @@ self.entitySupport = ko.observable("byCriteria");
                     self.singleEntityOptions.push({value: "anEntity1", label: getNlsString("DSB_BUILDER_EDIT_ENTITY_SELECTED_1")});
                     self.defaultSingleEntityValue(["anEntity1"]);
                     self.extendedOptions.tsel.defaultValue = self.defaultSingleEntityValue()[0];
-                }else if(self.entitySupport() === "byCriteria") {
+                }else if(self.entitySupport() === false) {
 //                    $("#ojChoiceId_defaultEntityValSel_"+self.tilesViewModel.dashboard.id()+"_selected").text(pageTselLabel);
                     self.defaultMultiEntityContext(targets);
                     if(self.defaultMultiEntityValue()[0] === "more") {
@@ -988,13 +1033,13 @@ self.entitySupport = ko.observable("byCriteria");
                 //apply filter settings in right drawer to filters on the page
                 //1. apply tsel settings
                 var qp
-                if(self.entitySupport() === "byCriteria") {
+                if(self.entitySupport() === true) {
                     qp = (self.extendedOptions.tsel.defaultValue==="more1")? "more" : self.extendedOptions.tsel.defaultValue;
                 }else {
                     qp = "anEntity";
                 }
                 
-                if(self.entitySupport() === "byCriteria" && qp!=="more") {
+                if(self.entitySupport() === true && qp!=="more") {
                     //set page Tsel by quickpicker
                     self.tilesViewModel.setQuickPickerSelected(qp);
                 }else {
@@ -1113,6 +1158,23 @@ self.entitySupport = ko.observable("byCriteria");
                 }
             });
             self.defaultAutoRefreshValue = ko.observable("every5minutes");
+            if(self.extendedOptions.autoRefresh) {
+                if(parseInt(self.extendedOptions.autoRefresh.defaultValue) === 0) {
+                    self.defaultAutoRefreshValue("off");
+                }else if(parseInt(self.extendedOptions.autoRefresh.defaultValue) === 300000) {
+                    self.defaultAutoRefreshValue("every5minutes");
+                }                
+            }else {
+                self.extendedOptions.autoRefresh = {defaultValue: 300000};
+            }
+            
+            self.defaultAutoRefreshValueText = ko.computed(function() {
+                if(self.defaultAutoRefreshValue() === "off") {
+                    return getNlsString("DBS_BUILDER_AUTOREFRESH_OFF");
+                }else if(self.defaultAutoRefreshValue() === "every5minutes") {
+                    return getNlsString("DBS_BUILDER_AUTOREFRESH_ON");
+                }
+            });
 
             if (self.isDashboardSet()) {
                 self.dashboardsetName = ko.observable(self.dashboardsetToolBarModel.dashboardsetName());

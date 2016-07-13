@@ -811,6 +811,8 @@ define(['knockout',
                             self.hasUserOptionInDB(true);
                         });
                     }
+                    
+                    $b.triggerEvent($b.EVENT_AUTO_REFRESH_CHANGED, "auto-refresh changed", value);
                 }
 
                 self.setAutoRefreshInterval(value);

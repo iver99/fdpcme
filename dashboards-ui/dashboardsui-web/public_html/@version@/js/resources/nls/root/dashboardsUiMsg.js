@@ -147,6 +147,17 @@ define({
       "DBS_BUILDER_BTN_EDIT_TITLE": "Edit dashboard",
       "DBS_BUILDER_EDIT_DSB_NAME": "Dashboard Name",
       "DBS_BUILDER_EDIT_SHOW_DSB_DESC": "Show dashboard description",
+      //right drawer->filters
+      "DSB_BUILDER_EDIT_DASHBOARD_FILTERS": "Filters",
+      "DSB_BUILDER_EDIT_TIME_RANGE": "Time Range",
+      "DSB_BUILDER_EDIT_ENABLE_TIME_RANGE": "Use dashboard time range",
+      "DSB_BUILDER_EDIT_DISABLE_TIME_RANGE": "Use time range defined in the widgets",
+      
+      "DSB_BUILDER_EDIT_ENTITIES": "Entities", 
+      "DSB_BUILDER_EDIT_ENTITY_SUPPORT_MULTIPLE": "Dashboard supports multiple entities",
+      "DSB_BUILDER_EDIT_ENABLE_ENTITIES": "Use dashboard entities",
+      "DSB_BUILDER_EDIT_DISABLE_ENTITIES": "Use entities defined in the widgets",
+      
       "DBS_BUILDER_EDIT_ENTITY_FILTER": "Entity Filter",
       "DBS_BUILDER_EDIT_SHOW_ENTITY_FILTER": "Show Entity filter",
       "DBS_BUILDER_EDIT_ENTITY_SUPPORT": "Entity Support",
