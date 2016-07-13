@@ -73,6 +73,8 @@ define([
                     }else{
                         var $target =$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId);
                         homeScrollbarReset($target);
+                        var $b = new Builder.DashboardBuilder(dashboardsetToolBarModel.dashboardInst, $($("#dashboard-content-template").text()));
+                        self.loadRightPanelModel(null, null, $b);
                     }
                 } else {
                     if (dashboardItem.type === "new") {

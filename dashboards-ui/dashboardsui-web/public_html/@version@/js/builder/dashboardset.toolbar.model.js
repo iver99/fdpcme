@@ -82,9 +82,11 @@ define(['knockout',
             });
              
             self.dashboardsetConfig.addFavorite = ko.observable(true);
-            Builder.checkDashboardFavorites(ko.unwrap(dashboardInst.id), function (resp) {
-                self.dashboardsetConfig.addFavorite(!(resp && resp.isFavorite));
-            });
+            if("SET" === dashboardInst.type()){
+                Builder.checkDashboardFavorites(ko.unwrap(dashboardInst.id), function (resp) {
+                    self.dashboardsetConfig.addFavorite(!(resp && resp.isFavorite));
+                });
+            }
             self.dashboardsetConfig.favoriteIcon = ko.pureComputed(function () {
                 return self.dashboardsetConfig.addFavorite() ? "fa-star" : "fa-star-o";
             });
