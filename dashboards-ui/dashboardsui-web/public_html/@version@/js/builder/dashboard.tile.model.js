@@ -985,13 +985,18 @@ define(['knockout',
             var initEnd = dfu_model.getUrlParam("endTime") ? new Date(parseInt(dfu_model.getUrlParam("endTime"))) : current;
             self.timeSelectorModel.viewStart(initStart);
             self.timeSelectorModel.viewEnd(initEnd);
+            self.initStart = ko.observable(initStart);
+            self.initEnd = ko.observable(initEnd);
+            self.timePeriod = ko.observable("Last 1 day");
             self.datetimePickerParams = {
-                startDateTime: initStart,
-                endDateTime: initEnd,
+                startDateTime: self.initStart,
+                endDateTime: self.initEnd,
+                timePeriod: self.timePeriod,
                 hideMainLabel: true,
-                callbackAfterApply: function(start, end) {
+                callbackAfterApply: function(start, end, tp) {
                     self.timeSelectorModel.viewStart(start);
                     self.timeSelectorModel.viewEnd(end);
+                    self.timePeriod(tp);
                     self.timeSelectorModel.timeRangeChange(true);		
                 }
             };

@@ -12,6 +12,8 @@ define({
       "DBS_HOME_DASHBOARDS_SET_CREATE_TYPE":"Type",
       "DBS_HOME_TITLE_HOME": "Home",
       "DBS_HOME_TITLE_DASHBOARDS": "Dashboards",
+      "DBS_HOME_TILES_NO_DASHBOARDS": "No dashboards found.",
+      "DBS_HOME_TILES_INTERNAL_ERROR": "Internal error. Try again.",
       "COMMON_BTN_OK": "OK",
       "COMMON_BTN_CANCEL": "Cancel",
       "COMMON_BTN_DISCARD": "Discard",
@@ -87,6 +89,7 @@ define({
       "DBS_HOME_FILTER_SERVICE_APM": "Application Performance Monitoring ",
       "DBS_HOME_FILTER_SERVICE_APM_ABBR": "APM",
       "DBS_HOME_FILTER_SERVICE_ITA": "IT Analytics",
+      "DBS_HOME_FILTER_SERVICE_OCS": "Orchestration",
       "DBS_HOME_FILTER_CREATOR_LABEL": "Created By",
       "DBS_HOME_FILTER_CREATOR_ORACLE": "Oracle",
       "DBS_HOME_FILTER_FAVORITES_LABEL": "Favorites",
@@ -341,7 +344,7 @@ define({
       "LANDING_HOME_ITA_DB_PERFORMANCE": "Performance Analytics - Database",
       "LANDING_HOME_SELECT": "Select",
       "LANDING_HOME_ITA_DB_RESOURCE": "Resource Analytics - Database",
-      "LANDING_HOME_ITA_MIDDLEWARE_PERFORMANCE": "Performance Analytics - Middleware",
+      "LANDING_HOME_ITA_MIDDLEWARE_PERFORMANCE": "Performance Analytics Application Server",
       "LANDING_HOME_ITA_MIDDLEWARE_RESOURCE": "Resource Analytics - Middleware",
       "LANDING_HOME_ITA_SERVER_RESOURCE": "Resource Analytics - Host",
       "LANDING_HOME_ITA_APPLICATION_PERFORMANCE": "Application Performance Analytics",
@@ -351,6 +354,12 @@ define({
       "LANDING_HOME_INFRA_MONITORING_DESC": "Monitor your entire IT infrastructure - on-premise or on the cloud - from one unified platform",
 
       "LANDING_HOME_DASHBOARDS": "Dashboards",
+      "LANDING_HOME_SECURITY_ANALYTICS": "Security Monitoring and Analytics",
+      "LANDING_HOME_SECURITY_ANALYTICS_DESC": "Detect, investigate and mitigate security threats",
+      
+      "LANDING_HOME_ORCHESTRATION": "Orchestration",
+      "LANDING_HOME_ORCHESTRATION_DESC": "Schedule, execute and report on tasks at scale",
+      
       "LANDING_HOME_DASHBOARDS_DESC": "Build custom dashboards using out-of-the-box widgets or your own visualization of data",
       "LANDING_HOME_DATA_EXPLORERS": "Data Explorers",
       "LANDING_HOME_DATA_EXPLORERS_DESC": "Search, analyze, and visualize data",

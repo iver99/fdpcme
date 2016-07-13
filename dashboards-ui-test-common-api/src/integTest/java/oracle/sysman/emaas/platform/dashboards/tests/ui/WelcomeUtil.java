@@ -56,7 +56,7 @@ public class WelcomeUtil
 	 * Get text of each service or item shown in welcome page.
 	 * 
 	 * @param serviceName
-	 * 		APM | LA | ITA | infraMonitoring | dashboards | dataExplorers | getStarted | videos | serviceOfferings
+	 * 		APM | LA | ITA | infraMonitoring | securityAnalytics | orchestration |dashboards | dataExplorers | getStarted | videos | serviceOfferings
 	 * @return
 	 */
 	private static String getExpectedText(String serviceName)
@@ -74,6 +74,12 @@ public class WelcomeUtil
 				break;
 			case SERVICE_NAME_INFRA_MONITORING:
 				expectedName = "Infrastructure Monitoring";
+				break;
+			case SERVICE_NAME_SECURITY_ANALYTICS:
+				expectedName = "Security Monitoring and Analytics";
+				break;
+                        case SERVICE_NAME_ORCHESTRATION:
+				expectedName = "Orchestration";
 				break;
 			case SERVICE_NAME_DASHBOARDS:
 				expectedName = "Dashboards";
@@ -143,7 +149,7 @@ public class WelcomeUtil
 	 * Get wrapper id of each service
 	 * 
 	 * @param serviceName
-	 * 		APM | LA | ITA | infraMonitoring | dashboards | dataExplorers
+	 * 		APM | LA | ITA | infraMonitoring | securityAnalytics | orchestration | dashboards | dataExplorers
 	 * @return
 	 */
 	private static String getServiceWrapperId(String serviceName)
@@ -161,6 +167,12 @@ public class WelcomeUtil
 				break;
 			case SERVICE_NAME_INFRA_MONITORING:
 				serviceWrapperId = DashBoardPageId.Welcome_InfraMonitoringID;
+				break;
+			case SERVICE_NAME_SECURITY_ANALYTICS:
+				serviceWrapperId = DashBoardPageId.Welcome_SecurityAnalyticsID;
+				break;
+                        case SERVICE_NAME_ORCHESTRATION:
+				serviceWrapperId = DashBoardPageId.Welcome_OrchestrationID;
 				break;
 			case SERVICE_NAME_DASHBOARDS:
 				serviceWrapperId = DashBoardPageId.Welcome_DashboardsLinkID;
@@ -205,7 +217,7 @@ public class WelcomeUtil
 	 * 
 	 * @param driver
 	 * @param serviceName
-	 * 			APM | LA | ITA | infraMonitoring| dashboards | dataExplorers 
+	 * 			APM | LA | ITA | infraMonitoring| securityAnalytics | orchestration | dashboards | dataExplorers 
 	 * @return
 	 * @throws Exception
 	 */
@@ -214,7 +226,7 @@ public class WelcomeUtil
 		driver.getLogger().info("Start to check if service: " + serviceName + " is existed in welcome page...");
 
 		Validator.fromValidValues("serviceName", serviceName, SERVICE_NAME_APM, SERVICE_NAME_LA, SERVICE_NAME_ITA,
-				SERVICE_NAME_INFRA_MONITORING, SERVICE_NAME_DASHBOARDS, SERVICE_NAME_DATA_EXPLORERS);
+				SERVICE_NAME_INFRA_MONITORING, SERVICE_NAME_SECURITY_ANALYTICS, SERVICE_NAME_ORCHESTRATION, SERVICE_NAME_DASHBOARDS, SERVICE_NAME_DATA_EXPLORERS);
 
 		boolean isExisted = false;
 		String serviceWrapperId = WelcomeUtil.getServiceWrapperId(serviceName);
@@ -408,6 +420,38 @@ public class WelcomeUtil
 		driver.click("id=" + DashBoardPageId.Welcome_LALinkCSS);
 		driver.takeScreenShot();
 	}
+	
+	/**
+	 * Visit "Security Monitoring and Analytics" in welcome
+	 * 
+	 * @param driver
+	 * @throws Exception
+	 */
+	public static void visitSecurityAnalytics(WebDriver driver) throws Exception
+	{
+		driver.getLogger().info("Visit Security Monitoring and Analytics from Welcome page..");
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
+		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_SecurityAnalyticsID);
+		driver.click("id=" + DashBoardPageId.Welcome_SecurityAnalyticsID);
+		driver.takeScreenShot();
+	}
+
+        /**
+	 * Visit "Orchestration" in welcome
+	 * 
+	 * @param driver
+	 * @throws Exception
+	 */
+	public static void visitOrchestration(WebDriver driver) throws Exception
+	{
+		driver.getLogger().info("Visit Orchestration from Welcome page..");
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
+		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_OrchestrationID);
+		driver.click("id=" + DashBoardPageId.Welcome_OrchestrationID);
+		driver.takeScreenShot();
+	}
 
 	public static final String DATA_EXPLORERS_LOG = "log";
 	public static final String DATA_EXPLORERS_ANALYZE = "analyze";
@@ -430,6 +474,8 @@ public class WelcomeUtil
 	public static final String SERVICE_NAME_LA = "LA";
 	public static final String SERVICE_NAME_ITA = "ITA";
 	public static final String SERVICE_NAME_INFRA_MONITORING = "infraMonitoring";
+	public static final String SERVICE_NAME_SECURITY_ANALYTICS = "securityAnalytics";
+	public static final String SERVICE_NAME_ORCHESTRATION = "orchestration";
 	public static final String SERVICE_NAME_DASHBOARDS = "dashboards";
 	public static final String SERVICE_NAME_DATA_EXPLORERS = "dataExplorers";
 
