@@ -5,7 +5,7 @@ publishing {
     publications {
      integTest(MavenPublication) {
                 setArtifactId(project.name)
-                setGroupId('com.oracle.emaas.emcpdf.testsdk')
+                setGroupId(project.zdtTasksGroup)
                 artifact integTestJar.archivePath
 		pom.withXml customPomDefinition
         }
