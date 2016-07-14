@@ -31,6 +31,21 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	@Test
+	public void testAdminConsoleLink() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testAdminConsoleLink");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		// Administration link for Administration Console UI
+		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ADMINCONSOLE);
+		WaitUtil.waitForPageFullyLoaded(webd);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = " + url);
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "admin-console/ac/adminConsole.html");
+	}
+
+	@Test
 	public void testAdminLink() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
