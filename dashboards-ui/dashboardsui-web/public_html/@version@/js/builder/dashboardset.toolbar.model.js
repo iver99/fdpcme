@@ -245,6 +245,7 @@ define(['knockout',
                     self.reorderedDbsSetItems.splice(reorderedResult.removeIndex, 1, selectedDashboard);
                     self.selectedDashboardItem(selectedDashboard);
                     $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + selectedDashboard.dashboardId});
+                    $('#dashboard-'+dashboardPickerId).remove();
                     $("#dbd-tabs-container").ojTabs("refresh");
                     $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
                 }else if(dashboardPickerId==='addDuplicate'){
