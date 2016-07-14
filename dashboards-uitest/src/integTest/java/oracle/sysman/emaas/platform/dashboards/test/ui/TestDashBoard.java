@@ -11,7 +11,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil.TimeRange;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WidgetSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
@@ -104,7 +104,8 @@ public class TestDashBoard extends LoginAndLogout
 
 
 	//@Test(dependsOnMethods = { "testCreateDashboard_noWidget_ListView" })
-	public void Test_targetselector() throws Exception
+	/*
+        public void Test_targetselector() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards  in list view");
@@ -121,6 +122,7 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardBuilderUtil.EditDashboard_targetselctor(webd, "noWidgetListView", "noWidgetListView desc2");
 
 	}
+        */
 
 	@Test
 	public void testCreateDashboad_noDesc_GridView() throws Exception
@@ -334,7 +336,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//check OOB delete protection
 		webd.getLogger().info("Verfiy if the OOB dashboard can be deleted");
-		DashboardHomeUtil.search(webd, "Application Performance");
+		DashboardHomeUtil.search(webd, "Application Performance Monitoring");
 		webd.click(DashBoardPageId.InfoBtnID);
 		WebElement removeButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.RmBtnID));
 		Assert.assertFalse(removeButton.isEnabled(), "delete is enabled for OOB dashboard");

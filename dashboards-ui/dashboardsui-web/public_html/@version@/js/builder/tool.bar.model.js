@@ -145,7 +145,12 @@ define(['knockout',
                                 }, function () {
                             console.log("update dashboard name && description  failed !");
                         });
-                        $b.getDashboardTilesViewModel().timeSelectorModel.timeRangeChange(true);
+                        if($b.getDashboardTilesViewModel().timePeriod()!=="Custom") {                           
+                            $b.getDashboardTilesViewModel().initEnd(new Date()); 
+                        }
+                        if($("#dtpicker_"+self.dashboardId).children().get(0)) {
+                            ko.contextFor($("#dtpicker_"+self.dashboardId).children().get(0)).$component.applyClick();
+                        }
                     }, interval);
                 }
             };
@@ -800,7 +805,9 @@ define(['knockout',
                     success: succCallback,
                     error: errorCallback
                 };
-                prefUtil.getAllPreferences(options);
+                if(!self.isUnderSet){
+                    prefUtil.getAllPreferences(options);
+                }
             }
             
             self.autoRefreshInterval.subscribe(function (value) {
@@ -887,17 +894,17 @@ define(['knockout',
             };
 
             self.dashboardOptsMenuItems = [
-//                {
-//                    "label": getNlsString('DBS_BUILDER_BTN_ADD'),
-//                    "url": "#",
-//                    "id":"emcpdf_dsbopts_add",
-//                    "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
-//                    "icon":"dbd-toolbar-icon-add-widget",
-//                    "title": "",//getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
-//                    "disabled": self.editDisabled() === true,
-//                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
-//                    "endOfGroup": false
-//                },
+                {
+                    "label": getNlsString('DBS_BUILDER_BTN_ADD'),
+                    "url": "#",
+                    "id":"emcpdf_dsbopts_add",
+                    "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
+                    "icon":"dbd-toolbar-icon-add-widget",
+                    "title": "",//getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
+                    "disabled": self.editDisabled() === true,
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
+                    "endOfGroup": false
+                },
                 {
                     "label": getNlsString('COMMON_BTN_EDIT'),
                     "url": "#",

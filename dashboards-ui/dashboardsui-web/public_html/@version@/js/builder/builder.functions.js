@@ -504,6 +504,24 @@ define(['knockout',
         Builder.registerFunction(getTimePeriodValue, "getTimePeriodValue");
 
         var assetRoots = [];
+        function addWidgetAssetRoot(provider_name, provider_version, provider_asset_root, asset_root) {
+            if((provider_name!==null) && (provider_version!==null) && (provider_asset_root!==null) && (asset_root!==null) && !isWidgetAssetRootExisted(provider_name, provider_version, provider_asset_root) ) {
+                assetRoots.push({provider_name: provider_name, provider_version: provider_version, provider_asset_root: provider_asset_root, asset_root: asset_root});
+            }
+        }
+        Builder.registerFunction(addWidgetAssetRoot, "addWidgetAssetRoot");
+        
+        function isWidgetAssetRootExisted(provider_name, provider_version, provider_asset_root) {
+            for(var i=0; i<assetRoots.length; i++) {
+                var art = assetRoots[i];
+                if((art.provider_name === provider_name) && (art.provider_version === provider_version) && (art.provider_asset_root === provider_asset_root)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        Builder.registerFunction(isWidgetAssetRootExisted, "isWidgetAssetRootExisted");
+        
         function getWidgetAssetRoot(provider_name, provider_version, provider_asset_root) {
             for(var i=0; i<assetRoots.length; i++) {
                 var art = assetRoots[i];
@@ -511,25 +529,10 @@ define(['knockout',
                     return art.asset_root;
                 }
             }
-            return null;
+            var asset_root = dfu.df_util_widget_lookup_assetRootUrl(provider_name, provider_version, provider_asset_root, true);
+            addWidgetAssetRoot(provider_name, provider_version, provider_asset_root, asset_root);
+            return asset_root;
         };
         Builder.registerFunction(getWidgetAssetRoot, "getWidgetAssetRoot");
-            
-        function getAllWidgetsAssetRoot(widgets) {
-            var asset_root;                
-            assetRoots = [];
-            for(var i=0; i<widgets.length; i++) {
-                var wgt = widgets[i];
-                var provider_name = wgt.PROVIDER_NAME();
-                var provider_version = wgt.PROVIDER_VERSION();
-                var provider_asset_root = wgt.PROVIDER_ASSET_ROOT();
-                if (getWidgetAssetRoot(provider_name, provider_version, provider_asset_root) === null) {
-                    asset_root = dfu.df_util_widget_lookup_assetRootUrl(provider_name, provider_version, provider_asset_root, true);
-                    assetRoots.push({provider_name: provider_name, provider_version: provider_version, provider_asset_root: provider_asset_root, asset_root: asset_root});
-                }
-            }                                
-        }
-        Builder.registerFunction(getAllWidgetsAssetRoot, "getAllWidgetsAssetRoot");
-
     }
 );

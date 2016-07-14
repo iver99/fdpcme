@@ -18,7 +18,8 @@ var DashboardsFilter = function(filter, sApplications ,options)
     self.serviceFilterItems = [
         {label: getNlsString('DBS_HOME_FILTER_SERVICE_APM_ABBR'), value: 'apm', id:'apmopt', appType:'APM', visible: false}, 
         {label: getNlsString('DBS_HOME_FILTER_SERVICE_ITA'), value: 'ita', id:'itaopt', appType:'ITAnalytics', visible: false},
-        {label: getNlsString('DBS_HOME_FILTER_SERVICE_LA'), value: 'la', id:'laopt', appType:'LogAnalytics', visible: false}
+        {label: getNlsString('DBS_HOME_FILTER_SERVICE_LA'), value: 'la', id:'laopt', appType:'LogAnalytics', visible: false},
+        {label: getNlsString('DBS_HOME_FILTER_SERVICE_OCS'), value: 'ocs', id:'ocsopt', appType:'Orchestration', visible: false}
     ];
     self.serviceFilter = ko.observableArray();
     self.showServiceFilter = ko.observable(false);

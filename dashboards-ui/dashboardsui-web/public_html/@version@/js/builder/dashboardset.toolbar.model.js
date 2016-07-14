@@ -72,15 +72,17 @@ define(['knockout',
             self.dashboardsetConfig.setHome = ko.observable(true);
             var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
             var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
-            prefUtil.getAllPreferences({
-                async: false,
-                success: function(resp) {
-                    var value = prefUtil.getPreferenceValue(resp, prefKeyHomeDashboardId);
-                    if (Number(value) === ko.unwrap(dashboardInst.id)) {
-                        self.dashboardsetConfig.setHome = ko.observable(false);
+            if("SET" === dashboardInst.type()){
+                prefUtil.getAllPreferences({
+                    async: false,
+                    success: function(resp) {
+                        var value = prefUtil.getPreferenceValue(resp, prefKeyHomeDashboardId);
+                        if (Number(value) === ko.unwrap(dashboardInst.id)) {
+                            self.dashboardsetConfig.setHome = ko.observable(false);
+                        }
                     }
-                }
-            });
+                });
+            }
            
             self.dashboardsetConfig.homeIcon = ko.observable("dbd-toolbar-icon-home");
             self.dashboardsetConfig.homeLabel = ko.pureComputed(function () {
@@ -90,9 +92,11 @@ define(['knockout',
             });
              
             self.dashboardsetConfig.addFavorite = ko.observable(true);
-            Builder.checkDashboardFavorites(ko.unwrap(dashboardInst.id), function (resp) {
-                self.dashboardsetConfig.addFavorite(!(resp && resp.isFavorite));
-            });
+            if("SET" === dashboardInst.type()){
+                Builder.checkDashboardFavorites(ko.unwrap(dashboardInst.id), function (resp) {
+                    self.dashboardsetConfig.addFavorite(!(resp && resp.isFavorite));
+                });
+            }
             self.dashboardsetConfig.favoriteIcon = ko.pureComputed(function () {
                 return self.dashboardsetConfig.addFavorite() ? "fa-star" : "fa-star-o";
             });
@@ -249,6 +253,7 @@ define(['knockout',
                     self.reorderedDbsSetItems.splice(reorderedResult.removeIndex, 1, selectedDashboard);
                     self.selectedDashboardItem(selectedDashboard);
                     $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + selectedDashboard.dashboardId});
+                    $('#dashboard-'+dashboardPickerId).remove();
                     $("#dbd-tabs-container").ojTabs("refresh");
                     $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
                 }else if(dashboardPickerId==='addDuplicate'){

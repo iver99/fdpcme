@@ -49,7 +49,7 @@ public class DashBoardPageId
 	//public static final String Database_Health_Summary_CSS = ".dbs-summary-page-image[alt='Database Health Summary']";
 	//public static final String Host_Health_Summary_CSS = ".dbs-summary-page-image[alt='Host Health Summary']";
 	public static final String Database_Performance_Analytics_CSS = ".dbs-summary-page-image[alt='Performance Analytics: Database']";
-	public static final String Middleware_Performance_Analytics_CSS = ".dbs-summary-page-image[alt='Performance Analytics: Middleware']";
+	public static final String Middleware_Performance_Analytics_CSS = ".dbs-summary-page-image[alt='Performance Analytics Application Server']";
 	//public static final String Middleware_Datasource_Performance_Analytics_ID = "//div[@aria-dashboard='19']";
 	public static final String Database_Resource_Analytics_CSS = ".dbs-summary-page-image[alt='Resource Analytics: Database']";
 	public static final String Middleware_Resource_Analytics_CSS = ".dbs-summary-page-image[alt='Resource Analytics: Middleware']";
@@ -168,7 +168,8 @@ public class DashBoardPageId
 	public static final String MDashboardDescID = "/html/body/div[3]/div/div/div/div[2]/div/span/span";
 
 	//remove dashboard/html/body/div[3]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button
-	public static final String InfoBtnID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";//"/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";///html/body/div[*]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button";
+	//Note: below xpath is used to identify this 1st dashboard only
+	public static final String InfoBtnID = "//button[@title='Dashboard Information']";//"/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";//"/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";///html/body/div[*]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button";
 	public static final String RmBtnID = "/html/body/div[1]/div/div/div[1]/div/div/div[2]/button";//"/html/body/div/div/div/div/div/div/div[2]/button";
 
 	//Explore Data
@@ -256,6 +257,8 @@ public class DashBoardPageId
 	public static final String DashboardsetOptionsEditSaveID = "saveDsbInfo";
 	public static final String DashboardsetOptionsEditDialogID = "ojDialogWrapper-changeDashboardsetInfo";
 	public static final String DashboardsetOptionsNameCollapsibleCSS = "#nameDescription a.oj-collapsible-open-icon";
+	public static final String DashboardsetOptionsShareDiaOpenCSS = "#shareSettings .oj-collapsible-wrapper";
+	public static final String DashboardsetOptionsShareOnJudgeCSS = "#shareSettings #share-on.oj-selected";
 	public static final String DashboardsetOptionsEditNameCSS = "input#dbsSetHNameIn";
 	public static final String DashboardsetOptionsEditDescriptionCSS = "textarea#editDbdSetDscp";
 	public static final String DashboardsetOptionsShareContentCSS = ".dbd-right-panel-editdashboard-set-share .oj-collapsible-wrapper";
@@ -312,6 +315,7 @@ public class DashBoardPageId
 	public static final String RemoveTileCSS = "li[data-option=remove]";
 
 	//right drawer css locators
+	public static final String RightDrawerToggleBtnCSS = ".right-panel-toggler button.toggle-right-panel-btn";
 	public static final String RightDrawerCSS = ".right-panel-toggler";
 	public static final String RightDrawerPanelCSS = ".dbd-left-panel";
 	public static final String RightDrawerToggleWrenchBtnCSS = ".right-panel-toggler button.toggle-right-panel-btn.rightpanel-wrench";
@@ -379,6 +383,8 @@ public class DashBoardPageId
 	public static final String Welcome_LALinkCSS = "LA_wrapper"; //".landing-home-box-content-head[data-bind='text: LA']";
 	public static final String Welcome_ITALinkID = "ITA_wrapper"; //".landing-home-box-content-head[data-bind='text: ITA']";
 	public static final String Welcome_InfraMonitoringID = "infra_mon_wrapper";
+	public static final String Welcome_SecurityAnalyticsID = "security_analytics_wrapper";
+	public static final String Welcome_OrchestrationID = "orchestration_wrapper";
 	public static final String Welcome_DashboardsLinkID = "dashboards_wrapper"; //"/html/body/div[2]/div/div[2]/ul/li[4]/a/div/div[2]/div[1]";
 	public static final String Welcome_DataExp = "data_explore_wrapper"; //"/html/body/div[2]/div/div[2]/ul/li[5]/div/div/div[2]/div[1]";
 	public static final String Welcome_ITA_SelectID = "ITA_options"; //"ojChoiceId_ITA_options_selected";

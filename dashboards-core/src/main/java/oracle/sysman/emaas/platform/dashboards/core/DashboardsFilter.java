@@ -24,14 +24,15 @@ import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 public class DashboardsFilter
 {
 	// reserved actual strings for used in query
-	private static final List<String> typeFilterStrings = Arrays.asList(new String[] { Dashboard.DASHBOARD_TYPE_NORMAL, Dashboard.DASHBOARD_TYPE_SET,
-			Dashboard.DASHBOARD_TYPE_SINGLEPAGE });
-	private static final List<String> appFilterStrings = Arrays.asList(new String[] { DashboardApplicationType.APM_STRING,
-			DashboardApplicationType.ITA_SRING, DashboardApplicationType.LA_STRING });
+	private static final List<String> typeFilterStrings = Arrays.asList(new String[] { Dashboard.DASHBOARD_TYPE_NORMAL,
+			Dashboard.DASHBOARD_TYPE_SET, Dashboard.DASHBOARD_TYPE_SINGLEPAGE });
+	private static final List<String> appFilterStrings = Arrays
+			.asList(new String[] { DashboardApplicationType.APM_STRING, DashboardApplicationType.ITA_SRING,
+					DashboardApplicationType.LA_STRING, DashboardApplicationType.ORCHESTRATION_STRING });
 	private static final List<String> ownerFilterStrings = Arrays.asList(new String[] { "Oracle", "Others", "Me", "Share" });
 
 	// reserved strings accepted as input filter string
-	private static final List<String> appFilterStrings_input = Arrays.asList(new String[] { "apm", "ita", "la" });
+	private static final List<String> appFilterStrings_input = Arrays.asList(new String[] { "apm", "ita", "la", "ocs" });
 
 	private static final String favoriteFilterString = "Favorites";
 
@@ -39,6 +40,7 @@ public class DashboardsFilter
 	public static final String ITA_PROVIDER_EMCI = "emcitas-ui-apps";
 	public static final String ITA_PROVIDER_TA = "TargetAnalytics";
 	public static final String LA_PROVIDER_LS = "LoganService";
+	public static final String OCS_PROVIDER_OCS = "Orchestration";
 
 	private List<String> includedTypes;
 	private List<String> includedApps;
@@ -161,6 +163,9 @@ public class DashboardsFilter
 			}
 			if (DashboardApplicationType.LA_STRING.equals(app)) {
 				sb.add(LA_PROVIDER_LS);
+			}
+			if (DashboardApplicationType.ORCHESTRATION_STRING.equals(app)) {
+				sb.add(OCS_PROVIDER_OCS);
 			}
 		}
 		return sb;

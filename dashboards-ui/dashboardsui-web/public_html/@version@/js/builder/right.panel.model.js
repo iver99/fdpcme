@@ -32,8 +32,8 @@ define(['knockout',
                     if(v_siblings && 1 === v_siblings.length && v_siblings.hasClass("dbd-right-panel-title")){
                         h = 0;
                     }
-                    if($(".builder-dbd-select-tip").outerHeight()>0){
-                        _topHeight = _topHeight-2-$(".builder-dbd-select-tip").height();
+                    if($(".builder-dbd-select-tip:visible").outerHeight()>0){
+                        _topHeight = _topHeight-2-$(".builder-dbd-select-tip:visible").height();
                     }
                     if (v_siblings && v_siblings.length > 0) {
                         for (var i = 0; i < v_siblings.length; i++) {
@@ -91,7 +91,7 @@ define(['knockout',
 
             self.editRightpanelLinkage = function(target){
                 var highlightIcon = "pencil";
-                self.completelyHidden(false);
+                self.completelyHidden(false);            
                 var panelTarget;
                 if (target === "singleDashboard-edit") {
                     panelTarget = "edit";
@@ -106,6 +106,7 @@ define(['knockout',
                 } else {
                     self.editPanelContent(panelTarget);
                     self.expandDBEditor(target,true);
+                    $(".dashboard-picker-container:visible").addClass("df-collaps");
                 }
                 self.$b.triggerBuilderResizeEvent('resize right panel');
             };
@@ -153,6 +154,7 @@ define(['knockout',
                 }else{
                     self.dashboardEditDisabled(true) ;
                 }
+                self.dashboard = _$b.dashboard;
             };
             
             self.loadToolBarModel(toolBarModel,self.$b);
@@ -302,15 +304,20 @@ define(['knockout',
                         self.$b.triggerBuilderResizeEvent('Initialize right panel');
                     }
                     
-                    if(self.isDashboardSet()){
-                        var isOnlyDashboardPicker = self.dashboardsetToolBarModel.dashboardsetItems.length === 1 && self.dashboardsetToolBarModel.dashboardsetItems[0].type === "new";
-                        self.dashboardsetShareDisabled(isOnlyDashboardPicker);
+                    if (self.isDashboardSet()) {
+                        self.dashboardsetToolBarModel.reorderedDbsSetItems.subscribe(function () {
+                            var isOnlyDashboardPicker = self.dashboardsetToolBarModel.dashboardsetItems.length === 1 && self.dashboardsetToolBarModel.dashboardsetItems[0].type === "new";
+                            self.dashboardsetShareDisabled(isOnlyDashboardPicker);
+                        });
                     }
                     
 
                     self.initEventHandlers();
                     self.loadWidgets();
-                    Builder.getAllWidgetsAssetRoot(self.widgets());
+                    for(var i=0; i<self.widgets().length; i++) {
+                        var wgt = self.widgets()[i];
+                        Builder.getWidgetAssetRoot(wgt.PROVIDER_NAME(), wgt.PROVIDER_VERSION(), wgt.PROVIDER_ASSET_ROOT());
+                    }
                     self.initDraggable();
 //                    self.checkAndDisableLinkDraggable();
 
@@ -645,7 +652,7 @@ define(['knockout',
             self.deleteDashboardClicked = function(){
                 queryDashboardSetsBySubId(self.dashboard.id(),function(resp){
                     window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(resp.dashboardSets || []); 
-                    toolBarModel.openDashboardDeleteConfirmDialog();
+                    self.toolBarModel.openDashboardDeleteConfirmDialog();
                 });
             };        
             
@@ -697,8 +704,10 @@ define(['knockout',
                     return self.editDashboardDialogModel().showdbDescription() + self.editDashboardDialogModel().name() + self.editDashboardDialogModel().description() + self.showdbOnHomePage();
             });
             dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } });
-            dsbSaveDelay.subscribe(function(){
-                self.editDashboardDialogModel() && self.editDashboardDialogModel().save();
+            dsbSaveDelay.subscribe(function(){   
+                if(!self.$b.dashboard.systemDashboard || !self.$b.dashboard.systemDashboard()){
+                    self.editDashboardDialogModel() && self.editDashboardDialogModel().save();
+                }
             });
             
             //Convert persisted time range to make them easier to read

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html id="global-html"  lang="en" data-testapiversion="1.7.5">
+<html id="global-html"  lang="en" data-testapiversion="1.9.0">
     <head>
         <title data-bind="text:builderTitle"></title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -296,13 +296,11 @@
                         </button>
                     </div>
                 </div>-->
-<!-- remove add widget
                 <div data-bind="component: {
                         name: 'df-widget-selector',
                         params: addWidgetDialogParams
                     }">
                 </div>
--->
             </div>
             <div class="oj-col stretch-height builder-main dashboard-content-main" role="main">
                 <div class="tiles-col-container oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size">
@@ -349,7 +347,8 @@
                                                                }
                                                            }"></emcta-target-selector>
                             </div>
-                            <div class="df-date-time-picker" data-bind="attr: {id: 'dtpicker_'+dashboard.id()}, component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>
+
+                            <div data-bind="attr: {id: 'dtpicker_'+dashboard.id()}, component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>
                         </div>
                     </div>
 

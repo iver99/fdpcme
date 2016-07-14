@@ -1168,17 +1168,22 @@ define(['knockout',
             self.initEnd = ko.observable(initEnd);
             self.timeSelectorModel.viewStart(initStart);
             self.timeSelectorModel.viewEnd(initEnd);
-            self.changeLabel = ko.observable(true);
             self.datetimePickerParams = {
                 startDateTime: self.initStart,
                 endDateTime: self.initEnd,
                 timePeriod: self.timePeriod,
                 hideMainLabel: true,
-                changeLabel: self.changeLabel,
                 callbackAfterApply: function(start, end, tp) {
                         self.timePeriod(tp);
                         self.timeSelectorModel.viewStart(start);
                         self.timeSelectorModel.viewEnd(end);
+                        if(tp === "Custom") {
+                            self.initStart(start);
+                            self.initEnd(end);                        
+                            self.timePeriod(tp);
+                        }else {
+                            self.timePeriod(tp);
+                        }
                         self.timeSelectorModel.timeRangeChange(true);
 
                         if(!self.toolbarModel.extendedOptions.timeSel) {
@@ -1206,14 +1211,6 @@ define(['knockout',
                             self.changeLabel(true);
                         }
 //                    }
-                },
-                callbackAfterCancel: function() {
-                    if(self.whichTimeSelLauncher() === 1) {
-                        //recover default time range value to the former one if it is "custom" when "Cancel" clicked
-                        $b.getRightPanelModel().defaultTimeRangeValue($b.getRightPanelModel().prevDefaultTimeRangeValue());
-                        self.whichTimeSelLauncher(0);
-                        self.changeLabel(true);
-                    }
                 }
             };
             
