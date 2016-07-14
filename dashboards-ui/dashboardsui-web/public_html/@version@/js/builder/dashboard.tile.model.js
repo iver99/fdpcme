@@ -947,15 +947,15 @@ define(['knockout',
                     function (data) {
                         //sucessfully get extended options for page filters
                         self.userExtendedOptions = data["extendedOptions"] ? JSON.parse(data["extendedOptions"]) : {};
-                        if(!self.userExtendedOptions.tsel) {
+                        if(!self.userExtendedOptions.tsel || (self.userExtendedOptions.tsel && !self.userExtendedOptions.tsel.entityContext)) {
                             self.userTsel = false;
                             self.userExtendedOptions.tsel = {quickPick: "host", entityContext: ""};
                         }else {
                             self.userTsel= true;
                         }
-                        if(!self.userExtendedOptions.timeSel) {
+                        if(!self.userExtendedOptions.timeSel || (self.userExtendedOptions.timeSel && !self.userExtendedOptions.timeSel.timePeriod)) {
                             self.userTimeSel = false;
-                            self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: "", end: ""};
+                            self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: new Date(new Date()-14*24*60*60*1000), end: new Date()};
                         }else {
                             self.userTimeSel = true;
                         }
@@ -972,7 +972,7 @@ define(['knockout',
                             self.userTimeSel = false;
                             self.userExtendedOptions = {};
                             self.userExtendedOptions.tsel = {quickPick: "host", entityContext: ""};
-                            self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: "", end: ""};
+                            self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: new Date(new Date()-14*24*60*60*1000), end: new Date()};
                         }
                     });
             }
@@ -1168,6 +1168,7 @@ define(['knockout',
             self.initEnd = ko.observable(initEnd);
             self.timeSelectorModel.viewStart(initStart);
             self.timeSelectorModel.viewEnd(initEnd);
+            self.changeLabel = ko.observable(true);
             self.datetimePickerParams = {
                 startDateTime: self.initStart,
                 endDateTime: self.initEnd,

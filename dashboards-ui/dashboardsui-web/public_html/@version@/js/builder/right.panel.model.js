@@ -898,7 +898,7 @@ define(['knockout',
             self.entitySupport.subscribe(function(val) {
                 val = val?"byCriteria":"single";
                 self.extendedOptions.tsel.entitySupport = val;
-                $b.getDashboardTilesViewModel().selectionMode(val);
+                $b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel().selectionMode(val);
                 if(val === "byCriteria") {
                     self.extendedOptions.tsel.defaultValue = self.defaultMultiEntityValue()[0];
                     self.extendedOptions.tsel.entityContext = self.defaultMultiEntityContext();
