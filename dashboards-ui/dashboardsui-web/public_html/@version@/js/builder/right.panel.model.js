@@ -663,7 +663,7 @@ define(['knockout',
             });
             dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } });
             dsbSaveDelay.subscribe(function(){
-                if(!self.$b.dashboard.systemDashboard || !$b.dashboard.systemDashboard()){
+                if(!self.$b.dashboard.systemDashboard || !self.$b.dashboard.systemDashboard()){
                     self.editDashboardDialogModel() && self.editDashboardDialogModel().save();
                 }
             });
