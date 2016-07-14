@@ -18,622 +18,931 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class DashboardTileRowEntity
 {
 	@JsonProperty("TILE_ID")
-	private Long TILE_ID;
+	private Long tileId;
 
 	@JsonProperty("DASHBOARD_ID")
-	private Long DASHBOARD_ID;
+	private Long dashboardId;
 
 	@JsonProperty("CREATION_DATE")
-	private String CREATION_DATE;
+	private String creationDate;
 
 	@JsonProperty("LAST_MODIFICATION_DATE")
-	private String LAST_MODIFICATION_DATE;
+	private String lastModificationDate;
 
 	@JsonProperty("LAST_MODIFIED_BY")
-	private String LAST_MODIFIED_BY;
+	private String lastModifiedBy;
 
 	@JsonProperty("OWNER")
-	private String OWNER;
+	private String owner;
 
 	@JsonProperty("TITLE")
-	private String TITLE;
+	private String title;
 
 	@JsonProperty("HEIGHT")
-	private Long HEIGHT;
+	private Long height;
 
 	@JsonProperty("WIDTH")
-	private Long WIDTH;
+	private Long width;
 
 	@JsonProperty("IS_MAXIMIZED")
-	private Integer IS_MAXIMIZED;
+	private Integer isMaximized;
 
 	@JsonProperty("POSITION")
-	private Long POSITION;
+	private Long position;
 
 	@JsonProperty("TENANT_ID")
-	private Long TENANT_ID;
+	private Long tenantId;
 
 	@JsonProperty("WIDGET_UNIQUE_ID")
-	private String WIDGET_UNIQUE_ID;
+	private String widgetUniqueId;
 
 	@JsonProperty("WIDGET_NAME")
-	private String WIDGET_NAME;
+	private String widgetName;
 
 	@JsonProperty("WIDGET_DESCRIPTION")
-	private String WIDGET_DESCRIPTION;
+	private String widgetDescription;
 
 	@JsonProperty("WIDGET_GROUP_NAME")
-	private String WIDGET_GROUP_NAME;
+	private String widgetGroupName;
 
 	@JsonProperty("WIDGET_ICON")
-	private String WIDGET_ICON;
+	private String widgetIcon;
 
 	@JsonProperty("WIDGET_HISTOGRAM")
-	private String WIDGET_HISTOGRAM;
+	private String widgetHistogram;
 
 	@JsonProperty("WIDGET_OWNER")
-	private String WIDGET_OWNER;
+	private String widgetOwner;
 
 	@JsonProperty("WIDGET_CREATION_TIME")
-	private String WIDGET_CREATION_TIME;
+	private String widgetCreationTime;
 
 	@JsonProperty("WIDGET_SOURCE")
-	private Long WIDGET_SOURCE;
+	private Long widgetSource;
 
 	@JsonProperty("WIDGET_KOC_NAME")
-	private String WIDGET_KOC_NAME;
+	private String widgetKocName;
 
 	@JsonProperty("WIDGET_VIEWMODE")
-	private String WIDGET_VIEWMODE;
+	private String widgetViewmode;
 
 	@JsonProperty("WIDGET_TEMPLATE")
-	private String WIDGET_TEMPLATE;
+	private String widgetTemplate;
 
 	@JsonProperty("PROVIDER_NAME")
-	private String PROVIDER_NAME;
+	private String providerName;
 
 	@JsonProperty("PROVIDER_VERSION")
-	private String PROVIDER_VERSION;
+	private String providerVersion;
 
 	@JsonProperty("PROVIDER_ASSET_ROOT")
-	private String PROVIDER_ASSET_ROOT;
+	private String providerAssetRoot;
 
 	@JsonProperty("TILE_ROW")
-	private Long TILE_ROW;
+	private Long tileRow;
 
 	@JsonProperty("TILE_COLUMN")
-	private Long TILE_COLUMN;
+	private Long tileColumn;
 
 	@JsonProperty("TYPE")
-	private Long TYPE;
+	private Long type;
 
 	@JsonProperty("WIDGET_SUPPORT_TIME_CONTROL")
-	private Integer WIDGET_SUPPORT_TIME_CONTROL;
+	private Integer widgetSupportTimeControl;
 
-	/**
-	 * @return the cREATION_DATE
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public String getCREATION_DATE()
+	@Override
+	public boolean equals(Object obj)
 	{
-		return CREATION_DATE;
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		DashboardTileRowEntity other = (DashboardTileRowEntity) obj;
+		if (creationDate == null) {
+			if (other.creationDate != null) {
+				return false;
+			}
+		}
+		else if (!creationDate.equals(other.creationDate)) {
+			return false;
+		}
+		if (dashboardId == null) {
+			if (other.dashboardId != null) {
+				return false;
+			}
+		}
+		else if (!dashboardId.equals(other.dashboardId)) {
+			return false;
+		}
+		if (height == null) {
+			if (other.height != null) {
+				return false;
+			}
+		}
+		else if (!height.equals(other.height)) {
+			return false;
+		}
+		if (isMaximized == null) {
+			if (other.isMaximized != null) {
+				return false;
+			}
+		}
+		else if (!isMaximized.equals(other.isMaximized)) {
+			return false;
+		}
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null) {
+				return false;
+			}
+		}
+		else if (!lastModificationDate.equals(other.lastModificationDate)) {
+			return false;
+		}
+		if (lastModifiedBy == null) {
+			if (other.lastModifiedBy != null) {
+				return false;
+			}
+		}
+		else if (!lastModifiedBy.equals(other.lastModifiedBy)) {
+			return false;
+		}
+		if (owner == null) {
+			if (other.owner != null) {
+				return false;
+			}
+		}
+		else if (!owner.equals(other.owner)) {
+			return false;
+		}
+		if (position == null) {
+			if (other.position != null) {
+				return false;
+			}
+		}
+		else if (!position.equals(other.position)) {
+			return false;
+		}
+		if (providerAssetRoot == null) {
+			if (other.providerAssetRoot != null) {
+				return false;
+			}
+		}
+		else if (!providerAssetRoot.equals(other.providerAssetRoot)) {
+			return false;
+		}
+		if (providerName == null) {
+			if (other.providerName != null) {
+				return false;
+			}
+		}
+		else if (!providerName.equals(other.providerName)) {
+			return false;
+		}
+		if (providerVersion == null) {
+			if (other.providerVersion != null) {
+				return false;
+			}
+		}
+		else if (!providerVersion.equals(other.providerVersion)) {
+			return false;
+		}
+		if (tenantId == null) {
+			if (other.tenantId != null) {
+				return false;
+			}
+		}
+		else if (!tenantId.equals(other.tenantId)) {
+			return false;
+		}
+		if (tileColumn == null) {
+			if (other.tileColumn != null) {
+				return false;
+			}
+		}
+		else if (!tileColumn.equals(other.tileColumn)) {
+			return false;
+		}
+		if (tileId == null) {
+			if (other.tileId != null) {
+				return false;
+			}
+		}
+		else if (!tileId.equals(other.tileId)) {
+			return false;
+		}
+		if (tileRow == null) {
+			if (other.tileRow != null) {
+				return false;
+			}
+		}
+		else if (!tileRow.equals(other.tileRow)) {
+			return false;
+		}
+		if (title == null) {
+			if (other.title != null) {
+				return false;
+			}
+		}
+		else if (!title.equals(other.title)) {
+			return false;
+		}
+		if (type == null) {
+			if (other.type != null) {
+				return false;
+			}
+		}
+		else if (!type.equals(other.type)) {
+			return false;
+		}
+		if (widgetCreationTime == null) {
+			if (other.widgetCreationTime != null) {
+				return false;
+			}
+		}
+		else if (!widgetCreationTime.equals(other.widgetCreationTime)) {
+			return false;
+		}
+		if (widgetDescription == null) {
+			if (other.widgetDescription != null) {
+				return false;
+			}
+		}
+		else if (!widgetDescription.equals(other.widgetDescription)) {
+			return false;
+		}
+		if (widgetGroupName == null) {
+			if (other.widgetGroupName != null) {
+				return false;
+			}
+		}
+		else if (!widgetGroupName.equals(other.widgetGroupName)) {
+			return false;
+		}
+		if (widgetHistogram == null) {
+			if (other.widgetHistogram != null) {
+				return false;
+			}
+		}
+		else if (!widgetHistogram.equals(other.widgetHistogram)) {
+			return false;
+		}
+		if (widgetIcon == null) {
+			if (other.widgetIcon != null) {
+				return false;
+			}
+		}
+		else if (!widgetIcon.equals(other.widgetIcon)) {
+			return false;
+		}
+		if (widgetKocName == null) {
+			if (other.widgetKocName != null) {
+				return false;
+			}
+		}
+		else if (!widgetKocName.equals(other.widgetKocName)) {
+			return false;
+		}
+		if (widgetName == null) {
+			if (other.widgetName != null) {
+				return false;
+			}
+		}
+		else if (!widgetName.equals(other.widgetName)) {
+			return false;
+		}
+		if (widgetOwner == null) {
+			if (other.widgetOwner != null) {
+				return false;
+			}
+		}
+		else if (!widgetOwner.equals(other.widgetOwner)) {
+			return false;
+		}
+		if (widgetSource == null) {
+			if (other.widgetSource != null) {
+				return false;
+			}
+		}
+		else if (!widgetSource.equals(other.widgetSource)) {
+			return false;
+		}
+		if (widgetSupportTimeControl == null) {
+			if (other.widgetSupportTimeControl != null) {
+				return false;
+			}
+		}
+		else if (!widgetSupportTimeControl.equals(other.widgetSupportTimeControl)) {
+			return false;
+		}
+		if (widgetTemplate == null) {
+			if (other.widgetTemplate != null) {
+				return false;
+			}
+		}
+		else if (!widgetTemplate.equals(other.widgetTemplate)) {
+			return false;
+		}
+		if (widgetUniqueId == null) {
+			if (other.widgetUniqueId != null) {
+				return false;
+			}
+		}
+		else if (!widgetUniqueId.equals(other.widgetUniqueId)) {
+			return false;
+		}
+		if (widgetViewmode == null) {
+			if (other.widgetViewmode != null) {
+				return false;
+			}
+		}
+		else if (!widgetViewmode.equals(other.widgetViewmode)) {
+			return false;
+		}
+		if (width == null) {
+			if (other.width != null) {
+				return false;
+			}
+		}
+		else if (!width.equals(other.width)) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
-	 * @return the dASHBOARD_ID
+	 * @return the creationDate
 	 */
-	public Long getDASHBOARD_ID()
+	public String getCreationDate()
 	{
-		return DASHBOARD_ID;
+		return creationDate;
 	}
 
 	/**
-	 * @return the hEIGHT
+	 * @return the dashboardId
 	 */
-	public Long getHEIGHT()
+	public Long getDashboardId()
 	{
-		return HEIGHT;
+		return dashboardId;
 	}
 
 	/**
-	 * @return the iS_MAXIMIZED
+	 * @return the height
 	 */
-	public Integer getIS_MAXIMIZED()
+	public Long getHeight()
 	{
-		return IS_MAXIMIZED;
+		return height;
 	}
 
 	/**
-	 * @return the lAST_MODIFICATION_DATE
+	 * @return the isMaximized
 	 */
-	public String getLAST_MODIFICATION_DATE()
+	public Integer getIsMaximized()
 	{
-		return LAST_MODIFICATION_DATE;
+		return isMaximized;
 	}
 
 	/**
-	 * @return the lAST_MODIFIED_BY
+	 * @return the lastModificationDate
 	 */
-	public String getLAST_MODIFIED_BY()
+	public String getLastModificationDate()
 	{
-		return LAST_MODIFIED_BY;
+		return lastModificationDate;
 	}
 
 	/**
-	 * @return the oWNER
+	 * @return the lastModifiedBy
 	 */
-	public String getOWNER()
+	public String getLastModifiedBy()
 	{
-		return OWNER;
+		return lastModifiedBy;
 	}
 
 	/**
-	 * @return the pOSITION
+	 * @return the owner
 	 */
-	public Long getPOSITION()
+	public String getOwner()
 	{
-		return POSITION;
+		return owner;
 	}
 
 	/**
-	 * @return the pROVIDER_ASSET_ROOT
+	 * @return the position
 	 */
-	public String getPROVIDER_ASSET_ROOT()
+	public Long getPosition()
 	{
-		return PROVIDER_ASSET_ROOT;
+		return position;
 	}
 
 	/**
-	 * @return the pROVIDER_NAME
+	 * @return the providerAssetRoot
 	 */
-	public String getPROVIDER_NAME()
+	public String getProviderAssetRoot()
 	{
-		return PROVIDER_NAME;
+		return providerAssetRoot;
 	}
 
 	/**
-	 * @return the pROVIDER_VERSION
+	 * @return the providerName
 	 */
-	public String getPROVIDER_VERSION()
+	public String getProviderName()
 	{
-		return PROVIDER_VERSION;
+		return providerName;
 	}
 
 	/**
-	 * @return the tENANT_ID
+	 * @return the providerVersion
 	 */
-	public Long getTENANT_ID()
+	public String getProviderVersion()
 	{
-		return TENANT_ID;
+		return providerVersion;
 	}
 
 	/**
-	 * @return the tILE_COLUMN
+	 * @return the tenantId
 	 */
-	public Long getTILE_COLUMN()
+	public Long getTenantId()
 	{
-		return TILE_COLUMN;
+		return tenantId;
 	}
 
 	/**
-	 * @return the tILE_ID
+	 * @return the tileColumn
 	 */
-	public Long getTILE_ID()
+	public Long getTileColumn()
 	{
-		return TILE_ID;
+		return tileColumn;
 	}
 
 	/**
-	 * @return the tILE_ROW
+	 * @return the tileId
 	 */
-	public Long getTILE_ROW()
+	public Long getTileId()
 	{
-		return TILE_ROW;
+		return tileId;
 	}
 
 	/**
-	 * @return the tITLE
+	 * @return the tileRow
 	 */
-	public String getTITLE()
+	public Long getTileRow()
 	{
-		return TITLE;
+		return tileRow;
 	}
 
 	/**
-	 * @return the tYPE
+	 * @return the title
 	 */
-	public Long getTYPE()
+	public String getTitle()
 	{
-		return TYPE;
+		return title;
 	}
 
 	/**
-	 * @return the wIDGET_CREATION_TIME
+	 * @return the type
 	 */
-	public String getWIDGET_CREATION_TIME()
+	public Long getType()
 	{
-		return WIDGET_CREATION_TIME;
+		return type;
 	}
 
 	/**
-	 * @return the wIDGET_DESCRIPTION
+	 * @return the widgetCreationTime
 	 */
-	public String getWIDGET_DESCRIPTION()
+	public String getWidgetCreationTime()
 	{
-		return WIDGET_DESCRIPTION;
+		return widgetCreationTime;
 	}
 
 	/**
-	 * @return the wIDGET_GROUP_NAME
+	 * @return the widgetDescription
 	 */
-	public String getWIDGET_GROUP_NAME()
+	public String getWidgetDescription()
 	{
-		return WIDGET_GROUP_NAME;
+		return widgetDescription;
 	}
 
 	/**
-	 * @return the wIDGET_HISTOGRAM
+	 * @return the widgetGroupName
 	 */
-	public String getWIDGET_HISTOGRAM()
+	public String getWidgetGroupName()
 	{
-		return WIDGET_HISTOGRAM;
+		return widgetGroupName;
 	}
 
 	/**
-	 * @return the wIDGET_ICON
+	 * @return the widgetHistogram
 	 */
-	public String getWIDGET_ICON()
+	public String getWidgetHistogram()
 	{
-		return WIDGET_ICON;
+		return widgetHistogram;
 	}
 
 	/**
-	 * @return the wIDGET_KOC_NAME
+	 * @return the widgetIcon
 	 */
-	public String getWIDGET_KOC_NAME()
+	public String getWidgetIcon()
 	{
-		return WIDGET_KOC_NAME;
+		return widgetIcon;
 	}
 
 	/**
-	 * @return the wIDGET_NAME
+	 * @return the widgetKocName
 	 */
-	public String getWIDGET_NAME()
+	public String getWidgetKocName()
 	{
-		return WIDGET_NAME;
+		return widgetKocName;
 	}
 
 	/**
-	 * @return the wIDGET_OWNER
+	 * @return the widgetName
 	 */
-	public String getWIDGET_OWNER()
+	public String getWidgetName()
 	{
-		return WIDGET_OWNER;
+		return widgetName;
 	}
 
 	/**
-	 * @return the wIDGET_SOURCE
+	 * @return the widgetOwner
 	 */
-	public Long getWIDGET_SOURCE()
+	public String getWidgetOwner()
 	{
-		return WIDGET_SOURCE;
+		return widgetOwner;
 	}
 
 	/**
-	 * @return the wIDGET_SUPPORT_TIME_CONTROL
+	 * @return the widgetSource
 	 */
-	public Integer getWIDGET_SUPPORT_TIME_CONTROL()
+	public Long getWidgetSource()
 	{
-		return WIDGET_SUPPORT_TIME_CONTROL;
+		return widgetSource;
 	}
 
 	/**
-	 * @return the wIDGET_TEMPLATE
+	 * @return the widgetSupportTimeControl
 	 */
-	public String getWIDGET_TEMPLATE()
+	public Integer getWidgetSupportTimeControl()
 	{
-		return WIDGET_TEMPLATE;
+		return widgetSupportTimeControl;
 	}
 
 	/**
-	 * @return the wIDGET_UNIQUE_ID
+	 * @return the widgetTemplate
 	 */
-	public String getWIDGET_UNIQUE_ID()
+	public String getWidgetTemplate()
 	{
-		return WIDGET_UNIQUE_ID;
+		return widgetTemplate;
 	}
 
 	/**
-	 * @return the wIDGET_VIEWMODE
+	 * @return the widgetUniqueId
 	 */
-	public String getWIDGET_VIEWMODE()
+	public String getWidgetUniqueId()
 	{
-		return WIDGET_VIEWMODE;
+		return widgetUniqueId;
 	}
 
 	/**
-	 * @return the wIDTH
+	 * @return the widgetViewmode
 	 */
-	public Long getWIDTH()
+	public String getWidgetViewmode()
 	{
-		return WIDTH;
+		return widgetViewmode;
 	}
 
 	/**
-	 * @param cREATION_DATE
-	 *            the cREATION_DATE to set
+	 * @return the width
 	 */
-	public void setCREATION_DATE(String cREATION_DATE)
+	public Long getWidth()
 	{
-		CREATION_DATE = cREATION_DATE;
+		return width;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
+		result = prime * result + (dashboardId == null ? 0 : dashboardId.hashCode());
+		result = prime * result + (height == null ? 0 : height.hashCode());
+		result = prime * result + (isMaximized == null ? 0 : isMaximized.hashCode());
+		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
+		result = prime * result + (lastModifiedBy == null ? 0 : lastModifiedBy.hashCode());
+		result = prime * result + (owner == null ? 0 : owner.hashCode());
+		result = prime * result + (position == null ? 0 : position.hashCode());
+		result = prime * result + (providerAssetRoot == null ? 0 : providerAssetRoot.hashCode());
+		result = prime * result + (providerName == null ? 0 : providerName.hashCode());
+		result = prime * result + (providerVersion == null ? 0 : providerVersion.hashCode());
+		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
+		result = prime * result + (tileColumn == null ? 0 : tileColumn.hashCode());
+		result = prime * result + (tileId == null ? 0 : tileId.hashCode());
+		result = prime * result + (tileRow == null ? 0 : tileRow.hashCode());
+		result = prime * result + (title == null ? 0 : title.hashCode());
+		result = prime * result + (type == null ? 0 : type.hashCode());
+		result = prime * result + (widgetCreationTime == null ? 0 : widgetCreationTime.hashCode());
+		result = prime * result + (widgetDescription == null ? 0 : widgetDescription.hashCode());
+		result = prime * result + (widgetGroupName == null ? 0 : widgetGroupName.hashCode());
+		result = prime * result + (widgetHistogram == null ? 0 : widgetHistogram.hashCode());
+		result = prime * result + (widgetIcon == null ? 0 : widgetIcon.hashCode());
+		result = prime * result + (widgetKocName == null ? 0 : widgetKocName.hashCode());
+		result = prime * result + (widgetName == null ? 0 : widgetName.hashCode());
+		result = prime * result + (widgetOwner == null ? 0 : widgetOwner.hashCode());
+		result = prime * result + (widgetSource == null ? 0 : widgetSource.hashCode());
+		result = prime * result + (widgetSupportTimeControl == null ? 0 : widgetSupportTimeControl.hashCode());
+		result = prime * result + (widgetTemplate == null ? 0 : widgetTemplate.hashCode());
+		result = prime * result + (widgetUniqueId == null ? 0 : widgetUniqueId.hashCode());
+		result = prime * result + (widgetViewmode == null ? 0 : widgetViewmode.hashCode());
+		result = prime * result + (width == null ? 0 : width.hashCode());
+		return result;
 	}
 
 	/**
-	 * @param dASHBOARD_ID
-	 *            the dASHBOARD_ID to set
+	 * @param creationDate
+	 *            the creationDate to set
 	 */
-	public void setDASHBOARD_ID(Long dASHBOARD_ID)
+	public void setCreationDate(String creationDate)
 	{
-		DASHBOARD_ID = dASHBOARD_ID;
+		this.creationDate = creationDate;
 	}
 
 	/**
-	 * @param hEIGHT
-	 *            the hEIGHT to set
+	 * @param dashboardId
+	 *            the dashboardId to set
 	 */
-	public void setHEIGHT(Long hEIGHT)
+	public void setDashboardId(Long dashboardId)
 	{
-		HEIGHT = hEIGHT;
+		this.dashboardId = dashboardId;
 	}
 
 	/**
-	 * @param iS_MAXIMIZED
-	 *            the iS_MAXIMIZED to set
+	 * @param height
+	 *            the height to set
 	 */
-	public void setIS_MAXIMIZED(Integer iS_MAXIMIZED)
+	public void setHeight(Long height)
 	{
-		IS_MAXIMIZED = iS_MAXIMIZED;
+		this.height = height;
 	}
 
 	/**
-	 * @param lAST_MODIFICATION_DATE
-	 *            the lAST_MODIFICATION_DATE to set
+	 * @param isMaximized
+	 *            the isMaximized to set
 	 */
-	public void setLAST_MODIFICATION_DATE(String lAST_MODIFICATION_DATE)
+	public void setIsMaximized(Integer isMaximized)
 	{
-		LAST_MODIFICATION_DATE = lAST_MODIFICATION_DATE;
+		this.isMaximized = isMaximized;
 	}
 
 	/**
-	 * @param lAST_MODIFIED_BY
-	 *            the lAST_MODIFIED_BY to set
+	 * @param lastModificationDate
+	 *            the lastModificationDate to set
 	 */
-	public void setLAST_MODIFIED_BY(String lAST_MODIFIED_BY)
+	public void setLastModificationDate(String lastModificationDate)
 	{
-		LAST_MODIFIED_BY = lAST_MODIFIED_BY;
+		this.lastModificationDate = lastModificationDate;
 	}
 
 	/**
-	 * @param oWNER
-	 *            the oWNER to set
+	 * @param lastModifiedBy
+	 *            the lastModifiedBy to set
 	 */
-	public void setOWNER(String oWNER)
+	public void setLastModifiedBy(String lastModifiedBy)
 	{
-		OWNER = oWNER;
+		this.lastModifiedBy = lastModifiedBy;
 	}
 
 	/**
-	 * @param pOSITION
-	 *            the pOSITION to set
+	 * @param owner
+	 *            the owner to set
 	 */
-	public void setPOSITION(Long pOSITION)
+	public void setOwner(String owner)
 	{
-		POSITION = pOSITION;
+		this.owner = owner;
 	}
 
 	/**
-	 * @param pROVIDER_ASSET_ROOT
-	 *            the pROVIDER_ASSET_ROOT to set
+	 * @param position
+	 *            the position to set
 	 */
-	public void setPROVIDER_ASSET_ROOT(String pROVIDER_ASSET_ROOT)
+	public void setPosition(Long position)
 	{
-		PROVIDER_ASSET_ROOT = pROVIDER_ASSET_ROOT;
+		this.position = position;
 	}
 
 	/**
-	 * @param pROVIDER_NAME
-	 *            the pROVIDER_NAME to set
+	 * @param providerAssetRoot
+	 *            the providerAssetRoot to set
 	 */
-	public void setPROVIDER_NAME(String pROVIDER_NAME)
+	public void setProviderAssetRoot(String providerAssetRoot)
 	{
-		PROVIDER_NAME = pROVIDER_NAME;
+		this.providerAssetRoot = providerAssetRoot;
 	}
 
 	/**
-	 * @param pROVIDER_VERSION
-	 *            the pROVIDER_VERSION to set
+	 * @param providerName
+	 *            the providerName to set
 	 */
-	public void setPROVIDER_VERSION(String pROVIDER_VERSION)
+	public void setProviderName(String providerName)
 	{
-		PROVIDER_VERSION = pROVIDER_VERSION;
+		this.providerName = providerName;
 	}
 
 	/**
-	 * @param tENANT_ID
-	 *            the tENANT_ID to set
+	 * @param providerVersion
+	 *            the providerVersion to set
 	 */
-	public void setTENANT_ID(Long tENANT_ID)
+	public void setProviderVersion(String providerVersion)
 	{
-		TENANT_ID = tENANT_ID;
+		this.providerVersion = providerVersion;
 	}
 
 	/**
-	 * @param tILE_COLUMN
-	 *            the tILE_COLUMN to set
+	 * @param tenantId
+	 *            the tenantId to set
 	 */
-	public void setTILE_COLUMN(Long tILE_COLUMN)
+	public void setTenantId(Long tenantId)
 	{
-		TILE_COLUMN = tILE_COLUMN;
+		this.tenantId = tenantId;
 	}
 
 	/**
-	 * @param tILE_ID
-	 *            the tILE_ID to set
+	 * @param tileColumn
+	 *            the tileColumn to set
 	 */
-	public void setTILE_ID(Long tILE_ID)
+	public void setTileColumn(Long tileColumn)
 	{
-		TILE_ID = tILE_ID;
+		this.tileColumn = tileColumn;
 	}
 
 	/**
-	 * @param tILE_ROW
-	 *            the tILE_ROW to set
+	 * @param tileId
+	 *            the tileId to set
 	 */
-	public void setTILE_ROW(Long tILE_ROW)
+	public void setTileId(Long tileId)
 	{
-		TILE_ROW = tILE_ROW;
+		this.tileId = tileId;
 	}
 
 	/**
-	 * @param tITLE
-	 *            the tITLE to set
+	 * @param tileRow
+	 *            the tileRow to set
 	 */
-	public void setTITLE(String tITLE)
+	public void setTileRow(Long tileRow)
 	{
-		TITLE = tITLE;
+		this.tileRow = tileRow;
 	}
 
 	/**
-	 * @param tYPE
-	 *            the tYPE to set
+	 * @param title
+	 *            the title to set
 	 */
-	public void setTYPE(Long tYPE)
+	public void setTitle(String title)
 	{
-		TYPE = tYPE;
+		this.title = title;
 	}
 
 	/**
-	 * @param wIDGET_CREATION_TIME
-	 *            the wIDGET_CREATION_TIME to set
+	 * @param type
+	 *            the type to set
 	 */
-	public void setWIDGET_CREATION_TIME(String wIDGET_CREATION_TIME)
+	public void setType(Long type)
 	{
-		WIDGET_CREATION_TIME = wIDGET_CREATION_TIME;
+		this.type = type;
 	}
 
 	/**
-	 * @param wIDGET_DESCRIPTION
-	 *            the wIDGET_DESCRIPTION to set
+	 * @param widgetCreationTime
+	 *            the widgetCreationTime to set
 	 */
-	public void setWIDGET_DESCRIPTION(String wIDGET_DESCRIPTION)
+	public void setWidgetCreationTime(String widgetCreationTime)
 	{
-		WIDGET_DESCRIPTION = wIDGET_DESCRIPTION;
+		this.widgetCreationTime = widgetCreationTime;
 	}
 
 	/**
-	 * @param wIDGET_GROUP_NAME
-	 *            the wIDGET_GROUP_NAME to set
+	 * @param widgetDescription
+	 *            the widgetDescription to set
 	 */
-	public void setWIDGET_GROUP_NAME(String wIDGET_GROUP_NAME)
+	public void setWidgetDescription(String widgetDescription)
 	{
-		WIDGET_GROUP_NAME = wIDGET_GROUP_NAME;
+		this.widgetDescription = widgetDescription;
 	}
 
 	/**
-	 * @param wIDGET_HISTOGRAM
-	 *            the wIDGET_HISTOGRAM to set
+	 * @param widgetGroupName
+	 *            the widgetGroupName to set
 	 */
-	public void setWIDGET_HISTOGRAM(String wIDGET_HISTOGRAM)
+	public void setWidgetGroupName(String widgetGroupName)
 	{
-		WIDGET_HISTOGRAM = wIDGET_HISTOGRAM;
+		this.widgetGroupName = widgetGroupName;
 	}
 
 	/**
-	 * @param wIDGET_ICON
-	 *            the wIDGET_ICON to set
+	 * @param widgetHistogram
+	 *            the widgetHistogram to set
 	 */
-	public void setWIDGET_ICON(String wIDGET_ICON)
+	public void setWidgetHistogram(String widgetHistogram)
 	{
-		WIDGET_ICON = wIDGET_ICON;
+		this.widgetHistogram = widgetHistogram;
 	}
 
 	/**
-	 * @param wIDGET_KOC_NAME
-	 *            the wIDGET_KOC_NAME to set
+	 * @param widgetIcon
+	 *            the widgetIcon to set
 	 */
-	public void setWIDGET_KOC_NAME(String wIDGET_KOC_NAME)
+	public void setWidgetIcon(String widgetIcon)
 	{
-		WIDGET_KOC_NAME = wIDGET_KOC_NAME;
+		this.widgetIcon = widgetIcon;
 	}
 
 	/**
-	 * @param wIDGET_NAME
-	 *            the wIDGET_NAME to set
+	 * @param widgetKocName
+	 *            the widgetKocName to set
 	 */
-	public void setWIDGET_NAME(String wIDGET_NAME)
+	public void setWidgetKocName(String widgetKocName)
 	{
-		WIDGET_NAME = wIDGET_NAME;
+		this.widgetKocName = widgetKocName;
 	}
 
 	/**
-	 * @param wIDGET_OWNER
-	 *            the wIDGET_OWNER to set
+	 * @param widgetName
+	 *            the widgetName to set
 	 */
-	public void setWIDGET_OWNER(String wIDGET_OWNER)
+	public void setWidgetName(String widgetName)
 	{
-		WIDGET_OWNER = wIDGET_OWNER;
+		this.widgetName = widgetName;
 	}
 
 	/**
-	 * @param wIDGET_SOURCE
-	 *            the wIDGET_SOURCE to set
+	 * @param widgetOwner
+	 *            the widgetOwner to set
 	 */
-	public void setWIDGET_SOURCE(Long wIDGET_SOURCE)
+	public void setWidgetOwner(String widgetOwner)
 	{
-		WIDGET_SOURCE = wIDGET_SOURCE;
+		this.widgetOwner = widgetOwner;
 	}
 
 	/**
-	 * @param wIDGET_SUPPORT_TIME_CONTROL
-	 *            the wIDGET_SUPPORT_TIME_CONTROL to set
+	 * @param widgetSource
+	 *            the widgetSource to set
 	 */
-	public void setWIDGET_SUPPORT_TIME_CONTROL(Integer wIDGET_SUPPORT_TIME_CONTROL)
+	public void setWidgetSource(Long widgetSource)
 	{
-		WIDGET_SUPPORT_TIME_CONTROL = wIDGET_SUPPORT_TIME_CONTROL;
+		this.widgetSource = widgetSource;
 	}
 
 	/**
-	 * @param wIDGET_TEMPLATE
-	 *            the wIDGET_TEMPLATE to set
+	 * @param widgetSupportTimeControl
+	 *            the widgetSupportTimeControl to set
 	 */
-	public void setWIDGET_TEMPLATE(String wIDGET_TEMPLATE)
+	public void setWidgetSupportTimeControl(Integer widgetSupportTimeControl)
 	{
-		WIDGET_TEMPLATE = wIDGET_TEMPLATE;
+		this.widgetSupportTimeControl = widgetSupportTimeControl;
 	}
 
 	/**
-	 * @param wIDGET_UNIQUE_ID
-	 *            the wIDGET_UNIQUE_ID to set
+	 * @param widgetTemplate
+	 *            the widgetTemplate to set
 	 */
-	public void setWIDGET_UNIQUE_ID(String wIDGET_UNIQUE_ID)
+	public void setWidgetTemplate(String widgetTemplate)
 	{
-		WIDGET_UNIQUE_ID = wIDGET_UNIQUE_ID;
+		this.widgetTemplate = widgetTemplate;
 	}
 
 	/**
-	 * @param wIDGET_VIEWMODE
-	 *            the wIDGET_VIEWMODE to set
+	 * @param widgetUniqueId
+	 *            the widgetUniqueId to set
 	 */
-	public void setWIDGET_VIEWMODE(String wIDGET_VIEWMODE)
+	public void setWidgetUniqueId(String widgetUniqueId)
 	{
-		WIDGET_VIEWMODE = wIDGET_VIEWMODE;
+		this.widgetUniqueId = widgetUniqueId;
 	}
 
 	/**
-	 * @param wIDTH
-	 *            the wIDTH to set
+	 * @param widgetViewmode
+	 *            the widgetViewmode to set
 	 */
-	public void setWIDTH(Long wIDTH)
+	public void setWidgetViewmode(String widgetViewmode)
 	{
-		WIDTH = wIDTH;
+		this.widgetViewmode = widgetViewmode;
+	}
+
+	/**
+	 * @param width
+	 *            the width to set
+	 */
+	public void setWidth(Long width)
+	{
+		this.width = width;
 	}
 }

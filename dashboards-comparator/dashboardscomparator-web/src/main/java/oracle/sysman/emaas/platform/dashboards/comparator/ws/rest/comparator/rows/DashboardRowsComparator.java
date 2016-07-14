@@ -68,8 +68,7 @@ public class DashboardRowsComparator extends AbstractComparator
 	 */
 	private TableRowsEntity retrieveRowsForSingleInstance(LookupClient lc) throws Exception, IOException
 	{
-		Link lk;
-		lk = getSingleInstanceUrl(lc, "zdt/tablerows", "http");
+		Link lk = getSingleInstanceUrl(lc, "zdt/tablerows", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;

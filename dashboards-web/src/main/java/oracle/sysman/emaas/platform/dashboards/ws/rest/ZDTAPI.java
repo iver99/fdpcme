@@ -35,14 +35,14 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.ZDTEntity;
 public class ZDTAPI extends APIBase
 {
 	private static final Logger logger = LogManager.getLogger(ZDTAPI.class);
-	private static final String TABLE_DATA_KEY_DASHBOARD = "dashboards";
-	private static final String TABLE_DATA_KEY_DASHBOARD_SET = "dashboardSets";
-	private static final String TABLE_DATA_KEY_DASHBOARD_FAVORITE = "favorites";
-	private static final String TABLE_DATA_KEY_DASHBOARD_LAST_ACCESS = "lastAccesses";
-	private static final String TABLE_DATA_KEY_DASHBOARD_TILES = "tiles";
-	private static final String TABLE_DATA_KEY_DASHBOARD_TILE_PARAMS = "tileParams";
-	private static final String TABLE_DATA_KEY_DASHBOARD_USER_OPTIONS = "userOptions";
-	private static final String TABLE_DATA_KEY_DASHBOARD_PREFERENCES = "preferences";
+	private static final String TABLE_DATA_KEY_DASHBOARD = "EMS_DASHBOARD";
+	private static final String TABLE_DATA_KEY_DASHBOARD_SET = "EMS_DASHBOARD_SET";
+	private static final String TABLE_DATA_KEY_DASHBOARD_FAVORITE = "EMS_DASHBOARD_FAVORITE";
+	private static final String TABLE_DATA_KEY_DASHBOARD_LAST_ACCESS = "EMS_DASHBOARD_LAST_ACCESS";
+	private static final String TABLE_DATA_KEY_DASHBOARD_TILES = "EMS_DASHBOARD_TILE";
+	private static final String TABLE_DATA_KEY_DASHBOARD_TILE_PARAMS = "EMS_DASHBOARD_TILE_PARAMS";
+	private static final String TABLE_DATA_KEY_DASHBOARD_USER_OPTIONS = "EMS_DASHBOARD_USER_OPTIONS";
+	private static final String TABLE_DATA_KEY_DASHBOARD_PREFERENCES = "EMS_PREFERENCE";
 
 	public ZDTAPI()
 	{

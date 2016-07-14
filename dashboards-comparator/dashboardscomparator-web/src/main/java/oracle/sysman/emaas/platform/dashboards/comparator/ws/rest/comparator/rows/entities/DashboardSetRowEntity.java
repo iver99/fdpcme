@@ -18,82 +18,148 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class DashboardSetRowEntity
 {
 	@JsonProperty("DASHBOARD_SET_ID")
-	private Long DASHBOARD_SET_ID;
+	private Long dashboardSetId;
 
 	@JsonProperty("TENANT_ID")
-	private Long TENANT_ID;
+	private Long tenantId;
 
 	@JsonProperty("SUB_DASHBOARD_ID")
-	private Long SUB_DASHBOARD_ID;
+	private Long subDashboardId;
 
 	@JsonProperty("POSITION")
-	private Long POSITION;
+	private Long position;
 
-	/**
-	 * @return the dASHBOARD_SET_ID
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public Long getDASHBOARD_SET_ID()
+	@Override
+	public boolean equals(Object obj)
 	{
-		return DASHBOARD_SET_ID;
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		DashboardSetRowEntity other = (DashboardSetRowEntity) obj;
+		if (dashboardSetId == null) {
+			if (other.dashboardSetId != null) {
+				return false;
+			}
+		}
+		else if (!dashboardSetId.equals(other.dashboardSetId)) {
+			return false;
+		}
+		if (position == null) {
+			if (other.position != null) {
+				return false;
+			}
+		}
+		else if (!position.equals(other.position)) {
+			return false;
+		}
+		if (subDashboardId == null) {
+			if (other.subDashboardId != null) {
+				return false;
+			}
+		}
+		else if (!subDashboardId.equals(other.subDashboardId)) {
+			return false;
+		}
+		if (tenantId == null) {
+			if (other.tenantId != null) {
+				return false;
+			}
+		}
+		else if (!tenantId.equals(other.tenantId)) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
-	 * @return the pOSITION
+	 * @return the dashboardSetId
 	 */
-	public Long getPOSITION()
+	public Long getDashboardSetId()
 	{
-		return POSITION;
+		return dashboardSetId;
 	}
 
 	/**
-	 * @return the sUB_DASHBOARD_ID
+	 * @return the position
 	 */
-	public Long getSUB_DASHBOARD_ID()
+	public Long getPosition()
 	{
-		return SUB_DASHBOARD_ID;
+		return position;
 	}
 
 	/**
-	 * @return the tENANT_ID
+	 * @return the subDashboardId
 	 */
-	public Long getTENANT_ID()
+	public Long getSubDashboardId()
 	{
-		return TENANT_ID;
+		return subDashboardId;
 	}
 
 	/**
-	 * @param dASHBOARD_SET_ID
-	 *            the dASHBOARD_SET_ID to set
+	 * @return the tenantId
 	 */
-	public void setDASHBOARD_SET_ID(Long dASHBOARD_SET_ID)
+	public Long getTenantId()
 	{
-		DASHBOARD_SET_ID = dASHBOARD_SET_ID;
+		return tenantId;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (dashboardSetId == null ? 0 : dashboardSetId.hashCode());
+		result = prime * result + (position == null ? 0 : position.hashCode());
+		result = prime * result + (subDashboardId == null ? 0 : subDashboardId.hashCode());
+		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
+		return result;
 	}
 
 	/**
-	 * @param pOSITION
-	 *            the pOSITION to set
+	 * @param dashboardSetId
+	 *            the dashboardSetId to set
 	 */
-	public void setPOSITION(Long pOSITION)
+	public void setDashboardSetId(Long dashboardSetId)
 	{
-		POSITION = pOSITION;
+		this.dashboardSetId = dashboardSetId;
 	}
 
 	/**
-	 * @param sUB_DASHBOARD_ID
-	 *            the sUB_DASHBOARD_ID to set
+	 * @param position
+	 *            the position to set
 	 */
-	public void setSUB_DASHBOARD_ID(Long sUB_DASHBOARD_ID)
+	public void setPosition(Long position)
 	{
-		SUB_DASHBOARD_ID = sUB_DASHBOARD_ID;
+		this.position = position;
 	}
 
 	/**
-	 * @param tENANT_ID
-	 *            the tENANT_ID to set
+	 * @param subDashboardId
+	 *            the subDashboardId to set
 	 */
-	public void setTENANT_ID(Long tENANT_ID)
+	public void setSubDashboardId(Long subDashboardId)
 	{
-		TENANT_ID = tENANT_ID;
+		this.subDashboardId = subDashboardId;
+	}
+
+	/**
+	 * @param tenantId
+	 *            the tenantId to set
+	 */
+	public void setTenantId(Long tenantId)
+	{
+		this.tenantId = tenantId;
 	}
 }

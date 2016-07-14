@@ -18,162 +18,264 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class DashboardTileParamsRowEntity
 {
 	@JsonProperty("TILE_ID")
-	private Long TILE_ID;
+	private Long tileId;
 
 	@JsonProperty("PARAM_NAME")
-	private String PARAM_NAME;
+	private String paramName;
 
 	@JsonProperty("TENANT_ID")
-	private Long TENANT_ID;
+	private Long tenantId;
 
 	@JsonProperty("IS_SYSTEM")
-	private Integer IS_SYSTEM;
+	private Integer isSystem;
 
 	@JsonProperty("PARAM_TYPE")
-	private Long PARAM_TYPE;
+	private Long paramType;
 
 	@JsonProperty("PARAM_VALUE_STR")
-	private String PARAM_VALUE_STR;
+	private String paramValueStr;
 
 	@JsonProperty("PARAM_VALUE_NUM")
-	private Long PARAM_VALUE_NUM;
+	private Long paramValueNum;
 
 	@JsonProperty("PARAM_VALUE_TIMESTAMP")
-	private String PARAM_VALUE_TIMESTAMP;
+	private String paramValueTimestamp;
 
-	/**
-	 * @return the iS_SYSTEM
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public Integer getIS_SYSTEM()
+	@Override
+	public boolean equals(Object obj)
 	{
-		return IS_SYSTEM;
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		DashboardTileParamsRowEntity other = (DashboardTileParamsRowEntity) obj;
+		if (isSystem == null) {
+			if (other.isSystem != null) {
+				return false;
+			}
+		}
+		else if (!isSystem.equals(other.isSystem)) {
+			return false;
+		}
+		if (paramName == null) {
+			if (other.paramName != null) {
+				return false;
+			}
+		}
+		else if (!paramName.equals(other.paramName)) {
+			return false;
+		}
+		if (paramType == null) {
+			if (other.paramType != null) {
+				return false;
+			}
+		}
+		else if (!paramType.equals(other.paramType)) {
+			return false;
+		}
+		if (paramValueNum == null) {
+			if (other.paramValueNum != null) {
+				return false;
+			}
+		}
+		else if (!paramValueNum.equals(other.paramValueNum)) {
+			return false;
+		}
+		if (paramValueStr == null) {
+			if (other.paramValueStr != null) {
+				return false;
+			}
+		}
+		else if (!paramValueStr.equals(other.paramValueStr)) {
+			return false;
+		}
+		if (paramValueTimestamp == null) {
+			if (other.paramValueTimestamp != null) {
+				return false;
+			}
+		}
+		else if (!paramValueTimestamp.equals(other.paramValueTimestamp)) {
+			return false;
+		}
+		if (tenantId == null) {
+			if (other.tenantId != null) {
+				return false;
+			}
+		}
+		else if (!tenantId.equals(other.tenantId)) {
+			return false;
+		}
+		if (tileId == null) {
+			if (other.tileId != null) {
+				return false;
+			}
+		}
+		else if (!tileId.equals(other.tileId)) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
-	 * @return the pARAM_NAME
+	 * @return the isSystem
 	 */
-	public String getPARAM_NAME()
+	public Integer getIsSystem()
 	{
-		return PARAM_NAME;
+		return isSystem;
 	}
 
 	/**
-	 * @return the pARAM_TYPE
+	 * @return the paramName
 	 */
-	public Long getPARAM_TYPE()
+	public String getParamName()
 	{
-		return PARAM_TYPE;
+		return paramName;
 	}
 
 	/**
-	 * @return the pARAM_VALUE_NUM
+	 * @return the paramType
 	 */
-	public Long getPARAM_VALUE_NUM()
+	public Long getParamType()
 	{
-		return PARAM_VALUE_NUM;
+		return paramType;
 	}
 
 	/**
-	 * @return the pARAM_VALUE_STR
+	 * @return the paramValueNum
 	 */
-	public String getPARAM_VALUE_STR()
+	public Long getParamValueNum()
 	{
-		return PARAM_VALUE_STR;
+		return paramValueNum;
 	}
 
 	/**
-	 * @return the pARAM_VALUE_TIMESTAMP
+	 * @return the paramValueStr
 	 */
-	public String getPARAM_VALUE_TIMESTAMP()
+	public String getParamValueStr()
 	{
-		return PARAM_VALUE_TIMESTAMP;
+		return paramValueStr;
 	}
 
 	/**
-	 * @return the tENANT_ID
+	 * @return the paramValueTimestamp
 	 */
-	public Long getTENANT_ID()
+	public String getParamValueTimestamp()
 	{
-		return TENANT_ID;
+		return paramValueTimestamp;
 	}
 
 	/**
-	 * @return the tILE_ID
+	 * @return the tenantId
 	 */
-	public Long getTILE_ID()
+	public Long getTenantId()
 	{
-		return TILE_ID;
+		return tenantId;
 	}
 
 	/**
-	 * @param iS_SYSTEM
-	 *            the iS_SYSTEM to set
+	 * @return the tileId
 	 */
-	public void setIS_SYSTEM(Integer iS_SYSTEM)
+	public Long getTileId()
 	{
-		IS_SYSTEM = iS_SYSTEM;
+		return tileId;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (isSystem == null ? 0 : isSystem.hashCode());
+		result = prime * result + (paramName == null ? 0 : paramName.hashCode());
+		result = prime * result + (paramType == null ? 0 : paramType.hashCode());
+		result = prime * result + (paramValueNum == null ? 0 : paramValueNum.hashCode());
+		result = prime * result + (paramValueStr == null ? 0 : paramValueStr.hashCode());
+		result = prime * result + (paramValueTimestamp == null ? 0 : paramValueTimestamp.hashCode());
+		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
+		result = prime * result + (tileId == null ? 0 : tileId.hashCode());
+		return result;
 	}
 
 	/**
-	 * @param pARAM_NAME
-	 *            the pARAM_NAME to set
+	 * @param isSystem
+	 *            the isSystem to set
 	 */
-	public void setPARAM_NAME(String pARAM_NAME)
+	public void setIsSystem(Integer isSystem)
 	{
-		PARAM_NAME = pARAM_NAME;
+		this.isSystem = isSystem;
 	}
 
 	/**
-	 * @param pARAM_TYPE
-	 *            the pARAM_TYPE to set
+	 * @param paramName
+	 *            the paramName to set
 	 */
-	public void setPARAM_TYPE(Long pARAM_TYPE)
+	public void setParamName(String paramName)
 	{
-		PARAM_TYPE = pARAM_TYPE;
+		this.paramName = paramName;
 	}
 
 	/**
-	 * @param pARAM_VALUE_NUM
-	 *            the pARAM_VALUE_NUM to set
+	 * @param paramType
+	 *            the paramType to set
 	 */
-	public void setPARAM_VALUE_NUM(Long pARAM_VALUE_NUM)
+	public void setParamType(Long paramType)
 	{
-		PARAM_VALUE_NUM = pARAM_VALUE_NUM;
+		this.paramType = paramType;
 	}
 
 	/**
-	 * @param pARAM_VALUE_STR
-	 *            the pARAM_VALUE_STR to set
+	 * @param paramValueNum
+	 *            the paramValueNum to set
 	 */
-	public void setPARAM_VALUE_STR(String pARAM_VALUE_STR)
+	public void setParamValueNum(Long paramValueNum)
 	{
-		PARAM_VALUE_STR = pARAM_VALUE_STR;
+		this.paramValueNum = paramValueNum;
 	}
 
 	/**
-	 * @param pARAM_VALUE_TIMESTAMP
-	 *            the pARAM_VALUE_TIMESTAMP to set
+	 * @param paramValueStr
+	 *            the paramValueStr to set
 	 */
-	public void setPARAM_VALUE_TIMESTAMP(String pARAM_VALUE_TIMESTAMP)
+	public void setParamValueStr(String paramValueStr)
 	{
-		PARAM_VALUE_TIMESTAMP = pARAM_VALUE_TIMESTAMP;
+		this.paramValueStr = paramValueStr;
 	}
 
 	/**
-	 * @param tENANT_ID
-	 *            the tENANT_ID to set
+	 * @param paramValueTimestamp
+	 *            the paramValueTimestamp to set
 	 */
-	public void setTENANT_ID(Long tENANT_ID)
+	public void setParamValueTimestamp(String paramValueTimestamp)
 	{
-		TENANT_ID = tENANT_ID;
+		this.paramValueTimestamp = paramValueTimestamp;
 	}
 
 	/**
-	 * @param tILE_ID
-	 *            the tILE_ID to set
+	 * @param tenantId
+	 *            the tenantId to set
 	 */
-	public void setTILE_ID(Long tILE_ID)
+	public void setTenantId(Long tenantId)
 	{
-		TILE_ID = tILE_ID;
+		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @param tileId
+	 *            the tileId to set
+	 */
+	public void setTileId(Long tileId)
+	{
+		this.tileId = tileId;
 	}
 }

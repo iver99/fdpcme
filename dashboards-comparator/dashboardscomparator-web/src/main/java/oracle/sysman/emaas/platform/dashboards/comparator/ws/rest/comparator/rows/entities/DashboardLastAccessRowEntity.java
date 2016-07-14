@@ -18,82 +18,148 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class DashboardLastAccessRowEntity
 {
 	@JsonProperty("DASHBOARD_ID")
-	private Long DASHBOARD_ID;
+	private Long dashboardId;
 
 	@JsonProperty("ACCESSED_BY")
-	private String ACCESSED_BY;
+	private String accessedBy;
 
 	@JsonProperty("ACCESS_DATE")
-	private String ACCESS_DATE;
+	private String accessDate;
 
 	@JsonProperty("TENANT_ID")
-	private Long TENANT_ID;
+	private Long tenantId;
 
-	/**
-	 * @return the aCCESS_DATE
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public String getACCESS_DATE()
+	@Override
+	public boolean equals(Object obj)
 	{
-		return ACCESS_DATE;
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		DashboardLastAccessRowEntity other = (DashboardLastAccessRowEntity) obj;
+		if (accessedBy == null) {
+			if (other.accessedBy != null) {
+				return false;
+			}
+		}
+		else if (!accessedBy.equals(other.accessedBy)) {
+			return false;
+		}
+		if (accessDate == null) {
+			if (other.accessDate != null) {
+				return false;
+			}
+		}
+		else if (!accessDate.equals(other.accessDate)) {
+			return false;
+		}
+		if (dashboardId == null) {
+			if (other.dashboardId != null) {
+				return false;
+			}
+		}
+		else if (!dashboardId.equals(other.dashboardId)) {
+			return false;
+		}
+		if (tenantId == null) {
+			if (other.tenantId != null) {
+				return false;
+			}
+		}
+		else if (!tenantId.equals(other.tenantId)) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
-	 * @return the aCCESSED_BY
+	 * @return the accessDate
 	 */
-	public String getACCESSED_BY()
+	public String getAccessDate()
 	{
-		return ACCESSED_BY;
+		return accessDate;
 	}
 
 	/**
-	 * @return the dASHBOARD_ID
+	 * @return the accessedBy
 	 */
-	public Long getDASHBOARD_ID()
+	public String getAccessedBy()
 	{
-		return DASHBOARD_ID;
+		return accessedBy;
 	}
 
 	/**
-	 * @return the tENANT_ID
+	 * @return the dashboardId
 	 */
-	public Long getTENANT_ID()
+	public Long getDashboardId()
 	{
-		return TENANT_ID;
+		return dashboardId;
 	}
 
 	/**
-	 * @param aCCESS_DATE
-	 *            the aCCESS_DATE to set
+	 * @return the tenantId
 	 */
-	public void setACCESS_DATE(String aCCESS_DATE)
+	public Long getTenantId()
 	{
-		ACCESS_DATE = aCCESS_DATE;
+		return tenantId;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (accessedBy == null ? 0 : accessedBy.hashCode());
+		result = prime * result + (accessDate == null ? 0 : accessDate.hashCode());
+		result = prime * result + (dashboardId == null ? 0 : dashboardId.hashCode());
+		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
+		return result;
 	}
 
 	/**
-	 * @param aCCESSED_BY
-	 *            the aCCESSED_BY to set
+	 * @param accessDate
+	 *            the accessDate to set
 	 */
-	public void setACCESSED_BY(String aCCESSED_BY)
+	public void setAccessDate(String accessDate)
 	{
-		ACCESSED_BY = aCCESSED_BY;
+		this.accessDate = accessDate;
 	}
 
 	/**
-	 * @param dASHBOARD_ID
-	 *            the dASHBOARD_ID to set
+	 * @param accessedBy
+	 *            the accessedBy to set
 	 */
-	public void setDASHBOARD_ID(Long dASHBOARD_ID)
+	public void setAccessedBy(String accessedBy)
 	{
-		DASHBOARD_ID = dASHBOARD_ID;
+		this.accessedBy = accessedBy;
 	}
 
 	/**
-	 * @param tENANT_ID
-	 *            the tENANT_ID to set
+	 * @param dashboardId
+	 *            the dashboardId to set
 	 */
-	public void setTENANT_ID(Long tENANT_ID)
+	public void setDashboardId(Long dashboardId)
 	{
-		TENANT_ID = tENANT_ID;
+		this.dashboardId = dashboardId;
+	}
+
+	/**
+	 * @param tenantId
+	 *            the tenantId to set
+	 */
+	public void setTenantId(Long tenantId)
+	{
+		this.tenantId = tenantId;
 	}
 }

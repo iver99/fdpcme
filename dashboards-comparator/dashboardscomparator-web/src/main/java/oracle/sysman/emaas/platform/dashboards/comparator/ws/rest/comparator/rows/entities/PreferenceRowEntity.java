@@ -18,82 +18,148 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class PreferenceRowEntity
 {
 	@JsonProperty("USER_NAME")
-	private String USER_NAME;
+	private String userName;
 
 	@JsonProperty("PREF_KEY")
-	private String PREF_KEY;
+	private String prefKey;
 
 	@JsonProperty("PREF_VALUE")
-	private String PREF_VALUE;
+	private String prefValue;
 
 	@JsonProperty("TENANT_ID")
-	private Long TENANT_ID;
+	private Long tenantId;
 
-	/**
-	 * @return the pREF_KEY
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public String getPREF_KEY()
+	@Override
+	public boolean equals(Object obj)
 	{
-		return PREF_KEY;
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		PreferenceRowEntity other = (PreferenceRowEntity) obj;
+		if (prefKey == null) {
+			if (other.prefKey != null) {
+				return false;
+			}
+		}
+		else if (!prefKey.equals(other.prefKey)) {
+			return false;
+		}
+		if (prefValue == null) {
+			if (other.prefValue != null) {
+				return false;
+			}
+		}
+		else if (!prefValue.equals(other.prefValue)) {
+			return false;
+		}
+		if (tenantId == null) {
+			if (other.tenantId != null) {
+				return false;
+			}
+		}
+		else if (!tenantId.equals(other.tenantId)) {
+			return false;
+		}
+		if (userName == null) {
+			if (other.userName != null) {
+				return false;
+			}
+		}
+		else if (!userName.equals(other.userName)) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
-	 * @return the pREF_VALUE
+	 * @return the prefKey
 	 */
-	public String getPREF_VALUE()
+	public String getPrefKey()
 	{
-		return PREF_VALUE;
+		return prefKey;
 	}
 
 	/**
-	 * @return the tENANT_ID
+	 * @return the prefValue
 	 */
-	public Long getTENANT_ID()
+	public String getPrefValue()
 	{
-		return TENANT_ID;
+		return prefValue;
 	}
 
 	/**
-	 * @return the uSER_NAME
+	 * @return the tenantId
 	 */
-	public String getUSER_NAME()
+	public Long getTenantId()
 	{
-		return USER_NAME;
+		return tenantId;
 	}
 
 	/**
-	 * @param pREF_KEY
-	 *            the pREF_KEY to set
+	 * @return the userName
 	 */
-	public void setPREF_KEY(String pREF_KEY)
+	public String getUserName()
 	{
-		PREF_KEY = pREF_KEY;
+		return userName;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (prefKey == null ? 0 : prefKey.hashCode());
+		result = prime * result + (prefValue == null ? 0 : prefValue.hashCode());
+		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
+		result = prime * result + (userName == null ? 0 : userName.hashCode());
+		return result;
 	}
 
 	/**
-	 * @param pREF_VALUE
-	 *            the pREF_VALUE to set
+	 * @param prefKey
+	 *            the prefKey to set
 	 */
-	public void setPREF_VALUE(String pREF_VALUE)
+	public void setPrefKey(String prefKey)
 	{
-		PREF_VALUE = pREF_VALUE;
+		this.prefKey = prefKey;
 	}
 
 	/**
-	 * @param tENANT_ID
-	 *            the tENANT_ID to set
+	 * @param prefValue
+	 *            the prefValue to set
 	 */
-	public void setTENANT_ID(Long tENANT_ID)
+	public void setPrefValue(String prefValue)
 	{
-		TENANT_ID = tENANT_ID;
+		this.prefValue = prefValue;
 	}
 
 	/**
-	 * @param uSER_NAME
-	 *            the uSER_NAME to set
+	 * @param tenantId
+	 *            the tenantId to set
 	 */
-	public void setUSER_NAME(String uSER_NAME)
+	public void setTenantId(Long tenantId)
 	{
-		USER_NAME = uSER_NAME;
+		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @param userName
+	 *            the userName to set
+	 */
+	public void setUserName(String userName)
+	{
+		this.userName = userName;
 	}
 }

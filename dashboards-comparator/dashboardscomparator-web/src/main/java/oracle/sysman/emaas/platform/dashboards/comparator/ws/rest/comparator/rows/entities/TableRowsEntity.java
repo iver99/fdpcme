@@ -15,171 +15,275 @@ import java.util.List;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
+ * Class that represents the retrieved data from one OMC instance, including the data rows for DF tables
+ *
  * @author guochen
  */
 public class TableRowsEntity
 {
 	@JsonProperty("EMS_DASHBOARD")
-	private List<DashboardRowEntity> EMS_DASHBOARD;
+	private List<DashboardRowEntity> emsDashboard;
 
 	@JsonProperty("EMS_DASHBOARD_FAVORITE")
-	private List<DashboardFavoriteRowEntity> EMS_DASHBOARD_FAVORITE;
+	private List<DashboardFavoriteRowEntity> emsDashboardFavorite;
 
 	@JsonProperty("EMS_DASHBOARD_LAST_ACCESS")
-	private List<DashboardLastAccessRowEntity> EMS_DASHBOARD_LAST_ACCESS;
+	private List<DashboardLastAccessRowEntity> emsDashboardLastAccess;
 
 	@JsonProperty("EMS_DASHBOARD_SET")
-	private List<DashboardSetRowEntity> EMS_DASHBOARD_SET;
+	private List<DashboardSetRowEntity> emsDashboardSet;
 
 	@JsonProperty("EMS_DASHBOARD_TILE")
-	private List<DashboardTileRowEntity> EMS_DASHBOARD_TILE;
+	private List<DashboardTileRowEntity> emsDashboardTile;
 
 	@JsonProperty("EMS_DASHBOARD_TILE_PARAMS")
-	private List<DashboardTileParamsRowEntity> EMS_DASHBOARD_TILE_PARAMS;
+	private List<DashboardTileParamsRowEntity> emsDashboardTileParams;
 
 	@JsonProperty("EMS_DASHBOARD_USER_OPTIONS")
-	private List<DashboardUserOptionsRowEntity> EMS_DASHBOARD_USER_OPTIONS;
+	private List<DashboardUserOptionsRowEntity> emsDashboardUserOptions;
 
 	@JsonProperty("EMS_PREFERENCE")
-	private List<PreferenceRowEntity> EMS_PREFERENCE;
+	private List<PreferenceRowEntity> emsPreference;
 
 	public TableRowsEntity()
 	{
 	}
 
-	/**
-	 * @return the eMS_DASHBOARD
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public List<DashboardRowEntity> getEMS_DASHBOARD()
+	@Override
+	public boolean equals(Object obj)
 	{
-		return EMS_DASHBOARD;
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		TableRowsEntity other = (TableRowsEntity) obj;
+		if (emsDashboard == null) {
+			if (other.emsDashboard != null) {
+				return false;
+			}
+		}
+		else if (!emsDashboard.equals(other.emsDashboard)) {
+			return false;
+		}
+		if (emsDashboardFavorite == null) {
+			if (other.emsDashboardFavorite != null) {
+				return false;
+			}
+		}
+		else if (!emsDashboardFavorite.equals(other.emsDashboardFavorite)) {
+			return false;
+		}
+		if (emsDashboardLastAccess == null) {
+			if (other.emsDashboardLastAccess != null) {
+				return false;
+			}
+		}
+		else if (!emsDashboardLastAccess.equals(other.emsDashboardLastAccess)) {
+			return false;
+		}
+		if (emsDashboardSet == null) {
+			if (other.emsDashboardSet != null) {
+				return false;
+			}
+		}
+		else if (!emsDashboardSet.equals(other.emsDashboardSet)) {
+			return false;
+		}
+		if (emsDashboardTile == null) {
+			if (other.emsDashboardTile != null) {
+				return false;
+			}
+		}
+		else if (!emsDashboardTile.equals(other.emsDashboardTile)) {
+			return false;
+		}
+		if (emsDashboardTileParams == null) {
+			if (other.emsDashboardTileParams != null) {
+				return false;
+			}
+		}
+		else if (!emsDashboardTileParams.equals(other.emsDashboardTileParams)) {
+			return false;
+		}
+		if (emsDashboardUserOptions == null) {
+			if (other.emsDashboardUserOptions != null) {
+				return false;
+			}
+		}
+		else if (!emsDashboardUserOptions.equals(other.emsDashboardUserOptions)) {
+			return false;
+		}
+		if (emsPreference == null) {
+			if (other.emsPreference != null) {
+				return false;
+			}
+		}
+		else if (!emsPreference.equals(other.emsPreference)) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
-	 * @return the eMS_DASHBOARD_FAVORITE
+	 * @return the emsDashboard
 	 */
-	public List<DashboardFavoriteRowEntity> getEMS_DASHBOARD_FAVORITE()
+	public List<DashboardRowEntity> getEmsDashboard()
 	{
-		return EMS_DASHBOARD_FAVORITE;
+		return emsDashboard;
 	}
 
 	/**
-	 * @return the eMS_DASHBOARD_LAST_ACCESS
+	 * @return the emsDashboardFavorite
 	 */
-	public List<DashboardLastAccessRowEntity> getEMS_DASHBOARD_LAST_ACCESS()
+	public List<DashboardFavoriteRowEntity> getEmsDashboardFavorite()
 	{
-		return EMS_DASHBOARD_LAST_ACCESS;
+		return emsDashboardFavorite;
 	}
 
 	/**
-	 * @return the eMS_DASHBOARD_SET
+	 * @return the emsDashboardLastAccess
 	 */
-	public List<DashboardSetRowEntity> getEMS_DASHBOARD_SET()
+	public List<DashboardLastAccessRowEntity> getEmsDashboardLastAccess()
 	{
-		return EMS_DASHBOARD_SET;
+		return emsDashboardLastAccess;
 	}
 
 	/**
-	 * @return the eMS_DASHBOARD_TILE
+	 * @return the emsDashboardSet
 	 */
-	public List<DashboardTileRowEntity> getEMS_DASHBOARD_TILE()
+	public List<DashboardSetRowEntity> getEmsDashboardSet()
 	{
-		return EMS_DASHBOARD_TILE;
+		return emsDashboardSet;
 	}
 
 	/**
-	 * @return the eMS_DASHBOARD_TILE_PARAMS
+	 * @return the emsDashboardTile
 	 */
-	public List<DashboardTileParamsRowEntity> getEMS_DASHBOARD_TILE_PARAMS()
+	public List<DashboardTileRowEntity> getEmsDashboardTile()
 	{
-		return EMS_DASHBOARD_TILE_PARAMS;
+		return emsDashboardTile;
 	}
 
 	/**
-	 * @return the eMS_DASHBOARD_USER_OPTIONS
+	 * @return the emsDashboardTileParams
 	 */
-	public List<DashboardUserOptionsRowEntity> getEMS_DASHBOARD_USER_OPTIONS()
+	public List<DashboardTileParamsRowEntity> getEmsDashboardTileParams()
 	{
-		return EMS_DASHBOARD_USER_OPTIONS;
+		return emsDashboardTileParams;
 	}
 
 	/**
-	 * @return the eMS_PREFERENCE
+	 * @return the emsDashboardUserOptions
 	 */
-	public List<PreferenceRowEntity> getEMS_PREFERENCE()
+	public List<DashboardUserOptionsRowEntity> getEmsDashboardUserOptions()
 	{
-		return EMS_PREFERENCE;
+		return emsDashboardUserOptions;
 	}
 
 	/**
-	 * @param eMS_DASHBOARD
-	 *            the eMS_DASHBOARD to set
+	 * @return the emsPreference
 	 */
-	public void setEMS_DASHBOARD(List<DashboardRowEntity> eMS_DASHBOARD)
+	public List<PreferenceRowEntity> getEmsPreference()
 	{
-		EMS_DASHBOARD = eMS_DASHBOARD;
+		return emsPreference;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (emsDashboard == null ? 0 : emsDashboard.hashCode());
+		result = prime * result + (emsDashboardFavorite == null ? 0 : emsDashboardFavorite.hashCode());
+		result = prime * result + (emsDashboardLastAccess == null ? 0 : emsDashboardLastAccess.hashCode());
+		result = prime * result + (emsDashboardSet == null ? 0 : emsDashboardSet.hashCode());
+		result = prime * result + (emsDashboardTile == null ? 0 : emsDashboardTile.hashCode());
+		result = prime * result + (emsDashboardTileParams == null ? 0 : emsDashboardTileParams.hashCode());
+		result = prime * result + (emsDashboardUserOptions == null ? 0 : emsDashboardUserOptions.hashCode());
+		result = prime * result + (emsPreference == null ? 0 : emsPreference.hashCode());
+		return result;
 	}
 
 	/**
-	 * @param eMS_DASHBOARD_FAVORITE
-	 *            the eMS_DASHBOARD_FAVORITE to set
+	 * @param emsDashboard
+	 *            the emsDashboard to set
 	 */
-	public void setEMS_DASHBOARD_FAVORITE(List<DashboardFavoriteRowEntity> eMS_DASHBOARD_FAVORITE)
+	public void setEmsDashboard(List<DashboardRowEntity> emsDashboard)
 	{
-		EMS_DASHBOARD_FAVORITE = eMS_DASHBOARD_FAVORITE;
+		this.emsDashboard = emsDashboard;
 	}
 
 	/**
-	 * @param eMS_DASHBOARD_LAST_ACCESS
-	 *            the eMS_DASHBOARD_LAST_ACCESS to set
+	 * @param emsDashboardFavorite
+	 *            the emsDashboardFavorite to set
 	 */
-	public void setEMS_DASHBOARD_LAST_ACCESS(List<DashboardLastAccessRowEntity> eMS_DASHBOARD_LAST_ACCESS)
+	public void setEmsDashboardFavorite(List<DashboardFavoriteRowEntity> emsDashboardFavorite)
 	{
-		EMS_DASHBOARD_LAST_ACCESS = eMS_DASHBOARD_LAST_ACCESS;
+		this.emsDashboardFavorite = emsDashboardFavorite;
 	}
 
 	/**
-	 * @param eMS_DASHBOARD_SET
-	 *            the eMS_DASHBOARD_SET to set
+	 * @param emsDashboardLastAccess
+	 *            the emsDashboardLastAccess to set
 	 */
-	public void setEMS_DASHBOARD_SET(List<DashboardSetRowEntity> eMS_DASHBOARD_SET)
+	public void setEmsDashboardLastAccess(List<DashboardLastAccessRowEntity> emsDashboardLastAccess)
 	{
-		EMS_DASHBOARD_SET = eMS_DASHBOARD_SET;
+		this.emsDashboardLastAccess = emsDashboardLastAccess;
 	}
 
 	/**
-	 * @param eMS_DASHBOARD_TILE
-	 *            the eMS_DASHBOARD_TILE to set
+	 * @param emsDashboardSet
+	 *            the emsDashboardSet to set
 	 */
-	public void setEMS_DASHBOARD_TILE(List<DashboardTileRowEntity> eMS_DASHBOARD_TILE)
+	public void setEmsDashboardSet(List<DashboardSetRowEntity> emsDashboardSet)
 	{
-		EMS_DASHBOARD_TILE = eMS_DASHBOARD_TILE;
+		this.emsDashboardSet = emsDashboardSet;
 	}
 
 	/**
-	 * @param eMS_DASHBOARD_TILE_PARAMS
-	 *            the eMS_DASHBOARD_TILE_PARAMS to set
+	 * @param emsDashboardTile
+	 *            the emsDashboardTile to set
 	 */
-	public void setEMS_DASHBOARD_TILE_PARAMS(List<DashboardTileParamsRowEntity> eMS_DASHBOARD_TILE_PARAMS)
+	public void setEmsDashboardTile(List<DashboardTileRowEntity> emsDashboardTile)
 	{
-		EMS_DASHBOARD_TILE_PARAMS = eMS_DASHBOARD_TILE_PARAMS;
+		this.emsDashboardTile = emsDashboardTile;
 	}
 
 	/**
-	 * @param eMS_DASHBOARD_USER_OPTIONS
-	 *            the eMS_DASHBOARD_USER_OPTIONS to set
+	 * @param emsDashboardTileParams
+	 *            the emsDashboardTileParams to set
 	 */
-	public void setEMS_DASHBOARD_USER_OPTIONS(List<DashboardUserOptionsRowEntity> eMS_DASHBOARD_USER_OPTIONS)
+	public void setEmsDashboardTileParams(List<DashboardTileParamsRowEntity> emsDashboardTileParams)
 	{
-		EMS_DASHBOARD_USER_OPTIONS = eMS_DASHBOARD_USER_OPTIONS;
+		this.emsDashboardTileParams = emsDashboardTileParams;
 	}
 
 	/**
-	 * @param eMS_PREFERENCE
-	 *            the eMS_PREFERENCE to set
+	 * @param emsDashboardUserOptions
+	 *            the emsDashboardUserOptions to set
 	 */
-	public void setEMS_PREFERENCE(List<PreferenceRowEntity> eMS_PREFERENCE)
+	public void setEmsDashboardUserOptions(List<DashboardUserOptionsRowEntity> emsDashboardUserOptions)
 	{
-		EMS_PREFERENCE = eMS_PREFERENCE;
+		this.emsDashboardUserOptions = emsDashboardUserOptions;
+	}
+
+	/**
+	 * @param emsPreference
+	 *            the emsPreference to set
+	 */
+	public void setEmsPreference(List<PreferenceRowEntity> emsPreference)
+	{
+		this.emsPreference = emsPreference;
 	}
 }

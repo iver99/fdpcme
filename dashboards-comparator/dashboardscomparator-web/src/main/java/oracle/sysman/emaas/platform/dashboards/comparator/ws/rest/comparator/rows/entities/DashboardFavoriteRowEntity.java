@@ -18,82 +18,148 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class DashboardFavoriteRowEntity
 {
 	@JsonProperty("USER_NAME")
-	private String USER_NAME;
+	private String userName;
 
 	@JsonProperty("DASHBOARD_ID")
-	private Long DASHBOARD_ID;
+	private Long dashboardId;
 
 	@JsonProperty("CREATION_DATE")
-	private String CREATION_DATE;
+	private String creationDate;
 
 	@JsonProperty("TENANT_ID")
-	private Long TENANT_ID;
+	private Long tenantId;
 
-	/**
-	 * @return the cREATION_DATE
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public String getCREATION_DATE()
+	@Override
+	public boolean equals(Object obj)
 	{
-		return CREATION_DATE;
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		DashboardFavoriteRowEntity other = (DashboardFavoriteRowEntity) obj;
+		if (creationDate == null) {
+			if (other.creationDate != null) {
+				return false;
+			}
+		}
+		else if (!creationDate.equals(other.creationDate)) {
+			return false;
+		}
+		if (dashboardId == null) {
+			if (other.dashboardId != null) {
+				return false;
+			}
+		}
+		else if (!dashboardId.equals(other.dashboardId)) {
+			return false;
+		}
+		if (tenantId == null) {
+			if (other.tenantId != null) {
+				return false;
+			}
+		}
+		else if (!tenantId.equals(other.tenantId)) {
+			return false;
+		}
+		if (userName == null) {
+			if (other.userName != null) {
+				return false;
+			}
+		}
+		else if (!userName.equals(other.userName)) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
-	 * @return the dASHBOARD_ID
+	 * @return the creationDate
 	 */
-	public Long getDASHBOARD_ID()
+	public String getCreationDate()
 	{
-		return DASHBOARD_ID;
+		return creationDate;
 	}
 
 	/**
-	 * @return the tENANT_ID
+	 * @return the dashboardId
 	 */
-	public Long getTENANT_ID()
+	public Long getDashboardId()
 	{
-		return TENANT_ID;
+		return dashboardId;
 	}
 
 	/**
-	 * @return the uSER_NAME
+	 * @return the tenantId
 	 */
-	public String getUSER_NAME()
+	public Long getTenantId()
 	{
-		return USER_NAME;
+		return tenantId;
 	}
 
 	/**
-	 * @param cREATION_DATE
-	 *            the cREATION_DATE to set
+	 * @return the userName
 	 */
-	public void setCREATION_DATE(String cREATION_DATE)
+	public String getUserName()
 	{
-		CREATION_DATE = cREATION_DATE;
+		return userName;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
+		result = prime * result + (dashboardId == null ? 0 : dashboardId.hashCode());
+		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
+		result = prime * result + (userName == null ? 0 : userName.hashCode());
+		return result;
 	}
 
 	/**
-	 * @param dASHBOARD_ID
-	 *            the dASHBOARD_ID to set
+	 * @param creationDate
+	 *            the creationDate to set
 	 */
-	public void setDASHBOARD_ID(Long dASHBOARD_ID)
+	public void setCreationDate(String creationDate)
 	{
-		DASHBOARD_ID = dASHBOARD_ID;
+		this.creationDate = creationDate;
 	}
 
 	/**
-	 * @param tENANT_ID
-	 *            the tENANT_ID to set
+	 * @param dashboardId
+	 *            the dashboardId to set
 	 */
-	public void setTENANT_ID(Long tENANT_ID)
+	public void setDashboardId(Long dashboardId)
 	{
-		TENANT_ID = tENANT_ID;
+		this.dashboardId = dashboardId;
 	}
 
 	/**
-	 * @param uSER_NAME
-	 *            the uSER_NAME to set
+	 * @param tenantId
+	 *            the tenantId to set
 	 */
-	public void setUSER_NAME(String uSER_NAME)
+	public void setTenantId(Long tenantId)
 	{
-		USER_NAME = uSER_NAME;
+		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @param userName
+	 *            the userName to set
+	 */
+	public void setUserName(String userName)
+	{
+		this.userName = userName;
 	}
 }

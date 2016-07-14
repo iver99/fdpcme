@@ -18,142 +18,235 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class DashboardUserOptionsRowEntity
 {
 	@JsonProperty("USER_NAME")
-	private String USER_NAME;
+	private String userName;
 
 	@JsonProperty("TENANT_ID")
-	private Long TENANT_ID;
+	private Long tenantId;
 
 	@JsonProperty("DASHBOARD_ID")
-	private Long DASHBOARD_ID;
+	private Long dashboardId;
 
 	@JsonProperty("AUTO_REFRESH_INTERVAL")
-	private Long AUTO_REFRESH_INTERVAL;
+	private Long autoRefreshInterval;
 
 	@JsonProperty("ACCESS_DATE")
-	private String ACCESS_DATE;
+	private String accessDate;
 
 	@JsonProperty("IS_FAVORITE")
-	private Integer IS_FAVORITE;
+	private Integer isFavorite;
 
 	@JsonProperty("EXTENDED_OPTIONS")
-	private String EXTENDED_OPTIONS;
+	private String extendedOptions;
 
-	/**
-	 * @return the aCCESS_DATE
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public String getACCESS_DATE()
+	@Override
+	public boolean equals(Object obj)
 	{
-		return ACCESS_DATE;
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		DashboardUserOptionsRowEntity other = (DashboardUserOptionsRowEntity) obj;
+		if (accessDate == null) {
+			if (other.accessDate != null) {
+				return false;
+			}
+		}
+		else if (!accessDate.equals(other.accessDate)) {
+			return false;
+		}
+		if (autoRefreshInterval == null) {
+			if (other.autoRefreshInterval != null) {
+				return false;
+			}
+		}
+		else if (!autoRefreshInterval.equals(other.autoRefreshInterval)) {
+			return false;
+		}
+		if (dashboardId == null) {
+			if (other.dashboardId != null) {
+				return false;
+			}
+		}
+		else if (!dashboardId.equals(other.dashboardId)) {
+			return false;
+		}
+		if (extendedOptions == null) {
+			if (other.extendedOptions != null) {
+				return false;
+			}
+		}
+		else if (!extendedOptions.equals(other.extendedOptions)) {
+			return false;
+		}
+		if (isFavorite == null) {
+			if (other.isFavorite != null) {
+				return false;
+			}
+		}
+		else if (!isFavorite.equals(other.isFavorite)) {
+			return false;
+		}
+		if (tenantId == null) {
+			if (other.tenantId != null) {
+				return false;
+			}
+		}
+		else if (!tenantId.equals(other.tenantId)) {
+			return false;
+		}
+		if (userName == null) {
+			if (other.userName != null) {
+				return false;
+			}
+		}
+		else if (!userName.equals(other.userName)) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
-	 * @return the aUTO_REFRESH_INTERVAL
+	 * @return the accessDate
 	 */
-	public Long getAUTO_REFRESH_INTERVAL()
+	public String getAccessDate()
 	{
-		return AUTO_REFRESH_INTERVAL;
+		return accessDate;
 	}
 
 	/**
-	 * @return the dASHBOARD_ID
+	 * @return the autoRefreshInterval
 	 */
-	public Long getDASHBOARD_ID()
+	public Long getAutoRefreshInterval()
 	{
-		return DASHBOARD_ID;
+		return autoRefreshInterval;
 	}
 
 	/**
-	 * @return the eXTENDED_OPTIONS
+	 * @return the dashboardId
 	 */
-	public String getEXTENDED_OPTIONS()
+	public Long getDashboardId()
 	{
-		return EXTENDED_OPTIONS;
+		return dashboardId;
 	}
 
 	/**
-	 * @return the iS_FAVORITE
+	 * @return the extendedOptions
 	 */
-	public Integer getIS_FAVORITE()
+	public String getExtendedOptions()
 	{
-		return IS_FAVORITE;
+		return extendedOptions;
 	}
 
 	/**
-	 * @return the tENANT_ID
+	 * @return the isFavorite
 	 */
-	public Long getTENANT_ID()
+	public Integer getIsFavorite()
 	{
-		return TENANT_ID;
+		return isFavorite;
 	}
 
 	/**
-	 * @return the uSER_NAME
+	 * @return the tenantId
 	 */
-	public String getUSER_NAME()
+	public Long getTenantId()
 	{
-		return USER_NAME;
+		return tenantId;
 	}
 
 	/**
-	 * @param aCCESS_DATE
-	 *            the aCCESS_DATE to set
+	 * @return the userName
 	 */
-	public void setACCESS_DATE(String aCCESS_DATE)
+	public String getUserName()
 	{
-		ACCESS_DATE = aCCESS_DATE;
+		return userName;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (accessDate == null ? 0 : accessDate.hashCode());
+		result = prime * result + (autoRefreshInterval == null ? 0 : autoRefreshInterval.hashCode());
+		result = prime * result + (dashboardId == null ? 0 : dashboardId.hashCode());
+		result = prime * result + (extendedOptions == null ? 0 : extendedOptions.hashCode());
+		result = prime * result + (isFavorite == null ? 0 : isFavorite.hashCode());
+		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
+		result = prime * result + (userName == null ? 0 : userName.hashCode());
+		return result;
 	}
 
 	/**
-	 * @param aUTO_REFRESH_INTERVAL
-	 *            the aUTO_REFRESH_INTERVAL to set
+	 * @param accessDate
+	 *            the accessDate to set
 	 */
-	public void setAUTO_REFRESH_INTERVAL(Long aUTO_REFRESH_INTERVAL)
+	public void setAccessDate(String accessDate)
 	{
-		AUTO_REFRESH_INTERVAL = aUTO_REFRESH_INTERVAL;
+		this.accessDate = accessDate;
 	}
 
 	/**
-	 * @param dASHBOARD_ID
-	 *            the dASHBOARD_ID to set
+	 * @param autoRefreshInterval
+	 *            the autoRefreshInterval to set
 	 */
-	public void setDASHBOARD_ID(Long dASHBOARD_ID)
+	public void setAutoRefreshInterval(Long autoRefreshInterval)
 	{
-		DASHBOARD_ID = dASHBOARD_ID;
+		this.autoRefreshInterval = autoRefreshInterval;
 	}
 
 	/**
-	 * @param eXTENDED_OPTIONS
-	 *            the eXTENDED_OPTIONS to set
+	 * @param dashboardId
+	 *            the dashboardId to set
 	 */
-	public void setEXTENDED_OPTIONS(String eXTENDED_OPTIONS)
+	public void setDashboardId(Long dashboardId)
 	{
-		EXTENDED_OPTIONS = eXTENDED_OPTIONS;
+		this.dashboardId = dashboardId;
 	}
 
 	/**
-	 * @param iS_FAVORITE
-	 *            the iS_FAVORITE to set
+	 * @param extendedOptions
+	 *            the extendedOptions to set
 	 */
-	public void setIS_FAVORITE(Integer iS_FAVORITE)
+	public void setExtendedOptions(String extendedOptions)
 	{
-		IS_FAVORITE = iS_FAVORITE;
+		this.extendedOptions = extendedOptions;
 	}
 
 	/**
-	 * @param tENANT_ID
-	 *            the tENANT_ID to set
+	 * @param isFavorite
+	 *            the isFavorite to set
 	 */
-	public void setTENANT_ID(Long tENANT_ID)
+	public void setIsFavorite(Integer isFavorite)
 	{
-		TENANT_ID = tENANT_ID;
+		this.isFavorite = isFavorite;
 	}
 
 	/**
-	 * @param uSER_NAME
-	 *            the uSER_NAME to set
+	 * @param tenantId
+	 *            the tenantId to set
 	 */
-	public void setUSER_NAME(String uSER_NAME)
+	public void setTenantId(Long tenantId)
 	{
-		USER_NAME = uSER_NAME;
+		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @param userName
+	 *            the userName to set
+	 */
+	public void setUserName(String userName)
+	{
+		this.userName = userName;
 	}
 }

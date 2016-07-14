@@ -18,386 +18,587 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class DashboardRowEntity
 {
 	@JsonProperty("DASHBOARD_ID")
-	private Long DASHBOARD_ID;
+	private Long dashboardId;
 
 	@JsonProperty("NAME")
-	private String NAME;
+	private String name;
 
 	@JsonProperty("TYPE")
-	private Long TYPE;
+	private Long type;
 
 	@JsonProperty("DESCRIPTION")
-	private String DESCRIPTION;
+	private String description;
 
 	@JsonProperty("CREATION_DATE")
-	private String CREATION_DATE;
+	private String creationDate;
 
 	@JsonProperty("LAST_MODIFICATION_DATE")
-	private String LAST_MODIFICATION_DATE;
+	private String lastModificationDate;
 
 	@JsonProperty("LAST_MODIFIED_BY")
-	private String LAST_MODIFIED_BY;
+	private String lastModifiedBy;
 
 	@JsonProperty("OWNER")
-	private String OWNER;
+	private String owner;
 
 	@JsonProperty("IS_SYSTEM")
-	private Integer IS_SYSTEM;
+	private Integer isSystem;
 
 	@JsonProperty("APPLICATION_TYPE")
-	private Integer APPLICATION_TYPE;
+	private Integer applicationType;
 
 	@JsonProperty("ENABLE_TIME_RANGE")
-	private Integer ENABLE_TIME_RANGE;
+	private Integer enableTimeRange;
 
 	@JsonProperty("SCREEN_SHOT")
-	private String SCREEN_SHOT;
+	private String screenShot;
 
 	@JsonProperty("DELETED")
-	private Long DELETED;
+	private Long deleted;
 
 	@JsonProperty("TENANT_ID")
-	private Long TENANT_ID;
+	private Long tenantId;
 
 	@JsonProperty("ENABLE_REFRESH")
-	private Integer ENABLE_REFRESH;
+	private Integer enableRefresh;
 
 	@JsonProperty("SHARE_PUBLIC")
-	private Integer SHARE_PUBLIC;
+	private Integer sharePublic;
 
 	@JsonProperty("ENABLE_ENTITY_FILTER")
-	private Integer ENABLE_ENTITY_FILTER;
+	private Integer enableEntityFilter;
 
 	@JsonProperty("ENABLE_DESCRIPTION")
-	private Integer ENABLE_DESCRIPTION;
+	private Integer enableDescription;
 
 	@JsonProperty("EXTENDED_OPTIONS")
-	private String EXTENDED_OPTIONS;
+	private String extendedOptions;
 
 	public DashboardRowEntity()
 	{
 	}
 
-	/**
-	 * @return the aPPLICATION_TYPE
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public Integer getAPPLICATION_TYPE()
+	@Override
+	public boolean equals(Object obj)
 	{
-		return APPLICATION_TYPE;
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		DashboardRowEntity other = (DashboardRowEntity) obj;
+		if (applicationType == null) {
+			if (other.applicationType != null) {
+				return false;
+			}
+		}
+		else if (!applicationType.equals(other.applicationType)) {
+			return false;
+		}
+		if (creationDate == null) {
+			if (other.creationDate != null) {
+				return false;
+			}
+		}
+		else if (!creationDate.equals(other.creationDate)) {
+			return false;
+		}
+		if (dashboardId == null) {
+			if (other.dashboardId != null) {
+				return false;
+			}
+		}
+		else if (!dashboardId.equals(other.dashboardId)) {
+			return false;
+		}
+		if (deleted == null) {
+			if (other.deleted != null) {
+				return false;
+			}
+		}
+		else if (!deleted.equals(other.deleted)) {
+			return false;
+		}
+		if (description == null) {
+			if (other.description != null) {
+				return false;
+			}
+		}
+		else if (!description.equals(other.description)) {
+			return false;
+		}
+		if (enableDescription == null) {
+			if (other.enableDescription != null) {
+				return false;
+			}
+		}
+		else if (!enableDescription.equals(other.enableDescription)) {
+			return false;
+		}
+		if (enableEntityFilter == null) {
+			if (other.enableEntityFilter != null) {
+				return false;
+			}
+		}
+		else if (!enableEntityFilter.equals(other.enableEntityFilter)) {
+			return false;
+		}
+		if (enableRefresh == null) {
+			if (other.enableRefresh != null) {
+				return false;
+			}
+		}
+		else if (!enableRefresh.equals(other.enableRefresh)) {
+			return false;
+		}
+		if (enableTimeRange == null) {
+			if (other.enableTimeRange != null) {
+				return false;
+			}
+		}
+		else if (!enableTimeRange.equals(other.enableTimeRange)) {
+			return false;
+		}
+		if (extendedOptions == null) {
+			if (other.extendedOptions != null) {
+				return false;
+			}
+		}
+		else if (!extendedOptions.equals(other.extendedOptions)) {
+			return false;
+		}
+		if (isSystem == null) {
+			if (other.isSystem != null) {
+				return false;
+			}
+		}
+		else if (!isSystem.equals(other.isSystem)) {
+			return false;
+		}
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null) {
+				return false;
+			}
+		}
+		else if (!lastModificationDate.equals(other.lastModificationDate)) {
+			return false;
+		}
+		if (lastModifiedBy == null) {
+			if (other.lastModifiedBy != null) {
+				return false;
+			}
+		}
+		else if (!lastModifiedBy.equals(other.lastModifiedBy)) {
+			return false;
+		}
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		}
+		else if (!name.equals(other.name)) {
+			return false;
+		}
+		if (owner == null) {
+			if (other.owner != null) {
+				return false;
+			}
+		}
+		else if (!owner.equals(other.owner)) {
+			return false;
+		}
+		if (screenShot == null) {
+			if (other.screenShot != null) {
+				return false;
+			}
+		}
+		else if (!screenShot.equals(other.screenShot)) {
+			return false;
+		}
+		if (sharePublic == null) {
+			if (other.sharePublic != null) {
+				return false;
+			}
+		}
+		else if (!sharePublic.equals(other.sharePublic)) {
+			return false;
+		}
+		if (tenantId == null) {
+			if (other.tenantId != null) {
+				return false;
+			}
+		}
+		else if (!tenantId.equals(other.tenantId)) {
+			return false;
+		}
+		if (type == null) {
+			if (other.type != null) {
+				return false;
+			}
+		}
+		else if (!type.equals(other.type)) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
-	 * @return the cREATION_DATE
+	 * @return the applicationType
 	 */
-	public String getCREATION_DATE()
+	public Integer getApplicationType()
 	{
-		return CREATION_DATE;
+		return applicationType;
 	}
 
 	/**
-	 * @return the dASHBOARD_ID
+	 * @return the creationDate
 	 */
-	public Long getDASHBOARD_ID()
+	public String getCreationDate()
 	{
-		return DASHBOARD_ID;
+		return creationDate;
 	}
 
 	/**
-	 * @return the dELETED
+	 * @return the dashboardId
 	 */
-	public Long getDELETED()
+	public Long getDashboardId()
 	{
-		return DELETED;
+		return dashboardId;
 	}
 
 	/**
-	 * @return the dESCRIPTION
+	 * @return the deleted
 	 */
-	public String getDESCRIPTION()
+	public Long getDeleted()
 	{
-		return DESCRIPTION;
+		return deleted;
 	}
 
 	/**
-	 * @return the eNABLE_DESCRIPTION
+	 * @return the description
 	 */
-	public Integer getENABLE_DESCRIPTION()
+	public String getDescription()
 	{
-		return ENABLE_DESCRIPTION;
+		return description;
 	}
 
 	/**
-	 * @return the eNABLE_ENTITY_FILTER
+	 * @return the enableDescription
 	 */
-	public Integer getENABLE_ENTITY_FILTER()
+	public Integer getEnableDescription()
 	{
-		return ENABLE_ENTITY_FILTER;
+		return enableDescription;
 	}
 
 	/**
-	 * @return the eNABLE_REFRESH
+	 * @return the enableEntityFilter
 	 */
-	public Integer getENABLE_REFRESH()
+	public Integer getEnableEntityFilter()
 	{
-		return ENABLE_REFRESH;
+		return enableEntityFilter;
 	}
 
 	/**
-	 * @return the eNABLE_TIME_RANGE
+	 * @return the enableRefresh
 	 */
-	public Integer getENABLE_TIME_RANGE()
+	public Integer getEnableRefresh()
 	{
-		return ENABLE_TIME_RANGE;
+		return enableRefresh;
 	}
 
 	/**
-	 * @return the eXTENDED_OPTIONS
+	 * @return the enableTimeRange
 	 */
-	public String getEXTENDED_OPTIONS()
+	public Integer getEnableTimeRange()
 	{
-		return EXTENDED_OPTIONS;
+		return enableTimeRange;
 	}
 
 	/**
-	 * @return the iS_SYSTEM
+	 * @return the extendedOptions
 	 */
-	public Integer getIS_SYSTEM()
+	public String getExtendedOptions()
 	{
-		return IS_SYSTEM;
+		return extendedOptions;
 	}
 
 	/**
-	 * @return the lAST_MODIFICATION_DATE
+	 * @return the isSystem
 	 */
-	public String getLAST_MODIFICATION_DATE()
+	public Integer getIsSystem()
 	{
-		return LAST_MODIFICATION_DATE;
+		return isSystem;
 	}
 
 	/**
-	 * @return the lAST_MODIFIED_BY
+	 * @return the lastModificationDate
 	 */
-	public String getLAST_MODIFIED_BY()
+	public String getLastModificationDate()
 	{
-		return LAST_MODIFIED_BY;
+		return lastModificationDate;
 	}
 
 	/**
-	 * @return the nAME
+	 * @return the lastModifiedBy
 	 */
-	public String getNAME()
+	public String getLastModifiedBy()
 	{
-		return NAME;
+		return lastModifiedBy;
 	}
 
 	/**
-	 * @return the oWNER
+	 * @return the name
 	 */
-	public String getOWNER()
+	public String getName()
 	{
-		return OWNER;
+		return name;
 	}
 
 	/**
-	 * @return the sCREEN_SHOT
+	 * @return the owner
 	 */
-	public String getSCREEN_SHOT()
+	public String getOwner()
 	{
-		return SCREEN_SHOT;
+		return owner;
 	}
 
 	/**
-	 * @return the sHARE_PUBLIC
+	 * @return the screenShot
 	 */
-	public Integer getSHARE_PUBLIC()
+	public String getScreenShot()
 	{
-		return SHARE_PUBLIC;
+		return screenShot;
 	}
 
 	/**
-	 * @return the tENANT_ID
+	 * @return the sharePublic
 	 */
-	public Long getTENANT_ID()
+	public Integer getSharePublic()
 	{
-		return TENANT_ID;
+		return sharePublic;
 	}
 
 	/**
-	 * @return the tYPE
+	 * @return the tenantId
 	 */
-	public Long getTYPE()
+	public Long getTenantId()
 	{
-		return TYPE;
+		return tenantId;
 	}
 
 	/**
-	 * @param aPPLICATION_TYPE
-	 *            the aPPLICATION_TYPE to set
+	 * @return the type
 	 */
-	public void setAPPLICATION_TYPE(Integer aPPLICATION_TYPE)
+	public Long getType()
 	{
-		APPLICATION_TYPE = aPPLICATION_TYPE;
+		return type;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (applicationType == null ? 0 : applicationType.hashCode());
+		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
+		result = prime * result + (dashboardId == null ? 0 : dashboardId.hashCode());
+		result = prime * result + (deleted == null ? 0 : deleted.hashCode());
+		result = prime * result + (description == null ? 0 : description.hashCode());
+		result = prime * result + (enableDescription == null ? 0 : enableDescription.hashCode());
+		result = prime * result + (enableEntityFilter == null ? 0 : enableEntityFilter.hashCode());
+		result = prime * result + (enableRefresh == null ? 0 : enableRefresh.hashCode());
+		result = prime * result + (enableTimeRange == null ? 0 : enableTimeRange.hashCode());
+		result = prime * result + (extendedOptions == null ? 0 : extendedOptions.hashCode());
+		result = prime * result + (isSystem == null ? 0 : isSystem.hashCode());
+		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
+		result = prime * result + (lastModifiedBy == null ? 0 : lastModifiedBy.hashCode());
+		result = prime * result + (name == null ? 0 : name.hashCode());
+		result = prime * result + (owner == null ? 0 : owner.hashCode());
+		result = prime * result + (screenShot == null ? 0 : screenShot.hashCode());
+		result = prime * result + (sharePublic == null ? 0 : sharePublic.hashCode());
+		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
+		result = prime * result + (type == null ? 0 : type.hashCode());
+		return result;
 	}
 
 	/**
-	 * @param cREATION_DATE
-	 *            the cREATION_DATE to set
+	 * @param applicationType
+	 *            the applicationType to set
 	 */
-	public void setCREATION_DATE(String cREATION_DATE)
+	public void setApplicationType(Integer applicationType)
 	{
-		CREATION_DATE = cREATION_DATE;
+		this.applicationType = applicationType;
 	}
 
 	/**
-	 * @param dASHBOARD_ID
-	 *            the dASHBOARD_ID to set
+	 * @param creationDate
+	 *            the creationDate to set
 	 */
-	public void setDASHBOARD_ID(Long dASHBOARD_ID)
+	public void setCreationDate(String creationDate)
 	{
-		DASHBOARD_ID = dASHBOARD_ID;
+		this.creationDate = creationDate;
 	}
 
 	/**
-	 * @param dELETED
-	 *            the dELETED to set
+	 * @param dashboardId
+	 *            the dashboardId to set
 	 */
-	public void setDELETED(Long dELETED)
+	public void setDashboardId(Long dashboardId)
 	{
-		DELETED = dELETED;
+		this.dashboardId = dashboardId;
 	}
 
 	/**
-	 * @param dESCRIPTION
-	 *            the dESCRIPTION to set
+	 * @param deleted
+	 *            the deleted to set
 	 */
-	public void setDESCRIPTION(String dESCRIPTION)
+	public void setDeleted(Long deleted)
 	{
-		DESCRIPTION = dESCRIPTION;
+		this.deleted = deleted;
 	}
 
 	/**
-	 * @param eNABLE_DESCRIPTION
-	 *            the eNABLE_DESCRIPTION to set
+	 * @param description
+	 *            the description to set
 	 */
-	public void setENABLE_DESCRIPTION(Integer eNABLE_DESCRIPTION)
+	public void setDescription(String description)
 	{
-		ENABLE_DESCRIPTION = eNABLE_DESCRIPTION;
+		this.description = description;
 	}
 
 	/**
-	 * @param eNABLE_ENTITY_FILTER
-	 *            the eNABLE_ENTITY_FILTER to set
+	 * @param enableDescription
+	 *            the enableDescription to set
 	 */
-	public void setENABLE_ENTITY_FILTER(Integer eNABLE_ENTITY_FILTER)
+	public void setEnableDescription(Integer enableDescription)
 	{
-		ENABLE_ENTITY_FILTER = eNABLE_ENTITY_FILTER;
+		this.enableDescription = enableDescription;
 	}
 
 	/**
-	 * @param eNABLE_REFRESH
-	 *            the eNABLE_REFRESH to set
+	 * @param enableEntityFilter
+	 *            the enableEntityFilter to set
 	 */
-	public void setENABLE_REFRESH(Integer eNABLE_REFRESH)
+	public void setEnableEntityFilter(Integer enableEntityFilter)
 	{
-		ENABLE_REFRESH = eNABLE_REFRESH;
+		this.enableEntityFilter = enableEntityFilter;
 	}
 
 	/**
-	 * @param eNABLE_TIME_RANGE
-	 *            the eNABLE_TIME_RANGE to set
+	 * @param enableRefresh
+	 *            the enableRefresh to set
 	 */
-	public void setENABLE_TIME_RANGE(Integer eNABLE_TIME_RANGE)
+	public void setEnableRefresh(Integer enableRefresh)
 	{
-		ENABLE_TIME_RANGE = eNABLE_TIME_RANGE;
+		this.enableRefresh = enableRefresh;
 	}
 
 	/**
-	 * @param eXTENDED_OPTIONS
-	 *            the eXTENDED_OPTIONS to set
+	 * @param enableTimeRange
+	 *            the enableTimeRange to set
 	 */
-	public void setEXTENDED_OPTIONS(String eXTENDED_OPTIONS)
+	public void setEnableTimeRange(Integer enableTimeRange)
 	{
-		EXTENDED_OPTIONS = eXTENDED_OPTIONS;
+		this.enableTimeRange = enableTimeRange;
 	}
 
 	/**
-	 * @param iS_SYSTEM
-	 *            the iS_SYSTEM to set
+	 * @param extendedOptions
+	 *            the extendedOptions to set
 	 */
-	public void setIS_SYSTEM(Integer iS_SYSTEM)
+	public void setExtendedOptions(String extendedOptions)
 	{
-		IS_SYSTEM = iS_SYSTEM;
+		this.extendedOptions = extendedOptions;
 	}
 
 	/**
-	 * @param lAST_MODIFICATION_DATE
-	 *            the lAST_MODIFICATION_DATE to set
+	 * @param isSystem
+	 *            the isSystem to set
 	 */
-	public void setLAST_MODIFICATION_DATE(String lAST_MODIFICATION_DATE)
+	public void setIsSystem(Integer isSystem)
 	{
-		LAST_MODIFICATION_DATE = lAST_MODIFICATION_DATE;
+		this.isSystem = isSystem;
 	}
 
 	/**
-	 * @param lAST_MODIFIED_BY
-	 *            the lAST_MODIFIED_BY to set
+	 * @param lastModificationDate
+	 *            the lastModificationDate to set
 	 */
-	public void setLAST_MODIFIED_BY(String lAST_MODIFIED_BY)
+	public void setLastModificationDate(String lastModificationDate)
 	{
-		LAST_MODIFIED_BY = lAST_MODIFIED_BY;
+		this.lastModificationDate = lastModificationDate;
 	}
 
 	/**
-	 * @param nAME
-	 *            the nAME to set
+	 * @param lastModifiedBy
+	 *            the lastModifiedBy to set
 	 */
-	public void setNAME(String nAME)
+	public void setLastModifiedBy(String lastModifiedBy)
 	{
-		NAME = nAME;
+		this.lastModifiedBy = lastModifiedBy;
 	}
 
 	/**
-	 * @param oWNER
-	 *            the oWNER to set
+	 * @param name
+	 *            the name to set
 	 */
-	public void setOWNER(String oWNER)
+	public void setName(String name)
 	{
-		OWNER = oWNER;
+		this.name = name;
 	}
 
 	/**
-	 * @param sCREEN_SHOT
-	 *            the sCREEN_SHOT to set
+	 * @param owner
+	 *            the owner to set
 	 */
-	public void setSCREEN_SHOT(String sCREEN_SHOT)
+	public void setOwner(String owner)
 	{
-		SCREEN_SHOT = sCREEN_SHOT;
+		this.owner = owner;
 	}
 
 	/**
-	 * @param sHARE_PUBLIC
-	 *            the sHARE_PUBLIC to set
+	 * @param screenShot
+	 *            the screenShot to set
 	 */
-	public void setSHARE_PUBLIC(Integer sHARE_PUBLIC)
+	public void setScreenShot(String screenShot)
 	{
-		SHARE_PUBLIC = sHARE_PUBLIC;
+		this.screenShot = screenShot;
 	}
 
 	/**
-	 * @param tENANT_ID
-	 *            the tENANT_ID to set
+	 * @param sharePublic
+	 *            the sharePublic to set
 	 */
-	public void setTENANT_ID(Long tENANT_ID)
+	public void setSharePublic(Integer sharePublic)
 	{
-		TENANT_ID = tENANT_ID;
+		this.sharePublic = sharePublic;
 	}
 
 	/**
-	 * @param tYPE
-	 *            the tYPE to set
+	 * @param tenantId
+	 *            the tenantId to set
 	 */
-	public void setTYPE(Long tYPE)
+	public void setTenantId(Long tenantId)
 	{
-		TYPE = tYPE;
+		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @param type
+	 *            the type to set
+	 */
+	public void setType(Long type)
+	{
+		this.type = type;
 	}
 }
