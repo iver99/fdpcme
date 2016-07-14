@@ -706,6 +706,10 @@ define(['knockout',
 
             self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
             self.dashboardSharing.subscribe(function(val){
+                if(!self.toolBarModel) {
+                    // return if current selected tab is dashboard picker  
+                    return ;
+                }
                 if ("notShared" === val) {
                     queryDashboardSetsBySubId(self.dashboard.id(), function (resp) {
                         var currentUser = dfu.getUserName();
@@ -718,7 +722,7 @@ define(['knockout',
                             window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(setsSharedByOthers);
                             self.toolBarModel.openDashboardUnshareConfirmDialog(function(isShared){
                                 if(isShared){
-                                    self.dashboardSharing(true);
+                                    self.dashboardSharing("shared");
                                 }
                             });
                         }else{
