@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 
 public class DashboardFavoriteRowEntityTest
 {
-	@Test
+	@Test(groups = { "s1" })
 	public void testEquals()
 	{
 		DashboardFavoriteRowEntity dfre1 = new DashboardFavoriteRowEntity();
@@ -31,7 +31,7 @@ public class DashboardFavoriteRowEntityTest
 		Assert.assertNotEquals(dfre1, dfre2);
 	}
 
-	@Test
+	@Test(groups = { "s1" })
 	public void testHashCode()
 	{
 		DashboardFavoriteRowEntity dfre1 = new DashboardFavoriteRowEntity();

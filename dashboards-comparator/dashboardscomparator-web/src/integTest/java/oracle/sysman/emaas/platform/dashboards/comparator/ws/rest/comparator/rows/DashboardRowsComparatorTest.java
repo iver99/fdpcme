@@ -78,14 +78,20 @@ public class DashboardRowsComparatorTest
 			+ 		"\"IS_FAVORITE\":1,"
 			+ 		"\"EXTENDED_OPTIONS\":\"options1\"}],"
 			+ "\"EMS_PREFERENCE\": [{"
-			+ 		"\"USER_NAME\":\"emcsadmin\","
+			+ 		"\"USER_NAME\":\"emcsadmin1\","
 			+ 		"\"PREF_KEY\":\"Dashboards.showWelcomeDialog\","
 			+ 		"\"PREF_VALUE\":\"false\","
-			+ 		"\"TENANT_ID\":1}]"
+			+ 		"\"TENANT_ID\":1"
+			+ 	"},{"
+			+ 		"\"USER_NAME\":\"emcsadmin2\","
+			+ 		"\"PREF_KEY\":\"Dashboards.showWelcomeDialog\","
+			+ 		"\"PREF_VALUE\":\"true\","
+			+ 		"\"TENANT_ID\":1"
+			+ 	"}]"
 			+ "}";
 	// @formatter:on
 
-	@Test
+	@Test(groups = { "s1" })
 	public void testRetrieveRowsEntityFromJsonForSingleInstance() throws IOException
 	{
 		DashboardRowsComparator drc = new DashboardRowsComparator();
@@ -106,7 +112,8 @@ public class DashboardRowsComparatorTest
 		Assert.assertEquals(tre.getEmsDashboardTileParams().get(0).getTileId().longValue(), 12);
 		Assert.assertEquals(tre.getEmsDashboardTileParams().size(), 1);
 		Assert.assertEquals(tre.getEmsDashboardUserOptions().get(0).getIsFavorite().intValue(), 1);
-		Assert.assertEquals(tre.getEmsPreference().size(), 1);
+		Assert.assertEquals(tre.getEmsPreference().size(), 2);
 		Assert.assertEquals(tre.getEmsPreference().get(0).getPrefValue(), "false");
+		Assert.assertEquals(tre.getEmsPreference().get(1).getPrefValue(), "true");
 	}
 }
