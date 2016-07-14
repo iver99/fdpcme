@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator;
+package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts;
 
 /**
  * @author guochen

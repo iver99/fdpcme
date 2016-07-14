@@ -1,0 +1,112 @@
+package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows;
+
+import java.io.IOException;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.TableRowsEntity;
+
+public class DashboardRowsComparatorTest
+{
+	private static final String DASHBOARD1_NAME = "D1";
+	private static final String DASHBOARD1_OPTIONS = "options1";
+
+	// @formatter:off
+	private static final String JSON_RESPONSE_DATA_TABLE="{"
+			+ "\"EMS_DASHBOARD\": [{"
+			+ 		"\"DASHBOARD_ID\":1,"
+			+ 		"\"NAME\":\"" + DASHBOARD1_NAME + "\","
+			+ 		"\"TYPE\":1,"
+			+ 		"\"DESCRIPTION\":\"desc1\","
+			+ 		"\"OWNER\":\"emcsadmin\","
+			+ 		"\"IS_SYSTEM\":1,"
+			+ 		"\"APPLICATION_TYPE\":1,"
+			+ 		"\"ENABLE_TIME_RANGE\":1,"
+			+ 		"\"DELETED\":1,"
+			+ 		"\"TENANT_ID\":1,"
+			+ 		"\"ENABLE_REFRESH\":1,"
+			+ 		"\"SHARE_PUBLIC\":0,"
+			+ 		"\"ENABLE_ENTITY_FILTER\":0,"
+			+ 		"\"ENABLE_DESCRIPTION\":1,"
+			+ 		"\"EXTENDED_OPTIONS\":\"" + DASHBOARD1_OPTIONS + "\""
+			+ 	"}],"
+			+ "\"EMS_DASHBOARD_FAVORITE\": [{"
+			+ 			"\"USER_NAME\":\"emcsadmin\","
+			+ 			"\"DASHBOARD_ID\":1,"
+			+ 			"\"TENANT_ID\":1"
+			+ 		"},{"
+			+ 			"\"USER_NAME\":\"emcsadmin\","
+			+ 			"\"DASHBOARD_ID\":2,"
+			+ 			"\"TENANT_ID\":1"
+			+ 		"}"
+			+ "],"
+			+ "\"EMS_DASHBOARD_LAST_ACCESS\": [{"
+			+ 		"\"DASHBOARD_ID\":1,"
+			+ 		"\"ACCESSED_BY\": 0,"
+			+ 		"\"TENANT_ID\": 1"
+			+ "}],"
+			+ "\"EMS_DASHBOARD_SET\": [{"
+			+ 		"\"DASHBOARD_SET_ID\": 12, "
+			+ 		"\"TENANT_ID\":1, "
+			+ 		"\"SUB_DASHBOARD_ID\":1,"
+			+ 		"\"POSITION\": 0"
+			+ "}],"
+			+ "\"EMS_DASHBOARD_TILE\": [{"
+			+ 		"\"TILE_ID\": 12, "
+			+ 		"\"DASHBOARD_ID\":1,"
+			+ 		"\"OWNER\":\"emcsadmin\","
+			+ 		"\"TITLE\":\"tile1 title\","
+			+ 		"\"HEIGHT\":2,"
+			+ 		"\"WIDTH\":6,"
+			+ 		"\"IS_MAXIMIZED\":1,"
+			+ 		"\"TENANT_ID\":1,"
+			+ 		"\"POSITION\": 0"
+			+ "}],"
+			+ "\"EMS_DASHBOARD_TILE_PARAMS\": [{"
+			+ 		"\"TILE_ID\":12,"
+			+ 		"\"PARAM_NAME\":\"Test name\","
+			+ 		"\"TENANT_ID\":1,"
+			+ 		"\"IS_SYSTEM\":1,"
+			+ 		"\"PARAM_TYPE\":1,"
+			+ 		"\"PARAM_VALUE_STR\":\"test value\"}],"
+			+ "\"EMS_DASHBOARD_USER_OPTIONS\": [{"
+			+ 		"\"USER_NAME\":\"emcsadmin\","
+			+ 		"\"TENANT_ID\":1,"
+			+ 		"\"DASHBOARD_ID\":1,"
+			+ 		"\"AUTO_REFRESH_INTERVAL\":1,"
+			+ 		"\"IS_FAVORITE\":1,"
+			+ 		"\"EXTENDED_OPTIONS\":\"options1\"}],"
+			+ "\"EMS_PREFERENCE\": [{"
+			+ 		"\"USER_NAME\":\"emcsadmin\","
+			+ 		"\"PREF_KEY\":\"Dashboards.showWelcomeDialog\","
+			+ 		"\"PREF_VALUE\":\"false\","
+			+ 		"\"TENANT_ID\":1}]"
+			+ "}";
+	// @formatter:on
+
+	@Test
+	public void testRetrieveRowsEntityFromJsonForSingleInstance() throws IOException
+	{
+		DashboardRowsComparator drc = new DashboardRowsComparator();
+		TableRowsEntity tre = drc.retrieveRowsEntityFromJsonForSingleInstance(JSON_RESPONSE_DATA_TABLE);
+		Assert.assertNotNull(tre);
+		Assert.assertEquals(tre.getEMS_DASHBOARD().get(0).getNAME(), DASHBOARD1_NAME);
+		Assert.assertEquals(tre.getEMS_DASHBOARD_FAVORITE().size(), 2);
+		Assert.assertEquals(tre.getEMS_DASHBOARD_FAVORITE().get(0).getDASHBOARD_ID().longValue(), 1);
+		Assert.assertEquals(tre.getEMS_DASHBOARD_FAVORITE().get(1).getDASHBOARD_ID().longValue(), 2);
+		Assert.assertEquals(tre.getEMS_DASHBOARD_LAST_ACCESS().size(), 1);
+		Assert.assertEquals(tre.getEMS_DASHBOARD_LAST_ACCESS().get(0).getDASHBOARD_ID().longValue(), 1);
+		Assert.assertEquals(tre.getEMS_DASHBOARD_SET().size(), 1);
+		Assert.assertEquals(tre.getEMS_DASHBOARD_SET().get(0).getDASHBOARD_SET_ID().longValue(), 12);
+		Assert.assertEquals(tre.getEMS_DASHBOARD_TILE().size(), 1);
+		Assert.assertEquals(tre.getEMS_DASHBOARD_TILE().get(0).getTILE_ID().longValue(), 12);
+		Assert.assertEquals(tre.getEMS_DASHBOARD_TILE().get(0).getHEIGHT().intValue(), 2);
+		Assert.assertEquals(tre.getEMS_DASHBOARD_TILE_PARAMS().size(), 1);
+		Assert.assertEquals(tre.getEMS_DASHBOARD_TILE_PARAMS().get(0).getTILE_ID().longValue(), 12);
+		Assert.assertEquals(tre.getEMS_DASHBOARD_USER_OPTIONS().size(), 1);
+		Assert.assertEquals(tre.getEMS_DASHBOARD_USER_OPTIONS().get(0).getIS_FAVORITE().intValue(), 1);
+		Assert.assertEquals(tre.getEMS_PREFERENCE().size(), 1);
+		Assert.assertEquals(tre.getEMS_PREFERENCE().get(0).getPREF_VALUE(), "false");
+	}
+}
