@@ -882,17 +882,17 @@ define(['knockout',
             };
 
             self.dashboardOptsMenuItems = [
-//                {
-//                    "label": getNlsString('DBS_BUILDER_BTN_ADD'),
-//                    "url": "#",
-//                    "id":"emcpdf_dsbopts_add",
-//                    "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
-//                    "icon":"dbd-toolbar-icon-add-widget",
-//                    "title": "",//getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
-//                    "disabled": self.editDisabled() === true,
-//                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
-//                    "endOfGroup": false
-//                },
+                {
+                    "label": getNlsString('DBS_BUILDER_BTN_ADD'),
+                    "url": "#",
+                    "id":"emcpdf_dsbopts_add",
+                    "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
+                    "icon":"dbd-toolbar-icon-add-widget",
+                    "title": "",//getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
+                    "disabled": self.editDisabled() === true,
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
+                    "endOfGroup": false
+                },
                 {
                     "label": getNlsString('COMMON_BTN_EDIT'),
                     "url": "#",
