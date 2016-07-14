@@ -144,38 +144,38 @@ public class RegistrationEntity implements Serializable
 		try {
 			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_ADMIN_LINKS, new ICacheFetchFactory() {
-						@Override
-						public Object fetchCachable(Object key) throws Exception
-						{
-							List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
-							UserContext.getCurrentUser());
-							if (!PrivilegeChecker.isAdminUser(userRoles)) {
-								return null;
-							}
+				@Override
+				public Object fetchCachable(Object key) throws Exception
+				{
+					List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
+									UserContext.getCurrentUser());
+					if (!PrivilegeChecker.isAdminUser(userRoles)) {
+						return null;
+					}
 
-							List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
-							List<LinkEntity> filteredAdminLinks = filterAdminLinksByUserRoles(registeredAdminLinks, userRoles);
-							// Try to find Administration Console link
-							LinkEntity adminConsoleLink = null;
-							for (LinkEntity le : filteredAdminLinks) {
-								if (ADMIN_CONSOLE_UI_SERVICENAME.equals(le.getServiceName())) {
-									adminConsoleLink = le;
-									filteredAdminLinks.remove(le);
-									break;
-								}
-							}
-
-							List<LinkEntity> sortedAdminLinks = new ArrayList<LinkEntity>();
-							// The Administration Console link should be always shown at the top
-							if (adminConsoleLink != null) {
-								sortedAdminLinks.add(adminConsoleLink);
-							}
-							// The others should be sorted in alphabetical order
-							sortedAdminLinks.addAll(sortServiceLinks(filteredAdminLinks));
-
-							return sortedAdminLinks;
+					List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
+					List<LinkEntity> filteredAdminLinks = filterAdminLinksByUserRoles(registeredAdminLinks, userRoles);
+					// Try to find Administration Console link
+					LinkEntity adminConsoleLink = null;
+					for (LinkEntity le : filteredAdminLinks) {
+						if (ADMIN_CONSOLE_UI_SERVICENAME.equals(le.getServiceName())) {
+							adminConsoleLink = le;
+							filteredAdminLinks.remove(le);
+							break;
 						}
-					});
+					}
+
+					List<LinkEntity> sortedAdminLinks = new ArrayList<LinkEntity>();
+					// The Administration Console link should be always shown at the top
+					if (adminConsoleLink != null) {
+						sortedAdminLinks.add(adminConsoleLink);
+					}
+					// The others should be sorted in alphabetical order
+					sortedAdminLinks.addAll(sortServiceLinks(filteredAdminLinks));
+
+					return sortedAdminLinks;
+				}
+			});
 		}
 		catch (Exception e) {
 			logger.error(e);
@@ -258,7 +258,7 @@ public class RegistrationEntity implements Serializable
 					le = replaceWithVanityUrl(le, tenantName, SECURITY_ANALYTICS_SERVICENAME);
 					list.add(le);
 				}
-                                else if (ORCHESTRATION_SERVICENAME.equals(app)) {
+				else if (ORCHESTRATION_SERVICENAME.equals(app)) {
 					// Orchestration has no UI service, and its landing page will be
 					// the Dashboard Home page with the Orchestration filter set.
 					// So the service name here will be set to Dashboard-UI for now
@@ -301,12 +301,12 @@ public class RegistrationEntity implements Serializable
 		try {
 			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS, new ICacheFetchFactory() {
-						@Override
-						public Object fetchCachable(Object key) throws Exception
-						{
-							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_HOME_LINK));
-						}
-					});
+				@Override
+				public Object fetchCachable(Object key) throws Exception
+				{
+					return sortServiceLinks(lookupLinksWithRelPrefix(NAME_HOME_LINK));
+				}
+			});
 		}
 		catch (Exception e) {
 			logger.error(e);
@@ -388,12 +388,12 @@ public class RegistrationEntity implements Serializable
 		try {
 			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_VISUAL_ANALYZER, new ICacheFetchFactory() {
-						@Override
-						public Object fetchCachable(Object key) throws Exception
-						{
-							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
-						}
-					});
+				@Override
+				public Object fetchCachable(Object key) throws Exception
+				{
+					return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
+				}
+			});
 		}
 		catch (Exception e) {
 			logger.error(e);
@@ -443,7 +443,8 @@ public class RegistrationEntity implements Serializable
 						&& roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_SECURITY)) {
 					resultLinks.add(le);
 				}
-				else if (le.getServiceName().equals(EVENTUI_SERVICENAME) || le.getServiceName().equals(TMUI_SERVICENAME)) {
+				else if (le.getServiceName().equals(EVENTUI_SERVICENAME) || le.getServiceName().equals(TMUI_SERVICENAME)
+						|| le.getServiceName().equals(ADMIN_CONSOLE_UI_SERVICENAME)) {
 					resultLinks.add(le);
 				}
 			}
@@ -523,7 +524,7 @@ public class RegistrationEntity implements Serializable
 			else if (SECURITY_ANALYTICS_OPC_APPNAME.equals(app)) {
 				appSet.add(SECURITY_ANALYTICS_SERVICENAME);
 			}
-                        //TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
+			//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
 			else if (ORCHESTRATION_OPC_APPNAME.equals(app)) {
 				appSet.add(ORCHESTRATION_SERVICENAME);
 			}
