@@ -949,7 +949,7 @@ define(['knockout',
                         self.userExtendedOptions = data["extendedOptions"] ? JSON.parse(data["extendedOptions"]) : {};
                         if(!self.userExtendedOptions.tsel) {
                             self.userTsel = false;
-                            self.userExtendedOptions.tsel = {quickPick: "allEntities", entityContext: ""};
+                            self.userExtendedOptions.tsel = {quickPick: "host", entityContext: ""};
                         }else {
                             self.userTsel= true;
                         }
@@ -959,13 +959,19 @@ define(['knockout',
                         }else {
                             self.userTimeSel = true;
                         }
+                        if(!self.userExtendedOptions.autoRefresh) {
+                            self.userAutoRefresh = false;
+                            self.userExtendedOptions.autoRefresh = {defaultValue: 300000};
+                        }else {
+                            self.userAutoRefresh = true;
+                        }
                     },
                     function (jqXHR, textStatus, errorThrown) {
                         if(jqXHR.status === 404){
                             self.userTsel = false;
                             self.userTimeSel = false;
                             self.userExtendedOptions = {};
-                            self.userExtendedOptions.tsel = {quickPick: "allEntities", entityContext: ""};
+                            self.userExtendedOptions.tsel = {quickPick: "host", entityContext: ""};
                             self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: "", end: ""};
                         }
                     });
@@ -973,6 +979,7 @@ define(['knockout',
             
             self.userTsel = false;
             self.userTimeSel = false;
+            self.userAutoRefresh = false;
             self.initUserFilterOptions();
             self.dashboardExtendedOptions = self.dashboard.extendedOptions ? JSON.parse(self.dashboard.extendedOptions()) : null;
 
@@ -986,9 +993,9 @@ define(['knockout',
                 }
                 
                 require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
-                    var compressedTargets = TargetSelectorUtils.compress(targets);
+//                    var compressedTargets = TargetSelectorUtils.compress(targets);
                     self.toolbarModel.extendedOptions.tsel.quickPick = "more"; //to do: set quick pick value to persist. self.getSelectedQuickPicker();
-                    self.toolbarModel.extendedOptions.tsel.entityContext = compressedTargets;
+                    self.toolbarModel.extendedOptions.tsel.entityContext = targets;
                     self.saveUserFilterOptions();
                 });
                 
@@ -1010,12 +1017,12 @@ define(['knockout',
             
             self.quickPickers = ko.observable(
                     [
-                    {
-                         "title": getNlsString("DBS_BUILDER_ALL_ENTITIES"),
-                         "type": "byTargetType",
-                         "value": ["allEntities"],
-                         "selected": true
-                    },
+//                    {
+//                         "title": getNlsString("DBS_BUILDER_ALL_ENTITIES"),
+//                         "type": "byTargetType",
+//                         "value": ["allEntities"],
+//                         "selected": false
+//                    },
                     {
                         "title" : getNlsString("DSB_BUILDER_EDIT_ALL_HOSTS"),
                         "type" : "byTargetType",
@@ -1088,12 +1095,12 @@ define(['knockout',
             }
             
             self.returnFromTsel = function(targets) {
-//                if(self.whichTselLauncher() === 0) {
                     self.returnFromPageTsel(targets);
-//                }else if(self.whichTselLauncher() === 1 || self.whichTselLauncher() === 2) {
-                   $b.getRightPanelModel().returnFromRightDrawerTsel(targets);
-                   self.whichTselLauncher(0);
-//                }
+                    var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
+                    if(rightPanelModel.dashboardSharing() !== "shared") {
+                        rightPanelModel.defaultEntityContext(targets);
+                        rightPanelModel.extendedOptions.tsel.entityContext = targets;
+                    }
             }
             
             var compressedTargets;
@@ -1107,15 +1114,17 @@ define(['knockout',
             }else if(self.dashboardExtendedOptions && self.dashboardExtendedOptions.tsel) {
                 self.setQuickPickerSelected(self.dashboardExtendedOptions.tsel.defaultValue);
                 compressedTargets = self.dashboardExtendedOptions.tsel.entityContext;
+                self.userExtendedOptions.tsel = {};
+//                self.userExtendedOptions.tsel.entityContext = compressedTargets;
             }
-            
-            require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
-                var targets = "";
-                if(compressedTargets) {
-                    targets = TargetSelectorUtils.decompress(compressedTargets);
-                }
-                self.targets(targets);
-                });
+            self.targets(compressedTargets);
+//            require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
+//                var targets = "";
+//                if(compressedTargets) {
+//                    targets = TargetSelectorUtils.decompress(compressedTargets);
+//                }
+//                self.targets(targets);
+//                });
             
             var timeSelectorChangelistener = ko.computed(function(){
                 return {
@@ -1147,6 +1156,7 @@ define(['knockout',
                     initEnd = new Date(parseInt(self.dashboardExtendedOptions.timeSel.end));
                     var tp = (self.dashboardExtendedOptions.timeSel.defaultValue === "custom1") ? "custom" : self.dashboardExtendedOptions.timeSel.defaultValue;
                     self.timePeriod(Builder.getTimePeriodString(tp));
+                    self.userExtendedOptions.timeSel = {};
                 }else {
                     initStart = new Date(current - 14*24*60*60*1000);
                     initEnd = current;
@@ -1166,7 +1176,6 @@ define(['knockout',
                 hideMainLabel: true,
                 changeLabel: self.changeLabel,
                 callbackAfterApply: function(start, end, tp) {
-//                    if(self.whichTimeSelLauncher() === 0) {
                         self.timePeriod(tp);
                         self.timeSelectorModel.viewStart(start);
                         self.timeSelectorModel.viewEnd(end);
@@ -1179,8 +1188,7 @@ define(['knockout',
                         self.toolbarModel.extendedOptions.timeSel.start = start.getTime();
                         self.toolbarModel.extendedOptions.timeSel.end = end.getTime();
                         self.saveUserFilterOptions();
-//                    }else if(self.whichTimeSelLauncher() === 1) {
-                        //change default time range value option text in right drawer
+                        
                         var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
                         if(rightPanelModel.dashboardSharing() !== "shared") {
                             rightPanelModel.defaultTimeRangeValue([Builder.getTimePeriodValue(tp)]);

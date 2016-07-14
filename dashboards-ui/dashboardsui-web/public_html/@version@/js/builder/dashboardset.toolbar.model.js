@@ -39,7 +39,15 @@ define(['knockout',
             self.hasUserOptionInDB = false;
             self.noDashboardHome=ko.observable(true);
             self.extendedOptions = {};
+            self.dashboardExtendedOptions = {};
             self.autoRefreshInterval = ko.observable(DEFAULT_AUTO_REFRESH_INTERVAL);
+            if(dashboardInst.extendedOptions) {
+                var dsbExtendedOptions = ko.unwrap(dashboardInst.extendedOptions);
+                self.dashboardExtendedOptions = JSON.parse(dsbExtendedOptions);
+                if(self.dashboardExtendedOptions.autoRefresh) {
+                    self.autoRefreshInterval(parseInt(self.dashboardExtendedOptions.autoRefresh.defaultValue));
+                }
+            }                    
             
             self.dashboardsetName =ko.observable(ko.unwrap(dashboardInst.name()));
             
@@ -392,8 +400,12 @@ define(['knockout',
                                 self.extendedOptions = JSON.parse(resp.extendedOptions);
                             };            
                             self.autoRefreshInterval(parseInt(resp.autoRefreshInterval));
-                            if( isNaN(self.autoRefreshInterval())){
-                                self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
+                            if( isNaN(self.autoRefreshInterval())){//                                
+                                if(self.dashboardExtendedOptions.autorefresh) {
+                                    self.autoRefreshInterval(parseInt(self.dashboardExtendedOptions.autorefresh.defaultValue));
+                                }else {
+                                   self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL); 
+                                }
                             }
                             self.hasUserOptionInDB = true;
                         }

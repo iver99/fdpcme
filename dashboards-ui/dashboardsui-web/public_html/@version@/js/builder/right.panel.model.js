@@ -169,7 +169,7 @@ define(['knockout',
                 //reset filter settings in right drawer when selected dashboard is changed
                 var dashboard = tilesViewModel.dashboard;
                 if(!dashboard.extendedOptions) {
-                    dashboard.extendedOptions = ko.observable("{\"tsel\": {\"entitySupport\": \"byCriteria\", \"defaultValue\": \"allEntities\", \"entityContext\": \"\"}, \"timeSel\": {\"defaultValue\": \"last14days\", \"start\": 0, \"end\": 0}}");
+                    dashboard.extendedOptions = ko.observable("{\"tsel\": {\"entitySupport\": \"byCriteria\", \"defaultValue\": \"host\", \"entityContext\": \"\"}, \"timeSel\": {\"defaultValue\": \"last14days\", \"start\": 0, \"end\": 0}}");
                 }
                 self.dashboard = dashboard;
                 var extendedOptions = JSON.parse(dashboard.extendedOptions());
@@ -179,7 +179,7 @@ define(['knockout',
                 //1. reset tsel in right drawer
                 self.enableEntityFilter((dashboard.enableEntityFilter() === 'TRUE')?'ON':'OFF');
                 
-                self.defaultEntityValue(tsel.defaultValue?tsel.defaultValue:"allEntities");
+                self.defaultEntityValue(tsel.defaultValue?tsel.defaultValue:"host");
                 self.initDefaultEntityValueForMore && self.initDefaultEntityValueForMore(tsel.entitySupport);
                 
                 self.entitySupport(tsel.entitySupport?(tsel.entitySupport==="byCriteria"?true:false):true);
@@ -798,7 +798,7 @@ define(['knockout',
 
             var defaultSettings = {
                     tsel:
-                        {entitySupport: "byCriteria", defaultValue: "allEntities", entityContext: ""},
+                        {entitySupport: "byCriteria", defaultValue: "host", entityContext: ""},
                     timeSel:
                         {defaultValue: "last14days", start: "", end: ""},
                     autoRefresh:
@@ -822,16 +822,12 @@ define(['knockout',
             }
 
             self.defaultEntityValue = ko.observable(self.extendedOptions.tsel.defaultValue);
-            self.defaultMultiEntityValue = ko.observable(["allEntities"]);
+            self.defaultMultiEntityValue = ko.observable(["host"]);
             self.defaultSingleEntityValue = ko.observable(["anEntity2"]);
 
             self.defaultEntityContext = ko.observable(self.extendedOptions.tsel.entityContext);
             self.defaultSingleEntityContext = ko.observable();
             self.defaultMultiEntityContext = ko.observable();
-            
-            self.defaultEntityValueText = ko.computed(function() {
-                return "default entity value";
-            });
             
             //set defualt entity value and entity context in "byCriteria"/"single" mode
             //handle more on how to show when the default entity value is "more*" or z"anEntity*
@@ -858,7 +854,7 @@ define(['knockout',
                     }
                 }
             };
-                self.initDefaultEntityValueForMore(self.entitySupport()?"byCriteria":"single");
+//                self.initDefaultEntityValueForMore(self.entitySupport()?"byCriteria":"single");
 
             //set default time range value
             //handlehow to show when the value is "custom*"
@@ -893,6 +889,7 @@ define(['knockout',
             self.entitySupport.subscribe(function(val) {
                 val = val?"byCriteria":"single";
                 self.extendedOptions.tsel.entitySupport = val;
+                $b.getDashboardTilesViewModel().selectionMode(val);
                 if(val === "byCriteria") {
                     self.extendedOptions.tsel.defaultValue = self.defaultMultiEntityValue()[0];
                     self.extendedOptions.tsel.entityContext = self.defaultMultiEntityContext();
@@ -973,14 +970,36 @@ define(['knockout',
 
                 self.extendedOptions.tsel.defaultValue = self.defaultSingleEntityValue()[0];
             }
+            
+            self.defaultEntityValueText = ko.observable("All Entities");
+            self.labelInited = false;
+            self.defaultEntityValueChanged = ko.computed(function() {
+                if(!self.dashboard.sharePublic() || !self.labelInited) {                
+                    var val = self.defaultEntityContext();
 
-            self.defaultEntityContext.subscribe(function(val) {
-                require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
-                    var compressedTargets = TargetSelectorUtils.compress(val);
-                    self.extendedOptions.tsel.entityContext = compressedTargets;
-                });
+                    if(val === "") {
+                        self.defaultEntityValueText("All Entities");
+                        return "All Entities";
+                    }
+
+                    var tselId = "tsel_"+self.dashboard.id();
+                    var label;
+                    self.labelIntervalId = setInterval(function() {
+                        if(self.labelInited) {
+                            clearInterval(self.labelIntervalId);
+                        }
+                       if($("#"+tselId).children().get(0)) {
+                            label =  ko.contextFor($('#' + tselId).children().get(0)).$component.getDropdownLabelForContext(val);
+                            self.labelInited = true;
+                        }else {
+                            label = "All Entities";
+                        }
+                        self.defaultEntityValueText(label);
+                        return label;
+                    }, 500);
+                }
             });
-
+                        
             self.launchTselFromRightPanel = function() {
                 require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
                         self.tilesViewModel.whichTselLauncher(1);

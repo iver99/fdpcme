@@ -61,10 +61,16 @@ define(['knockout',
 
             self.hasUserOptionInDB = ko.observable(false);
             self.extendedOptions = self.tilesViewModel.userExtendedOptions;
-            if(dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)){
+            if(self.isUnderSet && dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)){
                 self.autoRefreshInterval = dashboardSetOptions.autoRefreshInterval;
             }else {
-                self.autoRefreshInterval = ko.observable(DEFAULT_AUTO_REFRESH_INTERVAL);
+                if(self.tilesViewModel.userAutoRefresh && self.extendedOptions && self.extendedOptions.autoRefresh) {
+                    self.autoRefreshInterval = ko.observable(parseInt(self.extendedOptions.autoRefresh.defaultValue));
+                }else if(self.tilesViewModel.dashboardExtendedOptions && self.tilesViewModel.dashboardExtendedOptions.autoRefresh) {
+                    self.autoRefreshInterval = ko.observable(parseInt(self.tilesViewModel.dashboardExtendedOptions.autoRefresh.defaultValue));
+                }else {
+                    self.autoRefreshInterval = ko.observable(DEFAULT_AUTO_REFRESH_INTERVAL);
+                }
             }
             
             if (window.DEV_MODE) { // for dev mode debug only
@@ -151,9 +157,11 @@ define(['knockout',
                     function (data) {
                         //sucessfully get options
                         self.hasUserOptionInDB(true);
-                        self.autoRefreshInterval(data["autoRefreshInterval"]);
+//                        self.autoRefreshInterval(data["autoRefreshInterval"]);
                         //required to init interverl
-                        self.setAutoRefreshInterval(data["autoRefreshInterval"]);
+//                        self.setAutoRefreshInterval(data["autoRefreshInterval"]);
+                        self.setAutoRefreshInterval(self.autoRefreshInterval());
+
                     },
                     function (jqXHR, textStatus, errorThrown) {
                         if(jqXHR.status === 404){
