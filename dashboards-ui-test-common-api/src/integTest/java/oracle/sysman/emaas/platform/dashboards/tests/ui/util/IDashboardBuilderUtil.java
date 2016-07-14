@@ -70,8 +70,6 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 
 	public void refreshDashboardSet(WebDriver driver, String refreshSettings);
 
-	public void removeDashboardInSet(WebDriver driver, String dashboardName);
-
 	public void removeWidget(WebDriver driver, String widgetName) throws Exception;
 
 	public void removeWidget(WebDriver driver, String widgetName, int index) throws Exception;

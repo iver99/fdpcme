@@ -190,12 +190,6 @@ public class DashboardBuilderUtil
 		dbu.refreshDashboardSet(driver, refreshSettings);
 	}
 
-	public static void removeDashboardInSet(WebDriver driver, String dashboardName)
-	{
-		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
-		dbu.removeDashboardInSet(driver, dashboardName);
-	}
-
 	public static void removeWidget(WebDriver driver, String widgetName) throws Exception
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
@@ -208,7 +202,7 @@ public class DashboardBuilderUtil
 		dbu.removeWidget(driver, widgetName, index);
 	}
 
-	public void removeDashboardFromSet(WebDriver driver, String dashboardName) throws Exception
+	public static void removeDashboardFromSet(WebDriver driver, String dashboardName) throws Exception
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		dbu.removeDashboardFromSet(driver, dashboardName);
