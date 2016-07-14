@@ -708,51 +708,6 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	}
 
 	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#removeDashboardInSet(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
-	 */
-	@Override
-	public void removeDashboardInSet(WebDriver driver, String dashboardName)
-	{
-		driver.getLogger().info("removeDashboardInSet started for name=\"" + dashboardName + "\"");
-		Validator.notEmptyString("dashboardName", dashboardName);
-
-		WebElement dashboardSetContainer = driver.getWebDriver()
-				.findElement(By.cssSelector(DashBoardPageId.DashboardSetNavsContainerCSS));
-		if (dashboardSetContainer == null) {
-			throw new NoSuchElementException("removeDashboardInSet: the dashboard navigator container is not found");
-		}
-
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOf(dashboardSetContainer));
-		driver.takeScreenShot();
-
-		boolean hasFound = false;
-		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DashboardSetNavsCSS));
-		if (navs == null || navs.size() == 0) {
-			throw new NoSuchElementException("removeDashboardInSet: the dashboard navigators is not found");
-		}
-
-		for (WebElement nav : navs) {
-			if (nav.getAttribute("data-tabs-name").trim().equals(dashboardName)) {
-				hasFound = true;
-				nav.findElement(By.cssSelector(DashBoardPageId.DashboardSetNavRemoveBtnCSS)).click();
-				driver.getLogger()
-						.info("removeDashboardInSet has found and removed the dashboard named with \"" + dashboardName + "\"");
-				driver.takeScreenShot();
-				break;
-			}
-		}
-
-		if (hasFound == false) {
-			throw new NoSuchElementException(
-					"removeDashboardInSet can not find the dashboard named with \"" + dashboardName + "\"");
-		}
-
-		driver.takeScreenShot();
-		driver.getLogger().info("removeDashboardInSet completed");
-	}
-
-	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#removeWidget(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override

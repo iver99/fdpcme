@@ -32,8 +32,8 @@ define(['knockout',
                     if(v_siblings && 1 === v_siblings.length && v_siblings.hasClass("dbd-right-panel-title")){
                         h = 0;
                     }
-                    if($(".builder-dbd-select-tip").outerHeight()>0){
-                        _topHeight = _topHeight-2-$(".builder-dbd-select-tip").height();
+                    if($(".builder-dbd-select-tip:visible").outerHeight()>0){
+                        _topHeight = _topHeight-2-$(".builder-dbd-select-tip:visible").height();
                     }
                     if (v_siblings && v_siblings.length > 0) {
                         for (var i = 0; i < v_siblings.length; i++) {
