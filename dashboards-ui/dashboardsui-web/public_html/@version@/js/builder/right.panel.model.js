@@ -663,7 +663,9 @@ define(['knockout',
             });
             dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } });
             dsbSaveDelay.subscribe(function(){
+                if(!self.$b.dashboard.systemDashboard || !$b.dashboard.systemDashboard()){
                     self.editDashboardDialogModel() && self.editDashboardDialogModel().save();
+                }
             });
 
             self.enableEntityFilter = ko.observable(self.dashboard.enableEntityFilter && self.dashboard.enableEntityFilter() === 'TRUE');
