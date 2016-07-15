@@ -361,6 +361,9 @@ define({
       "SERVICE_NAME_APM":"Application Performance Monitoring",
       "SERVICE_NAME_ITAnalytics":"IT Analytics",
       "SERVICE_NAME_LogAnalytics":"Log Analytics",
+      "SERVICE_NAME_Monitoring":"Infrastructure Monitoring",
+      "SERVICE_NAME_SecurityAnalytics":"Security Monitoring and Analytics",
+      "SERVICE_NAME_Orchestration":"Orchestration",
 
       // common messages for error page are put here: add __PLUS_SERVICE to support url pattern '&service=APM|ITAnalytics|LogAnalytics'
       "COMMON_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG__PLUS_SERVICE":"You currently don't have access to this page because you're not subscribed to {0}.",
