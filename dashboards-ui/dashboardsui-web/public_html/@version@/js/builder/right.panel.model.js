@@ -831,7 +831,7 @@ define(['knockout',
             self.entitySupport.subscribe(function(val) {
                 val = val?"byCriteria":"single";
                 self.extendedOptions.tsel.entitySupport = val;
-                $b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel().selectionMode(val);
+                window.selectedDashboardInst().tilesViewModel.selectionMode(val);
 
             });
 
