@@ -83,9 +83,9 @@ define([
                         setTimeout(function () {
                             var $target = $('#dashboard-' + dashboardsetToolBarModel.selectedDashboardItem().dashboardId);
                             homeScrollbarReset($target);
+                            self.loadRightPanelModel(null, null, $b);
                         }, 2000);
-                            var $b = new Builder.DashboardBuilder(dashboardsetToolBarModel.dashboardInst, $($("#dashboard-content-template").text()));
-                            self.loadRightPanelModel(null,null,$b);
+                        var $b = new Builder.DashboardBuilder(dashboardsetToolBarModel.dashboardInst, $($("#dashboard-content-template").text()));
                     } else {
                         resetContainerScroll();
                         self.loadDashboard(dashboardId);

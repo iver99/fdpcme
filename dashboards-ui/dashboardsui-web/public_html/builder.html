@@ -1063,7 +1063,7 @@
                                     <!--ko if: !dashboardEditDisabled() && dashboardsetToolBarModel.dashboardsetItems.length>0-->
                                         <span class="edit-setting-head" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_SELECTED_DSB')"></span>
                                         <span class="edit-setting-link edit-dsb-link" data-bind="text:$data.dashboardsetToolBarModel.selectedDashboardItem().name, click: switchEditPanelContent"></span>
-                                        <!--ko if: $data.dashboard.tiles && $data.dashboard.tiles().length>0-->
+                                        <!-- ko if:sortedTiles().length > 0 -->
                                             <span class="edit-setting-head">Widgets</span>
                                             <!--ko foreach:sortedTiles-->
                                                 <span class="edit-setting-link" data-bind="text:WIDGET_NAME"></span>

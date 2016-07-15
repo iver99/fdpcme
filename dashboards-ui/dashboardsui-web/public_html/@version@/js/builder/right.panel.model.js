@@ -65,8 +65,11 @@ define(['knockout',
             self.dashboard = $b.dashboard;
             self.tilesViewModel = tilesViewModel;
             self.toolBarModel = toolBarModel;
-            self.sortedTiles = ko.pureComputed(function(){
-                return self.dashboard.tiles() ? self.dashboard.tiles().sort(function (tileA, tileB) {
+            self.editDashboardDialogModel = ko.observable(null);
+            self.sortedTiles = ko.computed(function(){
+                //add for detecting dashboard tabs switching in set 
+                self.editDashboardDialogModel();
+                return self.dashboard.tiles && self.dashboard.tiles() ? self.dashboard.tiles().sort(function (tileA, tileB) {
                     return tileA.WIDGET_NAME() > tileB.WIDGET_NAME();
                 }):[];
             });
@@ -144,17 +147,15 @@ define(['knockout',
             self.completelyHidden = ko.observable(false);
             self.maximized = ko.observable(false);
 
-            self.editDashboardDialogModel = ko.observable(null);
-            
             self.loadToolBarModel = function(toolBarModel,_$b){
-                self.toolBarModel = toolBarModel;                  
+                self.toolBarModel = toolBarModel;     
+                self.dashboard = _$b.dashboard;
                 self.editDashboardDialogModel(new ed.EditDashboardDialogModel(_$b,toolBarModel));                 
                 if(toolBarModel) {
                     self.dashboardEditDisabled(toolBarModel.editDisabled()) ;
                 }else{
                     self.dashboardEditDisabled(true) ;
                 }
-                self.dashboard = _$b.dashboard;
             };
             
             self.loadToolBarModel(toolBarModel,self.$b);
@@ -928,6 +929,10 @@ define(['knockout',
 
             self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
             self.dashboardSharing.subscribe(function(val){
+                if(!self.toolBarModel) {
+                    // return if current selected tab is dashboard picker  
+                    return ;
+                }
                 if ("notShared" === val) {
                     queryDashboardSetsBySubId(self.dashboard.id(), function (resp) {
                         var currentUser = dfu.getUserName();
@@ -940,7 +945,7 @@ define(['knockout',
                             window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(setsSharedByOthers);
                             self.toolBarModel.openDashboardUnshareConfirmDialog(function(isShared){
                                 if(isShared){
-                                    self.dashboardSharing(true);
+                                    self.dashboardSharing("shared");
                                 }
                             });
                         }else{
