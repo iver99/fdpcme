@@ -551,16 +551,16 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
     public void showEntityFilter(WebDriver driver, boolean showEntityFilter) throws Exception
 	{
 		driver.getLogger().info("DashboardBuilderUtil.showEntityFilter started");
-		driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsMenuLocator);
+		driver.waitForElementPresent("css=" + DashBoardPageId_190.BuilderOptionsMenuLocator);
 		WaitUtil.waitForPageFullyLoaded(driver);
 		
 		OpenFiltersInRightPanel(driver);
 		
-		driver.getElement("css=" + DashBoardPageId.RightDrawerEditDBShowEntityFilterCSS);
+		driver.getElement("css=" + DashBoardPageId_190.RightDrawerEditDBShowEntityFilterCSS);
 		if(showEntityFilter) {
-			driver.check("css=" + DashBoardPageId.RightDrawerEditDBShowEntityFilterCSS);
+			driver.check("css=" + DashBoardPageId_190.RightDrawerEditDBShowEntityFilterCSS);
 		}else {
-			driver.uncheck("css=" + DashBoardPageId.RightDrawerEditDBShowEntityFilterCSS);
+			driver.uncheck("css=" + DashBoardPageId_190.RightDrawerEditDBShowEntityFilterCSS);
 		}
 		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.showEntityFilter finished!!");
@@ -571,16 +571,16 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	{
 		driver.getLogger().info("DashboardBuilderUtil.showTimeRangeFilter started");
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsMenuLocator);
+		driver.waitForElementPresent("css=" + DashBoardPageId_190.BuilderOptionsMenuLocator);
 		WaitUtil.waitForPageFullyLoaded(driver);
 		
 		OpenFiltersInRightPanel(driver);
 		
-		driver.getElement("css=" + DashBoardPageId.RightDrawerEditDBShowTimeRangeFilterCSS);
+		driver.getElement("css=" + DashBoardPageId_190.RightDrawerEditDBShowTimeRangeFilterCSS);
 		if(showTimeRangeFilter) {
-			driver.check("css=" + DashBoardPageId.RightDrawerEditDBShowTimeRangeFilterCSS);
+			driver.check("css=" + DashBoardPageId_190.RightDrawerEditDBShowTimeRangeFilterCSS);
 		}else {
-			driver.uncheck("css=" + DashBoardPageId.RightDrawerEditDBShowTimeRangeFilterCSS);
+			driver.uncheck("css=" + DashBoardPageId_190.RightDrawerEditDBShowTimeRangeFilterCSS);
 		}
 		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.showTimeRangeFilter finished");
@@ -591,21 +591,22 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		driver.getLogger().info("DashboardBuilderUtil.openFiltersInRightPanel start");
 		//click Options to open Options menu
 		WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
-		WebElement editOption = selectedDashboardEl.findElement(By.cssSelector(DashBoardPageId.BuilderOptionsMenuLocator));
+		WebElement editOption = selectedDashboardEl.findElement(By.cssSelector(DashBoardPageId_190.BuilderOptionsMenuLocator));
 		editOption.click();
 		driver.takeScreenShot();
 
 		//click Options->edit to open right panel
-		driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsEditLocatorCSS);
-		driver.click("css=" + DashBoardPageId.BuilderOptionsEditLocatorCSS);
+		driver.waitForElementPresent("css=" + DashBoardPageId_190.BuilderOptionsEditLocatorCSS);
+		driver.click("css=" + DashBoardPageId_190.BuilderOptionsEditLocatorCSS);
 		driver.takeScreenShot();
 				
 		//click Right panel->filters
-		driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerEditDBFilterCSS);
-		driver.click("css=" + DashBoardPageId.RightDrawerEditDBFilterCSS);
+		driver.waitForElementPresent("css=" + DashBoardPageId_190.RightDrawerEditDBFilterCSS);
+		driver.click("css=" + DashBoardPageId_190.RightDrawerEditDBFilterCSS);
 		driver.takeScreenShot();
 	}
 
+    @Override
     public void openWidget(WebDriver driver, String widgetName, int index) throws Exception
     {
         driver.getLogger().info("DashboardBuilderUtil.openWidget started for widgetName=" + widgetName + ", index=" + index);
@@ -1360,6 +1361,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
         return widget;
     }
 
+    @Override
      protected void hideRightDrawer(WebDriver driver) throws Exception
     {
         driver.waitForElementPresent("css=" + DashBoardPageId_190.RightDrawerCSS);
