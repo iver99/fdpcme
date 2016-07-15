@@ -994,19 +994,16 @@ define(['knockout',
                 
                 require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
 //                    var compressedTargets = TargetSelectorUtils.compress(targets);
-                    self.toolbarModel.extendedOptions.tsel.quickPick = "more"; //to do: set quick pick value to persist. self.getSelectedQuickPicker();
                     self.toolbarModel.extendedOptions.tsel.entityContext = targets;
                     self.saveUserFilterOptions();
                 });
                 
             };
             
-            self.whichTselLauncher = ko.observable(0); //0 for page, 1 for right drawer->more, 2 for right drawer->quick pickers
             self.selectionMode = ko.observable("byCriteria");            
             self.returnMode = ko.observable('criteria');
             self.dropdownInitialLabel = ko.observable(getNlsString("DBS_BUILDER_ALL_ENTITIES"));
             self.dropdownResultLabel = ko.observable(getNlsString("DBS_BUILDER_ENTITIES_SELECTED"));
-            self.showMoreQuickPick = ko.observable(true);
             
             self.getInputCriteria = ko.computed(function() {
                 if(self.targets && self.targets()) {
@@ -1014,85 +1011,6 @@ define(['knockout',
                 }
                 return '';
             });
-            
-            self.quickPickers = ko.observable(
-                    [
-//                    {
-//                         "title": getNlsString("DBS_BUILDER_ALL_ENTITIES"),
-//                         "type": "byTargetType",
-//                         "value": ["allEntities"],
-//                         "selected": false
-//                    },
-                    {
-                        "title" : getNlsString("DSB_BUILDER_EDIT_ALL_HOSTS"),
-                        "type" : "byTargetType",
-                        "value" : ["host"],
-                        "selected" : true
-                    }, {
-                        "title" : getNlsString("DSB_BUILDER_EDIT_ALL_LINUX"),
-//                        "resultLabel" : "Linux",
-                        "type" : "byTargetType",
-                        "value" : ["usr_host_linux"],
-                        "selected": false
-                    }, {
-                        "title" : getNlsString("DSB_BUILDER_EDIT_ALL_WINDOWS"),
-//                        "resultLabel" : "Windows",
-                        "type" : "byTargetType",
-                        "value" : ["usr_host_windows"],
-                        "selected": false
-                    }, {
-                        "title" : getNlsString("DSB_BUILDER_EDIT_ALL_DOCKER"),
-//                        "resultLabel" : "Docker",
-                        "type" : "byTargetType",
-                        "value" : ["oracle_vm_guest"],
-                        "selected": false
-                    }          
-            ]);
-                            
-            self.setAllQuickPickersUnselected = function() {
-                for(var i=0; i<self.quickPickers().length; i++) {
-                    self.quickPickers()[i].selected = false;
-                }
-            }
-            
-            self.setQuickPickerSelected = function(value) {
-                self.setAllQuickPickersUnselected();
-                for(var i=0; i<self.quickPickers().length; i++) {
-                    if((self.quickPickers()[i].value)[0] === value) {
-                        self.quickPickers()[i].selected = true;
-                    }
-                }
-            }
-            
-            self.getSelectedQuickPicker = function() {
-                var quickPicker = "more";
-                for(var i=0; i<self.quickPickers().length; i++) {
-                    if(self.quickPickers()[i].selected) {
-                        quickPicker = (self.quickPickers()[i].value)[0];
-                    }
-                }
-                return quickPicker;
-            }
-            
-            self.notifyQuickPickerChange = ko.observable(new Date());
-
-            self.getQuickPickers = ko.computed(function() {
-                self.notifyQuickPickerChange();
-                if(self.whichTselLauncher() === 0 || self.whichTselLauncher() === 2) {
-                    if(self.selectionMode() === "byCriteria") {                       
-                        return self.quickPickers();
-                    }
-                }
-                return [];
-            });
-            
-                        
-            self.setPageTsel = function() {
-                //recover position and modality for Tsel
-                var popupId = '#' + ko.contextFor($('#tsel_'+self.dashboard.id()).children().get(0)).$component.id;
-                $(popupId).ojPopup( "option", {"position": {at: 'left bottom', my: 'left top'}, "modality": "modeless"});
-                self.whichTselLauncher(0);
-            }
             
             self.returnFromTsel = function(targets) {
                     self.returnFromPageTsel(targets);
@@ -1107,12 +1025,10 @@ define(['knockout',
             //set initial targets selector options. priority: user extendedOptions > dashboard extendedOptions
             //1. set selectionMode: byCriteria/single. Default is "byCriteria"
             //selectionMode is set in right.panel.model.js
-            //2. set quickPicker and selected targets/entityContext
+            //2. set selected targets/entityContext
             if(self.userTsel && self.userExtendedOptions && self.userExtendedOptions.tsel) {
-                self.setQuickPickerSelected(self.userExtendedOptions.tsel.quickPick);
                 compressedTargets = self.userExtendedOptions.tsel.entityContext;
             }else if(self.dashboardExtendedOptions && self.dashboardExtendedOptions.tsel) {
-                self.setQuickPickerSelected(self.dashboardExtendedOptions.tsel.defaultValue);
                 compressedTargets = self.dashboardExtendedOptions.tsel.entityContext;
                 self.userExtendedOptions.tsel = {};
 //                self.userExtendedOptions.tsel.entityContext = compressedTargets;
@@ -1168,14 +1084,12 @@ define(['knockout',
             self.initEnd = ko.observable(initEnd);
             self.timeSelectorModel.viewStart(initStart);
             self.timeSelectorModel.viewEnd(initEnd);
-            self.changeLabel = ko.observable(true);
             self.datetimePickerParams = {
                 startDateTime: self.initStart,
                 endDateTime: self.initEnd,
                 timePeriod: self.timePeriod,
                 hideMainLabel: true,
                 callbackAfterApply: function(start, end, tp) {
-                        self.timePeriod(tp);
                         self.timeSelectorModel.viewStart(start);
                         self.timeSelectorModel.viewEnd(end);
                         if(tp === "Custom") {
@@ -1206,16 +1120,9 @@ define(['knockout',
                             rightPanelModel.extendedOptions.timeSel.end = end.getTime();
                             rightPanelModel.extendedOptions.timeSel.defaultValue = Builder.getTimePeriodValue(tp);
                             rightPanelModel.defaultValueChanged(new Date());
-
-                            //recover timeSel launcher to the one on the page
-                            self.whichTimeSelLauncher(0);
-                            self.changeLabel(true);
                         }
-//                    }
                 }
             };
-            
-            self.whichTimeSelLauncher = ko.observable(0); // 0 for page, 1 for right drawer
             
             self.saveUserFilterOptions = function() {
                 var userFilterOptions = {

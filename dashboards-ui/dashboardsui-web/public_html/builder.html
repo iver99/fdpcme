@@ -333,7 +333,7 @@
                             <!-- /ko -->
                             <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator no-print"></span>
                             <div class="df-targte-selector" data-bind="visible: dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE'">
-                                <emcta-target-selector data-bind="attr: {id: 'tsel_'+dashboard.id()}, click: setPageTsel, event: {mouseover: setPageTsel}"
+                                <emcta-target-selector data-bind="attr: {id: 'tsel_'+dashboard.id()}"
                                                        params="returnFunction: returnFromTsel,
                                                            config:{
                                                                selectionMode: selectionMode(),
@@ -342,8 +342,7 @@
                                                                ui: {
                                                                    showLaunchButton: true,
                                                                    dropdownInitialLabel: dropdownInitialLabel(),
-                                                                   dropdownResultLabel: dropdownResultLabel(),
-                                                                   showMoreQuickPick: showMoreQuickPick()
+                                                                   dropdownResultLabel: dropdownResultLabel()
                                                                }
                                                            }"></emcta-target-selector>
                             </div>
