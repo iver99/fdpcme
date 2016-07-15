@@ -230,16 +230,21 @@ public class CommonTest
 		catch (IOException e) {
 
 			System.out.println("an error occureed while getting details by url" + " ::" + url + "  " + e.toString());
+
+		}
+		finally {
+
 			try {
 				if (in != null) {
 					in.close();
 				}
+
 				if (inReader != null) {
 					inReader.close();
 				}
 			}
-			catch (IOException ioEx) {
-				//ignore
+			catch (IOException e) {
+				e.printStackTrace();
 			}
 
 		}
