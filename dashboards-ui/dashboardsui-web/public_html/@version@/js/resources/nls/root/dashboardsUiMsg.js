@@ -154,7 +154,7 @@ define({
       "DBS_BUILDER_EDIT_SHOW_ENTITY_FILTER": "Show Entity filter",
       "DBS_BUILDER_EDIT_TIME_FILTER": "Time Range filter",
       "DBS_BUILDER_EDIT_SHOW_TIME_FILTER": "Show Time Range filter",
-      "DBS_BUILDER_BTN_DELETE_TITLE": "Delete dashboard",
+      "DBS_BUILDER_BTN_DELETE_TITLE": "Delete Dashboard",
       "DBS_BUILDER_BTN_DELETE_SET_TITLE": "Delete Dashboard Set",
       "DBS_BUILDER_BTN_FAVORITES_ADD": "Add Favorite",
       "DBS_BUILDER_BTN_FAVORITES_REMOVE": "Remove Favorite",
