@@ -15,7 +15,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 /**
  * @author guochen
  */
-public class DashboardTileParamsRowEntity
+public class DashboardTileParamsRowEntity implements RowEntity
 {
 	@JsonProperty("TILE_ID")
 	private Long tileId;
@@ -277,5 +277,16 @@ public class DashboardTileParamsRowEntity
 	public void setTileId(Long tileId)
 	{
 		this.tileId = tileId;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return "DashboardTileParamsRowEntity [tileId=" + tileId + ", paramName=" + paramName + ", tenantId=" + tenantId
+				+ ", isSystem=" + isSystem + ", paramType=" + paramType + ", paramValueStr=" + paramValueStr + ", paramValueNum="
+				+ paramValueNum + ", paramValueTimestamp=" + paramValueTimestamp + "]";
 	}
 }

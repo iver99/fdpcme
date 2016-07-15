@@ -15,7 +15,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 /**
  * @author guochen
  */
-public class PreferenceRowEntity
+public class PreferenceRowEntity implements RowEntity
 {
 	@JsonProperty("USER_NAME")
 	private String userName;
@@ -161,5 +161,15 @@ public class PreferenceRowEntity
 	public void setUserName(String userName)
 	{
 		this.userName = userName;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return "PreferenceRowEntity [userName=" + userName + ", prefKey=" + prefKey + ", prefValue=" + prefValue + ", tenantId="
+				+ tenantId + "]";
 	}
 }

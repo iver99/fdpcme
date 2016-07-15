@@ -286,4 +286,16 @@ public class TableRowsEntity
 	{
 		this.emsPreference = emsPreference;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return "TableRowsEntity [\n\tEMS_DASHBOARD=" + emsDashboard + ", \n\tEMS_DASHBOARD_FAVORITE=" + emsDashboardFavorite
+				+ ", \n\tEMS_DASHBOARD_LAST_ACCESS=" + emsDashboardLastAccess + ", \n\tEMS_DASHBOARD_SET=" + emsDashboardSet
+				+ ", \n\tEMS_DASHBOARD_TILE=" + emsDashboardTile + ", \n\tEMS_DASHBOARD_TILE_PARAMS=" + emsDashboardTileParams
+				+ ", \n\tEMS_DASHBOARD_USER_OPTIONS=" + emsDashboardUserOptions + ", \n\tEMS_PREFERENCE=" + emsPreference + "]";
+	}
 }

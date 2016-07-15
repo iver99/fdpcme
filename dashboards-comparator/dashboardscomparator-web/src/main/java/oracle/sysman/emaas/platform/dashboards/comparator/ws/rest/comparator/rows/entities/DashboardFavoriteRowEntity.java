@@ -15,7 +15,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 /**
  * @author guochen
  */
-public class DashboardFavoriteRowEntity
+public class DashboardFavoriteRowEntity implements RowEntity
 {
 	@JsonProperty("USER_NAME")
 	private String userName;
@@ -161,5 +161,15 @@ public class DashboardFavoriteRowEntity
 	public void setUserName(String userName)
 	{
 		this.userName = userName;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return "DashboardFavoriteRowEntity [userName=" + userName + ", dashboardId=" + dashboardId + ", creationDate="
+				+ creationDate + ", tenantId=" + tenantId + "]";
 	}
 }

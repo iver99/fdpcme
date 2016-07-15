@@ -15,7 +15,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 /**
  * @author guochen
  */
-public class DashboardRowEntity
+public class DashboardRowEntity implements RowEntity
 {
 	@JsonProperty("DASHBOARD_ID")
 	private Long dashboardId;
@@ -600,5 +600,20 @@ public class DashboardRowEntity
 	public void setType(Long type)
 	{
 		this.type = type;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return "DashboardRowEntity [dashboardId=" + dashboardId + ", name=" + name + ", type=" + type + ", description="
+				+ description + ", creationDate=" + creationDate + ", lastModificationDate=" + lastModificationDate
+				+ ", lastModifiedBy=" + lastModifiedBy + ", owner=" + owner + ", isSystem=" + isSystem + ", applicationType="
+				+ applicationType + ", enableTimeRange=" + enableTimeRange + ", screenShot=" + screenShot + ", deleted=" + deleted
+				+ ", tenantId=" + tenantId + ", enableRefresh=" + enableRefresh + ", sharePublic=" + sharePublic
+				+ ", enableEntityFilter=" + enableEntityFilter + ", enableDescription=" + enableDescription + ", extendedOptions="
+				+ extendedOptions + "]";
 	}
 }

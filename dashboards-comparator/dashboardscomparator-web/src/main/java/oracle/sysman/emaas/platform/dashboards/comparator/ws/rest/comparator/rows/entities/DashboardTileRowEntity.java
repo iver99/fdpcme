@@ -15,7 +15,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 /**
  * @author guochen
  */
-public class DashboardTileRowEntity
+public class DashboardTileRowEntity implements RowEntity
 {
 	@JsonProperty("TILE_ID")
 	private Long tileId;
@@ -944,5 +944,23 @@ public class DashboardTileRowEntity
 	public void setWidth(Long width)
 	{
 		this.width = width;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return "DashboardTileRowEntity [tileId=" + tileId + ", dashboardId=" + dashboardId + ", creationDate=" + creationDate
+				+ ", lastModificationDate=" + lastModificationDate + ", lastModifiedBy=" + lastModifiedBy + ", owner=" + owner
+				+ ", title=" + title + ", height=" + height + ", width=" + width + ", isMaximized=" + isMaximized + ", position="
+				+ position + ", tenantId=" + tenantId + ", widgetUniqueId=" + widgetUniqueId + ", widgetName=" + widgetName
+				+ ", widgetDescription=" + widgetDescription + ", widgetGroupName=" + widgetGroupName + ", widgetIcon="
+				+ widgetIcon + ", widgetHistogram=" + widgetHistogram + ", widgetOwner=" + widgetOwner + ", widgetCreationTime="
+				+ widgetCreationTime + ", widgetSource=" + widgetSource + ", widgetKocName=" + widgetKocName + ", widgetViewmode="
+				+ widgetViewmode + ", widgetTemplate=" + widgetTemplate + ", providerName=" + providerName + ", providerVersion="
+				+ providerVersion + ", providerAssetRoot=" + providerAssetRoot + ", tileRow=" + tileRow + ", tileColumn="
+				+ tileColumn + ", type=" + type + ", widgetSupportTimeControl=" + widgetSupportTimeControl + "]";
 	}
 }

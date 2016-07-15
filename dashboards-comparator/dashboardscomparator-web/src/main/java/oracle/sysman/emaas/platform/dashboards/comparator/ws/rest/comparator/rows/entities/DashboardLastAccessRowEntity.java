@@ -15,7 +15,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 /**
  * @author guochen
  */
-public class DashboardLastAccessRowEntity
+public class DashboardLastAccessRowEntity implements RowEntity
 {
 	@JsonProperty("DASHBOARD_ID")
 	private Long dashboardId;
@@ -161,5 +161,15 @@ public class DashboardLastAccessRowEntity
 	public void setTenantId(Long tenantId)
 	{
 		this.tenantId = tenantId;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return "DashboardLastAccessRowEntity [dashboardId=" + dashboardId + ", accessedBy=" + accessedBy + ", accessDate="
+				+ accessDate + ", tenantId=" + tenantId + "]";
 	}
 }
