@@ -192,7 +192,7 @@ define({
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_YEAR": "Last year",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM": "Custom",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LATEST": "Latest",
-      "DBS_BUILDER_BTN_DELETE_TITLE": "Delete dashboard",
+      "DBS_BUILDER_BTN_DELETE_TITLE": "Delete Dashboard",
       "DBS_BUILDER_BTN_DELETE_SET_TITLE": "Delete Dashboard Set",
       "DBS_BUILDER_BTN_FAVORITES_ADD": "Add Favorite",
       "DBS_BUILDER_BTN_FAVORITES_REMOVE": "Remove Favorite",
