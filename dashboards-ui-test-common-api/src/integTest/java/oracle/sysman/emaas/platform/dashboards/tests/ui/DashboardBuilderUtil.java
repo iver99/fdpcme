@@ -325,6 +325,12 @@ public class DashboardBuilderUtil
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		return dbu.verifyWidget(driver, widgetName, index);
 	}
+	
+	 public static void setEntitySupport(WebDriver driver, String mode) throws Exception
+	 {
+		 IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		 dbu.setEntitySupport(driver, mode);
+	 }
 
 	public static boolean showEntityFilter(WebDriver driver, boolean showEntityFilter) throws Exception
 	{
