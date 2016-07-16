@@ -546,44 +546,74 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
     {
         openWidget(driver, widgetName, 0);
     }
+    
+    @Override
+    public void setEntitySupport(WebDriver driver, String mode) throws Exception
+    {
+    	driver.getLogger().info("DashboardBuilderUtil.setEntitySupport started, the param of mode is: " + mode);
+    	driver.waitForElementPresent("css=" + DashBoardPageId_190.BuilderOptionsMenuLocator);
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
+		OpenFiltersInRightPanel(driver);
+		
+		driver.getElement("css=" + DashBoardPageId_190.RightDrawerEditDBEntitySupportCSS);
+		if("MULTIPLE".equals(mode)) {
+			driver.check("css=" + DashBoardPageId_190.RightDrawerEditDBEntitySupportCSS);
+			driver.getLogger().info("DashboardBuilderUtil.setEntitySupport checked entity support");
+		}else {
+			driver.uncheck("css=" + DashBoardPageId_190.RightDrawerEditDBEntitySupportCSS);
+			driver.getLogger().info("DashboardBuilderUtil.setEntitySupport unchecked entity support");
+		}
+		driver.takeScreenShot();
+		driver.getLogger().info("DashboardBuilderUtil.setEntitySupport finished!!!!");
+    }
 
     @Override
-    public void showEntityFilter(WebDriver driver, boolean showEntityFilter) throws Exception
+    public boolean showEntityFilter(WebDriver driver, boolean showEntityFilter) throws Exception
 	{
-		driver.getLogger().info("DashboardBuilderUtil.showEntityFilter started");
+		driver.getLogger().info("DashboardBuilderUtil.showEntityFilter started, the param of showEntityFilter is: " + showEntityFilter);
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.BuilderOptionsMenuLocator);
 		WaitUtil.waitForPageFullyLoaded(driver);
 		
 		OpenFiltersInRightPanel(driver);
 		
-		driver.getElement("css=" + DashBoardPageId_190.RightDrawerEditDBShowEntityFilterCSS);
 		if(showEntityFilter) {
-			driver.check("css=" + DashBoardPageId_190.RightDrawerEditDBShowEntityFilterCSS);
+			driver.waitForElementPresent("css="+DashBoardPageId_190.RightDrawerEditDBEnableEntityFilterCSS);
+			driver.click("css=" + DashBoardPageId_190.RightDrawerEditDBEnableEntityFilterCSS);
+			driver.takeScreenShot();
+			driver.getLogger().info("DashboardBuilderUtil show entity filter finished!!!");
+			return true;
 		}else {
-			driver.uncheck("css=" + DashBoardPageId_190.RightDrawerEditDBShowEntityFilterCSS);
+			driver.waitForElementPresent("css="+DashBoardPageId_190.RightDrawerEditDBDisableEntityFilterCSS);
+			driver.click("css=" + DashBoardPageId_190.RightDrawerEditDBDisableEntityFilterCSS);
+			driver.takeScreenShot();
+			driver.getLogger().info("DashboardBuilderUtil hide entity filter finished!!!");
+			return false;
 		}
-		driver.takeScreenShot();
-		driver.getLogger().info("DashboardBuilderUtil.showEntityFilter finished!!");
 	}
 	
     @Override
-	public void showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) throws Exception
+	public boolean showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) throws Exception
 	{
-		driver.getLogger().info("DashboardBuilderUtil.showTimeRangeFilter started");
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		driver.getLogger().info("DashboardBuilderUtil.showTimeRangeFilter started, the param of showTimeRangeFilter is: " + showTimeRangeFilter);
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.BuilderOptionsMenuLocator);
 		WaitUtil.waitForPageFullyLoaded(driver);
 		
 		OpenFiltersInRightPanel(driver);
 		
-		driver.getElement("css=" + DashBoardPageId_190.RightDrawerEditDBShowTimeRangeFilterCSS);
 		if(showTimeRangeFilter) {
-			driver.check("css=" + DashBoardPageId_190.RightDrawerEditDBShowTimeRangeFilterCSS);
+			driver.waitForElementPresent("css="+DashBoardPageId_190.RightDrawerEditDBEnableTimeRangeFilterCSS);
+			driver.click("css=" + DashBoardPageId_190.RightDrawerEditDBEnableTimeRangeFilterCSS);
+			driver.takeScreenShot();
+			driver.getLogger().info("DashboardBuilderUtil show time range filter finished!!!");
+			return true;
 		}else {
-			driver.uncheck("css=" + DashBoardPageId_190.RightDrawerEditDBShowTimeRangeFilterCSS);
+			driver.waitForElementPresent("css="+DashBoardPageId_190.RightDrawerEditDBDisableTimeRangeFilterCSS);
+			driver.click("css=" + DashBoardPageId_190.RightDrawerEditDBDisableTimeRangeFilterCSS);
+			driver.takeScreenShot();
+			driver.getLogger().info("DashboardBuilderUtil hide time range filter finished!!!");
+			return false;
 		}
-		driver.takeScreenShot();
-		driver.getLogger().info("DashboardBuilderUtil.showTimeRangeFilter finished");
 	}
     
     private void OpenFiltersInRightPanel(WebDriver driver)

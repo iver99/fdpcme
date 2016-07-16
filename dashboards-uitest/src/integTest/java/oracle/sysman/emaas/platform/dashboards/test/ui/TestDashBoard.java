@@ -718,7 +718,91 @@ public class TestDashBoard extends LoginAndLogout
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS),
 				"It is NOT the home page!");
 	}
+	
+	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
+	public void testHideEntityFilter() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testHideEntityFilter");
 
+		DashboardHomeUtil.gridView(webd);
+
+		//search the dashboard and open it in builder page
+		webd.getLogger().info("search the dashboard");
+		DashboardHomeUtil.search(webd, dbName_noWidgetGrid + "-modify");
+		webd.getLogger().info("verify the dashboard is existed");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_noWidgetGrid + "-modify"), "Dashboard NOT found!");
+		webd.getLogger().info("open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid + "-modify");
+		
+		//hide entity filter in dashboard
+		webd.getLogger().info("hide entity filter");
+		Assert.assertFalse(DashboardBuilderUtil.showEntityFilter(webd, false), "hide entity filter failed");		
+	}
+	
+	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
+	public void testHideTimeRangeFilter() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testHideTimeRangeFilter");
+
+		DashboardHomeUtil.gridView(webd);
+
+		//search the dashboard and open it in builder page
+		webd.getLogger().info("search the dashboard");
+		DashboardHomeUtil.search(webd, dbName_noWidgetGrid + "-modify");
+		webd.getLogger().info("verify the dashboard is existed");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_noWidgetGrid + "-modify"), "Dashboard NOT found!");
+		webd.getLogger().info("open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid + "-modify");
+		
+		//hide time range filter in dashboard
+		webd.getLogger().info("hide time range filter");
+		Assert.assertFalse(DashboardBuilderUtil.showTimeRangeFilter(webd, false), "hide time range filter failed");		
+	}
+	
+	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
+	public void testShowEntityFilter() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testShowEntityFilter");
+
+		DashboardHomeUtil.gridView(webd);
+
+		//search the dashboard and open it in builder page
+		webd.getLogger().info("search the dashboard");
+		DashboardHomeUtil.search(webd, dbName_noWidgetGrid + "-modify");
+		webd.getLogger().info("verify the dashboard is existed");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_noWidgetGrid + "-modify"), "Dashboard NOT found!");
+		webd.getLogger().info("open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid + "-modify");
+		
+		//show entity filter in dashboard
+		webd.getLogger().info("show entity filter");
+		Assert.assertTrue(DashboardBuilderUtil.showEntityFilter(webd, true), "show entity filter failed");		
+	}
+
+	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
+	public void testShowTimeRangeFilter() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testShowTimeRangeFilter");
+
+		DashboardHomeUtil.gridView(webd);
+
+		//search the dashboard and open it in builder page
+		webd.getLogger().info("search the dashboard");
+		DashboardHomeUtil.search(webd, dbName_noWidgetGrid + "-modify");
+		webd.getLogger().info("verify the dashboard is existed");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_noWidgetGrid + "-modify"), "Dashboard NOT found!");
+		webd.getLogger().info("open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid + "-modify");
+		
+		//show time range filter in dashboard
+		webd.getLogger().info("Show time range filter");
+		Assert.assertTrue(DashboardBuilderUtil.showTimeRangeFilter(webd, true), "Show time range filter failed");		
+	}
+	
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
 	public void testShareDashboard() throws Exception
 	{
