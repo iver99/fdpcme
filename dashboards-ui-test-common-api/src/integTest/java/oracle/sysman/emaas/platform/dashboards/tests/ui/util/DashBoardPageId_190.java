@@ -327,8 +327,11 @@ public class DashBoardPageId_190
     public static final String RightDrawerWidgetCSS = ".dbd-left-panel .dbd-left-panel-widget";
 
     //right drawer setting
-    public static final String RightDrawerEditDBShowEntityFilterCSS = "#showEntityFilter";
-    public static final String RightDrawerEditDBShowTimeRangeFilterCSS = "#showTimeRangeFilter";
+    public static final String RightDrawerEditDBEnableEntityFilterCSS = "#enableEntityFilter";
+    public static final String RightDrawerEditDBDisableEntityFilterCSS = "#disableEntityFilter";
+    public static final String RightDrawerEditDBEntitySupportCSS = "#entitySupport";
+    public static final String RightDrawerEditDBEnableTimeRangeFilterCSS = "#enableTimeRange";
+    public static final String RightDrawerEditDBDisableTimeRangeFilterCSS = "#disableTimeRange";
     public static final String RightDrawerEditSingleDBToShareSelectedCSS = "#dashboardSharingShared.oj-selected";
     public static final String RightDrawerEditSingleDBToShareCSS = "#dashboardSharingShared";
     public static final String RightDrawerEditSingleDBNotShareCSS = "#dashboardSharingNotShared";

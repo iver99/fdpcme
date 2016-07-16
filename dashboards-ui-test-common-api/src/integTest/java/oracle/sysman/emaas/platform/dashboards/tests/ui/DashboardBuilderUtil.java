@@ -326,16 +326,16 @@ public class DashboardBuilderUtil
 		return dbu.verifyWidget(driver, widgetName, index);
 	}
 
-	public static void showEntityFilter(WebDriver driver, boolean showEntityFilter) throws Exception
+	public static boolean showEntityFilter(WebDriver driver, boolean showEntityFilter) throws Exception
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
-		dbu.showEntityFilter(driver, showEntityFilter);
+		return dbu.showEntityFilter(driver, showEntityFilter);
 	}
 
-	public static void showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) throws Exception
+	public static boolean showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) throws Exception
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
-		dbu.showTimeRangeFilter(driver, showTimeRangeFilter);
+		return dbu.showTimeRangeFilter(driver, showTimeRangeFilter);
 	}
 
 }
