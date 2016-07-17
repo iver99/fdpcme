@@ -1,4 +1,4 @@
-version = "1.9.1" + "-$buildTimestamp"
+version = "1.9.0-miao" + "-$buildTimestamp"
 
 project.ext.intgRun = hasProperty('IFARM_RUN') && IFARM_RUN != '' ? IFARM_RUN : 0
 project.ext.buildBranch = hasProperty('BUILD_BRANCH') && BUILD_BRANCH != '' ? BUILD_BRANCH : 'master'
