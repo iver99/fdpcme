@@ -232,6 +232,10 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(DashBoardPageId_190.DashboardsetOptionsMenuID)));
         WaitUtil.waitForPageFullyLoaded(driver);
 
+        //wait for scrollbar to display
+        //TODO replace with more reliable way
+        Thread.sleep(5000L);
+
         //open settings menu
         driver.click("id="+DashBoardPageId_190.DashboardsetOptionsMenuID);
 
@@ -374,6 +378,10 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
         driver.waitForElementPresent("id="+DashBoardPageId_190.DashboardsetOptionsMenuID);
         driver.getLogger().info("DashboardBuilderUtil.editDashboardSet started");
         WaitUtil.waitForPageFullyLoaded(driver);
+        
+        //wait for scrollbar to display
+        //TODO replace with more reliable way
+        Thread.sleep(5000L);
 
         //open settings menu
         driver.click("id="+DashBoardPageId_190.DashboardsetOptionsMenuID);
