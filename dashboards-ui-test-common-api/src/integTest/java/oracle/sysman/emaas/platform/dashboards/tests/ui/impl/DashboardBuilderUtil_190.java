@@ -234,7 +234,10 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
         //wait for scrollbar to display
         //TODO replace with more reliable way
-        Thread.sleep(5000L);
+        try{
+            Thread.sleep(5000L);
+        }catch(Exception e){
+        }
 
         //open settings menu
         driver.click("id="+DashBoardPageId_190.DashboardsetOptionsMenuID);
