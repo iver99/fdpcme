@@ -840,15 +840,15 @@ define(['knockout',
                 self.dashboard.enableTimeRange((val==='ON') ? 'TRUE' : 'FALSE');
             });
             
-            self.defaultEntityValueText = ko.observable("All Entities");
+            self.defaultEntityValueText = ko.observable(getNlsString("DBS_BUILDER_ALL_ENTITIES"));
             self.labelInited = false;
             self.defaultEntityValueChanged = ko.computed(function() {
                 if(!self.dashboard.sharePublic() || !self.labelInited) {                
                     var val = self.defaultEntityContext();
 
                     if(val === "") {
-                        self.defaultEntityValueText("All Entities");
-                        return "All Entities";
+                        self.defaultEntityValueText(getNlsString("DBS_BUILDER_ALL_ENTITIES"));
+                        return getNlsString("DBS_BUILDER_ALL_ENTITIES");
                     }
 
                     var tselId = "tsel_"+self.dashboard.id();
@@ -861,7 +861,7 @@ define(['knockout',
                             label =  ko.contextFor($('#' + tselId).children().get(0)).$component.getDropdownLabelForContext(val);
                             self.labelInited = true;
                         }else {
-                            label = "All Entities";
+                            label = getNlsString("DBS_BUILDER_ALL_ENTITIES");
                         }
                         self.defaultEntityValueText(label);
                         return label;
