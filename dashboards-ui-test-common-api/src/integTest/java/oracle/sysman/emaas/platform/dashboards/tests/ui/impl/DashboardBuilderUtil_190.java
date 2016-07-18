@@ -111,7 +111,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
         driver.takeScreenShot();
         DashboardHomeUtil.selectDashboard(driver, dashboardName);
-        WaitUtil.waitForPageFullyLoaded(driver);
+        WaitUtil.waitForAjaxCompleted(driver);
         driver.getLogger().info(
                 "DashboardBuilderUtil.addNewDashboardToSet has selected the dashboard named with \"" + dashboardName + "\"");
 
@@ -792,41 +792,36 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
         driver.getLogger().info("DashboardBuilderUtil.removeDashboardFromSet started for name=\"" + dashboardName + "\"");
         Validator.notEmptyString("dashboardName", dashboardName);
 
-        WebElement dashboardSetContainer = driver.getWebDriver().findElement(
-                By.cssSelector(DashBoardPageId_190.DashboardSetNavsContainerCSS));
-        if (dashboardSetContainer == null) {
-            throw new NoSuchElementException(
-                    "DashboardBuilderUtil.removeDashboardFromSet: the dashboard navigator container is not found");
-        }
-
         WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-        wait.until(ExpectedConditions.visibilityOf(dashboardSetContainer));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(DashBoardPageId_190.DashboardSetNavsContainerCSS)));
         driver.takeScreenShot();
 
-        boolean hasFound = false;
+        WebElement targetTab = null;
         List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DashboardSetNavsCSS));
         if (navs == null || navs.size() == 0) {
             throw new NoSuchElementException("DashboardBuilderUtil.removeDashboardFromSet: the dashboard navigators is not found");
         }
 
-        for (WebElement nav : navs) {
+        for (int i = 0; i < navs.size(); i++) {
+            WebElement nav = navs.get(i);
             if (nav.getAttribute("data-tabs-name").trim().equals(dashboardName)) {
-                hasFound = true;
-                nav.findElement(By.cssSelector(DashBoardPageId_190.DashboardSetNavRemoveBtnCSS)).click();
-                WaitUtil.waitForPageFullyLoaded(driver);
-                driver.getLogger().info(
-                        "DashboardBuilderUtil.removeDashboardFromSet has found and removed the dashboard named with \""
-                                + dashboardName + "\"");
-                driver.takeScreenShot();
-                break;
+                targetTab = nav;
             }
         }
 
-        if (hasFound == false) {
+        if (null == targetTab) {
             throw new NoSuchElementException("DashboardBuilderUtil.removeDashboardFromSet can not find the dashboard named with \""
                     + dashboardName + "\"");
         }
 
+        WebElement closeBtn = targetTab.findElement(By.cssSelector(DashBoardPageId_190.DashboardSetNavRemoveBtnCSS));
+        driver.getLogger().info(
+                "DashboardBuilderUtil.removeDashboardFromSet has found and removed the dashboard named with \""
+                        + dashboardName + "\"");
+        driver.takeScreenShot();
+
+        WaitUtil.waitForAjaxCompleted(driver);
+        closeBtn.sendKeys(Keys.ENTER);
         driver.takeScreenShot();
         driver.getLogger().info("DashboardBuilderUtil.removeDashboardFromSet completed");
     }
