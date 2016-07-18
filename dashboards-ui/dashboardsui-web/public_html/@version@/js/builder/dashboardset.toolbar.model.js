@@ -765,7 +765,7 @@ define(['knockout',
                 }  
             }
             
-           self.removeDashboardInSet = function (removeId,currentSelectedItem,event,whetherDelete){
+           self.removeDashboardInSet = function (removeId,currentSelectedItem,whetherDelete,event){
                 if (self.dashboardInstMap[removeId].type !== 'new' && self.dashboardInstMap[removeId].$b.isDashboardUpdated() === true && !whetherDelete) {
                     $('#deleteDashboard').ojDialog("open");
                     event.preventDefault();
@@ -781,7 +781,7 @@ define(['knockout',
             $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
                 var removeDashboardId = Number(ui.tab.attr('id').split(/dashboardTab-/)[1]) || (ui.tab.attr('id').split(/dashboardTab-/)[1]);
                 var selectedItem = ui.tab;              
-                self.removeDashboardInSet(removeDashboardId,selectedItem,event,false);
+                self.removeDashboardInSet(removeDashboardId,selectedItem,false,event);
             } );
                         
             $("#dbd-tabs-container").on("ojdeselect", function (event, ui) {
