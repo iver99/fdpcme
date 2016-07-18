@@ -13,17 +13,17 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.co
 /**
  * @author guochen
  */
-public class ZDTEntity
+public class CountsEntity
 {
-	private long countOfDashboards;
-	private long countOfFavorite;
-	private long countOfPreference;
+	private Long countOfDashboards;
+	private Long countOfFavorite;
+	private Long countOfPreference;
 
-	public ZDTEntity()
+	public CountsEntity()
 	{
 	}
 
-	public ZDTEntity(long countOfDashboards, long countOfFavorite, long countOfPreference)
+	public CountsEntity(Long countOfDashboards, Long countOfFavorite, Long countOfPreference)
 	{
 		this.countOfDashboards = countOfDashboards;
 		this.countOfFavorite = countOfFavorite;
@@ -33,7 +33,7 @@ public class ZDTEntity
 	/**
 	 * @return the countOfDashboards
 	 */
-	public long getCountOfDashboards()
+	public Long getCountOfDashboards()
 	{
 		return countOfDashboards;
 	}
@@ -41,7 +41,7 @@ public class ZDTEntity
 	/**
 	 * @return the countOfFavorite
 	 */
-	public long getCountOfFavorite()
+	public Long getCountOfFavorite()
 	{
 		return countOfFavorite;
 	}
@@ -49,7 +49,7 @@ public class ZDTEntity
 	/**
 	 * @return the countOfPreference
 	 */
-	public long getCountOfPreference()
+	public Long getCountOfPreference()
 	{
 		return countOfPreference;
 	}
@@ -58,7 +58,7 @@ public class ZDTEntity
 	 * @param countOfDashboards
 	 *            the countOfDashboards to set
 	 */
-	public void setCountOfDashboards(long countOfDashboards)
+	public void setCountOfDashboards(Long countOfDashboards)
 	{
 		this.countOfDashboards = countOfDashboards;
 	}
@@ -67,7 +67,7 @@ public class ZDTEntity
 	 * @param countOfFavorite
 	 *            the countOfFavorite to set
 	 */
-	public void setCountOfFavorite(long countOfFavorite)
+	public void setCountOfFavorite(Long countOfFavorite)
 	{
 		this.countOfFavorite = countOfFavorite;
 	}
@@ -76,7 +76,7 @@ public class ZDTEntity
 	 * @param countOfPreference
 	 *            the countOfPreference to set
 	 */
-	public void setCountOfPreference(long countOfPreference)
+	public void setCountOfPreference(Long countOfPreference)
 	{
 		this.countOfPreference = countOfPreference;
 	}

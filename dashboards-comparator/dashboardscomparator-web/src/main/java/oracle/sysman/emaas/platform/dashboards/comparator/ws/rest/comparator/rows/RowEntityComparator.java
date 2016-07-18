@@ -99,6 +99,9 @@ public class RowEntityComparator<T extends RowEntity>
 					itr2.remove();
 				}
 			}
+			if (list2.isEmpty()) {
+				list2 = null;
+			}
 		}
 		tList2 = list2;
 		if (!set1.isEmpty()) {

@@ -13,21 +13,20 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.ro
 import java.util.Map.Entry;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
-import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.TableRowsEntity;
 
 /**
  * @author guochen
  */
-public class InstanceData
+public class InstanceData<T>
 {
 	private Entry<String, LookupClient> instance;
-	private TableRowsEntity data;
+	private T data;
 
 	/**
 	 * @param instance
 	 * @param data
 	 */
-	public InstanceData(Entry<String, LookupClient> instance, TableRowsEntity data)
+	public InstanceData(Entry<String, LookupClient> instance, T data)
 	{
 		super();
 		this.instance = instance;
@@ -37,7 +36,7 @@ public class InstanceData
 	/**
 	 * @return the data
 	 */
-	public TableRowsEntity getData()
+	public T getData()
 	{
 		return data;
 	}
@@ -54,7 +53,7 @@ public class InstanceData
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(TableRowsEntity data)
+	public void setData(T data)
 	{
 		this.data = data;
 	}

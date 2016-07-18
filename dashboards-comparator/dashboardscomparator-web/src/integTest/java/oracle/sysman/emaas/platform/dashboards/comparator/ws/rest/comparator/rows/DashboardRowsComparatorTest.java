@@ -5,6 +5,16 @@ import java.io.IOException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import mockit.Deencapsulation;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
+import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardFavoriteRowEntity;
+import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardLastAccessRowEntity;
+import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardRowEntity;
+import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardSetRowEntity;
+import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardTileParamsRowEntity;
+import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardTileRowEntity;
+import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardUserOptionsRowEntity;
+import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.PreferenceRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.TableRowsEntity;
 
 public class DashboardRowsComparatorTest
@@ -92,10 +102,146 @@ public class DashboardRowsComparatorTest
 	// @formatter:on
 
 	@Test(groups = { "s1" })
+	public void testCompareInstancesData() throws IOException
+	{
+		DashboardRowsComparator drc = new DashboardRowsComparator();
+		TableRowsEntity tre1 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance",
+				JSON_RESPONSE_DATA_TABLE);
+		TableRowsEntity tre2 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance",
+				JSON_RESPONSE_DATA_TABLE);
+		InstancesComparedData<TableRowsEntity> cd = Deencapsulation.invoke(drc, "compareInstancesData",
+				new InstanceData<TableRowsEntity>(null, tre1), new InstanceData<TableRowsEntity>(null, tre2));
+		// the 2 instances have the same data, so there is no difference from the compared result
+		TableRowsEntity result1 = cd.getInstance1().getData();
+		TableRowsEntity result2 = cd.getInstance1().getData();
+		Assert.assertNull(result1.getEmsDashboard());
+		Assert.assertNull(result1.getEmsDashboardFavorite());
+		Assert.assertNull(result1.getEmsDashboardLastAccess());
+		Assert.assertNull(result1.getEmsDashboardSet());
+		Assert.assertNull(result1.getEmsDashboardTile());
+		Assert.assertNull(result1.getEmsDashboardTileParams());
+		Assert.assertNull(result1.getEmsDashboardUserOptions());
+		Assert.assertNull(result1.getEmsPreference());
+		Assert.assertNull(result2.getEmsDashboard());
+		Assert.assertNull(result2.getEmsDashboardFavorite());
+		Assert.assertNull(result2.getEmsDashboardLastAccess());
+		Assert.assertNull(result2.getEmsDashboardSet());
+		Assert.assertNull(result2.getEmsDashboardTile());
+		Assert.assertNull(result2.getEmsDashboardTileParams());
+		Assert.assertNull(result2.getEmsDashboardUserOptions());
+		Assert.assertNull(result2.getEmsPreference());
+
+		// let's introduce more 'differece' to instance 1
+		tre1 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance", JSON_RESPONSE_DATA_TABLE);
+		tre2 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance", JSON_RESPONSE_DATA_TABLE);
+		DashboardRowEntity dre1 = new DashboardRowEntity();
+		dre1.setApplicationType(1);
+		dre1.setDashboardId(1001L);
+		dre1.setDeleted(1L);
+		dre1.setIsSystem(1);
+		tre1.getEmsDashboard().add(dre1);
+		DashboardFavoriteRowEntity dfre1 = new DashboardFavoriteRowEntity();
+		dfre1.setDashboardId(1001L);
+		dfre1.setTenantId(1L);
+		dfre1.setUserName("emcsadmin");
+		tre1.getEmsDashboardFavorite().add(dfre1);
+		DashboardLastAccessRowEntity dlare1 = new DashboardLastAccessRowEntity();
+		dlare1.setDashboardId(1001L);
+		dlare1.setTenantId(1L);
+		dlare1.setAccessedBy("ecmsadmin");
+		tre1.getEmsDashboardLastAccess().add(dlare1);
+		DashboardSetRowEntity dsre1 = new DashboardSetRowEntity();
+		dsre1.setDashboardSetId(1002L);
+		dsre1.setPosition(0L);
+		dsre1.setSubDashboardId(1001L);
+		dsre1.setTenantId(1L);
+		tre1.getEmsDashboardSet().add(dsre1);
+		DashboardTileParamsRowEntity dtpre1 = new DashboardTileParamsRowEntity();
+		dtpre1.setIsSystem(1);
+		dtpre1.setParamName("param1");
+		dtpre1.setParamType(1L);
+		dtpre1.setParamValueStr("para1 value");
+		dtpre1.setTenantId(1L);
+		dtpre1.setTileId(2023L);
+		tre1.getEmsDashboardTileParams().add(dtpre1);
+		DashboardTileRowEntity dtre1 = new DashboardTileRowEntity();
+		dtre1.setDashboardId(1001L);
+		dtre1.setHeight(3L);
+		dtre1.setIsMaximized(1);
+		dtre1.setOwner("emcsadmin");
+		dtre1.setPosition(2L);
+		dtre1.setProviderAssetRoot("assert root");
+		dtre1.setProviderName("provider 1");
+		dtre1.setProviderVersion("1.0");
+		dtre1.setTenantId(1L);
+		dtre1.setTileId(123456L);
+		dtre1.setTileRow(1L);
+		tre1.getEmsDashboardTile().add(dtre1);
+		DashboardUserOptionsRowEntity duore1 = new DashboardUserOptionsRowEntity();
+		duore1.setAutoRefreshInterval(1L);
+		duore1.setDashboardId(1001L);
+		duore1.setExtendedOptions("options");
+		duore1.setIsFavorite(1);
+		duore1.setTenantId(1L);
+		duore1.setUserName("emcsadmin");
+		tre1.getEmsDashboardUserOptions().add(duore1);
+		PreferenceRowEntity pre1 = new PreferenceRowEntity();
+		pre1.setPrefKey("key1");
+		pre1.setPrefValue("value1");
+		pre1.setTenantId(1L);
+		pre1.setUserName("emcsadmin");
+		tre1.getEmsPreference().add(pre1);
+
+		// let's introduce more 'difference' to instance 2
+		DashboardFavoriteRowEntity dfre2 = new DashboardFavoriteRowEntity();
+		dfre2.setDashboardId(2001L);
+		dfre2.setTenantId(1L);
+		dfre2.setUserName("emcsadmin");
+		tre2.getEmsDashboardFavorite().add(dfre2);
+
+		// let's introduce the same records for both the instances
+		PreferenceRowEntity preboth = new PreferenceRowEntity();
+		preboth.setPrefKey("same key");
+		preboth.setPrefValue("same wvalue");
+		preboth.setTenantId(1L);
+		preboth.setUserName("same user");
+		tre1.getEmsPreference().add(preboth);
+		tre2.getEmsPreference().add(preboth);
+
+		// serialize&de-serialize, to avoid any side effects from above operations on objects
+		tre1 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance",
+				JsonUtil.buildNormalMapper().toJson(tre1));
+		tre2 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance",
+				JsonUtil.buildNormalMapper().toJson(tre2));
+		cd = Deencapsulation.invoke(drc, "compareInstancesData", new InstanceData<TableRowsEntity>(null, tre1),
+				new InstanceData<TableRowsEntity>(null, tre2));
+		result1 = cd.getInstance1().getData();
+		result2 = cd.getInstance2().getData();
+		Assert.assertEquals(result1.getEmsDashboard().get(0), dre1);
+		Assert.assertEquals(result1.getEmsDashboardFavorite().get(0), dfre1);
+		Assert.assertEquals(result1.getEmsDashboardLastAccess().get(0), dlare1);
+		Assert.assertEquals(result1.getEmsDashboardSet().get(0), dsre1);
+		Assert.assertEquals(result1.getEmsDashboardTileParams().get(0), dtpre1);
+		Assert.assertEquals(result1.getEmsDashboardTile().get(0), dtre1);
+		Assert.assertEquals(result1.getEmsDashboardUserOptions().get(0), duore1);
+		Assert.assertEquals(result1.getEmsPreference().get(0), pre1);
+		Assert.assertEquals(result1.getEmsPreference().size(), 1);// preference appear in both side won't appear here
+		Assert.assertNull(result2.getEmsDashboard());
+		Assert.assertEquals(result2.getEmsDashboardFavorite().get(0), dfre2);
+		Assert.assertNull(result2.getEmsDashboardLastAccess());
+		Assert.assertNull(result2.getEmsDashboardSet());
+		Assert.assertNull(result2.getEmsDashboardTile());
+		Assert.assertNull(result2.getEmsDashboardTileParams());
+		Assert.assertNull(result2.getEmsDashboardUserOptions());
+		Assert.assertNull(result2.getEmsPreference());// preference appear in both side won't appear here
+	}
+
+	@Test(groups = { "s1" })
 	public void testRetrieveRowsEntityFromJsonForSingleInstance() throws IOException
 	{
 		DashboardRowsComparator drc = new DashboardRowsComparator();
-		TableRowsEntity tre = drc.retrieveRowsEntityFromJsonForSingleInstance(JSON_RESPONSE_DATA_TABLE);
+		TableRowsEntity tre = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance",
+				JSON_RESPONSE_DATA_TABLE);
 		Assert.assertNotNull(tre);
 		Assert.assertEquals(tre.getEmsDashboard().get(0).getName(), DASHBOARD1_NAME);
 		Assert.assertEquals(tre.getEmsDashboardFavorite().size(), 2);
