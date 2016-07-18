@@ -25,7 +25,12 @@ public class DashboardHomeUtil_Version implements IUiTestCommonAPI
 	@Override
 	public String getApiVersion(WebDriver wdriver)
 	{
-		String version = wdriver.getElement("//html").getAttribute(VERSION_ATTR);
+                //since 1.9.0, we use new xpath to get verison of home.html
+		String version = wdriver.getElement("//div[contains(@data-bind,'df-oracle-dashboard-list')]//div[boolean(@data-testapiversion)]").getAttribute(VERSION_ATTR);
+                //compatible with 1.7.5
+                if (version == null || "".equals(version.trim())) {
+                      version = wdriver.getElement("//html").getAttribute(VERSION_ATTR);
+                }
 		if (version == null || "".equals(version.trim())) {
 			//1.7.1 or earlier
 			return "171";
