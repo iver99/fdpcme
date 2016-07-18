@@ -125,7 +125,7 @@ public class TestDashboardSet extends LoginAndLogout
 				+ dbsetName_Favorite + " failed!");
 		webd.getLogger().info("Delete the dashboard set: " + dbsetName_Favorite + " finished");
 
-		webd.getLogger().info("All test data have been removed");
+                webd.getLogger().info("All test data have been removed");
 
 	}
 
@@ -153,6 +153,8 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Switch to the grid view");
 		DashboardHomeUtil.gridView(webd);
 		DashboardBuilderUtil.addNewDashboardToSet(webd, dbName);
+
+                Thread.sleep(8000L);
 
 		//verify the dashboard has been added to the dashboard set
 		webd.getLogger().info("Verify if the dashboard exists in the dashborad set");
@@ -185,6 +187,8 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Switch to the list view");
 		DashboardHomeUtil.listView(webd);
 		DashboardBuilderUtil.addNewDashboardToSet(webd, dbName);
+
+                Thread.sleep(8000L);
 
 		//verify the dashboard has been added to the dashboard set
 		webd.getLogger().info("Verify if the dashboard exists in the dashborad set");
@@ -573,6 +577,8 @@ public class TestDashboardSet extends LoginAndLogout
 		//remove a dashboard from the dashboard set
 		webd.getLogger().info("Remove a dashboard from the dashborad set");
 		DashboardBuilderUtil.removeDashboardFromSet(webd, dbName);
+
+                Thread.sleep(8000L);
 
 		//verify the dashboard has been added to the dashboard set
 		webd.getLogger().info("Verify if the dashboard exists in the dashborad set");
