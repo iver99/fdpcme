@@ -56,6 +56,10 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
         }
         driver.takeScreenShot();
         driver.click("id="+DashBoardPageId_190.DashOKButtonID);
+
+        String newTabLocator = ".other-nav[data-dashboard-name-in-set='"+name+"']";
+        WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(newTabLocator)));
         WaitUtil.waitForPageFullyLoaded(driver);
         driver.waitForElementPresent("css="+DashBoardPageId_190.BuilderOptionsMenuLocator);
         driver.getLogger().info("DashboardBuilderUtil.createDashboardInsideSet completed");
