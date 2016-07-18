@@ -508,7 +508,7 @@ define([
                                     var laImagePath = "/emsaasui/uifwk/@version@/images/widgets/sample-widget-histogram.png";
                                     var taImagePath = "/emsaasui/uifwk/@version@/images/widgets/sample-widget-histogram.png";
                                     var itaImagePath = "/emsaasui/uifwk/@version@/images/widgets/sample-widget-histogram.png";
-                                    if ('LoganService' === widget.PROVIDER_NAME) {
+                                    if ('LogAnalyticsUI' === widget.PROVIDER_NAME) {
                                         widget.WIDGET_VISUAL(laImagePath);
                                     }
                                     else if ('TargetAnalytics' === widget.PROVIDER_NAME) {

@@ -68,7 +68,7 @@ public class RegistrationEntity implements Serializable
 	public static final String APM_VERSION = "1.0+";
 	public static final String APM_HOME_LINK = "sso.home";
 	//	public static final String APM_URL = "/emsaasui/apmUi/index.html";
-	public static final String LA_SERVICENAME = "LoganService";
+	public static final String LA_SERVICENAME = "LogAnalyticsUI";
 	public static final String LA_VERSION = "1.0+";
 	public static final String LA_HOME_LINK = "sso.search";
 	//no home link is needed
