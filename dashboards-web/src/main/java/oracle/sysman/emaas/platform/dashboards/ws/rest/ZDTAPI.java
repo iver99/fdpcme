@@ -10,14 +10,17 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,7 +29,10 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import oracle.sysman.emaas.platform.dashboards.core.zdt.DataManager;
+import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.TableRowsSynchronizer;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.ZDTEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.TableRowsEntity;
 
 /**
  * @author guochen
@@ -35,6 +41,7 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.ZDTEntity;
 public class ZDTAPI extends APIBase
 {
 	private static final Logger logger = LogManager.getLogger(ZDTAPI.class);
+
 	private static final String TABLE_DATA_KEY_DASHBOARD = "EMS_DASHBOARD";
 	private static final String TABLE_DATA_KEY_DASHBOARD_SET = "EMS_DASHBOARD_SET";
 	private static final String TABLE_DATA_KEY_DASHBOARD_FAVORITE = "EMS_DASHBOARD_FAVORITE";
@@ -95,6 +102,23 @@ public class ZDTAPI extends APIBase
 				favoriteCount, preferenceCount);
 		ZDTEntity zdte = new ZDTEntity(dashboardCount, favoriteCount, preferenceCount);
 		return Response.ok(getJsonUtil().toJson(zdte)).build();
+	}
+
+	@PUT
+	@Path("sync")
+	public Response sync(JSONObject dataToSync)
+	{
+		infoInteractionLogAPIIncomingCall(null, null, "Service call to [PUT] /v1/zdt/sync");
+		try {
+			TableRowsEntity data = getJsonUtil().fromJson(dataToSync.toString(), TableRowsEntity.class);
+			new TableRowsSynchronizer().sync(data);
+			return Response.status(Status.NO_CONTENT).build();
+		}
+		catch (IOException e) {
+			logger.error(e.getLocalizedMessage(), e);
+			ErrorEntity error = new ErrorEntity(e);
+			return buildErrorResponse(error);
+		}
 	}
 
 	private JSONArray getDashboardFavoriteTableData()

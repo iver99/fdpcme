@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -23,8 +24,10 @@ import org.apache.logging.log4j.Logger;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.CountsEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.DashboardCountsComparator;
+import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.DashboardRowsComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.InstancesComparedData;
+import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.TableRowsEntity;
 
 /**
  * @author guochen
@@ -136,16 +139,35 @@ public class ZDTAPI
 		super();
 	}
 
-	@PUT
+	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response compareOnDF()
 	{
-		logger.info("There is an incoming call from ZDT comparator API");
+		logger.info("There is an incoming call from ZDT comparator API to compare");
 		// this comparator invokes the 2 instances REST APIs and retrieves the counts for objects (like dashboards), and return the counts for each instance
 		DashboardCountsComparator dcc = new DashboardCountsComparator();
 		InstancesComparedData<CountsEntity> result = dcc.compare();
 		InstancesComapredCounts ic = new InstancesComapredCounts(new InstanceCounts(result.getInstance1()),
 				new InstanceCounts(result.getInstance2()));
 		return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(ic)).build();
+	}
+
+	@PUT
+	@Path("sync")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response syncOnDF()
+	{
+		logger.info("There is an incoming call from ZDT comparator API to sync");
+		// this comparator invokes the 2 instances REST APIs and retrieves the different table rows for the 2 instances, and update the 2 instances accordingly
+		DashboardRowsComparator dcc = new DashboardRowsComparator();
+		InstancesComparedData<TableRowsEntity> result = dcc.compare();
+		try {
+			dcc.sync(result);
+			return Response.status(Status.NO_CONTENT).build();
+		}
+		catch (Exception e) {
+			logger.error(e.getLocalizedMessage(), e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Failed to sync data for the 2 instances").build();
+		}
 	}
 }

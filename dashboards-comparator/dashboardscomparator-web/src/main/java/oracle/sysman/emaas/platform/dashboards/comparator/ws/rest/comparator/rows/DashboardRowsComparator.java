@@ -75,6 +75,21 @@ public class DashboardRowsComparator extends AbstractComparator
 		}
 	}
 
+	public void sync(InstancesComparedData<TableRowsEntity> instancesData) throws Exception
+	{
+		if (instancesData == null) {
+			return;
+		}
+		// switch the data for the instances for sync
+		InstanceData<TableRowsEntity> instance1 = new InstanceData<TableRowsEntity>(instancesData.getInstance1().getInstance(),
+				instancesData.getInstance2().getData());
+		InstanceData<TableRowsEntity> instance2 = new InstanceData<TableRowsEntity>(instancesData.getInstance2().getInstance(),
+				instancesData.getInstance1().getData());
+		InstancesComparedData<TableRowsEntity> syncData = new InstancesComparedData<TableRowsEntity>(instance1, instance2);
+		syncForInstance(syncData.getInstance1());
+		syncForInstance(syncData.getInstance2());
+	}
+
 	/**
 	 * Compares the dashboard favorite rows data for the 2 instances, and put the compare result into <code>ComparedData</code>
 	 * object
@@ -287,5 +302,17 @@ public class DashboardRowsComparator extends AbstractComparator
 		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), null);
 		logger.info("Checking dashboard OMC instance table rows. Response is " + response);
 		return retrieveRowsEntityFromJsonForSingleInstance(response);
+	}
+
+	private String syncForInstance(InstanceData<TableRowsEntity> instance) throws Exception
+	{
+		Link lk = getSingleInstanceUrl(instance.getInstance().getValue(), "zdt/sync", "http");
+		if (lk == null) {
+			logger.warn("Get a null or empty link for one single instance!");
+			return null;
+		}
+		String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), instance.getData(), null);
+		logger.info("Checking dashboard OMC instance table rows. Response is " + response);
+		return response;
 	}
 }

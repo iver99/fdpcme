@@ -18,15 +18,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappingCollection;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappingEntity;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainEntity;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainsEntity;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.LogUtil.InteractionLogDirection;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,6 +26,15 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappingCollection;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappingEntity;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainEntity;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainsEntity;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.LogUtil.InteractionLogDirection;
 
 /**
  * @author guobaochen
@@ -62,12 +62,49 @@ public class TenantSubscriptionUtil
 			}
 			else {
 				LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
-				itrLogger
-				.info("RestClient is connecting to get response after getting authorization token from registration manager.");
+				itrLogger.info(
+						"RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
 			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
 			return builder.get(String.class);
+		}
+
+		/**
+		 * HTTP put request to send a non-empty request entity to a non-empty URL for specific URL<br>
+		 * NOTE: currently empty body isn't supported
+		 *
+		 * @param url
+		 * @param requestEntity
+		 * @param tenant
+		 * @return
+		 */
+		public String put(String url, Object requestEntity, String tenant)
+		{
+			if (StringUtils.isEmpty(url)) {
+				logger.error("Unable to put to an empty URL");
+				return null;
+			}
+			if (requestEntity == null || "".equals(requestEntity)) {
+				logger.error("Unable to put an empty request entity");
+				return null;
+			}
+
+			ClientConfig cc = new DefaultClientConfig();
+			Client client = Client.create(cc);
+			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
+			String auth = String.copyValueOf(authToken);
+			if (StringUtil.isEmpty(auth)) {
+				logger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
+			}
+			else {
+				LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
+				itrLogger.info(
+						"RestClient is connecting to get response after getting authorization token from registration manager.");
+			}
+			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
+					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+			return builder.put(String.class, requestEntity);
 		}
 	}
 
@@ -94,8 +131,8 @@ public class TenantSubscriptionUtil
 		try {
 			DomainsEntity de = ju.fromJson(domainsResponse, DomainsEntity.class);
 			if (de == null || de.getItems() == null || de.getItems().size() <= 0) {
-				logger.warn("Checking tenant (" + tenant
-						+ ") subscriptions: null/empty domains entity or domains item retrieved.");
+				logger.warn(
+						"Checking tenant (" + tenant + ") subscriptions: null/empty domains entity or domains item retrieved.");
 				return null;
 			}
 			String tenantAppUrl = null;
@@ -110,8 +147,8 @@ public class TenantSubscriptionUtil
 				return null;
 			}
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
-			logger.info("Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is "
-					+ appMappingUrl);
+			logger.info(
+					"Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is " + appMappingUrl);
 			String appMappingJson = rc.get(appMappingUrl, tenant);
 			logger.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
@@ -151,8 +188,8 @@ public class TenantSubscriptionUtil
 			if (apps == null || "".equals(apps)) {
 				return null;
 			}
-			List<String> origAppsList = Arrays.asList(apps
-					.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
+			List<String> origAppsList = Arrays
+					.asList(apps.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
 			return origAppsList;
 
 		}
