@@ -186,7 +186,6 @@ define(['knockout',
                     }
                 });
                 $.extend(newDashboardJs, fieldsToUpdate);
-                $("#globalBody").append("<df-ajax-flag></df-ajax-flag>");
                 Builder.updateDashboard(
                         ko.unwrap(dashboardInst.id),
                         JSON.stringify(newDashboardJs),
@@ -197,8 +196,11 @@ define(['knockout',
                 // add delay for updating screenshots because 
                 // a tab may take some time to render the tiles.
                 dfu.getAjaxUtil().actionAfterAjaxStop(function () {
-                    // remove flag tag from ui;
-                    $("df-ajax-flag").remove();
+                    // add flag tag for ui test if triggered by add or remove sub dashboard
+                    if(!fieldsToUpdate){
+                        $("df-ajax-flag").remove();
+                        $("#globalBody").append("<df-ajax-flag></df-ajax-flag>");
+                    }
                     var $tilesWrapper = $(".tiles-wrapper:visible");
                     if($tilesWrapper && selectedDashboardInst().type==='new'){
                         newDashboardJs.screenShot = null;

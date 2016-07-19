@@ -239,6 +239,7 @@ public class DashBoardPageId_190
     //dashboard set options
     public static final String DashboardSetNavsContainerCSS = "#dbd-set-tabs";
     public static final String DashboardSetNavsCSS = ".dbd-tabs-nav .oj-tabs-tab";
+    public static final String DashboardSetTabNameCSS = ".dbd-tabs-nav .oj-tabs-tab[data-tabs-name='_name_'] .oj-tabs-close-icon";
     public static final String DashboardSetNavRemoveBtnCSS = ".oj-tabs-close-icon";
     public static final String DashboardSetNavAddBtnCSS = "#add-nav";
     public static final String DashboardSetOptionBtn = "//button[contains(@id, 'tabs-caret')]";

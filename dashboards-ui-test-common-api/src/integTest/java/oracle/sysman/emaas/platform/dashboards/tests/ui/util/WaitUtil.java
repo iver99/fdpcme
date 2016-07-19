@@ -10,12 +10,15 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.util;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
+import com.google.common.base.Function;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Predicate;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author wenjzhu
@@ -43,14 +46,25 @@ public class WaitUtil
 
 	public static void waitForAjaxCompleted(final oracle.sysman.qatool.uifwk.webdriver.WebDriver webd)
 	{
-		webd.getLogger().info("START wait for ajax start: " + System.currentTimeMillis());
+		final String AJAX_FLAG_TAG = "df-ajax-flag";
+		webd.getLogger().info("START wait for ajax completed: " + System.currentTimeMillis());
 		org.openqa.selenium.WebDriver driver = webd.getWebDriver();
-		WebDriverWait wait = new WebDriverWait(driver, WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("df-ajax-flag")));
-		webd.getLogger().info("START wait for ajax end: " + System.currentTimeMillis());
-		wait = new WebDriverWait(driver, WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("df-ajax-flag")));
-		webd.getLogger().info("End wait for ajax end: " + System.currentTimeMillis());
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+				.withTimeout(WAIT_TIMEOUT, TimeUnit.SECONDS)
+				.pollingEvery(5,TimeUnit.SECONDS)
+				.ignoring(NoSuchElementException.class);
+
+		wait.until(new Function<WebDriver, Boolean>() {
+			public Boolean apply(WebDriver driver) {
+				webd.getLogger().info("Waiting for ajax completed: " + System.currentTimeMillis());
+				return webd.isElementPresent("css="+AJAX_FLAG_TAG);
+			}
+		});
+
+		webd.evalJavascript("$(\'"+AJAX_FLAG_TAG+"\').remove();");
+
+		webd.getLogger().info("END wait for ajax completed: " + System.currentTimeMillis());
+
 	}
 
 }
