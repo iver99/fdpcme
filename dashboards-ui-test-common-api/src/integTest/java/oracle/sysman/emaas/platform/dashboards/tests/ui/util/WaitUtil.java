@@ -10,7 +10,9 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.util;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Predicate;
@@ -37,6 +39,18 @@ public class WaitUtil
 				return activeAjax;
 			}
 		});
+	}
+
+	public static void waitForAjaxCompleted(final oracle.sysman.qatool.uifwk.webdriver.WebDriver webd)
+	{
+		webd.getLogger().info("START wait for ajax start: " + System.currentTimeMillis());
+		org.openqa.selenium.WebDriver driver = webd.getWebDriver();
+		WebDriverWait wait = new WebDriverWait(driver, WAIT_TIMEOUT);
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("df-ajax-flag")));
+		webd.getLogger().info("START wait for ajax end: " + System.currentTimeMillis());
+		wait = new WebDriverWait(driver, WAIT_TIMEOUT);
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("df-ajax-flag")));
+		webd.getLogger().info("End wait for ajax end: " + System.currentTimeMillis());
 	}
 
 }
