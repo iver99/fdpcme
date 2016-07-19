@@ -1,11 +1,9 @@
 define([
-    'jquery', 
-    'knockout',
     'ojs/ojcore',
     'uifwk/js/util/df-util',
     'uifwk/js/util/ajax-util'
 ],
-    function($, ko, oj, dfuModel, ajaxUtilModel)
+    function(oj, dfuModel, ajaxUtilModel)
     {
         function DashboardFrameworkZdtUtil() {
             var self = this;
@@ -13,35 +11,36 @@ define([
             var dfu = new dfuModel();
             var ajaxUtil = new ajaxUtilModel();
             
-            /**
-             * Check if OMC is under planned downtime or not.
-             * 
-             * This is a sync call to check whether OMC is under planned downtime or not, 
-             * if yes return true, otherwise return false. 
-             * 
-             * @returns {boolean}
-             */ 
-            self.isUnderPlannedDowntime = function() {
-                var underPlannedDowntime = false;
-                if (dfu.isDevMode()){
-                    downtimeDetectUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"omcstatus");
-                }
-                ajaxUtil.ajaxWithRetry({
-                    type: "GET",
-                    url: downtimeDetectUrl,
-                    async: false,
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8"
-                })
-                .fail(function(jqXHR, textStatus, errorThrown) {
-                    var apigwHeaders = ajaxUtil.getAPIGWHeaderValues(jqXHR, 'X-ORCL-OMC-APIGW-RETRYAFTER');
-                    if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'] === '"planned downtime"') {
-                        underPlannedDowntime = true;
-                    }
-                });
-                
-                return underPlannedDowntime;
-            };
+//            /**
+//             * Check if OMC is under planned downtime or not.
+//             * 
+//             * This is a sync call to check whether OMC is under planned downtime or not, 
+//             * if yes return true, otherwise return false. 
+//             * 
+//             * @returns {boolean}
+//             */ 
+//            self.isUnderPlannedDowntime = function() {
+//                var underPlannedDowntime = false;
+//                if (dfu.isDevMode()){
+//                    downtimeDetectUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"omcstatus");
+//                }
+//                ajaxUtil.ajaxWithRetry({
+//                    type: "POST",
+//                    data: {},
+//                    url: downtimeDetectUrl,
+//                    async: false,
+//                    dataType: "json",
+//                    contentType: "application/json; charset=utf-8"
+//                })
+//                .fail(function(jqXHR, textStatus, errorThrown) {
+//                    var apigwHeaders = ajaxUtil.getAPIGWHeaderValues(jqXHR, 'X-ORCL-OMC-APIGW-RETRYAFTER');
+//                    if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'] === '"planned downtime"') {
+//                        underPlannedDowntime = true;
+//                    }
+//                });
+//                
+//                return underPlannedDowntime;
+//            };
             
             /**
              * Detect whether OMC is under planned downtime or not asynchronously.
@@ -61,9 +60,10 @@ define([
                     downtimeDetectUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"omcstatus");
                 }
                 ajaxUtil.ajaxWithRetry({
-                    type: "GET",
+                    type: "POST",
                     url: downtimeDetectUrl,
                     async: true,
+                    data: {},
                     dataType: "json",
                     contentType: "application/json; charset=utf-8"
                 })
