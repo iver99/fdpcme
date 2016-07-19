@@ -84,8 +84,8 @@ define([
                             var $target = $('#dashboard-' + dashboardsetToolBarModel.selectedDashboardItem().dashboardId);
                             homeScrollbarReset($target);
                         }, 2000);
-                            var $b = new Builder.DashboardBuilder(dashboardsetToolBarModel.dashboardInst, $($("#dashboard-content-template").text()));
-                            self.loadRightPanelModel(null,null,$b);
+                        var $b = new Builder.DashboardBuilder(dashboardsetToolBarModel.dashboardInst, $($("#dashboard-content-template").text()));
+                        self.loadRightPanelModel(null, null, $b);
                     } else {
                         resetContainerScroll();
                         self.loadDashboard(dashboardId);

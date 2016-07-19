@@ -134,7 +134,7 @@ define(['knockout',
                 self.intervalID && clearInterval(self.intervalID); // clear interval if exists
                 if (interval) {
                     if (window.DEV_MODE) {
-                        interval = 3000;
+                        interval = 10000;
                     }
                     self.intervalID = setInterval(function () {
                         Builder.loadDashboard(
@@ -238,7 +238,7 @@ define(['knockout',
                             var removeId=selectedDashboardInst().toolBarModel.dashboardId;     
                             var selectedTab = $('#dashboardTab-'+removeId);
                             $('#delete-dashboard').ojDialog( "close" );
-                            selectedDashboardInst().dashboardsetToolBar.removeDashboardInSet(removeId,selectedTab,event,true);
+                            selectedDashboardInst().dashboardsetToolBar.removeDashboardInSet(removeId,selectedTab,true);
                             $("#dbd-tabs-container").ojTabs("refresh"); 
                         } else {
                             window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';

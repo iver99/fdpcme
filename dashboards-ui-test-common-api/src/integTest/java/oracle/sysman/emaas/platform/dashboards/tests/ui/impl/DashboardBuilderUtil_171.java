@@ -742,18 +742,28 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		Assert.assertTrue(false,"This method is not available in the current version");
 		driver.getLogger().info("Method not available in the current version");
 	}
+	
 	@Override
-    public void showEntityFilter(WebDriver driver, boolean showEntityFilter) throws Exception
+	public void setEntitySupport(WebDriver driver, String mode) throws Exception
 	{
 		Assert.assertTrue(false,"This method is not available in 1.7.1 version");
 		driver.getLogger().info("Method not available in 1.7.1 version");
 	}
 	
+	@Override
+    public boolean showEntityFilter(WebDriver driver, boolean showEntityFilter) throws Exception
+	{
+		Assert.assertTrue(false,"This method is not available in 1.7.1 version");
+		driver.getLogger().info("Method not available in 1.7.1 version");
+		return false;
+	}
+	
     @Override
-	public void showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) throws Exception
+	public boolean showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) throws Exception
 	{
     	Assert.assertTrue(false,"This method is not available in 1.7.1 version");
 		driver.getLogger().info("Method not available in 1.7.1 version");
+		return false;
 	}
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#resizeWidget(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, int, java.lang.String)

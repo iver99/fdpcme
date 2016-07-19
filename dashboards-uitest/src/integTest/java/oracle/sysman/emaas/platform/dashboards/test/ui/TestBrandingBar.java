@@ -30,7 +30,7 @@ public class TestBrandingBar extends LoginAndLogout
 
 	}
 
-	@Test
+	//@Test
 	public void testAdminConsoleLink() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());

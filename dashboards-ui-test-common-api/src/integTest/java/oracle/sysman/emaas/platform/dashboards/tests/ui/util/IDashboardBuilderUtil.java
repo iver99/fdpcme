@@ -120,10 +120,12 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	public boolean verifyWidget(WebDriver driver, String widgetName);
 
 	public boolean verifyWidget(WebDriver driver, String widgetName, int index);
-
-	public void showEntityFilter(WebDriver driver, boolean showEntityFilter) throws Exception;
 	
-	public void showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) throws Exception;
+	public void setEntitySupport(WebDriver driver, String mode) throws Exception;
+
+	public boolean showEntityFilter(WebDriver driver, boolean showEntityFilter) throws Exception;
+	
+	public boolean showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) throws Exception;
 	
 
 }

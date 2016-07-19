@@ -331,8 +331,6 @@ public class DashBoardPageId
 	public static final String RightDrawerWidgetCSS = ".dbd-left-panel .dbd-left-panel-widget";
 
 	//right drawer setting
-	public static final String RightDrawerEditDBShowEntityFilterCSS = "#showEntityFilter";
-	public static final String RightDrawerEditDBShowTimeRangeFilterCSS = "#showTimeRangeFilter";
 	public static final String RightDrawerEditDBDefaultTimeRangeSelect = "div[id^='oj-select-choice-defaultTimeRange_']";
 	public static final String RightDrawerEditDBDefaultTimeRangeResultLabel = "span[id^='ojChoiceId_defaultTimeRange_']";
 	public static final String RightDrawerEditDBDefaultTimeRangeLAST15MINS = "/html/body/div/div/div/ul/li[1]/div";

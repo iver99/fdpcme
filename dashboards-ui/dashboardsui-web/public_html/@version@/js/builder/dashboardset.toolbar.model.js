@@ -186,7 +186,7 @@ define(['knockout',
                     }
                 });
                 $.extend(newDashboardJs, fieldsToUpdate);
-                
+                $("#globalBody").append("<df-ajax-flag></df-ajax-flag>");
                 Builder.updateDashboard(
                         ko.unwrap(dashboardInst.id),
                         JSON.stringify(newDashboardJs),
@@ -197,6 +197,8 @@ define(['knockout',
                 // add delay for updating screenshots because 
                 // a tab may take some time to render the tiles.
                 dfu.getAjaxUtil().actionAfterAjaxStop(function () {
+                    // remove flag tag from ui;
+                    $("df-ajax-flag").remove();
                     var $tilesWrapper = $(".tiles-wrapper:visible");
                     if($tilesWrapper && selectedDashboardInst().type==='new'){
                         newDashboardJs.screenShot = null;
@@ -765,7 +767,7 @@ define(['knockout',
                 }  
             }
             
-           self.removeDashboardInSet = function (removeId,currentSelectedItem,event,whetherDelete){
+           self.removeDashboardInSet = function (removeId,currentSelectedItem,whetherDelete,event){
                 if (self.dashboardInstMap[removeId].type !== 'new' && self.dashboardInstMap[removeId].$b.isDashboardUpdated() === true && !whetherDelete) {
                     $('#deleteDashboard').ojDialog("open");
                     event.preventDefault();
@@ -781,7 +783,7 @@ define(['knockout',
             $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
                 var removeDashboardId = Number(ui.tab.attr('id').split(/dashboardTab-/)[1]) || (ui.tab.attr('id').split(/dashboardTab-/)[1]);
                 var selectedItem = ui.tab;              
-                self.removeDashboardInSet(removeDashboardId,selectedItem,event,false);
+                self.removeDashboardInSet(removeDashboardId,selectedItem,false,event);
             } );
                         
             $("#dbd-tabs-container").on("ojdeselect", function (event, ui) {
