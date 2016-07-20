@@ -316,6 +316,19 @@ artifactoryPublish {
 project.ext.set("source_cc", "${rootDir}/codeCoverage")
 apply from: "${project.ext.source_cc}/codeCoverage.gradle" 
 
+//-----------------------------------------------------------------------------
+// Set sonar.branch property for SonarQube
+//
+if(project.plugins.hasPlugin('sonar-runner')) {
+  sonarRunner {
+    sonarProperties {
+      property "sonar.branch", 'master'
+    }
+  }
+}
+//
+//-----------------------------------------------------------------------------
+
 // clean up database for Local LRG
 URLClassLoader loader = GroovyObject.class.classLoader
 configurations.driver.each {File file ->
