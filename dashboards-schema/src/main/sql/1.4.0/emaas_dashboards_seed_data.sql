@@ -139,8 +139,7 @@ BEGIN
     
     Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
     WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-    values (MW_RESOURCE_DSB_TILE_ID,MW_RESOURCE_DSB_ID,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
-    '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','verticalApplication.mw-resource');
+    values (MW_RESOURCE_DSB_TILE_ID,MW_RESOURCE_DSB_ID,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID','0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','verticalApplication.mw-resource');
 
     Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
     values (MW_RESOURCE_DSB_ID,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');

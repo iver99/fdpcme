@@ -152,7 +152,10 @@ define(['knockout',
 
                     self.initEventHandlers();
                     self.loadWidgets();
-                    Builder.getAllWidgetsAssetRoot(self.widgets());
+                    for(var i=0; i<self.widgets().length; i++) {
+                        var wgt = self.widgets()[i];
+                        Builder.getWidgetAssetRoot(wgt.PROVIDER_NAME(), wgt.PROVIDER_VERSION(), wgt.PROVIDER_ASSET_ROOT());
+                    }
                     self.initDraggable();
 //                    self.checkAndDisableLinkDraggable();
 

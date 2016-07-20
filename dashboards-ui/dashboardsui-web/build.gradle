@@ -77,9 +77,6 @@ dependencies {
 def jscc = "1".equals(System.getenv()['ENABLE_CC_JS'])
 
 //javascript code coverage
-if (!jscc ) {
-	gradle.startParameter.excludedTaskNames += ["jsCodeCoverage"]    
-}
 
 //define the JS source locations
 javascript.source {
