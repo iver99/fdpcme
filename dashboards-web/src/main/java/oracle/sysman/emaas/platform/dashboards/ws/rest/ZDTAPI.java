@@ -59,7 +59,7 @@ public class ZDTAPI extends APIBase
 	@GET
 	@Path("tablerows")
 	@Produces(MediaType.APPLICATION_JSON)
-	public JSONObject getAllTableData()
+	public Response getAllTableData()
 	{
 		infoInteractionLogAPIIncomingCall(null, null, "Service call to [GET] /v1/zdt/tablerows");
 
@@ -85,7 +85,7 @@ public class ZDTAPI extends APIBase
 		catch (JSONException e) {
 			logger.error(e.getLocalizedMessage(), e);
 		}
-		return obj;
+		return Response.status(Status.OK).entity(obj).build();
 	}
 
 	@GET
