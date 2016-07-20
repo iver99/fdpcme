@@ -108,7 +108,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
         driver.takeScreenShot();
         DashboardHomeUtil.selectDashboard(driver, dashboardName);
-        WaitUtil.waitForAjaxCompleted(driver);
+        WaitUtil.waitForPageFullyLoaded(driver);
         driver.getLogger().info(
                 "DashboardBuilderUtil.addNewDashboardToSet has selected the dashboard named with \"" + dashboardName + "\"");
 
@@ -788,6 +788,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
     {
         driver.getLogger().info("DashboardBuilderUtil.removeDashboardFromSet started for name=\"" + dashboardName + "\"");
         Validator.notEmptyString("dashboardName", dashboardName);
+        WaitUtil.waitForPageFullyLoaded(driver);
 
         WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(DashBoardPageId_190.DashboardSetNavsContainerCSS)));
@@ -819,7 +820,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
         driver.waitForElementPresent("css="+closeBtnLocator);
         driver.evalJavascript("$(\""+closeBtnLocator+"\").click()");
 
-        WaitUtil.waitForAjaxCompleted(driver);
+        WaitUtil.waitForPageFullyLoaded(driver);
         driver.takeScreenShot();
 
         WaitUtil.waitForPageFullyLoaded(driver);

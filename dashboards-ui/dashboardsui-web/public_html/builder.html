@@ -1059,7 +1059,7 @@
                             <div id="dbd-edit-settings-container" class="dbd-edit-settings-container">
                                 <!-- ko if:isDashboardSet -->
                                     <span class="edit-setting-head" data-bind="text: getNlsString('DBSSET_BUILDER_DASHBOARDSET')"></span>
-                                    <span class="edit-setting-link edit-dsbset-link" data-bind="text:$data.dashboardsetToolBarModel.dashboardsetName(), click: switchEditPanelContent"></span>
+                                    <span class="edit-setting-link edit-dsbset-link" data-bind="text:$data.dashboardsetToolBarModel.dashboardsetName, click: switchEditPanelContent"></span>
                                     <!--ko if: !dashboardEditDisabled() && dashboardsetToolBarModel.dashboardsetItems.length>0-->
                                         <span class="edit-setting-head" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_SELECTED_DSB')"></span>
                                         <span class="edit-setting-link edit-dsb-link" data-bind="text:$data.dashboardsetToolBarModel.selectedDashboardItem().name, click: switchEditPanelContent"></span>

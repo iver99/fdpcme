@@ -50,16 +50,8 @@ define(['knockout',
             }                    
             
             self.dashboardsetName =ko.observable(ko.unwrap(dashboardInst.name()));
-            
-            self.dashboardsetDescription = ko.observable(function () {
-                var fetchdescription = ko.unwrap(dashboardInst.description);
-                if (typeof (fetchdescription) === 'undefined') {
-                    fetchdescription = '';
-                } else {
-                    fetchdescription = dashboardInst.description();
-                }
-                return fetchdescription;
-            });
+
+            self.dashboardsetDescription = ko.observable(ko.unwrap(dashboardInst.description) || "");
 
 
             self.dashboardsetConfig = {
@@ -192,15 +184,10 @@ define(['knockout',
                         successCallback,
                         failureCallback
                         );
-
+                 
                 // add delay for updating screenshots because 
                 // a tab may take some time to render the tiles.
                 dfu.getAjaxUtil().actionAfterAjaxStop(function () {
-                    // add flag tag for ui test if triggered by add or remove sub dashboard
-                    if(!fieldsToUpdate){
-                        $("df-ajax-flag").remove();
-                        $("#globalBody").append("<df-ajax-flag></df-ajax-flag>");
-                    }
                     var $tilesWrapper = $(".tiles-wrapper:visible");
                     if($tilesWrapper && selectedDashboardInst().type==='new'){
                         newDashboardJs.screenShot = null;
@@ -745,8 +732,8 @@ define(['knockout',
             function highlightNextTab(removeDashboardId,clickItem){
                  $("#dashboard-" + removeDashboardId).remove();
                 
-                var removeResult=findRemoveTab(self.dashboardsetItems,removeDashboardId);
-                var reorderResult=findRemoveTab(self.reorderedDbsSetItems(),removeDashboardId);
+                var removeResult = findRemoveTab(self.dashboardsetItems, removeDashboardId);
+                var reorderResult = findRemoveTab(self.reorderedDbsSetItems(), removeDashboardId);
                 
                 if (removeResult.removeIndex > -1) {
                      var currentShowIndex=$('.other-nav').index(clickItem); 
@@ -775,7 +762,6 @@ define(['knockout',
                     event.preventDefault();
                 } else {
                     highlightNextTab(removeId, currentSelectedItem);
-                    $("#dashboard-" + removeId).remove();
                 }
                 if(self.dashboardInstMap[removeId].type === 'new' && self.dashboardsetItems.length > 0){
                     self.noDashboardHome(true);
