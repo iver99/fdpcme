@@ -63,16 +63,14 @@ define([
                     type: "POST",
                     url: downtimeDetectUrl,
                     async: true,
-                    data: {},
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8"
+                    headers: dfu.getDefaultHeader()
                 })
                 .done(function() {
                     callback(false);
                 })
                 .fail(function(jqXHR, textStatus, errorThrown) {
                     var apigwHeaders = ajaxUtil.getAPIGWHeaderValues(jqXHR, 'X-ORCL-OMC-APIGW-RETRYAFTER');
-                    if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'] === '"planned downtime"') {
+                    if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'] === 'planned downtime') {
                         callback(true);
                     }
                     else {

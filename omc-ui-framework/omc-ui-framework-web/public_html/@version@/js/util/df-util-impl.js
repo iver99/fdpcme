@@ -335,8 +335,8 @@ define([
             self.getDefaultHeader = function() {
                 var defHeader = {};
                 if (self.isDevMode()){
-                    defHeader["X-USER-IDENTITY-DOMAIN-NAME"] = self.tenantName;
-                    defHeader["X-REMOTE-USER"] = self.tenantName+'.'+self.userName;
+                    defHeader["X-USER-IDENTITY-DOMAIN-NAME"] = self.getDevData().tenant;
+                    defHeader["X-REMOTE-USER"] = self.getDevData().tenant+'.'+self.getDevData().user;
                     defHeader.Authorization="Basic "+btoa(self.getDevData().wlsAuth);
                 }
                 oj.Logger.info("Sent Header: "+JSON.stringify(defHeader));

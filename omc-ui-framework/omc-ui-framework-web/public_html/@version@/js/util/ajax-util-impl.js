@@ -155,7 +155,7 @@ define([
                                     }
                                 }
                                 //Check to see if OMC is under planned downtime, if yes, show a warning message to user and no need to retry
-                                else if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'] === '"planned downtime"') {
+                                else if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'] === 'planned downtime') {
                                     retries = 0;
                                     underPlannedDowntime = true;
                                     //show message to user when OMC is under planned downtime
@@ -366,7 +366,7 @@ define([
                         var headerItem = headerValues[i];
                         var itemValuePair = headerItem.split('=');
                         if (itemValuePair.length === 2) {
-                            headerValuesMap[$.trim(itemValuePair[0])] = $.trim(itemValuePair[1]);
+                            headerValuesMap[$.trim(itemValuePair[0])] = $.trim(itemValuePair[1].replace(/"/g, ''));
                         }
                     }
                 }
