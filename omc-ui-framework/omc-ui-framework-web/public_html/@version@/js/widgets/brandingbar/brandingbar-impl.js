@@ -59,6 +59,8 @@ define([
                 self.MONITORING_SERVICE_VERSION=encodeURIComponent('1.5+');
                 var appIdEventUI = "EventUI";
                 var appIdMonitoring = "Monitoring";
+                var appIdSecurityAnalytics = "SecurityAnalytics";
+                var appIdOcs = "Orchestration";
                 var appMap = {};
                 appMap[appIdAPM] = {
                     "appId": "APM",
@@ -117,6 +119,22 @@ define([
                     "version": self.MONITORING_SERVICE_VERSION,
                     "helpTopicId": "em_moncs"
                 }; 
+                appMap[appIdSecurityAnalytics] = {
+                        "appId": appIdSecurityAnalytics,
+                        "appName": "BRANDING_BAR_APP_NAME_SECURITY_ANALYTICS", 
+                        "serviceDisplayName": "BRANDING_BAR_CLOUD_SERVICE_NAME_SA",
+                        "serviceName": "SecurityAnalyticsUI",
+                        "version": self.SERVICE_VERSION,
+                        "helpTopicId": "em_samcs"
+                    }; 
+                appMap[appIdOcs] = {
+                    "appId": appIdOcs,
+                    "appName": "BRANDING_BAR_APP_NAME_ORCHESTRATION", 
+                    "serviceDisplayName": "BRANDING_BAR_APP_NAME_ORCHESTRATION",
+                    "serviceName": "Dashboard-UI", //Orchestration has no UI service, use Dashboard-UI now
+                    "version": self.SERVICE_VERSION,
+                    "helpTopicId": "em_home_gs"
+                };  
             
                 self.appId = $.isFunction(params.appId) ? params.appId() : params.appId;
                 self.relNotificationCheck = $.isFunction(params.relNotificationCheck) ? params.relNotificationCheck() : params.relNotificationCheck;

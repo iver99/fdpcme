@@ -205,6 +205,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         {
             self.filter = null;
         }
+        self.showTilesMsg = ko.observable(false);
+        self.tilesMsg = ko.observable("");
         self.showExploreDataBtn= ko.observable(true);
         self.showSeachClear = ko.observable(false);
         self.tilesViewGridId = self.parentElementId+'gridtview';
@@ -247,6 +249,12 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), filterString);
         self.datasourceCallback = function (_event) {
                     var _i = 0, _rawdbs = [];
+//                    if (self.datasource['serverError'] === true)
+//                    {
+//                        self.showTilesMsg(true);
+//                        self.tilesMsg(getNlsString('DBS_HOME_TILES_INTERNAL_ERROR'));
+//                        return;
+//                    }
                     if (_event['data'])
                     {
                         for (_i = 0; _i < _event['data'].length; _i++)
@@ -260,6 +268,17 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                             _rawdbs.push(_datai);
                         }
                     }
+                    
+                    if (_rawdbs.length < 1)
+                    {
+                        self.showTilesMsg(true);
+                        self.tilesMsg(getNlsString('DBS_HOME_TILES_NO_DASHBOARDS'));
+                    }
+                    else
+                    {
+                        self.showTilesMsg(false);
+                    }
+                        
                     //self.dashboardsTS(new oj.ArrayTableDataSource(_rawdbs, {idAttribute: 'id'}));
                     //var _event = _event = {data: _rawdbs, startIndex: 0};
                     if (self.dashboardsTS() && self.dashboardsTS() !== null)
@@ -277,6 +296,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.datasource['pagingDS'].setPage(0, { 
             'silent': true,
             'success': function() {
+                self.datasource['serverError'] = false;
                 self.refreshPagingSource();
                 if (self.datasource['pagingDS'].totalSize() <= 0)
                 {
@@ -287,6 +307,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                 }
             },
             'error': function(jqXHR, textStatus, errorThrown) {
+                self.datasource['serverError'] = true;
                 oj.Logger.error("Error when fetching data for paginge data source. " + (jqXHR ? jqXHR.responseText : ""));
             }
         } );

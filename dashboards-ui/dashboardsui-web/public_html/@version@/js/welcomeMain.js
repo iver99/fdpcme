@@ -140,6 +140,12 @@ require(['ojs/ojcore',
 
                 self.dashboards = getNlsString("LANDING_HOME_DASHBOARDS");
                 self.dashboardsDesc = getNlsString("LANDING_HOME_DASHBOARDS_DESC");
+                
+                self.securityAnalytics = getNlsString("LANDING_HOME_SECURITY_ANALYTICS");
+                self.securityAnalyticsDesc = getNlsString("LANDING_HOME_SECURITY_ANALYTICS_DESC");
+                self.orchestration = getNlsString("LANDING_HOME_ORCHESTRATION");
+                self.orchestrationDesc = getNlsString("LANDING_HOME_ORCHESTRATION_DESC");
+                
                 self.dataExplorers = getNlsString("LANDING_HOME_DATA_EXPLORERS");
                 self.dataExplorersDesc = getNlsString("LANDING_HOME_DATA_EXPLORERS_DESC");
                 self.dataExplorer = getNlsString("LANDING_HOME_DATA_EXPLORER");
@@ -156,6 +162,8 @@ require(['ojs/ojcore',
                 self.data_type = "select";
                 
                 self.showInfraMonitoring = ko.observable(false);
+                self.showSecurityAnalytics = ko.observable(false);
+                self.showOrchestration = ko.observable(false);
                 
                 self.getServiceUrls = function() {
                     var serviceUrl = dfu.getRegistrationUrl();
@@ -190,6 +198,12 @@ require(['ojs/ojcore',
                         for(i=0; i<cloudServicesNum; i++) {
                             if(cloudServices[i].name == "Monitoring") {
                                 self.showInfraMonitoring(true);
+                            }
+                            if(cloudServices[i].name === "SecurityAnalytics") {
+                                self.showSecurityAnalytics(true);
+                            }
+                            if(cloudServices[i].name == "Orchestration") {
+                                self.showOrchestration(true);
                             }
                             landingHomeUrls[cloudServices[i].name] = cloudServices[i].href;
                         }
@@ -299,6 +313,26 @@ require(['ojs/ojcore',
                     oj.Logger.info('Trying to open dashboards by URL: ' + self.dashboardsUrl);
                     if(self.dashboardsUrl) {
                         window.location.href = self.dashboardsUrl;
+                    }
+                };
+                self.openSecurityAnalytics = function() {
+                    if(!self.landingHomeUrls) {
+                        console.log("---fetching service links is not finished yet!---");
+                        return;
+                    }
+                    if(self.landingHomeUrls.SecurityAnalytics) {
+                        oj.Logger.info('Trying to open Security Analytics by URL: ' + self.landingHomeUrls.SecurityAnalytics);
+                        window.location.href = self.landingHomeUrls.SecurityAnalytics;
+                    }
+                };
+                self.openOrchestration = function() {
+                    if(!self.landingHomeUrls) {
+                        console.log("---fetching service links is not finished yet!---");
+                        return;
+                    }
+                    oj.Logger.info('Trying to open Orchestration by URL: ' + self.landingHomeUrls.Orchestration);
+                    if(self.landingHomeUrls.Orchestration) {
+                        window.location.href = self.landingHomeUrls.Orchestration;
                     }
                 };
                 self.dataExplorersChosen = function (event, data) {

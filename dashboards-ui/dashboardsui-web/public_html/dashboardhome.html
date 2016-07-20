@@ -61,6 +61,9 @@
     <!-- Home toolbar end -->
     <!-- tiles panel start -->
     <!-- ko if: $component.isTilesView() === 'gridtview' -->
+    <div data-bind="visible: showTilesMsg">
+        <div style="padding-left: 10px; font-style: italic; font-size: 1.4em;" data-bind="text: getNlsString('DBS_HOME_TILES_NO_DASHBOARDS')"></div>
+    </div>
     <div class="dbs-summaries-container" style="margin-bottom: 2%">
         <!-- ko foreach: dashboards -->
         <div tabindex="0" class="oj-panel dbs-summary-container" 
