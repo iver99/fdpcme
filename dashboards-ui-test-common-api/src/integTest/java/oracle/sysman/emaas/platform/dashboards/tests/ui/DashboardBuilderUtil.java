@@ -38,6 +38,12 @@ public class DashboardBuilderUtil
 		dbu.deleteDashboard(driver);
 	}
 
+	public static void deleteDashboardInsideSet(WebDriver driver)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.deleteDashboardInsideSet(driver);
+	}
+
 	public static void deleteDashboardSet(WebDriver driver)
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
