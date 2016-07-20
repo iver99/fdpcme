@@ -13,8 +13,6 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -34,7 +32,7 @@ public class OMCStatusAPI extends APIBase
 	private static Logger _logger = LogManager.getLogger(OMCStatusAPI.class);
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
+	//	@Produces(MediaType.APPLICATION_JSON)
 	public Response getOmcStatus(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer)
 	{
