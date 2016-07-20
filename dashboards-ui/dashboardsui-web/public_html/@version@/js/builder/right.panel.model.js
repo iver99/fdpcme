@@ -885,6 +885,10 @@ define(['knockout',
             self.dsbRtDrFiltersSaveDelay.extend({rateLimit: {method: "notifyWhenChangesStop", timeout: 800}});
 
             self.dsbRtDrFiltersSaveDelay.subscribe(function() {
+                if(self.dashboard.systemDashboard() || self.dashboard.owner() !== dfu.getUserName()) {
+                    console.log("This is an OOB dashboard or the current user is not owner of the dashboard");
+                    return;
+                }
                 var fieldsToUpdate = {
                     "enableEntityFilter": self.dashboard.enableEntityFilter(),
                     "extendedOptions": JSON.stringify(self.extendedOptions),
