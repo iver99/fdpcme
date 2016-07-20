@@ -38,7 +38,7 @@ public class ScreenshorCRUD
 		tenantid = ct.getTenantid();
 		tenantid_2 = ct.getTenantid_2();
 		remoteuser = ct.getRemoteUser();
-		screenshotRelUrl = ScreenshorCRUD.getScreenshotRelURLForDashboard(1L);
+		screenshotRelUrl = ScreenshorCRUD.getScreenshotRelURLForDashboard(2L);
 	}
 
 	private static String getScreenshotRelURLForDashboard(long dashboardId)
