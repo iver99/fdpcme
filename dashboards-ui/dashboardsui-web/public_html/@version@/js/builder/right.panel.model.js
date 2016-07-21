@@ -66,6 +66,7 @@ define(['knockout',
             self.tilesViewModel = tilesViewModel;
             self.toolBarModel = toolBarModel;
             self.editDashboardDialogModel = ko.observable(null);
+            var editDashboardDialogModelChanged = false;
             self.sortedTiles = ko.computed(function(){
                 //add for detecting dashboard tabs switching in set 
                 self.editDashboardDialogModel();
@@ -151,6 +152,7 @@ define(['knockout',
                 self.toolBarModel = toolBarModel;     
                 self.dashboard = _$b.dashboard;
                 self.editDashboardDialogModel(new ed.EditDashboardDialogModel(_$b,toolBarModel));                 
+                editDashboardDialogModelChanged = true;
                 if(toolBarModel) {
                     self.dashboardEditDisabled(toolBarModel.editDisabled()) ;
                 }else{
@@ -699,7 +701,11 @@ define(['knockout',
             dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } });
             dsbSaveDelay.subscribe(function(){   
                 if(!self.$b.dashboard.systemDashboard || !self.$b.dashboard.systemDashboard()){
-                    self.editDashboardDialogModel() && self.editDashboardDialogModel().save();
+                    if(!editDashboardDialogModelChanged){
+                        self.editDashboardDialogModel() && self.editDashboardDialogModel().save();
+                    }else{
+                        editDashboardDialogModelChanged = false;
+                    }
                 }
             });
             
@@ -879,6 +885,10 @@ define(['knockout',
             self.dsbRtDrFiltersSaveDelay.extend({rateLimit: {method: "notifyWhenChangesStop", timeout: 800}});
 
             self.dsbRtDrFiltersSaveDelay.subscribe(function() {
+                if(self.dashboard.systemDashboard() || self.dashboard.owner() !== dfu.getUserName()) {
+                    console.log("This is an OOB dashboard or the current user is not owner of the dashboard");
+                    return;
+                }
                 var fieldsToUpdate = {
                     "enableEntityFilter": self.dashboard.enableEntityFilter(),
                     "extendedOptions": JSON.stringify(self.extendedOptions),
