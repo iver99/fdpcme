@@ -993,7 +993,8 @@ define(['knockout',
                 
                 var prevSharePublic = self.dashboardsetToolBarModel.dashboardsetConfig.share();
                 self.dashboardsetShare = ko.observable(prevSharePublic);
-                self.dashboardsetShareDisabled = ko.observable(self.dashboardsetToolBarModel.dashboardsetItems.length === 0);
+                var isOnlyDashboardPicker = self.dashboardsetToolBarModel.dashboardsetItems.length === 1 && self.dashboardsetToolBarModel.dashboardsetItems[0].type === "new";
+                self.dashboardsetShareDisabled = ko.observable(isOnlyDashboardPicker);
 
                 self.defaultSetAutoRefreshValue = ko.observable("every5minutes"); // todo get from instance
                 
