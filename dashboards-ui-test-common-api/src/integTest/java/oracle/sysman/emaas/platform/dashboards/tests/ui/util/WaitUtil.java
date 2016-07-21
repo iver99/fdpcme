@@ -10,10 +10,15 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.util;
 
-import org.openqa.selenium.JavascriptExecutor;
+import com.google.common.base.Function;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Predicate;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author wenjzhu
@@ -31,7 +36,7 @@ public class WaitUtil
 			@Override
 			public boolean apply(org.openqa.selenium.WebDriver d)
 			{
-				boolean activeAjax = (Boolean) ((JavascriptExecutor) d).executeScript("return $.active === 0");
+				boolean activeAjax = (Boolean) ((JavascriptExecutor) d).executeScript("return $ !== undefined && $.active === 0");
 				webd.getLogger().info(
 						"Wait for ajax finished: " + System.currentTimeMillis() + " has active ajax: " + !activeAjax);
 				return activeAjax;
