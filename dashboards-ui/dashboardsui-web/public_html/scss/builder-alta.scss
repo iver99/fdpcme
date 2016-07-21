@@ -1369,6 +1369,11 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
                 }  
             }
         }
+        .other-nav:not(.oj-selected){
+            .oj-tabs-close-icon{
+                display: none;
+            }
+        }
         .other-nav:first-child{
             margin-top: 7px;
             margin-left: 5px;
