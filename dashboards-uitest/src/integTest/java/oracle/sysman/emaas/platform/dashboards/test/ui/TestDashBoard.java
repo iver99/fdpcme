@@ -11,10 +11,10 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WidgetSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.openqa.selenium.By;
@@ -102,10 +102,9 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("all dashboards have been deleted");
 	}
 
-
 	//@Test(dependsOnMethods = { "testCreateDashboard_noWidget_ListView" })
 	/*
-        public void Test_targetselector() throws Exception
+	    public void Test_targetselector() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards  in list view");
@@ -122,7 +121,7 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardBuilderUtil.EditDashboard_targetselctor(webd, "noWidgetListView", "noWidgetListView desc2");
 
 	}
-        */
+	 */
 
 	@Test
 	public void testCreateDashboad_noDesc_GridView() throws Exception
@@ -474,6 +473,56 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("the dashboard has been deleted");
 	}
 
+	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
+	public void testHideEntityFilter() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testHideEntityFilter");
+
+		DashboardHomeUtil.gridView(webd);
+
+		//search the dashboard and open it in builder page
+		webd.getLogger().info("search the dashboard");
+		DashboardHomeUtil.search(webd, dbName_noWidgetGrid + "-modify");
+		webd.getLogger().info("verify the dashboard is existed");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_noWidgetGrid + "-modify"), "Dashboard NOT found!");
+		webd.getLogger().info("open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid + "-modify");
+
+		//hide entity filter in dashboard
+		webd.getLogger().info("hide entity filter");
+		Assert.assertFalse(DashboardBuilderUtil.showEntityFilter(webd, false), "hide entity filter failed");
+
+		//verify the target selector not displayed in the page
+		webd.getLogger().info("Verify the target selecotr not diplayed in the page");
+		Assert.assertFalse(webd.isDisplayed("css=" + PageId.TargetSelector_Css), "The target selector is in the page");
+	}
+
+	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
+	public void testHideTimeRangeFilter() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testHideTimeRangeFilter");
+
+		DashboardHomeUtil.gridView(webd);
+
+		//search the dashboard and open it in builder page
+		webd.getLogger().info("search the dashboard");
+		DashboardHomeUtil.search(webd, dbName_noWidgetGrid + "-modify");
+		webd.getLogger().info("verify the dashboard is existed");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_noWidgetGrid + "-modify"), "Dashboard NOT found!");
+		webd.getLogger().info("open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid + "-modify");
+
+		//hide time range filter in dashboard
+		webd.getLogger().info("hide time range filter");
+		Assert.assertFalse(DashboardBuilderUtil.showTimeRangeFilter(webd, false), "hide time range filter failed");
+
+		//verify the time range filter not displayed in the page
+		webd.getLogger().info("Verify the time range filter not diplayed in the page");
+		Assert.assertFalse(webd.isDisplayed("css=" + PageId.DateTimePick_Css), "The time range filter is in the page");
+	}
+
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView" })
 	public void testModifyDashboard_namedesc() throws Exception
 	{
@@ -718,91 +767,7 @@ public class TestDashBoard extends LoginAndLogout
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS),
 				"It is NOT the home page!");
 	}
-	
-	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
-	public void testHideEntityFilter() throws Exception
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testHideEntityFilter");
 
-		DashboardHomeUtil.gridView(webd);
-
-		//search the dashboard and open it in builder page
-		webd.getLogger().info("search the dashboard");
-		DashboardHomeUtil.search(webd, dbName_noWidgetGrid + "-modify");
-		webd.getLogger().info("verify the dashboard is existed");
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_noWidgetGrid + "-modify"), "Dashboard NOT found!");
-		webd.getLogger().info("open the dashboard");
-		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid + "-modify");
-		
-		//hide entity filter in dashboard
-		webd.getLogger().info("hide entity filter");
-		Assert.assertFalse(DashboardBuilderUtil.showEntityFilter(webd, false), "hide entity filter failed");		
-	}
-	
-	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
-	public void testHideTimeRangeFilter() throws Exception
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testHideTimeRangeFilter");
-
-		DashboardHomeUtil.gridView(webd);
-
-		//search the dashboard and open it in builder page
-		webd.getLogger().info("search the dashboard");
-		DashboardHomeUtil.search(webd, dbName_noWidgetGrid + "-modify");
-		webd.getLogger().info("verify the dashboard is existed");
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_noWidgetGrid + "-modify"), "Dashboard NOT found!");
-		webd.getLogger().info("open the dashboard");
-		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid + "-modify");
-		
-		//hide time range filter in dashboard
-		webd.getLogger().info("hide time range filter");
-		Assert.assertFalse(DashboardBuilderUtil.showTimeRangeFilter(webd, false), "hide time range filter failed");		
-	}
-	
-	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
-	public void testShowEntityFilter() throws Exception
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testShowEntityFilter");
-
-		DashboardHomeUtil.gridView(webd);
-
-		//search the dashboard and open it in builder page
-		webd.getLogger().info("search the dashboard");
-		DashboardHomeUtil.search(webd, dbName_noWidgetGrid + "-modify");
-		webd.getLogger().info("verify the dashboard is existed");
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_noWidgetGrid + "-modify"), "Dashboard NOT found!");
-		webd.getLogger().info("open the dashboard");
-		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid + "-modify");
-		
-		//show entity filter in dashboard
-		webd.getLogger().info("show entity filter");
-		Assert.assertTrue(DashboardBuilderUtil.showEntityFilter(webd, true), "show entity filter failed");		
-	}
-
-	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
-	public void testShowTimeRangeFilter() throws Exception
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testShowTimeRangeFilter");
-
-		DashboardHomeUtil.gridView(webd);
-
-		//search the dashboard and open it in builder page
-		webd.getLogger().info("search the dashboard");
-		DashboardHomeUtil.search(webd, dbName_noWidgetGrid + "-modify");
-		webd.getLogger().info("verify the dashboard is existed");
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_noWidgetGrid + "-modify"), "Dashboard NOT found!");
-		webd.getLogger().info("open the dashboard");
-		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid + "-modify");
-		
-		//show time range filter in dashboard
-		webd.getLogger().info("Show time range filter");
-		Assert.assertTrue(DashboardBuilderUtil.showTimeRangeFilter(webd, true), "Show time range filter failed");		
-	}
-	
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
 	public void testShareDashboard() throws Exception
 	{
@@ -823,6 +788,57 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Share the dashboard");
 		Assert.assertTrue(DashboardBuilderUtil.toggleShareDashboard(webd), "Share dashboard failed!");
 
+	}
+
+	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
+	public void testShowEntityFilter() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testShowEntityFilter");
+
+		DashboardHomeUtil.gridView(webd);
+
+		//search the dashboard and open it in builder page
+		webd.getLogger().info("search the dashboard");
+		DashboardHomeUtil.search(webd, dbName_noWidgetGrid + "-modify");
+		webd.getLogger().info("verify the dashboard is existed");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_noWidgetGrid + "-modify"), "Dashboard NOT found!");
+		webd.getLogger().info("open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid + "-modify");
+
+		//show entity filter in dashboard
+		webd.getLogger().info("show entity filter");
+		Assert.assertTrue(DashboardBuilderUtil.showEntityFilter(webd, true), "show entity filter failed");
+
+		//verify the target selector not displayed in the page
+		webd.getLogger().info("Verify the target selecotr diplayed in the page");
+		Assert.assertTrue(webd.isDisplayed("css=" + PageId.TargetSelector_Css), "The target selector is NOT in the page");
+
+	}
+
+	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
+	public void testShowTimeRangeFilter() throws Exception
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testShowTimeRangeFilter");
+
+		DashboardHomeUtil.gridView(webd);
+
+		//search the dashboard and open it in builder page
+		webd.getLogger().info("search the dashboard");
+		DashboardHomeUtil.search(webd, dbName_noWidgetGrid + "-modify");
+		webd.getLogger().info("verify the dashboard is existed");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_noWidgetGrid + "-modify"), "Dashboard NOT found!");
+		webd.getLogger().info("open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid + "-modify");
+
+		//show time range filter in dashboard
+		webd.getLogger().info("Show time range filter");
+		Assert.assertTrue(DashboardBuilderUtil.showTimeRangeFilter(webd, true), "Show time range filter failed");
+
+		//verify the time range filter displayed in the page
+		webd.getLogger().info("Verify the time range filter diplayed in the page");
+		Assert.assertTrue(webd.isDisplayed("css=" + PageId.DateTimePick_Css), "The time range filter is NOT in the page");
 	}
 
 	@Test(dependsOnMethods = { "testShareDashboard" })

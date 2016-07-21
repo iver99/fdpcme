@@ -63,4 +63,6 @@ public class PageId
 
 	//builder page
 	public static final String DashboardSetAddDashboardIcon_Css = ".dbd-icon-add";
+	public static final String DateTimePick_Css = "[id^='dateTimePicker_']";
+	public static final String TargetSelector_Css = ".df-targte-selector.df-targte-selector";
 }
