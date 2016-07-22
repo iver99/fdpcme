@@ -147,7 +147,7 @@ define([
                                 //before returning the error message to the user
                                 //X-ORCL-OMC-APIGW-RETRYAFTER : retry-after=2, num-retry=3, msg="tenant locked"
                                 var apigwHeaders = self.getAPIGWHeaderValues(jqXHR, 'X-ORCL-OMC-APIGW-RETRYAFTER');
-                                if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'] === '"tenant locked"') {
+                                if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'].toLowerCase() === 'tenant locked') {
                                     if (apigwHeaders['retry-after'] && apigwHeaders['num-retry']) {
                                         retries = apigwHeaders['num-retry'];
                                         retryDelayTime = apigwHeaders['retry-after']*1000; //Convert to milliseconds
@@ -155,7 +155,7 @@ define([
                                     }
                                 }
                                 //Check to see if OMC is under planned downtime, if yes, show a warning message to user and no need to retry
-                                else if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'] === 'planned downtime') {
+                                else if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'].toLowerCase() === 'planned downtime') {
                                     retries = 0;
                                     underPlannedDowntime = true;
                                     //show message to user when OMC is under planned downtime
@@ -366,7 +366,7 @@ define([
                         var headerItem = headerValues[i];
                         var itemValuePair = headerItem.split('=');
                         if (itemValuePair.length === 2) {
-                            headerValuesMap[$.trim(itemValuePair[0])] = $.trim(itemValuePair[1].replace(/"/g, ''));
+                            headerValuesMap[$.trim(itemValuePair[0])] = $.trim(itemValuePair[1].replace(/["']/g, ''));
                         }
                     }
                 }

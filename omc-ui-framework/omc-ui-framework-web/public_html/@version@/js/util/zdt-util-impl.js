@@ -34,7 +34,7 @@ define([
 //                })
 //                .fail(function(jqXHR, textStatus, errorThrown) {
 //                    var apigwHeaders = ajaxUtil.getAPIGWHeaderValues(jqXHR, 'X-ORCL-OMC-APIGW-RETRYAFTER');
-//                    if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'] === '"planned downtime"') {
+//                    if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'].toLowerCase() === 'planned downtime') {
 //                        underPlannedDowntime = true;
 //                    }
 //                });
@@ -70,7 +70,7 @@ define([
                 })
                 .fail(function(jqXHR, textStatus, errorThrown) {
                     var apigwHeaders = ajaxUtil.getAPIGWHeaderValues(jqXHR, 'X-ORCL-OMC-APIGW-RETRYAFTER');
-                    if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'] === 'planned downtime') {
+                    if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'].toLowerCase() === 'planned downtime') {
                         callback(true);
                     }
                     else {
