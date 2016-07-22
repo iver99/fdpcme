@@ -1,10 +1,12 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -60,9 +62,9 @@ public class DashBoardUtils
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Performance Analytics: Database");
 
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Analytics"));
-                Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Availability Analytics"));
-                Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Host"));
-                //Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Availability Analytics"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Host"));
+		//Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
 		//Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Host Health Summary"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Performance Analytics: Database"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Performance Analytics Application Server"));
@@ -130,22 +132,32 @@ public class DashBoardUtils
 		Assert.assertFalse(driver.isElementPresent(PageId.Middleware_Operations_ID));
 	}
 
-	//Sharing and stopping dashbaord
-	//	public static void sharedashboard() throws Exception
-	//	{
-	//		driver.click(PageId.option);
-	//		driver.click(PageId.dashboardshare);
-	//	}
-	//
-	//	public static void sharestopping() throws Exception
-	//	{
-	//		driver.click(PageId.option);
-	//		driver.click(PageId.stopshare_btn);
-	//	}
+	public static boolean verfiyShareOptionDisabled() throws Exception
+	{
+		driver.getLogger().info("Click the option icon of Dashboard Set");
+		driver.waitForElementPresent("css=" + PageId.DashboardSetOptions_Css);
+		WaitUtil.waitForPageFullyLoaded(driver);
 
-	//	public static void waitForMilliSeconds(long millisSec) throws Exception
-	//	{
-	//		Thread.sleep(millisSec);
-	//	}
+		driver.getLogger().info("Click Edit icon");
+		driver.waitForElementPresent("css=" + PageId.DashboardSetOptionsEdit_CSS);
+		driver.click("css=" + PageId.DashboardSetOptionsEdit_CSS);
+		driver.takeScreenShot();
 
+		driver.getLogger().info("Expand Share options");
+		driver.waitForElementPresent("css=" + PageId.DashboardSetShare_Css);
+		driver.click("css=" + PageId.DashboardSetShare_Css);
+		driver.takeScreenShot();
+
+		driver.getLogger().info("Verify the options are disabled or not");
+		WebElement ShareOption = driver.getWebDriver().findElement(By.cssSelector(PageId.DashboardSetShare_Css));
+		WebElement NotShareOption = driver.getWebDriver().findElement(By.cssSelector(PageId.DashboardSetNotShare_Css));
+		if (!ShareOption.isEnabled() & !NotShareOption.isEnabled()) {
+			driver.getLogger().info("The Options are disabled!");
+			return true;
+		}
+		else {
+			driver.getLogger().info("Have the option enabled");
+			return false;
+		}
+	}
 }

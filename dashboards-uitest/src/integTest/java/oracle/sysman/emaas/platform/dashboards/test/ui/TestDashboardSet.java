@@ -162,7 +162,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	@Test(groups = "third run", dependsOnMethods = { "testRemoveDashboardFromDashboardSet" })
+	@Test(groups = "third run", dependsOnMethods = { "testShareWithoutDashboardInSet" })
 	public void testAddDashboardInListView() throws Exception
 	{
 		//init the test
@@ -413,7 +413,7 @@ public class TestDashboardSet extends LoginAndLogout
 		Assert.assertFalse(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_OutSet + "-duplicate"),
 				"Dashboard has been duplicated and add to dashboard set");
 	}
-	*/
+	 */
 	@Test(groups = "second run", dependsOnGroups = { "first run" })
 	public void testFavorite() throws Exception
 	{
@@ -777,6 +777,35 @@ public class TestDashboardSet extends LoginAndLogout
 		//share the dashboardset
 		webd.getLogger().info("Share the dashboard");
 		Assert.assertTrue(DashboardBuilderUtil.toggleShareDashboardset(webd), "Share the dashboard set failed!");
+
+	}
+
+	@Test(groups = "third run", dependsOnMethods = { "testRemoveDashboardFromDashboardSet" })
+	public void testShareWithoutDashboardInSet() throws Exception
+	{
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testShareWithoutDashboardInSet");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//open the dashboardset
+		webd.getLogger().info("Open the dashboard in the builder page");
+		DashboardHomeUtil.selectDashboard(webd, dbsetName);
+
+		webd.getLogger().info("Set the refresh setting to OFF");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
+
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//verify the share options are diabled
+		Assert.assertTrue(DashBoardUtils.verfiyShareOptionDisabled(), "The options are enabled!");
 
 	}
 
