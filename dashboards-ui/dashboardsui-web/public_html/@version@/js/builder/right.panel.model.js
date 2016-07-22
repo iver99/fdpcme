@@ -298,7 +298,7 @@ define(['knockout',
                         }
                         self.$b.triggerBuilderResizeEvent('Initialize right panel');
                     }
-                    
+                    resetRightPanelWidth();
                     if (self.isDashboardSet()) {
                         self.dashboardsetToolBarModel.reorderedDbsSetItems.subscribe(function () {
                             var isOnlyDashboardPicker = self.dashboardsetToolBarModel.dashboardsetItems.length === 1 && self.dashboardsetToolBarModel.dashboardsetItems[0].type === "new";
@@ -324,6 +324,11 @@ define(['knockout',
 
                     ResizableView(self.$b);
             };
+            
+            function resetRightPanelWidth(){
+                $('.dbd-left-panel-show').css('width','320px'); 
+                $('.dbd-left-panel-hide').css('width','0'); 
+            }
 
             self.initEventHandlers = function() {
 //                $b.addBuilderResizeListener(self.resizeEventHandler);
@@ -556,15 +561,21 @@ define(['knockout',
             
             self.toggleLeftPanel = function() {
                 if (!self.showRightPanel()) {
-                    self.showRightPanel(true);
-                    $(".dashboard-picker-container:visible").addClass("df-collaps");
-                    self.$b.triggerBuilderResizeEvent('show right panel');
+                    $(".dbd-left-panel").animate({width: "320px"}, "normal");
+                    $(".right-panel-toggler").animate({right: (323 + self.scrollbarWidth) + 'px'}, 'normal', function () {
+                        self.showRightPanel(true);
+                        $(".dashboard-picker-container:visible").addClass("df-collaps");
+                        self.$b.triggerBuilderResizeEvent('show right panel');
+                    });
                 } else {
-                    self.expandDBEditor(true);
-                    self.showRightPanel(false);
-                    self.initDraggable();
-                    $(".dashboard-picker-container:visible").removeClass("df-collaps");
-                    self.$b.triggerBuilderResizeEvent('hide right panel');
+                    $(".dbd-left-panel").animate({width: 0});
+                    $(".right-panel-toggler").animate({right: self.scrollbarWidth + 3 + 'px'}, 'normal', function () {
+                        self.expandDBEditor(true);
+                        self.showRightPanel(false);
+                        self.initDraggable();
+                        $(".dashboard-picker-container:visible").removeClass("df-collaps");
+                        self.$b.triggerBuilderResizeEvent('hide right panel');
+                    });
                 }
             };
 
