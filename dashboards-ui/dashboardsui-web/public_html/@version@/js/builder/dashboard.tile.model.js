@@ -185,6 +185,14 @@ define(['knockout',
                 $("#tile" + clientGuid + " .dbd-btn-editor").css("display", "none");
                 $("#tile" + clientGuid + " .dbd-btn-maxminToggle").css("display", "none");
             };
+            self.prevFocusedClientGuid = ko.observable(null);
+            self.focusOnTile = function(clientGuid, data, event) {
+                self.showPullRightBtn(clientGuid, data, event);
+                if(self.prevFocusedClientGuid()!==clientGuid) {
+                    self.hidePullRightBtn(self.prevFocusedClientGuid(), data, event);
+                    self.prevFocusedClientGuid(clientGuid);
+                }
+            }
             self.openInDataExplorer = function (event, ui) {
 		if (!self.dashboard.systemDashboard())
                 	$b.getToolBarModel().handleDashboardSave();
@@ -249,7 +257,23 @@ define(['knockout',
                         self.editor.shorterTile(tile);
                         self.show();
                         self.notifyTileChange(tile, new Builder.TileChange("POST_SHORTER"));
-                        break;                
+                        break; 
+                    case "up":
+                        self.editor.moveUpTile(tile);
+                        self.show();
+                        break;
+                    case "down":
+                        self.editor.moveDownTile(tile);
+                        self.show();
+                        break;
+                    case "left":
+                        self.editor.moveLeftTile(tile);
+                        self.show();
+                        break;
+                    case "right":
+                        self.editor.moveRightTile(tile);
+                        self.show();
+                        break;
                 }
                 
                 $b.triggerEvent($b.EVENT_TILE_RESIZED, null, tile);

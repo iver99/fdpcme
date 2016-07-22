@@ -245,6 +245,15 @@ define(['knockout',
             tile.shorterEnabled = ko.computed(function() {
                 return mode.getModeHeight(tile) > 1;
             });
+            tile.upEnabled = ko.computed(function() {
+                return mode.getModeRow(tile) > 0;
+            });
+            tile.leftEnabled = ko.computed(function() {
+                return mode.getModeColumn(tile) > 0;
+            });
+            tile.rightEnabled = ko.computed(function() {
+                return mode.getModeColumn(tile)+mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS;
+            });
             tile.maximizeEnabled = ko.computed(function() {
                 return !tile.isMaximized();
             });
