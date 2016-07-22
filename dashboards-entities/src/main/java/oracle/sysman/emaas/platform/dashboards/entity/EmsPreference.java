@@ -10,18 +10,24 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.MultitenantType;
+import org.eclipse.persistence.annotations.QueryRedirectors;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
+import oracle.sysman.emaas.platform.dashboards.entity.customizer.EmsPreferenceRedirector;
+
 @Entity
-@NamedQueries({
-		@NamedQuery(name = "EmsPreference.findAll", query = "select o from EmsPreference o where o.userName = :username"),
+@NamedQueries({ @NamedQuery(name = "EmsPreference.findAll", query = "select o from EmsPreference o where o.userName = :username"),
 		@NamedQuery(name = "EmsPreference.removeAll", query = "delete from EmsPreference o where o.userName = :username") })
 @Table(name = "EMS_PREFERENCE")
 @IdClass(EmsPreferencePK.class)
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
+//@Customizer(value = EmsPreferenceCustomizer.class)
+@AdditionalCriteria("this.deleted = '0'")
+@QueryRedirectors(insert = EmsPreferenceRedirector.class, delete = EmsPreferenceRedirector.class)
 public class EmsPreference implements Serializable
 {
 	private static final long serialVersionUID = 5177176379267126865L;
@@ -36,16 +42,28 @@ public class EmsPreference implements Serializable
 	@Id
 	@Column(name = "USER_NAME", nullable = false, length = 128)
 	private String userName;
+	@Column(name = "DELETED", nullable = false, length = 1)
+	private Boolean deleted;
 
 	public EmsPreference()
 	{
+		deleted = false;
 	}
 
 	public EmsPreference(String prefKey, String prefValue, String userName)
 	{
+		this();
 		this.prefKey = prefKey;
 		this.prefValue = prefValue;
 		this.userName = userName;
+	}
+
+	/**
+	 * @return the deleted
+	 */
+	public Boolean getDeleted()
+	{
+		return deleted;
 	}
 
 	public String getPrefKey()
@@ -61,6 +79,15 @@ public class EmsPreference implements Serializable
 	public String getUserName()
 	{
 		return userName;
+	}
+
+	/**
+	 * @param deleted
+	 *            the deleted to set
+	 */
+	public void setDeleted(Boolean deleted)
+	{
+		this.deleted = deleted;
 	}
 
 	public void setPrefKey(String prefKey)
