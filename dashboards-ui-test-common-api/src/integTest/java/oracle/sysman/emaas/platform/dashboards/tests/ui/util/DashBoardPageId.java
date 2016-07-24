@@ -208,18 +208,19 @@ public class DashBoardPageId
 	public static final String BuilderTileHideLocator = "//ul[not(contains(@style,'display:none'))]/li[@data-option='showhide-title']/a[@data-show-hide-title='hide']";
 
 	//dashboard builder options
-	public static final String BuilderOptionsMenuLocator = "//button[contains(@class, 'dashboardOptsBtn')]";
+	public static final String BuilderOptionsMenuLocator = ".df-toolbar .dashboardOptsBtn[title=\"Options\"]";
 	public static final String BuilderOptionsAutoRefreshLocator = "//li[@data-singledb-option='Auto-refresh']/a";
 	public static final String BuilderOptionsAutoRefreshOffLocator = "//li[@data-singledb-option='Off']/a";
 	public static final String BuilderOptionsAutoRefreshOn5MinLocator = "//li[@data-singledb-option=\"On (Every 5 Minutes)\"]/a";
-	public static final String BuilderOptionsDeleteLocator = "//li[@data-singledb-option='Delete']/a";
+	public static final String BuilderOptionsDeleteLocator = "button.dbd-delete-single-dashboard";
 	//	public static final String BuilderOptionsDeleteMenuLocator = "//a[@id='emcpdf_dsbopts_delete']";
 	public static final String BuilderOptionsPrintLocatorCSS = "li[data-singledb-option=\"Print\"] a";
 	public static final String BuilderOptionsEditLocatorCSS = "li[data-singledb-option=\"Edit\"] a";
-	public static final String BuilderOptionsEditNameCSS = "dbsHNameIn";
-	public static final String BuilderOptionsEditDescriptionCSS = "dbsHDpIn";
+	public static final String BuilderOptionsEditNameCSS = ".dbd-right-panel-editdashboard #dbsHNameIn";
+	public static final String BuilderOptionsEditDescriptionCSS = ".dbd-right-panel-editdashboard #editDbdDscp";
+	public static final String BuilderOptionsEditShowDescriptionCSS = ".dbd-right-panel-editdashboard #showdbDescription";
 	public static final String BuilderOptionsEditSaveCSS = ".createDsb-2";
-        public static final String EntityfilterLocator = "ckbxEntityFilter";
+    public static final String EntityfilterLocator = "ckbxEntityFilter";
 	public static final String BuilderOptionsShareLocatorCSS = "li[data-singledb-option=\"Share\"] a";
 	public static final String BuilderOptionsUnShareLocatorCSS = "li[data-singledb-option=\"Stop Sharing\"] a";
 	public static final String BuilderOptionsFavoriteLocatorCSS = "li[data-singledb-option=\"Add Favorite\"] a";
@@ -228,9 +229,12 @@ public class DashBoardPageId
 	public static final String BuilderOptionsRemoveHomeLocatorCSS = "li[data-singledb-option=\"Remove as Home\"] a";
 	public static final String BuilderOptionsSetHomeSaveCSS = "#btnComfirmSetAsHome";
 	public static final String BuilderOptionsDuplicateLocatorCSS = "li[data-singledb-option=\"Duplicate\"] a";
+	public static final String BuilderOptionsDuplicateToSetCSS = "li[data-singledb-option=\"Add to set\"] a";
+	public static final String BuilderOptionsDuplicateNotToSetCSS = "li[data-singledb-option=\"Do not add to set\"] a";
 	public static final String BuilderOptionsDuplicateNameCSS = "dupDsbNameIn";
 	public static final String BuilderOptionsDuplicateDescriptionCSS = "dupDsbDescIn";
 	public static final String BuilderOptionsDuplicateSaveCSS = ".createDsb-1";
+	public static final String DashboardSetContainerCSS = "div.dashboard-content";
 	// dashboard set name
 	public static final String DashboardSetNameTextLocator = "//div[@id='dbd-set-name']/span";
 	//dashboard set options
@@ -238,28 +242,30 @@ public class DashBoardPageId
 	public static final String DashboardSetNavsCSS = ".dbd-tabs-nav .oj-tabs-tab";
 	public static final String DashboardSetNavRemoveBtnCSS = ".oj-tabs-close-icon";
 	public static final String DashboardSetNavAddBtnCSS = "#add-nav";
-	public static final String DashboardSetOptionBtn = "//button[contains(@class, 'dbd-set-option-btn')]";
+	public static final String DashboardSetOptionBtn = "//button[contains(@id, 'tabs-caret')]";
 	public static final String DashboardSetOptionsAutoRefreshLocator = "id=dbs-refresh";
 	public static final String DashboardSetOptionsAutoRefreshOffLocator = "id=refresh-off";
 	public static final String DashboardSetAutoRefreshOffSelectedLocator = "//li[@id='refresh-off']/a/span[contains(@class, 'dbd-icon-check')]";
 	public static final String DashboardSetOptionsAutoRefreshOn5MinLocator = "id=refresh-time";
 	public static final String DashboardSetAutoRefreshOn5MinSelectedLocator = "//li[@id='refresh-time']/a/span[contains(@class, 'dbd-icon-check')]";
-	public static final String DashboardSetOptionsDeleteLocator = "//ul[@id='dbd-set-option']/li[@id='dbs-delete']";
+	public static final String DashboardSetOptionsDeleteLocator = "//button[contains(@class,'dbd-delete-dashboardset')]";
 	public static final String DashboardSetDeleteDialogLocator = "id=deleteDashboardset";
 	public static final String DashboardSetDeleteDialogDeleteBtnLocator = "//button[@data-delete-set-dialog='Delete']";
 	public static final String DashboardSetPrintLoadingID = "printLoading";
-	public static final String DashboardsetOptionsMenuID = "tabs-gear";
+	public static final String DashboardsetOptionsMenuID = "tabs-caret";
 	public static final String DashboardsetOptionsEditCSS = "#dbs-edit a";
 	public static final String DashboardsetOptionsEditSaveID = "saveDsbInfo";
 	public static final String DashboardsetOptionsEditDialogID = "ojDialogWrapper-changeDashboardsetInfo";
 	public static final String DashboardsetOptionsNameCollapsibleCSS = "#nameDescription a.oj-collapsible-open-icon";
-	public static final String DashboardsetOptionsEditNameCSS = "#changeDashboardsetInfo #dbsInfoName";
-	public static final String DashboardsetOptionsEditDescriptionCSS = "#changeDashboardsetInfo #dbsInfoDescription";
 	public static final String DashboardsetOptionsShareDiaOpenCSS = "#shareSettings .oj-collapsible-wrapper";
-	public static final String DashboardsetOptionsShareCollapsibleCSS = "#shareSettings .edit-dbsset-title";
 	public static final String DashboardsetOptionsShareOnJudgeCSS = "#shareSettings #share-on.oj-selected";
-	public static final String DashboardsetOptionsShareCSS = "#shareSettings #share-on";
-	public static final String DashboardsetOptionsUnshareCSS = "#shareSettings #share-off";
+	public static final String DashboardsetOptionsEditNameCSS = "input#dbsSetHNameIn";
+	public static final String DashboardsetOptionsEditDescriptionCSS = "textarea#editDbdSetDscp";
+	public static final String DashboardsetOptionsShareContentCSS = ".dbd-right-panel-editdashboard-set-share .oj-collapsible-wrapper";
+	public static final String DashboardsetOptionsShareCollapsibleCSS = ".dbd-right-panel-editdashboard-set-share >span";
+	public static final String DashboardsetOptionsShareStatusCSS = "#dashboardSetSharingShared.oj-selected";
+	public static final String DashboardsetOptionsShareCSS = "#dashboardSetSharingShared";
+	public static final String DashboardsetOptionsUnshareCSS = "#dashboardSetSharingNotShared";
 	public static final String DashboardsetOptionsPrintCSS = "#dbs-print a";
 	public static final String DashboardsetOptionsfavoriteCSS = "#dbs-favorite a";
 	public static final String DashboardsetOptionsRemoveFavoriteCSS = "#dbs-favorite a[dashboardset-option=\"Remove Favorite\"]";
@@ -267,7 +273,7 @@ public class DashBoardPageId
 	public static final String DashboardsetOptionsAddHomeCSS = "#dbs-home a[dashboardset-option=\"Set as Home\"]";
 
 	//dashboard tool bar
-	public static final String DashboardSaveCSS = "button.dashboard-screenshot";
+	public static final String DashboardSaveCSS = "button.dashboardSaveBtn";
 
 	//dashboard delete dialog
 	public static final String BuilderDeleteDialogLocator = "id=ojDialogWrapper-delete-dashboard";
@@ -309,13 +315,43 @@ public class DashBoardPageId
 	public static final String RemoveTileCSS = "li[data-option=remove]";
 
 	//right drawer css locators
+	public static final String RightDrawerToggleBtnCSS = ".right-panel-toggler button.toggle-right-panel-btn";
 	public static final String RightDrawerCSS = ".right-panel-toggler";
 	public static final String RightDrawerPanelCSS = ".dbd-left-panel";
-	public static final String RightDrawerToggleBtnCSS = ".right-panel-toggler button.toggle-right-panel-btn";
+	public static final String RightDrawerToggleWrenchBtnCSS = ".right-panel-toggler button.toggle-right-panel-btn.rightpanel-wrench";
+	public static final String RightDrawerTogglePencilBtnCSS = ".right-panel-toggler button.toggle-right-panel-btn.rightpanel-pencil";
+	public static final String RightDrawerEditSingleDBBtnCSS = ".edit-setting-link.edit-dsb-link";
+	public static final String RightDrawerEditSingleDBShareCSS = ".dbd-right-panel-editdashboard-share>span";
+	public static final String RightDrawerEditDBFilterCSS = ".dbd-right-panel-editdashboard-filters>span";
+
+
 	public static final String RightDrawerSearchInputCSS = ".dbd-left-panel input.widget-search-input";
 	public static final String RightDrawerSearchButtonCSS = ".dbd-left-panel button.dbd-left-panel-header-search-btn";
 	public static final String RightDrawerWidgetToAreaCSS = ".tiles-wrapper";
 	public static final String RightDrawerWidgetCSS = ".dbd-left-panel .dbd-left-panel-widget";
+
+	//right drawer setting
+	public static final String RightDrawerEditDBDefaultTimeRangeSelect = "div[id^='oj-select-choice-defaultTimeRange_']";
+	public static final String RightDrawerEditDBDefaultTimeRangeResultLabel = "span[id^='ojChoiceId_defaultTimeRange_']";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST15MINS = "/html/body/div/div/div/ul/li[1]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST30MINS = "/html/body/div/div/div/ul/li[2]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST60MINS = "/html/body/div/div/div/ul/li[3]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST4HOURS = "/html/body/div/div/div/ul/li[4]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST6HOURS = "/html/body/div/div/div/ul/li[5]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST1DAY = "/html/body/div/div/div/ul/li[6]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST7DAYS = "/html/body/div/div/div/ul/li[7]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST14DAYS = "/html/body/div/div/div/ul/li[8]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST30DAYS = "/html/body/div/div/div/ul/li[9]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST90DAYS = "/html/body/div/div/div/ul/li[10]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLAST1YEAR = "/html/body/div/div/div/ul/li[11]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeLATEST = "/html/body/div/div/div/ul/li[12]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeCUSTOM = "/html/body/div/div/div/ul/li[13]/div";
+	public static final String RightDrawerEditDBDefaultTimeRangeCusomResult = "/html/body/div/div/div/ul/li[14]/div";
+	
+	public static final String RightDrawerEditSingleDBToShareSelectedCSS = "#dashboardSharingShared.oj-selected";
+	public static final String RightDrawerEditSingleDBToShareCSS = "#dashboardSharingShared";
+	public static final String RightDrawerEditSingleDBNotShareCSS = "#dashboardSharingNotShared";
+
 
 	//time picker
 	public static final String TimePickerID = "/html/body/div[*]/div[2]/div[1]/div[1]/div/div[2]/div/span/span";//"/html/body/div[*]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";//"/html/body/div[3]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";///html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";//"
@@ -404,6 +440,7 @@ public class DashBoardPageId
 	public static final String DASHBOARD_HOME_DELETE_BUTTON = "dsbinfopop_delete";
 	public static final String DASHBOARD_HOME_DELETE_CONFIRM = "dbs_cfmDialog_delete";
 	public static final String DASHBOARD_HOME_DELETE_DIALOG = ".dbs_cfmDialog";
+	public static final String DASHBOARD_HOME_CREATINSET_BUTTON=".dashboard-picker-container .dbs-home-blue-button";
 
 	//error page
 	public static final String ErrorSignOutButtonId = "dbd_sign_out_button";

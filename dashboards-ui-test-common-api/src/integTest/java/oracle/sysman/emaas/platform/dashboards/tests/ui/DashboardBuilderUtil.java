@@ -25,10 +25,23 @@ public class DashboardBuilderUtil
 		dbu.addWidgetToDashboard(driver, searchString);
 	}
 
+	public static void createDashboardInsideSet(WebDriver driver, String name, String descriptions) throws Exception
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.createDashboardInsideSet(driver, name, descriptions);
+	}
+
+
 	public static void deleteDashboard(WebDriver driver)
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		dbu.deleteDashboard(driver);
+	}
+
+	public static void deleteDashboardInsideSet(WebDriver driver)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.deleteDashboardInsideSet(driver);
 	}
 
 	public static void deleteDashboardSet(WebDriver driver)
@@ -43,10 +56,21 @@ public class DashboardBuilderUtil
 		dbu.duplicateDashboard(driver, name, descriptions);
 	}
 
+	public static void duplicateDashboardInsideSet(WebDriver driver, String name, String descriptions,boolean addToSet) throws Exception {
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.duplicateDashboardInsideSet(driver, name, descriptions,addToSet);
+	}
+
 	public static void editDashboard(WebDriver driver, String name, String descriptions) throws Exception
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		dbu.editDashboard(driver, name, descriptions);
+	}
+
+	public static void editDashboard(WebDriver driver, String name, String descriptions, Boolean showDesc) throws Exception
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.editDashboard(driver, name, descriptions,showDesc);
 	}
 
 
@@ -172,12 +196,6 @@ public class DashboardBuilderUtil
 		dbu.refreshDashboardSet(driver, refreshSettings);
 	}
 
-	public static void removeDashboardInSet(WebDriver driver, String dashboardName)
-	{
-		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
-		dbu.removeDashboardInSet(driver, dashboardName);
-	}
-
 	public static void removeWidget(WebDriver driver, String widgetName) throws Exception
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
@@ -188,6 +206,12 @@ public class DashboardBuilderUtil
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		dbu.removeWidget(driver, widgetName, index);
+	}
+
+	public static void removeDashboardFromSet(WebDriver driver, String dashboardName) throws Exception
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.removeDashboardFromSet(driver, dashboardName);
 	}
 
 	public static void resizeWidget(WebDriver driver, String widgetName, int index, String resizeOptions) throws Exception
@@ -219,6 +243,13 @@ public class DashboardBuilderUtil
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		dbu.selectDashboard(driver, dashboardName);
 	}
+
+	public static void selectDashboardInsideSet(WebDriver driver, String dashboardName) throws Exception
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.selectDashboardInsideSet(driver, dashboardName);
+	}
+
 
 	public static void showWidgetTitle(WebDriver driver, String widgetName, boolean visibility) throws Exception
 	{
@@ -299,6 +330,24 @@ public class DashboardBuilderUtil
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		return dbu.verifyWidget(driver, widgetName, index);
+	}
+	
+	 public static void setEntitySupport(WebDriver driver, String mode) throws Exception
+	 {
+		 IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		 dbu.setEntitySupport(driver, mode);
+	 }
+
+	public static boolean showEntityFilter(WebDriver driver, boolean showEntityFilter) throws Exception
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		return dbu.showEntityFilter(driver, showEntityFilter);
+	}
+
+	public static boolean showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) throws Exception
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		return dbu.showTimeRangeFilter(driver, showTimeRangeFilter);
 	}
 
 }

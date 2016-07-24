@@ -35,7 +35,6 @@ public class DashBoardUtils
 
 	public static void closeOverviewPage() throws Exception
 	{
-
 		driver.getLogger().info("before clicking overview button");
 		driver.click(PageId.OverviewCloseID);
 		driver.getLogger().info("after clicking overview button");

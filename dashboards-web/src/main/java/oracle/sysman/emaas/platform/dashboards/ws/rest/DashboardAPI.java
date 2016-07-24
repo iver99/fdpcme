@@ -627,6 +627,32 @@ public class DashboardAPI extends APIBase
 		}
 	}
 
+	@GET
+	@Path("{id: [1-9][0-9]*}/dashboardsets")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response queryDashboardSetsBySubId(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+									   @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+									   @PathParam("id") long dashboardId)
+	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}/dashboardsets", dashboardId);
+		DashboardManager dm = DashboardManager.getInstance();
+		try {
+			logkeyHeaders("queryDashboardSetsBySubId()", userTenant, tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);
+			Dashboard dbd = dm.getDashboardSetsBySubId(dashboardId, tenantId);
+			return Response.ok(getJsonUtil().toJson(dbd)).build();
+		} catch (DashboardException e) {
+			logger.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		} catch (BasicServiceMalfunctionException e) {
+			logger.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		} finally {
+			clearUserContext();
+		}
+	}
+
 	private void logkeyHeaders(String api, String x_remote_user, String domain_name)
 	{
 		logger.info("Headers of " + api + ": X-REMOTE-USER=" + x_remote_user + ", X-USER-IDENTITY-DOMAIN-NAME=" + domain_name);
