@@ -737,7 +737,7 @@ define(['knockout',
             }
                                            
             $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
-                var removeDashboardId = Number(ui.tab.attr('id').split(/dashboardTab-/)[1]) || (ui.tab.attr('id').split(/dashboardTab-/)[1]);
+                var removeDashboardId = /*Number(ui.tab.attr('id').split(/dashboardTab-/)[1]) || */(ui.tab.attr('id').split(/dashboardTab-/)[1]);
 
                 if (self.dashboardInstMap[removeDashboardId].type !== 'new' && self.dashboardInstMap[removeDashboardId].$b.isDashboardUpdated() === true) {
                     $('#deleteDashboard').ojDialog("open");

@@ -21,9 +21,13 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.MultitenantType;
+import org.eclipse.persistence.annotations.QueryRedirectors;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
+
+import oracle.sysman.emaas.platform.dashboards.entity.customizer.EmsDashboardTileRedirector;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = "EmsDashboardTile.findAll", query = "select o from EmsDashboardTile o") })
@@ -31,6 +35,8 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 //@SequenceGenerator(name = "EmsDashboardTile_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_TILE_SEQ", allocationSize = 1)
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
+@AdditionalCriteria("this.deleted = '0'")
+@QueryRedirectors(delete = EmsDashboardTileRedirector.class)
 public class EmsDashboardTile implements Serializable
 {
 	private static final long serialVersionUID = 6307069723661684517L;
@@ -103,6 +109,8 @@ public class EmsDashboardTile implements Serializable
 	private Integer widgetSupportTimeControl;
 	@Column(name = "WIDGET_LINKED_DASHBOARD")
 	private BigInteger widgetLinkedDashboard;
+	@Column(name = "DELETED", nullable = false, length = 1)
+	private Boolean deleted;
 	@ManyToOne
 	@JoinColumns(value = { @JoinColumn(name = "DASHBOARD_ID", referencedColumnName = "DASHBOARD_ID"),
 			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
@@ -113,16 +121,19 @@ public class EmsDashboardTile implements Serializable
 
 	public EmsDashboardTile()
 	{
+		deleted = Boolean.FALSE;
 	}
 
 	public EmsDashboardTile(Date creationDate, EmsDashboard emsDashboard1, Integer type, Integer row, Integer column,
-			Integer height, Integer isMaximized, Date lastModificationDate, String lastModifiedBy, String owner, /*Integer position, */
+			Integer height, Integer isMaximized, Date lastModificationDate, String lastModifiedBy,
+			String owner, /*Integer position, */
 			String providerAssetRoot, String providerName, String providerVersion, BigInteger tileId, String title,
 			String widgetCreationTime, String widgetDescription, String widgetGroupName, String widgetHistogram,
 			String widgetIcon, String widgetKocName, String widgetName, String widgetOwner, Integer widgetSource,
 			String widgetTemplate, String widgetUniqueId, String widgetViewmode, Integer widgetSupportTimeControl, Integer width,
 			BigInteger widgetLinkedDashboard)
 	{
+		this();
 		this.creationDate = creationDate;
 		dashboard = emsDashboard1;
 		this.type = type;
@@ -187,6 +198,14 @@ public class EmsDashboardTile implements Serializable
 	public List<EmsDashboardTileParams> getDashboardTileParamsList()
 	{
 		return dashboardTileParamsList;
+	}
+
+	/**
+	 * @return the deleted
+	 */
+	public Boolean getDeleted()
+	{
+		return deleted;
 	}
 
 	public Integer getHeight()
@@ -364,6 +383,15 @@ public class EmsDashboardTile implements Serializable
 	public void setDashboardTileParamsList(List<EmsDashboardTileParams> emsDashboardTileParamsList)
 	{
 		dashboardTileParamsList = emsDashboardTileParamsList;
+	}
+
+	/**
+	 * @param deleted
+	 *            the deleted to set
+	 */
+	public void setDeleted(Boolean deleted)
+	{
+		this.deleted = deleted;
 	}
 
 	public void setHeight(Integer height)

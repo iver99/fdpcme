@@ -47,7 +47,7 @@ public class EmsPreference implements Serializable
 
 	public EmsPreference()
 	{
-		deleted = false;
+		deleted = Boolean.FALSE;
 	}
 
 	public EmsPreference(String prefKey, String prefValue, String userName)

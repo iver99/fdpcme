@@ -23,14 +23,14 @@ import org.eclipse.persistence.sessions.Record;
 import org.eclipse.persistence.sessions.Session;
 import org.eclipse.persistence.sessions.UnitOfWork;
 
-import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
 
 /**
  * @author guochen
  */
-public class EmsPreferenceRedirector implements QueryRedirector
+public class EmsDashboardTileParamsRedirector implements QueryRedirector
 {
-	private static final long serialVersionUID = 8558823239804439205L;
+	private static final long serialVersionUID = -4080358817498970850L;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.persistence.queries.QueryRedirector#invokeQuery(org.eclipse.persistence.queries.DatabaseQuery, org.eclipse.persistence.sessions.Record, org.eclipse.persistence.sessions.Session)
@@ -41,27 +41,28 @@ public class EmsPreferenceRedirector implements QueryRedirector
 		ClassDescriptor cd = session.getDescriptor(query.getReferenceClass());
 		if (query.isDeleteObjectQuery()) {// soft deletion
 			DeleteObjectQuery doq = (DeleteObjectQuery) query;
-			EmsPreference pre = (EmsPreference) doq.getObject();
-			pre.setDeleted(true);
-			UpdateObjectQuery uoq = new UpdateObjectQuery(pre);
+			EmsDashboardTileParams edtp = (EmsDashboardTileParams) doq.getObject();
+			edtp.setDeleted(true);
+			UpdateObjectQuery uoq = new UpdateObjectQuery(edtp);
 			cd.addDirectQueryKey("deleted", "DELETED");
 			uoq.setDescriptor(cd);
 			doq.setDescriptor(uoq.getDescriptor());
-			return uoq.execute((AbstractSession) session, (AbstractRecord) arguments);
+			Object rtn = uoq.execute((AbstractSession) session, (AbstractRecord) arguments);
+			return rtn;
 		}
 		else if (query.isInsertObjectQuery()) {// remove the soft deleted object before insertion
 			InsertObjectQuery ioq = (InsertObjectQuery) query;
-			EmsPreference pre = (EmsPreference) ioq.getObject();
+			EmsDashboardTileParams edtp = (EmsDashboardTileParams) ioq.getObject();
 
 			UnitOfWork uow = session.acquireUnitOfWork();
-			String delSql = "DELETE FROM EMS_PREFERENCE WHERE USER_NAME='" + pre.getUserName() + "' AND PREF_KEY='"
-					+ pre.getPrefKey() + "' AND TENANT_ID=" + session.getActiveSession().getProperty("tenant.id")
-					+ " AND DELETED=1";
+			String delSql = "DELETE FROM EMS_DASHBOARD_TILE_PARAMS WHERE TILE_ID='" + edtp.getDashboardTile().getTileId()
+					+ "' AND PARAM_NAME='" + edtp.getParamName() + "' AND TENANT_ID="
+					+ session.getActiveSession().getProperty("tenant.id") + " AND DELETED=1";
 			uow.executeNonSelectingCall(new SQLCall(delSql));
 			uow.commit();
 
-			ioq = new InsertObjectQuery(pre);
-			ioq.setDoNotRedirect(true);// avoid endless looping
+			ioq = new InsertObjectQuery(edtp);
+			ioq.setDoNotRedirect(true);
 			InsertObjectQuery old = cd.getQueryManager().getInsertQuery();
 			cd.getQueryManager().setInsertQuery(ioq);
 			Object rtn = ioq.execute((AbstractSession) session, (AbstractRecord) arguments);
@@ -72,5 +73,4 @@ public class EmsPreferenceRedirector implements QueryRedirector
 			return query.execute((AbstractSession) session, (AbstractRecord) arguments);
 		}
 	}
-
 }

@@ -16,18 +16,26 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
+import org.eclipse.persistence.annotations.QueryRedirectors;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
+
+import oracle.sysman.emaas.platform.dashboards.entity.customizer.EmsDashboardTileParamsRedirector;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = "EmsDashboardTileParams.findAll", query = "select o from EmsDashboardTileParams o") })
 @Table(name = "EMS_DASHBOARD_TILE_PARAMS")
 @IdClass(EmsDashboardTileParamsPK.class)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
+@AdditionalCriteria("this.deleted = '0'")
+@QueryRedirectors(insert = EmsDashboardTileParamsRedirector.class, delete = EmsDashboardTileParamsRedirector.class)
 public class EmsDashboardTileParams implements Serializable
 {
 	private static final long serialVersionUID = 4988046039963971713L;
+
 	@Column(name = "IS_SYSTEM", nullable = false)
 	private Integer isSystem;
+
 	@Id
 	@Column(name = "PARAM_NAME", nullable = false, length = 64)
 	private String paramName;
@@ -40,6 +48,8 @@ public class EmsDashboardTileParams implements Serializable
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "PARAM_VALUE_TIMESTAMP")
 	private Date paramValueTimestamp;
+	@Column(name = "DELETED", nullable = false, length = 1)
+	private Boolean deleted;
 	@ManyToOne
 	@Id
 	@JoinColumns(value = { @JoinColumn(name = "TILE_ID", referencedColumnName = "TILE_ID"),
@@ -48,11 +58,13 @@ public class EmsDashboardTileParams implements Serializable
 
 	public EmsDashboardTileParams()
 	{
+		deleted = Boolean.FALSE;
 	}
 
 	public EmsDashboardTileParams(Integer isSystem, String paramName, Integer paramType, Integer paramValueNum,
 			String paramValueStr, Date paramValueTimestamp, EmsDashboardTile emsDashboardTile)
 	{
+		this();
 		this.isSystem = isSystem;
 		this.paramName = paramName;
 		this.paramType = paramType;
@@ -65,6 +77,14 @@ public class EmsDashboardTileParams implements Serializable
 	public EmsDashboardTile getDashboardTile()
 	{
 		return dashboardTile;
+	}
+
+	/**
+	 * @return the deleted
+	 */
+	public Boolean getDeleted()
+	{
+		return deleted;
 	}
 
 	public Integer getIsSystem()
@@ -100,6 +120,15 @@ public class EmsDashboardTileParams implements Serializable
 	public void setDashboardTile(EmsDashboardTile emsDashboardTile)
 	{
 		dashboardTile = emsDashboardTile;
+	}
+
+	/**
+	 * @param deleted
+	 *            the deleted to set
+	 */
+	public void setDeleted(Boolean deleted)
+	{
+		this.deleted = deleted;
 	}
 
 	public void setIsSystem(Integer isSystem)
