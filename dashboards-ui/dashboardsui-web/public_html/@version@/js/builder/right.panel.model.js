@@ -897,7 +897,7 @@ define(['knockout',
                 }
                 
                 if (self.dashboard.tiles() && self.dashboard.tiles().length > 0) {
-                    var elem = $b.findEl('.tiles-wrapper');
+                    var elem = $b.findEl('.tiles-wrapper:visible');
                     var clone = Builder.createScreenshotElementClone(elem);
                     ssu.getBase64ScreenShot(clone, 314, 165, 0.8, function(data) {
                         Builder.removeScreenshotElementClone(clone);
