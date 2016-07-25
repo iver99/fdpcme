@@ -902,12 +902,12 @@ define(['knockout',
                     ssu.getBase64ScreenShot(clone, 314, 165, 0.8, function(data) {
                         Builder.removeScreenshotElementClone(clone);
                         self.dashboard.screenShot = ko.observable(data);
-                        self.self.handleSaveDsbFilterSettings(fieldsToUpdate);
+                        self.handleSaveDsbFilterSettings(fieldsToUpdate);
                     });                
                 }
                 else {
                     self.dashboard.screenShot = ko.observable(null);
-                    self.self.handleSaveDsbFilterSettings(fieldsToUpdate);
+                    self.handleSaveDsbFilterSettings(fieldsToUpdate);
                 }                
             });
             
