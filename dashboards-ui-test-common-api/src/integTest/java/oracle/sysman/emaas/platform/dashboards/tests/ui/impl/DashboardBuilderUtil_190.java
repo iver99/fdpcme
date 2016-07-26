@@ -8,10 +8,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DelayedPressEnterTh
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -791,43 +788,42 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
     {
         driver.getLogger().info("DashboardBuilderUtil.removeDashboardFromSet started for name=\"" + dashboardName + "\"");
         Validator.notEmptyString("dashboardName", dashboardName);
-
-        WebElement dashboardSetContainer = driver.getWebDriver().findElement(
-                By.cssSelector(DashBoardPageId_190.DashboardSetNavsContainerCSS));
-        if (dashboardSetContainer == null) {
-            throw new NoSuchElementException(
-                    "DashboardBuilderUtil.removeDashboardFromSet: the dashboard navigator container is not found");
-        }
+        WaitUtil.waitForPageFullyLoaded(driver);
 
         WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-        wait.until(ExpectedConditions.visibilityOf(dashboardSetContainer));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(DashBoardPageId_190.DashboardSetNavsContainerCSS)));
         driver.takeScreenShot();
 
-        boolean hasFound = false;
+        WebElement targetTab = null;
         List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DashboardSetNavsCSS));
         if (navs == null || navs.size() == 0) {
             throw new NoSuchElementException("DashboardBuilderUtil.removeDashboardFromSet: the dashboard navigators is not found");
         }
 
-        for (WebElement nav : navs) {
+        for (int i = 0; i < navs.size(); i++) {
+            WebElement nav = navs.get(i);
             if (nav.getAttribute("data-tabs-name").trim().equals(dashboardName)) {
-                hasFound = true;
-                nav.findElement(By.cssSelector(DashBoardPageId_190.DashboardSetNavRemoveBtnCSS)).click();
-                WaitUtil.waitForPageFullyLoaded(driver);
-                driver.getLogger().info(
-                        "DashboardBuilderUtil.removeDashboardFromSet has found and removed the dashboard named with \""
-                                + dashboardName + "\"");
-                driver.takeScreenShot();
-                break;
+                targetTab = nav;
             }
         }
 
-        if (hasFound == false) {
+        if (null == targetTab) {
             throw new NoSuchElementException("DashboardBuilderUtil.removeDashboardFromSet can not find the dashboard named with \""
                     + dashboardName + "\"");
         }
 
+        driver.getLogger().info(
+                "DashboardBuilderUtil.removeDashboardFromSet has found and removed the dashboard named with \""
+                        + dashboardName + "\"");
+
+        String closeBtnLocator = DashBoardPageId_190.DashboardSetTabNameCSS.replace("_name_",dashboardName);
+        driver.waitForElementPresent("css="+closeBtnLocator);
+        driver.evalJavascript("$(\""+closeBtnLocator+"\").click()");
+
+        WaitUtil.waitForPageFullyLoaded(driver);
         driver.takeScreenShot();
+
+        WaitUtil.waitForPageFullyLoaded(driver);
         driver.getLogger().info("DashboardBuilderUtil.removeDashboardFromSet completed");
     }
 

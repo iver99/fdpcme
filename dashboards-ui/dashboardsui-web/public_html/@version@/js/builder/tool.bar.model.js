@@ -134,7 +134,7 @@ define(['knockout',
                 self.intervalID && clearInterval(self.intervalID); // clear interval if exists
                 if (interval) {
                     if (window.DEV_MODE) {
-                        interval = 10000;
+                        interval = 120000;
                     }
                     self.intervalID = setInterval(function () {
                         Builder.loadDashboard(

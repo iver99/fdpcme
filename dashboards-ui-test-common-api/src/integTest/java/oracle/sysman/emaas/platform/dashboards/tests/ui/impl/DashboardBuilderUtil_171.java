@@ -203,6 +203,13 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.getLogger().info("deleteDashboard completed");
 	}
 
+	@Override
+	public void deleteDashboardInsideSet(WebDriver driver)
+	{
+		Assert.assertTrue(false,"This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+	}
+
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#deleteDashboardSet(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */

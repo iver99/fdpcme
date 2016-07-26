@@ -29,6 +29,8 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 
 	public void deleteDashboard(WebDriver driver);
 
+	public void deleteDashboardInsideSet(WebDriver driver);
+
 	public void deleteDashboardSet(WebDriver driver);
 
 	public void duplicateDashboard(WebDriver driver, String name, String descriptions) throws Exception;

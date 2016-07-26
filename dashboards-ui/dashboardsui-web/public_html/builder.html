@@ -996,7 +996,7 @@
                                                 </div>-->
                                             </div>
                                             <div class="oj-flex">
-                                                <div class="oj-flex-item" style="margin-top:10px">
+                                                <div class="oj-flex-item" style="margin-top:0px">
                                                     <div data-bind="ojComponent: {component: 'ojRadioset', value: dashboardSharing}" >
                                                         <span class="oj-choice-row">
                                                             <input id="dashboardSharingNotShared" type="radio" name="dashboardSharing" value="notShared">
@@ -1011,7 +1011,7 @@
                                             </div>
                                             <div class="oj-flex" data-bind="visible: dashboardSharing() === 'shared'">
                                                 <div class="oj-flex-item" style="margin-left: 25px;">
-                                                    <div class="share-default-settings">
+                                                    <div class="share-default-settings" style="margin-top: 5px;">
                                                         <div data-bind="text: getNlsString('DBS_BUILDER_DSB_DEFAULT_REFRESH')"></div>
                                                         <div id="defaultAutoRefresh" class="share-default-value" data-bind="text: defaultAutoRefreshValueText"></div>
                                                     </div>
@@ -1059,7 +1059,7 @@
                             <div id="dbd-edit-settings-container" class="dbd-edit-settings-container">
                                 <!-- ko if:isDashboardSet -->
                                     <span class="edit-setting-head" data-bind="text: getNlsString('DBSSET_BUILDER_DASHBOARDSET')"></span>
-                                    <span class="edit-setting-link edit-dsbset-link" data-bind="text:$data.dashboardsetToolBarModel.dashboardsetName(), click: switchEditPanelContent"></span>
+                                    <span class="edit-setting-link edit-dsbset-link" data-bind="text:$data.dashboardsetToolBarModel.dashboardsetName, click: switchEditPanelContent"></span>
                                     <!--ko if: !dashboardEditDisabled() && dashboardsetToolBarModel.dashboardsetItems.length>0-->
                                         <span class="edit-setting-head" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_SELECTED_DSB')"></span>
                                         <span class="edit-setting-link edit-dsb-link" data-bind="text:$data.dashboardsetToolBarModel.selectedDashboardItem().name, click: switchEditPanelContent"></span>
