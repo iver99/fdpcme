@@ -77,15 +77,15 @@ public class UserOptionsCRUD
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).body(jsonString1).when().post("/0/options");
+							"Authorization", authToken).body(jsonString1).when().post("dashboards/99999/options");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
-			Assert.assertTrue(res1.getStatusCode() == 400);
+			Assert.assertTrue(res1.getStatusCode() == 404);
 			System.out.println("											");
 			Assert.assertEquals(res1.jsonPath().get("errorCode"), 20001);
-			Assert.assertEquals(res1.jsonPath().get("errorMessage"), "specified dashboard is not found");
+			Assert.assertEquals(res1.jsonPath().get("errorMessage"), "Specified dashboard is not found");
 		}
 		catch (Exception ex) {
 			Assert.fail(ex.getLocalizedMessage());
@@ -102,15 +102,15 @@ public class UserOptionsCRUD
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("/0/options");
+							"Authorization", authToken).when().get("dashboards/99999/options");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
-			Assert.assertTrue(res1.getStatusCode() == 400);
+			Assert.assertTrue(res1.getStatusCode() == 404);
 			System.out.println("											");
 			Assert.assertEquals(res1.jsonPath().get("errorCode"), 20001);
-			Assert.assertEquals(res1.jsonPath().get("errorMessage"), "specified dashboard is not found");
+			Assert.assertEquals(res1.jsonPath().get("errorMessage"), "Specified dashboard is not found");
 		}
 		catch (Exception ex) {
 			Assert.fail(ex.getLocalizedMessage());
@@ -131,7 +131,7 @@ public class UserOptionsCRUD
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).body(jsonString1).when().post("/" + dashboard_id + "/options");
+							"Authorization", authToken).body(jsonString1).when().post("dashboards/" + dashboard_id + "/options");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
@@ -149,7 +149,7 @@ public class UserOptionsCRUD
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).body(jsonString2).when().put("/" + dashboard_id + "/options");
+							"Authorization", authToken).body(jsonString2).when().put("dashboards/" + dashboard_id + "/options");
 			System.out.println(res2.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
@@ -166,7 +166,7 @@ public class UserOptionsCRUD
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("/" + dashboard_id + "/options");
+							"Authorization", authToken).when().get("dashboards/" + dashboard_id + "/options");
 			System.out.println(res3.asString());
 			System.out.println("==GET operation is done");
 			System.out.println("											");
@@ -193,42 +193,15 @@ public class UserOptionsCRUD
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).body(jsonString1).when().put("/0/options");
+							"Authorization", authToken).body(jsonString1).when().put("dashboards/99999/options");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
-			Assert.assertTrue(res1.getStatusCode() == 400);
+			Assert.assertTrue(res1.getStatusCode() == 404);
 			System.out.println("											");
 			Assert.assertEquals(res1.jsonPath().get("errorCode"), 20001);
-			Assert.assertEquals(res1.jsonPath().get("errorMessage"), "specified dashboard is not found");
-		}
-		catch (Exception ex) {
-			Assert.fail(ex.getLocalizedMessage());
-		}
-
-	}
-
-	@Test
-	public void optionUpdate_invalidOption()
-	{
-		try {
-			String jsonString1 = "{  \"test\": 30000}";
-			Response res1 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).body(jsonString1).when().put("/" + dashboard_id + "/options");
-			System.out.println(res1.asString());
-			System.out.println("==POST operation is done");
-			System.out.println("											");
-			System.out.println("Status code is: " + res1.getStatusCode());
-			Assert.assertTrue(res1.getStatusCode() == 400);
-			System.out.println("											");
-			Assert.assertEquals(res1.jsonPath().get("errorCode"), 20003);
-			Assert.assertEquals(res1.jsonPath().get("errorMessage"), "Specified user options for the dashboard is not found");
+			Assert.assertEquals(res1.jsonPath().get("errorMessage"), "Specified dashboard is not found");
 		}
 		catch (Exception ex) {
 			Assert.fail(ex.getLocalizedMessage());
