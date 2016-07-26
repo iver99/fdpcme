@@ -18,6 +18,7 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import oracle.sysman.emInternalSDK.rproxy.lookup.CloudLookups;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
@@ -46,9 +47,8 @@ public abstract class AbstractComparator
 
 		try {
 			logger.info("Starts to compare the two DF OMC instances");
-			// TODO: current code is using EMPTY/INVALID lookup clients. In the real env, it's needed to get real lookup clients for 2 instances and compare!
-			//HashMap<String,LookupClient> lcMap = RegistrySDK.getOMCInstanceClients();
-			HashMap<String, LookupClient> lcMap = new HashMap<String, LookupClient>();
+			// TODO: code is from EMCPSM-1975, need to verify in real ZDT environment
+			HashMap<String, LookupClient> lcMap = CloudLookups.getCloudLookupClients();
 			Set<Entry<String, LookupClient>> entrySet = lcMap.entrySet();
 
 			if (entrySet.size() != ZDT_INSTANCES_AMOUNT) {
