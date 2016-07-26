@@ -71,6 +71,7 @@ public class DashboardRowsComparatorTest
 			+ 		"\"WIDTH\":6,"
 			+ 		"\"IS_MAXIMIZED\":1,"
 			+ 		"\"TENANT_ID\":1,"
+			+ 		"\"WIDGET_LINKED_DASHBOARD\": 1021,"
 			+ 		"\"POSITION\": 0"
 			+ "}],"
 			+ "\"EMS_DASHBOARD_TILE_PARAMS\": [{"

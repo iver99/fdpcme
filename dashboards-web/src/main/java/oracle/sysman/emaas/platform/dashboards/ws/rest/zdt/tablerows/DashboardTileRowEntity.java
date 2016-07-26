@@ -110,6 +110,9 @@ public class DashboardTileRowEntity implements RowEntity
 	@JsonProperty("WIDGET_SUPPORT_TIME_CONTROL")
 	private Integer widgetSupportTimeControl;
 
+	@JsonProperty("WIDGET_LINKED_DASHBOARD")
+	private Long widgetLinkedDashboard;
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -308,6 +311,14 @@ public class DashboardTileRowEntity implements RowEntity
 			}
 		}
 		else if (!widgetKocName.equals(other.widgetKocName)) {
+			return false;
+		}
+		if (widgetLinkedDashboard == null) {
+			if (other.widgetLinkedDashboard != null) {
+				return false;
+			}
+		}
+		else if (!widgetLinkedDashboard.equals(other.widgetLinkedDashboard)) {
 			return false;
 		}
 		if (widgetName == null) {
@@ -562,6 +573,14 @@ public class DashboardTileRowEntity implements RowEntity
 	}
 
 	/**
+	 * @return the widgetLinkedDashboard
+	 */
+	public Long getWidgetLinkedDashboard()
+	{
+		return widgetLinkedDashboard;
+	}
+
+	/**
 	 * @return the widgetName
 	 */
 	public String getWidgetName()
@@ -656,6 +675,7 @@ public class DashboardTileRowEntity implements RowEntity
 		result = prime * result + (widgetHistogram == null ? 0 : widgetHistogram.hashCode());
 		result = prime * result + (widgetIcon == null ? 0 : widgetIcon.hashCode());
 		result = prime * result + (widgetKocName == null ? 0 : widgetKocName.hashCode());
+		result = prime * result + (widgetLinkedDashboard == null ? 0 : widgetLinkedDashboard.hashCode());
 		result = prime * result + (widgetName == null ? 0 : widgetName.hashCode());
 		result = prime * result + (widgetOwner == null ? 0 : widgetOwner.hashCode());
 		result = prime * result + (widgetSource == null ? 0 : widgetSource.hashCode());
@@ -872,6 +892,15 @@ public class DashboardTileRowEntity implements RowEntity
 	public void setWidgetKocName(String widgetKocName)
 	{
 		this.widgetKocName = widgetKocName;
+	}
+
+	/**
+	 * @param widgetLinkedDashboard
+	 *            the widgetLinkedDashboard to set
+	 */
+	public void setWidgetLinkedDashboard(Long widgetLinkedDashboard)
+	{
+		this.widgetLinkedDashboard = widgetLinkedDashboard;
 	}
 
 	/**
