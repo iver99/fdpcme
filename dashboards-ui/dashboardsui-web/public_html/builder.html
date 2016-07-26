@@ -415,7 +415,7 @@
                                                     <ul style="display:none"
                                                         data-bind="attr: {'id': 'tileMenu' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
                                                         event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}},
-                                                        ojComponent: {component: 'ojMenu', select: $root.menuItemSelect}">
+                                                        ojComponent: {component: 'ojMenu', select: $root.menuItemSelect, openOptions: {position: {'my': 'left center', 'at': 'right center'} } }">
                                                         <li data-option="showhide-title">
                                                             <a href="#" data-bind="attr: {'data-show-hide-title': hideTitle() === 'true' ? 'show' : 'hide'}">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
