@@ -297,7 +297,7 @@ BEGIN
       V_WIDTH                       := 6;
       V_IS_MAXIMIZED                := 0;
       V_POSITION                    := 0;
-      V_WIDGET_UNIQUE_ID            := 3061;
+      V_WIDGET_UNIQUE_ID            := 3058;
       V_WIDGET_NAME                 := 'Line Chart';
       V_WIDGET_DESCRIPTION          := null;
       V_WIDGET_GROUP_NAME           := 'Data Explorer';
