@@ -43,6 +43,31 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
         WaitUtil.waitForPageFullyLoaded(driver);
         driver.getLogger().info("DashboardBuilderUtil.createDashboardInsideSet : " + name);
         Validator.notEmptyString("name", name);
+        //validate whether should open new dashboard home in set
+        boolean isSelectionTabExist = false;
+        List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DashboardSetNavsCSS));
+        if (navs == null || navs.size() == 0) {
+            throw new NoSuchElementException("DashboardBuilderUtil.createDashboardInsideSet: the dashboard navigators is not found");
+        }
+
+        for (WebElement nav : navs) {
+            if (nav.getAttribute("data-tabs-name").trim().equals(DASHBOARD_SELECTION_TAB_NAME)) {
+                isSelectionTabExist = true;
+                driver.getLogger().info("DashboardBuilderUtil.createDashboardInsideSet already has dashboard home");
+                break;
+            }
+        }
+
+        if (isSelectionTabExist == false) {
+            WebElement addNav = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId_190.DashboardSetNavAddBtnCSS));
+            if (addNav == null) {
+                throw new NoSuchElementException(
+                        "DashboardBuilderUtil.createDashboardInsideSet: the dashboard 'add' button  is not found");
+            }
+            addNav.click();
+            WaitUtil.waitForPageFullyLoaded(driver); // wait for all dashboards loaded
+        }
+
         driver.click("css="+DashBoardPageId_190.DASHBOARD_HOME_CREATINSET_BUTTON);
 
         if (name != null && !name.isEmpty()) {
