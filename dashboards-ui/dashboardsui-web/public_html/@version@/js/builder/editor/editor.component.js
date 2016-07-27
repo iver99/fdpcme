@@ -236,6 +236,8 @@ define(['knockout',
             tile.editDisabled = ko.computed(function() { //to do
                 return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard() || _currentUser !== dashboard.owner();
             });
+            tile.isAdmin = ko.dataFor($('#headerWrapper')[0]).brandingbarParams.isAdmin;
+            
             tile.widerEnabled = ko.computed(function() {
                 return mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS;
             });
