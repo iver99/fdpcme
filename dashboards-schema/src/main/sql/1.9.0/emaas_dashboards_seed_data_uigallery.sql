@@ -1511,7 +1511,7 @@ BEGIN
       V_WIDTH                       := 4;
       V_IS_MAXIMIZED                := 0;
       V_POSITION                    := 0;
-      V_WIDGET_UNIQUE_ID            := 10083;
+      V_WIDGET_UNIQUE_ID            := 3068;
       V_WIDGET_NAME                 := 'Entities by Database Machine';
       V_WIDGET_DESCRIPTION          := null;
       V_WIDGET_GROUP_NAME           := 'Data Explorer';
@@ -1545,7 +1545,7 @@ BEGIN
       V_WIDTH                       := 8;
       V_IS_MAXIMIZED                := 0;
       V_POSITION                    := 0;
-      V_WIDGET_UNIQUE_ID            := 10085;
+      V_WIDGET_UNIQUE_ID            := 3070;
       V_WIDGET_NAME                 := 'Exadata Capacity by Disk Type';
       V_WIDGET_DESCRIPTION          := null;
       V_WIDGET_GROUP_NAME           := 'Data Explorer';
@@ -1579,7 +1579,7 @@ BEGIN
       V_WIDTH                       := 8;
       V_IS_MAXIMIZED                := 0;
       V_POSITION                    := 0;
-      V_WIDGET_UNIQUE_ID            := 10084;
+      V_WIDGET_UNIQUE_ID            := 3069;
       V_WIDGET_NAME                 := 'Exadata Inventory';
       V_WIDGET_DESCRIPTION          := null;
       V_WIDGET_GROUP_NAME           := 'Data Explorer';
@@ -1613,7 +1613,7 @@ BEGIN
       V_WIDTH                       := 4;
       V_IS_MAXIMIZED                := 0;
       V_POSITION                    := 0;
-      V_WIDGET_UNIQUE_ID            := 10185;
+      V_WIDGET_UNIQUE_ID            := 3071;
       V_WIDGET_NAME                 := 'Entity Types in Database Machines';
       V_WIDGET_DESCRIPTION          := null;
       V_WIDGET_GROUP_NAME           := 'Data Explorer';
@@ -1710,7 +1710,7 @@ BEGIN
       V_WIDTH                       := 6;
       V_IS_MAXIMIZED                := 0;
       V_POSITION                    := 0;
-      V_WIDGET_UNIQUE_ID            := 10186;
+      V_WIDGET_UNIQUE_ID            := 3072;
       V_WIDGET_NAME                 := 'Oracle Exadata Storage Server Read/Write Response Times';
       V_WIDGET_DESCRIPTION          := null;
       V_WIDGET_GROUP_NAME           := 'Data Explorer';
@@ -1744,7 +1744,7 @@ BEGIN
       V_WIDTH                       := 6;
       V_IS_MAXIMIZED                := 0;
       V_POSITION                    := 0;
-      V_WIDGET_UNIQUE_ID            := 10188;
+      V_WIDGET_UNIQUE_ID            := 3073;
       V_WIDGET_NAME                 := 'Oracle Exadata Storage Server I/O Utilization by DB Machine';
       V_WIDGET_DESCRIPTION          := null;
       V_WIDGET_GROUP_NAME           := 'Data Explorer';
@@ -1778,7 +1778,7 @@ BEGIN
       V_WIDTH                       := 3;
       V_IS_MAXIMIZED                := 0;
       V_POSITION                    := 0;
-      V_WIDGET_UNIQUE_ID            := 10189;
+      V_WIDGET_UNIQUE_ID            := 3074;
       V_WIDGET_NAME                 := 'Oracle Exadata Storage Server Infiniband Network Performance';
       V_WIDGET_DESCRIPTION          := null;
       V_WIDGET_GROUP_NAME           := 'Data Explorer';
@@ -1812,7 +1812,7 @@ BEGIN
       V_WIDTH                       := 3;
       V_IS_MAXIMIZED                := 0;
       V_POSITION                    := 0;
-      V_WIDGET_UNIQUE_ID            := 10190;
+      V_WIDGET_UNIQUE_ID            := 3075;
       V_WIDGET_NAME                 := 'Oracle Exadata Storage Server Read Response Time';
       V_WIDGET_DESCRIPTION          := null;
       V_WIDGET_GROUP_NAME           := 'Data Explorer';
@@ -1854,7 +1854,7 @@ BEGIN
       V_WIDTH                       := 3;
       V_IS_MAXIMIZED                := 0;
       V_POSITION                    := 0;
-      V_WIDGET_UNIQUE_ID            := 10191;
+      V_WIDGET_UNIQUE_ID            := 3076;
       V_WIDGET_NAME                 := 'Oracle Exadata Storage Server Write Response Time';
       V_WIDGET_DESCRIPTION          := null;
       V_WIDGET_GROUP_NAME           := 'Data Explorer';
@@ -1896,7 +1896,7 @@ BEGIN
       V_WIDTH                       := 3;
       V_IS_MAXIMIZED                := 0;
       V_POSITION                    := 0;
-      V_WIDGET_UNIQUE_ID            := 10260;
+      V_WIDGET_UNIQUE_ID            := 3078;
       V_WIDGET_NAME                 := 'Host CPU Utilization and Memory Utilization';
       V_WIDGET_DESCRIPTION          := null;
       V_WIDGET_GROUP_NAME           := 'Data Explorer';
@@ -1930,7 +1930,7 @@ BEGIN
       V_WIDTH                       := 3;
       V_IS_MAXIMIZED                := 0;
       V_POSITION                    := 0;
-      V_WIDGET_UNIQUE_ID            := 10240;
+      V_WIDGET_UNIQUE_ID            := 3077;
       V_WIDGET_NAME                 := 'Top 5 Databases by Active Sessions';
       V_WIDGET_DESCRIPTION          := null;
       V_WIDGET_GROUP_NAME           := 'Data Explorer';
