@@ -148,24 +148,21 @@ dependencies{
 
 //Task added from "emcpdf_qa_test_3n"
 
-task QATest(type:EMTest,dependsOn:omcSetup ) {
-	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
-	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
-	include "oracle/sysman/emaas/platform/dashboards/logging/*"
-	include "oracle/sysman/emaas/platform/dashboards/test/Configuration/*"
-	include "oracle/sysman/emaas/platform/dashboards/test/RegistryLookup/*"
-	include "oracle/sysman/emaas/platform/dashboards/test/preference/*"
-	include "oracle/sysman/emaas/platform/dashboards/test/screenshot/*"
-	include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/*" 
+task QATest(type:EMTest) {
+//	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
+//	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
+//	include "oracle/sysman/emaas/platform/dashboards/logging/*"
+//	include "oracle/sysman/emaas/platform/dashboards/test/Configuration/*"
+//	include "oracle/sysman/emaas/platform/dashboards/test/RegistryLookup/*"
+//	include "oracle/sysman/emaas/platform/dashboards/test/preference/*"
+//	include "oracle/sysman/emaas/platform/dashboards/test/screenshot/*"
+//	include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/*" 
+	include "oracle/sysman/emaas/platform/dashboards/test/UserOptions/*"
 	useRestAssured=true
 	ext.set("testType", "integration")
 }
 
-
-
-
-
-task e2e (type: EMTest, dependsOn:QATest ){
+task e2e (type: EMTest){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'DashboardUITest') {
             classes([:]) {
@@ -182,13 +179,9 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
     useRestAssured = true
 
 }
-
-
-
-
 //Task is added from "emcpdf_uifwk_test_3n"
 
-task QATest1(type:EMTest,dependsOn:e2e ){ 
+task QATest1(type:EMTest){ 
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestAnalyzerPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestDashboardPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestOtherPage.class"
@@ -199,7 +192,7 @@ task QATest1(type:EMTest,dependsOn:e2e ){
 
 //Task is added from "emcpdf_dev_test_3n"
 
-task DEVTest(type:EMTest,dependsOn: QATest1){
+task DEVTest(type:EMTest){
 
   	include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest.class"
@@ -212,7 +205,7 @@ task DEVTest(type:EMTest,dependsOn: QATest1){
 
 //Task is added from "emcpdf_dev_ui_test_3n"
 
-task DEVUiTest(type:EMTest,dependsOn: DEVTest){
+task DEVUiTest(type:EMTest){
   	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/JsonUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/TenantSubscriptionUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"
@@ -222,14 +215,14 @@ task DEVUiTest(type:EMTest,dependsOn: DEVTest){
 
 //Task is added from "emcpdf_uifwk_dev_test_3n"
 
-task DEVTest2(type:EMTest,dependsOn: DEVUiTest){ 
+task DEVTest2(type:EMTest){ 
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"	
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
 
-task emcpdf_test_3n (dependsOn:[DEVTest2, omcTeardown]) {
-    omcTeardown.mustRunAfter(DEVTest2)
+task emcpdf_test_3n (dependsOn:[QATest,e2e,QATest1,DEVTest,DEVUiTest,DEVTest2]) {
+    //omcTeardown.mustRunAfter(DEVTest2)
     apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_taskprocessor")
 }
