@@ -71,13 +71,13 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Database"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Middleware"));
 		//Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Health Summary"));
-//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Database Configuration and Storage By Version"));
-//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Enterprise Overview"));
-//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Host Inventory By Platform"));
-//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 Databases by Resource Consumption"));
-//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 WebLogic Servers by Heap Usage"));
-//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 WebLogic Servers by Load"));
-//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Servers by JDK Version"));
+		//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Database Configuration and Storage By Version"));
+		//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Enterprise Overview"));
+		//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Host Inventory By Platform"));
+		//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 Databases by Resource Consumption"));
+		//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 WebLogic Servers by Heap Usage"));
+		//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 WebLogic Servers by Load"));
+		//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Servers by JDK Version"));
 	}
 
 	public static void LA_OOB_GridView() throws Exception
@@ -136,6 +136,7 @@ public class DashBoardUtils
 	{
 		driver.getLogger().info("Click the option icon of Dashboard Set");
 		driver.waitForElementPresent("css=" + PageId.DashboardSetOptions_Css);
+		driver.click("css=" + PageId.DashboardSetOptions_Css);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
 		driver.getLogger().info("Click Edit icon");
@@ -144,8 +145,8 @@ public class DashBoardUtils
 		driver.takeScreenShot();
 
 		driver.getLogger().info("Expand Share options");
-		driver.waitForElementPresent("css=" + PageId.DashboardSetShare_Css);
-		driver.click("css=" + PageId.DashboardSetShare_Css);
+		driver.waitForElementPresent("css=" + PageId.RightDrawerEditSingleDBShare_CSS);
+		driver.click("css=" + PageId.RightDrawerEditSingleDBShare_CSS);
 		driver.takeScreenShot();
 
 		driver.getLogger().info("Verify the options are disabled or not");

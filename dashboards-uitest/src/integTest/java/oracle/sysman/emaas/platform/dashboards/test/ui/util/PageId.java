@@ -68,6 +68,6 @@ public class PageId
 	public static final String DashboardSetOptions_Css = "#tabs-caret";//".df-toolbar .dashboardOptsBtn[title=\"Options\"]";
 	public static final String DashboardSetOptionsEdit_CSS = "#dbs-edit [dashboardset-option='Edit']";//"li[data-singledb-option=\"Edit\"] a";
 	public static final String RightDrawerEditSingleDBShare_CSS = ".dbd-right-panel-editdashboard-set-share .dbd-right-panel-editdashboard-innertitle.oj-collapsible-header";//".dbd-right-panel-editdashboard-share>span";
-	public static final String DashboardSetShare_Css = "#dashboardSetSharingShared.oj-selected";
-	public static final String DashboardSetNotShare_Css = "#dashboardSetSharingNotShared.oj-selected";
+	public static final String DashboardSetShare_Css = "#dashboardSetSharingShared";
+	public static final String DashboardSetNotShare_Css = "#dashboardSetSharingNotShared";
 }
