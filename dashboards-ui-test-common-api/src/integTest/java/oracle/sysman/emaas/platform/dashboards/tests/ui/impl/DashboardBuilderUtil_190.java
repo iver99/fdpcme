@@ -262,6 +262,33 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
     }
 
     @Override
+    public void deleteDashboardInsideSet(WebDriver driver)
+    {
+        driver.getLogger().info("DashboardBuilderUtil.deleteDashboardInsideSet started");
+        driver.waitForElementPresent("css="+DashBoardPageId_190.BuilderOptionsMenuLocator);
+        WaitUtil.waitForPageFullyLoaded(driver);
+
+        WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
+        WebElement editOption = selectedDashboardEl.findElement(By.cssSelector(DashBoardPageId_190.BuilderOptionsMenuLocator));
+        editOption.click();
+        driver.takeScreenShot();
+
+        driver.waitForElementPresent("css="+DashBoardPageId_190.BuilderOptionsEditLocatorCSS);
+        driver.click("css="+DashBoardPageId_190.BuilderOptionsEditLocatorCSS);
+        driver.takeScreenShot();
+
+        driver.waitForElementPresent("css="+DashBoardPageId_190.BuilderOptionsDeleteLocator);
+        driver.click("css="+DashBoardPageId_190.BuilderOptionsDeleteLocator);
+        driver.takeScreenShot();
+
+        driver.waitForElementPresent(DashBoardPageId_190.BuilderDeleteDialogLocator);
+        driver.click(DashBoardPageId_190.BuilderDeleteDialogDeleteBtnLocator);
+        WaitUtil.waitForPageFullyLoaded(driver);
+        driver.takeScreenShot();
+        driver.getLogger().info("DashboardBuilderUtil.deleteDashboardInsideSet completed");
+    }
+    
+    @Override
     public void duplicateDashboard(WebDriver driver, String name, String descriptions) throws Exception {
         duplicateDashboardCommonUse(driver,name, descriptions ,DUP_DASHBOARD_NODSUBMENU);
     }

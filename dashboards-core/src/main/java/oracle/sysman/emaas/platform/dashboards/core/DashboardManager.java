@@ -760,6 +760,15 @@ public class DashboardManager
 			}
 
 			if (!ic) {
+				sb.append(" or p.owner like ?" + index++);
+				paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString) + "%");
+			}
+			else {
+				sb.append(" or lower(p.owner) like ?" + index++);
+				paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString.toLowerCase(locale)) + "%");
+			}
+
+			if (!ic) {
 				sb.append(
 						" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and t.title like ?"
 								+ index++ + " )) ");
