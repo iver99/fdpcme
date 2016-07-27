@@ -7,7 +7,7 @@
 
         <link rel="icon" type="image/png" href="/emsaasui/uifwk/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
-        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v1.2.0/alta/oj-alta-min.css" type="text/css"/>
+        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v2.0.1/alta/oj-alta-min.css" type="text/css"/>
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/landing-home-alta.css" type="text/css"/>
@@ -29,7 +29,7 @@
             </header>
 
             <div id="mainContent" role="main">
-                <div class="welcome-slogan" data-bind="text: welcomeSlogan"></div>
+                <h1 class="welcome-slogan" data-bind="text: welcomeSlogan"></h1>
                 <div class="landing-home-box-wrapper">
                     <ul class="box-list-ul">
                         <li class="box-list-li box-list-a">
@@ -83,7 +83,7 @@
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: ITA"></div>
                                         <div class="landing-home-box-content-desc" data-bind="text: ITADesc"></div>
-                                        <select id="ITA_options" aria-label="IT Analytics" style="float: right; margin-top: 10px; margin-right: 10px; width: 255px;" data-bind="ojComponent: {component: 'ojSelect', value: ITA_Type, optionChange: ITAOptionChosen}">
+                                        <select id="ITA_options" aria-label="Select IT Analytics" style="float: right; margin-top: 10px; margin-right: 10px; width: 255px;" data-bind="ojComponent: {component: 'ojSelect', value: ITA_Type, optionChange: ITAOptionChosen}">
                                             <option value="select" id="ITA_Select" data-bind="text: select"></option>
                                             <option value="DB_perf" id="ITA_DB_perf" data-bind="text: ITA_DB_Performance"></option>
                                             <option value="mw_perf" id="ITA_mw_perf" data-bind="text: ITA_Middleware_Performance"></option>
@@ -100,6 +100,36 @@
                                 </div>
                             <!--</a>-->
                         </li>
+                        <!-- ko if: showSecurityAnalytics -->
+                        <li class="box-list-li box-list-a">
+                            <a id="security_analytics_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openSecurityAnalytics">
+                                <div class="service-box-wrapper">
+                                    <div class="landing-home-box-img security-analytics-box">
+                                        <img class="app-image" src="@version@/images/SecurityAnalytics_w_92px.png" data-bind="attr: {alt: securityAnalytics}"/>
+                                    </div>
+                                    <div class="landing-home-box-content">
+                                        <div class="landing-home-box-content-head" data-bind="text: securityAnalytics"></div>
+                                        <div class="landing-home-box-content-desc" data-bind="text: securityAnalyticsDesc"></div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <!-- /ko -->
+                        <!-- ko if: showOrchestration -->
+                        <li class="box-list-li box-list-a">
+                            <a id="orchestration_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openOrchestration">
+                                <div class="service-box-wrapper">
+                                    <div class="landing-home-box-img orchestration-box">
+                                        <img class="app-image" src="@version@/images/Orchestration_w_92px.png" data-bind="attr: {alt: orchestration}"/>
+                                    </div>
+                                    <div class="landing-home-box-content">
+                                        <div class="landing-home-box-content-head" data-bind="text: orchestration"></div>
+                                        <div class="landing-home-box-content-desc" data-bind="text: orchestrationDesc"></div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <!-- /ko -->
                         <li class="box-list-li box-list-a">
                             <a id="dashboards_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openDashboards">
                                 <div class="service-box-wrapper">
@@ -123,7 +153,7 @@
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: dataExplorers"></div>
                                         <div class="landing-home-box-content-desc" data-bind="text: dataExplorersDesc"></div>
-                                        <select id="dataExp_options" aria-label="Data Explorers" style="float: right; margin-top: 25px; margin-right: 10px; width: 235px;" data-bind="ojComponent: {component: 'ojSelect', value: data_type, optionChange: dataExplorersChosen}">                                      
+                                        <select id="dataExp_options" aria-label="Select Data Explorers" style="float: right; margin-top: 25px; margin-right: 10px; width: 235px;" data-bind="ojComponent: {component: 'ojSelect', value: data_type, optionChange: dataExplorersChosen}">                                      
                                             <option value="select" id="dataExp_Select" data-bind="text: select"></option>                                            
                                             <!-- ko foreach: exploreDataLinkList -->
                                             <option data-bind="attr: {id: 'dataExp_'+name}, value: name, text: name"></option>

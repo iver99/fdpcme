@@ -29,9 +29,9 @@ requirejs.config({
         'jqueryui': '../../libs/@version@/js/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/min',
-        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/ojL10n',
-        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/resources',
+        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/min',
+        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/ojL10n',
+        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/resources',
         'ojdnd': '../../libs/@version@/js/oraclejet/js/libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
@@ -215,9 +215,14 @@ require(['knockout',
                 if (self.headerHeight === height)
                     return;
                 var $visibleHeaderBar = $(".dashboard-content:visible .head-bar-container");
-                if ($visibleHeaderBar.length > 0) {
-                    var $b = ko.dataFor($visibleHeaderBar[0]) && ko.dataFor($visibleHeaderBar[0]).$b;
+                var $visibleRightDrawer = $(".dbd-left-panel:visible");
+                if ($visibleHeaderBar.length > 0 && ko.dataFor($visibleHeaderBar[0])) {
+                    var $b = ko.dataFor($visibleHeaderBar[0]).$b;
                     $b && $b.triggerBuilderResizeEvent('header wrapper bar height changed');
+                }
+                if ($visibleRightDrawer.length > 0 && ko.dataFor($visibleRightDrawer[0])) {
+                    var $b = ko.dataFor($visibleRightDrawer[0]).$b;
+                    $b && $b.triggerBuilderResizeEvent('header wrapper bar height changed, right drawer resized');
                 }
                 self.headerHeight = height;
             });

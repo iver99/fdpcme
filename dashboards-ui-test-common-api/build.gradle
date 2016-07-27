@@ -1,6 +1,4 @@
-version = "1.8.0" + "-$buildTimestamp"
-
-apply plugin: 'eclipse'
+version = "2.0.0" + "-$buildTimestamp"
 
 project.ext.intgRun = hasProperty('IFARM_RUN') && IFARM_RUN != '' ? IFARM_RUN : 0
 project.ext.buildBranch = hasProperty('BUILD_BRANCH') && BUILD_BRANCH != '' ? BUILD_BRANCH : 'master'

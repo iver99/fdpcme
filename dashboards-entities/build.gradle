@@ -8,7 +8,11 @@ jar {
 	}
 }
 publishing.publications {
-
+		integTest(MavenPublication) {
+                        setArtifactId(project.name + '-' + integTestJar.appendix)
+                        setGroupId('com.oracle.emaas.emcpdf.test')
+                        artifact integTestJar.archivePath
+    }
         thisJarPublication(MavenPublication) {
                 setGroupId('com.oracle.emaas.emcpdf.test')
                 artifact jar
@@ -16,6 +20,7 @@ publishing.publications {
 }
 
 artifactoryPublish {
+		publications('integTest')
         publications('thisJarPublication')
 }
 
@@ -42,3 +47,4 @@ sourceSets {
 		resources.srcDirs = ['src/integTest/java']
 	}
 }
+build.dependsOn integTestJar

@@ -18,6 +18,7 @@ and open the template in the editor.
     margin-bottom: 10px;
     margin-left: 72px;
     margin-right: 72px;
+    font-weight: normal;
 }
 
 .landing-home-box-wrapper {
@@ -100,6 +101,14 @@ and open the template in the editor.
 
 .dashboards-box {
     background-color: rgb(223, 225, 84);
+}
+
+.security-analytics-box {
+    background-color: rgb(71, 71, 71);
+}
+
+.orchestration-box {
+    background-color: rgb(0, 129, 121);
 }
 
 .data-explorers-box {

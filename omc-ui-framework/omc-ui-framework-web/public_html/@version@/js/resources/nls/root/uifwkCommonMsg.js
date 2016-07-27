@@ -42,6 +42,8 @@ define({
       "BRANDING_BAR_APP_NAME_DASHBOARD": "Dashboards",
       "BRANDING_BAR_APP_NAME_TENANT_MANAGEMENT_UI":"Set up Oracle Management Cloud",
       "BRANDING_BAR_APP_NAME_MONITORING": "Infrastructure Monitoring",
+      "BRANDING_BAR_APP_NAME_SECURITY_ANALYTICS": "Security Monitoring and Analytics",
+      "BRANDING_BAR_APP_NAME_ORCHESTRATION": "Orchestration",
       "BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_ERROR":"Error",
       "BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_WARN":"Warning",
       "BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CONFIRM":"Confirmation",
@@ -52,6 +54,7 @@ define({
       "BRANDING_BAR_MESSAGE_BOX_TITLE_SHOW_MORE":"Click to show all messages",
       "BRANDING_BAR_MESSAGE_BOX_TITLE_SHOW_FIRST":"Click to show first {0} messages only",
       "BRANDING_BAR_CLOUD_SERVICE_NAME_APM": "APM",
+      "BRANDING_BAR_CLOUD_SERVICE_NAME_SA": "Security",
       "BRANDING_BAR_SESSION_TIMEOUT_DIALOG_TILE": "Session Expired",
       "BRANDING_BAR_SESSION_TIMEOUT_MSG": "Your current session has expired. Click \'OK\' and sign in again.",
       "BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK": "OK",
@@ -140,6 +143,9 @@ define({
       "TIME_FILTER_TIME_HINT": "Hint : Enter time ranges you want to include in 24 hr format. For multiple time ranges separate them with ',' Ex: 1-7,13-17",
       "TIME_FILTER_DAYS_LABEL": "Days",
       "TIME_FILTER_MONTHS_LABEL": "Months",
-      "TIME_FILTER_OPTION_ALL": "All"      
+      "TIME_FILTER_OPTION_ALL": "All",
+      "TIME_FILTER_HOURS_FILTER_ERRMSG": "Time range format invalid. Re-enter time range(s).",
+      "TIME_FILTER_DAYS_FILTER_ERRMSG": "Select at least one day.",
+      "TIME_FILTER_MONTHS_FILTER_ERRMSG": "Select at least one month."
 });
 

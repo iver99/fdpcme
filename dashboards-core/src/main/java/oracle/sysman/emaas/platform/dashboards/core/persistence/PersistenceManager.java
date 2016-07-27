@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
@@ -36,14 +37,12 @@ public class PersistenceManager
 
 	public static PersistenceManager getInstance()
 	{
-		if (singleton == null) {
-			synchronized (lock) {
-				if (singleton == null) {
-					singleton = new PersistenceManager();
-				}
+		synchronized (lock) {
+			if (singleton == null) {
+				singleton = new PersistenceManager();
 			}
+			return singleton;
 		}
-		return singleton;
 	}
 
 /*	public static void main(String args[])
@@ -152,8 +151,16 @@ public class PersistenceManager
 			return connectionProps;
 		}
 		catch (Exception ex) {
-			//			ex.printStackTrace();
 			logger.error(ex.getLocalizedMessage(), ex);
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				}
+				catch (IOException e) {
+					logger.error(e.getLocalizedMessage(), e);
+				}
+			}
 		}
 		return connectionProps;
 

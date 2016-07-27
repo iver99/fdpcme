@@ -17,20 +17,22 @@ import javax.management.InstanceNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
-import mockit.Expectations;
-import mockit.Mocked;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
-import oracle.sysman.emaas.platform.dashboards.ui.targetmodel.services.GlobalStatus;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
-
 import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
+import mockit.Expectations;
+import mockit.Mocked;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.Builder;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.NonServiceResource;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emaas.platform.dashboards.ui.targetmodel.services.GlobalStatus;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 import weblogic.management.timer.Timer;
 
 /**
@@ -54,10 +56,12 @@ public class AvailabilityServiceManagerTest
 		AssertJUnit.assertEquals(asm.getName(), "Dashboard Service UI Timer Service");
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test(groups = { "s2" })
 	public void testHandleNotification(@Mocked final Notification anyNoti, @Mocked final RegistryServiceManager anyRsm,
 			@Mocked final RegistryLookupUtil anyLookupUtil, @Mocked final LookupManager lookupmgr,
-			@Mocked final LookupClient rsClient) throws Exception
+			@Mocked final LookupClient rsClient, @Mocked final RegistrationManager anyRegistrationManager,
+			@Mocked final InstanceInfo anyInstanceInfo, @Mocked final Builder anyBuilder) throws Exception
 	{
 		new Expectations() {
 			{
@@ -108,20 +112,21 @@ public class AvailabilityServiceManagerTest
 		asm.handleNotification(anyNoti, null);
 		Assert.assertFalse(GlobalStatus.isDashboardUIUp());
 
-		new Expectations() {
-			{
-				anyRsm.isRegistrationComplete();
-				result = Boolean.TRUE;
-				RegistryLookupUtil.getServiceInternalLink(SAVED_SEARCH_SERVICE_NAME, SAVED_SEARCH_SERVICE_VERSION,
-						SAVED_SEARCH_SERVICE_REL, null);
-				result = new Link().withRel("search").withHref("http://den00zyr.us.oracle.com:7019/savedsearch/v1/search");
-				RegistryLookupUtil.getServiceInternalLink(DASHBOARD_API_SERVICE_NAME, DASHBOARD_API_SERVICE_VERSION,
-						DASHBOARD_API_SERVICE_REL, null);
-				result = null;
-			}
-		};
-		asm.handleNotification(anyNoti, null);
-		Assert.assertFalse(GlobalStatus.isDashboardUIUp());
+		//		new Expectations() {
+		//			{
+		//				anyRsm.isRegistrationComplete();
+		//				result = Boolean.TRUE;
+		//				RegistryLookupUtil.getServiceInternalLink(SAVED_SEARCH_SERVICE_NAME, SAVED_SEARCH_SERVICE_VERSION,
+		//						SAVED_SEARCH_SERVICE_REL, null);
+		//				result = new Link().withRel("search").withHref("http://den00zyr.us.oracle.com:7019/savedsearch/v1/search");
+		//				RegistryLookupUtil.getServiceInternalLink(DASHBOARD_API_SERVICE_NAME, DASHBOARD_API_SERVICE_VERSION,
+		//						DASHBOARD_API_SERVICE_REL, null);
+		//				result = null;
+		//				anyRsm.markOutOfService((List<InstanceInfo>) any, null, null);
+		//			}
+		//		};
+		//		asm.handleNotification(anyNoti, null);
+		//		Assert.assertFalse(GlobalStatus.isDashboardUIUp());
 
 		new Expectations() {
 			{
@@ -133,8 +138,13 @@ public class AvailabilityServiceManagerTest
 				RegistryLookupUtil.getServiceInternalLink(DASHBOARD_API_SERVICE_NAME, DASHBOARD_API_SERVICE_VERSION,
 						DASHBOARD_API_SERVICE_REL, null);
 				result = new Link().withRel("base").withHref("http://den00zyr.us.oracle.com:7019/emcpdf/api/v1/");
+				InstanceInfo.Builder.newBuilder().withServiceName(anyString).withVersion(anyString).build();
+				result = anyInstanceInfo;
 				LookupManager.getInstance().getLookupClient().lookup((InstanceQuery) any);
 				result = null;
+				anyRsm.markOutOfService((List<InstanceInfo>) any, (List<NonServiceResource>) any, (List<String>) any);
+				//				RegistrationManager.getInstance().getRegistrationClient().outOfServiceCausedBy((List<InstanceInfo>) any,
+				//						(List<NonServiceResource>) any, (List<String>) any);
 			}
 		};
 		asm.handleNotification(anyNoti, null);
@@ -177,7 +187,8 @@ public class AvailabilityServiceManagerTest
 				RegistryLookupUtil.getServiceInternalLink(DASHBOARD_API_SERVICE_NAME, DASHBOARD_API_SERVICE_VERSION,
 						DASHBOARD_API_SERVICE_REL, null);
 				result = new Link().withRel("base").withHref("http://den00zyr.us.oracle.com:7019/emcpdf/api/v1/");
-				LookupManager.getInstance().getLookupClient().lookup((InstanceQuery) any);
+				InstanceInfo.Builder.newBuilder().withServiceName(anyString).withVersion(anyString).build();
+				//				LookupManager.getInstance().getLookupClient().lookup((InstanceQuery) any);
 				result = new Exception();
 			}
 		};
@@ -194,6 +205,8 @@ public class AvailabilityServiceManagerTest
 				RegistryLookupUtil.getServiceInternalLink(DASHBOARD_API_SERVICE_NAME, DASHBOARD_API_SERVICE_VERSION,
 						DASHBOARD_API_SERVICE_REL, null);
 				result = new Link().withRel("base").withHref("http://den00zyr.us.oracle.com:7019/emcpdf/api/v1/");
+				InstanceInfo.Builder.newBuilder().withServiceName(anyString).withVersion(anyString).build();
+				result = anyInstanceInfo;
 				LookupManager.getInstance().getLookupClient().lookup((InstanceQuery) any);
 				result = instanceInfos;
 				anyRsm.markServiceUp();

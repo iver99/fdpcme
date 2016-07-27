@@ -22,18 +22,18 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InfoManager;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.InstanceStatus;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InfoManager;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.InstanceStatus;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.NonServiceResource;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
 import weblogic.application.ApplicationLifecycleEvent;
 
 public class RegistryServiceManager implements ApplicationServiceManager
@@ -200,6 +200,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_BASE_HOME = "/emsaasui/emcpdfui/home.html";
 	private static final String NAV_QUICK_LINK = "/emsaasui/emcpdfui/home.html";
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
+
 	static {
 		try {
 			WLS_RUNTIME_SERVICE_NAME = ObjectName
@@ -234,8 +235,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 	private Boolean registrationComplete = null;
 
-	private final Logger logger = LogManager.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
-			+ ".serviceregistry");
+	private final Logger logger = LogManager
+			.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM + ".serviceregistry");
 
 	@Override
 	public String getName()
@@ -251,9 +252,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	/**
 	 * Update dashboards UI service status to out of service on service manager
 	 */
-	public void markOutOfService()
+	public void markOutOfService(List<InstanceInfo> services, List<NonServiceResource> resources, List<String> otherReasons)
 	{
-		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.OUT_OF_SERVICE);
+		RegistrationManager.getInstance().getRegistrationClient().outOfServiceCausedBy(services, resources, otherReasons);
+		//		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.OUT_OF_SERVICE);
 	}
 
 	/**
@@ -308,16 +310,16 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			logger.info("Initialize lookup manager");
 			LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
 
-//			logger.info("Checking RegistryService");
-//			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
-//				setRegistrationComplete(Boolean.FALSE);
-//				logger.error("Failed to found registryService. Dashboard-UI registration is not complete.");
-//				return false;
-//			}
+			//			logger.info("Checking RegistryService");
+			//			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
+			//				setRegistrationComplete(Boolean.FALSE);
+			//				logger.error("Failed to found registryService. Dashboard-UI registration is not complete.");
+			//				return false;
+			//			}
 
 			ServiceConfigBuilder builder = new ServiceConfigBuilder();
 			builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"))
-			.characteristics(serviceProps.getProperty("characteristics"));
+					.characteristics(serviceProps.getProperty("characteristics"));
 			StringBuilder virtualEndPoints = new StringBuilder();
 			StringBuilder canonicalEndPoints = new StringBuilder();
 			if (applicationUrlHttp != null) {
@@ -335,7 +337,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 			builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
 			builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-			.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+					.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 			logger.info("Initializing RegistrationManager");
 			RegistrationManager.getInstance().initComponent(builder.build());
@@ -368,7 +370,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 		catch (Exception e) {
 			setRegistrationComplete(Boolean.FALSE);
-			logger.error("Errors occurrs in registration. Service manager might be down. Dashboard-UI registration is not complete.");
+			logger.error(
+					"Errors occurrs in registration. Service manager might be down. Dashboard-UI registration is not complete.");
 			logger.error(e.getLocalizedMessage(), e);
 			//			throw e;
 		}

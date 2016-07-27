@@ -20,6 +20,14 @@
     .tf-label {
         font-weight: bold;
     }
+    
+    .tf-errorMsg {
+        color: red;
+    }
+    
+    .tf-errorBorder {
+        border: 2px solid #d66;
+    }
 </style>
 <div class="tf-wrapper">
     <div class="oj-row" style="padding-bottom: 10px;">
@@ -34,6 +42,8 @@
     <div class="oj-row tf-row tf-hint">
         <span data-bind="text: hintForTimeFilter"></span>
     </div>
+    
+    <div class="oj-row tf-row tf-errorMsg" data-bind="visible: showHoursFilterErrorMsg, text: hoursFilterErrorMsg"></div>
     <!-- time filter end -->
     
     <!--  day of week filter start -->
@@ -56,6 +66,7 @@
             </div>
         </div>
     </div>
+    <div class="oj-row tf-row tf-errorMsg" data-bind="visible: showDaysFilterErrorMsg, text: daysFilterErrorMsg"></div>
     <!-- day of week filter end -->
    
     <!-- month of year filter start -->
@@ -78,5 +89,6 @@
            </div>
         </div>
     </div>
+    <div class="oj-row tf-row tf-errorMsg" data-bind="visible: showMonthsFilterErrorMsg, text: monthsFilterErrorMsg"></div>
     <!--month of yesr filter end -->
 </div>

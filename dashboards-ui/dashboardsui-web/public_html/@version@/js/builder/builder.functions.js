@@ -332,8 +332,15 @@ define(['knockout',
         Builder.registerFunction(registerComponent, 'registerComponent');
 
         function getGuid() {
+            function securedRandom(){
+                var arr = new Uint32Array(1);
+                var crypto = window.crypto || window.msCrypto;
+                crypto.getRandomValues(arr);
+                var result = arr[0] * Math.pow(2,-32);
+                return result;
+            }
             function S4() {
-               return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+               return (((1+securedRandom())*0x10000)|0).toString(16).substring(1);
             }
             return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
         }
@@ -361,7 +368,8 @@ define(['knockout',
                 error: function(jqXHR, textStatus, errorThrown) {
                     if (errorCallBack)
                         errorCallBack(jqXHR, textStatus, errorThrown);
-                }
+                },
+                async: false
             });
         }
         
@@ -459,5 +467,72 @@ define(['knockout',
             return clone;
         }
         Builder.registerFunction(createScreenshotElementClone, 'createScreenshotElementClone');
+        
+        var timePeriods = [
+            {value: "last15mins", string: "Last 15 minutes"},
+            {value: "last30mins", string: "Last 30 minutes"},
+            {value: "last60mins", string: "Last 60 minutes"},
+            {value: "last4hours", string:  "Last 4 hours"},
+            {value: "last6hours", string: "Last 6 hours"},
+            {value: "last1day", string: "Last 1 day"},
+            {value: "last7days", string: "Last 7 days"},
+            {value: "last14days", string: "Last 14 days"},
+            {value: "last30days", string: "Last 30 days"},
+            {value: "last90days", string: "Last 90 days"},
+            {value: "last1year", string: "Last 1 year"},
+            {value: "latest", string: "Latest"},
+            {value: "custom", string: "Custom"},
+            {value: "custom1", string: "Custom"}
+        ];
+            
+        function getTimePeriodString(value) {
+            for(var i=0; i<timePeriods.length; i++) {
+                if(timePeriods[i].value === value) {
+                    return timePeriods[i].string;
+                }
+            }
+        }
+        Builder.registerFunction(getTimePeriodString, 'getTimePeriodString');
+        
+        function getTimePeriodValue(string) {
+            for(var i=0; i<timePeriods.length; i++) {
+                if(timePeriods[i].string === string) {
+                    return timePeriods[i].value;
+                }
+            }
+        }
+        Builder.registerFunction(getTimePeriodValue, "getTimePeriodValue");
+
+        var assetRoots = [];
+        function addWidgetAssetRoot(provider_name, provider_version, provider_asset_root, asset_root) {
+            if((provider_name!==null) && (provider_version!==null) && (provider_asset_root!==null) && (asset_root!==null) && !isWidgetAssetRootExisted(provider_name, provider_version, provider_asset_root) ) {
+                assetRoots.push({provider_name: provider_name, provider_version: provider_version, provider_asset_root: provider_asset_root, asset_root: asset_root});
+            }
+        }
+        Builder.registerFunction(addWidgetAssetRoot, "addWidgetAssetRoot");
+        
+        function isWidgetAssetRootExisted(provider_name, provider_version, provider_asset_root) {
+            for(var i=0; i<assetRoots.length; i++) {
+                var art = assetRoots[i];
+                if((art.provider_name === provider_name) && (art.provider_version === provider_version) && (art.provider_asset_root === provider_asset_root)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        Builder.registerFunction(isWidgetAssetRootExisted, "isWidgetAssetRootExisted");
+        
+        function getWidgetAssetRoot(provider_name, provider_version, provider_asset_root) {
+            for(var i=0; i<assetRoots.length; i++) {
+                var art = assetRoots[i];
+                if((art.provider_name === provider_name) && (art.provider_version === provider_version) && (art.provider_asset_root === provider_asset_root)) {
+                    return art.asset_root;
+                }
+            }
+            var asset_root = dfu.df_util_widget_lookup_assetRootUrl(provider_name, provider_version, provider_asset_root, true);
+            addWidgetAssetRoot(provider_name, provider_version, provider_asset_root, asset_root);
+            return asset_root;
+        };
+        Builder.registerFunction(getWidgetAssetRoot, "getWidgetAssetRoot");
     }
 );
