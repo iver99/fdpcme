@@ -10,11 +10,12 @@ define(['knockout',
         'uiutil',
         'ojs/ojcore',
         'builder/tool-bar/edit.dialog',
+        'uifwk/js/util/screenshot-util',
         'jqueryui',
         'builder/builder.core',
         'builder/widget/widget.model'
     ], 
-    function(ko, $, dfu, mbu, uiutil, oj, ed) {
+    function(ko, $, dfu, mbu, uiutil, oj, ed, ssu) {
         function ResizableView($b) {
             var self = this;
             
@@ -905,6 +906,23 @@ define(['knockout',
                     "extendedOptions": JSON.stringify(self.extendedOptions),
                     "enableTimeRange": self.dashboard.enableTimeRange()
                 }
+                
+                if (self.dashboard.tiles() && self.dashboard.tiles().length > 0) {
+                    var elem = $(".tiles-wrapper:visible");
+                    var clone = Builder.createScreenshotElementClone(elem);
+                    ssu.getBase64ScreenShot(clone, 314, 165, 0.8, function(data) {
+                        Builder.removeScreenshotElementClone(clone);
+                        self.dashboard.screenShot = ko.observable(data);
+                        self.handleSaveDsbFilterSettings(fieldsToUpdate);
+                    });                
+                }
+                else {
+                    self.dashboard.screenShot = ko.observable(null);
+                    self.handleSaveDsbFilterSettings(fieldsToUpdate);
+                }                
+            });
+            
+            self.handleSaveDsbFilterSettings = function(fieldsToUpdate) {
                 self.saveDsbFilterSettings(fieldsToUpdate, function() {
                     if(!self.dashboard.extendedOptions) {
                         self.dashboard.extendedOptions = ko.observable();
@@ -914,10 +932,11 @@ define(['knockout',
                 function() {
                     console.log("***error");
                 });
-            });
+            }
 
             self.saveDsbFilterSettings = function(fieldsToUpdate, succCallback, errorCallback) {
                 var newDashboardJs = ko.mapping.toJS(self.dashboard, {
+                    'include': ['screenShot'],
                     'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight",
                         "modeColumn", "modeRow", "screenShotHref", "systemDashboard",
                         "customParameters", "clientGuid", "dashboard",
