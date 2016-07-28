@@ -41,6 +41,12 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	@JsonProperty("PARAM_VALUE_TIMESTAMP")
 	private String paramValueTimestamp;
 
+	@JsonProperty("CREATION_DATE")
+	private String creationDate;
+
+	@JsonProperty("LAST_MODIFICATION_DATE")
+	private String lastModificationDate;
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -57,12 +63,28 @@ public class DashboardTileParamsRowEntity implements RowEntity
 			return false;
 		}
 		DashboardTileParamsRowEntity other = (DashboardTileParamsRowEntity) obj;
+		if (creationDate == null) {
+			if (other.creationDate != null) {
+				return false;
+			}
+		}
+		else if (!creationDate.equals(other.creationDate)) {
+			return false;
+		}
 		if (isSystem == null) {
 			if (other.isSystem != null) {
 				return false;
 			}
 		}
 		else if (!isSystem.equals(other.isSystem)) {
+			return false;
+		}
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null) {
+				return false;
+			}
+		}
+		else if (!lastModificationDate.equals(other.lastModificationDate)) {
 			return false;
 		}
 		if (paramName == null) {
@@ -125,11 +147,27 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	}
 
 	/**
+	 * @return the creationDate
+	 */
+	public String getCreationDate()
+	{
+		return creationDate;
+	}
+
+	/**
 	 * @return the isSystem
 	 */
 	public Integer getIsSystem()
 	{
 		return isSystem;
+	}
+
+	/**
+	 * @return the lastModificationDate
+	 */
+	public String getLastModificationDate()
+	{
+		return lastModificationDate;
 	}
 
 	/**
@@ -196,7 +234,9 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	{
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
 		result = prime * result + (isSystem == null ? 0 : isSystem.hashCode());
+		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
 		result = prime * result + (paramName == null ? 0 : paramName.hashCode());
 		result = prime * result + (paramType == null ? 0 : paramType.hashCode());
 		result = prime * result + (paramValueNum == null ? 0 : paramValueNum.hashCode());
@@ -208,12 +248,30 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	}
 
 	/**
+	 * @param creationDate
+	 *            the creationDate to set
+	 */
+	public void setCreationDate(String creationDate)
+	{
+		this.creationDate = creationDate;
+	}
+
+	/**
 	 * @param isSystem
 	 *            the isSystem to set
 	 */
 	public void setIsSystem(Integer isSystem)
 	{
 		this.isSystem = isSystem;
+	}
+
+	/**
+	 * @param lastModificationDate
+	 *            the lastModificationDate to set
+	 */
+	public void setLastModificationDate(String lastModificationDate)
+	{
+		this.lastModificationDate = lastModificationDate;
 	}
 
 	/**
@@ -287,6 +345,7 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	{
 		return "DashboardTileParamsRowEntity [tileId=" + tileId + ", paramName=" + paramName + ", tenantId=" + tenantId
 				+ ", isSystem=" + isSystem + ", paramType=" + paramType + ", paramValueStr=" + paramValueStr + ", paramValueNum="
-				+ paramValueNum + ", paramValueTimestamp=" + paramValueTimestamp + "]";
+				+ paramValueNum + ", paramValueTimestamp=" + paramValueTimestamp + ", creationDate=" + creationDate
+				+ ", lastModificationDate=" + lastModificationDate + "]";
 	}
 }

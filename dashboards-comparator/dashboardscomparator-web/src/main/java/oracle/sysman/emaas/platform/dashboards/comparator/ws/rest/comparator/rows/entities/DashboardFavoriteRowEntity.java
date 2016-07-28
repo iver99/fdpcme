@@ -26,6 +26,9 @@ public class DashboardFavoriteRowEntity implements RowEntity
 	@JsonProperty("CREATION_DATE")
 	private String creationDate;
 
+	@JsonProperty("LAST_MODIFICATION_DATE")
+	private String lastModificationDate;
+
 	@JsonProperty("TENANT_ID")
 	private Long tenantId;
 
@@ -59,6 +62,14 @@ public class DashboardFavoriteRowEntity implements RowEntity
 			}
 		}
 		else if (!dashboardId.equals(other.dashboardId)) {
+			return false;
+		}
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null) {
+				return false;
+			}
+		}
+		else if (!lastModificationDate.equals(other.lastModificationDate)) {
 			return false;
 		}
 		if (tenantId == null) {
@@ -97,6 +108,14 @@ public class DashboardFavoriteRowEntity implements RowEntity
 	}
 
 	/**
+	 * @return the lastModificationDate
+	 */
+	public String getLastModificationDate()
+	{
+		return lastModificationDate;
+	}
+
+	/**
 	 * @return the tenantId
 	 */
 	public Long getTenantId()
@@ -122,6 +141,7 @@ public class DashboardFavoriteRowEntity implements RowEntity
 		int result = 1;
 		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
 		result = prime * result + (dashboardId == null ? 0 : dashboardId.hashCode());
+		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
 		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
 		result = prime * result + (userName == null ? 0 : userName.hashCode());
 		return result;
@@ -143,6 +163,15 @@ public class DashboardFavoriteRowEntity implements RowEntity
 	public void setDashboardId(Long dashboardId)
 	{
 		this.dashboardId = dashboardId;
+	}
+
+	/**
+	 * @param lastModificationDate
+	 *            the lastModificationDate to set
+	 */
+	public void setLastModificationDate(String lastModificationDate)
+	{
+		this.lastModificationDate = lastModificationDate;
 	}
 
 	/**
@@ -170,6 +199,6 @@ public class DashboardFavoriteRowEntity implements RowEntity
 	public String toString()
 	{
 		return "DashboardFavoriteRowEntity [userName=" + userName + ", dashboardId=" + dashboardId + ", creationDate="
-				+ creationDate + ", tenantId=" + tenantId + "]";
+				+ creationDate + ", lastModificationDate=" + lastModificationDate + ", tenantId=" + tenantId + "]";
 	}
 }

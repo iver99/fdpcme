@@ -38,6 +38,12 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	@JsonProperty("EXTENDED_OPTIONS")
 	private String extendedOptions;
 
+	@JsonProperty("CREATION_DATE")
+	private String creationDate;
+
+	@JsonProperty("LAST_MODIFICATION_DATE")
+	private String lastModificationDate;
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -70,6 +76,14 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 		else if (!autoRefreshInterval.equals(other.autoRefreshInterval)) {
 			return false;
 		}
+		if (creationDate == null) {
+			if (other.creationDate != null) {
+				return false;
+			}
+		}
+		else if (!creationDate.equals(other.creationDate)) {
+			return false;
+		}
 		if (dashboardId == null) {
 			if (other.dashboardId != null) {
 				return false;
@@ -92,6 +106,14 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 			}
 		}
 		else if (!isFavorite.equals(other.isFavorite)) {
+			return false;
+		}
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null) {
+				return false;
+			}
+		}
+		else if (!lastModificationDate.equals(other.lastModificationDate)) {
 			return false;
 		}
 		if (tenantId == null) {
@@ -130,6 +152,14 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	}
 
 	/**
+	 * @return the creationDate
+	 */
+	public String getCreationDate()
+	{
+		return creationDate;
+	}
+
+	/**
 	 * @return the dashboardId
 	 */
 	public Long getDashboardId()
@@ -151,6 +181,14 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	public Integer getIsFavorite()
 	{
 		return isFavorite;
+	}
+
+	/**
+	 * @return the lastModificationDate
+	 */
+	public String getLastModificationDate()
+	{
+		return lastModificationDate;
 	}
 
 	/**
@@ -179,9 +217,11 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 		int result = 1;
 		result = prime * result + (accessDate == null ? 0 : accessDate.hashCode());
 		result = prime * result + (autoRefreshInterval == null ? 0 : autoRefreshInterval.hashCode());
+		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
 		result = prime * result + (dashboardId == null ? 0 : dashboardId.hashCode());
 		result = prime * result + (extendedOptions == null ? 0 : extendedOptions.hashCode());
 		result = prime * result + (isFavorite == null ? 0 : isFavorite.hashCode());
+		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
 		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
 		result = prime * result + (userName == null ? 0 : userName.hashCode());
 		return result;
@@ -203,6 +243,15 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	public void setAutoRefreshInterval(Long autoRefreshInterval)
 	{
 		this.autoRefreshInterval = autoRefreshInterval;
+	}
+
+	/**
+	 * @param creationDate
+	 *            the creationDate to set
+	 */
+	public void setCreationDate(String creationDate)
+	{
+		this.creationDate = creationDate;
 	}
 
 	/**
@@ -233,6 +282,15 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	}
 
 	/**
+	 * @param lastModificationDate
+	 *            the lastModificationDate to set
+	 */
+	public void setLastModificationDate(String lastModificationDate)
+	{
+		this.lastModificationDate = lastModificationDate;
+	}
+
+	/**
 	 * @param tenantId
 	 *            the tenantId to set
 	 */
@@ -258,6 +316,7 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	{
 		return "DashboardUserOptionsRowEntity [userName=" + userName + ", tenantId=" + tenantId + ", dashboardId=" + dashboardId
 				+ ", autoRefreshInterval=" + autoRefreshInterval + ", accessDate=" + accessDate + ", isFavorite=" + isFavorite
-				+ ", extendedOptions=" + extendedOptions + "]";
+				+ ", extendedOptions=" + extendedOptions + ", creationDate=" + creationDate + ", lastModificationDate="
+				+ lastModificationDate + "]";
 	}
 }

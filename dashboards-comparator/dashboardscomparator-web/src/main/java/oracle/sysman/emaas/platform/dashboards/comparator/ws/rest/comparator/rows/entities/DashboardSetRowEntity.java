@@ -29,6 +29,12 @@ public class DashboardSetRowEntity implements RowEntity
 	@JsonProperty("POSITION")
 	private Long position;
 
+	@JsonProperty("CREATION_DATE")
+	private String creationDate;
+
+	@JsonProperty("LAST_MODIFICATION_DATE")
+	private String lastModificationDate;
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -45,12 +51,28 @@ public class DashboardSetRowEntity implements RowEntity
 			return false;
 		}
 		DashboardSetRowEntity other = (DashboardSetRowEntity) obj;
+		if (creationDate == null) {
+			if (other.creationDate != null) {
+				return false;
+			}
+		}
+		else if (!creationDate.equals(other.creationDate)) {
+			return false;
+		}
 		if (dashboardSetId == null) {
 			if (other.dashboardSetId != null) {
 				return false;
 			}
 		}
 		else if (!dashboardSetId.equals(other.dashboardSetId)) {
+			return false;
+		}
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null) {
+				return false;
+			}
+		}
+		else if (!lastModificationDate.equals(other.lastModificationDate)) {
 			return false;
 		}
 		if (position == null) {
@@ -81,11 +103,27 @@ public class DashboardSetRowEntity implements RowEntity
 	}
 
 	/**
+	 * @return the creationDate
+	 */
+	public String getCreationDate()
+	{
+		return creationDate;
+	}
+
+	/**
 	 * @return the dashboardSetId
 	 */
 	public Long getDashboardSetId()
 	{
 		return dashboardSetId;
+	}
+
+	/**
+	 * @return the lastModificationDate
+	 */
+	public String getLastModificationDate()
+	{
+		return lastModificationDate;
 	}
 
 	/**
@@ -120,11 +158,22 @@ public class DashboardSetRowEntity implements RowEntity
 	{
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
 		result = prime * result + (dashboardSetId == null ? 0 : dashboardSetId.hashCode());
+		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
 		result = prime * result + (position == null ? 0 : position.hashCode());
 		result = prime * result + (subDashboardId == null ? 0 : subDashboardId.hashCode());
 		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
 		return result;
+	}
+
+	/**
+	 * @param creationDate
+	 *            the creationDate to set
+	 */
+	public void setCreationDate(String creationDate)
+	{
+		this.creationDate = creationDate;
 	}
 
 	/**
@@ -134,6 +183,15 @@ public class DashboardSetRowEntity implements RowEntity
 	public void setDashboardSetId(Long dashboardSetId)
 	{
 		this.dashboardSetId = dashboardSetId;
+	}
+
+	/**
+	 * @param lastModificationDate
+	 *            the lastModificationDate to set
+	 */
+	public void setLastModificationDate(String lastModificationDate)
+	{
+		this.lastModificationDate = lastModificationDate;
 	}
 
 	/**
@@ -170,6 +228,7 @@ public class DashboardSetRowEntity implements RowEntity
 	public String toString()
 	{
 		return "DashboardSetRowEntity [dashboardSetId=" + dashboardSetId + ", tenantId=" + tenantId + ", subDashboardId="
-				+ subDashboardId + ", position=" + position + "]";
+				+ subDashboardId + ", position=" + position + ", creationDate=" + creationDate + ", lastModificationDate="
+				+ lastModificationDate + "]";
 	}
 }

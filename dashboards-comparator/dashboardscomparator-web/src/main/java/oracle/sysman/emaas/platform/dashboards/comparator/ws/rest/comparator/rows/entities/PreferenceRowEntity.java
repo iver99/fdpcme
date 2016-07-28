@@ -29,6 +29,12 @@ public class PreferenceRowEntity implements RowEntity
 	@JsonProperty("TENANT_ID")
 	private Long tenantId;
 
+	@JsonProperty("CREATION_DATE")
+	private String creationDate;
+
+	@JsonProperty("LAST_MODIFICATION_DATE")
+	private String lastModificationDate;
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -45,6 +51,22 @@ public class PreferenceRowEntity implements RowEntity
 			return false;
 		}
 		PreferenceRowEntity other = (PreferenceRowEntity) obj;
+		if (creationDate == null) {
+			if (other.creationDate != null) {
+				return false;
+			}
+		}
+		else if (!creationDate.equals(other.creationDate)) {
+			return false;
+		}
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null) {
+				return false;
+			}
+		}
+		else if (!lastModificationDate.equals(other.lastModificationDate)) {
+			return false;
+		}
 		if (prefKey == null) {
 			if (other.prefKey != null) {
 				return false;
@@ -78,6 +100,22 @@ public class PreferenceRowEntity implements RowEntity
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * @return the creationDate
+	 */
+	public String getCreationDate()
+	{
+		return creationDate;
+	}
+
+	/**
+	 * @return the lastModificationDate
+	 */
+	public String getLastModificationDate()
+	{
+		return lastModificationDate;
 	}
 
 	/**
@@ -120,11 +158,31 @@ public class PreferenceRowEntity implements RowEntity
 	{
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
+		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
 		result = prime * result + (prefKey == null ? 0 : prefKey.hashCode());
 		result = prime * result + (prefValue == null ? 0 : prefValue.hashCode());
 		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
 		result = prime * result + (userName == null ? 0 : userName.hashCode());
 		return result;
+	}
+
+	/**
+	 * @param creationDate
+	 *            the creationDate to set
+	 */
+	public void setCreationDate(String creationDate)
+	{
+		this.creationDate = creationDate;
+	}
+
+	/**
+	 * @param lastModificationDate
+	 *            the lastModificationDate to set
+	 */
+	public void setLastModificationDate(String lastModificationDate)
+	{
+		this.lastModificationDate = lastModificationDate;
 	}
 
 	/**
@@ -170,6 +228,6 @@ public class PreferenceRowEntity implements RowEntity
 	public String toString()
 	{
 		return "PreferenceRowEntity [userName=" + userName + ", prefKey=" + prefKey + ", prefValue=" + prefValue + ", tenantId="
-				+ tenantId + "]";
+				+ tenantId + ", creationDate=" + creationDate + ", lastModificationDate=" + lastModificationDate + "]";
 	}
 }
