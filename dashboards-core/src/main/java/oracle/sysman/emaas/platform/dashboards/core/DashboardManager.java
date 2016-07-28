@@ -839,13 +839,14 @@ public class DashboardManager
 				throw new DashboardSameNameException();
 			}
 			// init creation date, owner to prevent null insertion
-			Date created = DateUtil.getCurrentUTCTime();
+			Date created = DateUtil.getGatewayTime();
 			if (dbd.getCreationDate() == null) {
 				dbd.setCreationDate(created);
 			}
 			if (dbd.getOwner() == null) {
 				dbd.setOwner(currentUser);
 			}
+			dbd.setLastModificationDate(created);
 			if (dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET)) {
 				//				dbd.setEnableTimeRange(null);
 			}
@@ -861,12 +862,12 @@ public class DashboardManager
 						if (tile.getOwner() == null) {
 							tile.setOwner(currentUser);
 						}
+						tile.setLastModificationDate(created);
 					}
 				}
 			}
 
 			EmsDashboard ed = dbd.getPersistenceEntity(null);
-			ed.setCreationDate(dbd.getCreationDate());
 			ed.setOwner(currentUser);
 			dsf.persistEmsDashboard(ed);
 			updateLastAccessDate(ed.getDashboardId(), tenantId);
@@ -924,10 +925,7 @@ public class DashboardManager
 				throw new DashboardSameNameException();
 			}
 			// init creation date, owner to prevent null insertion
-			Date created = DateUtil.getCurrentUTCTime();
-			//			if (dbd.getCreationDate() == null) {
-			//				dbd.setCreationDate(created);
-			//			}
+			Date created = DateUtil.getGatewayTime();
 			if (dbd.getOwner() == null) {
 				dbd.setOwner(currentUser);
 			}
@@ -948,6 +946,7 @@ public class DashboardManager
 						if (tile.getOwner() == null) {
 							tile.setOwner(currentUser);
 						}
+						tile.setLastModificationDate(created);
 					}
 				}
 			}
@@ -965,7 +964,6 @@ public class DashboardManager
 						MessageUtils.getDefaultBundleString(CommonSecurityException.DASHBOARD_ACTION_REQUIRE_OWNER));
 			}
 			ed = dbd.getPersistenceEntity(ed);
-			ed.setLastModificationDate(DateUtil.getCurrentUTCTime());
 			ed.setLastModifiedBy(currentUser);
 			if (dbd.getOwner() != null) {
 				ed.setOwner(dbd.getOwner());
@@ -1018,11 +1016,11 @@ public class DashboardManager
 			edla = new EmsUserOptions();
 			edla.setUserName(currentUser);
 			edla.setDashboardId(dashboardId);
-			edla.setAccessDate(DateUtil.getCurrentUTCTime());
+			edla.setAccessDate(DateUtil.getGatewayTime());
 			dsf.persistEmsUserOptions(edla);
 		}
 		else {
-			edla.setAccessDate(DateUtil.getCurrentUTCTime());
+			edla.setAccessDate(DateUtil.getGatewayTime());
 			dsf.mergeEmsUserOptions(edla);
 		}
 	}

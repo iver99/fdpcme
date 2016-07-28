@@ -9,7 +9,9 @@ import java.util.Date;
 import javax.persistence.EntityManager;
 
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.IdGenerator;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
@@ -106,6 +108,7 @@ public class DashboardServiceFacadeTest
 	private static EmsDashboard newDashboard()
 	{
 		EmsDashboard d = new EmsDashboard();
+		d.setDashboardId(IdGenerator.getDashboardId(ZDTContext.getRequestId()));
 		d.setName("test" + System.currentTimeMillis());
 		d.setCreationDate(DateUtil.getCurrentUTCTime());
 		d.setDeleted(BigInteger.ZERO);
@@ -125,6 +128,7 @@ public class DashboardServiceFacadeTest
 	private static EmsDashboardTile newTile()
 	{
 		EmsDashboardTile tile = new EmsDashboardTile();
+		tile.setTileId(IdGenerator.getTileId(ZDTContext.getRequestId(), 1));
 		tile.setCreationDate(DateUtil.getCurrentUTCTime());
 		tile.setHeight(1);
 		tile.setWidth(23);

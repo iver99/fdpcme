@@ -14,6 +14,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSec
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
@@ -756,11 +757,12 @@ public class Dashboard
 			throw new CommonSecurityException("sub dashboard is null");
 		}
 
-		Map<Dashboard, EmsSubDashboard> rows = new HashMap();
+		Map<Dashboard, EmsSubDashboard> rows = new HashMap<Dashboard, EmsSubDashboard>();
 		List<EmsSubDashboard> subDashboardList = ed.getSubDashboardList();
 		if (subDashboardList != null) {
 			for (int i = subDashboardList.size() - 1; i >= 0; i--) {
 				EmsSubDashboard emsSubDashboard = subDashboardList.get(i);
+				
 				ed.removeEmsSubDashboard(emsSubDashboard);
 			}
 		}
@@ -778,6 +780,8 @@ public class Dashboard
 				// remove duplicated entity
 				if (!rows.containsKey(subDashboard)) {
 					EmsSubDashboard emsSubDashboard = new EmsSubDashboard(dashboardId, subDashboard.getDashboardId(), index);
+					emsSubDashboard.setCreationDate(DateUtil.getGatewayTime());
+					emsSubDashboard.setLastModificationDate(emsSubDashboard.getCreationDate());
 					ed.addEmsSubDashboard(emsSubDashboard);
 					rows.put(subDashboard, emsSubDashboard);
 

@@ -25,10 +25,9 @@ import oracle.sysman.emaas.platform.dashboards.entity.customizer.EmsPreferenceRe
 @IdClass(EmsPreferencePK.class)
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
-//@Customizer(value = EmsPreferenceCustomizer.class)
 @AdditionalCriteria("this.deleted = '0'")
 @QueryRedirectors(insert = EmsPreferenceRedirector.class, delete = EmsPreferenceRedirector.class)
-public class EmsPreference implements Serializable
+public class EmsPreference extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 5177176379267126865L;
 	@Id

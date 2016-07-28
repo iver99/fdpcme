@@ -909,6 +909,8 @@ public class Tile
 
 	private void updateSpecificType(EmsDashboardTile to) throws CommonFunctionalException
 	{
+		to.setCreationDate(DateUtil.getGatewayTime());
+		to.setLastModificationDate(to.getCreationDate());
 		if (Tile.TILE_TYPE_TEXT_WIDGET.equals(getType())) {
 			to.setWidgetName(Tile.TEXT_WIDGET_NAME);
 			to.setWidgetDescription(Tile.TEXT_WIDGET_DESCRIPTION);
@@ -920,7 +922,7 @@ public class Tile
 			to.setWidgetTemplate(Tile.TEXT_WIDGET_TEMPLATE);
 			to.setWidth(Tile.TEXT_WIDGET_WIDTH);
 			to.setWidgetUniqueId(Tile.TEXT_WIDGET_NAME);
-			to.setWidgetCreationTime(String.valueOf(DateUtil.getCurrentUTCTime()));
+			to.setWidgetCreationTime(String.valueOf(DateUtil.getGatewayTime()));
 			String encodedContent = StringEscapeUtils.escapeHtml4(getContent());
 			if (StringUtil.isEmpty(encodedContent) || encodedContent.length() > TEXT_WIDGET_MAX_CONTENT_LEN) {
 				throw new CommonFunctionalException(

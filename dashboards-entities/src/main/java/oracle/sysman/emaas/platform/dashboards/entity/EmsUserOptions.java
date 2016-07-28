@@ -29,7 +29,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @IdClass(EmsUserOptionsPK.class)
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
-public class EmsUserOptions implements Serializable
+public class EmsUserOptions extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 8723513639667559582L;
 
