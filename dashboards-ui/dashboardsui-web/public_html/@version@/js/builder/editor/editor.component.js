@@ -236,6 +236,20 @@ define(['knockout',
             tile.editDisabled = ko.computed(function() { //to do
                 return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard() || _currentUser !== dashboard.owner();
             });
+            
+            var judgeAdmin = function () {
+                var retrunValue= false;
+                var brandingbarAdmin = ko.dataFor($('.links-content-container')[0]).adminLinks();
+                brandingbarAdmin.forEach(function (item) {
+                    if (item.name === "IT Analytics Administration") {
+                        retrunValue = true;
+                    };                     
+                });
+                return retrunValue;  
+            };
+            
+            tile.isItaAdmin = judgeAdmin();
+                                      
             tile.widerEnabled = ko.computed(function() {
                 return mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS;
             });
