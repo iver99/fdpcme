@@ -18,8 +18,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.MultitenantType;
@@ -31,7 +29,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 //@SequenceGenerator(name = "EmsDashboardTile_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_TILE_SEQ", allocationSize = 1)
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
-public class EmsDashboardTile implements Serializable
+public class EmsDashboardTile extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 6307069723661684517L;
 
@@ -56,13 +54,6 @@ public class EmsDashboardTile implements Serializable
 	@Column(name = "IS_MAXIMIZED", nullable = false)
 	private Integer isMaximized;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATION_DATE", nullable = false)
-	private Date creationDate;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "LAST_MODIFICATION_DATE")
-	private Date lastModificationDate;
 	@Column(name = "LAST_MODIFIED_BY", length = 128)
 	private String lastModifiedBy;
 	@Column(nullable = false, length = 128)
@@ -123,14 +114,14 @@ public class EmsDashboardTile implements Serializable
 			String widgetTemplate, String widgetUniqueId, String widgetViewmode, Integer widgetSupportTimeControl, Integer width,
 			BigInteger widgetLinkedDashboard)
 	{
-		this.creationDate = creationDate;
+		this.setCreationDate(creationDate);
+		this.setLastModificationDate(lastModificationDate);
 		dashboard = emsDashboard1;
 		this.type = type;
 		this.row = row;
 		this.column = column;
 		this.height = height;
 		this.isMaximized = isMaximized;
-		this.lastModificationDate = lastModificationDate;
 		this.lastModifiedBy = lastModifiedBy;
 		this.owner = owner;
 		position = 0;
@@ -174,11 +165,6 @@ public class EmsDashboardTile implements Serializable
 		return column;
 	}
 
-	public Date getCreationDate()
-	{
-		return creationDate;
-	}
-
 	public EmsDashboard getDashboard()
 	{
 		return dashboard;
@@ -197,11 +183,6 @@ public class EmsDashboardTile implements Serializable
 	public Integer getIsMaximized()
 	{
 		return isMaximized;
-	}
-
-	public Date getLastModificationDate()
-	{
-		return lastModificationDate;
 	}
 
 	public String getLastModifiedBy()
@@ -351,11 +332,6 @@ public class EmsDashboardTile implements Serializable
 		this.column = column;
 	}
 
-	public void setCreationDate(Date creationDate)
-	{
-		this.creationDate = creationDate;
-	}
-
 	public void setDashboard(EmsDashboard emsDashboard1)
 	{
 		dashboard = emsDashboard1;
@@ -374,11 +350,6 @@ public class EmsDashboardTile implements Serializable
 	public void setIsMaximized(Integer isMaximized)
 	{
 		this.isMaximized = isMaximized;
-	}
-
-	public void setLastModificationDate(Date lastModificationDate)
-	{
-		this.lastModificationDate = lastModificationDate;
 	}
 
 	public void setLastModifiedBy(String lastModifiedBy)

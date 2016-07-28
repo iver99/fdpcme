@@ -9,6 +9,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
+import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreferencePK;
@@ -138,6 +139,7 @@ public class DashboardServiceFacade
 
 	public EmsDashboard mergeEmsDashboard(EmsDashboard emsDashboard)
 	{
+		emsDashboard.setLastModificationDate(DateUtil.getGatewayTime());
 		EmsDashboard entity = null;
 		entity = em.merge(emsDashboard);
 		commitTransaction();
@@ -162,6 +164,7 @@ public class DashboardServiceFacade
 
 	public EmsPreference mergeEmsPreference(EmsPreference emsPreference)
 	{
+		emsPreference.setLastModificationDate(DateUtil.getGatewayTime());
 		EmsPreference entity = null;
 		entity = em.merge(emsPreference);
 		commitTransaction();
@@ -170,6 +173,7 @@ public class DashboardServiceFacade
 
 	public EmsUserOptions mergeEmsUserOptions(EmsUserOptions emsUserOptions)
 	{
+		emsUserOptions.setLastModificationDate(DateUtil.getGatewayTime());
 		EmsUserOptions entity = null;
 		entity = em.merge(emsUserOptions);
 		commitTransaction();
@@ -178,6 +182,8 @@ public class DashboardServiceFacade
 
 	public EmsDashboard persistEmsDashboard(EmsDashboard emsDashboard)
 	{
+		emsDashboard.setCreationDate(DateUtil.getGatewayTime());
+		emsDashboard.setLastModificationDate(emsDashboard.getCreationDate());
 		if (emsDashboard.getSharePublic() == null) {
 			emsDashboard.setSharePublic(0);
 		}
@@ -222,6 +228,8 @@ public class DashboardServiceFacade
 
 	public EmsPreference persistEmsPreference(EmsPreference emsPreference)
 	{
+		emsPreference.setCreationDate(DateUtil.getGatewayTime());
+		emsPreference.setLastModificationDate(emsPreference.getCreationDate());
 		em.persist(emsPreference);
 		commitTransaction();
 		return emsPreference;
@@ -229,6 +237,8 @@ public class DashboardServiceFacade
 
 	public EmsUserOptions persistEmsUserOptions(EmsUserOptions emsUserOptions)
 	{
+		emsUserOptions.setCreationDate(DateUtil.getGatewayTime());
+		emsUserOptions.setLastModificationDate(emsUserOptions.getCreationDate());
 		if (emsUserOptions.getAutoRefreshInterval() == null) {
 			emsUserOptions.setAutoRefreshInterval(UserOptionsManager.DEFAULT_REFRESH_INTERVAL);
 		}

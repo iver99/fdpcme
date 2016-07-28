@@ -18,8 +18,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.MultitenantType;
@@ -31,7 +29,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 //@SequenceGenerator(name = "EmsDashboard_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_SEQ", allocationSize = 1)
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
-public class EmsDashboard implements Serializable
+public class EmsDashboard extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1219062974568988740L;
 
@@ -58,14 +56,7 @@ public class EmsDashboard implements Serializable
 	private Integer sharePublic;
 	@Column(name = "APPLICATION_TYPE")
 	private Integer applicationType;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATION_DATE", nullable = false)
-	private Date creationDate;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "LAST_MODIFICATION_DATE")
-	private Date lastModificationDate;
+	
 	@Column(name = "LAST_MODIFIED_BY", length = 128)
 	private String lastModifiedBy;
 	@Column(nullable = false, length = 320)
@@ -98,7 +89,8 @@ public class EmsDashboard implements Serializable
 			Integer isSystem, Integer sharePublic, Date lastModificationDate, String lastModifiedBy, String name, String owner,
 			String screenShot, Integer type, Integer applicationType)
 	{
-		this.creationDate = creationDate;
+		this.setCreationDate(creationDate);
+		this.setLastModificationDate(lastModificationDate);
 		this.dashboardId = dashboardId;
 		this.deleted = deleted;
 		this.description = description;
@@ -108,7 +100,6 @@ public class EmsDashboard implements Serializable
 		this.enableEntityFilter = enableEntityFilter;
 		this.isSystem = isSystem;
 		this.sharePublic = sharePublic;
-		this.lastModificationDate = lastModificationDate;
 		this.lastModifiedBy = lastModifiedBy;
 		this.name = name;
 		this.owner = owner;
@@ -140,11 +131,6 @@ public class EmsDashboard implements Serializable
 	public Integer getApplicationType()
 	{
 		return applicationType;
-	}
-
-	public Date getCreationDate()
-	{
-		return creationDate;
 	}
 
 	public BigInteger getDashboardId()
@@ -193,11 +179,6 @@ public class EmsDashboard implements Serializable
 	public Integer getIsSystem()
 	{
 		return isSystem;
-	}
-
-	public Date getLastModificationDate()
-	{
-		return lastModificationDate;
 	}
 
 	public String getLastModifiedBy()
@@ -262,11 +243,6 @@ public class EmsDashboard implements Serializable
 		this.applicationType = applicationType;
 	}
 
-	public void setCreationDate(Date creationDate)
-	{
-		this.creationDate = creationDate;
-	}
-
 	/**
 	 * @param dashboardId
 	 *            the dashboardId to set
@@ -318,11 +294,6 @@ public class EmsDashboard implements Serializable
 	public void setIsSystem(Integer isSystem)
 	{
 		this.isSystem = isSystem;
-	}
-
-	public void setLastModificationDate(Date lastModificationDate)
-	{
-		this.lastModificationDate = lastModificationDate;
 	}
 
 	public void setLastModifiedBy(String lastModifiedBy)

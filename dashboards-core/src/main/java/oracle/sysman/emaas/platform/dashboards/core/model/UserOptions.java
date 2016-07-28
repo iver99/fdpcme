@@ -1,9 +1,11 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
 import java.math.BigInteger;
+import java.util.Date;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
+import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 
@@ -74,10 +76,15 @@ public class UserOptions
 
 	public EmsUserOptions toEntity(EmsUserOptions emsUserOptions, String userName) throws DashboardException
 	{
-		EmsUserOptions euo = emsUserOptions;
+		EmsUserOptions euo;
+		Date now = DateUtil.getGatewayTime();
 		if (emsUserOptions == null) {
 			euo = new EmsUserOptions();
+			euo.setCreationDate(now);
+		} else {
+			euo = emsUserOptions;
 		}
+		euo.setLastModificationDate(now);
 
 		if (dashboardId == null) {
 			throw new CommonFunctionalException(

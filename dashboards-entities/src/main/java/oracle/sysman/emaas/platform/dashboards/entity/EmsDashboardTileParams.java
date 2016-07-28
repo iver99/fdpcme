@@ -23,7 +23,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @Table(name = "EMS_DASHBOARD_TILE_PARAMS")
 @IdClass(EmsDashboardTileParamsPK.class)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
-public class EmsDashboardTileParams implements Serializable
+public class EmsDashboardTileParams extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 4988046039963971713L;
 	@Column(name = "IS_SYSTEM", nullable = false)
