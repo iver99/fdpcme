@@ -35,7 +35,6 @@ public class DashBoardUtils
 
 	public static void closeOverviewPage() throws Exception
 	{
-
 		driver.getLogger().info("before clicking overview button");
 		driver.click(PageId.OverviewCloseID);
 		driver.getLogger().info("after clicking overview button");
@@ -60,10 +59,13 @@ public class DashBoardUtils
 		DashboardHomeUtil.gridView(driver);
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Performance Analytics: Database");
 
-		//Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Analytics"));
+                Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Availability Analytics"));
+                Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Host"));
+                //Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
 		//Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Host Health Summary"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Performance Analytics: Database"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Performance Analytics: Middleware"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Performance Analytics Application Server"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Database"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Middleware"));
 		//Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Health Summary"));

@@ -32,6 +32,8 @@ public class PrivilegeChecker
 	public static final String ADMIN_ROLE_NAME_ITA = "IT Analytics Administrator";
 	public static final String ADMIN_ROLE_NAME_LA = "Log Analytics Administrator";
 	public static final String ADMIN_ROLE_NAME_MONITORING = "Monitoring Service Administrator";
+	public static final String ADMIN_ROLE_NAME_SECURITY = "Security Analytics Administrator";
+	public static final String ADMIN_ROLE_NAME_ORCHESTRATION = "Orchestration Administrator";
 	public static final String SECURITY_AUTH_ROLE_CHECK_API = "api/v1/roles/grants/getRoles?grantee=";
 	private static final String SECURITY_AUTHORIZATION_SERVICENAME = "SecurityAuthorization";
 	private static final String SECURITY_AUTHORIZATION_VERSION = "1.0+";
@@ -76,7 +78,8 @@ public class PrivilegeChecker
 		boolean isAdmin = false;
 		if (userRoles != null && userRoles.size() > 0) {
 			if (userRoles.contains(ADMIN_ROLE_NAME_APM) || userRoles.contains(ADMIN_ROLE_NAME_ITA)
-					|| userRoles.contains(ADMIN_ROLE_NAME_LA) || userRoles.contains(ADMIN_ROLE_NAME_MONITORING)) {
+					|| userRoles.contains(ADMIN_ROLE_NAME_LA) || userRoles.contains(ADMIN_ROLE_NAME_MONITORING)
+					|| userRoles.contains(ADMIN_ROLE_NAME_SECURITY) || userRoles.contains(ADMIN_ROLE_NAME_ORCHESTRATION)) {
 				isAdmin = true;
 			}
 		}

@@ -345,6 +345,15 @@ public class DashboardServiceFacade
 		return deleteCout;
 	}
 
+	public List<EmsDashboard> getEmsDashboardsBySubId(long subDashboardId)
+	{
+		getEntityManager().getTransaction().begin();
+		List<EmsDashboard> dashboards = em.createNamedQuery("EmsDashboard.queryBySubDashboardID").setParameter("p", subDashboardId)
+				.getResultList();
+		commitTransaction();
+		return dashboards;
+	}
+
     public int removeUnsharedEmsSubDashboard(long subDashboardId, String owner)
     {
         getEntityManager().getTransaction().begin();

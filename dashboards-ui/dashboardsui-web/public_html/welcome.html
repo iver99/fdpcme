@@ -100,6 +100,36 @@
                                 </div>
                             <!--</a>-->
                         </li>
+                        <!-- ko if: showSecurityAnalytics -->
+                        <li class="box-list-li box-list-a">
+                            <a id="security_analytics_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openSecurityAnalytics">
+                                <div class="service-box-wrapper">
+                                    <div class="landing-home-box-img security-analytics-box">
+                                        <img class="app-image" src="@version@/images/SecurityAnalytics_w_92px.png" data-bind="attr: {alt: securityAnalytics}"/>
+                                    </div>
+                                    <div class="landing-home-box-content">
+                                        <div class="landing-home-box-content-head" data-bind="text: securityAnalytics"></div>
+                                        <div class="landing-home-box-content-desc" data-bind="text: securityAnalyticsDesc"></div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <!-- /ko -->
+                        <!-- ko if: showOrchestration -->
+                        <li class="box-list-li box-list-a">
+                            <a id="orchestration_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openOrchestration">
+                                <div class="service-box-wrapper">
+                                    <div class="landing-home-box-img orchestration-box">
+                                        <img class="app-image" src="@version@/images/Orchestration_w_92px.png" data-bind="attr: {alt: orchestration}"/>
+                                    </div>
+                                    <div class="landing-home-box-content">
+                                        <div class="landing-home-box-content-head" data-bind="text: orchestration"></div>
+                                        <div class="landing-home-box-content-desc" data-bind="text: orchestrationDesc"></div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <!-- /ko -->
                         <li class="box-list-li box-list-a">
                             <a id="dashboards_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openDashboards">
                                 <div class="service-box-wrapper">

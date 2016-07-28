@@ -1,12 +1,12 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.testng.Assert.*;
+import org.testng.annotations.Test;
 
 /**
  * Created by Troy on 2016/1/20.
@@ -15,7 +15,7 @@ import static org.testng.Assert.*;
 public class EmsDashboardTileTest { 
     Date now = new Date();
     private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10,10,10, now,
-            "elephant","elephant","elephant","elephant",10,10);
+            "elephant","elephant","elephant","elephant",10,10, "{}");
 
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
             now,
