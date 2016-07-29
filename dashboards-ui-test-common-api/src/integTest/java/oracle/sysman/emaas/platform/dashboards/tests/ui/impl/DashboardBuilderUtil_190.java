@@ -43,6 +43,31 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
         WaitUtil.waitForPageFullyLoaded(driver);
         driver.getLogger().info("DashboardBuilderUtil.createDashboardInsideSet : " + name);
         Validator.notEmptyString("name", name);
+        //validate whether should open new dashboard home in set
+        boolean isSelectionTabExist = false;
+        List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DashboardSetNavsCSS));
+        if (navs == null || navs.size() == 0) {
+            throw new NoSuchElementException("DashboardBuilderUtil.createDashboardInsideSet: the dashboard navigators is not found");
+        }
+
+        for (WebElement nav : navs) {
+            if (nav.getAttribute("data-tabs-name").trim().equals(DASHBOARD_SELECTION_TAB_NAME)) {
+                isSelectionTabExist = true;
+                driver.getLogger().info("DashboardBuilderUtil.createDashboardInsideSet already has dashboard home");
+                break;
+            }
+        }
+
+        if (isSelectionTabExist == false) {
+            WebElement addNav = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId_190.DashboardSetNavAddBtnCSS));
+            if (addNav == null) {
+                throw new NoSuchElementException(
+                        "DashboardBuilderUtil.createDashboardInsideSet: the dashboard 'add' button  is not found");
+            }
+            addNav.click();
+            WaitUtil.waitForPageFullyLoaded(driver); // wait for all dashboards loaded
+        }
+
         driver.click("css="+DashBoardPageId_190.DASHBOARD_HOME_CREATINSET_BUTTON);
 
         if (name != null && !name.isEmpty()) {
@@ -261,6 +286,33 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
         driver.getLogger().info("DashboardBuilderUtil.deleteDashboardSet completed");
     }
 
+    @Override
+    public void deleteDashboardInsideSet(WebDriver driver)
+    {
+        driver.getLogger().info("DashboardBuilderUtil.deleteDashboardInsideSet started");
+        driver.waitForElementPresent("css="+DashBoardPageId_190.BuilderOptionsMenuLocator);
+        WaitUtil.waitForPageFullyLoaded(driver);
+
+        WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
+        WebElement editOption = selectedDashboardEl.findElement(By.cssSelector(DashBoardPageId_190.BuilderOptionsMenuLocator));
+        editOption.click();
+        driver.takeScreenShot();
+
+        driver.waitForElementPresent("css="+DashBoardPageId_190.BuilderOptionsEditLocatorCSS);
+        driver.click("css="+DashBoardPageId_190.BuilderOptionsEditLocatorCSS);
+        driver.takeScreenShot();
+
+        driver.waitForElementPresent("css="+DashBoardPageId_190.BuilderOptionsDeleteLocator);
+        driver.click("css="+DashBoardPageId_190.BuilderOptionsDeleteLocator);
+        driver.takeScreenShot();
+
+        driver.waitForElementPresent(DashBoardPageId_190.BuilderDeleteDialogLocator);
+        driver.click(DashBoardPageId_190.BuilderDeleteDialogDeleteBtnLocator);
+        WaitUtil.waitForPageFullyLoaded(driver);
+        driver.takeScreenShot();
+        driver.getLogger().info("DashboardBuilderUtil.deleteDashboardInsideSet completed");
+    }
+    
     @Override
     public void duplicateDashboard(WebDriver driver, String name, String descriptions) throws Exception {
         duplicateDashboardCommonUse(driver,name, descriptions ,DUP_DASHBOARD_NODSUBMENU);
