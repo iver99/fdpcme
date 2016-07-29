@@ -148,7 +148,7 @@ define([
                                 //X-ORCL-OMC-APIGW-RETRYAFTER : retry-after=2, num-retry=3, msg="tenant locked"
                                 var apigwHeaders = self.getAPIGWHeaderValues(jqXHR, 'X-ORCL-OMC-APIGW-RETRYAFTER');
                                 if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'].toLowerCase() === 'tenant locked') {
-                                    if (apigwHeaders['retry-after'] && apigwHeaders['num-retry']) {
+                                    if (apigwHeaders['retry-after'] && apigwHeaders['num-retry'] && retries!== 0) {
                                         retries = apigwHeaders['num-retry'];
                                         retryDelayTime = apigwHeaders['retry-after']*1000; //Convert to milliseconds
                                         retryLimit = apigwHeaders['num-retry'];

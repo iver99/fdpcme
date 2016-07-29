@@ -30,7 +30,8 @@ define([
 //                    url: downtimeDetectUrl,
 //                    async: false,
 //                    dataType: "json",
-//                    contentType: "application/json; charset=utf-8"
+//                    contentType: "application/json; charset=utf-8",
+//                    retryLimit: 0
 //                })
 //                .fail(function(jqXHR, textStatus, errorThrown) {
 //                    var apigwHeaders = ajaxUtil.getAPIGWHeaderValues(jqXHR, 'X-ORCL-OMC-APIGW-RETRYAFTER');
@@ -63,7 +64,8 @@ define([
                     type: "POST",
                     url: downtimeDetectUrl,
                     async: true,
-                    headers: dfu.getDefaultHeader()
+                    headers: dfu.getDefaultHeader(),
+                    retryLimit: 0
                 })
                 .done(function() {
                     callback(false);
