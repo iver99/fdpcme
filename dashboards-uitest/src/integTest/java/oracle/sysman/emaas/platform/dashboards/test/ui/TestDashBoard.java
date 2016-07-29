@@ -565,7 +565,7 @@ public class TestDashBoard extends LoginAndLogout
 	public void testModifyDashboard_widget() throws Exception
 	{
 		String WidgetName_1 = "Top Hosts by Log Entries";
-//		String WidgetName_2 = "Top 10 Listeners by Load";
+		//		String WidgetName_2 = "Top 10 Listeners by Load";
 
 		//initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -588,9 +588,9 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_1);
 		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_1), "Widget '" + WidgetName_1 + "' not found");
 
-//		webd.getLogger().info("Add Widget 'Top 10 Listeners by Load' into the dashboard");
-//		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_2);
-//		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_2), "Widget '" + WidgetName_2 + "' not found");
+		//		webd.getLogger().info("Add Widget 'Top 10 Listeners by Load' into the dashboard");
+		//		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_2);
+		//		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_2), "Widget '" + WidgetName_2 + "' not found");
 
 		webd.getLogger().info("Add Widget 'Top Hosts by Log Entries' into the dashboard");
 		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_1);
@@ -889,15 +889,17 @@ public class TestDashBoard extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_timepicker, dbDesc, true), "Create dashboard failed!");
 
 		//disable time selector
-		//TODO
+		DashboardBuilderUtil.showTimeRangeFilter(webd, false);
 		//verify the dashboard, the time selector no display
-		//		webd.getLogger().info("Verify the time selector is not diplayed in dashboard");
-		//		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_timepicker, dbDesc, false), "Time selector component is still displayed!");
+		webd.getLogger().info("Verify the time selector is not diplayed in dashboard");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_timepicker, dbDesc, false),
+				"Time selector component is still displayed!");
 		//enable time selector
-		//TODO
+		DashboardBuilderUtil.showTimeRangeFilter(webd, true);
 		//verify the dashboard, the time selector is displayed
-		//		webd.getLogger().info("Verify the time selector is diplayed in dashboard");
-		//		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_timepicker, dbDesc, true), "Time selector component is not displayed!");
+		webd.getLogger().info("Verify the time selector is diplayed in dashboard");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_timepicker, dbDesc, true),
+				"Time selector component is not displayed!");
 
 		//Add the widget to the dashboard
 		webd.getLogger().info("Start to add Widget into the dashboard");
@@ -967,7 +969,7 @@ public class TestDashBoard extends LoginAndLogout
 	public void testWidgetConfiguration() throws Exception
 	{
 		String WidgetName_1 = "Database Errors Trend";
-//		String WidgetName_2 = "Top 10 Listeners by Load";
+		//		String WidgetName_2 = "Top 10 Listeners by Load";
 
 		//initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -984,15 +986,15 @@ public class TestDashBoard extends LoginAndLogout
 		//widget operation
 		webd.getLogger().info("hide/show the widget title");
 		DashboardBuilderUtil.showWidgetTitle(webd, WidgetName_1, false);
-//		DashboardBuilderUtil.showWidgetTitle(webd, WidgetName_2, true);
+		//		DashboardBuilderUtil.showWidgetTitle(webd, WidgetName_2, true);
 		webd.getLogger().info("resize the widget title");
 		DashboardBuilderUtil.resizeWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_WIDER);
 		DashboardBuilderUtil.resizeWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_NARROWER);
-//		DashboardBuilderUtil.resizeWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_TALLER);
-//		DashboardBuilderUtil.resizeWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_SHORTER);
+		//		DashboardBuilderUtil.resizeWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_TALLER);
+		//		DashboardBuilderUtil.resizeWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_SHORTER);
 		webd.getLogger().info("remove the widget title");
 		DashboardBuilderUtil.removeWidget(webd, WidgetName_1);
-//		DashboardBuilderUtil.removeWidget(webd, WidgetName_2);
+		//		DashboardBuilderUtil.removeWidget(webd, WidgetName_2);
 
 		//save the dashboard
 		webd.getLogger().info("save the dashboard");
