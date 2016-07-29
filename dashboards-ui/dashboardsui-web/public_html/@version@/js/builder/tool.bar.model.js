@@ -25,6 +25,7 @@ define(['knockout',
             $b.registerObject(self, 'ToolBarModel');
             self.dashboard = $b.dashboard;
             self.isUpdated = $b.isDashboardUpdated;
+            self.isDeletingDbd = ko.observable(false);
             self.tilesViewModel = $b.getDashboardTilesViewModel();
             self.currentUser = dfu.getUserName();
             self.openRightPanelByBuild = ko.observable(true);
@@ -79,18 +80,16 @@ define(['knockout',
                     self.tilesViewModel.show();
                 };
             }
-            
+                                                        
             function showConfirmLeaveDialog(event) {
                 var _msg = getNlsString('DBS_BUILDER_CONFIRM_LEAVE_DIALOG_CONTENT');
-                
-                if (event && $b.isDashboardUpdated() === true)
+
+                if (event && $b.isDashboardUpdated() === true && self.isDeletingDbd()===false)
                 {
                     event.returnValue = _msg;
                 }
-                if ($b.isDashboardUpdated() === true)
+                if ($b.isDashboardUpdated() === true && self.isDeletingDbd()===false)
                 {
-                    //$( "#cfmleaveDialog" ).ojDialog( "open" );
-                    //$( '#cfmleavecbtn' ).focus();
                     $b.findEl('.dashboard-screenshot').focus();
                     return _msg;
                 }
@@ -622,6 +621,7 @@ define(['knockout',
                 $('#duplicateDsbDialog').ojDialog('open');
             };
             self.openDashboardDeleteConfirmDialog = function() {
+                self.isDeletingDbd(true);
                 $('#delete-dashboard').ojDialog( "open" ); 
                 $('#delete-dashboard').focus();
             };
