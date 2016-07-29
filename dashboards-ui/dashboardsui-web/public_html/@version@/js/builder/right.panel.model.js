@@ -1050,6 +1050,18 @@ define(['knockout',
                                 
                                 self.dashboardsetShare(result.sharePublic === true ? "on" : "off");
                                 self.dashboardsetToolBarModel.dashboardsetName(result.name);
+                                self.dashboardsetToolBarModel.dashboardInst.name(result.name);
+                                if(self.dashboardsetToolBarModel.dashboardInst.description){
+                                    if(result.description){
+                                        self.dashboardsetToolBarModel.dashboardInst.description(result.description);
+                                    }else{
+                                        delete self.dashboardsetToolBarModel.dashboardInst.description;
+                                    }
+                                }else{
+                                    if(result.description){
+                                        self.dashboardsetToolBarModel.dashboardInst.description = ko.observable(result.description);
+                                    }
+                                }
                                 self.dashboardsetToolBarModel.dashboardsetDescription(result.description);
                             },
                             function (jqXHR, textStatus, errorThrown) {
