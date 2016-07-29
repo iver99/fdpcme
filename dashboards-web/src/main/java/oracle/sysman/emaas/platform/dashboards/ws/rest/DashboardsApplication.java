@@ -10,10 +10,11 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 
 /**
  * @author guobaochen
@@ -33,6 +34,7 @@ public class DashboardsApplication extends Application
 		hs.add(TenantSubscriptionsAPI.class);
 		hs.add(ConfigurationAPI.class);
 		hs.add(RegistryLookupAPI.class);
+		hs.add(OMCStatusAPI.class);
 		return hs;
 	}
 }
