@@ -656,12 +656,16 @@ define(['knockout',
 //                }
 //            };
 
-            self.deleteDashboardClicked = function(){
+            self.deleteDashboardClicked = function(){       
                 queryDashboardSetsBySubId(self.dashboard.id(),function(resp){
                     window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(resp.dashboardSets || []); 
                     self.toolBarModel.openDashboardDeleteConfirmDialog();
                 });
-            };        
+            };  
+            
+            $("#delete-dashboard").on("ojclose", function (event, ui) {
+                self.toolBarModel.isDeletingDbd(false);
+            });
             
             $('.dbd-right-panel-editdashboard-general').on({
                 "ojexpand":function(event,ui){
