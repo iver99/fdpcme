@@ -72,7 +72,7 @@ define(['knockout',
                 //add for detecting dashboard tabs switching in set 
                 self.editDashboardDialogModel();
                 return self.dashboard.tiles && self.dashboard.tiles() ? self.dashboard.tiles().sort(function (tileA, tileB) {
-                    return tileA.WIDGET_NAME() > tileB.WIDGET_NAME();
+                    return tileA.WIDGET_NAME() > tileB.WIDGET_NAME()?1:(tileA.WIDGET_NAME() < tileB.WIDGET_NAME()?-1:0);
                 }):[];
             });
 

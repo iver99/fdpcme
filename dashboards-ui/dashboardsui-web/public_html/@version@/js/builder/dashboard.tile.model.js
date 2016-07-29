@@ -429,6 +429,7 @@ define(['knockout',
                     
                     var isResizing =  resizeMode !== null;
                     if(isResizing) {
+                        $('#globalBody').addClass('none-user-select');
                         self.resizingTile(ko.dataFor(targetHandler.closest('.dbd-widget')[0]));
                         self.resizingOptions({mode:resizeMode});
                     }
@@ -454,6 +455,7 @@ define(['knockout',
                         self.resizingTile(null);
                         self.resizingOptions(null);
                         $(this).css('cursor','default');
+                        $('#globalBody').removeClass('none-user-select');
                         self.tilesView.enableDraggable();
                 });;
             };
