@@ -493,11 +493,35 @@ body, html {
                         height 0.5s,
                         font-size 0.5s,
                         line-height 0.5s;
+        -moz-trasition: top 0.5s,
+                        left 0.5s,
+                        width 0.5s,
+                        height 0.5s,
+                        font-size 0.5s,
+                        line-height 0.5s;
+            transition: top 0.5s,
+                        left 0.5s,
+                        width 0.5s,
+                        height 0.5s,
+                        font-size 0.5s,
+                        line-height 0.5s;
 }
 
 .tile-dragging-placeholder {    
     -webkit-transition: top 0.5s, 
         left 0.5s, 
+        width 0.5s,
+        height 0.5s,
+        font-size 0.5s,
+        line-height 0.5s;
+    -moz-transition: top 0.5s, 
+        left 0.5s, 
+        width 0.5s,
+        height 0.5s,
+        font-size 0.5s,
+        line-height 0.5s;
+    transition: top 0.5s,
+        left 0.5s,
         width 0.5s,
         height 0.5s,
         font-size 0.5s,
