@@ -152,6 +152,13 @@ define(['knockout',
             };
 
             self.saveDashboardSet = function (fieldsToUpdate, successCallback, failureCallback) {
+//                if(dashboardInst.systemDashboard()) {
+                if(dashboardInst.owner() === "Oracle") { ///do not update dashboard set if it is OOB dsb set
+                    self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;  
+                    self.saveUserOptions();
+                    console.log("This is an OOB dashboard set");
+                    return;
+                }
                 var newDashboardJs = ko.mapping.toJS(dashboardInst, {
                     // TODO make sure the properties that should be included or excluded with Guobao
 //                        'include': ['screenShot', 'description', 'height',

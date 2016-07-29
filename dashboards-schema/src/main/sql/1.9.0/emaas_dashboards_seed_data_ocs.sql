@@ -83,8 +83,8 @@ BEGIN
       V_DESCRIPTION               := null;
       V_CREATION_DATE             := SYS_EXTRACT_UTC(SYSTIMESTAMP);
       V_LAST_MODIFICATION_DATE    := SYS_EXTRACT_UTC(SYSTIMESTAMP);
-      V_LAST_MODIFIED_BY          := 'ORACLE';
-      V_OWNER                     := 'ORACLE';
+      V_LAST_MODIFIED_BY          := 'Oracle';
+      V_OWNER                     := 'Oracle';
       V_IS_SYSTEM                 := 1;
       V_APPLICATION_TYPE          := 6;
       V_ENABLE_TIME_RANGE         := 1;
