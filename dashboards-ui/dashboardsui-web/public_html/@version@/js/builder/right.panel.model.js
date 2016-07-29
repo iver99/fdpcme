@@ -936,7 +936,11 @@ define(['knockout',
 
             self.saveDsbFilterSettings = function(fieldsToUpdate, succCallback, errorCallback) {
                 var newDashboardJs = ko.mapping.toJS(self.dashboard, {
-                    'include': ['screenShot'],
+                    'include': ['screenShot', 'description', 'height', 
+                        'isMaximized', 'title', 'type', 'width', 
+                        'tileParameters', 'name', 'systemParameter', 
+                        'tileId', 'value', 'content', 'linkText', 
+                        'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
                     'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight",
                         "modeColumn", "modeRow", "screenShotHref", "systemDashboard",
                         "customParameters", "clientGuid", "dashboard",
