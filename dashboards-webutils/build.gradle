@@ -1,5 +1,4 @@
 
-apply plugin: 'eclipse' 
 apply from: 'test.gradle'
 jar {
         from('src/main/java') {

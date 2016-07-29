@@ -2,8 +2,6 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import java.text.SimpleDateFormat
 import java.util.Date
 
-apply plugin: 'eclipse'
-
 apply from:'test.gradle'
 
 dfversion = project.ext.getServiceVersion('DashboardService-API')
