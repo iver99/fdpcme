@@ -235,7 +235,35 @@ define(['knockout',
             var _currentUser = dfu.getUserName();
             tile.editDisabled = ko.computed(function() { //to do
                 return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard() || _currentUser !== dashboard.owner();
-            });
+            }); 
+            
+            tile.isItaAdmin = ko.observable(false);
+            judgeAdmin();
+            function judgeAdmin() {
+                var serviceUrl = "/sso.static/dashboards.configurations/registration";
+                if (dfu.isDevMode()) {
+                    serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "configurations/registration");
+                }
+                dfu.ajaxWithRetry({
+                    url: serviceUrl,
+                    headers: dfu.getDashboardsRequestHeader(),
+                    contentType: 'application/json',
+                    success: function (data, textStatus) {
+                        data.adminLinks.forEach(function (item) {
+                            if (item.name === "IT Analytics Administration") {
+                                tile.isItaAdmin(true);
+                            }
+                            ;
+                        });
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        oj.Logger.error('Failed to get service instances by URL: ' + serviceUrl);
+                    },
+                    async: true
+                });
+            };
+
+
             tile.widerEnabled = ko.computed(function() {
                 return mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS;
             });
