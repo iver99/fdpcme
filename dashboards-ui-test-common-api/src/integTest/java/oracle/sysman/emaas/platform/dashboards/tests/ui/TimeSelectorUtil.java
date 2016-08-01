@@ -47,5 +47,4 @@ public class TimeSelectorUtil
 		ITimeSelectorUtil tsu = new UtilLoader<ITimeSelectorUtil>().loadUtil(webd, ITimeSelectorUtil.class);
 		return tsu.setTimeRange(webd, rangeoption);
 	}
-
 }

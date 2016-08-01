@@ -118,6 +118,8 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         
         self.EVENT_TILE_MOVE_STOPED = "EVENT_TILE_MOVE_STOPED";
         self.EVENT_TILE_RESIZED = "EVENT_TILE_RESIZED";
+        
+        self.EVENT_AUTO_REFRESH_CHANGED = "EVENT_AUTO_REFRESH_CHANGED";
 
         self.dispatcher = new dsp.Dispatcher();
         self.addEventListener = function(event, listener) {
@@ -171,8 +173,8 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
                     - $('#head-bar-container').outerHeight()*/;
             var width = $(window).width();
             var $visibleDashboard = $("#dashboards-tabs-contents .dashboard-content:visible");
-            var $rightPanelToggler = $visibleDashboard.find('.right-panel-toggler');
-            var $dbdLeftPanel = $visibleDashboard.find('.dbd-left-panel');
+            var $rightPanelToggler = $('.right-panel-toggler');
+            var $dbdLeftPanel = $('.dbd-left-panel');
             var panelWidth = $dbdLeftPanel.is(":visible") ? $dbdLeftPanel.width() : 0;
             var togglerWidth = $rightPanelToggler.is(":visible") ? $rightPanelToggler.outerWidth() : 0;
             var leftWidth = panelWidth + togglerWidth;
@@ -180,7 +182,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
             var tabSetHeight = $dbdSetTabs.is(":visible") ? $dbdSetTabs.height() : 0;
             var topHeight = $('#headerWrapper').outerHeight() + 
                     tabSetHeight + 
-                    $visibleDashboard.find('.head-bar-container').outerHeight();
+                    $visibleDashboard.find('.head-bar-container:visible').outerHeight();
             self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth, topHeight);
             if (previousWidth && width >= NORMAL_MIN_WIDTH && previousWidth < NORMAL_MIN_WIDTH)
                 self.triggerEvent(self.EVENT_ENTER_NORMAL_MODE, null, width, height, leftWidth, topHeight);

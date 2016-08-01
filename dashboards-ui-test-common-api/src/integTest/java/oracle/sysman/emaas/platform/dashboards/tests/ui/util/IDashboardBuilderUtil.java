@@ -25,15 +25,23 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 
 	public void addWidgetToDashboard(WebDriver driver, String searchString) throws Exception;
 
+    public void createDashboardInsideSet(WebDriver driver, String name, String descriptions) throws Exception;
+
 	public void deleteDashboard(WebDriver driver);
+
+	public void deleteDashboardInsideSet(WebDriver driver);
 
 	public void deleteDashboardSet(WebDriver driver);
 
 	public void duplicateDashboard(WebDriver driver, String name, String descriptions) throws Exception;
 
-	public void editDashboard(WebDriver driver, String name, String descriptions) throws Exception;
+    public void duplicateDashboardInsideSet(WebDriver driver, String name, String descriptions, boolean addToSet) throws Exception;
 
-	public void editDashboardSet(WebDriver driver, String name, String descriptions) throws Exception;
+    public void editDashboard(WebDriver driver, String name, String descriptions) throws Exception;
+
+	public void editDashboard(WebDriver driver, String name, String descriptions, Boolean toShowDscptn) throws Exception;
+
+    public void editDashboardSet(WebDriver driver, String name, String descriptions) throws Exception;
 
 	public Boolean favoriteOption(WebDriver driver) throws Exception;
 
@@ -64,13 +72,13 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 
 	public void refreshDashboardSet(WebDriver driver, String refreshSettings);
 
-	public void removeDashboardInSet(WebDriver driver, String dashboardName);
-
 	public void removeWidget(WebDriver driver, String widgetName) throws Exception;
 
 	public void removeWidget(WebDriver driver, String widgetName, int index) throws Exception;
 
-	public void resizeWidget(WebDriver driver, String widgetName, int index, String resizeOptions) throws Exception;
+    public void removeDashboardFromSet(WebDriver driver, String dashboardName) throws Exception;
+
+    public void resizeWidget(WebDriver driver, String widgetName, int index, String resizeOptions) throws Exception;
 
 	public void resizeWidget(WebDriver driver, String widgetName, String resizeOptions) throws Exception;
 
@@ -80,7 +88,9 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 
 	public void selectDashboard(WebDriver driver, String dashboardName) throws Exception;
 
-	public void showWidgetTitle(WebDriver driver, String widgetName, boolean visibility) throws Exception;
+    public void selectDashboardInsideSet(WebDriver driver,String dashboardName) throws Exception;
+
+    public void showWidgetTitle(WebDriver driver, String widgetName, boolean visibility) throws Exception;
 
 	public void showWidgetTitle(WebDriver driver, String widgetName, int index, boolean visibility) throws Exception;
 
@@ -112,5 +122,12 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	public boolean verifyWidget(WebDriver driver, String widgetName);
 
 	public boolean verifyWidget(WebDriver driver, String widgetName, int index);
+	
+	public void setEntitySupport(WebDriver driver, String mode) throws Exception;
+
+	public boolean showEntityFilter(WebDriver driver, boolean showEntityFilter) throws Exception;
+	
+	public boolean showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) throws Exception;
+	
 
 }

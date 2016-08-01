@@ -34,8 +34,8 @@ allprojects {
 	apply plugin: 'DevInfraPlugin' 
 	apply plugin: 'maven-publish'
         apply plugin: 'TestInfraPlugin'
-	apply plugin: 'JSPlugin'
 	apply plugin: 'gavsetting'
+	apply plugin: 'JSPlugin'
 	ext.dependenciesDir = new File(rootDir, 'common') 
 	repositories {  
 		mavenLocal()  
@@ -211,6 +211,10 @@ task runS1Tests(type: Exec) {
     if (project.hasProperty('BuildID')) {
         args "-PREPO_BID=${BuildID}"
     }
+   if (project.hasProperty('ENABLE_CC')) {
+        args "-PENABLE_CC=1"
+    }
+
     finalizedBy "print_results"
 }
 runS1Tests.enabled = !project.disableBuildTests
@@ -220,6 +224,9 @@ task runS2Tests(type: Exec) {
     args 'do_lrg', '-Plrgs=emcpdf_l1_test'
     if (project.hasProperty('BuildID')) {
         args "-PREPO_BID=${BuildID}"
+    }
+    if (project.hasProperty('ENABLE_CC')) {
+        args "-PENABLE_CC=1"
     }
     finalizedBy "print_results"
 
@@ -315,6 +322,19 @@ artifactoryPublish {
 // Apply code coverage gradle file. Defines jacoco and sonar properties.
 project.ext.set("source_cc", "${rootDir}/codeCoverage")
 apply from: "${project.ext.source_cc}/codeCoverage.gradle" 
+
+//-----------------------------------------------------------------------------
+// Set sonar.branch property for SonarQube
+//
+if(project.plugins.hasPlugin('sonar-runner')) {
+  sonarRunner {
+    sonarProperties {
+      property "sonar.branch", 'master'
+    }
+  }
+}
+//
+//-----------------------------------------------------------------------------
 
 // clean up database for Local LRG
 URLClassLoader loader = GroovyObject.class.classLoader

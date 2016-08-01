@@ -35,6 +35,9 @@ define([
     'ojs/ojgauge',
     'ojs/ojdatasource-common',
     'ojs/ojinputtext',
+    'ojs/ojtabs',
+    'ojs/ojcollapsible',
+    'ojs/ojradioset',
     'ojs/ojpagingtabledatasource'
 ], function (oj)
 {

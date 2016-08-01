@@ -16,7 +16,7 @@ public class EmsDashboardTileTest
 {
 	Date now = new Date();
 	private final EmsDashboard emsDashboard = new EmsDashboard(now, BigInteger.valueOf(10L), BigInteger.valueOf(10L), "elephant",
-			10, 10, 10, 10, 10, 10, now, "elephant", "elephant", "elephant", "elephant", 10, 10);
+			10, 10, 10, 10, 10, 10, now, "elephant", "elephant", "elephant", "elephant", 10, 10, "elephant");
 
 	private final EmsDashboardTile emsDashboardTile = new EmsDashboardTile(now, emsDashboard, 10, 10, 10, 10, 10, now,
 			"elephant", "elephant", /*Integer position, */

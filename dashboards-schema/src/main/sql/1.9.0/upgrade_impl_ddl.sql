@@ -17,3 +17,19 @@ Rem
 
 SET FEEDBACK ON
 SET SERVEROUTPUT ON
+
+
+DECLARE
+  v_count     INTEGER;
+BEGIN
+
+  --add new column 'EMS_DASHBOARD.EXTENDED_OPTIONS'
+  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD' AND column_name='EXTENDED_OPTIONS';
+  IF v_count=0 THEN
+    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD ADD "EXTENDED_OPTIONS" VARCHAR2(4000)';
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.EXTENDED_OPTIONS exists already, no change is needed');      
+  END IF;
+
+END;
+/

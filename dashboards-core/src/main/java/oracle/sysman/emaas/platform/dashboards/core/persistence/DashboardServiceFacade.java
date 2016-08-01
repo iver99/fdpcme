@@ -355,6 +355,15 @@ public class DashboardServiceFacade
 		return deleteCout;
 	}
 
+	public List<EmsDashboard> getEmsDashboardsBySubId(BigInteger subDashboardId)
+	{
+		getEntityManager().getTransaction().begin();
+		List<EmsDashboard> dashboards = em.createNamedQuery("EmsDashboard.queryBySubDashboardID").setParameter("p", subDashboardId)
+				.getResultList();
+		commitTransaction();
+		return dashboards;
+	}
+
 	public void removeEmsUserOptions(EmsUserOptions emsUserOptions)
 	{
 		emsUserOptions = em.find(EmsUserOptions.class,

@@ -271,6 +271,14 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	}
 
 	@Mock
+	public List<EmsDashboard> getEmsDashboardsBySubId(BigInteger subDashboardId)
+	{
+		System.out.println("[MockDashboardServiceFacade] getEmsDashboardsBySubId called");
+		List<EmsDashboard> ps = this.localFind(EmsDashboard.class, new EmsDashboardSelector(subDashboardId, null, null, null));
+		return ps.isEmpty() ? null : ps;
+	}
+
+	@Mock
 	public EmsUserOptions getEmsUserOptions(String username, BigInteger dashboardId)
 	{
 		System.out.println("[MockDashboardServiceFacade] getEmsUserOptions called");

@@ -79,8 +79,7 @@ public class TestDashBoard extends LoginAndLogout
 			//Open the dashboard
 			webd.getLogger().info("Open the dashboard to edit name and description");
 			DashboardHomeUtil.selectDashboard(webd, dbName_noWidgetGrid);
-			DashboardBuilderUtil.editDashboard(webd, dbName_noWidgetGrid + "-modify",
-					"Test_Dashboard_no_Widget_GridView desc modify");
+			DashboardBuilderUtil.editDashboard(webd, dbName_noWidgetGrid + "-modify", "Test_Dashboard_no_Widget_GridView desc modify",false);
 	
 			//Verify the dashboard edited successfully
 			webd.getLogger().info("Verify the dashboard edited successfully");
