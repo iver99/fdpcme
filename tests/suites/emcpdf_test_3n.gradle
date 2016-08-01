@@ -26,15 +26,7 @@
 
 
 buildscript {
-    repositories {
-	 /* To check if the jar is available in local maven repository */
-         maven {
-             url = "${PUB_MAVEN_MY_MAVEN_REPO}"
-         }
-        maven {
-            url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
-        }
-    }
+    apply from: 'test-buildscript-apply.gradle' 
     dependencies {
    	classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true 
 	classpath group: "com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "${devinfraVersion}", transitive: true
@@ -43,14 +35,7 @@ buildscript {
   }
 
 }
-repositories {
-	 maven {
-             url = "${PUB_MAVEN_MY_MAVEN_REPO}"
-         }
-    maven {
-     url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
-    }
-}
+apply from: 'test-project-apply.gradle'
 apply plugin: 'DevInfraPlugin'
 apply plugin: 'TestInfraPlugin'
 apply plugin: 'groovy'
@@ -64,13 +49,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  *                   END OF TEST-INFRA-BLOCK
  ***************************************************************************************************/
 
-repositories {
-maven {
-	url = "${PUB_MAVEN_MY_MAVEN_REPO}"
- }
- maven {
-	url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
-}
+
 
 
 //Update the lrgConfig configuration to specify where the test jar is.

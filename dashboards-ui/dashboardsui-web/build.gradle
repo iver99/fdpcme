@@ -10,8 +10,6 @@ apply plugin: 'war'
 apply plugin: 'eclipse-wtp'
 apply plugin: 'compass'
 
-group = 'com.oracle.emaas.emcpdf'
-
 jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
 def versionPathElement = jsversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
 
@@ -604,12 +602,12 @@ else
 publishing.publications {
         integTest(MavenPublication) {
                 setArtifactId(project.name + '-' + integTestJar.appendix)
-                setGroupId('com.oracle.emaas.emcpdf.test')
+                setGroupId("${publishGroup}")
                 artifact integTestJar.archivePath
         }
 
         thisJarPublication(MavenPublication) {
-                setGroupId('com.oracle.emaas.emcpdf.test')
+                setGroupId("${publishGroup}")
                 artifact jar
         }
 }

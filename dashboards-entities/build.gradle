@@ -10,11 +10,11 @@ jar {
 publishing.publications {
 		integTest(MavenPublication) {
                         setArtifactId(project.name + '-' + integTestJar.appendix)
-                        setGroupId('com.oracle.emaas.emcpdf.test')
+                        setGroupId("${publishGroup}")
                         artifact integTestJar.archivePath
     }
         thisJarPublication(MavenPublication) {
-                setGroupId('com.oracle.emaas.emcpdf.test')
+                setGroupId("${publishGroup}")
                 artifact jar
         }
 }

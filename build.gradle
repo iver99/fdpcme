@@ -73,16 +73,6 @@ if (ext.disableBuildTests)
 allprojects { 
 	apply plugin: 'JSPlugin'
 	ext.dependenciesDir = new File(rootDir, 'common') 
-	repositories {  
-		mavenLocal()  
-		maven {  
-			url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"  
-			credentials {  
-			username = "${artifactory_user}"  
-			password = "${artifactory_password}"  
-		} 
-	}  
-
 	} 
 	
 	configurations.all {
@@ -147,7 +137,7 @@ allprojects {
 	
     }
     s2tests.enabled = !project.rootProject.disableBuildTests
-}
+
 
 
 
@@ -286,7 +276,7 @@ publishing.publications {
     if (project.tasks.findByName('lrgMetadataZip')) {
         // Publication for publishing lrg metadata
         lrgMetadata(MavenPublication) {
-            groupId 'com.oracle.emaas.emcpdf.test' 
+            groupId "${publishGroup}"
             artifact lrgMetadataZip
             setArtifactId(lrgMetadataZip.baseName)
         }
