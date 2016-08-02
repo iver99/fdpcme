@@ -25,8 +25,8 @@
 buildscript {
            apply from: 'test-buildscript-apply.gradle'
 }
-apply from: 'setup.gradle'
 apply from: 'test-project-apply.gradle'
+apply from: 'setup.gradle'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
