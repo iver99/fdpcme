@@ -98,7 +98,6 @@ dependencies{
       	exclude('module':'groovy')
     }
 
-    
      testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.0.0+')
 
      

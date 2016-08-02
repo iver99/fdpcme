@@ -801,8 +801,8 @@ public class Dashboard
 					ed.addEmsSubDashboard(emsSubDashboard);
 					rows.put(subDashboard, emsSubDashboard);
 
-					// update share public property
-					if (ed.getSharePublic().equals(1)) {
+					// update share public property of un-oob dashboard
+					if (ed.getSharePublic().equals(1) && subbed.getIsSystem().equals(0)) {
 						subbed.setSharePublic(1);
 						dsf.mergeEmsDashboard(subbed);
 					}

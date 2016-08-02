@@ -56,11 +56,11 @@ public class DashBoardPageId
 	//public static final String WebLogic_Health_Summary_CSS = ".dbs-summary-page-image[alt='WebLogic Health Summary']";
 	public static final String Database_Configuration_and_Storage_By_Version_CSS = ".dbs-summary-page-image[alt='Database Configuration and Storage By Version']";
 	public static final String Enterprise_OverView_CSS = ".dbs-summary-page-image[alt='Enterprise Overview']";
-	public static final String Host_Inventory_By_Platform_CSS = ".dbs-summary-page-image[alt='Host Inventory By Platform']";
-	public static final String Top_25_Databases_by_Resource_Consumption_CSS = ".dbs-summary-page-image[alt='Top 25 Databases by Resource Consumption']";
-	public static final String Top_25_WebLogic_Servers_by_Heap_Usage_CSS = ".dbs-summary-page-image[alt='Top 25 WebLogic Servers by Heap Usage']";
-	public static final String Top_25_WebLogic_Servers_by_Load_CSS = ".dbs-summary-page-image[alt='Top 25 WebLogic Servers by Load']";
-	public static final String WebLogic_Servers_by_JDK_Version_CSS = ".dbs-summary-page-image[alt='WebLogic Servers by JDK Version']";
+//	public static final String Host_Inventory_By_Platform_CSS = ".dbs-summary-page-image[alt='Host Inventory By Platform']";
+//	public static final String Top_25_Databases_by_Resource_Consumption_CSS = ".dbs-summary-page-image[alt='Top 25 Databases by Resource Consumption']";
+//	public static final String Top_25_WebLogic_Servers_by_Heap_Usage_CSS = ".dbs-summary-page-image[alt='Top 25 WebLogic Servers by Heap Usage']";
+//	public static final String Top_25_WebLogic_Servers_by_Load_CSS = ".dbs-summary-page-image[alt='Top 25 WebLogic Servers by Load']";
+//	public static final String WebLogic_Servers_by_JDK_Version_CSS = ".dbs-summary-page-image[alt='WebLogic Servers by JDK Version']";
 	public static final String Database_Operations_CSS = ".dbs-summary-page-image[alt='Database Operations']";
 	public static final String Host_Operations_CSS = ".dbs-summary-page-image[alt='Host Operations']";
 	public static final String Middleware_Operations_CSS = ".dbs-summary-page-image[alt='Middleware Operations']";

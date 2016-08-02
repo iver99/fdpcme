@@ -264,14 +264,15 @@ define(['knockout',
 
                         var isBroaden = offsetXValue < 0;
                         var isNarrow = offsetXValue > 0;
-                        self.mode.setModeColumn(tile,newColumnIndex);
 
                         if (isBroaden) {
+                            self.mode.setModeColumn(tile,newColumnIndex);
                             self.broadenTile(tile, Math.abs(offsetXValue),true);
                             return true;
                         }
 
-                        if (isNarrow &&  tile.modeWidth() > 1) {
+                        if (isNarrow && tile.modeWidth() > self.mode.MODE_MIN_COLUMNS) {
+                            self.mode.setModeColumn(tile,newColumnIndex);
                             self.narrowTile(tile, Math.abs(offsetXValue));
                             return true;
                         }

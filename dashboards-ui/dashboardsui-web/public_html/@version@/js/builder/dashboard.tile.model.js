@@ -139,6 +139,7 @@ define(['knockout',
                     if (newTile){
                        self.editor.tiles.push(newTile);
                        self.show();
+                       Builder.getTileConfigure(self.dashboard, newTile, self.timeSelectorModel, self.targets, dashboardInst);
                        $b.triggerEvent($b.EVENT_TILE_ADDED, null, newTile);
                        self.triggerTileTimeControlSupportEvent((newTile.type() === 'DEFAULT' && newTile.WIDGET_SUPPORT_TIME_CONTROL())?true:null);
                     }
@@ -452,6 +453,7 @@ define(['knockout',
                     
                     var isResizing =  resizeMode !== null;
                     if(isResizing) {
+                        $('#globalBody').addClass('none-user-select');
                         self.resizingTile(ko.dataFor(targetHandler.closest('.dbd-widget')[0]));
                         self.resizingOptions({mode:resizeMode});
                     }
@@ -477,6 +479,7 @@ define(['knockout',
                         self.resizingTile(null);
                         self.resizingOptions(null);
                         $(this).css('cursor','default');
+                        $('#globalBody').removeClass('none-user-select');
                         self.tilesView.enableDraggable();
                 });;
             };
@@ -633,7 +636,7 @@ define(['knockout',
                 if(tile.content) {
                     cell.column = 0;
                 }
-
+                
                 $b.findEl('.tile-dragging-placeholder').css({
                     left: tile.left() - 5,
                     top: tile.top() - 5,
@@ -667,7 +670,7 @@ define(['knockout',
                     self.editor.tilesReorder();
                     self.showTiles();
                     $(ui.helper).css("opacity", 0.6);
-                
+                    
                     if(originalRow !== cell.row || originalCol !== cell.column) {
                         $b.findEl('.tile-dragging-placeholder').hide();
                         $b.findEl('.tile-dragging-placeholder').css({
@@ -800,16 +803,12 @@ define(['knockout',
                         $('#tile'+tile.clientGuid).addClass(draggingTileClass);
                     }
                     
-                    //move show() out of setTimeout to fix the issue that $b.findEl('.tile-dragging-placeholder').hide();doesn't work in onNewWidgetStopDragging
-                    $b.findEl('.tile-dragging-placeholder').show();
-                    setTimeout(function() {
-                        $b.findEl('.tile-dragging-placeholder').css({
+                   $b.findEl('.tile-dragging-placeholder').css({
                             left: self.getDisplayLeftForTile(self.editor.mode.getModeColumn(tile)) - 5,
                             top: self.getDisplayTopForTile(self.editor.mode.getModeRow(tile)) - 5,
                             width: self.getDisplayWidthForTile(width) - 10,
-                            height: self.getDisplayHeightForTile(height) - 10
-                        });
-                    }, 0);
+                            height: self.getDisplayHeightForTile(height)  - 10
+                        }).show();
                     
                     self.previousDragCell = cell;
                 }
@@ -843,6 +842,7 @@ define(['knockout',
                 self.editor.draggingTile = null;
                 u.helper.tile = null;
                 self.previousDragCell = null;
+                Builder.getTileConfigure(self.dashboard, tile, self.timeSelectorModel, self.targets, dashboardInst);
                 tile && tile.WIDGET_SUPPORT_TIME_CONTROL && self.triggerTileTimeControlSupportEvent(tile.WIDGET_SUPPORT_TIME_CONTROL()?true:null);
             };
             
