@@ -656,12 +656,16 @@ define(['knockout',
 //                }
 //            };
 
-            self.deleteDashboardClicked = function(){
+            self.deleteDashboardClicked = function(){       
                 queryDashboardSetsBySubId(self.dashboard.id(),function(resp){
                     window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(resp.dashboardSets || []); 
                     self.toolBarModel.openDashboardDeleteConfirmDialog();
                 });
-            };        
+            };  
+            
+            $("#delete-dashboard").on("ojclose", function (event, ui) {
+                self.toolBarModel.isDeletingDbd(false);
+            });
             
             $('.dbd-right-panel-editdashboard-general').on({
                 "ojexpand":function(event,ui){
@@ -936,7 +940,11 @@ define(['knockout',
 
             self.saveDsbFilterSettings = function(fieldsToUpdate, succCallback, errorCallback) {
                 var newDashboardJs = ko.mapping.toJS(self.dashboard, {
-                    'include': ['screenShot'],
+                    'include': ['screenShot', 'description', 'height', 
+                        'isMaximized', 'title', 'type', 'width', 
+                        'tileParameters', 'name', 'systemParameter', 
+                        'tileId', 'value', 'content', 'linkText', 
+                        'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
                     'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight",
                         "modeColumn", "modeRow", "screenShotHref", "systemDashboard",
                         "customParameters", "clientGuid", "dashboard",
