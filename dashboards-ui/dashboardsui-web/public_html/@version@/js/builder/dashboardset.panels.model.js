@@ -32,32 +32,64 @@ define([
             
             self.windowWidth=ko.observable($(window).width());
             self.windowHeight=ko.observable($(window).height());
-
+            
+            self.rightPanelModel = null;
+            self.loadRightPanelModel = function (toolBarModel, tilesViewModel, $b) {
+                if (self.rightPanelModel) {
+                    self.rightPanelModel.$b = $b;
+                    self.rightPanelModel.loadToolBarModel(toolBarModel,$b);
+                    self.rightPanelModel.loadTilesViewModel(tilesViewModel);
+                } else {
+                    var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel, toolBarModel, dashboardsetToolBarModel);
+                    ko.applyBindings(rightPanelModel, $('.df-right-panel')[0]);
+                    self.rightPanelModel = rightPanelModel;
+                }
+                self.rightPanelModel.initialize();
+            };
+            
             self.showDashboard = function (dashboardItem) {
                 var dashboardId = dashboardItem.dashboardId;
                 var divId = "dashboard-" + dashboardId;
-                if ($("#" + divId).length > 0) {
-                    $("#" + divId).show();
+                var $showDashboard = $("#" + divId);
+                var alreadyLoaded = $("#" + divId).length > 0;
+                
+                //hide the right panel
+                if (self.rightPanelModel) {
+                    //resize right panel before shown
+                    self.rightPanelModel.completelyHidden(true);
+                    $(".dashboard-picker-container").removeClass("df-collaps");
+                }
+                
+                if (alreadyLoaded) {
+                    $showDashboard.show();
                     self.selectedDashboardInst(dashboardInstMap[dashboardId]);
                     if (self.selectedDashboardInst().type === "included") {
+                        resetContainerScroll();
                         setTimeout(function() {
                             $(window).trigger("resize");
                         }, 200);
+                        var _dashboard = self.selectedDashboardInst();
+                        self.loadRightPanelModel(_dashboard.toolBarModel,_dashboard.tilesViewModel,_dashboard.$b);
                     }else{
-                        var $target =$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-list-container');
+                        var $target =$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId);
                         homeScrollbarReset($target);
+                        var $b = new Builder.DashboardBuilder(dashboardsetToolBarModel.dashboardInst, $($("#dashboard-content-template").text()));
+                        self.loadRightPanelModel(null, null, $b);
                     }
                 } else {
                     if (dashboardItem.type === "new") {
                         self.includingDashboard(dashboardId);
                         //new dashboard home css change:align
                         setTimeout(function () {
-                            var $target = $('#dashboard-' + dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-list-container');
-                            homeScrollbarReset($target);                   
-                    }, 2000);
+                            var $target = $('#dashboard-' + dashboardsetToolBarModel.selectedDashboardItem().dashboardId);
+                            homeScrollbarReset($target);
+                        }, 2000);
+                        var $b = new Builder.DashboardBuilder(dashboardsetToolBarModel.dashboardInst, $($("#dashboard-content-template").text()));
+                        self.loadRightPanelModel(null, null, $b);
                     } else {
+                        resetContainerScroll();
                         self.loadDashboard(dashboardId);
-                        }
+                    }
                 }
             };
             
@@ -69,7 +101,7 @@ define([
                 //var predataModel = new model.PredataModel();
                 
                 function init() {              
-                    var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share'],dashboardsetToolBarModel.reorderedDbsSetItems);
+                    var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share'], dashboardsetToolBarModel.reorderedDbsSetItems, true);
                     
                     dashboardsViewModle.showExploreDataBtn(false);
                     
@@ -97,16 +129,24 @@ define([
                         });
                         
                         if (!hasDuplicatedDashboard) {
-                            dashboardsetToolBarModel.pickDashboard(guid, {
+                            dashboardsetToolBarModel.pickDashboard(selectedDashboardInst().guid, {
                                 id: ko.observable(dataId),
                                 name: ko.observable(dataName)
                             });
                         }
                     };
+
+                    dashboardsViewModle.afterConfirmDashboardCreate = function(_model, _resp, _options) {
+                        var __data = {dashboard: {id : _model.get("id"), name: _model.get("name")}};
+                        dashboardsViewModle.handleDashboardClicked(null, __data);
+                        $('#dashboardTab-'+__data.dashboard.id).find('.tabs-name').text(__data.dashboard.name);
+                    };
                     ko.applyBindings(dashboardsViewModle, $includingEl[0]);
-                }
+                };
+
                 var dashboardInst = {
-                    type: "new"
+                    type: "new",
+                    guid:guid
                 };
                 dashboardInstMap[guid] = dashboardInst;
                 self.selectedDashboardInst(dashboardInst);
@@ -128,7 +168,8 @@ define([
                     var tilesView = new Builder.DashboardTilesView($b);
                     var tilesViewModel = new Builder.DashboardTilesViewModel($b, dashboardsetToolBarModel.dashboardInst/*, tilesView, urlChangeView*/);
                     var toolBarModel = new Builder.ToolBarModel($b, options);
-
+                    tilesViewModel.toolbarModel = toolBarModel;
+                    
                     //change dashboard name
                     toolBarModel.dashboardName.subscribe(function (dashboardName) {
                         var currentDashboardId = self.selectedDashboardInst().toolBarModel.dashboardId;
@@ -152,6 +193,7 @@ define([
                                 Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.editor.tiles.deleteTile, Builder.isContentLengthValid);
                             } else {
                                 Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, true, dashboardsetToolBarModel.dashboardInst);
+                                Builder.getTileConfigure(dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, dashboardsetToolBarModel.dashboardInst);
                             }
                         }
                     }
@@ -189,29 +231,25 @@ define([
                         type: "included",
                         $b: $b,
                         toolBarModel: toolBarModel,
-                        tilesViewModel: tilesViewModel
+                        tilesViewModel: tilesViewModel,
+                        dashboardsetToolBar:dashboardsetToolBarModel,
+                        dashboardSets: ko.observable(null)
                     };
                     self.selectedDashboardInst(dashboardInstMap[dsbId]);
 
                     ko.applyBindings(tilesViewModel, $dashboardEl.find('.dashboard-content-main')[0]);
-                    if(dashboardsetToolBarModel.isDashboardSet()){
-                       $('.dashboard-content .head-bar-container').css("background-color","white");
-                    }
 
-                    var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel);
-                    ko.applyBindings(rightPanelModel, $dashboardEl.find('.dbd-left-panel')[0]);
-                    rightPanelModel.initialize();
-                    new Builder.ResizableView($b);
-
+                    self.loadRightPanelModel(toolBarModel,tilesViewModel,$b);
+                    
                     $("#loading").hide();
                     $('#globalBody').show();
                     $dashboardEl.css("visibility", "visible");
                     if (dashboardsetToolBarModel.isDashboardSet()) {
-                        $b.findEl('.head-bar-container').css("background-color", "white");
+                        $b.findEl('.head-bar-container').css("border-bottom", "0");
 
                         //hide some drop-down menu options
-                        $b.findEl('.dropdown-menu li').each(function (index, element) {
-                            if (!($(element).attr('data-singledb-option') === 'Edit')) {
+                        $b.findEl('.dropdown-menu>li').each(function (index, element) {
+                            if (($(element).attr('data-singledb-option') !== 'Edit') && ($(element).attr('data-singledb-option') !== 'Print') && ($(element).attr('data-singledb-option') !== 'Duplicate')) {
                                 $(element).css({display: "none"});
                             }
                         });
@@ -291,23 +329,29 @@ define([
                 windowResizeProcess();
             });
             
-            function windowResizeProcess(){
+            function windowResizeProcess() {
                 if ($('.dbs-list-container').length !== 0 && self.selectedDashboardInst().type === 'new') {
-                    var $target=$($('.dbs-list-container')[0]);
+                    var $target = $('.dashboard-picker-container:visible');
                     homeScrollbarReset($target);
-                } 
-                else if (self.selectedDashboardInst().type === 'included') {              
+                    self.rightPanelModel.$b.triggerBuilderResizeEvent();
+                } else if (self.selectedDashboardInst() && self.selectedDashboardInst().type === 'included') {
                     self.selectedDashboardInst().tilesViewModel.notifyWindowResize();
                     self.selectedDashboardInst().$b.triggerBuilderResizeEvent();
                 }
-            }; 
-            function homeScrollbarReset(target){
-                    var bodyHeight = $(window).height();
-                    var titleToolbarHeight = target.position().top;
-                    var newHeight = Number(bodyHeight) - Number(titleToolbarHeight);
-                    $('.dbs-list-container').css({'height': newHeight}); 
             }
-        }
+            function homeScrollbarReset(target) {
+                var bodyHeight = $(window).height();
+                var titleToolbarHeight = target.position().top;
+                var newHeight = Number(bodyHeight) - Number(titleToolbarHeight);
+                var targetContainer = target.closest('#dashboards-tabs-contents');
+                targetContainer.css({'height': newHeight});
+                targetContainer.css({'overflow-y': 'scroll'});
+            }
+            function resetContainerScroll() {
+                var $container = $('#dashboards-tabs-contents');
+                $container.removeAttr("style");
+            }
+        };
         Builder.registerModule(DashboardsetPanelsModel, 'DashboardsetPanelsModel');
         return DashboardsetPanelsModel;
     }

@@ -10,7 +10,9 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
-public class DashboardBuilderUtil_175 extends DashboardBuilderUtil_171
+import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+
+public abstract class DashboardBuilderUtil_175 extends DashboardBuilderUtil_171
 {
 
 }

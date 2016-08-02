@@ -159,7 +159,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         
     }
     
-    function ViewModel(predata, parentElementId, defaultFilters,dashboardSetItem) {
+    function ViewModel(predata, parentElementId, defaultFilters, dashboardSetItem, isSet) {
         
         var self = this, showWelcome = (predata === null ? false : predata.getShowWelcomePref());
         
@@ -182,7 +182,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.welcomeDialogModel = new welcomeDialogModel(self.prefUtil, showWelcome);
         
         //dashboards
-        self.isDashboardSet = predata === null ? true : false;
+        self.isDashboardSet = isSet === true ? true : false;
         self.userName = dfu.getUserName();
         self.isMobileDevice = ko.observable( (new mbu()).isMobile );
         self.currentDashboardSetItem=dashboardSetItem;
@@ -375,13 +375,36 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         };
         
         self.handleDashboardDeleted = function(event, data) {
-            //console.log(data);
-            //self.selectedDashboard(data);
             var _sd = self.selectedDashboard();
-            self.confirmDialogModel.show(getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB'), 
+            var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
+            dfu.ajaxWithRetry(_url + _sd.dashboard.id + "/dashboardsets", {
+                type: 'GET',
+                headers: dfu.getDashboardsRequestHeader(),
+                success: function (resp) {
+                    var isMemberOfDashboards = resp.dashboardSets && resp.dashboardSets.length > 0;
+                    if(isMemberOfDashboards){
+                        var _name =  _sd.dashboard.name,_sets =  resp.dashboardSets;
+                        var _message =  getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_HEAD',_name) + "<br>";
+                        for(var i = 0; i < _sets.length ; i++ ){
+                            _message += "<br>"+"&lt;" + _sets[i].name +"&gt;";
+                        }
+                        _message += "<br><br>"+ getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_TAILE', _name);
+                        self.confirmDialogModel.show(
+                                getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB'),
+                                getNlsString('COMMON_BTN_DELETE'),
+                                _message,
+                                self.confirmDashboardDelete, true);
+                    }else{
+                         self.confirmDialogModel.show(getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB'), 
                          getNlsString('COMMON_BTN_DELETE'), 
-                         getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB_MSG', _sd.dashboard.name),
+                         getNlsString('COMMON_DELETE_DASHBOARD_MSG', _sd.dashboard.name),
                          self.confirmDashboardDelete, true);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                }
+            });
         };
         
         self.confirmDashboardDelete = function() {
@@ -431,7 +454,11 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.cancelDashboardCreate = function(){
             $( "#cDsbDialog" ).ojDialog( "open" );
         };
-
+        
+        self.afterConfirmDashboardCreate = function(_model, _resp, _options) {
+            _model.openDashboardPage();
+        };
+         
         self.confirmDashboardCreate = function()
         {
             var _trackObj = ko.utils.unwrapObservable(self.tracker), 
@@ -474,7 +501,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                             //self.refreshPagingSource(true);
                             $( "#cDsbDialog" ).css("cursor", "default");
                             $( "#cDsbDialog" ).ojDialog( "close" );
-                            _model.openDashboardPage();
+                            self.afterConfirmDashboardCreate(_model, _resp, _options);
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             //console.log('Error in Create: ' + textStatus);

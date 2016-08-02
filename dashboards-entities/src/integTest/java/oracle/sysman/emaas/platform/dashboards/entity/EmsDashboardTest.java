@@ -16,10 +16,10 @@ public class EmsDashboardTest
 {
 	Date now = new Date();
 	private EmsDashboard emsDashboard = new EmsDashboard(now, BigInteger.valueOf(10L), BigInteger.valueOf(10L), "elephant", 10,
-			10, 10, 10, 10, 10, now, "elephant", "elephant", "elephant", "elephant", 10, 10);
+			10, 10, 10, 10, 10, now, "elephant", "elephant", "elephant", "elephant", 10, 10, "elephant");
 
-	private final EmsDashboardTile emsDashboardTile = new EmsDashboardTile(now, emsDashboard, 10, 10, 10, 10, 10, now,
-			"elephant", "elephant", /*Integer position, */
+	private final EmsDashboardTile emsDashboardTile = new EmsDashboardTile(now, emsDashboard, 10, 10, 10, 10, 10, now, "elephant",
+			"elephant", /*Integer position, */
 			"elephant", "elephant", "dolphine", BigInteger.valueOf(10L), "dolphine", "dolphine", "dolphine", "kitten", "kitten",
 			"kitten", "kitten", "kitten", "lion", 10, "lion", "lion", "lion", 10, 10, BigInteger.valueOf(10L));
 
@@ -106,6 +106,13 @@ public class EmsDashboardTest
 	{
 		emsDashboard.setEnableTimeRange(10);
 		Assert.assertEquals(emsDashboard.getEnableTimeRange(), new Integer(10));
+	}
+
+	@Test
+	public void testGetExtendedOptions() throws Exception
+	{
+		emsDashboard.setExtendedOptions("elephant");
+		Assert.assertEquals(emsDashboard.getExtendedOptions(), "elephant");
 	}
 
 	@Test
@@ -245,6 +252,12 @@ public class EmsDashboardTest
 	}
 
 	@Test
+	public void testSetExtendedOptions() throws Exception
+	{
+
+	}
+
+	@Test
 	public void testSetIsSystem() throws Exception
 	{
 
@@ -298,3 +311,4 @@ public class EmsDashboardTest
 
 	}
 }
+

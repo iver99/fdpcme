@@ -170,6 +170,12 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		hideRightDrawer(driver);// hide drawer;
 	}
 
+	@Override
+	public void createDashboardInsideSet(WebDriver driver, String name, String descriptions) throws Exception {
+		Assert.assertTrue(false,"This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+	}
+
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#deleteDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
@@ -195,6 +201,13 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.waitForElementPresent(DashBoardPageId.SearchDashboardInputLocator);
 
 		driver.getLogger().info("deleteDashboard completed");
+	}
+
+	@Override
+	public void deleteDashboardInsideSet(WebDriver driver)
+	{
+		Assert.assertTrue(false,"This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
 	}
 
 	/* (non-Javadoc)
@@ -291,6 +304,12 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 
 	}
 
+	@Override
+	public void duplicateDashboardInsideSet(WebDriver driver, String name, String descriptions, boolean addToSet) throws Exception {
+		Assert.assertTrue(false,"This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+	}
+
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#editDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, java.lang.String)
 	 */
@@ -331,6 +350,12 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.click("css=" + DashBoardPageId.BuilderOptionsEditSaveCSS);
 		driver.takeScreenShot();
 		driver.getLogger().info("edit complete");
+	}
+
+	@Override
+	public void editDashboard(WebDriver driver, String name, String descriptions, Boolean toShowDscptn) throws Exception {
+		Assert.assertTrue(false,"This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
 	}
 
 	/* (non-Javadoc)
@@ -690,51 +715,6 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	}
 
 	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#removeDashboardInSet(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
-	 */
-	@Override
-	public void removeDashboardInSet(WebDriver driver, String dashboardName)
-	{
-		driver.getLogger().info("removeDashboardInSet started for name=\"" + dashboardName + "\"");
-		Validator.notEmptyString("dashboardName", dashboardName);
-
-		WebElement dashboardSetContainer = driver.getWebDriver()
-				.findElement(By.cssSelector(DashBoardPageId.DashboardSetNavsContainerCSS));
-		if (dashboardSetContainer == null) {
-			throw new NoSuchElementException("removeDashboardInSet: the dashboard navigator container is not found");
-		}
-
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOf(dashboardSetContainer));
-		driver.takeScreenShot();
-
-		boolean hasFound = false;
-		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DashboardSetNavsCSS));
-		if (navs == null || navs.size() == 0) {
-			throw new NoSuchElementException("removeDashboardInSet: the dashboard navigators is not found");
-		}
-
-		for (WebElement nav : navs) {
-			if (nav.getAttribute("data-tabs-name").trim().equals(dashboardName)) {
-				hasFound = true;
-				nav.findElement(By.cssSelector(DashBoardPageId.DashboardSetNavRemoveBtnCSS)).click();
-				driver.getLogger()
-						.info("removeDashboardInSet has found and removed the dashboard named with \"" + dashboardName + "\"");
-				driver.takeScreenShot();
-				break;
-			}
-		}
-
-		if (hasFound == false) {
-			throw new NoSuchElementException(
-					"removeDashboardInSet can not find the dashboard named with \"" + dashboardName + "\"");
-		}
-
-		driver.takeScreenShot();
-		driver.getLogger().info("removeDashboardInSet completed");
-	}
-
-	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#removeWidget(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
@@ -764,6 +744,34 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 
 	}
 
+	@Override
+	public void removeDashboardFromSet(WebDriver driver, String dashboardName) throws Exception {
+		Assert.assertTrue(false,"This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+	}
+	
+	@Override
+	public void setEntitySupport(WebDriver driver, String mode) throws Exception
+	{
+		Assert.assertTrue(false,"This method is not available in 1.7.1 version");
+		driver.getLogger().info("Method not available in 1.7.1 version");
+	}
+	
+	@Override
+    public boolean showEntityFilter(WebDriver driver, boolean showEntityFilter) throws Exception
+	{
+		Assert.assertTrue(false,"This method is not available in 1.7.1 version");
+		driver.getLogger().info("Method not available in 1.7.1 version");
+		return false;
+	}
+	
+    @Override
+	public boolean showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) throws Exception
+	{
+    	Assert.assertTrue(false,"This method is not available in 1.7.1 version");
+		driver.getLogger().info("Method not available in 1.7.1 version");
+		return false;
+	}
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#resizeWidget(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, int, java.lang.String)
 	 */
@@ -845,6 +853,12 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	public void selectDashboard(WebDriver driver, String dashboardName) throws Exception
 	{
 		DashboardHomeUtil.selectDashboard(driver, dashboardName);
+	}
+
+	@Override
+	public void selectDashboardInsideSet(WebDriver driver, String dashboardName) throws Exception {
+		Assert.assertTrue(false,"This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
 	}
 
 	/* (non-Javadoc)
@@ -1302,7 +1316,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		return widget;
 	}
 
-	private void hideRightDrawer(WebDriver driver) throws Exception
+	protected void hideRightDrawer(WebDriver driver) throws Exception
 	{
 		driver.waitForElementPresent("css=" + DashBoardPageId.RightDrawerCSS);
 		if (isRightDrawerVisible(driver) == true) {

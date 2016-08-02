@@ -37,6 +37,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 
 public class DashboardManager
@@ -323,6 +324,64 @@ public class DashboardManager
 			return Dashboard.valueOf(ed, null, true, true, true);
 		}
 		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+
+	public Dashboard getDashboardSetsBySubId(BigInteger dashboardId, Long tenantId) throws DashboardException{
+		EntityManager em = null;
+		try {
+            if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
+                logger.debug("Dashboard not found for id {} is invalid", dashboardId);
+                throw new DashboardNotFoundException();
+            }
+            DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+            em = dsf.getEntityManager();
+            EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+            if (ed == null) {
+                logger.debug("Dashboard not found with the specified id {}", dashboardId);
+                throw new DashboardNotFoundException();
+            }
+            Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted().longValue() > 0;
+            if (isDeleted != null && isDeleted.booleanValue()) {
+                logger.debug("Dashboard with id {} is not found for it's deleted already", dashboardId);
+                throw new DashboardNotFoundException();
+            }
+            String currentUser = UserContext.getCurrentUser();
+            // user can access owned or system dashboard
+            if (ed.getSharePublic().intValue() == 0) {
+                if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
+                    logger.debug(
+                            "Dashboard with id {} is not found for it's a non-OOB dashboard and not owned by current user {}",
+                            dashboardId, currentUser);
+                    throw new DashboardNotFoundException();
+                }
+            }
+            if (!isDashboardAccessbyCurrentTenant(ed)) {
+                logger.debug("Dashboard with id {} is not found for it can't be accessed by current tenant", dashboardId);
+                throw new DashboardNotFoundException();
+            }
+
+            updateLastAccessDate(dashboardId, tenantId, dsf);
+            Dashboard dashboard = Dashboard.valueOf(ed, null, false, false, false);
+
+            List<EmsDashboard> emsDashboards = dsf.getEmsDashboardsBySubId(dashboardId);
+			if (null == emsDashboards) {
+				logger.debug("Dashboard not found with the specified sub dashboard id {}", dashboardId);
+				throw new DashboardNotFoundException();
+			}
+
+            List<Dashboard> dashboardList = new ArrayList<>();
+            for (EmsDashboard emsDashboard : emsDashboards) {
+                dashboardList.add(Dashboard.valueOf(emsDashboard,null,false,false,false));
+            }
+
+            dashboard.setDashboardSets(dashboardList);
+
+			return dashboard;
+		} finally {
 			if (em != null) {
 				em.close();
 			}
@@ -955,6 +1014,12 @@ public class DashboardManager
 			if (ed == null) {
 				throw new DashboardNotFoundException();
 			}
+
+            Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted().longValue() > 0;
+			if (isDeleted != null && isDeleted.booleanValue()) {
+				throw new DashboardNotFoundException();
+			}
+
 			if (DataFormatUtils.integer2Boolean(ed.getIsSystem())) {
 				throw new CommonSecurityException(
 						MessageUtils.getDefaultBundleString(CommonSecurityException.NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR));
