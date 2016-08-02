@@ -4,6 +4,12 @@ sourceSets {
         java.srcDir 'src/integTest/java'
         compileClasspath = configurations.testNG+configurations.restAssured + configurations.testConfig
     }
+    test{
+		java {
+			srcDirs = ['src/integTest/java']
+		}
+		resources.srcDirs = ['src/integTest/java']
+	}
 }
 
 jar {
@@ -17,7 +23,7 @@ task integTestJar (type:Jar) {
     appendix = 'integ-tests'
 }
 dependencies {
-
+	testCompile configurations.testNG
 	testConfig project(':dashboards-entities') { transitive = false }
 	testConfig project(':dashboards-core')   { transitive = false }
 	testConfig project(':dashboards-web')   { transitive = false }
@@ -35,3 +41,4 @@ dependencies {
 	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 //	testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){ transitive = false }
 }
+build.dependsOn integTestJar

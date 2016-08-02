@@ -535,14 +535,7 @@ task restDoc {
     outputs.dir restDocOutputDir
 }
 
-sourceSets {
-        test{
-                java {
-                        srcDirs = ['src/integTest/java']
-                }
-                resources.srcDirs = ['src/integTest/java']
-        }
-}
+
 
 
 //copy files without any convert when -PdevMode enabled
@@ -616,4 +609,4 @@ artifactoryPublish {
         publications('integTest')
         publications('thisJarPublication')
 }
-build.dependsOn integTestJar
+

@@ -25,7 +25,7 @@ artifactoryPublish {
 }
  
 dependencies { 
-	compile configurations.testNG
+	
         compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
         compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
         compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0'){ transitive = false }
@@ -36,7 +36,7 @@ dependencies {
         compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.12'){ transitive = false }
         compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12'){ transitive = false }
         compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){ transitive = false }
-testCompile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+
 } 
 test {
         useTestNG()
@@ -47,13 +47,4 @@ test {
         }
 }
 
-sourceSets {
-        test{
-                java {
-                        srcDirs = ['src/integTest/java']
-                }
-                resources.srcDirs = ['src/integTest/java']
-        }
-}
 
-build.dependsOn integTestJar

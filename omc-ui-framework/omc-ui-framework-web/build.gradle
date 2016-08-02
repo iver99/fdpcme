@@ -54,22 +54,19 @@ else
     tselVersion =  getDependentSdkVersion('com.oracle.emaas.emctas.tgtsel', 'emcs-targetselector', '1.8.+')
 }
 dependencies {
-	compile configurations.testNG
-	compile configurations.webdriver
-	compile configurations.restAssured
-        compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '2.0.1-24669', ext: 'war'){ transitive = false }	
-        compile(group: 'files', name: 'canvg', version: '1.3', ext: 'zip'){ transitive = false }
-        compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
+    compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '2.0.1-24669', ext: 'war'){ transitive = false }	
+    compile(group: 'files', name: 'canvg', version: '1.3', ext: 'zip'){ transitive = false }
+    compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
 	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
-        compile(group: 'com.oracle.emaas.emctas.tgtsel', name:'emcs-targetselector', version:tselVersion, ext:'zip'){ transitive = false }
+    compile(group: 'com.oracle.emaas.emctas.tgtsel', name:'emcs-targetselector', version:tselVersion, ext:'zip'){ transitive = false }
 	providedCompile project(':dashboards-ui-test-common-api')  { transitive = false }
-        compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')	
+    compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')	
 	jscover (group:'com.github.tntim96', name:'JSCover-all', version:'1.0.19')
 }
 
 task cleanJs(type:Delete) {
 	delete fileTree(dir: stagingDir)
-        delete fileTree(dir: compiledDir)	
+    delete fileTree(dir: compiledDir)	
 }
 
 project.task("cleanCompassCss")<<{
@@ -701,7 +698,7 @@ war {
 //	into 'uifwk'
 //}
 
-check.dependsOn integTestJar
+
 
 publishing.publications {
     integTest(MavenPublication) {
@@ -715,11 +712,3 @@ artifactoryPublish {
 	publications ('integTest')
 }
 
-sourceSets {
-        test{
-                java {
-                        srcDirs = ['src/integTest/java']
-                }
-                resources.srcDirs = ['src/integTest/java']
-        }
-}
