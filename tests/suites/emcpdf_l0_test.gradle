@@ -34,13 +34,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  
  
 /* Your lrg specific code would come here */
-repositories {
-	maven {
-            url = "${PUB_MAVEN_MY_MAVEN_REPO}"
-         }
-        maven {
-            url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
-    }
+
 
 dependencies {
 
