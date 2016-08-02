@@ -18,18 +18,15 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.MultitenantType;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 @Entity
-@NamedQueries({@NamedQuery(name = "EmsDashboard.findAll", query = "select o from EmsDashboard o where o.deleted=0"),
-		@NamedQuery(name = "EmsDashboard.queryBySubDashboardID", query = "select a from EmsDashboard a ,EmsSubDashboard b " +
-							"where a.dashboardId = b.dashboardSetId and b.subDashboardId = :p")}
-)
+@NamedQueries({ @NamedQuery(name = "EmsDashboard.findAll", query = "select o from EmsDashboard o where o.deleted=0"),
+		@NamedQuery(name = "EmsDashboard.queryBySubDashboardID", query = "select a from EmsDashboard a ,EmsSubDashboard b "
+				+ "where a.dashboardId = b.dashboardSetId and b.subDashboardId = :p") })
 @Table(name = "EMS_DASHBOARD")
 //@SequenceGenerator(name = "EmsDashboard_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_SEQ", allocationSize = 1)
 @Multitenant(MultitenantType.SINGLE_TABLE)
@@ -63,14 +60,6 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	private Integer applicationType;
 	@Column(name = "EXTENDED_OPTIONS", length = 128)
 	private String extendedOptions;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATION_DATE", nullable = false)
-	private Date creationDate;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "LAST_MODIFICATION_DATE")
-	private Date lastModificationDate;
 	@Column(name = "LAST_MODIFIED_BY", length = 128)
 	private String lastModifiedBy;
 	@Column(nullable = false, length = 320)
@@ -103,8 +92,8 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 			Integer isSystem, Integer sharePublic, Date lastModificationDate, String lastModifiedBy, String name, String owner,
 			String screenShot, Integer type, Integer applicationType, String extendedOptions)
 	{
-		this.setCreationDate(creationDate);
-		this.setLastModificationDate(lastModificationDate);
+		setCreationDate(creationDate);
+		setLastModificationDate(lastModificationDate);
 		this.dashboardId = dashboardId;
 		this.deleted = deleted;
 		this.description = description;
@@ -146,11 +135,6 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	public Integer getApplicationType()
 	{
 		return applicationType;
-	}
-
-	public Date getCreationDate()
-	{
-		return creationDate;
 	}
 
 	public BigInteger getDashboardId()
@@ -195,7 +179,7 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	{
 		return enableTimeRange;
 	}
-	
+
 	public String getExtendedOptions()
 	{
 		return extendedOptions;
@@ -204,11 +188,6 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	public Integer getIsSystem()
 	{
 		return isSystem;
-	}
-
-	public Date getLastModificationDate()
-	{
-		return lastModificationDate;
 	}
 
 	public String getLastModifiedBy()
@@ -273,11 +252,6 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 		this.applicationType = applicationType;
 	}
 
-	public void setCreationDate(Date creationDate)
-	{
-		this.creationDate = creationDate;
-	}
-
 	/**
 	 * @param dashboardId
 	 *            the dashboardId to set
@@ -325,7 +299,7 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	{
 		this.enableTimeRange = enableTimeRange;
 	}
-	
+
 	public void setExtendedOptions(String extendedOptions)
 	{
 		this.extendedOptions = extendedOptions;
@@ -334,11 +308,6 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	public void setIsSystem(Integer isSystem)
 	{
 		this.isSystem = isSystem;
-	}
-
-	public void setLastModificationDate(Date lastModificationDate)
-	{
-		this.lastModificationDate = lastModificationDate;
 	}
 
 	public void setLastModifiedBy(String lastModifiedBy)
