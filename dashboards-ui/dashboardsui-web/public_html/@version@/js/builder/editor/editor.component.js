@@ -245,15 +245,10 @@ define(['knockout',
             tile.shorterEnabled = ko.computed(function() {
                 return mode.getModeHeight(tile) > 1;
             });
-            tile.upEnabled = ko.computed(function() {
-                return mode.getModeRow(tile) > 0;
-            });
-            tile.leftEnabled = ko.computed(function() {
-                return mode.getModeColumn(tile) > 0;
-            });
-            tile.rightEnabled = ko.computed(function() {
-                return mode.getModeColumn(tile)+mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS;
-            });
+            tile.upEnabled = ko.observable(true);
+            tile.leftEnabled = ko.observable(true);
+            tile.rightEnabled = ko.observable(true);
+
             tile.maximizeEnabled = ko.computed(function() {
                 return !tile.isMaximized();
             });
@@ -376,10 +371,15 @@ define(['knockout',
         }
         Builder.registerFunction(initializeTileAfterLoad, 'initializeTileAfterLoad');
         
-        function getTileConfigure(dashboard, tile, timeSelectorModel, targets, dashboardInst) {
+        function getTileConfigure(mode, dashboard, tile, timeSelectorModel, targets, dashboardInst) {
             if(!tile) {
                 return;
             }
+            
+            tile.upEnabled(mode.getModeRow(tile) > 0);
+            tile.leftEnabled(mode.getModeColumn(tile) > 0);
+            tile.rightEnabled(mode.getModeColumn(tile)+mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS);
+            
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                 var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');
                 var url = Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), versionPlus);

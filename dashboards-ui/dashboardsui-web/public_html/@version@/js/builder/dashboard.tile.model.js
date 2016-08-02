@@ -139,7 +139,7 @@ define(['knockout',
                     if (newTile){
                        self.editor.tiles.push(newTile);
                        self.show();
-                       Builder.getTileConfigure(self.dashboard, newTile, self.timeSelectorModel, self.targets, dashboardInst);
+                       Builder.getTileConfigure(self.editor.mode, self.dashboard, newTile, self.timeSelectorModel, self.targets, dashboardInst);
                        $b.triggerEvent($b.EVENT_TILE_ADDED, null, newTile);
                        self.triggerTileTimeControlSupportEvent((newTile.type() === 'DEFAULT' && newTile.WIDGET_SUPPORT_TIME_CONTROL())?true:null);
                     }
@@ -262,18 +262,24 @@ define(['knockout',
                     case "up":
                         self.editor.moveUpTile(tile);
                         self.show();
+                        tile.upEnabled(self.editor.mode.getModeRow(tile) > 0);
                         break;
                     case "down":
                         self.editor.moveDownTile(tile);
                         self.show();
+                        tile.upEnabled(self.editor.mode.getModeRow(tile) > 0);
                         break;
                     case "left":
                         self.editor.moveLeftTile(tile);
                         self.show();
+                        tile.leftEnabled(self.editor.mode.getModeColumn(tile) > 0);
+                        tile.rightEnabled(self.editor.mode.getModeColumn(tile)+self.editor.mode.getModeWidth(tile) < self.editor.mode.MODE_MAX_COLUMNS);
                         break;
                     case "right":
                         self.editor.moveRightTile(tile);
                         self.show();
+                        tile.leftEnabled(self.editor.mode.getModeColumn(tile) > 0);
+                        tile.rightEnabled(self.editor.mode.getModeColumn(tile)+self.editor.mode.getModeWidth(tile) < self.editor.mode.MODE_MAX_COLUMNS);
                         break;
                 }
                 
@@ -705,6 +711,11 @@ define(['knockout',
                 if ($(ui.helper).hasClass(draggingTileClass)) {
                     $(ui.helper).removeClass(draggingTileClass);
                 }
+                
+                tile.upEnabled(self.editor.mode.getModeRow(tile) > 0);
+                tile.leftEnabled(self.editor.mode.getModeColumn(tile) > 0);
+                tile.rightEnabled(self.editor.mode.getModeColumn(tile)+self.editor.mode.getModeWidth(tile) < self.editor.mode.MODE_MAX_COLUMNS);
+                
                 dragStartRow = null;
                 self.previousDragCell = null;
                 self.editor.draggingTile = null;
@@ -842,7 +853,7 @@ define(['knockout',
                 self.editor.draggingTile = null;
                 u.helper.tile = null;
                 self.previousDragCell = null;
-                Builder.getTileConfigure(self.dashboard, tile, self.timeSelectorModel, self.targets, dashboardInst);
+                Builder.getTileConfigure(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targets, dashboardInst);
                 tile && tile.WIDGET_SUPPORT_TIME_CONTROL && self.triggerTileTimeControlSupportEvent(tile.WIDGET_SUPPORT_TIME_CONTROL()?true:null);
             };
             

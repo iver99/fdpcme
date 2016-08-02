@@ -735,7 +735,7 @@ define(['knockout',
                             }
                             newTile.row(tileCell.row);
                             newTile.column(tileCell.column);
-                            self.tilesGrid.registerTileToGrid(newTile);
+                            self.tilesGrid.registerTileToGrid(newTile);                            
 //                                if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
 //                                    var worksheetName = 'WS_4_QDG_WIDGET';
 //                                    var workSheetCreatedBy = 'sysman';
