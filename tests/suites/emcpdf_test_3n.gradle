@@ -28,16 +28,12 @@
 buildscript {
     apply from: 'test-buildscript-apply.gradle' 
     dependencies {
-   	classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true 
-	classpath group: "com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "${devinfraVersion}", transitive: true
         classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_taskprocessor", version: "${omctfVersion}" 
 	classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"
   }
 
 }
 apply from: 'test-project-apply.gradle'
-apply plugin: 'DevInfraPlugin'
-apply plugin: 'TestInfraPlugin'
 apply plugin: 'groovy'
 
 apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_commontasks")
