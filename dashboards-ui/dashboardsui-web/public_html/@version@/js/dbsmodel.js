@@ -19,11 +19,12 @@ define([
     'dfutil',
     'prefutil',
     'mobileutil',
+    'uifwk/js/util/zdt-util',
     'ojs/ojknockout', 
     'ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'
 ],
-function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
+function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu,zdtUtilModel)
 {
     var SHOW_WELCOME_PREF_KEY = "Dashboards.showWelcomeDialog",
             DASHBOARDS_FILTER_PREF_KEY = "Dashboards.dashboardsFilter",
@@ -221,6 +222,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.sortBy = ko.observable(['default']);
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel(parentElementId);
+        var zdtUtil = new zdtUtilModel();
+//        self.zdtStatus= zdtUtil.isUnderPlannedDowntime();
+        self.zdtStatus= true;
         //self.comingsoonDialogModel = new comingsoonDialogModel();
         
         self.pageSize = ko.observable(120);

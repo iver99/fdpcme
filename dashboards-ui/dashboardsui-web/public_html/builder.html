@@ -29,7 +29,7 @@
             </header>
 
             <div id="dbd-set-tabs" data-bind="visible: isDashboardSet" class="no-print">
-                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',truncation:'none',removable:dashboardsetConfig.isCreator,reorderable:dashboardsetConfig.isCreator}">
+                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',truncation:'none',removable:dashboardsetConfig.isCreator && !zdtStatus,reorderable:dashboardsetConfig.isCreator}">
                     <div id="dbd-set-name" class="oj-tabs-facet">
                             <span data-bind="text:dashboardsetName()"></span>
                             <button id="tabs-caret"
@@ -43,7 +43,7 @@
                     <ul class="dbd-tabs-nav">
                     </ul>
 
-                    <div class="oj-tabs-facet demo-tabs-facet-flex" data-bind="visible:dashboardsetConfig.isCreator() && noDashboardHome()">
+                    <div class="oj-tabs-facet demo-tabs-facet-flex" data-bind="visible:dashboardsetConfig.isCreator() && noDashboardHome() && !zdtStatus">
                          <span id="add-nav" data-bind="click:addNewDashboard,attr: {title: getNlsString('DBSSET_BUILDER_ADD_DASHBOARD_TOSET')">
                              <i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i>
                          </span>
@@ -324,7 +324,7 @@
                                     data-bind="click: handleDashboardSave, ojComponent: {
                                         component:'ojButton', chroming: 'half', disabled: disableSave,
                                         icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
-                                        }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.isMobileDevice !== 'true'">
+                                        }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.isMobileDevice !== 'true'&& !zdtStatus">
                             </button>
                             <ul class="no-print dropdown-menu" data-bind="ojComponent: {component: 'ojMenu',select: optionMenuItemSelect},attr:{id:'dashboardOptsMenu'+toolBarGuid}" style="display: none;">
                                 <!-- ko template: {name: 'dsbOptsMenuItemTemplate', foreach: dashboardOptsMenuItems, as: 'item'} -->
@@ -778,6 +778,7 @@
                                                     <label for="dbsSetHNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
                                                     <input id="dbsSetHNameIn" maxlength="64" required
                                                            data-bind="ojComponent: { component: 'ojInputText', value: dashboardsetName, rawValue: dashboardsetNameInputed,
+                                                disabled: $data.zdtStatus,
                                                validators : [{
                                                        type: 'regExp', options : {
                                                        pattern: '.{1,64}',
@@ -797,7 +798,7 @@
                                                 <div class="oj-flex-item">
                                                     <label for="editDbdSetDscp" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
                                                     <textarea id="editDbdSetDscp" maxlength="256" rows="3" style="resize: vertical"
-                                                              data-bind="ojComponent: {component: 'ojTextArea', value: dashboardsetDescription, rawValue: dashboardsetDescriptionInputed, rootAttributes: {style:'max-width:420px;'},
+                                                              data-bind="ojComponent: {component: 'ojTextArea', value: dashboardsetDescription, rawValue: dashboardsetDescriptionInputed, disabled: $data.zdtStatus,rootAttributes: {style:'max-width:420px;'},
                                                                 validators : [{type: 'regExp', options : {
                                                                        pattern: '(.|\\b|\\s){0,256}',
                                                                        messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
@@ -820,7 +821,7 @@
                                             </div>
                                             <div class="oj-flex">
                                                 <div class="oj-flex-item" style="margin-top: 10px">
-                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: dashboardsetShare,disabled:dashboardsetShareDisabled}" >
+                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: dashboardsetShare,disabled:dashboardsetShareDisabled && zdtStatus,}" >
                                                         <span class="oj-choice-row">
                                                             <input id="dashboardSetSharingNotShared" type="radio" name="dashboardSetSharing" value="off">
                                                             <label for="dashboardSetSharingNotShared" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING_NOT_SHARED')"></label>
@@ -856,7 +857,7 @@
                                 </div>
                                 <hr/>
                                 <div>
-                                    <button class="dbd-delete-dashboardset" data-bind="click: deleteDashboardSetClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_DELETE_SET_TITLE') }"></button>
+                                    <button class="dbd-delete-dashboardset" data-bind="click: deleteDashboardSetClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_DELETE_SET_TITLE'),disabled: $data.zdtStatus}"></button>
                                 </div>
                             </div>
                         </div>
@@ -879,6 +880,7 @@
                                                     <input id="dbsHNameIn" maxlength="64" required
                                                            data-bind="ojComponent: { component: 'ojInputText', value: editDashboardDialogModel().name,
                                                rawValue: editDashboardDialogModel().nameInputed,
+                                               disabled: $data.zdtStatus,
                                                validators : [{
                                                        type: 'regExp', options : {
                                                        pattern: '.{1,64}',
@@ -900,6 +902,7 @@
                                                     <label for="editDbdDscp" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
                                                     <textarea id="editDbdDscp" maxlength="256" rows="3" style="resize: vertical"
                                                               data-bind="ojComponent: {component: 'ojTextArea', value: editDashboardDialogModel().description,rawValue: editDashboardDialogModel().descriptionInputed, rootAttributes: {style:'max-width:420px;'},
+                                                                disabled: $data.zdtStatus,
                                                                 validators : [{type: 'regExp', options : {
                                                                        pattern: '(.|\\b|\\s){0,256}',
                                                                        messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
@@ -909,7 +912,7 @@
                                             </div>
                                             <div class="oj-flex">
                                                 <div class="oj-flex-item">
-                                                    <div data-bind="ojComponent: {component: 'ojCheckboxset', value: editDashboardDialogModel().showdbDescription}" >
+                                                    <div data-bind="ojComponent: {component: 'ojCheckboxset', value: editDashboardDialogModel().showdbDescription,disabled:$data.zdtStatus}" >
                                                         <span class="oj-choice-row">
                                                             <input id="showdbDescription" type="checkbox" value="showdbDescription">
                                                             <label for="showdbDescription" data-bind="text: getNlsString('DBS_BUILDER_EDIT_SHOW_DSB_DESC')"></label>
@@ -962,8 +965,8 @@
                                                 </div>
                                             </div>
                                             <div class="oj-flex" >
-                                                <div class="oj-flex-item">
-                                                    <span class="oj-choice-row" style="margin: 8px 0 20px 0;">
+                                                <div class="oj-flex-item">                                                  
+                                                    <span class="oj-choice-row" style="margin: 8px 0 20px 0;">      
                                                         <input id="entitySupport" class="oj-checkbox" type="checkbox" data-bind="checked: entitySupport">
                                                         <label for="entitySupport" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENTITY_SUPPORT_MULTIPLE')"></label>
                                                     </span>   
@@ -1049,7 +1052,7 @@
                                 <hr/>
                                 <!-- /ko -->
                                 <div>
-                                    <button class="dbd-delete-single-dashboard" data-bind="click: deleteDashboardClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_DELETE_TITLE') }"></button>
+                                    <button class="dbd-delete-single-dashboard" data-bind="click: deleteDashboardClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),disabled:$data.zdtStatus}"></button>
                                 </div>
                             </div>
                         </div>

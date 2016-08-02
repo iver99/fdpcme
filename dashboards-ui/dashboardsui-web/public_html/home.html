@@ -43,7 +43,7 @@
                                                 <div style="margin-bottom: 20px;" data-bind="visible: isMobileDevice() !== true">
                                                     <button id="cbtn" 
                                                             data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, 
-                                                                ojComponent: { component:'ojButton', rootAttributes: {'class': 'dbs-home-blue-button'}, label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button>
+                                                                ojComponent: { component:'ojButton', disabled: zdtStatus,rootAttributes: {'class': 'dbs-home-blue-button'}, label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button>
                                                 </div>
                                                 <div style="display:none; min-width:100px; min-height:50px;" id="cbtn-tooltip" 
                                                          data-bind="ojComponent: {component: 'ojPopup', tail: 'simple',

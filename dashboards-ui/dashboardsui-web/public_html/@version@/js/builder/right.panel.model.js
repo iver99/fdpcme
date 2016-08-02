@@ -11,11 +11,12 @@ define(['knockout',
         'ojs/ojcore',
         'builder/tool-bar/edit.dialog',
         'uifwk/js/util/screenshot-util',
+        'uifwk/js/util/zdt-util',
         'jqueryui',
         'builder/builder.core',
         'builder/widget/widget.model'
     ], 
-    function(ko, $, dfu, mbu, uiutil, oj, ed, ssu) {
+    function(ko, $, dfu, mbu, uiutil, oj, ed, ssu,zdtUtilModel) {
         function ResizableView($b) {
             var self = this;
             
@@ -84,6 +85,9 @@ define(['knockout',
 
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
+            var zdtUtil = new zdtUtilModel();
+    //        self.zdtStatus= zdtUtil.isUnderPlannedDowntime();
+            self.zdtStatus = true;
             self.scrollbarWidth = uiutil.getScrollbarWidth();
 
             self.showRightPanelToggler =  ko.observable(self.isMobileDevice !== 'true');
@@ -926,17 +930,20 @@ define(['knockout',
                 }                
             });
             
-            self.handleSaveDsbFilterSettings = function(fieldsToUpdate) {
-                self.saveDsbFilterSettings(fieldsToUpdate, function() {
-                    if(!self.dashboard.extendedOptions) {
-                        self.dashboard.extendedOptions = ko.observable();
-                    }
-                    self.dashboard.extendedOptions(JSON.stringify(self.extendedOptions))
-                }, 
-                function() {
-                    console.log("***error");
-                });
-            }
+            self.handleSaveDsbFilterSettings = function (fieldsToUpdate) {
+                if (!self.zdtStatus) {
+                    self.saveDsbFilterSettings(fieldsToUpdate, function () {
+                        if (!self.dashboard.extendedOptions) {
+                            self.dashboard.extendedOptions = ko.observable();
+                        }
+                        self.dashboard.extendedOptions(JSON.stringify(self.extendedOptions))
+                    },
+                            function () {
+                                console.log("***error");
+                            });
+
+                }
+            };
 
             self.saveDsbFilterSettings = function(fieldsToUpdate, succCallback, errorCallback) {
                 var newDashboardJs = ko.mapping.toJS(self.dashboard, {

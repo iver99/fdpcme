@@ -12,9 +12,10 @@ define(['knockout',
         'builder/tool-bar/edit.dialog',
         'builder/tool-bar/duplicate.dialog',
         'uifwk/js/util/preference-util',
+        'uifwk/js/util/zdt-util',
         'builder/builder.core'
     ], 
-    function(ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu) {
+    function(ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu,zdtUtilModel) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
@@ -33,7 +34,9 @@ define(['knockout',
             self.toolBarGuid = Builder.getGuid();
             self.isUnderSet = ko.dataFor($("#dbd-set-tabs")[0]).isDashboardSet();
             self.duplicateInSet = ko.observable(false);
-
+            var zdtUtil = new zdtUtilModel();
+//        self.zdtStatus= zdtUtil.isUnderPlannedDowntime();
+            self.zdtStatus = true;
             if (self.dashboard.id && self.dashboard.id())
                 self.dashboardId = self.dashboard.id();
             else
@@ -903,7 +906,7 @@ define(['knockout',
                     "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
                     "icon":"dbd-toolbar-icon-add-widget",
                     "title": "",//getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
-                    "disabled": self.editDisabled() === true,
+                    "disabled": self.editDisabled() === true || self.zdtStatus,
                     "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
                     "endOfGroup": false
                 },
@@ -935,7 +938,7 @@ define(['knockout',
                     "id": "emcpdf_dsbopts_duplicate" + self.toolBarGuid,                 
                     "icon": "dbd-toolbar-icon-duplicate",
                     "title": "", //getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
-                    "disabled": false,
+                    "disabled": self.zdtStatus,
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
                     "endOfGroup": true,
                     "showSubMenu": function () {
@@ -976,7 +979,7 @@ define(['knockout',
                     "id": "emcpdf_dsbopts_favorites" + self.toolBarGuid,               
                     "icon": self.favoritesIcon, //"dbd-toolbar-icon-favorites",
                     "title": "", //self.favoriteLabel,
-                    "disabled": false,
+                    "disabled": self.zdtStatus,
                     "showOnMobile": true,
                     "showSubMenu": false,
                     "endOfGroup": false
@@ -987,7 +990,7 @@ define(['knockout',
                     "id": "emcpdf_dsbopts_home" + self.toolBarGuid,
                     "icon": self.dashboardsAsHomeIcon,
                     "title": "", //self.setAsHomeLabel,
-                    "disabled": false,
+                    "disabled": self.zdtStatus,
                     "showOnMobile": true,
                     "showSubMenu": false,
                     "endOfGroup": false
@@ -998,7 +1001,7 @@ define(['knockout',
                     "id": "emcpdf_dsbopts_refresh" + self.toolBarGuid,      
                     "icon": "dbd-toolbar-icon-refresh",
                     "title": "", //getNlsString('DBS_BUILDER_AUTOREFRESH_REFRESH'),
-                    "disabled": false,
+                    "disabled": self.zdtStatus,
                     "showOnMobile": true,
                     "showSubMenu": true,
                     "endOfGroup": false,

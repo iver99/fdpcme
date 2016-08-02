@@ -269,7 +269,10 @@
     border-radius: 2px;
     
     text-align: right;
-    box-shadow:none;        
+    box-shadow:none; 
+    &.oj-disabled{
+        opacity: 0.4;
+    }
 }
 
 .oj-button.oj-button-full-chrome.dbs-home-blue-button:hover{

@@ -13,9 +13,10 @@ define(['knockout',
     'builder/tool-bar/duplicate.dialog',
     'uifwk/js/util/preference-util',
     'mobileutil',
+    'uifwk/js/util/zdt-util',
     'builder/builder.core'
 ],
-    function (ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu,mbu) {
+    function (ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu,mbu,zdtUtilModel) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
@@ -35,6 +36,10 @@ define(['knockout',
             });
 
             self.isDashboardSet = ko.observable(ko.unwrap(dashboardInst.type)  === "SET");
+            var zdtUtil = new zdtUtilModel();
+//        self.zdtStatus= zdtUtil.isUnderPlannedDowntime();
+            self.zdtStatus = true;
+
             self.dashboardsetId=ko.unwrap(dashboardInst.id());
             self.hasUserOptionInDB = false;
             self.noDashboardHome=ko.observable(true);
@@ -153,73 +158,75 @@ define(['knockout',
 
             self.saveDashboardSet = function (fieldsToUpdate, successCallback, failureCallback) {
 //                if(dashboardInst.systemDashboard()) {
-                if(dashboardInst.owner() === "Oracle") { ///do not update dashboard set if it is OOB dsb set
-                    self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;  
-                    self.saveUserOptions();
-                    console.log("This is an OOB dashboard set");
-                    return;
-                }
-                var newDashboardJs = ko.mapping.toJS(dashboardInst, {
-                    // TODO make sure the properties that should be included or excluded with Guobao
+                if (!self.zdtStatus) {
+                    if (dashboardInst.owner() === "Oracle") { ///do not update dashboard set if it is OOB dsb set
+                        self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;
+                        self.saveUserOptions();
+                        console.log("This is an OOB dashboard set");
+                        return;
+                    }
+                    var newDashboardJs = ko.mapping.toJS(dashboardInst, {
+                        // TODO make sure the properties that should be included or excluded with Guobao
 //                        'include': ['screenShot', 'description', 'height',
 //                            'isMaximized', 'title', 'type', 'width',
 //                            'tileParameters', 'name', 'systemParameter',
 //                            'tileId', 'value', 'content', 'linkText',
 //                            'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
-                    'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight",
-                        "modeColumn", "modeRow", "screenShotHref", "systemDashboard",
-                        "customParameters", "clientGuid", "dashboard",
-                        "fireDashboardItemChangeEvent", "getParameter",
-                        "maximizeEnabled", "narrowerEnabled",
-                        "onDashboardItemChangeEvent", "restoreEnabled",
-                        "setParameter", "shouldHide", "systemParameters",
-                        "tileDisplayClass", "widerEnabled", "widget",
-                        "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
-                });
-                newDashboardJs.subDashboards = [];
-                self.reorderedDbsSetItems().forEach(function (item) {
-                    if (item.type !== "new") {
-                        newDashboardJs.subDashboards.push({
-                            id: item.dashboardId
-                        });
-                    }
-                });
-                $.extend(newDashboardJs, fieldsToUpdate);
-                Builder.updateDashboard(
-                        ko.unwrap(dashboardInst.id),
-                        JSON.stringify(newDashboardJs),
-                        successCallback,
-                        failureCallback
-                        );
-                 
-                // add delay for updating screenshots because 
-                // a tab may take some time to render the tiles.
-                dfu.getAjaxUtil().actionAfterAjaxStop(function () {
-                    var $tilesWrapper = $(".tiles-wrapper:visible");
-                    if($tilesWrapper && selectedDashboardInst().type==='new'){
-                        newDashboardJs.screenShot = null;
+                        'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight",
+                            "modeColumn", "modeRow", "screenShotHref", "systemDashboard",
+                            "customParameters", "clientGuid", "dashboard",
+                            "fireDashboardItemChangeEvent", "getParameter",
+                            "maximizeEnabled", "narrowerEnabled",
+                            "onDashboardItemChangeEvent", "restoreEnabled",
+                            "setParameter", "shouldHide", "systemParameters",
+                            "tileDisplayClass", "widerEnabled", "widget",
+                            "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
+                    });
+                    newDashboardJs.subDashboards = [];
+                    self.reorderedDbsSetItems().forEach(function (item) {
+                        if (item.type !== "new") {
+                            newDashboardJs.subDashboards.push({
+                                id: item.dashboardId
+                            });
+                        }
+                    });
+                    $.extend(newDashboardJs, fieldsToUpdate);
+                    Builder.updateDashboard(
+                            ko.unwrap(dashboardInst.id),
+                            JSON.stringify(newDashboardJs),
+                            successCallback,
+                            failureCallback
+                            );
+
+                    // add delay for updating screenshots because 
+                    // a tab may take some time to render the tiles.
+                    dfu.getAjaxUtil().actionAfterAjaxStop(function () {
+                        var $tilesWrapper = $(".tiles-wrapper:visible");
+                        if ($tilesWrapper && selectedDashboardInst().type === 'new') {
+                            newDashboardJs.screenShot = null;
                             Builder.updateDashboard(
                                     ko.unwrap(dashboardInst.id),
                                     JSON.stringify(newDashboardJs));
-                    }
-                    else if ($tilesWrapper && selectedDashboardInst().tilesViewModel.tilesView.dashboard.tiles().length > 0) {
-                        var $clone = Builder.createScreenshotElementClone($tilesWrapper);
-                        ssu.getBase64ScreenShot($clone, 314, 165, 0.8, function (data) {
-                            newDashboardJs.screenShot = data;
-                            Builder.removeScreenshotElementClone($clone);
+                        }
+                        else if ($tilesWrapper && selectedDashboardInst().tilesViewModel.tilesView.dashboard.tiles().length > 0) {
+                            var $clone = Builder.createScreenshotElementClone($tilesWrapper);
+                            ssu.getBase64ScreenShot($clone, 314, 165, 0.8, function (data) {
+                                newDashboardJs.screenShot = data;
+                                Builder.removeScreenshotElementClone($clone);
+                                Builder.updateDashboard(
+                                        ko.unwrap(dashboardInst.id),
+                                        JSON.stringify(newDashboardJs));
+                            });
+                        } else {
+                            newDashboardJs.screenShot = null;
                             Builder.updateDashboard(
                                     ko.unwrap(dashboardInst.id),
                                     JSON.stringify(newDashboardJs));
-                        });
-                    }else{
-                        newDashboardJs.screenShot = null;
-                            Builder.updateDashboard(
-                                    ko.unwrap(dashboardInst.id),
-                                    JSON.stringify(newDashboardJs));
-                    }
-                }, 2000, 30000);
-                self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;  
-                self.saveUserOptions();
+                        }
+                    }, 2000, 30000);
+                    self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;
+                    self.saveUserOptions();
+                }
             };
 
             self.addNewDashboard = function (data, event) {
@@ -316,7 +323,7 @@ define(['knockout',
                     "icon": "fa-print",
                     "title": "",
                     "disabled": "",
-                    "endOfGroup": true,         
+                    "endOfGroup": !self.zdtStatus,         
                     "showOnMobile": true,          
                     "showOnViewer":true,
                     "visibility":visibilityOnDifDevice(true,true),
@@ -332,7 +339,7 @@ define(['knockout',
                     "endOfGroup": false,
                     "showOnMobile": true,
                     "showOnViewer":true,
-                    "visibility":visibilityOnDifDevice(true,true),
+                    "visibility":visibilityOnDifDevice(true,true) && !self.zdtStatus,
                     "subMenu": []
                 },
                 {
@@ -345,7 +352,7 @@ define(['knockout',
                     "endOfGroup": false,
                     "showOnMobile": true,
                     "showOnViewer":true,
-                    "visibility":visibilityOnDifDevice(true,true),
+                    "visibility":visibilityOnDifDevice(true,true) && !self.zdtStatus,
                     "subMenu": []
                 },
                 {
@@ -358,7 +365,7 @@ define(['knockout',
                     "endOfGroup": false,
                     "showOnMobile": true,
                     "showOnViewer":true,
-                    "visibility":visibilityOnDifDevice(true,true),
+                    "visibility":visibilityOnDifDevice(true,true) && !self.zdtStatus,
                     "subMenu": [{
                             "label": getNlsString("DBS_BUILDER_AUTOREFRESH_OFF"),
                             "url": "#",

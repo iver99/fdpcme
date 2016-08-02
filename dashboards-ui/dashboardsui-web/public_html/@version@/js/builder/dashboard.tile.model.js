@@ -991,6 +991,9 @@ define(['knockout',
                 if(!self.toolbarModel.extendedOptions.tsel) {
                     self.toolbarModel.extendedOptions.tsel = {};
                 }
+                if(!self.toolbarModel.zdtStatus){
+                    return;
+                }
                 
                 require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
 //                    var compressedTargets = TargetSelectorUtils.compress(targets);
@@ -1015,7 +1018,7 @@ define(['knockout',
             self.returnFromTsel = function(targets) {
                     self.returnFromPageTsel(targets);
                     var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
-                    if(rightPanelModel.dashboardSharing() !== "shared") {
+                    if(rightPanelModel.dashboardSharing() !== "shared" && !self.toolbarModel.zdtStatus) {
                         rightPanelModel.defaultEntityContext(targets);
                         rightPanelModel.extendedOptions.tsel.entityContext = targets;
                     }
@@ -1101,7 +1104,7 @@ define(['knockout',
                         }
                         self.timeSelectorModel.timeRangeChange(true);
 
-                        if(!self.toolbarModel.applyClickedByAutoRefresh()) {
+                        if(!self.toolbarModel.applyClickedByAutoRefresh() && !self.toolbarModel.zdtStatus) {                            
                             if(!self.toolbarModel.extendedOptions.timeSel) {
                                 self.toolbarModel.extendedOptions.timeSel = {};
                             }
@@ -1127,19 +1130,21 @@ define(['knockout',
                 }
             };
             
-            self.saveUserFilterOptions = function() {
-                var userFilterOptions = {
-                    dashboardId: self.dashboard.id(),
-                    extendedOptions: JSON.stringify(self.toolbarModel.extendedOptions),
-                    autoRefreshInterval: self.toolbarModel.autoRefreshInterval()
-                };
-                if(self.toolbarModel.hasUserOptionInDB) {
-                    Builder.updateDashboardOptions(userFilterOptions);
-                }else {
-                    Builder.saveDashboardOptions(userFilterOptions);
-                    self.toolbarModel.hasUserOptionInDB = true;
+            self.saveUserFilterOptions = function () {
+                if (!self.toolbarModel.zdtStatus) {
+                    var userFilterOptions = {
+                        dashboardId: self.dashboard.id(),
+                        extendedOptions: JSON.stringify(self.toolbarModel.extendedOptions),
+                        autoRefreshInterval: self.toolbarModel.autoRefreshInterval()
+                    };
+                    if (self.toolbarModel.hasUserOptionInDB) {
+                        Builder.updateDashboardOptions(userFilterOptions);
+                    } else {
+                        Builder.saveDashboardOptions(userFilterOptions);
+                        self.toolbarModel.hasUserOptionInDB = true;
+                    }
                 }
-            }
+            };
             
             self.toolbarModel = null;
         }
