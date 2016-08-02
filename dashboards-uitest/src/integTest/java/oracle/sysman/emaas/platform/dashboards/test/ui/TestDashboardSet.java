@@ -41,7 +41,7 @@ public class TestDashboardSet extends LoginAndLogout
 	private String dbName = "";
 	private String dbsetName_Test1 = "";
 	private String dbName_InSet = "";
-	private final String dbName_OutSet = "";
+	private String dbName_OutSet = "";
 
 	@BeforeClass
 	public void createTestData() throws Exception
@@ -162,7 +162,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	@Test(groups = "third run", dependsOnMethods = { "testRemoveDashboardFromDashboardSet" })
+	@Test(groups = "third run", dependsOnMethods = { "testShareWithoutDashboardInSet" })
 	public void testAddDashboardInListView() throws Exception
 	{
 		//init the test
@@ -309,60 +309,58 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	/*
-		@Test(groups = "forth run", dependsOnMethods = { "testDeleteDashboardInSet" })
-		public void testDuplicateDashboardAddToSet() throws Exception
-		{
-			dbName_InSet = "DashboardInSet-" + generateTimeStamp();
-			//init the test
-			initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-			webd.getLogger().info("Start the test case: testDuplicateDashboardAddToSet");
+	@Test(groups = "forth run", dependsOnMethods = { "testDeleteDashboardInSet" })
+	public void testDuplicateDashboardAddToSet() throws Exception
+	{
+		dbName_InSet = "DashboardInSet-" + generateTimeStamp();
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testDuplicateDashboardAddToSet");
 
-			//reset the home page
-			webd.getLogger().info("Reset all filter options in the home page");
-			DashboardHomeUtil.resetFilterOptions(webd);
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
 
-			//switch to grid view
-			webd.getLogger().info("Switch to the grid view");
-			DashboardHomeUtil.gridView(webd);
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
 
-			//open the dashboardset
-			webd.getLogger().info("Open the dashboard in the builder page");
-			DashboardHomeUtil.selectDashboard(webd, dbsetName_Test1);
+		//open the dashboardset
+		webd.getLogger().info("Open the dashboard in the builder page");
+		DashboardHomeUtil.selectDashboard(webd, dbsetName_Test1);
 
-			webd.getLogger().info("Set the refresh setting to OFF");
-			DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
+		webd.getLogger().info("Set the refresh setting to OFF");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
 
-			//create a dashboard in the dashboard set
-			webd.getLogger().info("create a dashboard in the set");
-			DashboardBuilderUtil.createDashboardInsideSet(webd, dbName_InSet, null);
+		//create a dashboard in the dashboard set
+		webd.getLogger().info("create a dashboard in the set");
+		DashboardBuilderUtil.createDashboardInsideSet(webd, dbName_InSet, null);
 
-			//verify the dashboard is in the dashboard set
-			DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet);
+		//verify the dashboard is in the dashboard set
+		DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet);
 
-			//duplicate the dashboard in set
-			webd.getLogger().info("duplicate the dashboard in the dashboard set");
-			DashboardBuilderUtil.duplicateDashboardInsideSet(webd, dbName_InSet + "-duplicate", null, true);
+		//duplicate the dashboard in set
+		webd.getLogger().info("duplicate the dashboard in the dashboard set");
+		DashboardBuilderUtil.duplicateDashboardInsideSet(webd, dbName_InSet + "-duplicate", null, true);
 
-			webd.getLogger().info("Verify the duplicated dashboard is in the dashboard set");
-			Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet + "-duplicate"),
-					"Duplicated dashboard failed!");
+		webd.getLogger().info("Verify the duplicated dashboard is in the dashboard set");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet + "-duplicate"),
+				"Duplicated dashboard failed!");
 
-			//delete the dashboard
-			webd.getLogger().info("Delete the duplicate dashboard: " + dbName_InSet + "-duplicate");
-			DashboardBuilderUtil.selectDashboardInsideSet(webd, dbName_InSet + "-duplicate");
-			DashboardBuilderUtil.deleteDashboard(webd);
-			webd.getLogger().info(
-					"verify the dashboard: " + dbName_InSet + "-duplicate" + "has been deleted, and not in dashboard set as well");
-			Assert.assertFalse(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet + "-duplicate"), "The dashboard:"
-					+ dbName_InSet + "-duplicate" + " is still in the dashboard set");
-			BrandingBarUtil.visitDashboardHome(webd);
-			Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_InSet + "-duplicate"), "Delete dashboard: "
-					+ dbName_InSet + "-duplicate" + " failed!");
+		//delete the dashboard
+		webd.getLogger().info("Delete the duplicate dashboard: " + dbName_InSet + "-duplicate");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, dbName_InSet + "-duplicate");
+		DashboardBuilderUtil.deleteDashboardInsideSet(webd);
+		webd.getLogger().info(
+				"verify the dashboard: " + dbName_InSet + "-duplicate" + "has been deleted, and not in dashboard set as well");
+		Assert.assertFalse(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet + "-duplicate"), "The dashboard:"
+				+ dbName_InSet + "-duplicate" + " is still in the dashboard set");
+		BrandingBarUtil.visitDashboardHome(webd);
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_InSet + "-duplicate"), "Delete dashboard: "
+				+ dbName_InSet + "-duplicate" + " failed!");
 
-		}
-	 */
-	/*
+	}
+
 	@Test(groups = "forth run", dependsOnMethods = { "testDuplicateDashboardAddToSet" })
 	public void testDuplicateDashboardNotAddToSet() throws Exception
 	{
@@ -413,7 +411,7 @@ public class TestDashboardSet extends LoginAndLogout
 		Assert.assertFalse(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_OutSet + "-duplicate"),
 				"Dashboard has been duplicated and add to dashboard set");
 	}
-	*/
+
 	@Test(groups = "second run", dependsOnGroups = { "first run" })
 	public void testFavorite() throws Exception
 	{
@@ -777,6 +775,35 @@ public class TestDashboardSet extends LoginAndLogout
 		//share the dashboardset
 		webd.getLogger().info("Share the dashboard");
 		Assert.assertTrue(DashboardBuilderUtil.toggleShareDashboardset(webd), "Share the dashboard set failed!");
+
+	}
+
+	@Test(groups = "third run", dependsOnMethods = { "testRemoveDashboardFromDashboardSet" })
+	public void testShareWithoutDashboardInSet() throws Exception
+	{
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testShareWithoutDashboardInSet");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//open the dashboardset
+		webd.getLogger().info("Open the dashboard in the builder page");
+		DashboardHomeUtil.selectDashboard(webd, dbsetName);
+
+		webd.getLogger().info("Set the refresh setting to OFF");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
+
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//verify the share options are diabled
+		Assert.assertTrue(DashBoardUtils.verfiyShareOptionDisabled(), "The options are enabled!");
 
 	}
 
