@@ -29,6 +29,9 @@ public class DashboardFavoriteRowEntity implements RowEntity
 	@JsonProperty("TENANT_ID")
 	private Long tenantId;
 
+	@JsonProperty("LAST_MODIFICATION_DATE")
+	private String lastModificationDate;
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -77,6 +80,14 @@ public class DashboardFavoriteRowEntity implements RowEntity
 		else if (!userName.equals(other.userName)) {
 			return false;
 		}
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null) {
+				return false;
+			}
+		}
+		else if (!lastModificationDate.equals(other.lastModificationDate)) {
+			return false;
+		}
 		return true;
 	}
 
@@ -112,6 +123,15 @@ public class DashboardFavoriteRowEntity implements RowEntity
 		return userName;
 	}
 
+	/**
+	 * @return the lastModificationDate
+	 */
+	public String getLastModificationDate()
+	{
+		return lastModificationDate;
+	}
+
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -124,6 +144,7 @@ public class DashboardFavoriteRowEntity implements RowEntity
 		result = prime * result + (dashboardId == null ? 0 : dashboardId.hashCode());
 		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
 		result = prime * result + (userName == null ? 0 : userName.hashCode());
+		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
 		return result;
 	}
 
@@ -162,6 +183,15 @@ public class DashboardFavoriteRowEntity implements RowEntity
 	{
 		this.userName = userName;
 	}
+	/**
+	 * @param lastModificationDate
+	 *            the lastModificationDate to set
+	 */
+	public void setLastModificationDate(String lastModificationDate)
+	{
+		this.lastModificationDate = lastModificationDate;
+	}
+
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -170,6 +200,6 @@ public class DashboardFavoriteRowEntity implements RowEntity
 	public String toString()
 	{
 		return "DashboardFavoriteRowEntity [userName=" + userName + ", dashboardId=" + dashboardId + ", creationDate="
-				+ creationDate + ", tenantId=" + tenantId + "]";
+				+ creationDate + ", tenantId=" + tenantId +", lastModificationDate=" + lastModificationDate +"]";
 	}
 }

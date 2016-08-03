@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import mockit.*;
+import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.loggingconfig.UpdatedLoggerLevel;
@@ -13,6 +14,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,7 +72,7 @@ public class LoggingConfigAPITest {
                 apiBase.getJsonUtil().fromJson(anyString, UpdatedLoggerLevel.class);
                 result = updatedLoggerLevel;
 
-                Level.getLevel(anyString);
+                Level.getLevel((String)any);
                 result = level;
 
 
