@@ -129,6 +129,7 @@ define(['knockout',
             };
             
             self.intervalID = null;
+            self.applyClickedByAutoRefresh = ko.observable(false);
             self.setAutoRefreshInterval = function (interval) {
                 self.intervalID && clearInterval(self.intervalID); // clear interval if exists
                 if (interval) {
@@ -148,6 +149,7 @@ define(['knockout',
                             $b.getDashboardTilesViewModel().initEnd(new Date()); 
                         }
                         if($("#dtpicker_"+self.dashboardId).children().get(0)) {
+                            self.applyClickedByAutoRefresh(true);
                             ko.contextFor($("#dtpicker_"+self.dashboardId).children().get(0)).$component.applyClick();
                         }
                     }, interval);

@@ -98,8 +98,7 @@ dependencies{
       	exclude('module':'groovy')
     }
 
-    
-     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.0.0+')
+     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.0.0-greenchannel+')
 
      
      testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
@@ -147,7 +146,6 @@ dependencies{
 }
 
 //Task added from "emcpdf_qa_test_3n"
-
 task QATest(type:EMTest,dependsOn:omcSetup ) {
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
@@ -161,10 +159,7 @@ task QATest(type:EMTest,dependsOn:omcSetup ) {
 	ext.set("testType", "integration")
 }
 
-
-
-
-
+//Task is for dashboard UI Test
 task e2e (type: EMTest, dependsOn:QATest ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'DashboardUITest') {
@@ -183,11 +178,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 
 }
 
-
-
-
 //Task is added from "emcpdf_uifwk_test_3n"
-
 task QATest1(type:EMTest,dependsOn:e2e ){ 
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestAnalyzerPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestDashboardPage.class"
@@ -211,7 +202,6 @@ task DEVTest(type:EMTest,dependsOn: QATest1){
 }
 
 //Task is added from "emcpdf_dev_ui_test_3n"
-
 task DEVUiTest(type:EMTest,dependsOn: DEVTest){
   	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/JsonUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/TenantSubscriptionUtilTest.class"
@@ -221,7 +211,6 @@ task DEVUiTest(type:EMTest,dependsOn: DEVTest){
 }
 
 //Task is added from "emcpdf_uifwk_dev_test_3n"
-
 task DEVTest2(type:EMTest,dependsOn: DEVUiTest){ 
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"	

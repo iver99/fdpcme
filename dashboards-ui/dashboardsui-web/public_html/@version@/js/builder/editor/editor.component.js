@@ -235,21 +235,10 @@ define(['knockout',
             var _currentUser = dfu.getUserName();
             tile.editDisabled = ko.computed(function() { //to do
                 return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard() || _currentUser !== dashboard.owner();
-            });
+            }); 
             
-            var judgeAdmin = function () {
-                var retrunValue= false;
-                var brandingbarAdmin = ko.dataFor($('.links-content-container')[0]).adminLinks();
-                brandingbarAdmin.forEach(function (item) {
-                    if (item.name === "IT Analytics Administration") {
-                        retrunValue = true;
-                    };                     
-                });
-                return retrunValue;  
-            };
+            tile.isItaAdmin = ko.observable(false);
             
-            tile.isItaAdmin = judgeAdmin();
-                                      
             tile.widerEnabled = ko.computed(function() {
                 return mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS;
             });
@@ -376,43 +365,86 @@ define(['knockout',
                 var kocTemplate = tile.WIDGET_TEMPLATE();
                 if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
                     kocTemplate = assetRoot + kocTemplate;
-                Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
-
-                if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
-                    var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');
-                    var url = Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), versionPlus);
-                    if (url){
-                        tile.configure = function(){
-                            var widgetUrl = url;
-                            widgetUrl += "?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboardInst.id()+"&dashboardName="+dashboardInst.name();
-                            if(dashboard.enableTimeRange() === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
-                                widgetUrl += "";
-                            }else {
-                                var start = timeSelectorModel.viewStart().getTime();
-                                var end = timeSelectorModel.viewEnd().getTime();
-                                widgetUrl += "&startTime="+start+"&endTime="+end;
-                            }
-                            
-//                            targets && targets() && (widgetUrl += "&targets="+encodeURI(JSON.stringify(targets())));
-//                            window.open(widgetUrl);
-                            
-                            require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
-                                if(targets && targets()) {
-                                    var compressedTargets = encodeURI(JSON.stringify(targets()));
-                                    var targetUrlParam = "targets";
-                                    if(TargetSelectorUtils.compress) {
-                                        compressedTargets = TargetSelectorUtils.compress(targets());
-                                        targetUrlParam = "targetsz";
-                                    }
-                                    widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
-                                }
-                                window.location = widgetUrl;
-                            });
-                        };
-                    }
-                }         
+                Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);         
             }
         }
         Builder.registerFunction(initializeTileAfterLoad, 'initializeTileAfterLoad');
+        
+        function getTileConfigure(dashboard, tile, timeSelectorModel, targets, dashboardInst) {
+            if(!tile) {
+                return;
+            }
+            judgeAdmin();
+                function judgeAdmin() {
+                    if (!$('.links-content-container')[0]) {
+                        var serviceUrl = "/sso.static/dashboards.configurations/registration";
+                        if (dfu.isDevMode()) {
+                            serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "configurations/registration");
+                        }
+                        dfu.ajaxWithRetry({
+                            url: serviceUrl,
+                            headers: dfu.getDashboardsRequestHeader(),
+                            contentType: 'application/json',
+                            success: function (data, textStatus) {
+                                data.adminLinks.forEach(function (item) {
+                                    if (item.name === "IT Analytics Administration") {
+                                        tile.isItaAdmin(true);
+                                    }
+                                    ;
+                                });
+                            },
+                            error: function (xhr, textStatus, errorThrown) {
+                                oj.Logger.error('Failed to get service instances by URL: ' + serviceUrl);
+                            },
+                            async: true
+                        });
+                    } else {
+                        var brandingbarAdmin = ko.dataFor($('.links-content-container')[0]).adminLinks();
+                        brandingbarAdmin.forEach(function (item) {
+                            if (item.name === "IT Analytics Administration") {
+                                tile.isItaAdmin(true);
+                            }
+                            ;
+                        });
+                    }
+
+                };
+            
+            if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
+                var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');
+                var url = Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), versionPlus);
+                if (url){
+                    tile.configure = function(){
+                        var widgetUrl = url;
+                        widgetUrl += "?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboardInst.id()+"&dashboardName="+dashboardInst.name();
+                        if(dashboard.enableTimeRange() === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
+                            widgetUrl += "";
+                        }else {
+                            var start = timeSelectorModel.viewStart().getTime();
+                            var end = timeSelectorModel.viewEnd().getTime();
+                            widgetUrl += "&startTime="+start+"&endTime="+end;
+                        }
+                            
+//                        targets && targets() && (widgetUrl += "&targets="+encodeURI(JSON.stringify(targets())));
+//                        window.open(widgetUrl);
+                            
+                        require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
+                            if(targets && targets()) {
+                                var compressedTargets = encodeURI(JSON.stringify(targets()));
+                                var targetUrlParam = "targets";
+                                if(TargetSelectorUtils.compress) {
+                                    compressedTargets = TargetSelectorUtils.compress(targets());
+                                    targetUrlParam = "targetsz";
+                                }
+                                widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
+                            }
+                            window.location = widgetUrl;
+                        });
+                    };
+                }
+            }
+        }
+        Builder.registerFunction(getTileConfigure, 'getTileConfigure');
+        
     }
 );

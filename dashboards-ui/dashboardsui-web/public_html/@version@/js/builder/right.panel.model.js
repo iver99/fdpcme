@@ -72,7 +72,7 @@ define(['knockout',
                 //add for detecting dashboard tabs switching in set 
                 self.editDashboardDialogModel();
                 return self.dashboard.tiles && self.dashboard.tiles() ? self.dashboard.tiles().sort(function (tileA, tileB) {
-                    return tileA.WIDGET_NAME() > tileB.WIDGET_NAME();
+                    return tileA.WIDGET_NAME() > tileB.WIDGET_NAME()?1:(tileA.WIDGET_NAME() < tileB.WIDGET_NAME()?-1:0);
                 }):[];
             });
 
@@ -940,7 +940,11 @@ define(['knockout',
 
             self.saveDsbFilterSettings = function(fieldsToUpdate, succCallback, errorCallback) {
                 var newDashboardJs = ko.mapping.toJS(self.dashboard, {
-                    'include': ['screenShot'],
+                    'include': ['screenShot', 'description', 'height', 
+                        'isMaximized', 'title', 'type', 'width', 
+                        'tileParameters', 'name', 'systemParameter', 
+                        'tileId', 'value', 'content', 'linkText', 
+                        'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
                     'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight",
                         "modeColumn", "modeRow", "screenShotHref", "systemDashboard",
                         "customParameters", "clientGuid", "dashboard",
@@ -1066,6 +1070,18 @@ define(['knockout',
                                 
                                 self.dashboardsetShare(result.sharePublic === true ? "on" : "off");
                                 self.dashboardsetToolBarModel.dashboardsetName(result.name);
+                                self.dashboardsetToolBarModel.dashboardInst.name(result.name);
+                                if(self.dashboardsetToolBarModel.dashboardInst.description){
+                                    if(result.description){
+                                        self.dashboardsetToolBarModel.dashboardInst.description(result.description);
+                                    }else{
+                                        delete self.dashboardsetToolBarModel.dashboardInst.description;
+                                    }
+                                }else{
+                                    if(result.description){
+                                        self.dashboardsetToolBarModel.dashboardInst.description = ko.observable(result.description);
+                                    }
+                                }
                                 self.dashboardsetToolBarModel.dashboardsetDescription(result.description);
                             },
                             function (jqXHR, textStatus, errorThrown) {
