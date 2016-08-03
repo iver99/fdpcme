@@ -820,8 +820,9 @@ define(['knockout',
             //set default time range value
             //handlehow to show when the value is "custom*"
             self.defaultTimeRangeValue = ko.observable([self.extendedOptions.timeSel.defaultValue]);
-            self.defaultStartTime = ko.observable(parseInt(self.extendedOptions.timeSel.start));
-            self.defaultEndTime = ko.observable(parseInt(self.extendedOptions.timeSel.end));
+            var endTimeNow = new Date().getTime();
+            self.defaultStartTime = ko.observable(parseInt(self.extendedOptions.timeSel.start===""? (""+endTimeNow-14*24*3600*1000):self.extendedOptions.timeSel.start));
+            self.defaultEndTime = ko.observable(parseInt(self.extendedOptions.timeSel.end===""? (""+endTimeNow):self.extendedOptions.timeSel.end));
             
             self.defaultTimeRangeValueText = ko.computed(function() {
                 if((self.defaultTimeRangeValue()[0] !== "custom") && (self.defaultTimeRangeValue()[0] !== "custom1")) {
