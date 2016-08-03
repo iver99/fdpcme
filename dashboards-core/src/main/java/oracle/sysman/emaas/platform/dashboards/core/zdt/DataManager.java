@@ -50,12 +50,20 @@ public class DataManager
 	 */
 	public long getAllDashboardsCount()
 	{
-		DashboardServiceFacade dsf = new DashboardServiceFacade();
-		EntityManager em = dsf.getEntityManager();
-		String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD WHERE DELETED <> 1";
-		Query query = em.createNativeQuery(sql);
-		long count = ((Number) query.getSingleResult()).longValue();
-		return count;
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade();
+			em = dsf.getEntityManager();
+			String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD WHERE DELETED <> 1";
+			Query query = em.createNativeQuery(sql);
+			long count = ((Number) query.getSingleResult()).longValue();
+			return count;
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
 	}
 
 	/**
@@ -65,12 +73,20 @@ public class DataManager
 	 */
 	public long getAllFavoriteCount()
 	{
-		DashboardServiceFacade dsf = new DashboardServiceFacade();
-		EntityManager em = dsf.getEntityManager();
-		String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD d, EMS_DASHBOARD_USER_OPTIONS uo WHERE d.DASHBOARD_ID=uo.DASHBOARD_ID AND d.TENANT_ID=uo.TENANT_ID AND d.DELETED<>1 AND IS_FAVORITE=1";
-		Query query = em.createNativeQuery(sql);
-		long count = ((Number) query.getSingleResult()).longValue();
-		return count;
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade();
+			em = dsf.getEntityManager();
+			String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD d, EMS_DASHBOARD_USER_OPTIONS uo WHERE d.DASHBOARD_ID=uo.DASHBOARD_ID AND d.TENANT_ID=uo.TENANT_ID AND d.DELETED<>1 AND IS_FAVORITE=1";
+			Query query = em.createNativeQuery(sql);
+			long count = ((Number) query.getSingleResult()).longValue();
+			return count;
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
 	}
 
 	/**
@@ -80,12 +96,20 @@ public class DataManager
 	 */
 	public long getAllPreferencessCount()
 	{
-		DashboardServiceFacade dsf = new DashboardServiceFacade();
-		EntityManager em = dsf.getEntityManager();
-		String sql = "SELECT COUNT(1) FROM EMS_PREFERENCE";
-		Query query = em.createNativeQuery(sql);
-		long count = ((Number) query.getSingleResult()).longValue();
-		return count;
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade();
+			em = dsf.getEntityManager();
+			String sql = "SELECT COUNT(1) FROM EMS_PREFERENCE";
+			Query query = em.createNativeQuery(sql);
+			long count = ((Number) query.getSingleResult()).longValue();
+			return count;
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
 	}
 
 	/**
@@ -187,12 +211,20 @@ public class DataManager
 			logger.error("Can't query database table with null or empty SQL statement!");
 			return null;
 		}
-		DashboardServiceFacade dsf = new DashboardServiceFacade();
-		EntityManager em = dsf.getEntityManager();
-		Query query = em.createNativeQuery(nativeSql);
-		query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
-		@SuppressWarnings("unchecked")
-		List<Map<String, Object>> list = query.getResultList();
-		return list;
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade();
+			em = dsf.getEntityManager();
+			Query query = em.createNativeQuery(nativeSql);
+			query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+			@SuppressWarnings("unchecked")
+			List<Map<String, Object>> list = query.getResultList();
+			return list;
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
 	}
 }
