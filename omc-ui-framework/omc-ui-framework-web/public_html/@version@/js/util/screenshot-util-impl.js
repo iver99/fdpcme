@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 define(['jquery',
-//        'uifwk/libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/min/ojcore',
+//        'uifwk/libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/min/ojcore',
         'uifwk/libs/@version@/js/html2canvas/html2canvas',
         'uifwk/libs/@version@/js/canvg/rgbcolor',
         'uifwk/libs/@version@/js/canvg/StackBlur',
