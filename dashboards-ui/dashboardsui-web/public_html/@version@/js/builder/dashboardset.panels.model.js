@@ -48,6 +48,7 @@ define([
             };
             
             self.showDashboard = function (dashboardItem) {
+                document.activeElement.blur();//to blur the focused item on another tab
                 var dashboardId = dashboardItem.dashboardId;
                 var divId = "dashboard-" + dashboardId;
                 var $showDashboard = $("#" + divId);
