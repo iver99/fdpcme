@@ -633,46 +633,6 @@ public class DataManager
 		logger.info("Calling the Datamanager.insertDashboard");
 		int result;
 		String sql = "INSERT INTO EMS_DASHBOARD(DASHBOARD_ID,  NAME, TYPE, DESCRIPTION, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY, OWNER, IS_SYSTEM, APPLICATION_TYPE, ENABLE_TIME_RANGE, SCREEN_SHOT, DELETED, TENANT_ID, ENABLE_REFRESH, SHARE_PUBLIC, ENABLE_ENTITY_FILTER, ENABLE_DESCRIPTION, EXTENDED_OPTIONS)values(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') ,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') ,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		if (StringUtil.isEmpty(dashboardId.toString())) {
-			logger.error("dashboardId is null or empty!");
-		}
-		if (StringUtil.isEmpty(name)) {
-			logger.error("name is null or empty");
-		}
-		if (StringUtil.isEmpty(type.toString())) {
-			logger.error("type is null or empty!");
-		}
-		if (StringUtil.isEmpty(creationDate)) {
-			logger.error("create time is null or empty!");
-		}
-		if (StringUtil.isEmpty(owner)) {
-			logger.error("owner is null or empty!");
-		}
-		if (StringUtil.isEmpty(isSystem.toString())) {
-			logger.error("IS_SYSTEM is null or empty");
-		}
-		if (StringUtil.isEmpty(enableTimeRange.toString())) {
-			logger.error("ENABLE_TIME_RANGE is null or empty");
-		}
-		if (StringUtil.isEmpty(deleted.toString())) {
-			logger.error("DELETED is null or empty");
-		}
-		if (StringUtil.isEmpty(tenantId.toString())) {
-			logger.error("TENANT_ID is null or empty!");
-
-		}
-		if (StringUtil.isEmpty(enableRefresh.toString())) {
-			logger.error("ENABLE_REFRESH is null or empty!");
-		}
-		if (StringUtil.isEmpty(sharePublic.toString())) {
-			logger.error("SHARE_PUBLIC is null or empty!");
-		}
-		if (StringUtil.isEmpty(enableEntityFilter.toString())) {
-			logger.error("ENABLE_ENTITY_FILTER is null or empty!");
-		}
-		if (StringUtil.isEmpty(enableDescription.toString())) {
-			logger.error("ENABLE_DESCRIPTION is null or empty!");
-		}
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, dashboardId)
 				.setParameter(2, name)
