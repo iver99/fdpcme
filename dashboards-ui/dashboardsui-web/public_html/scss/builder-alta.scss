@@ -460,6 +460,7 @@ body, html {
 
 .dbd-tile-maximized {
   width: 100%;
+  max-width:100%;
 }
 
 @media print and (orientation: landscape), screen and (min-width: 1024px) {

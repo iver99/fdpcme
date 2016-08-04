@@ -88,19 +88,47 @@ define(['knockout',
             self.showWidgetTitle = ko.observable(true);
             self.showRightPanelToggler = ko.observable(true);
             
-            self.resizingTile = ko.observable();
-            self.resizingOptions = ko.observable().extend({ rateLimit: { timeout: 100, method: "always" } });
+            self.resizingTile = ko.observable();    
+            self.resizingTileCopy = null;
+            self.resizingOptions = ko.observable().extend({rateLimit: {timeout: 100, method: "always"}});
+            self.beforeResizeWidth = null;
+            self.beforeResizeHeight = null;
+            self.currentWigedtWidth = ko.observable();
+            self.currentWigedtHeight = ko.observable();
+            self.currentWigedtWidth.extend({rateLimit: 1000, method: 'notifyWhenChangesStop '});
+            self.currentWigedtHeight.extend({rateLimit: 1000, method: 'notifyWhenChangesStop '});
+
+            self.currentWigedtWidth.subscribe(function () {
+                notifyDragChangeProcess();
+            });
+            self.currentWigedtHeight.subscribe(function () {
+                notifyDragChangeProcess();
+            });
+            
             self.resizingMonitor = ko.computed(function () {
                 ko.mapping.fromJS(self.resizingOptions());
                 if (self.resizingTile() && self.resizingOptions() && self.resizingOptions().mode) {
                     var hasChanged = self.editor.resizeTile(self.resizingTile(), self.resizingOptions());
-                    if (hasChanged) {
-                        self.notifyTileChange(self.resizingTile(), new Builder.TileChange("DRAG_RESIZE")); // todo
+                    if (hasChanged) {                  
                         self.show();
-                    }
-                   
+                    }                 
                 }
             });
+            
+            function notifyDragChangeProcess() {
+                if (self.beforeResizeWidth === null || self.beforeResizeHeight === null) {
+                    return;
+                }
+                if (self.currentWigedtWidth() > self.beforeResizeWidth) {
+                    self.notifyTileChange(self.resizingTileCopy, new Builder.TileChange("POST_WIDER"));
+                } else if (self.currentWigedtWidth() < self.beforeResizeWidth) {
+                    self.notifyTileChange(self.resizingTileCopy, new Builder.TileChange("POST_NARROWER"));
+                } else if (self.currentWigedtHeight() > self.beforeResizeHeight) {
+                    self.notifyTileChange(self.resizingTileCopy, new Builder.TileChange("POST_TALLER"));
+                } else if (self.currentWigedtHeight() < self.beforeResizeHeight) {
+                    self.notifyTileChange(self.resizingTileCopy, new Builder.TileChange("POST_SHORTER"));
+                }
+            }
 
             self.isEmpty = function() {
                 return !self.editor.tiles() || self.editor.tiles().length === 0;
@@ -414,7 +442,7 @@ define(['knockout',
                 $('.dbd-widget').on('dragstart', self.handleStartDragging);
                 $('.dbd-widget').on('drag', self.handleOnDragging);
                 $('.dbd-widget').on('dragstop', self.handleStopDragging);
-                
+                                            
                 $('.dbd-resize-handler').on('mousedown', function (event) {
                     var targetHandler = $(event.currentTarget),resizeMode = null;
                     if ($(targetHandler).hasClass('dbd-resize-handler-right')) {
@@ -432,13 +460,16 @@ define(['knockout',
                         $('#globalBody').addClass('none-user-select');
                         self.resizingTile(ko.dataFor(targetHandler.closest('.dbd-widget')[0]));
                         self.resizingOptions({mode:resizeMode});
+                        self.beforeResizeWidth = self.resizingTile().cssWidth();
+                        self.beforeResizeHeight = self.resizingTile().cssHeight();
+                        self.currentWigedtWidth(self.resizingTile().cssWidth());
+                        self.currentWigedtHeight(self.resizingTile().cssHeight());
                     }
                     self.tilesView.disableDraggable();
-
                 });
 
                 $('#globalBody').on('mousemove', function (event) {
-                   if (self.resizingOptions()) {
+                    if (self.resizingOptions()) {
                         if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.EAST) {
                             $(this).css('cursor', 'ew-resize');
                         } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.WEST) {
@@ -452,12 +483,17 @@ define(['knockout',
                         self.resizingOptions(clonedTarget);
                     }
                 }).on('mouseup', function (event) {
-                        self.resizingTile(null);
-                        self.resizingOptions(null);
-                        $(this).css('cursor','default');
-                        $('#globalBody').removeClass('none-user-select');
-                        self.tilesView.enableDraggable();
-                });;
+                    if (self.resizingOptions() !== null && typeof (self.resizingOptions()) !== 'undefined') {
+                        self.currentWigedtWidth(self.resizingTile().cssWidth());
+                        self.currentWigedtHeight(self.resizingTile().cssHeight());
+                        self.resizingTileCopy = self.resizingTile();
+                    }
+                    self.resizingTile(null);
+                    self.resizingOptions(null);
+                    $(this).css('cursor', 'default');
+                    $('#globalBody').removeClass('none-user-select');
+                    self.tilesView.enableDraggable();
+                });
             };
             
             self.isDraggingCellChanged = function(pos) {
@@ -975,7 +1011,7 @@ define(['knockout',
                             self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: new Date(new Date()-14*24*60*60*1000), end: new Date()};
                         }
                     });
-            }
+            };
             
             self.userTsel = false;
             self.userTimeSel = false;
@@ -1019,7 +1055,7 @@ define(['knockout',
                         rightPanelModel.defaultEntityContext(targets);
                         rightPanelModel.extendedOptions.tsel.entityContext = targets;
                     }
-            }
+            };
             
             var compressedTargets;
             //set initial targets selector options. priority: user extendedOptions > dashboard extendedOptions
@@ -1139,7 +1175,7 @@ define(['knockout',
                     Builder.saveDashboardOptions(userFilterOptions);
                     self.toolbarModel.hasUserOptionInDB = true;
                 }
-            }
+            };
             
             self.toolbarModel = null;
         }
