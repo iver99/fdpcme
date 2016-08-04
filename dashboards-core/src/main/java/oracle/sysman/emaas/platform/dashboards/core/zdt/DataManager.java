@@ -350,6 +350,7 @@ public class DataManager
 					logger.info("This lastModificationDate is earlier, there is no need to update");
 					return 0;
 				}
+				logger.info("The lastModificationDate is later,do update now");
 				return updateDashboardTile(entityManager, tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 						width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 						widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
@@ -614,6 +615,7 @@ public class DataManager
 					logger.info("The lastModificationDate is earlier, no need to update");
 					return 0;
 				}
+				logger.info("The lastModificationDate is later, do update now");
 				return updatePreferences(entityManager, userName, prefKey, prefValue, tenantId, creationDate, lastModificationDate);
 			}
 			logger.info("Preference with prefKey {} does not exist insert now", prefKey);
@@ -693,6 +695,7 @@ public class DataManager
 				.setParameter(17, enableEntityFilter)
 				.setParameter(18, enableDescription)
 				.setParameter(19, extendedOptions);
+		logger.info(query.toString());
 		result = query.executeUpdate();
 		return result;
 	}
