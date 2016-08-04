@@ -411,10 +411,19 @@ define(['knockout',
                         
             self.show = function() {
                 self.showTiles();
+                //The show function will be called frequently during drag and drop. 
+                //Thus the events will be attached to same elements many time which will cause performance issue,
+                //especially for drag and mouse move events.
+                //So we remove events first to make sure the event is attached only one time.
+                $('.dbd-widget').off('dragstart', self.handleStartDragging);
+                $('.dbd-widget').off('drag', self.handleOnDragging);
+                $('.dbd-widget').off('dragstop', self.handleStopDragging);
+                
                 $('.dbd-widget').on('dragstart', self.handleStartDragging);
                 $('.dbd-widget').on('drag', self.handleOnDragging);
                 $('.dbd-widget').on('dragstop', self.handleStopDragging);
                 
+                $('.dbd-resize-handler').off("mousedown");
                 $('.dbd-resize-handler').on('mousedown', function (event) {
                     var targetHandler = $(event.currentTarget),resizeMode = null;
                     if ($(targetHandler).hasClass('dbd-resize-handler-right')) {
@@ -437,6 +446,7 @@ define(['knockout',
 
                 });
 
+                $('#globalBody').off("mousemove").off("mouseup");
                 $('#globalBody').on('mousemove', function (event) {
                    if (self.resizingOptions()) {
                         if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.EAST) {
@@ -457,7 +467,7 @@ define(['knockout',
                         $(this).css('cursor','default');
                         $('#globalBody').removeClass('none-user-select');
                         self.tilesView.enableDraggable();
-                });;
+                });
             };
             
             self.isDraggingCellChanged = function(pos) {
