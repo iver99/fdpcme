@@ -11,11 +11,13 @@
 package oracle.sysman.emaas.platform.dashboards.core.zdt;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.swing.text.DateFormatter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -254,7 +256,7 @@ public class DataManager
 		try {
 			if (isDashboardExist(entityManager, dashboardId, tenantId)) {
 				logger.info("Dashboard with id {} exists", dashboardId);
-				if (getDashboardLastModifiedDate(entityManager, dashboardId, tenantId).compareTo(lastModificationDate) >= 0) {
+				if (isAfter(getDashboardLastModifiedDate(entityManager, dashboardId, tenantId), lastModificationDate)) {
 					logger.info("This lastModificationDate is earlier, there is no need to update");
 					return 0;
 				}
@@ -344,7 +346,8 @@ public class DataManager
 		try {
 			if (isDashboardTileExist(entityManager, tileId, dashboardId, tenantId)) {
 				logger.info("Dashboard Tile with id {} exists", tileId);
-				if (getDashboardTileLastModifiedDate(entityManager, tileId, dashboardId, tenantId).compareTo(lastModificationDate) >= 0) {
+
+				if (isAfter(getDashboardTileLastModifiedDate(entityManager, tileId, dashboardId, tenantId),lastModificationDate)) {
 					logger.info("This lastModificationDate is earlier, there is no need to update");
 					return 0;
 				}
@@ -397,7 +400,7 @@ public class DataManager
 		try {
 			if (isDashboardTileParamExist(entityManager, tileId, paramName, tenantId)) {
 				logger.info("DashboardTileParam with tile id {} exists", tileId);
-				if (getDashboardTileParamLastModifiedDate(entityManager, tileId, paramName, tenantId).compareTo(lastModificationDate) >= 0) {
+				if (isAfter(getDashboardTileParamLastModifiedDate(entityManager, tileId, paramName, tenantId), lastModificationDate)) {
 					logger.info("The lastModificationDate is earlier, no need to update");
 					return 0;
 				}
@@ -441,7 +444,7 @@ public class DataManager
 		try {
 			if (isDashboardLastAccessExit(entityManager, dashboardId, tenantId)) {
 				logger.info("DashboardLastAccess with tile id {} exists", dashboardId);
-				if (getDashboardLastAccessLastModifiedDate(entityManager, dashboardId, tenantId).compareTo(lastModificationDate) >= 0) {
+				if (isAfter(getDashboardLastAccessLastModifiedDate(entityManager, dashboardId, tenantId), lastModificationDate)) {
 					logger.info("The lastModificationDate is earlier, no need to update");
 					return 0;
 				}
@@ -483,7 +486,7 @@ public class DataManager
 		try {
 			if (isDashboardFavoriteExit(entityManager, userName, dashboardId, tenantId)) {
 				logger.info("DashboardFavorite with dashboard id {} exists", dashboardId);
-				if (getDashboardFavoriteLastModifiedDate(entityManager, userName, dashboardId, tenantId).compareTo(lastModificationDate) >= 0) {
+				if (isAfter(getDashboardFavoriteLastModifiedDate(entityManager, userName, dashboardId, tenantId),lastModificationDate)) {
 					logger.info("The lastModification is earlier, no need to update");
 					return 0;
 				}
@@ -522,7 +525,7 @@ public class DataManager
 		try {
 			if (isDashboardUserOptionExist(entityManager, userName, tenantId, dashboardId)) {
 				logger.info("DashboardUserOption with dashboardId {} exists", dashboardId);
-				if (getDashboardUserOptionLastModifiedDate(entityManager, userName, tenantId, dashboardId).compareTo(lastModificationDate) >= 0) {
+				if (isAfter(getDashboardUserOptionLastModifiedDate(entityManager, userName, tenantId, dashboardId), lastModificationDate)) {
 					logger.info("The lastModificationDate is earlier, no need to update");
 					return 0;
 				}
@@ -567,7 +570,7 @@ public class DataManager
 		try {
 			if (isDashboardSetExist(entityManager, dashboardSetId, tenantId, subDashboardId)) {
 				logger.info("DashboardSet with dashboardSetId {} exist", dashboardSetId);
-				if (getDashboardSetLastModifiedDate(entityManager, dashboardSetId, tenantId, subDashboardId).compareTo(lastModificationDate) >= 0) {
+				if (isAfter(getDashboardSetLastModifiedDate(entityManager, dashboardSetId, tenantId, subDashboardId), lastModificationDate)) {
 					logger.info("The lastModification is earlier, no need to update");
 					return 0;
 				}
@@ -609,7 +612,7 @@ public class DataManager
 		try {
 			if (isPreferenceExist(entityManager, userName, prefKey, tenantId)) {
 				logger.info("Preference with prefKey {} exists", prefKey);
-				if (getPreferenceLastModifiedDate(entityManager, userName, prefKey, tenantId).compareTo(lastModificationDate) >= 0) {
+				if (isAfter(getPreferenceLastModifiedDate(entityManager, userName, prefKey, tenantId), lastModificationDate)) {
 					logger.info("The lastModificationDate is earlier, no need to update");
 					return 0;
 				}
@@ -787,46 +790,6 @@ public class DataManager
 		logger.info("Calling the Datamanager.updateDashboard");
 		int result;
 		String sql = "UPDATE EMS_DASHBOARD SET  NAME=?, TYPE=?, DESCRIPTION=?, CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), LAST_MODIFIED_BY=?, OWNER=?, IS_SYSTEM=?, APPLICATION_TYPE=?, ENABLE_TIME_RANGE=?, SCREEN_SHOT=?, DELETED=?, ENABLE_REFRESH=?, SHARE_PUBLIC=?, ENABLE_ENTITY_FILTER=?, ENABLE_DESCRIPTION=?, EXTENDED_OPTIONS=? WHERE DASHBOARD_ID=? AND TENANT_ID=?";
-		if (StringUtil.isEmpty(dashboardId.toString())) {
-			logger.error("dashboardId is null or empty!");
-		}
-		if (StringUtil.isEmpty(name)) {
-			logger.error("name is null or empty!");
-		}
-		if (StringUtil.isEmpty(type.toString())) {
-			logger.error("type is null or empty!");
-		}
-		if (StringUtil.isEmpty(creationDate)) {
-			logger.error("create time is null or empty!");
-		}
-		if (StringUtil.isEmpty(owner)) {
-			logger.error("owner is null or empty!");
-		}
-		if (StringUtil.isEmpty(isSystem.toString())) {
-			logger.error("IS_SYSTEM is null or empty");
-		}
-		if (StringUtil.isEmpty(enableTimeRange.toString())) {
-			logger.error("ENABLE_TIME_RANGE is null or empty");
-		}
-		if (StringUtil.isEmpty(deleted.toString())) {
-			logger.error("DELETED is null or empty");
-		}
-		if (StringUtil.isEmpty(tenantId.toString())) {
-			logger.error("TENANT_ID is null or empty!");
-
-		}
-		if (StringUtil.isEmpty(enableRefresh.toString())) {
-			logger.error("ENABLE_REFRESH is null or empty!");
-		}
-		if (StringUtil.isEmpty(sharePublic.toString())) {
-			logger.error("SHARE_PUBLIC is null or empty!");
-		}
-		if (StringUtil.isEmpty(enableEntityFilter.toString())) {
-			logger.error("ENABLE_ENTITY_FILTER is null or empty!");
-		}
-		if (StringUtil.isEmpty(enableDescription.toString())) {
-			logger.error("ENABLE_DESCRIPTION is null or empty!");
-		}
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, name)
 				.setParameter(2, type)
@@ -1161,5 +1124,14 @@ public class DataManager
 				.setParameter(2,prefKey)
 				.setParameter(3,tenantId);
 		return query.getSingleResult().toString();
+	}
+	private boolean isAfter(String thisDate, String comparedDate){
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try{
+			return simpleDateFormat.parse(thisDate).after(simpleDateFormat.parse(comparedDate));
+		}catch (Exception e){
+			logger.info(e.getLocalizedMessage());
+			return false;
+		}
 	}
 }
