@@ -11,7 +11,6 @@
 package oracle.sysman.emaas.platform.dashboards.core.zdt;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -1196,7 +1195,7 @@ public class DataManager
 
 	private String getPreferenceLastModifiedDate(EntityManager entityManager, String userName, String prefKey, Long tenantId){
 		logger.info("Calling DataManager.isPreferenceExist");
-		String sql = "SELECT COUNT(1) FROM EMS_PREFERENCE WHERE USER_NAME=? AND PREF_KEY=? AND TENANT_ID=?";
+		String sql = "SELECT LAST_MODIFICATION_DATE FROM EMS_PREFERENCE WHERE USER_NAME=? AND PREF_KEY=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1,userName)
 				.setParameter(2,prefKey)
