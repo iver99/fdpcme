@@ -12,13 +12,15 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import java.math.BigInteger;
+
 /**
  * @author guochen
  */
 public class DashboardTileParamsRowEntity implements RowEntity
 {
 	@JsonProperty("TILE_ID")
-	private Long tileId;
+	private BigInteger tileId;
 
 	@JsonProperty("PARAM_NAME")
 	private String paramName;
@@ -205,7 +207,7 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	/**
 	 * @return the tileId
 	 */
-	public Long getTileId()
+	public BigInteger getTileId()
 	{
 		return tileId;
 	}
@@ -315,7 +317,7 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	 * @param tileId
 	 *            the tileId to set
 	 */
-	public void setTileId(Long tileId)
+	public void setTileId(BigInteger tileId)
 	{
 		this.tileId = tileId;
 	}

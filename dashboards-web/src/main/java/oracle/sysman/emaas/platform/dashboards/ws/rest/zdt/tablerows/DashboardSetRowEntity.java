@@ -12,19 +12,21 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import java.math.BigInteger;
+
 /**
  * @author guochen
  */
 public class DashboardSetRowEntity implements RowEntity
 {
 	@JsonProperty("DASHBOARD_SET_ID")
-	private Long dashboardSetId;
+	private BigInteger dashboardSetId;
 
 	@JsonProperty("TENANT_ID")
 	private Long tenantId;
 
 	@JsonProperty("SUB_DASHBOARD_ID")
-	private Long subDashboardId;
+	private BigInteger subDashboardId;
 
 	@JsonProperty("POSITION")
 	private Long position;
@@ -105,7 +107,7 @@ public class DashboardSetRowEntity implements RowEntity
 	/**
 	 * @return the dashboardSetId
 	 */
-	public Long getDashboardSetId()
+	public BigInteger getDashboardSetId()
 	{
 		return dashboardSetId;
 	}
@@ -121,7 +123,7 @@ public class DashboardSetRowEntity implements RowEntity
 	/**
 	 * @return the subDashboardId
 	 */
-	public Long getSubDashboardId()
+	public BigInteger getSubDashboardId()
 	{
 		return subDashboardId;
 	}
@@ -172,7 +174,7 @@ public class DashboardSetRowEntity implements RowEntity
 	 * @param dashboardSetId
 	 *            the dashboardSetId to set
 	 */
-	public void setDashboardSetId(Long dashboardSetId)
+	public void setDashboardSetId(BigInteger dashboardSetId)
 	{
 		this.dashboardSetId = dashboardSetId;
 	}
@@ -190,7 +192,7 @@ public class DashboardSetRowEntity implements RowEntity
 	 * @param subDashboardId
 	 *            the subDashboardId to set
 	 */
-	public void setSubDashboardId(Long subDashboardId)
+	public void setSubDashboardId(BigInteger subDashboardId)
 	{
 		this.subDashboardId = subDashboardId;
 	}
