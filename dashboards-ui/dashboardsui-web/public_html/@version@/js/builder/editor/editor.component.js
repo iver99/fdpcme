@@ -235,7 +235,10 @@ define(['knockout',
             var _currentUser = dfu.getUserName();
             tile.editDisabled = ko.computed(function() { //to do
                 return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard() || _currentUser !== dashboard.owner();
-            });
+            }); 
+            
+            tile.isItaAdmin = ko.observable(false);
+            
             tile.widerEnabled = ko.computed(function() {
                 return mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS;
             });
@@ -379,6 +382,42 @@ define(['knockout',
             tile.upEnabled(mode.getModeRow(tile) > 0);
             tile.leftEnabled(mode.getModeColumn(tile) > 0);
             tile.rightEnabled(mode.getModeColumn(tile)+mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS);
+            
+            judgeAdmin();
+                function judgeAdmin() {
+                    if (!$('.links-content-container')[0]) {
+                        var serviceUrl = "/sso.static/dashboards.configurations/registration";
+                        if (dfu.isDevMode()) {
+                            serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "configurations/registration");
+                        }
+                        dfu.ajaxWithRetry({
+                            url: serviceUrl,
+                            headers: dfu.getDashboardsRequestHeader(),
+                            contentType: 'application/json',
+                            success: function (data, textStatus) {
+                                data.adminLinks.forEach(function (item) {
+                                    if (item.name === "IT Analytics Administration") {
+                                        tile.isItaAdmin(true);
+                                    }
+                                    ;
+                                });
+                            },
+                            error: function (xhr, textStatus, errorThrown) {
+                                oj.Logger.error('Failed to get service instances by URL: ' + serviceUrl);
+                            },
+                            async: true
+                        });
+                    } else {
+                        var brandingbarAdmin = ko.dataFor($('.links-content-container')[0]).adminLinks();
+                        brandingbarAdmin.forEach(function (item) {
+                            if (item.name === "IT Analytics Administration") {
+                                tile.isItaAdmin(true);
+                            }
+                            ;
+                        });
+                    }
+
+                };
             
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                 var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');

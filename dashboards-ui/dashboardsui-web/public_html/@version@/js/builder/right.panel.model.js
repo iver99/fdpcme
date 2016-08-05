@@ -299,7 +299,7 @@ define(['knockout',
                         }
                         self.$b.triggerBuilderResizeEvent('Initialize right panel');
                     }
-                    
+                    resetRightPanelWidth();
                     if (self.isDashboardSet()) {
                         self.dashboardsetToolBarModel.reorderedDbsSetItems.subscribe(function () {
                             var isOnlyDashboardPicker = self.dashboardsetToolBarModel.dashboardsetItems.length === 1 && self.dashboardsetToolBarModel.dashboardsetItems[0].type === "new";
@@ -325,6 +325,11 @@ define(['knockout',
 
                     ResizableView(self.$b);
             };
+            
+            function resetRightPanelWidth(){
+                $('.dbd-left-panel-show').css('width','320px'); 
+                $('.dbd-left-panel-hide').css('width','0'); 
+            }
 
             self.initEventHandlers = function() {
 //                $b.addBuilderResizeListener(self.resizeEventHandler);
@@ -557,15 +562,21 @@ define(['knockout',
             
             self.toggleLeftPanel = function() {
                 if (!self.showRightPanel()) {
-                    self.showRightPanel(true);
-                    $(".dashboard-picker-container:visible").addClass("df-collaps");
-                    self.$b.triggerBuilderResizeEvent('show right panel');
+                    $(".dbd-left-panel").animate({width: "320px"}, "normal");
+                    $(".right-panel-toggler").animate({right: (323 + self.scrollbarWidth) + 'px'}, 'normal', function () {
+                        self.showRightPanel(true);
+                        $(".dashboard-picker-container:visible").addClass("df-collaps");
+                        self.$b.triggerBuilderResizeEvent('show right panel');
+                    });
                 } else {
-                    self.expandDBEditor(true);
-                    self.showRightPanel(false);
-                    self.initDraggable();
-                    $(".dashboard-picker-container:visible").removeClass("df-collaps");
-                    self.$b.triggerBuilderResizeEvent('hide right panel');
+                    $(".dbd-left-panel").animate({width: 0});
+                    $(".right-panel-toggler").animate({right: self.scrollbarWidth + 3 + 'px'}, 'normal', function () {
+                        self.expandDBEditor(true);
+                        self.showRightPanel(false);
+                        self.initDraggable();
+                        $(".dashboard-picker-container:visible").removeClass("df-collaps");
+                        self.$b.triggerBuilderResizeEvent('hide right panel');
+                    });
                 }
             };
 
@@ -645,12 +656,16 @@ define(['knockout',
 //                }
 //            };
 
-            self.deleteDashboardClicked = function(){
+            self.deleteDashboardClicked = function(){       
                 queryDashboardSetsBySubId(self.dashboard.id(),function(resp){
                     window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(resp.dashboardSets || []); 
                     self.toolBarModel.openDashboardDeleteConfirmDialog();
                 });
-            };        
+            };  
+            
+            $("#delete-dashboard").on("ojclose", function (event, ui) {
+                self.toolBarModel.isDeletingDbd(false);
+            });
             
             $('.dbd-right-panel-editdashboard-general').on({
                 "ojexpand":function(event,ui){
@@ -925,7 +940,11 @@ define(['knockout',
 
             self.saveDsbFilterSettings = function(fieldsToUpdate, succCallback, errorCallback) {
                 var newDashboardJs = ko.mapping.toJS(self.dashboard, {
-                    'include': ['screenShot'],
+                    'include': ['screenShot', 'description', 'height', 
+                        'isMaximized', 'title', 'type', 'width', 
+                        'tileParameters', 'name', 'systemParameter', 
+                        'tileId', 'value', 'content', 'linkText', 
+                        'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
                     'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight",
                         "modeColumn", "modeRow", "screenShotHref", "systemDashboard",
                         "customParameters", "clientGuid", "dashboard",
@@ -1012,7 +1031,8 @@ define(['knockout',
                 
                 var prevSharePublic = self.dashboardsetToolBarModel.dashboardsetConfig.share();
                 self.dashboardsetShare = ko.observable(prevSharePublic);
-                self.dashboardsetShareDisabled = ko.observable(self.dashboardsetToolBarModel.dashboardsetItems.length === 0);
+                var isOnlyDashboardPicker = self.dashboardsetToolBarModel.dashboardsetItems.length === 1 && self.dashboardsetToolBarModel.dashboardsetItems[0].type === "new";
+                self.dashboardsetShareDisabled = ko.observable(isOnlyDashboardPicker);
 
                 self.defaultSetAutoRefreshValue = ko.observable("every5minutes"); // todo get from instance
                 
@@ -1050,6 +1070,18 @@ define(['knockout',
                                 
                                 self.dashboardsetShare(result.sharePublic === true ? "on" : "off");
                                 self.dashboardsetToolBarModel.dashboardsetName(result.name);
+                                self.dashboardsetToolBarModel.dashboardInst.name(result.name);
+                                if(self.dashboardsetToolBarModel.dashboardInst.description){
+                                    if(result.description){
+                                        self.dashboardsetToolBarModel.dashboardInst.description(result.description);
+                                    }else{
+                                        delete self.dashboardsetToolBarModel.dashboardInst.description;
+                                    }
+                                }else{
+                                    if(result.description){
+                                        self.dashboardsetToolBarModel.dashboardInst.description = ko.observable(result.description);
+                                    }
+                                }
                                 self.dashboardsetToolBarModel.dashboardsetDescription(result.description);
                             },
                             function (jqXHR, textStatus, errorThrown) {

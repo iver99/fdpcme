@@ -1,39 +1,23 @@
                                
 buildscript {
-    repositories {
-        maven {  
-            url = "${PUB_MAVEN_MY_MAVEN_REPO}"
-        }                                    
-        maven {                              
-            url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
-        }                                                                  
-    }                                                                      
+     apply from: 'test-buildscript-apply.gradle'                                                             
     dependencies { 
-         classpath group: "com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "${devinfraVersion}", transitive: true
-         classpath group: "com.oracle.emaas.emdi", name: "TestInfraPlugin", version: "${testinfraVersion}", transitive: true
+         
         classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"                
         classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_taskprocessor", version: "${omctfVersion}"              
     }                                                                                                                         
 }                                                                                                                             
-apply plugin: 'DevInfraPlugin'                                                                                                
-apply plugin: 'TestInfraPlugin'                                                                                               
+apply from: 'test-project-apply.gradle'                                                                                            
 apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_commontasks")                             
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest     
                                                                      
-repositories {
-    maven {  
-        url = "${PUB_MAVEN_MY_MAVEN_REPO}"
-    }                                    
-    maven {                              
-        url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
-    }                                                                  
-}                                                                      
+                                                     
 /******* ExtraProperties declaration ******/
 
 dependencies {
     testConfig group: 'com.oracle.emaas.emcpdf.test', name:'dashboards-upgrade-tests-integ-tests', version: "${REPO_BID}"
     testConfig group: 'com.oracle.emaas.emcpdf.test', name:'dashboards-uitest-integ-tests', version: "${REPO_BID}" 
-    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.0.0+')
+    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.0.0-greenchannel+')
 }
 
 //Add data population(pre-upgrade) tests or tasks here

@@ -1154,26 +1154,29 @@ define(['knockout',
                         }
                         self.timeSelectorModel.timeRangeChange(true);
 
-                        if(!self.toolbarModel.extendedOptions.timeSel) {
-                            self.toolbarModel.extendedOptions.timeSel = {};
+                        if(!self.toolbarModel.applyClickedByAutoRefresh()) {
+                            if(!self.toolbarModel.extendedOptions.timeSel) {
+                                self.toolbarModel.extendedOptions.timeSel = {};
+                            }
+                            self.toolbarModel.extendedOptions.timeSel.timePeriod = Builder.getTimePeriodValue(tp);
+                            self.toolbarModel.extendedOptions.timeSel.start = start.getTime();
+                            self.toolbarModel.extendedOptions.timeSel.end = end.getTime();
+                            self.saveUserFilterOptions();
+
+                            var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
+                            if(rightPanelModel.dashboardSharing() !== "shared") {
+                                rightPanelModel.defaultTimeRangeValue([Builder.getTimePeriodValue(tp)]);
+                                rightPanelModel.defaultStartTime(start.getTime());
+                                rightPanelModel.defaultEndTime(end.getTime());
+
+                                //set timeSel settings to save
+                                rightPanelModel.extendedOptions.timeSel.start = start.getTime();
+                                rightPanelModel.extendedOptions.timeSel.end = end.getTime();
+                                rightPanelModel.extendedOptions.timeSel.defaultValue = Builder.getTimePeriodValue(tp);                            
+                                rightPanelModel.defaultValueChanged(new Date());
+                            }                          
                         }
-                        self.toolbarModel.extendedOptions.timeSel.timePeriod = Builder.getTimePeriodValue(tp);
-                        self.toolbarModel.extendedOptions.timeSel.start = start.getTime();
-                        self.toolbarModel.extendedOptions.timeSel.end = end.getTime();
-                        self.saveUserFilterOptions();
-                        
-                        var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
-                        if(rightPanelModel.dashboardSharing() !== "shared") {
-                            rightPanelModel.defaultTimeRangeValue([Builder.getTimePeriodValue(tp)]);
-                            rightPanelModel.defaultStartTime(start.getTime());
-                            rightPanelModel.defaultEndTime(end.getTime());
-    
-                            //set timeSel settings to save
-                            rightPanelModel.extendedOptions.timeSel.start = start.getTime();
-                            rightPanelModel.extendedOptions.timeSel.end = end.getTime();
-                            rightPanelModel.extendedOptions.timeSel.defaultValue = Builder.getTimePeriodValue(tp);
-                            rightPanelModel.defaultValueChanged(new Date());
-                        }
+                        self.toolbarModel.applyClickedByAutoRefresh(false);
                 }
             };
             
