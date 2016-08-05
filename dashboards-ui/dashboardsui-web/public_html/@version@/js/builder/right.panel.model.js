@@ -90,7 +90,7 @@ define(['knockout',
             self.zdtStatus = true;
             self.scrollbarWidth = uiutil.getScrollbarWidth();
 
-            self.showRightPanelToggler =  ko.observable(self.isMobileDevice !== 'true');
+            self.showRightPanelToggler =  ko.observable(self.isMobileDevice !== 'true' && !self.zdtStatus);
             
             self.dashboardEditDisabled = ko.observable(self.toolBarModel ? self.toolBarModel.editDisabled() : true);
 
@@ -285,12 +285,15 @@ define(['knockout',
              **/
 
             self.initialize = function() {
-                    if (self.isMobileDevice === 'true' ) {
+                    if (self.isMobileDevice === 'true' || self.zdtStatus) {
                         self.completelyHidden(true);
                         self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
                     } else {
                         self.completelyHidden(false);
-                        if (self.emptyDashboard) {
+                        
+                        if(self.zdtStatus){
+                            self.showRightPanel(false);
+                        }else if (self.emptyDashboard) {
                             self.showRightPanel(true);
                         } else {
                             self.showRightPanel(false);

@@ -739,7 +739,7 @@
                                     icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-pencil'},
                                     label: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_SETTINGS_TITLE')
                                 },
-                                visible:(!dashboardEditDisabled() || isDashboardSet()) && !zdtStatus,
+                                visible:!dashboardEditDisabled() || isDashboardSet(),
                                 click: toggleRightPanel,
                                 style:{
                                     borderTop:dashboardEditDisabled() ? '1px solid #e4e8ea' : '0'
