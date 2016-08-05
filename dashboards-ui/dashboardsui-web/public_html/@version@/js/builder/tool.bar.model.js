@@ -916,7 +916,7 @@ define(['knockout',
                     "id": "emcpdf_dsbopts_edit" + self.toolBarGuid,
                     "icon": "dbd-toolbar-icon-edit",
                     "title": "", //getNlsString('DBS_BUILDER_BTN_EDIT_TITLE'),
-                    "disabled": self.editDisabled() === true,
+                    "disabled": self.editDisabled() === true || self.zdtStatus,
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
                     "showSubMenu": false,
                     "endOfGroup": false

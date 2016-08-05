@@ -313,7 +313,7 @@ define(['knockout',
                     "endOfGroup": false,       
                     "showOnMobile": false,
                     "showOnViewer":false, 
-                    "visibility":visibilityOnDifDevice(false,false),
+                    "visibility":visibilityOnDifDevice(false,false) && !self.zdtStatus,
                     "subMenu": []
                 }, 
                 {

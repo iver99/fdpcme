@@ -739,7 +739,7 @@
                                     icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-pencil'},
                                     label: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_SETTINGS_TITLE')
                                 },
-                                visible:!dashboardEditDisabled() || isDashboardSet(),
+                                visible:(!dashboardEditDisabled() || isDashboardSet()) && !zdtStatus,
                                 click: toggleRightPanel,
                                 style:{
                                     borderTop:dashboardEditDisabled() ? '1px solid #e4e8ea' : '0'
@@ -880,7 +880,6 @@
                                                     <input id="dbsHNameIn" maxlength="64" required
                                                            data-bind="ojComponent: { component: 'ojInputText', value: editDashboardDialogModel().name,
                                                rawValue: editDashboardDialogModel().nameInputed,
-                                               disabled: $data.zdtStatus,
                                                validators : [{
                                                        type: 'regExp', options : {
                                                        pattern: '.{1,64}',
@@ -902,7 +901,6 @@
                                                     <label for="editDbdDscp" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
                                                     <textarea id="editDbdDscp" maxlength="256" rows="3" style="resize: vertical"
                                                               data-bind="ojComponent: {component: 'ojTextArea', value: editDashboardDialogModel().description,rawValue: editDashboardDialogModel().descriptionInputed, rootAttributes: {style:'max-width:420px;'},
-                                                                disabled: $data.zdtStatus,
                                                                 validators : [{type: 'regExp', options : {
                                                                        pattern: '(.|\\b|\\s){0,256}',
                                                                        messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
@@ -912,7 +910,7 @@
                                             </div>
                                             <div class="oj-flex">
                                                 <div class="oj-flex-item">
-                                                    <div data-bind="ojComponent: {component: 'ojCheckboxset', value: editDashboardDialogModel().showdbDescription,disabled:$data.zdtStatus}" >
+                                                    <div data-bind="ojComponent: {component: 'ojCheckboxset', value: editDashboardDialogModel().showdbDescription}" >
                                                         <span class="oj-choice-row">
                                                             <input id="showdbDescription" type="checkbox" value="showdbDescription">
                                                             <label for="showdbDescription" data-bind="text: getNlsString('DBS_BUILDER_EDIT_SHOW_DSB_DESC')"></label>
@@ -1052,7 +1050,7 @@
                                 <hr/>
                                 <!-- /ko -->
                                 <div>
-                                    <button class="dbd-delete-single-dashboard" data-bind="click: deleteDashboardClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),disabled:$data.zdtStatus}"></button>
+                                    <button class="dbd-delete-single-dashboard" data-bind="click: deleteDashboardClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_DELETE_TITLE')}"></button>
                                 </div>
                             </div>
                         </div>

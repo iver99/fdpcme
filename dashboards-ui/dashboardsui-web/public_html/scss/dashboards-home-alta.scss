@@ -267,12 +267,21 @@
     background: linear-gradient(to bottom, #0470c9 0%, #0571cd 50%, #0479d8 100%);
     border: 1px solid #0476d3;
     border-radius: 2px;
-    
     text-align: right;
     box-shadow:none; 
     &.oj-disabled{
-        opacity: 0.4;
+        background-color: #f4f6f7;
+        background-image: none;
+        border-color: #e0e6eb;
+        color: #9e9e9e;
+        box-shadow: none;
+        &:hover{
+            background-color: #f4f6f7;
+            border-color: #e0e6eb;
+            color: #9e9e9e;
+        }
     }
+    
 }
 
 .oj-button.oj-button-full-chrome.dbs-home-blue-button:hover{

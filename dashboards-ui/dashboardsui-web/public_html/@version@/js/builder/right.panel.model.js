@@ -913,7 +913,7 @@ define(['knockout',
                     "enableEntityFilter": self.dashboard.enableEntityFilter(),
                     "extendedOptions": JSON.stringify(self.extendedOptions),
                     "enableTimeRange": self.dashboard.enableTimeRange()
-                }
+                };
                 
                 if (self.dashboard.tiles() && self.dashboard.tiles().length > 0) {
                     var elem = $(".tiles-wrapper:visible");
@@ -931,7 +931,6 @@ define(['knockout',
             });
             
             self.handleSaveDsbFilterSettings = function (fieldsToUpdate) {
-                if (!self.zdtStatus) {
                     self.saveDsbFilterSettings(fieldsToUpdate, function () {
                         if (!self.dashboard.extendedOptions) {
                             self.dashboard.extendedOptions = ko.observable();
@@ -942,7 +941,6 @@ define(['knockout',
                                 console.log("***error");
                             });
 
-                }
             };
 
             self.saveDsbFilterSettings = function(fieldsToUpdate, succCallback, errorCallback) {
