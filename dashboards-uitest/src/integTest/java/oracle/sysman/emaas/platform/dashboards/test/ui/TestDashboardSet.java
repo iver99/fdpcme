@@ -42,7 +42,10 @@ public class TestDashboardSet extends LoginAndLogout
 	private String dbsetName_Test1 = "";
 	private String dbName_InSet = "";
 	private String dbName_OutSet = "";
-	private String dbName_OOB = "";
+	private String dbName_DuplicateOOB = "";
+	private String dbsetName_ITA = "";
+	private String dbsetName_LA = "";
+	private final String dbsetName_APM = "";
 
 	@BeforeClass
 	public void createTestData() throws Exception
@@ -78,10 +81,9 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Create a new dashboard");
 		DashboardHomeUtil.createDashboard(webd, dbName, "", DashboardHomeUtil.DASHBOARD);
 
-		//verify the dashboardset
+		//verify the dashboard
 		webd.getLogger().info("Verify if the dashboard existed in builder page");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, "", true), "Dashboard NOT found!");
-
 	}
 
 	public void initTest(String testName) throws Exception
@@ -106,61 +108,16 @@ public class TestDashboardSet extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 
 		//remove the test data
-		if (!dbName.equals("")) {
-			webd.getLogger().info("Start to delete the dashboard set: " + dbName);
-			DashboardHomeUtil.deleteDashboard(webd, dbsetName_Favorite, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
-			webd.getLogger().info("Verify the dashboard set: " + dbName + " has been deleted");
-			Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName), "Delete dashboard " + dbName + " failed!");
-			webd.getLogger().info("Delete the dashboard set: " + dbName + " finished");
-		}
-
-		if (!dbsetName_setHome.equals("")) {
-			webd.getLogger().info("Start to delete the dashboard set: " + dbsetName_setHome);
-			DashboardHomeUtil.deleteDashboard(webd, dbsetName_setHome, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
-			webd.getLogger().info("Verify the dashboard set: " + dbsetName_setHome + " has been deleted");
-			Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbsetName_setHome), "Delete dashboard set "
-					+ dbsetName_setHome + " failed!");
-			webd.getLogger().info("Delete the dashboard set: " + dbsetName_setHome + " finished");
-		}
-
-		if (!dbsetName_Favorite.equals("")) {
-			webd.getLogger().info("Start to delete the dashboard set: " + dbsetName_Favorite);
-			DashboardHomeUtil.deleteDashboard(webd, dbsetName_Favorite, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
-			webd.getLogger().info("Verify the dashboard set: " + dbsetName_Favorite + " has been deleted");
-			Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbsetName_Favorite), "Delete dashboard set "
-					+ dbsetName_Favorite + " failed!");
-			webd.getLogger().info("Delete the dashboard set: " + dbsetName_Favorite + " finished");
-		}
-
-		if (!dbName_InSet.equals("")) {
-			webd.getLogger().info("Start to delete the dashboard: " + dbName_InSet);
-			DashboardHomeUtil.deleteDashboard(webd, dbName_InSet, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
-			webd.getLogger().info("Verify the dashboard: " + dbName_InSet + " has been deleted");
-			Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_InSet), "Delete dashboard " + dbName_InSet
-					+ " failed!");
-			webd.getLogger().info("Delete the dashboard: " + dbName_InSet + " finished");
-		}
-
-		if (!dbName_OutSet.equals("")) {
-			webd.getLogger().info("Start to delete the dashboard: " + dbName_OutSet);
-			DashboardHomeUtil.deleteDashboard(webd, dbName_OutSet, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
-			webd.getLogger().info("Verify the dashboard: " + dbName_OutSet + " has been deleted");
-			Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_OutSet), "Delete dashboard " + dbName_OutSet
-					+ " failed!");
-			webd.getLogger().info("Delete the dashboard: " + dbName_OutSet + " finished");
-		}
-
-		if (!dbName_OOB.equals("")) {
-			webd.getLogger().info("Start to delete the dashboard: " + dbName_OOB);
-			DashboardHomeUtil.deleteDashboard(webd, dbName_OOB, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
-			webd.getLogger().info("Verify the dashboard: " + dbName_OOB + " has been deleted");
-			Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_OOB), "Delete dashboard " + dbsetName_Favorite
-					+ " failed!");
-			webd.getLogger().info("Delete the dashboard: " + dbName_OOB + " finished");
-		}
-
+		DashBoardUtils.deleteDashboard(webd, dbName);
+		DashBoardUtils.deleteDashboard(webd, dbsetName_setHome);
+		DashBoardUtils.deleteDashboard(webd, dbsetName_Favorite);
+		DashBoardUtils.deleteDashboard(webd, dbsetName);
+		DashBoardUtils.deleteDashboard(webd, dbsetName_Test1);
+		DashBoardUtils.deleteDashboard(webd, dbName_InSet);
+		DashBoardUtils.deleteDashboard(webd, dbName_OutSet);
+		DashBoardUtils.deleteDashboard(webd, dbName_OutSet + "-duplicate");
+		DashBoardUtils.deleteDashboard(webd, dbName_DuplicateOOB);
 		webd.getLogger().info("All test data have been removed");
-
 	}
 
 	@Test(groups = "third run", dependsOnGroups = { "second run" })
@@ -188,7 +145,7 @@ public class TestDashboardSet extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 		DashboardBuilderUtil.addNewDashboardToSet(webd, dbName);
 
-		thinkTime(8000L);
+		//thinkTime(8000L);
 
 		//verify the dashboard has been added to the dashboard set
 		webd.getLogger().info("Verify if the dashboard exists in the dashborad set");
@@ -222,7 +179,7 @@ public class TestDashboardSet extends LoginAndLogout
 		DashboardHomeUtil.listView(webd);
 		DashboardBuilderUtil.addNewDashboardToSet(webd, dbName);
 
-		thinkTime(8000L);
+		//thinkTime(8000L);
 
 		//verify the dashboard has been added to the dashboard set
 		webd.getLogger().info("Verify if the dashboard exists in the dashborad set");
@@ -265,7 +222,7 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Create a dashboard inside dashboard set");
 		DashboardBuilderUtil.createDashboardInsideSet(webd, dbName_InSet, null);
 
-		thinkTime(8000L);
+		//thinkTime(8000L);
 
 		//verify the dashboard is in the dashboard set
 		webd.getLogger().info("Verify the created dashboard is in the dashboard set");
@@ -327,7 +284,7 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Remove the dashboard from the dashboard set");
 		DashboardBuilderUtil.removeDashboardFromSet(webd, dbName_InSet);
 
-		thinkTime(8000L);
+		//thinkTime(8000L);
 
 		//click Add dashboard icon
 		//webd.getLogger().info("Click Add Dashboard Icon");
@@ -447,13 +404,13 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "forth run", dependsOnMethods = { "testDuplicateDashboardNotAddToSet" })
-	public void testDuplicateOOBInSet() throws Exception
+	public void testDuplicateOOBAddToSet() throws Exception
 	{
-		dbName_OOB = "OOBDashboard-duplicate-" + generateTimeStamp();
+		dbName_DuplicateOOB = "OOBDashboard-duplicate-" + generateTimeStamp();
 
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testDuplicateOOBInSet");
+		webd.getLogger().info("Start the test case: testDuplicateOOBAddToSet");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -472,24 +429,103 @@ public class TestDashboardSet extends LoginAndLogout
 
 		//add an OOB dashboard in the dashboard set
 		webd.getLogger().info("Add an OOB dashboard in the set");
-		DashboardBuilderUtil.addNewDashboardToSet(webd, "Enterprise Overview");
+		DashboardBuilderUtil.addNewDashboardToSet(webd, "Database Operations");
 
 		//verify the dashboard is in the dashboard set
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Enterprise Overview"),
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Database Operations"),
 				"The OOB dashboard is not added into dashboard set");
 
 		//verify the edit menu & save icon are not displayed in OOB
-		webd.getLogger().info("Verify the edit menu & save icon are not displayed in OOB");
+		webd.getLogger().info("Verify the save icon is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DashboardSaveCSS), "Save icon is displayed in OOB");
-		webd.click("css=" + DashBoardPageId.BuilderOptionsMenuLocator);
+		//		webd.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsMenuLocator);
+		//		webd.click("css=" + DashBoardPageId.BuilderOptionsMenuLocator);
+		webd.waitForElementPresent("css=" + PageId.BuilderOptionsMenu_Css);
+		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(PageId.BuilderOptionsMenu_Css)));
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		webd.waitForElementPresent("css=" + PageId.BuilderOptionsMenu_Css);
+		webd.click("css=" + PageId.BuilderOptionsMenu_Css);
+		webd.getLogger().info("Verify the edit menu is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css" + DashBoardPageId.BuilderOptionsEditLocatorCSS),
 				"Edit menu is displayed in OOB");
 
 		//duplicate the dashboard in set
 		webd.getLogger().info("duplicate the dashboard in the dashboard set");
-		DashboardBuilderUtil.duplicateDashboardInsideSet(webd, dbName_OOB, null, false);
+		DashboardBuilderUtil.duplicateDashboardInsideSet(webd, dbName_DuplicateOOB, null, true);
 
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_OOB, null, true), "Duplicate OOB dashboard failed!");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_DuplicateOOB),
+				"Duplicate OOB dashboard failed!");
+
+		//delete the dashboard
+		webd.getLogger().info("Delete the duplicate dashboard: " + dbName_DuplicateOOB);
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, dbName_DuplicateOOB);
+		DashboardBuilderUtil.deleteDashboardInsideSet(webd);
+		webd.getLogger().info(
+				"verify the dashboard: " + dbName_DuplicateOOB + "has been deleted, and not in dashboard set as well");
+		Assert.assertFalse(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_DuplicateOOB), "The dashboard:"
+				+ dbName_DuplicateOOB + " is still in the dashboard set");
+		BrandingBarUtil.visitDashboardHome(webd);
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_DuplicateOOB), "Delete dashboard: "
+				+ dbName_DuplicateOOB + " failed!");
+
+	}
+
+	@Test(groups = "forth run", dependsOnMethods = { "testDuplicateOOBAddToSet" })
+	public void testDuplicateOOBNotAddToSet() throws Exception
+	{
+		dbName_DuplicateOOB = "OOBDashboard-duplicate-" + generateTimeStamp();
+
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testDuplicateOOBNotAddToSet");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//open the dashboardset
+		webd.getLogger().info("Open the dashboard in the builder page");
+		DashboardHomeUtil.selectDashboard(webd, dbsetName_Test1);
+
+		webd.getLogger().info("Set the refresh setting to OFF");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
+
+		//add an OOB dashboard in the dashboard set
+		webd.getLogger().info("Add an OOB dashboard in the set");
+		DashboardBuilderUtil.addNewDashboardToSet(webd, "Database Operations");
+
+		//verify the dashboard is in the dashboard set
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Database Operations"),
+				"The OOB dashboard is not added into dashboard set");
+
+		//verify the edit menu & save icon are not displayed in OOB
+		webd.getLogger().info("Verify the save icon is not displayed in OOB");
+		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DashboardSaveCSS), "Save icon is displayed in OOB");
+		//		webd.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsMenuLocator);
+		//		webd.click("css=" + DashBoardPageId.BuilderOptionsMenuLocator);
+		webd.waitForElementPresent("css=" + PageId.BuilderOptionsMenu_Css);
+		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(PageId.BuilderOptionsMenu_Css)));
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		webd.waitForElementPresent("css=" + PageId.BuilderOptionsMenu_Css);
+		webd.click("css=" + PageId.BuilderOptionsMenu_Css);
+		webd.getLogger().info("Verify the edit menu is not displayed in OOB");
+		Assert.assertFalse(webd.isDisplayed("css" + DashBoardPageId.BuilderOptionsEditLocatorCSS),
+				"Edit menu is displayed in OOB");
+
+		//duplicate the dashboard in set
+		webd.getLogger().info("duplicate the dashboard in the dashboard set");
+		DashboardBuilderUtil.duplicateDashboardInsideSet(webd, dbName_DuplicateOOB, null, false);
+
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_DuplicateOOB, null, true),
+				"Duplicate OOB dashboard failed!");
 
 		//back to home page
 		webd.getLogger().info("Go to Home page");
@@ -500,10 +536,9 @@ public class TestDashboardSet extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, dbsetName_Test1);
 
 		//verify the duplicated dashboard
-		webd.getLogger().info("Verify the duplicate dashboard: " + dbName_OOB + " is not in the dashboard set");
-		Assert.assertFalse(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_OOB),
+		webd.getLogger().info("Verify the duplicate dashboard: " + dbName_DuplicateOOB + " is not in the dashboard set");
+		Assert.assertFalse(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_DuplicateOOB),
 				"Dashboard has been duplicated and add to dashboard set");
-
 	}
 
 	@Test(groups = "second run", dependsOnGroups = { "first run" })
@@ -557,6 +592,101 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Verify if the dashboard set is not favorite");
 		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "favorites"), "My Favorites options is NOT checked!");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbsetName_Favorite), "dashboard set is still favorite");
+	}
+
+	@Test(groups = "fifth run", dependsOnGroups = { "forth run" })
+	public void testFilterAPMDashboardSet() throws Exception
+	{
+
+	}
+
+	@Test(groups = "fifth run", dependsOnGroups = { "forth run" })
+	public void testFilterITADashboardSet() throws Exception
+	{
+		dbsetName_ITA = "DashboardSet-ITA-" + generateTimeStamp();
+
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testFilterITADashboardSet");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//create dashboardset
+		webd.getLogger().info("Create a new dashboard set");
+		DashboardHomeUtil.createDashboard(webd, dbsetName_ITA, null, DashboardHomeUtil.DASHBOARDSET);
+
+		//verify the dashboardset
+		webd.getLogger().info("Verify if the dashboard set existed in builder page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_ITA), "Dashboard set NOT found!");
+
+		//add the ITA dashboard into the dashboard set
+		webd.getLogger().info("Add a ITA oob dashboard into the set");
+		DashboardBuilderUtil.addNewDashboardToSet(webd, "Categorical");
+
+		//back to the home page
+		webd.getLogger().info("Back to dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//set filter option, cloud services="IT Analytics" created by ME
+		webd.getLogger().info("set filter option, cloud services='IT Analytics' and Created by ME");
+		DashboardHomeUtil.filterOptions(webd, "ita");
+		DashboardHomeUtil.filterOptions(webd, "me");
+		webd.getLogger().info("Verify the created dashboard exists");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbsetName_ITA), "The dashboard NOT exists");
+
+		//reset filter options
+		webd.getLogger().info("Reset filter options");
+
+	}
+
+	@Test(groups = "fifth run", dependsOnGroups = { "forth run" })
+	public void testFilterLADashboardSet() throws Exception
+	{
+		dbsetName_LA = "DashboardSet-LA-" + generateTimeStamp();
+
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testFilterITADashboardSet");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//create dashboardset
+		webd.getLogger().info("Create a new dashboard set");
+		DashboardHomeUtil.createDashboard(webd, dbsetName_LA, null, DashboardHomeUtil.DASHBOARDSET);
+
+		//verify the dashboardset
+		webd.getLogger().info("Verify if the dashboard set existed in builder page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_LA), "Dashboard set NOT found!");
+
+		//add the ITA dashboard into the dashboard set
+		webd.getLogger().info("Add a ITA oob dashboard into the set");
+		DashboardBuilderUtil.addNewDashboardToSet(webd, "Database Operations");
+
+		//back to the home page
+		webd.getLogger().info("Back to dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//set filter option, cloud services="IT Analytics" created by ME
+		webd.getLogger().info("set filter option, cloud services='Log Analytics' and Created by ME");
+		DashboardHomeUtil.filterOptions(webd, "la");
+		DashboardHomeUtil.filterOptions(webd, "me");
+		webd.getLogger().info("Verify the created dashboard exists");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbsetName_LA), "The dashboard NOT exists");
+
+		//reset filter options
+		webd.getLogger().info("Reset filter options");
 	}
 
 	@Test(groups = "first run", dependsOnMethods = { "testCreateDashboardSet" })
@@ -679,7 +809,7 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Remove a dashboard from the dashborad set");
 		DashboardBuilderUtil.removeDashboardFromSet(webd, dbName);
 
-		thinkTime(8000L);
+		//thinkTime(8000L);
 
 		//verify the dashboard has been added to the dashboard set
 		webd.getLogger().info("Verify if the dashboard exists in the dashborad set");
@@ -811,7 +941,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	@Test(groups = "last run", dependsOnGroups = { "forth run" })
+	@Test(groups = "last run", dependsOnGroups = { "fifth run" })
 	public void testSetHome() throws Exception
 	{
 		dbsetName_setHome = "DashboardSet_TestSetHome-" + generateTimeStamp();
@@ -931,8 +1061,4 @@ public class TestDashboardSet extends LoginAndLogout
 		return String.valueOf(System.currentTimeMillis());
 	}
 
-	private void thinkTime(long waittime) throws InterruptedException
-	{
-		Thread.sleep(waittime);
-	}
 }

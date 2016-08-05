@@ -3,10 +3,13 @@ package oracle.sysman.emaas.platform.dashboards.test.ui;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 /**
@@ -22,6 +25,56 @@ public class BugVerification extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
+	}
+
+	@AfterClass
+	public void removeTestData() throws Exception
+	{
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: removeTestData");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to the grid view
+		webd.getLogger().info("Swtich to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//remove the test data
+		webd.getLogger().info("Start to remove the test data...");
+
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF2040");
+
+		webd.getLogger().info("All test data have been removed");
+	}
+
+	@Test
+	public void testEMCPDF_2040() throws Exception
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testEMCPDF_2040");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//create dashboard
+		webd.getLogger().info("Create a dashboard: no description, with time refresh");
+		DashboardHomeUtil.createDashboard(webd, "Dashboard_EMCPDF2040", null, DashboardHomeUtil.DASHBOARD);
+		webd.getLogger().info("verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_EMCPDF2040", null, true),
+				"Create dashboard failed!");
+
+		//set the timepicker as Custom
+		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, "04/14/2016 12:00 AM", "04/14/2016 12:30 PM"));
+
 	}
 
 	@Test
