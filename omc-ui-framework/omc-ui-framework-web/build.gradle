@@ -51,7 +51,7 @@ if (project.hasProperty("debugTsel"))
 }
 else
 {
-    tselVersion =  getDependentSdkVersion('com.oracle.emaas.emctas.tgtsel', 'emcs-targetselector', '1.8.+')
+    tselVersion =  getDependentSdkVersion('com.oracle.emaas.emctas.tgtsel', 'emcs-targetselector', '1.9.+')
 }
 dependencies {
     compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '2.0.1-24669', ext: 'war'){ transitive = false }	
