@@ -247,6 +247,10 @@ body, html {
   border: 1px solid #999999;
 }
 
+.builder-dbd-description .font-style-italic{
+    font-style: italic !important;
+}
+
 .builder-toolbar-left {
     /*  padding-right: 180px;
       margin-right: -180px;*/
@@ -1400,6 +1404,11 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
                         text-decoration: none;
                     }
                 }  
+            }
+        }
+        .other-nav:not(.oj-selected){
+            .oj-tabs-close-icon{
+                display: none;
             }
         }
         .other-nav:first-child{

@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/png" href="/emsaasui/uifwk/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
-        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v2.0.1/alta/oj-alta-min.css" type="text/css"/>
+        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v2.0.2/alta/oj-alta-min.css" type="text/css"/>
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
@@ -310,7 +310,8 @@
                             <!-- ko with:toolbarModel -->
                             <div class="builder-dbd-description" data-bind="visible: dashboardDescriptionEnabled()==='TRUE'">
                                 <div class="builder-dbd-description-display-area dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
-                                    <span data-bind="text: dashboardDescription,
+                                    <span data-bind="text: dashboardDescription()?dashboardDescription:'No description',
+                                                     css:{'font-style-italic':!dashboardDescription()},
                                                      attr: {title: dashboardDescription}" 
                                           class="dbd-display-area-text single-dbd-description"></span>          
                                 </div>
@@ -382,7 +383,7 @@
                                               <div class="dbd-btn-editor">                 
                                                   <button class="oj-button-half-chrome dbd-data-explore" tabindex="0"
                                                           data-bind="
-                                                             visible: $root.isMobileDevice !== 'true',
+                                                             visible: $root.isMobileDevice !== 'true' && isItaAdmin,                                                        
                                                              attr:{'id': 'editButton' + clientGuid,title: getNlsString('DBS_BUILDER_TILE_EDIT')},
                                                              click:$root.openInDataExplorer,
                                                              ojComponent: {
