@@ -219,6 +219,12 @@ define(['knockout',
                 }
             };
             
+            self.editingWidgetId = null;
+
+            self.widgetMenuOpen = function(event, ui) {
+                self.editingWidgetId = event.target.id;
+            }
+
             self.menuItemSelect = function (event, ui) {
                 var tile = ko.dataFor(ui.item[0]);
                 if (!tile) {
@@ -488,6 +494,18 @@ define(['knockout',
                         $('#globalBody').removeClass('none-user-select');
                         self.tilesView.enableDraggable();
                 });;
+                
+                //close widget menu if the page is moved up/down by scroll bar
+                $(".tiles-col-container").off("scroll");
+                $(".tiles-col-container").on("scroll", function() {
+                    if(self.editingWidgetId && $("#"+self.editingWidgetId).css("display")!=="none") {
+                        $("#"+self.editingWidgetId).trigger({
+                            type: 'keydown',
+                            keyCode: 27
+                        });
+                        self.editingWidgetId && self.hidePullRightBtn(self.editingWidgetId.substring(8));
+                    }
+                });
             };
             
             self.isDraggingCellChanged = function(pos) {
