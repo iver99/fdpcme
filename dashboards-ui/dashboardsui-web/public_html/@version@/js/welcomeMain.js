@@ -141,6 +141,8 @@ require(['ojs/ojcore',
                 self.dashboards = getNlsString("LANDING_HOME_DASHBOARDS");
                 self.dashboardsDesc = getNlsString("LANDING_HOME_DASHBOARDS_DESC");
                 
+                self.compliance = getNlsString("LANDING_HOME_COMPLIANCE");
+                self.complianceDesc = getNlsString("LANDING_HOME_COMPLIANCE_DESC");
                 self.securityAnalytics = getNlsString("LANDING_HOME_SECURITY_ANALYTICS");
                 self.securityAnalyticsDesc = getNlsString("LANDING_HOME_SECURITY_ANALYTICS_DESC");
                 self.orchestration = getNlsString("LANDING_HOME_ORCHESTRATION");
@@ -162,6 +164,7 @@ require(['ojs/ojcore',
                 self.data_type = "select";
                 
                 self.showInfraMonitoring = ko.observable(false);
+                self.showCompliance = ko.observable(false);
                 self.showSecurityAnalytics = ko.observable(false);
                 self.showOrchestration = ko.observable(false);
                 
@@ -198,6 +201,9 @@ require(['ojs/ojcore',
                         for(i=0; i<cloudServicesNum; i++) {
                             if(cloudServices[i].name == "Monitoring") {
                                 self.showInfraMonitoring(true);
+                            }
+                            if(cloudServices[i].name === "Compliance") {
+                                self.showCompliance(true);
                             }
                             if(cloudServices[i].name === "SecurityAnalytics") {
                                 self.showSecurityAnalytics(true);
@@ -315,6 +321,16 @@ require(['ojs/ojcore',
                         window.location.href = self.dashboardsUrl;
                     }
                 };
+                self.openCompliance = function() {
+                    if(!self.landingHomeUrls) {
+                        console.log("---fetching service links is not finished yet!---");
+                        return;
+                    }
+                    oj.Logger.info('Trying to open Compliance by URL: ' + self.landingHomeUrls.Compliance);
+                    if(self.landingHomeUrls.Compliance) {
+                        window.location.href = self.landingHomeUrls.Compliance;
+                    }
+                }
                 self.openSecurityAnalytics = function() {
                     if(!self.landingHomeUrls) {
                         console.log("---fetching service links is not finished yet!---");

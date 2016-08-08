@@ -100,6 +100,21 @@
                                 </div>
                             <!--</a>-->
                         </li>
+                        <!-- ko if: showCompliance -->
+                        <li class="box-list-li box-list-a">
+                            <a id="compliance_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openCompliance">
+                                <div class="service-box-wrapper">
+                                    <div class="landing-home-box-img compliance-box">
+                                        <img class="app-image" src="@version@/images/Compliance_w_92px.png" data-bind="attr: {alt: compliance}"/>
+                                    </div>
+                                    <div class="landing-home-box-content">
+                                        <div class="landing-home-box-content-head" data-bind="text: compliance"></div>
+                                        <div class="landing-home-box-content-desc" data-bind="text: complianceDesc"></div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <!-- /ko -->
                         <!-- ko if: showSecurityAnalytics -->
                         <li class="box-list-li box-list-a">
                             <a id="security_analytics_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openSecurityAnalytics">
