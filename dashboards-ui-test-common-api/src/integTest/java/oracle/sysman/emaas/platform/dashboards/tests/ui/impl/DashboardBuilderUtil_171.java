@@ -555,6 +555,25 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	{
 		DashboardHomeUtil.listView(driver);
 	}
+	
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#moveWidget(WebDriver driver, String widgetName, int index, String moveOption)
+	 */
+	@Override
+	public void moveWidget(WebDriver driver, String widgetName, int index, String moveOption) throws Exception
+	{
+    	Assert.assertTrue(false,"This method is not available in 1.7.1 version");
+		driver.getLogger().info("Method not available in 1.7.1 version");
+	}
+	
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#moveWidget(WebDriver driver, String widgetName, String moveOption)
+	 */
+	@Override
+	public void moveWidget(WebDriver driver, String widgetName, String moveOption) throws Exception
+	{
+    	moveWidget(driver, widgetName, 0, moveOption);
+	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#openWidget(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
