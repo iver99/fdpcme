@@ -4,6 +4,12 @@ sourceSets {
         java.srcDir 'src/integTest/java'
         compileClasspath = configurations.testNG+configurations.restAssured+configurations.testConfig
     }
+     test{
+                java {
+                        srcDirs = ['src/integTest/java']
+                }
+                resources.srcDirs = ['src/integTest/java']
+        }
 }
 
 task integTestJar (type:Jar) {
@@ -12,10 +18,11 @@ task integTestJar (type:Jar) {
 }
 
 dependencies {
+	testCompile configurations.testNG
 	testConfig project(':dashboards-ui:dashboardsui-webutils')   { transitive = false }
 	testConfig project(':dashboards-ui:dashboardsui-web')   { transitive = false }
 	testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
-        testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
+    testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
 	testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
 	testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
 	testConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
@@ -46,3 +53,4 @@ dependencies {
         
     
 }
+build.dependsOn integTestJar
