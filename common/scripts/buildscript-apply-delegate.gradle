@@ -1,0 +1,162 @@
+/* Copyright (c) 2015, 2016 Oracle and/or its affiliates. All rights reserved.*/
+
+/*
+   DESCRIPTION
+     Prerequisites to calling this script:
+     -- project property commonBranchTopDir must have been set by buildscript{}
+        in the root project build.gradle or other main gradle script
+
+     This script sets properties:
+       PUB_DIR_MASTER -- caller may override
+       PUB_LOCAL_EMDI_MASTER
+       PUB_REMOTE_EMDI_MASTER
+     Then it finds and applies buildscript-delegate.gradle.
+
+     buildscript-delegate.gradle can use the value of property
+     PUB_REMOTE_EMDI_MASTER if it is set to a dir path or empty string,
+     but must recompute it when the property is not set
+     (for compatibility with older versions of this script).
+
+     Env variables EMAAS_LOCAL_SCRATCH_BASE and EMAAS_DEV_INFRA_GENERIC_EMDEV
+     override the builtin property defaults.
+     These properties provide the basis for setting the properties
+     PUB_LOCAL_EMDI_MASTER and PUB_REMOTE_EMDI_MASTER.
+
+     --------------------------------------------------------------------------
+     The Common Build Framework (CBF) buildscript{} calling chain
+     starts like this:
+
+     In a rootProject build.gradle script, buildscript{...} applies this script
+     $project.commonBranchTopDir/common/scripts/buildscript-apply-delegate.gradle
+     which finds and applies script
+     $project.PUB_DIR_MASTER/scripts/buildscript-delegate.gradle
+     which finds pubDir and applies $pubDir/scripts/buildscript.gradle.
+
+     buildscript-delegate.gradle does this:
+     --------------------------------------------------------------------------
+     First the local CBF pub scripts are installed or refreshed to PUB_DIR
+     from PUB_DIR_MASTER.
+     Special case: this PUB_DIR refresh is skipped for a farm job
+     that does not set PUB_DIR or set PUB_DIR_RUN_FROM_INSTALL=1.
+
+     The CBF local installation is available for anytime gradle --offline use
+     after the first automatic installation by this script.
+
+       -- PUB_DIR (local CBF installation) default: /scratch/<user>/.emdi/pub
+       -- PUB_DIR_MASTER default: remote master CBF location if accessible,
+          otherwise default local CBF installation
+
+     After PUB_DIR is potentially refreshed,
+     the CBF pub scripts are by default run from PUB_DIR_MASTER,
+     except project emdi (which owns CBF) runs from emdi/pub.
+
+     When PUB_DIR_RUN_FROM_INSTALL=1, CBF scripts are run from PUB_DIR
+     (local CBF installation) instead of from PUB_DIR_MASTER.
+
+     An install or refresh to PUB_DIR from PUB_DIR_MASTER is done when:
+       PUB_DIR_MASTER exists
+       and PUB_DIR is not equal to PUB_DIR_MASTER
+       and PUB_DIR is not the same as <pubDirThisProject> (branch protection)
+       and (not a farm job or PUB_DIR is set or PUB_DIR_RUN_FROM_INSTALL=1)
+       and PUB_DIR_REFRESH days (default 7) have elapsed since the last update
+         PUB_DIR_REFRESH < 0  => force refresh each time
+         PUB_DIR_REFRESH == 0 => never refresh
+         PUB_DIR_REFRESH > 0  => refresh every this many days
+
+     Note that any PUB_DIR* override may be set as a property or env variable.
+     --------------------------------------------------------------------------
+
+   MODIFIED MM/DD/YY
+   skuchero 04/12/16 - tweak code style
+   skuchero 03/10/16 - set PUB_REMOTE_EMDI_MASTER to a dir path or empty string
+   skuchero 02/21/16 - simplify header comment user doc for PUB_DIR* props
+   skuchero 02/17/16 - improve exception message
+   skuchero 12/17/15 - offline and Windows improvements
+   skuchero 08/10/15 - prop takes precedence over env var of same name
+   skuchero 05/12/15 - created
+ */
+//-----------------------------------------------------------------------------
+
+// property must be set by buildscript{} code prior to applying this script
+assert project.hasProperty('commonBranchTopDir')
+
+// set PUB_LOCAL_EMDI_MASTER and PUB_REMOTE_EMDI_MASTER
+//
+def isUnix = ! System.getProperty('os.name').toLowerCase().startsWith('windows')
+def localPrefix = System.env.EMAAS_LOCAL_SCRATCH_BASE ?:
+  (isUnix ? "/scratch" : "C:/scratch")
+def localUser = isUnix ? "$System.env.USER" : "$System.env.USERNAME"
+project.ext.PUB_LOCAL_EMDI_MASTER = "$localPrefix/$localUser/.emdi"
+//
+project.ext.PUB_REMOTE_EMDI_MASTER = ''
+def remotePrefix = System.env.EMAAS_DEV_INFRA_GENERIC_EMDEV ?:
+  (isUnix ? "/usr/dev_infra/generic/emdev" : "C:/ADE/dev_infra_generic/emdev")
+if ( ! project.gradle.startParameter.isOffline()) {
+  if (file("$remotePrefix/pub/getStorageServerLoc.sh").exists()) {
+    def emdiParent = "sh $remotePrefix/pub/getStorageServerLoc.sh -base".execute().text.trim()
+    if (emdiParent) {
+      // set even if this standard development remote dir is not accessible
+      // -- buildscript-delegate.gradle may depend on this behavior
+      project.ext.PUB_REMOTE_EMDI_MASTER = "$emdiParent/emdi"
+    }
+  }
+}
+
+// set PUB_DIR_MASTER
+//
+// Note that an emdi project dir is not by default considered stable
+// enough to install/update to a pubDir shared between projects,
+// so PUB_DIR_MASTER is never set by default to a project branch dir.
+//
+if ( ! project.hasProperty('PUB_DIR_MASTER') && System.env.PUB_DIR_MASTER) {
+  project.ext.PUB_DIR_MASTER = System.env.PUB_DIR_MASTER
+}
+if ( ! project.hasProperty('PUB_DIR_MASTER')) {
+  def isRemotePubDirMasterAvailable = (
+       ! project.gradle.startParameter.isOffline() // online
+    && project.PUB_REMOTE_EMDI_MASTER // not empty string
+    && file("$project.PUB_REMOTE_EMDI_MASTER/pub").isDirectory() // dir exists
+    )
+  project.ext.PUB_DIR_MASTER = isRemotePubDirMasterAvailable ?
+    "$project.PUB_REMOTE_EMDI_MASTER/pub" :
+    "$project.PUB_LOCAL_EMDI_MASTER/pub"
+}
+
+// apply buildscript-delegate.gradle
+//
+def ourDelegate = "$project.commonBranchTopDir/pub/scripts/buildscript-delegate.gradle"
+if (file(ourDelegate).exists()) {
+  // emdi project owns the CBF pub scripts
+  apply from: ourDelegate
+} else {
+  // non-emdi project
+  if (file(project.PUB_DIR_MASTER).isDirectory()) {
+    apply from: "$project.PUB_DIR_MASTER/scripts/buildscript-delegate.gradle"
+  } else {
+    // throw helpful exception message
+    def offlineMsg = ''
+    def remoteMsg = ''
+    def windowsMsg = ''
+    if (project.gradle.startParameter.isOffline()) {
+      // run any gradle task to install CBF from remote location
+      offlineMsg = "Install CBF scripts locally for later offline use " +
+        "by running \"gradle projects\" (or any gradle task) when online.\n"
+    } else {
+      if ( ! project.PUB_REMOTE_EMDI_MASTER) {
+        // required if CBF not installed locally and PUB_DIR_MASTER not set
+        remoteMsg = "Check that your machine can access dir $remotePrefix/pub.\n"
+      }
+      if ( ! isUnix) {
+        // Windows prerequisites
+        windowsMsg = "See https://confluence.oraclecorp.com/confluence/display/EMS/Extending+the+Hudson+Build+Infrastructure+to+Support+Windows+Builds#ExtendingtheHudsonBuildInfrastructuretoSupportWindowsBuilds-WindowsSystemSetupInstructions.\n"
+      }
+    }
+    throw new GradleException(
+      "PUB_DIR_MASTER directory does not exist: $project.PUB_DIR_MASTER.\n" +
+      "$offlineMsg" +
+      "$remoteMsg" +
+      "$windowsMsg" +
+      "See also https://confluence.oraclecorp.com/confluence/display/DevTools/Essential+File+Templates+for+the+CBF#EssentialFileTemplatesfortheCBF-common/scripts/buildscript-apply-delegate.gradle--emaasprojecttemplatecode.")
+  }
+}
+

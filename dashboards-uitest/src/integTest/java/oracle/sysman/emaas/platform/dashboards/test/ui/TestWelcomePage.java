@@ -141,7 +141,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening ITA: Performance Analytics-Database in welcome page finished!!!");
 	}
 
-	@Test
+	//@Test
 	public void testOpenITA_PAMiddlewarePage() throws Exception
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
