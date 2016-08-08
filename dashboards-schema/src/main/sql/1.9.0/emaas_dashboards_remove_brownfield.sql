@@ -3,115 +3,64 @@ SET FEEDBACK ON
 SET SERVEROUTPUT ON
 
 DECLARE
+OOB_DB_CONF_STOR CONSTANT EMS_DASHBOARD.NAME%TYPE:='Database Configuration and Storage By Version';
+OOB_ENT_OV CONSTANT EMS_DASHBOARD.NAME%TYPE:='Enterprise Overview';
+OOB_HOST_INV CONSTANT EMS_DASHBOARD.NAME%TYPE:='Host Inventory By Platform';
+OOB_TOP25_WLS_HEAP CONSTANT EMS_DASHBOARD.NAME%TYPE:='Top 25 WebLogic Servers by Heap Usage';
+OOB_TOP25_WLS_LOAD CONSTANT EMS_DASHBOARD.NAME%TYPE:='Top 25 WebLogic Servers by Load';
+OOB_TOP25_DB CONSTANT EMS_DASHBOARD.NAME%TYPE:='Top 25 Databases by Resource Consumption';
+OOB_WLS_SDK CONSTANT EMS_DASHBOARD.NAME%TYPE:='WebLogic Servers by JDK Version';
 BEGIN
 DELETE FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID'
   AND DASHBOARD_ID IN
   (SELECT DASHBOARD_ID FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID<=1000 and NAME IN 
-('Database Configuration and Storage by Version'
-,'Enterprise Overview'
-,'Host Inventory by Platform'
-,'Top 25 Databases by Resource Consumption'
-,'Top 25 Weblogic Servers by Heap Usage'
-,'Top 25 Weblogic Servers by Load'
-,'Weblogic Severs by JDK Version'
-,'Weblogic Servers with their Patch ID'
-,'Weblogic Servers with small maximum heap'
-,'Weblogic servers and their ports'
-,'Databases with autoextend on and size greater than 10GB'
-,'Top 10 listeners by load'
-,'host inventory by platform'
-,'Top 25 databases by resource consumption'
-,'Database Configuration and Storage by Version'
-,'Top 25 Weblogic Servers by Heap Usage'
-,'Top 25 Weblogic Servers by Load'
-,'Weblogic servers by JDK version'
-,'Top 5 databases'
-,'Top 5 hosts'
-,'Top 5 weblogic servers'
-,'Top 5 application deployments'
-,'Target status')
+(OOB_DB_CONF_STOR
+,OOB_ENT_OV
+,OOB_HOST_INV
+,OOB_TOP25_DB
+,OOB_TOP25_WLS_HEAP
+,OOB_TOP25_WLS_LOAD
+,OOB_WLS_SDK
+)
   );
 
 DELETE FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID'
   AND DASHBOARD_ID IN
   (SELECT DASHBOARD_ID FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID<=1000 and NAME IN 
-('Database Configuration and Storage by Version'
-,'Enterprise Overview'
-,'Host Inventory by Platform'
-,'Top 25 Databases by Resource Consumption'
-,'Top 25 Weblogic Servers by Heap Usage'
-,'Top 25 Weblogic Servers by Load'
-,'Weblogic Severs by JDK Version'
-,'Weblogic Servers with their Patch ID'
-,'Weblogic Servers with small maximum heap'
-,'Weblogic servers and their ports'
-,'Databases with autoextend on and size greater than 10GB'
-,'Top 10 listeners by load'
-,'host inventory by platform'
-,'Top 25 databases by resource consumption'
-,'Database Configuration and Storage by Version'
-,'Top 25 Weblogic Servers by Heap Usage'
-,'Top 25 Weblogic Servers by Load'
-,'Weblogic servers by JDK version'
-,'Top 5 databases'
-,'Top 5 hosts'
-,'Top 5 weblogic servers'
-,'Top 5 application deployments'
-,'Target status')
+(OOB_DB_CONF_STOR
+,OOB_ENT_OV
+,OOB_HOST_INV
+,OOB_TOP25_DB
+,OOB_TOP25_WLS_HEAP
+,OOB_TOP25_WLS_LOAD
+,OOB_WLS_SDK
+)
   );
 
-DELETE FROM EMS_DASHBOARD_USER_OPTIONS WHERE TENANT_ID = '&TENANT_ID'
+DELETE FROM EMS_DASHBOARD_USER_OPTIONS WHERE TENANT_ID = '&TENANT_ID' 
   AND DASHBOARD_ID IN
   (SELECT DASHBOARD_ID FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID<=1000 and NAME IN 
-('Database Configuration and Storage by Version'
-,'Enterprise Overview'
-,'Host Inventory by Platform'
-,'Top 25 Databases by Resource Consumption'
-,'Top 25 Weblogic Servers by Heap Usage'
-,'Top 25 Weblogic Servers by Load'
-,'Weblogic Severs by JDK Version'
-,'Weblogic Servers with their Patch ID'
-,'Weblogic Servers with small maximum heap'
-,'Weblogic servers and their ports'
-,'Databases with autoextend on and size greater than 10GB'
-,'Top 10 listeners by load'
-,'host inventory by platform'
-,'Top 25 databases by resource consumption'
-,'Database Configuration and Storage by Version'
-,'Top 25 Weblogic Servers by Heap Usage'
-,'Top 25 Weblogic Servers by Load'
-,'Weblogic servers by JDK version'
-,'Top 5 databases'
-,'Top 5 hosts'
-,'Top 5 weblogic servers'
-,'Top 5 application deployments'
-,'Target status')
+(OOB_DB_CONF_STOR
+,OOB_ENT_OV
+,OOB_HOST_INV
+,OOB_TOP25_DB
+,OOB_TOP25_WLS_HEAP
+,OOB_TOP25_WLS_LOAD
+,OOB_WLS_SDK
+)
   );
 
 
-DELETE FROM EMS_DASHBOARD WHERE NAME IN ('Database Configuration and Storage by Version'
-,'Enterprise Overview'
-,'Host Inventory by Platform'
-,'Top 25 Databases by Resource Consumption'
-,'Top 25 Weblogic Servers by Heap Usage'
-,'Top 25 Weblogic Servers by Load'
-,'Weblogic Severs by JDK Version'
-,'Weblogic Servers with their Patch ID'
-,'Weblogic Servers with small maximum heap'
-,'Weblogic servers and their ports'
-,'Databases with autoextend on and size greater than 10GB'
-,'Top 10 listeners by load'
-,'host inventory by platform'
-,'Top 25 databases by resource consumption'
-,'Database Configuration and Storage by Version'
-,'Top 25 Weblogic Servers by Heap Usage'
-,'Top 25 Weblogic Servers by Load'
-,'Weblogic servers by JDK version'
-,'Top 5 databases'
-,'Top 5 hosts'
-,'Top 5 weblogic servers'
-,'Top 5 application deployments'
-,'Target status');
+DELETE FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' and DASHBOARD_ID<=1000  and NAME IN 
+(OOB_DB_CONF_STOR
+,OOB_ENT_OV
+,OOB_HOST_INV
+,OOB_TOP25_DB
+,OOB_TOP25_WLS_HEAP
+,OOB_TOP25_WLS_LOAD
+,OOB_WLS_SDK
+);
+  COMMIT;
   DBMS_OUTPUT.PUT_LINE('Remove out of box dashboards for BF successfully');
 EXCEPTION
   WHEN OTHERS THEN

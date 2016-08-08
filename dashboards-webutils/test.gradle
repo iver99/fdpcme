@@ -4,7 +4,14 @@ sourceSets {
         java.srcDir 'src/integTest/java'
         compileClasspath = configurations.testNG+configurations.restAssured + configurations.testConfig
     }
+    test{
+                java {
+                        srcDirs = ['src/integTest/java']
+                }
+                resources.srcDirs = ['src/integTest/java']
+        }
 }
+
 
 jar {
         from('src/main/java') {
@@ -17,7 +24,8 @@ task integTestJar (type:Jar) {
     appendix = 'integ-tests'
 }
 dependencies {
-compile project(':dashboards-core')
+		testCompile configurations.testNG
+		testConfig project(':dashboards-core')
         testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
         testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
         testConfig(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0'){ transitive = false }
@@ -48,3 +56,4 @@ compile project(':dashboards-core')
 	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 //	testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){ transitive = false }
 }
+build.dependsOn integTestJar
