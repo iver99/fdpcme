@@ -12,7 +12,11 @@ public class DashboardBuilderUtil
 	public static final String TILE_NARROWER = IDashboardBuilderUtil.TILE_NARROWER;
 	public static final String TILE_TALLER = IDashboardBuilderUtil.TILE_TALLER;
 	public static final String TILE_SHORTER = IDashboardBuilderUtil.TILE_SHORTER;
-
+	public static final String TILE_UP = IDashboardBuilderUtil.TILE_UP;
+	public static final String TILE_DOWN = IDashboardBuilderUtil.TILE_DOWN;
+	public static final String TILE_LEFT = IDashboardBuilderUtil.TILE_LEFT;
+	public static final String TILE_RIGHT = IDashboardBuilderUtil.TILE_RIGHT;
+	
 	public static void addNewDashboardToSet(WebDriver driver, String dashboardName) throws Exception
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
@@ -158,6 +162,18 @@ public class DashboardBuilderUtil
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		dbu.listView(driver);
+	}
+	
+	public static void moveWidget(WebDriver driver, String widgetName, int index, String moveOption) throws Exception
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.moveWidget(driver, widgetName, index, moveOption);
+	}
+	
+	public static void moveWidget(WebDriver driver, String widgetName, String moveOption) throws Exception
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.moveWidget(driver, widgetName, moveOption);
 	}
 
 	public static void openWidget(WebDriver driver, String widgetName) throws Exception
