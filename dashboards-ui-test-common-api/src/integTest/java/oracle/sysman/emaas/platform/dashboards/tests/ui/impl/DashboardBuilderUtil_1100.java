@@ -91,14 +91,11 @@ public class DashboardBuilderUtil_1100 extends DashboardBuilderUtil_190
                 counter++;
             }
         }
-        System.out.println("******");
-        System.out.println(widget);
         return widget;
     }
     
     private void focusOnWidgetHeader(WebDriver driver, WebElement widgetElement)
     {
-    	System.out.println("****focusOnWidgetzheader");
         if (null == widgetElement) {
             driver.getLogger().info("Fail to find the widget element");
             driver.takeScreenShot();
@@ -109,6 +106,5 @@ public class DashboardBuilderUtil_1100 extends DashboardBuilderUtil_190
         Actions actions = new Actions(driver.getWebDriver());
         actions.moveToElement(widgetHeader).build().perform();
         driver.getLogger().info("Focus to the widget");
-        System.out.println("****focusOnWidgetHeader End");
     }
 }
