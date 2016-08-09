@@ -146,7 +146,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Custom, UIControls.sStartText, UIControls.sEndText);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Custom, UIControls.SSTARTTEXT, UIControls.SENDTEXT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -170,8 +170,8 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Custom, UIControls.sStartTextCompact,
-				UIControls.sEndTextCompact);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Custom, UIControls.SSTARTTEXTCOMPACT,
+				UIControls.SENDTEXTCOMPACT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -196,7 +196,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last14Days, UIControls.sStartText, UIControls.sEndText);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last14Days, UIControls.SSTARTTEXT, UIControls.SENDTEXT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -221,8 +221,8 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last14Days, UIControls.sStartTextCompact,
-				UIControls.sEndTextCompact);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last14Days, UIControls.SSTARTTEXTCOMPACT,
+				UIControls.SENDTEXTCOMPACT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -248,7 +248,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last15Mins, UIControls.sStartText, UIControls.sEndText);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last15Mins, UIControls.SSTARTTEXT, UIControls.SENDTEXT);
 
 		webdriver.shutdownBrowser(true);
 
@@ -275,8 +275,8 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last15Mins, UIControls.sStartTextCompact,
-				UIControls.sEndTextCompact);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last15Mins, UIControls.SSTARTTEXTCOMPACT,
+				UIControls.SENDTEXTCOMPACT);
 
 		webdriver.shutdownBrowser(true);
 
@@ -302,7 +302,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last1Day, UIControls.sStartText, UIControls.sEndText);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last1Day, UIControls.SSTARTTEXT, UIControls.SENDTEXT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -327,8 +327,8 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last1Day, UIControls.sStartTextCompact,
-				UIControls.sEndTextCompact);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last1Day, UIControls.SSTARTTEXTCOMPACT,
+				UIControls.SENDTEXTCOMPACT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -353,7 +353,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last1Year, UIControls.sStartText, UIControls.sEndText);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last1Year, UIControls.SSTARTTEXT, UIControls.SENDTEXT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -378,8 +378,8 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last1Year, UIControls.sStartTextCompact,
-				UIControls.sEndTextCompact);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last1Year, UIControls.SSTARTTEXTCOMPACT,
+				UIControls.SENDTEXTCOMPACT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -403,7 +403,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last30Days, UIControls.sStartText, UIControls.sEndText);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last30Days, UIControls.SSTARTTEXT, UIControls.SENDTEXT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -427,8 +427,8 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last30Days, UIControls.sStartTextCompact,
-				UIControls.sEndTextCompact);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last30Days, UIControls.SSTARTTEXTCOMPACT,
+				UIControls.SENDTEXTCOMPACT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -453,7 +453,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last30Mins, UIControls.sStartText, UIControls.sEndText);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last30Mins, UIControls.SSTARTTEXT, UIControls.SENDTEXT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -478,8 +478,8 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last30Mins, UIControls.sStartTextCompact,
-				UIControls.sEndTextCompact);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last30Mins, UIControls.SSTARTTEXTCOMPACT,
+				UIControls.SENDTEXTCOMPACT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -504,7 +504,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last4Hours, UIControls.sStartText, UIControls.sEndText);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last4Hours, UIControls.SSTARTTEXT, UIControls.SENDTEXT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -529,8 +529,8 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last4Hours, UIControls.sStartTextCompact,
-				UIControls.sEndTextCompact);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last4Hours, UIControls.SSTARTTEXTCOMPACT,
+				UIControls.SENDTEXTCOMPACT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -555,7 +555,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last60Mins, UIControls.sStartText, UIControls.sEndText);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last60Mins, UIControls.SSTARTTEXT, UIControls.SENDTEXT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -580,8 +580,8 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last60Mins, UIControls.sStartTextCompact,
-				UIControls.sEndTextCompact);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last60Mins, UIControls.SSTARTTEXTCOMPACT,
+				UIControls.SENDTEXTCOMPACT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -606,7 +606,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last6Hours, UIControls.sStartText, UIControls.sEndText);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last6Hours, UIControls.SSTARTTEXT, UIControls.SENDTEXT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -631,8 +631,8 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last6Hours, UIControls.sStartTextCompact,
-				UIControls.sEndTextCompact);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last6Hours, UIControls.SSTARTTEXTCOMPACT,
+				UIControls.SENDTEXTCOMPACT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -657,7 +657,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last7Days, UIControls.sStartText, UIControls.sEndText);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last7Days, UIControls.SSTARTTEXT, UIControls.SENDTEXT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -682,8 +682,8 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last7Days, UIControls.sStartTextCompact,
-				UIControls.sEndTextCompact);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last7Days, UIControls.SSTARTTEXTCOMPACT,
+				UIControls.SENDTEXTCOMPACT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -707,7 +707,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last90Days, UIControls.sStartText, UIControls.sEndText);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last90Days, UIControls.SSTARTTEXT, UIControls.SENDTEXT);
 		webdriver.shutdownBrowser(true);
 	}
 
@@ -730,8 +730,8 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last90Days, UIControls.sStartTextCompact,
-				UIControls.sEndTextCompact);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last90Days, UIControls.SSTARTTEXTCOMPACT,
+				UIControls.SENDTEXTCOMPACT);
 		webdriver.shutdownBrowser(true);
 	}
 
@@ -754,7 +754,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Latest, UIControls.sStartText, UIControls.sEndText);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Latest, UIControls.SSTARTTEXT, UIControls.SENDTEXT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -778,8 +778,8 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Latest, UIControls.sStartTextCompact,
-				UIControls.sEndTextCompact);
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Latest, UIControls.SSTARTTEXTCOMPACT,
+				UIControls.SENDTEXTCOMPACT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -803,7 +803,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		String returnFilterInfo = TimeSelectorUtil.setTimeFilter(webdriver, null, excludedDays, null);
 
 		//verify the result
-		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.sFilterInfo));
+		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.SFILTERINFO));
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -827,7 +827,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		String returnFilterInfo = TimeSelectorUtil.setTimeFilter(webdriver, 2, null, excludedDays, null);
 
 		//verify the result
-		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.sFilterInfoCompact));
+		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.SFILTERINFOCOMPACT));
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -852,7 +852,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		String returnFilterInfo = TimeSelectorUtil.setTimeFilter(webdriver, null, excludedDays, excludedMonths);
 
 		//verify the result
-		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.sFilterInfo));
+		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.SFILTERINFO));
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -877,7 +877,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		String returnFilterInfo = TimeSelectorUtil.setTimeFilter(webdriver, 2, null, excludedDays, excludedMonths);
 
 		//verify the result
-		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.sFilterInfoCompact));
+		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.SFILTERINFOCOMPACT));
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -900,7 +900,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		String returnFilterInfo = TimeSelectorUtil.setTimeFilter(webdriver, "0-12,20-22", null, null);
 
 		//verify the result
-		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.sFilterInfo));
+		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.SFILTERINFO));
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -923,7 +923,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		String returnFilterInfo = TimeSelectorUtil.setTimeFilter(webdriver, 2, "5-12,20-22", null, null);
 
 		//verify the result
-		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.sFilterInfoCompact));
+		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.SFILTERINFOCOMPACT));
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -948,7 +948,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		String returnFilterInfo = TimeSelectorUtil.setTimeFilter(webdriver, "0-6,9-15", excludedDays, null);
 
 		//verify the result
-		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.sFilterInfo));
+		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.SFILTERINFO));
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -973,7 +973,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		String returnFilterInfo = TimeSelectorUtil.setTimeFilter(webdriver, 2, "0-6,9-15", excludedDays, null);
 
 		//verify the result
-		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.sFilterInfoCompact));
+		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.SFILTERINFOCOMPACT));
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -998,7 +998,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		String returnFilterInfo = TimeSelectorUtil.setTimeFilter(webdriver, "7-12,21-23", excludedDays, excludedMonths);
 
 		//verify the result
-		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.sFilterInfo));
+		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.SFILTERINFO));
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -1023,7 +1023,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		String returnFilterInfo = TimeSelectorUtil.setTimeFilter(webdriver, 2, "1-3,7-9,21-23", excludedDays, excludedMonths);
 
 		//verify the result
-		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.sFilterInfoCompact));
+		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.SFILTERINFOCOMPACT));
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -1048,7 +1048,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		String returnFilterInfo = TimeSelectorUtil.setTimeFilter(webdriver, "0-5,19-22", null, excludedMonths);
 
 		//verify the result
-		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.sFilterInfo));
+		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.SFILTERINFO));
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -1073,7 +1073,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		String returnFilterInfo = TimeSelectorUtil.setTimeFilter(webdriver, 2, "0-5,19-22", null, excludedMonths);
 
 		//verify the result
-		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.sFilterInfoCompact));
+		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.SFILTERINFOCOMPACT));
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -1097,7 +1097,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		String returnFilterInfo = TimeSelectorUtil.setTimeFilter(webdriver, null, null, excludedMonths);
 
 		//verify the result
-		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.sFilterInfo));
+		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.SFILTERINFO));
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -1121,7 +1121,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		String returnFilterInfo = TimeSelectorUtil.setTimeFilter(webdriver, 2, null, null, excludedMonths);
 
 		//verify the result
-		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.sFilterInfoCompact));
+		Assert.assertEquals(returnFilterInfo, webdriver.getText(UIControls.SFILTERINFOCOMPACT));
 
 		webdriver.shutdownBrowser(true);
 	}

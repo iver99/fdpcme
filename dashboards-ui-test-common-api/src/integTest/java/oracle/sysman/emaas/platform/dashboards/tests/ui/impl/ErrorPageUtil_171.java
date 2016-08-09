@@ -24,9 +24,9 @@ public class ErrorPageUtil_171 extends ErrorPageUtil_Version implements IErrorPa
 	public void signOut(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("ErrorPageUtil click signOut button started");
-		driver.waitForElementPresent("id=" + DashBoardPageId.ErrorSignOutButtonId);
+		driver.waitForElementPresent("id=" + DashBoardPageId.ERRORSIGNOUTBUTTONID);
 		driver.takeScreenShot();
-		driver.click("id=" + DashBoardPageId.ErrorSignOutButtonId);
+		driver.click("id=" + DashBoardPageId.ERRORSIGNOUTBUTTONID);
 		driver.takeScreenShot();
 		driver.getLogger().info("ErrorUtil click signOut button completed!");
 	}
