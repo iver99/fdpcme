@@ -944,7 +944,7 @@ define(['knockout',
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
                     "endOfGroup": true,
                     "showSubMenu": function () {
-                        if (self.currentUser !== self.dashboard.owner()) {
+                        if (self.currentUser !== self.dashboard.owner() && "Oracle" !== self.dashboard.owner()) {
                             return false;
                         } else {
                             return self.isUnderSet;
