@@ -3,6 +3,12 @@ sourceSets {
         java.srcDir 'src/integTest/java'
         compileClasspath = compileClasspath + configurations.testConfig + configurations.testNG+configurations.webdriver + configurations.restAssured
     }
+    test{
+                java {
+                        srcDirs = ['src/integTest/java']
+                }
+                resources.srcDirs = ['src/integTest/java']
+        }
 }
 
 task integTestJar (type:Jar) {
@@ -11,5 +17,9 @@ task integTestJar (type:Jar) {
 }
 
 dependencies {
+	testCompile configurations.testNG
+	testCompile configurations.webdriver
+	testCompile configurations.restAssured
     testConfig project(':dashboards-ui-test-common-api') { transitive = false }
 }
+build.dependsOn integTestJar
