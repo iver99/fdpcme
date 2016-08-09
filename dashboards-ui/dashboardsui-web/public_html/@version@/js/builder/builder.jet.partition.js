@@ -44,7 +44,6 @@ define([
     'ojs/ojindexer',
     'ojs/ojnbox',
     'ojs/ojsunburst',
-    'ojs/ojL10n',
     'ojs/ojinputnumber',
     'ojs/ojoffcanvas',
     'ojs/ojswipetoreveal',
