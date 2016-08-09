@@ -382,7 +382,7 @@
                                               <div class="dbd-btn-editor">                 
                                                   <button class="oj-button-half-chrome dbd-data-explore" tabindex="0"
                                                           data-bind="
-                                                             visible: $root.isMobileDevice !== 'true' && isItaAdmin,                                                        
+                                                             visible: $root.isMobileDevice !== 'true' && isItaAdmin &&(!$root.toolbarModel.zdtStatus),                                                        
                                                              attr:{'id': 'editButton' + clientGuid,title: getNlsString('DBS_BUILDER_TILE_EDIT')},
                                                              click:$root.openInDataExplorer,
                                                              ojComponent: {
@@ -394,6 +394,7 @@
                                               <div class="dbd-btn-maxminToggle">
                                                   <button class="oj-button-half-chrome" tabindex="0"
                                                           data-bind="
+                                                             visible:!$root.toolbarModel.zdtStatus,
                                                              attr:{'id': 'maxMinButton' + clientGuid,title: maximizeEnabled()?getNlsString('DBS_BUILDER_TILE_MAXIMIZE'):getNlsString('DBS_BUILDER_TILE_RESTORE')},
                                                              click:$root.maxMinToggle,
                                                              ojComponent: {
@@ -405,7 +406,7 @@
                                                 <div class="dbd-btn-group">
                                                     <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
                                                             data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
-                                                                       visible: ($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true'),
+                                                                       visible: ($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')&&(!$root.toolbarModel.zdtStatus),
                                                                        ojComponent: {component: 'ojButton', 
                                                                                      label: '', chroming: 'half',
                                                                                      icons: {start:'fa-icon-font fa-icon-font-16 dbd-tile-icon-option'},
