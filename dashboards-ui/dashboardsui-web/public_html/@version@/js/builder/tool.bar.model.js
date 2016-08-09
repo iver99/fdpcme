@@ -478,6 +478,11 @@ define(['knockout',
                         "tileDisplayClass", "widerEnabled", "widget", 
                         "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
                 });
+                dbdJs.tiles.forEach(function(oneTile){
+                    if(oneTile.isMaximized){
+                        oneTile.isMaximized=false;
+                    }
+                });
                 var dashboardJSON = JSON.stringify(dbdJs);
                 var dashboardId = self.tilesViewModel.dashboard.id();
                 Builder.updateDashboard(dashboardId, dashboardJSON, function() {
@@ -939,7 +944,7 @@ define(['knockout',
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
                     "endOfGroup": true,
                     "showSubMenu": function () {
-                        if (self.currentUser !== self.dashboard.owner()) {
+                        if (self.currentUser !== self.dashboard.owner() && "Oracle" !== self.dashboard.owner()) {
                             return false;
                         } else {
                             return self.isUnderSet;

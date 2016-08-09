@@ -1,0 +1,29 @@
+/* Copyright (c) 2016, Oracle and/or its affiliates. All rights reserved.*/
+/*
+* DESCRIPTION
+*     Common buildscript to be applied for all lrgs.
+*
+* MODIFIED    (MM/DD/YY)
+*   skgupta     02/11/16 - Creation
+*
+*/
+//-----------------------------------------------------------------------------
+// Enable this to be a rootProject which uses project common files.
+//
+// Configure the project classpath to enable applying plugins,
+// and define some global project properties and methods.
+// -- gradle runs the buildscript block first during the configuration phase
+//
+buildscript {
+   if (System.env.BRANCH_TOP_DIR != null) {
+     project.ext.commonBranchTopDir = System.env.BRANCH_TOP_DIR
+   } else {
+     project.ext.commonBranchTopDir = ["sh", "-c", "cd $rootDir; git rev-parse --show-toplevel"].execute().text.trim()
+     // optional error message
+     if ( ! project.commonBranchTopDir) {
+       throw new GradleException("Error: git not found in sh search PATH\n" +
+         "=> If changing PATH to find git is not feasible, env variables BRANCH_TOP_DIR and BRANCH_NAME must be set")
+     }
+   }
+   apply from: "$project.commonBranchTopDir/common/scripts/buildscript-apply-delegate.gradle"
+}
