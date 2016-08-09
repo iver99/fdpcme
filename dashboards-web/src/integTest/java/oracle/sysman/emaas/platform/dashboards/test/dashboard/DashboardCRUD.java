@@ -313,7 +313,7 @@ public class DashboardCRUD
 			System.out.println("==POST operation is done");
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
-			Assert.assertTrue(res1.getStatusCode() == 201);
+			Assert.assertEquals(res1.getStatusCode(), 201);
 			System.out.println("Verfify whether the timestamp of create&modify is same or not");
 			//Assert.assertEquals(res1.jsonPath().get("createdOn"), res1.jsonPath().get("lastModifiedOn"));
 			System.out.println("*******											");

@@ -1,12 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
-
-import org.testng.Assert;
-import org.testng.AssertJUnit;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
@@ -21,6 +17,11 @@ import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManag
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+
+import org.testng.Assert;
+import org.testng.AssertJUnit;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * @author guobaochen
@@ -145,7 +146,7 @@ public class DashboardManagerTest
 		Dashboard dbd2 = new Dashboard();
 		dbd2.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
 		dbd2.setType(Dashboard.DASHBOARD_TYPE_NORMAL);
-		dbd2.setDashboardId(Long.MAX_VALUE); // specify id not existing in database
+		dbd2.setDashboardId(BigInteger.valueOf(Long.MAX_VALUE)); // specify id not existing in database
 		dm.saveNewDashboard(dbd2, tenantId1);
 		Dashboard queried = dm.getDashboardById(dbd2.getDashboardId(), tenantId1);
 		Assert.assertEquals(dbd2.getName(), queried.getName());
@@ -581,7 +582,7 @@ public class DashboardManagerTest
 		// not existing ones
 		boolean expectedException = false;
 		try {
-			queried = dm.getDashboardById(Long.MAX_VALUE, tenantId1);
+			queried = dm.getDashboardById(BigInteger.valueOf(Long.MAX_VALUE), tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
 			expectedException = true;
@@ -772,8 +773,8 @@ public class DashboardManagerTest
 				AssertJUnit.fail("Failed: unexpected dashboard returned: deleted");
 			}
 			if (dbd.getName().equals(dbd12.getName())) {
-				AssertJUnit.fail(
-						"Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
+				AssertJUnit
+						.fail("Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
 			}
 			if (dbd.getName().equals(dbd13.getName())) {
 				AssertJUnit.fail("Failed: unexpected dashboard returned: system dashboard from unsubscribed service");
