@@ -57,9 +57,11 @@ define([
                 var appIdError = "Error";
                 self.SERVICE_VERSION=encodeURIComponent('1.0+');
                 self.MONITORING_SERVICE_VERSION=encodeURIComponent('1.5+');
+                self.COMPLIANCE_SERVICE_VERSION = encodeURIComponent('1.7.5+');
                 var appIdEventUI = "EventUI";
                 var appIdMonitoring = "Monitoring";
                 var appIdSecurityAnalytics = "SecurityAnalytics";
+                var appIdCompliance = "Compliance";
                 var appIdOcs = "Orchestration";
                 var appMap = {};
                 appMap[appIdAPM] = {
@@ -126,7 +128,15 @@ define([
                         "serviceName": "SecurityAnalyticsUI",
                         "version": self.SERVICE_VERSION,
                         "helpTopicId": "em_samcs"
-                    }; 
+                    };
+                appMap[appIdCompliance] = {
+                        "appId": appIdCompliance,
+                        "appName": "BRANDING_BAR_APP_NAME_COMPLIANCE", 
+                        "serviceDisplayName": "BRANDING_BAR_APP_NAME_COMPLIANCE",
+                        "serviceName": "ComplianceUI",
+                        "version": self.COMPLIANCE_SERVICE_VERSION,
+                        "helpTopicId": ""
+                    };
                 appMap[appIdOcs] = {
                     "appId": appIdOcs,
                     "appName": "BRANDING_BAR_APP_NAME_ORCHESTRATION", 
