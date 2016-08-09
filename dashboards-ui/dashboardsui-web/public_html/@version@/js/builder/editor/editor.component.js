@@ -248,6 +248,10 @@ define(['knockout',
             tile.shorterEnabled = ko.computed(function() {
                 return mode.getModeHeight(tile) > 1;
             });
+            tile.upEnabled = ko.observable(true);
+            tile.leftEnabled = ko.observable(true);
+            tile.rightEnabled = ko.observable(true);
+
             tile.maximizeEnabled = ko.computed(function() {
                 return !tile.isMaximized();
             });
@@ -370,10 +374,15 @@ define(['knockout',
         }
         Builder.registerFunction(initializeTileAfterLoad, 'initializeTileAfterLoad');
         
-        function getTileConfigure(dashboard, tile, timeSelectorModel, targets, dashboardInst) {
+        function getTileConfigure(mode, dashboard, tile, timeSelectorModel, targets, dashboardInst) {
             if(!tile) {
                 return;
             }
+            
+            tile.upEnabled(mode.getModeRow(tile) > 0);
+            tile.leftEnabled(mode.getModeColumn(tile) > 0);
+            tile.rightEnabled(mode.getModeColumn(tile)+mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS);
+            
             judgeAdmin();
                 function judgeAdmin() {
                     if (!$('.links-content-container')[0]) {

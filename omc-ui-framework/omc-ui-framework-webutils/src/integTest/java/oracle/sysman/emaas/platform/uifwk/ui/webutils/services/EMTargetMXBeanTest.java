@@ -24,7 +24,7 @@ public class EMTargetMXBeanTest
 	@Test(groups = { "s1" })
 	public void testGetEMTargetType() throws Exception
 	{
-		Assert.assertEquals(mb.getEMTargetType(), EMTargetConstants.m_target_type);
+		Assert.assertEquals(mb.getEMTargetType(), EMTargetConstants.M_TARGET_TYPE);
 	}
 
 	@Test(groups = { "s1" })

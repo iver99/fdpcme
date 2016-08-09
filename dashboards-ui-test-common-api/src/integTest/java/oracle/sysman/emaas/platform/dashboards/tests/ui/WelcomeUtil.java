@@ -31,21 +31,21 @@ public class WelcomeUtil
 
 		WaitUtil.waitForPageFullyLoaded(driver);
 		
-		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.Welcome_DataExp_SelectID);
-		driver.click("id=oj-select-choice-" + DashBoardPageId.Welcome_DataExp_SelectID);
+		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.WELCOME_DATAEXP_SELECTID);
+		driver.click("id=oj-select-choice-" + DashBoardPageId.WELCOME_DATAEXP_SELECTID);
 		driver.takeScreenShot();
 		switch (selection) {
 			case DATA_EXPLORERS_LOG:
-				eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_DataExp_SelectID,
-						DashBoardPageId.Welcome_DataExp_Log);
+				eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.WELCOME_DATAEXP_SELECTID,
+						DashBoardPageId.WELCOME_DATAEXP_LOG);
 				break;
 			case DATA_EXPLORERS_ANALYZE:
-				eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_DataExp_SelectID,
-						DashBoardPageId.Welcome_DataExp_Analyze);
+				eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.WELCOME_DATAEXP_SELECTID,
+						DashBoardPageId.WELCOME_DATAEXP_ANALYZE);
 				break;
 			case DATA_EXPLORERS_SEARCH:
-				eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_DataExp_SelectID,
-						DashBoardPageId.Welcome_DataExp_Search);
+				eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.WELCOME_DATAEXP_SELECTID,
+						DashBoardPageId.WELCOME_DATAEXP_SEARCH);
 				break;
 		}
 		driver.getWebDriver().findElement(By.xpath(eleXpath)).click();
@@ -112,13 +112,13 @@ public class WelcomeUtil
 		String itemId = null;
 		switch (itemName) {
 			case LEARN_MORE_GET_STARTED:
-				itemId = DashBoardPageId.Welcome_LearnMore_getStarted;
+				itemId = DashBoardPageId.WELCOME_LEARNMORE_GETSTARTED;
 				break;
 			case LEARN_MORE_VIDEOS:
-				itemId = DashBoardPageId.Welcome_LearnMore_Videos;
+				itemId = DashBoardPageId.WELCOME_LEARNMORE_VIDEOS;
 				break;
 			case LEARN_MORE_SERVICE_OFFERINGS:
-				itemId = DashBoardPageId.Welcome_LearnMore_ServiceOffering;
+				itemId = DashBoardPageId.WELCOME_LEARNMORE_SERVICEOFFERING;
 				break;
 		}
 		return itemId;
@@ -157,28 +157,28 @@ public class WelcomeUtil
 		String serviceWrapperId = null;
 		switch (serviceName) {
 			case SERVICE_NAME_APM:
-				serviceWrapperId = DashBoardPageId.Welcome_APMLinkCSS;
+				serviceWrapperId = DashBoardPageId.WELCOME_APMLINKCSS;
 				break;
 			case SERVICE_NAME_LA:
-				serviceWrapperId = DashBoardPageId.Welcome_LALinkCSS;
+				serviceWrapperId = DashBoardPageId.WELCOME_LALINKCSS;
 				break;
 			case SERVICE_NAME_ITA:
-				serviceWrapperId = DashBoardPageId.Welcome_ITALinkID;
+				serviceWrapperId = DashBoardPageId.WELCOME_ITALINKID;
 				break;
 			case SERVICE_NAME_INFRA_MONITORING:
-				serviceWrapperId = DashBoardPageId.Welcome_InfraMonitoringID;
+				serviceWrapperId = DashBoardPageId.WELCOME_INFRAMONITORINGID;
 				break;
 			case SERVICE_NAME_SECURITY_ANALYTICS:
-				serviceWrapperId = DashBoardPageId.Welcome_SecurityAnalyticsID;
+				serviceWrapperId = DashBoardPageId.WELCOME_SECURITYANALYTICSID;
 				break;
                         case SERVICE_NAME_ORCHESTRATION:
-				serviceWrapperId = DashBoardPageId.Welcome_OrchestrationID;
+				serviceWrapperId = DashBoardPageId.WELCOME_ORCHESTRATIONID;
 				break;
 			case SERVICE_NAME_DASHBOARDS:
-				serviceWrapperId = DashBoardPageId.Welcome_DashboardsLinkID;
+				serviceWrapperId = DashBoardPageId.WELCOME_DASHBOARDSLINKID;
 				break;
 			case SERVICE_NAME_DATA_EXPLORERS:
-				serviceWrapperId = DashBoardPageId.Welcome_DataExp;
+				serviceWrapperId = DashBoardPageId.WELCOME_DATAEXP;
 				break;
 		}
 		return serviceWrapperId;
@@ -256,8 +256,8 @@ public class WelcomeUtil
 	{
 		driver.getLogger().info("Visiting 'Learn More-How to get started' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_LearnMore_getStarted);
-		driver.click("id=" + DashBoardPageId.Welcome_LearnMore_getStarted);
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_LEARNMORE_GETSTARTED);
+		driver.click("id=" + DashBoardPageId.WELCOME_LEARNMORE_GETSTARTED);
 		driver.takeScreenShot();
 	}
 
@@ -271,8 +271,8 @@ public class WelcomeUtil
 	{
 		driver.getLogger().info("Visiting 'Learn More-Service Offerings' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_LearnMore_ServiceOffering);
-		driver.click("id=" + DashBoardPageId.Welcome_LearnMore_ServiceOffering);
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_LEARNMORE_SERVICEOFFERING);
+		driver.click("id=" + DashBoardPageId.WELCOME_LEARNMORE_SERVICEOFFERING);
 		driver.takeScreenShot();
 	}
 
@@ -286,8 +286,8 @@ public class WelcomeUtil
 	{
 		driver.getLogger().info("Visiting 'Learn More-Videos' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_LearnMore_Videos);
-		driver.click("id=" + DashBoardPageId.Welcome_LearnMore_Videos);
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_LEARNMORE_VIDEOS);
+		driver.click("id=" + DashBoardPageId.WELCOME_LEARNMORE_VIDEOS);
 		driver.takeScreenShot();
 	}
 
@@ -302,8 +302,8 @@ public class WelcomeUtil
 		driver.getLogger().info("Visit APM from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
 		
-		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_APMLinkCSS);
-		driver.click("id=" + DashBoardPageId.Welcome_APMLinkCSS);
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_APMLINKCSS);
+		driver.click("id=" + DashBoardPageId.WELCOME_APMLINKCSS);
 		driver.takeScreenShot();
 	}
 
@@ -318,8 +318,8 @@ public class WelcomeUtil
 		driver.getLogger().info("Visit Dashboards from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
 		
-		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_DashboardsLinkID);
-		driver.click("id=" + DashBoardPageId.Welcome_DashboardsLinkID);
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_DASHBOARDSLINKID);
+		driver.click("id=" + DashBoardPageId.WELCOME_DASHBOARDSLINKID);
 		driver.takeScreenShot();
 	}
 
@@ -334,8 +334,8 @@ public class WelcomeUtil
 		driver.getLogger().info("Visit Infrastructure Monitoring from Welcome page..");
 		WaitUtil.waitForPageFullyLoaded(driver);
 		
-		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_InfraMonitoringID);
-		driver.click("id=" + DashBoardPageId.Welcome_InfraMonitoringID);
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_INFRAMONITORINGID);
+		driver.click("id=" + DashBoardPageId.WELCOME_INFRAMONITORINGID);
 		driver.takeScreenShot();
 	}	
 	
@@ -361,43 +361,43 @@ public class WelcomeUtil
 		WaitUtil.waitForPageFullyLoaded(driver);
 		
 		if (ITA_DEFAULT.equals(selection)) {
-			driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_ITALinkID);
-			driver.click("id=" + DashBoardPageId.Welcome_ITALinkID);
+			driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_ITALINKID);
+			driver.click("id=" + DashBoardPageId.WELCOME_ITALINKID);
 			driver.takeScreenShot();
 		}
 		else {
 			String eleXpath = null;
-			driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.Welcome_ITA_SelectID);
-			driver.click("id=oj-select-choice-" + DashBoardPageId.Welcome_ITA_SelectID);
+			driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.WELCOME_ITA_SELECTID);
+			driver.click("id=oj-select-choice-" + DashBoardPageId.WELCOME_ITA_SELECTID);
 			driver.takeScreenShot();
 			switch (selection) {
 				case ITA_PERFORMANCE_ANALYTICS_DATABASE:
-					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
-							DashBoardPageId.Welcome_ITA_PADatabase);
+					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
+							DashBoardPageId.WELCOME_ITA_PADATABASE);
 					break;
 				case ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE:
-					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
-							DashBoardPageId.Welcome_ITA_PAMiddleware);
+					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
+							DashBoardPageId.WELCOME_ITA_PAMIDDLEWARE);
 					break;
 				case ITA_RESOURCE_ANALYTICS_DATABASE:
-					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
-							DashBoardPageId.Welcome_ITA_RADatabase);
+					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
+							DashBoardPageId.WELCOME_ITA_RADATABASE);
 					break;
 				case ITA_RESOURCE_ANALYTICS_MIDDLEWARE:
-					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
-							DashBoardPageId.Welcome_ITA_RAMiddleware);
+					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
+							DashBoardPageId.WELCOME_ITA_RAMIDDLEWARE);
 					break;
 				case ITA_RESOURCE_ANALYTICS_HOST:
-					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
-							DashBoardPageId.Welcome_ITA_RA_Host);
+					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
+							DashBoardPageId.WELCOME_ITA_RA_HOST);
 					break;
 				case ITA_DATA_EXPLORER_ANALYZE:
-					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
-							DashBoardPageId.Welcome_ITA_DEAnalyze);
+					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
+							DashBoardPageId.WELCOME_ITA_DEANALYZE);
 					break;
 				case ITA_DATA_EXPLORER:
-					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
-							DashBoardPageId.Welcome_ITA_DE);
+					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
+							DashBoardPageId.WELCOME_ITA_DE);
 					break;
 			}
 			driver.click(eleXpath);
@@ -416,8 +416,8 @@ public class WelcomeUtil
 		driver.getLogger().info("Visiting LA from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
 		
-		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_LALinkCSS);
-		driver.click("id=" + DashBoardPageId.Welcome_LALinkCSS);
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_LALINKCSS);
+		driver.click("id=" + DashBoardPageId.WELCOME_LALINKCSS);
 		driver.takeScreenShot();
 	}
 	
@@ -432,8 +432,8 @@ public class WelcomeUtil
 		driver.getLogger().info("Visit Security Monitoring and Analytics from Welcome page..");
 		WaitUtil.waitForPageFullyLoaded(driver);
 		
-		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_SecurityAnalyticsID);
-		driver.click("id=" + DashBoardPageId.Welcome_SecurityAnalyticsID);
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_SECURITYANALYTICSID);
+		driver.click("id=" + DashBoardPageId.WELCOME_SECURITYANALYTICSID);
 		driver.takeScreenShot();
 	}
 
@@ -448,8 +448,8 @@ public class WelcomeUtil
 		driver.getLogger().info("Visit Orchestration from Welcome page..");
 		WaitUtil.waitForPageFullyLoaded(driver);
 		
-		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_OrchestrationID);
-		driver.click("id=" + DashBoardPageId.Welcome_OrchestrationID);
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_ORCHESTRATIONID);
+		driver.click("id=" + DashBoardPageId.WELCOME_ORCHESTRATIONID);
 		driver.takeScreenShot();
 	}
 

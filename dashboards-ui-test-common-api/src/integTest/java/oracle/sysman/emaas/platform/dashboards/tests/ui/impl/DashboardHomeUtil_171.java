@@ -43,9 +43,9 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	public void closeOverviewPage(WebDriver driver) throws Exception
 	{
 
-		if (driver.isDisplayed(DashBoardPageId.OverviewCloseID)) {
+		if (driver.isDisplayed(DashBoardPageId.OVERVIEWCLOSEID)) {
 			driver.getLogger().info("before clicking overview button");
-			driver.click(DashBoardPageId.OverviewCloseID);
+			driver.click(DashBoardPageId.OVERVIEWCLOSEID);
 		}
 	}
 
@@ -66,22 +66,22 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	public void createDashboard(WebDriver driver, String name, String descriptions, String type) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call createDashboard : " + name);
-		driver.click(convertID(DashBoardPageId.CreateDSButtonID));
+		driver.click(convertID(DashBoardPageId.CREATEDSBUTTONID));
 
 		if (name != null && !name.isEmpty()) {
-			driver.sendKeys(convertID(DashBoardPageId.DashBoardNameBoxID), name);
+			driver.sendKeys(convertID(DashBoardPageId.DASHBOARDNAMEBOXID), name);
 		}
 		if (descriptions != null && !descriptions.isEmpty()) {
-			driver.sendKeys(convertID(DashBoardPageId.DashBoardDescBoxID), descriptions);
+			driver.sendKeys(convertID(DashBoardPageId.DASHBOARDDESCBOXID), descriptions);
 		}
 		if (DASHBOARD.equalsIgnoreCase(type)) {
-			driver.check(convertID(DashBoardPageId.DashBoardType_Single));
+			driver.check(convertID(DashBoardPageId.DASHBOARDTYPE_SINGLE));
 		}
 		else if (DASHBOARDSET.equalsIgnoreCase(type)) {
-			driver.check(convertID(DashBoardPageId.DashBoardType_Set));
+			driver.check(convertID(DashBoardPageId.DASHBOARDTYPE_SET));
 		}
 		driver.takeScreenShot();
-		driver.click(convertID(DashBoardPageId.DashOKButtonID));
+		driver.click(convertID(DashBoardPageId.DASHOKBUTTONID));
 
 	}
 
@@ -133,38 +133,38 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 			trimedFs.add(s.trim());
 		}
 		if (trimedFs.contains("apm")) {
-			driver.waitForElementPresent(DashBoardPageId.FilterApmLocator);
-			driver.click(DashBoardPageId.FilterApmLocator);
+			driver.waitForElementPresent(DashBoardPageId.FILTERAPMLOCATOR);
+			driver.click(DashBoardPageId.FILTERAPMLOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		if (trimedFs.contains("la")) {
-			driver.waitForElementPresent(DashBoardPageId.FilterLaLocator);
-			driver.click(DashBoardPageId.FilterLaLocator);
+			driver.waitForElementPresent(DashBoardPageId.FILTERLALOCATOR);
+			driver.click(DashBoardPageId.FILTERLALOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		if (trimedFs.contains("ita")) {
-			driver.waitForElementPresent(DashBoardPageId.FilterItaLocator);
-			driver.click(DashBoardPageId.FilterItaLocator);
+			driver.waitForElementPresent(DashBoardPageId.FILTERITALOCATOR);
+			driver.click(DashBoardPageId.FILTERITALOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		if (trimedFs.contains("oracle")) {
-			driver.waitForElementPresent(DashBoardPageId.FilterOracleLocator);
-			driver.click(DashBoardPageId.FilterOracleLocator);
+			driver.waitForElementPresent(DashBoardPageId.FILTERORACLELOCATOR);
+			driver.click(DashBoardPageId.FILTERORACLELOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		if (trimedFs.contains("share")) {
-			driver.waitForElementPresent(DashBoardPageId.FilterShareLocator);
-			driver.click(DashBoardPageId.FilterShareLocator);
+			driver.waitForElementPresent(DashBoardPageId.FILTERSHARELOCATOR);
+			driver.click(DashBoardPageId.FILTERSHARELOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		if (trimedFs.contains("me")) {
-			driver.waitForElementPresent(DashBoardPageId.FilterMeLocator);
-			driver.click(DashBoardPageId.FilterMeLocator);
+			driver.waitForElementPresent(DashBoardPageId.FILTERMELOCATOR);
+			driver.click(DashBoardPageId.FILTERMELOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		if (trimedFs.contains("favorites")) {
-			driver.waitForElementPresent(DashBoardPageId.FilterFavoriteLocator);
-			driver.click(DashBoardPageId.FilterFavoriteLocator);
+			driver.waitForElementPresent(DashBoardPageId.FILTERFAVORITELOCATOR);
+			driver.click(DashBoardPageId.FILTERFAVORITELOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 	}
@@ -189,8 +189,8 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 
 		Validator.notEmptyString("option", option);
 
-		driver.click(convertName(DashBoardPageId.ExploreDataBtnID));
-		WebElement menu = driver.getElement(convertName(DashBoardPageId.ExploreDataMenu));
+		driver.click(convertName(DashBoardPageId.EXPLOREDATABTNID));
+		WebElement menu = driver.getElement(convertName(DashBoardPageId.EXPLOREDATAMENU));
 		List<WebElement> menuList = menu.findElements(By.tagName("li"));
 		for (WebElement menuItem : menuList) {
 			if (option.equals(menuItem.getText())) {
@@ -207,9 +207,9 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	public void gridView(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call gridView");
-		driver.waitForElementPresent(DashBoardPageId.DashboardsGridViewLocator);
+		driver.waitForElementPresent(DashBoardPageId.DASHBOARDSGRIDVIEWLOCATOR);
 		driver.takeScreenShot();
-		driver.click(DashBoardPageId.DashboardsGridViewLocator);
+		driver.click(DashBoardPageId.DASHBOARDSGRIDVIEWLOCATOR);
 	}
 
 	/* (non-Javadoc)
@@ -220,7 +220,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call isDashboardExists dashboardName: " + dashboardName);
 		Validator.notEmptyString("dashboardName", dashboardName);
-		String indicator = DashBoardPageId.DashboardNameLocator.replace("_name_", dashboardName);
+		String indicator = DashBoardPageId.DASHBOARDNAMELOCATOR.replace("_name_", dashboardName);
 		if (!driver.isElementPresent(indicator)) {
 			return false;
 		}
@@ -236,25 +236,25 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.getLogger().info("[DashboardHomeUtil] call isFilterOptionSelected filter: " + filter);
 		Validator.notEmptyString("filter", filter);
 		if ("apm".equals(filter)) {
-			return driver.getElement(DashBoardPageId.FilterApmLocator).isSelected();
+			return driver.getElement(DashBoardPageId.FILTERAPMLOCATOR).isSelected();
 		}
 		else if ("la".equals(filter)) {
-			return driver.getElement(DashBoardPageId.FilterLaLocator).isSelected();
+			return driver.getElement(DashBoardPageId.FILTERLALOCATOR).isSelected();
 		}
 		else if ("ita".equals(filter)) {
-			return driver.getElement(DashBoardPageId.FilterItaLocator).isSelected();
+			return driver.getElement(DashBoardPageId.FILTERITALOCATOR).isSelected();
 		}
 		else if ("oracle".equals(filter)) {
-			return driver.getElement(DashBoardPageId.FilterOracleLocator).isSelected();
+			return driver.getElement(DashBoardPageId.FILTERORACLELOCATOR).isSelected();
 		}
 		else if ("share".equals(filter)) {
-			return driver.getElement(DashBoardPageId.FilterShareLocator).isSelected();
+			return driver.getElement(DashBoardPageId.FILTERSHARELOCATOR).isSelected();
 		}
 		else if ("me".equals(filter)) {
-			return driver.getElement(DashBoardPageId.FilterMeLocator).isSelected();
+			return driver.getElement(DashBoardPageId.FILTERMELOCATOR).isSelected();
 		}
 		else if ("favorites".equals(filter)) {
-			return driver.getElement(DashBoardPageId.FilterFavoriteLocator).isSelected();
+			return driver.getElement(DashBoardPageId.FILTERFAVORITELOCATOR).isSelected();
 		}
 		else {
 			throw new IllegalArgumentException("Unkonw filter option: " + filter);
@@ -269,12 +269,12 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	public List<String> listDashboardNames(WebDriver driver) throws Exception
 	{
 		List<String> names = new ArrayList<String>();
-		List<WebElement> eles = driver.getWebDriver().findElements(By.xpath(DashBoardPageId.DashboardNameContainers));
+		List<WebElement> eles = driver.getWebDriver().findElements(By.xpath(DashBoardPageId.DASHBOARDNAMECONTAINERS));
 		for (int i = 1; i <= eles.size(); i++) {
 			driver.getLogger().info("Get dahsbord name for: "
-					+ DashBoardPageId.DashboardNameIndexLocator.replaceFirst("_index_", String.valueOf(i)));
+					+ DashBoardPageId.DASHBOARDNAMEINDEXLOCATOR.replaceFirst("_index_", String.valueOf(i)));
 			WebElement ele = driver
-					.getElement(DashBoardPageId.DashboardNameIndexLocator.replaceFirst("_index_", String.valueOf(i)));
+					.getElement(DashBoardPageId.DASHBOARDNAMEINDEXLOCATOR.replaceFirst("_index_", String.valueOf(i)));
 			String name = getElementAttribtue(ele, "aria-label");
 			if (name == null) {
 				name = ele.getText();
@@ -301,9 +301,9 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	public void listView(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call listView");
-		driver.waitForElementPresent(DashBoardPageId.DashboardsListViewLocator);
+		driver.waitForElementPresent(DashBoardPageId.DASHBOARDSLISTVIEWLOCATOR);
 		driver.takeScreenShot();
-		driver.click(DashBoardPageId.DashboardsListViewLocator);
+		driver.click(DashBoardPageId.DASHBOARDSLISTVIEWLOCATOR);
 	}
 
 	/* (non-Javadoc)
@@ -314,32 +314,32 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	{
 
 		driver.getLogger().info("[DashboardHomeUtil] call resetFilterOptions");
-		driver.waitForElementPresent(DashBoardPageId.FilterApmLocator);
-		WebElement el = driver.getElement(DashBoardPageId.FilterApmLocator);
+		driver.waitForElementPresent(DashBoardPageId.FILTERAPMLOCATOR);
+		WebElement el = driver.getElement(DashBoardPageId.FILTERAPMLOCATOR);
 		if (el.isSelected()) {
 			el.click();
 		}
-		el = driver.getElement(DashBoardPageId.FilterLaLocator);
+		el = driver.getElement(DashBoardPageId.FILTERLALOCATOR);
 		if (el.isSelected()) {
 			el.click();
 		}
-		el = driver.getElement(DashBoardPageId.FilterItaLocator);
+		el = driver.getElement(DashBoardPageId.FILTERITALOCATOR);
 		if (el.isSelected()) {
 			el.click();
 		}
-		el = driver.getElement(DashBoardPageId.FilterOracleLocator);
+		el = driver.getElement(DashBoardPageId.FILTERORACLELOCATOR);
 		if (el.isSelected()) {
 			el.click();
 		}
-		el = driver.getElement(DashBoardPageId.FilterShareLocator);
+		el = driver.getElement(DashBoardPageId.FILTERSHARELOCATOR);
 		if (el.isSelected()) {
 			el.click();
 		}
-		el = driver.getElement(DashBoardPageId.FilterMeLocator);
+		el = driver.getElement(DashBoardPageId.FILTERMELOCATOR);
 		if (el.isSelected()) {
 			el.click();
 		}
-		el = driver.getElement(DashBoardPageId.FilterFavoriteLocator);
+		el = driver.getElement(DashBoardPageId.FILTERFAVORITELOCATOR);
 		if (el.isSelected()) {
 			el.click();
 		}
@@ -355,11 +355,11 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.getLogger().info("[DashboardHomeUtil] call search searchString: " + searchString);
 		Validator.notEmptyString("searchString", searchString);
 		driver.getLogger().info("[DashboardHomeUtil] call search");
-		driver.waitForElementPresent(DashBoardPageId.SearchDashboardInputLocator);
-		driver.getElement(DashBoardPageId.SearchDashboardInputLocator).clear();
-		driver.click(DashBoardPageId.SearchDashboardInputLocator);
-		driver.sendKeys(DashBoardPageId.SearchDashboardInputLocator, searchString);
-		driver.click(DashBoardPageId.SearchDashboardSearchBtnLocator);
+		driver.waitForElementPresent(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR);
+		driver.getElement(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR).clear();
+		driver.click(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR);
+		driver.sendKeys(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR, searchString);
+		driver.click(DashBoardPageId.SEARCHDASHBOARDSEARCHBTNLOCATOR);
 		WaitUtil.waitForPageFullyLoaded(driver);
 	}
 
@@ -370,7 +370,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	public void selectDashboard(WebDriver driver, String dashboardName) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call selectDashboard dashboardName: " + dashboardName);
-		String indicator = DashBoardPageId.DashboardNameLocator.replace("_name_", dashboardName);
+		String indicator = DashBoardPageId.DASHBOARDNAMELOCATOR.replace("_name_", dashboardName);
 		if (!driver.isElementPresent(indicator)) {
 			throw new NoSuchElementException("Dashboard not exists. Name: " + dashboardName);
 		}
@@ -385,7 +385,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call selectOOB dashboardName: " + dashboardName);
 		Validator.notEmptyString("dashboardName", dashboardName);
-		String indicator = DashBoardPageId.OOBDashboardNameLocator.replace("_name_", dashboardName);
+		String indicator = DashBoardPageId.OOBDASHBOARDNAMELOCATOR.replace("_name_", dashboardName);
 		if (!driver.isElementPresent(indicator)) {
 			throw new NoSuchElementException("Dashboard not exists. Name: " + dashboardName);
 		}
@@ -400,62 +400,62 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call sortBy option: " + option);
 		Validator.notEmptyString("option", option);
-		driver.waitForElementPresent(DashBoardPageId.SortBySelectLocator);
-		driver.click(DashBoardPageId.SortBySelectLocator);
+		driver.waitForElementPresent(DashBoardPageId.SORTBYSELECTLOCATOR);
+		driver.click(DashBoardPageId.SORTBYSELECTLOCATOR);
 
 		if ("default".equals(option)) {
-			driver.waitForElementPresent(DashBoardPageId.SortByDefaultLocator);
-			driver.click(DashBoardPageId.SortByDefaultLocator);
+			driver.waitForElementPresent(DashBoardPageId.SORTBYDEFAULTLOCATOR);
+			driver.click(DashBoardPageId.SORTBYDEFAULTLOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_NAME_ASC.equals(option)) {
-			driver.waitForElementPresent(DashBoardPageId.SortByNameASCLocator);
-			driver.click(DashBoardPageId.SortByNameASCLocator);
+			driver.waitForElementPresent(DashBoardPageId.SORTBYNAMEASCLOCATOR);
+			driver.click(DashBoardPageId.SORTBYNAMEASCLOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_NAME_DSC.equals(option)) {
-			driver.waitForElementPresent(DashBoardPageId.SortByNameDSCLocator);
-			driver.click(DashBoardPageId.SortByNameDSCLocator);
+			driver.waitForElementPresent(DashBoardPageId.SORTBYNAMEDSCLOCATOR);
+			driver.click(DashBoardPageId.SORTBYNAMEDSCLOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_OWNER_ASC.equals(option)) {
-			driver.waitForElementPresent(DashBoardPageId.SortByCreatedByASCLocator);
-			driver.click(DashBoardPageId.SortByCreatedByASCLocator);
+			driver.waitForElementPresent(DashBoardPageId.SORTBYCREATEDBYASCLOCATOR);
+			driver.click(DashBoardPageId.SORTBYCREATEDBYASCLOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_OWNER_DSC.equals(option)) {
-			driver.waitForElementPresent(DashBoardPageId.SortByCreatedByDSCLocator);
-			driver.click(DashBoardPageId.SortByCreatedByDSCLocator);
+			driver.waitForElementPresent(DashBoardPageId.SORTBYCREATEDBYDSCLOCATOR);
+			driver.click(DashBoardPageId.SORTBYCREATEDBYDSCLOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_ASC.equals(option)) {
-			driver.waitForElementPresent(DashBoardPageId.SortByCreateDateASCLocator);
-			driver.click(DashBoardPageId.SortByCreateDateASCLocator);
+			driver.waitForElementPresent(DashBoardPageId.SORTBYCREATEDATEASCLOCATOR);
+			driver.click(DashBoardPageId.SORTBYCREATEDATEASCLOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_DSC.equals(option)) {
-			driver.waitForElementPresent(DashBoardPageId.SortByCreateDateDSCLocator);
-			driver.click(DashBoardPageId.SortByCreateDateDSCLocator);
+			driver.waitForElementPresent(DashBoardPageId.SORTBYCREATEDATEDSCLOCATOR);
+			driver.click(DashBoardPageId.SORTBYCREATEDATEDSCLOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_ASC.equals(option)) {
-			driver.waitForElementPresent(DashBoardPageId.SortByLastModifiedASCLocator);
-			driver.click(DashBoardPageId.SortByLastModifiedASCLocator);
+			driver.waitForElementPresent(DashBoardPageId.SORTBYLASTMODIFIEDASCLOCATOR);
+			driver.click(DashBoardPageId.SORTBYLASTMODIFIEDASCLOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_DSC.equals(option)) {
-			driver.waitForElementPresent(DashBoardPageId.SortByLastModifiedDSCLocator);
-			driver.click(DashBoardPageId.SortByLastModifiedDSCLocator);
+			driver.waitForElementPresent(DashBoardPageId.SORTBYLASTMODIFIEDDSCLOCATOR);
+			driver.click(DashBoardPageId.SORTBYLASTMODIFIEDDSCLOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC.equals(option)) {
-			driver.waitForElementPresent(DashBoardPageId.SortByLastAccessASCLocator);
-			driver.click(DashBoardPageId.SortByLastAccessASCLocator);
+			driver.waitForElementPresent(DashBoardPageId.SORTBYLASTACCESSASCLOCATOR);
+			driver.click(DashBoardPageId.SORTBYLASTACCESSASCLOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC.equals(option)) {
-			driver.waitForElementPresent(DashBoardPageId.SortByLastAccessDSCLocator);
-			driver.click(DashBoardPageId.SortByLastAccessDSCLocator);
+			driver.waitForElementPresent(DashBoardPageId.SORTBYLASTACCESSDSCLOCATOR);
+			driver.click(DashBoardPageId.SORTBYLASTACCESSDSCLOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		else {
@@ -472,10 +472,10 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	{
 
 		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableCreatedByHeader");
-		driver.waitForElementPresent(DashBoardPageId.ListViewTableCreatedByHeaderLocator);
+		driver.waitForElementPresent(DashBoardPageId.LISTVIEWTABLECREATEDBYHEADERLOCATOR);
 
-		WebElement tableHeader = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.ListViewTableCreatedByHeaderLocator));
-		WebElement tableSort = tableHeader.findElement(By.cssSelector(DashBoardPageId.ListViewSortLocatorCss));
+		WebElement tableHeader = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.LISTVIEWTABLECREATEDBYHEADERLOCATOR));
+		WebElement tableSort = tableHeader.findElement(By.cssSelector(DashBoardPageId.LISTVIEWSORTLOCATORCSS));
 
 		Actions actions = new Actions(driver.getWebDriver());
 		driver.getLogger().info("Focus to the table header");
@@ -498,11 +498,11 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	public void sortListViewByLastModified(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableLastModifiedHeader");
-		driver.waitForElementPresent(DashBoardPageId.ListViewTableLastModifiedHeaderLocator);
+		driver.waitForElementPresent(DashBoardPageId.LISTVIEWTABLELASTMODIFIEDHEADERLOCATOR);
 
 		WebElement tableHeader = driver.getWebDriver()
-				.findElement(By.xpath(DashBoardPageId.ListViewTableLastModifiedHeaderLocator));
-		WebElement tableSort = tableHeader.findElement(By.cssSelector(DashBoardPageId.ListViewSortLocatorCss));
+				.findElement(By.xpath(DashBoardPageId.LISTVIEWTABLELASTMODIFIEDHEADERLOCATOR));
+		WebElement tableSort = tableHeader.findElement(By.cssSelector(DashBoardPageId.LISTVIEWSORTLOCATORCSS));
 
 		Actions actions = new Actions(driver.getWebDriver());
 		driver.getLogger().info("Focus to the table header");
@@ -525,10 +525,10 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	public void sortListViewByName(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableNameHeader");
-		driver.waitForElementPresent(DashBoardPageId.ListViewTableNameHeaderLocator);
+		driver.waitForElementPresent(DashBoardPageId.LISTVIEWTABLENAMEHEADERLOCATOR);
 
-		WebElement tableHeader = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.ListViewTableNameHeaderLocator));
-		WebElement tableSort = tableHeader.findElement(By.cssSelector(DashBoardPageId.ListViewSortLocatorCss));
+		WebElement tableHeader = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.LISTVIEWTABLENAMEHEADERLOCATOR));
+		WebElement tableSort = tableHeader.findElement(By.cssSelector(DashBoardPageId.LISTVIEWSORTLOCATORCSS));
 
 		Actions actions = new Actions(driver.getWebDriver());
 		driver.getLogger().info("Focus to the table header");
@@ -552,7 +552,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	{
 		Validator.notEmptyString("dashboardName", dashboardName);
 		driver.getLogger().info("[DashboardHomeUtil] call waitForDashboardPresent dashboardName: " + dashboardName);
-		String indicator = DashBoardPageId.DashboardNameLocator.replace("_name_", dashboardName);
+		String indicator = DashBoardPageId.DASHBOARDNAMELOCATOR.replace("_name_", dashboardName);
 		driver.waitForElementPresent(indicator);
 	}
 
