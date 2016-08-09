@@ -352,6 +352,7 @@ define({
       "DBS_ERROR_TEXT_GO_HOME_PAGE": "to go to the default Home page",
       "DBS_ERROR_URL": "Requested URL is: ",
       "DBS_ERROR_BTN_SIGN_OUT": "Sign Out",
+      "DBS_ERROR_INTERNAL_ERROR": "Oracle Management Cloud service received a bad request and had an internal error. Try to access your service later.",
       
       "SERVICE_NAME_APM":"Application Performance Monitoring",
       "SERVICE_NAME_ITAnalytics":"IT Analytics",
