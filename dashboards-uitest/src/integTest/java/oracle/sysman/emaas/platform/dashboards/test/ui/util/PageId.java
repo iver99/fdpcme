@@ -65,9 +65,10 @@ public class PageId
 	public static final String DASHBOARDSETADDDASHBOARDICON_CSS = ".dbd-icon-add";
 	public static final String DATETIMEPICK_CSS = "[id^='dateTimePicker_']";
 	public static final String TARGETSELECTOR_CSS = ".df-targte-selector.df-targte-selector";
-	public static final String DASHBOARDSETOPTIONS_CSS = "#tabs-caret";//".df-toolbar .dashboardOptsBtn[title=\"Options\"]";
-	public static final String DASHBOARDSETOPTIONSEDIT_CSS = "#dbs-edit [dashboardset-option='Edit']";//"li[data-singledb-option=\"Edit\"] a";
-	public static final String RIGHTDRAWEREDITSINGLEDBSHARE_CSS = ".dbd-right-panel-editdashboard-set-share .dbd-right-panel-editdashboard-innertitle.oj-collapsible-header";//".dbd-right-panel-editdashboard-share>span";
+	public static final String DASHBOARDSETOPTIONS_CSS = "#tabs-caret";
+	public static final String DASHBOARDSETOPTIONSEDIT_CSS = "#dbs-edit [dashboardset-option='Edit']";
+	public static final String RIGHTDRAWEREDITSINGLEDBSHARE_CSS = ".dbd-right-panel-editdashboard-set-share .dbd-right-panel-editdashboard-innertitle.oj-collapsible-header";
 	public static final String DASHBOARDSETSHARE_CSS = "#dashboardSetSharingShared";
 	public static final String DASHBOARDSETNOTSHARE_CSS = "#dashboardSetSharingNotShared";
+
 }
