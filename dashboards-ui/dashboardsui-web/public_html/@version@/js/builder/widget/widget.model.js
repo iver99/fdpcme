@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -10,7 +10,7 @@ define(['jquery',
         'builder/builder.core'], function($, oj, dfu) {
     function WidgetDataSource() {
         var self = this;
-        
+
         self.loadWidgetData = function(keyword, successCallback) {
             initialize();
             loadWidgets(keyword);
@@ -38,7 +38,7 @@ define(['jquery',
                 async: false
             });
         };
-        
+
         function sortWidgetsData(widgets) {
             if (widgets && widgets.length > 0) {
                 widgets.sort(function(a, b) {
@@ -61,7 +61,7 @@ define(['jquery',
         }
     }
     Builder.registerModule(WidgetDataSource, "WidgetDataSource");
-        
+
     /*function createTextWidget(width) {
         var widget = {};
         widget.WIDGET_KOC_NAME = "DF_V1_WIDGET_TEXT";

@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -10,7 +10,7 @@ define(['knockout',
         'uifwk/js/util/ajax-util',
         'uifwk/js/util/message-util'
     ],
-    
+
     function(ko, $, dfumodel, userTenantUtilModel, ajaxUtilModel, msgUtilModel)
     {
         function InternalDashboardFrameworkUtility() {
@@ -18,17 +18,17 @@ define(['knockout',
             var userTenantUtil = new userTenantUtilModel();
             var ajaxUtil = new ajaxUtilModel();
             var msgUtil = new msgUtilModel();
-            
+
             self.getUserTenant = function() {
                 return userTenantUtil.getUserTenant();
             };
-            
+
             var userTenant = self.getUserTenant();
             var userName = getUserName(userTenant);
             var tenantName = userTenant && userTenant.tenant ? userTenant.tenant : null;
             var dfu = new dfumodel(userName, tenantName);
-            var isDevMode=dfu.isDevMode(); 
-            var devData = dfu.getDevData();  
+            var isDevMode=dfu.isDevMode();
+            var devData = dfu.getDevData();
             if (isDevMode){
                self.getDevData = function(){
                    return devData;
@@ -37,22 +37,22 @@ define(['knockout',
             self.isDevMode = function(){
                 return isDevMode;
             };
-            
+
             self.getUserName = function() {
                 return userName;
             };
-            
+
             self.getTenantName = function() {
                 return tenantName;
             };
-            
+
             /**
              * Discover available Saved Search service URL
              * @returns {String} url
              */
             self.discoverSavedSearchServiceUrl = function() {
                 if (self.isDevMode()){
-                   return self.getDevData().ssfRestApiEndPoint; 
+                   return self.getDevData().ssfRestApiEndPoint;
                 }else{
                     return '/sso.static/savedsearch.navigation';
                 }
@@ -63,7 +63,7 @@ define(['knockout',
                 if (self.registrationInfo===null){
                     ajaxUtil.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationUrl(),
                         dataType: 'json',
-                        headers: dfu.getDefaultHeader(), 
+                        headers: dfu.getDefaultHeader(),
                         async: false,
                         success: function(data, textStatus){
                             self.registrationInfo = data;
@@ -71,15 +71,15 @@ define(['knockout',
                         error: function(data, textStatus){
                             console.log('Failed to get registion info!');
                         }
-                    });                     
+                    });
                 }
                 return self.registrationInfo;
             };
-            
+
             self.getRegistrationUrl=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
                 if (self.isDevMode()){
-                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"configurations/registration"); 
+                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"configurations/registration");
                 }else{
                     return '/sso.static/dashboards.configurations/registration';
                 }
@@ -88,21 +88,21 @@ define(['knockout',
             self.getLogUrl=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
                 if (self.isDevMode()){
-                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"logging/logs"); 
+                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"logging/logs");
                 }else{
                     return '/sso.static/dashboards.logging/logs';
                 }
-            };   
-            
+            };
+
             self.getDashboardsUrl=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
                 if (self.isDevMode()){
-                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"dashboards"); 
+                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"dashboards");
                 }else{
                     return '/sso.static/dashboards.service';
                 }
-            };   
-            
+            };
+
             self.getWidgetsUrl = function(){
                 if (self.isDevMode()){
                     return self.buildFullUrl(self.getDevData().ssfRestApiEndPoint,"/widgets");
@@ -113,20 +113,20 @@ define(['knockout',
             self.getPreferencesUrl=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
                 if (self.isDevMode()){
-                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"preferences"); 
+                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"preferences");
                 }else{
                     return '/sso.static/dashboards.preferences';
                 }
-            }; 
-            
+            };
+
             self.getSubscribedappsUrl=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
                 if (self.isDevMode()){
-                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"subscribedapps"); 
+                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"subscribedapps");
                 }else{
                     return '/sso.static/dashboards.subscribedapps';
                 }
-            };             
+            };
             /**
              * Discover available quick links
              * @returns {Array} quickLinks
@@ -140,7 +140,7 @@ define(['knockout',
                     return [];
                 }
             };
-            
+
             /**
              * Discover available visual analyzer links
              * @returns {Array} visualAnalyzerLinks
@@ -154,7 +154,7 @@ define(['knockout',
                     return [];
                 }
             };
-            
+
             /**
              * Get URL parameter value according to URL parameter name
              * @param {String} name
@@ -162,9 +162,9 @@ define(['knockout',
              */
             self.getUrlParam = function(name){
                 var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(window.location.search);
-                return results === null ? "" : results[1];                
+                return results === null ? "" : results[1];
             };
-            
+
             self.guid = function(){
                 function securedRandom(){
                     var arr = new Uint32Array(1);
@@ -176,10 +176,10 @@ define(['knockout',
                 function S4() {
                    return (((1+securedRandom())*0x10000)|0).toString(16).substring(1);
                 }
-                
+
                 return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
             };
-            
+
             /**
             * Returns a random integer between min (inclusive) and max (inclusive)
             * Using Math.round() will give you a non-uniform distribution!
@@ -194,22 +194,22 @@ define(['knockout',
                 }
                 return Math.floor(securedRandom() * (max - min + 1)) + min;
             };
-            
+
             /**
              * catenate root and path to build full path
              * e.g.
              * root=http://host:port/root/
              * path=home.html
              * output=http://host:port/root/home.html
-             * 
+             *
              * root=http://host:port/root
              * path=home.html
              * output=http://host:port/root/home.html
-             * 
+             *
              * root=http://host:port/root/
              * path=/home.html
              * output=http://host:port/root/home.html
-             * 
+             *
              * @param {type} root
              * @param {type} path
              * @returns {String}
@@ -217,7 +217,7 @@ define(['knockout',
             self.buildFullUrl=function(root, path){
                 return dfu.buildFullUrl(root, path);
             };
-                        
+
             self.getDashboardsRequestHeader = function() {
                 return dfu.getDashboardsRequestHeader();
             };
@@ -231,15 +231,15 @@ define(['knockout',
                     }
                     if (header["X-USER-IDENTITY-DOMAIN-NAME"]){
                         delete header["X-USER-IDENTITY-DOMAIN-NAME"];
-                    } 
+                    }
                 }
                 return header;
             };
-            
+
             self.getUserTenant = function() {
                 return userTenant;
             };
-            
+
             self.getRelUrlFromFullUrl = function(url) {
                 if (!url)
                     return url;
@@ -252,7 +252,7 @@ define(['knockout',
                     return url;
                 return urlNoProtocol.substring(relPathIndex);
             };
-            
+
             /**
              * Discover service asset root path by provider information
              * @param {String} providerName
@@ -279,7 +279,7 @@ define(['knockout',
                 }
 
             };
-            
+
             function getUserName(userTenant) {
                 if (userTenant && userTenant.tenantUser) {
                     var idx = userTenant.tenantUser.indexOf('.');
@@ -289,7 +289,7 @@ define(['knockout',
                 }
                 return null;
             }
-            
+
             /**
              * Discover quick link
              * @param {type} serviceName
@@ -300,37 +300,37 @@ define(['knockout',
             self.discoverQuickLink = function(serviceName, version, rel){
                 return dfu.discoverLinkWithRelPrefix(serviceName, version, rel);
             };
-            
+
             /**
              * Ajax call with retry logic
-             * @returns 
-             */ 
+             * @returns
+             */
             self.ajaxWithRetry = function() {
 		var args = arguments;
 		var options = ajaxUtil.getAjaxOptions(args);
                 return ajaxUtil.ajaxWithRetry(options);
             };
-            
+
             /**
              * Display message
              */
             self.showMessage = function(messageObj) {
                 return msgUtil.showMessage(messageObj);
             };
-            
+
             /**
              * Discover logout url for current logged in user
              */
             self.discoverLogoutUrl = function() {
                 return dfu.discoverLogoutUrl();
-            };            
-            
+            };
+
             self.getAjaxUtil = function() {
                 return ajaxUtil;
             };
-            
+
             /**
-             * 
+             *
              * @param {number} pWidth The width of the container to put screenshot
              * @param {number} pHeight The height of the container to put screenshot
              * @param {type} scrshotHref The url of screenshot
@@ -340,7 +340,7 @@ define(['knockout',
             self.getScreenshotSizePerRatio = function(pWidth, pHeight, scrshotHref, callback) {
                 dfu.getScreenshotSizePerRatio(pWidth, pHeight, scrshotHref, callback);
             }
-            
+
         }
         return new InternalDashboardFrameworkUtility();
     }

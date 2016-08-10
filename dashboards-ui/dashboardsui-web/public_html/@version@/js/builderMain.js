@@ -19,7 +19,7 @@ requirejs.config({
               'message-util': 'uifwk/js/util/message-util',
               'df-util': 'uifwk/js/util/df-util',
               'prefutil':'uifwk/js/util/preference-util'
-             }        
+             }
     },
     // Path mappings for the logical module names
     paths: {
@@ -67,7 +67,7 @@ requirejs.config({
             'ojs/ojselectcombobox',
             'ojs/ojpopup',
             'ojs/ojchart',
-            'ojs/ojcomponents',   
+            'ojs/ojcomponents',
             'ojs/ojcomponentcore',
             'ojs/ojdialog',
             'ojs/ojdatetimepicker',
@@ -159,7 +159,7 @@ requirejs.config({
             exports: 'crossroads'
         }
     },
-    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation 
+    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation
     // resources with a custom translation file.
     // Any resource file added, must be placed under a directory named "nls". You can use a path mapping or you can define
     // a path that is relative to the location of this main.js file.
@@ -235,14 +235,14 @@ require(['knockout',
             viewModel: textwidget,
             template: {require: 'text!./widgets/textwidget/textwidget.html'}
         });*/
-            
+
         if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
             ko.components.register("df-oracle-dashboard-list",{
                 viewModel:dashboardhome_impl,
                 template:{require:'text!/emsaasui/emcpdfui/dashboardhome.html'}
             });
         }
-        
+
         function DashboardTitleModel(dashboard) {
             var self = this;
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
@@ -280,12 +280,12 @@ require(['knockout',
                 self.headerHeight = height;
             });
         };
-         
+
         var dsbId = dfu.getUrlParam("dashboardId");
         console.warn("TODO: validate valid dashboard id format");
 //                oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
 //                window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href) + "&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";
-       
+
 
         Builder.initializeFromCookie();
 
@@ -295,7 +295,7 @@ require(['knockout',
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
             Builder.loadDashboard(dsbId, function (dashboard) {
-                
+
                 var dashboardTitleModel = new DashboardTitleModel(dashboard);
                 ko.applyBindings(dashboardTitleModel, $("title")[0]);
                 var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dashboard);
@@ -326,7 +326,7 @@ function updateOnePageHeight(event) {
     }
 }
 
-            
+
 function truncateString(str, length) {
     if (str && length > 0 && str.length > length)
     {

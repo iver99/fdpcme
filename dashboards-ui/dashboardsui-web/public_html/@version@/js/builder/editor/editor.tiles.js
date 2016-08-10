@@ -1,10 +1,10 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
-define(['knockout', 
+define(['knockout',
         'jquery',
         'builder/builder.core'
     ],
@@ -38,7 +38,7 @@ define(['knockout',
             self.displayHeight = function() {
                 return self.height * Builder.DEFAULT_HEIGHT;
             };
-            
+
             if (Array.isArray(data.tileParameters)) {
                 $.each(data.tileParameters, function (i, parameter) {
                     if (parameter.name === "DF_HIDE_TITLE") {
@@ -47,7 +47,7 @@ define(['knockout',
                 });
             }
         }
-        
+
         /*function TextTileItem(data) {
             ko.utils.extend(this, new Builder.TileItem(data));
             ko.mapping.fromJS(data, {include: ['content']}, this);
@@ -61,11 +61,11 @@ define(['knockout',
                 return $('#tile' + self.clientGuid).height();
             };
         }*/
-        
+
         Builder.registerModule(TileItem, 'TileItem');
         //Builder.registerModule(TextTileItem, 'TextTileItem');
-        
-        return {"TileItem": TileItem/*, 
+
+        return {"TileItem": TileItem/*,
             "TextTileItem": TextTileItem*/};
     }
 );

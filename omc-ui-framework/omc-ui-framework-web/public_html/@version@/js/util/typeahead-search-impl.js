@@ -1,40 +1,40 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['jquery', 'knockout', 'uifwk/js/util/ajax-util'], 
+define(['jquery', 'knockout', 'uifwk/js/util/ajax-util'],
        /*
-        * @param {Object} oj 
+        * @param {Object} oj
         * @param {jQuery} $
         */
 function($, ko, ajaxUtilModel)
 {
     var ajaxUtil = new ajaxUtilModel();
-    
+
 (function ()
 { // make sure register is running
-    
+
 ko.bindingHandlers.typeAheadSearch = {
     init: function(element, valueAccessor) {
         var _value = valueAccessor();
         $(element).typeAheadSearch(_value);
-                
+
     },
     update: function(element, valueAccessor) {
-        
+
     }
 };
 
 $.widget( "dbs.typeAheadSearch", {
-	
+
 	options: {
 		delay: 900,
 		minLength: 1,
 		source: null,
                 filterFunc: null,
                 disabled: false,
-                
+
 		// event handlders
 		response: null
 	},
@@ -44,7 +44,7 @@ $.widget( "dbs.typeAheadSearch", {
 
 	_create: function() {
 		// Some browsers only repeat keydown events, not keypress events
-		// The code for & in keypress is the same as the up arrow, 
+		// The code for & in keypress is the same as the up arrow,
 		var suppressKeyPress, suppressKeyPressRepeat, suppressInput,
 			nodeName = this.element[ 0 ].nodeName.toLowerCase(),
 			isTextarea = nodeName === "textarea",
@@ -57,7 +57,7 @@ $.widget( "dbs.typeAheadSearch", {
 			this.element.prop( "isContentEditable" );
 
 		this.valueMethod = this.element[ isTextarea || isInput ? "val" : "text" ];
-		
+
 		this.element
 			//.addClass( "ui-autocomplete-input" )
 			.attr( "autocomplete", "off" );
@@ -147,10 +147,10 @@ $.widget( "dbs.typeAheadSearch", {
 				this._searchTimeout( event );
 			},
 			focus: function() {
-				
+
 			},
 			blur: function( event ) {
-                            
+
 			}
 		});
 
@@ -205,7 +205,7 @@ $.widget( "dbs.typeAheadSearch", {
                                 else _fetchSize = _dsFetchSize;
                             }
                             _dataSource = _dsFac.build(request.term, _fetchSize);
-                            _dataSource['pagingDS'].fetch({'startIndex': 0, 'fetchType': 'init', 
+                            _dataSource['pagingDS'].fetch({'startIndex': 0, 'fetchType': 'init',
                                 success: function() {
                                     //console.log("[dbsTypeAhead] fetch success");
                                     response(_dataSource);
@@ -241,10 +241,10 @@ $.widget( "dbs.typeAheadSearch", {
 
 		// always save the actual value, not the one passed as an argument
 		this.term = this._value();
-                
+
                 var keyCode = $.ui.keyCode;
-                if ( event.keyCode !== keyCode.BACKSPACE && 
-                        event.keyCode !== keyCode.DELETE && 
+                if ( event.keyCode !== keyCode.BACKSPACE &&
+                        event.keyCode !== keyCode.DELETE &&
                         event.keyCode !== keyCode.ENTER )
                 {
                     if ( value.length < this.options.minLength ) {
@@ -253,11 +253,11 @@ $.widget( "dbs.typeAheadSearch", {
                 }
 		return this._search( value );
 	},
-        
+
         forceSearch: function(  ) {
 		// always save the actual value, not the one passed as an argument
 		var value = this.term = this._value();
-                
+
 		return this._search( value );
 	},
 
@@ -290,7 +290,7 @@ $.widget( "dbs.typeAheadSearch", {
 	__response: function( content ) {
 		if ( !this.options.disabled && !this.cancelSearch ) {
 			this._trigger( "response", null, { content: content } );
-		} 
+		}
 	},
 
 	close: function( event ) {
@@ -308,7 +308,7 @@ $.widget( "dbs.typeAheadSearch", {
                         event.preventDefault();
             }
 	},
-        
+
         destroy: function () {
             $.Widget.prototype.destroy.apply(this, arguments);
             this._destroy();
