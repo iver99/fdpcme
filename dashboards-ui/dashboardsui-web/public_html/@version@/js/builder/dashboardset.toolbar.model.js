@@ -69,7 +69,7 @@ define(['knockout',
                     async: false,
                     success: function(resp) {
                         var value = prefUtil.getPreferenceValue(resp, prefKeyHomeDashboardId);
-                        if (Number(value) === ko.unwrap(dashboardInst.id)) {
+                        if (value === ko.unwrap(dashboardInst.id)) {
                             self.dashboardsetConfig.setHome = ko.observable(false);
                         }
                     }
