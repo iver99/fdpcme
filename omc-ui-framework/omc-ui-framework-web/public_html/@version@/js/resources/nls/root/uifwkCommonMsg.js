@@ -43,6 +43,7 @@ define({
       "BRANDING_BAR_APP_NAME_TENANT_MANAGEMENT_UI":"Set up Oracle Management Cloud",
       "BRANDING_BAR_APP_NAME_MONITORING": "Infrastructure Monitoring",
       "BRANDING_BAR_APP_NAME_SECURITY_ANALYTICS": "Security Monitoring and Analytics",
+      "BRANDING_BAR_APP_NAME_COMPLIANCE": "Compliance",
       "BRANDING_BAR_APP_NAME_ORCHESTRATION": "Orchestration",
       "BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_ERROR":"Error",
       "BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_WARN":"Warning",
