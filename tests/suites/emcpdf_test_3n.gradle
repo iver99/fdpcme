@@ -36,27 +36,29 @@ buildscript {
         }
     }
     dependencies {
-   	classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true 
-	classpath group: "com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "${devinfraVersion}", transitive: true
-        classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_taskprocessor", version: "${omctfVersion}" 
-	classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"
+        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true 
+        classpath group: "com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "${devinfraVersion}", transitive: true
   }
-
 }
 repositories {
 	 maven {
              url = "${PUB_MAVEN_MY_MAVEN_REPO}"
          }
     maven {
-     url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
+        url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
     }
 }
 apply plugin: 'DevInfraPlugin'
 apply plugin: 'TestInfraPlugin'
 apply plugin: 'groovy'
 
-apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_commontasks")
-
+/***************** OMCTF Plugin **********************/
+configurations { omctfPluginConfig }
+dependencies {
+    omctfPluginConfig group: "com.oracle.omc.omctf.testsdk", name: "OMCTFPlugin", version: "${omctfPluginVersion}"
+}
+apply from: getAbsoluteFilePath(project.configurations.omctfPluginConfig,"OMCTFPlugin")
+/************** End of OMCTFPlugin *******************/
 
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 
@@ -230,5 +232,5 @@ task DEVTest2(type:EMTest,dependsOn: DEVUiTest){
 
 task emcpdf_test_3n (dependsOn:[DEVTest2, omcTeardown]) {
     omcTeardown.mustRunAfter(DEVTest2)
-    apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_taskprocessor")
+    apply from: getAbsoluteFilePath(project.configurations.omctfConfig,"omctf_taskprocessor")
 }

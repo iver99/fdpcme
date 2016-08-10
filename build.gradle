@@ -286,20 +286,19 @@ buildscript {
 		classpath 'org.gradle.plugins:gradle-compass:1.0.10.1'
 	}  
 }
-
-publishing {
-    publications {
- 
-        if (project.tasks.findByName('lrgMetadataZip')) {
-            // Publication for publishing lrg metadata
-            lrgMetadata(MavenPublication) {
-                groupId 'com.oracle.emaas.emcpdf.test' 
-                artifact lrgMetadataZip
-                setArtifactId(lrgMetadataZip.baseName)
-            }
+project.publishing.publications {
+    if (project.tasks.findByName('lrgMetadataZip')) {
+        // Publication for publishing lrg metadata
+        lrgMetadata(MavenPublication) {
+            groupId 'com.oracle.emaas.emcpdf.test' 
+            artifact lrgMetadataZip
+            setArtifactId(lrgMetadataZip.baseName)
         }
     }
-    // (Optional) This is required ONLY when you wish to publish the lrgMetadata zip alone (as it is not possible with artifactoryPublish task)
+    /* (Optional) This is required ONLY when you wish to 
+       publish the lrgMetadata zip alone (as it is not possible 
+       with artifactoryPublish task)
+    */
     repositories {
         maven {
             name = "artifactory"
