@@ -1,9 +1,9 @@
 
-define(['knockout', 
+define(['knockout',
         'jquery',
         'ojs/ojcore',
         'dfutil'
-    ], 
+    ],
     function(ko, $, oj, dfu) {
         function EditDashboardDialogModel($b, tbModel) {
             var dsb = $b.dashboard;
@@ -32,18 +32,18 @@ define(['knockout',
             self.timeRangeFilterValue = ko.observable(dsb.enableTimeRange ? (dsb.enableTimeRange()==="TRUE"?["ON"]:["OFF"]) : ["ON"]); //ko.observable(["ON"]);//for now ON always and hide option in UI
 //            self.targetFilterValue = ko.observable(["OFF"]);
             self.nameValidated = ko.observable(true);
-            self.isDisabled = ko.computed(function() { 
+            self.isDisabled = ko.computed(function() {
                 if (self.nameInputed() && self.nameInputed().length > 0)
                 {
                     return false;
                 }
                 return true;
             });
-            
+
 //            self.onNameOrDescriptionEditing = ko.computed(function(){
 //                return self.nameFocused()||self.descriptionFocused();
 //            });
-//            
+//
 //            self.onNameOrDescriptionEditing.subscribe(function(val){
 //                if(val){
 //                    self.tbModel.onNameOrDescriptionEditing = true;
@@ -51,7 +51,7 @@ define(['knockout',
 ////                    self.tbModel.onNameOrDescriptionEditing = false;
 //                }
 //            });
-//            
+//
             if (self.tbModel) {
                 self.nameInputed.subscribe(function (val) {
                     self.dashboard.name(val);
@@ -88,10 +88,10 @@ define(['knockout',
                     self.description(val);
                 });
             }
-          
-            
-          
-            
+
+
+
+
             self.noSameNameValidator = {
                     'validate' : function (value) {
                         self.nameValidated(true);
@@ -102,7 +102,7 @@ define(['knockout',
                         if (value && Builder.isDashboardNameExisting(value)) {
                             //$('#builder-dbd-name-input').focus();
                             self.nameValidated(false);
-                            throw new oj.ValidatorError(oj.Translations.getTranslatedString("COMMON_DASHBAORD_SAME_NAME_ERROR"), 
+                            throw new oj.ValidatorError(oj.Translations.getTranslatedString("COMMON_DASHBAORD_SAME_NAME_ERROR"),
                                              oj.Translations.getTranslatedString("COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL"));
                         }
                         return true;
@@ -110,9 +110,9 @@ define(['knockout',
             };
 
             self.save = function() {
-                if (self.nameValidated() === false || dfu.getUserName()!==self.dashboard.owner()) 
+                if (self.nameValidated() === false || dfu.getUserName()!==self.dashboard.owner())
                     return;
-                
+
                 var url = "/sso.static/dashboards.service/";
                 if (dfu.isDevMode()) {
                         url = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/");
@@ -143,7 +143,7 @@ define(['knockout',
 //                            self.dashboard.enableEntityFilter(isEditDsbOptionEnabled(self.entityFilterValue) ? "TRUE" : "FALSE");
 //                            self.dashboard.enableTimeRange(isEditDsbOptionEnabled(self.timeRangeFilterValue) ? "TRUE" : "FALSE");
 
-                            $('#edit-dashboard').ojDialog("close"); 
+                            $('#edit-dashboard').ojDialog("close");
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
@@ -158,7 +158,7 @@ define(['knockout',
 
 
         }
-        
+
         return {"EditDashboardDialogModel": EditDashboardDialogModel};
     }
 );

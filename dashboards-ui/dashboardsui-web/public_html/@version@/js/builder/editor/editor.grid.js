@@ -1,46 +1,46 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 define(['builder/builder.core'
-    ], 
+    ],
     function() {
         function TilesGrid(mode) {
             var self = this;
             self.tileGrid = [];
             self.mode = mode;
-            
+
             var heightProperty = "ROW_HEIGHT";
-            
+
             self.initialize = function() {
                 self.tileGrid = [];
             };
-            
+
             self.changeMode = function(newMode) {
                 self.mode = newMode;
             };
-            
+
             self.size = function() {
                 return self.tileGrid.length;
             };
-            
+
             self.isEmptyRow = function(row) {
                 for(var i=0; i<self.mode.MODE_MAX_COLUMNS; i++) {
                     if(self.tileGrid[row][i]) {
                             return false;
                     }
-                }                
+                }
                 return true;
             };
-            
+
             self.getRow = function(rowIndex) {
                 if (!self.tileGrid[rowIndex]) {
                     self.initializeGridRows(rowIndex + 1);
                 }
                 return self.tileGrid[rowIndex];
             };
-            
+
             self.registerTileToGrid = function(tile) {
                 if (!tile)
                     return;
@@ -51,7 +51,7 @@ define(['builder/builder.core'
                     }
                 }
             };
-            
+
             self.unregisterTileInGrid = function(tile) {
                 if (!tile)
                     return;
@@ -64,7 +64,7 @@ define(['builder/builder.core'
                     }
                 }
             };
-            
+
             self.initializeGridRows = function(rows) {
                 for (var i = 0; i < rows; i++) {
                     if (!self.tileGrid[i]) {
@@ -81,8 +81,8 @@ define(['builder/builder.core'
                         self.tileGrid[i][j] = null;
                     }
                 }
-            }; 
-            
+            };
+
             self.updateTileSize = function(tile, width, height) {
                 if (!tile || width < 0 || width > self.mode.MODE_MAX_COLUMNS)
                     return;
@@ -92,7 +92,7 @@ define(['builder/builder.core'
                 self.mode.setModeHeight(tile, height);
                 self.registerTileToGrid(tile);
             };
-            
+
             self.isPositionOkForTile = function(tile, row, column) {
                 if (row < 0 || column < 0 || column + self.mode.getModeWidth(tile) > self.mode.MODE_MAX_COLUMNS)
                     return false;
@@ -107,7 +107,7 @@ define(['builder/builder.core'
                 }
                 return true;
             };
-            
+
             self.setRowHeight = function(rowIndex, height) {
                 var row = self.getRow(rowIndex);
                 if (!row)
@@ -118,7 +118,7 @@ define(['builder/builder.core'
                 else
                     row[heightProperty] = Builder.DEFAULT_HEIGHT;
             };
-                        
+
             self.getRowHeight = function(rowIndex) {
                 var row = self.getRow(rowIndex);
                 if (!row)
@@ -126,7 +126,7 @@ define(['builder/builder.core'
                 var height = row[heightProperty];
                 return height || Builder.DEFAULT_HEIGHT;
             };
-            
+
             self.getHeight = function() {
                 for (var i = 0, height = 0; i < self.size(); i++) {
                     var row = self.getRow(i);
@@ -137,7 +137,7 @@ define(['builder/builder.core'
             };
         }
         Builder.registerModule(TilesGrid, 'TilesGrid');
-        
+
         return TilesGrid;
     }
 );

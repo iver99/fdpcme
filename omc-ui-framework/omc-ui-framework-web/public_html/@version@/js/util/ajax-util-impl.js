@@ -1,14 +1,14 @@
 define([
-    'jquery', 
+    'jquery',
     'knockout',
-    'ojs/ojcore', 
-    'uifwk/js/util/message-util', 
+    'ojs/ojcore',
+    'uifwk/js/util/message-util',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg'
 ],
     function($, ko, oj, msgUtilModel, nls)
     {
         /**
-         * Register ajax global start / stop event 
+         * Register ajax global start / stop event
          * so that application may know if there are active ajax requests.
          * Note that only ajax requests that are sent via jQuery can be monitored.
          * @type Function|ko.dependentObservable
@@ -29,18 +29,18 @@ define([
             });
             ajaxPendingDelayNotification.extend({rateLimit: {timeout: 0, method: "notifyWhenChangesStop"}});
             return ajaxPendingDelayNotification;
-            
+
         })();
-            
+
         function DashboardFrameworkAjaxUtility() {
             var self = this;
             var messageUtil = new msgUtilModel();
-            
+
             /**
              * register the ajax stop event
-             * @param {type} handler 
+             * @param {type} handler
              * @param {type} wait    wait n ms to call the handler after ajax stops
-             * @param {type} maxWait if wait time is over maxWait, the handler 
+             * @param {type} maxWait if wait time is over maxWait, the handler
              *                       will be executed anyway.
              * @returns {undefined}
              */
@@ -53,7 +53,7 @@ define([
                         handler();
                     }, maxWait);
                 }
-                
+
                 var subscription = activeAjaxMonitor.subscribe(function (ajaxRunning) {
                     if (!ajaxRunning) {
                         clearTimeout(waitTimeout);
@@ -65,10 +65,10 @@ define([
                     }
                 });
             };
-            
+
             /**
              * Ajax call with retry logic
-             * 
+             *
              * Supported patterns:
              * 1. ajaxWithRetry(url)
              *    url: a target URL string (e.g. '/sso.static/dashboards.subscribedapps')
@@ -87,19 +87,19 @@ define([
              *     successCallback: success call back function
              *     options: a Object which contains the settings required by an ajax call
              *             Support standard jquery settings and additional options "retryLimit", "showMessages"
-             * 
+             *
              * @returns {Deferred Object}
-             */ 
+             */
             self.ajaxWithRetry = function() {
                 var args = arguments;
                 var retryOptions = self.getAjaxOptions(args);
                 var retryCount = 0;
-                var retryLimit = retryOptions.retryLimit !== null && 
+                var retryLimit = retryOptions.retryLimit !== null &&
                         typeof(retryOptions.retryLimit) === 'number' ? retryOptions.retryLimit : 3;
                 retryLimit = retryLimit > 0 ? retryLimit : 0;
                 var showMessages = isValidShowMessageOption(retryOptions.showMessages) ? retryOptions.showMessages : 'all';
                 //Retry delay time in milliseconds, if not set, will be 2 seconds by default
-                var retryDelayTime = retryOptions.retryDelayTime !== null && 
+                var retryDelayTime = retryOptions.retryDelayTime !== null &&
                         typeof(retryOptions.retryDelayTime) === 'number' ? retryOptions.retryDelayTime : 500;
                 var messageId = null;
                 var messageObj = null;
@@ -118,7 +118,7 @@ define([
                             beforeSendInAjaxSetup(jqXHR, settings);
                     }
                 };
-                
+
                 var ajaxCallDfd = $.Deferred();
                 var jqXhrObj = null;
                 //Add ability to abort ajaxWithRetry calls
@@ -127,7 +127,7 @@ define([
                         return jqXhrObj.abort();
                     }
                 };
-                
+
                 (function ajaxCall (retries) {
                     jqXhrObj = $.ajax(retryOptions);
                     jqXhrObj.done(function (data, textStatus, jqXHR) {
@@ -150,49 +150,49 @@ define([
                                 detailMsg = nls.BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL;
                                 detailMsg = messageUtil.formatMessage(detailMsg, retryCount);
                                 messageObj = {
-                                    id: messageId, 
-                                    action: 'show', 
-                                    type: 'warn', 
+                                    id: messageId,
+                                    action: 'show',
+                                    type: 'warn',
                                     category: 'retry_in_progress',
-                                    summary: summaryMsg, 
+                                    summary: summaryMsg,
                                     detail: detailMsg};
 
                                 //Always show retry message summary and detail on UI
                                 messageUtil.showMessage(messageObj);
-                                
+
                                 //Do retry once again if failed
                                 setTimeout(function(){ajaxCall(retries - 1);}, retryDelayTime);
-                                
+
                                 return false;
                             }
-                            
+
                             //remove old retrying message after retries
                             removeMessage(messageId);
-                            
+
                             if (showMessages !== 'none') {
                                 //show new retry error message
                                 //Set failure message to be shown on UI after retries
                                 var errorSummaryMsg = nls.BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY;
                                 errorSummaryMsg = messageUtil.formatMessage(errorSummaryMsg, retryLimit);
-                                    
+
                                 var errorDetailMsg = null;
                                 if (showMessages === 'all') {
                                     var responseErrorMsg = getMessageFromXhrResponse(jqXHR);
-                                    errorDetailMsg = responseErrorMsg !== null ? responseErrorMsg : 
+                                    errorDetailMsg = responseErrorMsg !== null ? responseErrorMsg :
                                             nls.BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL;
                                     errorDetailMsg = messageUtil.formatMessage(errorDetailMsg);
                                 }
                                 messageObj = {
-                                    id: messageUtil.getGuid(), 
-                                    action: 'show', 
-                                    type: "error", 
+                                    id: messageUtil.getGuid(),
+                                    action: 'show',
+                                    type: "error",
                                     category: 'retry_fail',
                                     summary: errorSummaryMsg,
                                     detail: errorDetailMsg};
 
                                 //Show error message on UI
                                 messageUtil.showMessage(messageObj);
-                                
+
                                 //Log message
                                 var errorMsg = "Attempts to connect to your cloud service failed after {0} tries. Target URL: {1}.";
                                 errorMsg = messageUtil.formatMessage(errorMsg, retryLimit, retryOptions.url);
@@ -200,24 +200,24 @@ define([
                                 logMessage(retryOptions.url, 'error', errorMsg);
                             }
                         }
-                        
+
                         //Call error callback if the ajax call finally failed
                         if (errorCallBack) {
                             errorCallBack(jqXHR, textStatus, errorThrown);
                         }
-                        
+
                         ajaxCallDfd.reject(jqXHR, textStatus, errorThrown);
-                        
+
                         return false;
                     });
                 }(retryLimit));
- 
+
                 return ajaxCallDfd;
             };
-            
+
             /**
              * Make an ajax get call with retry logic
-             * 
+             *
              * Supported patterns:
              * 1. ajaxGetWithRetry(url)
              *    url: a target URL string (e.g. '/sso.static/dashboards.subscribedapps')
@@ -236,20 +236,20 @@ define([
              *     successCallback: success call back function
              *     options: a Object which contains the settings required by an ajax call
              *             Support standard jquery settings and additional options "retryLimit", "showMessages"
-             * 
+             *
              * @returns {Deferred Object}
-             */ 
+             */
             self.ajaxGetWithRetry = function() {
                 var args = arguments;
                 var retryOptions = self.getAjaxOptions(args);
-                
+
                 //Set ajax call type to GET
                 retryOptions.type = 'GET';
-                
+
                 //call ajaxWithRetry
                 return self.ajaxWithRetry(retryOptions);
             };
-            
+
             self.getAjaxOptions = function(args) {
                 var argsLength = args.length;
                 var retryOptions = {};
@@ -268,52 +268,52 @@ define([
                         retryOptions.url = args[0];
                         retryOptions.success = args[1];
                     }
-                    else if (typeof(args[0]) === 'string' && 
+                    else if (typeof(args[0]) === 'string' &&
                             (typeof(args[1]) === 'undefined' || args[1] === null)) {
                         retryOptions.url = args[0];
                     }
-                    else if (args[0] !== null && typeof(args[0]) === 'object' && 
+                    else if (args[0] !== null && typeof(args[0]) === 'object' &&
                             (typeof(args[1]) === 'undefined' || args[1] === null)) {
                         retryOptions = args[0];
                     }
                 }
                 else if (argsLength === 3) {
-                    if (typeof(args[0]) === 'string' && 
-                            typeof(args[1]) === 'function' && 
+                    if (typeof(args[0]) === 'string' &&
+                            typeof(args[1]) === 'function' &&
                             args[2] !== null && typeof(args[2]) === 'object') {
                         retryOptions = args[2];
                         retryOptions.url = args[0];
                         retryOptions.success = args[1];
                     }
-                    else if (typeof(args[0]) === 'string' && 
-                            typeof(args[1]) === 'function' && 
+                    else if (typeof(args[0]) === 'string' &&
+                            typeof(args[1]) === 'function' &&
                             (typeof(args[2]) === 'undefined' || args[2] === null)) {
                         retryOptions.url = args[0];
                         retryOptions.success = args[1];
                     }
-                    else if (typeof(args[0]) === 'string' && 
-                            (args[1] === null || typeof(args[1]) === 'undefined') && 
+                    else if (typeof(args[0]) === 'string' &&
+                            (args[1] === null || typeof(args[1]) === 'undefined') &&
                             args[2] !== null && typeof(args[2]) === 'object') {
                         retryOptions = args[2];
                         retryOptions.url = args[0];
                     }
-                    else if (typeof(args[0]) === 'string' && 
-                            (args[1] === null || typeof(args[1]) === 'undefined') && 
+                    else if (typeof(args[0]) === 'string' &&
+                            (args[1] === null || typeof(args[1]) === 'undefined') &&
                             (args[2] === null || typeof(args[2]) === 'undefined')) {
                         retryOptions.url = args[0];
                     }
                 }
-                
+
                 return retryOptions;
             };
 
             function isValidShowMessageOption(messageOption) {
-                return messageOption === "none" || messageOption === "summary" || 
+                return messageOption === "none" || messageOption === "summary" ||
                         messageOption === "all";
             }
-            
+
             function logMessage(url, messageType, messageText) {
-                if (messageType) 
+                if (messageType)
                     messageType = messageType.toLowerCase();
                 if (url === '/sso.static/dashboards.logging/logs') {
                     switch(messageType) {
@@ -352,23 +352,23 @@ define([
                     }
                 }
             }
-            
+
             function removeMessage(messageId) {
                 if (messageId) {
                     var messageObj = {id: messageId, tag: 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE', action: 'remove', category: 'retry_in_progress'};
                     window.postMessage(messageObj, window.location.href);
                 }
             }
-            
+
             function getMessageFromXhrResponse(xhr) {
                 var message = null;
                 var respJson = xhr.responseJSON;
-                if (typeof respJson !== "undefined" && 
-                        respJson.hasOwnProperty("errorMessage") && 
-                        typeof respJson.errorMessage !== "undefined" && 
+                if (typeof respJson !== "undefined" &&
+                        respJson.hasOwnProperty("errorMessage") &&
+                        typeof respJson.errorMessage !== "undefined" &&
                         respJson.errorMessage !== "") {
                     message = respJson.errorMessage;
-                } 
+                }
                 //do not show response text for now, as it may contains information not friendly to the end user
 //                else {
 //                    var respText = xhr.responseText;
@@ -376,12 +376,12 @@ define([
 //                        message = respText;
 //                    }
 //                }
-                
+
                 return message;
             }
-            
+
         }
-        
+
         return DashboardFrameworkAjaxUtility;
     }
 );

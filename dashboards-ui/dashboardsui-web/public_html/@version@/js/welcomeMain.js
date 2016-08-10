@@ -32,7 +32,7 @@ requirejs.config({
             exports: 'crossroads'
         }
     },
-    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation 
+    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation
     // resources with a custom translation file.
     // Any resource file added, must be placed under a directory named "nls". You can use a path mapping or you can define
     // a path that is relative to the location of this main.js file.
@@ -70,10 +70,10 @@ require(['ojs/ojcore',
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             var logger = new _emJETCustomLogger();
             var logReceiver = dfu.getLogUrl();
-           
+
             logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
             logger.setLogLevel(oj.Logger.LEVEL_WARN);
-            
+
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar", {
                     viewModel: {require: '/emsaasui/uifwk/js/widgets/brandingbar/js/brandingbar.js'},
@@ -97,10 +97,10 @@ require(['ojs/ojcore',
             function getNlsString(key, args) {
                 return oj.Translations.getTranslatedString(key, args);
             }
-            
+
             function TitleViewModel(){
                var self = this;
-//               self.homeTitle = getNlsString("DBS_HOME_TITLE");  
+//               self.homeTitle = getNlsString("DBS_HOME_TITLE");
                self.landingHomeTitle = dfu_model.generateWindowTitle(getNlsString("LANDING_HOME_WINDOW_TITLE"), null, null, null);
            }
 
@@ -109,7 +109,7 @@ require(['ojs/ojcore',
 
             function landingHomeModel() {
                 var self = this;
-                
+
                 self.dashboardsUrl = "/emsaasui/emcpdfui/home.html";
                 self.landingHomeUrls = null;
                 self.baseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";
@@ -118,13 +118,13 @@ require(['ojs/ojcore',
                 self.getStartedUrl = self.baseUrl + self.gsID;
                 self.videosUrl = self.baseUrl + self.videoID;
                 self.communityUrl = "http://cloud.oracle.com/management";
-                
+
                 self.welcomeSlogan = getNlsString("LANDING_HOME_WELCOME_SLOGAN");
                 self.APM = getNlsString("LANDING_HOME_APM");
                 self.APMDesc = getNlsString("LANDING_HOME_APM_DESC");
                 self.LA = getNlsString("LANDING_HOME_LA");
                 self.LADesc = getNlsString("LANDING_HOME_LA_DESC");
-                self.ITA = getNlsString("LANDING_HOME_ITA");                
+                self.ITA = getNlsString("LANDING_HOME_ITA");
                 self.ITADesc = getNlsString("LANDING_HOME_ITA_DESC");
                 self.select = getNlsString("LANDING_HOME_SELECT");
                 self.ITA_DB_Performance = getNlsString("LANDING_HOME_ITA_DB_PERFORMANCE");
@@ -134,45 +134,45 @@ require(['ojs/ojcore',
                 self.ITA_Server_Resource = getNlsString("LANDING_HOME_ITA_SERVER_RESOURCE");
                 self.ITA_Application_Performance = getNlsString("LANDING_HOME_ITA_APPLICATION_PERFORMANCE");
                 self.ITA_Avail_Analytics = getNlsString("LANDING_HOME_ITA_AVAIL_ANALYTICS");
-                
+
                 self.infraMonitoring = getNlsString("LANDING_HOME_INFRA_MONITORING");
                 self.infraMonitoringDesc = getNlsString("LANDING_HOME_INFRA_MONITORING_DESC");
 
                 self.dashboards = getNlsString("LANDING_HOME_DASHBOARDS");
                 self.dashboardsDesc = getNlsString("LANDING_HOME_DASHBOARDS_DESC");
-                
+
                 self.compliance = getNlsString("LANDING_HOME_COMPLIANCE");
                 self.complianceDesc = getNlsString("LANDING_HOME_COMPLIANCE_DESC");
                 self.securityAnalytics = getNlsString("LANDING_HOME_SECURITY_ANALYTICS");
                 self.securityAnalyticsDesc = getNlsString("LANDING_HOME_SECURITY_ANALYTICS_DESC");
                 self.orchestration = getNlsString("LANDING_HOME_ORCHESTRATION");
                 self.orchestrationDesc = getNlsString("LANDING_HOME_ORCHESTRATION_DESC");
-                
+
                 self.dataExplorers = getNlsString("LANDING_HOME_DATA_EXPLORERS");
                 self.dataExplorersDesc = getNlsString("LANDING_HOME_DATA_EXPLORERS_DESC");
                 self.dataExplorer = getNlsString("LANDING_HOME_DATA_EXPLORER");
-                
+
                 self.exploreDataLinkList = ko.observableArray();
                 self.exploreDataInITA = ko.observableArray();
-                
+
                 self.learnMore = getNlsString("LANDING_HOME_LEARN_MORE");
                 self.getStarted = getNlsString("LANDING_HOME_GET_STARTED_LINK");
                 self.videos = getNlsString("LANDING_HOME_VIDEOS_LINK");
                 self.community = getNlsString("LANDING_HOME_COMMUNITY_LINK");
-                
+
                 self.ITA_Type = "select";
                 self.data_type = "select";
-                
+
                 self.showInfraMonitoring = ko.observable(false);
                 self.showCompliance = ko.observable(false);
                 self.showSecurityAnalytics = ko.observable(false);
                 self.showOrchestration = ko.observable(false);
-                
+
                 self.getServiceUrls = function() {
                     var serviceUrl = dfu.getRegistrationUrl();
                     dfu.ajaxWithRetry({
                         url: serviceUrl,
-                        headers: dfu_model.getDefaultHeader(), 
+                        headers: dfu_model.getDefaultHeader(),
                         contentType:'application/json',
                         success: function(data, textStatus) {
                             fetchServiceLinks(data);
@@ -181,18 +181,18 @@ require(['ojs/ojcore',
                             oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
                         },
                         async: true
-                    }); 
+                    });
                 };
-                
+
                 //get urls of databases and middleware
                 self.getITAVerticalAppUrl = function(rel) {
                     var serviceName = "emcitas-ui-apps";
-                    var version = "1.0";                   
+                    var version = "1.0";
                     var url = dfu_model.discoverUrl(serviceName, version, rel);
                     return url;
                 };
-                
-                function fetchServiceLinks(data) { 
+
+                function fetchServiceLinks(data) {
                     var landingHomeUrls = {};
                     var i;
                     if(data.cloudServices && data.cloudServices.length>0) {
@@ -220,11 +220,11 @@ require(['ojs/ojcore',
                         for(i=0; i<dataExplorersNum; i++) {
                             var originalName = dataExplorers[i].name;
                             dataExplorers[i].name = originalName.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, '');
-                            self.exploreDataLinkList.push(dataExplorers[i]);                                                        
+                            self.exploreDataLinkList.push(dataExplorers[i]);
                             landingHomeUrls[dataExplorers[i].name] = dataExplorers[i].href;
                             //change name of data explorer in ITA to "Data Explorer - Analyze" & "Data Explorer"
 
-                            if(dataExplorers[i].serviceName === "emcitas-ui-apps") {                             
+                            if(dataExplorers[i].serviceName === "emcitas-ui-apps") {
                                 self.exploreDataInITA.push({id: 'ITA_Analyze', href: dataExplorers[i].href, name: self.dataExplorer+" - " +dataExplorers[i].name, serviceName: dataExplorers[i].serviceName, version: dataExplorers[i].version});
 			    	landingHomeUrls[self.dataExplorer+" - " +dataExplorers[i].name] = dataExplorers[i].href;
                             }else if (dataExplorers[i].serviceName === "TargetAnalytics") {
@@ -247,7 +247,7 @@ require(['ojs/ojcore',
                     self.landingHomeUrls = landingHomeUrls;
                 }
                 self.getServiceUrls();
-                                
+
                 self.openAPM = function() {
                     if(!self.landingHomeUrls) {
                         console.log("---fetching service links is not finished yet!---");
@@ -279,7 +279,7 @@ require(['ojs/ojcore',
                         if(self.landingHomeUrls.ITAnalytics) {
                             window.location.href = self.landingHomeUrls.ITAnalytics;
                         }
-                    } else if (event.type === "keypress" && event.keyCode === 9) {  //keyboard handle for Firefox                      
+                    } else if (event.type === "keypress" && event.keyCode === 9) {  //keyboard handle for Firefox
                         if (event.shiftKey) {
                             if (event.target.id === "ITA_wrapper") {
                                 $(event.target).blur();
@@ -377,7 +377,7 @@ require(['ojs/ojcore',
                     oj.Logger.info('Trying to open Management Cloud Community by URL: ' + self.communityUrl);
                     if(self.communityUrl) {
                         window.open(self.communityUrl, "_blank");
-                    }                   
+                    }
                 };
             }
 

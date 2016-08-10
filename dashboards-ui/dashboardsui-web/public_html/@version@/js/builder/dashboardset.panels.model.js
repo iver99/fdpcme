@@ -7,7 +7,7 @@ define([
     'idfbcutil',
     'ojs/ojcore',
     'jqueryui',
-    'builder/builder.jet.partition', 
+    'builder/builder.jet.partition',
     'builder/builder.core',
     'builder/right.panel.model',
     'builder/builder.functions',
@@ -24,15 +24,15 @@ define([
             }
 
             var self = this;
-            
+
             var dashboardInstMap =dashboardsetToolBarModel.dashboardInstMap = {};
             var options = {"autoRefreshInterval":dashboardsetToolBarModel.autoRefreshInterval};
-            
+
             window.selectedDashboardInst = self.selectedDashboardInst = ko.observable(null);
-            
+
             self.windowWidth=ko.observable($(window).width());
             self.windowHeight=ko.observable($(window).height());
-            
+
             self.rightPanelModel = null;
             self.loadRightPanelModel = function (toolBarModel, tilesViewModel, $b) {
                 if (self.rightPanelModel) {
@@ -46,21 +46,21 @@ define([
                 }
                 self.rightPanelModel.initialize();
             };
-            
+
             self.showDashboard = function (dashboardItem) {
                 document.activeElement.blur();//to blur the focused item on another tab
                 var dashboardId = dashboardItem.dashboardId;
                 var divId = "dashboard-" + dashboardId;
                 var $showDashboard = $("#" + divId);
                 var alreadyLoaded = $("#" + divId).length > 0;
-                
+
                 //hide the right panel
                 if (self.rightPanelModel) {
                     //resize right panel before shown
                     self.rightPanelModel.completelyHidden(true);
                     $(".dashboard-picker-container").removeClass("df-collaps");
                 }
-                
+
                 if (alreadyLoaded) {
                     $showDashboard.show();
                     self.selectedDashboardInst(dashboardInstMap[dashboardId]);
@@ -93,21 +93,21 @@ define([
                     }
                 }
             };
-            
+
             self.includingDashboard = function (guid) {
                 var $includingEl = $($("#dashboard-include-template").text());
                 $("#dashboards-tabs-contents").append($includingEl);
                 $includingEl.attr("id", "dashboard-" + guid);
 
                 //var predataModel = new model.PredataModel();
-                
-                function init() {              
+
+                function init() {
                     var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share'], dashboardsetToolBarModel.reorderedDbsSetItems, true);
-                    
+
                     dashboardsViewModle.showExploreDataBtn(false);
-                    
+
                     dashboardsViewModle.handleDashboardClicked = function(event, data) {
-                        
+
                         var hasDuplicatedDashboard = false;
                         var dataId;
                         var dataName;
@@ -116,9 +116,9 @@ define([
                                dataName=data.dashboard.name;
                             }else{
                                dataId= data.id;
-                               dataName=data.name; 
+                               dataName=data.name;
                             }
-                        dashboardsetToolBarModel.dashboardsetItems.forEach(function(dashboardItem) {                         
+                        dashboardsetToolBarModel.dashboardsetItems.forEach(function(dashboardItem) {
                             if (dashboardItem.dashboardId === dataId) {
                                 hasDuplicatedDashboard = true;
                                     dfu.showMessage({
@@ -128,7 +128,7 @@ define([
                                         removeDelayTime: 5000});
                                 }
                         });
-                        
+
                         if (!hasDuplicatedDashboard) {
                             dashboardsetToolBarModel.pickDashboard(selectedDashboardInst().guid, {
                                 id: ko.observable(dataId),
@@ -151,27 +151,27 @@ define([
                 };
                 dashboardInstMap[guid] = dashboardInst;
                 self.selectedDashboardInst(dashboardInst);
-                
+
                 //predataModel.loadAll().then(init, init); //nomatter there is error in predata loading, initiating
                 init();
             };
 
             self.loadDashboard = function (dsbId) {
-                
+
                 $("#loading").show();
                 Builder.loadDashboard(dsbId, function (dashboard) {
-                    
+
                     var $dashboardEl = $($("#dashboard-content-template").text());
                     $("#dashboards-tabs-contents").append($dashboardEl);
                     $dashboardEl.attr("id", "dashboard-" + dsbId);
-                    
+
                     var $b = new Builder.DashboardBuilder(dashboard, $dashboardEl);
                     var tilesView = new Builder.DashboardTilesView($b);
                     var tilesViewModel = new Builder.DashboardTilesViewModel($b, dashboardsetToolBarModel.dashboardInst/*, tilesView, urlChangeView*/);
 //                    $b.registerObject(tilesViewModel, 'DashboardTilesViewModel'); //to add tilesViewModel to $b so that it can be reached by $b.getDashboardTilesViewModel()
                     var toolBarModel = new Builder.ToolBarModel($b, options);
                     tilesViewModel.toolbarModel = toolBarModel;
-                    
+
                     //change dashboard name
                     toolBarModel.dashboardName.subscribe(function (dashboardName) {
                         var currentDashboardId = self.selectedDashboardInst().toolBarModel.dashboardId;
@@ -183,11 +183,11 @@ define([
                         });
                         dashboardsetToolBarModel.reorderedDbsSetItems().filter(function isIdMatch(value) {
                             if(value.dashboardId===currentDashboardId){
-                                value.name(dashboardName);                            
+                                value.name(dashboardName);
                             }
                         });
                     });
-                                        
+
                     if (dashboard.tiles && dashboard.tiles()) {
                         for (var i = 0; i < dashboard.tiles().length; i++) {
                             var tile = dashboard.tiles()[i];
@@ -228,7 +228,7 @@ define([
 
                     ko.applyBindings(toolBarModel, $dashboardEl.find('.head-bar-container')[0]);
                     tilesViewModel.initialize();
-                    
+
                     dashboardInstMap[dsbId] = {
                         type: "included",
                         $b: $b,
@@ -242,7 +242,7 @@ define([
                     ko.applyBindings(tilesViewModel, $dashboardEl.find('.dashboard-content-main')[0]);
 
                     self.loadRightPanelModel(toolBarModel,tilesViewModel,$b);
-                    
+
                     $("#loading").hide();
                     $('#globalBody').show();
                     $dashboardEl.css("visibility", "visible");
@@ -255,7 +255,7 @@ define([
                                 $(element).css({display: "none"});
                             }
                         });
-                        
+
                         // hide the options button if there are no menu items in the menu.
                         var allMenusHidden = true;
                         $b.findEl('.dropdown-menu li').each(function () {
@@ -266,7 +266,7 @@ define([
                         if (allMenusHidden) {
                             $b.findEl(".dashboardOptsBtn").hide();
                         }
-                        
+
                         if (!dashboardsetToolBarModel.dashboardsetConfig.isCreator()) {
                             $($b.findEl('.builder-toolbar-right')).css({display: "none"});
                         }
@@ -281,7 +281,7 @@ define([
                     idfbcutil.hookupBrowserCloseEvent(function () {
                         oj.Logger.info("Dashboard: [id=" + dashboard.id() + ", name=" + dashboard.name() + "] is closed", true);
                     });
-                    
+
                     $("#loading").hide();
                     /*
                      * Code to test df_util_widget_lookup_assetRootUrl
@@ -301,10 +301,10 @@ define([
             self.hideAllDashboards = function () {
                 $(".dashboard-content").hide();
             };
-            
+
             function initDashboard() {
                 self.hideAllDashboards();
-                dashboardsetToolBarModel.selectedDashboardItem() && 
+                dashboardsetToolBarModel.selectedDashboardItem() &&
                         self.showDashboard(dashboardsetToolBarModel.selectedDashboardItem());
             }
 
@@ -312,7 +312,7 @@ define([
 
             initDashboard();
 
-            //resize function   
+            //resize function
             $(window).resize(function () {
                 if (self.windowWidth() === $(window).width()) {
                     self.windowHeight($(window).height());
@@ -323,14 +323,14 @@ define([
 
             self.windowWidth.extend({rateLimit: 200, method: 'notifyWhenChangesStop '});
             self.windowHeight.extend({rateLimit: 200, method: 'notifyWhenChangesStop '});
-            
+
             self.windowHeight.subscribe(function () {
                 windowResizeProcess();
             });
             self.windowWidth.subscribe(function () {
                 windowResizeProcess();
             });
-            
+
             function windowResizeProcess() {
                 if ($('.dbs-list-container').length !== 0 && self.selectedDashboardInst().type === 'new') {
                     var $target = $('.dashboard-picker-container:visible');

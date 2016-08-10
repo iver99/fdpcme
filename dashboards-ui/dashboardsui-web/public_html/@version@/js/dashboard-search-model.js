@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -10,7 +10,7 @@ define(['knockout',
         'ojs/ojknockout',
         'ojs/ojmenu'
     ],
-    
+
     function(ko)
     {
         function SearchObject(name, description, url, chartType) {
@@ -20,7 +20,7 @@ define(['knockout',
             self.url = ko.observable(url);
             self.chartType = ko.observable(chartType);
         }
-        
+
         return {};
     }
 );
