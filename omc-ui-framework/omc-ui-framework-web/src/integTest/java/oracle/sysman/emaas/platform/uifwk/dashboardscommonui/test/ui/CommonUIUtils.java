@@ -100,7 +100,7 @@ public class CommonUIUtils
 	public static void commonUITestLog(String sDesc)
 	{
 		String sStr = "*** Dashboards Common UI TestLog ***:  " + sDesc;
-		System.out.println(sStr);
+		//System.out.println(sStr);
 	}
 
 	public static String getAppName(String sTenant, String sUser)
@@ -207,7 +207,7 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("SSO_USERNAME");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-							.commonUITestLog("The SSO_USERNAME property value is null ... set it to a different value -- 'emcsadmin'.");
+					.commonUITestLog("The SSO_USERNAME property value is null ... set it to a different value -- 'emcsadmin'.");
 					sPropertyValue = "emcsadmin";
 				}
 			}
@@ -216,7 +216,7 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("SSO_PASSWORD");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-							.commonUITestLog("The SSO_PASSWORD property value is null ... set it to a different value -- 'Welcome1!'.");
+					.commonUITestLog("The SSO_PASSWORD property value is null ... set it to a different value -- 'Welcome1!'.");
 					//	below hard coded password is being using in tests/dev mode only
 					sPropertyValue = "Welcome1!";
 				}
@@ -225,7 +225,7 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("COMMON_UI_URL_SUFFIX");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-							.commonUITestLog("The COMMON_UI_URL_SUFFIX property value is null ... set it to a different value -- '/emsaasui/uifwk/test.html'.");
+					.commonUITestLog("The COMMON_UI_URL_SUFFIX property value is null ... set it to a different value -- '/emsaasui/uifwk/test.html'.");
 					sPropertyValue = "/emsaasui/uifwk/test.html";
 				}
 			}
@@ -233,7 +233,7 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("SAAS_AUTH_TOKEN");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-					.commonUITestLog("The DASHBOARD_API_ENDPOINT property value is null ... set it to a different value -- 'welcome1'.");
+							.commonUITestLog("The DASHBOARD_API_ENDPOINT property value is null ... set it to a different value -- 'welcome1'.");
 					sPropertyValue = "Basic d2VibG9naWM6d2VsY29tZTE=";
 
 				}
@@ -241,7 +241,7 @@ public class CommonUIUtils
 					sPropertyValue = emaasProp.getProperty("DASHBOARD_API_ENDPOINT");
 					if (sPropertyValue == null) {
 						CommonUIUtils
-						.commonUITestLog("The SAAS_AUTH_TOKEN property value is null ... set it to a different value .");
+								.commonUITestLog("The SAAS_AUTH_TOKEN property value is null ... set it to a different value .");
 						sPropertyValue = sOhsUrl + "/emcpdf/api/v1/";
 					}
 				}
@@ -250,7 +250,7 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("TARGETMODEL_SERVICE_SHARD_ENDPOINT");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-							.commonUITestLog("The TARGETMODEL_SERVICE_SHARD_ENDPOINT property value is null ... set it to a different value.");
+					.commonUITestLog("The TARGETMODEL_SERVICE_SHARD_ENDPOINT property value is null ... set it to a different value.");
 					sRolesUrl = CommonUIUtils.getEmaasPropertyValue("EMCS_NODE2_HOSTNAME");
 					if (sRolesUrl == null) {
 						sPropertyValue = null;

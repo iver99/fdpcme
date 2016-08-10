@@ -171,6 +171,62 @@ define(['knockout',
                 }
                 self.tilesReorder();
             };
+            
+            self.moveTileTo = function(cell, tile) {
+                var dragStartRow = self.mode.getModeRow(tile);
+                var cellsOccupiedByTile = self.getCellsOccupied(cell.row, cell.column, self.mode.getModeWidth(tile), self.mode.getModeHeight(tile));
+                var tilesUnderCell = self.getTilesUnder(cellsOccupiedByTile, tile);
+                var tilesBelowOriginalCell = self.getTilesBelow(tile);
+                var rowDiff, iTile;
+                for(var i in tilesUnderCell) {
+                    iTile = tilesUnderCell[i];
+                    rowDiff = cell.row - self.mode.getModeRow(iTile) + self.mode.getModeHeight(tile);
+                    self.moveTileDown(iTile, rowDiff);
+                }
+                    
+                self.updateTilePosition(tile, cell.row, cell.column);
+                
+                rowDiff = Math.abs(cell.row - dragStartRow);
+                for(i in tilesBelowOriginalCell) {
+                    iTile = tilesBelowOriginalCell[i];
+                    rowDiff = (rowDiff===0) ? self.mode.getModeHeight(tile) : rowDiff;
+                    self.moveTileUp(iTile, rowDiff);
+                }
+                    
+                self.tilesReorder();
+            }            
+            
+            self.moveUpTile = function(tile, value) {
+                var row = self.mode.getModeRow(tile);
+                var col = self.mode.getModeColumn(tile);
+                var cell = new Builder.Cell(row-1, col);
+                self.draggingTile = tile;
+                self.moveTileTo(cell, tile);
+            }
+            
+            self.moveDownTile = function(tile, value) {
+                var row = self.mode.getModeRow(tile);
+                var col = self.mode.getModeColumn(tile);
+                var cell = new Builder.Cell(row+1, col);
+                self.draggingTile = tile;
+                self.moveTileTo(cell, tile);
+            }
+            
+            self.moveLeftTile = function(tile, value) {
+               var row = self.mode.getModeRow(tile);
+               var col = self.mode.getModeColumn(tile);
+               var cell = new Builder.Cell(row, col-1);
+               self.draggingTile = tile;
+               self.moveTileTo(cell, tile);
+            }
+            
+            self.moveRightTile = function(tile, value) {
+                var row = self.mode.getModeRow(tile);
+                var col = self.mode.getModeColumn(tile);
+                var cell = new Builder.Cell(row, col+1);
+                self.draggingTile = tile;
+                self.moveTileTo(cell, tile);
+            }
 
             self.resizeTile = function (tile,options) {
                 var isPositionValid = options && options.left && options.top;
@@ -679,7 +735,7 @@ define(['knockout',
                             }
                             newTile.row(tileCell.row);
                             newTile.column(tileCell.column);
-                            self.tilesGrid.registerTileToGrid(newTile);
+                            self.tilesGrid.registerTileToGrid(newTile);                            
 //                                if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
 //                                    var worksheetName = 'WS_4_QDG_WIDGET';
 //                                    var workSheetCreatedBy = 'sysman';

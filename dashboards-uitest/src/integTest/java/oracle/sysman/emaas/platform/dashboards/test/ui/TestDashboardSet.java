@@ -619,7 +619,7 @@ public class TestDashboardSet extends LoginAndLogout
 		//verify if in the home page
 		webd.getLogger().info("Verify delete successfully and back to the home page");
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DashboardDisplayPanelCss)));
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DASHBOARDDISPLAYPANELCSS)));
 
 		//verify if in the dashboar set has been deleted
 		webd.getLogger().info("Verify if the dashboard has been deleted");
@@ -701,7 +701,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 		//click Add dashboard icon
 		webd.getLogger().info("Click Add Dashboard Icon");
-		webd.click("css=" + PageId.DashboardSetAddDashboardIcon_Css);
+		webd.click("css=" + PageId.DASHBOARDSETADDDASHBOARDICON_CSS);
 
 		//search the dashboard created in set
 		DashboardHomeUtil.search(webd, dbName_InSet);
@@ -712,7 +712,7 @@ public class TestDashboardSet extends LoginAndLogout
 		String InfoBtn_xpath = "//div[contains(@aria-label, 'DashboardInSet')]//button";
 		webd.getLogger().info("Verfiy the current dashboard can not be deleted");
 		webd.click(InfoBtn_xpath);
-		WebElement removeButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.RmBtnID));
+		WebElement removeButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.RMBTNID));
 		Assert.assertFalse(removeButton.isEnabled(), "delete is enabled for current dashboard");
 
 	}

@@ -158,23 +158,12 @@ define(['knockout',
             
             self.initUserOtions = function () {
                 if(!self.isUnderSet){
-                     Builder.fetchDashboardOptions(
-                    self.dashboard.id(),
-                    function (data) {
-                        //sucessfully get options
-                        self.hasUserOptionInDB(true);
-//                        self.autoRefreshInterval(data["autoRefreshInterval"]);
-                        //required to init interverl
-//                        self.setAutoRefreshInterval(data["autoRefreshInterval"]);
+                    self.hasUserOptionInDB($b.getDashboardTilesViewModel().hasUserOptionInDB());
+                    if(self.hasUserOptionInDB()){
                         self.setAutoRefreshInterval(self.autoRefreshInterval());
-
-                    },
-                    function (jqXHR, textStatus, errorThrown) {
-                        if(jqXHR.status === 404){
-                            self.hasUserOptionInDB(false);
-                            self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
-                        }
-                    });
+                    }else{
+                        self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
+                    }
                 }else{
                     self.setAutoRefreshInterval(self.autoRefreshInterval());
                 }

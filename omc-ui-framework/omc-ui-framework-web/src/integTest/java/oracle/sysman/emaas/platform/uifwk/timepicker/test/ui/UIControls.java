@@ -16,14 +16,14 @@ package oracle.sysman.emaas.platform.uifwk.timepicker.test.ui;
 public class UIControls
 {
 	//Begin: Text
-	public static final String sStartText = "//*[@id='start']";
-	public static final String sEndText = "//*[@id='end']";
+	public static final String SSTARTTEXT = "//*[@id='start']";
+	public static final String SENDTEXT = "//*[@id='end']";
 
-	public static final String sStartTextCompact = "//*[@id='startInCompact']";
-	public static final String sEndTextCompact = "//*[@id='endInCompact']";
+	public static final String SSTARTTEXTCOMPACT = "//*[@id='startInCompact']";
+	public static final String SENDTEXTCOMPACT = "//*[@id='endInCompact']";
 
-	public static final String sFilterInfo = "//*[@id='filterInfo']";
-	public static final String sFilterInfoCompact = "//*[@id='filterInfoInCompact']";
+	public static final String SFILTERINFO = "//*[@id='filterInfo']";
+	public static final String SFILTERINFOCOMPACT = "//*[@id='filterInfoInCompact']";
 
 	//	public static final String sTimePeriod = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/span";
 	//	public static final String sErrorMsg = "/html/body/div[1]/div/div[2]/div/div/div/div[4]";//"/html/body/div[1]/div/div/div[1]/div/div[2]/div[4]";

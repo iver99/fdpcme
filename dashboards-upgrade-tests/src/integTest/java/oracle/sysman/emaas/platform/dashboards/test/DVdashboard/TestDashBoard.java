@@ -163,7 +163,7 @@ public void testSetHome() throws Exception
 		//delete the dashboard
 		webd.getLogger().info("start to delete the dashboard");
 
-		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
+		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.FAVORITE_BOXID));
 		if (el.isSelected()) {
 			el.click();
 		}
