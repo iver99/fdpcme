@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -43,6 +43,7 @@ define({
       "BRANDING_BAR_APP_NAME_TENANT_MANAGEMENT_UI":"Set up Oracle Management Cloud",
       "BRANDING_BAR_APP_NAME_MONITORING": "Infrastructure Monitoring",
       "BRANDING_BAR_APP_NAME_SECURITY_ANALYTICS": "Security Monitoring and Analytics",
+      "BRANDING_BAR_APP_NAME_COMPLIANCE": "Compliance",
       "BRANDING_BAR_APP_NAME_ORCHESTRATION": "Orchestration",
       "BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_ERROR":"Error",
       "BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_WARN":"Warning",
@@ -135,8 +136,8 @@ define({
       "DATETIME_PICKER_TIME_FILTER_INFO_HOURS_EXCLUDED": "Hours excluded: ",
       "DATETIME_PICKER_TIME_FILTER_INFO_DAYS_EXCLUDED": "Days excluded: ",
       "DATETIME_PICKER_TIME_FILTER_INFO_MONTHS_EXCLUDED": "Months excluded: ",
-      
-      
+
+
       //time filter
       "TIME_FILTER_TITLE": "Filters",
       "TIME_FILTER_TIME_LABEL": "Time",

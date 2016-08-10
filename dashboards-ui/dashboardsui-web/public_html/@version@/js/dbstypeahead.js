@@ -1,32 +1,32 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['dfutil', 'ojs/ojcore', 'jquery', 'knockout','jqueryui'], 
+define(['dfutil', 'ojs/ojcore', 'jquery', 'knockout','jqueryui'],
        /*
-        * @param {Object} oj 
+        * @param {Object} oj
         * @param {jQuery} $
         */
 function(dfu, oj, $, ko)
 {
-    
+
 (function ()
 { // make sure register is running
-    
+
 ko.bindingHandlers.dbsTypeAhead = {
     init: function(element, valueAccessor) {
         var _value = valueAccessor();
         $(element).dbsTypeAhead(_value);
-                
+
     },
     update: function(element, valueAccessor) {
-        
+
     }
 };
 
 $.widget( "dbs.dbsTypeAhead", {
-	
+
 	options: {
 		delay: 900,
 		minLength: 1,
@@ -35,7 +35,7 @@ $.widget( "dbs.dbsTypeAhead", {
                 disabled: false,
                 busyElement: null,
                 busyClassName: null,
-                
+
 		// event handlders
 		response: null,
                 acceptInput: undefined,
@@ -47,7 +47,7 @@ $.widget( "dbs.dbsTypeAhead", {
 
 	_create: function() {
 		// Some browsers only repeat keydown events, not keypress events
-		// The code for & in keypress is the same as the up arrow, 
+		// The code for & in keypress is the same as the up arrow,
 		var suppressKeyPress, suppressKeyPressRepeat, suppressInput,
 			nodeName = this.element[ 0 ].nodeName.toLowerCase(),
 			isTextarea = nodeName === "textarea",
@@ -60,7 +60,7 @@ $.widget( "dbs.dbsTypeAhead", {
 			this.element.prop( "isContentEditable" );
 
 		this.valueMethod = this.element[ isTextarea || isInput ? "val" : "text" ];
-		
+
 		this.element
 			//.addClass( "ui-autocomplete-input" )
 			.attr( "autocomplete", "off" );
@@ -152,10 +152,10 @@ $.widget( "dbs.dbsTypeAhead", {
                                 this._acceptInput();
 			},
 			focus: function() {
-				
+
 			},
 			blur: function() {
-                            
+
 			}
 		});
 
@@ -175,7 +175,7 @@ $.widget( "dbs.dbsTypeAhead", {
 	},
 
 	_initSource: function() {
-		var array, 
+		var array,
 			that = this, filterFunc = that.options.filterFunc;
 		if ( $.isArray( this.options.source ) ) {
 			array = this.options.source;
@@ -200,7 +200,7 @@ $.widget( "dbs.dbsTypeAhead", {
 					}
 				});
 			};
-		}*/ 
+		}*/
                 else if ( this.options.source && this.options.source['dsFactory']){
 			var _dsFac = this.options.source['dsFactory'], _dsFetchSize = this.options.source['fetchSize'], _dataSource;
                         this.source = function( request, response ) {
@@ -255,10 +255,10 @@ $.widget( "dbs.dbsTypeAhead", {
 
 		// always save the actual value, not the one passed as an argument
 		this.term = this._value();
-                
+
                 var keyCode = $.ui.keyCode;
-                if ( event.keyCode !== keyCode.BACKSPACE && 
-                        event.keyCode !== keyCode.DELETE && 
+                if ( event.keyCode !== keyCode.BACKSPACE &&
+                        event.keyCode !== keyCode.DELETE &&
                         event.keyCode !== keyCode.ENTER )
                 {
                     if ( value.length < this.options.minLength ) {
@@ -267,12 +267,12 @@ $.widget( "dbs.dbsTypeAhead", {
                 }
 		return this._search( value );
 	},
-        
-        
+
+
         forceSearch: function(  callback  ) {
             this._searchTimeOutWithoutEvent(0, true, callback);
 	},
-        
+
         _searchTimeOutWithoutEvent: function( timeout, isForceSearch, callback ) {
             clearTimeout( this.searching );
             // always save the actual value, not the one passed as an argument
@@ -281,7 +281,7 @@ $.widget( "dbs.dbsTypeAhead", {
                 return this._search( value, isForceSearch, callback );
             }, timeout );
         },
-        
+
 	_search: function( value, isForceSearch, callback ) {
 		this.pending++;
                 if (isForceSearch !== true)
@@ -335,9 +335,9 @@ $.widget( "dbs.dbsTypeAhead", {
 	__response: function( content ) {
 		if ( !this.options.disabled && !this.cancelSearch ) {
 			this._trigger( "response", null, { content: content } );
-		} 
+		}
 	},
-        
+
         clearInput: function () {
             var nodeName = this.element[ 0 ].nodeName.toLowerCase(), isTextarea = nodeName === "textarea",
 			isInput = nodeName === "input";
@@ -348,26 +348,26 @@ $.widget( "dbs.dbsTypeAhead", {
                 this._acceptInput();
             }
         },
-        
+
         _selfSearchStart: function( ) {
             this._delay(function() {
                 var _value = this._value();
 		if ( !this.options.disabled && this.options.selfSearchStart  ) {
 			this._trigger( "selfSearchStart", null, _value );
-		} 
+		}
             }, 0 );
-                
+
 	},
-        
+
         _acceptInput: function( ) {
             this._delay(function() {
 
                 var _value = this._value();
 		if ( !this.options.disabled && this.options.acceptInput && !this.cancelSearch  ) {
 			this._trigger( "acceptInput", null, _value );
-		} 
+		}
             }, 0 );
-                
+
 	},
 
 	close: function( event ) {
@@ -385,7 +385,7 @@ $.widget( "dbs.dbsTypeAhead", {
                 event.preventDefault();
             }
 	},
-        
+
         destroy: function () {
             $.Widget.prototype.destroy.apply(this, arguments);
             this._destroy();

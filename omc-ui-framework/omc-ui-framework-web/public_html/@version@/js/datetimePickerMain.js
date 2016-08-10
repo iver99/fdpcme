@@ -30,7 +30,7 @@ requirejs.config({
             exports: 'crossroads'
         }
     },
-    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation 
+    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation
     // resources with a custom translation file.
     // Any resource file added, must be placed under a directory named "nls". You can use a path mapping or you can define
     // a path that is relative to the location of this main.js file.
@@ -72,7 +72,7 @@ require(['ojs/ojcore',
                 viewModel: {require: "/emsaasui/uifwk/js/widgets/datetime-picker/js/datetime-picker.js"},
                 template: {require: "text!/emsaasui/uifwk/js/widgets/datetime-picker/html/datetime-picker.html"}
             });
-            
+
             function MyViewModel() {
                 var self = this;
                 var start = new Date(new Date() - 24 * 60 * 60 * 1000);
@@ -81,7 +81,7 @@ require(['ojs/ojcore',
                 self.floatPosition1 = "left";
                 self.floatPosition3 = "right";
                 self.dateTimeConverter1 = oj.Validation.converterFactory("dateTime").createConverter(dateTimeOption);
-                
+
                 self.start = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(start)));
                 self.end = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(end)));
                 self.filterInfo = ko.observable();
@@ -94,7 +94,7 @@ require(['ojs/ojcore',
                 self.timeDisplay = ko.observable("short");
                 self.timePeriodPre = ko.observable("Last 7 days");
                 self.changeLabel = ko.observable(true);
-                
+
                 self.isTimePeriodLessThan1day = function(timePeriod) {
                     if(timePeriod==="Last 15 minutes" || timePeriod==="Last 30 minutes" || timePeriod==="Last 60 minutes" ||
                                 timePeriod==="Last 4 hours" || timePeriod==="Last 6 hours") {
@@ -102,13 +102,13 @@ require(['ojs/ojcore',
                     }
                     return false;
                 }
-                
+
                 self.getGMTTimezone = function(date) {
                     var timezoneOffset = date.getTimezoneOffset()/60;
                     timezoneOffset = timezoneOffset>0 ? ("GMT-"+timezoneOffset) : ("GMT+"+Math.abs(timezoneOffset));
                     return timezoneOffset;
                 }
-                
+
                 self.timeParams1 = {
                     startDateTime: /*self.initStart,*/ start,
                     endDateTime: self.initEnd, //end,
@@ -120,8 +120,8 @@ require(['ojs/ojcore',
 //                    customTimeBack: 90*24*60*60*1000,
 //                    appId: "APM",
 //                    hideTimeSelection: true,
-//                    KOCadvanced: {KOCname: 'time-filter', 
-//                        KOCtemplate: '/emsaasui/uifwk/js/widgets/timeFilter/html/timeFilter.html', 
+//                    KOCadvanced: {KOCname: 'time-filter',
+//                        KOCtemplate: '/emsaasui/uifwk/js/widgets/timeFilter/html/timeFilter.html',
 //                        KOCviewModel: /*{require: '/emsaasui/uifwk/js/widgets/timeFilter/js/timeFilter.js'}},*/ {instance: tf}},
                     dtpickerPosition: self.floatPosition1,
                     timePeriod: "Last 1 day", //self.timePeriodPre,
@@ -148,7 +148,7 @@ require(['ojs/ojcore',
                         console.log("***");
                     }
                 };
-                
+
                 self.timeParams3 = {
                     startDateTime: start,
                     endDateTime: end,
@@ -178,16 +178,16 @@ require(['ojs/ojcore',
                         self.filterInfo3($(eles[1]).find("span").text());
                     }
                 };
-                
-                self.changeOption = function() { 
+
+                self.changeOption = function() {
                     self.changeLabel(false);
                     self.initStart(new Date(new Date() - 48*60*60*1000));
                     self.initEnd(new Date(new Date() - 3*60*60*1000));
                     self.timePeriodsNotToShow(["Last 90 days", "Latest"]);
                     self.timeDisplay("long");
-                    self.timePeriodPre("Last 90 days");                    
+                    self.timePeriodPre("Last 90 days");
                 }
-                
+
                 self.lineSeriesValues = ko.observableArray();
                 self.lineGroupsValues = ko.observableArray();
 
@@ -279,7 +279,7 @@ require(['ojs/ojcore',
                 };
 
                 self.generateData(self.timeParams1.startDateTime, self.timeParams1.endDateTime);
-                
+
                 self.adjustTime = function(start, end) {
                     var adjustedStart, adjustedEnd;
                     adjustedStart =start - 60*60*1000;

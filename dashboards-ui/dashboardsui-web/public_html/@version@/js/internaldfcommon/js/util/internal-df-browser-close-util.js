@@ -5,7 +5,7 @@
 define(['knockout',
         'jquery'
     ],
-    
+
     function(ko, $)
     {
         function InternalBrowserCloseUtility(){
@@ -24,14 +24,14 @@ define(['knockout',
 //                       e.preventDefault();
                      }
                      if ($.isFunction(self.action)){
-                        self.action(); 
+                        self.action();
                      }
 
                      //for Chrome and Safari
 //                   return 'Are you you want to leave this page?';//don't show any alert to user now
                  }
             }
-            
+
             self.hookupBrowserCloseEvent = function(callback){
                 self.action = callback;
                 window.onbeforeunload=browserCloseEventListener;
@@ -61,13 +61,13 @@ define(['knockout',
                 $("input[type=submit]").bind("click", function() {
                   self.isBrowserCloseEvent=false;
                 });
-            
+
             };
         }
-        
+
         return new InternalBrowserCloseUtility();
     }
-);    
+);
 
 
 

@@ -24,8 +24,7 @@ define([
             function DashboardListViewModel(params) {
                 return params;
             }
-            
+
             return {viewModel: DashboardListViewModel, template: htmlString};
         }
 );
- 

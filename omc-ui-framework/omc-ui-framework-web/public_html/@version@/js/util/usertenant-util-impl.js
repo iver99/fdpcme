@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -11,15 +11,15 @@ define(['jquery', 'ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-uti
             var dfu = new dfumodel();
             self.devMode=dfu.isDevMode();
             var ajaxUtil = new ajaxUtilModel();
-            
+
             /**
              * Get logged in user and tenant name from web service
-             * 
-             * @returns {Object} user tenant object 
-             *                    e.g. {"tenant": "emaastesttenant1", 
-             *                          "user": "emcsadmin", 
+             *
+             * @returns {Object} user tenant object
+             *                    e.g. {"tenant": "emaastesttenant1",
+             *                          "user": "emcsadmin",
              *                          "tenantUser": "emaastesttenant1.emcsadmin"}
-             */ 
+             */
             self.getUserTenant = function() {
                 if (self.devMode){
                     return dfu.getDevData().userTenant;
@@ -27,7 +27,7 @@ define(['jquery', 'ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-uti
                 var tenantName = null; //in case tenant name is not got
                 var userName = null;   //in case use name is not got
                 var tenantUser = null; //in case tenantName.userName is not got
-                
+
                 ajaxUtil.ajaxWithRetry({
                     type: "GET",
                     url: "/sso.static/loggedInUser",
@@ -49,23 +49,23 @@ define(['jquery', 'ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-uti
                         return null;
                   }
                   else
-                      return {"tenant": tenantName, "user": userName, "tenantUser": tenantUser}; 
+                      return {"tenant": tenantName, "user": userName, "tenantUser": tenantUser};
             };
-            
+
             /**
              * Get logged in user and tenant name
-             * 
+             *
              * Note: this API is deprecated, keep it compatible as it may have been used already
-             * 
-             * @returns {Object} user tenant object 
-             *                    e.g. {"tenant": "emaastesttenant1", 
-             *                          "user": "emcsadmin", 
+             *
+             * @returns {Object} user tenant object
+             *                    e.g. {"tenant": "emaastesttenant1",
+             *                          "user": "emcsadmin",
              *                          "tenantUser": "emaastesttenant1.emcsadmin"}
-             */ 
+             */
             self.getUserTenantFromCookie = function() {
                 return self.getUserTenant();
             };
-            
+
 //            var userTenant = self.getUserTenant();
             var userTenant = null;
             if (self.devMode){
@@ -75,23 +75,23 @@ define(['jquery', 'ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-uti
             }
             /**
              * Get logged in user name
-             * 
+             *
              * @returns {String} user name
-             */ 
+             */
             self.getUserName = function() {
                 return userTenant && userTenant.user ? userTenant.user : null;
             };
-            
+
             /**
              * Get logged in tenant name
-             * 
+             *
              * @returns {String} tenant name
-             */ 
+             */
             self.getTenantName = function() {
                 return userTenant && userTenant.tenant ? userTenant.tenant : null;
             };
         }
-        
+
         return DashboardFrameworkUserTenantUtility;
     }
 );

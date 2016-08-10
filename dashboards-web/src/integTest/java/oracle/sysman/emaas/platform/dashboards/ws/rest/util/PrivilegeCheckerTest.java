@@ -94,6 +94,7 @@ public class PrivilegeCheckerTest
 		Assert.assertFalse(PrivilegeChecker.isAdminUser(Arrays.asList("Orchestration User")));
 		Assert.assertFalse(PrivilegeChecker.isAdminUser(Arrays.asList("APM User", "Monitoring Service User")));
 		Assert.assertFalse(PrivilegeChecker.isAdminUser(Arrays.asList("Security Analytics User")));
+		Assert.assertFalse(PrivilegeChecker.isAdminUser(Arrays.asList("Compliance User")));
 		Assert.assertTrue(PrivilegeChecker.isAdminUser(Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_APM)));
 		Assert.assertTrue(PrivilegeChecker.isAdminUser(Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_ITA)));
 		Assert.assertTrue(PrivilegeChecker.isAdminUser(Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_LA)));
@@ -102,5 +103,6 @@ public class PrivilegeCheckerTest
 				"Monitoring Service User")));
 		Assert.assertTrue(PrivilegeChecker.isAdminUser(Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_SECURITY)));
 		Assert.assertTrue(PrivilegeChecker.isAdminUser(Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_ORCHESTRATION)));
+		Assert.assertTrue(PrivilegeChecker.isAdminUser(Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_COMPLIANCE)));
 	}
 }

@@ -35,7 +35,9 @@ public enum DashboardApplicationType
 	// Security Analytics service
 	SecurityAnalytics(5),
 	// Orchestration
-	Orchestration(6);
+	Orchestration(6),
+	// Compliance
+	Compliance(7);
 
 	public static final String APM_STRING = "APM";
 	public static final String ITA_SRING = "ITAnalytics";
@@ -43,6 +45,7 @@ public enum DashboardApplicationType
 	public static final String MONITORING_STRING = "Monitoring";
 	public static final String SECURITY_ANALYTICS_STRING = "SecurityAnalytics";
 	public static final String ORCHESTRATION_STRING = "Orchestration";
+	public static final String COMPLIANCE_STRING = "Compliance";
 
 	@JsonCreator
 	public static DashboardApplicationType fromJsonValue(String value)
@@ -65,6 +68,9 @@ public enum DashboardApplicationType
                 if (ORCHESTRATION_STRING.equals(value)) {
 			return Orchestration;
 		}
+        if (COMPLIANCE_STRING.equals(value)) {
+            return Compliance;
+        }
 		throw new IllegalArgumentException("Invalid DashboardApplicationType string value: " + value);
 	}
 
@@ -106,6 +112,9 @@ public enum DashboardApplicationType
                 if (value == Orchestration.value) {
 			return ORCHESTRATION_STRING;
 		}
+        if (value == Compliance.value) {
+        	return COMPLIANCE_STRING;
+        }
 		throw new IllegalArgumentException("Invalid DashboardApplicationType type value: " + value);
 	}
 
