@@ -379,6 +379,7 @@ public class DashBoardPageId
 	public static final String WELCOME_LALINKCSS = "LA_wrapper"; //".landing-home-box-content-head[data-bind='text: LA']";
 	public static final String WELCOME_ITALINKID = "ITA_wrapper"; //".landing-home-box-content-head[data-bind='text: ITA']";
 	public static final String WELCOME_INFRAMONITORINGID = "infra_mon_wrapper";
+	public static final String WELCOME_COMPLIANCEID = "compliance_wrapper";
 	public static final String WELCOME_SECURITYANALYTICSID = "security_analytics_wrapper";
 	public static final String WELCOME_ORCHESTRATIONID = "orchestration_wrapper";
 	public static final String WELCOME_DASHBOARDSLINKID = "dashboards_wrapper"; //"/html/body/div[2]/div/div[2]/ul/li[4]/a/div/div[2]/div[1]";

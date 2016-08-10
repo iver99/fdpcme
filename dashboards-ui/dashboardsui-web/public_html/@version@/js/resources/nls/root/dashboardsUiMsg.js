@@ -395,6 +395,10 @@ define({
       "LANDING_HOME_INFRA_MONITORING_DESC": "Monitor your entire IT infrastructure - on-premise or on the cloud - from one unified platform",
 
       "LANDING_HOME_DASHBOARDS": "Dashboards",
+      
+      "LANDING_HOME_COMPLIANCE": "Compliance",
+      "LANDING_HOME_COMPLIANCE_DESC": "Automate application and infrastructure configuration assessments",
+      
       "LANDING_HOME_SECURITY_ANALYTICS": "Security Monitoring and Analytics",
       "LANDING_HOME_SECURITY_ANALYTICS_DESC": "Detect, investigate and mitigate security threats",
       
