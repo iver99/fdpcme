@@ -1,4 +1,3 @@
-                               
 buildscript {
      apply from: 'test-buildscript-apply.gradle'                                                             
     dependencies { 
@@ -80,7 +79,5 @@ omcTeardown.mustRunAfter ([pre_upgrade,post_upgrade])
 //task emaas_small_upgrade_3n (dependsOn: ['omcSetup']) {
 
 task emcpdf_upgrade_test_3n (dependsOn:[pre_upgrade,post_upgrade,omcTeardown]){
-
-apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_taskprocessor")
-
+    apply from: getAbsoluteFilePath(project.configurations.omctfConfig,"omctf_taskprocessor")
 }

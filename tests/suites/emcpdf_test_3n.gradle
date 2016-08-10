@@ -31,13 +31,17 @@ buildscript {
         classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_taskprocessor", version: "${omctfVersion}" 
 	classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"
   }
-
 }
 apply from: 'test-project-apply.gradle'
 apply plugin: 'groovy'
 
-apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_commontasks")
-
+/***************** OMCTF Plugin **********************/
+configurations { omctfPluginConfig }
+dependencies {
+    omctfPluginConfig group: "com.oracle.omc.omctf.testsdk", name: "OMCTFPlugin", version: "${omctfPluginVersion}"
+}
+apply from: getAbsoluteFilePath(project.configurations.omctfPluginConfig,"OMCTFPlugin")
+/************** End of OMCTFPlugin *******************/
 
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 
@@ -195,5 +199,5 @@ task DEVTest2(type:EMTest,dependsOn: DEVUiTest){
 
 task emcpdf_test_3n (dependsOn:[DEVTest2, omcTeardown]) {
     omcTeardown.mustRunAfter(DEVTest2)
-    apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_taskprocessor")
+    apply from: getAbsoluteFilePath(project.configurations.omctfConfig,"omctf_taskprocessor")
 }

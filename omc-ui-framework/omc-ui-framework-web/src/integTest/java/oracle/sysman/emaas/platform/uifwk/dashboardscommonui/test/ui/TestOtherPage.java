@@ -50,16 +50,16 @@ public class TestOtherPage extends CommonUIUtils
 
 			//click the compass icon
 			webdriver.getLogger().info("Click the Application navigator icon");
-			webdriver.waitForElementPresent(UIControls.sCompassIcon);
-			webdriver.click(UIControls.sCompassIcon);
+			webdriver.waitForElementPresent(UIControls.SCOMPASSICON);
+			webdriver.click(UIControls.SCOMPASSICON);
 			webdriver.takeScreenShot();
 
 			CommonUIUtils.verifyMenu(webdriver, isAPMAdmin);
 
 			//click the compass icon again
 			webdriver.getLogger().info("Click the Application navigator icon again");
-			webdriver.waitForElementPresent(UIControls.sCompassIcon);
-			webdriver.click(UIControls.sCompassIcon);
+			webdriver.waitForElementPresent(UIControls.SCOMPASSICON);
+			webdriver.click(UIControls.SCOMPASSICON);
 			webdriver.takeScreenShot();
 
 			webdriver.getLogger().info("Verify the Links menu disappeared");
@@ -98,31 +98,31 @@ public class TestOtherPage extends CommonUIUtils
 
 			//verify the product name,app name,content of page
 			webdriver.getLogger().info("Verify the page content");
-			Assert.assertTrue(webdriver.isElementPresent(UIControls.sOracleImage));
-			Assert.assertEquals(webdriver.getAttribute(UIControls.sOracleImage + "@alt"), "Oracle");
-			Assert.assertTrue(webdriver.isElementPresent(UIControls.sProductText));
-			webdriver.getLogger().info("The Product is:  " + webdriver.getText(UIControls.sProductText));
-			Assert.assertEquals(webdriver.getText(UIControls.sProductText), "Management Cloud");
+			Assert.assertTrue(webdriver.isElementPresent(UIControls.SORACLEIMAGE));
+			Assert.assertEquals(webdriver.getAttribute(UIControls.SORACLEIMAGE + "@alt"), "Oracle");
+			Assert.assertTrue(webdriver.isElementPresent(UIControls.SPRODUCTTEXT));
+			webdriver.getLogger().info("The Product is:  " + webdriver.getText(UIControls.SPRODUCTTEXT));
+			Assert.assertEquals(webdriver.getText(UIControls.SPRODUCTTEXT), "Management Cloud");
 			//Assert.assertTrue(webdriver.isElementPresent(UIControls.sAppText));
-			Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
-			webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
-			Assert.assertEquals(webdriver.getText(UIControls.sPageText),
+			Assert.assertTrue(webdriver.isElementPresent(UIControls.SPAGETEXT));
+			webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.SPAGETEXT));
+			Assert.assertEquals(webdriver.getText(UIControls.SPAGETEXT),
 					"Sample page for OMC UI Framework components testing only");
 			//Assert.assertTrue(webdriver.isElementPresent(UIControls.sCompassIcon));
-			Assert.assertTrue(webdriver.isElementPresent(UIControls.sAddWidgetIcon));
+			Assert.assertTrue(webdriver.isElementPresent(UIControls.SADDWIDGETICON));
 
 			//click the compass icon
 			webdriver.getLogger().info("Click the Application navigator icon");
-			webdriver.waitForElementPresent(UIControls.sCompassIcon);
-			webdriver.click(UIControls.sCompassIcon);
+			webdriver.waitForElementPresent(UIControls.SCOMPASSICON);
+			webdriver.click(UIControls.SCOMPASSICON);
 			webdriver.takeScreenShot();
 
 			CommonUIUtils.verifyMenu(webdriver, isDSAdmin);
 
 			//click the compass icon again
 			webdriver.getLogger().info("Click the Application navigator icon again");
-			webdriver.waitForElementPresent(UIControls.sCompassIcon);
-			webdriver.click(UIControls.sCompassIcon);
+			webdriver.waitForElementPresent(UIControls.SCOMPASSICON);
+			webdriver.click(UIControls.SCOMPASSICON);
 			webdriver.takeScreenShot();
 
 			webdriver.getLogger().info("Verify the Links menu disappeared");
@@ -160,16 +160,16 @@ public class TestOtherPage extends CommonUIUtils
 
 			//click the compass icon
 			webdriver.getLogger().info("Click the Application navigator icon");
-			webdriver.waitForElementPresent(UIControls.sCompassIcon);
-			webdriver.click(UIControls.sCompassIcon);
+			webdriver.waitForElementPresent(UIControls.SCOMPASSICON);
+			webdriver.click(UIControls.SCOMPASSICON);
 			webdriver.takeScreenShot();
 
 			CommonUIUtils.verifyMenu(webdriver, isDSAdmin);
 
 			//click the compass icon again
 			webdriver.getLogger().info("Click the Application navigator icon again");
-			webdriver.waitForElementPresent(UIControls.sCompassIcon);
-			webdriver.click(UIControls.sCompassIcon);
+			webdriver.waitForElementPresent(UIControls.SCOMPASSICON);
+			webdriver.click(UIControls.SCOMPASSICON);
 			webdriver.takeScreenShot();
 
 			webdriver.getLogger().info("Verify the Links menu disappeared");

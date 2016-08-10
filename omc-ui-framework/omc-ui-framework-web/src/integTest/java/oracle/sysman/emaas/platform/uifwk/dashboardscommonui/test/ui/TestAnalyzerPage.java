@@ -50,16 +50,16 @@ public class TestAnalyzerPage extends CommonUIUtils
 
 			//click the compass icon
 			webdriver.getLogger().info("Click the Application navigator icon");
-			webdriver.waitForElementPresent(UIControls.sCompassIcon);
-			webdriver.click(UIControls.sCompassIcon);
+			webdriver.waitForElementPresent(UIControls.SCOMPASSICON);
+			webdriver.click(UIControls.SCOMPASSICON);
 			webdriver.takeScreenShot();
 
 			CommonUIUtils.verifyMenu(webdriver, isLAAdmin);
 
 			//click the compass icon again
 			webdriver.getLogger().info("Click the Application navigator icon again");
-			webdriver.waitForElementPresent(UIControls.sCompassIcon);
-			webdriver.click(UIControls.sCompassIcon);
+			webdriver.waitForElementPresent(UIControls.SCOMPASSICON);
+			webdriver.click(UIControls.SCOMPASSICON);
 			webdriver.takeScreenShot();
 
 			webdriver.getLogger().info("Verify the Links menu disappeared");
@@ -99,16 +99,16 @@ public class TestAnalyzerPage extends CommonUIUtils
 
 			//click the compass icon
 			webdriver.getLogger().info("Click the Application navigator icon");
-			webdriver.waitForElementPresent(UIControls.sCompassIcon);
-			webdriver.click(UIControls.sCompassIcon);
+			webdriver.waitForElementPresent(UIControls.SCOMPASSICON);
+			webdriver.click(UIControls.SCOMPASSICON);
 			webdriver.takeScreenShot();
 
 			CommonUIUtils.verifyMenu(webdriver, isITAAdmin);
 
 			//click the compass icon again
 			webdriver.getLogger().info("Click the Application navigator icon again");
-			webdriver.waitForElementPresent(UIControls.sCompassIcon);
-			webdriver.click(UIControls.sCompassIcon);
+			webdriver.waitForElementPresent(UIControls.SCOMPASSICON);
+			webdriver.click(UIControls.SCOMPASSICON);
 			webdriver.takeScreenShot();
 
 			webdriver.getLogger().info("Verify the Links menu disappeared");

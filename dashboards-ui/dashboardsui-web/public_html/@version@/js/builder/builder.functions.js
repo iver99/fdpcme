@@ -525,7 +525,7 @@ define(['knockout',
         function getWidgetAssetRoot(provider_name, provider_version, provider_asset_root) {
             for(var i=0; i<assetRoots.length; i++) {
                 var art = assetRoots[i];
-                if((art.provider_name === provider_name) && (art.provider_version === provider_version) && (art.provider_asset_root === provider_asset_root)) {
+                if((art.provider_name === provider_name) && (art.provider_asset_root === provider_asset_root)) {
                     return art.asset_root;
                 }
             }
