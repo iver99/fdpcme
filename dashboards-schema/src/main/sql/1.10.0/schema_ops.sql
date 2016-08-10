@@ -1,0 +1,7 @@
+Rem 08/10/2016	pingwu  	Created file
+
+@&EMSAAS_SQL_ROOT/1.10.0/upgrade_impl_ddl.sql
+
+SET HEADING OFF
+SET FEEDBACK OFF
+SET LINESIZE 2000
