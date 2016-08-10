@@ -435,22 +435,6 @@ public class TestDashboardSet extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Database Operations"),
 				"The OOB dashboard is not added into dashboard set");
 
-		//verify the edit menu & save icon are not displayed in OOB
-		webd.getLogger().info("Verify the save icon is not displayed in OOB");
-		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DashboardSaveCSS), "Save icon is displayed in OOB");
-		//		webd.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsMenuLocator);
-		//		webd.click("css=" + DashBoardPageId.BuilderOptionsMenuLocator);
-		webd.waitForElementPresent("css=" + PageId.BuilderOptionsMenu_Css);
-		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(PageId.BuilderOptionsMenu_Css)));
-		WaitUtil.waitForPageFullyLoaded(webd);
-
-		webd.waitForElementPresent("css=" + PageId.BuilderOptionsMenu_Css);
-		webd.click("css=" + PageId.BuilderOptionsMenu_Css);
-		webd.getLogger().info("Verify the edit menu is not displayed in OOB");
-		Assert.assertFalse(webd.isDisplayed("css" + DashBoardPageId.BuilderOptionsEditLocatorCSS),
-				"Edit menu is displayed in OOB");
-
 		//duplicate the dashboard in set
 		webd.getLogger().info("duplicate the dashboard in the dashboard set");
 		DashboardBuilderUtil.duplicateDashboardInsideSet(webd, dbName_DuplicateOOB, null, true);
@@ -497,12 +481,8 @@ public class TestDashboardSet extends LoginAndLogout
 		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
 
 		//add an OOB dashboard in the dashboard set
-		webd.getLogger().info("Add an OOB dashboard in the set");
-		DashboardBuilderUtil.addNewDashboardToSet(webd, "Database Operations");
-
-		//verify the dashboard is in the dashboard set
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Database Operations"),
-				"The OOB dashboard is not added into dashboard set");
+		webd.getLogger().info("select the OOB dashboard in the set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Database Operations");
 
 		//verify the edit menu & save icon are not displayed in OOB
 		webd.getLogger().info("Verify the save icon is not displayed in OOB");

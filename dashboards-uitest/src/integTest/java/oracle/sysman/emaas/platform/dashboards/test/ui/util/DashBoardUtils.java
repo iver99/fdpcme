@@ -52,7 +52,7 @@ public class DashBoardUtils
 	public static void deleteDashboard(WebDriver webdriver, String DashboardName) throws Exception
 	{
 		if (DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName)) {
-			webdriver.getLogger().info("Start to delete the dashboard: " + DashboardName + "-duplicate");
+			webdriver.getLogger().info("Start to delete the dashboard: " + DashboardName);
 			DashboardHomeUtil.deleteDashboard(webdriver, DashboardName, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 			webdriver.getLogger().info("Verify the dashboard: " + DashboardName + " has been deleted");
 			Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName), "Delete dashboard "

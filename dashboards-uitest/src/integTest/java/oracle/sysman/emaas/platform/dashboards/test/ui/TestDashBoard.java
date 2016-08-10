@@ -249,7 +249,7 @@ public class TestDashBoard extends LoginAndLogout
 	@Test
 	public void testDashboardWith12Columns() throws Exception
 	{
-		dbName_columncheck = "DashboardWith12Columns" + generateTimeStamp();
+		dbName_columncheck = "DashboardWith12Columns-" + generateTimeStamp();
 		String desc = "Description for " + dbName_columncheck;
 
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -497,7 +497,7 @@ public class TestDashBoard extends LoginAndLogout
 	@Test
 	public void testFilterLADashboard() throws Exception
 	{
-		dbName_LADashboard = "ITADashboard-" + generateTimeStamp();
+		dbName_LADashboard = "LADashboard-" + generateTimeStamp();
 		String dbDesc = "test filter LA works for custom dashboard";
 		//initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
