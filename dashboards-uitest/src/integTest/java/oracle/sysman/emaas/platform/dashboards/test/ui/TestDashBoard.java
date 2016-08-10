@@ -306,8 +306,8 @@ public class TestDashBoard extends LoginAndLogout
 		//check OOB delete protection
 		webd.getLogger().info("Verfiy if the OOB dashboard can be deleted");
 		DashboardHomeUtil.search(webd, "Application Performance Monitoring");
-		webd.click(DashBoardPageId.InfoBtnID);
-		WebElement removeButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.RmBtnID));
+		webd.click(DashBoardPageId.INFOBTNID);
+		WebElement removeButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.RMBTNID));
 		Assert.assertFalse(removeButton.isEnabled(), "delete is enabled for OOB dashboard");
 	}
 
@@ -435,7 +435,7 @@ public class TestDashBoard extends LoginAndLogout
 		//delete the dashboard
 		webd.getLogger().info("start to delete the dashboard");
 
-		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
+		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.FAVORITE_BOXID));
 		if (el.isSelected()) {
 			el.click();
 		}
@@ -567,7 +567,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//verify the target selector not displayed in the page
 		webd.getLogger().info("Verify the target selecotr not diplayed in the page");
-		Assert.assertFalse(webd.isDisplayed("css=" + PageId.TargetSelector_Css), "The target selector is in the page");
+		Assert.assertFalse(webd.isDisplayed("css=" + PageId.TARGETSELECTOR_CSS), "The target selector is in the page");
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
@@ -592,7 +592,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//verify the time range filter not displayed in the page
 		webd.getLogger().info("Verify the time range filter not diplayed in the page");
-		Assert.assertFalse(webd.isDisplayed("css=" + PageId.DateTimePick_Css), "The time range filter is in the page");
+		Assert.assertFalse(webd.isDisplayed("css=" + PageId.DATETIMEPICK_CSS), "The time range filter is in the page");
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView" })
@@ -748,7 +748,7 @@ public class TestDashBoard extends LoginAndLogout
 		//verify if in the home page
 		webd.getLogger().info("verify delete successfully and back to the home page");
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DashboardDisplayPanelCss)));
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DASHBOARDDISPLAYPANELCSS)));
 	}
 
 	@Test
@@ -789,7 +789,7 @@ public class TestDashBoard extends LoginAndLogout
 		//verify if in the home page
 		webd.getLogger().info("Verify if in the home page");
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DashboardDisplayPanelCss)));
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DASHBOARDDISPLAYPANELCSS)));
 	}
 
 	@Test
@@ -884,7 +884,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//verify the target selector not displayed in the page
 		webd.getLogger().info("Verify the target selecotr diplayed in the page");
-		Assert.assertTrue(webd.isDisplayed("css=" + PageId.TargetSelector_Css), "The target selector is NOT in the page");
+		Assert.assertTrue(webd.isDisplayed("css=" + PageId.TARGETSELECTOR_CSS), "The target selector is NOT in the page");
 
 	}
 
@@ -910,7 +910,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//verify the time range filter displayed in the page
 		webd.getLogger().info("Verify the time range filter diplayed in the page");
-		Assert.assertTrue(webd.isDisplayed("css=" + PageId.DateTimePick_Css), "The time range filter is NOT in the page");
+		Assert.assertTrue(webd.isDisplayed("css=" + PageId.DATETIMEPICK_CSS), "The time range filter is NOT in the page");
 	}
 
 	@Test(dependsOnMethods = { "testShareDashboard" })

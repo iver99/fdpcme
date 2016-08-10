@@ -20,15 +20,15 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorExludedDayMonth;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorUIControls;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements ITimeSelectorUtil
 {
@@ -287,13 +287,15 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		}
 		else {
 			String returnStartDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartDateInput))
-					.get(Index - 1).getAttribute("value") + " "
+					.get(Index - 1).getAttribute("value")
+					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).get(Index - 1)
-							.getAttribute("value");
+					.getAttribute("value");
 			String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndDateInput))
-					.get(Index - 1).getAttribute("value") + " "
+					.get(Index - 1).getAttribute("value")
+					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(Index - 1)
-							.getAttribute("value");
+					.getAttribute("value");
 
 			returnStartDate = timeFormatChange(webd, returnStartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 			returnEndDate = timeFormatChange(webd, returnEndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
@@ -389,7 +391,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		else {
 			tmpDate = convertDate;
 		}
-		System.out.println("tmpDate:" + tmpDate);
+		//System.out.println("tmpDate:" + tmpDate);
 		String[] date = tmpDate.split("-");
 		String StartDate = date[0].trim();
 		String EndDate = date[1].trim();
@@ -419,8 +421,8 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 
 		}
 		else if (StartDate.startsWith("Yesterday")) {
-			StartDate = StartDate.replace("Yesterday",
-					actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/" + yesterday.get(Calendar.YEAR));
+			StartDate = StartDate.replace("Yesterday", actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/"
+					+ yesterday.get(Calendar.YEAR));
 			returnStartDate = timeFormatChange(driver, StartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 		}
 		else {
@@ -434,8 +436,8 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 
 		}
 		else if (EndDate.startsWith("Yesterday")) {
-			EndDate = EndDate.replace("Yesterday",
-					actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/" + yesterday.get(Calendar.YEAR));
+			EndDate = EndDate.replace("Yesterday", actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/"
+					+ yesterday.get(Calendar.YEAR));
 			returnEndDate = timeFormatChange(driver, EndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 		}
 		else if (Character.isDigit(EndDate.charAt(0))) {

@@ -93,8 +93,8 @@ public class BugVerification extends LoginAndLogout
 		DashboardHomeUtil.filterOptions(webd, "la");
 
 		//signout menu
-		webd.click(PageId.MenuBtnID);
-		webd.click(PageId.SignOutID);
+		webd.click(PageId.MENUBTNID);
+		webd.click(PageId.SIGNOUTID);
 
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_812");
@@ -124,10 +124,10 @@ public class BugVerification extends LoginAndLogout
 
 		webd.getWebDriver().navigate()
 				.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
-		webd.waitForElementPresent("css=" + PageId.ErrorPageSingOutBtnCss);
+		webd.waitForElementPresent("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
 		webd.takeScreenShot();
 
-		webd.click("css=" + PageId.ErrorPageSingOutBtnCss);
+		webd.click("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
 		webd.getLogger().info("Sing out button is clicked");
 		webd.takeScreenShot();
 

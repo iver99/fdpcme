@@ -65,11 +65,11 @@ public class TileParamTest
 		tp.setType(TileParam.PARAM_TYPE_BOOLEAN);
 		tp.setValue("true");
 		//logger.info("Values inside TileParam is: " + tp.toString());
-		System.out.println("Values inside TileParam is: " + tp.toString());
+		//System.out.println("Values inside TileParam is: " + tp.toString());
 		Assert.assertEquals(tp.getValue(), Boolean.TRUE.toString(), tp.toString());
 		tp.setValue("TRUE");
 		//logger.info("Values inside TileParam is: " + tp.toString());
-		System.out.println("Values inside TileParam is: " + tp.toString());
+		//System.out.println("Values inside TileParam is: " + tp.toString());
 		Assert.assertEquals(tp.getValue(), Boolean.TRUE.toString(), tp.toString());
 		tp.setValue(null);
 		Assert.assertEquals(tp.getValue(), Boolean.FALSE.toString(), tp.toString());

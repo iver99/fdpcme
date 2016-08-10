@@ -209,7 +209,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Open ITA by url: " + tmpUrl);
 		urlVerification(tmpUrl, "emcpdfui/home.html?filter=ita");
 
-		WebElement el = webd.getWebDriver().findElement(By.id(PageId.ITA_BoxID));
+		WebElement el = webd.getWebDriver().findElement(By.id(PageId.ITA_BOXID));
 		Assert.assertTrue(el.isSelected());
 		DashBoardUtils.ITA_OOB_Exist();
 		DashBoardUtils.Outdate_OOB();

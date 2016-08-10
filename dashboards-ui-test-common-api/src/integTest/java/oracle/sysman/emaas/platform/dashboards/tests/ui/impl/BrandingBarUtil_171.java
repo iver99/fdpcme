@@ -10,6 +10,12 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
@@ -17,12 +23,6 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBrandingBarUtil
 {
@@ -36,7 +36,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 		driver.getLogger().info("start validating admin tab");
 		//Open the navigation bar if it's not displayed
 		openNavigationBar(driver);
-		boolean isDisplayed = driver.isDisplayed("id=" + DashBoardPageId.BrandingBarAdminLinksID);
+		boolean isDisplayed = driver.isDisplayed("id=" + DashBoardPageId.BRANDINGBARADMINLINKSID);
 		return isDisplayed;
 	}
 
@@ -61,8 +61,8 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	public boolean isCloudServiceLinkExisted(WebDriver driver, String cloudServiceLinkName)
 	{
 		Validator.notEmptyString("cloudServiceLinkName in [isCloudServiceLinkExisted]", cloudServiceLinkName);
-		driver.getLogger()
-				.info("Start to check if cloud service link is existed in navigation bar. Link name: " + cloudServiceLinkName);
+		driver.getLogger().info(
+				"Start to check if cloud service link is existed in navigation bar. Link name: " + cloudServiceLinkName);
 		boolean isExisted = false;
 		isExisted = isApplicationLinkExisted(driver, "cs", cloudServiceLinkName);
 		driver.getLogger().info("Existence check for cloud service link is completed. Result: " + isExisted);
@@ -77,7 +77,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	{
 		driver.getLogger().info("Start to check if 'Dashboards' link is existed in navigation bar.");
 		boolean isExisted = false;
-		String locator = "id=" + DashBoardPageId.BrandingBarDashboardHomeLinkID;
+		String locator = "id=" + DashBoardPageId.BRANDINGBARDASHBOARDHOMELINKID;
 		isExisted = isApplicationLinkExisted(driver, locator);
 		driver.getLogger().info("Existence check for 'Dashboards' link is completed. Result: " + isExisted);
 		return isExisted;
@@ -106,7 +106,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	{
 		driver.getLogger().info("Start to check if 'My Favorites' link is existed in navigation bar.");
 		boolean isExisted = false;
-		String locator = "id=" + DashBoardPageId.BrandingBarMyFavoritesLinkID;
+		String locator = "id=" + DashBoardPageId.BRANDINGBARMYFAVORITESLINKID;
 		isExisted = isApplicationLinkExisted(driver, locator);
 		driver.getLogger().info("Existence check for 'My Favorites' link is completed. Result: " + isExisted);
 		return isExisted;
@@ -120,7 +120,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	{
 		driver.getLogger().info("Start to check if 'Home' link is existed in navigation bar.");
 		boolean isExisted = false;
-		String locator = "id=" + DashBoardPageId.BrandingBarMyHomeLinkID;
+		String locator = "id=" + DashBoardPageId.BRANDINGBARMYHOMELINKID;
 		isExisted = isApplicationLinkExisted(driver, locator);
 		driver.getLogger().info("Existence check for 'Home' link is completed. Result: " + isExisted);
 		return isExisted;
@@ -149,7 +149,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	{
 		driver.getLogger().info("Start to check if 'Welcome' link is existed in navigation bar.");
 		boolean isExisted = false;
-		String locator = "id=" + DashBoardPageId.BrandingBarWelcomeLinkID;
+		String locator = "id=" + DashBoardPageId.BRANDINGBARWELCOMELINKID;
 		isExisted = isApplicationLinkExisted(driver, locator);
 		driver.getLogger().info("Existence check for 'Welcome' link is completed. Result: " + isExisted);
 		return isExisted;
@@ -164,34 +164,34 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 		Validator.fromValidValues("option", option, USERMENU_OPTION_HELP, USERMENU_OPTION_ABOUT, USERMENU_OPTION_SIGNOUT);
 
 		driver.getLogger().info("Start to do branding bar user menu option: " + option);
-		driver.waitForElementPresent(DashBoardPageId.Brand_Bar_User_Menu);
+		driver.waitForElementPresent(DashBoardPageId.BRAND_BAR_USER_MENU);
 		driver.getLogger().info("Click branding bar user menu button.");
-		driver.click(DashBoardPageId.Brand_Bar_User_Menu);
+		driver.click(DashBoardPageId.BRAND_BAR_USER_MENU);
 
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), 900L);
-		By locator = By.id(DashBoardPageId.UserMenuPopupId);
+		By locator = By.id(DashBoardPageId.USERMENUPOPUPID);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
 		driver.takeScreenShot();
-		Assert.assertTrue(driver.isDisplayed("id=" + DashBoardPageId.UserMenuPopupId));
+		Assert.assertTrue(driver.isDisplayed("id=" + DashBoardPageId.USERMENUPOPUPID));
 		driver.getLogger().info("User menu popup is displayed.");
 
 		switch (option) {
 			case USERMENU_OPTION_HELP:
 				driver.takeScreenShot();
 				driver.getLogger().info("Click Help menu.");
-				driver.click(DashBoardPageId.Option_Help);
+				driver.click(DashBoardPageId.OPTION_HELP);
 				break;
 			case USERMENU_OPTION_ABOUT:
 				driver.takeScreenShot();
 				driver.getLogger().info("Click About menu.");
-				driver.click(DashBoardPageId.Option_About);
+				driver.click(DashBoardPageId.OPTION_ABOUT);
 				driver.takeScreenShot();
 				driver.getLogger().info("Close the About dialog.");
-				driver.click(DashBoardPageId.AboutDialogClose);
+				driver.click(DashBoardPageId.ABOUTDIALOGCLOSE);
 				break;
 			case USERMENU_OPTION_SIGNOUT:
 				driver.getLogger().info("Click Sign Out menu.");
-				driver.click(DashBoardPageId.Option_Logout);
+				driver.click(DashBoardPageId.OPTION_LOGOUT);
 				break;
 		}
 		driver.takeScreenShot();
@@ -249,7 +249,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	public void visitDashboardHome(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("Start to visit 'Dashboards' link from branding bar.");
-		visitApplicationLink(driver, DashBoardPageId.BrandingBarDashboardLinkLocator);
+		visitApplicationLink(driver, DashBoardPageId.BRANDINGBARDASHBOARDLINKLOCATOR);
 	}
 
 	/* (non-Javadoc)
@@ -259,7 +259,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	public void visitMyFavorites(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("[visitMyFavorites] start to visit 'My Favorites' link from branding bar.");
-		visitApplicationLink(driver, DashBoardPageId.BrandingBarMyFavoritesLinkID);
+		visitApplicationLink(driver, DashBoardPageId.BRANDINGBARMYFAVORITESLINKID);
 	}
 
 	/* (non-Javadoc)
@@ -269,7 +269,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	public void visitMyHome(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("[visitMyHome] start to visit 'Home' link from branding bar.");
-		visitApplicationLink(driver, DashBoardPageId.BrandingBarMyHomeLinkID);
+		visitApplicationLink(driver, DashBoardPageId.BRANDINGBARMYHOMELINKID);
 	}
 
 	/* (non-Javadoc)
@@ -279,7 +279,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	public void visitWelcome(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("[visitWelcome] start to visit 'Welcome' link from branding bar.");
-		visitApplicationLink(driver, DashBoardPageId.BrandingBarWelcomeLinkID);
+		visitApplicationLink(driver, DashBoardPageId.BRANDINGBARWELCOMELINKID);
 	}
 
 	/**
@@ -294,16 +294,16 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	private void checkLinksMenuVisibility(WebDriver driver, boolean visible)
 	{
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), 900L);
-		By locator = By.id(DashBoardPageId.BrandingBarNavLinksId);
+		By locator = By.id(DashBoardPageId.BRANDINGBARNAVLINKSID);
 		if (visible) {
 			wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
 			driver.takeScreenShot();
-			Assert.assertTrue(driver.isDisplayed("id=" + DashBoardPageId.BrandingBarNavLinksId));
+			Assert.assertTrue(driver.isDisplayed("id=" + DashBoardPageId.BRANDINGBARNAVLINKSID));
 		}
 		else {
 			wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
 			driver.takeScreenShot();
-			Assert.assertFalse(driver.isDisplayed("id=" + DashBoardPageId.BrandingBarNavLinksId));
+			Assert.assertFalse(driver.isDisplayed("id=" + DashBoardPageId.BRANDINGBARNAVLINKSID));
 		}
 
 	}
@@ -319,21 +319,21 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	{
 		String parentId = null;
 		switch (linkType) {
-			//Home links
+		//Home links
 			case "home":
-				parentId = DashBoardPageId.BrandingBarHomeLinksID;
+				parentId = DashBoardPageId.BRANDINGBARHOMELINKSID;
 				break;
-			//Cloud service links
+				//Cloud service links
 			case "cs":
-				parentId = DashBoardPageId.BrandingBarCloudServiceLinksID;
+				parentId = DashBoardPageId.BRANDINGBARCLOUDSERVICELINKSID;
 				break;
-			//Visual analyzer links
+				//Visual analyzer links
 			case "va":
-				parentId = DashBoardPageId.BrandingBarVisualAnalyzerLinksID;
+				parentId = DashBoardPageId.BRANDINGBARVISUALANALYZERLINKSID;
 				break;
-			//Administration links
+				//Administration links
 			case "admin":
-				parentId = DashBoardPageId.BrandingBarAdminLinksID;
+				parentId = DashBoardPageId.BRANDINGBARADMINLINKSID;
 				break;
 		}
 		return parentId;
@@ -361,7 +361,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 		isExisted = driver.isDisplayed(locator);
 		//Recover the navigation bar to the original status
 		if (!isNavBarDisplayed) {
-			driver.click("id=" + DashBoardPageId.LinkID);
+			driver.click("id=" + DashBoardPageId.LINKID);
 		}
 		driver.takeScreenShot();
 		return isExisted;
@@ -413,7 +413,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	 */
 	private boolean isNavigationBarDisplayed(WebDriver driver)
 	{
-		boolean isDisplayed = driver.isDisplayed("id=" + DashBoardPageId.BrandingBarNavLinksId);
+		boolean isDisplayed = driver.isDisplayed("id=" + DashBoardPageId.BRANDINGBARNAVLINKSID);
 		driver.getLogger().info("Check if the navigation bar is displayed or not. Result: " + isDisplayed);
 		return isDisplayed;
 	}
@@ -429,7 +429,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	{
 		//Open the navigation bar if it's not displayed
 		if (!isNavigationBarDisplayed(driver)) {
-			String navBarId = "id=" + DashBoardPageId.LinkID;
+			String navBarId = "id=" + DashBoardPageId.LINKID;
 			driver.waitForElementPresent(navBarId);
 			driver.click(navBarId);
 			WaitUtil.waitForPageFullyLoaded(driver);

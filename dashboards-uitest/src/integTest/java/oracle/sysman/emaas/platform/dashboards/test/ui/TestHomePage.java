@@ -92,7 +92,7 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.listView(webd);
 
 		//verify the sort by is Default
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Default");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Default");
 
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by created by Ascending");
@@ -102,7 +102,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Ascending");
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Created By Ascending");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Created By Ascending");
 		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
 
 		//webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
@@ -115,7 +115,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Descending");
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Created By Descending");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Created By Descending");
 		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
 
 		//webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
@@ -312,7 +312,7 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.listView(webd);
 
 		//verify the sort by is Default
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Default");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Default");
 
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by last modified Ascending");
@@ -320,7 +320,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Ascending");
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Last Modified Ascending");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Last Modified Ascending");
 		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
 		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
 		Assert.assertEquals(names.get(names.size() - 1), "ADashboard Test");
@@ -332,7 +332,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Descending");
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Last Modified Descending");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Last Modified Descending");
 		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
 		names = DashboardHomeUtil.listDashboardNames(webd);
 		Assert.assertEquals(names.get(0), "ADashboard Test");
@@ -433,7 +433,7 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.listView(webd);
 
 		//verify the sort by is Default
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Default");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Default");
 
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by name Ascending");
@@ -441,7 +441,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Ascending");
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Name Ascending");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Name Ascending");
 		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
 
 		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
@@ -453,7 +453,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Descending");
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Name Descending");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Name Descending");
 		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
 
 		names = DashboardHomeUtil.listDashboardNames(webd);

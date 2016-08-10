@@ -15,8 +15,6 @@ package oracle.sysman.emaas.platform.dashboards.ui.webutils.services;
  *
  */
 import java.lang.management.ManagementFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Resource;
 import javax.management.InstanceAlreadyExistsException;
@@ -24,18 +22,23 @@ import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
-import weblogic.application.ApplicationLifecycleEvent;
+
 import oracle.sysman.emaas.platform.dashboards.ui.targetmodel.services.JMXUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
 
-/* * A servlet context listener to initialize the MXBean for EM target discovery 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import weblogic.application.ApplicationLifecycleEvent;
+
+/* * A servlet context listener to initialize the MXBean for EM target discovery
  */
 public class EMTargetInitializer implements ApplicationServiceManager
 {
 
 	private static final Logger logger = LogManager.getLogger(EMTargetMXBeanImpl.class);
-	private static final String m_target_type = EMTargetConstants.m_target_type;
-	private static final String SVR_MBEAN_NAME_PREFIX = "EMDomain:Type=EMIntegration,EMTargetType=" + m_target_type + ",Name=";
+	private static final String M_TARGET_TYPE = EMTargetConstants.M_TARGET_TYPE;
+	private static final String SVR_MBEAN_NAME_PREFIX = "EMDomain:Type=EMIntegration,EMTargetType=" + M_TARGET_TYPE + ",Name=";
 
 	@Resource(lookup = "java:module/ModuleName")
 	private String moduleName;
@@ -118,7 +121,7 @@ public class EMTargetInitializer implements ApplicationServiceManager
 
 		}
 		catch (Exception e) {
-			logger.error("Unregister MBean for " + m_target_type + " failed.", e);
+			logger.error("Unregister MBean for " + M_TARGET_TYPE + " failed.", e);
 		}
 
 	}

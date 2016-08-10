@@ -302,6 +302,10 @@ define({
       "DBS_BUILDER_TILE_NARROWER": "Narrower",
       "DBS_BUILDER_TILE_TALLER": "Taller",
       "DBS_BUILDER_TILE_SHORTER": "Shorter",
+      "DBS_BUILDER_TILE_UP": "Up",
+      "DBS_BUILDER_TILE_DOWN": "Down",
+      "DBS_BUILDER_TILE_LEFT": "Left",
+      "DBS_BUILDER_TILE_RIGHT": "Right",
       "DBS_BUILDER_TILE_MAXIMIZE": "Maximize",
       "DBS_BUILDER_TILE_RESTORE": "Restore",
       "DBS_BUILDER_TILE_SHOW":"Show title",
@@ -352,6 +356,7 @@ define({
       "DBS_ERROR_TEXT_GO_HOME_PAGE": "to go to the default Home page",
       "DBS_ERROR_URL": "Requested URL is: ",
       "DBS_ERROR_BTN_SIGN_OUT": "Sign Out",
+      "DBS_ERROR_INTERNAL_ERROR": "Oracle Management Cloud service received a bad request and had an internal error. Try to access your service later.",
       
       "SERVICE_NAME_APM":"Application Performance Monitoring",
       "SERVICE_NAME_ITAnalytics":"IT Analytics",

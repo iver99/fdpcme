@@ -33,19 +33,19 @@ public class DashBoardUtils
 	public static void clickDashboardLinkInBrandingBar(WebDriver webdriver) throws Exception
 	{
 		webdriver.getLogger().info("Click Compass icon to display menu of branding bar");
-		webdriver.getWebDriver().findElement(By.xpath(PageId.CompassIcon)).click();
+		webdriver.getWebDriver().findElement(By.xpath(PageId.COMPASSICON)).click();
 		WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(PageId.DashboardLink)));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(PageId.DASHBOARDLINK)));
 		webdriver.takeScreenShot();
 		webdriver.getLogger().info("Click Dashboard link to back to dashboard home page");
-		webdriver.getWebDriver().findElement(By.xpath(PageId.DashboardLink)).click();
+		webdriver.getWebDriver().findElement(By.xpath(PageId.DASHBOARDLINK)).click();
 		webdriver.takeScreenShot();
 	}
 
 	public static void closeOverviewPage() throws Exception
 	{
 		driver.getLogger().info("before clicking overview button");
-		driver.click(PageId.OverviewCloseID);
+		driver.click(PageId.OVERVIEWCLOSEID);
 		driver.getLogger().info("after clicking overview button");
 	}
 
@@ -147,11 +147,11 @@ public class DashBoardUtils
 	{
 		driver = webDriver;
 
-		if (driver.isDisplayed(PageId.OverviewCloseID)) {
+		if (driver.isDisplayed(PageId.OVERVIEWCLOSEID)) {
 			DashBoardUtils.closeOverviewPage();
 		}
 
-		Assert.assertFalse(driver.isDisplayed(PageId.OverviewCloseID));
+		Assert.assertFalse(driver.isDisplayed(PageId.OVERVIEWCLOSEID));
 
 		driver.takeScreenShot();
 	}
@@ -187,23 +187,23 @@ public class DashBoardUtils
 	public static boolean verfiyShareOptionDisabled() throws Exception
 	{
 		driver.getLogger().info("Click the option icon of Dashboard Set");
-		driver.waitForElementPresent("css=" + PageId.DashboardSetOptions_Css);
-		driver.click("css=" + PageId.DashboardSetOptions_Css);
+		driver.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
+		driver.click("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
 		driver.getLogger().info("Click Edit icon");
-		driver.waitForElementPresent("css=" + PageId.DashboardSetOptionsEdit_CSS);
-		driver.click("css=" + PageId.DashboardSetOptionsEdit_CSS);
+		driver.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONSEDIT_CSS);
+		driver.click("css=" + PageId.DASHBOARDSETOPTIONSEDIT_CSS);
 		driver.takeScreenShot();
 
 		driver.getLogger().info("Expand Share options");
-		driver.waitForElementPresent("css=" + PageId.RightDrawerEditSingleDBShare_CSS);
-		driver.click("css=" + PageId.RightDrawerEditSingleDBShare_CSS);
+		driver.waitForElementPresent("css=" + PageId.RIGHTDRAWEREDITSINGLEDBSHARE_CSS);
+		driver.click("css=" + PageId.RIGHTDRAWEREDITSINGLEDBSHARE_CSS);
 		driver.takeScreenShot();
 
 		driver.getLogger().info("Verify the options are disabled or not");
-		WebElement ShareOption = driver.getWebDriver().findElement(By.cssSelector(PageId.DashboardSetShare_Css));
-		WebElement NotShareOption = driver.getWebDriver().findElement(By.cssSelector(PageId.DashboardSetNotShare_Css));
+		WebElement ShareOption = driver.getWebDriver().findElement(By.cssSelector(PageId.DASHBOARDSETSHARE_CSS));
+		WebElement NotShareOption = driver.getWebDriver().findElement(By.cssSelector(PageId.DASHBOARDSETNOTSHARE_CSS));
 		if (!ShareOption.isEnabled() & !NotShareOption.isEnabled()) {
 			driver.getLogger().info("The Options are disabled!");
 			return true;

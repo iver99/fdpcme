@@ -486,19 +486,18 @@ public class TestDashboardSet extends LoginAndLogout
 
 		//verify the edit menu & save icon are not displayed in OOB
 		webd.getLogger().info("Verify the save icon is not displayed in OOB");
-		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DashboardSaveCSS), "Save icon is displayed in OOB");
+		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DASHBOARDSAVECSS), "Save icon is displayed in OOB");
 		//		webd.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsMenuLocator);
 		//		webd.click("css=" + DashBoardPageId.BuilderOptionsMenuLocator);
-		webd.waitForElementPresent("css=" + PageId.BuilderOptionsMenu_Css);
+		webd.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
 		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(PageId.BuilderOptionsMenu_Css)));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(PageId.DASHBOARDSETOPTIONS_CSS)));
 		WaitUtil.waitForPageFullyLoaded(webd);
 
-		webd.waitForElementPresent("css=" + PageId.BuilderOptionsMenu_Css);
-		webd.click("css=" + PageId.BuilderOptionsMenu_Css);
+		webd.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
+		webd.click("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
 		webd.getLogger().info("Verify the edit menu is not displayed in OOB");
-		Assert.assertFalse(webd.isDisplayed("css" + DashBoardPageId.BuilderOptionsEditLocatorCSS),
-				"Edit menu is displayed in OOB");
+		Assert.assertFalse(webd.isDisplayed("css" + PageId.DASHBOARDSETOPTIONSEDIT_CSS), "Edit menu is displayed in OOB");
 
 		//duplicate the dashboard in set
 		webd.getLogger().info("duplicate the dashboard in the dashboard set");
@@ -823,7 +822,7 @@ public class TestDashboardSet extends LoginAndLogout
 		//verify if in the home page
 		webd.getLogger().info("Verify delete successfully and back to the home page");
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DashboardDisplayPanelCss)));
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DASHBOARDDISPLAYPANELCSS)));
 
 		//verify if in the dashboar set has been deleted
 		webd.getLogger().info("Verify if the dashboard has been deleted");
@@ -905,7 +904,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 		//click Add dashboard icon
 		webd.getLogger().info("Click Add Dashboard Icon");
-		webd.click("css=" + PageId.DashboardSetAddDashboardIcon_Css);
+		webd.click("css=" + PageId.DASHBOARDSETADDDASHBOARDICON_CSS);
 
 		//search the dashboard created in set
 		DashboardHomeUtil.search(webd, dbName_InSet);
@@ -916,7 +915,7 @@ public class TestDashboardSet extends LoginAndLogout
 		String InfoBtn_xpath = "//div[contains(@aria-label, 'DashboardInSet')]//button";
 		webd.getLogger().info("Verfiy the current dashboard can not be deleted");
 		webd.click(InfoBtn_xpath);
-		WebElement removeButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.RmBtnID));
+		WebElement removeButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.RMBTNID));
 		Assert.assertFalse(removeButton.isEnabled(), "delete is enabled for current dashboard");
 
 	}
