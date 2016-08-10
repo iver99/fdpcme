@@ -36,6 +36,7 @@ define(['knockout',
         
             var self = this;
             $b.registerObject(self, 'DashboardTilesViewModel');
+            self.hasUserOptionInDB = ko.observable(false); //use in tool.bar.model.js
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.scrollbarWidth = uiutil.getScrollbarWidth();
             
@@ -1044,6 +1045,7 @@ define(['knockout',
                 Builder.fetchDashboardOptions(
                     self.dashboard.id(),
                     function (data) {
+                        self.hasUserOptionInDB(true);
                         //sucessfully get extended options for page filters
                         self.userExtendedOptions = data["extendedOptions"] ? JSON.parse(data["extendedOptions"]) : {};
                         if(!self.userExtendedOptions.tsel || (self.userExtendedOptions.tsel && !self.userExtendedOptions.tsel.entityContext)) {
@@ -1067,6 +1069,7 @@ define(['knockout',
                     },
                     function (jqXHR, textStatus, errorThrown) {
                         if(jqXHR.status === 404){
+                            self.hasUserOptionInDB(false);
                             self.userTsel = false;
                             self.userTimeSel = false;
                             self.userExtendedOptions = {};
