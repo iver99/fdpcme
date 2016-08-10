@@ -46,14 +46,15 @@ define([
                 }
                 self.rightPanelModel.initialize();
             };
-
-            self.showDashboard = function (dashboardItem) {
+            
+            self.showDashboard = function (dashboardsetToolBarModel) {
                 document.activeElement.blur();//to blur the focused item on another tab
-                var dashboardId = dashboardItem.dashboardId;
-                var divId = "dashboard-" + dashboardId;
-                var $showDashboard = $("#" + divId);
-                var alreadyLoaded = $("#" + divId).length > 0;
-
+                var dashboardItem=dashboardsetToolBarModel.selectedDashboardItem(),               
+                    dashboardId = dashboardItem.dashboardId,
+                    divId = "dashboard-" + dashboardId,
+                    $showDashboard = $("#" + divId),
+                    alreadyLoaded = $("#" + divId).length > 0;
+                
                 //hide the right panel
                 if (self.rightPanelModel) {
                     //resize right panel before shown
@@ -64,7 +65,8 @@ define([
                 if (alreadyLoaded) {
                     $showDashboard.show();
                     self.selectedDashboardInst(dashboardInstMap[dashboardId]);
-                    if (self.selectedDashboardInst().type === "included") {
+                    var _isIncludingDbsHome=self.selectedDashboardInst().type === "included";
+                    if (!_isIncludingDbsHome) {
                         resetContainerScroll();
                         setTimeout(function() {
                             $(window).trigger("resize");
@@ -78,7 +80,8 @@ define([
                         self.loadRightPanelModel(null, null, $b);
                     }
                 } else {
-                    if (dashboardItem.type === "new") {
+                    var _isIncludingDbsHome=dashboardItem.type === "new";
+                    if (_isIncludingDbsHome) {
                         self.includingDashboard(dashboardId);
                         //new dashboard home css change:align
                         setTimeout(function () {
@@ -89,7 +92,7 @@ define([
                         self.loadRightPanelModel(null, null, $b);
                     } else {
                         resetContainerScroll();
-                        self.loadDashboard(dashboardId);
+                        self.loadDashboard(dashboardsetToolBarModel);
                     }
                 }
             };
@@ -156,12 +159,40 @@ define([
                 init();
             };
 
-            self.loadDashboard = function (dsbId) {
-
+            self.loadDashboard = function (dashboardsetToolBarModel) {
                 $("#loading").show();
-                Builder.loadDashboard(dsbId, function (dashboard) {
+                var dashboardItem = dashboardsetToolBarModel.selectedDashboardItem(),
+                    dashboardId = dashboardItem.dashboardId,
+                    dashboardSetId = dashboardsetToolBarModel.dashboardsetId;
+                var _isDashboard= dashboardId === dashboardSetId;
+                if (_isDashboard) {
+                     initializeSingleDashboard(dashboardItem.raw, dashboardId);
+                } else {
+                    Builder.loadDashboard(dashboardId, function (dashboard) {
+                        initializeSingleDashboard(dashboard, dashboardId);
+                    }, function (e) {
+                        $("#loading").hide();
+                        console.log(e.errorMessage());
+                        if (e.errorCode && e.errorCode() === 20001) {
+                            oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
+                            window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href);
+                        }
+                    });
+                }
+            };
 
-                    var $dashboardEl = $($("#dashboard-content-template").text());
+            self.hideAllDashboards = function () {
+                $(".dashboard-content").hide();
+            };
+            
+            function initDashboard() {
+                self.hideAllDashboards();
+                dashboardsetToolBarModel.selectedDashboardItem() && 
+                        self.showDashboard(dashboardsetToolBarModel);
+            }
+            
+            function initializeSingleDashboard(dashboard,dsbId){
+                var $dashboardEl = $($("#dashboard-content-template").text());
                     $("#dashboards-tabs-contents").append($dashboardEl);
                     $dashboardEl.attr("id", "dashboard-" + dsbId);
 
@@ -287,25 +318,7 @@ define([
                      * Code to test df_util_widget_lookup_assetRootUrl
                      var testvalue = df_util_widget_lookup_assetRootUrl('SavedSearch','0.1','search');
                      console.log('value for asetRootUrl(search) is ' + testvalue + ', and the expected value is + http://slc08upg.us.oracle.com:7001/savedsearch/v1/search');
-                     */
-                }, function (e) {
-                    $("#loading").hide();
-                    console.log(e.errorMessage());
-                    if (e.errorCode && e.errorCode() === 20001) {
-                        oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
-                        window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href);
-                    }
-                });
-            };
-
-            self.hideAllDashboards = function () {
-                $(".dashboard-content").hide();
-            };
-
-            function initDashboard() {
-                self.hideAllDashboards();
-                dashboardsetToolBarModel.selectedDashboardItem() &&
-                        self.showDashboard(dashboardsetToolBarModel.selectedDashboardItem());
+                     */                
             }
 
             dashboardsetToolBarModel.selectedDashboardItem.subscribe(initDashboard);
