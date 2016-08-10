@@ -23,7 +23,6 @@ import mockit.MockUp;
 import oracle.sysman.emaas.platform.dashboards.core.util.FacadeUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 
 /**
@@ -201,26 +200,26 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	@Mock
 	public void $init(Long tenantId)
 	{
-		System.out.println("[MockDashboardServiceFacade] $init called");
+		////System.out.println("[MockDashboardServiceFacade] $init called");
 		currentTenant = tenantId;
 		Map<Class<?>, List<?>> tenantStorage = storages.get(currentTenant);
 		if (tenantStorage == null) {
 			storages.put(currentTenant, new HashMap<Class<?>, List<?>>());
-			System.out.println("Local storage created for tenant: " + currentTenant);
+			////System.out.println("Local storage created for tenant: " + currentTenant);
 		}
-		//System.out.println("dashboard id: " + newDashboardId());
+		////System.out.println("dashboard id: " + newDashboardId());
 	}
 
 	@Mock
 	public void commitTransaction()
 	{
-		System.out.println("[MockDashboardServiceFacade] commitTransaction called");
+		//System.out.println("[MockDashboardServiceFacade] commitTransaction called");
 	}
 
 	@Mock
 	public EmsDashboard getEmsDashboardById(Long dashboardId)
 	{
-		System.out.println("[MockDashboardServiceFacade] getEmsDashboardById called");
+		//System.out.println("[MockDashboardServiceFacade] getEmsDashboardById called");
 		List<EmsDashboard> ps = this.localFind(EmsDashboard.class, new EmsDashboardSelector(dashboardId, null, null, null));
 		return ps.isEmpty() ? null : ps.get(0);
 	}
@@ -228,7 +227,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	@Mock
 	public EmsDashboard getEmsDashboardByName(String name, String owner)
 	{
-		System.out.println("[MockDashboardServiceFacade] getEmsDashboardByName called");
+		//System.out.println("[MockDashboardServiceFacade] getEmsDashboardByName called");
 		List<EmsDashboard> ps = this.localFind(EmsDashboard.class, new EmsDashboardSelector(null, name, owner, true));
 		return ps.isEmpty() ? null : ps.get(0);
 	}
@@ -236,14 +235,22 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	@Mock
 	public List<EmsDashboard> getEmsDashboardFindAll()
 	{
-		System.out.println("[MockDashboardServiceFacade] getEmsDashboardFindAll called");
+		//System.out.println("[MockDashboardServiceFacade] getEmsDashboardFindAll called");
 		return this.localFind(EmsDashboard.class, null);
+	}
+
+	@Mock
+	public List<EmsDashboard> getEmsDashboardsBySubId(long subDashboardId)
+	{
+		//System.out.println("[MockDashboardServiceFacade] getEmsDashboardsBySubId called");
+		List<EmsDashboard> ps = this.localFind(EmsDashboard.class, new EmsDashboardSelector(subDashboardId, null, null, null));
+		return ps.isEmpty() ? null : ps;
 	}
 
 	@Mock
 	public EmsPreference getEmsPreference(String username, String prefKey)
 	{
-		System.out.println("[MockDashboardServiceFacade] getEmsDashboardFindAll called");
+		//System.out.println("[MockDashboardServiceFacade] getEmsDashboardFindAll called");
 		//		List<EmsPreference> st = this.getLocalStorage(EmsPreference.class);
 		//		for (EmsPreference p : st) {
 		//			if (p.getUserName().equals(username) && p.getPrefKey().equals(prefKey)) {
@@ -258,7 +265,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	@Mock
 	public List<EmsPreference> getEmsPreferenceFindAll(String username)
 	{
-		System.out.println("[MockDashboardServiceFacade] getEmsPreferenceFindAll called");
+		//System.out.println("[MockDashboardServiceFacade] getEmsPreferenceFindAll called");
 		//		List<EmsPreference> st = this.getLocalStorage(EmsPreference.class);
 		//		ArrayList<EmsPreference> result = new ArrayList<EmsPreference>();
 		//		for (EmsPreference p : st) {
@@ -271,17 +278,9 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	}
 
 	@Mock
-	public List<EmsDashboard> getEmsDashboardsBySubId(long subDashboardId)
-	{
-		System.out.println("[MockDashboardServiceFacade] getEmsDashboardsBySubId called");
-		List<EmsDashboard> ps = this.localFind(EmsDashboard.class, new EmsDashboardSelector(subDashboardId, null, null, null));
-		return ps.isEmpty() ? null : ps;
-	}
-
-	@Mock
 	public EmsUserOptions getEmsUserOptions(String username, Long dashboardId)
 	{
-		System.out.println("[MockDashboardServiceFacade] getEmsUserOptions called");
+		//System.out.println("[MockDashboardServiceFacade] getEmsUserOptions called");
 		List<EmsUserOptions> ps = localFind(EmsUserOptions.class, new EmsUserOptionsSelector(username, dashboardId, null));
 		return ps.isEmpty() ? null : ps.get(0);
 	}
@@ -289,7 +288,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	@Mock
 	public EntityManager getEntityManager()
 	{
-		System.out.println("[MockDashboardServiceFacade] getEntityManager called");
+		//System.out.println("[MockDashboardServiceFacade] getEntityManager called");
 		//return null;
 		return new MockEntityManager();
 		/*
@@ -298,7 +297,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 			@Mock
 			public void close()
 			{
-				System.out.println("[MockEntityManager] close called");
+				//System.out.println("[MockEntityManager] close called");
 			}
 
 			@Mock
@@ -345,7 +344,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	@Mock
 	public List<EmsDashboard> getFavoriteEmsDashboards(String username)
 	{
-		System.out.println("[MockDashboardServiceFacade] getFavoriteEmsDashboards called");
+		//System.out.println("[MockDashboardServiceFacade] getFavoriteEmsDashboards called");
 		List<EmsUserOptions> ps = localFind(EmsUserOptions.class, new EmsUserOptionsSelector(username, null, 1));
 		ArrayList<EmsDashboard> result = new ArrayList<EmsDashboard>();
 		for (EmsUserOptions p : ps) {
@@ -362,7 +361,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	@Mock
 	public EmsDashboard mergeEmsDashboard(EmsDashboard emsDashboard)
 	{
-		System.out.println("[MockDashboardServiceFacade] mergeEmsDashboard called");
+		//System.out.println("[MockDashboardServiceFacade] mergeEmsDashboard called");
 		if (emsDashboard.getLastModificationDate() == null) {
 			Date now = new Date();
 			emsDashboard.setLastModificationDate(now);
@@ -373,7 +372,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	@Mock
 	public EmsPreference mergeEmsPreference(EmsPreference emsPreference)
 	{
-		System.out.println("[MockDashboardServiceFacade] mergeEmsPreference called");
+		//System.out.println("[MockDashboardServiceFacade] mergeEmsPreference called");
 		//		List<EmsPreference> st = this.getLocalStorage(EmsPreference.class);
 		//		EmsPreference merge = null;
 		//		for (EmsPreference p : st) {
@@ -394,7 +393,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	@Mock
 	public EmsUserOptions mergeEmsUserOptions(EmsUserOptions emsUserOptions)
 	{
-		System.out.println("[MockDashboardServiceFacade] mergeEmsUserOptions called");
+		//System.out.println("[MockDashboardServiceFacade] mergeEmsUserOptions called");
 		return this.localMerge(emsUserOptions,
 				new EmsUserOptionsSelector(emsUserOptions.getUserName(), emsUserOptions.getDashboardId(), null));
 	}
@@ -402,7 +401,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	@Mock
 	public EmsDashboard persistEmsDashboard(EmsDashboard emsDashboard)
 	{
-		System.out.println("[MockDashboardServiceFacade] persistEmsDashboard called");
+		//System.out.println("[MockDashboardServiceFacade] persistEmsDashboard called");
 		emsDashboard.setDashboardId(newDashboardId());
 		if (emsDashboard.getCreationDate() == null) {
 			Date now = new Date();
@@ -417,7 +416,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	@Mock
 	public EmsPreference persistEmsPreference(EmsPreference emsPreference)
 	{
-		System.out.println("[MockDashboardServiceFacade] persistEmsPreference called");
+		//System.out.println("[MockDashboardServiceFacade] persistEmsPreference called");
 		return localPersist(emsPreference);
 	}
 
@@ -430,14 +429,14 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 		if (emsUserOptions.getIsFavorite() == null) {
 			emsUserOptions.setIsFavorite(0);
 		}
-		System.out.println("[MockDashboardServiceFacade] persistEmsUserOptions called");
+		//System.out.println("[MockDashboardServiceFacade] persistEmsUserOptions called");
 		return localPersist(emsUserOptions);
 	}
 
 	@Mock
 	public void removeAllEmsPreferences(String username)
 	{
-		System.out.println("[MockDashboardServiceFacade] removeAllEmsPreferences called");
+		////System.out.println("[MockDashboardServiceFacade] removeAllEmsPreferences called");
 		//		List<EmsPreference> st = this.getLocalStorage(EmsPreference.class);
 		//		ArrayList<EmsPreference> removed = new ArrayList<EmsPreference>();
 		//		for (EmsPreference p : st) {
@@ -453,21 +452,21 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	@Mock
 	public void removeAllEmsUserOptions(Long dashboardId)
 	{
-		System.out.println("[MockDashboardServiceFacade] removeAllEmsUserOptions called");
+		//System.out.println("[MockDashboardServiceFacade] removeAllEmsUserOptions called");
 		this.localRemove(EmsUserOptions.class, new EmsUserOptionsSelector(null, dashboardId, null));
 	}
 
 	@Mock
 	public void removeEmsDashboard(EmsDashboard emsDashboard)
 	{
-		System.out.println("[MockDashboardServiceFacade] mergeEmsDashboardFavorite called");
+		//System.out.println("[MockDashboardServiceFacade] mergeEmsDashboardFavorite called");
 		this.localRemove(emsDashboard.getClass(), new EmsDashboardSelector(emsDashboard.getDashboardId(), null, null, null));
 	}
 
 	@Mock
 	public void removeEmsPreference(EmsPreference emsPreference)
 	{
-		System.out.println("[MockDashboardServiceFacade] mergeEmsDashboardFavorite called");
+		//System.out.println("[MockDashboardServiceFacade] mergeEmsDashboardFavorite called");
 		//		List<EmsPreference> st = this.getLocalStorage(EmsPreference.class);
 		//		ArrayList<EmsPreference> removed = new ArrayList<EmsPreference>();
 		//		for (EmsPreference p : st) {
@@ -484,15 +483,16 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	}
 
 	@Mock
-	public int removeEmsSubDashboardBySubId(long subDashboardId){
-        return 0;
-    }
-
-	@Mock
-	public int removeEmsSubDashboardBySetId(long dashboardSetId){
-        return 0;
+	public int removeEmsSubDashboardBySetId(long dashboardSetId)
+	{
+		return 0;
 	}
 
+	@Mock
+	public int removeEmsSubDashboardBySubId(long subDashboardId)
+	{
+		return 0;
+	}
 
 	@Mock
 	public void removeEmsUserOptions(EmsUserOptions emsUserOptions)
@@ -501,27 +501,27 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 				new EmsUserOptionsSelector(emsUserOptions.getUserName(), emsUserOptions.getDashboardId(), null));
 	}
 
-        @Mock
-        public int removeUnsharedEmsSubDashboard(long subDashboardId, String owner)
-        {
-               return 1;
-        }
+	@Mock
+	public int removeUnsharedEmsSubDashboard(long subDashboardId, String owner)
+	{
+		return 1;
+	}
 
 	@SuppressWarnings("unchecked")
 	private <T> T cloneEntity(T c)
 	{
 		if (EmsPreference.class.equals(c.getClass())) {
-			System.out.println("[MockDashboardServiceFacade] cloneEntity: clone EmsPreference");
+			////System.out.println("[MockDashboardServiceFacade] cloneEntity: clone EmsPreference");
 			return (T) FacadeUtil.cloneEmsPreference((EmsPreference) c);
 		}
 
 		if (EmsUserOptions.class.equals(c.getClass())) {
-			System.out.println("[MockDashboardServiceFacade] cloneEntity: clone EmsUserOptions");
+			//	//System.out.println("[MockDashboardServiceFacade] cloneEntity: clone EmsUserOptions");
 			return (T) FacadeUtil.cloneEmsUserOptions((EmsUserOptions) c);
 		}
 
 		if (EmsDashboard.class.equals(c.getClass())) {
-			System.out.println("[MockDashboardServiceFacade] cloneEntity: clone EmsDashboard");
+			////System.out.println("[MockDashboardServiceFacade] cloneEntity: clone EmsDashboard");
 			return (T) FacadeUtil.cloneEmsDashboard((EmsDashboard) c);
 		}
 
@@ -586,9 +586,9 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 		if (storage == null) {
 			storage = new ArrayList<T>();
 			storages.get(currentTenant).put(entity.getClass(), storage);
-			System.out.println("[MockDashboardServiceFacade] localPersist: storage created for class: " + entity.getClass());
+			////System.out.println("[MockDashboardServiceFacade] localPersist: storage created for class: " + entity.getClass());
 		}
-		System.out.println("[MockDashboardServiceFacade] localPersist: persist " + entity);
+		////System.out.println("[MockDashboardServiceFacade] localPersist: persist " + entity);
 		storage.add(cloneEntity(entity));
 		return entity;
 	}
@@ -599,7 +599,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 		ArrayList<T> result = new ArrayList<T>();
 		for (T entity : storage) {
 			if (entity == null) {
-				System.out.println("[MockDashboardServiceFacade] localRemove: null entity");
+				//System.out.println("[MockDashboardServiceFacade] localRemove: null entity");
 				throw new RuntimeException("[MockDashboardServiceFacade] localRemove: null entity");
 			}
 			if (entity != null) {
