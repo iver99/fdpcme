@@ -1,13 +1,17 @@
 buildscript {
      apply from: 'test-buildscript-apply.gradle'                                                             
-    dependencies { 
-         
-        classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"                
-        classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_taskprocessor", version: "${omctfVersion}"              
-    }                                                                                                                         
 }                                                                                                                             
 apply from: 'test-project-apply.gradle'                                                                                            
-apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_commontasks")                             
+
+
+/***************** OMCTF Plugin **********************/
+configurations { omctfPluginConfig }
+dependencies {
+	omctfPluginConfig group: "com.oracle.omc.omctf.testsdk", name: "OMCTFPlugin", version: "${omctfPluginVersion}"
+}
+apply from: getAbsoluteFilePath(project.configurations.omctfPluginConfig,"OMCTFPlugin")
+/************** End of OMCTFPlugin *******************/
+
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest     
                                                                      
                                                      
