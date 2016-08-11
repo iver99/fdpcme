@@ -12,7 +12,9 @@ define(['knockout',
         'builder/tool-bar/edit.dialog',
         'builder/tool-bar/duplicate.dialog',
         'uifwk/js/util/preference-util',
-        'builder/builder.core'
+        'builder/builder.core',
+        'builder/dashboard/dashboard.user.options.model',
+        'builder/dashboard/dashboard.model'
     ],
     function(ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu) {
         // dashboard type to keep the same with return data from REST API
@@ -68,7 +70,7 @@ define(['knockout',
                 if(self.tilesViewModel.dashboardExtendedOptions && self.tilesViewModel.dashboardExtendedOptions.autoRefresh) {
                     self.autoRefreshInterval = ko.observable(parseInt(self.tilesViewModel.dashboardExtendedOptions.autoRefresh.defaultValue));
                 }
-                new Builder.DashboardUserOptionsDataSource().loadDashboardUserOptions(self.dashboard.id(),
+                new Builder.DashboardUserOptionsDataSource().loadDashboardUserOptionsData(self.dashboard.id(),
                     function(data) {
                         if(data["autoRefreshInterval"] !== "undefined") {
                             self.autoRefreshInterval(data["autoRefreshInterval"]);
@@ -139,7 +141,7 @@ define(['knockout',
                         interval = 120000;
                     }
                     self.intervalID = setInterval(function () {
-                        Builder.loadDashboard(
+                        new Builder.DashboardDataSource().loadDashboardData(
                                 $b.dashboard.id(),
                                 function (dashboardInst) {
                                     self.dashboardName(dashboardInst.name());

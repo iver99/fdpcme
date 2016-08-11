@@ -15,7 +15,8 @@ define([
     'builder/dashboard.tile.view',
     'builder/tool.bar.model',
     'builder/integrate/builder.integrate',
-    'dashboards/dbstypeahead'],
+    'dashboards/dbstypeahead',
+    'builder/dashboard/dashboard.model'],
     function (model, ko, $, dfu, _emJETCustomLogger, idfbcutil, oj) {
 
         function DashboardsetPanelsModel(dashboardsetToolBarModel) {
@@ -168,7 +169,7 @@ define([
                 if (_isDashboard) {
                      initializeSingleDashboard(dashboardItem.raw, dashboardId);
                 } else {
-                    Builder.loadDashboard(dashboardId, function (dashboard) {
+                    new Builder.DashboardDataSource().loadDashboardData(dashboardId, function (dashboard) {
                         initializeSingleDashboard(dashboard, dashboardId);
                     }, function (e) {
                         $("#loading").hide();

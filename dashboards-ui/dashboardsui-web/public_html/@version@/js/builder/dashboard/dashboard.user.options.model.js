@@ -7,8 +7,9 @@
 define(['knockout',
     'jquery',
     'ojs/ojcore',
-    'dfutil',
-    'builder/builder.core'], function(ko, $, oj, dfu) {
+    'builder/builder.core'
+], function(ko, $, oj) {
+    
     function DashboardUserOptionsDataSource() {
         var self = this;
         
@@ -19,7 +20,7 @@ define(['knockout',
         self.userOptions = null;
         self.hasUserOptionInDB = ko.observable(false);
         
-        self.loadDashboardUserOptions = function(dashboardId, successCallback, errorCallback) {
+        self.loadDashboardUserOptionsData = function(dashboardId, successCallback, errorCallback) {
             if(self.userOptions) {
                 successCallback && successCallback(self.userOptions);
             }else {

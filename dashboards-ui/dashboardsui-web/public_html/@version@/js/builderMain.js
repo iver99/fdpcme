@@ -198,7 +198,8 @@ require(['knockout',
     'builder/builder.core',
     'dashboards/dbstypeahead',
     'builder/dashboardset.toolbar.model',
-    'builder/dashboardset.panels.model'
+    'builder/dashboardset.panels.model',
+    'builder/dashboard/dashboard.model'
 ],
     function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, /*textwidget, */dashboardhome_impl) // this callback gets executed when all required modules are loaded
     {
@@ -294,7 +295,7 @@ require(['knockout',
             var headerViewModel = new DashboardsetHeaderViewModel();
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
-            Builder.loadDashboard(dsbId, function (dashboard) {
+            new Builder.DashboardDataSource().loadDashboardData(dsbId, function (dashboard) {
 
                 var dashboardTitleModel = new DashboardTitleModel(dashboard);
                 ko.applyBindings(dashboardTitleModel, $("title")[0]);

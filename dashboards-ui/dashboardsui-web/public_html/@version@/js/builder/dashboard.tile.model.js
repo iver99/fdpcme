@@ -1044,7 +1044,7 @@ define(['knockout',
             self.initUserFilterOptions = function() {
                 var userOptionsDS = new Builder.DashboardUserOptionsDataSource();
                 
-                userOptionsDS.loadDashboardUserOptions(
+                userOptionsDS.loadDashboardUserOptionsData(
                     self.dashboard.id(),
                     function (data) {
                         //sucessfully get extended options for page filters
