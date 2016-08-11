@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
 public class PersistenceManagerTest
 {
 	@BeforeTest
-	public void setUp() throws Exception
+	public void setUp()
 	{
 		PersistenceManager.setTestEnv(true);
 	}

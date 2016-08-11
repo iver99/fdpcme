@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.util.Properties;
 
@@ -22,7 +23,7 @@ import org.testng.annotations.Test;
 public class PersistenceManagerTest_S2
 {
 	@BeforeTest
-	public void setUp() throws Exception
+	public void setUp()
 	{
 		PersistenceManager.setTestEnv(true);
 	}
@@ -30,7 +31,7 @@ public class PersistenceManagerTest_S2
 	@Test(groups = { "s2" })
 	public void testPersistenceManager(@Mocked final Properties mockProperties, @Mocked final EntityManagerFactory memf,
 			@Mocked final EntityManager mem, @Mocked final SchemaUtil msu, @Mocked final Persistence mp, @Mocked final System ms,
-			@Mocked final Utils mu) throws Exception
+			@Mocked final Utils mu) throws IOException
 	{
 		final Properties props = getMockProperties();
 		props.put("tenant.id", 3);

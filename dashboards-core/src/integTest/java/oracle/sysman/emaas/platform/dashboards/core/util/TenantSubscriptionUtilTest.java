@@ -575,7 +575,7 @@ public class TenantSubscriptionUtilTest
 	public void testRestClientGet_S2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
 			@Mocked final RegistrationManager anyRegistrationManager, @Mocked final URI anyUri,
 			@Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
-			@Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder) throws Exception
+			@Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder)
 	{
 		new NonStrictExpectations() {
 			{
@@ -607,7 +607,7 @@ public class TenantSubscriptionUtilTest
 	}
 	
 	@AfterMethod(groups = { "s2" })
-	public void afterMethod() throws Exception
+	public void afterMethod()
 	{
 		cleanCache();
 	}
