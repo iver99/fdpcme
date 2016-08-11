@@ -59,7 +59,6 @@ $.widget( "dbs.typeAheadSearch", {
 		this.valueMethod = this.element[ isTextarea || isInput ? "val" : "text" ];
 
 		this.element
-			//.addClass( "ui-autocomplete-input" )
 			.attr( "autocomplete", "off" );
 
 		this._on( this.element, {
@@ -207,11 +206,9 @@ $.widget( "dbs.typeAheadSearch", {
                             _dataSource = _dsFac.build(request.term, _fetchSize);
                             _dataSource['pagingDS'].fetch({'startIndex': 0, 'fetchType': 'init',
                                 success: function() {
-                                    //console.log("[dbsTypeAhead] fetch success");
                                     response(_dataSource);
                                 },
                                 error: function() {
-                                    //console.log("[dbsTypeAhead] fetch failed");
                                     response(_dataSource);
 				}
                             } );
@@ -230,7 +227,6 @@ $.widget( "dbs.typeAheadSearch", {
                             modifierKey = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
 
 			if ( !equalValues || ( equalValues && !modifierKey ) ) {
-				//this.selectedItem = null;
 				this.search( null, event );
 			}
 		}, this.options.delay );
@@ -263,7 +259,6 @@ $.widget( "dbs.typeAheadSearch", {
 
 	_search: function( value ) {
 		this.pending++;
-		//this.element.addClass( "ui-autocomplete-loading" );
                 this.element.css("cursor", "progress");
 		this.cancelSearch = false;
 
@@ -281,8 +276,6 @@ $.widget( "dbs.typeAheadSearch", {
 
 			this.pending--;
 			if ( !this.pending ) {
-				//this.element.removeClass( "ui-autocomplete-loading" );
-                            //this.element.css("cursor", "text");
 			}
 		}, this );
 	},
@@ -295,7 +288,6 @@ $.widget( "dbs.typeAheadSearch", {
 
 	close: function( event ) {
 		this.cancelSearch = true;
-		//this._close( event );
 	},
 
 	_value: function() {
@@ -317,7 +309,6 @@ $.widget( "dbs.typeAheadSearch", {
 	_destroy: function() {
 		clearTimeout( this.searching );
 		this.element
-			//.removeClass( "ui-autocomplete-input" )
 			.removeAttr( "autocomplete" );
 	}
 });

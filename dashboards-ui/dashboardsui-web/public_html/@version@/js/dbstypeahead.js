@@ -62,7 +62,6 @@ $.widget( "dbs.dbsTypeAhead", {
 		this.valueMethod = this.element[ isTextarea || isInput ? "val" : "text" ];
 
 		this.element
-			//.addClass( "ui-autocomplete-input" )
 			.attr( "autocomplete", "off" );
 
 		this._on( this.element, {
@@ -211,20 +210,13 @@ $.widget( "dbs.dbsTypeAhead", {
                                 else _fetchSize = _dsFetchSize;
                             }
                             _dataSource = _dsFac.build(_searchText, _fetchSize);
-                            //var __callback = request.callback;
                             _dataSource['pagingDS'].setPage(0, {
                                 'silent': true,
                                 success: function() {
-                                    //console.log("[dbsTypeAhead] fetch success");
-                                    //if ($.isFunction(__callback))
-                                    //{
-                                    //    __callback();
-                                    //}
                                     _dataSource.serverError = false;
                                     response(_dataSource);
                                 },
                                 error: function() {
-                                    //console.log("[dbsTypeAhead] fetch failed");
                                     _dataSource.serverError = true;
                                     response(_dataSource);
 				}
@@ -244,7 +236,6 @@ $.widget( "dbs.dbsTypeAhead", {
                             modifierKey = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
 
 			if ( !equalValues || ( equalValues && !modifierKey ) ) {
-				//this.selectedItem = null;
 				this.search( null, event );
 			}
 		}, this.options.delay );
@@ -288,7 +279,6 @@ $.widget( "dbs.dbsTypeAhead", {
                 {
                     this._selfSearchStart();
                 }
-		//this.element.addClass( "ui-autocomplete-loading" );
                 //set busy crusor
                 if (this.options["busyElement"] && this.options["busyElement"] !== null)
                 {
@@ -325,10 +315,6 @@ $.widget( "dbs.dbsTypeAhead", {
 			}
 
 			this.pending--;
-			if ( !this.pending ) {
-				//this.element.removeClass( "ui-autocomplete-loading" );
-                            //this.element.css("cursor", "text");
-			}
 		}, this );
 	},
 
@@ -372,7 +358,6 @@ $.widget( "dbs.dbsTypeAhead", {
 
 	close: function( event ) {
 		this.cancelSearch = true;
-		//this._close( event );
 	},
 
 	_value: function() {
@@ -394,7 +379,6 @@ $.widget( "dbs.dbsTypeAhead", {
 	_destroy: function() {
 		clearTimeout( this.searching );
 		this.element
-			//.removeClass( "ui-autocomplete-input" )
 			.removeAttr( "autocomplete" );
 	}
 });

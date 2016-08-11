@@ -138,7 +138,6 @@ define(['knockout',
                 }
             };
 
-//            self.datetimePickerParams = ko.observable(tilesViewModel && tilesViewModel.datetimePickerParams);
 
             self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
 
@@ -262,7 +261,6 @@ define(['knockout',
 
             self.dashboardTileExistsChangedHandler = function(anyTileExists) {
                 console.debug('Received event EVENT_TILE_EXISTS_CHANGED with value of ' + anyTileExists + '. ' + (anyTileExists?'Show':'Hide') + ' time control settings accordingly');
-                //                self.showTimeControl(anyTileExists);
             };
 
             self.dashboardTileSupportTimeControlHandler = function(exists) {
@@ -315,7 +313,6 @@ define(['knockout',
                         Builder.getWidgetAssetRoot(wgt.PROVIDER_NAME(), wgt.PROVIDER_VERSION(), wgt.PROVIDER_ASSET_ROOT());
                     }
                     self.initDraggable();
-//                    self.checkAndDisableLinkDraggable();
 
                     $('.widget-search-input').autocomplete({
                         source: self.autoSearchWidgets,
@@ -332,20 +329,13 @@ define(['knockout',
             }
 
             self.initEventHandlers = function() {
-//                $b.addBuilderResizeListener(self.resizeEventHandler);
                 self.$b.addEventListener(self.$b.EVENT_TILE_MAXIMIZED, self.tileMaximizedHandler);
                 self.$b.addEventListener(self.$b.EVENT_TILE_RESTORED, self.tileRestoredHandler);
                 self.$b.addEventListener(self.$b.EVENT_AUTO_REFRESH_CHANGED, self.autoRefreshChanged);
-//                $b.addEventListener($b.EVENT_TILE_ADDED, self.tileAddedHandler);
-//                $b.addEventListener($b.EVENT_TILE_DELETED, self.tileDeletedHandler);
-//                $b.addEventListener($b.EVENT_TILE_EXISTS_CHANGED, self.dashboardTileExistsChangedHandler);
-//                $b.addEventListener($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, self.dashboardTileSupportTimeControlHandler);
             };
 
             self.initDraggable = function() {
                 self.initWidgetDraggable();
-//                self.initTextWidgetDraggable();
-//                self.initWidgetLinkDraggable();
             };
 
             self.initWidgetDraggable = function() {
@@ -363,43 +353,6 @@ define(['knockout',
                     }
                 });
             };
-
-//            self.initTextWidgetDraggable = function() {
-//                $("#dbd-left-panel-text").draggable({
-//                    helper: "clone",
-//                    handle: "#dbd-left-panel-text-handle",
-//                    start: function(e, t) {
-//                        $b.triggerEvent($b.EVENT_NEW_TEXT_START_DRAGGING, null, e, t);
-//                    },
-//                    drag: function(e, t) {
-//                        $b.triggerEvent($b.EVENT_NEW_TEXT_DRAGGING, null, e, t);
-//                    },
-//                    stop: function(e, t) {
-//                        $b.triggerEvent($b.EVENT_NEW_TEXT_STOP_DRAGGING, null, e, t);
-//                    }
-//                });
-//            };
-
-//            self.initWidgetLinkDraggable = function() {
-//                $("#dbd-left-panel-link").draggable({
-//                    helper: "clone",
-//                    handle: "#dbd-left-panel-link-handle",
-//                    start: function(e, t) {
-//                        $b.triggerEvent($b.EVENT_NEW_LINK_START_DRAGGING, null, e, t);
-//                    },
-//                    drag: function(e, t) {
-//                        $b.triggerEvent($b.EVENT_NEW_LINK_DRAGGING, null, e, t);
-//                    },
-//                    stop: function(e, t) {
-//                        $b.triggerEvent($b.EVENT_NEW_LINK_STOP_DRAGGING, null, e, t);
-//                    }
-//                });
-//            };
-
-//            self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
-//                $('#dbd-left-panel').height(height - topHeight);
-//                $('#left-panel-text-helper').css("width", width - 20);
-//            };
 
             self.tileMaximizedHandler = function() {
                 self.maximized(true);
@@ -431,15 +384,7 @@ define(['knockout',
                 }
             }
 
-//            self.tileAddedHandler = function(tile) {
-//                tile && tile.type() === "DEFAULT" && ($("#dbd-left-panel-link").draggable("enable"));
-//            };
 
-//            self.tileDeletedHandler = function(tile) {
-//                if (!tile || tile.type() !== "DEFAULT")
-//                    return;
-//                self.checkAndDisableLinkDraggable();
-//            };
             var AUTO_PAGE_NAV = 1;
             var widgetListHeight = ko.observable(0);
             var pageSizeLastTime = 0;
@@ -481,7 +426,6 @@ define(['knockout',
                                 wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
                                 wgt && !wgt.imgWidth && (wgt.imgWidth = ko.observable('120px'));
                                 wgt && !wgt.imgHeight && (wgt.imgHeight = ko.observable('120px'));
-//                                self.getWidgetScreenshot(wgt);
                                 self.widgets.push(wgt);
                             }
                         }
@@ -493,10 +437,6 @@ define(['knockout',
             self.getWidgetScreenshot = function(wgt) {
                 var url = null;
                 wgt.WIDGET_SCREENSHOT_HREF && (url = wgt.WIDGET_SCREENSHOT_HREF());
-//                if (!url) { // backward compility if SSF doesn't support .png screenshot. to be removed once SSF changes are merged
-//                    loadWidgetBase64Screenshot(wgt);
-//                    return;
-//                }
                 if (!dfu.isDevMode()){
                     url = dfu.getRelUrlFromFullUrl(url);
                 }
@@ -650,11 +590,6 @@ define(['knockout',
                 }
             };
 
-//            self.checkAndDisableLinkDraggable = function() {
-//                if(!self.dashboard.isDefaultTileExist()) {
-//                    $("#dbd-left-panel-link").draggable("disable");
-//                }
-//            };
 
             self.deleteDashboardClicked = function(){
                 queryDashboardSetsBySubId(self.dashboard.id(),function(resp){
@@ -1048,7 +983,7 @@ define(['knockout',
                 });
                 dsbSetSaveDelay.extend({rateLimit: {method: "notifyWhenChangesStop", timeout: 800}});
 
-                //todo called when refresh page;
+                //todo called when refresh page
                 dsbSetSaveDelay.subscribe(function () {
                     self.dashboardsetToolBarModel.saveDashboardSet(
                             {

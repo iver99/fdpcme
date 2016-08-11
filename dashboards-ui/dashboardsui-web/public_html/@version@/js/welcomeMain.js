@@ -100,7 +100,6 @@ require(['ojs/ojcore',
 
             function TitleViewModel(){
                var self = this;
-//               self.homeTitle = getNlsString("DBS_HOME_TITLE");
                self.landingHomeTitle = dfu_model.generateWindowTitle(getNlsString("LANDING_HOME_WINDOW_TITLE"), null, null, null);
            }
 
@@ -232,9 +231,6 @@ require(['ojs/ojcore',
                                 landingHomeUrls[self.dataExplorer] = dataExplorers[i].href;
                             }
                             //change name of data explorer in ITA starting with "Data Explorer - "
-//                            if(dataExplorers[i].serviceName === "emcitas-ui-apps" || dataExplorers[i].serviceName === "TargetAnalytics") {
-//                                self.exploreDataInITA.push(dataExplorers[i]);
-//                            }
                         }
                     }
                     landingHomeUrls["DB_perf"] = self.getITAVerticalAppUrl("verticalApplication.db-perf");

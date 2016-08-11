@@ -62,18 +62,4 @@ define(['jquery',
     }
     Builder.registerModule(WidgetDataSource, "WidgetDataSource");
 
-    /*function createTextWidget(width) {
-        var widget = {};
-        widget.WIDGET_KOC_NAME = "DF_V1_WIDGET_TEXT";
-        widget.WIDGET_TEMPLATE = "./widgets/textwidget/textwidget.html";
-        widget.WIDGET_VIEWMODEL = "./widgets/textwidget/js/textwidget";
-        widget.type = "TEXT_WIDGET";
-        widget.width = width;
-        widget.height = 1;
-        widget.column = null;
-        widget.row = null;
-        widget.content = null;
-        return widget;
-    }
-    Builder.registerFunction(createTextWidget, 'createTextWidget');*/
 });
