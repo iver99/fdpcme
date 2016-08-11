@@ -80,7 +80,7 @@ public class LoginAndLogout
 			url = PageUtils.getServiceLink(tenantId, rel, servicename);
 		}
 		catch (Exception e) {
-
+			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OMCS_DASHBOARD_URL");
 		}
 
 		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");
