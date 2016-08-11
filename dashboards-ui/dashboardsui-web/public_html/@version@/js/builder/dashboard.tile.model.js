@@ -16,6 +16,7 @@ define(['knockout',
         'builder/editor/editor.component',
         'builder/editor/editor',
         'builder/editor/editor.mode',
+        'builder/dashboard/dashboard.user.options.model',
         'builder/widget/widget.model',
         'jqueryui',
         'builder/builder.jet.partition'
@@ -36,7 +37,6 @@ define(['knockout',
 
             var self = this;
             $b.registerObject(self, 'DashboardTilesViewModel');
-            self.hasUserOptionInDB = ko.observable(false); //use in tool.bar.model.js
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.scrollbarWidth = uiutil.getScrollbarWidth();
 
@@ -1042,10 +1042,11 @@ define(['knockout',
             };
 
             self.initUserFilterOptions = function() {
-                Builder.fetchDashboardOptions(
+                var userOptionsDS = new Builder.DashboardUserOptionsDataSource();
+                
+                userOptionsDS.loadDashboardUserOptions(
                     self.dashboard.id(),
                     function (data) {
-                        self.hasUserOptionInDB(true);
                         //sucessfully get extended options for page filters
                         self.userExtendedOptions = data["extendedOptions"] ? JSON.parse(data["extendedOptions"]) : {};
                         if(!self.userExtendedOptions.tsel || (self.userExtendedOptions.tsel && !self.userExtendedOptions.tsel.entityContext)) {
@@ -1060,16 +1061,9 @@ define(['knockout',
                         }else {
                             self.userTimeSel = true;
                         }
-                        if(!self.userExtendedOptions.autoRefresh) {
-                            self.userAutoRefresh = false;
-                            self.userExtendedOptions.autoRefresh = {defaultValue: 300000};
-                        }else {
-                            self.userAutoRefresh = true;
-                        }
                     },
                     function (jqXHR, textStatus, errorThrown) {
                         if(jqXHR.status === 404){
-                            self.hasUserOptionInDB(false);
                             self.userTsel = false;
                             self.userTimeSel = false;
                             self.userExtendedOptions = {};
@@ -1081,7 +1075,6 @@ define(['knockout',
 
             self.userTsel = false;
             self.userTimeSel = false;
-            self.userAutoRefresh = false;
             self.initUserFilterOptions();
             self.dashboardExtendedOptions = self.dashboard.extendedOptions ? JSON.parse(self.dashboard.extendedOptions()) : null;
 
@@ -1235,12 +1228,8 @@ define(['knockout',
                     extendedOptions: JSON.stringify(self.toolbarModel.extendedOptions),
                     autoRefreshInterval: self.toolbarModel.autoRefreshInterval()
                 };
-                if(self.toolbarModel.hasUserOptionInDB) {
-                    Builder.updateDashboardOptions(userFilterOptions);
-                }else {
-                    Builder.saveDashboardOptions(userFilterOptions);
-                    self.toolbarModel.hasUserOptionInDB = true;
-                }
+                
+                new Builder.DashboardUserOptionsDataSource().saveDashboardUserOptions(userFilterOptions);
             };
 
             self.toolbarModel = null;

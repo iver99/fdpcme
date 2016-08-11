@@ -60,18 +60,20 @@ define(['knockout',
             self.editDisabled = ko.observable(self.dashboard.type() === SINGLEPAGE_TYPE || self.dashboard.systemDashboard() || self.currentUser !== self.dashboard.owner());
             self.disableSave = ko.observable(false);
 
-            self.hasUserOptionInDB = ko.observable(false);
             self.extendedOptions = self.tilesViewModel.userExtendedOptions;
             if(self.isUnderSet && dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)){
                 self.autoRefreshInterval = dashboardSetOptions.autoRefreshInterval;
             }else {
-                if(self.tilesViewModel.userAutoRefresh && self.extendedOptions && self.extendedOptions.autoRefresh) {
-                    self.autoRefreshInterval = ko.observable(parseInt(self.extendedOptions.autoRefresh.defaultValue));
-                }else if(self.tilesViewModel.dashboardExtendedOptions && self.tilesViewModel.dashboardExtendedOptions.autoRefresh) {
+                self.autoRefreshInterval = ko.observable(DEFAULT_AUTO_REFRESH_INTERVAL);
+                if(self.tilesViewModel.dashboardExtendedOptions && self.tilesViewModel.dashboardExtendedOptions.autoRefresh) {
                     self.autoRefreshInterval = ko.observable(parseInt(self.tilesViewModel.dashboardExtendedOptions.autoRefresh.defaultValue));
-                }else {
-                    self.autoRefreshInterval = ko.observable(DEFAULT_AUTO_REFRESH_INTERVAL);
                 }
+                new Builder.DashboardUserOptionsDataSource().loadDashboardUserOptions(self.dashboard.id(),
+                    function(data) {
+                        if(data["autoRefreshInterval"] !== "undefined") {
+                            self.autoRefreshInterval(data["autoRefreshInterval"]);
+                        }
+                    });
             }
 
             if (window.DEV_MODE) { // for dev mode debug only
@@ -116,7 +118,7 @@ define(['knockout',
 
             self.initialize = function() {
                 self.initEventHandlers();
-                self.initUserOtions();
+                self.initUserOptions();
                 $b.findEl('.builder-dbd-name-input').on('blur', function(evt) {
                     if (evt && evt.relatedTarget && evt.relatedTarget.id && $(evt.relatedTarget).hasClass("builder-dbd-name-cancel"))
                         self.cancelChangeDashboardName();
@@ -156,18 +158,8 @@ define(['knockout',
                 }
             };
 
-            self.initUserOtions = function () {
-                if(!self.isUnderSet){
-                    self.hasUserOptionInDB($b.getDashboardTilesViewModel().hasUserOptionInDB());
-                    if(self.hasUserOptionInDB()){
-                        self.setAutoRefreshInterval(self.autoRefreshInterval());
-                    }else{
-                        self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
-                    }
-                }else{
-                    self.setAutoRefreshInterval(self.autoRefreshInterval());
-                }
-
+            self.initUserOptions = function () {
+                self.setAutoRefreshInterval(self.autoRefreshInterval());
             };
 
             self.initEventHandlers = function() {
@@ -815,13 +807,7 @@ define(['knockout',
                 };
                 //save user options if it is in single dashboard mode
                 if (!self.isUnderSet) {
-                    if (self.hasUserOptionInDB()) {
-                        Builder.updateDashboardOptions(optionsJson);
-                    } else {
-                        Builder.saveDashboardOptions(optionsJson, function () {
-                            self.hasUserOptionInDB(true);
-                        });
-                    }
+                    new Builder.DashboardUserOptionsDataSource().saveDashboardUserOptions(optionsJson);
 
                     $b.triggerEvent($b.EVENT_AUTO_REFRESH_CHANGED, "auto-refresh changed", value);
                 }
