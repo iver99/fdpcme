@@ -421,88 +421,6 @@ public class DataManager
 		}
 	}
 
-	public int syncDashboardLastAccess(BigInteger dashboardId, String accessedBy, String accessDate, Long tenantId,
-									   String creationDate, String lastModificationDate) {
-		logger.info("Calling DataManager.syncDashboardLastAccess");
-		if (dashboardId == null) {
-			logger.info("DASHBOARD_ID is null!");
-			return 0;
-		}
-		if (StringUtil.isEmpty(accessedBy)) {
-			logger.info("ACCESSED_BY is null!");
-			return 0;
-		}
-		if (StringUtil.isEmpty(accessDate)) {
-			logger.info("ACCESS_DATE is null!");
-		}
-		if (tenantId == null) {
-			logger.info("TENANT_ID is null!");
-			return 0;
-		}
-		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
-		entityManager.getTransaction().begin();
-		try {
-			if (isDashboardLastAccessExit(entityManager, dashboardId, tenantId)) {
-				logger.info("DashboardLastAccess with tile id {} exists", dashboardId);
-				if (isAfter(getDashboardLastAccessLastModifiedDate(entityManager, dashboardId, tenantId), lastModificationDate)) {
-					logger.info("The lastModificationDate is earlier, no need to update");
-					return 0;
-				}
-				logger.info("The lastModificationDate is later, do update now");
-				return updateDashboardLastAccess(entityManager, dashboardId, accessedBy, accessDate, tenantId, creationDate, lastModificationDate);
-			}
-			logger.info("Dashboard Last Access with id {} does not exist insert now", dashboardId);
-			return insertDashboardLastAccess(entityManager, dashboardId, accessedBy, accessDate, tenantId, creationDate, lastModificationDate);
-		} catch (Exception e) {
-			logger.error(e.getLocalizedMessage());
-			return 0;
-		} finally {
-			entityManager.getTransaction().commit();
-			entityManager.close();
-		}
-	}
-
-	public int syncDashboardFavorite(String userName, BigInteger dashboardId, String creationDate,
-									 Long tenantId, String lastModificationDate) {
-		logger.info("Calling DataManager.syncDashboardFavorite");
-		if (StringUtil.isEmpty(userName)) {
-			logger.info("USER_NAME is null!");
-			return 0;
-		}
-		if (dashboardId == null) {
-			logger.info("DASHBOARD_ID is null");
-			return 0;
-		}
-		if (StringUtil.isEmpty(creationDate)) {
-			logger.info("CREATION_DATE");
-			return 0;
-		}
-		if (tenantId == null) {
-			logger.info("TENANT_ID");
-			return 0;
-		}
-		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
-		entityManager.getTransaction().begin();
-		try {
-			if (isDashboardFavoriteExit(entityManager, userName, dashboardId, tenantId)) {
-				logger.info("DashboardFavorite with dashboard id {} exists", dashboardId);
-				if (isAfter(getDashboardFavoriteLastModifiedDate(entityManager, userName, dashboardId, tenantId),lastModificationDate)) {
-					logger.info("The lastModification is earlier, no need to update");
-					return 0;
-				}
-				logger.info("The lastModification is later, do update now");
-				return updateDashboardFavorite(entityManager, userName, dashboardId, creationDate, tenantId, lastModificationDate);
-			}
-			logger.info("Dashboard Favorite with id {} does not exist insert now", dashboardId);
-			return insertDashboardFavorite(entityManager, userName, dashboardId, creationDate, tenantId, lastModificationDate);
-		} catch (Exception e) {
-			logger.error(e.getLocalizedMessage());
-			return 0;
-		} finally {
-			entityManager.getTransaction().commit();
-			entityManager.close();
-		}
-	}
 
 	public int syncDashboardUserOption(String userName, Long tenantId, BigInteger dashboardId,
 									   Long autoRefreshInterval, String accessDate, Integer isFavorite, String extendedOptions,
@@ -993,26 +911,7 @@ public class DataManager
 		return count > 0;
 	}
 
-	private boolean isDashboardLastAccessExit(EntityManager entityManager, BigInteger dashboardId, Long tenantId) {
-		logger.info("Calling DataManager.isDashboardLastAccessExit");
-		String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_LAST_ACCESS WHERE DASHBOARD_ID=? AND TENANT_ID=?";
-		Query query = entityManager.createNativeQuery(sql)
-				.setParameter(1, dashboardId)
-				.setParameter(2, tenantId);
-		long count = ((Number) query.getSingleResult()).longValue();
-		return count > 0;
-	}
 
-	private boolean isDashboardFavoriteExit(EntityManager entityManager, String userName, BigInteger dashboardId, Long tenantId) {
-		logger.info("Calling DataManager.updateDashboardFavorite");
-        String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_FAVORITE WHERE USER_NAME=? AND DASHBOARD_ID=? AND TENANT_ID=?";
-		Query query = entityManager.createNativeQuery(sql)
-				.setParameter(1, userName)
-				.setParameter(2, dashboardId)
-				.setParameter(3, tenantId);
-		long count = ((Number) query.getSingleResult()).longValue();
-		return count > 0;
-	}
 
 	private boolean isDashboardUserOptionExist(EntityManager entityManager, String userName, Long tenantId, BigInteger dashboardId) {
 		logger.info("Calling DataManager.isDashboardUserOptionExit");
@@ -1077,24 +976,6 @@ public class DataManager
 		return query.getSingleResult().toString();
 	}
 
-	private String getDashboardLastAccessLastModifiedDate(EntityManager entityManager, BigInteger dashboardId, Long tenantId){
-		logger.info("Calling DataManager.getDashboardLastAccessLastModifiedDate");
-		String sql = "SELECT LAST_MODIFICATION_DATE FROM EMS_DASHBOARD_LAST_ACCESS WHERE DASHBOARD_ID=? AND TENANT_ID=?";
-		Query query = entityManager.createNativeQuery(sql)
-				.setParameter(1,dashboardId)
-				.setParameter(2,tenantId);
-		return  query.getSingleResult().toString();
-	}
-
-	private String getDashboardFavoriteLastModifiedDate(EntityManager entityManager, String userName, BigInteger dashboardId, Long tenantId){
-		logger.info("Calling DataManager.getDashboardFavoriteLastModifiedDate");
-        String sql = "SELECT LAST_MODIFICATION_DATE FROM EMS_DASHBOARD_FAVORITE WHERE USER_NAME=? AND DASHBOARD_ID=? AND TENANT_ID=?";
-		Query query = entityManager.createNativeQuery(sql)
-				.setParameter(1, userName)
-				.setParameter(2, dashboardId)
-				.setParameter(3, tenantId);
-		return query.getSingleResult().toString();
-	}
 
 	private String getDashboardUserOptionLastModifiedDate(EntityManager entityManager, String userName, Long tenantId, BigInteger dashboardId){
 		logger.info("Calling DataManager.getDashboardUserOptionLastModifiedDate");

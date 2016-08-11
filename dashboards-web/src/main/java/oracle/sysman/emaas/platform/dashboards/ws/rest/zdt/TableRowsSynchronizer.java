@@ -47,43 +47,12 @@ public class TableRowsSynchronizer {
             logger.info("nothing was added to EMS_DASHBOARD_SET!");
         if (syncDashboardUserOptionsTableRows(data.getEmsDashboardUserOptions()) <= 0)
             logger.info("nothing was added to EMS_DASHBOARD_USER_OPTIONS!");
-        if (syncDashboardFavoriteTableRows(data.getEmsDashboardFavorite()) <= 0)
-            logger.info("nothing was added to EMS_DASHBOARD_FAVORITE!");
-        if (syncDashboardLastAccessTableRows(data.getEmsDashboardLastAccess()) <= 0)
-            logger.info("nothing was added to EMS_DASHBOARD_LAST_ACCESS!");
         if (syncDashboardTileTableRows(data.getEmsDashboardTile()) <= 0)
             logger.info("nothing was added to EMS_DASHBOARD_TILE!");
         if (syncDashboardTileParamsTableRows(data.getEmsDashboardTileParams()) <= 0)
             logger.info("nothing was added to EMS_DASHBOARD_TILE_PARAMS!");
     }
 
-    private int syncDashboardFavoriteTableRows(List<DashboardFavoriteRowEntity> rows) {
-        if (rows == null || rows.isEmpty()) {
-            logger.info("DashboardFavoriteRows is empty or null!");
-            return 0;
-        }
-        int result = 0;
-        for (DashboardFavoriteRowEntity dashboardFavoriteRowEntity : rows) {
-            result += DataManager.getInstance().syncDashboardFavorite(dashboardFavoriteRowEntity.getUserName()
-                    , dashboardFavoriteRowEntity.getDashboardId(), dashboardFavoriteRowEntity.getCreationDate(), dashboardFavoriteRowEntity.getTenantId()
-                    , dashboardFavoriteRowEntity.getLastModificationDate());
-        }
-        return result;
-    }
-
-    private int syncDashboardLastAccessTableRows(List<DashboardLastAccessRowEntity> rows) {
-        if (rows == null) {
-            logger.info("DashboardLastAccessRows is empty or null!");
-            return 0;
-        }
-        int result = 0;
-        for (DashboardLastAccessRowEntity dashboardLastAccessRowEntity : rows) {
-            result += DataManager.getInstance().syncDashboardLastAccess(dashboardLastAccessRowEntity.getDashboardId(),
-                    dashboardLastAccessRowEntity.getAccessedBy(), dashboardLastAccessRowEntity.getAccessDate(), dashboardLastAccessRowEntity.getTenantId(),
-                    dashboardLastAccessRowEntity.getCreationDate(), dashboardLastAccessRowEntity.getLastModificationDate());
-        }
-        return result;
-    }
 
     private int syncDashboardSetTableRows(List<DashboardSetRowEntity> rows) {
         if (rows == null || rows.isEmpty()) {
@@ -137,7 +106,7 @@ public class TableRowsSynchronizer {
         }
         int result = 0;
         for (DashboardTileRowEntity dashboardTileRowEntity : rows) {
-            result += DataManager.getInstance().syncDashboardTile(dashboardTileRowEntity.getTileId(), dashboardTileRowEntity.getDashboardId(), dashboardTileRowEntity.getLastModificationDate()
+            result += DataManager.getInstance().syncDashboardTile(dashboardTileRowEntity.getTileId(), dashboardTileRowEntity.getDashboardId(), dashboardTileRowEntity.getCreationDate()
                     , dashboardTileRowEntity.getLastModificationDate(), dashboardTileRowEntity.getLastModifiedBy(), dashboardTileRowEntity.getOwner(), dashboardTileRowEntity.getTitle()
                     , dashboardTileRowEntity.getHeight(), dashboardTileRowEntity.getWidth(), dashboardTileRowEntity.getIsMaximized(), dashboardTileRowEntity.getPosition()
                     , dashboardTileRowEntity.getTenantId(), dashboardTileRowEntity.getWidgetUniqueId(), dashboardTileRowEntity.getWidgetName(), dashboardTileRowEntity.getWidgetDescription()
