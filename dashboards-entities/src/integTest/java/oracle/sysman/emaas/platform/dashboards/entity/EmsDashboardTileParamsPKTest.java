@@ -9,9 +9,7 @@ import java.util.Date;
 
 import org.testng.annotations.Test;
 
-/**
- * Created by Troy on 2016/1/20.
- */
+
 @Test(groups = {"s1"})
 public class EmsDashboardTileParamsPKTest { 
     Date now =  new Date();
@@ -60,7 +58,7 @@ public class EmsDashboardTileParamsPKTest {
     private EmsDashboardTileParamsPK emsDashboardTileParamsPK = new EmsDashboardTileParamsPK("elephant",10L);
 
     @Test
-    public void testEquals() throws Exception {
+    public void testEquals() {
         EmsDashboardTileParamsPK emsDashboardTileParamsPK1 = new EmsDashboardTileParamsPK("elephant",10L);
         EmsDashboardTileParamsPK emsDashboardTileParamsPK2 = new EmsDashboardTileParamsPK("elephant",11L);
         EmsDashboardTileParamsPK emsDashboardTileParamsPK3 = new EmsDashboardTileParamsPK("dolphine",11L);
@@ -73,14 +71,14 @@ public class EmsDashboardTileParamsPKTest {
     }
 
     @Test
-    public void testGetDashboardTile() throws Exception {
+    public void testGetDashboardTile() {
         emsDashboardTileParamsPK.setDashboardTile(10L);
         assertEquals(emsDashboardTileParamsPK.getDashboardTile(),new Long(10));
 
     }
 
     @Test
-    public void testGetParamName() throws Exception {
+    public void testGetParamName() {
         emsDashboardTileParamsPK= new EmsDashboardTileParamsPK();
         emsDashboardTileParamsPK.setParamName("elephant");
         assertEquals(emsDashboardTileParamsPK.getParamName(),"elephant");
@@ -88,17 +86,17 @@ public class EmsDashboardTileParamsPKTest {
     }
 
     @Test
-    public void testHashCode() throws Exception {
+    public void testHashCode() {
         assertNotNull(emsDashboardTileParamsPK.hashCode());
     }
 
     @Test
-    public void testSetDashboardTile() throws Exception {
+    public void testSetDashboardTile() {
 
     }
 
     @Test
-    public void testSetParamName() throws Exception {
+    public void testSetParamName() {
 
     }
 }
