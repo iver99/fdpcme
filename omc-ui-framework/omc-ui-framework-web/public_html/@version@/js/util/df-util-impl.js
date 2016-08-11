@@ -534,9 +534,6 @@ define([
              * @returns {String} url
              */
             self.discoverSavedSearchServiceUrl = function() {
-//                return 'http://slc08upg.us.oracle.com:7001/savedsearch/v1/';
-//                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
-//                return self.discoverUrl('SavedSearch', '0.1');
                 return self.SSF_REST_API_BASE;
             };
 

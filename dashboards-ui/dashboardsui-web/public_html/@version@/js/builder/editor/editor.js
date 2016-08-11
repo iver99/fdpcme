@@ -44,9 +44,6 @@ define(['knockout',
                         var pos = self.calAvailablePositionForTile(tile, startrow, startcolumn);
                         self.mode.setModeRow(tile, pos.row), self.mode.setModeColumn(tile, pos.column);
                         pos = self.getAvailableCellAfterTile(tile);
-//                        if (pos.column >= newMode.MODE_MAX_COLUMNS) {
-//                            pos.row += newMode.getModeHeight(tile), pos.column = 0;
-//                        }
                         startrow = pos.row, startcolumn = pos.column;
                         self.tilesGrid.registerTileToGrid(self.tiles()[i]);
                     }
@@ -480,7 +477,6 @@ define(['knockout',
                 }
                 return nexts;
             };
-//            self.moved = [];
             self.draggingTile = null;
             self.moveTileDown = function(tile, rowDiff) {
                 if(rowDiff <= 0) {
@@ -627,18 +623,6 @@ define(['knockout',
                     if(j == -1) {
                         self.updateTilePosition(iTile, j+1, self.mode.getModeColumn(iTile));
                     }
-//                    var preTile = self.tiles()[i-1];
-//                    if(i === 0) {
-//                        j = 0;
-//                    }else {
-//                        j = (preTile.row() > iTile.row()) ? 0 : preTile.row();
-//                    }
-//                    for(; j<iTile.row(); j++) {
-//                        if(self.canMoveToRow(iTile, j)) {
-//                            self.updateTilePosition(iTile, j, iTile.column());
-//                            break;
-//                        }
-//                    }
                 }
                 //check for empry rows
                 var rows = self.tilesGrid.size();
@@ -712,7 +696,6 @@ define(['knockout',
                     if (koc_name && viewmodel && template) {
                         if (widget_source===1){
                              if (!ko.components.isRegistered(koc_name)) {
-//                                var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root, true);
                                 var assetRoot = Builder.getWidgetAssetRoot(provider_name,provider_version,provider_asset_root);
                                 if (assetRoot===null){
                                     oj.Logger.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
@@ -736,48 +719,6 @@ define(['knockout',
                             newTile.row(tileCell.row);
                             newTile.column(tileCell.column);
                             self.tilesGrid.registerTileToGrid(newTile);
-//                                if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
-//                                    var worksheetName = 'WS_4_QDG_WIDGET';
-//                                    var workSheetCreatedBy = 'sysman';
-//                                    var qdgId = 'chart1';
-//                                    var ssfUrl = '/sso.static/savedsearch.categories';
-//                                    if (ssfUrl && ssfUrl !== '') {
-//                                        var href = ssfUrl + '/search/'+widget.WIDGET_UNIQUE_ID;
-//                                        var widgetDetails = null;
-//                                        dfu.ajaxWithRetry({
-//                                            url: href,
-//                                            headers: dfu.getSavedSearchServiceRequestHeader(),
-//                                            success: function(data, textStatus) {
-//                                                widgetDetails = data;
-//                                            },
-//                                            error: function(xhr, textStatus, errorThrown){
-//                                                console.log('Error when get widget details!');
-//                                            },
-//                                            async: false
-//                                        });
-//
-//                                        if (widgetDetails){
-//                                            if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
-//                                               widget.parameters = {};
-//                                               for(var i=0;i<widgetDetails.parameters.length;i++){
-//                                                   widget.parameters[widgetDetails.parameters[i]["name"]] = widgetDetails.parameters[i]["value"];
-//                                               }
-//                                            }
-//                                        }
-//                                    }
-//
-//                                    // specific parameters for ita which is required. Retrieve them from SSF
-//                                    if (widget.parameters["ITA_WIDGET_WORKSHEETNAME"])
-//                                        worksheetName = widget.parameters["ITA_WIDGET_WORKSHEETNAME"];
-//                                    if (widget.parameters["ITA_WIDGET_CREATEDBY"])
-//                                        workSheetCreatedBy = widget.parameters["ITA_WIDGET_CREATEDBY"];
-//                                    if (widget.parameters["ITA_WIDGET_QDGID"])
-//                                        qdgId = widget.parameters["ITA_WIDGET_QDGID"];
-//
-//                                    newTile.worksheetName = worksheetName;
-//                                    newTile.createdBy = workSheetCreatedBy;
-//                                    newTile.qdgId = qdgId;
-//                                }
                         }
                         else {
                             oj.Logger.error("Invalid WIDGET_SOURCE: "+widget_source);
@@ -786,7 +727,6 @@ define(['knockout',
                     else {
                         oj.Logger.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
                     }
-//                    }
                 return newTile;
             };
         }

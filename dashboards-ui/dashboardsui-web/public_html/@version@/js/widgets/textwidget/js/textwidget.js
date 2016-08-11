@@ -41,9 +41,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 if(params.tile) {
                     self.tile = params.tile;
                 }
-//                if(params.reorder) {
-//                   self.reorder = params.reorder;
-//                }
                 if(params.deleteTextCallback) {
                     self.deleteTextCallback = params.deleteTextCallback;
                 }
@@ -73,7 +70,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         {name: 'colors', items: ['TextColor']},
                         {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']},
                         {name: 'links', items: ['Link']}
-//                                {name: 'insert', items: ['Image', 'Flash']}
                     ],
                     removePlugins: 'resize, elementspath',
                     startupFocus: false,
@@ -103,10 +99,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     var tmpX  = e.clientX+document.body.scrollLeft+document.documentElement.scrollLeft;
                     var tmpY = e.clientY+document.body.scrollTop+document.documentElement.scrollTop;
                     if(x!==tmpX || y!==tmpY) {
-//                        console.log("dragged");
                         return;
                     }else {
-//                        console.log("clicked");
                         self.textClicked(data, e);
                     }
                 };
@@ -143,7 +137,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     clicks++;
                     if(clicks === 1) {
                         timerClickType = setTimeout(function() {
-//                            console.log("single click");
                             clicks = 0;
                             self.showTextEditor();
                             timerSetCaret = setTimeout(function() {insertBreakAtPoint(e);}, 400);
@@ -151,7 +144,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     }else {
                         clearTimeout(timerSetCaret);
                         clearTimeout(timerClickType);
-//                        console.log("double click");
                         clicks = 0;
                         self.editTextEditor();
                     }
@@ -226,8 +218,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                             }
                         });
                         //reset textcolor icon
-//                        $($(".cke_button__textcolor span")[0]).removeClass("cke_button__textcolor_icon");
-//                        $($(".cke_button__textcolor span")[0]).addClass("cke_textcolor_new_icon");
 
                         this.setData(self.content());
                         $("#textEditorWrapper_" + self.randomId).css("background-color", "white");
@@ -246,7 +236,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         } else {
                             self.showErrorMsg(false);
                         }
-//                        console.log(this.getData());
                         self.content(this.getData());
                         params.tile.content(self.content());
                         $("#textEditorWrapper_" + self.randomId).hide();
@@ -264,7 +253,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     editor.on("change", function() {
                         var curHeight = $("#textEditorWrapper_"+self.randomId).height();
                         if(curHeight !== preHeight) {
-//                            console.log("editing area height changed!");
                             preHeight = curHeight;
                             self.show && self.show();
                             self.builder && self.builder.triggerEvent(self.builder.EVENT_TEXT_START_EDITING, null, null);
@@ -276,7 +264,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     $("#textWidget_"+self.randomId).remove();
                     self.tiles && self.tiles.remove(self.tile);
                     self.deleteTextCallback && self.deleteTextCallback(self.tile);
-//                    self.reorder && self.reorder();
                     self.show && self.show();
                 };
 

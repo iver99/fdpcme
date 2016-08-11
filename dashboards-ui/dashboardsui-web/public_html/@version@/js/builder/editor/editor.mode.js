@@ -48,7 +48,6 @@ define(['knockout',
             setModeColumn : function(tile, modeColumn) {
                 // as this function could be inherited, so not to update tile column here.
                 // instead, don't use setModeColumn but set tile column directly when it's needed
-    //            tile.column(modeColumn);
                 !tile.modeColumn && (tile.modeColumn = ko.observable());
                 tile.modeColumn(modeColumn);
             },
@@ -63,7 +62,6 @@ define(['knockout',
             setModeRow : function(tile, modeRow) {
                 // as this function could be inherited, so not to update tile row here.
                 // instead, don't use setModeRow but set tile row directly when it's needed
-    //            tile.row(modeRow);
                 !tile.modeRow && (tile.modeRow = ko.observable());
                 tile.modeRow(modeRow);
             },
