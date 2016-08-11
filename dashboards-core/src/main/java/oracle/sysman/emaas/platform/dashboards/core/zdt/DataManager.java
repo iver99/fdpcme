@@ -225,29 +225,29 @@ public class DataManager
 	public int syncDashboardTableRow(BigInteger dashboardId, String name, Long type, String description, String creationDate, String lastModificationDate, String lastModifiedBy, String owner,
 									 Integer isSystem, Integer applicationType, Integer enableTimeRange, String screenShot, Long deleted, Long tenantId, Integer enableRefresh, Integer sharePublic,
 									 Integer enableEntityFilter, Integer enableDescription, String extendedOptions) {
-		logger.info("Calling the DataManager.syncDashboardTableRow");
+		logger.debug("Calling the DataManager.syncDashboardTableRow");
 		if (dashboardId == null) {
-			logger.info("dashboard id cannot be null!");
+			logger.debug("dashboard id cannot be null!");
 			return 0;
 		}
 		if (StringUtil.isEmpty(name)) {
-			logger.info("name cannot be null!");
+			logger.debug("name cannot be null!");
 			return 0;
 		}
 		if (type == null) {
-			logger.info("type cannot be null!");
+			logger.debug("type cannot be null!");
 			return 0;
 		}
 		if ((StringUtil.isEmpty(creationDate))) {
-			logger.info("creation date cannot be null!");
+			logger.debug("creation date cannot be null!");
 			return 0;
 		}
 		if ((StringUtil.isEmpty(owner))) {
-			logger.info("creation date cannot be null!");
+			logger.debug("creation date cannot be null!");
 			return 0;
 		}
 		if (isSystem == null) {
-			logger.info("creation date cannot be null!");
+			logger.debug("creation date cannot be null!");
 			return 0;
 		}
 
@@ -255,16 +255,16 @@ public class DataManager
 		entityManager.getTransaction().begin();
 		try {
 			if (isDashboardExist(entityManager, dashboardId, tenantId)) {
-				logger.info("Dashboard with id {} exists", dashboardId);
+				logger.debug("Dashboard with id {} exists", dashboardId);
 				if (isAfter(getDashboardLastModifiedDate(entityManager, dashboardId, tenantId), lastModificationDate)) {
-					logger.info("This lastModificationDate is earlier, there is no need to update");
+					logger.debug("This lastModificationDate is earlier, there is no need to update");
 					return 0;
 				}
 				return updateDashboard(entityManager, dashboardId, name, type, description, creationDate, lastModificationDate, lastModifiedBy, owner,
 						isSystem, applicationType, enableTimeRange, screenShot, deleted, tenantId, enableRefresh, sharePublic,
 						enableEntityFilter, enableDescription, extendedOptions);
 			}
-			logger.info("Dashboard with id {} not exist insert now", dashboardId);
+			logger.debug("Dashboard with id {} not exist insert now", dashboardId);
 			return insertDashboard(entityManager, dashboardId, name, type, description, creationDate, lastModificationDate, lastModifiedBy, owner,
 					isSystem, applicationType, enableTimeRange, screenShot, deleted, tenantId, enableRefresh, sharePublic, enableEntityFilter, enableDescription, extendedOptions);
 		} catch (Exception e) {
@@ -280,84 +280,84 @@ public class DataManager
 								 Long width, Integer isMaximized, Long position, Long tenantId, String widgetUniqueId, String widgetName, String widgetDescription, String widgetGroupName,
 								 String widgetIcon, String widgetHistogram, String widgetOwner, String widgetCreationTime, Long widgetSource, String widgetKocName, String widgetViewmode, String widgetTemplate,
 								 String providerName, String providerVersion, String providerAssetRoot, Long tileRow, Long tileColumn, Long type, Integer widgetSupportTimeControl, Long widgetLinkedDashboard) {
-		logger.info("Calling the DataManager,syncDashboardTile");
+		logger.debug("Calling the DataManager,syncDashboardTile");
 		if (tileId == null) {
-			logger.info("TILE_ID is null!");
+			logger.debug("TILE_ID is null!");
 			return 0;
 		}
 		if (dashboardId == null) {
-			logger.info("DASHBOARD_ID is null!");
+			logger.debug("DASHBOARD_ID is null!");
 			return 0;
 		}
 		if (StringUtil.isEmpty(creationDate)) {
-			logger.info("CREATION_DATE is null!");
+			logger.debug("CREATION_DATE is null!");
 			return 0;
 		}
 		if (StringUtil.isEmpty(title)) {
-			logger.info("TITLE is null!");
+			logger.debug("TITLE is null!");
 			return 0;
 		}
 		if (position == null) {
-			logger.info("POSITION is null!");
+			logger.debug("POSITION is null!");
 			return 0;
 		}
 		if (tenantId == null) {
-			logger.info("TENANT_ID is null!");
+			logger.debug("TENANT_ID is null!");
 			return 0;
 		}
 		if (StringUtil.isEmpty(widgetUniqueId)) {
-			logger.info("WIDGET_UNIQUE_ID is null!");
+			logger.debug("WIDGET_UNIQUE_ID is null!");
 			return 0;
 		}
 		if (StringUtil.isEmpty(widgetName)) {
-			logger.info("WIDGET_NAME is null!");
+			logger.debug("WIDGET_NAME is null!");
 			return 0;
 		}
 		if (StringUtil.isEmpty(widgetOwner)) {
-			logger.info("WIDGET_OWNER is null!");
+			logger.debug("WIDGET_OWNER is null!");
 			return 0;
 		}
 		if (StringUtil.isEmpty(widgetCreationTime)) {
-			logger.info("WIDGET_CREATION_TIME is null!");
+			logger.debug("WIDGET_CREATION_TIME is null!");
 			return 0;
 		}
 		if (widgetSource == null) {
-			logger.info("WIDGET_SOURCE is null!");
+			logger.debug("WIDGET_SOURCE is null!");
 			return 0;
 		}
 		if (StringUtil.isEmpty(widgetKocName)) {
-			logger.info("WIDGET_KOC_NAME is null!");
+			logger.debug("WIDGET_KOC_NAME is null!");
 			return 0;
 		}
 		if (StringUtil.isEmpty(widgetViewmode)) {
-			logger.info("WIDGET_VIEWMODE is null!");
+			logger.debug("WIDGET_VIEWMODE is null!");
 			return 0;
 		}
 		if (StringUtil.isEmpty(widgetTemplate)) {
-			logger.info("WIDGET_TEMPLATE is null!");
+			logger.debug("WIDGET_TEMPLATE is null!");
 			return 0;
 		}
 		if (widgetSupportTimeControl == null) {
-			logger.info("WIDGET_SUPPORT_TIME_CONTROL is null!");
+			logger.debug("WIDGET_SUPPORT_TIME_CONTROL is null!");
 			return 0;
 		}
 		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
 		entityManager.getTransaction().begin();
 		try {
 			if (isDashboardTileExist(entityManager, tileId, dashboardId, tenantId)) {
-				logger.info("Dashboard Tile with id {} exists", tileId);
+				logger.debug("Dashboard Tile with id {} exists", tileId);
 
 				if (isAfter(getDashboardTileLastModifiedDate(entityManager, tileId, dashboardId, tenantId),lastModificationDate)) {
-					logger.info("This lastModificationDate is earlier, there is no need to update");
+					logger.debug("This lastModificationDate is earlier, there is no need to update");
 					return 0;
 				}
-				logger.info("The lastModificationDate is later,do update now");
+				logger.debug("The lastModificationDate is later,do update now");
 				return updateDashboardTile(entityManager, tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 						width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 						widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
 						providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard);
 			}
-			logger.info("Tile with id {} not exist insert now", tileId);
+			logger.debug("Tile with id {} not exist insert now", tileId);
 			return insertDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 					width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 					widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
@@ -374,41 +374,41 @@ public class DataManager
 	public int syncDashboardTileParam( BigInteger tileId, String paramName,
 									  Long tenantId, Integer isSystem, Long paramType, String paramValueStr,
 									  Long paramValueNum, String paramValueTimestamp, String creationDate, String lastModificationDate) {
-		logger.info("Calling DataManager.syncDashboardTileParam");
+		logger.debug("Calling DataManager.syncDashboardTileParam");
 		if(tenantId == null){
-			logger.info("TENANT_ID is null!");
+			logger.debug("TENANT_ID is null!");
 			return 0;
 		}
 		if(paramName == null){
-			logger.info("PARAM_NAME is null!");
+			logger.debug("PARAM_NAME is null!");
 			return 0;
 		}
 		if(tileId == null){
-			logger.info("TILE_ID is null!");
+			logger.debug("TILE_ID is null!");
 			return 0;
 		}
 		if(isSystem == null){
-			logger.info("IS_SYSTEM is null!");
+			logger.debug("IS_SYSTEM is null!");
 			return 0;
 		}
 		if(paramType == null){
-			logger.info("PARAM_TYPE is null!");
+			logger.debug("PARAM_TYPE is null!");
 			return 0;
 		}
 		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
 		entityManager.getTransaction().begin();
 		try {
 			if (isDashboardTileParamExist(entityManager, tileId, paramName, tenantId)) {
-				logger.info("DashboardTileParam with tile id {} exists", tileId);
+				logger.debug("DashboardTileParam with tile id {} exists", tileId);
 				if (isAfter(getDashboardTileParamLastModifiedDate(entityManager, tileId, paramName, tenantId), lastModificationDate)) {
-					logger.info("The lastModificationDate is earlier, no need to update");
+					logger.debug("The lastModificationDate is earlier, no need to update");
 					return 0;
 				}
-				logger.info("The lastModificationDate is later,do update now");
+				logger.debug("The lastModificationDate is later,do update now");
 				return updateDashboardTileParam(entityManager, tileId, paramName, tenantId, isSystem,
 						paramType, paramValueStr, paramValueNum, paramValueTimestamp, creationDate, lastModificationDate);
 			}
-			logger.info("Tile param with id {} does not exist insert now", tileId);
+			logger.debug("Tile param with id {} does not exist insert now", tileId);
 			return insertDashboardTileParam(entityManager, tileId, paramName, tenantId,
 					isSystem, paramType, paramValueStr, paramValueNum,
 					paramValueTimestamp, creationDate, lastModificationDate);
@@ -425,34 +425,34 @@ public class DataManager
 	public int syncDashboardUserOption(String userName, Long tenantId, BigInteger dashboardId,
 									   Long autoRefreshInterval, String accessDate, Integer isFavorite, String extendedOptions,
 									   String creationDate, String lastModificationDate) {
-		logger.info("Calling DataManager.syncDashboardUserOption");
+		logger.debug("Calling DataManager.syncDashboardUserOption");
 		if (StringUtil.isEmpty(userName)) {
-			logger.info("USER_NAME is null!");
+			logger.debug("USER_NAME is null!");
 			return 0;
 		}
 		if (tenantId == null) {
-			logger.info("TENANT_ID is null !");
+			logger.debug("TENANT_ID is null !");
 			return 0;
 		}
 		if (dashboardId == null) {
-			logger.info("DASHBOARD_ID is null !");
+			logger.debug("DASHBOARD_ID is null !");
 			return 0;
 		}
 		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
 		entityManager.getTransaction().begin();
 		try {
 			if (isDashboardUserOptionExist(entityManager, userName, tenantId, dashboardId)) {
-				logger.info("DashboardUserOption with dashboardId {} exists", dashboardId);
+				logger.debug("DashboardUserOption with dashboardId {} exists", dashboardId);
 				if (isAfter(getDashboardUserOptionLastModifiedDate(entityManager, userName, tenantId, dashboardId), lastModificationDate)) {
-					logger.info("The lastModificationDate is earlier, no need to update");
+					logger.debug("The lastModificationDate is earlier, no need to update");
 					return 0;
 				}
-				logger.info("The lastModificationDate is later, do update now");
+				logger.debug("The lastModificationDate is later, do update now");
 				return updateDashboardUserOption(entityManager, userName, tenantId, dashboardId,
 						autoRefreshInterval, accessDate, isFavorite, extendedOptions,
 						creationDate, lastModificationDate);
 			}
-			logger.info("Dashboard User Option with id {} does not exist insert now", dashboardId);
+			logger.debug("Dashboard User Option with id {} does not exist insert now", dashboardId);
 			return insertDashboardUserOption(entityManager, userName, tenantId, dashboardId, autoRefreshInterval,
 					accessDate, isFavorite, extendedOptions, creationDate, lastModificationDate);
 		} catch (Exception e) {
@@ -466,36 +466,36 @@ public class DataManager
 
 	public int syncDashboardSet(BigInteger dashboardSetId, Long tenantId, BigInteger subDashboardId,
 								Long position, String creationDate, String lastModificationDate) {
-		logger.info("Calling DataManager.syncDashboardSet", dashboardSetId);
+		logger.debug("Calling DataManager.syncDashboardSet", dashboardSetId);
 		if (dashboardSetId == null) {
-			logger.info("DASHBOARD_SET_ID is null !");
+			logger.debug("DASHBOARD_SET_ID is null !");
 			return 0;
 		}
 		if (tenantId == null) {
-			logger.info("TENANT_ID is null !");
+			logger.debug("TENANT_ID is null !");
 			return 0;
 		}
 		if (subDashboardId == null) {
-			logger.info("SUB_DASHBOARD_ID is null !");
+			logger.debug("SUB_DASHBOARD_ID is null !");
 			return 0;
 		}
 		if (position == null) {
-			logger.info("POSITION is null !");
+			logger.debug("POSITION is null !");
 			return 0;
 		}
 		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
 		entityManager.getTransaction().begin();
 		try {
 			if (isDashboardSetExist(entityManager, dashboardSetId, tenantId, subDashboardId)) {
-				logger.info("DashboardSet with dashboardSetId {} exist", dashboardSetId);
+				logger.debug("DashboardSet with dashboardSetId {} exist", dashboardSetId);
 				if (isAfter(getDashboardSetLastModifiedDate(entityManager, dashboardSetId, tenantId, subDashboardId), lastModificationDate)) {
-					logger.info("The lastModification is earlier, no need to update");
+					logger.debug("The lastModification is earlier, no need to update");
 					return 0;
 				}
-				logger.info("The lastModificationDate is later, do update now");
+				logger.debug("The lastModificationDate is later, do update now");
 				return updateDashboardSet(entityManager, dashboardSetId, tenantId, subDashboardId, position, creationDate, lastModificationDate);
 			}
-			logger.info("Dashboard Set with id {} does not exist insert now", dashboardSetId);
+			logger.debug("Dashboard Set with id {} does not exist insert now", dashboardSetId);
 			return insertDashboardSet(entityManager, dashboardSetId, tenantId, subDashboardId, position, creationDate, lastModificationDate);
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage());
@@ -508,36 +508,36 @@ public class DataManager
 
 	public int syncPreferences(String userName, String prefKey, String prefValue,
 							   Long tenantId, String creationDate, String lastModificationDate) {
-		logger.info("Calling syncPreference");
+		logger.debug("Calling syncPreference");
 		if (StringUtil.isEmpty(userName)) {
-			logger.info("USER_NAME is null");
+			logger.debug("USER_NAME is null");
 			return 0;
 		}
 		if (StringUtil.isEmpty(prefKey)) {
-			logger.info("PREF_KEY is null");
+			logger.debug("PREF_KEY is null");
 			return 0;
 		}
 		if (StringUtil.isEmpty(prefValue)) {
-			logger.info("PREF_VALUE is null");
+			logger.debug("PREF_VALUE is null");
 			return 0;
 		}
 		if (tenantId == null) {
-			logger.info("TENANT_ID is null");
+			logger.debug("TENANT_ID is null");
 			return 0;
 		}
 		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
 		entityManager.getTransaction().begin();
 		try {
 			if (isPreferenceExist(entityManager, userName, prefKey, tenantId)) {
-				logger.info("Preference with prefKey {} exists", prefKey);
+				logger.debug("Preference with prefKey {} exists", prefKey);
 				if (isAfter(getPreferenceLastModifiedDate(entityManager, userName, prefKey, tenantId), lastModificationDate)) {
-					logger.info("The lastModificationDate is earlier, no need to update");
+					logger.debug("The lastModificationDate is earlier, no need to update");
 					return 0;
 				}
-				logger.info("The lastModificationDate is later, do update now");
+				logger.debug("The lastModificationDate is later, do update now");
 				return updatePreferences(entityManager, userName, prefKey, prefValue, tenantId, creationDate, lastModificationDate);
 			}
-			logger.info("Preference with prefKey {} does not exist insert now", prefKey);
+			logger.debug("Preference with prefKey {} does not exist insert now", prefKey);
 			return insertPreferences(entityManager, userName, prefKey, prefValue, tenantId, creationDate, lastModificationDate);
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage());
@@ -551,7 +551,7 @@ public class DataManager
 	private int insertDashboard(EntityManager entityManager, BigInteger dashboardId, String name, Long type, String description, String creationDate, String lastModificationDate, String lastModifiedBy, String owner,
 								Integer isSystem, Integer applicationType, Integer enableTimeRange, String screenShot, Long deleted, Long tenantId, Integer enableRefresh, Integer sharePublic,
 								Integer enableEntityFilter, Integer enableDescription, String extendedOptions) {
-		logger.info("Calling the Datamanager.insertDashboard");
+		logger.debug("Calling the Datamanager.insertDashboard");
 		int result;
 		String sql = "INSERT INTO EMS_DASHBOARD(DASHBOARD_ID,  NAME, TYPE, DESCRIPTION, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY, OWNER, IS_SYSTEM, APPLICATION_TYPE, ENABLE_TIME_RANGE, SCREEN_SHOT, DELETED, TENANT_ID, ENABLE_REFRESH, SHARE_PUBLIC, ENABLE_ENTITY_FILTER, ENABLE_DESCRIPTION, EXTENDED_OPTIONS)values(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') ,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') ,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Query query = entityManager.createNativeQuery(sql)
@@ -574,7 +574,7 @@ public class DataManager
 				.setParameter(17, enableEntityFilter)
 				.setParameter(18, enableDescription)
 				.setParameter(19, extendedOptions);
-		logger.info(query.toString());
+		logger.debug(query.toString());
 		result = query.executeUpdate();
 		return result;
 	}
@@ -583,7 +583,7 @@ public class DataManager
 									Long width, Integer isMaximized, Long position, Long tenantId, String widgetUniqueId, String widgetName, String widgetDescription, String widgetGroupName,
 									String widgetIcon, String widgetHistogram, String widgetOwner, String widgetCreationTime, Long widgetSource, String widgetKocName, String widgetViewmode, String widgetTemplate,
 									String providerName, String providerVersion, String providerAssetRoot, Long tileRow, Long tileColumn, Long type, Integer widgetSupportTimeControl, Long widgetLinkedDashboard) {
-		logger.info("Calling DataManager.insertDashboardTiles");
+		logger.debug("Calling DataManager.insertDashboardTiles");
 		int result;
 		String sql = "INSERT INTO EMS_DASHBOARD_TILE(TILE_ID, DASHBOARD_ID, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY, OWNER, TITLE, HEIGHT, WIDTH, IS_MAXIMIZED, POSITION, TENANT_ID, WIDGET_UNIQUE_ID, WIDGET_NAME, WIDGET_DESCRIPTION, WIDGET_GROUP_NAME, WIDGET_ICON, WIDGET_HISTOGRAM, WIDGET_OWNER, WIDGET_CREATION_TIME, WIDGET_SOURCE, WIDGET_KOC_NAME, WIDGET_VIEWMODE, WIDGET_TEMPLATE, PROVIDER_NAME, PROVIDER_VERSION, PROVIDER_ASSET_ROOT, TILE_ROW, TILE_COLUMN, TYPE, WIDGET_SUPPORT_TIME_CONTROL, WIDGET_LINKED_DASHBOARD)values(?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') ,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') ,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Query query = entityManager.createNativeQuery(sql)
@@ -608,7 +608,7 @@ public class DataManager
 	}
 
 	private int insertDashboardTileParam(EntityManager entityManager, BigInteger tileId, String paramName, Long tenantId, Integer isSystem, Long paramType, String paramValueStr, Long paramValueNum, String paramValueTimestamp, String creationDate, String lastModificationDate) {
-		logger.info("Calling DataManager.insertDashboardTileParam");
+		logger.debug("Calling DataManager.insertDashboardTileParam");
 		int result;
 		String sql = "INSERT INTO EMS_DASHBOARD_TILE_PARAMS(TILE_ID, PARAM_NAME, TENANT_ID, IS_SYSTEM, PARAM_TYPE, PARAM_VALUE_STR, PARAM_VALUE_NUM, PARAM_VALUE_TIMESTAMP, CREATION_DATE, LAST_MODIFICATION_DATE)values(?, ?, ?, ?, ?, ?, ?, to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'))";
 		Query query = entityManager.createNativeQuery(sql)
@@ -627,7 +627,7 @@ public class DataManager
 	}
 
 	private int insertDashboardLastAccess(EntityManager entityManager, BigInteger dashboardId, String accessedBy, String accessDate, Long tenantId, String creationDate, String lastModificationDate) {
-		logger.info("Calling DataManager.insertDashboardLastAccess");
+		logger.debug("Calling DataManager.insertDashboardLastAccess");
 		int result;
 		String sql = "INSERT INTO EMS_DASHBOARD_LAST_ACCESS(DASHBOARD_ID, ACCESSED_BY, ACCESS_DATE, TENANT_ID, CREATION_DATE, LAST_MODIFICATION_DATE)values(?, ?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), ?, to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') , to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') )";
 		Query query = entityManager.createNativeQuery(sql)
@@ -642,7 +642,7 @@ public class DataManager
 	}
 
 	private int insertDashboardFavorite(EntityManager entityManager, String userName, BigInteger dashboardId, String creationDate, Long tenantId, String lastModificationDate) {
-		logger.info("Calling DataManager.insertDashboardFavorite");
+		logger.debug("Calling DataManager.insertDashboardFavorite");
 		int result;
 		String sql = "INSERT INTO EMS_DASHBOARD_FAVORITE(USER_NAME, DASHBOARD_ID, CREATION_DATE, TENANT_ID, LAST_MODIFICATION_DATE)values(?, ?, to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') , ?, to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') )";
 		Query query = entityManager.createNativeQuery(sql)
@@ -657,7 +657,7 @@ public class DataManager
 
 	private int insertDashboardUserOption(EntityManager entityManager, String userName, Long tenantId, BigInteger dashboardId, Long autoRefreshInterval, String accessDate,
 										  Integer isFavorite, String extendedOptions, String creationDate, String lastModificationDate) {
-		logger.info("Calling DataManager.insertDashboardUserOptions");
+		logger.debug("Calling DataManager.insertDashboardUserOptions");
 		int result;
 		String sql = "INSERT INTO EMS_DASHBOARD_USER_OPTIONS(USER_NAME, TENANT_ID, DASHBOARD_ID, AUTO_REFRESH_INTERVAL, ACCESS_DATE, IS_FAVORITE, EXTENDED_OPTIONS, CREATION_DATE, LAST_MODIFICATION_DATE)values(?, ?, ?, ?, to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), ?, ?, to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'))";
 		Query query = entityManager.createNativeQuery(sql)
@@ -673,7 +673,7 @@ public class DataManager
 	}
 
 	private int insertDashboardSet(EntityManager entityManager, BigInteger dashboardSetId, Long tenantId, BigInteger subDashboardId, Long position, String creationDate, String lastModificationDate) {
-		logger.info("Calling DataManager.insertDashboardSet");
+		logger.debug("Calling DataManager.insertDashboardSet");
 		int result;
 		String sql = "INSERT INTO EMS_DASHBOARD_SET(DASHBOARD_SET_ID, TENANT_ID, SUB_DASHBOARD_ID, POSITION, CREATION_DATE, LAST_MODIFICATION_DATE)values(?, ?, ?, ?, to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'))";
 		Query query = entityManager.createNativeQuery(sql)
@@ -688,7 +688,7 @@ public class DataManager
 	}
 
 	private int insertPreferences(EntityManager entityManager, String userName, String prefKey, String prefValue, Long tenantId, String creationDate, String lastModificationDate) {
-		logger.info("Calling DataManager.insertPreference");
+		logger.debug("Calling DataManager.insertPreference");
 		int result;
 		String sql = "INSERT INTO EMS_PREFERENCE (USER_NAME, PREF_KEY, PREF_VALUE, TENANT_ID, CREATION_DATE, LAST_MODIFICATION_DATE)values(?, ?, ?, ?, to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'))";
 		Query query = entityManager.createNativeQuery(sql)
@@ -705,7 +705,7 @@ public class DataManager
 	private int updateDashboard(EntityManager entityManager, BigInteger dashboardId, String name, Long type, String description, String creationDate, String lastModificationDate, String lastModifiedBy, String owner,
 								Integer isSystem, Integer applicationType, Integer enableTimeRange, String screenShot, Long deleted, Long tenantId, Integer enableRefresh, Integer sharePublic,
 								Integer enableEntityFilter, Integer enableDescription, String extendedOptions) {
-		logger.info("Calling the Datamanager.updateDashboard");
+		logger.debug("Calling the Datamanager.updateDashboard");
 		int result;
 		String sql = "UPDATE EMS_DASHBOARD SET  NAME=?, TYPE=?, DESCRIPTION=?, CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), LAST_MODIFIED_BY=?, OWNER=?, IS_SYSTEM=?, APPLICATION_TYPE=?, ENABLE_TIME_RANGE=?, SCREEN_SHOT=?, DELETED=?, ENABLE_REFRESH=?, SHARE_PUBLIC=?, ENABLE_ENTITY_FILTER=?, ENABLE_DESCRIPTION=?, EXTENDED_OPTIONS=? WHERE DASHBOARD_ID=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
@@ -736,7 +736,7 @@ public class DataManager
                                     Long width, Integer isMaximized, Long position, Long tenantId, String widgetUniqueId, String widgetName, String widgetDescription, String widgetGroupName,
                                     String widgetIcon, String widgetHistogram, String widgetOwner, String widgetCreationTime, Long widgetSource, String widgetKocName, String widgetViewmode, String widgetTemplate,
                                     String providerName, String providerVersion, String providerAssetRoot, Long tileRow, Long tileColumn, Long type, Integer widgetSupportTimeControl, Long widgetLinkedDashboard) {
-		logger.info("Calling Datamanager.updateDashboardTiles");
+		logger.debug("Calling Datamanager.updateDashboardTiles");
 		int result;
 		String sql = "UPDATE EMS_DASHBOARD_TILE SET CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') , LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') , LAST_MODIFIED_BY=?, OWNER=?, TITLE=?, HEIGHT=?, WIDTH=?, IS_MAXIMIZED=?, POSITION=?, WIDGET_UNIQUE_ID=?, WIDGET_NAME=?, WIDGET_DESCRIPTION=?, WIDGET_GROUP_NAME=?, WIDGET_ICON=?, WIDGET_HISTOGRAM=?, WIDGET_OWNER=?, WIDGET_CREATION_TIME=?, WIDGET_SOURCE=?, WIDGET_KOC_NAME=?, WIDGET_VIEWMODE=?, WIDGET_TEMPLATE=?, PROVIDER_NAME=?, PROVIDER_VERSION=?, PROVIDER_ASSET_ROOT=?, TILE_ROW=?, TILE_COLUMN=?, TYPE=?, WIDGET_SUPPORT_TIME_CONTROL=?, WIDGET_LINKED_DASHBOARD=? WHERE TILE_ID=? AND DASHBOARD_ID=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
@@ -779,7 +779,7 @@ public class DataManager
 	private int updateDashboardTileParam(EntityManager entityManager, BigInteger tileId, String paramName, Long tenantId,
 										 Integer isSystem, Long paramType, String paramValueStr, Long paramValueNum,
 										 String paramValueTimestamp, String creationDate, String lastModificationDate) {
-		logger.info("Calling DataManager.updateDashboardTileParam");
+		logger.debug("Calling DataManager.updateDashboardTileParam");
 		int result;
 		String sql = "UPDATE EMS_DASHBOARD_TILE_PARAMS SET IS_SYSTEM=?, PARAM_TYPE=?, PARAM_VALUE_STR=?, PARAM_VALUE_NUM=?, PARAM_VALUE_TIMESTAMP=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') WHERE TILE_ID=? AND PARAM_NAME=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
@@ -796,40 +796,10 @@ public class DataManager
 		result = query.executeUpdate();
 		return result;
 	}
-
-	private int updateDashboardLastAccess(EntityManager entityManager, BigInteger dashboardId, String accessedBy,
-										  String accessDate, Long tenantId, String creationDate, String lastModificationDate) {
-		logger.info("Calling DataManager.updateDashboardLastAccess");
-		int result;
-		String sql = "UPDATE EMS_DASHBOARD_LAST_ACCESS SET CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), ACCESSED_BY=?, ACCESS_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') WHERE DASHBOARD_ID=? AND TENANT_ID=?";
-		Query query = entityManager.createNativeQuery(sql)
-				.setParameter(1, creationDate)
-				.setParameter(2, lastModificationDate)
-				.setParameter(3, accessedBy)
-				.setParameter(4, accessDate)
-				.setParameter(5, dashboardId)
-				.setParameter(6, tenantId);
-		result = query.executeUpdate();
-		return result;
-	}
-
-	private int updateDashboardFavorite(EntityManager entityManager, String userName, BigInteger dashboardId, String creationDate, Long tenantId, String lastModificationDate) {
-		logger.info("Calling DataManager.updateDashboardFavorite");
-		int result;
-		String sql = "UPDATE EMS_DASHBOARD_FAVORITE SET CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), DASHBOARD_ID=?, LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')  WHERE USER_NAME=? AND TENANT_ID=?";
-		Query query = entityManager.createNativeQuery(sql)
-				.setParameter(1, creationDate)
-				.setParameter(2, userName)
-				.setParameter(3, lastModificationDate)
-				.setParameter(4, tenantId)
-				.setParameter(5, dashboardId);
-		result = query.executeUpdate();
-		return result;
-	}
-
+ 
 	private int updateDashboardUserOption(EntityManager entityManager, String userName, Long tenantId, BigInteger dashboardId, Long autoRefreshInterval, String accessDate,
 										  Integer isFavorite, String extendedOptions, String creationDate, String lastModificationDate) {
-		logger.info("Calling DataManager.updateDashboardUserOption");
+		logger.debug("Calling DataManager.updateDashboardUserOption");
 		int result;
 		String sql = "UPDATE EMS_DASHBOARD_USER_OPTIONS SET CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), AUTO_REFRESH_INTERVAL=?, ACCESS_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), IS_FAVORITE=?, EXTENDED_OPTIONS=? WHERE USER_NAME=? AND TENANT_ID=? AND DASHBOARD_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
@@ -849,7 +819,7 @@ public class DataManager
 
 	private int updateDashboardSet(EntityManager entityManager, BigInteger dashboardSetId, Long tenantId, BigInteger subDashboardId,
 								   Long position, String creationDate, String lastModificationDate) {
-		logger.info("Calling DataManager.updateDashboardSet");
+		logger.debug("Calling DataManager.updateDashboardSet");
 		int result;
 		String sql = "UPDATE EMS_DASHBOARD_SET SET CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), POSITION=? WHERE DASHBOARD_SET_ID=? AND TENANT_ID=? AND SUB_DASHBOARD_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
@@ -865,7 +835,7 @@ public class DataManager
 
 	private int updatePreferences(EntityManager entityManager, String userName, String prefKey,
 								  String prefValue, Long tenantId, String creationDate, String lastModificationDate) {
-		logger.info("Calling DataManager.updatePreference");
+		logger.debug("Calling DataManager.updatePreference");
 		int result;
 		String sql = "UPDATE EMS_PREFERENCE SET PREF_VALUE=?, CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') WHERE USER_NAME=? AND PREF_KEY=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
@@ -880,7 +850,7 @@ public class DataManager
 	}
 
 	private boolean isDashboardExist(EntityManager entityManager, BigInteger dashboardId, Long tenantId) {
-		logger.info("Calling the Datamanager.isDashboardsExist");
+		logger.debug("Calling the Datamanager.isDashboardsExist");
 		String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD WHERE DASHBOARD_ID=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, dashboardId)
@@ -890,7 +860,7 @@ public class DataManager
 	}
 
 	private boolean isDashboardTileExist(EntityManager entityManager, BigInteger tileId, BigInteger dashboardId, Long tenantId) {
-		logger.info("Calling Datamanager.isDashboardTileExist");
+		logger.debug("Calling Datamanager.isDashboardTileExist");
 		String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_TILE WHERE TILE_ID=? AND DASHBOARD_ID=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, tileId)
@@ -901,7 +871,7 @@ public class DataManager
 	}
 
 	private boolean isDashboardTileParamExist(EntityManager entityManager, BigInteger tileId, String paramName, Long tenantId) {
-		logger.info("Calling DataManager.isDashboardTileParamExit");
+		logger.debug("Calling DataManager.isDashboardTileParamExit");
 		String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_TILE_PARAMS WHERE TILE_ID=? AND PARAM_NAME=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, tileId)
@@ -914,7 +884,7 @@ public class DataManager
 
 
 	private boolean isDashboardUserOptionExist(EntityManager entityManager, String userName, Long tenantId, BigInteger dashboardId) {
-		logger.info("Calling DataManager.isDashboardUserOptionExit");
+		logger.debug("Calling DataManager.isDashboardUserOptionExit");
 		String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_USER_OPTIONS WHERE USER_NAME=? AND TENANT_ID=? AND DASHBOARD_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, userName)
@@ -925,7 +895,7 @@ public class DataManager
 	}
 
 	private boolean isDashboardSetExist(EntityManager entityManager, BigInteger dashboardSetId, Long tenantId, BigInteger subDashboardId) {
-		logger.info("Calling DataManager.isDashboardSetExist");
+		logger.debug("Calling DataManager.isDashboardSetExist");
 		String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_SET WHERE DASHBOARD_SET_ID=? AND TENANT_ID=? AND SUB_DASHBOARD_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, dashboardSetId)
@@ -936,7 +906,7 @@ public class DataManager
 	}
 
 	private boolean isPreferenceExist(EntityManager entityManager, String userName, String prefKey, Long tenantId) {
-		logger.info("Calling DataManager.isPreferenceExist");
+		logger.debug("Calling DataManager.isPreferenceExist");
 		String sql = "SELECT COUNT(1) FROM EMS_PREFERENCE WHERE USER_NAME=? AND PREF_KEY=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, userName)
@@ -947,7 +917,7 @@ public class DataManager
 	}
 
 	private String getDashboardLastModifiedDate(EntityManager entityManager,BigInteger dashboardId, Long tenantId) {
-		logger.info("Calling the Datamanager.getDashboardsLastModifiedDate");
+		logger.debug("Calling the Datamanager.getDashboardsLastModifiedDate");
 		String sql = "SELECT LAST_MODIFICATION_DATE FROM EMS_DASHBOARD WHERE DASHBOARD_ID=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, dashboardId)
@@ -957,7 +927,7 @@ public class DataManager
 	}
 
 	private String getDashboardTileLastModifiedDate(EntityManager entityManager, BigInteger tileId, BigInteger dashboardId, Long tenantId) {
-		logger.info("Calling Datamanager.getDashboardTileLastModifiedDate");
+		logger.debug("Calling Datamanager.getDashboardTileLastModifiedDate");
 		String sql = "SELECT LAST_MODIFICATION_DATE FROM EMS_DASHBOARD_TILE WHERE TILE_ID=? AND DASHBOARD_ID=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, tileId)
@@ -967,7 +937,7 @@ public class DataManager
 	}
 
 	private String getDashboardTileParamLastModifiedDate(EntityManager entityManager, BigInteger tileId, String paramName, Long tenantId){
-		logger.info("Calling DataManager.getDashboardTileParamLastModifiedDate");
+		logger.debug("Calling DataManager.getDashboardTileParamLastModifiedDate");
 		String sql = "SELECT LAST_MODIFICATION_DATE FROM EMS_DASHBOARD_TILE_PARAMS WHERE TILE_ID=? AND PARAM_NAME=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1,tileId)
@@ -978,7 +948,7 @@ public class DataManager
 
 
 	private String getDashboardUserOptionLastModifiedDate(EntityManager entityManager, String userName, Long tenantId, BigInteger dashboardId){
-		logger.info("Calling DataManager.getDashboardUserOptionLastModifiedDate");
+		logger.debug("Calling DataManager.getDashboardUserOptionLastModifiedDate");
 		String sql = "SELECT LAST_MODIFICATION_DATE FROM EMS_DASHBOARD_USER_OPTIONS WHERE USER_NAME=? AND TENANT_ID=? AND DASHBOARD_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, userName)
@@ -988,7 +958,7 @@ public class DataManager
 	}
 
 	private String getDashboardSetLastModifiedDate(EntityManager entityManager, BigInteger dashboardSetId, Long tenantId, BigInteger subDashboardId){
-		logger.info("Calling DataManager.getDashboardSetLastModifiedDate");
+		logger.debug("Calling DataManager.getDashboardSetLastModifiedDate");
 		String sql = "SELECT LAST_MODIFICATION_DATE FROM EMS_DASHBOARD_SET WHERE DASHBOARD_SET_ID=? AND TENANT_ID=? AND SUB_DASHBOARD_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1,dashboardSetId)
@@ -998,7 +968,7 @@ public class DataManager
 	}
 
 	private String getPreferenceLastModifiedDate(EntityManager entityManager, String userName, String prefKey, Long tenantId){
-		logger.info("Calling DataManager.isPreferenceExist");
+		logger.debug("Calling DataManager.isPreferenceExist");
 		String sql = "SELECT LAST_MODIFICATION_DATE FROM EMS_PREFERENCE WHERE USER_NAME=? AND PREF_KEY=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1,userName)
@@ -1011,7 +981,7 @@ public class DataManager
 		try{
 			return simpleDateFormat.parse(thisDate).after(simpleDateFormat.parse(comparedDate));
 		}catch (Exception e){
-			logger.info(e.getLocalizedMessage());
+			logger.debug(e.getLocalizedMessage());
 			return false;
 		}
 	}

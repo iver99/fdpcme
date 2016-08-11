@@ -41,22 +41,22 @@ public class TableRowsSynchronizer {
             logger.error("Failed to sync for input data is null");
             return;
         }
-        if (syncPreferenceTableRows(data.getEmsPreference()) <= 0) logger.info("nothing was added to EMS_Prefernce!");
-        if (syncDashboardTableRows(data.getEmsDashboard()) <= 0) logger.info("nothing was added to EMS_DASHBOARD!");
+        if (syncPreferenceTableRows(data.getEmsPreference()) <= 0) logger.debug("nothing was added to EMS_Prefernce!");
+        if (syncDashboardTableRows(data.getEmsDashboard()) <= 0) logger.debug("nothing was added to EMS_DASHBOARD!");
         if (syncDashboardSetTableRows(data.getEmsDashboardSet()) <= 0)
-            logger.info("nothing was added to EMS_DASHBOARD_SET!");
+            logger.debug("nothing was added to EMS_DASHBOARD_SET!");
         if (syncDashboardUserOptionsTableRows(data.getEmsDashboardUserOptions()) <= 0)
-            logger.info("nothing was added to EMS_DASHBOARD_USER_OPTIONS!");
+            logger.debug("nothing was added to EMS_DASHBOARD_USER_OPTIONS!");
         if (syncDashboardTileTableRows(data.getEmsDashboardTile()) <= 0)
-            logger.info("nothing was added to EMS_DASHBOARD_TILE!");
+            logger.debug("nothing was added to EMS_DASHBOARD_TILE!");
         if (syncDashboardTileParamsTableRows(data.getEmsDashboardTileParams()) <= 0)
-            logger.info("nothing was added to EMS_DASHBOARD_TILE_PARAMS!");
+            logger.debug("nothing was added to EMS_DASHBOARD_TILE_PARAMS!");
     }
 
 
     private int syncDashboardSetTableRows(List<DashboardSetRowEntity> rows) {
         if (rows == null || rows.isEmpty()) {
-            logger.info("DashboardSetRows is empty or null!");
+            logger.debug("DashboardSetRows is empty or null!");
             return 0;
         }
         int result = 0;
@@ -69,7 +69,7 @@ public class TableRowsSynchronizer {
 
     private int syncDashboardTableRows(List<DashboardRowEntity> dashboardRows) {
         if (dashboardRows == null || dashboardRows.isEmpty()) {
-            logger.info("dashboardRows is null or empty!");
+            logger.debug("dashboardRows is null or empty!");
             return 0;
         }
         int result = 0;
@@ -86,7 +86,7 @@ public class TableRowsSynchronizer {
 
     private int syncDashboardTileParamsTableRows(List<DashboardTileParamsRowEntity> rows) {
         if (rows == null || rows.isEmpty()) {
-            logger.info("TileParamsRows is null or empty!");
+            logger.debug("TileParamsRows is null or empty!");
             return 0;
         }
         int result = 0;
@@ -101,7 +101,7 @@ public class TableRowsSynchronizer {
 
     private int syncDashboardTileTableRows(List<DashboardTileRowEntity> rows) {
         if (rows == null || rows.isEmpty()) {
-            logger.info("TileRows is null or empty!");
+            logger.debug("TileRows is null or empty!");
             return 0;
         }
         int result = 0;
@@ -121,7 +121,7 @@ public class TableRowsSynchronizer {
 
     private int syncDashboardUserOptionsTableRows(List<DashboardUserOptionsRowEntity> rows) {
         if (rows == null || rows.isEmpty()) {
-            logger.info("DashboardUserOptionsRows is null or empty!");
+            logger.debug("DashboardUserOptionsRows is null or empty!");
             return 0;
         }
         int result = 0;
@@ -135,7 +135,7 @@ public class TableRowsSynchronizer {
 
     private int syncPreferenceTableRows(List<PreferenceRowEntity> rows) {
         if (rows == null || rows.isEmpty()) {
-            logger.info(" PreferenceRows is null or empty!");
+            logger.debug("PreferenceRows is null or empty!");
             return 0;
         }
         int result = 0;
