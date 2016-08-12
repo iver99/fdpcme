@@ -21,7 +21,7 @@ public interface IWelcomeUtil extends IUiTestCommonAPI
 	 * @param selection
 	 *            log | analyze | search
 	 */
-	public void dataExplorers(WebDriver driver, String selection) throws Exception;
+	public void dataExplorers(WebDriver driver, String selection) ;
 
 	/**
 	 * Check if specific item in Learn More is existed in welcome.
@@ -40,49 +40,49 @@ public interface IWelcomeUtil extends IUiTestCommonAPI
 	 * @param serviceName
 	 *            APM | LA | ITA | dashboards | dataExplorers
 	 * @return
-	 * @throws Exception
+	 * @
 	 */
-	public boolean isServiceExistedInWelcome(WebDriver driver, String serviceName) throws Exception;
+	public boolean isServiceExistedInWelcome(WebDriver driver, String serviceName) ;
 
 	/**
 	 * Visit "How to get started" in welcome
 	 *
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public void learnMoreHow(WebDriver driver) throws Exception;
+	public void learnMoreHow(WebDriver driver) ;
 
 	/**
 	 * Visit "Service Offerings" in welcome
 	 *
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public void learnMoreServiceOffering(WebDriver driver) throws Exception;
+	public void learnMoreServiceOffering(WebDriver driver) ;
 
 	/**
 	 * Visit "Videos" in welcome
 	 *
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public void learnMoreVideo(WebDriver driver) throws Exception;
+	public void learnMoreVideo(WebDriver driver) ;
 
 	/**
 	 * Visit "Application Performance Monitoring" in welcome
 	 *
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public void visitAPM(WebDriver driver) throws Exception;
+	public void visitAPM(WebDriver driver) ;
 
 	/**
 	 * Visit "Dashboards" in welcome
 	 *
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public void visitDashboards(WebDriver driver) throws Exception;
+	public void visitDashboards(WebDriver driver) ;
 
 	/**
 	 * Visit specific item in IT Analytics in welcome
@@ -91,15 +91,15 @@ public interface IWelcomeUtil extends IUiTestCommonAPI
 	 * @param selection
 	 *            default | performanceAnayticsDatabase | performanceAnalyticsMiddleware | resourceAnalyticsDatabase |
 	 *            resourceAnalyticsMiddleware | dataExplorerAnalyze | dataExplorer
-	 * @throws Exception
+	 * @
 	 */
-	public void visitITA(WebDriver driver, String selection) throws Exception;
+	public void visitITA(WebDriver driver, String selection) ;
 
 	/**
 	 * Visit "Log Analytics" in welcome
 	 *
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public void visitLA(WebDriver driver) throws Exception;
+	public void visitLA(WebDriver driver) ;
 }

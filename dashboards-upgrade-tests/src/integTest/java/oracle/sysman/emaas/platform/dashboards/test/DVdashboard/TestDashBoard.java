@@ -15,12 +15,12 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.test.util.*;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.*;
 
 import java.util.Set;
+
 import org.testng.Assert;
 
 
@@ -41,13 +41,19 @@ public class TestDashBoard extends LoginAndLogout
   
 
 
-	public void initTest(String testName) throws Exception
+	public void initTest(String testName) 
 	{
 		login(this.getClass().getName() + "." + testName);
-		DashBoardUtils.loadWebDriver(webd);
+		try {
+			DashBoardUtils.loadWebDriver(webd);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 @Test
-public void testSetHome() throws Exception
+public void testSetHome() 
 	{
 		dbName_setHome = "setHomeDashboard-" + generateTimeStamp();
 		String dbDesc = "SetHome_testDashboard desc";
@@ -95,7 +101,7 @@ public void testSetHome() throws Exception
  
 	}
 	@Test
-	public void testFavorite() throws Exception
+	public void testFavorite() 
 	{
 		dbName_favorite = "favoriteDashboard-" + generateTimeStamp();
 		String dbDesc = "favorite_testDashboard desc";

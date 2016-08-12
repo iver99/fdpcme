@@ -126,7 +126,7 @@ public class CommonTest
 	 * @throws URISyntaxException
 	 */
 
-	/*public static void main(String ar[]) throws Exception
+	/*public static void main(String ar[]) 
 	{
 		String  name = "http://slc08twq.us.oracle.com:7004/registry/servicemanager/registry/v1";
 		name = name + DSB_DEPLOY_URL;
