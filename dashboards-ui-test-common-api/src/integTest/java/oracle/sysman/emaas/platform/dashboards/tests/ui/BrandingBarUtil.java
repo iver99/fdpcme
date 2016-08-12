@@ -66,7 +66,7 @@ public class BrandingBarUtil
 	public static boolean isAlertLinkExisted(WebDriver driver)
 	{
 		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
-		return bu.isAlertLinkExisted(driver);
+		return bu.isAlertsLinkExisted(driver);
 	}
 
 	/**

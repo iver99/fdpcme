@@ -49,13 +49,13 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public boolean isAdminLinkExisted(WebDriver driver, String adminLinkName);
 
 	/**
-	 * Check if the alert link is existed or not
+	 * Check if the Alerts link is existed or not
 	 *
 	 * @param driver
 	 *            WebDriver instance
 	 * @return
 	 */
-	public boolean isAlertLinkExisted(WebDriver driver);
+	public boolean isAlertsLinkExisted(WebDriver driver);
 
 	/**
 	 * Check if the specified cloud service link is existed or not by given name

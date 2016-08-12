@@ -56,10 +56,10 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	}
 
 	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isAlertLinkExisted(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isAlertsLinkExisted(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public boolean isAlertLinkExisted(WebDriver driver)
+	public boolean isAlertsLinkExisted(WebDriver driver)
 	{
 		driver.getLogger().info("Start to check if 'Alert' link is existed in navigation bar.");
 		boolean isExisted = false;
@@ -244,10 +244,6 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 		driver.getLogger().info("Start to visit home link from branding bar. Link name: " + homeLinkName);
 		visitApplicationLink(driver, "home", homeLinkName);
 	}
-
-	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#visitDashboardHome(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
-	 */
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#visitApplicationVisualAnalyzer(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
