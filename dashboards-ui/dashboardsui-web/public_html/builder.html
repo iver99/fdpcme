@@ -319,13 +319,13 @@
                             <button class='dashboardOptsBtn dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print' id ="dashboardOptsBtn"
                                     data-bind="visible: true, ojComponent: { component: 'ojButton', chroming: 'half', icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
                                     menu: '#dashboardOptsMenu'+toolBarGuid},
-                                    attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
+                                    attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS'),id:'dashboardOptsBtn_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))}">
                             </button>
                             <button class="dashboardSaveBtn dashboardOptsBtn oj-button oj-default oj-button-half-chrome no-print" id ="dashboardSaveBtn"
                                     data-bind="click: handleDashboardSave, ojComponent: {
                                         component:'ojButton', chroming: 'half', disabled: disableSave,
                                         icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
-                                        }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.isMobileDevice !== 'true'">
+                                        }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD'),id:'dashboardSaveBtn_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))}, visible: editDisabled() !== true && $root.isMobileDevice !== 'true'">
                             </button>
                             <ul class="no-print dropdown-menu" data-bind="ojComponent: {component: 'ojMenu',select: optionMenuItemSelect},attr:{id:'dashboardOptsMenu'+toolBarGuid}" style="display: none;">
                                 <!-- ko template: {name: 'dsbOptsMenuItemTemplate', foreach: dashboardOptsMenuItems, as: 'item'} -->
@@ -758,7 +758,7 @@
                                 $root.scrollbarWidth+ 3 + 'px'
                         }">
                     <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn rightpanel-wrench" style="display: block;" id="rightpanel-wrench"
-                            data-bind="ojComponent: {
+                            data-bind="attr:{id:'rightpanel-wrench_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},ojComponent: {
                                     component:'ojButton',
                                     display: 'icons',
                                     icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 dbd-wrench'},
@@ -771,7 +771,7 @@
                             }"/>
                     </button>
                     <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn oj-buttonset-first rightpanel-pencil" style="display: block;" id="rightpanel-pencil"
-                            data-bind="ojComponent: {
+                            data-bind="attr:{id:'rightpanel-pencil_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},ojComponent: {
                                     component:'ojButton',
                                     display: 'icons',
                                     icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-pencil'},
@@ -791,7 +791,7 @@
                                             component:'ojButton',
                                             display: 'icons',
                                             icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-question-circle'},
-                                            label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')}">
+                                            label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')},attr:{id:'rightpanel-help_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))}">
 
                     </button>
             </div>
@@ -1130,7 +1130,7 @@
                                             <input class="widget-search-input" type="text" name="searchInput" id="widget-search-input"
                                                    data-bind="event: { keypress: searchWidgetsInputKeypressed }, ojComponent:{component:'ojInputText', value: keyword,
                                               placeholder: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODER_CONTENT'), rootAttributes: {'class': 'dbs-search-box-input'}}
-                                              ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL') }"/>
+                                              ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL'),id:'widget-search-input_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1))) }"/>
                                         </div>
                                         <div>
                                             <!--                                <button class="oj-button-half-chrome" data-bind="click: clearWidgetSearchInputClicked, visible: keyword,
@@ -1142,11 +1142,11 @@
                                                                                     text-align: center;
                                                                                     float: left;">
                                                                             </button>-->
-                                            <button class="dbd-left-panel-header-search-btn oj-button-half-chrome" id="dbd-left-panel-header-search-btn" data-bind="click: searchWidgetsClicked,
+                                            <button class="dbd-left-panel-header-search-btn oj-button-half-chrome" id="dbd-left-panel-header-search-btn" data-bind="attr:{id:'dbd-left-panel-header-search-btn_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: searchWidgetsClicked,
                                         ojComponent: {component: 'ojButton',chroming: 'half', label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons',
                                         icons: {start:'left-panel-dbd-search-icon'}}" style="float:right">
                                             </button>
-                                            <button class="oj-button-half-chrome" id="clear-widget-search-input" data-bind="click: clearWidgetSearchInputClicked, visible: clearRightPanelSearch,
+                                            <button class="oj-button-half-chrome" id="clear-widget-search-input" data-bind="attr:{id:'clear-widget-search-input_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: clearWidgetSearchInputClicked, visible: clearRightPanelSearch,
                                                     ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons',
                                                     icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 31px;'}}" style="float:right;margin-bottom:0">
                                             </button>
