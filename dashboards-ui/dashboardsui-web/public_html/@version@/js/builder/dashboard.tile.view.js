@@ -25,11 +25,9 @@ define(['knockout',
             $b.registerObject(this, 'DashboardTilesView');
 
             self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
-//                $('#tiles-col-container').css("right", leftWidth);
                 $b.findEl('.tiles-col-container').width(width);
                 $b.findEl('.df-computed-content-width').width(width - leftWidth - self.scrollbarWidth);
                 $b.findEl('.tiles-col-container').height(height - topHeight);
-//                window.DEV_MODE && console.debug('tiles-col-container rightright set to: ' + leftWidth + ', width set:' + (width - leftWidth) + ', height set to: ' + (height - topHeight));
             };
 
             self.getTileElement = function(tile) {
@@ -101,11 +99,9 @@ define(['knockout',
                         return;
                     var top = parseInt(target.css("top")), left = parseInt(target.css("left"));
                     if (!isNaN(top) && !isNaN(left) && target.position() && target.position().left !== 0 && target.position().top !== 0) {
-//                        window.DEV_MODE && console.debug("old target position: top-" + target.css("top") + ", left-" + target.css("left"));
                         target.css("top", top - $('#headerWrapper').outerHeight() - $b.findEl('.head-bar-container').outerHeight() + $b.findEl(".tiles-col-container").scrollTop());
                         target.css("left", left - $b.findEl(".dbd-left-panel").width());
                         elem.cacheLeft = target.css("left");
-//                        window.DEV_MODE && console.debug("new target position: top-" + target.css("top") + ", left-" + target.css("left"));
                     }
                 }
             };

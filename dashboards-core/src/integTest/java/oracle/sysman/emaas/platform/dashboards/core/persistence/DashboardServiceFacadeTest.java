@@ -186,7 +186,7 @@ public class DashboardServiceFacadeTest
 	//	 * @throws java.lang.Exception
 	//	 */
 	//	@BeforeClass
-	//	public static void setUpBeforeClass() throws Exception {
+	//	public static void setUpBeforeClass() {
 	//		PersistenceManager.setTestEnv(true);
 	//	}
 	//
@@ -194,7 +194,7 @@ public class DashboardServiceFacadeTest
 	//	 * @throws java.lang.Exception
 	//	 */
 	//	@AfterClass
-	//	public static void tearDownAfterClass() throws Exception {
+	//	public static void tearDownAfterClass() {
 	//	}
 
 	private static int testSeq = 1;
@@ -204,7 +204,7 @@ public class DashboardServiceFacadeTest
 	 * @throws java.lang.Exception
 	 */
 	@BeforeTest
-	public void setUp() throws Exception
+	public void setUp()
 	{
 		PersistenceManager.setTestEnv(true);
 		UserContext.setCurrentUser("SYSMAN");
@@ -240,7 +240,7 @@ public class DashboardServiceFacadeTest
 	 * @throws java.lang.Exception
 	 */
 	@AfterTest
-	public void tearDown() throws Exception
+	public void tearDown()
 	{
 		EntityManager em = null;
 		try {

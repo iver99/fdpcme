@@ -16,12 +16,11 @@ public class LoginAndLogout
 	{
 		if (webd != null) {
 			LoginUtils.doLogout(webd);
-			try {
-				webd.shutdownBrowser(true);
-			}
-			catch (Exception e) {
-				webd.getLogger().warning("Failed to shutdown browser" + e.getMessage());
-			}
+			try{
+                             webd.shutdownBrowser(true);
+                        }catch(Exception e){
+                             webd.getLogger().warning("Failed to shutdown browser"+e.getMessage());
+                        }
 		}
 	}
 
@@ -81,7 +80,7 @@ public class LoginAndLogout
 			url = PageUtils.getServiceLink(tenantId, rel, servicename);
 		}
 		catch (Exception e) {
-
+			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OMCS_DASHBOARD_URL");
 		}
 
 		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");

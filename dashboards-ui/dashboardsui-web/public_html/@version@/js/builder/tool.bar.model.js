@@ -49,7 +49,6 @@ define(['knockout',
             if(self.dashboard.description && self.dashboard.description()){
                 self.dashboardDescription = ko.observable(self.dashboard.description());
             }else{
-//                self.dashboardDescription = ko.observable("Description of sample dashboard. You can use dashboard builder to view/edit dashboard");
                 self.dashboardDescription = ko.observable();
             }
             if(self.dashboard.enableDescription && self.dashboard.enableDescription()) {
@@ -126,9 +125,6 @@ define(['knockout',
                     if (evt && evt.relatedTarget && evt.relatedTarget.id && $(evt.relatedTarget).hasClass("builder-dbd-name-ok"))
                         self.okChangeDashboardName();
                 });
-//                $('#'+addWidgetDialogId).ojDialog("beforeClose", function() {
-//                    self.handleAddWidgetTooltip();
-//                });
             };
 
             self.intervalID = null;
@@ -164,10 +160,7 @@ define(['knockout',
             };
 
             self.initEventHandlers = function() {
-//                $b.addEventListener($b.EVENT_NEW_TEXT_START_DRAGGING, self.handleAddWidgetTooltip);
                 $b.addEventListener($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, self.handleAddWidgetTooltip);
-//                $b.addEventListener($b.EVENT_TEXT_START_EDITING, self.handleStartEditText);
-//                $b.addEventListener($b.EVENT_TEXT_STOP_EDITING, self.handleStopEditText);
             };
 
             self.rightButtonsAreaClasses = ko.computed(function() {
@@ -215,7 +208,7 @@ define(['knockout',
                 }
                 dfu.ajaxWithRetry(_url + self.dashboard.id(), {
                     type: 'DELETE',
-                    headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
+                    headers: dfu.getDashboardsRequestHeader(),
                     success: function (result) {
                         if (selectedDashboardInst().toolBarModel.isUnderSet) {
                             var removeId=selectedDashboardInst().toolBarModel.dashboardId;
@@ -387,10 +380,6 @@ define(['knockout',
             };
 */
 
-//            self.handleDashboardNotSave = function() {
-//                self.isUpdated(false);
-//                $( "#cfmleaveDialog" ).ojDialog( "close" );
-//            };
 
             self.handleDashboardSave = function() {
                 if (self.isNameUnderEdit()) {
@@ -427,10 +416,6 @@ define(['knockout',
 
             self.handleSaveUpdateDashboard = function(outputData) {
                 self.handleSaveUpdateToServer(function() {
-//                    if ($( "#cfmleaveDialog" ).ojDialog( "isOpen" ) === true )
-//                    {
-//                        $( "#cfmleaveDialog" ).ojDialog( "close" );
-//                    }
                     self.isUpdated(false);
                     dfu.showMessage({
                             type: 'confirm',
@@ -558,7 +543,6 @@ define(['knockout',
                                 self.cssSharePublic(cssShareDashboard);
                                 dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
                             }
-                            //$("#share_cfmDialog").ojDialog("close");
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
@@ -883,7 +867,7 @@ define(['knockout',
                     "id":"emcpdf_dsbopts_add",
                     "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
                     "icon":"dbd-toolbar-icon-add-widget",
-                    "title": "",//getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
+                    "title": "",
                     "disabled": self.editDisabled() === true,
                     "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
                     "endOfGroup": false
@@ -893,7 +877,7 @@ define(['knockout',
                     "url": "#",
                     "id": "emcpdf_dsbopts_edit" + self.toolBarGuid,
                     "icon": "dbd-toolbar-icon-edit",
-                    "title": "", //getNlsString('DBS_BUILDER_BTN_EDIT_TITLE'),
+                    "title": "",
                     "disabled": self.editDisabled() === true,
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
                     "showSubMenu": false,
@@ -904,7 +888,7 @@ define(['knockout',
                     "url": "#",
                     "id": "emcpdf_dsbopts_print" + self.toolBarGuid,
                     "icon": "dbd-toolbar-icon-print",
-                    "title": "", //getNlsString('COMMON_BTN_PRINT'),
+                    "title": "",
                     "disabled": false,
                     "showOnMobile": true,
                     "showSubMenu": false,
@@ -915,7 +899,7 @@ define(['knockout',
                     "url": "#",
                     "id": "emcpdf_dsbopts_duplicate" + self.toolBarGuid,
                     "icon": "dbd-toolbar-icon-duplicate",
-                    "title": "", //getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
+                    "title": "",
                     "disabled": false,
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
                     "endOfGroup": true,
@@ -978,7 +962,7 @@ define(['knockout',
                     "url": "#",
                     "id": "emcpdf_dsbopts_refresh" + self.toolBarGuid,
                     "icon": "dbd-toolbar-icon-refresh",
-                    "title": "", //getNlsString('DBS_BUILDER_AUTOREFRESH_REFRESH'),
+                    "title": "",
                     "disabled": false,
                     "showOnMobile": true,
                     "showSubMenu": true,
@@ -1012,17 +996,6 @@ define(['knockout',
                         }
                     ]
                 }
-//                {
-//                    "label": getNlsString('COMMON_BTN_DELETE'),
-//                    "url": "#",
-//                    "id":"emcpdf_dsbopts_delete"+self.toolBarGuid,
-//                    "onclick": self.editDisabled() === true ? "" : self.openDashboardDeleteConfirmDialog,
-//                    "icon":"dbd-toolbar-icon-delete",
-//                    "title": "", //getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),
-//                    "disabled": self.editDisabled() === true,
-//                    "showOnMobile": true,
-//                    "endOfGroup": false
-//                }
             ];
         }
 

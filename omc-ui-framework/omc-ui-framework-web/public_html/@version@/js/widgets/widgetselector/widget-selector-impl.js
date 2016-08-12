@@ -257,7 +257,6 @@ define([
                 self.widgetBoxClicked = function(data, event) {
                     var curWidget = self.currentWidget();
                     if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME ||
-                            /*curWidget.PROVIDER_VERSION !== data.PROVIDER_VERSION ||*/
                             curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) {
                         widgetArray[curWidget.index].isSelected(false);
                         data.isSelected(true);
@@ -549,11 +548,9 @@ define([
                                     widgetProviderName === pname
                                 /*    && widgetProviderVersion === pversion */) {
                                 //Enable ITA widget group since ITA widgets are enabled now.
-//                                if (!(pname === 'emcitas-ui-apps' && pversion === '1.0' && data[i].WIDGET_GROUP_ID === 3)) {
                                     var widgetGroup = {value:pname+'|'+pversion+'|'+gname, label:gname};
                                     targetWidgetGroupArray.push(widgetGroup);
                                     availableWidgetGroups.push(data[i]);
-//                                }
                             }
                         }
                     }

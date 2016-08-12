@@ -284,8 +284,6 @@ require(['knockout',
 
         var dsbId = dfu.getUrlParam("dashboardId");
         console.warn("TODO: validate valid dashboard id format");
-//                oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
-//                window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href) + "&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";
 
 
         Builder.initializeFromCookie();
@@ -318,7 +316,6 @@ require(['knockout',
     }
 );
 
-// method to be called by page inside iframe (especially inside one page type dashboard)
 function updateOnePageHeight(event) {
     if (event && event.data && event.data.messageType === 'onePageWidgetHeight') {
         onePageTile.height(event.data.height);
@@ -345,11 +342,9 @@ function getNlsString(key, args) {
 }
 
 function getDateString(isoString) {
-    //console.log(isoString);
     if (isoString && isoString.length > 0)
     {
         var s = isoString.split(/[\-\.\+: TZ]/g);
-        //console.log(s);
         if (s.length > 1)
         {
             return new Date(s[0], parseInt(s[1], 10) - 1, s[2], s[3], s[4], s[5], s[6]).toLocaleDateString();

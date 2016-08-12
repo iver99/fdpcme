@@ -195,7 +195,7 @@ public class DashboardServiceFacadeTest_S2
 	 * @throws java.lang.Exception
 	 */
 	//@BeforeMethod
-	public void setUp() throws Exception
+	public void setUp()
 	{
 		//load mock
 		new MockDashboardServiceFacade();
@@ -244,7 +244,7 @@ public class DashboardServiceFacadeTest_S2
 	 * @throws java.lang.Exception
 	 */
 	//@AfterMethod
-	public void tearDown() throws Exception
+	public void tearDown()
 	{
 		EntityManager em = null;
 		try {
@@ -267,7 +267,7 @@ public class DashboardServiceFacadeTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testAll() throws Exception
+	public void testAll()
 	{
 		setUp();
 		testGetEmsUserOptions();

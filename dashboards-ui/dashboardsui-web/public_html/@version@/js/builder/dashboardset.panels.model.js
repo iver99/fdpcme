@@ -103,7 +103,6 @@ define([
                 $("#dashboards-tabs-contents").append($includingEl);
                 $includingEl.attr("id", "dashboard-" + guid);
 
-                //var predataModel = new model.PredataModel();
 
                 function init() {
                     var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share'], dashboardsetToolBarModel.reorderedDbsSetItems, true);
@@ -156,7 +155,6 @@ define([
                 dashboardInstMap[guid] = dashboardInst;
                 self.selectedDashboardInst(dashboardInst);
 
-                //predataModel.loadAll().then(init, init); //nomatter there is error in predata loading, initiating
                 init();
             };
 
@@ -200,7 +198,6 @@ define([
                     var $b = new Builder.DashboardBuilder(dashboard, $dashboardEl);
                     var tilesView = new Builder.DashboardTilesView($b);
                     var tilesViewModel = new Builder.DashboardTilesViewModel($b, dashboardsetToolBarModel.dashboardInst/*, tilesView, urlChangeView*/);
-//                    $b.registerObject(tilesViewModel, 'DashboardTilesViewModel'); //to add tilesViewModel to $b so that it can be reached by $b.getDashboardTilesViewModel()
                     var toolBarModel = new Builder.ToolBarModel($b, options);
                     tilesViewModel.toolbarModel = toolBarModel;
 

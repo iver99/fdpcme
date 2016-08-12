@@ -27,10 +27,6 @@
 
 buildscript {
     apply from: 'test-buildscript-apply.gradle' 
-    dependencies {
-        classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_taskprocessor", version: "${omctfVersion}" 
-	classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"
-  }
 }
 apply from: 'test-project-apply.gradle'
 apply plugin: 'groovy'
@@ -149,6 +145,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestBrandingBar')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
             }
         }
     }
@@ -199,5 +196,5 @@ task DEVTest2(type:EMTest,dependsOn: DEVUiTest){
 
 task emcpdf_test_3n (dependsOn:[DEVTest2, omcTeardown]) {
     omcTeardown.mustRunAfter(DEVTest2)
-    apply from: getAbsoluteFilePath(project.configurations.omctfConfig,"omctf_taskprocessor")
+    apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")
 }

@@ -15,7 +15,7 @@ public class DashBoardUtils
 {
 	private static WebDriver driver;
 
-	public static void APM_OOB_Exist() throws Exception
+	public static void APM_OOB_Exist() 
 	{
 		driver.getLogger().info("Wait for dashboards loading...");
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Application Performance Monitoring");
@@ -24,13 +24,13 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Monitoring"));
 	}
 
-	public static void APM_OOB_NotExist() throws Exception
+	public static void APM_OOB_NotExist() 
 	{
 		driver.getLogger().info("Verify below APM OOB don't exist...");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Monitoring"));
 	}
 
-	public static void clickDashboardLinkInBrandingBar(WebDriver webdriver) throws Exception
+	public static void clickDashboardLinkInBrandingBar(WebDriver webdriver) 
 	{
 		webdriver.getLogger().info("Click Compass icon to display menu of branding bar");
 		webdriver.getWebDriver().findElement(By.xpath(PageId.COMPASSICON)).click();
@@ -42,14 +42,14 @@ public class DashBoardUtils
 		webdriver.takeScreenShot();
 	}
 
-	public static void closeOverviewPage() throws Exception
+	public static void closeOverviewPage() 
 	{
 		driver.getLogger().info("before clicking overview button");
 		driver.click(PageId.OVERVIEWCLOSEID);
 		driver.getLogger().info("after clicking overview button");
 	}
 
-	public static void deleteDashboard(WebDriver webdriver, String DashboardName) throws Exception
+	public static void deleteDashboard(WebDriver webdriver, String DashboardName) 
 	{
 		if (DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName)) {
 			webdriver.getLogger().info("Start to delete the dashboard: " + DashboardName);
@@ -62,7 +62,7 @@ public class DashBoardUtils
 
 	}
 
-	public static void handleAlert(WebDriver webdriver) throws Exception
+	public static void handleAlert(WebDriver webdriver) 
 	{
 		WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
 		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
@@ -76,7 +76,7 @@ public class DashBoardUtils
 		webdriver.takeScreenShot();
 	}
 
-	public static void ITA_OOB_Exist() throws Exception
+	public static void ITA_OOB_Exist() 
 	{
 		driver.getLogger().info("Wait for dashboards loading...");
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Performance Analytics: Database");
@@ -101,7 +101,7 @@ public class DashBoardUtils
 		;
 	}
 
-	public static void ITA_OOB_NotExist() throws Exception
+	public static void ITA_OOB_NotExist() 
 	{
 		driver.getLogger().info("Verify below IT Analytics OOB dashboard Set and Dashboards don't exist...");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Exadata Health"));
@@ -123,7 +123,7 @@ public class DashBoardUtils
 
 	}
 
-	public static void LA_OOB_Exist() throws Exception
+	public static void LA_OOB_Exist() 
 	{
 		driver.getLogger().info("Wait for dashboards loading...");
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Database Operations");
@@ -134,7 +134,7 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Middleware Operations"));
 	}
 
-	public static void LA_OOB_NotExist() throws Exception
+	public static void LA_OOB_NotExist() 
 	{
 		driver.getLogger().info("Verify below Log Analytics OOB don't exist...");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
@@ -143,7 +143,7 @@ public class DashBoardUtils
 
 	}
 
-	public static void loadWebDriver(WebDriver webDriver) throws Exception
+	public static void loadWebDriver(WebDriver webDriver) 
 	{
 		driver = webDriver;
 
@@ -156,12 +156,12 @@ public class DashBoardUtils
 		driver.takeScreenShot();
 	}
 
-	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
+	public static void loadWebDriverOnly(WebDriver webDriver) 
 	{
 		driver = webDriver;
 	}
 
-	public static void noOOBCheck() throws Exception
+	public static void noOOBCheck() 
 	{
 		//verify all the oob dashboard not exsit
 		driver.getLogger().info("verify all the oob dashboard not exsit");
@@ -172,7 +172,7 @@ public class DashBoardUtils
 
 	}
 
-	public static void Outdate_OOB() throws Exception
+	public static void Outdate_OOB() 
 	{
 		driver.getLogger().info("Verify below IT Analytics OOB don't exist...");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Configuration and Storage By Version"));
@@ -184,7 +184,7 @@ public class DashBoardUtils
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Servers by JDK Version"));
 	}
 
-	public static boolean verfiyShareOptionDisabled() throws Exception
+	public static boolean verfiyShareOptionDisabled() 
 	{
 		driver.getLogger().info("Click the option icon of Dashboard Set");
 		driver.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
