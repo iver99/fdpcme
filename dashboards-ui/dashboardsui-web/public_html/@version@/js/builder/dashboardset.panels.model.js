@@ -161,23 +161,17 @@ define([
             self.loadDashboard = function (dashboardsetToolBarModel) {
                 $("#loading").show();
                 var dashboardItem = dashboardsetToolBarModel.selectedDashboardItem(),
-                    dashboardId = dashboardItem.dashboardId,
-                    dashboardSetId = dashboardsetToolBarModel.dashboardsetId;
-                var _isDashboard= dashboardId === dashboardSetId;
-                if (_isDashboard) {
-                     initializeSingleDashboard(dashboardItem.raw, dashboardId);
-                } else {
-                    new Builder.DashboardDataSource().loadDashboardData(dashboardId, function (dashboard) {
-                        initializeSingleDashboard(dashboard, dashboardId);
-                    }, function (e) {
-                        $("#loading").hide();
-                        console.log(e.errorMessage());
-                        if (e.errorCode && e.errorCode() === 20001) {
-                            oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
-                            window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href);
-                        }
-                    });
-                }
+                    dashboardId = dashboardItem.dashboardId;
+                new Builder.DashboardDataSource().loadDashboardData(dashboardId, function (dashboard) {
+                    initializeSingleDashboard(dashboard, dashboardId);
+                }, function (e) {
+                    $("#loading").hide();
+                    console.log(e.errorMessage());
+                    if (e.errorCode && e.errorCode() === 20001) {
+                        oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
+                        window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href);
+                    }
+                });
             };
 
             self.hideAllDashboards = function () {

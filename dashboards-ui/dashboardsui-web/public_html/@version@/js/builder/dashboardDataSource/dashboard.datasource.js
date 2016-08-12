@@ -84,11 +84,11 @@ define(['knockout',
             }
         };
         
-        self.updateDashboardData = function(dashboardId,successCallback,errorCallback){
+        self.updateDashboardData = function(dashboardId,dashboard,successCallback,errorCallback){
              if(!self.dataSource[dashboardId]){
                  self.dataSource[dashboardId] = {};
              }
-             Builder.updateDashboard(dashboardId, function (data) {
+             Builder.updateDashboard(dashboardId,dashboard,function (data) {
                  self.dataSource[dashboardId].dashboard=data;
                  successCallback && successCallback(data);
             }, errorCallback);          
@@ -107,7 +107,7 @@ define(['knockout',
                     function(e) {
                         errorCallback && errorCallback(e);
                     });
-        }
+        };
         
         self.fetchScreenshotData = function(dashboardId, successCallback, errorCallback){
             if(!self.dataSource[dashboardId]){

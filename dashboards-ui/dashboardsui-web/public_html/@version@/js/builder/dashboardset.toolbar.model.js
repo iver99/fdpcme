@@ -143,12 +143,7 @@ define(['knockout',
                     extendedOptions: JSON.stringify(self.extendedOptions),
                     autoRefreshInterval: self.autoRefreshInterval()
                 };
-                if (self.hasUserOptionInDB) {
-                    Builder.updateDashboardOptions(options);
-                } else {
-                    Builder.saveDashboardOptions(options);
-                    self.hasUserOptionInDB = true;
-                }
+                new Builder.DashboardDataSource().saveDashboardUserOptions(options);                
             };
 
             self.saveDashboardSet = function (fieldsToUpdate, successCallback, failureCallback) {
@@ -184,13 +179,8 @@ define(['knockout',
                     }
                 });
                 $.extend(newDashboardJs, fieldsToUpdate);
-                Builder.updateDashboard(
-                        ko.unwrap(dashboardInst.id),
-                        JSON.stringify(newDashboardJs),
-                        successCallback,
-                        failureCallback
-                        );
-
+                new Builder.DashboardDataSource().updateDashboardData(ko.unwrap(dashboardInst.id),JSON.stringify(newDashboardJs),successCallback,failureCallback);
+               
                 // add delay for updating screenshots because
                 // a tab may take some time to render the tiles.
                 dfu.getAjaxUtil().actionAfterAjaxStop(function () {
@@ -409,7 +399,6 @@ define(['knockout',
                                    self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
                                 }
                             }
-                            self.hasUserOptionInDB = true;
                         }
 
                         if(self.autoRefreshInterval() === DEFAULT_AUTO_REFRESH_INTERVAL){
@@ -448,12 +437,7 @@ define(['knockout',
                         $("#dbd-tabs-container").ojTabs("refresh");
                         $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
                     }
-
-                    Builder.fetchDashboardOptions(
-                            self.dashboardsetId,
-                            resolveLoadOptions.bind(this, "success"),
-                            resolveLoadOptions.bind(this, "error"));
-
+                    new Builder.DashboardDataSource().loadDashboardUserOptionsData(self.dashboardsetId,resolveLoadOptions.bind(this, "success"),resolveLoadOptions.bind(this, "error"));
                 } else {
                     singleDashboardItem = new dashboardItem(dashboardInst);
                     self.dashboardsetItems.push(singleDashboardItem);
