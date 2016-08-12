@@ -94,6 +94,21 @@ define(['knockout',
             }, errorCallback);          
         };
         
+        self.duplicateDashboard = function(dashboard, successCallback, errorCallback) {
+            if(!self.dataSource[ko.unwrap(dashboard.id)]) {
+                self.dataSource[ko.unwrap(dashboard.id)] = {};
+            }
+            
+            Builder.duplicateDashboard(dashboard,
+                    function(data) {
+                        self.dataSource[ko.unwrap(dashboard.id)].dashboard = data;
+                        successCallback && successCallback(data);
+                    },
+                    function(e) {
+                        errorCallback && errorCallback(e);
+                    });
+        }
+        
         self.fetchScreenshotData = function(dashboardId, successCallback, errorCallback){
             if(!self.dataSource[dashboardId]){
                  self.dataSource[dashboardId] = {};
