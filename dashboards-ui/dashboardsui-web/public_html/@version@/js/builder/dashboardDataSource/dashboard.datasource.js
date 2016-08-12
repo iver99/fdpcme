@@ -84,12 +84,56 @@ define(['knockout',
             }
         };
         
+        self.updateDashboardData = function(dashboardId,successCallback,errorCallback){
+             if(!self.dataSource[dashboardId]){
+                 self.dataSource[dashboardId] = {};
+             }
+             Builder.updateDashboard(dashboardId, function (data) {
+                 self.dataSource[dashboardId].dashboard=data;
+                 successCallback && successCallback(data);
+            }, errorCallback);          
+        };
+        
+        self.fetchScreenshotData = function(dashboardId, successCallback, errorCallback){
+            if(!self.dataSource[dashboardId]){
+                 self.dataSource[dashboardId] = {};
+             }
+             if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].screenshot) {
+                Builder.fetchDashboardScreenshot(dashboardId,
+                        function (data) {
+                            self.dataSource[dashboardId].screenshot = data;
+                            successCallback && successCallback(data);
+                        },
+                        errorCallback);
+            } else {
+                successCallback && successCallback(self.dataSource[dashboardId].screenshot);
+            }           
+        };
+        
+        self.fetchFavoriteData =function(dashboardId, successCallback, errorCallback){
+            if (!self.dataSource[dashboardId]) {
+                self.dataSource[dashboardId] = {};
+            }
+            if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].favorite) {
+                Builder.checkDashboardFavorites(dashboardId,
+                        function (data) {
+                            self.dataSource[dashboardId].favorite = data;
+                            successCallback && successCallback(data);
+                        },
+                        function (jqXHR, textStatus, errorThrown) {
+                            errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
+                        });
+            } else {
+                successCallback && successCallback(self.dataSource[dashboardId].favorite);
+            } 
+        };
+                      
         function isEmptyObject(obj) {
             var index;
             for (index in obj)
                 return !1;
             return !0;
-        }  
+        };  
         
         DashboardDataSource.instance = self;
     }
