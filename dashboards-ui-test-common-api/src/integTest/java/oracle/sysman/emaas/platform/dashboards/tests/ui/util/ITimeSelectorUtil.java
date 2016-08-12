@@ -33,20 +33,20 @@ public interface ITimeSelectorUtil extends IUiTestCommonAPI
 
 	}
 
-	public String setCustomTime(WebDriver webd, int index, String startDateTime, String endDateTime) throws Exception;
+	public String setCustomTime(WebDriver webd, int index, String startDateTime, String endDateTime);
 
 	//Date MM/dd/yyyy
 	//Time hh:mm a
-	public String setCustomTime(WebDriver webd, String startDateTime, String endDateTime) throws Exception;
+	public String setCustomTime(WebDriver webd, String startDateTime, String endDateTime);
 
 	public String setTimeFilter(WebDriver webd, int index, String hoursToExclude, int[] daysToExclude, int[] monthsToExclude)
-			throws Exception;
+	throws Exception;
 
 	public String setTimeFilter(WebDriver webd, String hoursToExclude, int[] daysToExclude, int[] monthsToExclude)
 			throws Exception;
 
-	public String setTimeRange(WebDriver webd, int Index, TimeRange rangeoption) throws Exception;
+	public String setTimeRange(WebDriver webd, int Index, TimeRange rangeoption);
 
-	public String setTimeRange(WebDriver webd, TimeRange rangeoption) throws Exception;
+	public String setTimeRange(WebDriver webd, TimeRange rangeoption);
 
 }

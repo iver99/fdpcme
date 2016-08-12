@@ -17,13 +17,13 @@ import org.testng.annotations.Test;
 public class TestBrandingBar extends LoginAndLogout
 {
 
-	public void initTest(String testName) throws Exception
+	public void initTest(String testName) 
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
-	public void initTestCustom(String testName, String Username) throws Exception
+	public void initTestCustom(String testName, String Username) 
 	{
 		customlogin(this.getClass().getName() + "." + testName, Username);
 		DashBoardUtils.loadWebDriver(webd);
@@ -31,7 +31,7 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	//@Test
-	public void testAdminConsoleLink() throws Exception
+	public void testAdminConsoleLink() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testAdminConsoleLink");
@@ -46,7 +46,7 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	@Test
-	public void testAdminLink() throws Exception
+	public void testAdminLink() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testAdminLink");
@@ -61,7 +61,7 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	@Test
-	public void testAdminLinkAPMAdmin() throws Exception
+	public void testAdminLinkAPMAdmin() 
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_apm_admin1");
 		webd.getLogger().info("start to test in testAdminLink");
@@ -114,7 +114,7 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	@Test
-	public void testAdminLinkAPMUser() throws Exception
+	public void testAdminLinkAPMUser() 
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_apm_user1");
 		webd.getLogger().info("start to test in testAdminLink");
@@ -132,7 +132,7 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	@Test
-	public void testAdminLinkITAAdmin() throws Exception
+	public void testAdminLinkITAAdmin() 
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_admin1");
 		webd.getLogger().info("start to test in testAdminLink");
@@ -194,7 +194,7 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	@Test
-	public void testAdminLinkITAUser() throws Exception
+	public void testAdminLinkITAUser() 
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_user1");
 		webd.getLogger().info("start to test in testAdminLink");
@@ -217,7 +217,7 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	@Test
-	public void testAdminLinkLAAdmin() throws Exception
+	public void testAdminLinkLAAdmin() 
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_admin1");
 		webd.getLogger().info("start to test in testAdminLink");
@@ -263,7 +263,7 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	@Test
-	public void testAdminLinkLAUser() throws Exception
+	public void testAdminLinkLAUser() 
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_user1");
 		WaitUtil.waitForPageFullyLoaded(webd);
@@ -280,7 +280,7 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	@Test
-	public void testAgentsLink() throws Exception
+	public void testAgentsLink() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testAgentsLink");
@@ -295,7 +295,7 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	@Test
-	public void testAPMLink() throws Exception
+	public void testAPMLink() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testAPMLink");
@@ -310,7 +310,7 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	@Test
-	public void testDashBoardHomeLink() throws Exception
+	public void testDashBoardHomeLink() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testDashBoardHomeLink");
@@ -325,7 +325,7 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	@Test
-	public void testHomeLink() throws Exception
+	public void testHomeLink() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testHomeLink");
@@ -340,7 +340,7 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	@Test
-	public void testITALink() throws Exception
+	public void testITALink() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testITALink");
@@ -355,7 +355,7 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	@Test
-	public void testLALink() throws Exception
+	public void testLALink() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testLALink");
@@ -370,7 +370,7 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	@Test
-	public void testLogLink() throws Exception
+	public void testLogLink() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testLogLink");
@@ -385,7 +385,7 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	@Test
-	public void testSearchLink() throws Exception
+	public void testSearchLink() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testSearchLink");
