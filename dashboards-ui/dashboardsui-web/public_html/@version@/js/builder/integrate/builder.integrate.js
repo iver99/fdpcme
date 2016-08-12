@@ -1,13 +1,13 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['jquery', 
+define(['jquery',
         'ojs/ojcore',
         'dfutil',
         'builder/builder.core'
-    ], 
+    ],
     function($, oj, dfu) {
         function fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent) {
             var deferred = $.Deferred();
@@ -33,7 +33,7 @@ define(['jquery',
             return deferred.promise();
         }
         Builder.registerFunction(fireDashboardItemChangeEventTo, 'fireDashboardItemChangeEventTo');
-        
+
         function fireDashboardItemChangeEvent(tiles, dashboardItemChangeEvent){
             if (!tiles) return;
             if (dashboardItemChangeEvent){
@@ -51,7 +51,7 @@ define(['jquery',
                 combinedPromise.fail(function(ex){
                     console.log("One or more widgets failed to refresh: "+ex);
                     oj.Logger.log("One or more widgets failed to refresh: "+ex);
-                });   
+                });
             }
         }
         Builder.registerFunction(fireDashboardItemChangeEvent, 'fireDashboardItemChangeEvent');

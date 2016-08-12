@@ -1,10 +1,10 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['knockout', 
-        'jquery', 
+define(['knockout',
+        'jquery',
         'ojs/ojcore',
         'builder/builder.core'
     ], function(ko, $, oj) {
@@ -46,9 +46,8 @@ define(['knockout',
                 return tile.modeColumn();
             },
             setModeColumn : function(tile, modeColumn) {
-                // as this function could be inherited, so not to update tile column here. 
+                // as this function could be inherited, so not to update tile column here.
                 // instead, don't use setModeColumn but set tile column directly when it's needed
-    //            tile.column(modeColumn);
                 !tile.modeColumn && (tile.modeColumn = ko.observable());
                 tile.modeColumn(modeColumn);
             },
@@ -61,9 +60,8 @@ define(['knockout',
                 return tile.modeRow();
             },
             setModeRow : function(tile, modeRow) {
-                // as this function could be inherited, so not to update tile row here. 
+                // as this function could be inherited, so not to update tile row here.
                 // instead, don't use setModeRow but set tile row directly when it's needed
-    //            tile.row(modeRow);
                 !tile.modeRow && (tile.modeRow = ko.observable());
                 tile.modeRow(modeRow);
             },

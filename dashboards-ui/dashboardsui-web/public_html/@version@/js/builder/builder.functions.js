@@ -1,17 +1,17 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
-define(['knockout', 
-        'jquery', 
+define(['knockout',
+        'jquery',
         'ojs/ojcore',
-        'dfutil',        
+        'dfutil',
         'builder/dashboard.tile.model',
         'uifwk/js/util/df-util',
         'builder/editor/editor.tiles'
-    ], 
+    ],
     function(ko, $, oj, dfu, dtm, dfumodel) {
         function getTileDefaultWidth(wgt, mode) {
             if (wgt && (typeof wgt.WIDGET_DEFAULT_WIDTH==='number') && (wgt.WIDGET_DEFAULT_WIDTH%1)===0 && wgt.WIDGET_DEFAULT_WIDTH >= mode.MODE_MIN_COLUMNS && wgt.WIDGET_DEFAULT_WIDTH <= mode.MODE_MAX_COLUMNS)
@@ -29,15 +29,6 @@ define(['knockout',
 
         function isURL(str_url) {
                 var strRegex = "^((https|http|ftp|rtsp|mms)?://)";
-    //                        + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?"
-    //                        + "(([0-9]{1,3}\.){3}[0-9]{1,3}"
-    //                        + "|"
-    //                        + "([0-9a-z_!~*'()-]+\.)*"
-    //                        + "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\."
-    //                        + "[a-z]{2,6})"
-    //                        + "(:[0-9]{1,4})?"
-    //                        + "((/?)|"
-    //                        + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
                 var re = new RegExp(strRegex);
                 return re.test(str_url);
             }
@@ -47,7 +38,7 @@ define(['knockout',
             var url = dfu.discoverQuickLink(pName, pVersion, "visualAnalyzer");
             if (url){
                 if (dfu.isDevMode()){
-                    url = dfu.getRelUrlFromFullUrl(url);  
+                    url = dfu.getRelUrlFromFullUrl(url);
                 }
             }
             return url;
@@ -83,7 +74,7 @@ define(['knockout',
             var userTenant= dfu.getUserTenant();
             if (userTenant){
                 dtm.tenantName = userTenant.tenant;
-                dtm.userTenant  =  userTenant.tenantUser;      
+                dtm.userTenant  =  userTenant.tenantUser;
             }
         }
         Builder.registerFunction(initializeFromCookie, 'initializeFromCookie');
@@ -118,7 +109,7 @@ define(['knockout',
                         try {
                             var tile = data.tiles[0];
                             var url = dfu.df_util_widget_lookup_assetRootUrl(tile["PROVIDER_NAME"], tile["PROVIDER_VERSION"], tile["PROVIDER_ASSET_ROOT"], false);
-                            
+
                             if (dfu.isDevMode()) {
                                 url = dfu.getRelUrlFromFullUrl(url);
                             }
@@ -128,18 +119,14 @@ define(['knockout',
                             oj.Logger.error(e);
                         }
                     }
-                    
+
 
                     var mapping = {
                        "tiles": {
                            "create" : function(options) {
-//                                if(options.data.type === "TEXT_WIDGET") {
-//                                    return new Builder.TextTileItem(options.data);
-//                                }else {
                                     return new Builder.TileItem(options.data);
-//                                }
                            }
-                       } 
+                       }
                     };
                     if (data && data['name'] && data['name'] !== null)
                     {
@@ -215,7 +202,7 @@ define(['knockout',
                     if (data && data['description'] && data['description'] !== null)
                     {
                         data['description'] = $("<div/>").html(data['description']).text();
-                    }                    
+                    }
                     if (succCallBack)
                         succCallBack(data);
                 },
@@ -266,7 +253,7 @@ define(['knockout',
             });
         }
         Builder.registerFunction(fetchDashboardScreenshot, 'fetchDashboardScreenshot');
-        
+
         function checkDashboardFavorites(dashboardId, succCallBack, errorCallBack) {
             var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
             dfu.ajaxWithRetry(url, {
@@ -326,7 +313,7 @@ define(['knockout',
                 ko.components.register(kocName,{
                   viewModel:{require:viewModel},
                   template:{require:'text!'+template}
-              }); 
+              });
             }
         }
         Builder.registerFunction(registerComponent, 'registerComponent');
@@ -345,7 +332,7 @@ define(['knockout',
             return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
         }
         Builder.registerFunction(getGuid, 'getGuid');
-        
+
         function isSmallMediaQuery() {
             var smQuery = oj.ResponsiveUtils.getFrameworkQuery(
                                 oj.ResponsiveUtils.FRAMEWORK_QUERY_KEY.SM_ONLY);
@@ -354,7 +341,7 @@ define(['knockout',
             return smObservable & smObservable();
         }
         Builder.registerFunction(isSmallMediaQuery, 'isSmallMediaQuery');
-        
+
         function fetchDashboardOptions(dashboardId, succCallBack, errorCallBack){
             var url = dfu.buildFullUrl(getBaseUrl(),dashboardId+"/options" );
             dfu.ajaxWithRetry(url, {
@@ -372,9 +359,9 @@ define(['knockout',
                 async: false
             });
         }
-        
+
         Builder.registerFunction(fetchDashboardOptions, 'fetchDashboardOptions');
-        
+
         function updateDashboardOptions(optionsJson, succCallBack, errorCallBack){
             var url = dfu.buildFullUrl(getBaseUrl(),optionsJson["dashboardId"]+"/options" );
             dfu.ajaxWithRetry(url, {
@@ -392,9 +379,9 @@ define(['knockout',
                 }
             });
         }
-        
+
         Builder.registerFunction(updateDashboardOptions, 'updateDashboardOptions');
-        
+
         function saveDashboardOptions(optionsJson, succCallBack, errorCallBack){
             var url = dfu.buildFullUrl(getBaseUrl(),optionsJson["dashboardId"]+"/options" );
             dfu.ajaxWithRetry(url, {
@@ -418,10 +405,10 @@ define(['knockout',
             var end = dfu_model.getUrlParam("endTime") ? true : false;
             return start && end;
         }
-        
+
         Builder.registerFunction(saveDashboardOptions, 'saveDashboardOptions');
         Builder.registerFunction(isTimeRangeAvailInUrl, 'isTimeRangeAvailInUrl');
-        
+
         function removeScreenshotElementClone(clone) {
             if (!(clone instanceof $))
                 throw new RangeError("Invalid clone element to remove: jquery object expected");
@@ -432,7 +419,7 @@ define(['knockout',
             document.body.removeChild(clone[0]);
         }
         Builder.registerFunction(removeScreenshotElementClone, 'removeScreenshotElementClone');
-        
+
         function createScreenshotElementClone(src) {
             function createMask(id, width, height) {
                 var mask = $(document.createElement('div'));
@@ -467,7 +454,7 @@ define(['knockout',
             return clone;
         }
         Builder.registerFunction(createScreenshotElementClone, 'createScreenshotElementClone');
-        
+
         var timePeriods = [
             {value: "last15mins", string: "Last 15 minutes"},
             {value: "last30mins", string: "Last 30 minutes"},
@@ -484,7 +471,7 @@ define(['knockout',
             {value: "custom", string: "Custom"},
             {value: "custom1", string: "Custom"}
         ];
-            
+
         function getTimePeriodString(value) {
             for(var i=0; i<timePeriods.length; i++) {
                 if(timePeriods[i].value === value) {
@@ -493,7 +480,7 @@ define(['knockout',
             }
         }
         Builder.registerFunction(getTimePeriodString, 'getTimePeriodString');
-        
+
         function getTimePeriodValue(string) {
             for(var i=0; i<timePeriods.length; i++) {
                 if(timePeriods[i].string === string) {
@@ -510,7 +497,7 @@ define(['knockout',
             }
         }
         Builder.registerFunction(addWidgetAssetRoot, "addWidgetAssetRoot");
-        
+
         function isWidgetAssetRootExisted(provider_name, provider_version, provider_asset_root) {
             for(var i=0; i<assetRoots.length; i++) {
                 var art = assetRoots[i];
@@ -521,11 +508,11 @@ define(['knockout',
             return false;
         }
         Builder.registerFunction(isWidgetAssetRootExisted, "isWidgetAssetRootExisted");
-        
+
         function getWidgetAssetRoot(provider_name, provider_version, provider_asset_root) {
             for(var i=0; i<assetRoots.length; i++) {
                 var art = assetRoots[i];
-                if((art.provider_name === provider_name) && (art.provider_version === provider_version) && (art.provider_asset_root === provider_asset_root)) {
+                if((art.provider_name === provider_name) && (art.provider_asset_root === provider_asset_root)) {
                     return art.asset_root;
                 }
             }

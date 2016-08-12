@@ -1,15 +1,15 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['knockout', 
+define(['knockout',
         'jquery',
         'ojs/ojcore',
         'dfutil',
         'uifwk/js/util/screenshot-util'
-    ], 
-    function(ko, $, oj, dfu, ssu) {       
+    ],
+    function(ko, $, oj, dfu, ssu) {
         function DuplicateDashboardModel($b) {
             var self = this;
             self.tilesViewModel = $b.getDashboardTilesViewModel();
@@ -18,14 +18,14 @@ define(['knockout',
             self.name = ko.observable();
             self.description = ko.observable();
             self.saveBtnDisabled = ko.observable(true);
-            
+
             self.beforeOpenDialog = function(event, ui) {
                 $("#dupDsbNameIn").ojInputText("option", "value", null);
                 $("#dupDsbDescIn").ojTextArea("option", "value", null);
                 self.saveBtnDisabled(true);
                 self.errorMessages.removeAll();
             };
-            
+
             self.nameOptionChanged = function(event, data) {
                 if (data.option === 'value' || data.option === 'rawValue') {
                     if (data.value && $.trim(data.value) !== '') {
@@ -36,19 +36,19 @@ define(['knockout',
                     }
                 }
             };
-            
+
             self.duplicateDashboardConfirmed = function() {
-                var trackObj = ko.utils.unwrapObservable(self.tracker), 
+                var trackObj = ko.utils.unwrapObservable(self.tracker),
                 hasInvalidComponents = trackObj ? trackObj["invalidShown"] : false,
                 hasInvalidHidenComponents = trackObj ? trackObj["invalidHidden"] : false;
 
-                if (hasInvalidComponents || hasInvalidHidenComponents) 
+                if (hasInvalidComponents || hasInvalidHidenComponents)
                 {
                     trackObj.showMessages();
                     trackObj.focusOnFirstInvalid();
                     return;
                 }
-                
+
                 self.errorMessages.removeAll();
                 var name = self.name();
                 if (!name || name === "" || name.length > 64)
@@ -62,12 +62,12 @@ define(['knockout',
                 $("#duplicateDsbDialog").css("cursor", "progress");
                 self.duplicateDashboard();
             };
-            
+
             self.cancelDuplicateDashboard = function () {
                 selectedDashboardInst().toolBarModel.duplicateInSet(false);
                 $('#duplicateDsbDialog').ojDialog('close');
             };
-            
+
             self.duplicateDashboard = function() {
                 var origDashboard = $b.dashboard;
                 var newDashboard = $.extend(true, {}, origDashboard);
@@ -96,9 +96,9 @@ define(['knockout',
                 else {
                     if (newDashboard.tiles() && newDashboard.tiles().length > 0) {
                         ssu.getBase64ScreenShot($b.findEl('.tiles-wrapper'), 314, 165, 0.8, function(data) {
-                            newDashboard.screenShot = data;  
+                            newDashboard.screenShot = data;
                             self.saveDuplicatedDashboardToServer(newDashboard);
-                        });                
+                        });
                     }
                     else {
                         newDashboard.screenShot = null;
@@ -106,7 +106,7 @@ define(['knockout',
                     }
                 }
             };
-            
+
             self.saveDuplicatedDashboardToServer = function(newDashboard) {
                 var succCallback = function (data) {
                     if (selectedDashboardInst().toolBarModel.duplicateInSet()) {
@@ -132,30 +132,29 @@ define(['knockout',
                     }
                     else {
                         $('#duplicateDsbDialog').ojDialog('close');
-                        error && error.errorMessage() && dfu.showMessage({type: 'error', 
-                            summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_DUPLICATING'), 
+                        error && error.errorMessage() && dfu.showMessage({type: 'error',
+                            summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_DUPLICATING'),
                             detail: ''});
                     }
                 };
                 var dbdJs = ko.mapping.toJS(newDashboard, {
-                    'include': ['screenShot', 'description', 'height', 
-                        'isMaximized', 'title', 'type', 'width', 
-                        'tileParameters', 'name', 'systemParameter', 
+                    'include': ['screenShot', 'description', 'height',
+                        'isMaximized', 'title', 'type', 'width',
+                        'tileParameters', 'name', 'systemParameter',
                         'value', 'content', 'linkText', "systemDashboard",
                         'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
-                    'ignore': ["createdOn", "href", "owner", "modeWidth","sharePublic", "modeHeight", 
+                    'ignore': ["createdOn", "href", "owner", "modeWidth","sharePublic", "modeHeight",
                         "lastModifiedBy", "lastModifiedOn", "tileId",
-                        "modeColumn", "modeRow", "screenShotHref", 
-                        "customParameters", "clientGuid", "dashboard", 
-                        "fireDashboardItemChangeEvent", "getParameter", 
-                        "maximizeEnabled", "narrowerEnabled", 
-                        "onDashboardItemChangeEvent", "restoreEnabled", 
-                        "setParameter", "shouldHide", "systemParameters", 
-                        "tileDisplayClass", "widerEnabled", "widget", 
+                        "modeColumn", "modeRow", "screenShotHref",
+                        "customParameters", "clientGuid", "dashboard",
+                        "fireDashboardItemChangeEvent", "getParameter",
+                        "maximizeEnabled", "narrowerEnabled",
+                        "onDashboardItemChangeEvent", "restoreEnabled",
+                        "setParameter", "shouldHide", "systemParameters",
+                        "tileDisplayClass", "widerEnabled", "widget",
                         "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
                 });
                 var dashboardJSON = JSON.stringify(dbdJs);
-                //console.log("dashboard to dup: "+dashboardJSON);
                 Builder.duplicateDashboard(dashboardJSON, function(data) {
                     succCallback && succCallback(data);
                 }, function(error) {
@@ -163,7 +162,7 @@ define(['knockout',
                 });
             };
         }
-        
+
         return {"DuplicateDashboardModel": DuplicateDashboardModel};
     }
 );

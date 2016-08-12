@@ -1,9 +1,9 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['knockout', 
+define(['knockout',
         'jquery',
         'dfutil',
         'idfbcutil',
@@ -13,12 +13,12 @@ define(['knockout',
         'builder/tool-bar/duplicate.dialog',
         'uifwk/js/util/preference-util',
         'builder/builder.core'
-    ], 
+    ],
     function(ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
-        
+
         function ToolBarModel($b,dashboardSetOptions) {
             var self = this;
             self.$b = $b;
@@ -48,7 +48,6 @@ define(['knockout',
             if(self.dashboard.description && self.dashboard.description()){
                 self.dashboardDescription = ko.observable(self.dashboard.description());
             }else{
-//                self.dashboardDescription = ko.observable("Description of sample dashboard. You can use dashboard builder to view/edit dashboard");
                 self.dashboardDescription = ko.observable();
             }
             if(self.dashboard.enableDescription && self.dashboard.enableDescription()) {
@@ -73,14 +72,14 @@ define(['knockout',
                     self.autoRefreshInterval = ko.observable(DEFAULT_AUTO_REFRESH_INTERVAL);
                 }
             }
-            
+
             if (window.DEV_MODE) { // for dev mode debug only
                 self.changeMode = function() {
                     self.tilesViewModel.editor.changeMode(self.tilesViewModel.editor.mode === self.tilesViewModel.tabletMode ? self.tilesViewModel.normalMode : self.tilesViewModel.tabletMode);
                     self.tilesViewModel.show();
                 };
             }
-                                                        
+
             function showConfirmLeaveDialog(event) {
                 var _msg = getNlsString('DBS_BUILDER_CONFIRM_LEAVE_DIALOG_CONTENT');
 
@@ -95,7 +94,7 @@ define(['knockout',
                 }
             };
             $(window).bind("beforeunload", showConfirmLeaveDialog);
-            
+
             self.includeTimeRangeFilter = ko.pureComputed({
                 read: function() {
                     if (self.dashboard.enableTimeRange()) {
@@ -112,7 +111,7 @@ define(['knockout',
                         self.dashboard.enableTimeRange(false);
                     }
                 }
-            });    
+            });
 
             self.initialize = function() {
                 self.initEventHandlers();
@@ -123,11 +122,8 @@ define(['knockout',
                     if (evt && evt.relatedTarget && evt.relatedTarget.id && $(evt.relatedTarget).hasClass("builder-dbd-name-ok"))
                         self.okChangeDashboardName();
                 });
-//                $('#'+addWidgetDialogId).ojDialog("beforeClose", function() {
-//                    self.handleAddWidgetTooltip();
-//                });
             };
-            
+
             self.intervalID = null;
             self.applyClickedByAutoRefresh = ko.observable(false);
             self.setAutoRefreshInterval = function (interval) {
@@ -145,8 +141,8 @@ define(['knockout',
                                 }, function () {
                             console.log("update dashboard name && description  failed !");
                         });
-                        if($b.getDashboardTilesViewModel().timePeriod()!=="Custom") {                           
-                            $b.getDashboardTilesViewModel().initEnd(new Date()); 
+                        if($b.getDashboardTilesViewModel().timePeriod()!=="Custom") {
+                            $b.getDashboardTilesViewModel().initEnd(new Date());
                         }
                         if($("#dtpicker_"+self.dashboardId).children().get(0)) {
                             self.applyClickedByAutoRefresh(true);
@@ -155,37 +151,23 @@ define(['knockout',
                     }, interval);
                 }
             };
-            
+
             self.initUserOtions = function () {
                 if(!self.isUnderSet){
-                     Builder.fetchDashboardOptions(
-                    self.dashboard.id(),
-                    function (data) {
-                        //sucessfully get options
-                        self.hasUserOptionInDB(true);
-//                        self.autoRefreshInterval(data["autoRefreshInterval"]);
-                        //required to init interverl
-//                        self.setAutoRefreshInterval(data["autoRefreshInterval"]);
+                    self.hasUserOptionInDB($b.getDashboardTilesViewModel().hasUserOptionInDB());
+                    if(self.hasUserOptionInDB()){
                         self.setAutoRefreshInterval(self.autoRefreshInterval());
-
-                    },
-                    function (jqXHR, textStatus, errorThrown) {
-                        if(jqXHR.status === 404){
-                            self.hasUserOptionInDB(false);
-                            self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
-                        }
-                    });
+                    }else{
+                        self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
+                    }
                 }else{
                     self.setAutoRefreshInterval(self.autoRefreshInterval());
                 }
-               
+
             };
 
             self.initEventHandlers = function() {
-//                $b.addEventListener($b.EVENT_NEW_TEXT_START_DRAGGING, self.handleAddWidgetTooltip);
                 $b.addEventListener($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, self.handleAddWidgetTooltip);
-//                $b.addEventListener($b.EVENT_TEXT_START_EDITING, self.handleStartEditText);
-//                $b.addEventListener($b.EVENT_TEXT_STOP_EDITING, self.handleStopEditText);
             };
 
             self.rightButtonsAreaClasses = ko.computed(function() {
@@ -193,9 +175,9 @@ define(['knockout',
                 return css;
             });
 
-            this.classNames = ko.observableArray(["oj-toolbars", 
-                                          "oj-toolbar-top-border", 
-                                          "oj-toolbar-bottom-border", 
+            this.classNames = ko.observableArray(["oj-toolbars",
+                                          "oj-toolbar-top-border",
+                                          "oj-toolbar-bottom-border",
                                           "oj-button-half-chrome"]);
 
             this.classes = ko.computed(function() {
@@ -225,7 +207,7 @@ define(['knockout',
                     return true;
                 }
             };
-            
+
             self.handleDeleteDashboardClicked = function() {
                 var _url="/sso.static/dashboards.service/";
                 if (dfu.isDevMode()){
@@ -233,14 +215,14 @@ define(['knockout',
                 }
                 dfu.ajaxWithRetry(_url + self.dashboard.id(), {
                     type: 'DELETE',
-                    headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
+                    headers: dfu.getDashboardsRequestHeader(),
                     success: function (result) {
-                        if (selectedDashboardInst().toolBarModel.isUnderSet) {   
-                            var removeId=selectedDashboardInst().toolBarModel.dashboardId;     
+                        if (selectedDashboardInst().toolBarModel.isUnderSet) {
+                            var removeId=selectedDashboardInst().toolBarModel.dashboardId;
                             var selectedTab = $('#dashboardTab-'+removeId);
                             $('#delete-dashboard').ojDialog( "close" );
                             selectedDashboardInst().dashboardsetToolBar.removeDashboardInSet(removeId,selectedTab,true);
-                            $("#dbd-tabs-container").ojTabs("refresh"); 
+                            $("#dbd-tabs-container").ojTabs("refresh");
                         } else {
                             window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
                         }
@@ -248,16 +230,16 @@ define(['knockout',
                     error: function(jqXHR, textStatus, errorThrown) {}
                 });
             };
-            
+
             self.handleDeleteDashboardCancelled = function() {
-                $('#delete-dashboard').ojDialog( "close" ); 
+                $('#delete-dashboard').ojDialog( "close" );
             };
-            
+
             self.handleUnshareDashboardClicked = function() {
               self.handleShareUnshare(false);
-              $('#share-dashboard').ojDialog( "close" ); 
+              $('#share-dashboard').ojDialog( "close" );
             };
-            
+
             self.handleUnshareDashboardCancelled = function() {
                 // revert change
                 var dashboardSharing = ko.dataFor($b.findEl(".share-settings")[0]).dashboardSharing;
@@ -403,12 +385,8 @@ define(['knockout',
                 $("body").css("overflow", "hidden");
                 $("html").css("overflow", "hidden");
             };
-*/            
-            
-//            self.handleDashboardNotSave = function() {
-//                self.isUpdated(false);
-//                $( "#cfmleaveDialog" ).ojDialog( "close" );    
-//            };
+*/
+
 
             self.handleDashboardSave = function() {
                 if (self.isNameUnderEdit()) {
@@ -435,7 +413,7 @@ define(['knockout',
                         Builder.removeScreenshotElementClone(clone);
                         self.tilesViewModel.dashboard.screenShot = ko.observable(data);
                         self.handleSaveUpdateDashboard(outputData);
-                    });                
+                    });
                 }
                 else {
                     self.tilesViewModel.dashboard.screenShot = ko.observable(null);
@@ -445,10 +423,6 @@ define(['knockout',
 
             self.handleSaveUpdateDashboard = function(outputData) {
                 self.handleSaveUpdateToServer(function() {
-//                    if ($( "#cfmleaveDialog" ).ojDialog( "isOpen" ) === true )
-//                    {
-//                        $( "#cfmleaveDialog" ).ojDialog( "close" );
-//                    }
                     self.isUpdated(false);
                     dfu.showMessage({
                             type: 'confirm',
@@ -463,19 +437,19 @@ define(['knockout',
 
             self.handleSaveUpdateToServer = function(succCallback, errorCallback) {
                 var dbdJs = ko.mapping.toJS(self.tilesViewModel.dashboard, {
-                    'include': ['screenShot', 'description', 'height', 
-                        'isMaximized', 'title', 'type', 'width', 
-                        'tileParameters', 'name', 'systemParameter', 
-                        'tileId', 'value', 'content', 'linkText', 
+                    'include': ['screenShot', 'description', 'height',
+                        'isMaximized', 'title', 'type', 'width',
+                        'tileParameters', 'name', 'systemParameter',
+                        'tileId', 'value', 'content', 'linkText',
                         'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
                     'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight",
                         "modeColumn", "modeRow", "screenShotHref", "systemDashboard",
-                        "customParameters", "clientGuid", "dashboard", 
-                        "fireDashboardItemChangeEvent", "getParameter", 
-                        "maximizeEnabled", "narrowerEnabled", 
-                        "onDashboardItemChangeEvent", "restoreEnabled", 
-                        "setParameter", "shouldHide", "systemParameters", 
-                        "tileDisplayClass", "widerEnabled", "widget", 
+                        "customParameters", "clientGuid", "dashboard",
+                        "fireDashboardItemChangeEvent", "getParameter",
+                        "maximizeEnabled", "narrowerEnabled",
+                        "onDashboardItemChangeEvent", "restoreEnabled",
+                        "setParameter", "shouldHide", "systemParameters",
+                        "tileDisplayClass", "widerEnabled", "widget",
                         "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
                 });
                 dbdJs.tiles.forEach(function(oneTile){
@@ -497,24 +471,24 @@ define(['knockout',
             var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
 
             self.addSelectedWidgetToDashboard = function(widget) {
-                var width = Builder.getTileDefaultWidth(widget, self.tilesViewModel.editor.mode), 
+                var width = Builder.getTileDefaultWidth(widget, self.tilesViewModel.editor.mode),
                         height = Builder.getTileDefaultHeight(widget, self.tilesViewModel.editor.mode);
                 self.tilesViewModel.appendNewTile(widget.WIDGET_NAME, "", width, height, widget);
             };
 
             self.addWidgetDialogParams = {
                 dialogId: addWidgetDialogId,
-                dialogTitle: getNlsString('DBS_BUILDER_ADD_WIDGET_DLG_TITLE'), 
+                dialogTitle: getNlsString('DBS_BUILDER_ADD_WIDGET_DLG_TITLE'),
                 affirmativeButtonLabel: getNlsString('DBS_BUILDER_BTN_ADD'),
                 userName: dfu.getUserName(),
                 tenantName: dfu.getTenantName(),
                 widgetHandler: self.addSelectedWidgetToDashboard,
                 autoCloseDialog: false
-    //                ,providerName: null     //'TargetAnalytics' 
+    //                ,providerName: null     //'TargetAnalytics'
     //                ,providerVersion: null  //'1.0.5'
-    //                ,providerName: 'TargetAnalytics' 
+    //                ,providerName: 'TargetAnalytics'
     //                ,providerVersion: '1.0.5'
-    //                ,providerName: 'DashboardFramework' 
+    //                ,providerName: 'DashboardFramework'
     //                ,providerVersion: '1.0'
             };
 
@@ -545,9 +519,9 @@ define(['knockout',
                     $b.findEl(".tooltip-add-widget").css("display", "block");
                 }else {
                     $b.findEl(".tooltip-add-widget").css("display", "none");
-                }  
+                }
             };
-            
+
             self.handleShareUnshare = function(isToShare) {
                 var _shareState = self.dashboard.sharePublic();
                 if(_shareState === isToShare ) {
@@ -559,7 +533,7 @@ define(['knockout',
                         dataType: "json",
                         contentType: 'application/json',
                         data: JSON.stringify({sharePublic: isToShare}),
-                        headers: dfu.getDashboardsRequestHeader(), 
+                        headers: dfu.getDashboardsRequestHeader(),
                         success: function (result) {
                             self.dashboard.sharePublic(isToShare);
                             if (self.dashboard.sharePublic() === true)
@@ -576,7 +550,6 @@ define(['knockout',
                                 self.cssSharePublic(cssShareDashboard);
                                 dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
                             }
-                            //$("#share_cfmDialog").ojDialog("close"); 
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
@@ -613,13 +586,13 @@ define(['knockout',
             self.isFavoriteDashboard = false;
             self.isHomeDashboard = false;
             self.hasAnotherDashboardSetAsHome = false;
-            
+
             //Check dashboard favorites
             checkDashboardFavorites();
-            
+
             //Check home dashboard preferences
             checkDashboardAsHomeSettings();
-            
+
             self.openDashboardEditDialog = function() {
                 var rightPanel = ko.dataFor($('.df-right-panel')[0]);
                 rightPanel && rightPanel.editRightpanelLinkage("singleDashboard-edit");
@@ -629,14 +602,14 @@ define(['knockout',
             };
             self.openDashboardDeleteConfirmDialog = function() {
                 self.isDeletingDbd(true);
-                $('#delete-dashboard').ojDialog( "open" ); 
+                $('#delete-dashboard').ojDialog( "open" );
                 $('#delete-dashboard').focus();
             };
             self.openDashboardUnshareConfirmDialog = function() {
-                $('#share-dashboard').ojDialog( "open" ); 
+                $('#share-dashboard').ojDialog( "open" );
                 $('#share-dashboard').focus();
             };
-            
+
             self.addDashboardToFavorites = function() {
                 function succCallback(data) {
                     dfu.showMessage({
@@ -689,10 +662,10 @@ define(['knockout',
             };
             self.setAsHomeConfirmed = function() {
                 self.setDashboardAsHome();
-                $("#setAsHomeCfmDialog").ojDialog("close"); 
+                $("#setAsHomeCfmDialog").ojDialog("close");
             };
             self.setAsHomeCancelled = function() {
-                $("#setAsHomeCfmDialog").ojDialog("close"); 
+                $("#setAsHomeCfmDialog").ojDialog("close");
             };
             self.setDashboardAsHome = function() {
                 function succCallback(data) {
@@ -752,7 +725,7 @@ define(['knockout',
                 }
                 else {
                     if (self.hasAnotherDashboardSetAsHome) {
-                        $("#setAsHomeCfmDialog").ojDialog("open"); 
+                        $("#setAsHomeCfmDialog").ojDialog("open");
                         $("#btnCancelSetAsHome").focus();
                     }
                     else {
@@ -760,7 +733,7 @@ define(['knockout',
                     }
                 }
             };
-            
+
             function checkDashboardFavorites() {
                 function succCallback(data) {
                     if (data && data.isFavorite === true) {
@@ -816,9 +789,9 @@ define(['knockout',
                     prefUtil.getAllPreferences(options);
                 }
             }
-            
+
             self.autoRefreshInterval.subscribe(function (value) {
-                // update 
+                // update
                 var optionsJson = {
                     "dashboardId": self.dashboard.id(),
                     "extendedOptions": JSON.stringify(self.extendedOptions),
@@ -833,14 +806,14 @@ define(['knockout',
                             self.hasUserOptionInDB(true);
                         });
                     }
-                    
+
                     $b.triggerEvent($b.EVENT_AUTO_REFRESH_CHANGED, "auto-refresh changed", value);
                 }
 
                 self.setAutoRefreshInterval(value);
 
             });
-            
+
             self.optionMenuItemSelect = function (event,data) {
                 var $clickTarget=data.item;
                 var clickTargetName = $clickTarget.attr('data-singledb-option');
@@ -875,13 +848,13 @@ define(['knockout',
                         break;
                     case "Remove Favorite":
                         self.handleDashboardFavorites();
-                        break;    
+                        break;
                     case "Set as Home":
                         self.handleDashboardAsHome();
                         break;
                     case "Remove as Home":
                         self.handleDashboardAsHome();
-                        break;  
+                        break;
                     //refresh off
                     case "Off":
                         $clickTarget.closest("ul").find(".oj-menu-item-icon").removeClass("fa-check");
@@ -907,7 +880,7 @@ define(['knockout',
                     "id":"emcpdf_dsbopts_add",
                     "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
                     "icon":"dbd-toolbar-icon-add-widget",
-                    "title": "",//getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
+                    "title": "",
                     "disabled": self.editDisabled() === true,
                     "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
                     "endOfGroup": false
@@ -917,7 +890,7 @@ define(['knockout',
                     "url": "#",
                     "id": "emcpdf_dsbopts_edit" + self.toolBarGuid,
                     "icon": "dbd-toolbar-icon-edit",
-                    "title": "", //getNlsString('DBS_BUILDER_BTN_EDIT_TITLE'),
+                    "title": "",
                     "disabled": self.editDisabled() === true,
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
                     "showSubMenu": false,
@@ -926,9 +899,9 @@ define(['knockout',
                 {
                     "label": getNlsString('COMMON_BTN_PRINT'),
                     "url": "#",
-                    "id": "emcpdf_dsbopts_print" + self.toolBarGuid,             
+                    "id": "emcpdf_dsbopts_print" + self.toolBarGuid,
                     "icon": "dbd-toolbar-icon-print",
-                    "title": "", //getNlsString('COMMON_BTN_PRINT'),
+                    "title": "",
                     "disabled": false,
                     "showOnMobile": true,
                     "showSubMenu": false,
@@ -937,9 +910,9 @@ define(['knockout',
                 {
                     "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
                     "url": "#",
-                    "id": "emcpdf_dsbopts_duplicate" + self.toolBarGuid,                 
+                    "id": "emcpdf_dsbopts_duplicate" + self.toolBarGuid,
                     "icon": "dbd-toolbar-icon-duplicate",
-                    "title": "", //getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
+                    "title": "",
                     "disabled": false,
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
                     "endOfGroup": true,
@@ -956,7 +929,7 @@ define(['knockout',
                             "url": "#",
                             "id": "emcpdf_dsbopts_addToSet" + self.toolBarGuid,
                             "icon": "",
-                            "title": "",                     
+                            "title": "",
                             "disabled": false,
                             "showOnMobile": true,
                             "showSubMenu": false,
@@ -967,7 +940,7 @@ define(['knockout',
                             "url": "#",
                             "id": "emcpdf_dsbopts_notAddToSet" + self.toolBarGuid,
                             "icon": "",
-                            "title": "",                  
+                            "title": "",
                             "disabled": false,
                             "showOnMobile": true,
                             "showSubMenu": false,
@@ -978,7 +951,7 @@ define(['knockout',
                 {
                     "label": self.favoriteLabel,
                     "url": "#",
-                    "id": "emcpdf_dsbopts_favorites" + self.toolBarGuid,               
+                    "id": "emcpdf_dsbopts_favorites" + self.toolBarGuid,
                     "icon": self.favoritesIcon, //"dbd-toolbar-icon-favorites",
                     "title": "", //self.favoriteLabel,
                     "disabled": false,
@@ -1000,9 +973,9 @@ define(['knockout',
                 {
                     "label": getNlsString('DBS_BUILDER_AUTOREFRESH_REFRESH'),
                     "url": "#",
-                    "id": "emcpdf_dsbopts_refresh" + self.toolBarGuid,      
+                    "id": "emcpdf_dsbopts_refresh" + self.toolBarGuid,
                     "icon": "dbd-toolbar-icon-refresh",
-                    "title": "", //getNlsString('DBS_BUILDER_AUTOREFRESH_REFRESH'),
+                    "title": "",
                     "disabled": false,
                     "showOnMobile": true,
                     "showSubMenu": true,
@@ -1015,7 +988,7 @@ define(['knockout',
                             "icon": ko.computed(function () {
                                 return self.autoRefreshInterval() === 0 ? "fa-check" : "";
                             }),
-                            "title": "",          
+                            "title": "",
                             "disabled": false,
                             "showOnMobile": true,
                             "showSubMenu": false,
@@ -1028,7 +1001,7 @@ define(['knockout',
                             "icon": ko.computed(function () {
                                 return self.autoRefreshInterval() ? "fa-check" : "";
                             }),
-                            "title": "",    
+                            "title": "",
                             "disabled": false,
                             "showOnMobile": true,
                             "showSubMenu": false,
@@ -1036,20 +1009,9 @@ define(['knockout',
                         }
                     ]
                 }
-//                {
-//                    "label": getNlsString('COMMON_BTN_DELETE'),
-//                    "url": "#",
-//                    "id":"emcpdf_dsbopts_delete"+self.toolBarGuid,
-//                    "onclick": self.editDisabled() === true ? "" : self.openDashboardDeleteConfirmDialog,
-//                    "icon":"dbd-toolbar-icon-delete",
-//                    "title": "", //getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),
-//                    "disabled": self.editDisabled() === true,
-//                    "showOnMobile": true,
-//                    "endOfGroup": false
-//                }
             ];
         }
-        
+
         Builder.registerModule(ToolBarModel, 'ToolBarModel');
         return ToolBarModel;
     }

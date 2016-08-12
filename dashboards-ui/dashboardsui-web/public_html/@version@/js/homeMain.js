@@ -11,8 +11,7 @@
 requirejs.config({
     //Set up module mapping
     map: {
-        '*': 
-//            {'df-util': '/emsaasui/uifwk/libs/@version@/js/uifwk/js/util/df-util'}
+        '*':
               {'prefutil':'uifwk/js/util/preference-util'}
     },
     // Path mappings for the logical module names
@@ -52,7 +51,7 @@ requirejs.config({
             exports: 'crossroads'
         }
     },
-    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation 
+    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation
     // resources with a custom translation file.
     // Any resource file added, must be placed under a directory named "nls". You can use a path mapping or you can define
     // a path that is relative to the location of this main.js file.
@@ -66,7 +65,6 @@ requirejs.config({
     waitSeconds: 300
 });
 
-//var dashboardsViewModle = undefined;
 
 /**
  * A top-level require call executed by the Application.
@@ -101,23 +99,20 @@ require(['dashboards/dbsmodel',
         function(model, ko, $, oj, dfu, dfumodel, dashboardhome_impl, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
         {
             var logger = new _emJETCustomLogger();
-//            var dfRestApi = dfu.discoverDFRestApiUrl();
-//            if (dfRestApi){
             var logReceiver = dfu.getLogUrl();
                 logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
                 // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                 // If you comment the line below, our current log calls will not be output!
                 logger.setLogLevel(oj.Logger.LEVEL_WARN);
-//            }
 
-           
+
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
                     viewModel:{require:'/emsaasui/uifwk/js/widgets/brandingbar/js/brandingbar.js'},
                     template:{require:'text!/emsaasui/uifwk/js/widgets/brandingbar/html/brandingbar.html'}
                 });
             }
-            
+
             if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
                 ko.components.register("df-oracle-dashboard-list",{
                     viewModel:dashboardhome_impl,
@@ -130,9 +125,9 @@ require(['dashboards/dbsmodel',
                 }
             };
             ko.virtualElements.allowedBindings.stopBinding = true;
-            
+
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
-            
+
             function HeaderViewModel() {
                 var self = this;
                 self.userName = dfu.getUserName();
@@ -145,13 +140,11 @@ require(['dashboards/dbsmodel',
                     isAdmin:true
                 };
             }
-           
+
            function TitleViewModel(){
                var self = this;
-//               self.homeTitle = getNlsString("DBS_HOME_TITLE");  
                self.homeTitle = dfu_model.generateWindowTitle(getNlsString("DBS_HOME_TITLE_HOME"), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
            }
-            //dashboardsViewModle = new model.ViewModel();
             var headerViewModel = new HeaderViewModel();
             var titleVM = new TitleViewModel();
 
@@ -167,14 +160,14 @@ require(['dashboards/dbsmodel',
                     var dashboardsViewModle = new model.ViewModel(predataModel, "mainContent");
                     ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
                     $('#mainContent').show();
-                    
+
                 }
                 predataModel.loadAll().then(init, init); //nomatter there is error in predata loading, initiating
 
             });
         }
 );
-            
+
 function truncateString(str, length) {
     if (str && length > 0 && str.length > length)
     {
@@ -192,11 +185,9 @@ function getNlsString(key, args) {
 }
 
 function getDateString(isoString) {
-    //console.log(isoString);
     if (isoString && isoString.length > 0)
     {
         var s = isoString.split(/[\-\.\+: TZ]/g);
-        //console.log(s);
         if (s.length > 1)
         {
             return new Date(s[0], parseInt(s[1], 10) - 1, s[2], s[3], s[4], s[5], s[6]).toLocaleDateString();

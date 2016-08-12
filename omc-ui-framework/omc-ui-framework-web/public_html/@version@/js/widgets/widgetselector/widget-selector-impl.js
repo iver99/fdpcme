@@ -1,11 +1,11 @@
 define([
-    'knockout', 
-    'jquery', 
-    'uifwk/js/util/df-util', 
-    'ojs/ojcore', 
+    'knockout',
+    'jquery',
+    'uifwk/js/util/df-util',
+    'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
-    'uifwk/js/util/typeahead-search', 
-    'ojs/ojselectcombobox', 
+    'uifwk/js/util/typeahead-search',
+    'ojs/ojselectcombobox',
     'ojs/ojdialog',
     'ojs/ojinputtext',
     'ojs/ojbutton'
@@ -13,17 +13,17 @@ define([
         function (ko, $, dfumodel, oj, nls) {
             function WidgetSelectorViewModel(params) {
                 var self = this;
-                
+
                 // Get input parameters and set UI strings
                 var affirmativeTxt = $.isFunction(params.affirmativeButtonLabel) ? params.affirmativeButtonLabel() : params.affirmativeButtonLabel;
                 var dialogTitle = $.isFunction(params.dialogTitle) ? params.dialogTitle() : params.dialogTitle;
                 var widgetProviderName = $.isFunction(params.providerName) ? params.providerName() : params.providerName;
                 var widgetProviderVersion = $.isFunction(params.providerVersion) ? params.providerVersion() : params.providerVersion;
-                var includeDashboardIneligible = $.isFunction(params.includeDashboardIneligible) ? params.includeDashboardIneligible() : 
+                var includeDashboardIneligible = $.isFunction(params.includeDashboardIneligible) ? params.includeDashboardIneligible() :
                         (params.includeDashboardIneligible ? params.includeDashboardIneligible : false);
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
-                self.dialogId = $.isFunction(params.dialogId) ? params.dialogId() : 
+                self.dialogId = $.isFunction(params.dialogId) ? params.dialogId() :
                         (params.dialogId ? params.dialogId : 'widgetSelectorDialog');
                 self.widgetHandler = params.widgetHandler;
                 self.autoCloseDialog = $.isFunction(params.autoCloseDialog) ? params.autoCloseDialog() : params.autoCloseDialog;
@@ -36,13 +36,13 @@ define([
                 self.widgetScreenShotPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE;
                 self.widgetDescPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE;
                 self.widgetsLoadingHints = nls.WIDGET_SELECTOR_WIDGETS_LOADING_HINT;
-                        
+
                 self.widgetGroupFilterVisible = ko.observable(widgetProviderName && widgetProviderVersion ? false : true);
                 self.searchText = ko.observable("");
                 self.clearButtonVisible = ko.computed(function(){return self.searchText() && '' !== self.searchText() ? true : false;});
-                
+
                 var dfu = new dfumodel(self.userName, self.tenantName);
-                
+
                 // Initialize widget group and widget data
                 var labelAll = nls.WIDGET_SELECTOR_WIDGET_GROUP_ALL;
                 var groupValueAll = 'all|all|All';
@@ -71,12 +71,12 @@ define([
                 self.currentWidget = ko.observable();
                 self.confirmBtnDisabled = ko.observable(true);
                 self.widgetOnLoading = ko.observable(true);
-                
+
                 // Initialize data and refresh
                 self.beforeOpenDialog = function(event, ui) {
                     refreshWidgets();
                 };
-                
+
                 // Widget group selector value change handler
                 self.optionChangedHandler = function(data, event) {
                     if (event.option === "value") {
@@ -88,13 +88,13 @@ define([
                         if (value !== null && $.isArray(value)) {
                             value = value[0];
                         }
-                        
+
                         if (preValue !== value) {
                             self.searchWidgets();
                         }
                     }
                 };
-                
+
                 // Show widgets data of previous page
                 self.naviPrevious = function(data, event) {
                     console.log(event);
@@ -120,7 +120,7 @@ define([
                         refreshWidgetAndButtonStatus();
                     }
                 };
-                
+
                 // Show widget data of next page
                 self.naviNext = function(data, event) {
                     if (event.type === "click" || (event.type === "keypress" && event.keyCode === 13)) {
@@ -144,7 +144,7 @@ define([
                         refreshWidgetAndButtonStatus();
                     }
                 };
-                
+
                 // Search widgets by selected widget group and search text(name, description)
                 self.searchWidgets = function() {
                     searchResultArray = [];
@@ -155,7 +155,7 @@ define([
                     }
                     else {
                         for (var i=0; i<allWidgets.length; i++) {
-                            if (allWidgets[i].WIDGET_NAME.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1 || 
+                            if (allWidgets[i].WIDGET_NAME.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1 ||
                                     (allWidgets[i].WIDGET_DESCRIPTION && allWidgets[i].WIDGET_DESCRIPTION.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1)) {
                                 searchResultArray.push(allWidgets[i]);
                             }
@@ -171,12 +171,12 @@ define([
                     naviFromSearchResults = true;
                     refreshWidgetAndButtonStatus();
                 };
-                
+
                 self.clearSearchText = function() {
                     self.searchText('');
                     self.searchWidgets();
                 };
-                
+
                 //Refresh widget selection status and confirm button status
                 function refreshWidgetAndButtonStatus() {
                     var curWidget = self.currentWidget();
@@ -186,7 +186,7 @@ define([
                     }
                     self.confirmBtnDisabled(true);
                 };
-                
+
                 // Get widget data to be shown in current page
                 function fetchWidgetsForCurrentPage(allWidgets) {
                     curPageWidgets=[];
@@ -195,7 +195,7 @@ define([
                         curPageWidgets.push(allWidgets[i]);
                     }
                 };
-                
+
                 // Get available widgets to be searched from
                 function getAvailableWidgets() {
                     var availWidgets = [];
@@ -225,39 +225,38 @@ define([
                     }
                     return availWidgets;
                 };
-                
+
                 // Refresh pagination button status
                 function refreshNaviButton() {
                     self.naviPreBtnEnabled(curPage === 1 ? false : true);
                     self.naviNextBtnEnabled(totalPage > 1 && curPage!== totalPage ? true:false);
                 };
-                
+
                 // Return search result of type ahead search
                 self.searchFilterFunc = function (arr, value) {
                     self.searchText(value);
                     return searchResultArray;
                 };
-                
+
                 // Handler for type ahead search
                 self.searchResponse = function (event, data) {
                     self.searchWidgets();
                 };
-                
+
                 // Handler for navigation to widget screen shot page
                 self.widgetNaviScreenShotClicked = function(data, event) {
                     data.isScreenShotPageDisplayed(true);
                 };
-                
+
                 // Handler for navigation to widget description page
                 self.widgetNaviDescClicked = function(data, event) {
                     data.isScreenShotPageDisplayed(false);
                 };
-                
+
                 // Widget box click handler
                 self.widgetBoxClicked = function(data, event) {
                     var curWidget = self.currentWidget();
-                    if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME || 
-                            /*curWidget.PROVIDER_VERSION !== data.PROVIDER_VERSION ||*/ 
+                    if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME ||
                             curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) {
                         widgetArray[curWidget.index].isSelected(false);
                         data.isSelected(true);
@@ -267,11 +266,11 @@ define([
                         data.isSelected(true);
                         self.currentWidget(data);
                     }
-                    
+
                     if (self.confirmBtnDisabled() === true)
                         self.confirmBtnDisabled(false);
                 };
-                
+
                 // Widget handler for selected widget
                 self.widgetSelectionConfirmed = function() {
                     //Close dialog if autoCloseDialog is true or not set
@@ -285,7 +284,7 @@ define([
                         oj.Logger.warn('No widget handler is available to call back!');
                     }
                 };
-                                
+
                 function getWidgets() {
                     var widgetsUrl = '/sso.static/savedsearch.widgets';
                     if (dfu.isDevMode()){
@@ -294,7 +293,7 @@ define([
                             widgetsUrl = widgetsUrl + "?includeDashboardIneligible=true";
                         }
                     }
-                    
+
                     if (queryWidgetsForAllSubscribedApps) {
                         return dfu.ajaxWithRetry({
                             url: widgetsUrl,
@@ -306,7 +305,7 @@ define([
                                 oj.Logger.error('Error when fetching widgets by URL: '+widgetsUrl+'.');
                             },
                             async: true
-                        });  
+                        });
                     }
                     else {
                         var ajaxCallDfd = $.Deferred();
@@ -341,7 +340,7 @@ define([
                         return ajaxCallDfd;
                     }
                 };
-                
+
                 function getWidgetGroups() {
                     var widgetgroupsUrl = '/sso.static/savedsearch.widgetgroups';
                     if (dfu.isDevMode()){
@@ -371,7 +370,7 @@ define([
                             async: true
                         });
                 };
-                
+
                 function refreshPageData() {
                     curPage = 1;
                     totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
@@ -384,7 +383,7 @@ define([
                     self.naviPreBtnEnabled(curPage === 1 ? false : true);
                     self.naviNextBtnEnabled(totalPage > 1 && curPage!== totalPage ? true:false);
                 };
-                
+
                 // Refresh widget/widget group data and UI displaying
                 function refreshWidgets() {
                     widgetArray = [];
@@ -400,7 +399,7 @@ define([
                     self.searchText("");
                     self.widgetOnLoading(true);
                     refreshPageData();
-                    
+
                     getWidgetGroups().done(function(data, textStatus, jqXHR){
                         oj.Logger.info("Finished loading widget groups. Start to load widgets.");
                         getWidgets().done(function(data, textStatus, jqXHR){
@@ -425,12 +424,12 @@ define([
                         oj.Logger.error("Failed to fetch widget groups.");
                     });
                 };
-                
+
                 // Load widgets from ajax call result data
                 function loadWidgets(data) {
                     if (data && data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
-                            if ((!widgetProviderName /*&& !widgetProviderVersion*/) || 
+                            if ((!widgetProviderName /*&& !widgetProviderVersion*/) ||
                                     (widgetProviderName === data[i].PROVIDER_NAME /*&& widgetProviderVersion === data[i].PROVIDER_VERSION*/)) {
                                 var widget = data[i];
                                 widget.index = widgetIndex;
@@ -455,7 +454,7 @@ define([
                         }
                     }
                 };
-                
+
                 function loadWidgetScreenshot(widget) {
                     var url = widget.WIDGET_SCREENSHOT_HREF;
                     if (!url) { // backward compility if SSF doesn't support .png screenshot. to be removed once SSF changes are merged
@@ -464,7 +463,7 @@ define([
                     }
                     if (!dfu.isDevMode()){
                         url = dfu.getRelUrlFromFullUrl(url);
-                    } 
+                    }
                     widget && !widget.WIDGET_VISUAL && (widget.WIDGET_VISUAL = ko.observable(''));
                     url && widget.WIDGET_VISUAL(url);
                     if (!widget.WIDGET_VISUAL()) {
@@ -490,7 +489,7 @@ define([
                         widget.imgHeight(imgHeight + "px");
                     });
                 }
-                
+
                 function loadWidgetBase64Screenshot(widget) {
                     if (!widget.isScreenshotLoaded) {
                         var widgetsUrl = '/sso.static/savedsearch.widgets';
@@ -529,37 +528,35 @@ define([
                                 oj.Logger.error('Error when fetching widget screen shot by URL: '+widgetScreenshotUrl+'.');
                             },
                             async: true
-                        });  
+                        });
                     }
                 };
-                
+
                 // Load widget groups from ajax call result data
                 function loadWidgetGroups(data) {
                     var targetWidgetGroupArray = [];
-                    var pname = null; 
-                    var pversion = null; 
-                    var gname = null; 
+                    var pname = null;
+                    var pversion = null;
+                    var gname = null;
                     targetWidgetGroupArray.push(groupAll);
                     if (data && data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
                             pname = data[i].PROVIDER_NAME;
                             pversion = data[i].PROVIDER_VERSION;
                             gname = data[i].WIDGET_GROUP_NAME;
-                            if ((!widgetProviderName /*&& !widgetProviderVersion */) || 
-                                    widgetProviderName === pname 
+                            if ((!widgetProviderName /*&& !widgetProviderVersion */) ||
+                                    widgetProviderName === pname
                                 /*    && widgetProviderVersion === pversion */) {
                                 //Enable ITA widget group since ITA widgets are enabled now.
-//                                if (!(pname === 'emcitas-ui-apps' && pversion === '1.0' && data[i].WIDGET_GROUP_ID === 3)) {
                                     var widgetGroup = {value:pname+'|'+pversion+'|'+gname, label:gname};
                                     targetWidgetGroupArray.push(widgetGroup);
                                     availableWidgetGroups.push(data[i]);
-//                                }
                             }
                         }
                     }
                     return targetWidgetGroupArray;
                 };
-                
+
                 // Calculate the time difference between current date and the last modification date
                 function getLastModificationTimeString(lastModifiedDate) {
                     var result = "";
@@ -580,41 +577,41 @@ define([
                         }
                         else if (timediff >= min && timediff < hour) {
                             diffCount = Math.round(timediff/min);
-                            diffUnit = diffCount > 1 ? nls.WIDGET_SELECTOR_TIME_MINS : 
+                            diffUnit = diffCount > 1 ? nls.WIDGET_SELECTOR_TIME_MINS :
                                     nls.WIDGET_SELECTOR_TIME_MIN;
                             result = diffCount + " " + diffUnit + agoText;
                         }
                         else if (timediff >= hour && timediff < day) {
                             diffCount = Math.round(timediff/hour);
-                            diffUnit = diffCount > 1 ? nls.WIDGET_SELECTOR_TIME_HOURS : 
+                            diffUnit = diffCount > 1 ? nls.WIDGET_SELECTOR_TIME_HOURS :
                                     nls.WIDGET_SELECTOR_TIME_HOUR;
                             result = diffCount + " " + diffUnit + agoText;
                         }
                         else if (timediff >= day && timediff < month) {
                             diffCount = Math.round(timediff/day);
-                            diffUnit = diffCount > 1 ? nls.WIDGET_SELECTOR_TIME_DAYS : 
+                            diffUnit = diffCount > 1 ? nls.WIDGET_SELECTOR_TIME_DAYS :
                                     nls.WIDGET_SELECTOR_TIME_DAY;
                             result = diffCount + " " + diffUnit + agoText;
                         }
                         else if (timediff >= month && timediff < year) {
                             diffCount = Math.round(timediff/month);
-                            diffUnit = diffCount > 1 ? nls.WIDGET_SELECTOR_TIME_MONTHS : 
+                            diffUnit = diffCount > 1 ? nls.WIDGET_SELECTOR_TIME_MONTHS :
                                     nls.WIDGET_SELECTOR_TIME_MONTH;
                             result = diffCount + " " + diffUnit + agoText;
                         }
                         else if (timediff >= year) {
                             diffCount = Math.round(timediff/year);
-                            diffUnit = diffCount > 1 ? nls.WIDGET_SELECTOR_TIME_YEARS : 
+                            diffUnit = diffCount > 1 ? nls.WIDGET_SELECTOR_TIME_YEARS :
                                     nls.WIDGET_SELECTOR_TIME_YEAR;
                             result = diffCount + " " + diffUnit + agoText;
                         }
                     }
-                    
+
                     return result;
                 };
-                
+
             }
-            
+
             return WidgetSelectorViewModel;
         });
 

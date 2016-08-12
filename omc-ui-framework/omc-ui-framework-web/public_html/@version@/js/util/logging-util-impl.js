@@ -1,8 +1,8 @@
 /**
  * EMSaas JET based custom logger module.
- * 
+ *
  * The only properties that are public are the methods in function emJETCustomLogger.
- * 
+ *
  * Initialize this logger during your initialization, passing the necessary parameters.
  * Then, call the usual JET oj.logger methods.  This custom logger intercepts those logs
  * and sends them to your logger url (passed in initialization).
@@ -10,7 +10,7 @@
 define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
     function(oj, ajaxUtilModel, dfumodel)
     {
-        
+
         // Custom logger.
         var customLogger = {};
 
@@ -39,7 +39,6 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
             if (window && window.console) {
                 window.console.info(output);
             }
-            //_cacheOrSend(oj.Logger.LEVEL_INFO, output,flush);
         };
 
         /**
@@ -63,7 +62,6 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
             if (window && window.console) {
                 window.console.log(output);
             }
-            //_cacheOrSend(oj.Logger.LEVEL_LOG, output,flush);
         };
 
         //
@@ -80,11 +78,11 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
         var logsCacheLimit = 20;
         // Last time we sent to server
         var logsCacheLastTimeWeSent = 1;
-        
+
         var logOwner = "UnknownTenant.UnknownUser";
-        
+
         var serverUrlToSendLogs = null;
-        
+
         var ajaxUtil = new ajaxUtilModel();
         var dfu = null;
 
@@ -93,14 +91,14 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
          */
         var _cacheOrSend = function(level, msg, flush)
         {
-            // TODO: Look into guarding against too many logs in a short period 
+            // TODO: Look into guarding against too many logs in a short period
             // of time.  Use case: Something bad may have happened and now we are getting
             // inundated with logs.
 
             // TODO: Send the cache when browser is closed, or user leaves the page.
 
             logsCache.push({"logLevel": level, "log": msg});
-            
+
             // If cache is full, then send.
             if (flush || logsCache.length >= logsCacheLimit) {
                 _sendToServer();
@@ -192,7 +190,7 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
 
             /**
              * Initialize the custom logger.
-             * 
+             *
              * url : server url to send the logs
              * Arguments below have defaults (see above) but you can set them at initialization:
              * maxInterval : Maximum Interval to wait before sending the next batch of logs

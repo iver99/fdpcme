@@ -1,8 +1,8 @@
 
 
-define(['dashboards/dashboardmodel', 'dashboards/dashboardcollection', 'dashboards/dashboardpaging', 'ojs/ojcore', 'knockout', 'jquery', 
+define(['dashboards/dashboardmodel', 'dashboards/dashboardcollection', 'dashboards/dashboardpaging', 'ojs/ojcore', 'knockout', 'jquery',
     'ojs/ojknockout', 'ojs/ojmodel','ojs/ojpagingcontrol',
-    'ojs/ojpagingcontrol-model'], 
+    'ojs/ojpagingcontrol-model'],
 function(dm, dc, dp, oj, ko, $)
 {
 /**
@@ -23,22 +23,18 @@ function(dm, dc, dp, oj, ko, $)
             if (pageSize)
             {
                 _pageSize = pageSize;
-                _fetchSize = pageSize;//((_pageSize * 2) > 300 ? _pageSize : (_pageSize * 2));
+                _fetchSize = pageSize;
                 if (_fetchSize > _modelLimit) _modelLimit = _fetchSize;
             }
-            var _collection = new dc.DashboardCollection([], 
-                        {'fetchSize': _fetchSize, 
-                         'modelLimit': _modelLimit, 
-                         'url': self.dashbaordsUrl, 
+            var _collection = new dc.DashboardCollection([],
+                        {'fetchSize': _fetchSize,
+                         'modelLimit': _modelLimit,
+                         'url': self.dashbaordsUrl,
                          'query': query,
                          'orderBy': _orderby,
                          'filter': _filter,
-//                         'types': _types,
-//                         'appTypes': _appTypes,
-//                         'owners': _owners,
-//                         "favoritesOnly": _favoritesOnly, 
                          'model': _model});
-            var _pagingds = new dp.DashboardPaging(_collection);// new oj.CollectionPagingDataSource(_collection);
+            var _pagingds = new dp.DashboardPaging(_collection);
             _pagingds.setPageSize(_pageSize);
             return {'model' : _model, 'collection': _collection, "pagingDS": _pagingds};
           })();

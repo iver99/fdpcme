@@ -98,21 +98,20 @@ public class TestWelcomePage extends LoginAndLogout
 	//		webd.getLogger().info("Test opening 'How to get started' in welcome page finished!!!");
 	//	}
 
+	//	@Test
+	//	public void testOpenInfraMonitoring() throws Exception
+	//	{
+	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+	//		webd.getLogger().info("Start to test open Infrastructure Monitoring in welcome page...");
+	//		
+	//		BrandingBarUtil.visitWelcome(webd);
+	//		WelcomeUtil.visitInfraMonitoring(webd);
+	//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+	//		webd.getLogger().info("Open Infrastructure Monitoring by url: " + tmpUrl);
+	//		urlVerification(tmpUrl, "monitoringservicesui/cms/index.html");
+	//		webd.getLogger().info("Test open Infrastructure Monitoring in welcome page finished!!!");
+	//	}
 
-//	@Test
-//	public void testOpenInfraMonitoring() throws Exception
-//	{
-//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-//		webd.getLogger().info("Start to test open Infrastructure Monitoring in welcome page...");
-//		
-//		BrandingBarUtil.visitWelcome(webd);
-//		WelcomeUtil.visitInfraMonitoring(webd);
-//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-//		webd.getLogger().info("Open Infrastructure Monitoring by url: " + tmpUrl);
-//		urlVerification(tmpUrl, "monitoringservicesui/cms/index.html");
-//		webd.getLogger().info("Test open Infrastructure Monitoring in welcome page finished!!!");
-//	}
-	
 	@Test
 	public void testOpenITA_DEPage() throws Exception
 	{
@@ -169,7 +168,7 @@ public class TestWelcomePage extends LoginAndLogout
 		urlVerification(tmpUrl, "emcitas/db-analytics-war/html/db-analytics-resource-planner.html");
 		webd.getLogger().info("Test opening ITA: Resource Analytics-Database in welcome page finished!!!");
 	}
-	
+
 	@Test
 	public void testOpenITA_RAHostPage() throws Exception
 	{
@@ -210,9 +209,12 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Open ITA by url: " + tmpUrl);
 		urlVerification(tmpUrl, "emcpdfui/home.html?filter=ita");
 
-		WebElement el = webd.getWebDriver().findElement(By.id(PageId.ITA_BoxID));
+		WebElement el = webd.getWebDriver().findElement(By.id(PageId.ITA_BOXID));
 		Assert.assertTrue(el.isSelected());
-		DashBoardUtils.ITA_OOB_GridView();
+		DashBoardUtils.ITA_OOB_Exist();
+		DashBoardUtils.Outdate_OOB();
+		DashBoardUtils.LA_OOB_NotExist();
+		DashBoardUtils.APM_OOB_NotExist();
 		webd.getLogger().info("Test open ITA in welcome page finished!!!");
 	}
 

@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -122,7 +122,7 @@ define({
       "DBS_HOME_DSB_PANEL_WIDGETS": "Widgets",
       "DBS_HOME_DSB_PAGE_SCREEN_SHOT": "Snapshot",
       "DBS_HOME_DSB_PAGE_DESCRIPTION": "Description",
-      "DBS_HOME_DSB_PAGE_WIDGETS": "Widgets",    
+      "DBS_HOME_DSB_PAGE_WIDGETS": "Widgets",
       "DBS_HOME_DSB_PAGE_INFO_DESC": "Description: ",
       "DBS_HOME_DSB_PAGE_INFO_CREATE": "Created By: ",
       "DBS_HOME_DSB_PAGE_INFO_CDATE": "Creation Date: ",
@@ -155,12 +155,12 @@ define({
       "DSB_BUILDER_EDIT_TIME_RANGE": "Time Range",
       "DSB_BUILDER_EDIT_ENABLE_TIME_RANGE": "Use dashboard time range",
       "DSB_BUILDER_EDIT_DISABLE_TIME_RANGE": "Use time ranges defined within content items",
-      
-      "DSB_BUILDER_EDIT_ENTITIES": "Entities", 
+
+      "DSB_BUILDER_EDIT_ENTITIES": "Entities",
       "DSB_BUILDER_EDIT_ENTITY_SUPPORT_MULTIPLE": "Dashboard supports multiple entities",
       "DSB_BUILDER_EDIT_ENABLE_ENTITIES": "Use dashboard entities",
       "DSB_BUILDER_EDIT_DISABLE_ENTITIES": "Use entities defined within content items",
-      
+
       "DBS_BUILDER_EDIT_ENTITY_FILTER": "Entity Filter",
       "DBS_BUILDER_EDIT_SHOW_ENTITY_FILTER": "Show Entity filter",
       "DBS_BUILDER_EDIT_ENTITY_SUPPORT": "Entity Support",
@@ -170,7 +170,7 @@ define({
       "DSB_BUILDER_EDIT_SELECT_AN_ENTITY": "Select an entity...",
       "DSB_BUILDER_EDIT_ENTITY_SELECTED_0": "Entity Selected (0)",
       "DSB_BUILDER_EDIT_ENTITY_SELECTED_1": "Entity Selected (1)",
-      "DSB_BUILDER_EDIT_ENTITY_SELECTED_N": "Entities Selected (N)",      
+      "DSB_BUILDER_EDIT_ENTITY_SELECTED_N": "Entities Selected (N)",
       "DBS_BUILDER_EDIT_TIME_FILTER": "Time Range Filter",
       "DBS_BUILDER_EDIT_SHOW_TIME_FILTER": "Show Time Range filter",
       "DSB_BUILDER_EDIT_DEFAULT_TIME_RANGE_LABEL": "Default Time Range Value",
@@ -337,14 +337,14 @@ define({
       "DBS_BUILDER_MSG_ERROR_NAME_DUPLICATED_DETAIL": "Provide a unique name.",
       "DBS_BUILDER_MSG_AUTO_REFRESH_ON": "Auto-refresh enabled.",
       "DBS_BUILDER_MSG_AUTO_REFRESH_OFF": "Auto-refresh disabled.",
-      
+
       "TEXT_WIDGET_IFRAME_HINT":"Please change the URL and click \"Change\" to apply: ",
       "TEXT_WIDGET_IFRAME_CONFIGURATION":"Configuration",
       "TEXT_WIDGET_SUBSCRIBER_HINT":"You will see received message and what I will respond",
       "LABEL_WIDGET_IFRAME_CHANGE":"Change",
       "TEXT_WIDGET_PUBLISHER_HINT":"Please write your message and click \"Publish\" to send",
       "LABEL_WIDGET_PUBLISHER_PUBLISH":"Publish",
-      
+
       "DBS_ERROR_PAGE_TITLE":"Error",
       "DBS_ERROR_PAGE_NOT_FOUND_MSG":"Sorry, the page you have requested either doesn't exist or you do not have access to it.",
       "DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG":"Sorry, you must specify a valid dashboard id to open a dashboard.",
@@ -356,7 +356,8 @@ define({
       "DBS_ERROR_TEXT_GO_HOME_PAGE": "to go to the default Home page",
       "DBS_ERROR_URL": "Requested URL is: ",
       "DBS_ERROR_BTN_SIGN_OUT": "Sign Out",
-      
+      "DBS_ERROR_INTERNAL_ERROR": "Oracle Management Cloud service received a bad request and had an internal error. Try to access your service later.",
+
       "SERVICE_NAME_APM":"Application Performance Monitoring",
       "SERVICE_NAME_ITAnalytics":"IT Analytics",
       "SERVICE_NAME_LogAnalytics":"Log Analytics",
@@ -394,22 +395,26 @@ define({
       "LANDING_HOME_INFRA_MONITORING_DESC": "Monitor your entire IT infrastructure - on-premise or on the cloud - from one unified platform",
 
       "LANDING_HOME_DASHBOARDS": "Dashboards",
+      
+      "LANDING_HOME_COMPLIANCE": "Compliance",
+      "LANDING_HOME_COMPLIANCE_DESC": "Automate application and infrastructure configuration assessments",
+      
       "LANDING_HOME_SECURITY_ANALYTICS": "Security Monitoring and Analytics",
       "LANDING_HOME_SECURITY_ANALYTICS_DESC": "Detect, investigate and mitigate security threats",
-      
+
       "LANDING_HOME_ORCHESTRATION": "Orchestration",
       "LANDING_HOME_ORCHESTRATION_DESC": "Schedule, execute and report on tasks at scale",
-      
+
       "LANDING_HOME_DASHBOARDS_DESC": "Build custom dashboards using out-of-the-box widgets or your own visualization of data",
       "LANDING_HOME_DATA_EXPLORERS": "Data Explorers",
       "LANDING_HOME_DATA_EXPLORERS_DESC": "Search, analyze, and visualize data",
       "LANDING_HOME_DATA_EXPLORER": "Data Explorer",
-      
+
       "LANDING_HOME_LEARN_MORE": "Learn More",
       "LANDING_HOME_GET_STARTED_LINK": "How to get started",
       "LANDING_HOME_VIDEOS_LINK": "Videos",
       "LANDING_HOME_COMMUNITY_LINK": "Service Offerings",
-      
+
       "DBS_BUILDER_EDIT_WIDGET_LINK": "Link",
       "DBS_BUILDER_EDIT_WIDGET_LINK_DESC": "Link to other dashboard",
       "DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_TITLE": "Edit widget link",
@@ -420,7 +425,7 @@ define({
       "DBS_BUILDER_EDIT_WIDGET_LINK_NAME_VALIDATE_ERROR": "Enter a non-empty name and its length should be less than 4000 characters.",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_LENGTH_VALIDATE_ERROR": "Enter a non-empty URL and its length should be less than 4000 characters.",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_VALIDATE_ERROR": "The format of URL is incorrect.",
-      
+
       //dashoard set message
       "DBSSET_BUILDER_DASHBOARDSET":"Dashboard Set",
       "DBSSET_BUILDER_ADD_DASHBOARD_TOSET":"Add a dashboard",

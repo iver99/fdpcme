@@ -1,11 +1,4 @@
 requirejs.config({
-//    urlArgs: "v=1.0",
-//    //Set up module mapping
-//    map: {
-//        'prefutil': 
-//            {'df-util': '/emsaasui/uifwk/js/util/df-util',
-//             'usertenant-util': '/emsaasui/uifwk/js/util/usertenant-util'}
-//    },
     // Path mappings for the logical module names
     paths: {
         'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.4.0',
@@ -38,7 +31,7 @@ requirejs.config({
             exports: 'crossroads'
         }
     },
-    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation 
+    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation
     // resources with a custom translation file.
     // Any resource file added, must be placed under a directory named "nls". You can use a path mapping or you can define
     // a path that is relative to the location of this main.js file.
@@ -67,7 +60,7 @@ requirejs.config({
 require(['knockout',
     'jquery',
     'ojs/ojcore',
-    'loggingutil', 
+    'loggingutil',
     'uifwk/js/util/usertenant-util',
     'uifwk/js/util/message-util',
     'uifwk/js/util/df-util',
@@ -78,17 +71,16 @@ require(['knockout',
     'ojs/ojdialog'
 ],
         function(ko, $, oj, _emJETCustomLogger, userTenantUtilModel, msgUtilModel, dfumodel) // this callback gets executed when all required modules are loaded
-        { 
-            //appId: "Error";//"TenantManagement";//"LogAnalytics";//"ITAnalytics"; //"APM" //"Dashboard";
-            var appId = getUrlParam("appId"); 
-            appId = appId !== null && appId !== "" ? appId : "Dashboard"; 
+        {
+            var appId = getUrlParam("appId");
+            appId = appId !== null && appId !== "" ? appId : "Dashboard";
             var isAdmin = getUrlParam("isAdmin");
             isAdmin = isAdmin === "false" ? false : true;
             var userTenantUtil = new userTenantUtilModel();
-            var userName = userTenantUtil.getUserName(); 
-            var tenantName = userTenantUtil.getTenantName(); 
+            var userName = userTenantUtil.getUserName();
+            var tenantName = userTenantUtil.getTenantName();
             var tenantDotUser = userName && tenantName ? tenantName+"."+userName : "";
-            
+
             var logger = new _emJETCustomLogger();
             var logReceiver = "/sso.static/dashboards.logging/logs";
             var dfu = new dfumodel();
@@ -99,7 +91,7 @@ require(['knockout',
             // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
             // If you comment the line below, our current log calls will not be output!
             logger.setLogLevel(oj.Logger.LEVEL_LOG);
-                
+
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
                     viewModel:{require:'/emsaasui/uifwk/js/widgets/brandingbar/js/brandingbar.js'},
@@ -111,8 +103,8 @@ require(['knockout',
                     viewModel:{require:'/emsaasui/uifwk/js/widgets/widgetselector/js/widget-selector.js'},
                     template:{require:'text!/emsaasui/uifwk/js/widgets/widgetselector/html/widget-selector.html'}
                 });
-            } 
-            
+            }
+
             /**
             * Get URL parameter value according to URL parameter name
             * @param {String} name
@@ -121,12 +113,12 @@ require(['knockout',
             function getUrlParam(name){
                 /* globals location */
                 var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
-                return results === null ? "" : results[1];                
+                return results === null ? "" : results[1];
             }
-            
+
             function HeaderViewModel() {
                 var self = this;
-                
+
                 self.brandingbarParams = {
                     userName: userName,
                     tenantName: tenantName,
@@ -136,7 +128,7 @@ require(['knockout',
                     isAdmin: isAdmin
                 };
             }
-            
+
             function MainViewModel() {
                 var self = this;
                 //Add widget dialog
@@ -156,7 +148,7 @@ require(['knockout',
                 self.widgetList = ko.observableArray(widgetArray);
                 self.addWidgetBtnLabel = appId === "Dashboard" ? "Add" : "Open";
                 self.addWidgetBtnDisabled = (appId === "Dashboard" || appId === "ITAnalytics" || appId === "LogAnalytics") ? false : true;
-                
+
                 var appIdAPM = "APM";
                 var appIdITAnalytics = "ITAnalytics";
                 var appIdLogAnalytics = "LogAnalytics";
@@ -184,16 +176,16 @@ require(['knockout',
                 appMap[appIdTenantManagement] = {
                     "providerName": null,
                     "providerVersion": null
-                };     
+                };
                 appMap[appIdError] = {
                     "providerName": null,
                     "providerVersion": null
-                };  
+                };
                 appMap[appIdMonitoring] = {
                     "providerName": null,
                     "providerVersion": null
                 };
-                
+
                 self.addSelectedWidgetToDashboard = function(widget) {
                     widgetArray.push(widget);
                     self.widgetList(widgetArray);
@@ -208,7 +200,7 @@ require(['knockout',
 
                 self.widgetSelectorParams = {
                     dialogId: widgetSelectorDialogId,
-                    dialogTitle: dialogTitle, 
+                    dialogTitle: dialogTitle,
                     affirmativeButtonLabel: dialogConfirmBtnLabel,
                     userName: userName,
                     tenantName: tenantName,
@@ -216,9 +208,9 @@ require(['knockout',
                     providerName: appMap[appId] ? appMap[appId].providerName: null,
                     providerVersion: appMap[appId] ? appMap[appId].providerVersion : null,
                     autoCloseDialog: autoCloseWidgetSelector
-    //                ,providerName: 'TargetAnalytics' 
+    //                ,providerName: 'TargetAnalytics'
     //                ,providerVersion: '1.0.5'
-    //                ,providerName: 'DashboardFramework' 
+    //                ,providerName: 'DashboardFramework'
     //                ,providerVersion: '1.0'
                 };
 
@@ -226,10 +218,10 @@ require(['knockout',
                     $('#'+widgetSelectorDialogId).ojDialog('open');
                 };
             }
-            
+
             $(document).ready(function() {
-                ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]); 
-                ko.applyBindings(new MainViewModel(), $('#main-container')[0]); 
+                ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
+                ko.applyBindings(new MainViewModel(), $('#main-container')[0]);
                 $("#loading").hide();
                 $('#globalBody').show();
             });

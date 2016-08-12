@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -37,12 +37,11 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
             this._funcs[name] = this[name] = func;
         }
     };
-    
+
     // Literal definitions
     // dashboard type to keep the same with return data from REST API
     Builder.SINGLEPAGE_TYPE = "SINGLEPAGE";
     Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK = 0;
-    //Builder.TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
     Builder.LINK_NAME_MAX_LENGTH = 4000;
     Builder.LINK_URL_MAX_LENGTH = 4000;
     Builder.BUILDER_DEFAULT_TILE_WIDTH = 6;
@@ -50,21 +49,21 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
     Builder.DEFAULT_HEIGHT = 161;
     Builder.EDITOR_POS_BASED_ON_ROW_COLUMN = "BASED_ON_ROW_COLUMN";
     Builder.EDITOR_POS_FIND_SUITABLE_SPACE = "FIND_SUITABLE_SPACE";
-    
+
     window.Builder = Builder;
-    
+
     function DashboardBuilder(dashboard, $dashboardEl) {
         var self = this;
-        
+
         self.dashboard = dashboard;
-        
+
         self.findEl = function (expr) {
             if (arguments.length === 0) {
                 return $dashboardEl;
             }
 
             var $foundEl = $dashboardEl.find(expr);
-            // TODO should be removed in production. Just for checking if missing 
+            // TODO should be removed in production. Just for checking if missing
             // elements after migrating dashboard to dashboardsets.
             var whiteNameList = [".dbd-widget", ".dbd-left-panel-widget-text", ".tooltip-add-widget"];
             if ($foundEl.length === 0 && (whiteNameList.indexOf(expr) < 0)) {
@@ -72,9 +71,9 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
             }
             return $foundEl;
         };
-        
+
         self.isDashboardUpdated = ko.observable(false);
-        
+
         // module objects registration
         self._objects = {};
         self.registerObject = function(obj, name) {
@@ -89,13 +88,6 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
 
         self.EVENT_DSB_ENABLE_TIMERANGE_CHANGED = "EVENT_DSB_ENABLE_TIMERANGE_CHANGED";
 
-        /*self.EVENT_NEW_TEXT_START_DRAGGING = "EVENT_NEW_TEXT_START_DRAGGING";
-        self.EVENT_NEW_TEXT_DRAGGING = "EVENT_NEW_TEXT_DRAGGING";
-        self.EVENT_NEW_TEXT_STOP_DRAGGING = "EVENT_NEW_TEXT_STOP_DRAGGING";
-
-        self.EVENT_NEW_LINK_START_DRAGGING = "EVENT_NEW_LINK_START_DRAGGING";
-        self.EVENT_NEW_LINK_DRAGGING = "EVENT_NEW_LINK_DRAGGING";
-        self.EVENT_NEW_LINK_STOP_DRAGGING = "EVENT_NEW_LINK_STOP_DRAGGING";*/
 
         self.EVENT_NEW_WIDGET_START_DRAGGING = "EVENT_NEW_WIDGET_START_DRAGGING";
         self.EVENT_NEW_WIDGET_DRAGGING = "EVENT_NEW_WIDGET_DRAGGING";
@@ -115,10 +107,10 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         self.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL = "EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL";
 
         self.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA = "EVENT_DISPLAY_CONTENT_IN_EDIT_AREA";
-        
+
         self.EVENT_TILE_MOVE_STOPED = "EVENT_TILE_MOVE_STOPED";
         self.EVENT_TILE_RESIZED = "EVENT_TILE_RESIZED";
-        
+
         self.EVENT_AUTO_REFRESH_CHANGED = "EVENT_AUTO_REFRESH_CHANGED";
 
         self.dispatcher = new dsp.Dispatcher();
@@ -130,30 +122,6 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
             window.DEV_MODE && console.debug('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')+(p4?'(p4:'+p4+')':'')):""));
             self.dispatcher.triggerEvent(event, p1, p2, p3, p4);
         };
-
-        /*self.addNewTextStartDraggingListener = function(listener) {
-            self.addEventListener(self.EVENT_NEW_TEXT_START_DRAGGING, listener);
-        };
-
-        self.addNewTextDraggingListener = function(listener) {
-            self.addEventListener(self.EVENT_NEW_TEXT_DRAGGING, listener);
-        };
-
-        self.addNewTextStopDraggingListener = function(listener) {
-            self.addEventListener(self.EVENT_NEW_TEXT_STOP_DRAGGING, listener);
-        };
-
-        self.addNewLinkStartDraggingListener = function(listener) {
-            self.addEventListener(self.EVENT_NEW_LINK_START_DRAGGING, listener);
-        };
-
-        self.addNewLinkDraggingListener = function(listener) {
-            self.addEventListener(self.EVENT_NEW_LINK_DRAGGING, listener);
-        };
-
-        self.addNewLinkStopDraggingListener = function(listener) {
-            self.addEventListener(self.EVENT_NEW_LINK_STOP_DRAGGING, listener);
-        };*/
 
         self.addNewWidgetStartDraggingListener = function(listener) {
             self.addEventListener(self.EVENT_NEW_WIDGET_START_DRAGGING, listener);
@@ -169,7 +137,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
 
         var previousWidth, NORMAL_MIN_WIDTH = 768;
         self.triggerBuilderResizeEvent = function(message) {
-            var height = $(window).height()/* - $('#headerWrapper').outerHeight() 
+            var height = $(window).height()/* - $('#headerWrapper').outerHeight()
                     - $('#head-bar-container').outerHeight()*/;
             var width = $(window).width();
             var $visibleDashboard = $("#dashboards-tabs-contents .dashboard-content:visible");
@@ -180,8 +148,8 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
             var leftWidth = panelWidth + togglerWidth;
             var $dbdSetTabs = $('#dbd-set-tabs');
             var tabSetHeight = $dbdSetTabs.is(":visible") ? $dbdSetTabs.height() : 0;
-            var topHeight = $('#headerWrapper').outerHeight() + 
-                    tabSetHeight + 
+            var topHeight = $('#headerWrapper').outerHeight() +
+                    tabSetHeight +
                     $visibleDashboard.find('.head-bar-container:visible').outerHeight();
             self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth, topHeight);
             if (previousWidth && width >= NORMAL_MIN_WIDTH && previousWidth < NORMAL_MIN_WIDTH)
@@ -189,26 +157,24 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
             else if (previousWidth && width < NORMAL_MIN_WIDTH && previousWidth >= NORMAL_MIN_WIDTH)
                 self.triggerEvent(self.EVENT_ENTER_TABLET_MODE, null, width, height, leftWidth, topHeight);
             previousWidth = width;
-        };    
+        };
 
         self.addBuilderResizeListener = function(listener) {
             self.addEventListener(self.EVENT_BUILDER_RESIZE, listener);
         };
-        
+
         function dashboardUpdatedListener(event) {
-            //console.log("Dahsbaord updated. Data: " + JSON.stringify(event));
             self.isDashboardUpdated(true);
         };
         self.addEventListener(self.EVENT_TILE_ADDED, dashboardUpdatedListener);
         self.addEventListener(self.EVENT_TILE_DELETED, dashboardUpdatedListener);
         self.addEventListener(self.EVENT_DSB_ENABLE_TIMERANGE_CHANGED, dashboardUpdatedListener);
-        //self.addEventListener(self.EVENT_BUILDER_RESIZE, dashboardUpdatedListener);
         self.addEventListener(self.EVENT_TILE_MOVE_STOPED, dashboardUpdatedListener);
         self.addEventListener(self.EVENT_TILE_RESIZED, dashboardUpdatedListener);
     }
-    
+
     Builder.registerModule(DashboardBuilder, 'DashboardBuilder');
-    
+
     function functionName(fn) {
         if (Function.prototype.name === undefined) {
             var funcNameRegex = /function\s([^(]{1,})\(/;
@@ -222,6 +188,6 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
             return fn.prototype.constructor.name;
         }
     }
-    
+
     return DashboardBuilder;
 });
