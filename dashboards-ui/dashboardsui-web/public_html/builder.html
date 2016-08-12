@@ -235,7 +235,7 @@
                 </div>-->
 <!--                <div style="display: none;" class="text-widget-dialog" title="Add Text Widget" data-bind="ojComponent: {component: 'ojDialog', initialVisibility: 'hide'}, attr: {title: getNlsString('DBS_BUILDER_BTN_ADD_TEXT_TITLE')}">
                     <div class="oj-dialog-body">
-                        <input class="text-widget-content" type="text" data-bind="ojComponent: 'ojInputText', placeholder: getNlsString('ADD_TEXT_WIDGET_PLACEHOLDER')"/>
+                        <input class="text-widget-content" id="text-widget-content" type="text" data-bind="ojComponent: 'ojInputText', placeholder: getNlsString('ADD_TEXT_WIDGET_PLACEHOLDER')"/>
                         <button class="text-widget-ok-button" data-bind="ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_OK')}, click: handleAddTextWidgetOKClicked"></button>
                     </div>
                 </div>-->
@@ -291,7 +291,7 @@
                         </div>                        
                     </div>
                     <div class="oj-dialog-footer">
-                        <button class="okSettingsButton" data-bind="click: handleSettingsDialogOKClose,
+                        <button class="okSettingsButton" id="okSettingsButton" data-bind="click: handleSettingsDialogOKClose
                                 ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_OK')}"> 
                         </button>
                     </div>
@@ -316,12 +316,12 @@
                                           class="dbd-display-area-text single-dbd-description"></span>          
                                 </div>
                             </div>  
-                            <button class='dashboardOptsBtn dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print'
+                            <button class='dashboardOptsBtn dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print' id ="dashboardOptsBtn"
                                     data-bind="visible: true, ojComponent: { component: 'ojButton', chroming: 'half', icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
                                     menu: '#dashboardOptsMenu'+toolBarGuid},
                                     attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
                             </button>
-                            <button class="dashboardSaveBtn dashboardOptsBtn oj-button oj-default oj-button-half-chrome no-print"
+                            <button class="dashboardSaveBtn dashboardOptsBtn oj-button oj-default oj-button-half-chrome no-print" id ="dashboardSaveBtn"
                                     data-bind="click: handleDashboardSave, ojComponent: {
                                         component:'ojButton', chroming: 'half', disabled: disableSave,
                                         icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
@@ -404,7 +404,7 @@
                                                         }"></button>
                                               </div>
                                                 <div class="dbd-btn-group">
-                                                    <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
+                                                    <button class="oj-button-half-chrome dbd-tile-action" id="dbd-tile-action" tabindex="0"
                                                             data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
                                                                        visible: ($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true'),
                                                                        ojComponent: {component: 'ojButton', 
@@ -757,7 +757,7 @@
                                 (323 + $root.scrollbarWidth) + 'px' :
                                 $root.scrollbarWidth+ 3 + 'px'
                         }">
-                    <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn rightpanel-wrench" style="display: block;"
+                    <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn rightpanel-wrench" style="display: block;" id="rightpanel-wrench"
                             data-bind="ojComponent: {
                                     component:'ojButton',
                                     display: 'icons',
@@ -770,7 +770,7 @@
                                'df-selected':rightPanelIcon()=='wrench'
                             }"/>
                     </button>
-                    <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn oj-buttonset-first rightpanel-pencil" style="display: block;"
+                    <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn oj-buttonset-first rightpanel-pencil" style="display: block;" id="rightpanel-pencil"
                             data-bind="ojComponent: {
                                     component:'ojButton',
                                     display: 'icons',
@@ -787,7 +787,7 @@
                                 }"/>
                     </button>
                     <!-- EMCPDF-1513:Help Tab on right drawer disabled -->
-                    <button class="right-panel-help-btn drawer-icon-btn" style="display: none;" data-bind="ojComponent: {
+                    <button class="right-panel-help-btn drawer-icon-btn" id="rightpanel-help" style="display: none;" data-bind="ojComponent: {
                                             component:'ojButton',
                                             display: 'icons',
                                             icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-question-circle'},
@@ -1127,7 +1127,7 @@
                                 <div class="dbd-left-panel-header fit-size-vertical-sibling">
                                     <div class="dbd-left-panel-header-search">
                                         <div  class="dbd-left-panel-header-search-input">
-                                            <input class="widget-search-input" type="text" name="searchInput"
+                                            <input class="widget-search-input" type="text" name="searchInput" id="widget-search-input"
                                                    data-bind="event: { keypress: searchWidgetsInputKeypressed }, ojComponent:{component:'ojInputText', value: keyword,
                                               placeholder: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODER_CONTENT'), rootAttributes: {'class': 'dbs-search-box-input'}}
                                               ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL') }"/>
@@ -1142,11 +1142,11 @@
                                                                                     text-align: center;
                                                                                     float: left;">
                                                                             </button>-->
-                                            <button class="dbd-left-panel-header-search-btn oj-button-half-chrome" data-bind="click: searchWidgetsClicked,
+                                            <button class="dbd-left-panel-header-search-btn oj-button-half-chrome" id="dbd-left-panel-header-search-btn" data-bind="click: searchWidgetsClicked,
                                         ojComponent: {component: 'ojButton',chroming: 'half', label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons',
                                         icons: {start:'left-panel-dbd-search-icon'}}" style="float:right">
                                             </button>
-                                            <button class="oj-button-half-chrome" data-bind="click: clearWidgetSearchInputClicked, visible: clearRightPanelSearch,
+                                            <button class="oj-button-half-chrome" id="clear-widget-search-input" data-bind="click: clearWidgetSearchInputClicked, visible: clearRightPanelSearch,
                                                     ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons',
                                                     icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 31px;'}}" style="float:right;margin-bottom:0">
                                             </button>
