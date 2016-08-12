@@ -24,7 +24,7 @@ define(['knockout',
             };
 
             self.onResizeFitSize = function(width, height, leftWidth, topHeight) {
-                self.rebuildElementSet(),
+                self.rebuildElementSet();
                 self.$list.each(function() {
                     var elem = $(this)
                     ,_topHeight = topHeight

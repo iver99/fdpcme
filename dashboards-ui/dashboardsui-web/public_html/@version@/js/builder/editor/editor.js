@@ -42,9 +42,11 @@ define(['knockout',
                     for(var i=0; i<self.tiles().length; i++) {
                         var tile = self.tiles()[i];
                         var pos = self.calAvailablePositionForTile(tile, startrow, startcolumn);
-                        self.mode.setModeRow(tile, pos.row), self.mode.setModeColumn(tile, pos.column);
+                        self.mode.setModeRow(tile, pos.row);
+                        self.mode.setModeColumn(tile, pos.column);
                         pos = self.getAvailableCellAfterTile(tile);
-                        startrow = pos.row, startcolumn = pos.column;
+                        startrow = pos.row;
+                        startcolumn = pos.column;
                         self.tilesGrid.registerTileToGrid(self.tiles()[i]);
                     }
                 }
