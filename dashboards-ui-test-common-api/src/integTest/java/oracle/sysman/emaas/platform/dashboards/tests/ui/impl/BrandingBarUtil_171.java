@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
@@ -51,6 +52,20 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 		boolean isExisted = false;
 		isExisted = isApplicationLinkExisted(driver, "admin", adminLinkName);
 		driver.getLogger().info("Existence check for admin link is completed. Result: " + isExisted);
+		return isExisted;
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isAlertLinkExisted(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public boolean isAlertLinkExisted(WebDriver driver)
+	{
+		driver.getLogger().info("Start to check if 'Alert' link is existed in navigation bar.");
+		boolean isExisted = false;
+		isExisted = isApplicationLinkExisted(driver, "home", BrandingBarUtil.NAV_LINK_TEXT_HOME_ALERTS);
+
+		driver.getLogger().info("Existence check for 'Alert' link is completed. Result: " + isExisted);
 		return isExisted;
 	}
 
@@ -231,6 +246,10 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	}
 
 	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#visitDashboardHome(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+
+	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#visitApplicationVisualAnalyzer(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
@@ -240,10 +259,6 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 		driver.getLogger().info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
 		visitApplicationLink(driver, "va", visualAnalyzerLinkName);
 	}
-
-	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#visitDashboardHome(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
-	 */
 
 	@Override
 	public void visitDashboardHome(WebDriver driver) throws Exception

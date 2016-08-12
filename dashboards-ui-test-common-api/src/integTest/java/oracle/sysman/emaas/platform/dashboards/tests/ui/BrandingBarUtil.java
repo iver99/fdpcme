@@ -12,6 +12,8 @@ public class BrandingBarUtil
 	public static final String USERMENU_OPTION_SIGNOUT = IBrandingBarUtil.USERMENU_OPTION_SIGNOUT;
 
 	//Branding bar link text
+	//home
+	public static final String NAV_LINK_TEXT_HOME_ALERTS = IBrandingBarUtil.NAV_LINK_TEXT_HOME_ALERTS;
 	//Cloud Services
 	public static final String NAV_LINK_TEXT_CS_ITA = IBrandingBarUtil.NAV_LINK_TEXT_CS_ITA;
 	public static final String NAV_LINK_TEXT_CS_APM = IBrandingBarUtil.NAV_LINK_TEXT_CS_APM;
@@ -52,6 +54,19 @@ public class BrandingBarUtil
 	{
 		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
 		return bu.isAdminLinkExisted(driver, adminLinkName);
+	}
+
+	/**
+	 * Check if the alert link is existed or not
+	 *
+	 * @param driver
+	 *            WebDriver instance
+	 * @return
+	 */
+	public static boolean isAlertLinkExisted(WebDriver driver)
+	{
+		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
+		return bu.isAlertLinkExisted(driver);
 	}
 
 	/**
@@ -270,4 +285,3 @@ public class BrandingBarUtil
 	}
 
 }
-
