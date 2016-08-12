@@ -80,7 +80,7 @@ define(['knockout',
                         },
                         errorCallback);
             } else {
-                successCallback && successCallback(self.dataSource[dashboardId].dashbaord);
+                successCallback && successCallback(self.dataSource[dashboardId].dashboard);
             }
         };
         
