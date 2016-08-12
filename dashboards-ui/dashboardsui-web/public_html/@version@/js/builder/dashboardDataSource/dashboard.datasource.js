@@ -110,22 +110,52 @@ define(['knockout',
             }           
         };
         
-        self.fetchFavoriteData =function(dashboardId, successCallback, errorCallback){
+        self.checkDashboardFavorites =function(dashboardId, successCallback, errorCallback){
             if (!self.dataSource[dashboardId]) {
                 self.dataSource[dashboardId] = {};
             }
-            if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].favorite) {
+            if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].isFavorite) {
                 Builder.checkDashboardFavorites(dashboardId,
                         function (data) {
-                            self.dataSource[dashboardId].favorite = data;
+                            self.dataSource[dashboardId].isFavorite = data;
                             successCallback && successCallback(data);
                         },
                         function (jqXHR, textStatus, errorThrown) {
                             errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
                         });
             } else {
-                successCallback && successCallback(self.dataSource[dashboardId].favorite);
+                successCallback && successCallback(self.dataSource[dashboardId].isFavorite);
             } 
+        };
+        
+        self.addDashboardToFavorites = function(dashboardId, successCallback, errorCallback) {
+            if(!self.dataSource[dashboardId]) {
+                self.dataSource[dashboardId] = {};
+            }
+            
+            Builder.addDashboardToFavorites(dashboardId,
+                    function(data) {
+                        self.dataSource[dashboardId].isFavorite = {"isFavorite": true};
+                        successCallback && successCallback(data);
+                    },
+                    function(jqXHR, textStatus, errorThrown) {
+                        errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
+                    });
+        };
+        
+        self.removeDashboardFromFavorites = function(dashboardId, successCallback, errorCallback) {
+            if(!self.dataSource[dashboardId]) {
+                self.dataSource[dashboardId] = {};
+            }
+            
+            Builder.removeDashboardFromFavorites(dashboardId,
+                    function(data) {
+                        self.dataSource[dashboardId].isFavorite = {"isFavorite": false};
+                        successCallback && successCalback(data);
+                    },
+                    function(jqXHR, textStatus, errorThrown) {
+                        errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
+                    });
         };
                       
         function isEmptyObject(obj) {
