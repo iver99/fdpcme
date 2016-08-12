@@ -199,7 +199,7 @@ require(['knockout',
     'dashboards/dbstypeahead',
     'builder/dashboardset.toolbar.model',
     'builder/dashboardset.panels.model',
-    'builder/dashboard/dashboard.model'
+    'builder/dashboardDataSource/dashboard.datasource'
 ],
     function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, /*textwidget, */dashboardhome_impl) // this callback gets executed when all required modules are loaded
     {

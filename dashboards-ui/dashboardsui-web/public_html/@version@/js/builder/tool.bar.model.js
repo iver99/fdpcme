@@ -13,8 +13,7 @@ define(['knockout',
         'builder/tool-bar/duplicate.dialog',
         'uifwk/js/util/preference-util',
         'builder/builder.core',
-        'builder/dashboard/dashboard.user.options.model',
-        'builder/dashboard/dashboard.model'
+        'builder/dashboardDataSource/dashboard.datasource'
     ],
     function(ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu) {
         // dashboard type to keep the same with return data from REST API
@@ -70,7 +69,7 @@ define(['knockout',
                 if(self.tilesViewModel.dashboardExtendedOptions && self.tilesViewModel.dashboardExtendedOptions.autoRefresh) {
                     self.autoRefreshInterval = ko.observable(parseInt(self.tilesViewModel.dashboardExtendedOptions.autoRefresh.defaultValue));
                 }
-                new Builder.DashboardUserOptionsDataSource().loadDashboardUserOptionsData(self.dashboard.id(),
+                new Builder.DashboardDataSource().loadDashboardUserOptionsData(self.dashboard.id(),
                     function(data) {
                         if(data["autoRefreshInterval"] !== "undefined") {
                             self.autoRefreshInterval(data["autoRefreshInterval"]);
@@ -809,7 +808,7 @@ define(['knockout',
                 };
                 //save user options if it is in single dashboard mode
                 if (!self.isUnderSet) {
-                    new Builder.DashboardUserOptionsDataSource().saveDashboardUserOptions(optionsJson);
+                    new Builder.DashboardDataSource().saveDashboardUserOptions(optionsJson);
 
                     $b.triggerEvent($b.EVENT_AUTO_REFRESH_CHANGED, "auto-refresh changed", value);
                 }

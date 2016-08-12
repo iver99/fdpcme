@@ -21,13 +21,13 @@ define(['knockout',
         
         self.loadDashboardUserOptionsData = function (dashboardId, successCallback, errorCallback) {
             if (!self.dataSource[dashboardId]) {
-                self.instance[dashboardId] = {};
+                self.dataSource[dashboardId] = {};
             }
             if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].userOptions) {
                 Builder.fetchDashboardOptions(dashboardId,
                         function (data) {
-                            self[dashboardId].userOptions = data;
-                            self[dashboardId].hasUserOptionInDB = true;
+                            self.dataSource[dashboardId].userOptions = data;
+                            self.dataSource[dashboardId].hasUserOptionInDB = true;
                             successCallback && successCallback(data);
                         },
                         function (jqXHR, textStatus, errorThrown) {
@@ -46,7 +46,7 @@ define(['knockout',
             if (isEmptyObject(self.dataSource[optionsJson.dashboardId]) || !self.dataSource[optionsJson.dashboardId].hasUserOptionInDB) {
                 Builder.saveDashboardOptions(optionsJson,
                         function (data) {
-                            self[optionsJson.dashboardId] = {
+                            self.dataSource[optionsJson.dashboardId] = {
                                 "userOptions": data
                             };
                             successCallback && successCallback(data);
@@ -57,7 +57,7 @@ define(['knockout',
             } else {
                 Builder.updateDashboardOptions(optionsJson,
                         function (data) {
-                            self[optionsJson.dashboardId] = {
+                            self.dataSource[optionsJson.dashboardId] = {
                                 "userOptions": data
                             };
                             successCallback && successCallback(data);

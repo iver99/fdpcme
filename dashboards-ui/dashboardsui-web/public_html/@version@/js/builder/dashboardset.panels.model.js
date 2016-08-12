@@ -16,7 +16,7 @@ define([
     'builder/tool.bar.model',
     'builder/integrate/builder.integrate',
     'dashboards/dbstypeahead',
-    'builder/dashboard/dashboard.model'],
+    'builder/dashboardDataSource/dashboard.datasource'],
     function (model, ko, $, dfu, _emJETCustomLogger, idfbcutil, oj) {
 
         function DashboardsetPanelsModel(dashboardsetToolBarModel) {

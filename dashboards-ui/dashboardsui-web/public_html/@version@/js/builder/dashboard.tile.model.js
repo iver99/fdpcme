@@ -16,7 +16,7 @@ define(['knockout',
         'builder/editor/editor.component',
         'builder/editor/editor',
         'builder/editor/editor.mode',
-        'builder/dashboard/dashboard.user.options.model',
+        'builder/dashboardDataSource/dashboard.datasource',
         'builder/widget/widget.model',
         'jqueryui',
         'builder/builder.jet.partition'
@@ -1042,9 +1042,9 @@ define(['knockout',
             };
 
             self.initUserFilterOptions = function() {
-                var userOptionsDS = new Builder.DashboardUserOptionsDataSource();
+                var dashboardDS = new Builder.DashboardDataSource();
                 
-                userOptionsDS.loadDashboardUserOptionsData(
+                dashboardDS.loadDashboardUserOptionsData(
                     self.dashboard.id(),
                     function (data) {
                         //sucessfully get extended options for page filters
@@ -1229,7 +1229,7 @@ define(['knockout',
                     autoRefreshInterval: self.toolbarModel.autoRefreshInterval()
                 };
                 
-                new Builder.DashboardUserOptionsDataSource().saveDashboardUserOptions(userFilterOptions);
+                new Builder.DashboardDataSource().saveDashboardUserOptions(userFilterOptions);
             };
 
             self.toolbarModel = null;
