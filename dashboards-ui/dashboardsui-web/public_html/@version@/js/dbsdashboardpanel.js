@@ -102,7 +102,6 @@ $.widget('dbs.dbsDashboardPanel',
                 _element.removeClass(self.classNames['active']);
                 self.titleElement.removeClass(self.classNames['active']);
                 _toolbarEle.removeClass(self.classNames['active']);
-                //self.contentPage3Ele.removeClass(self.classNames['pageScroll']);
                 /*
                 _element.animate({margin:'+=5px', height:'-=10px', width:'-=10px'},
                 {
@@ -150,7 +149,6 @@ $.widget('dbs.dbsDashboardPanel',
             self.active = false;
             _element
             .bind('mouseenter.' + _name, function (event) {
-                //console.log("mouse enter");
                 self._activate(event);
             })
             .bind('mouseleave.' + _name, function (event) {
@@ -197,7 +195,6 @@ $.widget('dbs.dbsDashboardPanel',
             _name = self.options['dashboard'].name;
             if ( _name &&  _name.length > TITLE_MAX_LENGTH)
             {
-                //self.headerElement.attr("dbstooltip", self.options['dashboard'].name);
                 self.headerElement.attr("title", _name);
             }
 
@@ -249,7 +246,7 @@ $.widget('dbs.dbsDashboardPanel',
             self.contentPagesEle = $("<div></div>")
                     .addClass(self.classNames['pages']);
             //image page
-            self.contentPage1ImgEle = undefined;//$("<img>").addClass(self.classNames['pageImage']).attr('alt', "");
+            self.contentPage1ImgEle = undefined;
             self.contentPage1Ele = $("<div></div>").addClass(self.classNames['active'])
                     .addClass(self.classNames['page']);
 
@@ -265,33 +262,10 @@ $.widget('dbs.dbsDashboardPanel',
                     if (!dfu.isDevMode()) {
                         url = dfu.getRelUrlFromFullUrl(url);
                     }
-//                    if (dfu.isDevMode()) {
-//                        url = dfu.buildFullUrl(dfu.getDashboardsUrl(), '/' + self.options['dashboard']['id'] + '/screenshot');
-//                    }
 
                     // don't use base64 image data, but use the URL retrieved from dashboard directly as screenshot url
                     self._setBase64ScreenShot(url);
                     if(_dmodel) _dmodel['screenShot'] = url;
-
-//                    dfu.ajaxWithRetry({
-//                            //This will be a page which will return the base64 encoded string
-//                        //url: '/sso.static/dashboards.service/' + self.options['dashboard']['id'] + '/screenshot',//self.options['dashboard']['screenShotHref'],
-//                        url: url,
-//                        headers: dfu.getDashboardsRequestHeader(),
-//                        success: function(response){
-//                            var __ss = (response.screenShot ? response.screenShot : undefined);
-//                            self._setBase64ScreenShot(__ss);
-//                            if (_dmodel)
-//                            {
-//                                //_dmodel.set("screenShot", _ss);
-//                                _dmodel['screenShot'] = __ss;
-//                            }
-//                        },
-//                        error : function(jqXHR, textStatus, errorThrown) {
-//                            self._setBase64ScreenShot(null);
-//                            //console.log("Load image error");
-//                        }
-//                    });
                 }
                 else
                 {
@@ -319,9 +293,6 @@ $.widget('dbs.dbsDashboardPanel',
             if (self.infoElement && self.infoElement.length > 0) self.infoElement.unbind("click." + self.name);
             self.element.find("*").removeAttr('style').removeClass().remove();
             self.element.unbind("." + self.name);
-            //self.element.unbind("mouseenter." + self.name);
-            //self.element.unbind("mouseleave." + self.name);
-            //self.element.unbind("click." + self.name);
         },
 
         _destroy: function () {

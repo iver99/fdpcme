@@ -87,7 +87,6 @@ define(['jquery',
                                 swidth = canvas.width;
                                 sheight = (swidth * target_height) / target_width;
                             }
-//                            window.DEV_MODE && console.debug("Capturing screenshot. Expecteds size [" + target_width + "x" + target_height + "]. Page size [" + canvas.width + "x" + canvas.height + "] (captured size [" + swidth + "x" + sheight + "]).");
                             var resize_ctx = resize_canvas.getContext('2d');
                             resize_ctx.drawImage(canvas, 0, 0, swidth, sheight, 0, 0, target_width, target_height);
                             var data = resize_canvas.toDataURL("image/jpeg", quality);
@@ -111,10 +110,6 @@ define(['jquery',
             this.getBase64PartialScreenShot = function(elem_id, src_left, src_top, src_width, src_height, resizing_ratio, quality, callback) {
                 // if elem_id is already a jquery object, just take it as $elemInst
                 var $elemInst = elem_id instanceof $ ? elem_id : $(elem_id);
-//                if (isNaN(target_width) || target_width <= 0)
-//                    throw new RangeError("Invalid target screenshot width");
-//                if (isNaN(target_height) || target_height <= 0)
-//                    throw new RangeError("Invalid target screenshot height");
                 if (isNaN(quality) || quality <= 0 || quality > 1)
                     throw new RangeError("Invalid target screenshot quality");
                 if (isNaN(resizing_ratio) || resizing_ratio <= 0 || resizing_ratio > 1)
@@ -171,7 +166,6 @@ define(['jquery',
                             var target_height = src_height * resizing_ratio;
                             resize_canvas.setAttribute('height', target_height + 'px');
                             resize_canvas.setAttribute('width', target_width + 'px');
-//                            window.DEV_MODE && console.debug("Capturing screenshot. Expecteds size [" + target_width + "x" + target_height + "]. Page size [" + canvas.width + "x" + canvas.height + "] (captured size [" + swidth + "x" + sheight + "]).");
                             var resize_ctx = resize_canvas.getContext('2d');
                             resize_ctx.drawImage(canvas, src_left, src_top, src_width, src_height, 0, 0, target_width, target_height);
                             var data = resize_canvas.toDataURL("image/jpeg", quality);

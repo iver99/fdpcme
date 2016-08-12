@@ -39,7 +39,6 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
             if (window && window.console) {
                 window.console.info(output);
             }
-            //_cacheOrSend(oj.Logger.LEVEL_INFO, output,flush);
         };
 
         /**
@@ -63,7 +62,6 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
             if (window && window.console) {
                 window.console.log(output);
             }
-            //_cacheOrSend(oj.Logger.LEVEL_LOG, output,flush);
         };
 
         //

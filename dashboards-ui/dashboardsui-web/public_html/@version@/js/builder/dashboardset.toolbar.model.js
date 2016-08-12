@@ -152,7 +152,6 @@ define(['knockout',
             };
 
             self.saveDashboardSet = function (fieldsToUpdate, successCallback, failureCallback) {
-//                if(dashboardInst.systemDashboard()) {
                 if(dashboardInst.owner() === "Oracle") { ///do not update dashboard set if it is OOB dsb set
                     self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;
                     self.saveUserOptions();
@@ -672,7 +671,7 @@ define(['knockout',
                     }
                     dfu.ajaxWithRetry(_url + dbsToolBar.dashboardsetId, {
                         type: 'DELETE',
-                        headers: dfu.getDashboardsRequestHeader(), //{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
+                        headers: dfu.getDashboardsRequestHeader(),
                         success: function (result) {
                             window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
                         },

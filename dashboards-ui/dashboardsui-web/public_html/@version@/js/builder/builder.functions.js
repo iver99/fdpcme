@@ -29,15 +29,6 @@ define(['knockout',
 
         function isURL(str_url) {
                 var strRegex = "^((https|http|ftp|rtsp|mms)?://)";
-    //                        + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?"
-    //                        + "(([0-9]{1,3}\.){3}[0-9]{1,3}"
-    //                        + "|"
-    //                        + "([0-9a-z_!~*'()-]+\.)*"
-    //                        + "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\."
-    //                        + "[a-z]{2,6})"
-    //                        + "(:[0-9]{1,4})?"
-    //                        + "((/?)|"
-    //                        + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
                 var re = new RegExp(strRegex);
                 return re.test(str_url);
             }
@@ -133,11 +124,7 @@ define(['knockout',
                     var mapping = {
                        "tiles": {
                            "create" : function(options) {
-//                                if(options.data.type === "TEXT_WIDGET") {
-//                                    return new Builder.TextTileItem(options.data);
-//                                }else {
                                     return new Builder.TileItem(options.data);
-//                                }
                            }
                        }
                     };

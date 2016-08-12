@@ -370,12 +370,6 @@ define([
                     message = respJson.errorMessage;
                 }
                 //do not show response text for now, as it may contains information not friendly to the end user
-//                else {
-//                    var respText = xhr.responseText;
-//                    if (typeof respText !== "undefined" && respText !== "") {
-//                        message = respText;
-//                    }
-//                }
 
                 return message;
             }

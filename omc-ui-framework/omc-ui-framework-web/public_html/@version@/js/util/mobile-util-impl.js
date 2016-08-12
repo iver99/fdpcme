@@ -4,7 +4,7 @@ function(oj)
 {
     function MobileUtility() {
         var self = this, diphone = 'iphone', dipod = 'ipod', dipad = 'ipad',
-                dandroid = 'android', dms = 'windows', dtablet = 'tablet';// dmobile = 'mobile', dopera = 'opera', dmini = 'mini', dmobi = 'mobi';
+                dandroid = 'android', dms = 'windows', dtablet = 'tablet';
         self.userAgent = null;
         if (navigator && navigator.userAgent)
         {
@@ -30,17 +30,6 @@ function(oj)
             {
                 oj.Logger.info("The user from android mobile agent.");
                 return true;
-//                if (self.userAgent.search(dmobile) > -1)
-//                {
-//                    oj.Logger.info("The user from android mobile agent.")
-//                    return true;
-//                }
-//                if (self.userAgent.search(dopera) > -1 && (self.userAgent.search(dmini) ||
-//                        self.userAgent.search(dmobi)))
-//                {
-//                    oj.Logger.info("The user from android mobile agent with opera browser.")
-//                    return true;
-//                }
             }
             return false;
         }

@@ -66,7 +66,6 @@ define(['jquery', 'ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-uti
                 return self.getUserTenant();
             };
 
-//            var userTenant = self.getUserTenant();
             var userTenant = null;
             if (self.devMode){
                 userTenant=dfu.getDevData().userTenant;

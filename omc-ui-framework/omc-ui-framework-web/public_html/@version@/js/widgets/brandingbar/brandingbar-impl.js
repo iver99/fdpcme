@@ -152,7 +152,7 @@ define([
                 self.notificationVisible = ko.observable(false);
                 self.notificationDisabled = ko.observable(true);
                 self.notificationPageUrl = null;
-                self.navLinksVisible = true; //self.appId === 'Error' ? false : true; EMCPDF-992
+                self.navLinksVisible = true;
 
                 var isAppIdNotEmpty = self.appId && $.trim(self.appId) !== "";
                 var appProperties = isAppIdNotEmpty && appMap[self.appId] ? appMap[self.appId] : {};
@@ -256,7 +256,7 @@ define([
                 };
 
                 //Open help link
-                var helpBaseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";//"http://tahiti-stage.us.oracle.com/pls/topic/lookup?ctx=cloud&id=";
+                var helpBaseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";
                 var helpTopicId = appProperties["helpTopicId"] ? appProperties["helpTopicId"] : "em_home_gs";
                 self.openHelpLink = function() {
                     oj.Logger.info("Open help link: " + helpBaseUrl + helpTopicId);
