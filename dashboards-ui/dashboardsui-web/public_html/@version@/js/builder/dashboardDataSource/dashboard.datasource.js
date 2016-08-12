@@ -17,13 +17,13 @@ define(['knockout',
             return DashboardDataSource.instance;
         }
         
-        self.instance={};
+        self.dataSource={};
         
         self.loadDashboardUserOptionsData = function (dashboardId, successCallback, errorCallback) {
-            if (!self.instance[dashboardId]) {
+            if (!self.dataSource[dashboardId]) {
                 self.instance[dashboardId] = {};
             }
-            if (isEmptyObject(self.instance[dashboardId]) || !self.instance[dashboardId].userOptions) {
+            if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].userOptions) {
                 Builder.fetchDashboardOptions(dashboardId,
                         function (data) {
                             self[dashboardId].userOptions = data;
@@ -35,15 +35,15 @@ define(['knockout',
                             errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
                         });
             } else {
-                successCallback && successCallback(self.instance[dashboardId].userOptions);
+                successCallback && successCallback(self.dataSource[dashboardId].userOptions);
             }
         };
         
         self.saveDashboardUserOptions = function (optionsJson, successCallback, errorCallback) {
-            if (!self.instance[optionsJson.dashboardId]) {
-                self.instance[optionsJson.dashboardId] = {};
+            if (!self.dataSource[optionsJson.dashboardId]) {
+                self.dataSource[optionsJson.dashboardId] = {};
             }
-            if (isEmptyObject(self.instance[optionsJson.dashboardId]) || !self.instance[optionsJson.dashboardId].hasUserOptionInDB) {
+            if (isEmptyObject(self.dataSource[optionsJson.dashboardId]) || !self.dataSource[optionsJson.dashboardId].hasUserOptionInDB) {
                 Builder.saveDashboardOptions(optionsJson,
                         function (data) {
                             self[optionsJson.dashboardId] = {
@@ -69,18 +69,18 @@ define(['knockout',
         };
         
         self.loadDashboardData = function (dashboardId, successCallback, errorCallback) {
-            if (!self.instance[dashboardId]) {
-                self.instance[dashboardId] = {};
+            if (!self.dataSource[dashboardId]) {
+                self.dataSource[dashboardId] = {};
             }
-            if (isEmptyObject(self.instance[dashboardId]) || !self.instance[dashboardId].dashboard) {
+            if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].dashboard) {
                 Builder.loadDashboard(dashboardId,
                         function (data) {
-                            self.instance[dashboardId].dashboard = data;
+                            self.dataSource[dashboardId].dashboard = data;
                             successCallback && successCallback(data);
                         },
                         errorCallback);
             } else {
-                successCallback && successCallback(self.instance[dashboardId].dashbaord);
+                successCallback && successCallback(self.dataSource[dashboardId].dashbaord);
             }
         };
         
