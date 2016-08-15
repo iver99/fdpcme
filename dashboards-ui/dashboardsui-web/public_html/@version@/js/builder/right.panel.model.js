@@ -24,7 +24,7 @@ define(['knockout',
             };
 
             self.onResizeFitSize = function(width, height, leftWidth, topHeight) {
-                self.rebuildElementSet(),
+                self.rebuildElementSet();
                 self.$list.each(function() {
                     var elem = $(this)
                     ,_topHeight = topHeight
@@ -423,9 +423,15 @@ define(['knockout',
                                 if (!widgets[i].WIDGET_DESCRIPTION)
                                     widgets[i].WIDGET_DESCRIPTION = null;
                                 var wgt = ko.mapping.fromJS(widgets[i]);
-                                wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
-                                wgt && !wgt.imgWidth && (wgt.imgWidth = ko.observable('120px'));
-                                wgt && !wgt.imgHeight && (wgt.imgHeight = ko.observable('120px'));
+                                if(wgt && !wgt.WIDGET_VISUAL){
+                                    wgt.WIDGET_VISUAL = ko.observable('');
+                                }
+                                if(wgt && !wgt.imgWidth){
+                                    wgt.imgWidth = ko.observable('120px');
+                                }
+                                if(wgt && !wgt.imgHeight){
+                                    wgt.imgHeight = ko.observable('120px');
+                                }
                                 self.widgets.push(wgt);
                             }
                         }
@@ -436,11 +442,15 @@ define(['knockout',
 
             self.getWidgetScreenshot = function(wgt) {
                 var url = null;
-                wgt.WIDGET_SCREENSHOT_HREF && (url = wgt.WIDGET_SCREENSHOT_HREF());
+                if(wgt.WIDGET_SCREENSHOT_HREF){
+                    url = wgt.WIDGET_SCREENSHOT_HREF();
+                }
                 if (!dfu.isDevMode()){
                     url = dfu.getRelUrlFromFullUrl(url);
                 }
-                wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
+                if(wgt && !wgt.WIDGET_VISUAL){
+                    wgt.WIDGET_VISUAL = ko.observable('');
+                }
                 url && wgt.WIDGET_VISUAL(url);
                 !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('@version@/images/no-image-available.png'));
 
@@ -453,9 +463,13 @@ define(['knockout',
 
             self.getWidgetBase64Screenshot = function(wgt) {
                 var url = '/sso.static/savedsearch.widgets';
-                dfu.isDevMode() && (url = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,'/widgets'));
+                if(dfu.isDevMode()){
+                    url = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,'/widgets');
+                }
                 url += '/'+wgt.WIDGET_UNIQUE_ID()+'/screenshot';
-                wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
+                if(wgt && !wgt.WIDGET_VISUAL){
+                    wgt.WIDGET_VISUAL = ko.observable('');
+                }
                 dfu.ajaxWithRetry({
                     url: url,
                     headers: dfu.getSavedSearchRequestHeader(),

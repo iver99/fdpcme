@@ -75,7 +75,8 @@ define(['jquery',
                     onrendered: function(canvas) {
                         try {
                             var resize_canvas = document.createElement('canvas');
-                            resize_canvas.width = target_width, resize_canvas.height = target_height;
+                            resize_canvas.width = target_width;
+                            resize_canvas.height = target_height;
                             var ratio = target_width / target_height;
                             var canvasRatio = canvas.width / canvas.height;
                             var  swidth, sheight;
