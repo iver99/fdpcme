@@ -71,4 +71,7 @@ public class PageId
 	public static final String DASHBOARDSETSHARE_CSS = "#dashboardSetSharingShared";
 	public static final String DASHBOARDSETNOTSHARE_CSS = "#dashboardSetSharingNotShared";
 
+	//error page
+	public static final String ERRORMESSAGE_CSS = ".dbd-error-msg";
+
 }
