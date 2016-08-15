@@ -452,7 +452,7 @@ define(['knockout',
                 });
                 var dashboardJSON = JSON.stringify(dbdJs);
                 var dashboardId = self.tilesViewModel.dashboard.id();
-                Builder.updateDashboard(dashboardId, dashboardJSON, function() {
+                new Builder.DashboardDataSource().updateDashboardData(dashboardId, dashboardJSON, function() {
                         succCallback && succCallback();
                 }, function(error) {
                     console.error(error.errorMessage());
@@ -622,7 +622,7 @@ define(['knockout',
                             detail: ''
                     });
                 }
-                Builder.addDashboardToFavorites(self.dashboard.id(), succCallback, errorCallback);
+                new Builder.DashboardDataSource().addDashboardToFavorites(self.dashboard.id(), succCallback, errorCallback);
             };
             self.removeDashboardFromFavorites = function() {
                 function succCallback(data) {
@@ -643,7 +643,7 @@ define(['knockout',
                             detail: ''
                     });
                 }
-                Builder.removeDashboardFromFavorites(self.dashboard.id(), succCallback, errorCallback);
+                new Builder.DashboardDataSource().removeDashboardFromFavorites(self.dashboard.id(), succCallback, errorCallback);
             };
             self.handleDashboardFavorites = function() {
                 if (self.isFavoriteDashboard) {
@@ -745,7 +745,7 @@ define(['knockout',
                     self.favoritesIcon(cssAddFavorite);
                     self.isFavoriteDashboard = false;
                 }
-                Builder.checkDashboardFavorites(self.dashboard.id(), succCallback, errorCallback);
+                new Builder.DashboardDataSource().checkDashboardFavorites(self.dashboard.id(), succCallback, errorCallback);
             }
             function checkDashboardAsHomeSettings() {
                 function succCallback(data) {

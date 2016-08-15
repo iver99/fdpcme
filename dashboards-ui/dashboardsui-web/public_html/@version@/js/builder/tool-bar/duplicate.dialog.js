@@ -91,7 +91,7 @@ define(['knockout',
                         newDashboard.screenShot = null;
                         self.saveDuplicatedDashboardToServer(newDashboard);
                     };
-                    Builder.fetchDashboardScreenshot(origDashboard.id(), succCallback, errorCallback);
+                    new Builder.DashboardDataSource().fetchDashboardScreenshot(origDashboard.id(), succCallback, errorCallback);
                 }
                 else {
                     if (newDashboard.tiles() && newDashboard.tiles().length > 0) {
@@ -155,7 +155,7 @@ define(['knockout',
                         "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
                 });
                 var dashboardJSON = JSON.stringify(dbdJs);
-                Builder.duplicateDashboard(dashboardJSON, function(data) {
+                new Builder.DashboardDataSource().duplicateDashboard(dashboardJSON, function(data) {
                     succCallback && succCallback(data);
                 }, function(error) {
                     errorCallback && errorCallback(error);
