@@ -64,8 +64,7 @@ define([
                     type: "POST",
                     url: downtimeDetectUrl,
                     async: true,
-                    headers: dfu.getDefaultHeader(),
-                    retryLimit: 0
+                    headers: dfu.getDefaultHeader()
                 })
                 .done(function() {
                     callback(false);
