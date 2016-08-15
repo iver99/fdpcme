@@ -85,9 +85,9 @@ define(['knockout',
 
             self.dashboardsetConfig.addFavorite = ko.observable(true);
             if("SET" === dashboardInst.type()){
-                Builder.checkDashboardFavorites(ko.unwrap(dashboardInst.id), function (resp) {
+                new Builder.DashboardDataSource().checkDashboardFavorites(ko.unwrap(dashboardInst.id), function (resp) {
                     self.dashboardsetConfig.addFavorite(!(resp && resp.isFavorite));
-                });
+                });  
             }
             self.dashboardsetConfig.favoriteIcon = ko.pureComputed(function () {
                 return self.dashboardsetConfig.addFavorite() ? "fa-star" : "fa-star-o";
@@ -185,27 +185,19 @@ define(['knockout',
                 // a tab may take some time to render the tiles.
                 dfu.getAjaxUtil().actionAfterAjaxStop(function () {
                     var $tilesWrapper = $(".tiles-wrapper:visible");
-                    if($tilesWrapper && selectedDashboardInst().type==='new'){
+                    if ($tilesWrapper && selectedDashboardInst().type === 'new') {
                         newDashboardJs.screenShot = null;
-                            Builder.updateDashboard(
-                                    ko.unwrap(dashboardInst.id),
-                                    JSON.stringify(newDashboardJs));
                     }
                     else if ($tilesWrapper && selectedDashboardInst().tilesViewModel.tilesView.dashboard.tiles().length > 0) {
                         var $clone = Builder.createScreenshotElementClone($tilesWrapper);
                         ssu.getBase64ScreenShot($clone, 314, 165, 0.8, function (data) {
                             newDashboardJs.screenShot = data;
                             Builder.removeScreenshotElementClone($clone);
-                            Builder.updateDashboard(
-                                    ko.unwrap(dashboardInst.id),
-                                    JSON.stringify(newDashboardJs));
                         });
-                    }else{
+                    } else {
                         newDashboardJs.screenShot = null;
-                            Builder.updateDashboard(
-                                    ko.unwrap(dashboardInst.id),
-                                    JSON.stringify(newDashboardJs));
                     }
+                    new Builder.updateDashboardData(ko.unwrap(dashboardInst.id), JSON.stringify(newDashboardJs));
                 }, 2000, 30000);
                 self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;
                 self.saveUserOptions();
@@ -546,7 +538,7 @@ define(['knockout',
                     var addFavorite = dbsToolBar.dashboardsetConfig.addFavorite();
 
                     if (addFavorite) {
-                        Builder.addDashboardToFavorites(
+                       new Builder.DashboardDataSource().addDashboardToFavorites(
                                 ko.unwrap(dashboardInst.id),
                                 function () {
                                     dbsToolBar.dashboardsetConfig.addFavorite(false);
@@ -565,7 +557,7 @@ define(['knockout',
                                     });
                                 });
                     } else {
-                        Builder.removeDashboardFromFavorites(
+                        new Builder.DashboardDataSource().removeDashboardFromFavorites(
                                 ko.unwrap(dashboardInst.id),
                                 function () {
                                     dbsToolBar.dashboardsetConfig.addFavorite(true);

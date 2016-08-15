@@ -166,7 +166,7 @@ define(['knockout',
             Builder.removeDashboardFromFavorites(dashboardId,
                     function(data) {
                         self.dataSource[dashboardId].isFavorite = {"isFavorite": false};
-                        successCallback && successCalback(data);
+                        successCallback && successCallback(data);
                     },
                     function(jqXHR, textStatus, errorThrown) {
                         errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
