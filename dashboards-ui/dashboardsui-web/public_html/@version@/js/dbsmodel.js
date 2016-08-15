@@ -229,7 +229,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.dashboardsTS = ko.observable(new dts.DashboardArrayTableSource([], {idAttribute: 'id'}));
         self.showPaging = ko.computed(function() {
             var _pds = ko.utils.unwrapObservable(self.pagingDatasource());
-            if (_pds instanceof  oj.ArrayPagingDataSource) return false;
+            if (_pds instanceof  oj.ArrayPagingDataSource) {return false;}
             var _spo = ko.utils.unwrapObservable(self.pagingDatasource().getShowPagingObservable());
             return _spo;
         });
@@ -388,7 +388,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         };
 
         self.confirmDashboardDelete = function() {
-            if ( !self.selectedDashboard() || self.selectedDashboard() === null ) return;
+            if ( !self.selectedDashboard() || self.selectedDashboard() === null ) {return;}
 
             self.datasource['pagingDS'].remove(self.selectedDashboard().dashboardModel,
                    {
@@ -507,11 +507,6 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                                 $( "#cDsbDialog" ).css("cursor", "default");
                                 $( "#cDsbDialog" ).ojDialog( "close" );
                             }
-                            /*
-                            $( "#cDsbDialog" ).ojDialog( "close" );
-                            self.confirmDialogModel.show("Error", "Ok",
-                                    "Error on creating dashboard." + " " +_m,
-                                    function () {self.confirmDialogModel.close()});*/
                         }
                     });
         };
@@ -713,7 +708,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                 self.datasource['pagingDS'].refreshModel(_id, {
                     success: function(model) {
                         var _e = $(".dbs-summary-container[aria-dashboard=\""+_id+"\"]");
-                        if (_e && _e.length > 0) _e.dbsDashboardPanel("refresh");
+                        if (_e && _e.length > 0) {_e.dbsDashboardPanel("refresh");}
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         oj.Logger.error("Error when updating dashboard. " + (jqXHR ? jqXHR.responseText : ""));
@@ -754,7 +749,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 
         self.getDashboardsFilterPref = function () {
             var filter = self.getPreferenceValue(DASHBOARDS_FILTER_PREF_KEY);
-            if (filter === undefined || filter.length === 0) return undefined;
+            if (filter === undefined || filter.length === 0) {return undefined;}
             filter = $("<div/>").html(filter).text();
             return filter;
         };
@@ -782,13 +777,13 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         };
 
         self.getPreferenceValue = function(key) {
-            if (self.preferences === undefined) return undefined;
+            if (self.preferences === undefined) {return undefined;}
             var arr;
             arr = $.grep(self.preferences, function( pref ) {
-                if (pref !== undefined && pref['key'] === key) return true;
+                if (pref !== undefined && pref['key'] === key) {return true;}
                 return false;
             });
-            if (arr !== undefined && arr.length > 0) return arr[0]['value'];
+            if (arr !== undefined && arr.length > 0) {return arr[0]['value'];}
             return undefined;
         };
 

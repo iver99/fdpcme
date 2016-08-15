@@ -200,8 +200,9 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
             self.initialize = function(url, maxInterval, frequency, limit, tenantUser)
             {
                 logOwner = tenantUser || null;
-                if (logOwner === null)
+                if (logOwner === null){
                     console.log("Error to initilize Logger with user: "+tenantUser);
+                }
                 serverUrlToSendLogs = url;
                 var userName = (logOwner === null ? null : logOwner.substring(logOwner.indexOf('.')+1));
                 var tenantName = (logOwner === null ? null : logOwner.substring(0, logOwner.indexOf('.')));

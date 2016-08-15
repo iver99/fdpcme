@@ -16,12 +16,15 @@ define(['jquery',
                 // if elem_id is already a jquery object, just take it as $elemInst
                 var $elemInst = elem_id instanceof $ ? elem_id : $(elem_id);
 
-                if (isNaN(target_width) || target_width <= 0)
+                if (isNaN(target_width) || target_width <= 0){
                     throw new RangeError("Invalid target screenshot width");
-                if (isNaN(target_height) || target_height <= 0)
+                }
+                if (isNaN(target_height) || target_height <= 0){
                     throw new RangeError("Invalid target screenshot height");
-                if (isNaN(quality))
+                }
+                if (isNaN(quality)){
                     throw new RangeError("Invalid target screenshot quality");
+                }
                 var nodesToRecover = [], nodesToRemove = [], overflowElems = [], parents = $elemInst.parents();
                 parents && parents.each(function() {
                     if ($(this).css("overflow") && $(this).css("overflow") !== "visible") {
@@ -111,10 +114,12 @@ define(['jquery',
             this.getBase64PartialScreenShot = function(elem_id, src_left, src_top, src_width, src_height, resizing_ratio, quality, callback) {
                 // if elem_id is already a jquery object, just take it as $elemInst
                 var $elemInst = elem_id instanceof $ ? elem_id : $(elem_id);
-                if (isNaN(quality) || quality <= 0 || quality > 1)
+                if (isNaN(quality) || quality <= 0 || quality > 1){
                     throw new RangeError("Invalid target screenshot quality");
-                if (isNaN(resizing_ratio) || resizing_ratio <= 0 || resizing_ratio > 1)
+                }
+                if (isNaN(resizing_ratio) || resizing_ratio <= 0 || resizing_ratio > 1){
                     throw new RangeError("Invalid resizing ratio");
+                }
                 var nodesToRecover = [], nodesToRemove = [], overflowElems = [], parents = $elemInst.parents();
                 parents && parents.each(function() {
                     if ($(this).css("overflow") && $(this).css("overflow") !== "visible") {
@@ -150,14 +155,18 @@ define(['jquery',
                     });
                     parentNode.appendChild(canvas);
                 });
-                if (isNaN(src_left) || src_left < 0 || src_left >= $elemInst.width())
+                if (isNaN(src_left) || src_left < 0 || src_left >= $elemInst.width()){
                     throw new RangeError("Invalid source left position for screenshot capturing");
-                if (isNaN(src_top) || src_top < 0 || src_top >= $elemInst.height())
+                }
+                if (isNaN(src_top) || src_top < 0 || src_top >= $elemInst.height()){
                     throw new RangeError("Invalid source left position for screenshot capturing");
-                if (isNaN(src_width) || src_width <= 0 || src_width >= $elemInst.width() - src_left)
+                }
+                if (isNaN(src_width) || src_width <= 0 || src_width >= $elemInst.width() - src_left){
                     throw new RangeError("Invalid source width for screenshot capturing");
-                if (isNaN(src_height) || src_height <= 0 || src_height >= $elemInst.height() - src_top)
+                }
+                if (isNaN(src_height) || src_height <= 0 || src_height >= $elemInst.height() - src_top){
                     throw new RangeError("Invalid source height for screenshot capturing");
+                }
                 html2canvas($elemInst, {
                     background: "#fff",
                     onrendered: function(canvas) {
