@@ -47,7 +47,7 @@ public class RegistrationEntityTest
 	RegistryLookupUtil registryLookupUtil;
 
 	@BeforeMethod
-	public void setUp() throws Exception
+	public void setUp() 
 	{
 		registrationEntity = new RegistrationEntity();
 
@@ -73,20 +73,20 @@ public class RegistrationEntityTest
 	}
 
 	@Test
-	public void testGetAdminLinks() throws Exception
+	public void testGetAdminLinks() 
 	{
 		Assert.assertFalse(CollectionUtils.hasElements(registrationEntity.getAdminLinks()));
 	}
 
 	@Test
-	public void testGetCloudServices() throws Exception
+	public void testGetCloudServices() 
 	{
 		Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getCloudServices()));
 	}
 
 	@Test
 	public void testGetHomeLinks(@Mocked final LookupClient lookupClient, @Mocked final InstanceInfo instanceInfo,
-			@Mocked final Link link, @Mocked final LinkEntity linkEntity) throws Exception
+			@Mocked final Link link, @Mocked final LinkEntity linkEntity) 
 	{
 		new Expectations() {
 			{
@@ -142,7 +142,7 @@ public class RegistrationEntityTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetSessionExpiryTime() throws Exception
+	public void testGetSessionExpiryTime() 
 	{
 		Assert.assertNull(registrationEntity.getSessionExpiryTime());
 		registrationEntity = new RegistrationEntity("201217");
@@ -151,7 +151,7 @@ public class RegistrationEntityTest
 	}
 
 	@Test
-	public void testGetVisualAnalyzers() throws Exception
+	public void testGetVisualAnalyzers() 
 	{
 		Assert.assertNotNull(registrationEntity.getVisualAnalyzers());
 	}

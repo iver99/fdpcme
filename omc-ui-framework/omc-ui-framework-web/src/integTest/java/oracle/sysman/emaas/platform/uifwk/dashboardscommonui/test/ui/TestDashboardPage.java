@@ -36,7 +36,7 @@ public class TestDashboardPage extends CommonUIUtils
 	}
 
 	@Test
-	public void testDashboardPage_noPara() throws Exception
+	public void testDashboardPage_noPara() 
 	{
 		try {
 			String testName = this.getClass().getName() + ".testDashboardPage_noPara";
@@ -81,7 +81,7 @@ public class TestDashboardPage extends CommonUIUtils
 	}
 
 	@Test
-	public void testDashboardPage_withPara() throws Exception
+	public void testDashboardPage_withPara() 
 	{
 		try {
 			CommonUIUtils.commonUITestLog("This is to test Dashboard Page");
@@ -132,7 +132,7 @@ public class TestDashboardPage extends CommonUIUtils
 	//Testcase for adding widget using widgetselector
 
 	@Test
-	public void testWidgetSelector() throws Exception
+	public void testWidgetSelector() 
 	{
 		try {
 			String WidgetName_1 = "Database Errors Trend";

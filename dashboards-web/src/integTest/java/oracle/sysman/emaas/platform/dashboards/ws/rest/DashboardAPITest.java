@@ -156,7 +156,7 @@ public class DashboardAPITest
 
 	@Test
 	public void testGetDashboardBase64ScreenShot(@SuppressWarnings("unused") @Mocked DashboardAPIUtil dashboardAPIUtil)
-			throws Exception
+			
 	{
 		//		new Expectations() {
 		//			{

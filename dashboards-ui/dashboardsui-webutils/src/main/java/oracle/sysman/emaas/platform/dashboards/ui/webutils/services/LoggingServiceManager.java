@@ -11,6 +11,7 @@ package oracle.sysman.emaas.platform.dashboards.ui.webutils.services;
  */
 
 import java.lang.management.ManagementFactory;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -54,7 +55,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager#postStart(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void postStart(ApplicationLifecycleEvent evt) throws Exception
+	public void postStart(ApplicationLifecycleEvent evt) 
 	{
 	}
 
@@ -62,7 +63,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager#postStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void postStop(ApplicationLifecycleEvent evt) throws Exception
+	public void postStop(ApplicationLifecycleEvent evt) 
 	{
 
 	}
@@ -71,7 +72,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager#preStart(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void preStart(ApplicationLifecycleEvent evt) throws Exception
+	public void preStart(ApplicationLifecycleEvent evt) throws Exception 
 	{
 		URL url = LoggingServiceManager.class.getResource("/log4j2_dsbui.xml");
 		Configurator.initialize("root", LoggingServiceManager.class.getClassLoader(), url.toURI());
@@ -99,7 +100,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager#preStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void preStop(ApplicationLifecycleEvent evt) throws Exception
+	public void preStop(ApplicationLifecycleEvent evt) 
 	{
 		logger.info("Pre-stopping logging service");
 		try {

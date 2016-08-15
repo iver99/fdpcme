@@ -15,17 +15,17 @@ public class TenantEditionEntityTest {
     TenantEditionEntity tenantEditionEntity;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         tenantEditionEntity = new TenantEditionEntity();
     }
 
     @AfterMethod
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
     }
 
     @Test
-    public void testGetApplication() throws Exception {
+    public void testGetApplication() {
         Assert.assertNull(tenantEditionEntity.getApplication());
 
         tenantEditionEntity.setApplication("app");
@@ -36,7 +36,7 @@ public class TenantEditionEntityTest {
     }
 
     @Test
-    public void testGetEdition() throws Exception {
+    public void testGetEdition() {
         Assert.assertNull(tenantEditionEntity.getEdition());
 
         tenantEditionEntity.setEdition("edition");

@@ -25,13 +25,13 @@ public class EMTargetMXBeanImpl implements EMTargetMXBean
 	}
 
 	@Override
-	public String getEMTargetType() throws Exception
+	public String getEMTargetType() 
 	{
 		return M_TARGET_TYPE;
 	}
 
 	@Override
-	public String getName() throws Exception
+	public String getName() 
 	{
 		return m_name;
 	}

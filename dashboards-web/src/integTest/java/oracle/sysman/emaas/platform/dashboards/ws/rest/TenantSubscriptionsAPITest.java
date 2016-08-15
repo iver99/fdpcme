@@ -9,10 +9,12 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.ServiceEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.TenantDetailEntity;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,13 +27,13 @@ public class TenantSubscriptionsAPITest {
     TenantSubscriptionsAPI tenantSubscriptionsAPI;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         tenantSubscriptionsAPI = new TenantSubscriptionsAPI();
 
     }
 
     @Test
-    public void testGetSubscribedApplications(@Mocked final APIBase apiBase) throws Exception {
+    public void testGetSubscribedApplications(@Mocked final APIBase apiBase) {
         new NonStrictExpectations() {
             {
                 apiBase.buildErrorResponse((ErrorEntity) any);
@@ -44,7 +46,7 @@ public class TenantSubscriptionsAPITest {
     }
 
     @Test
-    public void testGetSubscribedApplications1(@Mocked final APIBase apiBase, @Mocked final TenantSubscriptionUtil tenantSubscriptionUtil) throws Exception {
+    public void testGetSubscribedApplications1(@Mocked final APIBase apiBase, @Mocked final TenantSubscriptionUtil tenantSubscriptionUtil) {
         new Expectations() {
             {
                 List<String> apps = new ArrayList<>();
@@ -59,14 +61,14 @@ public class TenantSubscriptionsAPITest {
     }
 
     @Test
-    public void testGetSubscribedApplications2() throws Exception {
+    public void testGetSubscribedApplications2() {
 
         Assert.assertNotNull(tenantSubscriptionsAPI.getSubscribedApplications("", "userTenant", "userTenant", null));
 
     }
 
     @Test
-    public void testGetSubscribedApplications3(@Mocked final TenantSubscriptionUtil.RestClient restClient, @Mocked final Link link) throws Exception {
+    public void testGetSubscribedApplications3(@Mocked final TenantSubscriptionUtil.RestClient restClient, @Mocked final Link link) {
         new MockUp<APIBase>() {
             @Mock
             public void initializeUserContext(String opcTenantId, String userTenant) throws CommonSecurityException {
@@ -77,7 +79,7 @@ public class TenantSubscriptionsAPITest {
     }
 
     @Test
-    public void testGetSubscribedApplications4(@Mocked final ServiceEntity serviceEntity, @Mocked final TenantDetailEntity tenantDetailEntity, @Mocked final JsonUtil jsonUtil, @Mocked final TenantSubscriptionUtil.RestClient restClient, @Mocked final Link link, @Mocked final RegistryLookupUtil registryLookupUtil) throws Exception {
+    public void testGetSubscribedApplications4(@Mocked final ServiceEntity serviceEntity, @Mocked final TenantDetailEntity tenantDetailEntity, @Mocked final JsonUtil jsonUtil, @Mocked final TenantSubscriptionUtil.RestClient restClient, @Mocked final Link link, @Mocked final RegistryLookupUtil registryLookupUtil) throws IOException {
 
         new MockUp<APIBase>() {
             @Mock
