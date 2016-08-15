@@ -1195,7 +1195,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     try {
                         //make sure the date is valid.
                         var convertedDate = self.dateConverter2.format(oj.IntlConverterUtils.dateToLocalIso(new Date(data.value)));
-                        if(convertedDate !== data.value) throw true;
+                        if(convertedDate !== data.value) {throw true;}
 
                         $(event.target).removeClass("input-error");
                         if (value === 1) {

@@ -420,8 +420,9 @@ define(['knockout',
                         self.widgets([]);
                         if (widgets && widgets.length > 0) {
                             for (var i = 0; i < widgets.length; i++) {
-                                if (!widgets[i].WIDGET_DESCRIPTION)
+                                if (!widgets[i].WIDGET_DESCRIPTION){
                                     widgets[i].WIDGET_DESCRIPTION = null;
+                                }
                                 var wgt = ko.mapping.fromJS(widgets[i]);
                                 if(wgt && !wgt.WIDGET_VISUAL){
                                     wgt.WIDGET_VISUAL = ko.observable('');
@@ -535,10 +536,12 @@ define(['knockout',
             };
 
             self.widgetMouseOverHandler = function(widget,event) {
-                if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
+                if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0){
                     return;
-                if(!widget.WIDGET_VISUAL())
+                }
+                if(!widget.WIDGET_VISUAL()){
                     self.getWidgetScreenshot(widget);
+                }
                 var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
                 var popupContent=$(widgetItem).find('.dbd-left-panel-img-pop');
                 $(".dbd-right-panel-build-container i.fa-plus").hide();
@@ -588,8 +591,9 @@ define(['knockout',
             };
 
             self.containerMouseOverHandler = function() {
-                if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
+                if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0){
                     return;
+                }
                 if (!$('.right-container-pop').ojPopup("isOpen")) {
                    $('.right-container-pop').ojPopup("open", $('.dbd-left-panel-footer-contain'),
                    {
@@ -660,8 +664,9 @@ define(['knockout',
             self.showdbOnHomePage = ko.observable([]);
 
             var dsbSaveDelay = ko.computed(function(){
-                if(self.editDashboardDialogModel())
+                if(self.editDashboardDialogModel()){
                     return self.editDashboardDialogModel().showdbDescription() + self.editDashboardDialogModel().name() + self.editDashboardDialogModel().description() + self.showdbOnHomePage();
+                }
             });
             dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } });
             dsbSaveDelay.subscribe(function(){

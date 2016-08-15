@@ -31,8 +31,9 @@ define(['knockout',
             };
 
             self.getTileElement = function(tile) {
-                if (!tile || !tile.clientGuid)
+                if (!tile || !tile.clientGuid){
                     return null;
+                }
                 return $("#tile" + tile.clientGuid + ".dbd-widget");
             };
 
@@ -44,8 +45,9 @@ define(['knockout',
                 var tiles = tile ? [self.getTileElement(tile)] : $b.findEl(".dbd-widget");
                 for (var i = 0; i < tiles.length; i++) {
                     var target = $(tiles[i]);
-                    if (target.is(".ui-draggable"))
+                    if (target.is(".ui-draggable")){
                         target.draggable("disable");
+                    }
                 }
             };
 
@@ -65,25 +67,29 @@ define(['knockout',
                             stack: ".dbd-tile-in-dragging"
                         });
                     }
-                    else
+                    else{
                         target.draggable("enable");
+                    }
                 }
             };
 
             self.enableMovingTransition = function() {
-                if (!$b.findEl('.widget-area').hasClass('dbd-support-transition'))
+                if (!$b.findEl('.widget-area').hasClass('dbd-support-transition')){
                     $b.findEl('.widget-area').addClass('dbd-support-transition');
+                }
             };
 
             self.disableMovingTransition = function() {
-                if ($b.findEl('.widget-area').hasClass('dbd-support-transition'))
+                if ($b.findEl('.widget-area').hasClass('dbd-support-transition')){
                     $b.findEl('.widget-area').removeClass('dbd-support-transition');
+                }
             };
 
             self.postDocumentShow = function() {
                 $("body").on("DOMSubtreeModified", function(e) {
-                    if (e.currentTarget && e.currentTarget.nodeName !== "BODY")
+                    if (e.currentTarget && e.currentTarget.nodeName !== "BODY"){
                         return;
+                    }
                     if ($(e.currentTarget.lastChild).hasClass('cke_chrome')) {
                         var mo = new MutationObserver(self.onTargetAttributesChange);
                         mo.observe(e.currentTarget.lastChild, {'attributes': true, attributeOldValue: true});
@@ -95,8 +101,9 @@ define(['knockout',
             self.onTargetAttributesChange = function(records) {
                 if (records[0].attributeName === "style") {
                     var elem = records[0].target, target = $(elem);
-                    if (!elem || elem.cacheLeft && elem.cacheLeft === target.css("left"))
+                    if (!elem || elem.cacheLeft && elem.cacheLeft === target.css("left")){
                         return;
+                    }
                     var top = parseInt(target.css("top")), left = parseInt(target.css("left"));
                     if (!isNaN(top) && !isNaN(left) && target.position() && target.position().left !== 0 && target.position().top !== 0) {
                         target.css("top", top - $('#headerWrapper').outerHeight() - $b.findEl('.head-bar-container').outerHeight() + $b.findEl(".tiles-col-container").scrollTop());

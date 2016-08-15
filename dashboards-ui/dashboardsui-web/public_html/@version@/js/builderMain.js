@@ -263,10 +263,12 @@ require(['knockout',
 
             $("#headerWrapper").on("DOMSubtreeModified", function() {
                 var height = $("#headerWrapper").height();
-                if (!self.headerHeight)
+                if (!self.headerHeight){
                     self.headerHeight = height;
-                if (self.headerHeight === height)
+                }
+                if (self.headerHeight === height){
                     return;
+                }
                 var $visibleHeaderBar = $(".dashboard-content:visible .head-bar-container");
                 var $visibleRightDrawer = $(".dbd-left-panel:visible");
                 if ($visibleHeaderBar.length > 0 && ko.dataFor($visibleHeaderBar[0])) {
@@ -328,8 +330,9 @@ function truncateString(str, length) {
     if (str && length > 0 && str.length > length)
     {
         var _tlocation = str.indexOf(' ', length);
-        if ( _tlocation <= 0 )
+        if ( _tlocation <= 0 ){
             _tlocation = length;
+        }
         return str.substring(0, _tlocation) + "...";
     }
     return str;

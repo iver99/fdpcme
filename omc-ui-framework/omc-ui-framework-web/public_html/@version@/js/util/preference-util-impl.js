@@ -18,10 +18,10 @@ function($, ajaxUtilModel)
         if (prefArray && key) {
             var arr;
             arr = $.grep(prefArray, function(pref) {
-                if (pref !== undefined && pref['key'] === key) return true;
+                if (pref !== undefined && pref['key'] === key) {return true;}
                 return false;
             });
-            if (arr !== undefined && arr.length > 0) return arr[0]['value'];
+            if (arr !== undefined && arr.length > 0) {return arr[0]['value'];}
         }
         return undefined;
     };

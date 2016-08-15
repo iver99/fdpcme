@@ -34,10 +34,12 @@ define(['knockout',
             self.isUnderSet = ko.dataFor($("#dbd-set-tabs")[0]).isDashboardSet();
             self.duplicateInSet = ko.observable(false);
 
-            if (self.dashboard.id && self.dashboard.id())
+            if (self.dashboard.id && self.dashboard.id()){
                 self.dashboardId = self.dashboard.id();
-            else
+            }
+            else{
                 self.dashboardId = 9999; // id is expected to be available always
+            }
 
             if(self.dashboard.name && self.dashboard.name()){
                 self.dashboardName = ko.observable(self.dashboard.name());
@@ -117,10 +119,12 @@ define(['knockout',
                 self.initEventHandlers();
                 self.initUserOtions();
                 $b.findEl('.builder-dbd-name-input').on('blur', function(evt) {
-                    if (evt && evt.relatedTarget && evt.relatedTarget.id && $(evt.relatedTarget).hasClass("builder-dbd-name-cancel"))
+                    if (evt && evt.relatedTarget && evt.relatedTarget.id && $(evt.relatedTarget).hasClass("builder-dbd-name-cancel")){
                         self.cancelChangeDashboardName();
-                    if (evt && evt.relatedTarget && evt.relatedTarget.id && $(evt.relatedTarget).hasClass("builder-dbd-name-ok"))
+                    }
+                    if (evt && evt.relatedTarget && evt.relatedTarget.id && $(evt.relatedTarget).hasClass("builder-dbd-name-ok")){
                         self.okChangeDashboardName();
+                    }
                 });
             };
 
@@ -195,8 +199,9 @@ define(['knockout',
             self.noSameNameValidator = {
                 'validate' : function (value) {
                     self.nameValidated = true;
-                    if (self.dashboardName() === value)
+                    if (self.dashboardName() === value){
                         return true;
+                    }
                     value = value + "";
 
                     if (value && Builder.isDashboardNameExisting(value)) {
@@ -257,8 +262,9 @@ define(['knockout',
             self.okChangeDashboardName = function() {
                 var nameInput = oj.Components.getWidgetConstructor($b.findEl('.builder-dbd-name-input')[0]);
                 nameInput('validate');
-                if (!self.nameValidated)
+                if (!self.nameValidated){
                     return false;
+                }
                 if (!$b.findEl('.builder-dbd-name-input')[0].value) {
                     $b.findEl('.builder-dbd-name-input').focus();
                     return false;
@@ -303,10 +309,12 @@ define(['knockout',
                 if ($b.findEl('.builder-dbd-description').hasClass('editing')) {
                     $b.findEl('.builder-dbd-description').removeClass('editing');
                 }
-                if (!self.dashboard.description)
+                if (!self.dashboard.description){
                     self.dashboard.description = ko.observable(self.dashboardDescription());
-                else
+                }
+                else{
                     self.dashboard.description(self.dashboardDescription());
+                }
             };
 
             self.cancelChangeDashboardDescription = function() {
@@ -391,8 +399,9 @@ define(['knockout',
             self.handleDashboardSave = function() {
                 if (self.isNameUnderEdit()) {
                     try {
-                        if (!self.okChangeDashboardName())
+                        if (!self.okChangeDashboardName()){
                             return;  // validator not passed, so do not save
+                        }
                     }
                     catch (e) {
                         oj.Logger.error(e);
@@ -492,17 +501,11 @@ define(['knockout',
     //                ,providerVersion: '1.0'
             };
 
-            /*self.HandleAddTextWidget = function() {
-                var maximizedTile = self.tilesViewModel.editor.getMaximizedTile();
-                if (maximizedTile)
-                    self.tilesViewModel.restore(maximizedTile);
-                self.tilesViewModel.appendTextTile();
-            };*/
-
             self.openAddWidgetDialog = function() {
                 var maximizedTile = self.tilesViewModel.editor.getMaximizedTile();
-                if (maximizedTile)
+                if (maximizedTile){
                     self.tilesViewModel.restore(maximizedTile);
+                }
                 $('#'+addWidgetDialogId).ojDialog('open');
             };
 
@@ -511,10 +514,12 @@ define(['knockout',
             };
 
             self.handleAddWidgetTooltip = function(hasContent) {
-                if (hasContent === true)
+                if (hasContent === true){
                     $b.findEl(".tooltip-add-widget").css("display", "none");
-                else if (hasContent === false)
+                }
+                else if (hasContent === false){
                     $b.findEl(".tooltip-add-widget").css("display", "block");
+                }
                 else if (self.tilesViewModel.isEmpty() && self.dashboard && self.dashboard.systemDashboard && !self.dashboard.systemDashboard()) {
                     $b.findEl(".tooltip-add-widget").css("display", "block");
                 }else {

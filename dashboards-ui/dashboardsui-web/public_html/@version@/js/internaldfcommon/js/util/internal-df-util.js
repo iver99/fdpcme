@@ -241,15 +241,18 @@ define(['knockout',
             };
 
             self.getRelUrlFromFullUrl = function(url) {
-                if (!url)
+                if (!url){
                     return url;
+                }
                 var protocolIndex = url.indexOf('://');
-                if (protocolIndex === -1)
+                if (protocolIndex === -1){
                     return url;
+                }
                 var urlNoProtocol = url.substring(protocolIndex + 3);
                 var relPathIndex = urlNoProtocol.indexOf('/');
-                if (relPathIndex === -1)
+                if (relPathIndex === -1){
                     return url;
+                }
                 return urlNoProtocol.substring(relPathIndex);
             };
 
@@ -267,8 +270,9 @@ define(['knockout',
                     var providerVersionPlus = encodeURIComponent(providerVersion+'+');
                     var assetRoot = dfu.discoverUrl(providerName, providerVersionPlus, providerAssetRoot);
                     if (assetRoot){
-                        if (relUrlExpected)
+                        if (relUrlExpected){
                             assetRoot = self.getRelUrlFromFullUrl(assetRoot);
+                        }
                         return assetRoot;
                     }else{
                         console.log("Warning: asset root not found by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
