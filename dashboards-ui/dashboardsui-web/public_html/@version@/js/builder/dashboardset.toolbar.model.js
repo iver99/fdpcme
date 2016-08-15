@@ -222,8 +222,8 @@ define(['knockout',
              */
             self.pickDashboard = function(dashboardPickerId, dashboardNameId) {
                 var selectedDashboard = new dashboardItem(dashboardNameId);
-                var removeResult=findRemoveTab(self.dashboardsetItems,dashboardPickerId);
-                var reorderedResult=findRemoveTab(self.reorderedDbsSetItems(),dashboardPickerId);
+                var removeResult=findTargetInArr(self.dashboardsetItems,dashboardPickerId);
+                var reorderedResult=findTargetInArr(self.reorderedDbsSetItems(),dashboardPickerId);
 
                 if (removeResult.removeIndex > -1) {
                     removeTargetTab(removeResult.removeItem);
@@ -477,7 +477,7 @@ define(['knockout',
                     $("#dbd-tabs-container").ojTabs("refresh");
                 }
 
-            function findRemoveTab(dashboardsetItems,dashboardPickerId){
+            function findTargetInArr(dashboardsetItems,dashboardPickerId){
                 var dashboardToRemove = -1;
                 var dashboardToRemoveItem;
                 ko.utils.arrayForEach(dashboardsetItems, function (item, index) {
@@ -496,45 +496,7 @@ define(['knockout',
             }
 
             function dbConfigMenuClick (){
-                this.saveDbsDescription = function (dashboardsetEditModel) {
-                    var me = this;
-
-                    var nameEdit = $('#nameDescription input').val();
-                    var descriptionEdit = $('#nameDescription textarea').val();
-                    var sharePublic = ko.unwrap(dashboardsetEditModel.dashboardsetConfig.share) === "on";
-
-                    var fieldsToUpdate = {
-                            "name": nameEdit,
-                            "description": descriptionEdit,
-                            "sharePublic":sharePublic
-                        };
-                    self.saveDashboardSet(
-                            fieldsToUpdate,
-                            function (result) {
-                                if (sharePublic !== ko.unwrap(dashboardInst.sharePublic)) {
-                                    var shareMsgKey = sharePublic ? 'DBS_BUILDER_DASHBOARD_SET_SHARE_SUCCESS' : 'DBS_BUILDER_DASHBOARD_SET_SHARE_ERROR';
-                                    dfu.showMessage({
-                                        type: 'confirm',
-                                        summary: getNlsString(shareMsgKey),
-                                        detail: '',
-                                        removeDelayTime: 5000
-                                    });
-                                }
-                                dashboardInst.sharePublic(sharePublic);
-                                me.dashboardsetName(nameEdit);
-                                me.dashboardsetDescription(descriptionEdit);
-                                $('#changeDashboardsetInfo').ojDialog("close");
-                            },
-                            function (jqXHR, textStatus, errorThrown) {
-                                $('#changeDashboardsetInfo').ojDialog("close");
-                                dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
-                            }
-                    );
-                };
-                this.cancelSaveDbsetInfo = function(){
-                     $('#changeDashboardsetInfo').ojDialog("close");
-                };
-                this.favoriteDbs = function (dbsToolBar) {
+                    this.favoriteDbs = function (dbsToolBar) {
                     var addFavorite = dbsToolBar.dashboardsetConfig.addFavorite();
 
                     if (addFavorite) {
@@ -714,19 +676,22 @@ define(['knockout',
             function highlightNextTab(removeDashboardId,clickItem){
                  $("#dashboard-" + removeDashboardId).remove();
 
-                var removeResult = findRemoveTab(self.dashboardsetItems, removeDashboardId);
-                var reorderResult = findRemoveTab(self.reorderedDbsSetItems(), removeDashboardId);
+                var removeResult = findTargetInArr(self.dashboardsetItems, removeDashboardId);
+                var reorderResult = findTargetInArr(self.reorderedDbsSetItems(), removeDashboardId);
 
                 if (removeResult.removeIndex > -1) {
-                     var currentShowIndex=$('.other-nav').index(clickItem);
-                     self.dashboardsetItems.splice(removeResult.removeIndex, 1);
-                     self.reorderedDbsSetItems.splice(reorderResult.removeIndex, 1);
-                     removeTargetTab(removeResult.removeItem);
-                    if (clickItem.hasClass('oj-selected')) {
-                        if (self.dashboardsetItems.length === currentShowIndex && self.dashboardsetItems.length !== 0) {
+                    var currentShowIndex = $('.other-nav').index(clickItem);
+                    self.dashboardsetItems.splice(removeResult.removeIndex, 1);
+                    self.reorderedDbsSetItems.splice(reorderResult.removeIndex, 1);
+                    removeTargetTab(removeResult.removeItem);
+                    var _removeSelectedTab = clickItem.hasClass('oj-selected'),
+                        _removeTab = self.dashboardsetItems.length === currentShowIndex && self.dashboardsetItems.length !== 0,
+                        _hasNoDashboard = self.dashboardsetItems.length === 0;
+                    if (_removeSelectedTab) {
+                        if (_removeTab) {
                             $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + self.reorderedDbsSetItems()[currentShowIndex - 1].dashboardId});
                             self.selectedDashboardItem(self.reorderedDbsSetItems()[currentShowIndex - 1]);
-                        } else if (self.dashboardsetItems.length === 0) {
+                        } else if (_hasNoDashboard) {
                             self.addNewDashboard();
                         }
                         else {
