@@ -14,7 +14,7 @@ Rem    NOTES
 Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
-Rem    pamela   8/15/1016  Created
+Rem    pamela   8/15/2016  Created
 
 SET FEEDBACK ON
 SET SERVEROUTPUT ON
