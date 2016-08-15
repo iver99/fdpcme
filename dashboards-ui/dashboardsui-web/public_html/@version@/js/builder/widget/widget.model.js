@@ -54,8 +54,12 @@ define(['jquery',
             var lcKeyword = $.trim(keyword) ? $.trim(keyword).toLowerCase() : null;
             for (var i = 0; i < data.length; i++) {
                 var widget = null;
-                lcKeyword && (data[i].WIDGET_NAME.toLowerCase().indexOf(lcKeyword) !== -1 || data[i].WIDGET_DESCRIPTION && data[i].WIDGET_DESCRIPTION.toLowerCase().indexOf(lcKeyword) !== -1||data[i].WIDGET_OWNER.toLowerCase().indexOf(lcKeyword) !== -1) && (widget = data[i]);
-                !lcKeyword && (widget = data[i]);
+                if(lcKeyword && (data[i].WIDGET_NAME.toLowerCase().indexOf(lcKeyword) !== -1 || data[i].WIDGET_DESCRIPTION && data[i].WIDGET_DESCRIPTION.toLowerCase().indexOf(lcKeyword) !== -1||data[i].WIDGET_OWNER.toLowerCase().indexOf(lcKeyword) !== -1)){
+                    widget = data[i];
+                }
+                if(!lcKeyword){
+                    widget = data[i];
+                }
                 widget && self.widget.push(widget);
             }
         }

@@ -23,7 +23,11 @@ define(['knockout',
             },
             setModeWidth : function(tile, width) {
                 tile.width(width);
-                tile.modeWidth ? tile.modeWidth(width) : tile.modeWidth = ko.observable(width);
+                if(tile.modeWidth){
+                    tile.modeWidth(width)
+                }else{
+                    tile.modeWidth = ko.observable(width);
+                }
             },
             resetModeWidth : function(tile) {
                 if (!tile.modeWidth) tile.modeWidth = ko.observable();
@@ -35,7 +39,11 @@ define(['knockout',
             },
             setModeHeight : function(tile, height) {
                 tile.height(height);
-                tile.modeHeight ? tile.modeHeight(height) : tile.modeHeight = ko.observable(height);
+                if(tile.modeHeight){
+                    tile.modeHeight(height)
+                }else{
+                    tile.modeHeight = ko.observable(height);
+                }
             },
             resetModeHeight : function(tile) {
                 if (!tile.modeHeight) tile.modeHeight = ko.observable();
@@ -48,7 +56,9 @@ define(['knockout',
             setModeColumn : function(tile, modeColumn) {
                 // as this function could be inherited, so not to update tile column here.
                 // instead, don't use setModeColumn but set tile column directly when it's needed
-                !tile.modeColumn && (tile.modeColumn = ko.observable());
+                if(!tile.modeColumn){
+                    tile.modeColumn = ko.observable();
+                }
                 tile.modeColumn(modeColumn);
             },
             resetModeColumn : function(tile) {
@@ -62,7 +72,9 @@ define(['knockout',
             setModeRow : function(tile, modeRow) {
                 // as this function could be inherited, so not to update tile row here.
                 // instead, don't use setModeRow but set tile row directly when it's needed
-                !tile.modeRow && (tile.modeRow = ko.observable());
+                if(!tile.modeRow){
+                    tile.modeRow = ko.observable();
+                }
                 tile.modeRow(modeRow);
             },
             resetModeRow : function(tile) {
@@ -81,7 +93,9 @@ define(['knockout',
         TabletEditorMode.prototype = new NormalEditorMode();
         TabletEditorMode.prototype.constructor = TabletEditorMode;
         TabletEditorMode.prototype.resetModeWidth = function(tile) {
-            !tile.modeWidth && (tile.modeWidth = ko.observable());
+            if(!tile.modeWidth){
+                tile.modeWidth = ko.observable();
+            }
             tile.modeWidth(tile.width() <= 3 ? 1 : 2);
         };
         TabletEditorMode.prototype.setModeWidth = function(tile, width) {
