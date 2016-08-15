@@ -197,7 +197,7 @@ define(['knockout',
                     } else {
                         newDashboardJs.screenShot = null;
                     }
-                    new Builder.updateDashboardData(ko.unwrap(dashboardInst.id), JSON.stringify(newDashboardJs));
+                    new Builder.DashboardDataSource().updateDashboardData(ko.unwrap(dashboardInst.id), JSON.stringify(newDashboardJs));
                 }, 2000, 30000);
                 self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;
                 self.saveUserOptions();
