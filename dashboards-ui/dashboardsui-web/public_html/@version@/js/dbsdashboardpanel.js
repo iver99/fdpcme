@@ -158,7 +158,9 @@ $.widget('dbs.dbsDashboardPanel',
             if (str && length > 0 && str.length > length)
             {
                 var _tlocation = str.indexOf(' ', length);
-                if ( _tlocation <= 0 ) {_tlocation = length;}
+                if ( _tlocation <= 0 ) {
+                    _tlocation = length;
+                }
                 return str.substring(0, _tlocation) + "...";
             }
             return str;
@@ -245,7 +247,9 @@ $.widget('dbs.dbsDashboardPanel',
 
                     // don't use base64 image data, but use the URL retrieved from dashboard directly as screenshot url
                     self._setBase64ScreenShot(url);
-                    if(_dmodel) {_dmodel['screenShot'] = url;}
+                    if(_dmodel) {
+                        _dmodel['screenShot'] = url;
+                    }
                 }
                 else
                 {
@@ -270,7 +274,9 @@ $.widget('dbs.dbsDashboardPanel',
 
         _destroyComponent: function() {
             var self = this;
-            if (self.infoElement && self.infoElement.length > 0) {self.infoElement.unbind("click." + self.name);}
+            if (self.infoElement && self.infoElement.length > 0) {
+                self.infoElement.unbind("click." + self.name);
+            }
             self.element.find("*").removeAttr('style').removeClass().remove();
             self.element.unbind("." + self.name);
         },

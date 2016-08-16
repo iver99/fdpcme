@@ -673,7 +673,9 @@ define([
              */
             self.formatMessage = function(message) {
                 var i=1;
-                while(i<arguments.length) {message=message.replace("{"+(i-1)+"}",arguments[i++]);}
+                while(i<arguments.length) {
+                    message=message.replace("{"+(i-1)+"}",arguments[i++]);
+                }
                 return message;
             };
 

@@ -35,7 +35,9 @@ define(['jquery',
         Builder.registerFunction(fireDashboardItemChangeEventTo, 'fireDashboardItemChangeEventTo');
 
         function fireDashboardItemChangeEvent(tiles, dashboardItemChangeEvent){
-            if (!tiles) {return;}
+            if (!tiles) {
+                return;
+            }
             if (dashboardItemChangeEvent){
                 var defArray = [];
                 for (var i = 0; i < tiles.length; i++) {

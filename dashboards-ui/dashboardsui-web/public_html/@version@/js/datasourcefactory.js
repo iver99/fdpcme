@@ -24,7 +24,9 @@ function(dm, dc, dp, oj, ko, $)
             {
                 _pageSize = pageSize;
                 _fetchSize = pageSize;
-                if (_fetchSize > _modelLimit) {_modelLimit = _fetchSize;}
+                if (_fetchSize > _modelLimit) {
+                  _modelLimit = _fetchSize;
+                }
             }
             var _collection = new dc.DashboardCollection([],
                         {'fetchSize': _fetchSize,
