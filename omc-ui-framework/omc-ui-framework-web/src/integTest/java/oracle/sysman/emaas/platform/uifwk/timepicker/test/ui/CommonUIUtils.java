@@ -161,7 +161,7 @@ public class CommonUIUtils
 
 	}
 
-	public static void InitValue()
+	public static void initValue()
 	{
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = sAPIUrl;

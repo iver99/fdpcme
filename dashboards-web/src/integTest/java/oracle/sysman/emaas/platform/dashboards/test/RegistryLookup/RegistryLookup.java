@@ -36,7 +36,7 @@ public class RegistryLookup
 	}
 
 	@Test
-	public void invalid_url()
+	public void invalidUrl()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -172,7 +172,7 @@ public class RegistryLookup
 	}
 
 	@Test
-	public void lookupEndPoint_invalidPara()
+	public void lookupEndPointInvalidPara()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -280,7 +280,7 @@ public class RegistryLookup
 	}
 
 	@Test
-	public void lookupLink_invalidPara()
+	public void lookupLinkInvalidPara()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -610,7 +610,7 @@ public class RegistryLookup
 	}
 
 	@Test
-	public void multiTenant_headerCheck()
+	public void multiTenantHeaderCheck()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -667,7 +667,7 @@ public class RegistryLookup
 	}
 
 	@Test
-	public void remoteUser_headerCheck()
+	public void remoteUserHeaderCheck()
 	{
 		try {
 			//System.out.println("------------------------------------------");

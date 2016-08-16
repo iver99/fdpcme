@@ -37,12 +37,12 @@ public class FavoriteDashboardCRUD
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
 		tenantid = ct.getTenantid();
-		tenantid_2 = ct.getTenantid_2();
+		tenantid_2 = ct.getTenantid2();
 		remoteuser = ct.getRemoteUser();
 	}
 
 	@Test
-	public void favorite_create_invalidId()
+	public void favoriteCreateInvalidId()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -83,7 +83,7 @@ public class FavoriteDashboardCRUD
 	}
 
 	@Test
-	public void favorite_CRUD()
+	public void favoriteCRUD()
 	{
 		String dashboard_id = "";
 		try {
@@ -182,7 +182,7 @@ public class FavoriteDashboardCRUD
 	}
 
 	@Test
-	public void favorite_delete_invalidId()
+	public void favoriteDeleteInvalidId()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -221,7 +221,7 @@ public class FavoriteDashboardCRUD
 	}
 
 	@Test
-	public void favorite_query_all()
+	public void favoriteQueryAll()
 	{
 		String dashboard_id = "";
 		try {
@@ -326,7 +326,7 @@ public class FavoriteDashboardCRUD
 	}
 
 	@Test
-	public void favorite_query_invalidId()
+	public void favoriteQueryInvalidId()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -483,7 +483,7 @@ public class FavoriteDashboardCRUD
 	//	}
 
 	@Test
-	public void multiTenant_favorite_CRUD_invalidTenant()
+	public void multiTenantFavoriteCRUDInvalidTenant()
 	{
 		String dashboard_id = "";
 		try {
@@ -585,7 +585,7 @@ public class FavoriteDashboardCRUD
 	}
 
 	@Test
-	public void multiTenant_headerCheck()
+	public void multiTenantHeaderCheck()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -737,7 +737,7 @@ public class FavoriteDashboardCRUD
 	//	}
 
 	@Test
-	public void remoteUser_headerCheck()
+	public void remoteUserHeaderCheck()
 	{
 		try {
 			//System.out.println("------------------------------------------");

@@ -528,10 +528,10 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 
 		//verify all the oob display
-		DashBoardUtils.APM_OOB_Exist();
-		DashBoardUtils.ITA_OOB_Exist();
-		DashBoardUtils.LA_OOB_Exist();
-		DashBoardUtils.Outdate_OOB();
+		DashBoardUtils.apmOobExist();
+		DashBoardUtils.itaOobExist();
+		DashBoardUtils.laOobExist();
+		DashBoardUtils.outDateOob();
 	}
 
 	@Test
@@ -546,10 +546,10 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 
 		//verify all the oob display
-		DashBoardUtils.APM_OOB_Exist();
-		DashBoardUtils.ITA_OOB_Exist();
-		DashBoardUtils.LA_OOB_Exist();
-		DashBoardUtils.Outdate_OOB();
+		DashBoardUtils.apmOobExist();
+		DashBoardUtils.itaOobExist();
+		DashBoardUtils.laOobExist();
+		DashBoardUtils.outDateOob();
 	}
 
 	@Test
@@ -568,9 +568,9 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 
 		//verify APM oob display
-		DashBoardUtils.APM_OOB_Exist();
-		DashBoardUtils.ITA_OOB_NotExist();
-		DashBoardUtils.LA_OOB_NotExist();
+		DashBoardUtils.apmOobExist();
+		DashBoardUtils.itaOobNotExist();
+		DashBoardUtils.laOobNotExist();
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -636,10 +636,10 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//verify all the oob display
-		DashBoardUtils.APM_OOB_Exist();
-		DashBoardUtils.ITA_OOB_Exist();
-		DashBoardUtils.LA_OOB_Exist();
-		DashBoardUtils.Outdate_OOB();
+		DashBoardUtils.apmOobExist();
+		DashBoardUtils.itaOobExist();
+		DashBoardUtils.laOobExist();
+		DashBoardUtils.outDateOob();
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -661,10 +661,10 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//verify all the oob display
-		DashBoardUtils.APM_OOB_Exist();
-		DashBoardUtils.ITA_OOB_Exist();
-		DashBoardUtils.LA_OOB_Exist();
-		DashBoardUtils.Outdate_OOB();
+		DashBoardUtils.apmOobExist();
+		DashBoardUtils.itaOobExist();
+		DashBoardUtils.laOobExist();
+		DashBoardUtils.outDateOob();
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -686,10 +686,10 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 
 		//verify ITA oob display
-		DashBoardUtils.ITA_OOB_Exist();
-		DashBoardUtils.APM_OOB_NotExist();
-		DashBoardUtils.LA_OOB_NotExist();
-		DashBoardUtils.Outdate_OOB();
+		DashBoardUtils.itaOobExist();
+		DashBoardUtils.apmOobNotExist();
+		DashBoardUtils.laOobNotExist();
+		DashBoardUtils.outDateOob();
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -711,10 +711,10 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.listView(webd);
 
 		//verify ITA oob display
-		DashBoardUtils.ITA_OOB_Exist();
-		DashBoardUtils.APM_OOB_NotExist();
-		DashBoardUtils.LA_OOB_NotExist();
-		DashBoardUtils.Outdate_OOB();
+		DashBoardUtils.itaOobExist();
+		DashBoardUtils.apmOobNotExist();
+		DashBoardUtils.laOobNotExist();
+		DashBoardUtils.outDateOob();
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -736,10 +736,10 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 
 		//verify LA oob display
-		DashBoardUtils.LA_OOB_Exist();
-		DashBoardUtils.APM_OOB_NotExist();
-		DashBoardUtils.ITA_OOB_NotExist();
-		DashBoardUtils.Outdate_OOB();
+		DashBoardUtils.laOobExist();
+		DashBoardUtils.apmOobNotExist();
+		DashBoardUtils.itaOobNotExist();
+		DashBoardUtils.outDateOob();
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -761,10 +761,10 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.listView(webd);
 
 		//verify LA oob display
-		DashBoardUtils.LA_OOB_Exist();
-		DashBoardUtils.APM_OOB_NotExist();
-		DashBoardUtils.ITA_OOB_NotExist();
-		DashBoardUtils.Outdate_OOB();
+		DashBoardUtils.laOobExist();
+		DashBoardUtils.apmOobNotExist();
+		DashBoardUtils.itaOobNotExist();
+		DashBoardUtils.outDateOob();
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);

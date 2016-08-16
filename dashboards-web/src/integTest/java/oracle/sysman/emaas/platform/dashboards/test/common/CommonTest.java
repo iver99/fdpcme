@@ -275,7 +275,7 @@ public class CommonTest
 		return tenantid;
 	}
 
-	public String getTenantid_2()
+	public String getTenantid2()
 	{
 		return tenantid_2;
 	}

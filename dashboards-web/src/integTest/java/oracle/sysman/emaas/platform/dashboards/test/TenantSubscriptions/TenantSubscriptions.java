@@ -38,7 +38,7 @@ public class TenantSubscriptions
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
 		tenantid = ct.getTenantid();
-		tenantid_2 = ct.getTenantid_2();
+		tenantid_2 = ct.getTenantid2();
 		remoteuser = ct.getRemoteUser();
 	}
 
@@ -95,7 +95,7 @@ public class TenantSubscriptions
 	}
 
 	@Test
-	public void getSubscribedapps_wrongTenant()
+	public void getSubscribedappsWrongTenant()
 	{
 		try {
 			//System.out.println("------------------------------------------");

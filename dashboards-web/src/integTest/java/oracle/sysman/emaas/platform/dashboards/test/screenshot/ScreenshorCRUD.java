@@ -36,7 +36,7 @@ public class ScreenshorCRUD
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
 		tenantid = ct.getTenantid();
-		tenantid_2 = ct.getTenantid_2();
+		tenantid_2 = ct.getTenantid2();
 		remoteuser = ct.getRemoteUser();
 		screenshotRelUrl = ScreenshorCRUD.getScreenshotRelURLForDashboard(2L);
 	}
@@ -66,7 +66,7 @@ public class ScreenshorCRUD
 	}
 
 	@Test
-	public void multiTenant_headerCheck()
+	public void multiTenantHeaderCheck()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -152,7 +152,7 @@ public class ScreenshorCRUD
 	//	}
 
 	@Test
-	public void multiTenant_screenshot_query_invalidTenant()
+	public void multiTenantScreenshotQueryInvalidTenant()
 	{
 		String dashboard_id = "";
 		try {
@@ -218,7 +218,7 @@ public class ScreenshorCRUD
 	}
 
 	@Test
-	public void remoteUser_headerCheck()
+	public void remoteUserHeaderCheck()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -240,7 +240,7 @@ public class ScreenshorCRUD
 	}
 
 	@Test
-	public void remoteUser_screenshot_query()
+	public void remoteUserScreenshotQuery()
 	{
 		String dashboard_id = "";
 		try {
@@ -305,7 +305,7 @@ public class ScreenshorCRUD
 	}
 
 	@Test
-	public void screenshot_query()
+	public void screenshotQuery()
 	{
 		String dashboard_id = "";
 		try {
@@ -372,7 +372,7 @@ public class ScreenshorCRUD
 	}
 
 	@Test
-	public void screenshot_query_invalidId()
+	public void screenshotQueryInvalidId()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -407,7 +407,7 @@ public class ScreenshorCRUD
 	}
 
 	@Test
-	public void screenshot_query_noScreenShot()
+	public void screenshotQueryNoScreenShot()
 	{
 		String dashboard_id = "";
 		try {

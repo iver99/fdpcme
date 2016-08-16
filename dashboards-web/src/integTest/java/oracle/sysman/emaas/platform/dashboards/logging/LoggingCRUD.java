@@ -50,7 +50,7 @@ public class LoggingCRUD
 	}
 
 	@Test
-	public void logging_create()
+	public void loggingCreate()
 	{
 		try {
 			//System.out.println("------------------------------------------");
