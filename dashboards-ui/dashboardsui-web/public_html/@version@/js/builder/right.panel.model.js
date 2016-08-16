@@ -227,7 +227,7 @@ define(['knockout',
                 loadSeeableWidgetScreenshots();
             });
 
-            var loadSeeableWidgetScreenshots = function(startPosition){
+            function loadSeeableWidgetScreenshots(startPosition){
                 var fromWidgetIndex = startPosition?(Math.floor(startPosition/30)):0;
                 var toWidgetIndex = Math.ceil(widgetListHeight()/30)+fromWidgetIndex;
                 if (self.widgets && self.widgets().length > 0) {
