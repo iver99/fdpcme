@@ -84,7 +84,7 @@ public class GetConfiguration
 	}
 
 	@Test
-	public void remotUser_headerCheck()
+	public void remotUserHeaderCheck()
 	{
 		try {
 			//	System.out.println("------------------------------------------");

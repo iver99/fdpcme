@@ -1008,7 +1008,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.BUILDEROPTIONSMENULOCATOR);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		OpenFiltersInRightPanel(driver);
+		openFiltersInRightPanel(driver);
 
 		driver.getElement("css=" + DashBoardPageId_190.RIGHTDRAWEREDITDBENTITYSUPPORTCSS);
 		if ("MULTIPLE".equals(mode)) {
@@ -1031,7 +1031,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.BUILDEROPTIONSMENULOCATOR);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		OpenFiltersInRightPanel(driver);
+		openFiltersInRightPanel(driver);
 
 		if (showEntityFilter) {
 			driver.waitForElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWEREDITDBENABLEENTITYFILTERCSS);
@@ -1057,7 +1057,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.BUILDEROPTIONSMENULOCATOR);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		OpenFiltersInRightPanel(driver);
+		openFiltersInRightPanel(driver);
 
 		if (showTimeRangeFilter) {
 			driver.waitForElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWEREDITDBENABLETIMERANGEFILTERCSS);
@@ -1645,7 +1645,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		return isDisplayed && isWidthValid;
 	}
 
-	private void OpenFiltersInRightPanel(WebDriver driver)
+	private void openFiltersInRightPanel(WebDriver driver)
 	{
 		driver.getLogger().info("DashboardBuilderUtil.openFiltersInRightPanel start");
 		//click Options to open Options menu

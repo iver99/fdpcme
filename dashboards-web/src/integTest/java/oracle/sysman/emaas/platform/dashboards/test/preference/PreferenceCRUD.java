@@ -36,12 +36,12 @@ public class PreferenceCRUD
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
 		tenantid = ct.getTenantid();
-		tenantid_2 = ct.getTenantid_2();
+		tenantid_2 = ct.getTenantid2();
 		remoteuser = ct.getRemoteUser();
 	}
 
 	@Test
-	public void multiTenant_headerCheck()
+	public void multiTenantHeaderCheck()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -102,7 +102,7 @@ public class PreferenceCRUD
 	}
 
 	@Test
-	public void preference_create()
+	public void preferenceCreate()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -173,7 +173,7 @@ public class PreferenceCRUD
 	}
 
 	@Test
-	public void preference_create_longKey()
+	public void preferenceCreateLongKey()
 	{
 		String str_prefname = "defghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij";
 		String str_prefname_new = "efghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij";
@@ -244,7 +244,7 @@ public class PreferenceCRUD
 	}
 
 	@Test
-	public void preference_delete_invalidKey()
+	public void preferenceDeleteInvalidKey()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -268,7 +268,7 @@ public class PreferenceCRUD
 	}
 
 	@Test
-	public void preference_deleteAll()
+	public void preferenceDeleteAll()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -356,7 +356,7 @@ public class PreferenceCRUD
 	}
 
 	@Test
-	public void preference_listAll()
+	public void preferenceListAll()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -466,7 +466,7 @@ public class PreferenceCRUD
 	}
 
 	@Test
-	public void preference_multiTenant_CRUD()
+	public void preferenceMultiTenantCRUD()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -575,7 +575,7 @@ public class PreferenceCRUD
 	}
 
 	@Test
-	public void preference_update()
+	public void preferenceUpdate()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -664,7 +664,7 @@ public class PreferenceCRUD
 	}
 
 	@Test
-	public void prefernece_create_invalidKey()
+	public void preferneceCreateInvalidKey()
 	{
 		String[] str_prefname = new String[] { "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "+", "=", "~", "`", "{", "}",
 				"[", "]", "|", "\\", ";", ":", "\"", "'", ",", "<", ">", "test name" };
@@ -694,7 +694,7 @@ public class PreferenceCRUD
 	}
 
 	@Test
-	public void remoteUser_headerCheck()
+	public void remoteUserHeaderCheck()
 	{
 		try {
 			//System.out.println("------------------------------------------");

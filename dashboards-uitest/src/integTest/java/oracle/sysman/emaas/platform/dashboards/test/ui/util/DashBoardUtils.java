@@ -15,7 +15,7 @@ public class DashBoardUtils
 {
 	private static WebDriver driver;
 
-	public static void APM_OOB_Exist() 
+	public static void apmOobExist() 
 	{
 		driver.getLogger().info("Wait for dashboards loading...");
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Application Performance Monitoring");
@@ -24,7 +24,7 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Monitoring"));
 	}
 
-	public static void APM_OOB_NotExist() 
+	public static void apmOobNotExist() 
 	{
 		driver.getLogger().info("Verify below APM OOB don't exist...");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Monitoring"));
@@ -76,7 +76,7 @@ public class DashBoardUtils
 		webdriver.takeScreenShot();
 	}
 
-	public static void ITA_OOB_Exist() 
+	public static void itaOobExist() 
 	{
 		driver.getLogger().info("Wait for dashboards loading...");
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Performance Analytics: Database");
@@ -101,7 +101,7 @@ public class DashBoardUtils
 		;
 	}
 
-	public static void ITA_OOB_NotExist() 
+	public static void itaOobNotExist() 
 	{
 		driver.getLogger().info("Verify below IT Analytics OOB dashboard Set and Dashboards don't exist...");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Exadata Health"));
@@ -123,7 +123,7 @@ public class DashBoardUtils
 
 	}
 
-	public static void LA_OOB_Exist() 
+	public static void laOobExist() 
 	{
 		driver.getLogger().info("Wait for dashboards loading...");
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Database Operations");
@@ -134,7 +134,7 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Middleware Operations"));
 	}
 
-	public static void LA_OOB_NotExist() 
+	public static void laOobNotExist() 
 	{
 		driver.getLogger().info("Verify below Log Analytics OOB don't exist...");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
@@ -165,14 +165,14 @@ public class DashBoardUtils
 	{
 		//verify all the oob dashboard not exsit
 		driver.getLogger().info("verify all the oob dashboard not exsit");
-		DashBoardUtils.APM_OOB_NotExist();
-		DashBoardUtils.ITA_OOB_NotExist();
-		DashBoardUtils.LA_OOB_NotExist();
-		DashBoardUtils.Outdate_OOB();
+		DashBoardUtils.apmOobNotExist();
+		DashBoardUtils.itaOobNotExist();
+		DashBoardUtils.laOobNotExist();
+		DashBoardUtils.outDateOob();
 
 	}
 
-	public static void Outdate_OOB() 
+	public static void outDateOob() 
 	{
 		driver.getLogger().info("Verify below IT Analytics OOB don't exist...");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Configuration and Storage By Version"));
