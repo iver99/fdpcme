@@ -65,7 +65,7 @@ define([
                 if (alreadyLoaded) {
                     $showDashboard.show();
                     self.selectedDashboardInst(dashboardInstMap[dashboardId]);
-                    var _isIncludingDbsHome=self.selectedDashboardInst().type === "included";
+                    var _isIncludingDbsHome=self.selectedDashboardInst().type === "new";
                     if (!_isIncludingDbsHome) {
                         resetContainerScroll();
                         setTimeout(function() {
