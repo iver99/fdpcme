@@ -368,7 +368,8 @@ define(['knockout',
                 error: function(jqXHR, textStatus, errorThrown) {
                     if (errorCallBack)
                         errorCallBack(jqXHR, textStatus, errorThrown);
-                }
+                },
+                async: false
             });
         }
         
@@ -467,6 +468,41 @@ define(['knockout',
         }
         Builder.registerFunction(createScreenshotElementClone, 'createScreenshotElementClone');
         
+        var timePeriods = [
+            {value: "last15mins", string: "Last 15 minutes"},
+            {value: "last30mins", string: "Last 30 minutes"},
+            {value: "last60mins", string: "Last 60 minutes"},
+            {value: "last4hours", string:  "Last 4 hours"},
+            {value: "last6hours", string: "Last 6 hours"},
+            {value: "last1day", string: "Last 1 day"},
+            {value: "last7days", string: "Last 7 days"},
+            {value: "last14days", string: "Last 14 days"},
+            {value: "last30days", string: "Last 30 days"},
+            {value: "last90days", string: "Last 90 days"},
+            {value: "last1year", string: "Last 1 year"},
+            {value: "latest", string: "Latest"},
+            {value: "custom", string: "Custom"},
+            {value: "custom1", string: "Custom"}
+        ];
+            
+        function getTimePeriodString(value) {
+            for(var i=0; i<timePeriods.length; i++) {
+                if(timePeriods[i].value === value) {
+                    return timePeriods[i].string;
+                }
+            }
+        }
+        Builder.registerFunction(getTimePeriodString, 'getTimePeriodString');
+        
+        function getTimePeriodValue(string) {
+            for(var i=0; i<timePeriods.length; i++) {
+                if(timePeriods[i].string === string) {
+                    return timePeriods[i].value;
+                }
+            }
+        }
+        Builder.registerFunction(getTimePeriodValue, "getTimePeriodValue");
+
         var assetRoots = [];
         function addWidgetAssetRoot(provider_name, provider_version, provider_asset_root, asset_root) {
             if((provider_name!==null) && (provider_version!==null) && (provider_asset_root!==null) && (asset_root!==null) && !isWidgetAssetRootExisted(provider_name, provider_version, provider_asset_root) ) {

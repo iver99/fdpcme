@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.UUID;
 import java.util.Vector;
 
 import javax.servlet.Filter;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,7 +48,7 @@ public class DashboardsCORSFilter implements Filter
 		private String tenant = null;
 		private Vector<String> headerNames = null;
 
-                @SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		public OAMHttpRequestWrapper(HttpServletRequest request)
 		{
 			super(request);
@@ -102,7 +104,7 @@ public class DashboardsCORSFilter implements Filter
 		}
 
 		@Override
-                @SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		public Enumeration<String> getHeaderNames()
 		{
 			if (headerNames != null) {
@@ -114,7 +116,7 @@ public class DashboardsCORSFilter implements Filter
 		}
 
 		@Override
-                @SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		public Enumeration<String> getHeaders(String name)
 		{
 			if (X_REMOTE_USER_HEADER.equals(name) && oam_remote_user != null) {
@@ -147,15 +149,39 @@ public class DashboardsCORSFilter implements Filter
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
 		HttpServletRequest oamRequest = new OAMHttpRequestWrapper(hReq);
+
+		//		StringBuilder sb = new StringBuilder();
+		//		Enumeration headerNames = hReq.getHeaderNames();
+		//		while (headerNames.hasMoreElements()) {
+		//			String key = (String) headerNames.nextElement();
+		//			String value = hReq.getHeader(key);
+		//			sb.append("[" + key + " : " + value + "]");
+		//		}
+		//		logger.debug("Headers: " + sb.toString());
+
+		ZDTContext.clear();
+		String requestIdHeader = hReq.getHeader("X-ORCL-OMC-APIGW-REQGUID");
+		String requestTimeHeader = hReq.getHeader("X-ORCL-OMC-APIGW-REQTIME");
+		if (requestIdHeader != null) {
+			logger.debug("X-ORCL-OMC-APIGW-REQGUID : " + requestIdHeader);
+			UUID uuid = UUID.fromString(requestIdHeader);
+			ZDTContext.setRequestId(uuid);
+		}
+		if (requestTimeHeader != null) {
+			logger.debug("X-ORCL-OMC-APIGW-REQTIME : " + requestTimeHeader);
+			Long time = Long.valueOf(requestTimeHeader);
+			ZDTContext.setRequestTime(time);
+		}
+
 		// Only add CORS headers if the developer mode is enabled to add them
 		if (!new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists()) {
 			try {
-			        chain.doFilter(oamRequest, response);
-		        }
-		        catch (Exception e) {
-			        logger.error(e.getLocalizedMessage(), e);
-			        hRes.sendError(500, MessageUtils.getDefaultBundleString("REST_API_EXCEPTION"));
-		        }
+				chain.doFilter(oamRequest, response);
+			}
+			catch (Exception e) {
+				logger.error(e.getLocalizedMessage(), e);
+				hRes.sendError(500, MessageUtils.getDefaultBundleString("REST_API_EXCEPTION"));
+			}
 			logger.debug("developer mode is NOT enabled on server side");
 			return;
 		}

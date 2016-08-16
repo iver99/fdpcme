@@ -1,11 +1,22 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
+import java.io.Serializable;
+import java.math.BigInteger;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.MultitenantType;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
-
-import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * @author jishshi
@@ -13,81 +24,86 @@ import java.io.Serializable;
  */
 
 @Entity
-@NamedQueries({ @NamedQuery(name = "EmsSubDashboard.removeBySubDashboardID", query = "delete from EmsSubDashboard o where o.subDashboardId = :p"),
-                @NamedQuery(name = "EmsSubDashboard.removeByDashboardSetID", query = "delete from EmsSubDashboard o where o.dashboardSetId = :p"),
-                @NamedQuery(name = "EmsSubDashboard.removeUnshared", query = "" +
-                        "delete from EmsSubDashboard b where b.dashboardSetId in (" +
-                        "select a.dashboardId from EmsDashboard a " +
-                        "where a.dashboardId = b.dashboardSetId " +
-                        "and b.subDashboardId = :p1 " +
-                        "and a.owner != :p2" +
-                        ")"),
-})
+@NamedQueries({
+	@NamedQuery(name = "EmsSubDashboard.removeBySubDashboardID", query = "delete from EmsSubDashboard o where o.subDashboardId = :p"),
+	@NamedQuery(name = "EmsSubDashboard.removeByDashboardSetID", query = "delete from EmsSubDashboard o where o.dashboardSetId = :p"),
+	@NamedQuery(name = "EmsSubDashboard.removeUnshared", query = ""
+			+ "delete from EmsSubDashboard b where b.dashboardSetId in (" + "select a.dashboardId from EmsDashboard a "
+			+ "where a.dashboardId = b.dashboardSetId " + "and b.subDashboardId = :p1 " + "and a.owner != :p2" + ")"), })
 @Table(name = "EMS_DASHBOARD_SET")
 @IdClass(EmsDashboardSetPK.class)
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
-public class EmsSubDashboard implements Serializable {
+public class EmsSubDashboard extends EmBaseEntity implements Serializable
+{
 
-    private static final long serialVersionUID = 8344138185588082239L;
+	private static final long serialVersionUID = 8344138185588082239L;
 
-    @Id
-    @Column(name = "DASHBOARD_SET_ID", nullable = false, length = 256)
-    private Long dashboardSetId;
-    @Id
-    @Column(name = "SUB_DASHBOARD_ID", nullable = false, length = 256)
-    private Long subDashboardId;
+	@Id
+	@Column(name = "DASHBOARD_SET_ID", nullable = false, length = 256)
+	private BigInteger dashboardSetId;
+	@Id
+	@Column(name = "SUB_DASHBOARD_ID", nullable = false, length = 256)
+	private BigInteger subDashboardId;
 
-    @Column(name = "POSITION", nullable = false)
-    private Integer position;
+	@Column(name = "POSITION", nullable = false)
+	private Integer position;
 
-    @ManyToOne
-    @JoinColumns(value = {
-            @JoinColumn(name = "DASHBOARD_SET_ID", referencedColumnName = "DASHBOARD_ID",insertable = false,updatable = false),
-            @JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID",insertable = false,updatable = false)
-    })
-    private EmsDashboard dashboardSet;
+	@ManyToOne
+	@JoinColumns(value = {
+			@JoinColumn(name = "DASHBOARD_SET_ID", referencedColumnName = "DASHBOARD_ID", insertable = false, updatable = false),
+			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
+	private EmsDashboard dashboardSet;
 
-    public EmsSubDashboard() {
+	public EmsSubDashboard()
+	{
 
-    }
+	}
 
-    public EmsSubDashboard(Long dashboardSetId, Long subDashboardId, int position) {
-        this.dashboardSetId = dashboardSetId;
-        this.subDashboardId = subDashboardId;
-        this.position = position;
-    }
+	public EmsSubDashboard(BigInteger dashboardSetId, BigInteger subDashboardId, int position)
+	{
+		this.dashboardSetId = dashboardSetId;
+		this.subDashboardId = subDashboardId;
+		this.position = position;
+	}
 
-    public void setDashboardSetId(Long dashboardSetId) {
-        this.dashboardSetId = dashboardSetId;
-    }
+	public EmsDashboard getDashboardSet()
+	{
+		return dashboardSet;
+	}
 
-    public Long getSubDashboardId() {
-        return subDashboardId;
-    }
+	public BigInteger getDashboardSetId()
+	{
+		return dashboardSetId;
+	}
 
-    public void setSubDashboardId(Long subDashboardId) {
-        this.subDashboardId = subDashboardId;
-    }
+	public Integer getPosition()
+	{
+		return position;
+	}
 
-    public Integer getPosition() {
-        return position;
-    }
+	public BigInteger getSubDashboardId()
+	{
+		return subDashboardId;
+	}
 
-    public void setPosition(Integer position) {
-        this.position = position;
-    }
+	public void setDashboardSet(EmsDashboard dashboardSet)
+	{
+		this.dashboardSet = dashboardSet;
+	}
 
+	public void setDashboardSetId(BigInteger dashboardSetId)
+	{
+		this.dashboardSetId = dashboardSetId;
+	}
 
-    public Long getDashboardSetId() {
-        return dashboardSetId;
-    }
+	public void setPosition(Integer position)
+	{
+		this.position = position;
+	}
 
-    public EmsDashboard getDashboardSet() {
-        return dashboardSet;
-    }
-
-    public void setDashboardSet(EmsDashboard dashboardSet) {
-        this.dashboardSet = dashboardSet;
-    }
+	public void setSubDashboardId(BigInteger subDashboardId)
+	{
+		this.subDashboardId = subDashboardId;
+	}
 }
