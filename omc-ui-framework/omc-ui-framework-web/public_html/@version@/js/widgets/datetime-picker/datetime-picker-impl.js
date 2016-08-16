@@ -1758,7 +1758,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.generateTfTooltip = function(hoursOfDay, daysOfWeek, monthsOfYear) {
                     var i;
                     var tfTooltip = "";
-                    if(hoursOfDay.length === 24 && daysOfWeek.length === 7 && monthsOfYear.length == 12) {
+                    if(hoursOfDay.length === 24 && daysOfWeek.length === 7 && monthsOfYear.length === 12) {
                         self.tfInfoIndicatorVisible(false);
                         return null;
                     }else {

@@ -206,7 +206,7 @@ DashboardPaging.prototype.getEndItemIndex = function()
 DashboardPaging.prototype.getPageCount = function()
 {
   var totalSize = this.totalSize();
-  return totalSize == -1 ? -1 : Math.ceil(totalSize / this.pageSize);
+  return totalSize === -1 ? -1 : Math.ceil(totalSize / this.pageSize);
 };
 
 DashboardPaging.prototype.refreshModel = function(modelId, options)

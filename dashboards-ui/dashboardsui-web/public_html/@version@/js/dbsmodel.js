@@ -539,7 +539,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.handleListColumnSort = function( event, ui ) {
             if (ui)
             {
-                var _option = ui.header + (ui.direction == 'descending' ? '_dsc' : '_asc');
+                var _option = ui.header + (ui.direction === 'descending' ? '_dsc' : '_asc');
                 self.sortBy([_option]);
             }
         };
@@ -549,7 +549,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             if ( valueParam.option === "value" && _value[0] !== _preValue[0] )
             {
                 self.dsFactory.sortBy = _value[0];
-                if (valueParam.optionMetadata.writeback == 'shouldNotWrite')
+                if (valueParam.optionMetadata.writeback === 'shouldNotWrite')
                 {
                     // change by set self.sortBy triggered by list table sort
                     self.forceSearch();
@@ -584,32 +584,32 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 
         self._getListTableSortUi = function(sortOption)
         {
-            if (sortOption == 'name_asc')
+            if (sortOption === 'name_asc')
             {
                 return {'header': 'name', 'direction': 'ascending'};
             }
 
-            if (sortOption == 'name_dsc')
+            if (sortOption === 'name_dsc')
             {
                 return {'header': 'name', 'direction': 'descending'};
             }
 
-            if (sortOption == 'owner_asc')
+            if (sortOption === 'owner_asc')
             {
                 return {'header': 'owner', 'direction': 'ascending'};
             }
 
-            if (sortOption == 'owner_dsc')
+            if (sortOption === 'owner_dsc')
             {
                 return {'header': 'owner', 'direction': 'descending'};
             }
 
-            if (sortOption == 'last_modification_date_asc')
+            if (sortOption === 'last_modification_date_asc')
             {
                 return {'header': 'last_modification_date', 'direction': 'ascending'};
             }
 
-            if (sortOption == 'last_modification_date_dsc')
+            if (sortOption === 'last_modification_date_dsc')
             {
                 return {'header': 'last_modification_date', 'direction': 'descending'};
             }
