@@ -32,6 +32,7 @@ define(['knockout',
             self.duplicateDashboardModel = new dd.DuplicateDashboardModel($b);
             self.toolBarGuid = Builder.getGuid();
             self.isUnderSet = ko.dataFor($("#dbd-set-tabs")[0]).isDashboardSet();
+            self.isInOOBDashboardSet=ko.dataFor($("#dbd-set-tabs")[0]).isOobDashboardset();
             self.duplicateInSet = ko.observable(false);
 
             if (self.dashboard.id && self.dashboard.id()){
@@ -924,7 +925,9 @@ define(['knockout',
                     "showSubMenu": function () {
                         if (self.currentUser !== self.dashboard.owner() && "Oracle" !== self.dashboard.owner()) {
                             return false;
-                        } else {
+                        } else if(self.isInOOBDashboardSet){
+                            return false;
+                        } else{
                             return self.isUnderSet;
                         }
                     }(),
