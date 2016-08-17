@@ -18,6 +18,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
@@ -81,7 +82,7 @@ public class CommonTest
 	public static List<String> getDeploymentUrl(String json)
 	{
 		if (json == null || "".equals(json)) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		java.util.HashSet<String> urlSet = new java.util.HashSet<String>();
@@ -91,7 +92,7 @@ public class CommonTest
 
 			List<SchemaDeploymentUrls> sdlist = ju.fromJsonToList(json, SchemaDeploymentUrls.class, "items");
 			if (sdlist == null | sdlist.isEmpty()) {
-				return null;
+				return Collections.emptyList();
 			}
 			for (SchemaDeploymentUrls sd : sdlist) {
 				for (String temp : sd.getCanonicalEndpoints()) {
@@ -112,7 +113,7 @@ public class CommonTest
 		catch (Exception e) {
 
 			//	logger.error("an error occureed while getting schema name", e);
-			return null;
+			return Collections.emptyList();
 		}
 		List<String> urls = new ArrayList<String>();
 		urls.addAll(urlSet);

@@ -184,7 +184,7 @@ public class RegistrationEntity implements Serializable
 		}
 		catch (Exception e) {
 			logger.error(e);
-			return null;
+			return Collections.emptyList();
 		}
 	}
 
@@ -328,7 +328,7 @@ public class RegistrationEntity implements Serializable
 		catch (Exception e) {
 			logger.error(e);
 		}
-		return null;
+		return Collections.emptyList();
 	}
 
 	public String getSessionExpiryTime()
@@ -414,7 +414,7 @@ public class RegistrationEntity implements Serializable
 		}
 		catch (Exception e) {
 			logger.error(e);
-			return null;
+			return Collections.emptyList();
 		}
 	}
 

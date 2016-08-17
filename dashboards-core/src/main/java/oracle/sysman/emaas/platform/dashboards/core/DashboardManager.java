@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.core;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -1180,11 +1181,11 @@ public class DashboardManager
 		if (opcTenantId == null || "".equals(opcTenantId)) {
 			logger.warn(
 					"When trying to retrieve subscribed application, it's found the tenant context is not set (TenantContext.getCurrentTenant() == null)");
-			return null;
+			return Collections.emptyList();
 		}
 		List<String> appNames = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId);
 		if (appNames == null || appNames.isEmpty()) {
-			return null;
+			return Collections.emptyList();
 		}
 		List<DashboardApplicationType> apps = new ArrayList<DashboardApplicationType>();
 		for (String appName : appNames) {
