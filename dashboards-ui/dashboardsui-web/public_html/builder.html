@@ -158,28 +158,6 @@
                                 </button>
                                  /ko -->
                             </div>
-                            <div class="builder-dbd-name-edit-area dbd-edit-area">
-                                <input class="builder-dbd-name-input"
-                                       data-bind="event: {keypress: handleDashboardNameInputKeyPressed},valueUpdate: 'afterkeydown',
-                                       		   ojComponent: {component: 'ojInputText', 
-                                               value: dashboardNameEditing, required: true, rootAttributes: {
-                                               style:'max-width:55em; padding-top: 1px;'}, validators: [noSameNameValidator]}, 
-                                               attr: {placeholder: getNlsString('DBS_BUILDER_REQUIRE_NAME')}" maxlength="64">
-                                <button class="builder-dbd-name-ok oj-button oj-default oj-button-half-chrome"
-                                          data-bind="click:okChangeDashboardName,ojComponent: {
-                                                component:'ojButton', chroming: 'half'
-                                    }, attr: {title: getNlsString('COMMON_BTN_OK')}" tabindex="0">
-                                    <span role="img"
-                                        class="oj-fwk-icon-status-confirmation oj-fwk-icon"></span>
-                                  </button>
-                                  <button class="builder-dbd-name-cancel oj-button oj-default oj-button-half-chrome"
-                                          data-bind="click:cancelChangeDashboardName, ojComponent: {
-                                                component:'ojButton', chroming: 'half'
-                                    }, attr: {title: getNlsString('COMMON_BTN_CANCEL')}" tabindex="0">
-                                    <span role="img"
-                                        class="oj-fwk-icon-status-error oj-fwk-icon"></span>
-                                  </button>
-                              </div>
                         </div>                      
                     </div>
                 </div>                
@@ -643,32 +621,7 @@
                     </div>
                 </div>
                 <!-- delete dilog end -->
-                 <!-- share dilog start -->
-                <div style="display:none" id="share-dashboard"
-                     data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
-                                        cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
-                    <div class="oj-dialog-header oj-helper-clearfix">
-                        <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_HOME_CFM_DLG_UNSHARE_DSB')"></span>
-                    </div>
-                    <div class="oj-dialog-body">
-                        <!-- ko if:dashboardSets() && dashboardSets().length > 0  -->
-                            <p data-bind="html: getNlsString('COMMON_UNSHAER_USED_DASHBOARD_MSG_HEAD')"></p>
-                            <ul>
-                                <!-- ko foreach:dashboardSets -->
-                                    <li style="list-style-type:none;" data-bind="text: '<'+$data.name+'>'"></li>
-                                <!-- /ko -->
-                            </ul>
-                             <p data-bind="html: getNlsString('COMMON_UNSHAER_USED_DASHBOARD_MSG_TAILE', toolBarModel.dashboardName())"></p>
-                        <!-- /ko -->
-                    </div>
-                    <div class="oj-dialog-footer">
-                        <button data-bind="click: toolBarModel.handleUnshareDashboardClicked,
-                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_UNSHAER'), rootAttributes: {style:'margin-right:5px'}}"></button>
-                        <button class="dbs_dcbtn" data-bind="click: toolBarModel.handleUnshareDashboardCancelled,
-                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'), rootAttributes: {style:'margin-right:5px'}}"></button>
-                    </div>
-                </div>
-                <!-- share dilog end -->
+                
                 <!-- Duplicate Dashboard dialog start -->
                 <div style="display:none" id="duplicateDsbDialog"
                      data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon',

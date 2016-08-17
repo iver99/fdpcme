@@ -112,7 +112,9 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         self.EVENT_TILE_RESIZED = "EVENT_TILE_RESIZED";
 
         self.EVENT_AUTO_REFRESH_CHANGED = "EVENT_AUTO_REFRESH_CHANGED";
-
+        
+        self.EVENT_AUTO_REFRESHING_PAGE = "EVENT_AUTO_REFRESHING_PAGE";
+        
         self.dispatcher = new dsp.Dispatcher();
         self.addEventListener = function(event, listener) {
             self.dispatcher.registerEventHandler(event, listener);
