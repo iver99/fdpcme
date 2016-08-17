@@ -347,10 +347,10 @@ define([
                 }
             }
             function homeScrollbarReset(target) {
-                var bodyHeight = $(window).height();
-                var titleToolbarHeight = target.position().top;
-                var newHeight = Number(bodyHeight) - Number(titleToolbarHeight);
-                var targetContainer = target.closest('#dashboards-tabs-contents');
+                var bodyHeight = $(window).height(),
+                    titleToolbarHeight = target.position().top,
+                    newHeight = Number(bodyHeight) - Number(titleToolbarHeight),
+                    targetContainer = target.closest('#dashboards-tabs-contents');
                 targetContainer.css({'height': newHeight});
                 targetContainer.css({'overflow-y': 'scroll'});
             }

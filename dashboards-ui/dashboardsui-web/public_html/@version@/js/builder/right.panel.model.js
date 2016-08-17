@@ -241,43 +241,7 @@ define(['knockout',
             scrollDelay.subscribe(function(val){
                 loadSeeableWidgetScreenshots(val);
             });
-
-            /**
-            self.showTimeControl = ko.observable(false);
-            observable variable possibly updated by other events
-            self.enableTimeControl = ko.observable(false);
-            self.computedEnableTimeControl = ko.pureComputed({
-                read: function() {
-                    console.debug('LeftPanel enableTimeControl is ' + self.enableTimeControl() + ', ' + (self.enableTimeControl()?'Enable':'Disable')+' time control settings accordingly');
-                    return self.enableTimeControl();
-                },
-                write: function(value) {
-                    console.debug('Time control settings is set to ' + value + ' manually');
-                    self.enableTimeControl(value);
-                    self.dashboard.enableTimeRange(value?'TRUE':'FALSE');
-                    $b.triggerEvent($b.EVENT_DSB_ENABLE_TIMERANGE_CHANGED, null);
-                }
-            });
-
-            self.dashboardTileExistsChangedHandler = function(anyTileExists) {
-                console.debug('Received event EVENT_TILE_EXISTS_CHANGED with value of ' + anyTileExists + '. ' + (anyTileExists?'Show':'Hide') + ' time control settings accordingly');
-            };
-
-            self.dashboardTileSupportTimeControlHandler = function(exists) {
-                console.debug('Received event EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL with value of ' + exists + '. ' + (exists?'Show':'Hide') + ' time control settings accordingly');
-                if (self.dashboard.enableTimeRange() === 'AUTO') {
-                    console.debug('As dashboard enable time range is AUTO, '+(exists?'enable':'disable') + ' time control settings based result if tile supporting time control exists. Its value is ' + exists);
-                    self.enableTimeControl(exists);
-                }
-                else {
-                    console.debug((self.dashboard.enableTimeRange()==='TRUE'?'Enable':'Disable') + ' time control based on dashboard enableTimeRange value: ' + self.dashboard.enableTimeRange());
-                    self.enableTimeControl(self.dashboard.enableTimeRange() === 'TRUE');
-                }
-                console.debug('Exists tile supporting time control? ' + exists + ' ' + (exists?'Show':'Hide') + ' time control setting accordingly');
-                self.showTimeControl(exists);
-            };
-             **/
-
+           
             self.initialize = function() {
                     if (self.isMobileDevice === 'true' ) {
                         self.completelyHidden(true);
@@ -382,7 +346,7 @@ define(['knockout',
                     self.extendedOptions.autoRefresh.defaultValue = interval;
                     self.defaultValueChanged(new Date());
                 }
-            }
+            };
 
 
             var AUTO_PAGE_NAV = 1;
@@ -682,7 +646,7 @@ define(['knockout',
                 var timezoneOffset = date.getTimezoneOffset()/60;
                 timezoneOffset = timezoneOffset>0 ? ("GMT-"+timezoneOffset) : ("GMT+"+Math.abs(timezoneOffset));
                 return timezoneOffset;
-            }
+            };
 
             self.getTimeInfo = function(startTimeStamp, endTimeStamp) {
                 var startISO = oj.IntlConverterUtils.dateToLocalIso(new Date(startTimeStamp));
