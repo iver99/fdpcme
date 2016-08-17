@@ -200,8 +200,12 @@ $.widget( "dbs.typeAheadSearch", {
                             var _fetchSize = 20;
                             if (_dsFetchSize)
                             {
-                                if ($.isFunction(_dsFetchSize)) _fetchSize = _dsFetchSize();
-                                else _fetchSize = _dsFetchSize;
+                                if ($.isFunction(_dsFetchSize)) {
+                                	_fetchSize = _dsFetchSize();
+                                }
+                                else {
+                                	_fetchSize = _dsFetchSize;
+                                }
                             }
                             _dataSource = _dsFac.build(request.term, _fetchSize);
                             _dataSource['pagingDS'].fetch({'startIndex': 0, 'fetchType': 'init',

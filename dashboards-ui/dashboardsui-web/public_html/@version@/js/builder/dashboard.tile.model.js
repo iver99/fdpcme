@@ -188,8 +188,9 @@ define(['knockout',
                 }
             }
             self.openInDataExplorer = function (event, ui) {
-		if (!self.dashboard.systemDashboard())
+		        if (!self.dashboard.systemDashboard()){
                 	$b.getToolBarModel().handleDashboardSave();
+                }
                 var iId = setInterval(function() {
                     if (!$b.isDashboardUpdated()) {
                         clearInterval(iId);
@@ -328,8 +329,9 @@ define(['knockout',
             self.maximize = function(tile) {
                 for (var i = 0; i < self.editor.tiles().length; i++) {
                     var eachTile = self.editor.tiles()[i];
-                    if (eachTile !== tile)
+                    if (eachTile !== tile){
                         eachTile.shouldHide(true);
+                    }
                 }
                 tile.shouldHide(false);
                 tile.isMaximized(true);
@@ -454,8 +456,9 @@ define(['knockout',
             };
 
             self.isDraggingCellChanged = function(pos) {
-                if (!self.previousDragCell)
+                if (!self.previousDragCell){
                     return true;
+                }
                 return pos.row !== self.previousDragCell.row || pos.column !== self.previousDragCell.column;
             };
 
@@ -628,8 +631,9 @@ define(['knockout',
                 if(!ui) {
                     return;
                 }
-                if (!self.previousDragCell)
+                if (!self.previousDragCell){
                     return;
+                }
                 var tile = ko.dataFor(ui.helper[0]);
                 var cell = self.editor.getCellFromPosition(widgetAreaWidth, ui.helper.position());
                 if(tile.content) {
@@ -684,7 +688,9 @@ define(['knockout',
                     $b.findEl('.tile-dragging-placeholder').hide();
                     return;
                 }else {
-                    if (self.isEmpty()) $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging into edit area (stopped dragging)", true);
+                    if (self.isEmpty()){
+                        $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging into edit area (stopped dragging)", true);
+                    }
                     //use tile's left as the cursor's left to calculate the cell so that placeholder closely follow users' mouse
                     var cellPos = {};
                     cellPos.left = pos.left;
@@ -693,12 +699,16 @@ define(['knockout',
                         cellPos.left = cellPos.left - tile.cssWidth()/2;
                     }
                     var cell = self.editor.getCellFromPosition(widgetAreaWidth, cellPos);
-                    if (!cell) return;
+                    if (!cell) {
+                        return;
+                    }
 
                     if(self.previousDragCell && self.previousDragCell.row === cell.row && self.previousDragCell.column === cell.column) {
                         return;
                     }
-                    if(!self.previousDragCell) self.previousDragCell = cell;
+                    if(!self.previousDragCell) {
+                        self.previousDragCell = cell;
+                    }
                     var widget = ko.mapping.toJS(ko.dataFor(u.helper[0]));
                     var width = Builder.getTileDefaultWidth(widget, self.editor.mode), height = Builder.getTileDefaultHeight(widget, self.editor.mode);
                     if(cell.column>self.editor.mode.MODE_MAX_COLUMNS-width) {

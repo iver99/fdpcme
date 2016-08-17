@@ -13,37 +13,37 @@ public class FavoriteEntityTest {
     private FavoriteEntity favoriteEntity = new FavoriteEntity();
 
     @Test
-    public void testGetHref() throws Exception {
+    public void testGetHref() {
         favoriteEntity.setHref("www.oracle.com");
         assertEquals(favoriteEntity.getHref(),"www.oracle.com");
     }
 
     @Test
-    public void testGetId() throws Exception {
+    public void testGetId() {
         favoriteEntity.setId(10L);
         assertEquals(favoriteEntity.getId(),new Long(10));
 
     }
 
     @Test
-    public void testGetName() throws Exception {
+    public void testGetName() {
         favoriteEntity.setName("elephant");
         assertEquals(favoriteEntity.getName(),"elephant");
 
     }
 
     @Test
-    public void testSetHref() throws Exception {
+    public void testSetHref() {
 
     }
 
     @Test
-    public void testSetId() throws Exception {
+    public void testSetId() {
 
     }
 
     @Test
-    public void testSetName() throws Exception {
+    public void testSetName() {
 
     }
 }

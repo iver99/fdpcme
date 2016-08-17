@@ -30,7 +30,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 	}
 
 	@Test
-	public void testLogAnalyzerPage() throws Exception
+	public void testLogAnalyzerPage() 
 	{
 		try {
 			CommonUIUtils.commonUITestLog("This is to test Log Analyzer Page");
@@ -79,7 +79,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 	}
 
 	@Test
-	public void testTargetAnalyzerPage() throws Exception
+	public void testTargetAnalyzerPage() 
 	{
 		try {
 			CommonUIUtils.commonUITestLog("This is to test Target Analyzer Page");

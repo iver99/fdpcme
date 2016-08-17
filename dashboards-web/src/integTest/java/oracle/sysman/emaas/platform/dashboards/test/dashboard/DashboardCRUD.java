@@ -36,12 +36,12 @@ public class DashboardCRUD
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
 		tenantid = ct.getTenantid();
-		tenantid_2 = ct.getTenantid_2();
+		tenantid_2 = ct.getTenantid2();
 		remoteuser = ct.getRemoteUser();
 	}
 
 	@Test
-	public void dashboard_create_emptyPara()
+	public void dashboardCreateEmptyPara()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -244,7 +244,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboard_create_longNameDesc()
+	public void dashboardCreateLongNameDesc()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -290,7 +290,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboard_create_simple()
+	public void dashboardCreateSimple()
 	{
 
 		/* create a dashboard with required field
@@ -395,7 +395,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboard_create_withTile()
+	public void dashboardCreateWithTile()
 	{
 		String dashboard_id = "";
 		try {
@@ -456,7 +456,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboard_delete_invalidId()
+	public void dashboardDeleteInvalidId()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -482,7 +482,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboard_delete_sytemDashboard()
+	public void dashboardDeleteSytemDashboard()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -517,7 +517,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboard_lastAccess()
+	public void dashboardLastAccess()
 	{
 		String dashboard_id = "";
 		try {
@@ -798,7 +798,7 @@ public class DashboardCRUD
 	}*/
 
 	@Test
-	public void dashboard_orderByCreationDate()
+	public void dashboardOrderByCreationDate()
 	{
 		String dashboard_id = "";
 		try {
@@ -877,7 +877,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboard_orderByDefault()
+	public void dashboardOrderByDefault()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -905,7 +905,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboard_orderByLastAccess()
+	public void dashboardOrderByLastAccess()
 	{
 		String dashboard_id = "";
 		try {
@@ -1017,7 +1017,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboard_orderByName()
+	public void dashboardOrderByName()
 	{
 		String dashboard_id = "";
 		try {
@@ -1112,7 +1112,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboard_query_multi()
+	public void dashboardQueryMulti()
 	{
 		int totalResults = 0;
 		int count = 0;
@@ -1194,7 +1194,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboard_query_multi_invalid_para()
+	public void dashboardQueryMultiInvalidPara()
 	{
 		try {
 			Response res1 = RestAssured
@@ -1241,7 +1241,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboard_update()
+	public void dashboardUpdate()
 	{
 		String dashboard_id = "";
 		try {
@@ -1382,7 +1382,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboard_update_emptyPara()
+	public void dashboardUpdateEmptyPara()
 	{
 		String dashboard_id = "";
 		try {
@@ -1622,7 +1622,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboard_update_invalidId()
+	public void dashboardUpdateInvalidId()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -1655,7 +1655,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboard_update_longNameDesc()
+	public void dashboardUpdateLongNameDesc()
 	{
 		String dashboard_id = "";
 		try {
@@ -1736,7 +1736,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboard_update_systemDashboard()
+	public void dashboardUpdateSystemDashboard()
 	{
 		String dashboard_id = "";
 		try {
@@ -1822,7 +1822,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboardset_create_simple()
+	public void dashboardsetCreateSimple()
 	{
 		String dashboardset_id = "";
 		try {
@@ -1922,7 +1922,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void dashboardset_update()
+	public void dashboardsetUpdate()
 	{
 		String dashboard_id = "";
 		String dashboardset_id = "";
@@ -2065,7 +2065,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void multiTenant_headerCheck()
+	public void multiTenantHeaderCheck()
 	{
 		try {
 			//System.out.println("------------------------------------------");
@@ -2239,7 +2239,7 @@ public class DashboardCRUD
 	//	}
 
 	@Test
-	public void multiTenant_queryUpdateDelete_invalidTenant()
+	public void multiTenantQueryUpdateDeleteInvalidTenant()
 	{
 		String dashboard_id = "";
 		try {
@@ -2314,7 +2314,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void remoteUser_headerCheck()
+	public void remoteUserHeaderCheck()
 	{
 		try {
 			//System.out.println("------------------------------------------");

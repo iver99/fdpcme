@@ -267,24 +267,24 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	}
 
 	@Override
-	public void postStart(ApplicationLifecycleEvent evt) throws Exception
+	public void postStart(ApplicationLifecycleEvent evt) 
 	{
 		logger.info("Post-starting 'Service Registry' application service");
 		registerService();
 	}
 
 	@Override
-	public void postStop(ApplicationLifecycleEvent evt) throws Exception
+	public void postStop(ApplicationLifecycleEvent evt) 
 	{
 	}
 
 	@Override
-	public void preStart(ApplicationLifecycleEvent evt) throws Exception
+	public void preStart(ApplicationLifecycleEvent evt) 
 	{
 	}
 
 	@Override
-	public void preStop(ApplicationLifecycleEvent evt) throws Exception
+	public void preStop(ApplicationLifecycleEvent evt) 
 	{
 		//		logger.info("Pre-stopping service, attempting to close entityimanager factory");
 		//		PersistenceManager.getInstance().closeEntityManagerFactory();

@@ -24,7 +24,7 @@ define(['knockout',
             };
 
             self.onResizeFitSize = function(width, height, leftWidth, topHeight) {
-                self.rebuildElementSet(),
+                self.rebuildElementSet();
                 self.$list.each(function() {
                     var elem = $(this)
                     ,_topHeight = topHeight
@@ -84,6 +84,7 @@ define(['knockout',
 
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
+            self.isOobDashboardset=dashboardsetToolBarModel.isOobDashboardset;
             self.scrollbarWidth = uiutil.getScrollbarWidth();
 
             self.showRightPanelToggler =  ko.observable(self.isMobileDevice !== 'true');
@@ -227,7 +228,7 @@ define(['knockout',
                 loadSeeableWidgetScreenshots();
             });
 
-            var loadSeeableWidgetScreenshots = function(startPosition){
+            function loadSeeableWidgetScreenshots(startPosition){
                 var fromWidgetIndex = startPosition?(Math.floor(startPosition/30)):0;
                 var toWidgetIndex = Math.ceil(widgetListHeight()/30)+fromWidgetIndex;
                 if (self.widgets && self.widgets().length > 0) {
@@ -243,7 +244,7 @@ define(['knockout',
             });
            
             self.initialize = function() {
-                    if (self.isMobileDevice === 'true' ) {
+                    if (self.isMobileDevice === 'true' || self.isOobDashboardset()) {
                         self.completelyHidden(true);
                         self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
                     } else {
@@ -326,7 +327,7 @@ define(['knockout',
 
             self.tileRestoredHandler = function() {
                 self.maximized(false);
-                if(self.isMobileDevice !== 'true') {
+                if(self.isMobileDevice !== 'true' && !self.isOobDashboardset()) {
                     self.completelyHidden(false);
                 }
 
@@ -384,12 +385,19 @@ define(['knockout',
                         self.widgets([]);
                         if (widgets && widgets.length > 0) {
                             for (var i = 0; i < widgets.length; i++) {
-                                if (!widgets[i].WIDGET_DESCRIPTION)
+                                if (!widgets[i].WIDGET_DESCRIPTION){
                                     widgets[i].WIDGET_DESCRIPTION = null;
+                                }
                                 var wgt = ko.mapping.fromJS(widgets[i]);
-                                wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
-                                wgt && !wgt.imgWidth && (wgt.imgWidth = ko.observable('120px'));
-                                wgt && !wgt.imgHeight && (wgt.imgHeight = ko.observable('120px'));
+                                if(wgt && !wgt.WIDGET_VISUAL){
+                                    wgt.WIDGET_VISUAL = ko.observable('');
+                                }
+                                if(wgt && !wgt.imgWidth){
+                                    wgt.imgWidth = ko.observable('120px');
+                                }
+                                if(wgt && !wgt.imgHeight){
+                                    wgt.imgHeight = ko.observable('120px');
+                                }
                                 self.widgets.push(wgt);
                             }
                         }
@@ -400,11 +408,15 @@ define(['knockout',
 
             self.getWidgetScreenshot = function(wgt) {
                 var url = null;
-                wgt.WIDGET_SCREENSHOT_HREF && (url = wgt.WIDGET_SCREENSHOT_HREF());
+                if(wgt.WIDGET_SCREENSHOT_HREF){
+                    url = wgt.WIDGET_SCREENSHOT_HREF();
+                }
                 if (!dfu.isDevMode()){
                     url = dfu.getRelUrlFromFullUrl(url);
                 }
-                wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
+                if(wgt && !wgt.WIDGET_VISUAL){
+                    wgt.WIDGET_VISUAL = ko.observable('');
+                }
                 url && wgt.WIDGET_VISUAL(url);
                 !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('@version@/images/no-image-available.png'));
 
@@ -417,9 +429,13 @@ define(['knockout',
 
             self.getWidgetBase64Screenshot = function(wgt) {
                 var url = '/sso.static/savedsearch.widgets';
-                dfu.isDevMode() && (url = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,'/widgets'));
+                if(dfu.isDevMode()){
+                    url = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,'/widgets');
+                }
                 url += '/'+wgt.WIDGET_UNIQUE_ID()+'/screenshot';
-                wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
+                if(wgt && !wgt.WIDGET_VISUAL){
+                    wgt.WIDGET_VISUAL = ko.observable('');
+                }
                 dfu.ajaxWithRetry({
                     url: url,
                     headers: dfu.getSavedSearchRequestHeader(),
@@ -485,10 +501,12 @@ define(['knockout',
             };
 
             self.widgetMouseOverHandler = function(widget,event) {
-                if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
+                if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0){
                     return;
-                if(!widget.WIDGET_VISUAL())
+                }
+                if(!widget.WIDGET_VISUAL()){
                     self.getWidgetScreenshot(widget);
+                }
                 var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
                 var popupContent=$(widgetItem).find('.dbd-left-panel-img-pop');
                 $(".dbd-right-panel-build-container i.fa-plus").hide();
@@ -538,8 +556,9 @@ define(['knockout',
             };
 
             self.containerMouseOverHandler = function() {
-                if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
+                if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0){
                     return;
+                }
                 if (!$('.right-container-pop').ojPopup("isOpen")) {
                    $('.right-container-pop').ojPopup("open", $('.dbd-left-panel-footer-contain'),
                    {
@@ -610,8 +629,9 @@ define(['knockout',
             self.showdbOnHomePage = ko.observable([]);
 
             var dsbSaveDelay = ko.computed(function(){
-                if(self.editDashboardDialogModel())
+                if(self.editDashboardDialogModel()){
                     return self.editDashboardDialogModel().showdbDescription() + self.editDashboardDialogModel().name() + self.editDashboardDialogModel().description() + self.showdbOnHomePage();
+                }
             });
             dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } });
             dsbSaveDelay.subscribe(function(){

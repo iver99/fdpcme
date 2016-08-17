@@ -267,15 +267,17 @@ define([
                         self.currentWidget(data);
                     }
 
-                    if (self.confirmBtnDisabled() === true)
+                    if (self.confirmBtnDisabled() === true){
                         self.confirmBtnDisabled(false);
+                    }
                 };
 
                 // Widget handler for selected widget
                 self.widgetSelectionConfirmed = function() {
                     //Close dialog if autoCloseDialog is true or not set
-                    if (self.autoCloseDialog !== false)
+                    if (self.autoCloseDialog !== false){
                         $('#'+self.dialogId).ojDialog('close');
+                    }
                     if (self.widgetHandler && $.isFunction(self.widgetHandler)) {
                         var selectedWidget = self.currentWidget();
                         self.widgetHandler(selectedWidget);
@@ -437,8 +439,9 @@ define([
                                 widget.imgWidth = ko.observable("190px");
                                 widget.imgHeight = ko.observable("140px");
 
-                                if (!widget.WIDGET_DESCRIPTION)
+                                if (!widget.WIDGET_DESCRIPTION){
                                     widget.WIDGET_DESCRIPTION = "";
+                                }
                                 widget.isSelected = ko.observable(false);
                                 widget.isScreenShotPageDisplayed = ko.observable(true);
                                 widget.isScreenshotLoaded = false;
@@ -501,8 +504,9 @@ define([
                             url: widgetScreenshotUrl,
                             headers: dfu.getSavedSearchServiceRequestHeader(),
                             success: function(data, textStatus) {
-                                if (data && data.screenShot)
+                                if (data && data.screenShot){
                                     widget.WIDGET_VISUAL(data.screenShot);
+                                }
                                 else {
                                     var laImagePath = "/emsaasui/uifwk/@version@/images/widgets/sample-widget-histogram.png";
                                     var taImagePath = "/emsaasui/uifwk/@version@/images/widgets/sample-widget-histogram.png";

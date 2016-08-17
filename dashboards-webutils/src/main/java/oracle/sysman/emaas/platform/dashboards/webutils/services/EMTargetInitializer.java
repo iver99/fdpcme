@@ -87,10 +87,10 @@ public class EMTargetInitializer implements ApplicationServiceManager
 	}
 
 	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager#postStop(weblogic.application.ApplicationLifecycleEvent)
+	 * @see oracle.sysman.emas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager#postStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void postStop(ApplicationLifecycleEvent evt) throws Exception
+	public void postStop(ApplicationLifecycleEvent evt) 
 	{
 		// TODO Auto-generated method stub
 

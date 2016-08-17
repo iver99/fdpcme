@@ -15,6 +15,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.management.InstanceAlreadyExistsException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
@@ -42,7 +44,7 @@ public class LoggingServiceManagerTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testStartStop(@Mocked final MBeanServer anyMbs, @Mocked final ManagementFactory anyMf) throws Exception
+	public void testStartStop(@Mocked final MBeanServer anyMbs, @Mocked final ManagementFactory anyMf) throws Exception 
 	{
 		new MockUp<Class<LoggingServiceManager>>() {
 			@Mock

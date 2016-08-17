@@ -15,6 +15,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.management.InstanceAlreadyExistsException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
@@ -43,7 +45,7 @@ public class LoggingServiceManagerTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testStartStop(@Mocked final MBeanServer anyMbs, @Mocked final ManagementFactory anyMf) throws Exception
+	public void testStartStop(@Mocked final MBeanServer anyMbs, @Mocked final ManagementFactory anyMf) 
 	{
 		new MockUp<Class<LoggingServiceManager>>() {
 			@Mock
@@ -59,17 +61,35 @@ public class LoggingServiceManagerTest
 			}
 		};
 
-		new Expectations() {
-			{
-				ManagementFactory.getPlatformMBeanServer();
-				result = anyMbs;
-				anyMbs.unregisterMBean((ObjectName) any);
-				times = 1;
-			}
-		};
+		try {
+			new Expectations() {
+				{
+					ManagementFactory.getPlatformMBeanServer();
+					result = anyMbs;
+					anyMbs.unregisterMBean((ObjectName) any);
+					times = 1;
+				}
+			};
+		}
+		catch (MBeanRegistrationException | InstanceNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		lsm.preStart(null);
-		lsm.preStop(null);
+		try {
+			lsm.preStart(null);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			lsm.preStop(null);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test(groups = { "s2" })

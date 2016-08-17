@@ -94,8 +94,9 @@ define(['knockout',
             };
 
             self.save = function() {
-                if (self.nameValidated() === false || dfu.getUserName()!==self.dashboard.owner())
+                if (self.nameValidated() === false || dfu.getUserName()!==self.dashboard.owner()){
                     return;
+                }
 
                 var url = "/sso.static/dashboards.service/";
                 if (dfu.isDevMode()) {

@@ -14,7 +14,9 @@ define(['knockout',
             self.action = null;
             function browserCloseEventListener(e) {
                 if (self.isBrowserCloseEvent) {
-                     if(!e) e = window.event;
+                     if(!e) {
+                        e = window.event;
+                    }
                      //e.cancelBubble is supported by IE - this will kill the bubbling process.
                      e.cancelBubble = true;
                      //e.stopPropagation works in Firefox.

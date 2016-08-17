@@ -89,7 +89,7 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
         /**
          * Cache the log and send to server if cache limit is reached.
          */
-        var _cacheOrSend = function(level, msg, flush)
+        function _cacheOrSend(level, msg, flush)
         {
             // TODO: Look into guarding against too many logs in a short period
             // of time.  Use case: Something bad may have happened and now we are getting
@@ -108,7 +108,7 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
         /**
          * Ensure the logs get sent before too long.
          */
-        var _sendBeforeTooLong = function()
+        function _sendBeforeTooLong()
         {
             if (logsCache.length > 0 && (new Date().getTime() - logsCacheLastTimeWeSent) > logsCacheMaxInterval) {
                 _sendToServer();
@@ -118,7 +118,7 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
         /**
          * Send the cached logs to server
          */
-        var _sendToServer = function()
+        function _sendToServer()
         {
             // Send the logs asynchronously and clear the cache.
             new _asyncSender()();
@@ -130,7 +130,7 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
          * An asynchronous sender that clones the cache and then sends the logs from the clone.
          * A new instance of this object must be created for each use.
          */
-        var _asyncSender = function()
+        function _asyncSender()
         {
             var logsCacheCloned = [];
 
@@ -172,7 +172,7 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
         /**
          * Format the log so time and client are identified.
          */
-        var _format = function(args)
+        function _format(args)
         {
             //TODO:  Add something to identify who is logging:  tenantID, host, IP address, what else?
             //       Some of the info may already be available from the request object on server side.
@@ -200,8 +200,9 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
             self.initialize = function(url, maxInterval, frequency, limit, tenantUser)
             {
                 logOwner = tenantUser || null;
-                if (logOwner === null)
+                if (logOwner === null){
                     console.log("Error to initilize Logger with user: "+tenantUser);
+                }
                 serverUrlToSendLogs = url;
                 var userName = (logOwner === null ? null : logOwner.substring(logOwner.indexOf('.')+1));
                 var tenantName = (logOwner === null ? null : logOwner.substring(0, logOwner.indexOf('.')));

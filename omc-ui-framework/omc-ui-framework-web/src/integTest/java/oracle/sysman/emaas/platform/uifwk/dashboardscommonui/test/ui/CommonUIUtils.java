@@ -52,7 +52,7 @@ public class CommonUIUtils
 	static Boolean isLAAdmin = false;
 	static Boolean isDSAdmin = false;
 
-	public static void addWidget(WebDriver driver) throws Exception
+	public static void addWidget(WebDriver driver) 
 	{
 		//click Add Widget icon
 		driver.getLogger().info("Verify if Add Widgets icon displayed");
@@ -379,7 +379,7 @@ public class CommonUIUtils
 		}
 	}
 
-	public static void openWidget(WebDriver driver, boolean isEnabled) throws Exception
+	public static void openWidget(WebDriver driver, boolean isEnabled) 
 	{
 		if (isEnabled) {
 			//click Open Widget icon
@@ -440,7 +440,7 @@ public class CommonUIUtils
 		}
 	}
 
-	public static void verifyMenu(WebDriver driver, boolean isAdmin) throws Exception
+	public static void verifyMenu(WebDriver driver, boolean isAdmin) 
 	{
 		//verify the menus
 		driver.getLogger().info("Verify the Links menu displayed");
@@ -492,7 +492,7 @@ public class CommonUIUtils
 		}
 	}
 
-	public static void verifyNoLinksMenu(WebDriver driver) throws Exception
+	public static void verifyNoLinksMenu(WebDriver driver) 
 	{
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), 900L);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(UIControls.SLINKSMENU)));
@@ -500,7 +500,7 @@ public class CommonUIUtils
 
 	}
 
-	public static void verifyPageContent(WebDriver driver, String sAppName) throws Exception
+	public static void verifyPageContent(WebDriver driver, String sAppName) 
 	{
 		//verify the product name,app name,content of page
 		driver.getLogger().info("Verify the page content");

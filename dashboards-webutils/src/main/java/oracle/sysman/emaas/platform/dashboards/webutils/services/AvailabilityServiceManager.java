@@ -55,7 +55,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager#postStart(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void postStart(ApplicationLifecycleEvent evt) throws Exception
+	public void postStart(ApplicationLifecycleEvent evt) 
 	{
 		timer = new Timer();
 		NotificationListener notification = new AvailabilityNotification(rsm);
@@ -70,7 +70,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager#postStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void postStop(ApplicationLifecycleEvent evt) throws Exception
+	public void postStop(ApplicationLifecycleEvent evt) 
 	{
 	}
 
@@ -78,7 +78,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager#preStart(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void preStart(ApplicationLifecycleEvent evt) throws Exception
+	public void preStart(ApplicationLifecycleEvent evt) 
 	{
 	}
 
@@ -86,7 +86,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager#preStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void preStop(ApplicationLifecycleEvent evt) throws Exception
+	public void preStop(ApplicationLifecycleEvent evt) 
 	{
 		logger.info("Pre-stopping availability service");
 		try {

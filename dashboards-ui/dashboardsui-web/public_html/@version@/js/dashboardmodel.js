@@ -55,7 +55,9 @@ function(dfu, oj, ko, $)
     DashboardModel.prototype.getNavLink = function()
     {
         var _id = this.get('id');
-        if (!_id) return null;
+        if (!_id) {
+            return null;
+        }
         var _type = this.get('type');
         if ("SINGLEPAGE"===_type){
             var tiles = this.get('tiles');
