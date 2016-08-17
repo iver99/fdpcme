@@ -112,8 +112,7 @@ define(['knockout',
                 var configId = data.item.attr('id');
                 switch (configId) {
                     case 'dbs-edit':
-                        var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
-                        rightPanelModel && rightPanelModel.editRightpanelLinkage("dashboardset-edit");
+                        self.notifyRightPanelChange("dashboardset-edit");
                         break;
                     case 'refresh-off':
                         self.dbConfigMenuClick.refreshDbs(self,'off');
@@ -136,6 +135,10 @@ define(['knockout',
                     default:
                         break;
                 }
+            };
+            
+            self.notifyRightPanelChange = function (changeEvent) {
+                Builder.rightPanelChange(changeEvent);
             };
 
             self.saveUserOptions = function(){

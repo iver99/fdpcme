@@ -318,6 +318,11 @@ define(['knockout',
                     }
                 });
             };
+            
+            function rightPanelChange(status) {
+                 self.editRightpanelLinkage(status);
+            }
+            Builder.registerModule(rightPanelChange, 'rightPanelChange');
 
             self.tileMaximizedHandler = function() {
                 self.maximized(true);
@@ -348,7 +353,6 @@ define(['knockout',
                     self.defaultValueChanged(new Date());
                 }
             };
-
 
             var AUTO_PAGE_NAV = 1;
             var widgetListHeight = ko.observable(0);
@@ -625,7 +629,7 @@ define(['knockout',
                     $('.dbd-right-panel-editdashboard-set-general').ojCollapsible("option","expanded",isToExpand);
                 }
             };
-
+            
             self.showdbOnHomePage = ko.observable([]);
 
             var dsbSaveDelay = ko.computed(function(){
@@ -697,7 +701,7 @@ define(['knockout',
 
                 dateTimeInfo = start + " - " + end;
                 return dateTimeInfo;
-            }
+            };
 
             self.timeRangeOptions = ko.observableArray([
                 {value: 'last15mins', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS')},
@@ -829,7 +833,7 @@ define(['knockout',
                     "enableEntityFilter": self.dashboard.enableEntityFilter(),
                     "extendedOptions": JSON.stringify(self.extendedOptions),
                     "enableTimeRange": self.dashboard.enableTimeRange()
-                }
+                };
 
                 if (self.dashboard.tiles() && self.dashboard.tiles().length > 0) {
                     var elem = $(".tiles-wrapper:visible");
@@ -851,12 +855,12 @@ define(['knockout',
                     if(!self.dashboard.extendedOptions) {
                         self.dashboard.extendedOptions = ko.observable();
                     }
-                    self.dashboard.extendedOptions(JSON.stringify(self.extendedOptions))
+                    self.dashboard.extendedOptions(JSON.stringify(self.extendedOptions));
                 },
                 function() {
                     console.log("***error");
                 });
-            }
+            };
 
             self.saveDsbFilterSettings = function(fieldsToUpdate, succCallback, errorCallback) {
                 var newDashboardJs = ko.mapping.toJS(self.dashboard, {
@@ -878,7 +882,7 @@ define(['knockout',
 
                 $.extend(newDashboardJs, fieldsToUpdate);
                 Builder.updateDashboard(self.dashboard.id(), JSON.stringify(newDashboardJs), succCallback, errorCallback);
-            }
+            };
 
 
             function queryDashboardSetsBySubId(dashboardId,callback){
@@ -897,7 +901,7 @@ define(['knockout',
 
             self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
             self.dashboardSharing.subscribe(function(val){
-                if(!self.toolBarModel || self.isDashboardSet) {
+                if(!self.toolBarModel || self.isDashboardSet()) {
                     // return if current selected tab is dashboard picker
                     return ;
                 }
