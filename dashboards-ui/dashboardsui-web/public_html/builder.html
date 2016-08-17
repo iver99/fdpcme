@@ -621,7 +621,32 @@
                     </div>
                 </div>
                 <!-- delete dilog end -->
-                
+                <!-- share dilog start -->
+                <div style="display:none" id="share-dashboard"
+                     data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
+                                        cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
+                    <div class="oj-dialog-header oj-helper-clearfix">
+                        <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_HOME_CFM_DLG_UNSHARE_DSB')"></span>
+                    </div>
+                    <div class="oj-dialog-body">
+                        <!-- ko if:dashboardSets() && dashboardSets().length > 0  -->
+                            <p data-bind="html: getNlsString('COMMON_UNSHAER_USED_DASHBOARD_MSG_HEAD')"></p>
+                            <ul>
+                                <!-- ko foreach:dashboardSets -->
+                                    <li style="list-style-type:none;" data-bind="text: '<'+$data.name+'>'"></li>
+                                <!-- /ko -->
+                            </ul>
+                             <p data-bind="html: getNlsString('COMMON_UNSHAER_USED_DASHBOARD_MSG_TAILE', toolBarModel.dashboardName())"></p>
+                        <!-- /ko -->
+                    </div>
+                    <div class="oj-dialog-footer">
+                        <button data-bind="click: toolBarModel.handleUnshareDashboardClicked,
+                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_UNSHAER'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                        <button class="dbs_dcbtn" data-bind="click: toolBarModel.handleUnshareDashboardCancelled,
+                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                    </div>
+                </div>
+                <!-- share dilog end -->
                 <!-- Duplicate Dashboard dialog start -->
                 <div style="display:none" id="duplicateDsbDialog"
                      data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon',

@@ -192,6 +192,18 @@ define(['knockout',
             self.handleDeleteDashboardCancelled = function() {
                 $('#delete-dashboard').ojDialog( "close" );
             };
+            
+            self.handleUnshareDashboardClicked = function() {
+              self.handleShareUnshare(false);
+              $('#share-dashboard').ojDialog( "close" ); 
+            };
+            
+            self.handleUnshareDashboardCancelled = function() {
+                // revert change
+                var dashboardSharing = ko.dataFor($b.findEl(".share-settings")[0]).dashboardSharing;
+                dashboardSharing("shared");
+                $('#share-dashboard').ojDialog( "close" );
+            };
 
             self.isNameUnderEdit = function() {
                 return $b.findEl('.builder-dbd-name').hasClass('editing');
