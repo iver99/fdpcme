@@ -733,7 +733,7 @@ war {
     }
     else
     {
-	from(stagingDir) {
+	from(compiledDir) {
 	    include '**/*'
 	    exclude '**/*.orig.js','**/*.map','**/scss'
 	    into('/')
