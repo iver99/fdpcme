@@ -1,4 +1,4 @@
-define(['uifwk/@version@/js/widgets/aboutbox/aboutbox-impl'],
-    function (aboutBoxViewModelImpl) {
-        return aboutBoxViewModelImpl;
+define(['uifwk/@version@/js/uifwk-impl-partition'],
+    function () {
+        return require('uifwk/@version@/js/widgets/aboutbox/aboutbox-impl');
     });

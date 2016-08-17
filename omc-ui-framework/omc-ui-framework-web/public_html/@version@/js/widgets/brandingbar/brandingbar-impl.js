@@ -1,8 +1,8 @@
 define([
     'knockout',
     'jquery',
-    'uifwk/js/util/df-util',
-    'uifwk/js/util/message-util',
+    'uifwk/@version@/js/util/df-util-impl', 
+    'uifwk/@version@/js/util/message-util-impl',
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'ojs/ojknockout',

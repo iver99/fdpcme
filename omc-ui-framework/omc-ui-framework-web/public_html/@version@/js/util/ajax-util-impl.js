@@ -2,7 +2,7 @@ define([
     'jquery',
     'knockout',
     'ojs/ojcore',
-    'uifwk/js/util/message-util',
+    'uifwk/@version@/js/util/message-util-impl', 
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg'
 ],
     function($, ko, oj, msgUtilModel, nls)

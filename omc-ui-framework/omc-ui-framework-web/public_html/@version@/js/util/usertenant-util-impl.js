@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['jquery', 'ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
+define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@/js/util/df-util-impl'],
     function($, oj, ajaxUtilModel, dfumodel)
     {
         function DashboardFrameworkUserTenantUtility() {

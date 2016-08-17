@@ -127,6 +127,7 @@ javascript.source {
                 srcDir 'public_html/js'
                 include "**/*.js"
 		exclude "**/*.orig.js"
+                exclude "**/uifwk-partition.js"
             }
         }
 	cachedjs {
@@ -135,6 +136,7 @@ javascript.source {
 		//scrDir stagingDir+"/@version@/js"
 		include "**/*.js"
 		exclude "**/*.orig.js"
+                exclude "**/uifwk-impl-partition.js"
 	    }
 	}
     jshint {
@@ -403,8 +405,6 @@ task jsCodeCoverage(type:JavaExec, dependsOn:[cleanJs, copyJsSource]) {
 }
 jsCodeCoverage.onlyIf{jscc}
 
-task individualMinify(dependsOn: [copyJsSource, jsCodeCoverage, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
-
 compass {
     // We package the gems into the .jar file (see compass dependencies)
     // so that http proxy issues do not affect us.  To enable this, 
@@ -636,6 +636,63 @@ project.task("cleanTargetSelector") << {
 
 clean.dependsOn cleanJet,cleanFont,cleanTargetSelector
 
+//Combine start
+/**
+ * combine -> minify -> fingerprint JavaScript
+ */
+task copyStagedJs(type:Copy, dependsOn:[copyJsSource]) {
+    from (stagingDir) {
+	include "**/*"	
+    }
+    into compiledDir
+}
+
+task prepareRequireJsConfig(type:Copy) {
+    from ('.') {
+        include "uifwk.build.js"
+            //replace @version@ with versionPathElement
+            filter(ReplaceTokens, tokens: [version: versionPathElement])
+    }
+    into buildDir
+}
+
+task individualMinify(dependsOn: [copyStagedJs, jsCodeCoverage, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
+
+task combineAppJs(dependsOn: [individualMinify,prepareRequireJsConfig], type: com.eriwen.gradle.js.tasks.RequireJsTask) {
+    source = javascript.source.staticjs.js.files   //point to your source files
+    requirejs.buildprofile = file(buildDir.absolutePath+"/uifwk.build.js")
+    outputs.upToDateWhen { false }           //requireJs task does not know how to accurately determine if it is UP-TO-DATE so this line says the task is never up to date.
+}
+
+task minifyUIFwkPartitionJs(dependsOn: [combineAppJs],type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+    doFirst {
+        //copy the original source which will be used in a source map
+        Files.copy(Paths.get(compiledDir+"/js/uifwk-partition.js"), Paths.get(compiledDir+"/js/uifwk-partition.orig.js"))
+    }
+    source = file(compiledDir+"/js/uifwk-partition.js")
+    dest = file(compiledDir+"/js/uifwk-partition.js")
+    sourceMap = file(compiledDir+"/js/uifwk-partition.map")
+
+    closure {
+        warningLevel = 'QUIET'
+    }
+
+    doLast {
+        //update the compiled JS to point to the source map
+        File compiledFile = new File(compiledDir+"/js/uifwk-partition.js")
+        logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
+        compiledFile.append("\n//# sourceMappingURL=uifwk-partition.map", 'UTF-8')
+
+        //fix file path in source map file
+        File mapFile = new File(compiledDir+"/js/uifwk-partition.map")
+        String contents = mapFile.getText("UTF-8")
+        String absPath = compiledFile;
+        contents = contents.replaceAll(Pattern.quote(absPath), "uifwk-partition.orig.js")
+        mapFile.write(contents, "UTF-8")
+    }
+}
+//Combine end
+
 war.archiveName "omc-ui-framework-web.war"
 
 copyJsSource.dependsOn unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory, unpackTargetSelectorFromArtifactory
@@ -657,7 +714,7 @@ if(project.hasProperty("devMode")){
 }
 else
 {
-	war.dependsOn individualMinify
+	war.dependsOn minifyUIFwkPartitionJs
 
 }
 
