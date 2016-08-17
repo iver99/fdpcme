@@ -979,7 +979,7 @@ define(['knockout',
 
             self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
             self.dashboardSharing.subscribe(function(val){
-                if(!self.toolBarModel) {
+                if(!self.toolBarModel || self.isDashboardSet()) {
                     // return if current selected tab is dashboard picker
                     return ;
                 }
