@@ -1195,7 +1195,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     try {
                         //make sure the date is valid.
                         var convertedDate = self.dateConverter2.format(oj.IntlConverterUtils.dateToLocalIso(new Date(data.value)));
-                        if(convertedDate !== data.value) {throw true;}
+                        if(convertedDate !== data.value) {
+                            throw true;
+                        }
 
                         $(event.target).removeClass("input-error");
                         if (value === 1) {
@@ -1758,7 +1760,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.generateTfTooltip = function(hoursOfDay, daysOfWeek, monthsOfYear) {
                     var i;
                     var tfTooltip = "";
-                    if(hoursOfDay.length === 24 && daysOfWeek.length === 7 && monthsOfYear.length == 12) {
+                    if(hoursOfDay.length === 24 && daysOfWeek.length === 7 && monthsOfYear.length === 12) {
                         self.tfInfoIndicatorVisible(false);
                         return null;
                     }else {

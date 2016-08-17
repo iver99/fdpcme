@@ -198,7 +198,7 @@ require(['ojs/ojcore',
                         var cloudServices = data.cloudServices;
                         var cloudServicesNum = cloudServices.length;
                         for(i=0; i<cloudServicesNum; i++) {
-                            if(cloudServices[i].name == "Monitoring") {
+                            if(cloudServices[i].name === "Monitoring") {
                                 self.showInfraMonitoring(true);
                             }
                             if(cloudServices[i].name === "Compliance") {
@@ -207,7 +207,7 @@ require(['ojs/ojcore',
                             if(cloudServices[i].name === "SecurityAnalytics") {
                                 self.showSecurityAnalytics(true);
                             }
-                            if(cloudServices[i].name == "Orchestration") {
+                            if(cloudServices[i].name === "Orchestration") {
                                 self.showOrchestration(true);
                             }
                             landingHomeUrls[cloudServices[i].name] = cloudServices[i].href;

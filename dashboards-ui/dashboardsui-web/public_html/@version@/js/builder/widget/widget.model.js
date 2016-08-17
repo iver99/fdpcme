@@ -43,8 +43,12 @@ define(['jquery',
             if (widgets && widgets.length > 0) {
                 widgets.sort(function(a, b) {
                     var na = a.WIDGET_NAME.toLowerCase(), nb = b.WIDGET_NAME.toLowerCase();
-                    if (na < nb) {return -1;}
-                    if (na > nb) {return 1;}
+                    if (na < nb) {
+                        return -1;
+                    }
+                    if (na > nb) {
+                        return 1;
+                    }
                     return 0;
                 });
             }

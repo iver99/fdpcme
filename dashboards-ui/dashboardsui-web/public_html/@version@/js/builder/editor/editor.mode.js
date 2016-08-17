@@ -18,7 +18,9 @@ define(['knockout',
         NormalEditorMode.prototype = {
             constructor: NormalEditorMode,
             getModeWidth : function(tile) {
-                if (!tile.modeWidth) {tile.modeWidth = ko.observable(tile.width());}
+                if (!tile.modeWidth) {
+                    tile.modeWidth = ko.observable(tile.width());
+                }
                 return tile.modeWidth();
             },
             setModeWidth : function(tile, width) {
@@ -30,11 +32,15 @@ define(['knockout',
                 }
             },
             resetModeWidth : function(tile) {
-                if (!tile.modeWidth) {tile.modeWidth = ko.observable();}
+                if (!tile.modeWidth) {
+                    tile.modeWidth = ko.observable();
+                }
                 tile.modeWidth(tile.width());
             },
             getModeHeight : function(tile) {
-                if (!tile.modeHeight) {tile.modeHeight = ko.observable(tile.height());}
+                if (!tile.modeHeight) {
+                    tile.modeHeight = ko.observable(tile.height());
+                }
                 return tile.modeHeight();
             },
             setModeHeight : function(tile, height) {
@@ -46,11 +52,15 @@ define(['knockout',
                 }
             },
             resetModeHeight : function(tile) {
-                if (!tile.modeHeight) {tile.modeHeight = ko.observable();}
+                if (!tile.modeHeight) {
+                    tile.modeHeight = ko.observable();
+                }
                 tile.modeHeight(tile.height());
             },
             getModeColumn : function(tile) {
-                if (!tile.modeColumn) {tile.modeColumn = ko.observable(tile.column());}
+                if (!tile.modeColumn) {
+                    tile.modeColumn = ko.observable(tile.column());
+                }
                 return tile.modeColumn();
             },
             setModeColumn : function(tile, modeColumn) {
@@ -62,11 +72,15 @@ define(['knockout',
                 tile.modeColumn(modeColumn);
             },
             resetModeColumn : function(tile) {
-                if (!tile.modeColumn) {tile.modeColumn = ko.observable();}
+                if (!tile.modeColumn) {
+                    tile.modeColumn = ko.observable();
+                }
                 tile.modeColumn(tile.column());
             },
             getModeRow : function(tile) {
-                if (!tile.modeRow) {tile.modeRow = ko.observable(tile.row());}
+                if (!tile.modeRow) {
+                    tile.modeRow = ko.observable(tile.row());
+                }
                 return tile.modeRow();
             },
             setModeRow : function(tile, modeRow) {
@@ -78,7 +92,9 @@ define(['knockout',
                 tile.modeRow(modeRow);
             },
             resetModeRow : function(tile) {
-                if (!tile.modeRow) {tile.modeRow = ko.observable();}
+                if (!tile.modeRow) {
+                    tile.modeRow = ko.observable();
+                }
                 tile.modeRow(tile.row());
             }
         };

@@ -345,7 +345,7 @@ define(['knockout',
                 return result;
             }
             function S4() {
-               return (((1+securedRandom())*0x10000)|0).toString(16).substring(1);
+               return parseInt(((1+securedRandom())*0x10000)).toString(16).substring(1);
             }
             return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
         }
@@ -355,8 +355,8 @@ define(['knockout',
             var smQuery = oj.ResponsiveUtils.getFrameworkQuery(
                                 oj.ResponsiveUtils.FRAMEWORK_QUERY_KEY.SM_ONLY);
             var smObservable = oj.ResponsiveKnockoutUtils.createMediaQueryObservable(smQuery);
-            window.DEV_MODE && console.debug("Checking sm media type result: " + (smObservable&smObservable()));
-            return smObservable & smObservable();
+            window.DEV_MODE && console.debug("Checking sm media type result: " + (smObservable&&smObservable()));
+            return smObservable && smObservable();
         }
         Builder.registerFunction(isSmallMediaQuery, 'isSmallMediaQuery');
 

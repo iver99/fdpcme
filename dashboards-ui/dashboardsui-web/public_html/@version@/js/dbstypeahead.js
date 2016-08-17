@@ -188,8 +188,12 @@ $.widget( "dbs.dbsTypeAhead", {
                             var _fetchSize = 20, _searchText = (request.term && request.term !== null) ? request.term.trim() : request.term;
                             if (_dsFetchSize)
                             {
-                                if ($.isFunction(_dsFetchSize)) {_fetchSize = _dsFetchSize();}
-                                else {_fetchSize = _dsFetchSize;}
+                                if ($.isFunction(_dsFetchSize)) {
+                                	_fetchSize = _dsFetchSize();
+                                }
+                                else {
+                                	_fetchSize = _dsFetchSize;
+                                }
                             }
                             _dataSource = _dsFac.build(_searchText, _fetchSize);
                             _dataSource['pagingDS'].setPage(0, {

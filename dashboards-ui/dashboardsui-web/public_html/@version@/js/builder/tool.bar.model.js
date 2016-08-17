@@ -32,6 +32,7 @@ define(['knockout',
             self.duplicateDashboardModel = new dd.DuplicateDashboardModel($b);
             self.toolBarGuid = Builder.getGuid();
             self.isUnderSet = ko.dataFor($("#dbd-set-tabs")[0]).isDashboardSet();
+            self.isInOOBDashboardSet=ko.dataFor($("#dbd-set-tabs")[0]).isOobDashboardset();
             self.duplicateInSet = ko.observable(false);
 
             if (self.dashboard.id && self.dashboard.id()){
@@ -247,7 +248,7 @@ define(['knockout',
 
             self.handleUnshareDashboardCancelled = function() {
                 // revert change
-                var dashboardSharing = ko.dataFor($b.findEl(".share-settings")[0]).dashboardSharing;
+                var dashboardSharing = ko.dataFor($(".share-settings")[0]).dashboardSharing;
                 dashboardSharing("shared");
                 $('#share-dashboard').ojDialog( "close" );
             };
@@ -527,41 +528,6 @@ define(['knockout',
                 }
             };
 
-            self.handleShareUnshare = function(isToShare) {
-                var _shareState = self.dashboard.sharePublic();
-                if(_shareState === isToShare ) {
-                    return ;
-                }
-                var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
-                dfu.ajaxWithRetry(_url + self.dashboard.id() + "/quickUpdate", {
-                        type: 'PUT',
-                        dataType: "json",
-                        contentType: 'application/json',
-                        data: JSON.stringify({sharePublic: isToShare}),
-                        headers: dfu.getDashboardsRequestHeader(),
-                        success: function (result) {
-                            self.dashboard.sharePublic(isToShare);
-                            if (self.dashboard.sharePublic() === true)
-                            {
-                                self.sharePublicLabel(unshareDashboardLabel);
-                                self.sharePublicTitle(unshareDashboardTitle);
-                                self.cssSharePublic(cssUnshareDashboard);
-                                dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_SHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_SHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
-                            }
-                            else
-                            {
-                                self.sharePublicLabel(shareDashboardLabel);
-                                self.sharePublicTitle(shareDashboardTitle);
-                                self.cssSharePublic(cssShareDashboard);
-                                dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
-                            }
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
-                        }
-                    });
-            };
-
             self.initialize();
 
             var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
@@ -598,6 +564,41 @@ define(['knockout',
             //Check home dashboard preferences
             checkDashboardAsHomeSettings();
 
+            self.handleShareUnshare = function(isToShare) {
+                var _shareState = self.dashboard.sharePublic();
+                if(_shareState === isToShare ) {
+                    return ;
+                }
+                var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
+                dfu.ajaxWithRetry(_url + self.dashboard.id() + "/quickUpdate", {
+                        type: 'PUT',
+                        dataType: "json",
+                        contentType: 'application/json',
+                        data: JSON.stringify({sharePublic: isToShare}),
+                        headers: dfu.getDashboardsRequestHeader(),
+                        success: function (result) {
+                            self.dashboard.sharePublic(isToShare);
+                            if (self.dashboard.sharePublic() === true)
+                            {
+                                self.sharePublicLabel(unshareDashboardLabel);
+                                self.sharePublicTitle(unshareDashboardTitle);
+                                self.cssSharePublic(cssUnshareDashboard);
+                                dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_SHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_SHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
+                            }
+                            else
+                            {
+                                self.sharePublicLabel(shareDashboardLabel);
+                                self.sharePublicTitle(shareDashboardTitle);
+                                self.cssSharePublic(cssShareDashboard);
+                                dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
+                        }
+                    });
+            };
+            
             self.openDashboardEditDialog = function() {
                 var rightPanel = ko.dataFor($('.df-right-panel')[0]);
                 rightPanel && rightPanel.editRightpanelLinkage("singleDashboard-edit");
@@ -924,7 +925,9 @@ define(['knockout',
                     "showSubMenu": function () {
                         if (self.currentUser !== self.dashboard.owner() && "Oracle" !== self.dashboard.owner()) {
                             return false;
-                        } else {
+                        } else if(self.isInOOBDashboardSet){
+                            return false;
+                        } else{
                             return self.isUnderSet;
                         }
                     }(),
