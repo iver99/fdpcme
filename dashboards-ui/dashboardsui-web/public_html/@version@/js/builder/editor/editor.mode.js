@@ -75,7 +75,7 @@ define(['knockout',
 
         function TabletEditorMode() {
             this.mode = "Tablet Display Mode";
-            this.MODE_MAX_COLUMNS = 2;
+            this.MODE_MAX_COLUMNS = 1;
             this.MODE_MIN_COLUMNS = 1;
             this.editable = false;
             this.POSITION_TYPE = Builder.EDITOR_POS_FIND_SUITABLE_SPACE;
@@ -84,7 +84,7 @@ define(['knockout',
         TabletEditorMode.prototype.constructor = TabletEditorMode;
         TabletEditorMode.prototype.resetModeWidth = function(tile) {
             !tile.modeWidth && (tile.modeWidth = ko.observable());
-            tile.modeWidth(tile.width() <= 3 ? 1 : 2);
+            tile.modeWidth(1/*tile.width() <= 3 ? 1 : 2*/);
         };
         TabletEditorMode.prototype.setModeWidth = function(tile, width) {
             oj.Logger.error("Unsupport operation: TabletEditorMode.setModeWidth()");
