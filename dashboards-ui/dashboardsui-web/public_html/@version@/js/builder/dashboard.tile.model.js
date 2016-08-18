@@ -68,7 +68,6 @@ define(['knockout',
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
             self.showTimeRange = ko.observable(false);
             self.showWidgetTitle = ko.observable(true);
-            self.showRightPanelToggler = ko.observable(true);
 
             self.resizingTile = ko.observable();
             self.resizingTileCopy = null;
@@ -813,14 +812,6 @@ define(['knockout',
 
             self.enterTabletModeHandler = function() {
                 self.editor.changeMode(self.tabletMode);
-            };
-
-            self.dashboardMaximizedHandler = function() {
-                self.showRightPanelToggler(false);
-            };
-
-            self.dashboardRestoredHandler = function() {
-                self.showRightPanelToggler(true);
             };
 
             var globalTimer = null;

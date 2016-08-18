@@ -452,9 +452,13 @@ define(['knockout',
             };
             
             self.openDashboardEditDialog = function() {
-                var rightPanel = ko.dataFor($('.df-right-panel')[0]);
-                rightPanel && rightPanel.editRightpanelLinkage("singleDashboard-edit");
+                self.notifyRightPanelChange("singleDashboard-edit");      
             };
+            
+            self.notifyRightPanelChange = function (changeEvent) {
+                Builder.rightPanelChange(changeEvent);
+            };
+            
             self.openDashboardDuplicateDialog = function() {
                 $('#duplicateDsbDialog').ojDialog('open');
             };

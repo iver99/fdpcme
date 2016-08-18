@@ -11,11 +11,12 @@ define(['knockout',
         'ojs/ojcore',
         'builder/tool-bar/edit.dialog',
         'uifwk/js/util/screenshot-util',
+        'builder/right-panel/right.panel.control.model',
         'jqueryui',
         'builder/builder.core',
         'builder/widget/widget.model'
     ],
-    function(ko, $, dfu, mbu, uiutil, oj, ed, ssu) {
+    function(ko, $, dfu, mbu, uiutil, oj, ed, ssu,rpc) {
         function ResizableView($b) {
             var self = this;
 
@@ -79,74 +80,15 @@ define(['knockout',
             $b.registerObject(this, 'RightPanelModel');
 
             self.$b = $b;
-
+            self.rightPanelControl=new rpc.rightPanelControl(self.$b,tilesViewModel,toolBarModel);
             self.selectedDashboard = ko.observable(self.dashboard);
-
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
-            self.isOobDashboardset=dashboardsetToolBarModel.isOobDashboardset;
-            self.scrollbarWidth = uiutil.getScrollbarWidth();
-
-            self.showRightPanelToggler =  ko.observable(self.isMobileDevice !== 'true');
-
-            self.dashboardEditDisabled = ko.observable(self.toolBarModel ? self.toolBarModel.editDisabled() : true);
-
-            self.showRightPanel = ko.observable(false);
-
-            self.rightPanelIcon = ko.observable(tilesViewModel && tilesViewModel.isEmpty() ? "wrench" : "none");
-
-            self.editRightpanelLinkage = function(target){
-                var highlightIcon = "pencil";
-                self.completelyHidden(false);
-                var panelTarget;
-                if (target === "singleDashboard-edit") {
-                    panelTarget = "edit";
-                } else if (target === "dashboardset-edit") {
-                    panelTarget = "editset";
-                }
-                self.rightPanelIcon(highlightIcon);
-                if (!self.showRightPanel()) {
-                    self.toggleLeftPanel();
-                    self.editPanelContent(panelTarget);
-                    self.expandDBEditor(target,true);
-                } else {
-                    self.editPanelContent(panelTarget);
-                    self.expandDBEditor(target,true);
-                    $(".dashboard-picker-container:visible").addClass("df-collaps");
-                }
-                self.$b.triggerBuilderResizeEvent('resize right panel');
-            };
-
-            self.toggleRightPanel = function (data, event, target) {
-                var clickedIcon;
-                if ($(event.currentTarget).hasClass('rightpanel-pencil')) {
-                    clickedIcon = "pencil";
-                } else if ($(event.currentTarget).hasClass('rightpanel-wrench')) {
-                    clickedIcon = "wrench";
-                }
-
-                if (self.showRightPanel() && clickedIcon !== self.rightPanelIcon()) {
-                    self.rightPanelIcon(clickedIcon);
-                } else if (self.showRightPanel()) {
-                    self.rightPanelIcon("none");
-                    self.toggleLeftPanel();
-                    if("NORMAL"!==self.$b.dashboard.type() || self.$b.dashboard.systemDashboard()){
-                        self.completelyHidden(true);
-                    }
-                } else {
-                    self.rightPanelIcon(clickedIcon);
-                    self.toggleLeftPanel();
-                }
-            };
-
-
+            self.isOobDashboardset=dashboardsetToolBarModel.isOobDashboardset; 
             self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
-
             self.keyword = ko.observable('');
             self.clearRightPanelSearch=ko.observable(false);
             self.widgets = ko.observableArray([]);
-
-            self.completelyHidden = ko.observable(false);
             self.maximized = ko.observable(false);
 
             self.loadToolBarModel = function(toolBarModel,_$b){
@@ -155,9 +97,9 @@ define(['knockout',
                 self.editDashboardDialogModel(new ed.EditDashboardDialogModel(_$b,toolBarModel));
                 editDashboardDialogModelChanged = true;
                 if(toolBarModel) {
-                    self.dashboardEditDisabled(toolBarModel.editDisabled()) ;
+                    self.rightPanelControl.dashboardEditDisabled(toolBarModel.editDisabled()) ;
                 }else{
-                    self.dashboardEditDisabled(true) ;
+                    self.rightPanelControl.dashboardEditDisabled(true) ;
                 }
             };
 
@@ -169,7 +111,7 @@ define(['knockout',
                 }
                 self.tilesViewModel = tilesViewModel;
                 self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
-                self.rightPanelIcon(self.emptyDashboard ? "wrench" : "none");
+                self.rightPanelControl.rightPanelIcon(self.emptyDashboard ? "wrench" : "none");
 
                 //reset filter settings in right drawer when selected dashboard is changed
                 var dashboard = tilesViewModel.dashboard;
@@ -194,10 +136,6 @@ define(['knockout',
 
                 self.dashboardSharing(self.dashboard.sharePublic() ? "shared" : "notShared");
             };
-
-            $('.dbd-right-panel-editdashboard-filters').ojCollapsible( { "expanded": false } );
-            $('.dbd-right-panel-editdashboard-share').ojCollapsible( { "expanded": false } );
-            $('.dbd-right-panel-editdashboard-general').ojCollapsible( { "expanded": false } );
 
             var scrollInstantStore = ko.observable();
             var scrollDelay = ko.computed(function() {
@@ -245,20 +183,20 @@ define(['knockout',
            
             self.initialize = function() {
                     if (self.isMobileDevice === 'true' || self.isOobDashboardset()) {
-                        self.completelyHidden(true);
+                        self.rightPanelControl.completelyHidden(true);
                         self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
                     } else {
-                        self.completelyHidden(false);
+                        self.rightPanelControl.completelyHidden(false);
                         if (self.emptyDashboard) {
-                            self.showRightPanel(true);
+                            self.rightPanelControl.showRightPanel(true);
                         } else {
-                            self.showRightPanel(false);
+                            self.rightPanelControl.showRightPanel(false);
                         }
 
                         if ("NORMAL" !== self.$b.dashboard.type()
                                 || true === self.$b.dashboard.systemDashboard()
                                 || false === self.dashboardsetToolBarModel.dashboardsetConfig.isCreator()) {
-                            self.completelyHidden(true);
+                            self.rightPanelControl.completelyHidden(true);
                         }
                         self.$b.triggerBuilderResizeEvent('Initialize right panel');
                     }
@@ -318,22 +256,17 @@ define(['knockout',
                     }
                 });
             };
-            
-            function rightPanelChange(status) {
-                 self.editRightpanelLinkage(status);
-            }
-            Builder.registerModule(rightPanelChange, 'rightPanelChange');
-
+                        
             self.tileMaximizedHandler = function() {
                 self.maximized(true);
-                self.completelyHidden(true);
+                self.rightPanelControl.completelyHidden(true);
                 self.$b.triggerBuilderResizeEvent('tile maximized and completely hide left panel');
             };
 
             self.tileRestoredHandler = function() {
                 self.maximized(false);
                 if(self.isMobileDevice !== 'true' && !self.isOobDashboardset()) {
-                    self.completelyHidden(false);
+                    self.rightPanelControl.completelyHidden(false);
                 }
 
                 self.initDraggable();
@@ -484,26 +417,7 @@ define(['knockout',
                 }
             };
 
-            self.toggleLeftPanel = function() {
-                if (!self.showRightPanel()) {
-                    $(".dbd-left-panel").animate({width: "320px"}, "normal");
-                    $(".right-panel-toggler").animate({right: (323 + self.scrollbarWidth) + 'px'}, 'normal', function () {
-                        self.showRightPanel(true);
-                        $(".dashboard-picker-container:visible").addClass("df-collaps");
-                        self.$b.triggerBuilderResizeEvent('show right panel');
-                    });
-                } else {
-                    $(".dbd-left-panel").animate({width: 0});
-                    $(".right-panel-toggler").animate({right: self.scrollbarWidth + 3 + 'px'}, 'normal', function () {
-                        self.expandDBEditor(true);
-                        self.showRightPanel(false);
-                        self.initDraggable();
-                        $(".dashboard-picker-container:visible").removeClass("df-collaps");
-                        self.$b.triggerBuilderResizeEvent('hide right panel');
-                    });
-                }
-            };
-
+            
             self.widgetMouseOverHandler = function(widget,event) {
                 if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0){
                     return;
@@ -588,48 +502,7 @@ define(['knockout',
             $("#delete-dashboard").on("ojclose", function (event, ui) {
                 self.toolBarModel.isDeletingDbd(false);
             });
-
-            $('.dbd-right-panel-editdashboard-general').on({
-                "ojexpand":function(event,ui){
-                    $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option","expanded",false);
-                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option","expanded",false);
-                }
-            });
-
-            $('.dbd-right-panel-editdashboard-set-general').on({
-                "ojexpand":function(event,ui){
-                    $('.dbd-right-panel-editdashboard-set-share').ojCollapsible("option","expanded",false);
-                }
-            });
-
-            $('.dbd-right-panel-editdashboard-filters').on({
-                "ojexpand":function(event,ui){
-                    $('.dbd-right-panel-editdashboard-general').ojCollapsible("option","expanded",false);
-                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option","expanded",false);
-                }
-            });
-
-            $('.dbd-right-panel-editdashboard-share').on({
-                "ojexpand":function(event,ui){
-                    $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option","expanded",false);
-                    $('.dbd-right-panel-editdashboard-general').ojCollapsible("option","expanded",false);
-                }
-            });
-
-            $('.dbd-right-panel-editdashboard-set-share').on({
-                "ojexpand":function(event,ui){
-                    $('.dbd-right-panel-editdashboard-set-general').ojCollapsible("option","expanded",false);
-                }
-            });
-
-            self.expandDBEditor = function(target,isToExpand){
-                if("singleDashboard-edit" === target){
-                    $('.dbd-right-panel-editdashboard-general').ojCollapsible("option","expanded",isToExpand);
-                }else if("dashboardset-edit" === target){
-                    $('.dbd-right-panel-editdashboard-set-general').ojCollapsible("option","expanded",isToExpand);
-                }
-            };
-            
+         
             self.showdbOnHomePage = ko.observable([]);
 
             var dsbSaveDelay = ko.computed(function(){
@@ -1017,21 +890,6 @@ define(['knockout',
                     $('#deleteDashboardset').ojDialog("open");
                 };
             }
-
-            self.editPanelContent = ko.observable("settings");
-
-            self.switchEditPanelContent = function(data,event){
-                if ($(event.currentTarget).hasClass('edit-dsb-link')) {
-                    self.editPanelContent("edit");
-                    self.expandDBEditor("singleDashboard-edit",true);
-                } else if ($(event.currentTarget).hasClass('edit-dsbset-link')) {
-                    self.editPanelContent("editset");
-                    self.expandDBEditor("dashboardset-edit",true);
-                } else {
-                    self.editPanelContent("settings");
-                }
-                self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
-        };
         }
 
         Builder.registerModule(RightPanelModel, 'RightPanelModel');

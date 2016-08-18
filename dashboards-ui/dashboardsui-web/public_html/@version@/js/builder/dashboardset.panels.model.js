@@ -59,7 +59,7 @@ define([
                 //hide the right panel
                 if (self.rightPanelModel) {
                     //resize right panel before shown
-                    self.rightPanelModel.completelyHidden(true);
+                    Builder.rightPanelChange("complete-hidden-rightpanel");                 
                     $(".dashboard-picker-container").removeClass("df-collaps");
                 }
 

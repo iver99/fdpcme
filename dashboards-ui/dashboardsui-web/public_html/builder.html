@@ -727,13 +727,13 @@
                 <!--/ko-->
             </div>
 
-            <div class="df-right-panel no-print" data-bind="style:{top:isDashboardSet() ?'100px':'91px'},visible:!completelyHidden()">
+            <div class="df-right-panel no-print" data-bind="style:{top:isDashboardSet() ?'100px':'91px'},visible:!rightPanelControl.completelyHidden()">
                 <div class="right-panel-toggler no-print fit-size" data-bind="
-                        visible:showRightPanelToggler,
+                        visible:rightPanelControl.showRightPanelToggler,
                         style: {
-                                 right: showRightPanel() ?
-                                (323 + $root.scrollbarWidth) + 'px' :
-                                $root.scrollbarWidth+ 3 + 'px'
+                                 right: rightPanelControl.showRightPanel() ?
+                                (323 + rightPanelControl.scrollbarWidth) + 'px' :
+                                rightPanelControl.scrollbarWidth+ 3 + 'px'
                         }">
                     <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn rightpanel-wrench" style="display: block;" id="rightpanel-wrench"
                             data-bind="attr:{id:'rightpanel-wrench_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},ojComponent: {
@@ -742,10 +742,10 @@
                                     icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 dbd-wrench'},
                                     label:getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_TITLE')
                             },
-                            click: toggleRightPanel,
-                            visible:!dashboardEditDisabled(),
+                            click: rightPanelControl.toggleRightPanel,
+                            visible:!rightPanelControl.dashboardEditDisabled(),
                             css:{
-                               'df-selected':rightPanelIcon()=='wrench'
+                               'df-selected':rightPanelControl.rightPanelIcon()=='wrench'
                             }"/>
                     </button>
                     <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn oj-buttonset-first rightpanel-pencil" style="display: block;" id="rightpanel-pencil"
@@ -755,13 +755,13 @@
                                     icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-pencil'},
                                     label: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_SETTINGS_TITLE')
                                 },
-                                visible:!dashboardEditDisabled() || isDashboardSet(),
-                                click: toggleRightPanel,
+                                visible:!rightPanelControl.dashboardEditDisabled() || isDashboardSet(),
+                                click: rightPanelControl.toggleRightPanel,
                                 style:{
-                                    borderTop:dashboardEditDisabled() ? '1px solid #e4e8ea' : '0'
+                                    borderTop:rightPanelControl.dashboardEditDisabled() ? '1px solid #e4e8ea' : '0'
                                 },
                                 css: {
-                                    'df-selected': rightPanelIcon()=='pencil'
+                                    'df-selected': rightPanelControl.rightPanelIcon()=='pencil'
                                 }"/>
                     </button>
                     <!-- EMCPDF-1513:Help Tab on right drawer disabled -->
@@ -775,13 +775,13 @@
             </div>
 
                 <div class="dbd-left-panel no-print fit-size"
-                        data-bind="css: {'dbd-left-panel-show' : showRightPanel(), 'dbd-left-panel-hide' : !showRightPanel()},
-                                   style: {right: $root.scrollbarWidth + 'px'}">
+                        data-bind="css: {'dbd-left-panel-show' : rightPanelControl.showRightPanel(), 'dbd-left-panel-hide' : !rightPanelControl.showRightPanel()},
+                                   style: {right: rightPanelControl.scrollbarWidth + 'px'}">
                     <div class="dbd-right-panel-contents">
                         <!-- ko if: $data.isDashboardSet -->
-                        <div class="dbd-right-panel-editdashboardset" data-bind="visible:rightPanelIcon()=='pencil'&&$data.editPanelContent()=='editset'">
+                        <div class="dbd-right-panel-editdashboardset" data-bind="visible:rightPanelControl.rightPanelIcon()=='pencil'&&$data.rightPanelControl.editPanelContent()=='editset'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" >
-                                <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: switchEditPanelContent"style="color:#0572ce;margin-left: -5px;"></a>
+                                <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: rightPanelControl.switchEditPanelContent"style="color:#0572ce;margin-left: -5px;"></a>
                                 <span data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_DSBSET_TITLE')"></span>
                             </div>
                             <div class="dbd-right-panel-editdashboard-container fit-size" style="overflow-y: scroll">
@@ -879,9 +879,9 @@
                         <!-- /ko -->
 
                         <!-- ko if: $data.editDashboardDialogModel -->
-                        <div class="dbd-right-panel-editdashboard" data-bind="visible:rightPanelIcon()=='pencil' && $data.editPanelContent()=='edit'">
+                        <div class="dbd-right-panel-editdashboard" data-bind="visible:rightPanelControl.rightPanelIcon()=='pencil' && $data.rightPanelControl.editPanelContent()=='edit'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" >
-                                <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: switchEditPanelContent"style="color:#0572ce"></a>
+                                <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: rightPanelControl.switchEditPanelContent"style="color:#0572ce"></a>
                                 <span data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_DSB_TITLE')"></span>
                             </div>
                             <div class="dbd-right-panel-editdashboard-container fit-size" style="padding-left:0; padding-right:0;overflow-y: scroll">
@@ -1070,15 +1070,15 @@
                             </div>
                         </div>
                         <!-- /ko -->
-                        <div id="dbd-right-panel-editsettings"  class="dbd-right-panel-editsettings"  data-bind="visible:rightPanelIcon()=='pencil'&&$data.editPanelContent()=='settings'">
+                        <div id="dbd-right-panel-editsettings"  class="dbd-right-panel-editsettings"  data-bind="visible:rightPanelControl.rightPanelIcon()=='pencil'&&$data.rightPanelControl.editPanelContent()=='settings'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_SETTINGS_TITLE')"></div>
                             <div id="dbd-edit-settings-container" class="dbd-edit-settings-container">
                                 <!-- ko if:isDashboardSet -->
                                     <span class="edit-setting-head" data-bind="text: getNlsString('DBSSET_BUILDER_DASHBOARDSET')"></span>
-                                    <span class="edit-setting-link edit-dsbset-link" data-bind="text:$data.dashboardsetToolBarModel.dashboardsetName, click: switchEditPanelContent"></span>
-                                    <!--ko if: !dashboardEditDisabled() && dashboardsetToolBarModel.dashboardsetItems.length>0-->
+                                    <span class="edit-setting-link edit-dsbset-link" data-bind="text:$data.dashboardsetToolBarModel.dashboardsetName, click: rightPanelControl.switchEditPanelContent"></span>
+                                    <!--ko if: !rightPanelControl.dashboardEditDisabled() && dashboardsetToolBarModel.dashboardsetItems.length>0-->
                                         <span class="edit-setting-head" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_SELECTED_DSB')"></span>
-                                        <span class="edit-setting-link edit-dsb-link" data-bind="text:$data.dashboardsetToolBarModel.selectedDashboardItem().name, click: switchEditPanelContent"></span>
+                                        <span class="edit-setting-link edit-dsb-link" data-bind="text:$data.dashboardsetToolBarModel.selectedDashboardItem().name, click: rightPanelControl.switchEditPanelContent"></span>
                                         <!-- ko if:sortedTiles().length > 0 -->
                                             <span class="edit-setting-head">Widgets</span>
                                             <!--ko foreach:sortedTiles-->
@@ -1087,9 +1087,9 @@
                                         <!--/ko-->
                                     <!-- /ko -->
                                 <!--/ko-->
-                                <!--ko if: isDashboardSet() === false && !dashboardEditDisabled()-->
+                                <!--ko if: isDashboardSet() === false && !rightPanelControl.dashboardEditDisabled()-->
                                 <span class="edit-setting-head">Dashboard</span>
-                                    <span class="edit-setting-link edit-dsb-link" data-bind="text: dashboard.name, click: switchEditPanelContent"></span>
+                                    <span class="edit-setting-link edit-dsb-link" data-bind="text: dashboard.name, click: rightPanelControl.switchEditPanelContent"></span>
                                     <!--ko if: $data.dashboard.tiles().length>0-->
                                     <span class="edit-setting-head">Widgets</span>
                                         <!--ko foreach: sortedTiles -->
@@ -1099,7 +1099,7 @@
                                 <!--/ko-->
                             </div>
                         </div>
-                        <div class="dbd-right-panel-wrench" data-bind="visible:rightPanelIcon()=='wrench'">
+                        <div class="dbd-right-panel-wrench" data-bind="visible:rightPanelControl.rightPanelIcon()=='wrench'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_TITLE')"></div>
                             <div class="dbd-right-panel-build-container" style="padding:0">
                                 <div class="dbd-left-panel-header fit-size-vertical-sibling">
