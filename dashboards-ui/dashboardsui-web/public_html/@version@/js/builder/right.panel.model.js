@@ -6,7 +6,7 @@
 define(['knockout',
         'jquery',
         'dfutil',
-        'mobileutil',
+        'uifwk/js/util/mobile-util',
         'uiutil',
         'ojs/ojcore',
         'builder/tool-bar/edit.dialog',

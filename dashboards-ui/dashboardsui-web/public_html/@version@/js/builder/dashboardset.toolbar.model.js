@@ -12,7 +12,7 @@ define(['knockout',
     'builder/tool-bar/edit.dialog',
     'builder/tool-bar/duplicate.dialog',
     'uifwk/js/util/preference-util',
-    'mobileutil',
+    'uifwk/js/util/mobile-util',
     'builder/builder.core'
 ],
     function (ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu,mbu) {

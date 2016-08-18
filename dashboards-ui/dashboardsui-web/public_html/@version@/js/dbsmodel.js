@@ -17,8 +17,8 @@ define([
     'knockout',
     'jquery',
     'dfutil',
-    'prefutil',
-    'mobileutil',
+    'uifwk/js/util/preference-util',
+    'uifwk/js/util/mobile-util',
     'ojs/ojknockout',
     'ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'
