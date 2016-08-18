@@ -304,8 +304,8 @@ define([
                     }
                 };
 
-                var templatePath = "/emsaasui/uifwk/js/widgets/navlinks/html/navigation-links.html";
-                var vmPath = "/emsaasui/uifwk/js/widgets/navlinks/js/navigation-links.js";
+                var templatePath = "uifwk/js/widgets/navlinks/html/navigation-links.html";
+                var vmPath = "uifwk/js/widgets/navlinks/js/navigation-links";
 
                 //Parameters for navigation links ko component
                 self.navLinksKocParams = {
@@ -333,8 +333,8 @@ define([
                     id: self.aboutBoxId,
                     nlsStrings: nls };
                 //Register a Knockout component for about box
-                var aboutTemplatePath = "/emsaasui/uifwk/js/widgets/aboutbox/html/aboutbox.html";
-                var aboutVmPath = "/emsaasui/uifwk/js/widgets/aboutbox/js/aboutbox.js";
+                var aboutTemplatePath = "uifwk/js/widgets/aboutbox/html/aboutbox.html";
+                var aboutVmPath = "uifwk/js/widgets/aboutbox/js/aboutbox";
                 if (!ko.components.isRegistered('df-oracle-about-box')) {
                     ko.components.register("df-oracle-about-box",{
                         viewModel:{require:aboutVmPath},
