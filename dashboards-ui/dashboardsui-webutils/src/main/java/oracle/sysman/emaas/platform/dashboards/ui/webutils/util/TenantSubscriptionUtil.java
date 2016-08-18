@@ -94,7 +94,7 @@ public class TenantSubscriptionUtil
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
 			DomainsEntity de = ju.fromJson(domainsResponse, DomainsEntity.class);
-			if (de == null || de.getItems() == null || de.getItems().size() <= 0) {
+			if (de == null || de.getItems() == null || de.getItems().isEmpty()) {
 				logger.warn("Checking tenant (" + tenant
 						+ ") subscriptions: null/empty domains entity or domains item retrieved.");
 				return Collections.emptyList();

@@ -440,7 +440,7 @@ public class RegistrationEntity implements Serializable
 	private List<LinkEntity> filterAdminLinksByUserRoles(List<LinkEntity> origLinks, List<String> roleNames)
 	{
 		List<LinkEntity> resultLinks = new ArrayList<LinkEntity>();
-		if (origLinks != null && origLinks.size() != 0 && roleNames != null) {
+		if (origLinks != null && !origLinks.isEmpty() && roleNames != null) {
 			for (LinkEntity le : origLinks) {
 				if (le.getServiceName().equals(APM_SERVICENAME) && roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_APM)) {
 					resultLinks.add(le);
@@ -555,7 +555,7 @@ public class RegistrationEntity implements Serializable
 			}
 		}
 		//if any of APM/LA/TA is subscribed, TenantManagementUI/EventUI/AdminConsoleSaaSUi should be subscribed accordingly as agreement now
-		if (appSet.size() > 0) {
+		if (!appSet.isEmpty()) {
 			//			if (isAdmin) {
 			appSet.add(TMUI_SERVICENAME);
 			//			}
@@ -646,7 +646,7 @@ public class RegistrationEntity implements Serializable
 
 	private List<LinkEntity> sortServiceLinks(List<LinkEntity> origLinks)
 	{
-		if (origLinks != null && origLinks.size() > 0) {
+		if (origLinks != null && !origLinks.isEmpty()) {
 			Collections.sort(origLinks, new Comparator<LinkEntity>() {
 				@Override
 				public int compare(LinkEntity linkOne, LinkEntity linkTwo)
