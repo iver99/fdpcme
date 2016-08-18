@@ -588,8 +588,7 @@ public class RegistryLookup
 							"Authorization", authToken).when()
 							.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=1.0&rel=abc");
 
-			//System.out.println("											");
-			//System.out.println("Status code is: " + res5.getStatusCode());
+			
 			Assert.assertTrue(res5.getStatusCode() == 404);
 			//System.out.println(res5.asString());
 

@@ -795,7 +795,7 @@ public class DashboardManager
 				"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
 						+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE ");
 		String jpqlQuery = sbQuery.toString();
-		//System.out.println("sql: " + jpqlQuery);
+		
 		logger.debug(jpqlQuery);
 		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 		EntityManager em = dsf.getEntityManager();

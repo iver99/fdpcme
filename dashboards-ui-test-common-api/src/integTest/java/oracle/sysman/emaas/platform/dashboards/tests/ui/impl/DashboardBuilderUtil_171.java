@@ -1018,7 +1018,6 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			driver.click("css=" + DashBoardPageId.BUILDEROPTIONSSETHOMELOCATORCSS);
 			driver.takeScreenShot();
 			boolean comfirmDialog = driver.isDisplayed("css=" + DashBoardPageId.BUILDEROPTIONSSETHOMESAVECSS);
-			//System.out.println("dialog home " + comfirmDialog);
 			if (comfirmDialog) {
 				driver.click("css=" + DashBoardPageId.BUILDEROPTIONSSETHOMESAVECSS);
 				driver.takeScreenShot();

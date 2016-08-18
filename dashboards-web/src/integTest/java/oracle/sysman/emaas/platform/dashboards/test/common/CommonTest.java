@@ -120,24 +120,6 @@ public class CommonTest
 		return urls;
 	}
 
-	/**
-	 * Sets up RESTAssured defaults before executing test cases Enables logging Reading the inputs from the testenv.properties
-	 * file
-	 * 
-	 * @throws URISyntaxException
-	 */
-
-	/*public static void main(String ar[]) 
-	{
-		String  name = "http://slc08twq.us.oracle.com:7004/registry/servicemanager/registry/v1";
-		name = name + DSB_DEPLOY_URL;
-		String data = getData(name);
-		List<String>  url=  getDeploymentUrl(data);
-		System.out.println(url.get(0));
-
-		System.out.println(getDomainName(url.get(0)));
-		System.out.println(getPort(url.get(0)));
-	}*/
 
 	public static String getDomainName(String url) throws URISyntaxException
 	{
@@ -200,7 +182,7 @@ public class CommonTest
 			RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
 		}
 		catch (Exception e) {
-			//System.out.println("An error occurred while retriving deployment details:"+ e.toString()+" " + e.getCause());
+			
 		}
 
 	}
@@ -233,7 +215,7 @@ public class CommonTest
 			}
 		}
 		catch (IOException e) {
-			//	System.out.println("an error occureed while getting details by url" + " ::" + url + "  " + e.toString());
+			
 		}
 		finally {
 			try {
