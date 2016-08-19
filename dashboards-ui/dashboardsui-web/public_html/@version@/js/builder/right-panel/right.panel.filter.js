@@ -11,6 +11,7 @@ define([
             var self = this;
             
             self.dashboard = $b.dashboard;
+            self.rightPanelUtil = new rpu.RightPanelUtil();
             
             var defaultSettings = {
                     tsel:
@@ -83,9 +84,9 @@ define([
             
             self.defaultTimeRangeValueText = ko.computed(function() {
                 if((self.defaultTimeRangeValue()[0] !== "custom") && (self.defaultTimeRangeValue()[0] !== "custom1")) {
-                    return rpu.getDefaultTimeRangeValueText(self.defaultTimeRangeValue()[0]);
+                    return self.rightPanelUtil.getDefaultTimeRangeValueText(self.defaultTimeRangeValue()[0]);
                 }else {
-                    return rpu.getTimeInfo(self.defaultStartTime(), self.defaultEndTime());
+                    return self.rightPanelUtil.getTimeInfo(self.defaultStartTime(), self.defaultEndTime());
                 }
             });
 

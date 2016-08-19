@@ -84,5 +84,5 @@ define([
             };
         }
         
-        return new RightPanelUtil();
+        return {"RightPanelUtil": RightPanelUtil}; //new RightPanelUtil();
 });
