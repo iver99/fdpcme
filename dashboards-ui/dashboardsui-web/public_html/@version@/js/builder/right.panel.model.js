@@ -81,9 +81,9 @@ define(['knockout',
             $b.registerObject(this, 'RightPanelModel');
 
             self.$b = $b;
-            self.rightPanelControl=new rpc.rightPanelControl(self.$b,tilesViewModel,toolBarModel);
+            self.rightPanelControl=new rpc.rightPanelControl(self.$b);
             self.rightPanelFilter = new rpf.RightPanelFilterModel(self.$b);
-            self.rightPanelWidget= new rpw.rightPanelWidget($b,tilesViewModel);
+            self.rightPanelWidget= new rpw.rightPanelWidget(self.$b);
             self.selectedDashboard = ko.observable(self.dashboard);
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
@@ -95,6 +95,7 @@ define(['knockout',
                 self.toolBarModel = toolBarModel;
                 self.dashboard = _$b.dashboard;
                 self.editDashboardDialogModel(new ed.EditDashboardDialogModel(_$b,toolBarModel));
+                self.rightPanelControl.$b(_$b);
                 editDashboardDialogModelChanged = true;
                 if(toolBarModel) {
                     self.rightPanelControl.dashboardEditDisabled(toolBarModel.editDisabled()) ;
