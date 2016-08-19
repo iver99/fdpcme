@@ -4,12 +4,12 @@ define(['knockout',
 'dfutil'
 ],
 function (ko, $, oj, dfu) {
-    function rightPanelWidget($b, tilesViewModel) {
+    function rightPanelWidget($b) {
         var self = this;
         self.widgets = ko.observableArray([]);
         self.keyword = ko.observable('');
         self.clearRightPanelSearch = ko.observable(false);
-        self.tilesViewModel = ko.observable(tilesViewModel);
+        self.tilesViewModel = ko.observable($b.getDashboardTilesViewModel() && $b.getDashboardTilesViewModel());
 
         self.loadWidgets = function (req) {
             var widgetDS = new Builder.WidgetDataSource();

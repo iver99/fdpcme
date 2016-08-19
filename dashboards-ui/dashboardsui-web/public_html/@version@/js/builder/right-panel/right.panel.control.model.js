@@ -6,13 +6,14 @@ define(['knockout',
 'uiutil'
 ],
 function (ko, $, oj, dfu, mbu, uiutil) {
-    function rightPanelControl($b, tilesViewModel, toolBarModel) {
+    function rightPanelControl($b) {
         var self = this;
+        self.$b=ko.observable($b);
         self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
-        self.dashboardEditDisabled = ko.observable(toolBarModel ? toolBarModel.editDisabled() : true);
+        self.dashboardEditDisabled = ko.observable(self.$b().getToolBarModel() ? self.$b().getToolBarModel().editDisabled() : true);
         self.showRightPanelToggler = ko.observable(self.isMobileDevice !== 'true');
         self.showRightPanel = ko.observable(false);
-        self.rightPanelIcon = ko.observable(tilesViewModel && tilesViewModel.isEmpty() ? "wrench" : "none");
+        self.rightPanelIcon = ko.observable($b.getDashboardTilesViewModel() && $b.getDashboardTilesViewModel().isEmpty() ? "wrench" : "none");
         self.completelyHidden = ko.observable(false);
         self.editPanelContent = ko.observable("settings");
         self.scrollbarWidth = uiutil.getScrollbarWidth();
@@ -44,7 +45,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 self.expandDBEditor(target, true);
                 $(".dashboard-picker-container:visible").addClass("df-collaps");
             }
-            $b.triggerBuilderResizeEvent('resize right panel');
+            self.$b().triggerBuilderResizeEvent('resize right panel');
         };
 
         self.toggleRightPanel = function (data, event, target) {
@@ -60,7 +61,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
             } else if (self.showRightPanel()) {
                 self.rightPanelIcon("none");
                 self.toggleLeftPanel();
-                if ("NORMAL" !== $b.dashboard.type() || $b.dashboard.systemDashboard()) {
+                if ("NORMAL" !== self.$b().dashboard.type() || self.$b().dashboard.systemDashboard()) {
                     self.completelyHidden(true);
                 }
             } else {
@@ -75,7 +76,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 $(".right-panel-toggler").animate({right: (323 + self.scrollbarWidth) + 'px'}, 'normal', function () {
                     self.showRightPanel(true);
                     $(".dashboard-picker-container:visible").addClass("df-collaps");
-                    $b.triggerBuilderResizeEvent('show right panel');
+                    self.$b().triggerBuilderResizeEvent('show right panel');
                 });
             } else {
                 $(".dbd-left-panel").animate({width: 0});
@@ -84,7 +85,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                     self.showRightPanel(false);
                     self.initDraggable();
                     $(".dashboard-picker-container:visible").removeClass("df-collaps");
-                    $b.triggerBuilderResizeEvent('hide right panel');
+                    self.$b().triggerBuilderResizeEvent('hide right panel');
                 });
             }
         };
@@ -99,12 +100,13 @@ function (ko, $, oj, dfu, mbu, uiutil) {
             } else {
                 self.editPanelContent("settings");
             }
-            $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
+            self.$b().triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
         };
 
         function rightPanelChange(status) {
             if(status==="complete-hidden-rightpanel"){
                 self.completelyHidden(true);
+                self.$b().triggerBuilderResizeEvent('hide right panel');
             }else{
                 self.editRightpanelLinkage(status);
             }          
@@ -121,13 +123,13 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 helper: "clone",
                 scroll: false,
                 start: function (e, t) {
-                    $b.triggerEvent($b.EVENT_NEW_WIDGET_START_DRAGGING, null, e, t);
+                    self.$b().triggerEvent(self.$b().EVENT_NEW_WIDGET_START_DRAGGING, null, e, t);
                 },
                 drag: function (e, t) {
-                    $b.triggerEvent($b.EVENT_NEW_WIDGET_DRAGGING, null, e, t);
+                    self.$b().triggerEvent(self.$b().EVENT_NEW_WIDGET_DRAGGING, null, e, t);
                 },
                 stop: function (e, t) {
-                    $b.triggerEvent($b.EVENT_NEW_WIDGET_STOP_DRAGGING, null, e, t);
+                    self.$b().triggerEvent(self.$b().EVENT_NEW_WIDGET_STOP_DRAGGING, null, e, t);
                 }
             });
         };    
