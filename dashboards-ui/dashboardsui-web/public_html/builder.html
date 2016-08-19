@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/dashboards-home-alta.css" type="text/css"/>
-        
+       
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -960,7 +960,7 @@
                                             </div>
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
-                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: enableTimeRangeFilter}" >
+                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: rightPanelFilter.enableTimeRangeFilter}" >
                                                         <span class="oj-choice-row">
                                                             <input id="enableTimeRange" type="radio" name="enableTimeRange" value="ON">
                                                             <label for="enableTimeRange" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENABLE_TIME_RANGE')"></label>
@@ -980,12 +980,12 @@
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
                                                     <span class="oj-choice-row" style="margin: 8px 0 20px 0;">
-                                                        <input id="entitySupport" class="oj-checkbox" type="checkbox" data-bind="checked: entitySupport">
+                                                        <input id="entitySupport" class="oj-checkbox" type="checkbox" data-bind="checked: rightPanelFilter.entitySupport">
                                                         <label for="entitySupport" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENTITY_SUPPORT_MULTIPLE')"></label>
                                                     </span>   
                                                 </div>
                                                 <div class="oj-flex-item">
-                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: enableEntityFilter}" >
+                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: rightPanelFilter.enableEntityFilter}" >
                                                         <span class="oj-choice-row">
                                                             <input id="enableEntityFilter" type="radio" name="enableEntityFilter" value="ON">
                                                             <label for="enableEntityFilter" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENABLE_ENTITIES')"></label>
@@ -1029,15 +1029,15 @@
                                                 <div class="oj-flex-item" style="margin-left: 25px;">
                                                     <div class="share-default-settings" style="margin-top: 5px;">
                                                         <div data-bind="text: getNlsString('DBS_BUILDER_DSB_DEFAULT_REFRESH')"></div>
-                                                        <div id="defaultAutoRefresh" class="share-default-value" data-bind="text: defaultAutoRefreshValueText"></div>
+                                                        <div id="defaultAutoRefresh" class="share-default-value" data-bind="text: rightPanelFilter.defaultAutoRefreshValueText"></div>
                                                     </div>
                                                     <div class="share-default-settings" data-bind="visible: dashboard.enableEntityFilter()==='TRUE'">
                                                         <div data-bind="text: getNlsString('DSB_BUILDER_EDIT_DEFAULT_ENTITY_LABEL')"></div>
-                                                        <div id="defaultEntityValue" class="share-default-value" data-bind="text: defaultEntityValueText"></div>
+                                                        <div id="defaultEntityValue" class="share-default-value" data-bind="text: rightPanelFilter.defaultEntityValueText"></div>
                                                     </div>
                                                     <div class="share-default-settings" data-bind="visible: dashboard.enableTimeRange()==='TRUE'">
                                                         <div data-bind="text: getNlsString('DSB_BUILDER_EDIT_DEFAULT_TIME_RANGE_LABEL')"></div>
-                                                        <div id="defaultTimeRangeValue" class="share-default-value" data-bind="text: defaultTimeRangeValueText"></div>
+                                                        <div id="defaultTimeRangeValue" class="share-default-value" data-bind="text: rightPanelFilter.defaultTimeRangeValueText"></div>
                                                     </div>
                                                 </div>
                                             </div>

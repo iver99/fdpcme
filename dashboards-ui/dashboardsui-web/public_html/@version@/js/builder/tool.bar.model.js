@@ -63,7 +63,24 @@ define(['knockout',
             self.editDisabled = ko.observable(self.dashboard.type() === SINGLEPAGE_TYPE || self.dashboard.systemDashboard() || self.currentUser !== self.dashboard.owner());
             self.disableSave = ko.observable(false);
             
-            self.autoRefreshInterval = ko.observable(DEFAULT_AUTO_REFRESH_INTERVAL);
+            if(self.isUnderSet && dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)){
+                self.autoRefreshInterval = ko.observable(dashboardSetOptions.autoRefreshInterval);
+            }else {                
+                new Builder.DashboardDataSource().loadDashboardUserOptionsData(self.dashboard.id(),
+                    function(data) {
+                        if(data["extendedOptions"] && data["extendedOptions"].autoRefresh) {
+                            self.autoRefreshInterval = ko.observable(data["extendedOptions"].autoRefresh);
+                        }else if(self.tilesViewModel.dashboardExtendedOptions && self.tilesViewModel.dashboardExtendedOptions.autoRefresh) {
+                            self.autoRefreshInterval = ko.observable(parseInt(self.tilesViewModel.dashboardExtendedOptions.autoRefresh.defaultValue));
+                        }else {
+                            self.autoRefreshInterval = ko.observable(DEFAULT_AUTO_REFRESH_INTERVAL);
+                        }
+                    },
+                    function(jqXHR, textStatus, errorThrown) {
+                        self.autoRefreshInterval = ko.observable(DEFAULT_AUTO_REFRESH_INTERVAL);
+                    });
+            }
+                       
             self.autoRefreshInterval.subscribe(function (value) {
                 //save user options if it is in single dashboard mode
                 if (!self.isUnderSet) {
@@ -71,20 +88,6 @@ define(['knockout',
                 }
                 setAutoRefreshInterval(value);
             });
-            
-            if(self.isUnderSet && dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)){
-                self.autoRefreshInterval(dashboardSetOptions.autoRefreshInterval());
-            }else {
-                if(self.tilesViewModel.dashboardExtendedOptions && self.tilesViewModel.dashboardExtendedOptions.autoRefresh) {
-                    self.autoRefreshInterval(parseInt(self.tilesViewModel.dashboardExtendedOptions.autoRefresh.defaultValue));
-                }
-                new Builder.DashboardDataSource().loadDashboardUserOptionsData(self.dashboard.id(),
-                    function(data) {
-                        if(data["autoRefreshInterval"] !== "undefined") {
-                            self.autoRefreshInterval(data["autoRefreshInterval"]);
-                        }
-                    });
-            }
 
             if (window.DEV_MODE) { // for dev mode debug only
                 self.changeMode = function() {

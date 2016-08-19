@@ -12,11 +12,12 @@ define(['knockout',
         'builder/tool-bar/edit.dialog',
         'uifwk/js/util/screenshot-util',
         'builder/right-panel/right.panel.control.model',
+        'builder/right-panel/right.panel.filter',
         'jqueryui',
         'builder/builder.core',
         'builder/widget/widget.model'
     ],
-    function(ko, $, dfu, mbu, uiutil, oj, ed, ssu,rpc) {
+    function(ko, $, dfu, mbu, uiutil, oj, ed, ssu, rpc, rpf) {
         function ResizableView($b) {
             var self = this;
 
@@ -81,6 +82,7 @@ define(['knockout',
 
             self.$b = $b;
             self.rightPanelControl=new rpc.rightPanelControl(self.$b,tilesViewModel,toolBarModel);
+            self.rightPanelFilter = new rpf.RightPanelFilterModel(self.$b);
             self.selectedDashboard = ko.observable(self.dashboard);
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
@@ -114,25 +116,7 @@ define(['knockout',
                 self.rightPanelControl.rightPanelIcon(self.emptyDashboard ? "wrench" : "none");
 
                 //reset filter settings in right drawer when selected dashboard is changed
-                var dashboard = tilesViewModel.dashboard;
-                if(!dashboard.extendedOptions) {
-                    dashboard.extendedOptions = ko.observable("{\"tsel\": {\"entitySupport\": \"byCriteria\", \"entityContext\": \"\"}, \"timeSel\": {\"defaultValue\": \"last14days\", \"start\": 0, \"end\": 0}}");
-                }
-                self.dashboard = dashboard;
-                var extendedOptions = JSON.parse(dashboard.extendedOptions());
-                self.extendedOptions = extendedOptions ? extendedOptions : self.extendedOptions;
-                var tsel = extendedOptions ? extendedOptions.tsel : {};
-                var timeSel = extendedOptions ? extendedOptions.timeSel : {};
-                //1. reset tsel in right drawer
-                self.enableEntityFilter((dashboard.enableEntityFilter() === 'TRUE')?'ON':'OFF');
-                self.entitySupport(tsel.entitySupport?(tsel.entitySupport==="byCriteria"?true:false):true);
-                self.defaultEntityContext(tsel.entityContext ? tsel.entityContext : {});
-                tilesViewModel.selectionMode(self.entitySupport()?"byCriteria":"single");
-                //2. reset timeSel in right drawer
-                self.enableTimeRangeFilter((dashboard.enableTimeRange() === 'TRUE')?'ON':'OFF');
-                self.defaultTimeRangeValue([timeSel.defaultValue]);
-                self.defaultStartTime(parseInt(timeSel.start));
-                self.defaultEndTime(parseInt(timeSel.end));
+                self.rightPanelFilter.loadRightPanelFilter(tilesViewModel);
 
                 self.dashboardSharing(self.dashboard.sharePublic() ? "shared" : "notShared");
             };
@@ -281,9 +265,9 @@ define(['knockout',
                     }else if(interval === 300000) {
                         value = "every5minutes";
                     }
-                    self.defaultAutoRefreshValue(value);
-                    self.extendedOptions.autoRefresh.defaultValue = interval;
-                    self.defaultValueChanged(new Date());
+                    self.rightPanelFilter.defaultAutoRefreshValue(value);
+                    self.rightPanelFilter.extendedOptions.autoRefresh.defaultValue = interval;
+                    self.rightPanelFilter.defaultValueChanged(new Date());
                 }
             };
 
@@ -521,243 +505,6 @@ define(['knockout',
                 }
             });
 
-            //Convert persisted time range to make them easier to read
-            self.dateConverter = oj.Validation.converterFactory("dateTime").createConverter({formatType: "date", dateFormat: "medium"});
-            self.timeConverter = oj.Validation.converterFactory("dateTime").createConverter({formatType: "time", timeFormat: "short"});
-            self.today = "Today";
-            self.yesterday = "Yesterday";
-
-            self.adjustDateMoreFriendly = function(date) {
-                var today = oj.IntlConverterUtils.dateToLocalIso(new Date()).slice(0, 10);
-                var yesterday = oj.IntlConverterUtils.dateToLocalIso(new Date(new Date()-24*60*60*1000)).slice(0, 10);
-                if(today === date) {
-                    return self.today;
-                }else if(yesterday === date) {
-                    return self.yesterday;
-                }else {
-                    return self.dateConverter.format(date);
-                }
-            };
-
-            self.getGMTTimezone = function(date) {
-                var timezoneOffset = date.getTimezoneOffset()/60;
-                timezoneOffset = timezoneOffset>0 ? ("GMT-"+timezoneOffset) : ("GMT+"+Math.abs(timezoneOffset));
-                return timezoneOffset;
-            };
-
-            self.getTimeInfo = function(startTimeStamp, endTimeStamp) {
-                var startISO = oj.IntlConverterUtils.dateToLocalIso(new Date(startTimeStamp));
-                var endISO = oj.IntlConverterUtils.dateToLocalIso(new Date(endTimeStamp));
-                var startDate = startISO.slice(0, 10);
-                var endDate = endISO.slice(0, 10);
-                var startTime = startISO.slice(10, 16);
-                var endTime = endISO.slice(10, 16);
-
-                var dateTimeInfo;
-                var start = self.adjustDateMoreFriendly(startDate);
-                var end = self.adjustDateMoreFriendly(endDate);
-                //show "Today/Yesterday" only once
-                if(start === end) {
-                    end = "";
-                }
-
-                start = start + " " + self.timeConverter.format(startTime);
-                end = end + " " + self.timeConverter.format(endTime);
-
-                //add timezone for time ranges less than 1 day if the start&end time are in different timezone due to daylight saving time.
-                var tmpStart = oj.IntlConverterUtils.isoToLocalDate(startDate+startTime);
-                var tmpEnd = oj.IntlConverterUtils.isoToLocalDate(endDate+endTime);
-                if(tmpStart.getTimezoneOffset() !== tmpEnd.getTimezoneOffset() && self.isTimePeriodLessThan1day(self.timePeriod())) {
-                    start += " (" + self.getGMTTimezone(tmpStart) + ")";
-                    end += " (" + self.getGMTTimezone(tmpEnd) + ")";
-                }
-
-                dateTimeInfo = start + " - " + end;
-                return dateTimeInfo;
-            };
-
-            self.timeRangeOptions = ko.observableArray([
-                {value: 'last15mins', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS')},
-                {value: 'last30mins', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS')},
-                {value: 'last60mins', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS')},
-                {value: 'last4hours', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_4_HOURS')},
-                {value: 'last6hours', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_6_HOURS')},
-                {value: 'last1day', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_DAY')},
-                {value: 'last7days', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_7_DAYS')},
-                {value: 'last14days', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_14_DAYS')},
-                {value: 'last30days', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_DAYS')},
-                {value: 'last90days', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_90_DAYS')},
-                {value: 'last1year', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_YEAR')},
-                {value: 'latest', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LATEST')},
-                {value: 'custom', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM')}
-            ]);
-
-            self.getDefaultTimeRangeValueText = function(value) {
-                for(var i=0; i<self.timeRangeOptions().length; i++) {
-                    if(value === self.timeRangeOptions()[i].value) {
-                        return self.timeRangeOptions()[i].label;
-                    }
-                }
-                return null;
-            };
-
-            var defaultSettings = {
-                    tsel:
-                        {entitySupport: "byCriteria", entityContext: ""},
-                    timeSel:
-                        {defaultValue: "last14days", start: "", end: ""},
-                    autoRefresh:
-                        {defaultValue: 300000}
-            };
-            self.extendedOptions = self.dashboard.extendedOptions ? JSON.parse(self.dashboard.extendedOptions()) : defaultSettings;
-
-            //set entity support/selectionMode
-            self.extendedOptions.tsel.entitySupport && $b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel().selectionMode(self.extendedOptions.tsel.entitySupport);
-
-            self.enableEntityFilter = ko.observable((self.dashboard.enableEntityFilter() === 'TRUE')?'ON':'OFF');
-            self.enableTimeRangeFilter = ko.observable(self.dashboard.enableTimeRange && (self.dashboard.enableTimeRange() === 'TRUE'?'ON':'OFF'));
-
-            self.entitySupport = ko.observable(true);
-            if($b.getDashboardTilesViewModel) {
-                if($b.getDashboardTilesViewModel().selectionMode()==="byCriteria") {
-                    self.entitySupport(true);
-                }else {
-                    self.entitySupport(false);
-                }
-            }
-
-            self.defaultEntityContext = ko.observable(self.extendedOptions.tsel.entityContext);
-
-            //set default time range value
-            //handlehow to show when the value is "custom*"
-            self.defaultTimeRangeValue = ko.observable([self.extendedOptions.timeSel.defaultValue]);
-            var endTimeNow = new Date().getTime();
-            self.defaultStartTime = ko.observable(parseInt(self.extendedOptions.timeSel.start===""? (""+endTimeNow-14*24*3600*1000):self.extendedOptions.timeSel.start));
-            self.defaultEndTime = ko.observable(parseInt(self.extendedOptions.timeSel.end===""? (""+endTimeNow):self.extendedOptions.timeSel.end));
-
-            self.defaultTimeRangeValueText = ko.computed(function() {
-                if((self.defaultTimeRangeValue()[0] !== "custom") && (self.defaultTimeRangeValue()[0] !== "custom1")) {
-                    return self.getDefaultTimeRangeValueText(self.defaultTimeRangeValue()[0]);
-                }else {
-                    return self.getTimeInfo(self.defaultStartTime(), self.defaultEndTime());
-                }
-            });
-
-            self.enableEntityFilter.subscribe(function(val){
-                self.dashboard.enableEntityFilter((val==='ON') ? 'TRUE' : 'FALSE');
-            });
-
-            //reset default entity value and entity context when entity support is changed
-            self.entitySupport.subscribe(function(val) {
-                val = val?"byCriteria":"single";
-                self.extendedOptions.tsel.entitySupport = val;
-                window.selectedDashboardInst().tilesViewModel.selectionMode(val);
-
-            });
-
-            self.enableTimeRangeFilter.subscribe(function(val){
-                self.dashboard.enableTimeRange((val==='ON') ? 'TRUE' : 'FALSE');
-            });
-
-            self.defaultEntityValueText = ko.observable(getNlsString("DBS_BUILDER_ALL_ENTITIES"));
-            self.labelInited = false;
-            self.defaultEntityValueChanged = ko.computed(function() {
-                if(!self.dashboard.sharePublic() || !self.labelInited) {
-                    var val = self.defaultEntityContext();
-
-                    if(val === "") {
-                        self.defaultEntityValueText(getNlsString("DBS_BUILDER_ALL_ENTITIES"));
-                        return getNlsString("DBS_BUILDER_ALL_ENTITIES");
-                    }
-
-                    var tselId = "tsel_"+self.dashboard.id();
-                    var label;
-                    self.labelIntervalId = setInterval(function() {
-                        if(self.labelInited) {
-                            clearInterval(self.labelIntervalId);
-                        }
-                       if($("#"+tselId).children().get(0)) {
-                            label =  ko.contextFor($('#' + tselId).children().get(0)).$component.getDropdownLabelForContext(val);
-                            self.labelInited = true;
-                        }else {
-                            label = getNlsString("DBS_BUILDER_ALL_ENTITIES");
-                        }
-                        self.defaultEntityValueText(label);
-                        return label;
-                    }, 500);
-                }
-            });
-
-            self.defaultValueChanged = ko.observable(new Date());
-            //handle with auto-saving of filter setting in right drawer
-            self.dsbRtDrFiltersSaveDelay = ko.computed(function() {
-                return self.enableEntityFilter() + self.entitySupport() + self.defaultEntityContext() +
-                        self.enableTimeRangeFilter() + self.defaultTimeRangeValue() + self.defaultValueChanged();
-            });
-
-            self.dsbRtDrFiltersSaveDelay.extend({rateLimit: {method: "notifyWhenChangesStop", timeout: 800}});
-
-            self.dsbRtDrFiltersSaveDelay.subscribe(function() {
-                if(self.dashboard.systemDashboard() || self.dashboard.owner() !== dfu.getUserName()) {
-                    console.log("This is an OOB dashboard or the current user is not owner of the dashboard");
-                    return;
-                }
-                var fieldsToUpdate = {
-                    "enableEntityFilter": self.dashboard.enableEntityFilter(),
-                    "extendedOptions": JSON.stringify(self.extendedOptions),
-                    "enableTimeRange": self.dashboard.enableTimeRange()
-                };
-
-                if (self.dashboard.tiles() && self.dashboard.tiles().length > 0) {
-                    var elem = $(".tiles-wrapper:visible");
-                    var clone = Builder.createScreenshotElementClone(elem);
-                    ssu.getBase64ScreenShot(clone, 314, 165, 0.8, function(data) {
-                        Builder.removeScreenshotElementClone(clone);
-                        self.dashboard.screenShot = ko.observable(data);
-                        self.handleSaveDsbFilterSettings(fieldsToUpdate);
-                    });
-                }
-                else {
-                    self.dashboard.screenShot = ko.observable(null);
-                    self.handleSaveDsbFilterSettings(fieldsToUpdate);
-                }
-            });
-
-            self.handleSaveDsbFilterSettings = function(fieldsToUpdate) {
-                self.saveDsbFilterSettings(fieldsToUpdate, function() {
-                    if(!self.dashboard.extendedOptions) {
-                        self.dashboard.extendedOptions = ko.observable();
-                    }
-                    self.dashboard.extendedOptions(JSON.stringify(self.extendedOptions));
-                },
-                function() {
-                    console.log("***error");
-                });
-            };
-
-            self.saveDsbFilterSettings = function(fieldsToUpdate, succCallback, errorCallback) {
-                var newDashboardJs = ko.mapping.toJS(self.dashboard, {
-                    'include': ['screenShot', 'description', 'height',
-                        'isMaximized', 'title', 'type', 'width',
-                        'tileParameters', 'name', 'systemParameter',
-                        'tileId', 'value', 'content', 'linkText',
-                        'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
-                    'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight",
-                        "modeColumn", "modeRow", "screenShotHref", "systemDashboard",
-                        "customParameters", "clientGuid", "dashboard",
-                        "fireDashboardItemChangeEvent", "getParameter",
-                        "maximizeEnabled", "narrowerEnabled",
-                        "onDashboardItemChangeEvent", "restoreEnabled",
-                        "setParameter", "shouldHide", "systemParameters",
-                        "tileDisplayClass", "widerEnabled", "widget",
-                        "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
-                });
-
-                $.extend(newDashboardJs, fieldsToUpdate);
-                Builder.updateDashboard(self.dashboard.id(), JSON.stringify(newDashboardJs), succCallback, errorCallback);
-            };
-
-
             function queryDashboardSetsBySubId(dashboardId,callback){
                 var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
                  dfu.ajaxWithRetry(_url + dashboardId + "/dashboardsets", {
@@ -799,24 +546,6 @@ define(['knockout',
                     });
                 } else {
                     self.toolBarModel.handleShareUnshare(true);
-                }
-            });
-            self.defaultAutoRefreshValue = ko.observable("every5minutes");
-            if(self.extendedOptions.autoRefresh) {
-                if(parseInt(self.extendedOptions.autoRefresh.defaultValue) === 0) {
-                    self.defaultAutoRefreshValue("off");
-                }else if(parseInt(self.extendedOptions.autoRefresh.defaultValue) === 300000) {
-                    self.defaultAutoRefreshValue("every5minutes");
-                }
-            }else {
-                self.extendedOptions.autoRefresh = {defaultValue: 300000};
-            }
-
-            self.defaultAutoRefreshValueText = ko.computed(function() {
-                if(self.defaultAutoRefreshValue() === "off") {
-                    return getNlsString("DBS_BUILDER_AUTOREFRESH_OFF");
-                }else if(self.defaultAutoRefreshValue() === "every5minutes") {
-                    return getNlsString("DBS_BUILDER_AUTOREFRESH_ON");
                 }
             });
 

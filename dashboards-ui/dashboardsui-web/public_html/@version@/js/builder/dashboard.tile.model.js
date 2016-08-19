@@ -907,8 +907,8 @@ define(['knockout',
                     self.returnFromPageTsel(targets);
                     var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
                     if(rightPanelModel.dashboardSharing() !== "shared") {
-                        rightPanelModel.defaultEntityContext(targets);
-                        rightPanelModel.extendedOptions.tsel.entityContext = targets;
+                        rightPanelModel.rightPanelFilter.defaultEntityContext(targets);
+                        rightPanelModel.rightPanelFilter.extendedOptions.tsel.entityContext = targets;
                     }
             };
 
@@ -995,15 +995,15 @@ define(['knockout',
 
                             var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
                             if(rightPanelModel.dashboardSharing() !== "shared") {
-                                rightPanelModel.defaultTimeRangeValue([Builder.getTimePeriodValue(tp)]);
-                                rightPanelModel.defaultStartTime(start.getTime());
-                                rightPanelModel.defaultEndTime(end.getTime());
+                                rightPanelModel.rightPanelFilter.defaultTimeRangeValue([Builder.getTimePeriodValue(tp)]);
+                                rightPanelModel.rightPanelFilter.defaultStartTime(start.getTime());
+                                rightPanelModel.rightPanelFilter.defaultEndTime(end.getTime());
 
                                 //set timeSel settings to save
-                                rightPanelModel.extendedOptions.timeSel.start = start.getTime();
-                                rightPanelModel.extendedOptions.timeSel.end = end.getTime();
-                                rightPanelModel.extendedOptions.timeSel.defaultValue = Builder.getTimePeriodValue(tp);
-                                rightPanelModel.defaultValueChanged(new Date());
+                                rightPanelModel.rightPanelFilter.extendedOptions.timeSel.start = start.getTime();
+                                rightPanelModel.rightPanelFilter.extendedOptions.timeSel.end = end.getTime();
+                                rightPanelModel.rightPanelFilter.extendedOptions.timeSel.defaultValue = Builder.getTimePeriodValue(tp);
+                                rightPanelModel.rightPanelFilter.defaultValueChanged(new Date());
                             }
                         }
                         self.applyClickedByAutoRefresh(false);
@@ -1016,11 +1016,11 @@ define(['knockout',
                     extendedOptions: JSON.stringify(self.userExtendedOptions),
                     autoRefreshInterval: self.autoRefreshInterval
                 };
-                
+
                 new Builder.DashboardDataSource().saveDashboardUserOptions(userFilterOptions);
             };
             
-            self.autoRefreshChanged = function(interval) {                
+            self.autoRefreshChanged = function(interval) {
                 self.autoRefreshInterval = interval;
                 self.saveUserFilterOptions();
             }
