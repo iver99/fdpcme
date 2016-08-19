@@ -1,4 +1,4 @@
-define([
+define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
     'knockout',
     'jquery',
     'uifwk/@version@/js/util/df-util-impl', 

@@ -1,4 +1,4 @@
-define([
+define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
     'knockout',
     'jquery',
     'uifwk/@version@/js/util/df-util-impl', 
