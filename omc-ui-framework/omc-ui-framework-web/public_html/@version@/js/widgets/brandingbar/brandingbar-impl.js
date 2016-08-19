@@ -301,6 +301,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                         case "emcpdf_oba_logout":
                             self.handleSignout();
                             break;
+                        default:
+                            break;
                     }
                 };
 

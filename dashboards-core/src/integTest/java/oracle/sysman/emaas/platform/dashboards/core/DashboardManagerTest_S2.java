@@ -834,7 +834,7 @@ public class DashboardManagerTest_S2
 		Assert.assertEquals(shot.getScreenshot(), testScreenshotDate);
 
 		List<Dashboard> ds = dm.listAllDashboards(tenantId1);
-		Assert.assertEquals(ds.size() > 0, true);
+		Assert.assertEquals(!ds.isEmpty(), true);
 		Assert.assertEquals(ds.get(0).getName(), dbd1.getName());
 		Assert.assertEquals(ds.get(0).getLastModifiedBy(), dbd1.getLastModifiedBy());
 		Assert.assertEquals(ds.get(0).getLastModificationDate(), dbd1.getLastModificationDate());

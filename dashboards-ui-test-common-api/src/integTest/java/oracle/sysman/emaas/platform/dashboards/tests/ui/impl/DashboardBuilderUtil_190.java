@@ -59,7 +59,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
 		boolean isSelectionTabExist = false;
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException("DashboardBuilderUtil.addNewDashboardToSet: the dashboard navigators is not found");
 		}
 
@@ -144,7 +144,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		driver.getLogger().info("[DashboardHomeUtil] start to add widget from right drawer");
 		List<WebElement> matchingWidgets = driver.getWebDriver().findElements(
 				By.cssSelector(DashBoardPageId_190.RIGHTDRAWERWIDGETCSS));
-		if (matchingWidgets == null || matchingWidgets.size() == 0) {
+		if (matchingWidgets == null || matchingWidgets.isEmpty()) {
 			throw new NoSuchElementException("Right drawer widget for search string =" + searchString + " is not found");
 		}
 
@@ -205,7 +205,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		//validate whether should open new dashboard home in set
 		boolean isSelectionTabExist = false;
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException(
 					"DashboardBuilderUtil.createDashboardInsideSet: the dashboard navigators is not found");
 		}
@@ -705,7 +705,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		}
 
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException("DashboardBuilderUtil.printDashboardSet: the dashboard navigators is not found");
 		}
 		for (WebElement nav : navs) {
@@ -816,7 +816,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
 		WebElement targetTab = null;
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException("DashboardBuilderUtil.removeDashboardFromSet: the dashboard navigators is not found");
 		}
 
@@ -984,7 +984,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		driver.takeScreenShot();
 
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException(
 					"DashboardBuilderUtil.selectDashboardInsideSet: the dashboard navigators is not found");
 		}
@@ -1154,7 +1154,6 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 			driver.click("css=" + DashBoardPageId_190.BUILDEROPTIONSSETHOMELOCATORCSS);
 			driver.takeScreenShot();
 			boolean comfirmDialog = driver.isDisplayed("css=" + DashBoardPageId_190.BUILDEROPTIONSSETHOMESAVECSS);
-			System.out.println("dialog home " + comfirmDialog);
 			if (comfirmDialog) {
 				driver.click("css=" + DashBoardPageId_190.BUILDEROPTIONSSETHOMESAVECSS);
 				driver.takeScreenShot();
@@ -1353,7 +1352,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
 		boolean hasFound = false;
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException(
 					"DashboardBuilderUtil.verifyDashboardInsideSet: the dashboard navigators is not found");
 		}

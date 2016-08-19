@@ -472,6 +472,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         case self.timePeriodCustom:
                             self.customChosen(true);
                             break;
+                        default:
+                            break;
                     }
                 };
 
@@ -531,6 +533,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             break;
                         case self.timePeriodLatest:
                             self.latestNotToShow(true);
+                        default:
+                            break;
                     }
                 };
 
@@ -1145,11 +1149,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         id = ele[0].id;
                         $(self.pickerPanelId + " #" + id).removeClass("input-focus");
                     }
-                    if (idToFocus) {
-                        if ((idToFocus === "divStartTime_" + self.randomId && !self.startTimeError()) || (idToFocus === "divEndTime_" + self.randomId && !self.endTimeError()) ||
-                                idToFocus === "inputStartDate_" + self.randomId || idToFocus === "inputEndDate_" + self.randomId) {
+                    if (idToFocus && ((idToFocus === "divStartTime_" + self.randomId && !self.startTimeError()) || (idToFocus === "divEndTime_" + self.randomId && !self.endTimeError()) ||
+                                idToFocus === "inputStartDate_" + self.randomId || idToFocus === "inputEndDate_" + self.randomId)) {
                             $(self.pickerPanelId + " #" + idToFocus).addClass("input-focus");
-                        }
                     }
                 };
 
@@ -1663,7 +1665,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var uuid = calendarId.split("_")[0];
                     var curYears = [];
                     var tmpMonths = [];
-                    var curMonth, curDay, curDate;
+                    var curDay;
                     var regExp = new RegExp(/\d{4}/);
                     var firstDayOfWeek = oj.LocaleData.getFirstDayOfWeek();
 
@@ -1695,10 +1697,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     isDayInMonthsChecked = ($.inArray(tmpMonths[i].toString(), self.tfInstance.monthsChecked()) === -1) ? false : true;
                                 }
                                 if (!ele.hasClass("oj-datepicker-other-month") &&
-                                        isDayInDaysChecked && isDayInMonthsChecked){
-                                    if ((new Date(curYears[i], tmpMonths[i] - 1, curDay).getTime() >= new Date(startRange).getTime()) && (new Date(curYears[i], tmpMonths[i] - 1, curDay).getTime() <= new Date(endRange).getTime())) {
+                                        (isDayInDaysChecked && isDayInMonthsChecked) && ((new Date(curYears[i], tmpMonths[i] - 1, curDay).getTime() >= new Date(startRange).getTime()) && (new Date(curYears[i], tmpMonths[i] - 1, curDay).getTime() <= new Date(endRange).getTime()))) {
                                         ele.addClass("date-selected");
-                                    }
                                 }
 
                                 //Set dates post today as inactive. To be continued
@@ -1791,9 +1791,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                                     break;
                                 }
-                                if(hoursExcluded[i] - hoursExcluded[i-1] === 1) {
-                                    continue;
-                                }else {
+                                if(hoursExcluded[i] - hoursExcluded[i-1] !== 1) {
                                     hoursExcludedEnd.push(hoursExcluded[i-1]);
                                     hoursExcludedStart.push(hoursExcluded[i]);
                                 }

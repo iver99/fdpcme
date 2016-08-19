@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
@@ -84,7 +85,7 @@ public class DashboardsFilter
 	public List<DashboardApplicationType> getIncludedApplicationTypes()
 	{
 		if (includedApps == null || includedApps.isEmpty()) {
-			return null;
+			return Collections.emptyList();
 		}
 		List<DashboardApplicationType> types = new ArrayList<DashboardApplicationType>();
 		try {
@@ -124,7 +125,7 @@ public class DashboardsFilter
 	public List<Integer> getIncludedTypeIntegers()
 	{
 		if (includedTypes == null || includedTypes.isEmpty()) {
-			return null;
+			return Collections.emptyList();
 		}
 		List<Integer> types = new ArrayList<Integer>();
 		try {
@@ -148,7 +149,7 @@ public class DashboardsFilter
 	public List<String> getIncludedWidgetProviders()
 	{
 		if (includedApps == null || includedApps.isEmpty()) {
-			return null;
+			return Collections.emptyList();
 		}
 		List<String> sb = new ArrayList<String>();
 		for (String app : includedApps) {

@@ -376,7 +376,7 @@ public class DashboardServiceFacadeTest_S2
 			EmsUserOptions rd = dashboardServiceFacade.getEmsUserOptions(uo.getUserName(), uo.getDashboardId());
 			Assert.assertNotNull(rd);
 			List<EmsDashboard> ds = dashboardServiceFacade.getFavoriteEmsDashboards(uo.getUserName());
-			Assert.assertEquals(ds.size() > 0, true);
+			Assert.assertEquals(!ds.isEmpty(), true);
 		}
 		finally {
 			if (em != null) {

@@ -43,7 +43,6 @@ define(['knockout',
                         elem.height(height - _topHeight - h);
                     }
                     if(elem.hasClass("dbd-left-panel")||elem.hasClass("right-panel-toggler")){
-                        var _top = elem.css("top");
                         if(ko.dataFor($('.df-right-panel')[0]).isDashboardSet()){
                             elem.css("top",_topHeight-99);
                         }else{
@@ -84,6 +83,7 @@ define(['knockout',
 
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
+            self.isOobDashboardset=dashboardsetToolBarModel.isOobDashboardset;
             self.scrollbarWidth = uiutil.getScrollbarWidth();
 
             self.showRightPanelToggler =  ko.observable(self.isMobileDevice !== 'true');
@@ -279,7 +279,7 @@ define(['knockout',
              **/
 
             self.initialize = function() {
-                    if (self.isMobileDevice === 'true' ) {
+                    if (self.isMobileDevice === 'true' || self.isOobDashboardset()) {
                         self.completelyHidden(true);
                         self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
                     } else {
@@ -362,7 +362,7 @@ define(['knockout',
 
             self.tileRestoredHandler = function() {
                 self.maximized(false);
-                if(self.isMobileDevice !== 'true') {
+                if(self.isMobileDevice !== 'true' && !self.isOobDashboardset()) {
                     self.completelyHidden(false);
                 }
 
@@ -387,7 +387,6 @@ define(['knockout',
 
             var AUTO_PAGE_NAV = 1;
             var widgetListHeight = ko.observable(0);
-            var pageSizeLastTime = 0;
             // try using MutationObserver to detect widget list height change.
             // if MutationObserver is not availbe, register builder resize listener.
             if (typeof window.MutationObserver !== 'undefined') {
@@ -932,7 +931,7 @@ define(['knockout',
 
             self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
             self.dashboardSharing.subscribe(function(val){
-                if(!self.toolBarModel) {
+                if(!self.toolBarModel || self.isDashboardSet()) {
                     // return if current selected tab is dashboard picker
                     return ;
                 }

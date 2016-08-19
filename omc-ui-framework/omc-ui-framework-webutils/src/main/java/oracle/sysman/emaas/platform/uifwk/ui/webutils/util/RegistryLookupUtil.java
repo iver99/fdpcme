@@ -45,7 +45,7 @@ public class RegistryLookupUtil
 			LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", result, tenantName);
-			if (result != null && result.size() > 0) {
+			if (result != null && !result.isEmpty()) {
 
 				//find https link first
 				for (InstanceInfo internalInstance : result) {
@@ -57,7 +57,7 @@ public class RegistryLookupUtil
 						links = internalInstance.getLinksWithProtocol(rel, "https");
 					}
 
-					if (links != null && links.size() > 0) {
+					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
 						itrLogger.debug("Retrieved link {} by using getLinks(WithRelPrefix)WithProtocol for rel={} for https",
 								lk, rel);
@@ -78,7 +78,7 @@ public class RegistryLookupUtil
 					else {
 						links = internalInstance.getLinksWithProtocol(rel, "http");
 					}
-					if (links != null && links.size() > 0) {
+					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
 						itrLogger.debug("Retrieved link {} by using getLinks(WithRelPrefix)WithProtocol for rel={} for https",
 								lk, rel);
