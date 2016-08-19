@@ -266,7 +266,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testCreateDashboardDifUserSameNameSameTenant_S2() throws DashboardException
+	public void testCreateDashboardDifUserSameNameSameTenantS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		DashboardManager dm0 = DashboardManager.getInstance();
@@ -298,7 +298,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testCreateDashboardSameNameDifTenant_S2() throws DashboardException
+	public void testCreateDashboardSameNameDifTenantS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		Dashboard dbd1 = new Dashboard();
@@ -324,7 +324,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(expectedExceptions = DashboardException.class, groups = { "s2" })
-	public void testCreateDashboardSameNameSameUserSameTenant_S2() throws DashboardException
+	public void testCreateDashboardSameNameSameUserSameTenantS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		Dashboard dbd1 = null;
@@ -355,7 +355,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testCreateSimpleDashboard_S2() throws DashboardException, InterruptedException
+	public void testCreateSimpleDashboardS2() throws DashboardException, InterruptedException
 	{
 		loadMockBeforeMethod();
 		Dashboard dbd = new Dashboard();
@@ -386,7 +386,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testCreateUpdateDashboard_S2() throws DashboardException, InterruptedException
+	public void testCreateUpdateDashboardS2() throws DashboardException, InterruptedException
 	{
 		loadMockBeforeMethod();
 		String currentUser = UserContext.getCurrentUser();
@@ -549,7 +549,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testCreateUpdateSystemDashboard_S2() throws DashboardException
+	public void testCreateUpdateSystemDashboardS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		DashboardManager dm = DashboardManager.getInstance();
@@ -584,7 +584,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testDeleteDashboard_S2() throws DashboardException
+	public void testDeleteDashboardS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		DashboardManager dm = DashboardManager.getInstance();
@@ -759,7 +759,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testFavoriteDashboards_S2() throws DashboardException
+	public void testFavoriteDashboardsS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		DashboardManager dm = DashboardManager.getInstance();
@@ -834,7 +834,7 @@ public class DashboardManagerTest_S2
 		Assert.assertEquals(shot.getScreenshot(), testScreenshotDate);
 
 		List<Dashboard> ds = dm.listAllDashboards(tenantId1);
-		Assert.assertEquals(ds.size() > 0, true);
+		Assert.assertEquals(!ds.isEmpty(), true);
 		Assert.assertEquals(ds.get(0).getName(), dbd1.getName());
 		Assert.assertEquals(ds.get(0).getLastModifiedBy(), dbd1.getLastModifiedBy());
 		Assert.assertEquals(ds.get(0).getLastModificationDate(), dbd1.getLastModificationDate());
@@ -844,7 +844,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetDashboardByName_S2() throws DashboardException
+	public void testGetDashboardByNameS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		DashboardManager dm = DashboardManager.getInstance();
@@ -894,7 +894,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetDashboardId_S2() throws DashboardException
+	public void testGetDashboardIdS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		DashboardManager dm = DashboardManager.getInstance();
@@ -942,7 +942,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetUpdateLastAccessDate_S2() throws DashboardException, InterruptedException
+	public void testGetUpdateLastAccessDateS2() throws DashboardException, InterruptedException
 	{
 		loadMockBeforeMethod();
 		DashboardManager dm = DashboardManager.getInstance();
@@ -979,7 +979,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = "s2")
-	public void testListDashboard_S2(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
+	public void testListDashboardS2(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
 			@Mocked final EntityManager anyEntityManager, @Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber)
 					throws DashboardException, InterruptedException
 	{
@@ -1043,7 +1043,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testSetDashboardIncludeTimeControl_S2() throws DashboardException
+	public void testSetDashboardIncludeTimeControlS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		Dashboard dbd1 = new Dashboard();

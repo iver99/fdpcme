@@ -174,7 +174,7 @@ define(['knockout',
                     return result;
                 }
                 function S4() {
-                   return (((1+securedRandom())*0x10000)|0).toString(16).substring(1);
+                   return parseInt(((1+securedRandom())*0x10000)).toString(16).substring(1);
                 }
 
                 return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
@@ -265,8 +265,8 @@ define(['knockout',
              * @returns {String} assetRoot
              */
             self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot, relUrlExpected){
-                var regInfo = self.getRegistrationInfo();
-                if (regInfo){
+//                var regInfo = self.getRegistrationInfo();
+//                if (regInfo){
                     var providerVersionPlus = encodeURIComponent(providerVersion+'+');
                     var assetRoot = dfu.discoverUrl(providerName, providerVersionPlus, providerAssetRoot);
                     if (assetRoot){
@@ -278,9 +278,9 @@ define(['knockout',
                         console.log("Warning: asset root not found by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
                         return assetRoot;
                     }
-                } else {
+//                } else {
                     return null;
-                }
+//                }
 
             };
 

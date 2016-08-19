@@ -43,7 +43,6 @@ public class CommonUIUtils
 	public static void commonUITestLog(String sDesc)
 	{
 		String sStr = "*** Dashboards Common UI TestLog ***:  " + sDesc;
-		//System.out.println(sStr);
 	}
 
 	public static String getEmaasPropertyValue(String sProperty)
@@ -161,7 +160,7 @@ public class CommonUIUtils
 
 	}
 
-	public static void InitValue()
+	public static void initValue()
 	{
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = sAPIUrl;

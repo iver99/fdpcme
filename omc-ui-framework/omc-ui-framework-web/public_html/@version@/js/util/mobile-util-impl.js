@@ -14,7 +14,7 @@ function(oj)
         {
             if (self.userAgent !== null && self.userAgent.search(diphone) > -1)
             {
-                if (self.userAgent.search(dipod) == -1 && self.userAgent.search(dipad) == -1)
+                if (self.userAgent.search(dipod) === -1 && self.userAgent.search(dipad) === -1)
                 {
                     oj.Logger.info("The user from iphone agent.");
                     return true;

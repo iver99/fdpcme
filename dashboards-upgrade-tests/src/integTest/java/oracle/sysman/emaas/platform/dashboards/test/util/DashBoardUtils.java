@@ -9,7 +9,7 @@ public class DashBoardUtils
 {
 	private static WebDriver driver;
 
-	public static void APM_OOB_GridView() 
+	public static void apmOobGrid() 
 	{
 		DashboardHomeUtil.gridView(driver);
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Application Performance Monitoring");
@@ -25,7 +25,7 @@ public class DashBoardUtils
 		driver.getLogger().info("after clicking overview button");
 	}
 
-	public static void ITA_OOB_GridView() 
+	public static void itaOobGridView() 
 	{
 		DashboardHomeUtil.gridView(driver);
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Database Health Summary");
@@ -46,7 +46,7 @@ public class DashBoardUtils
 //		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Servers by JDK Version"));
 	}
 
-	public static void LA_OOB_GridView() 
+	public static void laOobGridView() 
 	{
 		DashboardHomeUtil.gridView(driver);
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Database Operations");
@@ -74,7 +74,7 @@ public class DashBoardUtils
 		driver = webDriver;
 	}
 
-	public static void noOOBCheck_GridView() 
+	public static void noOOBCheckGridView() 
 	{
 		//verify all the oob dashboard not exsit
 		driver.getLogger().info("verify all the oob dashboard not exsit");

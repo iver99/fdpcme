@@ -634,7 +634,7 @@ define(['knockout',
                             break;
                         }
                     }
-                    if(j == -1) {
+                    if(j === -1) {
                         self.updateTilePosition(iTile, j+1, self.mode.getModeColumn(iTile));
                     }
                 }

@@ -54,7 +54,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 
 		boolean isSelectionTabExist = false;
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException("addNewDashboardToSet: the dashboard navigators is not found");
 		}
 
@@ -139,7 +139,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.getLogger().info("[DashboardHomeUtil] start to add widget from right drawer");
 		List<WebElement> matchingWidgets = driver.getWebDriver().findElements(
 				By.cssSelector(DashBoardPageId.RIGHTDRAWERWIDGETCSS));
-		if (matchingWidgets == null || matchingWidgets.size() == 0) {
+		if (matchingWidgets == null || matchingWidgets.isEmpty()) {
 			throw new NoSuchElementException("Right drawer widget for search string =" + searchString + " is not found");
 		}
 
@@ -657,7 +657,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		}
 
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException("addNewDashboardToSet: the dashboard navigators is not found");
 		}
 		for (WebElement nav : navs) {
@@ -1018,7 +1018,6 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			driver.click("css=" + DashBoardPageId.BUILDEROPTIONSSETHOMELOCATORCSS);
 			driver.takeScreenShot();
 			boolean comfirmDialog = driver.isDisplayed("css=" + DashBoardPageId.BUILDEROPTIONSSETHOMESAVECSS);
-			//System.out.println("dialog home " + comfirmDialog);
 			if (comfirmDialog) {
 				driver.click("css=" + DashBoardPageId.BUILDEROPTIONSSETHOMESAVECSS);
 				driver.takeScreenShot();
@@ -1223,7 +1222,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 
 		boolean hasFound = false;
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException("verifyDashboardInsideSet: the dashboard navigators is not found");
 		}
 

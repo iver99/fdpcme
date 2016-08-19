@@ -35,6 +35,7 @@ define(['knockout',
             });
 
             self.isDashboardSet = ko.observable(ko.unwrap(dashboardInst.type)  === "SET");
+            self.isOobDashboardset=ko.observable(ko.unwrap(dashboardInst.owner)  === "Oracle");
             self.dashboardsetId=ko.unwrap(dashboardInst.id());
             self.hasUserOptionInDB = false;
             self.noDashboardHome=ko.observable(true);

@@ -331,7 +331,7 @@ public class TenantSubscriptionUtilTest
 	// @formatter:off
 
 	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServices_EmptyAppMappingEntity_S2(@Mocked RegistryLookupUtil anyUtil,
+	public void testGetTenantSubscribedServicesEmptyAppMappingEntityS2(@Mocked RegistryLookupUtil anyUtil,
 			@Mocked final RestClient anyClient) throws IOException
 	{
 		final Link link = new Link();
@@ -350,12 +350,12 @@ public class TenantSubscriptionUtilTest
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-		Assert.assertNull(services);
+		Assert.assertTrue(services == null || services.isEmpty());
 		Assert.assertEquals(TenantSubscriptionUtil.isAPMServiceOnly(Arrays.asList(new String[] { "APM" })), true);
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServices_EmptyAppMappingJson_S2(@Mocked RegistryLookupUtil anyUtil,
+	public void testGetTenantSubscribedServicesEmptyAppMappingJsonS2(@Mocked RegistryLookupUtil anyUtil,
 			@Mocked final RestClient anyClient) throws IOException
 	{
 		final Link link = new Link();
@@ -374,11 +374,12 @@ public class TenantSubscriptionUtilTest
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-		Assert.assertNull(services);
+		//Assert.assertNull(services);
+		Assert.assertTrue(services == null || services.isEmpty());
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServices_EmptyAppMappings_S2(@Mocked RegistryLookupUtil anyUtil,
+	public void testGetTenantSubscribedServicesEmptyAppMappingsS2(@Mocked RegistryLookupUtil anyUtil,
 			@Mocked final RestClient anyClient) throws IOException
 	{
 		final Link link = new Link();
@@ -397,11 +398,12 @@ public class TenantSubscriptionUtilTest
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-		Assert.assertNull(services);
+		//Assert.assertNull(services);
+		Assert.assertTrue(services == null || services.isEmpty());
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServices_EmptyDomain_S2(@Mocked RegistryLookupUtil anyUtil,
+	public void testGetTenantSubscribedServicesEmptyDomainS2(@Mocked RegistryLookupUtil anyUtil,
 			@Mocked final RestClient anyClient)
 	{
 		final Link link = new Link();
@@ -417,11 +419,12 @@ public class TenantSubscriptionUtilTest
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-		Assert.assertNull(services);
+		//Assert.assertNull(services);
+		Assert.assertTrue(services == null || services.isEmpty());
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServices_EmptyDomainsEntity_S2(@Mocked RegistryLookupUtil anyUtil,
+	public void testGetTenantSubscribedServicesEmptyDomainsEntityS2(@Mocked RegistryLookupUtil anyUtil,
 			@Mocked final RestClient anyClient, @Mocked final JsonUtil anyJsonUtil, @Mocked final DomainsEntity anyDomainsEntity)
 			throws IOException
 	{
@@ -446,11 +449,12 @@ public class TenantSubscriptionUtilTest
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-		Assert.assertNull(services);
+		//Assert.assertNull(services);
+		Assert.assertTrue(services == null || services.isEmpty());
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServices_EmptyTenantAppUrl_S2(@Mocked RegistryLookupUtil anyUtil,
+	public void testGetTenantSubscribedServicesEmptyTenantAppUrlS2(@Mocked RegistryLookupUtil anyUtil,
 			@Mocked final RestClient anyClient) throws IOException
 	{
 		final Link link = new Link();
@@ -469,11 +473,12 @@ public class TenantSubscriptionUtilTest
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-		Assert.assertNull(services);
+		//Assert.assertNull(services);
+		Assert.assertTrue(services == null || services.isEmpty());
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServices_IOException_S2(@Mocked RegistryLookupUtil anyUtil,
+	public void testGetTenantSubscribedServicesIOExceptionS2(@Mocked RegistryLookupUtil anyUtil,
 			@Mocked final RestClient anyClient, @Mocked final JsonUtil anyJsonUtil) throws IOException
 	{
 		final Link link = new Link();
@@ -495,18 +500,20 @@ public class TenantSubscriptionUtilTest
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-		Assert.assertNull(services);
+		//Assert.assertNull(services);
+		Assert.assertTrue(services == null || services.isEmpty());
 	}
 
 	@Test(groups = { "s2" })
-	public void testgetTenantSubscribedServices_NullTenant_S2()
+	public void testgetTenantSubscribedServicesNullTenantS2()
 	{
-		Object rtn = TenantSubscriptionUtil.getTenantSubscribedServices(null);
-		Assert.assertNull(rtn);
+		List<String> rtn = TenantSubscriptionUtil.getTenantSubscribedServices(null);
+		//Assert.assertNull(rtn);
+		Assert.assertTrue(rtn == null || rtn.isEmpty());
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServices_S2(@Mocked RegistryLookupUtil anyUtil, @Mocked final RestClient anyClient)
+	public void testGetTenantSubscribedServicesS2(@Mocked RegistryLookupUtil anyUtil, @Mocked final RestClient anyClient)
 	{
 		final Link link = new Link();
 
@@ -539,14 +546,14 @@ public class TenantSubscriptionUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testRestClientGet_Null()
+	public void testRestClientGetNull()
 	{
 		String res = new TenantSubscriptionUtil.RestClient().get(null, null);
 		Assert.assertNull(res);
 	}
 
 	@Test(groups = { "s2" })
-	public void testRestClientGet_NullAuth_S2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
+	public void testRestClientGetNullAuthS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
 			@Mocked final RegistrationManager anyRegistrationManager, @Mocked final URI anyUri,
 			@Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
 			@Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder, @Mocked final StringUtil anyStringUtil)
@@ -572,7 +579,7 @@ public class TenantSubscriptionUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testRestClientGet_S2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
+	public void testRestClientGetS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
 			@Mocked final RegistrationManager anyRegistrationManager, @Mocked final URI anyUri,
 			@Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
 			@Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder)
