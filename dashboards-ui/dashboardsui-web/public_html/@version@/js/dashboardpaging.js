@@ -291,14 +291,11 @@ DashboardPaging.prototype.fetch = function(options)
         this.pageSize = opts['pageSize'];
     }
     var _lastFetchSize = self.collection.lastFetchSize, _offset = self.collection.offset;
-    if (_forceFetch !== true)
+    if (_forceFetch !== true && (this.current >= _offset && (this.pageSize + this.current) <= (_offset + _lastFetchSize)))
     {
-        if (this.current >= _offset && (this.pageSize + this.current) <= (_offset + _lastFetchSize))
-        {
-            return this._refreshDataWindow().then(function() {
+        return this._refreshDataWindow().then(function() {
                               self._processSuccess(opts);
                           });
-        }
     }
     self._fetch(options);
 };

@@ -767,10 +767,8 @@ define(['knockout',
                 var rpt = $(".right-panel-toggler");
                 var tile = u.helper.tile;
 
-                if(u.helper.tile) {
-                    if($('#tile'+u.helper.tile.clientGuid).hasClass(draggingTileClass)) {
-                        $('#tile'+u.helper.tile.clientGuid).removeClass(draggingTileClass);
-                    }
+                if(u.helper.tile && ($('#tile'+u.helper.tile.clientGuid).hasClass(draggingTileClass))) {
+                    $('#tile'+u.helper.tile.clientGuid).removeClass(draggingTileClass);
                 }
                 if (e.clientY <= tcc.offset().top || e.clientX >= rpt.offset().left) {
                     if (self.isEmpty()) {
