@@ -1787,9 +1787,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                                     break;
                                 }
-                                if(hoursExcluded[i] - hoursExcluded[i-1] === 1) {
-                                    continue;
-                                }else {
+                                if(hoursExcluded[i] - hoursExcluded[i-1] !== 1) {
                                     hoursExcludedEnd.push(hoursExcluded[i-1]);
                                     hoursExcludedStart.push(hoursExcluded[i]);
                                 }

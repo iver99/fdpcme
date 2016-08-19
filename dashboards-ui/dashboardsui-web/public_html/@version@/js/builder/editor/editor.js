@@ -623,9 +623,7 @@ define(['knockout',
                     }
 
                     for(j=self.mode.getModeRow(iTile)-1; j>=0; j--) {
-                        if(self.canMoveToRow(iTile, j)){
-                            continue;
-                        }else{
+                        if(!self.canMoveToRow(iTile, j)){
                             self.updateTilePosition(iTile, j+1, self.mode.getModeColumn(iTile));
                             break;
                         }
