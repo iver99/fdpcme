@@ -278,6 +278,8 @@ define(['knockout',
                         tile.leftEnabled(self.editor.mode.getModeColumn(tile) > 0);
                         tile.rightEnabled(self.editor.mode.getModeColumn(tile)+self.editor.mode.getModeWidth(tile) < self.editor.mode.MODE_MAX_COLUMNS);
                         break;
+                    default:
+                        break;
                 }
 
                 $b.triggerEvent($b.EVENT_TILE_RESIZED, null, tile);

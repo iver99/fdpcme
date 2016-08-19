@@ -135,6 +135,8 @@ $.widget( "dbs.typeAheadSearch", {
 				case keyCode.DOWN:
 					this._keyEvent( "next", event );
 					break;
+				default:
+					break;
 				}
 			},
 			input: function( event ) {

@@ -472,6 +472,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         case self.timePeriodCustom:
                             self.customChosen(true);
                             break;
+                        default:
+                            break;
                     }
                 };
 
@@ -531,6 +533,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             break;
                         case self.timePeriodLatest:
                             self.latestNotToShow(true);
+                        default:
+                            break;
                     }
                 };
 
