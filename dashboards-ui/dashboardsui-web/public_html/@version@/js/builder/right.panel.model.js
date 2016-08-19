@@ -173,6 +173,8 @@ define(['knockout',
                 self.$b.addEventListener(self.$b.EVENT_TILE_MAXIMIZED, self.tileMaximizedHandler);
                 self.$b.addEventListener(self.$b.EVENT_TILE_RESTORED, self.tileRestoredHandler);
                 self.$b.addEventListener(self.$b.EVENT_AUTO_REFRESH_CHANGED, self.autoRefreshChanged);
+                self.$b.addEventListener(self.$b.EVENT_TIME_SELECTION_CHANGED, self.timeSelectionChanged);
+                self.$b.addEventListener(self.$b.EVENT_TARGET_SELECTION_CHANGED, self.targetSelectionChanged);
             };
 
             self.initDraggable = function() {
@@ -224,6 +226,27 @@ define(['knockout',
                     self.rightPanelFilter.defaultValueChanged(new Date());
                 }
             };
+            
+            self.timeSelectionChanged = function(tp, start, end) {
+                if(self.dashboardSharing() !== "shared") {
+                    self.rightPanelFilter.defaultTimeRangeValue([tp]);
+                    self.rightPanelFilter.defaultStartTime(start);
+                    self.rightPanelFilter.defaultEndTime(end);
+
+                    //set timeSel settings to save
+                    self.rightPanelFilter.extendedOptions.timeSel.start = start;
+                    self.rightPanelFilter.extendedOptions.timeSel.end = end;
+                    self.rightPanelFilter.extendedOptions.timeSel.defaultValue = tp;
+                    self.rightPanelFilter.defaultValueChanged(new Date());
+                }
+            }
+            
+            self.targetSelectionChanged = function(targets) {
+                if(self.dashboardSharing() !== "shared") {
+                    self.rightPanelFilter.defaultEntityContext(targets);
+                    self.rightPanelFilter.extendedOptions.tsel.entityContext = targets;
+                }
+            }
             
             self.deleteDashboardClicked = function(){
                 queryDashboardSetsBySubId(self.dashboard.id(),function(resp){

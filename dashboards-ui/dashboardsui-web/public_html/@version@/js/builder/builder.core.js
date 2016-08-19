@@ -115,6 +115,9 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         
         self.EVENT_AUTO_REFRESHING_PAGE = "EVENT_AUTO_REFRESHING_PAGE";
         
+        self.EVENT_TIME_SELECTION_CHANGED = "EVENT_TIME_SELECTION_CHANGED";
+        self.EVENT_TARGET_SELECTION_CHANGED = "EVENT_TARGET_SELECTION_CHANGED";
+        
         self.dispatcher = new dsp.Dispatcher();
         self.addEventListener = function(event, listener) {
             self.dispatcher.registerEventHandler(event, listener);

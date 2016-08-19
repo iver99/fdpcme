@@ -901,11 +901,7 @@ define(['knockout',
 
             self.returnFromTsel = function(targets) {
                     self.returnFromPageTsel(targets);
-                    var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
-                    if(rightPanelModel.dashboardSharing() !== "shared") {
-                        rightPanelModel.rightPanelFilter.defaultEntityContext(targets);
-                        rightPanelModel.rightPanelFilter.extendedOptions.tsel.entityContext = targets;
-                    }
+                    $b.triggerEvent($b.targetSelectionChanged, "target selection changed by target selector", targets);
             };
 
             var compressedTargets;
@@ -989,18 +985,7 @@ define(['knockout',
                             self.userExtendedOptions.timeSel.end = end.getTime();
                             self.saveUserFilterOptions();
 
-                            var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
-                            if(rightPanelModel.dashboardSharing() !== "shared") {
-                                rightPanelModel.rightPanelFilter.defaultTimeRangeValue([Builder.getTimePeriodValue(tp)]);
-                                rightPanelModel.rightPanelFilter.defaultStartTime(start.getTime());
-                                rightPanelModel.rightPanelFilter.defaultEndTime(end.getTime());
-
-                                //set timeSel settings to save
-                                rightPanelModel.rightPanelFilter.extendedOptions.timeSel.start = start.getTime();
-                                rightPanelModel.rightPanelFilter.extendedOptions.timeSel.end = end.getTime();
-                                rightPanelModel.rightPanelFilter.extendedOptions.timeSel.defaultValue = Builder.getTimePeriodValue(tp);
-                                rightPanelModel.rightPanelFilter.defaultValueChanged(new Date());
-                            }
+                            $b.triggerEvent($b.EVENT_TIME_SELECTION_CHANGED, "time selection is changed by selecting date/time picker", Builder.getTimePeriodValue(tp), start.getTime(), end.getTime());
                         }
                         self.applyClickedByAutoRefresh(false);
                 }
