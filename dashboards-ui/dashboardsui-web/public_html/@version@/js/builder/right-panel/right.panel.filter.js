@@ -45,10 +45,12 @@ define([
             
             self.enableEntityFilter.subscribe(function(val){
                 self.dashboard.enableEntityFilter((val==='ON') ? 'TRUE' : 'FALSE');
+                $b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel().timeSelectorModel.timeRangeChange(true);
             });
             
             self.enableTimeRangeFilter.subscribe(function(val){
                 self.dashboard.enableTimeRange((val==='ON') ? 'TRUE' : 'FALSE');
+                $b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel().timeSelectorModel.timeRangeChange(true);
             });
             
             //reset default entity value and entity context when entity support is changed
