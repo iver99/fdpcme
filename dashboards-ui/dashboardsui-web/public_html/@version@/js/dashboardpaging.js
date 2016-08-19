@@ -46,7 +46,8 @@ DashboardPaging.prototype._refreshDataWindow = function() {
         this.showPagingObservable(false);
     }//show paging
 
-    this.dataWindow = new Array(this._getSize());
+    this.dataWindow = [];
+    this.dataWindow.length = this._getSize();
 
     var self = this;
     if (this._getSize() === 0 && this.collection.length === 0)
