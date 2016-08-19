@@ -89,7 +89,6 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             {
                 if (self.parentElementId && self.parentElementId.trim().length > 0)
                 {
-                    var y = $("#"+self.parentElementId+" "+cssSelector);
                     return $("#"+self.parentElementId+" "+cssSelector);
                 }
                 return $(cssSelector);

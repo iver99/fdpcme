@@ -1663,7 +1663,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     var uuid = calendarId.split("_")[0];
                     var curYears = [];
                     var tmpMonths = [];
-                    var curMonth, curDay, curDate;
+                    var curDay;
                     var regExp = new RegExp(/\d{4}/);
                     var firstDayOfWeek = oj.LocaleData.getFirstDayOfWeek();
 
