@@ -43,7 +43,6 @@ public class CommonUIUtils
 	public static void commonUITestLog(String sDesc)
 	{
 		String sStr = "*** Dashboards Common UI TestLog ***:  " + sDesc;
-		//System.out.println(sStr);
 	}
 
 	public static String getEmaasPropertyValue(String sProperty)

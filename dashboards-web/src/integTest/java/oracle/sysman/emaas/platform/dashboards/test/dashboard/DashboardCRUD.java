@@ -190,7 +190,6 @@ public class DashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).body(jsonString11).when().post("/dashboards");
-			//System.out.println("Status code is: " + res11.getStatusCode());
 			Assert.assertTrue(res11.getStatusCode() == 400);
 			Assert.assertEquals(res11.jsonPath().get("errorCode"), 10000);
 			Assert.assertEquals(res11.jsonPath().get("errorMessage"),
