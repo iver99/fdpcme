@@ -7,8 +7,9 @@
 define(['knockout',
     'jquery',
     'ojs/ojcore',
-    'builder/builder.core'
-], function(ko, $, oj) {
+    'builder/builder.core',
+    'dfutil'
+], function(ko, $, oj, dfu) {
     
     function DashboardDataSource() {
         var self = this;
@@ -75,8 +76,9 @@ define(['knockout',
             if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].dashboard) {
                 Builder.loadDashboard(dashboardId,
                         function (data) {
-                            self.dataSource[dashboardId].dashboard = data;
-                            successCallback && successCallback(data);
+                            var dsb = getKODashboardForUI(data);
+                            self.dataSource[dashboardId].dashboard = dsb;
+                            successCallback && successCallback(dsb);
                         },
                         errorCallback);
             } else {
@@ -88,10 +90,20 @@ define(['knockout',
              if(!self.dataSource[dashboardId]){
                  self.dataSource[dashboardId] = {};
              }
-             Builder.updateDashboard(dashboardId,dashboard,function (data) {
-                 self.dataSource[dashboardId].dashboard=data;
-                 successCallback && successCallback(data);
-            }, errorCallback);          
+             Builder.updateDashboard(dashboardId,dashboard,
+                function (data) {                    
+                    if (data && data['name'] && data['name'] !== null)
+                    {
+                        data['name'] = $("<div/>").html(data['name']).text();
+                    }
+                    if (data && data['description'] && data['description'] !== null)
+                    {
+                        data['description'] = $("<div/>").html(data['description']).text();
+                    }
+                    self.dataSource[dashboardId].dashboard=data;
+                    successCallback && successCallback(data);
+               }, 
+               errorCallback);          
         };
         
         self.duplicateDashboard = function(dashboard, successCallback, errorCallback) {
@@ -178,7 +190,53 @@ define(['knockout',
             for (index in obj)
                 return !1;
             return !0;
-        };  
+        };
+        
+        //convert dashboard returned from datebase to knockout obaservable for UI use
+        function getKODashboardForUI(data) {
+            // If dashboad is single page app, success callback will be ignored
+            if (data.type === "SINGLEPAGE") {
+                try {
+                    var tile = data.tiles[0];
+                    var url = dfu.df_util_widget_lookup_assetRootUrl(tile["PROVIDER_NAME"], tile["PROVIDER_VERSION"], tile["PROVIDER_ASSET_ROOT"], false);
+
+                    if (dfu.isDevMode()) {
+                        url = dfu.getRelUrlFromFullUrl(url);
+                    }
+                    window.location = url;
+                    return;
+                } catch (e) {
+                    oj.Logger.error(e);
+                }
+            }
+
+
+            var mapping = {
+                "tiles": {
+                    "create": function (options) {
+                        return new Builder.TileItem(options.data);
+                    }
+                }
+            };
+            if (data && data['name'] && data['name'] !== null)
+            {
+                data['name'] = $("<div/>").html(data['name']).text();
+            }
+            if (data && data['description'] && data['description'] !== null)
+            {
+                data['description'] = $("<div/>").html(data['description']).text();
+            }
+            var dsb = ko.mapping.fromJS(data, mapping);
+            dsb.isDefaultTileExist = function () {
+                for (var i in dsb.tiles()) {
+                    if (dsb.tiles()[i].type() === "DEFAULT") {
+                        return true;
+                    }
+                }
+                return false;
+            };
+            return dsb;
+        }
         
         DashboardDataSource.instance = self;
     }
