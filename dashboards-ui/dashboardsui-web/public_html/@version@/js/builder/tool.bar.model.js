@@ -113,7 +113,6 @@ define(['knockout',
 
             self.initialize = function() {
                 self.initEventHandlers();
-                self.initUserOptions();
             };
 
             self.intervalID = null;
@@ -141,10 +140,6 @@ define(['knockout',
                         }
                     }, interval);
                 }
-            };
-
-            self.initUserOptions = function () {
-                setAutoRefreshInterval(self.autoRefreshInterval());
             };
 
             self.initEventHandlers = function() {
