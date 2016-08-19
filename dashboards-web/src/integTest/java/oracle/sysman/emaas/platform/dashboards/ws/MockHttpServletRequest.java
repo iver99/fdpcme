@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
@@ -219,7 +220,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	  public Collection<Part> getParts() throws IOException, ServletException
 	  {
 		  // TODO Auto-generated method stub
-		  return null;
+		  return Collections.emptySet();
 	  }
 
 	@Override

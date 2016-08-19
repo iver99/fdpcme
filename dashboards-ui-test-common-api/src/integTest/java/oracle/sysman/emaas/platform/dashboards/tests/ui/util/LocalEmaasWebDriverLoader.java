@@ -60,13 +60,12 @@ public class LocalEmaasWebDriverLoader
 			@Mock
 			public void $init(String testName)
 			{
-				//System.out.println("Init mock SetUpBrowser");
+				
 			}
 
 			@Mock
 			public org.openqa.selenium.WebDriver launch(WebDriver wd)
 			{
-				//System.out.println("mock SetUpBrowser: launch");
 				return webDriver;
 			}
 		}

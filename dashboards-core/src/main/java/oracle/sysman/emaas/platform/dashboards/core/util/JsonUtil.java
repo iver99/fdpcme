@@ -13,6 +13,7 @@ package oracle.sysman.emaas.platform.dashboards.core.util;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -142,7 +143,7 @@ public class JsonUtil
 			result = json1.getString(field);
 		}
 		catch (Exception e) {
-			return null;
+			return Collections.emptyList();
 		}
 		return (List<T>) this.fromJson(result, constructParametricType(List.class, classMeta));
 	}

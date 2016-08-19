@@ -350,7 +350,7 @@ public class TenantSubscriptionUtilTest
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-		Assert.assertNull(services);
+		Assert.assertTrue(services == null || services.isEmpty());
 		Assert.assertEquals(TenantSubscriptionUtil.isAPMServiceOnly(Arrays.asList(new String[] { "APM" })), true);
 	}
 
@@ -374,7 +374,8 @@ public class TenantSubscriptionUtilTest
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-		Assert.assertNull(services);
+		//Assert.assertNull(services);
+		Assert.assertTrue(services == null || services.isEmpty());
 	}
 
 	@Test(groups = { "s2" })
@@ -397,7 +398,8 @@ public class TenantSubscriptionUtilTest
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-		Assert.assertNull(services);
+		//Assert.assertNull(services);
+		Assert.assertTrue(services == null || services.isEmpty());
 	}
 
 	@Test(groups = { "s2" })
@@ -417,7 +419,8 @@ public class TenantSubscriptionUtilTest
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-		Assert.assertNull(services);
+		//Assert.assertNull(services);
+		Assert.assertTrue(services == null || services.isEmpty());
 	}
 
 	@Test(groups = { "s2" })
@@ -446,7 +449,8 @@ public class TenantSubscriptionUtilTest
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-		Assert.assertNull(services);
+		//Assert.assertNull(services);
+		Assert.assertTrue(services == null || services.isEmpty());
 	}
 
 	@Test(groups = { "s2" })
@@ -469,7 +473,8 @@ public class TenantSubscriptionUtilTest
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-		Assert.assertNull(services);
+		//Assert.assertNull(services);
+		Assert.assertTrue(services == null || services.isEmpty());
 	}
 
 	@Test(groups = { "s2" })
@@ -495,14 +500,16 @@ public class TenantSubscriptionUtilTest
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-		Assert.assertNull(services);
+		//Assert.assertNull(services);
+		Assert.assertTrue(services == null || services.isEmpty());
 	}
 
 	@Test(groups = { "s2" })
 	public void testgetTenantSubscribedServicesNullTenantS2()
 	{
-		Object rtn = TenantSubscriptionUtil.getTenantSubscribedServices(null);
-		Assert.assertNull(rtn);
+		List<String> rtn = TenantSubscriptionUtil.getTenantSubscribedServices(null);
+		//Assert.assertNull(rtn);
+		Assert.assertTrue(rtn == null || rtn.isEmpty());
 	}
 
 	@Test(groups = { "s2" })

@@ -84,6 +84,7 @@ define(['knockout',
 
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
+            self.isOobDashboardset=dashboardsetToolBarModel.isOobDashboardset;
             self.scrollbarWidth = uiutil.getScrollbarWidth();
 
             self.showRightPanelToggler =  ko.observable(self.isMobileDevice !== 'true');
@@ -279,7 +280,7 @@ define(['knockout',
              **/
 
             self.initialize = function() {
-                    if (self.isMobileDevice === 'true' ) {
+                    if (self.isMobileDevice === 'true' || self.isOobDashboardset()) {
                         self.completelyHidden(true);
                         self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
                     } else {
@@ -362,7 +363,7 @@ define(['knockout',
 
             self.tileRestoredHandler = function() {
                 self.maximized(false);
-                if(self.isMobileDevice !== 'true') {
+                if(self.isMobileDevice !== 'true' && !self.isOobDashboardset()) {
                     self.completelyHidden(false);
                 }
 
@@ -932,7 +933,7 @@ define(['knockout',
 
             self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
             self.dashboardSharing.subscribe(function(val){
-                if(!self.toolBarModel) {
+                if(!self.toolBarModel || self.isDashboardSet()) {
                     // return if current selected tab is dashboard picker
                     return ;
                 }
