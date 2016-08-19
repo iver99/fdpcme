@@ -423,7 +423,6 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		else {
 			tmpDate = convertDate;
 		}
-		//System.out.println("tmpDate:" + tmpDate);
 		String[] date = tmpDate.split("-");
 		String StartDate = date[0].trim();
 		String EndDate = date[1].trim();

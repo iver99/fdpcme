@@ -265,8 +265,8 @@ define(['knockout',
              * @returns {String} assetRoot
              */
             self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot, relUrlExpected){
-                var regInfo = self.getRegistrationInfo();
-                if (regInfo){
+//                var regInfo = self.getRegistrationInfo();
+//                if (regInfo){
                     var providerVersionPlus = encodeURIComponent(providerVersion+'+');
                     var assetRoot = dfu.discoverUrl(providerName, providerVersionPlus, providerAssetRoot);
                     if (assetRoot){
@@ -278,9 +278,9 @@ define(['knockout',
                         console.log("Warning: asset root not found by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
                         return assetRoot;
                     }
-                } else {
+//                } else {
                     return null;
-                }
+//                }
 
             };
 
