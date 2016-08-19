@@ -588,14 +588,10 @@ define(['knockout',
                     for(var j=0; j<width; j++) {
                         col = cell.column + j;
                         self.tilesGrid.tileGrid[row] &&  (iTile = self.tilesGrid.tileGrid[row][col]);
-                        if(argNum === 2) {
-                            if(iTile && $.inArray(iTile, tiles) === -1 && tile !== iTile) {
-                                tiles.push(iTile);
-                            }
-                        }else if(argNum === 3) {
-                            if(iTile && $.inArray(iTile, tiles) === -1) {
-                                tiles.push(iTile);
-                            }
+                        if(argNum === 2 && iTile && $.inArray(iTile, tiles) === -1 && tile !== iTile) {
+                            tiles.push(iTile);
+                        }else if(argNum === 3 && iTile && $.inArray(iTile, tiles) === -1) {
+                            tiles.push(iTile);
                         }
                     }
                 }
@@ -662,10 +658,8 @@ define(['knockout',
                     iTile.moved = false;
 
                     for(var j=0; j<emptyRows.length; j++) {
-                        if(iRow > emptyRows[j]) {
-                            if(self.canMoveToRow(iTile, iRow-j-1)) {
-                                self.updateTilePosition(iTile, iRow-j-1, self.mode.getModeColumn(iTile));
-                            }
+                        if(iRow > emptyRows[j] && self.canMoveToRow(iTile, iRow-j-1)) {
+                            self.updateTilePosition(iTile, iRow-j-1, self.mode.getModeColumn(iTile));
                         }
                     }
                 }

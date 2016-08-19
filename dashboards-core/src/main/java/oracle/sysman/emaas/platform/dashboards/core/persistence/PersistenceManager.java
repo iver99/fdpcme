@@ -45,17 +45,7 @@ public class PersistenceManager
 		}
 	}
 
-/*	public static void main(String args[])
-	{
 
-		SchemaUtil rct = new SchemaUtil();
-		String url = "http://slc08twq.us.oracle.com:7004/registry/servicemanager/registry/v1" + DEPLOY_URL;
-		String data = rct.get(url);
-		List<String> urlList = SchemaUtil.getDeploymentUrl(data);
-		data = rct.get(urlList.get(0) + DEPLY_SCHEMA);
-		String schemaName = rct.getSchemaUserBySoftwareName(data, SERVICE_NAME);
-		System.out.println(schemaName);
-	}*/
 
 	public static void setTestEnv(boolean value)
 	{

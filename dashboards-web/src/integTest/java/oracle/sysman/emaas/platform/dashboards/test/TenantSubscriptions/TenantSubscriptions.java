@@ -46,8 +46,6 @@ public class TenantSubscriptions
 	public void getSubscribedapps()
 	{
 		try {
-			//System.out.println("------------------------------------------");
-			//System.out.println("without the parameter in URL, get the subscribed applications without edition data");
 			Response res1 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -55,13 +53,8 @@ public class TenantSubscriptions
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("/subscribedapps");
-			//System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 200);
 			Assert.assertNotNull(res1.jsonPath().get("applications"));
-			//System.out.println("											");
-
-			//System.out.println("------------------------------------------");
-			//System.out.println("with the parameter in URL, get the subscribed applications without edition data");
 			Response res2 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -69,13 +62,8 @@ public class TenantSubscriptions
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("/subscribedapps?withEdition=false");
-			//System.out.println("Status code is: " + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 200);
 			Assert.assertNotNull(res2.jsonPath().get("applications"));
-			//System.out.println("											");
-
-			//System.out.println("------------------------------------------");
-			//System.out.println("with the parameter in URL, get the subscribed applications with edition data");
 			Response res3 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -83,11 +71,10 @@ public class TenantSubscriptions
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("/subscribedapps?withEdition=true");
-			//System.out.println("Status code is: " + res3.getStatusCode());
 			Assert.assertTrue(res3.getStatusCode() == 200);
 			Assert.assertNotNull(res3.jsonPath().get("applications.application[0]"));
 			Assert.assertNotNull(res3.jsonPath().get("applications.edition[0]"));
-			//System.out.println("											");
+			
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
@@ -98,8 +85,6 @@ public class TenantSubscriptions
 	public void getSubscribedappsWrongTenant()
 	{
 		try {
-			//System.out.println("------------------------------------------");
-			//System.out.println("without the parameter in URL, get the subscribed applications without edition data");
 			Response res1 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -107,14 +92,9 @@ public class TenantSubscriptions
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", "wrongtenant", "X-REMOTE-USER", "wrongtenant" + "." + remoteuser,
 							"Authorization", authToken).when().get("/subscribedapps");
-			//System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 404);
 			Assert.assertEquals(res1.jsonPath().get("errorCode"), 20002);
 			Assert.assertEquals(res1.jsonPath().get("errorMessage"), "Specified tenant does not subscribe to any service");
-			//System.out.println("											");
-
-			//System.out.println("------------------------------------------");
-			//System.out.println("with the parameter in URL, get the subscribed applications without edition data");
 			Response res2 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -122,14 +102,10 @@ public class TenantSubscriptions
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", "wrongtenant", "X-REMOTE-USER", "wrongtenant" + "." + remoteuser,
 							"Authorization", authToken).when().get("/subscribedapps?withEdition=false");
-			//System.out.println("Status code is: " + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 404);
 			Assert.assertEquals(res2.jsonPath().get("errorCode"), 20002);
 			Assert.assertEquals(res2.jsonPath().get("errorMessage"), "Specified tenant does not subscribe to any service");
-			//System.out.println("											");
-
-			//System.out.println("------------------------------------------");
-			//System.out.println("with the parameter in URL, get the subscribed applications with edition data");
+			
 			Response res3 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -137,11 +113,10 @@ public class TenantSubscriptions
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", "wrongtenant", "X-REMOTE-USER", "wrongtenant" + "." + remoteuser,
 							"Authorization", authToken).when().get("/subscribedapps?withEdition=true");
-			//System.out.println("Status code is: " + res3.getStatusCode());
 			Assert.assertTrue(res3.getStatusCode() == 404);
 			Assert.assertEquals(res3.jsonPath().get("errorCode"), 20002);
 			Assert.assertEquals(res3.jsonPath().get("errorMessage"), "Specified tenant does not subscribe to any service");
-			//System.out.println("											");
+			
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());

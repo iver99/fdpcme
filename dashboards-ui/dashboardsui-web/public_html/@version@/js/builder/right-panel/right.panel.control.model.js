@@ -3,10 +3,9 @@ define(['knockout',
 'ojs/ojcore',
 'dfutil',
 'mobileutil',
-'uiutil',
-'ojs/ojcore',
+'uiutil'
 ],
-function (ko, $, oj, dfu, mbu, uiutil, oj) {
+function (ko, $, oj, dfu, mbu, uiutil) {
     function rightPanelControl($b, tilesViewModel, toolBarModel) {
         var self = this;
         self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');

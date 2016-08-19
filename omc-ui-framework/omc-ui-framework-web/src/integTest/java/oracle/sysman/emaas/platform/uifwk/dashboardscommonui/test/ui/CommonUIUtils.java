@@ -100,61 +100,11 @@ public class CommonUIUtils
 	public static void commonUITestLog(String sDesc)
 	{
 		String sStr = "*** Dashboards Common UI TestLog ***:  " + sDesc;
-		//System.out.println(sStr);
 	}
 
 	public static String getAppName(String sTenant, String sUser)
 	{
-		//		//String sAppName = "";
-		//
-		//		RestAssured.useRelaxedHTTPSValidation();
-		//		RestAssured.baseURI = sAPIUrl;
-		//
-		//		Response res1 = RestAssured
-		//				.given()
-		//				.contentType(ContentType.JSON)
-		//				.log()
-		//				.everything()
-		//				.headers("X-USER-IDENTITY-DOMAIN-NAME", sTenant, "X-REMOTE-USER", sTenant + "." + sUser, "Authorization",
-		//						sAuthToken).when().get("/subscribedapps");
-		//		CommonUIUtils.commonUITestLog("The statu code is:" + res1.getStatusCode() + res1.jsonPath().get("applications"));
-		//		String s_appname = res1.jsonPath().getString("applications");
-		//		//The response content contains "[" and "]", need to remove them before storing into array
-		//		CommonUIUtils.commonUITestLog("The response content is:" + s_appname);
-		//		s_appname = s_appname.replaceAll("\\[", "").replaceAll("\\]", "");
-		//		String[] ls_appname = s_appname.split(",");
-		//		for (int i = 0; i < ls_appname.length; i++) {
-		//			//Trim the whitespace
-		//			ls_appname[i] = ls_appname[i].trim();
-		//		}
-		//		Arrays.sort(ls_appname);
-		//		for (int i = 0; i < ls_appname.length; i++) {
-		//			CommonUIUtils.commonUITestLog(i + " : " + ls_appname[i]);
-		//			if (ls_appname[i].contains("APM")) {
-		//				if (sAppName.equals("")) {
-		//					sAppName = "Application Performance Monitoring";
-		//				}
-		//				else {
-		//					sAppName = sAppName + " | Application Performance Monitoring";
-		//				}
-		//			}
-		//			else if (ls_appname[i].contains("ITAnalytics")) {
-		//				if (sAppName.equals("")) {
-		//					sAppName = "IT Analytics";
-		//				}
-		//				else {
-		//					sAppName = sAppName + " | IT Analytics";
-		//				}
-		//			}
-		//			else if (ls_appname[i].contains("LogAnalytics")) {
-		//				if (sAppName.equals("")) {
-		//					sAppName = "Log Analytics";
-		//				}
-		//				else {
-		//					sAppName = sAppName + " | Log Analytics";
-		//				}
-		//			}
-		//		}
+		
 		sAppName = ""; //With fix to EMCPDF-1220, the application name in Dashboard pages will be blank
 		CommonUIUtils.commonUITestLog("The App Name is:" + sAppName);
 		return sAppName;

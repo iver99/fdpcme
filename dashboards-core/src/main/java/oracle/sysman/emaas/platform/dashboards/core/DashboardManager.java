@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.core;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -794,7 +795,7 @@ public class DashboardManager
 				"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
 						+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE ");
 		String jpqlQuery = sbQuery.toString();
-		//System.out.println("sql: " + jpqlQuery);
+		
 		logger.debug(jpqlQuery);
 		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 		EntityManager em = dsf.getEntityManager();
@@ -1180,11 +1181,11 @@ public class DashboardManager
 		if (opcTenantId == null || "".equals(opcTenantId)) {
 			logger.warn(
 					"When trying to retrieve subscribed application, it's found the tenant context is not set (TenantContext.getCurrentTenant() == null)");
-			return null;
+			return Collections.emptyList();
 		}
 		List<String> appNames = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId);
 		if (appNames == null || appNames.isEmpty()) {
-			return null;
+			return Collections.emptyList();
 		}
 		List<DashboardApplicationType> apps = new ArrayList<DashboardApplicationType>();
 		for (String appName : appNames) {

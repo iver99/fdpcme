@@ -16,7 +16,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
 
 //import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -321,7 +323,7 @@ public class SchemaUtil
 	public static List<String> getDeploymentUrl(String json)
 	{
 		if (json == null || "".equals(json)) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		java.util.HashSet<String> urlSet = new java.util.HashSet<String>();
@@ -331,7 +333,7 @@ public class SchemaUtil
 
 			List<SchemaDeploymentUrls> sdlist = ju.fromJsonToList(json, SchemaDeploymentUrls.class, ITEMS);
 			if (sdlist == null | sdlist.isEmpty()) {
-				return null;
+				return Collections.emptyList();
 			}
 			for (SchemaDeploymentUrls sd : sdlist) {
 				for (String temp : sd.getCanonicalEndpoints()) {
@@ -352,7 +354,7 @@ public class SchemaUtil
 		catch (Exception e) {
 
 			logger.error("an error occureed while getting schema name", e);
-			return null;
+			return Collections.emptyList();
 		}
 		List<String> urls = new ArrayList<String>();
 		urls.addAll(urlSet);
