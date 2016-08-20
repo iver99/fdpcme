@@ -890,7 +890,7 @@ define(['knockout',
                     self.toolbarModel.extendedOptions.tsel = {};
                 }
 
-                require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
+                require(["emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
                     self.toolbarModel.extendedOptions.tsel.entityContext = targets;
                     self.saveUserFilterOptions();
                 });
@@ -910,6 +910,7 @@ define(['knockout',
             });
 
             self.returnFromTsel = function(targets) {
+                window.DashboardWidgetAPI.setTargetSelectionContext(targets);
                     self.returnFromPageTsel(targets);
                     var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
                     if(rightPanelModel.dashboardSharing() !== "shared") {

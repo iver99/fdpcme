@@ -385,7 +385,7 @@ define(['knockout',
                         }
 
 
-                        require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
+                        require(["emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
                             if(targets && targets()) {
                                 var compressedTargets = encodeURI(JSON.stringify(targets()));
                                 var targetUrlParam = "targets";

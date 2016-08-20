@@ -15,6 +15,7 @@ define([
     'builder/dashboard.tile.view',
     'builder/tool.bar.model',
     'builder/integrate/builder.integrate',
+    'builder/integrate/dashboard.widget.api',
     'dashboards/dbstypeahead'],
     function (model, ko, $, dfu, _emJETCustomLogger, idfbcutil, oj) {
 
