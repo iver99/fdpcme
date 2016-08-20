@@ -66,7 +66,7 @@ public class RegistryLookupUtil
 
 	private static List<Link> getLinksWithProtocol(String protocol, List<Link> links)
 	{
-		if (protocol == null || links == null || protocol.length() == 0 || links.size() == 0) {
+		if (protocol == null || links == null || protocol.length() == 0 || links.isEmpty()) {
 			if (links == null) {
 				return new ArrayList<Link>();
 			}
@@ -91,7 +91,7 @@ public class RegistryLookupUtil
 
 	private static List<Link> getLinksWithRelPrefixWithProtocol(String protocol, String relPrefix, List<Link> links)
 	{
-		if (protocol == null || relPrefix == null || links == null || protocol.length() == 0 || links.size() == 0) {
+		if (protocol == null || relPrefix == null || links == null || protocol.length() == 0 || links.isEmpty()) {
 			if (links == null) {
 				return new ArrayList<Link>();
 			}
@@ -141,7 +141,7 @@ public class RegistryLookupUtil
 			else {
 				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			}
-			if (result != null && result.size() > 0) {
+			if (result != null && !result.isEmpty()) {
 
 				//find https link first
 				for (InstanceInfo internalInstance : result) {
@@ -179,7 +179,7 @@ public class RegistryLookupUtil
 					catch (Exception e) {
 						logger.error(e.getLocalizedMessage(), e);
 					}
-					if (links != null && links.size() > 0) {
+					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
 						break;
 					}
@@ -225,7 +225,7 @@ public class RegistryLookupUtil
 					catch (Exception e) {
 						logger.error(e.getLocalizedMessage(), e);
 					}
-					if (links != null && links.size() > 0) {
+					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
 						return lk;
 					}
@@ -266,7 +266,7 @@ public class RegistryLookupUtil
 			else {
 				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			}
-			if (result != null && result.size() > 0) {
+			if (result != null && !result.isEmpty()) {
 				// [EMCPDF-733] Rest client can't handle https currently, so http protocol is enough for internal use
 				// find http link only
 				for (InstanceInfo internalInstance : result) {
@@ -277,7 +277,7 @@ public class RegistryLookupUtil
 					else {
 						links = internalInstance.getLinksWithProtocol(rel, "http");
 					}
-					if (links != null && links.size() > 0) {
+					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
 						return lk;
 					}
@@ -299,7 +299,7 @@ public class RegistryLookupUtil
 		Map<String, String> map = new HashMap<String, String>();
 		try {
 			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
-			if (result != null && result.size() > 0) {
+			if (result != null && !result.isEmpty()) {
 				for (InstanceInfo internalInstance : result) {
 					if (map.containsKey(APM_SERVICE) && map.containsKey(ITA_SERVICE) && map.containsKey(LA_SERVICE)
 							&& map.containsKey(MONITORING_SERVICE) && map.containsKey(SECURITY_ANALYTICS_SERVICE) && map.containsKey(COMPLIANCE_SERVICE)) {
@@ -309,7 +309,7 @@ public class RegistryLookupUtil
 						List<Link> links = internalInstance.getLinksWithProtocol("vanity/apm", "https");
 						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
 
-						if (links != null && links.size() > 0) {
+						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							logger.debug("Retrieved base vanity URL for apm: {} ", lk.getHref());
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
@@ -321,7 +321,7 @@ public class RegistryLookupUtil
 						List<Link> links = internalInstance.getLinksWithProtocol("vanity/ita", "https");
 						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
 
-						if (links != null && links.size() > 0) {
+						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							logger.debug("Retrieved base vanity URL for ita: {} ", lk.getHref());
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
@@ -335,7 +335,7 @@ public class RegistryLookupUtil
 						List<Link> links = internalInstance.getLinksWithProtocol("vanity/la", "https");
 						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
 
-						if (links != null && links.size() > 0) {
+						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							logger.debug("Retrieved base vanity URL for la: {} ", lk.getHref());
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
@@ -347,7 +347,7 @@ public class RegistryLookupUtil
 						List<Link> links = internalInstance.getLinksWithProtocol("vanity/monitoring", "https");
 						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
 
-						if (links != null && links.size() > 0) {
+						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							logger.debug("Retrieved base vanity URL for monitoring service: {} ", lk.getHref());
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
@@ -360,7 +360,7 @@ public class RegistryLookupUtil
 						List<Link> links = internalInstance.getLinksWithProtocol("vanity/security", "https");
 						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
 
-						if (links != null && links.size() > 0) {
+						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							logger.debug("Retrieved base vanity URL for Security Analytics service: {} ", lk.getHref());
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
@@ -374,7 +374,7 @@ public class RegistryLookupUtil
 						List<Link> links = internalInstance.getLinksWithProtocol("vanity/compliance", "https");
 						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
 
-						if (links != null && links.size() > 0) {
+						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							logger.debug("Retrieved base vanity URL for Compliance service: {} ", lk.getHref());
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());

@@ -41,7 +41,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	public static final String DUP_SHBOARDSET_NOTTOSET = "duplicate_notAddToSet";
 
 	@Override
-	public void addNewDashboardToSet(WebDriver driver, String dashboardName) throws Exception
+	public void addNewDashboardToSet(WebDriver driver, String dashboardName) 
 	{
 		driver.getLogger().info("DashboardBuilderUtil.addNewDashboardToSet started for name=\"" + dashboardName + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
@@ -59,7 +59,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
 		boolean isSelectionTabExist = false;
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException("DashboardBuilderUtil.addNewDashboardToSet: the dashboard navigators is not found");
 		}
 
@@ -85,7 +85,13 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		}
 
 		driver.takeScreenShot();
-		DashboardHomeUtil.selectDashboard(driver, dashboardName);
+		try {
+			DashboardHomeUtil.selectDashboard(driver, dashboardName);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		WaitUtil.waitForPageFullyLoaded(driver);
 		driver.getLogger().info(
 				"DashboardBuilderUtil.addNewDashboardToSet has selected the dashboard named with \"" + dashboardName + "\"");
@@ -95,7 +101,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public void addWidgetToDashboard(WebDriver driver, String searchString) throws Exception
+	public void addWidgetToDashboard(WebDriver driver, String searchString) 
 	{
 		Validator.notNull("widgetName", searchString);
 		Validator.notEmptyString("widgetName", searchString);
@@ -138,7 +144,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		driver.getLogger().info("[DashboardHomeUtil] start to add widget from right drawer");
 		List<WebElement> matchingWidgets = driver.getWebDriver().findElements(
 				By.cssSelector(DashBoardPageId_190.RIGHTDRAWERWIDGETCSS));
-		if (matchingWidgets == null || matchingWidgets.size() == 0) {
+		if (matchingWidgets == null || matchingWidgets.isEmpty()) {
 			throw new NoSuchElementException("Right drawer widget for search string =" + searchString + " is not found");
 		}
 
@@ -190,7 +196,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public void createDashboardInsideSet(WebDriver driver, String name, String descriptions) throws Exception
+	public void createDashboardInsideSet(WebDriver driver, String name, String descriptions) 
 	{
 		driver.waitForElementPresent("id=" + DashBoardPageId_190.DASHBOARDSETOPTIONSMENUID);
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -199,7 +205,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		//validate whether should open new dashboard home in set
 		boolean isSelectionTabExist = false;
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException(
 					"DashboardBuilderUtil.createDashboardInsideSet: the dashboard navigators is not found");
 		}
@@ -335,14 +341,14 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public void duplicateDashboard(WebDriver driver, String name, String descriptions) throws Exception
+	public void duplicateDashboard(WebDriver driver, String name, String descriptions) 
 	{
 		duplicateDashboardCommonUse(driver, name, descriptions, DUP_DASHBOARD_NODSUBMENU);
 	}
 
 	@Override
 	public void duplicateDashboardInsideSet(WebDriver driver, String name, String descriptions, boolean addToSet)
-			throws Exception
+			
 	{
 		if (addToSet) {
 			duplicateDashboardCommonUse(driver, name, descriptions, DUP_DASHBOARD_TOSET);
@@ -353,7 +359,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public void editDashboard(WebDriver driver, String name, String descriptions, Boolean toShowDscptn) throws Exception
+	public void editDashboard(WebDriver driver, String name, String descriptions, Boolean toShowDscptn) 
 	{
 		Validator.notNull("editname", name);
 		Validator.notEmptyString("editname", name);
@@ -407,10 +413,10 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	 * @param driver
 	 * @param name
 	 * @param descriptions
-	 * @throws Exception
+	 * @
 	 */
 	@Deprecated
-	public void EditDashboard_targetselctor(WebDriver driver, String name, String descriptions) throws Exception
+	public void EditDashboard_targetselctor(WebDriver driver, String name, String descriptions) 
 	{
 		Validator.notNull("editname", name);
 		Validator.notEmptyString("editname", name);
@@ -453,7 +459,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public void editDashboardSet(WebDriver driver, String name, String descriptions) throws Exception
+	public void editDashboardSet(WebDriver driver, String name, String descriptions) 
 	{
 		Validator.notNull("editname", name);
 		Validator.notEmptyString("editname", name);
@@ -464,7 +470,13 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
 		//wait for scrollbar to display
 		//TODO replace with more reliable way
-		Thread.sleep(5000L);
+		try {
+			Thread.sleep(5000L);
+		}
+		catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		//open settings menu
 		driver.click("id=" + DashBoardPageId_190.DASHBOARDSETOPTIONSMENUID);
@@ -497,7 +509,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public Boolean favoriteOption(WebDriver driver) throws Exception
+	public Boolean favoriteOption(WebDriver driver) 
 	{
 		driver.getLogger().info("DashboardBuilderUtil.favoriteOption started");
 
@@ -522,7 +534,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public Boolean favoriteOptionDashboardSet(WebDriver driver) throws Exception
+	public Boolean favoriteOptionDashboardSet(WebDriver driver) 
 	{
 		driver.getLogger().info("DashboardBuilderUtil.favoriteOptionDashboardSet started");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -544,13 +556,19 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public void gridView(WebDriver driver) throws Exception
+	public void gridView(WebDriver driver) 
 	{
-		DashboardHomeUtil.gridView(driver);
+		try {
+			DashboardHomeUtil.gridView(driver);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public boolean isRefreshSettingChecked(WebDriver driver, String refreshSettings) throws Exception
+	public boolean isRefreshSettingChecked(WebDriver driver, String refreshSettings) 
 	{
 		driver.getLogger().info("DashboardBuilderUtil.isRefreshSettingChecked started for refreshSettings=" + refreshSettings);
 
@@ -621,25 +639,31 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		}
 	}
 
-	//	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
+	//	public static void loadWebDriverOnly(WebDriver webDriver) 
 	//	{
 	//		driver = webDriver;
 	//	}
 
 	@Override
-	public void listView(WebDriver driver) throws Exception
+	public void listView(WebDriver driver) 
 	{
-		DashboardHomeUtil.listView(driver);
+		try {
+			DashboardHomeUtil.listView(driver);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void openWidget(WebDriver driver, String widgetName) throws Exception
+	public void openWidget(WebDriver driver, String widgetName) 
 	{
 		openWidget(driver, widgetName, 0);
 	}
 
 	@Override
-	public void openWidget(WebDriver driver, String widgetName, int index) throws Exception
+	public void openWidget(WebDriver driver, String widgetName, int index) 
 	{
 		driver.getLogger().info("DashboardBuilderUtil.openWidget started for widgetName=" + widgetName + ", index=" + index);
 
@@ -651,7 +675,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public void printDashboard(WebDriver driver) throws Exception
+	public void printDashboard(WebDriver driver) 
 	{
 		driver.getLogger().info("DashboardBuilderUtil print dashboard started");
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.BUILDEROPTIONSMENULOCATOR);
@@ -665,7 +689,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public void printDashboardSet(WebDriver driver) throws Exception
+	public void printDashboardSet(WebDriver driver) 
 	{
 		driver.getLogger().info("DashboardBuilderUtil print dashboard set started");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -681,7 +705,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		}
 
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException("DashboardBuilderUtil.printDashboardSet: the dashboard navigators is not found");
 		}
 		for (WebElement nav : navs) {
@@ -699,7 +723,13 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		DelayedPressEnterThread thr = new DelayedPressEnterThread("DelayedPressEnterThread", waitTime);
 		driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId_190.DASHBOARDSETOPTIONSPRINTCSS)).click();
 		//have to use thread sleep to wait for the print window(windows dialog) to appear
-		Thread.sleep(waitTime);
+		try {
+			Thread.sleep(waitTime);
+		}
+		catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		driver.getLogger().info("DashboardBuilderUtil.printDashboardSet: print set completed");
 	}
 
@@ -786,7 +816,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
 		WebElement targetTab = null;
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException("DashboardBuilderUtil.removeDashboardFromSet: the dashboard navigators is not found");
 		}
 
@@ -818,18 +848,25 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public void removeWidget(WebDriver driver, String widgetName) throws Exception
+	public void removeWidget(WebDriver driver, String widgetName) 
 	{
 		removeWidget(driver, widgetName, 0);
 	}
 
 	@Override
-	public void removeWidget(WebDriver driver, String widgetName, int index) throws Exception
+	public void removeWidget(WebDriver driver, String widgetName, int index) 
 	{
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
 
-		WebElement widgetEl = getWidgetByName(driver, widgetName, index);
+		WebElement widgetEl = null;
+		try {
+			widgetEl = getWidgetByName(driver, widgetName, index);
+		}
+		catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		focusOnWidgetHeader(driver, widgetEl);
 		driver.takeScreenShot();
@@ -842,13 +879,20 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public void resizeWidget(WebDriver driver, String widgetName, int index, String resizeOptions) throws Exception
+	public void resizeWidget(WebDriver driver, String widgetName, int index, String resizeOptions) 
 	{
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
 		Validator.fromValidValues("resizeOptions", resizeOptions, TILE_NARROWER, TILE_WIDER, TILE_SHORTER, TILE_TALLER);
 
-		WebElement widgetEl = getWidgetByName(driver, widgetName, index);
+		WebElement widgetEl = null;
+		try {
+			widgetEl = getWidgetByName(driver, widgetName, index);
+		}
+		catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		focusOnWidgetHeader(driver, widgetEl);
 		driver.takeScreenShot();
@@ -882,13 +926,13 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public void resizeWidget(WebDriver driver, String widgetName, String resizeOptions) throws Exception
+	public void resizeWidget(WebDriver driver, String widgetName, String resizeOptions) 
 	{
 		resizeWidget(driver, widgetName, 0, resizeOptions);
 	}
 
 	@Override
-	public void saveDashboard(WebDriver driver) throws Exception
+	public void saveDashboard(WebDriver driver) 
 	{
 		driver.getLogger().info("DashboardBuilderUtil.save started");
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.DASHBOARDSAVECSS);
@@ -898,19 +942,31 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public void search(WebDriver driver, String searchString) throws Exception
+	public void search(WebDriver driver, String searchString) 
 	{
-		DashboardHomeUtil.search(driver, searchString);
+		try {
+			DashboardHomeUtil.search(driver, searchString);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void selectDashboard(WebDriver driver, String dashboardName) throws Exception
+	public void selectDashboard(WebDriver driver, String dashboardName) 
 	{
-		DashboardHomeUtil.selectDashboard(driver, dashboardName);
+		try {
+			DashboardHomeUtil.selectDashboard(driver, dashboardName);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void selectDashboardInsideSet(WebDriver driver, String dashboardName) throws Exception
+	public void selectDashboardInsideSet(WebDriver driver, String dashboardName) 
 	{
 		driver.getLogger().info("DashboardBuilderUtil.selectDashboardInsideSet started for name=\"" + dashboardName + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
@@ -928,7 +984,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		driver.takeScreenShot();
 
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException(
 					"DashboardBuilderUtil.selectDashboardInsideSet: the dashboard navigators is not found");
 		}
@@ -946,13 +1002,13 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public void setEntitySupport(WebDriver driver, String mode) throws Exception
+	public void setEntitySupport(WebDriver driver, String mode) 
 	{
 		driver.getLogger().info("DashboardBuilderUtil.setEntitySupport started, the param of mode is: " + mode);
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.BUILDEROPTIONSMENULOCATOR);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		OpenFiltersInRightPanel(driver);
+		openFiltersInRightPanel(driver);
 
 		driver.getElement("css=" + DashBoardPageId_190.RIGHTDRAWEREDITDBENTITYSUPPORTCSS);
 		if ("MULTIPLE".equals(mode)) {
@@ -968,14 +1024,14 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public boolean showEntityFilter(WebDriver driver, boolean showEntityFilter) throws Exception
+	public boolean showEntityFilter(WebDriver driver, boolean showEntityFilter) 
 	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.showEntityFilter started, the param of showEntityFilter is: " + showEntityFilter);
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.BUILDEROPTIONSMENULOCATOR);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		OpenFiltersInRightPanel(driver);
+		openFiltersInRightPanel(driver);
 
 		if (showEntityFilter) {
 			driver.waitForElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWEREDITDBENABLEENTITYFILTERCSS);
@@ -994,14 +1050,14 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public boolean showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) throws Exception
+	public boolean showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) 
 	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.showTimeRangeFilter started, the param of showTimeRangeFilter is: " + showTimeRangeFilter);
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.BUILDEROPTIONSMENULOCATOR);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		OpenFiltersInRightPanel(driver);
+		openFiltersInRightPanel(driver);
 
 		if (showTimeRangeFilter) {
 			driver.waitForElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWEREDITDBENABLETIMERANGEFILTERCSS);
@@ -1020,13 +1076,13 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public void showWidgetTitle(WebDriver driver, String widgetName, boolean visibility) throws Exception
+	public void showWidgetTitle(WebDriver driver, String widgetName, boolean visibility) 
 	{
 		showWidgetTitle(driver, widgetName, 0, visibility);
 	}
 
 	@Override
-	public void showWidgetTitle(WebDriver driver, String widgetName, int index, boolean visibility) throws Exception
+	public void showWidgetTitle(WebDriver driver, String widgetName, int index, boolean visibility) 
 	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.showWidgetTitle started for widgetName=" + widgetName + ", index=" + index
@@ -1069,16 +1125,22 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	 * @param option
 	 *            sort by - default, access_date_asc, access_date_dsc, name_asc, name_dsc, creation_date_asc, creation_date_dsc,
 	 *            last_modification_date_asc, last_modification_date_dsc, owner_asc, owner_dsc
-	 * @throws Exception
+	 * @
 	 */
 	@Override
-	public void sortBy(WebDriver driver, String option) throws Exception
+	public void sortBy(WebDriver driver, String option) 
 	{
-		DashboardHomeUtil.sortBy(driver, option);
+		try {
+			DashboardHomeUtil.sortBy(driver, option);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public Boolean toggleHome(WebDriver driver) throws Exception
+	public Boolean toggleHome(WebDriver driver) 
 	{
 		driver.getLogger().info("DashboardBuilderUtil.asHomeOption started");
 
@@ -1092,7 +1154,6 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 			driver.click("css=" + DashBoardPageId_190.BUILDEROPTIONSSETHOMELOCATORCSS);
 			driver.takeScreenShot();
 			boolean comfirmDialog = driver.isDisplayed("css=" + DashBoardPageId_190.BUILDEROPTIONSSETHOMESAVECSS);
-			System.out.println("dialog home " + comfirmDialog);
 			if (comfirmDialog) {
 				driver.click("css=" + DashBoardPageId_190.BUILDEROPTIONSSETHOMESAVECSS);
 				driver.takeScreenShot();
@@ -1112,7 +1173,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public Boolean toggleHomeDashboardSet(WebDriver driver) throws Exception
+	public Boolean toggleHomeDashboardSet(WebDriver driver) 
 	{
 		driver.getLogger().info("DashboardBuilderUtil.toggleHomeOptionDashboardSet started");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -1137,7 +1198,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public Boolean toggleShareDashboard(WebDriver driver) throws Exception
+	public Boolean toggleShareDashboard(WebDriver driver) 
 	{
 		driver.getLogger().info("DashboardBuilderUtil.sharedashboard started");
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.BUILDEROPTIONSMENULOCATOR);
@@ -1175,10 +1236,10 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	/**
 	 * @param driver
 	 * @return true if toggle to share the dashboardset
-	 * @throws Exception
+	 * @
 	 */
 	@Override
-	public Boolean toggleShareDashboardset(WebDriver driver) throws Exception
+	public Boolean toggleShareDashboardset(WebDriver driver) 
 	{
 		driver.getLogger().info("DashboardBuilderUtil.toggleShareDashboardset started");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -1291,7 +1352,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
 		boolean hasFound = false;
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException(
 					"DashboardBuilderUtil.verifyDashboardInsideSet: the dashboard navigators is not found");
 		}
@@ -1409,7 +1470,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	private void duplicateDashboardCommonUse(WebDriver driver, String name, String descriptions, String operationName)
-			throws Exception
+			
 	{
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		Validator.notNull("duplicatename", name);
@@ -1583,7 +1644,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		return isDisplayed && isWidthValid;
 	}
 
-	private void OpenFiltersInRightPanel(WebDriver driver)
+	private void openFiltersInRightPanel(WebDriver driver)
 	{
 		driver.getLogger().info("DashboardBuilderUtil.openFiltersInRightPanel start");
 		//click Options to open Options menu
@@ -1604,7 +1665,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	//to open right drawer and show build dashboard
-	private void showRightDrawer(WebDriver driver, String buttonName) throws Exception
+	private void showRightDrawer(WebDriver driver, String buttonName) 
 	{
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWERCSS);
 		if (isRightDrawerVisible(driver) != false) {
@@ -1627,7 +1688,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	protected void hideRightDrawer(WebDriver driver) throws Exception
+	protected void hideRightDrawer(WebDriver driver) 
 	{
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWERCSS);
 		if (isRightDrawerVisible(driver) == true) {

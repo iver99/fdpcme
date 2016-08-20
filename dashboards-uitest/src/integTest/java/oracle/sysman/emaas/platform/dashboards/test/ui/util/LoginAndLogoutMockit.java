@@ -34,7 +34,7 @@ public class LoginAndLogoutMockit extends LocalEmaasWebDriverLoader
 	}
 
 	@AfterMethod
-	public static void logout_method()
+	public static void logoutMethod()
 	{
 		if (webd != null) {
 			//LoginUtils.doLogout(webd);

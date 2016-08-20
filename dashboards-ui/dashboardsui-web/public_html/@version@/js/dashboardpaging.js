@@ -39,10 +39,15 @@ DashboardPaging.prototype._getSize = function() {
 DashboardPaging.prototype._refreshDataWindow = function() {
     // Reinit the array
     var _isShow = this.showPagingObservable();
-    if (_isShow !== true && this.pageSize < this.totalSize()) this.showPagingObservable(true); //show paging
-    if (_isShow === true && this.pageSize >= this.totalSize()) this.showPagingObservable(false); //show paging
+    if (_isShow !== true && this.pageSize < this.totalSize()) {
+        this.showPagingObservable(true);
+    }//show paging
+    if (_isShow === true && this.pageSize >= this.totalSize()) {
+        this.showPagingObservable(false);
+    }//show paging
 
-    this.dataWindow = new Array(this._getSize());
+    this.dataWindow = [];
+    this.dataWindow.length = this._getSize();
 
     var self = this;
     if (this._getSize() === 0 && this.collection.length === 0)
@@ -69,7 +74,9 @@ DashboardPaging.prototype.IterativeAt = function (start, end) {
         var doTask = function(index) {
                         return self.__getPromise(function(resolve, reject) {
                             self.collection.at(index, null).then(function(model) {
-                                if (model) array.push(model);
+                                if (model) {
+                                    array.push(model);
+                                }
                                 if (model.isDsbAttrsHtmlDecoded !== true)
                                 {
                                     var __dname = $("<div/>").html(model.get('name')).text();
@@ -206,7 +213,7 @@ DashboardPaging.prototype.getEndItemIndex = function()
 DashboardPaging.prototype.getPageCount = function()
 {
   var totalSize = this.totalSize();
-  return totalSize == -1 ? -1 : Math.ceil(totalSize / this.pageSize);
+  return totalSize === -1 ? -1 : Math.ceil(totalSize / this.pageSize);
 };
 
 DashboardPaging.prototype.refreshModel = function(modelId, options)
@@ -274,7 +281,9 @@ DashboardPaging.prototype.remove = function(model, options)
 
 DashboardPaging.prototype.fetch = function(options)
 {
-    if (!this.collection) return;
+    if (!this.collection) {
+        return;
+    }
     var self = this, opts = options || {}, _forceFetch = options['forceFetch'];
     if (opts['startIndex'] !== undefined) {
          this.current = opts['startIndex'];
@@ -283,14 +292,11 @@ DashboardPaging.prototype.fetch = function(options)
         this.pageSize = opts['pageSize'];
     }
     var _lastFetchSize = self.collection.lastFetchSize, _offset = self.collection.offset;
-    if (_forceFetch !== true)
+    if (_forceFetch !== true && (this.current >= _offset && (this.pageSize + this.current) <= (_offset + _lastFetchSize)))
     {
-        if (this.current >= _offset && (this.pageSize + this.current) <= (_offset + _lastFetchSize))
-        {
-            return this._refreshDataWindow().then(function() {
+        return this._refreshDataWindow().then(function() {
                               self._processSuccess(opts);
                           });
-        }
     }
     self._fetch(options);
 };
@@ -436,7 +442,9 @@ DashboardPaging.prototype.getModelFromWindow = function(id)
     {
         for (_i= 0 ; _i < w.length; _i++)
         {
-            if (w[_i].id === id) return w[_i];
+            if (w[_i].id === id) {
+                return w[_i];
+            }
         }
     }
 

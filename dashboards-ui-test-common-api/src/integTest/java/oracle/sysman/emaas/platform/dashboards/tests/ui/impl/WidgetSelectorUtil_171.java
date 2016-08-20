@@ -29,12 +29,18 @@ public class WidgetSelectorUtil_171 extends WidgetSelectorUtil_Version implement
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWidgetSelectorUtil#addWidget(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void addWidget(WebDriver driver, String widgetName) throws Exception
+	public void addWidget(WebDriver driver, String widgetName)
 	{
 		driver.getLogger().info("addWidget started, widgetName=" + widgetName);
 		Validator.notEmptyString("widgetName", widgetName);
 
-		searchWidget(driver, widgetName);
+		try {
+			searchWidget(driver, widgetName);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		String autoCloseCheck = driver.getElement(DashBoardPageId.WIDGET_SELECTOR_WIDGET_AREA)
 				.getAttribute("data-wgt-slt-auto-close");
 		Boolean autoClose = Boolean.valueOf(autoCloseCheck);
@@ -46,7 +52,13 @@ public class WidgetSelectorUtil_171 extends WidgetSelectorUtil_Version implement
 
 		// automatically close the dialog then
 		if (!autoClose) {
-			closeDialog(driver);
+			try {
+				closeDialog(driver);
+			}
+			catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		driver.getLogger().info("addWidget completed");
@@ -56,7 +68,7 @@ public class WidgetSelectorUtil_171 extends WidgetSelectorUtil_Version implement
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWidgetSelectorUtil#page(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int)
 	 */
 	@Override
-	public void page(WebDriver driver, int pageNo) throws Exception
+	public void page(WebDriver driver, int pageNo) throws IllegalAccessException
 	{
 		throw new IllegalAccessException("Not implemented: page(WebDriver driver, int pageNo)");
 	}
@@ -65,7 +77,7 @@ public class WidgetSelectorUtil_171 extends WidgetSelectorUtil_Version implement
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWidgetSelectorUtil#pagingNext(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void pagingNext(WebDriver driver) throws Exception
+	public void pagingNext(WebDriver driver) throws IllegalAccessException
 	{
 		throw new IllegalAccessException("Not implemented:pagingNext(WebDriver driver)");
 	}
@@ -74,12 +86,12 @@ public class WidgetSelectorUtil_171 extends WidgetSelectorUtil_Version implement
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWidgetSelectorUtil#pagingPrevious(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void pagingPrevious(WebDriver driver) throws Exception
+	public void pagingPrevious(WebDriver driver) throws IllegalAccessException
 	{
 		throw new IllegalAccessException("Not implemented:pagingPrevious(WebDriver driver)");
 	}
 
-	private void closeDialog(WebDriver driver) throws Exception
+	private void closeDialog(WebDriver driver)
 	{
 		driver.getLogger().info("(Internal method) closeDialog started");
 		driver.waitForElementPresent(DashBoardPageId.WIDGET_SELECTOR_CLOSE_BTN_LOCATOR);
@@ -108,7 +120,7 @@ public class WidgetSelectorUtil_171 extends WidgetSelectorUtil_Version implement
 		return tileTitles.get(index);
 	}
 
-	private void searchWidget(WebDriver driver, String widgetName) throws Exception
+	private void searchWidget(WebDriver driver, String widgetName) 
 	{
 		driver.waitForElementPresent(DashBoardPageId.WIDGET_SELECTOR_WIDGET_AREA);
 		driver.clear(DashBoardPageId.WIDGET_SELECTOR_SEARCH_INPUT_LOCATOR);

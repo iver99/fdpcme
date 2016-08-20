@@ -12,7 +12,7 @@ public class LoginAndLogout
 	public static WebDriver webd = null;
 
 	@AfterMethod
-	public static void logout_method()
+	public static void logoutMethod()
 	{
 		if (webd != null) {
 			LoginUtils.doLogout(webd);

@@ -52,7 +52,7 @@ public class EMTargetInitializer implements ApplicationServiceManager
 	}
 
 	@Override
-	public void postStart(ApplicationLifecycleEvent evt) throws Exception
+	public void postStart(ApplicationLifecycleEvent evt) 
 	{
 		// TODO Auto-generated method stub
 		String emTargetMBeanName = "";
@@ -78,19 +78,19 @@ public class EMTargetInitializer implements ApplicationServiceManager
 	}
 
 	@Override
-	public void postStop(ApplicationLifecycleEvent evt) throws Exception
+	public void postStop(ApplicationLifecycleEvent evt) 
 	{
 
 	}
 
 	@Override
-	public void preStart(ApplicationLifecycleEvent evt) throws Exception
+	public void preStart(ApplicationLifecycleEvent evt) 
 	{
 
 	}
 
 	@Override
-	public void preStop(ApplicationLifecycleEvent evt) throws Exception
+	public void preStop(ApplicationLifecycleEvent evt) 
 	{
 		// TODO Auto-generated method stub
 		String emTargetMBeanName = SVR_MBEAN_NAME_PREFIX + appName;

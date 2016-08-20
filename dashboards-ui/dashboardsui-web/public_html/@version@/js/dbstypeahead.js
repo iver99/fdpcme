@@ -139,6 +139,8 @@ $.widget( "dbs.dbsTypeAhead", {
 				case keyCode.DOWN:
 					this._keyEvent( "next", event );
 					break;
+				default:
+					break;
 				}
 			},
 			input: function( event ) {
@@ -181,33 +183,19 @@ $.widget( "dbs.dbsTypeAhead", {
 			this.source = function( request, response ) {
 				response( filterFunc( array, request.term ) );
 			};
-		}/* else if ( typeof this.options.source === "string" ) {
-			url = this.options.source;
-			this.source = function( request, response ) {
-				if ( that.xhr ) {
-					that.xhr.abort();
-				}
-				that.xhr = dfu.ajaxWithRetry({
-					url: url,
-					data: request,
-					dataType: "json",
-					success: function( data ) {
-						response( data );
-					},
-					error: function() {
-						response([]);
-					}
-				});
-			};
-		}*/
+		}
                 else if ( this.options.source && this.options.source['dsFactory']){
 			var _dsFac = this.options.source['dsFactory'], _dsFetchSize = this.options.source['fetchSize'], _dataSource;
                         this.source = function( request, response ) {
                             var _fetchSize = 20, _searchText = (request.term && request.term !== null) ? request.term.trim() : request.term;
                             if (_dsFetchSize)
                             {
-                                if ($.isFunction(_dsFetchSize)) _fetchSize = _dsFetchSize();
-                                else _fetchSize = _dsFetchSize;
+                                if ($.isFunction(_dsFetchSize)) {
+                                	_fetchSize = _dsFetchSize();
+                                }
+                                else {
+                                	_fetchSize = _dsFetchSize;
+                                }
                             }
                             _dataSource = _dsFac.build(_searchText, _fetchSize);
                             _dataSource['pagingDS'].setPage(0, {
@@ -250,11 +238,9 @@ $.widget( "dbs.dbsTypeAhead", {
                 var keyCode = $.ui.keyCode;
                 if ( event.keyCode !== keyCode.BACKSPACE &&
                         event.keyCode !== keyCode.DELETE &&
-                        event.keyCode !== keyCode.ENTER )
-                {
-                    if ( value.length < this.options.minLength ) {
+                        event.keyCode !== keyCode.ENTER &&
+                        ( value.length < this.options.minLength )) {
 			return this.close( event );
-                    }
                 }
 		return this._search( value );
 	},

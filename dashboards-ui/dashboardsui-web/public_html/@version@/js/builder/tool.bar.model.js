@@ -32,12 +32,15 @@ define(['knockout',
             self.duplicateDashboardModel = new dd.DuplicateDashboardModel($b);
             self.toolBarGuid = Builder.getGuid();
             self.isUnderSet = ko.dataFor($("#dbd-set-tabs")[0]).isDashboardSet();
+            self.isInOOBDashboardSet=ko.dataFor($("#dbd-set-tabs")[0]).isOobDashboardset();
             self.duplicateInSet = ko.observable(false);
 
-            if (self.dashboard.id && self.dashboard.id())
+            if (self.dashboard.id && self.dashboard.id()){
                 self.dashboardId = self.dashboard.id();
-            else
+            }
+            else{
                 self.dashboardId = 9999; // id is expected to be available always
+            }
 
             if(self.dashboard.name && self.dashboard.name()){
                 self.dashboardName = ko.observable(self.dashboard.name());
@@ -117,10 +120,12 @@ define(['knockout',
                 self.initEventHandlers();
                 self.initUserOtions();
                 $b.findEl('.builder-dbd-name-input').on('blur', function(evt) {
-                    if (evt && evt.relatedTarget && evt.relatedTarget.id && $(evt.relatedTarget).hasClass("builder-dbd-name-cancel"))
+                    if (evt && evt.relatedTarget && evt.relatedTarget.id && $(evt.relatedTarget).hasClass("builder-dbd-name-cancel")){
                         self.cancelChangeDashboardName();
-                    if (evt && evt.relatedTarget && evt.relatedTarget.id && $(evt.relatedTarget).hasClass("builder-dbd-name-ok"))
+                    }
+                    if (evt && evt.relatedTarget && evt.relatedTarget.id && $(evt.relatedTarget).hasClass("builder-dbd-name-ok")){
                         self.okChangeDashboardName();
+                    }
                 });
             };
 
@@ -195,8 +200,9 @@ define(['knockout',
             self.noSameNameValidator = {
                 'validate' : function (value) {
                     self.nameValidated = true;
-                    if (self.dashboardName() === value)
+                    if (self.dashboardName() === value){
                         return true;
+                    }
                     value = value + "";
 
                     if (value && Builder.isDashboardNameExisting(value)) {
@@ -242,7 +248,7 @@ define(['knockout',
 
             self.handleUnshareDashboardCancelled = function() {
                 // revert change
-                var dashboardSharing = ko.dataFor($b.findEl(".share-settings")[0]).dashboardSharing;
+                var dashboardSharing = ko.dataFor($(".share-settings")[0]).dashboardSharing;
                 dashboardSharing("shared");
                 $('#share-dashboard').ojDialog( "close" );
             };
@@ -257,8 +263,9 @@ define(['knockout',
             self.okChangeDashboardName = function() {
                 var nameInput = oj.Components.getWidgetConstructor($b.findEl('.builder-dbd-name-input')[0]);
                 nameInput('validate');
-                if (!self.nameValidated)
+                if (!self.nameValidated){
                     return false;
+                }
                 if (!$b.findEl('.builder-dbd-name-input')[0].value) {
                     $b.findEl('.builder-dbd-name-input').focus();
                     return false;
@@ -303,10 +310,12 @@ define(['knockout',
                 if ($b.findEl('.builder-dbd-description').hasClass('editing')) {
                     $b.findEl('.builder-dbd-description').removeClass('editing');
                 }
-                if (!self.dashboard.description)
+                if (!self.dashboard.description){
                     self.dashboard.description = ko.observable(self.dashboardDescription());
-                else
+                }
+                else{
                     self.dashboard.description(self.dashboardDescription());
+                }
             };
 
             self.cancelChangeDashboardDescription = function() {
@@ -391,8 +400,9 @@ define(['knockout',
             self.handleDashboardSave = function() {
                 if (self.isNameUnderEdit()) {
                     try {
-                        if (!self.okChangeDashboardName())
+                        if (!self.okChangeDashboardName()){
                             return;  // validator not passed, so do not save
+                        }
                     }
                     catch (e) {
                         oj.Logger.error(e);
@@ -492,17 +502,11 @@ define(['knockout',
     //                ,providerVersion: '1.0'
             };
 
-            /*self.HandleAddTextWidget = function() {
-                var maximizedTile = self.tilesViewModel.editor.getMaximizedTile();
-                if (maximizedTile)
-                    self.tilesViewModel.restore(maximizedTile);
-                self.tilesViewModel.appendTextTile();
-            };*/
-
             self.openAddWidgetDialog = function() {
                 var maximizedTile = self.tilesViewModel.editor.getMaximizedTile();
-                if (maximizedTile)
+                if (maximizedTile){
                     self.tilesViewModel.restore(maximizedTile);
+                }
                 $('#'+addWidgetDialogId).ojDialog('open');
             };
 
@@ -511,50 +515,17 @@ define(['knockout',
             };
 
             self.handleAddWidgetTooltip = function(hasContent) {
-                if (hasContent === true)
+                if (hasContent === true){
                     $b.findEl(".tooltip-add-widget").css("display", "none");
-                else if (hasContent === false)
+                }
+                else if (hasContent === false){
                     $b.findEl(".tooltip-add-widget").css("display", "block");
+                }
                 else if (self.tilesViewModel.isEmpty() && self.dashboard && self.dashboard.systemDashboard && !self.dashboard.systemDashboard()) {
                     $b.findEl(".tooltip-add-widget").css("display", "block");
                 }else {
                     $b.findEl(".tooltip-add-widget").css("display", "none");
                 }
-            };
-
-            self.handleShareUnshare = function(isToShare) {
-                var _shareState = self.dashboard.sharePublic();
-                if(_shareState === isToShare ) {
-                    return ;
-                }
-                var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
-                dfu.ajaxWithRetry(_url + self.dashboard.id() + "/quickUpdate", {
-                        type: 'PUT',
-                        dataType: "json",
-                        contentType: 'application/json',
-                        data: JSON.stringify({sharePublic: isToShare}),
-                        headers: dfu.getDashboardsRequestHeader(),
-                        success: function (result) {
-                            self.dashboard.sharePublic(isToShare);
-                            if (self.dashboard.sharePublic() === true)
-                            {
-                                self.sharePublicLabel(unshareDashboardLabel);
-                                self.sharePublicTitle(unshareDashboardTitle);
-                                self.cssSharePublic(cssUnshareDashboard);
-                                dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_SHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_SHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
-                            }
-                            else
-                            {
-                                self.sharePublicLabel(shareDashboardLabel);
-                                self.sharePublicTitle(shareDashboardTitle);
-                                self.cssSharePublic(cssShareDashboard);
-                                dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
-                            }
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
-                        }
-                    });
             };
 
             self.initialize();
@@ -593,6 +564,41 @@ define(['knockout',
             //Check home dashboard preferences
             checkDashboardAsHomeSettings();
 
+            self.handleShareUnshare = function(isToShare) {
+                var _shareState = self.dashboard.sharePublic();
+                if(_shareState === isToShare ) {
+                    return ;
+                }
+                var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
+                dfu.ajaxWithRetry(_url + self.dashboard.id() + "/quickUpdate", {
+                        type: 'PUT',
+                        dataType: "json",
+                        contentType: 'application/json',
+                        data: JSON.stringify({sharePublic: isToShare}),
+                        headers: dfu.getDashboardsRequestHeader(),
+                        success: function (result) {
+                            self.dashboard.sharePublic(isToShare);
+                            if (self.dashboard.sharePublic() === true)
+                            {
+                                self.sharePublicLabel(unshareDashboardLabel);
+                                self.sharePublicTitle(unshareDashboardTitle);
+                                self.cssSharePublic(cssUnshareDashboard);
+                                dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_SHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_SHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
+                            }
+                            else
+                            {
+                                self.sharePublicLabel(shareDashboardLabel);
+                                self.sharePublicTitle(shareDashboardTitle);
+                                self.cssSharePublic(cssShareDashboard);
+                                dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
+                        }
+                    });
+            };
+            
             self.openDashboardEditDialog = function() {
                 var rightPanel = ko.dataFor($('.df-right-panel')[0]);
                 rightPanel && rightPanel.editRightpanelLinkage("singleDashboard-edit");
@@ -870,6 +876,8 @@ define(['knockout',
                         self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);// 5 minutes
                         dfu.showMessage({type: 'confirm', summary: getNlsString('DBS_BUILDER_MSG_AUTO_REFRESH_ON'), detail: '', removeDelayTime: 5000});
                         break;
+                    default:
+                        break;
                 }
             };
 
@@ -919,7 +927,9 @@ define(['knockout',
                     "showSubMenu": function () {
                         if (self.currentUser !== self.dashboard.owner() && "Oracle" !== self.dashboard.owner()) {
                             return false;
-                        } else {
+                        } else if(self.isInOOBDashboardSet){
+                            return false;
+                        } else{
                             return self.isUnderSet;
                         }
                     }(),

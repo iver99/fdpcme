@@ -22,7 +22,7 @@ public interface EMTargetMXBean
 	 * @exception Exception
 	 *                if the operation fails
 	 */
-	public String getEMTargetType() throws Exception;
+	public String getEMTargetType();
 
 	/**
 	 * Gets the EM target name.
@@ -30,6 +30,6 @@ public interface EMTargetMXBean
 	 * @exception Exception
 	 *                if the operation fails
 	 */
-	public String getName() throws Exception;
+	public String getName();
 
 }

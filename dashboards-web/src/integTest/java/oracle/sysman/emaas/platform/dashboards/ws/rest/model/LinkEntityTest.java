@@ -14,19 +14,19 @@ public class LinkEntityTest {
     LinkEntity linkEntity ;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         linkEntity = new LinkEntity(null,null,null,null);
     }
 
     @Test
-    public void testGetHref() throws Exception {
+    public void testGetHref() {
         Assert.assertNull(linkEntity.getHref());
         linkEntity.setHref("href");
         Assert.assertEquals(linkEntity.getHref(),"href");
     }
 
     @Test
-    public void testGetName() throws Exception {
+    public void testGetName() {
         Assert.assertNull(linkEntity.getName());
 
         linkEntity.setName("name");
@@ -34,7 +34,7 @@ public class LinkEntityTest {
     }
 
     @Test
-    public void testGetServiceName() throws Exception {
+    public void testGetServiceName() {
         Assert.assertNull(linkEntity.getServiceName());
         linkEntity.setServiceName("ServiceName");
         Assert.assertEquals(linkEntity.getServiceName(),"ServiceName");
@@ -42,7 +42,7 @@ public class LinkEntityTest {
     }
 
     @Test
-    public void testGetVersion() throws Exception {
+    public void testGetVersion() {
         Assert.assertNull(linkEntity.getVersion());
         linkEntity.setVersion("version");
         Assert.assertEquals(linkEntity.getVersion(),"version");

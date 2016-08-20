@@ -159,13 +159,16 @@ define(['knockout',
 
             var kowidget;
                 kowidget = new Builder.TileItem(widget);
-            for (var p in kowidget)
+            for (var p in kowidget){
                 self[p] = kowidget[p];
+            }
             if(self['WIDGET_SUPPORT_TIME_CONTROL']) {
-                if (self['WIDGET_SUPPORT_TIME_CONTROL']() === '0')
+                if (self['WIDGET_SUPPORT_TIME_CONTROL']() === '0'){
                     self['WIDGET_SUPPORT_TIME_CONTROL'](false);
-                else
+                }
+                else{
                     self['WIDGET_SUPPORT_TIME_CONTROL'](true);
+                }
                 window.DEV_MODE && console.debug("self['WIDGET_SUPPORT_TIME_CONTROL'] is set to " + self['WIDGET_SUPPORT_TIME_CONTROL']());
             }
 
@@ -174,39 +177,10 @@ define(['knockout',
         }
         Builder.registerModule(DashboardTile, 'DashboardTile');
 
-        /*function initializeTextTileAfterLoad(mode, $b, tile, funcShow, deleteTextCallback) {
-            if(!tile) {
+        function initializeTileAfterLoad(mode, dashboard, tile, timeSelectorModel, targets, loadImmediately, dashboardInst) {
+            if (!tile){
                 return;
             }
-            var dashboard = $b.dashboard;
-            Builder.registerComponent(tile.WIDGET_KOC_NAME(), tile.WIDGET_VIEWMODEL(), tile.WIDGET_TEMPLATE());
-            tile.shouldHide = ko.observable(false);
-            tile.toBeOccupied = ko.observable(false);
-            var _currentUser = dfu.getUserName();
-            tile.editDisabled = ko.computed(function() { //to do
-                return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard() || _currentUser !== dashboard.owner();
-            });
-            tile.params = {
-                show: funcShow,
-                deleteTextCallback: deleteTextCallback,
-    //                reorder: funcReorder,
-                tiles: dashboard.tiles,
-                tile: tile,
-                validator: Builder.isContentLengthValid,
-                builder: $b
-            };
-
-            tile.tileDisplayClass = ko.computed(function() {
-                var display = tile.shouldHide()?"none":"block";
-                var tileBorder = tile.toBeOccupied() ? "border: 1px dashed black;": "";
-                return tile.cssStyle() + "display:" + display + "; left: 10px;"+tileBorder;
-            });
-        }
-        Builder.registerFunction(initializeTextTileAfterLoad, 'initializeTextTileAfterLoad');*/
-
-        function initializeTileAfterLoad(mode, dashboard, tile, timeSelectorModel, targets, loadImmediately, dashboardInst) {
-            if (!tile)
-                return;
 
             tile.shouldHide = ko.observable(false);
             tile.toBeOccupied = ko.observable(false);
@@ -252,8 +226,12 @@ define(['knockout',
             tile.linkedDashboard = ko.computed(function() {
                 if (tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()) {
                     var link = '/emsaasui/emcpdfui/builder.html?dashboardId=' + tile.WIDGET_LINKED_DASHBOARD();
-                    (dashboard.enableTimeRange()==="TRUE" || Builder.isTimeRangeAvailInUrl()===true)&& timeSelectorModel && timeSelectorModel.viewStart() && (link += '&startTime='+timeSelectorModel.viewStart().getTime()+'&endTime='+timeSelectorModel.viewEnd().getTime());
-                    targets && targets() && (link += "&targets="+encodeURI(JSON.stringify(targets())));
+                    if((dashboard.enableTimeRange()==="TRUE" || Builder.isTimeRangeAvailInUrl()===true)&& timeSelectorModel && timeSelectorModel.viewStart()){
+                        link += '&startTime='+timeSelectorModel.viewStart().getTime()+'&endTime='+timeSelectorModel.viewEnd().getTime();
+                    }
+                    if(targets && targets()){
+                        link += "&targets="+encodeURI(JSON.stringify(targets()));
+                    }
                     return link;
                 } else
                     return "#";
@@ -334,11 +312,13 @@ define(['knockout',
             if (loadImmediately) {
                 var assetRoot = Builder.getWidgetAssetRoot(tile.PROVIDER_NAME(),tile.PROVIDER_VERSION(),tile.PROVIDER_ASSET_ROOT());
                 var kocVM = tile.WIDGET_VIEWMODEL();
-                if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
+                if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                     kocVM = assetRoot + kocVM;
+                }
                 var kocTemplate = tile.WIDGET_TEMPLATE();
-                if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
+                if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                     kocTemplate = assetRoot + kocTemplate;
+                }
                 Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
             }
         }

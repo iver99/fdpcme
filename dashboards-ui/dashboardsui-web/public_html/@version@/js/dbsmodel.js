@@ -89,7 +89,6 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             {
                 if (self.parentElementId && self.parentElementId.trim().length > 0)
                 {
-                    var y = $("#"+self.parentElementId+" "+cssSelector);
                     return $("#"+self.parentElementId+" "+cssSelector);
                 }
                 return $(cssSelector);
@@ -229,7 +228,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.dashboardsTS = ko.observable(new dts.DashboardArrayTableSource([], {idAttribute: 'id'}));
         self.showPaging = ko.computed(function() {
             var _pds = ko.utils.unwrapObservable(self.pagingDatasource());
-            if (_pds instanceof  oj.ArrayPagingDataSource) return false;
+            if (_pds instanceof  oj.ArrayPagingDataSource) {
+                return false;
+            }
             var _spo = ko.utils.unwrapObservable(self.pagingDatasource().getShowPagingObservable());
             return _spo;
         });
@@ -283,12 +284,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             'success': function() {
                 self.datasource['serverError'] = false;
                 self.refreshPagingSource();
-                if (self.datasource['pagingDS'].totalSize() <= 0)
-                {
-                    if (self.welcomeDialogModel.showWelcome === false)
-                    {
-                        $('#cbtn-tooltip').ojPopup('open', "#cbtn");
-                    }
+                if (self.datasource['pagingDS'].totalSize() <= 0 && (self.welcomeDialogModel.showWelcome === false)){
+                    $('#cbtn-tooltip').ojPopup('open', "#cbtn");
                 }
             },
             'error': function(jqXHR, textStatus, errorThrown) {
@@ -388,7 +385,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         };
 
         self.confirmDashboardDelete = function() {
-            if ( !self.selectedDashboard() || self.selectedDashboard() === null ) return;
+            if ( !self.selectedDashboard() || self.selectedDashboard() === null ) {
+                return;
+            }
 
             self.datasource['pagingDS'].remove(self.selectedDashboard().dashboardModel,
                    {
@@ -507,11 +506,6 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                                 $( "#cDsbDialog" ).css("cursor", "default");
                                 $( "#cDsbDialog" ).ojDialog( "close" );
                             }
-                            /*
-                            $( "#cDsbDialog" ).ojDialog( "close" );
-                            self.confirmDialogModel.show("Error", "Ok",
-                                    "Error on creating dashboard." + " " +_m,
-                                    function () {self.confirmDialogModel.close()});*/
                         }
                     });
         };
@@ -544,7 +538,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.handleListColumnSort = function( event, ui ) {
             if (ui)
             {
-                var _option = ui.header + (ui.direction == 'descending' ? '_dsc' : '_asc');
+                var _option = ui.header + (ui.direction === 'descending' ? '_dsc' : '_asc');
                 self.sortBy([_option]);
             }
         };
@@ -554,7 +548,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             if ( valueParam.option === "value" && _value[0] !== _preValue[0] )
             {
                 self.dsFactory.sortBy = _value[0];
-                if (valueParam.optionMetadata.writeback == 'shouldNotWrite')
+                if (valueParam.optionMetadata.writeback === 'shouldNotWrite')
                 {
                     // change by set self.sortBy triggered by list table sort
                     self.forceSearch();
@@ -589,32 +583,32 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 
         self._getListTableSortUi = function(sortOption)
         {
-            if (sortOption == 'name_asc')
+            if (sortOption === 'name_asc')
             {
                 return {'header': 'name', 'direction': 'ascending'};
             }
 
-            if (sortOption == 'name_dsc')
+            if (sortOption === 'name_dsc')
             {
                 return {'header': 'name', 'direction': 'descending'};
             }
 
-            if (sortOption == 'owner_asc')
+            if (sortOption === 'owner_asc')
             {
                 return {'header': 'owner', 'direction': 'ascending'};
             }
 
-            if (sortOption == 'owner_dsc')
+            if (sortOption === 'owner_dsc')
             {
                 return {'header': 'owner', 'direction': 'descending'};
             }
 
-            if (sortOption == 'last_modification_date_asc')
+            if (sortOption === 'last_modification_date_asc')
             {
                 return {'header': 'last_modification_date', 'direction': 'ascending'};
             }
 
-            if (sortOption == 'last_modification_date_dsc')
+            if (sortOption === 'last_modification_date_dsc')
             {
                 return {'header': 'last_modification_date', 'direction': 'descending'};
             }
@@ -657,12 +651,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self._forceSearch = function (silent, endcallback)
         {
             var  _ts = self.dashboardsTS();
-            if (silent !== true)
+            if (silent !== true && ( _ts && _ts !== null ))
             {
-                if ( _ts && _ts !== null )
-                {
-                    _ts.handleEvent(oj.TableDataSource.EventType['REQUEST']);
-                }
+                _ts.handleEvent(oj.TableDataSource.EventType['REQUEST']);
             }
             self.getElementByCss(".dbs-sinput").dbsTypeAhead("forceSearch", endcallback);
         };
@@ -713,7 +704,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                 self.datasource['pagingDS'].refreshModel(_id, {
                     success: function(model) {
                         var _e = $(".dbs-summary-container[aria-dashboard=\""+_id+"\"]");
-                        if (_e && _e.length > 0) _e.dbsDashboardPanel("refresh");
+                        if (_e && _e.length > 0) {
+                            _e.dbsDashboardPanel("refresh");
+                        }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         oj.Logger.error("Error when updating dashboard. " + (jqXHR ? jqXHR.responseText : ""));
@@ -754,7 +747,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 
         self.getDashboardsFilterPref = function () {
             var filter = self.getPreferenceValue(DASHBOARDS_FILTER_PREF_KEY);
-            if (filter === undefined || filter.length === 0) return undefined;
+            if (filter === undefined || filter.length === 0) {
+                return undefined;
+            }
             filter = $("<div/>").html(filter).text();
             return filter;
         };
@@ -782,13 +777,19 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         };
 
         self.getPreferenceValue = function(key) {
-            if (self.preferences === undefined) return undefined;
+            if (self.preferences === undefined) {
+                return undefined;
+            }
             var arr;
             arr = $.grep(self.preferences, function( pref ) {
-                if (pref !== undefined && pref['key'] === key) return true;
+                if (pref !== undefined && pref['key'] === key) {
+                    return true;
+                }
                 return false;
             });
-            if (arr !== undefined && arr.length > 0) return arr[0]['value'];
+            if (arr !== undefined && arr.length > 0) {
+                return arr[0]['value'];
+            }
             return undefined;
         };
 

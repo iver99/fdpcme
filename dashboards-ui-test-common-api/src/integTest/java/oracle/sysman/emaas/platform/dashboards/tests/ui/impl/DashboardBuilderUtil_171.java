@@ -37,7 +37,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#addNewDashboardToSet(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void addNewDashboardToSet(WebDriver driver, String dashboardName) throws Exception
+	public void addNewDashboardToSet(WebDriver driver, String dashboardName)
 	{
 		driver.getLogger().info("addNewDashboardToSet started for name=\"" + dashboardName + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
@@ -54,7 +54,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 
 		boolean isSelectionTabExist = false;
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException("addNewDashboardToSet: the dashboard navigators is not found");
 		}
 
@@ -79,7 +79,13 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		}
 
 		driver.takeScreenShot();
-		DashboardHomeUtil.selectDashboard(driver, dashboardName);
+		try {
+			DashboardHomeUtil.selectDashboard(driver, dashboardName);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		driver.getLogger().info("removeDashboardInSet has selected the dashboard named with \"" + dashboardName + "\"");
 
 		driver.takeScreenShot();
@@ -90,7 +96,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#addWidgetToDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void addWidgetToDashboard(WebDriver driver, String searchString) throws Exception
+	public void addWidgetToDashboard(WebDriver driver, String searchString)
 	{
 		Validator.notNull("widgetName", searchString);
 		Validator.notEmptyString("widgetName", searchString);
@@ -133,7 +139,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.getLogger().info("[DashboardHomeUtil] start to add widget from right drawer");
 		List<WebElement> matchingWidgets = driver.getWebDriver().findElements(
 				By.cssSelector(DashBoardPageId.RIGHTDRAWERWIDGETCSS));
-		if (matchingWidgets == null || matchingWidgets.size() == 0) {
+		if (matchingWidgets == null || matchingWidgets.isEmpty()) {
 			throw new NoSuchElementException("Right drawer widget for search string =" + searchString + " is not found");
 		}
 
@@ -171,7 +177,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	}
 
 	@Override
-	public void createDashboardInsideSet(WebDriver driver, String name, String descriptions) throws Exception
+	public void createDashboardInsideSet(WebDriver driver, String name, String descriptions)
 	{
 		Assert.assertTrue(false, "This method is not available in the current version");
 		driver.getLogger().info("Method not available in the current version");
@@ -243,7 +249,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#duplicateDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void duplicateDashboard(WebDriver driver, String name, String descriptions) throws Exception
+	public void duplicateDashboard(WebDriver driver, String name, String descriptions)
 	{
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		Validator.notNull("duplicatename", name);
@@ -307,7 +313,6 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 
 	@Override
 	public void duplicateDashboardInsideSet(WebDriver driver, String name, String descriptions, boolean addToSet)
-			throws Exception
 	{
 		Assert.assertTrue(false, "This method is not available in the current version");
 		driver.getLogger().info("Method not available in the current version");
@@ -317,7 +322,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#editDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void editDashboard(WebDriver driver, String name, String descriptions) throws Exception
+	public void editDashboard(WebDriver driver, String name, String descriptions)
 	{
 		Validator.notNull("editname", name);
 		Validator.notEmptyString("editname", name);
@@ -356,7 +361,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	}
 
 	@Override
-	public void editDashboard(WebDriver driver, String name, String descriptions, Boolean toShowDscptn) throws Exception
+	public void editDashboard(WebDriver driver, String name, String descriptions, Boolean toShowDscptn)
 	{
 		Assert.assertTrue(false, "This method is not available in the current version");
 		driver.getLogger().info("Method not available in the current version");
@@ -366,7 +371,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#editDashboardSet(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void editDashboardSet(WebDriver driver, String name, String descriptions) throws Exception
+	public void editDashboardSet(WebDriver driver, String name, String descriptions)
 	{
 		Validator.notNull("editname", name);
 		Validator.notEmptyString("editname", name);
@@ -414,7 +419,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#favoriteOption(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public Boolean favoriteOption(WebDriver driver) throws Exception
+	public Boolean favoriteOption(WebDriver driver)
 	{
 		driver.getLogger().info("favoriteOption started");
 
@@ -442,7 +447,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#favoriteOptionDashboardSet(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public Boolean favoriteOptionDashboardSet(WebDriver driver) throws Exception
+	public Boolean favoriteOptionDashboardSet(WebDriver driver)
 	{
 		driver.getLogger().info("favoriteOptionDashboardSet started");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -467,16 +472,22 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#gridView(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void gridView(WebDriver driver) throws Exception
+	public void gridView(WebDriver driver)
 	{
-		DashboardHomeUtil.gridView(driver);
+		try {
+			DashboardHomeUtil.gridView(driver);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#isRefreshSettingChecked(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public boolean isRefreshSettingChecked(WebDriver driver, String refreshSettings) throws Exception
+	public boolean isRefreshSettingChecked(WebDriver driver, String refreshSettings)
 	{
 		driver.getLogger().info("isRefreshSettingChecked started for refreshSettings=" + refreshSettings);
 
@@ -547,7 +558,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		}
 	}
 
-	//	public void loadWebDriverOnly(WebDriver webDriver) throws Exception
+	//	public void loadWebDriverOnly(WebDriver webDriver)
 	//	{
 	//		driver = webDriver;
 	//	}
@@ -555,16 +566,22 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#listView(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void listView(WebDriver driver) throws Exception
+	public void listView(WebDriver driver)
 	{
-		DashboardHomeUtil.listView(driver);
+		try {
+			DashboardHomeUtil.listView(driver);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#moveWidget(WebDriver driver, String widgetName, int index, String moveOption)
 	 */
 	@Override
-	public void moveWidget(WebDriver driver, String widgetName, int index, String moveOption) throws Exception
+	public void moveWidget(WebDriver driver, String widgetName, int index, String moveOption)
 	{
     	Assert.assertTrue(false,"This method is not available in 1.7.1 version");
 		driver.getLogger().info("Method not available in 1.7.1 version");
@@ -574,7 +591,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#moveWidget(WebDriver driver, String widgetName, String moveOption)
 	 */
 	@Override
-	public void moveWidget(WebDriver driver, String widgetName, String moveOption) throws Exception
+	public void moveWidget(WebDriver driver, String widgetName, String moveOption)
 	{
     	moveWidget(driver, widgetName, 0, moveOption);
 	}
@@ -583,7 +600,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#openWidget(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void openWidget(WebDriver driver, String widgetName) throws Exception
+	public void openWidget(WebDriver driver, String widgetName)
 	{
 		openWidget(driver, widgetName, 0);
 	}
@@ -592,7 +609,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#openWidget(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, int)
 	 */
 	@Override
-	public void openWidget(WebDriver driver, String widgetName, int index) throws Exception
+	public void openWidget(WebDriver driver, String widgetName, int index)
 	{
 		driver.getLogger().info("openWidget started for widgetName=" + widgetName + ", index=" + index);
 
@@ -607,7 +624,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#printDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void printDashboard(WebDriver driver) throws Exception
+	public void printDashboard(WebDriver driver)
 	{
 		driver.getLogger().info("DashboardBuilderUtil print dashboard started");
 		driver.waitForElementPresent(DashBoardPageId.BUILDEROPTIONSMENULOCATOR);
@@ -625,7 +642,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 */
 
 	@Override
-	public void printDashboardSet(WebDriver driver) throws Exception
+	public void printDashboardSet(WebDriver driver)
 	{
 		driver.getLogger().info("DashboardBuilderUtil print dashboard set started");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -640,7 +657,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		}
 
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException("addNewDashboardToSet: the dashboard navigators is not found");
 		}
 		for (WebElement nav : navs) {
@@ -658,7 +675,13 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		DelayedPressEnterThread thr = new DelayedPressEnterThread("DelayedPressEnterThread", waitTime);
 		driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.DASHBOARDSETOPTIONSPRINTCSS)).click();
 		//have to use thread sleep to wait for the print window(windows dialog) to appear
-		Thread.sleep(waitTime);
+		try {
+			Thread.sleep(waitTime);
+		}
+		catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		driver.getLogger().info("DashboardBuilderUtil print set completed");
 	}
 
@@ -739,7 +762,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	}
 
 	@Override
-	public void removeDashboardFromSet(WebDriver driver, String dashboardName) throws Exception
+	public void removeDashboardFromSet(WebDriver driver, String dashboardName)
 	{
 		Assert.assertTrue(false, "This method is not available in the current version");
 		driver.getLogger().info("Method not available in the current version");
@@ -749,7 +772,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#removeWidget(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void removeWidget(WebDriver driver, String widgetName) throws Exception
+	public void removeWidget(WebDriver driver, String widgetName)
 	{
 		removeWidget(driver, widgetName, 0);
 	}
@@ -758,12 +781,19 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#removeWidget(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, int)
 	 */
 	@Override
-	public void removeWidget(WebDriver driver, String widgetName, int index) throws Exception
+	public void removeWidget(WebDriver driver, String widgetName, int index)
 	{
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
 
-		WebElement widgetEl = getWidgetByName(driver, widgetName, index);
+		WebElement widgetEl = null;
+		try {
+			widgetEl = getWidgetByName(driver, widgetName, index);
+		}
+		catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		focusOnWidgetHeader(driver, widgetEl);
 		driver.takeScreenShot();
@@ -779,13 +809,20 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#resizeWidget(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, int, java.lang.String)
 	 */
 	@Override
-	public void resizeWidget(WebDriver driver, String widgetName, int index, String resizeOptions) throws Exception
+	public void resizeWidget(WebDriver driver, String widgetName, int index, String resizeOptions)
 	{
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
 		Validator.fromValidValues("resizeOptions", resizeOptions, TILE_NARROWER, TILE_WIDER, TILE_SHORTER, TILE_TALLER);
 
-		WebElement widgetEl = getWidgetByName(driver, widgetName, index);
+		WebElement widgetEl = null;
+		try {
+			widgetEl = getWidgetByName(driver, widgetName, index);
+		}
+		catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		focusOnWidgetHeader(driver, widgetEl);
 		driver.takeScreenShot();
@@ -822,7 +859,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#resizeWidget(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void resizeWidget(WebDriver driver, String widgetName, String resizeOptions) throws Exception
+	public void resizeWidget(WebDriver driver, String widgetName, String resizeOptions)
 	{
 		resizeWidget(driver, widgetName, 0, resizeOptions);
 	}
@@ -831,7 +868,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#saveDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void saveDashboard(WebDriver driver) throws Exception
+	public void saveDashboard(WebDriver driver)
 	{
 		driver.getLogger().info("save started");
 		driver.waitForElementPresent("css=" + DashBoardPageId.DASHBOARDSAVECSS);
@@ -844,36 +881,48 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#search(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void search(WebDriver driver, String searchString) throws Exception
+	public void search(WebDriver driver, String searchString)
 	{
-		DashboardHomeUtil.search(driver, searchString);
+		try {
+			DashboardHomeUtil.search(driver, searchString);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#selectDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void selectDashboard(WebDriver driver, String dashboardName) throws Exception
+	public void selectDashboard(WebDriver driver, String dashboardName)
 	{
-		DashboardHomeUtil.selectDashboard(driver, dashboardName);
+		try {
+			DashboardHomeUtil.selectDashboard(driver, dashboardName);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void selectDashboardInsideSet(WebDriver driver, String dashboardName) throws Exception
+	public void selectDashboardInsideSet(WebDriver driver, String dashboardName)
 	{
 		Assert.assertTrue(false, "This method is not available in the current version");
 		driver.getLogger().info("Method not available in the current version");
 	}
 
 	@Override
-	public void setEntitySupport(WebDriver driver, String mode) throws Exception
+	public void setEntitySupport(WebDriver driver, String mode)
 	{
 		Assert.assertTrue(false, "This method is not available in 1.7.1 version");
 		driver.getLogger().info("Method not available in 1.7.1 version");
 	}
 
 	@Override
-	public boolean showEntityFilter(WebDriver driver, boolean showEntityFilter) throws Exception
+	public boolean showEntityFilter(WebDriver driver, boolean showEntityFilter)
 	{
 		Assert.assertTrue(false, "This method is not available in 1.7.1 version");
 		driver.getLogger().info("Method not available in 1.7.1 version");
@@ -881,7 +930,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	}
 
 	@Override
-	public boolean showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) throws Exception
+	public boolean showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter)
 	{
 		Assert.assertTrue(false, "This method is not available in 1.7.1 version");
 		driver.getLogger().info("Method not available in 1.7.1 version");
@@ -892,7 +941,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#showWidgetTitle(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, boolean)
 	 */
 	@Override
-	public void showWidgetTitle(WebDriver driver, String widgetName, boolean visibility) throws Exception
+	public void showWidgetTitle(WebDriver driver, String widgetName, boolean visibility)
 	{
 		showWidgetTitle(driver, widgetName, 0, visibility);
 	}
@@ -901,7 +950,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#showWidgetTitle(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, int, boolean)
 	 */
 	@Override
-	public void showWidgetTitle(WebDriver driver, String widgetName, int index, boolean visibility) throws Exception
+	public void showWidgetTitle(WebDriver driver, String widgetName, int index, boolean visibility)
 	{
 		driver.getLogger().info(
 				"showWidgetTitle started for widgetName=" + widgetName + ", index=" + index + ", visibility=" + visibility);
@@ -940,16 +989,22 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#sortBy(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void sortBy(WebDriver driver, String option) throws Exception
+	public void sortBy(WebDriver driver, String option)
 	{
-		DashboardHomeUtil.sortBy(driver, option);
+		try {
+			DashboardHomeUtil.sortBy(driver, option);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#toggleHome(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public Boolean toggleHome(WebDriver driver) throws Exception
+	public Boolean toggleHome(WebDriver driver)
 	{
 		driver.getLogger().info("asHomeOption started");
 
@@ -963,7 +1018,6 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			driver.click("css=" + DashBoardPageId.BUILDEROPTIONSSETHOMELOCATORCSS);
 			driver.takeScreenShot();
 			boolean comfirmDialog = driver.isDisplayed("css=" + DashBoardPageId.BUILDEROPTIONSSETHOMESAVECSS);
-			//System.out.println("dialog home " + comfirmDialog);
 			if (comfirmDialog) {
 				driver.click("css=" + DashBoardPageId.BUILDEROPTIONSSETHOMESAVECSS);
 				driver.takeScreenShot();
@@ -986,7 +1040,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#toggleHomeDashboardSet(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public Boolean toggleHomeDashboardSet(WebDriver driver) throws Exception
+	public Boolean toggleHomeDashboardSet(WebDriver driver)
 	{
 		driver.getLogger().info("toggleHomeOptionDashboardSet started");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -1014,7 +1068,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#toggleShareDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public Boolean toggleShareDashboard(WebDriver driver) throws Exception
+	public Boolean toggleShareDashboard(WebDriver driver)
 	{
 		driver.getLogger().info("sharedashboard started");
 		driver.waitForElementPresent(DashBoardPageId.BUILDEROPTIONSMENULOCATOR);
@@ -1041,7 +1095,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#toggleShareDashboardset(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public Boolean toggleShareDashboardset(WebDriver driver) throws Exception
+	public Boolean toggleShareDashboardset(WebDriver driver)
 	{
 		driver.getLogger().info("toggleShareDashboardset started");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -1168,7 +1222,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 
 		boolean hasFound = false;
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.size() == 0) {
+		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException("verifyDashboardInsideSet: the dashboard navigators is not found");
 		}
 
@@ -1361,7 +1415,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		return isDisplayed && isWidthValid;
 	}
 
-	private void showRightDrawer(WebDriver driver) throws Exception
+	private void showRightDrawer(WebDriver driver)
 	{
 		driver.waitForElementPresent("css=" + DashBoardPageId.RIGHTDRAWERCSS);
 		if (isRightDrawerVisible(driver) == false) {
@@ -1372,7 +1426,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.takeScreenShot();
 	}
 
-	protected void hideRightDrawer(WebDriver driver) throws Exception
+	protected void hideRightDrawer(WebDriver driver)
 	{
 		driver.waitForElementPresent("css=" + DashBoardPageId.RIGHTDRAWERCSS);
 		if (isRightDrawerVisible(driver) == true) {

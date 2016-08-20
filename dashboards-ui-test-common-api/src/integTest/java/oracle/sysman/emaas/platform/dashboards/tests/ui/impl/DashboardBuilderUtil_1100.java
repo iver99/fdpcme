@@ -23,14 +23,21 @@ public class DashboardBuilderUtil_1100 extends DashboardBuilderUtil_190
     public static final String TILE_RIGHT = "right";
     
     @Override
-    public void moveWidget(WebDriver driver, String widgetName, int index, String moveOption) throws Exception
+    public void moveWidget(WebDriver driver, String widgetName, int index, String moveOption)
     {
     	Validator.notEmptyString("widgetName", widgetName);
         Validator.equalOrLargerThan0("index", index);
         Validator.fromValidValues("moveOption", moveOption, TILE_UP,
                 TILE_DOWN, TILE_LEFT, TILE_RIGHT);
 
-        WebElement widgetEl = getWidgetByName(driver, widgetName, index);
+        WebElement widgetEl = null;
+		try {
+			widgetEl = getWidgetByName(driver, widgetName, index);
+		}
+		catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         focusOnWidgetHeader(driver, widgetEl);
         driver.takeScreenShot();
@@ -63,7 +70,7 @@ public class DashboardBuilderUtil_1100 extends DashboardBuilderUtil_190
     }
     
     @Override
-    public void moveWidget(WebDriver driver, String widgetName, String moveOption) throws Exception
+    public void moveWidget(WebDriver driver, String widgetName, String moveOption)
     {
     	moveWidget(driver, widgetName, 0, moveOption);
     }

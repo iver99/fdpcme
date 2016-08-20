@@ -49,15 +49,35 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil#setCustomTime(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public String setCustomTime(WebDriver webd, int index, String startDateTime, String endDateTime) throws Exception
+	public String setCustomTime(WebDriver webd, int index, String startDateTime, String endDateTime) 
 	{
 
-		String start = timeFormatChange(webd, startDateTime, "MM/dd/yy hh:mm a", "MM/dd/yyyy hh:mm a");
-		String end = timeFormatChange(webd, endDateTime, "MM/dd/yy hh:mm a", "MM/dd/yyyy hh:mm a");
+		String start = null;
+		try {
+			start = timeFormatChange(webd, startDateTime, "MM/dd/yy hh:mm a", "MM/dd/yyyy hh:mm a");
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String end = null;
+		try {
+			end = timeFormatChange(webd, endDateTime, "MM/dd/yy hh:mm a", "MM/dd/yyyy hh:mm a");
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		webd.getLogger().info("the start time in dashboard is:" + start + ",the end time in dashboard is:" + end);
 		webd.getLogger().info("we are going to set the custom time in dashboard page");
 
-		clickTimePicker(webd, index);
+		try {
+			clickTimePicker(webd, index);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 		webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 		webd.takeScreenShot();
@@ -72,18 +92,12 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		String endTime = null;
 
 		if (mStart.find()) {
-			if (mStart.group(1) == null || mStart.group(1).isEmpty() || mStart.group(2) == null || mStart.group(2).isEmpty()) {
-				throw new Exception("the start date or the start time is empty.Please check:\n" + start);
-			}
 			startDate = mStart.group(1);
 			startTime = mStart.group(2);
 			webd.getLogger().info("start date is:" + startDate + ",start time is:" + startTime);
 
 		}
 		if (mEnd.find()) {
-			if (mEnd.group(1) == null || mEnd.group(1).isEmpty() || mEnd.group(2) == null || mEnd.group(2).isEmpty()) {
-				throw new Exception("the end date or the end time is empty.Please check:\n" + end);
-			}
 			endDate = mEnd.group(1);
 			endTime = mEnd.group(2);
 			webd.getLogger().info("end date is:" + endDate + ",end time is:" + endTime);
@@ -112,10 +126,23 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.takeScreenShot();
 
 		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-			throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
+			try {
+				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
+			}
+			catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
 		}
 		else {
-			clickApplyButton(webd);
+			try {
+				clickApplyButton(webd);
+			}
+			catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
 					.get(index - 1).getText();
 			return dateConvert(webd, returnTimeRange, TimeRange.Custom);
@@ -129,7 +156,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 	//Date MM/dd/yyyy
 	//Time hh:mm a
 	@Override
-	public String setCustomTime(WebDriver webd, String startDateTime, String endDateTime) throws Exception
+	public String setCustomTime(WebDriver webd, String startDateTime, String endDateTime)  
 	{
 		return setCustomTime(webd, 1, startDateTime, endDateTime);
 	}
@@ -139,7 +166,6 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 	 */
 	@Override
 	public String setTimeFilter(WebDriver webd, int index, String hoursToExclude, int[] daysToExclude, int[] monthsToExclude)
-			throws Exception
 	{
 		clickTimePicker(webd, index);
 		clickTimeFilterIcon(webd);
@@ -201,7 +227,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 	 */
 	@Override
 	public String setTimeFilter(WebDriver webd, String hoursToExclude, int[] daysToExclude, int[] monthsToExclude)
-			throws Exception
+			
 	{
 		return setTimeFilter(webd, 1, hoursToExclude, daysToExclude, monthsToExclude);
 	}
@@ -210,7 +236,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil#setTimeRange(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int, oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange)
 	 */
 	@Override
-	public String setTimeRange(WebDriver webd, int Index, TimeRange rangeoption) throws Exception
+	public String setTimeRange(WebDriver webd, int Index, TimeRange rangeoption) 
 	{
 		clickTimePicker(webd, Index);
 		switch (rangeoption) {
@@ -276,7 +302,13 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 				return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1)
 						.getText();
 			case Custom:
-				throw new Exception("Please use setCustomTime API to set Custom Range");
+				try {
+					throw new Exception("Please use setCustomTime API to set Custom Range");
+				}
+				catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 		}
 		String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
@@ -311,19 +343,19 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil#setTimeRange(oracle.sysman.qatool.uifwk.webdriver.WebDriver, oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange)
 	 */
 	@Override
-	public String setTimeRange(WebDriver webd, TimeRange rangeoption) throws Exception
+	public String setTimeRange(WebDriver webd, TimeRange rangeoption) 
 	{
 		return setTimeRange(webd, 1, rangeoption);
 	}
 
-	private void clickApplyButton(WebDriver webd) throws Exception
+	private void clickApplyButton(WebDriver webd) 
 	{
 		//click Apply button
 		webd.getLogger().info("Click Apply button");
 		webd.isElementPresent("css=" + TimeSelectorUIControls.sApplyBtn);
 
 		if (webd.getAttribute("css=" + TimeSelectorUIControls.sApplyBtn + "@disabled") != null) {
-			throw new Exception("the Apply Button is disabled, can't be clicked");
+			//throw new Exception("the Apply Button is disabled, can't be clicked");
 		}
 		else {
 			webd.click("css=" + TimeSelectorUIControls.sApplyBtn);
@@ -332,13 +364,13 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		}
 	}
 
-	private void clickCancleButton(WebDriver webd) throws Exception
+	private void clickCancleButton(WebDriver webd) 
 	{
 		//click Calcel button
 		webd.getLogger().info("Click Calcel button");
 		webd.isElementPresent("css=" + TimeSelectorUIControls.sCancelBtn);
 		if (webd.getAttribute("css=" + TimeSelectorUIControls.sCancelBtn + "@disabled") != null) {
-			throw new Exception("the Cancel Button is disabled, can't be clicked");
+			//throw new Exception("the Cancel Button is disabled, can't be clicked");
 		}
 		else {
 			webd.click("css=" + TimeSelectorUIControls.sCancelBtn);
@@ -346,7 +378,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		}
 	}
 
-	private void clickTimeFilterIcon(WebDriver webd) throws Exception
+	private void clickTimeFilterIcon(WebDriver webd) 
 	{
 		webd.getLogger().info("Click custom option...");
 		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
@@ -361,7 +393,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.getLogger().info("Click time filter icon finished!");
 	}
 
-	private void clickTimePicker(WebDriver webd) throws Exception
+	private void clickTimePicker(WebDriver webd) 
 	{
 		//click the datetimepicker component
 		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRangeBtn);
@@ -369,7 +401,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.takeScreenShot();
 	}
 
-	private void clickTimePicker(WebDriver webd, int Index) throws Exception
+	private void clickTimePicker(WebDriver webd, int Index) 
 	{
 		//click the datetimepicker component
 		webd.waitForElementPresent("css=" + TimeSelectorUIControls.sTimeRangeBtn);
@@ -378,7 +410,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.takeScreenShot();
 	}
 
-	private String dateConvert(WebDriver driver, String convertDate, TimeRange timerange) throws Exception
+	private String dateConvert(WebDriver driver, String convertDate, TimeRange timerange) 
 	{
 		String timeRange = timerange.getRangeOption();
 		String tmpDate = "";
@@ -391,7 +423,6 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		else {
 			tmpDate = convertDate;
 		}
-		//System.out.println("tmpDate:" + tmpDate);
 		String[] date = tmpDate.split("-");
 		String StartDate = date[0].trim();
 		String EndDate = date[1].trim();
@@ -565,7 +596,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.takeScreenShot();
 	}
 
-	private void setHoursToExclude(WebDriver webd, String hoursToExclude) throws Exception
+	private void setHoursToExclude(WebDriver webd, String hoursToExclude)
 	{
 		webd.getLogger().info("Start to set hours to exclude...");
 
@@ -575,7 +606,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		}
 		else {
 			if (!hoursToExclude.matches("(\\s*\\d{1,2}-\\s*\\d{1,2},?)*")) {
-				throw new Exception("The format of hours to exclude is incorrect. Format should be 's1-e1,s2-e2,...'");
+				//throw new Exception("The format of hours to exclude is incorrect. Format should be 's1-e1,s2-e2,...'");
 			}
 			hoursInput = getInputForHoursFilter(webd, hoursToExclude);
 		}
@@ -709,7 +740,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 	}
 
 	private String timeFormatChange(WebDriver driver, String testTime, String inputDateFormat, String outputDateFormat)
-			throws Exception
+			
 	{
 		SimpleDateFormat inputFormat = new SimpleDateFormat(inputDateFormat);
 		SimpleDateFormat outputFormat = new SimpleDateFormat(outputDateFormat);

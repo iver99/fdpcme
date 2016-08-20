@@ -17,7 +17,6 @@ define(['knockout',
 ],
     function (ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu,mbu) {
         // dashboard type to keep the same with return data from REST API
-        var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
 
         function DashboardsetToolBarModel(dashboardInst) {
@@ -35,6 +34,7 @@ define(['knockout',
             });
 
             self.isDashboardSet = ko.observable(ko.unwrap(dashboardInst.type)  === "SET");
+            self.isOobDashboardset=ko.observable(ko.unwrap(dashboardInst.owner)  === "Oracle");
             self.dashboardsetId=ko.unwrap(dashboardInst.id());
             self.hasUserOptionInDB = false;
             self.noDashboardHome=ko.observable(true);

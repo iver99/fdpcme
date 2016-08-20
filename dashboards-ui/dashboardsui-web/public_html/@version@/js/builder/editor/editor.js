@@ -24,8 +24,9 @@ define(['knockout',
             };
 
             self.changeMode = function(newMode) {
-                if (newMode)
+                if (newMode){
                     self.mode = newMode;
+                }
                 if (!self.mode) {
                     console.error("Error: tiles editor holds an empty mode!");
                     return;
@@ -33,8 +34,9 @@ define(['knockout',
                 self.tilesGrid.initializeGridRows(self.tilesGrid.size());
                 self.tilesGrid.changeMode(self.mode);
                 self.resetTiles();
-                if (self.mode.POSITION_TYPE === Builder.EDITOR_POS_BASED_ON_ROW_COLUMN)
+                if (self.mode.POSITION_TYPE === Builder.EDITOR_POS_BASED_ON_ROW_COLUMN){
                     self.tilesReorder();
+                }
                 else if (self.mode.POSITION_TYPE === Builder.EDITOR_POS_FIND_SUITABLE_SPACE) {
                     self.sortTilesByRowsThenColumns();
                     self.tilesGrid.setNullToGridRows(self.tilesGrid.size());
@@ -42,9 +44,11 @@ define(['knockout',
                     for(var i=0; i<self.tiles().length; i++) {
                         var tile = self.tiles()[i];
                         var pos = self.calAvailablePositionForTile(tile, startrow, startcolumn);
-                        self.mode.setModeRow(tile, pos.row), self.mode.setModeColumn(tile, pos.column);
+                        self.mode.setModeRow(tile, pos.row);
+                        self.mode.setModeColumn(tile, pos.column);
                         pos = self.getAvailableCellAfterTile(tile);
-                        startrow = pos.row, startcolumn = pos.column;
+                        startrow = pos.row;
+                        startcolumn = pos.column;
                         self.tilesGrid.registerTileToGrid(self.tiles()[i]);
                     }
                 }
@@ -117,8 +121,9 @@ define(['knockout',
 
             self.broadenTile = function(tile,value,fromLeft) {
                 var width = self.mode.getModeWidth(tile),offsetValue = value || 1;
-                if (width >= self.mode.MODE_MAX_COLUMNS)
+                if (width >= self.mode.MODE_MAX_COLUMNS){
                     return;
+                }
                 var col = fromLeft ? self.mode.getModeColumn(tile) : self.mode.getModeColumn(tile) + self.mode.getModeWidth(tile);
                 if(col + 1 > self.mode.MODE_MAX_COLUMNS){
                     self.mode.setModeColumn(tile, self.mode.getModeColumn(tile) - offsetValue);
@@ -138,8 +143,9 @@ define(['knockout',
 
             self.narrowTile = function(tile,value) {
                 var width = self.mode.getModeWidth(tile),offsetValue = value || 1;
-                if (width <= self.mode.MODE_MIN_COLUMNS)
+                if (width <= self.mode.MODE_MIN_COLUMNS){
                     return;
+                }
                 width = width - offsetValue;
                 self.tilesGrid.updateTileSize(tile, width, self.mode.getModeHeight(tile));
                 self.tilesReorder();
@@ -158,8 +164,9 @@ define(['knockout',
 
             self.shorterTile = function(tile,value) {
                 var height = self.mode.getModeHeight(tile),offsetValue = value || 1;
-                if (height <= 1)
+                if (height <= 1){
                     return;
+                }
                 height = height - offsetValue;
                 var tilesToMove = self.getTilesBelow(tile);
                 self.tilesGrid.updateTileSize(tile, self.mode.getModeWidth(tile), height);
@@ -348,8 +355,9 @@ define(['knockout',
             };
 
             self.updateTilePosition = function(tile, row, column) {
-                if (self.mode.getModeRow(tile) !== null && self.mode.getModeColumn(tile) !== null)
+                if (self.mode.getModeRow(tile) !== null && self.mode.getModeColumn(tile) !== null){
                     self.tilesGrid.unregisterTileInGrid(tile);
+                }
                 tile.row(row);
                 self.mode.resetModeRow(tile, row);
                 tile.column(column);
@@ -376,32 +384,38 @@ define(['knockout',
                 for (row = startRow; row < self.tilesGrid.size(); row++) {
                     var columnStart = row === startRow ? startCol : 0;
                     for (column = columnStart; column < self.mode.MODE_MAX_COLUMNS; column++) {
-                        if (self.tilesGrid.isPositionOkForTile(tile, row, column))
+                        if (self.tilesGrid.isPositionOkForTile(tile, row, column)){
                             return new Builder.Cell(row, column);
+                        }
                     }
                 }
-                if (column !== undefined && column >= self.mode.MODE_MAX_COLUMNS)
+                if (column !== undefined && column >= self.mode.MODE_MAX_COLUMNS){
                     column = 0;
+                }
                 return new Builder.Cell(row, column);
             };
 
             self.sortTilesByColumnsThenRows = function() {
                 // note that sort is based on the internal position, not the mode position
                 self.tiles.sort(function(tile1, tile2) {
-                    if (self.mode.getModeColumn(tile1) !== self.mode.getModeColumn(tile2))
+                    if (self.mode.getModeColumn(tile1) !== self.mode.getModeColumn(tile2)){
                         return self.mode.getModeColumn(tile1) - self.mode.getModeColumn(tile2);
-                    else
+                    }
+                    else{
                         return self.mode.getModeRow(tile1) - self.mode.getModeRow(tile2);
+                    }
                 });
             };
 
             self.sortTilesByRowsThenColumns = function() {
                 // note that sort is based on the internal position, not the mode position
                 self.tiles.sort(function(tile1, tile2) {
-                    if (self.mode.getModeRow(tile1) !== self.mode.getModeRow(tile2))
+                    if (self.mode.getModeRow(tile1) !== self.mode.getModeRow(tile2)){
                         return self.mode.getModeRow(tile1) - self.mode.getModeRow(tile2);
-                    else
+                    }
+                    else{
                         return self.mode.getModeColumn(tile1) - self.mode.getModeColumn(tile2);
+                    }
                 });
             };
 
@@ -574,14 +588,10 @@ define(['knockout',
                     for(var j=0; j<width; j++) {
                         col = cell.column + j;
                         self.tilesGrid.tileGrid[row] &&  (iTile = self.tilesGrid.tileGrid[row][col]);
-                        if(argNum === 2) {
-                            if(iTile && $.inArray(iTile, tiles) === -1 && tile !== iTile) {
-                                tiles.push(iTile);
-                            }
-                        }else if(argNum === 3) {
-                            if(iTile && $.inArray(iTile, tiles) === -1) {
-                                tiles.push(iTile);
-                            }
+                        if(argNum === 2 && iTile && $.inArray(iTile, tiles) === -1 && tile !== iTile) {
+                            tiles.push(iTile);
+                        }else if(argNum === 3 && iTile && $.inArray(iTile, tiles) === -1) {
+                            tiles.push(iTile);
                         }
                     }
                 }
@@ -613,14 +623,12 @@ define(['knockout',
                     }
 
                     for(j=self.mode.getModeRow(iTile)-1; j>=0; j--) {
-                        if(self.canMoveToRow(iTile, j)){
-                            continue;
-                        }else{
+                        if(!self.canMoveToRow(iTile, j)){
                             self.updateTilePosition(iTile, j+1, self.mode.getModeColumn(iTile));
                             break;
                         }
                     }
-                    if(j == -1) {
+                    if(j === -1) {
                         self.updateTilePosition(iTile, j+1, self.mode.getModeColumn(iTile));
                     }
                 }
@@ -648,10 +656,8 @@ define(['knockout',
                     iTile.moved = false;
 
                     for(var j=0; j<emptyRows.length; j++) {
-                        if(iRow > emptyRows[j]) {
-                            if(self.canMoveToRow(iTile, iRow-j-1)) {
-                                self.updateTilePosition(iTile, iRow-j-1, self.mode.getModeColumn(iTile));
-                            }
+                        if(iRow > emptyRows[j] && self.canMoveToRow(iTile, iRow-j-1)) {
+                            self.updateTilePosition(iTile, iRow-j-1, self.mode.getModeColumn(iTile));
                         }
                     }
                 }
@@ -662,8 +668,9 @@ define(['knockout',
                 var grid = self.tilesGrid;
                 for (; row < grid.size(); row++) {
                     height += grid.getRowHeight(row);
-                    if (position.top < (height >= Builder.DEFAULT_HEIGHT / 2 ? height : Builder.DEFAULT_HEIGHT / 2))
+                    if (position.top < (height >= Builder.DEFAULT_HEIGHT / 2 ? height : Builder.DEFAULT_HEIGHT / 2)){
                         break;
+                    }
                 }
                 var columnWidth = widgetAreaWidth / self.mode.MODE_MAX_COLUMNS;
                 var column = Math.round(position.left / columnWidth);
@@ -672,8 +679,9 @@ define(['knockout',
             };
 
             self.createNewTile = function(name, description, width, height, widget, timeSelectorModel, targets, loadImmediately, dashboardInst) {
-                if (!widget)
+                if (!widget){
                     return null;
+                }
 
                 var newTile = null;
 

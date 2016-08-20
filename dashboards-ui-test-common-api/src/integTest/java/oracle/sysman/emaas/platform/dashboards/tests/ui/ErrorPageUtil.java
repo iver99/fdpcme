@@ -10,9 +10,9 @@ public class ErrorPageUtil
 	 * click error page sign out button
 	 *
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public static void signOut(WebDriver driver) throws Exception
+	public static void signOut(WebDriver driver) 
 	{
 		IErrorPageUtil epu = new UtilLoader<IErrorPageUtil>().loadUtil(driver, IErrorPageUtil.class);
 		epu.signOut(driver);

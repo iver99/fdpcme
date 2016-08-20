@@ -18,7 +18,7 @@ public interface IErrorPageUtil extends IUiTestCommonAPI
 	 * click error page sign out button
 	 *
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public void signOut(WebDriver driver) throws Exception;
+	public void signOut(WebDriver driver) ;
 }

@@ -188,8 +188,9 @@ define([
                             }
                             callbackFunc(data.href);
                         }
-                        else
+                        else{
                             callbackFunc(null);
+                        }
                     },
                     error:function(xhr, textStatus, errorThrown) {
                         oj.Logger.error("Error: URL not found due to error: " + textStatus);
@@ -283,8 +284,9 @@ define([
                             oj.Logger.info("Link (with Rel Prefix) found by serviceName="+serviceName+", version="+version+", rel="+rel);
                             callbackFunc(data.href);
                         }
-                        else
+                        else{
                             callbackFunc(null);
+                        }
                     },
                     error: function(xhr, textStatus, errorThrown){
                         oj.Logger.error("Error: Link (with Rel Prefix) not found due to error: "+textStatus);
@@ -619,7 +621,7 @@ define([
                     return result;
                 }
                 function S4() {
-                   return (((1+securedRandom())*0x10000)|0).toString(16).substring(1);
+                   return parseInt(((1+securedRandom())*0x10000)).toString(16).substring(1);
                 }
 
                 return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
@@ -671,20 +673,25 @@ define([
              */
             self.formatMessage = function(message) {
                 var i=1;
-                while(i<arguments.length) message=message.replace("{"+(i-1)+"}",arguments[i++]);
+                while(i<arguments.length) {
+                    message=message.replace("{"+(i-1)+"}",arguments[i++]);
+                }
                 return message;
             };
 
             self.getRelUrlFromFullUrl = function(url) {
-                    if (!url)
+                    if (!url){
                         return url;
+                    }
                     var protocolIndex = url.indexOf('://');
-                    if (protocolIndex === -1)
+                    if (protocolIndex === -1){
                         return url;
+                    }
                     var urlNoProtocol = url.substring(protocolIndex + 3);
                     var relPathIndex = urlNoProtocol.indexOf('/');
-                    if (relPathIndex === -1)
+                    if (relPathIndex === -1){
                         return url;
+                    }
                     return urlNoProtocol.substring(relPathIndex);
             };
 
@@ -782,8 +789,9 @@ define([
             function showSessionTimeoutWarningDialog(warningDialogId) {
                 //Clear interval for extending user session
                 /* globals clearInterval */
-                if (window.intervalToExtendCurrentUserSession)
+                if (window.intervalToExtendCurrentUserSession){
                     clearInterval(window.intervalToExtendCurrentUserSession);
+                }
                 window.currentUserSessionExpired = true;
                 //Open sessin timeout warning dialog
                 $('#'+warningDialogId).ojDialog('open');

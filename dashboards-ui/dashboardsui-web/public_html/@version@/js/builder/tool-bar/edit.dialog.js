@@ -11,7 +11,6 @@ define(['knockout',
             self.dashboard = dsb;
             self.tbModel = tbModel;
             self.name = ko.observable(dsb.name());
-            var savedName = dsb.name();
             self.nameInputed = ko.observable(undefined); //read only input text
             self.nameFocused = ko.observable(false);
             self.descriptionFocused = ko.observable(false);
@@ -94,8 +93,9 @@ define(['knockout',
             };
 
             self.save = function() {
-                if (self.nameValidated() === false || dfu.getUserName()!==self.dashboard.owner())
+                if (self.nameValidated() === false || dfu.getUserName()!==self.dashboard.owner()){
                     return;
+                }
 
                 var url = "/sso.static/dashboards.service/";
                 if (dfu.isDevMode()) {
