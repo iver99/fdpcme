@@ -278,6 +278,8 @@ define(['knockout',
                         tile.leftEnabled(self.editor.mode.getModeColumn(tile) > 0);
                         tile.rightEnabled(self.editor.mode.getModeColumn(tile)+self.editor.mode.getModeWidth(tile) < self.editor.mode.MODE_MAX_COLUMNS);
                         break;
+                    default:
+                        break;
                 }
 
                 $b.triggerEvent($b.EVENT_TILE_RESIZED, null, tile);
@@ -547,7 +549,7 @@ define(['knockout',
                 self.show();
                 self.tilesView.enableMovingTransition();
             };
-            var startTime, tilesToBeOccupied, startX, startY;
+            var startTime, startX, startY;
             self.handleStartDragging = function(event, ui) {
                 if(!ui) {
                     console.log(ui);
@@ -585,9 +587,7 @@ define(['knockout',
                     height: ui.helper.height() - 10
                 }).show();
 
-                var tileInCell = self.editor.tilesGrid.tileGrid[cell.row] ? self.editor.tilesGrid.tileGrid[cell.row][cell.column] : null;
-                if((self.previousDragCell) && cell.column+self.editor.mode.getModeWidth(tile) <= self.editor.mode.MODE_MAX_COLUMNS /*&&
-                        (!tileInCell || (tileInCell && tileInCell !== tile && self.editor.mode.getModeRow(tileInCell) === cell.row && self.editor.mode.getModeColumn(tileInCell) === cell.column))*/) {
+                if((self.previousDragCell) && cell.column+self.editor.mode.getModeWidth(tile) <= self.editor.mode.MODE_MAX_COLUMNS) {
                     var cellsOccupiedByTile = self.editor.getCellsOccupied(cell.row, cell.column, self.editor.mode.getModeWidth(tile), self.editor.mode.getModeHeight(tile));
                     var tilesUnderCell = self.editor.getTilesUnder(cellsOccupiedByTile, tile);
                     var tilesBelowOriginalCell = self.editor.getTilesBelow(tile);
@@ -769,10 +769,8 @@ define(['knockout',
                 var rpt = $(".right-panel-toggler");
                 var tile = u.helper.tile;
 
-                if(u.helper.tile) {
-                    if($('#tile'+u.helper.tile.clientGuid).hasClass(draggingTileClass)) {
-                        $('#tile'+u.helper.tile.clientGuid).removeClass(draggingTileClass);
-                    }
+                if(u.helper.tile && ($('#tile'+u.helper.tile.clientGuid).hasClass(draggingTileClass))) {
+                    $('#tile'+u.helper.tile.clientGuid).removeClass(draggingTileClass);
                 }
                 if (e.clientY <= tcc.offset().top || e.clientX >= rpt.offset().left) {
                     if (self.isEmpty()) {
@@ -820,7 +818,6 @@ define(['knockout',
                 self.showRightPanelToggler(true);
             };
 
-            var globalTimer = null;
             self.postDocumentShow = function() {
                 $b.triggerBuilderResizeEvent('resize builder after document show');
                 self.initializeMaximization();

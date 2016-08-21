@@ -38,10 +38,8 @@ define(['knockout',
 
         function getVisualAnalyzerUrl(pName, pVersion) {
             var url = dfu.discoverQuickLink(pName, pVersion, "visualAnalyzer");
-            if (url){
-                if (dfu.isDevMode()){
-                    url = dfu.getRelUrlFromFullUrl(url);
-                }
+            if (url && (dfu.isDevMode())){
+                url = dfu.getRelUrlFromFullUrl(url);
             }
             return url;
         }

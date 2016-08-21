@@ -184,7 +184,6 @@ require(['ojs/ojcore',
                     var lineSeries = [];
                     var lineGroups = [];
                     var timeInterval, dateTimeDiff;
-                    var startTmp, endTmp;
 
                     var dateTimeOption = {formatType: "datetime", dateFormat: "short"};
                     self.dateTimeConverter = oj.Validation.converterFactory("dateTime").createConverter(dateTimeOption);

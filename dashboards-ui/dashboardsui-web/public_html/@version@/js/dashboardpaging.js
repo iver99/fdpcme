@@ -46,7 +46,8 @@ DashboardPaging.prototype._refreshDataWindow = function() {
         this.showPagingObservable(false);
     }//show paging
 
-    this.dataWindow = new Array(this._getSize());
+    this.dataWindow = [];
+    this.dataWindow.length = this._getSize();
 
     var self = this;
     if (this._getSize() === 0 && this.collection.length === 0)
@@ -291,14 +292,11 @@ DashboardPaging.prototype.fetch = function(options)
         this.pageSize = opts['pageSize'];
     }
     var _lastFetchSize = self.collection.lastFetchSize, _offset = self.collection.offset;
-    if (_forceFetch !== true)
+    if (_forceFetch !== true && (this.current >= _offset && (this.pageSize + this.current) <= (_offset + _lastFetchSize)))
     {
-        if (this.current >= _offset && (this.pageSize + this.current) <= (_offset + _lastFetchSize))
-        {
-            return this._refreshDataWindow().then(function() {
+        return this._refreshDataWindow().then(function() {
                               self._processSuccess(opts);
                           });
-        }
     }
     self._fetch(options);
 };
