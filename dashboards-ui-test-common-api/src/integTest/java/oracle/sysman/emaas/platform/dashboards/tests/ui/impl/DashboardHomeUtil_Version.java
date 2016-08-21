@@ -10,6 +10,9 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IUiTestCommonAPI;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
@@ -18,6 +21,7 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
  */
 public class DashboardHomeUtil_Version implements IUiTestCommonAPI
 {
+	private static final Logger logger = LogManager.getLogger(DashboardHomeUtil_Version.class);
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IUiTestCommonAPI#getApiVersion(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
@@ -30,6 +34,7 @@ public class DashboardHomeUtil_Version implements IUiTestCommonAPI
                 try{
                     version = wdriver.getElement("//div[contains(@data-bind,'df-oracle-dashboard-list')]//div[boolean(@data-testapiversion)]").getAttribute(VERSION_ATTR);
                 }catch(Exception e){
+                	logger.info("context",e);
                 }
                 //compatible with 1.7.5
                 if (version == null || "".equals(version.trim())) {

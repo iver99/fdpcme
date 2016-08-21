@@ -1,5 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.test.screenshot;
 
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import oracle.sysman.emaas.platform.dashboards.test.common.CommonTest;
 import oracle.sysman.qatool.uifwk.webdriver.logging.EMTestLogger;
 
@@ -17,7 +20,7 @@ public class ScreenshorCRUD
 	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the inputs from the testenv.properties file before
 	 * executing test cases
 	 */
-
+	private static final Logger logger = LogManager.getLogger(ScreenshorCRUD.class);
 	static String HOSTNAME;
 	static String portno;
 	static String serveruri;
@@ -75,6 +78,7 @@ public class ScreenshorCRUD
 			
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -112,6 +116,7 @@ public class ScreenshorCRUD
 			Assert.assertTrue(res2.getStatusCode() == 403);
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -141,6 +146,7 @@ public class ScreenshorCRUD
 			
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -176,6 +182,7 @@ public class ScreenshorCRUD
 			
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -225,6 +232,7 @@ public class ScreenshorCRUD
 			
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -251,6 +259,7 @@ public class ScreenshorCRUD
 			
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -288,6 +297,7 @@ public class ScreenshorCRUD
 			
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
