@@ -149,11 +149,11 @@ define([
                 "timeFilterValule": self.timeFilterValue(),
                 "daysChecked" : self.daysChecked(),
                 "monthsChecked" : self.monthsChecked()
-            }
+            };
         });
         self.tfChangedSubscriber.subscribe(function() {
             self.tfChangedCallback && self.tfChangedCallback();
-        })
+        });
     }
     return AdvancedViewModel;
 });

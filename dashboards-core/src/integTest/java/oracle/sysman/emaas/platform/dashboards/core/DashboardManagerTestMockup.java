@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +21,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class DashboardManagerTestMockup
 {
+	private static final Logger logger = LogManager.getLogger(DashboardManagerTestMockup.class);
+	
 	public static void executeRepeatedly(int threadNum, final int repeatsPerThread, final Runnable r,
 			final Runnable postThreadRun, final Runnable postAllRun) throws InterruptedException
 	{
@@ -44,10 +48,10 @@ public class DashboardManagerTestMockup
 						}
 					}
 					catch (SecurityException e) {
-						e.printStackTrace();
+						logger.info("context",e);
 					}
 					catch (IllegalArgumentException e) {
-						e.printStackTrace();
+						logger.info("context",e);
 					}
 				}
 			});

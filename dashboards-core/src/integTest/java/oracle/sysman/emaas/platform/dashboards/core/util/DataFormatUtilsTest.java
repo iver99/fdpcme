@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.core.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -16,6 +18,7 @@ import org.testng.annotations.Test;
  */
 public class DataFormatUtilsTest
 {
+	private static final Logger logger = LogManager.getLogger(DataFormatUtilsTest.class);
 	@Test(groups = { "s2" })
 	public void testDashboardTypeString2Integer() throws CommonFunctionalException
 	{
@@ -27,6 +30,7 @@ public class DataFormatUtilsTest
 			Assert.fail("Fail: expecting CommonFunctionalException");
 		}
 		catch (CommonFunctionalException e) {
+			logger.info("context",e);
 			// expecting this exception
 		}
 
@@ -96,6 +100,7 @@ public class DataFormatUtilsTest
 			Assert.fail("Fail: expecting CommonFunctionalException here");
 		}
 		catch (CommonFunctionalException e) {
+			logger.info("context",e);
 			// this is the expected exception
 		}
 	}

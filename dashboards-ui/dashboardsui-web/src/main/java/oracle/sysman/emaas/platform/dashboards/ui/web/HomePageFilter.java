@@ -83,17 +83,17 @@ public class HomePageFilter implements Filter
 				logger.info("User logged in! Start to check the user preference of Home.");
 				String userTenant = httpReq.getHeader(OAM_REMOTE_USER_HEADER);
 				logger.info("Current tenant user is: \"{}\"", userTenant);
-				if (userTenant != null && !userTenant.equals("")) {
+				if (userTenant != null && !("").equals(userTenant)) {
 					String domainName = userTenant.substring(0, userTenant.indexOf("."));
 					String authorization = new String(LookupManager.getInstance().getAuthorizationToken());
 					String preference = getPreference(domainName, authorization, userTenant);
 					logger.info("Get the user preference of Home settings. Result: \"{}\"", preference);
-					if (preference != null && !preference.equals("")) {
+					if (preference != null && !("").equals(preference)) {
 						int flag = preference.indexOf("value");
 						if (flag > 0) {
 							String value = preference.substring(flag + 8, preference.length() - 2);
 							logger.info("The ID of the dashboard which has been set as Home is: \"{}\"", value);
-							if (!value.equals("")) {
+							if (!("").equals(value)) {
 								URLCodec codec = new URLCodec();
 								String urlEscaped = "";
 								try {
@@ -102,6 +102,7 @@ public class HomePageFilter implements Filter
 								}
 								catch (EncoderException e) {
 									logger.error("Failed to encode:" + value);
+									logger.info("failed to encode the url",e);
 								}
 								String redirectUrl = "./builder.html?dashboardId=" + urlEscaped;
 								if (!isHomeDashboardExists(domainName, authorization, userTenant, value)) {

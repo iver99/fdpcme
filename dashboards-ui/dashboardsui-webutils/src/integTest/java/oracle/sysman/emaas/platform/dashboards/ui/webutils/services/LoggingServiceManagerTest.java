@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.ui.webutils.services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.lang.management.ManagementFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -33,6 +35,9 @@ import org.testng.annotations.Test;
  */
 public class LoggingServiceManagerTest
 {
+
+	private static final Logger logger = LogManager.getLogger(LoggingServiceManagerTest.class);
+
 	LoggingServiceManager lsm = new LoggingServiceManager();
 	@Mocked
 	private URL _url;
@@ -54,6 +59,7 @@ public class LoggingServiceManagerTest
 					return new URL("TestURL1");
 				}
 				catch (MalformedURLException e) {
+					logger.info("context",e);
 					return null;
 				}
 			}
@@ -83,6 +89,7 @@ public class LoggingServiceManagerTest
 					return new URL("TestURL1");
 				}
 				catch (MalformedURLException e) {
+					logger.info("context",e);
 					return null;
 				}
 			}
@@ -107,7 +114,7 @@ public class LoggingServiceManagerTest
 			lsm.preStop(null);
 		}
 		catch (Exception e) {
-
+			logger.info("context",e);
 		}
 	}
 }

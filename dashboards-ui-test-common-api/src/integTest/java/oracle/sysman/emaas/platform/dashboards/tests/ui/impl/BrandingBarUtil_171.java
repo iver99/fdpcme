@@ -10,6 +10,9 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
@@ -26,7 +29,9 @@ import org.testng.Assert;
 
 public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBrandingBarUtil
 {
+	
 
+private static final Logger logger = LogManager.getLogger(BrandingBarUtil_171.class);
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isAdmin(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
@@ -400,6 +405,8 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 			return false;
 		}
 		catch (StaleElementReferenceException e) {
+
+			logger.info("context",e);
 			return true;
 		}
 	}
@@ -459,6 +466,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 			driver.click(locator);
 		}
 		catch (StaleElementReferenceException e) {
+			logger.info("context",e);
 			driver.getLogger().info("StaleElementReferenceException thrown, wait for element becoming not stale");
 			// wait until element is not stale
 			new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT).until(new ExpectedCondition<Boolean>() {

@@ -10,6 +10,9 @@
 
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,6 +27,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
  */
 public class DashboardsFilter
 {
+	private static final Logger logger = LogManager.getLogger(DashboardsFilter.class);
 	// reserved actual strings for used in query
 	private static final List<String> typeFilterStrings = Arrays.asList(new String[] { Dashboard.DASHBOARD_TYPE_NORMAL,
 			Dashboard.DASHBOARD_TYPE_SET, Dashboard.DASHBOARD_TYPE_SINGLEPAGE });
@@ -94,6 +98,7 @@ public class DashboardsFilter
 			}
 		}
 		catch (IllegalArgumentException iae) {
+			logger.info("context",iae);
 		}
 		return types;
 	}
@@ -134,6 +139,7 @@ public class DashboardsFilter
 			}
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 		}
 		return types;
 	}

@@ -119,27 +119,6 @@ define(['knockout',
         }
         Builder.registerModule(DashboardItemChangeEvent, 'DashboardItemChangeEvent');
 
-        /*function DashboardTextTile(mode, $b, widget, funcShow, deleteTextCallback) {
-            var self = this;
-            self.dashboard = $b.dashboard;
-            self.title = ko.observable("text widget title"); //to do
-            self.description = ko.observable();
-            self.isMaximized = ko.observable(false);
-
-            var kowidget;
-            if(widget.type === "TEXT_WIDGET") {
-                kowidget = new Builder.TextTileItem(widget);
-            }else {
-                kowidget = new Builder.TileItem(widget);
-            }
-
-            for (var p in kowidget)
-                self[p] = kowidget[p];
-
-            Builder.initializeTextTileAfterLoad(mode, $b, self, funcShow, deleteTextCallback, Builder.isContentLengthValid);
-        }
-        Builder.registerModule(DashboardTextTile, 'DashboardTextTile');*/
-
         /**
          *  Object used to represents a dashboard tile created by clicking adding widget
          *
@@ -160,6 +139,9 @@ define(['knockout',
             var kowidget;
                 kowidget = new Builder.TileItem(widget);
             for (var p in kowidget){
+                if(kowidget[p] === undefined){
+                    continue;
+                }
                 self[p] = kowidget[p];
             }
             if(self['WIDGET_SUPPORT_TIME_CONTROL']) {

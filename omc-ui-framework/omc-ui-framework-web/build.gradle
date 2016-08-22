@@ -57,6 +57,10 @@ dependencies {
     compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '2.0.2-26417', ext: 'war'){ transitive = false }	
     compile(group: 'files', name: 'canvg', version: '1.3', ext: 'zip'){ transitive = false }
     compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
+compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = 
+false }
+        compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ 
+transitive = false }
 	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
     compile(group: 'com.oracle.emaas.emctas.tgtsel', name:'emcs-targetselector', version:tselVersion, ext:'zip'){ transitive = false }
 	providedCompile project(':dashboards-ui-test-common-api')  { transitive = false }
