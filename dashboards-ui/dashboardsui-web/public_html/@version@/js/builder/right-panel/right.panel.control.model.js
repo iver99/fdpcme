@@ -10,10 +10,10 @@ function (ko, $, oj, dfu, mbu, uiutil) {
         var self = this;
         self.$b=ko.observable($b);
         self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
-        self.dashboardEditDisabled = ko.observable(self.$b().getToolBarModel() ? self.$b().getToolBarModel().editDisabled() : true);
+        self.dashboardEditDisabled = ko.observable(self.$b().getToolBarModel&&self.$b().getToolBarModel() ? self.$b().getToolBarModel().editDisabled() : true);
         self.showRightPanelToggler = ko.observable(self.isMobileDevice !== 'true');
         self.showRightPanel = ko.observable(false);
-        self.rightPanelIcon = ko.observable($b.getDashboardTilesViewModel() && $b.getDashboardTilesViewModel().isEmpty() ? "wrench" : "none");
+        self.rightPanelIcon = ko.observable(self.$b().getToolBarModel && self.$b().getToolBarModel() && $b.getDashboardTilesViewModel().isEmpty() ? "wrench" : "none");
         self.completelyHidden = ko.observable(false);
         self.editPanelContent = ko.observable("settings");
         self.scrollbarWidth = uiutil.getScrollbarWidth();

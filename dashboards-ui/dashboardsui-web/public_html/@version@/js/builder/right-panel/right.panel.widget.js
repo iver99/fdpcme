@@ -9,7 +9,7 @@ function (ko, $, oj, dfu) {
         self.widgets = ko.observableArray([]);
         self.keyword = ko.observable('');
         self.clearRightPanelSearch = ko.observable(false);
-        self.tilesViewModel = ko.observable($b.getDashboardTilesViewModel() && $b.getDashboardTilesViewModel());
+        self.tilesViewModel = ko.observable($b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel());
 
         self.loadWidgets = function (req) {
             var widgetDS = new Builder.WidgetDataSource();
