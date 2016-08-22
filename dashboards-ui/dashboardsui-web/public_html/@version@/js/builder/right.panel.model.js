@@ -833,7 +833,7 @@ define(['knockout',
                         if(self.labelInited) {
                             clearInterval(self.labelIntervalId);
                         }
-                       if($("#"+tselId).children().get(0)) {
+                       if($("#"+tselId).children().get(0) && ko.contextFor($('#' + tselId).children().get(0)).$component.cm.dropdownInitialLabel()) {
                             label =  ko.contextFor($('#' + tselId).children().get(0)).$component.getDropdownLabelForContext(val);
                             self.labelInited = true;
                         }else {
