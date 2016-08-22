@@ -188,7 +188,7 @@ public class TenantSubscriptionUtil
 			return false;
 		}
 		//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
-		if (svc.equals("Monitoring")) {
+		if (("Monitoring").equals(svc)) {
 			return true;
 		}
 		return false;

@@ -120,7 +120,7 @@ public class ScreenshorCRUD
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res5 = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -186,7 +186,7 @@ public class ScreenshorCRUD
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res5 = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -236,7 +236,7 @@ public class ScreenshorCRUD
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res5 = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -301,7 +301,7 @@ public class ScreenshorCRUD
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res5 = RestAssured
 						.given()
 						.contentType(ContentType.JSON)

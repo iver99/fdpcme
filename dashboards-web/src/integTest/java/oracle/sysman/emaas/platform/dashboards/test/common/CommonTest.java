@@ -198,7 +198,7 @@ public class CommonTest
 	public String getData(String url)
 	{
 
-		if (url == null || url.trim().equals("")) {
+		if (url == null || ("").equals(url.trim())) {
 			return null;
 		}
 
