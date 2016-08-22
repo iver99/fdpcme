@@ -102,6 +102,7 @@ public class HomePageFilter implements Filter
 								}
 								catch (EncoderException e) {
 									logger.error("Failed to encode:" + value);
+									logger.info("failed to encode the url",e);
 								}
 								String redirectUrl = "./builder.html?dashboardId=" + urlEscaped;
 								if (!isHomeDashboardExists(domainName, authorization, userTenant, value)) {

@@ -357,6 +357,7 @@ public class DashboardManager
 		}
 		catch (NoResultException e) {
 			logger.debug("Dashboard not found for name \"{}\" because NoResultException is caught", name);
+			logger.info("context",e);
 			return null;
 		}
 		finally {

@@ -382,7 +382,7 @@ define(['knockout',
                     self.extendedOptions.autoRefresh.defaultValue = interval;
                     self.defaultValueChanged(new Date());
                 }
-            }
+            };
 
 
             var AUTO_PAGE_NAV = 1;
@@ -700,7 +700,7 @@ define(['knockout',
                 var timezoneOffset = date.getTimezoneOffset()/60;
                 timezoneOffset = timezoneOffset>0 ? ("GMT-"+timezoneOffset) : ("GMT+"+Math.abs(timezoneOffset));
                 return timezoneOffset;
-            }
+            };
 
             self.getTimeInfo = function(startTimeStamp, endTimeStamp) {
                 var startISO = oj.IntlConverterUtils.dateToLocalIso(new Date(startTimeStamp));
@@ -731,7 +731,7 @@ define(['knockout',
 
                 dateTimeInfo = start + " - " + end;
                 return dateTimeInfo;
-            }
+            };
 
             self.timeRangeOptions = ko.observableArray([
                 {value: 'last15mins', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS')},
@@ -863,7 +863,7 @@ define(['knockout',
                     "enableEntityFilter": self.dashboard.enableEntityFilter(),
                     "extendedOptions": JSON.stringify(self.extendedOptions),
                     "enableTimeRange": self.dashboard.enableTimeRange()
-                }
+                };
 
                 if (self.dashboard.tiles() && self.dashboard.tiles().length > 0) {
                     var elem = $(".tiles-wrapper:visible");
@@ -885,12 +885,12 @@ define(['knockout',
                     if(!self.dashboard.extendedOptions) {
                         self.dashboard.extendedOptions = ko.observable();
                     }
-                    self.dashboard.extendedOptions(JSON.stringify(self.extendedOptions))
+                    self.dashboard.extendedOptions(JSON.stringify(self.extendedOptions));
                 },
                 function() {
                     console.log("***error");
                 });
-            }
+            };
 
             self.saveDsbFilterSettings = function(fieldsToUpdate, succCallback, errorCallback) {
                 var newDashboardJs = ko.mapping.toJS(self.dashboard, {
@@ -912,7 +912,7 @@ define(['knockout',
 
                 $.extend(newDashboardJs, fieldsToUpdate);
                 Builder.updateDashboard(self.dashboard.id(), JSON.stringify(newDashboardJs), succCallback, errorCallback);
-            }
+            };
 
 
             function queryDashboardSetsBySubId(dashboardId,callback){

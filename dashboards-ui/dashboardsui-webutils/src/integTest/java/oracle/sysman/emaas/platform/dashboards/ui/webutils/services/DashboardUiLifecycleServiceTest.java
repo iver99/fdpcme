@@ -10,6 +10,9 @@
 
 package oracle.sysman.emaas.platform.dashboards.ui.webutils.services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.List;
 
 import mockit.Deencapsulation;
@@ -29,7 +32,7 @@ import weblogic.application.ApplicationLifecycleEvent;
 public class DashboardUiLifecycleServiceTest
 {
 	private final DashboardUiLifecycleService uils = new DashboardUiLifecycleService();
-
+	private static final Logger logger = LogManager.getLogger(DashboardUiLifecycleServiceTest.class);
 	@SuppressWarnings("unchecked")
 	@Test(groups = { "s2" })
 	public void testNewLifecycleInstance()
@@ -83,7 +86,7 @@ public class DashboardUiLifecycleServiceTest
 			uils.postStart(evt);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.info("context",e);
 		}
 	}
 
@@ -121,7 +124,7 @@ public class DashboardUiLifecycleServiceTest
 			uils.postStop(evt);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.info("context",e);
 		}
 	}
 
@@ -159,7 +162,7 @@ public class DashboardUiLifecycleServiceTest
 			uils.preStart(evt);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.info("context",e);
 		}
 	}
 
@@ -197,7 +200,7 @@ public class DashboardUiLifecycleServiceTest
 			uils.preStop(evt);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.info("context",e);
 		}
 	}
 }
