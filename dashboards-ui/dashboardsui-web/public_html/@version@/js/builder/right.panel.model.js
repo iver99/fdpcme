@@ -174,6 +174,7 @@ define(['knockout',
                 self.$b.addEventListener(self.$b.EVENT_TILE_MAXIMIZED, self.tileMaximizedHandler);
                 self.$b.addEventListener(self.$b.EVENT_TILE_RESTORED, self.tileRestoredHandler);
                 self.$b.addEventListener(self.$b.EVENT_AUTO_REFRESH_CHANGED, self.autoRefreshChanged);
+                self.$b.addEventListener(self.$b.EVENT_DSBSET_AUTO_REFRESH_CHANGED, self.dsbSetAutoRefreshChanged);
                 self.$b.addEventListener(self.$b.EVENT_TIME_SELECTION_CHANGED, self.timeSelectionChanged);
                 self.$b.addEventListener(self.$b.EVENT_TARGET_SELECTION_CHANGED, self.targetSelectionChanged);
             };
@@ -227,6 +228,22 @@ define(['knockout',
                     self.rightPanelFilter.defaultValueChanged(new Date());
                 }
             };
+            
+            self.dsbSetAutoRefreshChanged = function(interval) {
+                if(self.dashboardsetShare() !== "on") {                    
+                    self.dashboardsetToolBarModel.dashboardExtendedOptions.autoRefresh.defaultValue = interval;
+                    var fieldsToUpdate = {
+                        extendedOptions: JSON.stringify(self.dashboardsetToolBarModel.dashboardExtendedOptions)
+                    }
+                    self.dashboardsetToolBarModel.saveDashboardSet(fieldsToUpdate,
+                        function(result) {
+                            if(!self.dashboardsetToolBarModel.dashboardInst.extendedOptions) {
+                                self.dashboardsetToolBarModel.dashboardInst.extendedOptions = ko.observable();
+                            }
+                            self.dashboardsetToolBarModel.dashboardInst.extendedOptions(result.extendedOptions);
+                        });
+                }
+            }
             
             self.timeSelectionChanged = function(tp, start, end) {
                 if(self.dashboardSharing() !== "shared") {

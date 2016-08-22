@@ -47,6 +47,8 @@ define(['knockout',
                 if(self.dashboardExtendedOptions.autoRefresh) {
                     self.autoRefreshInterval(parseInt(self.dashboardExtendedOptions.autoRefresh.defaultValue));
                 }
+            }else {
+                self.dashboardExtendedOptions.autoRefresh = {};
             }
 
             self.dashboardsetName =ko.observable(ko.unwrap(dashboardInst.name()));
@@ -150,7 +152,7 @@ define(['knockout',
             };
 
             self.saveDashboardSet = function (fieldsToUpdate, successCallback, failureCallback) {
-                if(dashboardInst.owner() === "Oracle") { ///do not update dashboard set if it is OOB dsb set
+                if(dashboardInst.owner() === "Oracle" || dashboardInst.owner() !== dfu.getUserName()) { ///do not update dashboard set if it is OOB dsb set or if the user is not owner
                     self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;
                     self.saveUserOptions();
                     console.log("This is an OOB dashboard set");
@@ -181,6 +183,9 @@ define(['knockout',
                         });
                     }
                 });
+                if(dashboardInst.extendedOptions) {
+                    newDashboardJs.extendedOptions = ko.unwrap(dashboardInst.extendedOptions);
+                }
                 $.extend(newDashboardJs, fieldsToUpdate);
                 new Builder.DashboardDataSource().updateDashboardData(ko.unwrap(dashboardInst.id),JSON.stringify(newDashboardJs),successCallback,failureCallback);
                
@@ -385,15 +390,16 @@ define(['knockout',
                             self.extendedOptions ={};
                             if(typeof(resp.extendedOptions)!=="undefined"){
                                 self.extendedOptions = JSON.parse(resp.extendedOptions);
-                            };
-                            self.autoRefreshInterval(parseInt(resp.autoRefreshInterval));
-                            if( isNaN(self.autoRefreshInterval())){//
-                                if(self.dashboardExtendedOptions.autorefresh) {
-                                    self.autoRefreshInterval(parseInt(self.dashboardExtendedOptions.autorefresh.defaultValue));
+                                if(self.extendedOptions.autoRefresh) {
+                                    self.autoRefreshInterval(parseInt(self.extendedOptions.autoRefresh.defaultValue));
                                 }else {
-                                   self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
+                                    if(self.dashboardExtendedOptions.autoRefresh) {
+                                        self.autoRefreshInterval(parseInt(self.dashboardExtendedOptions.autoRefresh.defaultValue));
+                                    }else {
+                                       self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
+                                    }
                                 }
-                            }
+                            };
                         }
 
                         if(self.autoRefreshInterval() === DEFAULT_AUTO_REFRESH_INTERVAL){
@@ -592,7 +598,7 @@ define(['knockout',
                         if (option === 'on') {
                             dbsToolBar.dashboardsetConfig.refreshOnIcon("dbd-icon-check");
                             dbsToolBar.dashboardsetConfig.refreshOffIcon("dbd-noselected");
-                            self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
+                            self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL); 
                             dfu.showMessage({type: 'confirm', summary: getNlsString('DBS_BUILDER_MSG_AUTO_REFRESH_ON'), detail: '', removeDelayTime: 5000});
                         }
                         if(option === 'off'){
@@ -601,6 +607,12 @@ define(['knockout',
                             self.autoRefreshInterval(0);
                             dfu.showMessage({type: 'confirm', summary: getNlsString('DBS_BUILDER_MSG_AUTO_REFRESH_OFF'), detail: '', removeDelayTime: 5000});
                         }
+                        
+                        if($(".dbd-left-panel:visible").length>0 && ko.dataFor($(".dbd-left-panel:visible")[0])) {
+                            var $b = ko.dataFor($(".dbd-left-panel:visible")[0]).$b;
+                            $b && $b.triggerEvent($b.EVENT_DSBSET_AUTO_REFRESH_CHANGED, "dashboard set auto-refresh value changed", self.autoRefreshInterval());
+                        }
+                        self.extendedOptions.autoRefresh ? (self.extendedOptions.autoRefresh.defaultValue = self.autoRefreshInterval()) : (self.extendedOptions.autoRefresh={defaultValue: self.autoRefreshInterval()});
                     }
                     self.saveUserOptions();
                 };
