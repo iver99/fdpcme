@@ -1,5 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.math.BigDecimal;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
@@ -13,6 +16,7 @@ import org.testng.annotations.Test;
 public class TileParamTest
 {
 
+	private static final Logger logger = LogManager.getLogger(TileParamTest.class);
 	@Test(groups = { "s2" })
 	public void testGetValue()
 	{
@@ -60,6 +64,7 @@ public class TileParamTest
 		}
 		catch (CommonFunctionalException e) {
 			// expected exception
+			logger.info("context",e);
 		}
 
 		tp.setType(TileParam.PARAM_TYPE_BOOLEAN);

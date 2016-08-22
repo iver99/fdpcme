@@ -1,5 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.test.favoritedashboards;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +30,9 @@ public class FavoriteDashboardCRUD
 	static String tenantid;
 	static String tenantid_2;
 	static String remoteuser;
+
+	private static final Logger logger = LogManager.getLogger(FavoriteDashboardCRUD.class);
+
 
 	@BeforeClass
 	public static void setUp()
@@ -72,6 +78,7 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -141,6 +148,7 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -192,6 +200,7 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -270,6 +279,7 @@ public class FavoriteDashboardCRUD
 
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -318,6 +328,7 @@ public class FavoriteDashboardCRUD
 
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -390,6 +401,7 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -449,6 +461,7 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -494,6 +507,7 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}

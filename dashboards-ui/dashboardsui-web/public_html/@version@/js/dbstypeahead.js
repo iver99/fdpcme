@@ -139,6 +139,8 @@ $.widget( "dbs.dbsTypeAhead", {
 				case keyCode.DOWN:
 					this._keyEvent( "next", event );
 					break;
+				default:
+					break;
 				}
 			},
 			input: function( event ) {
@@ -236,11 +238,9 @@ $.widget( "dbs.dbsTypeAhead", {
                 var keyCode = $.ui.keyCode;
                 if ( event.keyCode !== keyCode.BACKSPACE &&
                         event.keyCode !== keyCode.DELETE &&
-                        event.keyCode !== keyCode.ENTER )
-                {
-                    if ( value.length < this.options.minLength ) {
+                        event.keyCode !== keyCode.ENTER &&
+                        ( value.length < this.options.minLength )) {
 			return this.close( event );
-                    }
                 }
 		return this._search( value );
 	},

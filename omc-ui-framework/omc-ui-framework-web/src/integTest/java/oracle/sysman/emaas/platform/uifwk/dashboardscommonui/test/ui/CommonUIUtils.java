@@ -10,6 +10,9 @@
 
 package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,6 +36,7 @@ import com.jayway.restassured.response.Response;
  */
 public class CommonUIUtils
 {
+	private static final Logger logger = LogManager.getLogger(CommonUIUtils.class);
 	static String sTenantId = CommonUIUtils.getEmaasPropertyValue("TENANT_ID");
 	static String sOhsUrl = CommonUIUtils.getEmaasPropertyValue("OHS_URL");
 	static String sRegistryUrl = CommonUIUtils.getEmaasPropertyValue("OHS_REGISTRY_URL");
@@ -218,6 +222,7 @@ public class CommonUIUtils
 
 		}
 		catch (IOException ex) {
+			logger.info("context",ex);
 			ex.printStackTrace();
 		}
 		finally {
@@ -226,6 +231,7 @@ public class CommonUIUtils
 					input.close();
 				}
 				catch (IOException e) {
+					logger.info("context",e);
 					e.printStackTrace();
 				}
 			}
@@ -357,6 +363,7 @@ public class CommonUIUtils
 				driver.getLogger().info("the category display is: " + driver.isDisplayed(UIControls.SCATEGORYSELECT));
 			}
 			catch (RuntimeException re) {
+				logger.info("context",re);
 				Assert.fail(re.getLocalizedMessage());
 			}
 			//Assert.assertFalse(driver.isElementPresent(UIControls.sCategorySelect));

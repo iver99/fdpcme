@@ -1,5 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 
@@ -14,6 +17,7 @@ import org.testng.annotations.Test;
 @Test(groups = {"s1"})
 public class UserOptionsTest {
     UserOptions userOptions;
+    private static final Logger logger = LogManager.getLogger(UserOptionsTest.class);
 
     @BeforeMethod
     public void setUp() {
@@ -71,6 +75,7 @@ public class UserOptionsTest {
 		catch (DashboardException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.info("context",e);
 		}
 		if (emsUserOptions != null) {
 			 Assert.assertEquals(emsUserOptions.getUserName(),"new name");
@@ -85,13 +90,17 @@ public class UserOptionsTest {
         try {
             userOptions.setDashboardId(null);
             userOptions.toEntity(null, "new name");
-        }catch (Exception ignored){}
+        }catch (Exception ignored){
+        	logger.info("context",ignored);
+        }
 
         try{
             userOptions.setDashboardId(1L);
             userOptions.setAutoRefreshInterval(null);
             userOptions.toEntity(null,"new name");
-        }catch (Exception ignored){}
+        }catch (Exception ignored){
+        	logger.info("context",ignored);
+        }
     }
 
 }

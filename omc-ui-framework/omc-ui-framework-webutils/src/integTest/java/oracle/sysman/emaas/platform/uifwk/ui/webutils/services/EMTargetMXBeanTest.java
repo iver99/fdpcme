@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.uifwk.ui.webutils.services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -18,6 +20,8 @@ import org.testng.annotations.Test;
  */
 public class EMTargetMXBeanTest
 {
+	private static final Logger logger = LogManager.getLogger(EMTargetMXBeanTest.class);
+
 	private final String mbName = "Test_EMTargetMXBean";
 	private final EMTargetMXBean mb = new EMTargetMXBeanImpl(mbName);
 
@@ -28,6 +32,7 @@ public class EMTargetMXBeanTest
 			Assert.assertEquals(mb.getEMTargetType(), EMTargetConstants.M_TARGET_TYPE);
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -40,6 +45,7 @@ public class EMTargetMXBeanTest
 			Assert.assertEquals(mb.getName(), mbName);
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
