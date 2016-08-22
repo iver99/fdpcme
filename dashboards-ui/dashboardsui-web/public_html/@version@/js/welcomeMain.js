@@ -316,7 +316,7 @@ require(['ojs/ojcore',
                         oj.Logger.info("Trying to open Infrastructure Monitoring by URL: " + self.landingHomeUrls.Monitoring);
                         window.location.href = self.landingHomeUrls.Monitoring;
                     }
-                }
+                };
                 self.openDashboards = function() {
                     oj.Logger.info('Trying to open dashboards by URL: ' + self.dashboardsUrl);
                     if(self.dashboardsUrl) {
@@ -332,7 +332,7 @@ require(['ojs/ojcore',
                     if(self.landingHomeUrls.Compliance) {
                         window.location.href = self.landingHomeUrls.Compliance;
                     }
-                }
+                };
                 self.openSecurityAnalytics = function() {
                     if(!self.landingHomeUrls) {
                         console.log("---fetching service links is not finished yet!---");

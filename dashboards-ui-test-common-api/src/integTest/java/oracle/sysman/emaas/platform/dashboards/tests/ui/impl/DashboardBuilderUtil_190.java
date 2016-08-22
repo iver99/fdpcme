@@ -1318,8 +1318,8 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERDESCRIPTIONTEXTLOCATOR);
 		String realDesc = driver.getElement(DashBoardPageId_190.BUILDERDESCRIPTIONTEXTLOCATOR).getAttribute("title");
-		if (description == null || description.equals("")) {
-			if (realDesc != null && !realDesc.trim().equals("")) {
+		if (description == null || ("").equals(description)) {
+			if (realDesc != null && !("").equals(realDesc.trim())) {
 				driver.getLogger().info(
 						"DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected description is "
 								+ description + ", actual dashboard description is " + realDesc);
@@ -1593,7 +1593,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		List<WebElement> dashboardContainers = driver.getWebDriver().findElements(
 				By.cssSelector(DashBoardPageId_190.DASHBOARDSETCONTAINERCSS));
 		for (WebElement container : dashboardContainers) {
-			if (false == container.getCssValue("display").equals("none")) {
+			if (false == ("none").equals(container.getCssValue("display"))) {
 				driver.getLogger().info(
 						"[DashboardBuilderUtil] triggered getSelectedDashboardEl and get the dashboard successfully!");
 				return container;
@@ -1651,10 +1651,10 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	private boolean isRightDrawerVisible(WebDriver driver)
 	{
 		WebElement rightDrawerPanel = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId_190.RIGHTDRAWERPANELCSS));
-		boolean isDisplayed = rightDrawerPanel.getCssValue("display").equals("none") != true;
+		boolean isDisplayed = ("none").equals(rightDrawerPanel.getCssValue("display")) != true;
 		driver.getLogger().info("DashboardBuilderUtil.isRightDrawerVisible,the isDisplayed value is " + isDisplayed);
 
-		boolean isWidthValid = rightDrawerPanel.getCssValue("width").equals("0px") != true;
+		boolean isWidthValid = ("0px").equals(rightDrawerPanel.getCssValue("width")) != true;
 		driver.getLogger().info("DashboardBuilderUtil.isRightDrawerVisible,the isWidthValid value is " + isWidthValid);
 
 		return isDisplayed && isWidthValid;
