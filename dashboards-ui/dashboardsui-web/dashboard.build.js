@@ -61,4 +61,4 @@
         'prefutil':'empty:'
 //	'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
     }
-})
+});

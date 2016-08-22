@@ -186,7 +186,7 @@ define(['knockout',
                     self.hidePullRightBtn(self.prevFocusedClientGuid(), data, event);
                     self.prevFocusedClientGuid(clientGuid);
                 }
-            }
+            };
             self.openInDataExplorer = function (event, ui) {
 		        if (!self.dashboard.systemDashboard()){
                 	$b.getToolBarModel().handleDashboardSave();
@@ -217,7 +217,7 @@ define(['knockout',
 
             self.widgetMenuOpen = function(event, ui) {
                 self.editingWidgetId = event.target.id;
-            }
+            };
 
             self.menuItemSelect = function (event, ui) {
                 var tile = ko.dataFor(ui.item[0]);
