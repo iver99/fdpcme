@@ -289,10 +289,6 @@ define([
                         if (allMenusHidden) {
                             $b.findEl(".dashboardOptsBtn").hide();
                         }
-
-                        if (!dashboardsetToolBarModel.dashboardsetConfig.isCreator()) {
-                            $($b.findEl('.builder-toolbar-right')).css({display: "none"});
-                        }
                     }
 
                     tilesView.enableDraggable();
