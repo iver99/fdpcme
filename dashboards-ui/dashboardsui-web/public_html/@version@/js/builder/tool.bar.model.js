@@ -35,8 +35,8 @@ define(['knockout',
             self.isUnderSet = ko.dataFor($("#dbd-set-tabs")[0]).isDashboardSet();
             self.duplicateInSet = ko.observable(false);
             var zdtUtil = new zdtUtilModel();
-//        self.zdtStatus= zdtUtil.isUnderPlannedDowntime();
-            self.zdtStatus = true;
+            self.zdtStatus= zdtUtil.isUnderPlannedDowntime();
+//            self.zdtStatus = true;
             if (self.dashboard.id && self.dashboard.id())
                 self.dashboardId = self.dashboard.id();
             else

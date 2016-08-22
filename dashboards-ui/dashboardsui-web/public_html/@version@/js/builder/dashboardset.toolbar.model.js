@@ -37,8 +37,8 @@ define(['knockout',
 
             self.isDashboardSet = ko.observable(ko.unwrap(dashboardInst.type)  === "SET");
             var zdtUtil = new zdtUtilModel();
-//        self.zdtStatus= zdtUtil.isUnderPlannedDowntime();
-            self.zdtStatus = true;
+            self.zdtStatus= zdtUtil.isUnderPlannedDowntime();
+//            self.zdtStatus = true;
 
             self.dashboardsetId=ko.unwrap(dashboardInst.id());
             self.hasUserOptionInDB = false;

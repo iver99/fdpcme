@@ -223,8 +223,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu,zdtUtilModel)
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel(parentElementId);
         var zdtUtil = new zdtUtilModel();
-//        self.zdtStatus= zdtUtil.isUnderPlannedDowntime();
-        self.zdtStatus= true;
+        self.zdtStatus= zdtUtil.isUnderPlannedDowntime();
+//      self.zdtStatus= true;
         //self.comingsoonDialogModel = new comingsoonDialogModel();
         
         self.pageSize = ko.observable(120);

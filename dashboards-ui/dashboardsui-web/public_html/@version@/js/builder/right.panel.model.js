@@ -86,8 +86,8 @@ define(['knockout',
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
             var zdtUtil = new zdtUtilModel();
-    //        self.zdtStatus= zdtUtil.isUnderPlannedDowntime();
-            self.zdtStatus = true;
+            self.zdtStatus= zdtUtil.isUnderPlannedDowntime();
+//          self.zdtStatus = true;
             self.scrollbarWidth = uiutil.getScrollbarWidth();
 
             self.showRightPanelToggler =  ko.observable(self.isMobileDevice !== 'true' && !self.zdtStatus);
