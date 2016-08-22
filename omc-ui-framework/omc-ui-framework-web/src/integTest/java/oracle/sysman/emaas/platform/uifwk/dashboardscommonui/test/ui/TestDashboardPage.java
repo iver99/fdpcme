@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WidgetSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
@@ -28,6 +30,7 @@ import org.testng.annotations.Test;
  */
 public class TestDashboardPage extends CommonUIUtils
 {
+	private static final Logger logger = LogManager.getLogger(TestDashboardPage.class);
 	@BeforeClass
 	public static void initValue()
 	{
@@ -76,6 +79,7 @@ public class TestDashboardPage extends CommonUIUtils
 
 		}
 		catch (Exception ex) {
+			logger.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}
@@ -125,6 +129,7 @@ public class TestDashboardPage extends CommonUIUtils
 
 		}
 		catch (Exception ex) {
+			logger.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}
@@ -177,6 +182,7 @@ public class TestDashboardPage extends CommonUIUtils
 			CommonUIUtils.logoutCommonUI(webdriver);
 		}
 		catch (Exception ex) {
+			logger.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}

@@ -20,6 +20,7 @@ public class LoginAndLogout
 				webd.shutdownBrowser(true);
 			}
 			catch (Exception e) {
+				e.printStackTrace();
 				webd.getLogger().warning("Failed to shutdown browser" + e.getMessage());
 			}
 		}
@@ -32,6 +33,7 @@ public class LoginAndLogout
 			tenantID = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			tenantID = "emaastesttenant1";
 		}
 		username = customUser;
@@ -51,6 +53,7 @@ public class LoginAndLogout
 			tenantID = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			tenantID = "emaastesttenant1";
 		}
 
@@ -59,6 +62,7 @@ public class LoginAndLogout
 
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			username = "emcsadmin";
 		}
 		try {
@@ -66,6 +70,7 @@ public class LoginAndLogout
 
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			password = "Welcome1!";
 		}
 
@@ -81,6 +86,7 @@ public class LoginAndLogout
 			url = PageUtils.getServiceLink(tenantId, rel, servicename);
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OMCS_DASHBOARD_URL");
 		}
 
@@ -101,6 +107,7 @@ public class LoginAndLogout
 			tenantID = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			tenantID = "emaastesttenant1";
 		}
 
@@ -109,6 +116,7 @@ public class LoginAndLogout
 
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			username = "emcsadmin";
 		}
 		try {
@@ -116,6 +124,7 @@ public class LoginAndLogout
 
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			password = "Welcome1!";
 		}
 
