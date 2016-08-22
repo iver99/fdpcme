@@ -5,12 +5,13 @@ define([
     'uifwk/js/util/message-util',
     'ojs/ojcore', 
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
+    'uifwk/js/util/zdt-util',
     'ojs/ojknockout', 
     'ojs/ojtoolbar', 
     'ojs/ojmenu', 
     'ojs/ojbutton',
     'ojs/ojdialog'],
-        function (ko, $, dfumodel,msgUtilModel, oj, nls) {
+        function (ko, $, dfumodel,msgUtilModel, oj, nls, zdtUtilModel) {
             function BrandingBarViewModel(params) {
                 var self = this;
                 var msgUtil = new msgUtilModel();
@@ -409,6 +410,10 @@ define([
                 if (self.navLinksVisible === false) {
                     setupTimerForSessionTimeout();
                 }
+                
+                //Detect planned downtime
+                var zdtUtil = new zdtUtilModel();
+                zdtUtil.detectPlannedDowntime(function(isDown){});
                 
                 function setupTimerForSessionTimeout() {
                     if (!dfu.isDevMode()){
