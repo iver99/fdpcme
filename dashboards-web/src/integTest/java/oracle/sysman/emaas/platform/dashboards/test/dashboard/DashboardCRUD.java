@@ -349,7 +349,7 @@ public class DashboardCRUD
 			logger.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				
 				Response res5 = RestAssured
 						.given()
@@ -401,7 +401,7 @@ public class DashboardCRUD
 			logger.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				
 				Response res5 = RestAssured
 						.given()
@@ -528,7 +528,7 @@ public class DashboardCRUD
 			logger.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				
 				Response res = RestAssured
 						.given()
@@ -574,7 +574,7 @@ public class DashboardCRUD
 			logger.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -654,7 +654,7 @@ public class DashboardCRUD
 			logger.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -739,7 +739,7 @@ public class DashboardCRUD
 			logger.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				
 				Response res = RestAssured
 						.given()
@@ -818,7 +818,7 @@ public class DashboardCRUD
 			logger.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				
 				Response res5 = RestAssured
 						.given()
@@ -981,7 +981,7 @@ public class DashboardCRUD
 			logger.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				
 				Response res5 = RestAssured
 						.given()
@@ -1212,7 +1212,7 @@ public class DashboardCRUD
 			logger.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res5 = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -1304,7 +1304,7 @@ public class DashboardCRUD
 			logger.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res5 = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -1367,7 +1367,7 @@ public class DashboardCRUD
 			logger.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res5 = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -1433,7 +1433,7 @@ public class DashboardCRUD
 			logger.info("context",e);
 		}
 		finally {
-			if (!dashboardset_id.equals("")) {
+			if (!("").equals(dashboardset_id)) {
 				Response res5 = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -1510,7 +1510,7 @@ public class DashboardCRUD
 			logger.info("context",e);
 		}
 		finally {
-			if (!dashboardset_id.equals("")) {
+			if (!("").equals(dashboardset_id)) {
 				Response res8 = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -1520,7 +1520,7 @@ public class DashboardCRUD
 								"Authorization", authToken).when().delete("/dashboards/" + dashboardset_id);
 				Assert.assertTrue(res8.getStatusCode() == 204);
 			}
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res9 = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -1613,7 +1613,7 @@ public class DashboardCRUD
 			logger.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 						.headers("OAM_REMOTE_USER", tenantid + "." + remoteuser, "Authorization", authToken).when()
 						.delete("/dashboards/" + dashboard_id);

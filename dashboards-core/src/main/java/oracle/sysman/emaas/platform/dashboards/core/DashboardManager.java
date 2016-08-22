@@ -722,19 +722,19 @@ public class DashboardManager
 					if (i != 0) {
 						sb.append(" or ");
 					}
-					if (filter.getIncludedOwners().get(i).equals("Oracle")) {
+					if (("Oracle").equals(filter.getIncludedOwners().get(i))) {
 						sb.append(" p.owner = ?" + index++);
 						paramList.add("Oracle");
 					}
-					if (filter.getIncludedOwners().get(i).equals("Others")) {
+					if (("Others").equals(filter.getIncludedOwners().get(i))) {
 						sb.append(" p.owner != ?" + index++);
 						paramList.add("Oracle");
 					}
-					if (filter.getIncludedOwners().get(i).equals("Me")) {
+					if (("Me").equals(filter.getIncludedOwners().get(i))) {
 						sb.append(" p.owner = ?" + index++);
 						paramList.add(UserContext.getCurrentUser());
 					}
-					if (filter.getIncludedOwners().get(i).equals("Share")) {
+					if (("Share").equals(filter.getIncludedOwners().get(i))) {
 						sb.append(" p.owner != ?" + index++ + " and p.share_public > 0");
 						paramList.add(UserContext.getCurrentUser());
 					}
