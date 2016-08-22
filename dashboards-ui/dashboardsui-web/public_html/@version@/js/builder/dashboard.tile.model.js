@@ -117,6 +117,9 @@ define(['knockout',
 
             self.isDefaultTileExist = function() {
                 for(var i in self.dashboard.tiles()){
+                    if(!self.dashboard.tiles()[i]){
+                            continue;
+                    }
                     if(self.dashboard.tiles()[i].type() === "DEFAULT") {
                         return true;
                     }
@@ -289,6 +292,9 @@ define(['knockout',
            self.initializeTiles = function() {
                 if(self.editor.tiles && self.editor.tiles()) {
                     for(var i=0; i< self.editor.tiles().length; i++) {
+                        if(!self.editor.tiles()[i]){
+                            continue;
+                        }
                         var tile = self.editor.tiles()[i];
                         self.editor.tilesGrid.registerTileToGrid(tile);
                     }
@@ -594,6 +600,9 @@ define(['knockout',
                     self.editor.draggingTile = tile;
                     var rowDiff, iTile;
                     for(var i in tilesUnderCell) {
+                        if(!tilesUnderCell[i]){
+                            continue;
+                        }
                         iTile = tilesUnderCell[i];
                         rowDiff = cell.row - self.editor.mode.getModeRow(iTile) + self.editor.mode.getModeHeight(tile);
                         self.editor.moveTileDown(iTile, rowDiff);
@@ -603,6 +612,9 @@ define(['knockout',
 
                     rowDiff = Math.abs(cell.row - dragStartRow);
                     for(i in tilesBelowOriginalCell) {
+                        if(!tilesBelowOriginalCell[i]){
+                            continue;
+                        }
                         iTile = tilesBelowOriginalCell[i];
                         rowDiff = (rowDiff===0) ? self.editor.mode.getModeHeight(tile) : rowDiff;
                         self.editor.moveTileUp(iTile, rowDiff);
@@ -728,6 +740,9 @@ define(['knockout',
                     var tilesToMove = self.editor.getTilesUnder(cells, tile);
                     var tilesBelowOriginalCell = self.editor.getTilesBelow(tile);
                     for(var i in tilesToMove) {
+                        if(!tilesToMove[i]){
+                            continue;
+                        }
                         var rowDiff = cell.row-self.editor.mode.getModeRow(tilesToMove[i])+self.editor.mode.getModeHeight(tile);
                         self.editor.moveTileDown(tilesToMove[i], rowDiff);
                     }
@@ -736,6 +751,9 @@ define(['knockout',
 
                     var rowDiff = Math.abs(cell.row - self.editor.mode.getModeRow(tile));
                     for(i in tilesBelowOriginalCell) {
+                        if(!tilesBelowOriginalCell[i]){
+                            continue;
+                        }
                         var iTile = tilesBelowOriginalCell[i];
                         rowDiff = (rowDiff===0) ? self.editor.mode.getModeHeight(tile) : rowDiff;
                         self.editor.moveTileUp(iTile, rowDiff);
