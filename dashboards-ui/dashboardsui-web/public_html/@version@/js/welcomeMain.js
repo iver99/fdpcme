@@ -76,7 +76,7 @@ require(['ojs/ojcore',
         
             window.onerror = function (msg, url, lineNo, columnNo, error)
             {
-                oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg); 
+                oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg, true); 
                 return false; 
             }
 
