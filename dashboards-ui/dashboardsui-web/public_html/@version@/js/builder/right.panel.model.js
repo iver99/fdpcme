@@ -85,13 +85,20 @@ define(['knockout',
 
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
-            var zdtUtil = new zdtUtilModel();
-            self.zdtStatus= zdtUtil.isUnderPlannedDowntime();
-//          self.zdtStatus = true;
+            var zdtUtil = new zdtUtilModel();           
+            self.zdtStatus= ko.observable(false);
+            zdtUtil.detectPlannedDowntime(function(isUnderPlannedDowntime){
+                self.zdtStatus(isUnderPlannedDowntime);
+                if(isUnderPlannedDowntime){
+                    self.showRightPanel(false);
+                    self.completelyHidden(true);
+                }
+            });
+       
             self.scrollbarWidth = uiutil.getScrollbarWidth();
 
-            self.showRightPanelToggler =  ko.observable(self.isMobileDevice !== 'true' && !self.zdtStatus);
-            
+            self.showRightPanelToggler =  ko.observable(self.isMobileDevice !== 'true');
+                        
             self.dashboardEditDisabled = ko.observable(self.toolBarModel ? self.toolBarModel.editDisabled() : true);
 
             self.showRightPanel = ko.observable(false);
@@ -285,15 +292,13 @@ define(['knockout',
              **/
 
             self.initialize = function() {
-                    if (self.isMobileDevice === 'true' || self.zdtStatus) {
+                    if (self.isMobileDevice === 'true') {
                         self.completelyHidden(true);
                         self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
                     } else {
                         self.completelyHidden(false);
                         
-                        if(self.zdtStatus){
-                            self.showRightPanel(false);
-                        }else if (self.emptyDashboard) {
+                        if (self.emptyDashboard) {
                             self.showRightPanel(true);
                         } else {
                             self.showRightPanel(false);

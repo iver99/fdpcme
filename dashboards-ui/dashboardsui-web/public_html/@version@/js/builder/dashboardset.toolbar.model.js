@@ -37,9 +37,21 @@ define(['knockout',
 
             self.isDashboardSet = ko.observable(ko.unwrap(dashboardInst.type)  === "SET");
             var zdtUtil = new zdtUtilModel();
-            self.zdtStatus= zdtUtil.isUnderPlannedDowntime();
-//            self.zdtStatus = true;
-
+            self.zdtStatus = ko.observable(false);
+            zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
+                self.zdtStatus(isUnderPlannedDowntime);
+                if (isUnderPlannedDowntime) {
+                    //hide some options in planned down time
+                    $('#dbd-set-option>li').each(function (index, element) {
+                        if (($(element).attr('id') !== 'dbs-print')) {
+                            $(element).css({display: "none"});
+                        }
+                    });
+                    $("#dbd-tabs-container").ojTabs("option", "removable", false);
+                    $("#add-nav").css({display: "none"});
+                }
+            });
+            
             self.dashboardsetId=ko.unwrap(dashboardInst.id());
             self.hasUserOptionInDB = false;
             self.noDashboardHome=ko.observable(true);
@@ -158,7 +170,7 @@ define(['knockout',
 
             self.saveDashboardSet = function (fieldsToUpdate, successCallback, failureCallback) {
 //                if(dashboardInst.systemDashboard()) {
-                if (!self.zdtStatus) {
+                if (!self.zdtStatus()) {
                     if (dashboardInst.owner() === "Oracle") { ///do not update dashboard set if it is OOB dsb set
                         self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;
                         self.saveUserOptions();
@@ -313,7 +325,7 @@ define(['knockout',
                     "endOfGroup": false,       
                     "showOnMobile": false,
                     "showOnViewer":false, 
-                    "visibility":visibilityOnDifDevice(false,false) && !self.zdtStatus,
+                    "visibility":visibilityOnDifDevice(false,false),
                     "subMenu": []
                 }, 
                 {
@@ -323,7 +335,7 @@ define(['knockout',
                     "icon": "fa-print",
                     "title": "",
                     "disabled": "",
-                    "endOfGroup": !self.zdtStatus,         
+                    "endOfGroup": true,         
                     "showOnMobile": true,          
                     "showOnViewer":true,
                     "visibility":visibilityOnDifDevice(true,true),
@@ -339,7 +351,7 @@ define(['knockout',
                     "endOfGroup": false,
                     "showOnMobile": true,
                     "showOnViewer":true,
-                    "visibility":visibilityOnDifDevice(true,true) && !self.zdtStatus,
+                    "visibility":visibilityOnDifDevice(true,true),
                     "subMenu": []
                 },
                 {
@@ -352,7 +364,7 @@ define(['knockout',
                     "endOfGroup": false,
                     "showOnMobile": true,
                     "showOnViewer":true,
-                    "visibility":visibilityOnDifDevice(true,true) && !self.zdtStatus,
+                    "visibility":visibilityOnDifDevice(true,true) ,
                     "subMenu": []
                 },
                 {
@@ -365,7 +377,7 @@ define(['knockout',
                     "endOfGroup": false,
                     "showOnMobile": true,
                     "showOnViewer":true,
-                    "visibility":visibilityOnDifDevice(true,true) && !self.zdtStatus,
+                    "visibility":visibilityOnDifDevice(true,true),
                     "subMenu": [{
                             "label": getNlsString("DBS_BUILDER_AUTOREFRESH_OFF"),
                             "url": "#",

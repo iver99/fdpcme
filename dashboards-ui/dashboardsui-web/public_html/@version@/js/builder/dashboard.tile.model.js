@@ -991,7 +991,7 @@ define(['knockout',
                 if(!self.toolbarModel.extendedOptions.tsel) {
                     self.toolbarModel.extendedOptions.tsel = {};
                 }
-                if(!self.toolbarModel.zdtStatus){
+                if(!self.toolbarModel.zdtStatus()){
                     return;
                 }
                 
@@ -1018,7 +1018,7 @@ define(['knockout',
             self.returnFromTsel = function(targets) {
                     self.returnFromPageTsel(targets);
                     var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
-                    if(rightPanelModel.dashboardSharing() !== "shared" && !self.toolbarModel.zdtStatus) {
+                    if(rightPanelModel.dashboardSharing() !== "shared" && !self.toolbarModel.zdtStatus()) {
                         rightPanelModel.defaultEntityContext(targets);
                         rightPanelModel.extendedOptions.tsel.entityContext = targets;
                     }
@@ -1104,7 +1104,7 @@ define(['knockout',
                         }
                         self.timeSelectorModel.timeRangeChange(true);
 
-                        if(!self.toolbarModel.applyClickedByAutoRefresh() && !self.toolbarModel.zdtStatus) {                            
+                        if(!self.toolbarModel.applyClickedByAutoRefresh() && !self.toolbarModel.zdtStatus()) {                            
                             if(!self.toolbarModel.extendedOptions.timeSel) {
                                 self.toolbarModel.extendedOptions.timeSel = {};
                             }
@@ -1131,7 +1131,7 @@ define(['knockout',
             };
             
             self.saveUserFilterOptions = function () {
-                if (!self.toolbarModel.zdtStatus) {
+                if (!self.toolbarModel.zdtStatus()) {
                     var userFilterOptions = {
                         dashboardId: self.dashboard.id(),
                         extendedOptions: JSON.stringify(self.toolbarModel.extendedOptions),

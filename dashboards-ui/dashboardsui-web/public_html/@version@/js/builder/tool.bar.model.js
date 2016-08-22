@@ -35,8 +35,17 @@ define(['knockout',
             self.isUnderSet = ko.dataFor($("#dbd-set-tabs")[0]).isDashboardSet();
             self.duplicateInSet = ko.observable(false);
             var zdtUtil = new zdtUtilModel();
-            self.zdtStatus= zdtUtil.isUnderPlannedDowntime();
-//            self.zdtStatus = true;
+            self.zdtStatus = ko.observable(false);
+            zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
+                self.zdtStatus(isUnderPlannedDowntime);
+                if (isUnderPlannedDowntime) {
+                    $('.dropdown-menu>li').each(function (index, element) {
+                        if (($(element).attr('data-singledb-option') !== 'Print')) {
+                            $(element).css({display: "none"});
+                        }
+                    });
+                }
+            });            
             if (self.dashboard.id && self.dashboard.id())
                 self.dashboardId = self.dashboard.id();
             else
@@ -906,7 +915,7 @@ define(['knockout',
                     "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
                     "icon":"dbd-toolbar-icon-add-widget",
                     "title": "",//getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
-                    "disabled": self.editDisabled() === true || self.zdtStatus,
+                    "disabled": self.editDisabled() === true,
                     "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
                     "endOfGroup": false
                 },
@@ -916,7 +925,7 @@ define(['knockout',
                     "id": "emcpdf_dsbopts_edit" + self.toolBarGuid,
                     "icon": "dbd-toolbar-icon-edit",
                     "title": "", //getNlsString('DBS_BUILDER_BTN_EDIT_TITLE'),
-                    "disabled": self.editDisabled() === true || self.zdtStatus,
+                    "disabled": self.editDisabled() === true,
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
                     "showSubMenu": false,
                     "endOfGroup": false
@@ -938,7 +947,7 @@ define(['knockout',
                     "id": "emcpdf_dsbopts_duplicate" + self.toolBarGuid,                 
                     "icon": "dbd-toolbar-icon-duplicate",
                     "title": "", //getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
-                    "disabled": self.zdtStatus,
+                    "disabled": false,
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
                     "endOfGroup": true,
                     "showSubMenu": function () {
@@ -979,7 +988,7 @@ define(['knockout',
                     "id": "emcpdf_dsbopts_favorites" + self.toolBarGuid,               
                     "icon": self.favoritesIcon, //"dbd-toolbar-icon-favorites",
                     "title": "", //self.favoriteLabel,
-                    "disabled": self.zdtStatus,
+                    "disabled": false,
                     "showOnMobile": true,
                     "showSubMenu": false,
                     "endOfGroup": false
@@ -990,7 +999,7 @@ define(['knockout',
                     "id": "emcpdf_dsbopts_home" + self.toolBarGuid,
                     "icon": self.dashboardsAsHomeIcon,
                     "title": "", //self.setAsHomeLabel,
-                    "disabled": self.zdtStatus,
+                    "disabled": false,
                     "showOnMobile": true,
                     "showSubMenu": false,
                     "endOfGroup": false
@@ -1001,7 +1010,7 @@ define(['knockout',
                     "id": "emcpdf_dsbopts_refresh" + self.toolBarGuid,      
                     "icon": "dbd-toolbar-icon-refresh",
                     "title": "", //getNlsString('DBS_BUILDER_AUTOREFRESH_REFRESH'),
-                    "disabled": self.zdtStatus,
+                    "disabled": false,
                     "showOnMobile": true,
                     "showSubMenu": true,
                     "endOfGroup": false,
