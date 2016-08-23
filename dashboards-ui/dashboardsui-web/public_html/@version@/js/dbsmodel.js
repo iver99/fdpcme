@@ -227,7 +227,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu,zdtUtilModel)
         zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
             self.zdtStatus(isUnderPlannedDowntime);
         });        
-        self.comingsoonDialogModel = new comingsoonDialogModel();
+//       self.comingsoonDialogModel = new comingsoonDialogModel();
         
         self.pageSize = ko.observable(120);
         
