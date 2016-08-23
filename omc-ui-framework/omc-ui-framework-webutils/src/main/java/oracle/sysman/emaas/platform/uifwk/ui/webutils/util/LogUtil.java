@@ -23,6 +23,9 @@ import org.apache.logging.log4j.core.config.LoggerConfig;
  */
 public class LogUtil
 {
+	private LogUtil() {
+	  }
+
 	/**
 	 * Direction for interaction log
 	 *

@@ -42,6 +42,9 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
  */
 public class TenantSubscriptionUtil
 {
+	private TenantSubscriptionUtil() {
+	  }
+
 	public static class RestClient
 	{
 		public RestClient()

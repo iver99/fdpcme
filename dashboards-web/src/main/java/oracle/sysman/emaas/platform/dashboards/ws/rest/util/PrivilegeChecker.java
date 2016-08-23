@@ -26,6 +26,9 @@ import org.apache.logging.log4j.Logger;
  */
 public class PrivilegeChecker
 {
+	private PrivilegeChecker() {
+	  }
+
 	private static Logger logger = LogManager.getLogger(PrivilegeChecker.class);
 
 	public static final String ADMIN_ROLE_NAME_APM = "APM Administrator";

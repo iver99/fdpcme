@@ -15,6 +15,9 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.util;
  */
 public class TimeSelectorUIControls
 {
+	private TimeSelectorUIControls() {
+	  }
+
 	// Begin: Text
 	public static final String sErrorMsg = "div.errorMsg";
 	//public static final String sFilterInfoLabel = "//*[@id='filterInfo']";

@@ -73,6 +73,12 @@ require(['ojs/ojcore',
 
             logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
             logger.setLogLevel(oj.Logger.LEVEL_WARN);
+        
+            window.onerror = function (msg, url, lineNo, columnNo, error)
+            {
+                oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg, true); 
+                return false; 
+            }
 
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar", {

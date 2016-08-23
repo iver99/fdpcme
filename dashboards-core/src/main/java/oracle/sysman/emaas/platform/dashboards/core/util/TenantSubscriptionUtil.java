@@ -43,6 +43,9 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
  */
 public class TenantSubscriptionUtil
 {
+	private TenantSubscriptionUtil() {
+	  }
+
 	 public static class RestClient
 	{
 		public static final String HTTP_HEADER_OAM_REMOTE_USER = "OAM_REMOTE_USER";

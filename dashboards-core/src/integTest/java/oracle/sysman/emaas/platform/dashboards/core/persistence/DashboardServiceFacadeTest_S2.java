@@ -187,7 +187,7 @@ public class DashboardServiceFacadeTest_S2
 
 	private EmsDashboardTile t;
 
-	private EmsDashboardTileParams p;
+	private EmsDashboardTileParams emDashboardTileParam;
 
 	private EmsUserOptions uo;
 
@@ -214,8 +214,8 @@ public class DashboardServiceFacadeTest_S2
 			em = dashboardServiceFacade.getEntityManager();
 			d = DashboardServiceFacadeTest_S2.newDashboard();
 			t = DashboardServiceFacadeTest_S2.newTile();
-			p = DashboardServiceFacadeTest_S2.newTileParams(testSeq++ % 3 + 1);
-			t.addEmsDashboardTileParams(p);
+			emDashboardTileParam = DashboardServiceFacadeTest_S2.newTileParams(testSeq++ % 3 + 1);
+			t.addEmsDashboardTileParams(emDashboardTileParam);
 			d.addEmsDashboardTile(t);
 			//f = DashboardServiceFacadeTest_S2.newFavorite(d);
 

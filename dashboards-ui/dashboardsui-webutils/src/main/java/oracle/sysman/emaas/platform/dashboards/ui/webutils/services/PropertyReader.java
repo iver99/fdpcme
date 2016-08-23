@@ -21,6 +21,9 @@ import org.apache.logging.log4j.Logger;
 
 public class PropertyReader
 {
+	private PropertyReader() {
+	  }
+
 	private static final Logger logger = LogManager.getLogger(PropertyReader.class);
 
 	public static final String getInstallDir()

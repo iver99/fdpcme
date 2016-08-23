@@ -1173,7 +1173,6 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 				driver.click("css=" + DashBoardPageId_190.BUILDEROPTIONSSETHOMESAVECSS);
 				driver.takeScreenShot();
 			}
-			;
 			driver.getLogger().info("DashboardBuilderUtil set home completed");
 			return true;
 		}

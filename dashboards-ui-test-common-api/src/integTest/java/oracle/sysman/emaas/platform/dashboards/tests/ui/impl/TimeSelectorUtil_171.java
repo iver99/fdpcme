@@ -299,8 +299,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Latest);
 				webd.click("css=" + TimeSelectorUIControls.sTimeRange_Latest);
 				webd.takeScreenShot();
-				return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1)
-						.getText();
+				return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1).getText();
 			case Custom:
 				try {
 					throw new Exception("Please use setCustomTime API to set Custom Range");

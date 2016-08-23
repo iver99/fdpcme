@@ -34,7 +34,7 @@ import org.testng.Assert;
 public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version implements IDashboardBuilderUtil
 {
 	private static final Logger logger = LogManager.getLogger(DashboardBuilderUtil_171.class);
-	private final String DASHBOARD_SELECTION_TAB_NAME = "Dashboard";
+	private final static String DASHBOARD_SELECTION_TAB_NAME = "Dashboard";
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#addNewDashboardToSet(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
@@ -1034,7 +1034,6 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 				driver.click("css=" + DashBoardPageId.BUILDEROPTIONSSETHOMESAVECSS);
 				driver.takeScreenShot();
 			}
-			;
 			driver.getLogger().info("DashboardBuilderUtil set home completed");
 			return true;
 		}

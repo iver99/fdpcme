@@ -104,6 +104,12 @@ require(['dashboards/dbsmodel',
                 // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                 // If you comment the line below, our current log calls will not be output!
                 logger.setLogLevel(oj.Logger.LEVEL_WARN);
+        
+            window.onerror = function (msg, url, lineNo, columnNo, error)
+            {
+                oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg, true); 
+                return false; 
+            }
 
 
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {

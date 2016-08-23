@@ -21,6 +21,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class DashboardManagerTestMockup
 {
+	private DashboardManagerTestMockup() {
+	  }
+
 	private static final Logger logger = LogManager.getLogger(DashboardManagerTestMockup.class);
 	
 	public static void executeRepeatedly(int threadNum, final int repeatsPerThread, final Runnable r,

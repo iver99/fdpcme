@@ -50,9 +50,9 @@ public class EmsDashboardTest {
     @Test
     public void testAddEmsDashboardTile() {
         emsDashboard = new EmsDashboard();
-        EmsDashboardTile emsDashboardTile = new EmsDashboardTile();
-        emsDashboard.addEmsDashboardTile(emsDashboardTile);
-        assertEquals(emsDashboard.getDashboardTileList().get(0),emsDashboardTile);
+        EmsDashboardTile tile = new EmsDashboardTile();
+        emsDashboard.addEmsDashboardTile(tile);
+        assertEquals(emsDashboard.getDashboardTileList().get(0),tile);
     }
 
     @Test

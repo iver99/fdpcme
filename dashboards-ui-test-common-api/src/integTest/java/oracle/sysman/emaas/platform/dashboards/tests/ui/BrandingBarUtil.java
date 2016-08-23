@@ -6,6 +6,9 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class BrandingBarUtil
 {
+	private BrandingBarUtil() {
+	  }
+
 	// values for 'option' for user menu
 	public static final String USERMENU_OPTION_HELP = IBrandingBarUtil.USERMENU_OPTION_HELP;
 	public static final String USERMENU_OPTION_ABOUT = IBrandingBarUtil.USERMENU_OPTION_ABOUT;

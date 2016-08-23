@@ -5,6 +5,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CacheFactory {
 	
+	private CacheFactory() {
+	  }
+
+	
 	private static final int DEFAULT_EXPIRE_TIME=0;
 	
 	private static ConcurrentHashMap<String,CacheUnit> cacheUnitMap=new ConcurrentHashMap<String,CacheUnit>();

@@ -28,6 +28,7 @@ import com.jayway.restassured.response.Response;
  */
 public class CommonUIUtils
 {
+	
 	static String sTenantId = CommonUIUtils.getEmaasPropertyValue("TENANT_ID");
 	static String sOhsUrl = CommonUIUtils.getEmaasPropertyValue("OHS_URL");
 	static String sRegistryUrl = CommonUIUtils.getEmaasPropertyValue("OHS_REGISTRY_URL");
