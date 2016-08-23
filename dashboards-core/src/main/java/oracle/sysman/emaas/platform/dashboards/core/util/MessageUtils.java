@@ -18,6 +18,9 @@ import java.util.ResourceBundle;
  */
 public class MessageUtils
 {
+	private MessageUtils() {
+	  }
+
 	private static final String DASHBOARDS_CORE_RESOURCE_BUNDLE = "oracle.sysman.emaas.platform.dashboards.core.DashboardsCoreBundle";
 
 	public static String getDefaultBundleString(String key, String... args)

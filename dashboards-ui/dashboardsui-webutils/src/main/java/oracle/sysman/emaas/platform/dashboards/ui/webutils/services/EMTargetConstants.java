@@ -15,5 +15,8 @@ package oracle.sysman.emaas.platform.dashboards.ui.webutils.services;
  */
 public class EMTargetConstants
 {
+	private EMTargetConstants() {
+	  }
+
 	public static final String M_TARGET_TYPE = "oracle_emaas_dashboard_ui";
 }

@@ -24,6 +24,9 @@ import org.apache.logging.log4j.core.config.LoggerConfig;
  */
 public class LogUtil
 {
+	private LogUtil() {
+	  }
+
 	/**
 	 * Class that represents the interaction log context, containing tenant id, service invoked, and service invocation direction
 	 *

@@ -10,6 +10,9 @@
 
 package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,6 +36,7 @@ import com.jayway.restassured.response.Response;
  */
 public class CommonUIUtils
 {
+	private static final Logger logger = LogManager.getLogger(CommonUIUtils.class);
 	static String sTenantId = CommonUIUtils.getEmaasPropertyValue("TENANT_ID");
 	static String sOhsUrl = CommonUIUtils.getEmaasPropertyValue("OHS_URL");
 	static String sRegistryUrl = CommonUIUtils.getEmaasPropertyValue("OHS_REGISTRY_URL");
@@ -131,7 +135,7 @@ public class CommonUIUtils
 
 			CommonUIUtils.commonUITestLog("Get the " + sProperty + " property value.");
 
-			if (sProperty.equals("TENANT_ID")) {
+			if (("TENANT_ID").equals(sProperty)) {
 				CommonUIUtils.commonUITestLog("Get the TENANT_ID property value.");
 				sPropertyValue = emaasProp.getProperty("TENANT_ID");
 				if (sPropertyValue == null) {
@@ -139,7 +143,7 @@ public class CommonUIUtils
 					sPropertyValue = "emaastesttenant1";
 				}
 			}
-			else if (sProperty.equals("OHS_REGISTRY_URL")) {
+			else if (("OHS_REGISTRY_URL").equals(sProperty)) {
 				sPropertyValue = emaasProp.getProperty("OHS_REGISTRY_URL");
 				if (sPropertyValue == null) {
 					CommonUIUtils.commonUITestLog("The OHS_REGISTRY_URL property value is null ... set it to a different value.");
@@ -153,7 +157,7 @@ public class CommonUIUtils
 					}
 				}
 			}
-			else if (sProperty.equals("SSO_USERNAME")) {
+			else if (("SSO_USERNAME").equals(sProperty)) {
 				sPropertyValue = emaasProp.getProperty("SSO_USERNAME");
 				if (sPropertyValue == null) {
 					CommonUIUtils
@@ -161,7 +165,7 @@ public class CommonUIUtils
 					sPropertyValue = "emcsadmin";
 				}
 			}
-			else if (sProperty.equals("SSO_PASSWORD")) {
+			else if (("SSO_PASSWORD").equals(sProperty)) {
 				//	below password is being using in tests/dev mode only
 				sPropertyValue = emaasProp.getProperty("SSO_PASSWORD");
 				if (sPropertyValue == null) {
@@ -171,7 +175,7 @@ public class CommonUIUtils
 					sPropertyValue = "Welcome1!";
 				}
 			}
-			else if (sProperty.equals("COMMON_UI_URL_SUFFIX")) {
+			else if (("COMMON_UI_URL_SUFFIX").equals(sProperty)) {
 				sPropertyValue = emaasProp.getProperty("COMMON_UI_URL_SUFFIX");
 				if (sPropertyValue == null) {
 					CommonUIUtils
@@ -179,7 +183,7 @@ public class CommonUIUtils
 					sPropertyValue = "/emsaasui/uifwk/test.html";
 				}
 			}
-			else if (sProperty.equals("SAAS_AUTH_TOKEN")) {
+			else if (("SAAS_AUTH_TOKEN").equals(sProperty)) {
 				sPropertyValue = emaasProp.getProperty("SAAS_AUTH_TOKEN");
 				if (sPropertyValue == null) {
 					CommonUIUtils
@@ -187,7 +191,7 @@ public class CommonUIUtils
 					sPropertyValue = "Basic d2VibG9naWM6d2VsY29tZTE=";
 
 				}
-				else if (sProperty.equals("DASHBOARD_API_ENDPOINT")) {
+				else if (("DASHBOARD_API_ENDPOINT").equals(sProperty)) {
 					sPropertyValue = emaasProp.getProperty("DASHBOARD_API_ENDPOINT");
 					if (sPropertyValue == null) {
 						CommonUIUtils
@@ -196,7 +200,7 @@ public class CommonUIUtils
 					}
 				}
 			}
-			else if (sProperty.equals("TARGETMODEL_SERVICE_SHARD_ENDPOINT")) {
+			else if (("TARGETMODEL_SERVICE_SHARD_ENDPOINT").equals(sProperty)) {
 				sPropertyValue = emaasProp.getProperty("TARGETMODEL_SERVICE_SHARD_ENDPOINT");
 				if (sPropertyValue == null) {
 					CommonUIUtils
@@ -218,6 +222,7 @@ public class CommonUIUtils
 
 		}
 		catch (IOException ex) {
+			logger.info("context",ex);
 			ex.printStackTrace();
 		}
 		finally {
@@ -226,6 +231,7 @@ public class CommonUIUtils
 					input.close();
 				}
 				catch (IOException e) {
+					logger.info("context",e);
 					e.printStackTrace();
 				}
 			}
@@ -357,12 +363,13 @@ public class CommonUIUtils
 				driver.getLogger().info("the category display is: " + driver.isDisplayed(UIControls.SCATEGORYSELECT));
 			}
 			catch (RuntimeException re) {
+				logger.info("context",re);
 				Assert.fail(re.getLocalizedMessage());
 			}
 			//Assert.assertFalse(driver.isElementPresent(UIControls.sCategorySelect));
 
 			//Open a widget
-			if (!driver.getAttribute(UIControls.SWIDGETDISPLAY + "@childElementCount").equals("0")) {
+			if (!("0").equals(driver.getAttribute(UIControls.SWIDGETDISPLAY + "@childElementCount"))) {
 				driver.getLogger().info("Select a widget and open it in the main page");
 				driver.getLogger().info("Select a widget");
 				driver.waitForElementPresent(UIControls.SWIDGETSELECT);

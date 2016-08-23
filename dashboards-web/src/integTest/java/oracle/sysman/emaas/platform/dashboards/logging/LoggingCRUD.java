@@ -10,6 +10,9 @@
 
 package oracle.sysman.emaas.platform.dashboards.logging;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import oracle.sysman.emaas.platform.dashboards.test.common.CommonTest;
 
 import org.testng.Assert;
@@ -29,7 +32,7 @@ public class LoggingCRUD
 	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the inputs from the testenv.properties file before
 	 * executing test cases
 	 */
-
+	private static final Logger logger = LogManager.getLogger(LoggingCRUD.class);
 	static String HOSTNAME;
 	static String portno;
 	static String serveruri;
@@ -99,6 +102,7 @@ public class LoggingCRUD
 			
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 

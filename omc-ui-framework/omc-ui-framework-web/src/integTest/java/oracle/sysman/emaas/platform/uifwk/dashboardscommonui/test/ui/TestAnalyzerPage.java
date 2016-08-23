@@ -10,6 +10,9 @@
 
 package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
 
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
@@ -22,6 +25,7 @@ import org.testng.annotations.Test;
  */
 public class TestAnalyzerPage extends CommonUIUtils
 {
+	private static final Logger logger = LogManager.getLogger(TestAnalyzerPage.class);
 	@BeforeClass
 	public static void initValue()
 	{
@@ -74,6 +78,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 
 		}
 		catch (Exception ex) {
+			logger.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}
@@ -123,6 +128,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 
 		}
 		catch (Exception ex) {
+			logger.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}

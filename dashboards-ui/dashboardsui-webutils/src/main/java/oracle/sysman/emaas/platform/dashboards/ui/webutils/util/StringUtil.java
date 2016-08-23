@@ -15,6 +15,9 @@ package oracle.sysman.emaas.platform.dashboards.ui.webutils.util;
  */
 public class StringUtil
 {
+	private StringUtil() {
+	  }
+
 	public static boolean isEmpty(String s)
 	{
 		if (s == null) {

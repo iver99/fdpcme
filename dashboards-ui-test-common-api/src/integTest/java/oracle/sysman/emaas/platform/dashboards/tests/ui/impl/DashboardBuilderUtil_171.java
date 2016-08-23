@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
@@ -31,7 +33,8 @@ import org.testng.Assert;
 
 public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version implements IDashboardBuilderUtil
 {
-	private final String DASHBOARD_SELECTION_TAB_NAME = "Dashboard";
+	private static final Logger logger = LogManager.getLogger(DashboardBuilderUtil_171.class);
+	private final static String DASHBOARD_SELECTION_TAB_NAME = "Dashboard";
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#addNewDashboardToSet(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
@@ -84,6 +87,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
+			logger.info("context",e);
 			e.printStackTrace();
 		}
 		driver.getLogger().info("removeDashboardInSet has selected the dashboard named with \"" + dashboardName + "\"");
@@ -478,6 +482,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			DashboardHomeUtil.gridView(driver);
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -572,6 +577,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			DashboardHomeUtil.listView(driver);
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -679,6 +685,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			Thread.sleep(waitTime);
 		}
 		catch (InterruptedException e) {
+			logger.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -791,6 +798,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			widgetEl = getWidgetByName(driver, widgetName, index);
 		}
 		catch (InterruptedException e) {
+			logger.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -820,6 +828,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			widgetEl = getWidgetByName(driver, widgetName, index);
 		}
 		catch (InterruptedException e) {
+			logger.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -887,6 +896,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			DashboardHomeUtil.search(driver, searchString);
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -902,6 +912,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			DashboardHomeUtil.selectDashboard(driver, dashboardName);
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -995,6 +1006,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			DashboardHomeUtil.sortBy(driver, option);
 		}
 		catch (Exception e) {
+			logger.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -1022,7 +1034,6 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 				driver.click("css=" + DashBoardPageId.BUILDEROPTIONSSETHOMESAVECSS);
 				driver.takeScreenShot();
 			}
-			;
 			driver.getLogger().info("DashboardBuilderUtil set home completed");
 			return true;
 		}
@@ -1171,8 +1182,8 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 
 		driver.waitForElementPresent(DashBoardPageId.BUILDERDESCRIPTIONTEXTLOCATOR);
 		String realDesc = driver.getElement(DashBoardPageId.BUILDERDESCRIPTIONTEXTLOCATOR).getAttribute("title");
-		if (description == null || description.equals("")) {
-			if (realDesc != null && !realDesc.trim().equals("")) {
+		if (description == null || ("").equals(description)) {
+			if (realDesc != null && !("").equals(realDesc.trim())) {
 				driver.getLogger().info(
 						"verifyDashboard compelted and returns false. Expected description is " + description
 								+ ", actual dashboard description is " + realDesc);
@@ -1297,6 +1308,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			we = getTileTitleElement(driver, widgetName, index);
 		}
 		catch (NoSuchElementException e) {
+			logger.info("context",e);
 			driver.getLogger().info("verifyWidget compelted and returns false");
 			return false;
 		}
@@ -1406,10 +1418,10 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	private boolean isRightDrawerVisible(WebDriver driver)
 	{
 		WebElement rightDrawerPanel = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RIGHTDRAWERPANELCSS));
-		boolean isDisplayed = rightDrawerPanel.getCssValue("display").equals("none") != true;
+		boolean isDisplayed = ("none").equals(rightDrawerPanel.getCssValue("display")) != true;
 		driver.getLogger().info("isRightDrawerVisible,the isDisplayed value is " + isDisplayed);
 
-		boolean isWidthValid = rightDrawerPanel.getCssValue("width").equals("0px") != true;
+		boolean isWidthValid = ("0px").equals(rightDrawerPanel.getCssValue("width")) != true;
 		driver.getLogger().info("isRightDrawerVisible,the isWidthValid value is " + isWidthValid);
 
 		return isDisplayed && isWidthValid;

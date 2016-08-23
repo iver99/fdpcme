@@ -127,13 +127,13 @@ require(['ojs/ojcore',
                         return true;
                     }
                     return false;
-                }
+                };
 
                 self.getGMTTimezone = function(date) {
                     var timezoneOffset = date.getTimezoneOffset()/60;
                     timezoneOffset = timezoneOffset>0 ? ("GMT-"+timezoneOffset) : ("GMT+"+Math.abs(timezoneOffset));
                     return timezoneOffset;
-                }
+                };
 
                 self.timeParams1 = {
                     startDateTime: /*self.initStart,*/ start,
@@ -201,7 +201,7 @@ require(['ojs/ojcore',
                     self.timePeriodsNotToShow(["Last 90 days", "Latest"]);
                     self.timeDisplay("long");
                     self.timePeriodPre("Last 90 days");
-                }
+                };
 
                 self.lineSeriesValues = ko.observableArray();
                 self.lineGroupsValues = ko.observableArray();

@@ -396,7 +396,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.panelPosition = {"my": "start top+16", "at": "start  bottom", "collision": "none", "of": "#dropDown_"+self.randomId};
                     self.pickerPanelPosition = {"my": "start top", "at": "end top", "collision": "none", "of": "#drawers_"+self.randomId};
                     self.timeFilterPosition = {"my": "start center", "at": "end center", "collision": "none"};
-                }
+                };
 
                 self.setDtpickerPositionToRight = function() {
                     self.drawerChosen("rightDrawerChosen");
@@ -407,7 +407,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.panelPosition = {"my": "end top+16", "at": "end  bottom", "collision": "none", "of": "#dropDown_"+self.randomId};
                     self.pickerPanelPosition = {"my": "end top", "at": "start top", "collision": "none", "of": "#drawers_"+self.randomId};
                     self.timeFilterPosition = {"my": "end center", "at": "start center", "collision": "none"};
-                }
+                };
 
                 self.setAllTimePeriodsNotChosen = function() {
                     self.last15minsChosen(false);
@@ -912,7 +912,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         return true;
                     }
                     return false;
-                }
+                };
 
                 /**
                  *
@@ -923,7 +923,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var timezoneOffset = date.getTimezoneOffset()/60;
                     timezoneOffset = timezoneOffset>0 ? ("GMT-"+timezoneOffset) : ("GMT+"+Math.abs(timezoneOffset));
                     return timezoneOffset;
-                }
+                };
 
                 /**
                  *
@@ -1119,7 +1119,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.lastDaysChecked(self.tfInstance.daysChecked());
                         self.lastMonthsChecked(self.tfInstance.monthsChecked());
                     }
-            }
+            };
 
             /**
              * type: 0 for initialize time picker, 1 for user's action. This param is used for not validating window limit when initialized.
@@ -1360,7 +1360,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.shouldSetLastDatas = true;
                     $(self.pickerPanelId).ojPopup('close');
                     $(self.panelId).ojPopup('close');
-                }
+                };
 
                 //contol whether the panel should popup or not
                 self.panelControl = function () {
@@ -1432,7 +1432,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }else {
                         return false;
                     }
-                }
+                };
 
                 /**
                  * set everyting to original state if not applied
@@ -1477,11 +1477,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     if(!$(event.target).hasClass(self.drawerChosen())) {
                         $(event.target).addClass(self.drawerHover);
                     }
-                }
+                };
 
                 self.hoverOutDrawer = function(data, event) {
                     $(event.target).removeClass(self.drawerHover);
-                }
+                };
 
                 //select time period
                 self.chooseTimePeriod = function (data, event) {
@@ -1733,18 +1733,18 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }else {
                         $(self.timeFilterId).ojPopup("open", "#pickerPanel_"+self.randomId, self.timeFilterPosition);
                     }
-                }
+                };
 
                 self.showTimeFilterInfo = function() {
                     $("#tfInfo_"+self.randomId).ojPopup("open", "#tfInfoIndicator_"+self.randomId);
                     if ($(self.panelId).ojPopup('isOpen')) {
                         self.closeAllPopups();
                     }
-                }
+                };
 
                 self.hideTimeFilterInfo = function() {
                     $("#tfInfo_"+self.randomId).ojPopup("close");
-                }
+                };
 
                 self.toggleTimeFilterInfo = function() {
                     if($("#tfInfo_"+self.randomId).ojPopup("isOpen")) {
@@ -1755,7 +1755,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             self.closeAllPopups();
                         }
                     }
-                }
+                };
 
                 self.generateTfTooltip = function(hoursOfDay, daysOfWeek, monthsOfYear) {
                     var i;
@@ -1859,7 +1859,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         tfTooltip = hoursExcludedInfo + period1 + daysExcludedInfo + period2 + monthsExcludedInfo;
                         return tfTooltip;
                     }
-                }
+                };
 
 
                 self.tfParams = {

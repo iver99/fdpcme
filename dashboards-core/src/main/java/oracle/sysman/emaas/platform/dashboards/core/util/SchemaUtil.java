@@ -395,6 +395,7 @@ public class SchemaUtil
 			}
 			catch (IOException ioEx) {
 				//ignore
+				logger.info("context",ioEx);
 			}
 		}
 		return response.toString();

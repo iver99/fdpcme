@@ -43,7 +43,10 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
  */
 public class TenantSubscriptionUtil
 {
-	public static class RestClient
+	private TenantSubscriptionUtil() {
+	  }
+
+	 public static class RestClient
 	{
 		public static final String HTTP_HEADER_OAM_REMOTE_USER = "OAM_REMOTE_USER";
 
@@ -75,6 +78,7 @@ public class TenantSubscriptionUtil
 				return builder.get(String.class);
 			}
 			catch (Exception e) {
+				logger.info("context",e);
 				itrLogger.error("Exception when RestClient trying to get response from specified service. Message:"
 						+ e.getLocalizedMessage());
 				return null;
@@ -105,6 +109,7 @@ public class TenantSubscriptionUtil
 				return builder.get(String.class);
 			}
 			catch (Exception e) {
+				logger.info("context",e);
 				itrLogger.error("Exception when RestClient trying to get response from specified service. Message:"
 						+ e.getLocalizedMessage());
 				return null;
@@ -143,7 +148,7 @@ public class TenantSubscriptionUtil
 					CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 		}
 		catch (Exception e) {
-			logger.error(e);
+			logger.error("context",e);
 			return Collections.emptyList();
 		}
 		if (cachedApps != null) {

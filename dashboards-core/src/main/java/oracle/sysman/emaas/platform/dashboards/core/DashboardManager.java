@@ -12,10 +12,6 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotData;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
@@ -38,6 +34,10 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DashboardManager
 {
@@ -357,6 +357,7 @@ public class DashboardManager
 		}
 		catch (NoResultException e) {
 			logger.debug("Dashboard not found for name \"{}\" because NoResultException is caught", name);
+			logger.info("context",e);
 			return null;
 		}
 		finally {
@@ -721,19 +722,19 @@ public class DashboardManager
 					if (i != 0) {
 						sb.append(" or ");
 					}
-					if (filter.getIncludedOwners().get(i).equals("Oracle")) {
+					if (("Oracle").equals(filter.getIncludedOwners().get(i))) {
 						sb.append(" p.owner = ?" + index++);
 						paramList.add("Oracle");
 					}
-					if (filter.getIncludedOwners().get(i).equals("Others")) {
+					if (("Others").equals(filter.getIncludedOwners().get(i))) {
 						sb.append(" p.owner != ?" + index++);
 						paramList.add("Oracle");
 					}
-					if (filter.getIncludedOwners().get(i).equals("Me")) {
+					if (("Me").equals(filter.getIncludedOwners().get(i))) {
 						sb.append(" p.owner = ?" + index++);
 						paramList.add(UserContext.getCurrentUser());
 					}
-					if (filter.getIncludedOwners().get(i).equals("Share")) {
+					if (("Share").equals(filter.getIncludedOwners().get(i))) {
 						sb.append(" p.owner != ?" + index++ + " and p.share_public > 0");
 						paramList.add(UserContext.getCurrentUser());
 					}
