@@ -14,11 +14,12 @@ define(['knockout',
         'builder/right-panel/right.panel.control.model',
         'builder/right-panel/right.panel.filter',
         'builder/right-panel/right.panel.widget',
+        'builder/right-panel/right.panel.edit',
         'jqueryui',
         'builder/builder.core',
         'builder/widget/widget.model'
     ],
-    function(ko, $, dfu, mbu, uiutil, oj, ed, ssu, rpc, rpf, rpw) {
+    function(ko, $, dfu, mbu, uiutil, oj, ed, ssu, rpc, rpf, rpw,rpe) {
         function ResizableView($b) {
             var self = this;
 
@@ -84,6 +85,7 @@ define(['knockout',
             self.rightPanelControl=new rpc.rightPanelControl(self.$b);
             self.rightPanelFilter = new rpf.RightPanelFilterModel(self.$b);
             self.rightPanelWidget= new rpw.rightPanelWidget(self.$b);
+            self.rightPanelEdit=new rpe.rightPanelEditModel(self.$b);
             self.selectedDashboard = ko.observable(self.dashboard);
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
@@ -96,6 +98,7 @@ define(['knockout',
                 self.dashboard = _$b.dashboard;
                 self.editDashboardDialogModel(new ed.EditDashboardDialogModel(_$b,toolBarModel));
                 self.rightPanelControl.$b(_$b);
+                self.rightPanelEdit.$b(_$b);
                 editDashboardDialogModelChanged = true;
                 if(toolBarModel) {
                     self.rightPanelControl.dashboardEditDisabled(toolBarModel.editDisabled()) ;
@@ -264,19 +267,8 @@ define(['knockout',
                     self.rightPanelFilter.defaultEntityContext(targets);
                     self.rightPanelFilter.extendedOptions.tsel.entityContext = targets;
                 }
-            }
-            
-            self.deleteDashboardClicked = function(){
-                queryDashboardSetsBySubId(self.dashboard.id(),function(resp){
-                    window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(resp.dashboardSets || []);
-                    self.toolBarModel.openDashboardDeleteConfirmDialog();
-                });
             };
-
-            $("#delete-dashboard").on("ojclose", function (event, ui) {
-                self.toolBarModel.isDeletingDbd(false);
-            });
-         
+                                
             self.showdbOnHomePage = ko.observable([]);
 
             var dsbSaveDelay = ko.computed(function(){
@@ -403,11 +395,7 @@ define(['knockout',
                             function (jqXHR, textStatus, errorThrown) {
                                 dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
                             });
-                });
-
-                self.deleteDashboardSetClicked = function () {
-                    $('#deleteDashboardset').ojDialog("open");
-                };
+                });        
             }
         }
 
