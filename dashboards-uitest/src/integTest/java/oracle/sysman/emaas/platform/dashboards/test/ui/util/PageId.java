@@ -70,6 +70,10 @@ public class PageId
 	public static final String RIGHTDRAWEREDITSINGLEDBSHARE_CSS = ".dbd-right-panel-editdashboard-set-share .dbd-right-panel-editdashboard-innertitle.oj-collapsible-header";
 	public static final String DASHBOARDSETSHARE_CSS = "#dashboardSetSharingShared";
 	public static final String DASHBOARDSETNOTSHARE_CSS = "#dashboardSetSharingNotShared";
+	public static final String DASHBOARDOPTIONS_CSS = "button.dashboardOptsBtn";
+
+	public static final String DASHBOARDTITLE_CSS = "#pageTitle";
+	public static final String DATETIMEPICKER_OOB_CSS = "#dateTimePicker_APA";
 
 	//error page
 	public static final String ERRORMESSAGE_CSS = ".dbd-error-msg";

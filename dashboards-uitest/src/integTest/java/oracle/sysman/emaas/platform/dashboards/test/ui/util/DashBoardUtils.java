@@ -243,4 +243,12 @@ public class DashBoardUtils
 			return false;
 		}
 	}
+
+	public static void verifyURL(WebDriver webdriver, String url)
+	{
+		String currurl = webdriver.getWebDriver().getCurrentUrl();
+		webdriver.getLogger().info("url = " + currurl);
+		Assert.assertEquals(currurl.substring(currurl.indexOf("emsaasui") + 9), url);
+
+	}
 }
