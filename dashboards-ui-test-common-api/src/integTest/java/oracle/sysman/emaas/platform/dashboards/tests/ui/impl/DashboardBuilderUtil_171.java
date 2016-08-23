@@ -1034,7 +1034,6 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 				driver.click("css=" + DashBoardPageId.BUILDEROPTIONSSETHOMESAVECSS);
 				driver.takeScreenShot();
 			}
-			;
 			driver.getLogger().info("DashboardBuilderUtil set home completed");
 			return true;
 		}

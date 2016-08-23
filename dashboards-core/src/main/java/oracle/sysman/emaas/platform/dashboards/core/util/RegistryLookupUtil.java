@@ -448,33 +448,15 @@ public class RegistryLookupUtil
 						links = internalInstance.getLinksWithProtocol(rel, "https");
 					}
 
-					try {
-						SanitizedInstanceInfo sanitizedInstance = null;
-						if (!StringUtil.isEmpty(tenantName)) {
-							sanitizedInstance = LookupManager.getInstance().getLookupClient()
-									.getSanitizedInstanceInfo(internalInstance, tenantName);
-							itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
-									sanitizedInstance, tenantName);
+					SanitizedInstanceInfo sanitizedInstance = findSaniInsInfo(tenantName, internalInstance);
+					if (sanitizedInstance != null) {
+						if (prefixMatch) {
+							links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("https", rel,
+									sanitizedInstance.getLinks());
 						}
 						else {
-							logger.debug("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
-							sanitizedInstance = LookupManager.getInstance().getLookupClient()
-									.getSanitizedInstanceInfo(internalInstance);
-							itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
-									sanitizedInstance);
+							links = RegistryLookupUtil.getLinksWithProtocol("https", sanitizedInstance.getLinks(rel));
 						}
-						if (sanitizedInstance != null) {
-							if (prefixMatch) {
-								links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("https", rel,
-										sanitizedInstance.getLinks());
-							}
-							else {
-								links = RegistryLookupUtil.getLinksWithProtocol("https", sanitizedInstance.getLinks(rel));
-							}
-						}
-					}
-					catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
 					}
 					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
@@ -501,34 +483,16 @@ public class RegistryLookupUtil
 					else {
 						links = internalInstance.getLinksWithProtocol(rel, "http");
 					}
-					try {
-						SanitizedInstanceInfo sanitizedInstance = null;
-						if (!StringUtil.isEmpty(tenantName)) {
-							sanitizedInstance = LookupManager.getInstance().getLookupClient()
-									.getSanitizedInstanceInfo(internalInstance, tenantName);
-							itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
-									sanitizedInstance, tenantName);
+
+					SanitizedInstanceInfo sanitizedInstance = findSaniInsInfo(tenantName, internalInstance);
+					if (sanitizedInstance != null) {
+						if (prefixMatch) {
+							links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("http", rel,
+									sanitizedInstance.getLinks());
 						}
 						else {
-							logger.debug("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
-							sanitizedInstance = LookupManager.getInstance().getLookupClient()
-									.getSanitizedInstanceInfo(internalInstance);
-							itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
-									sanitizedInstance);
+							links = RegistryLookupUtil.getLinksWithProtocol("http", sanitizedInstance.getLinks(rel));
 						}
-						if (sanitizedInstance != null) {
-							if (prefixMatch) {
-								links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("http", rel,
-										sanitizedInstance.getLinks());
-							}
-							else {
-								links = RegistryLookupUtil.getLinksWithProtocol("http", sanitizedInstance.getLinks(rel));
-							}
-
-						}
-					}
-					catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
 					}
 					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
@@ -551,6 +515,35 @@ public class RegistryLookupUtil
 			return lk;
 		}
 	}
+
+    /**
+     * @param tenantName
+     * @param internalInstance
+     * @return
+     * @throws Exception
+     */
+    private static SanitizedInstanceInfo findSaniInsInfo(String tenantName, InstanceInfo internalInstance)
+    {
+        SanitizedInstanceInfo sanitizedInstance = null;
+        try {
+            if (!StringUtil.isEmpty(tenantName)) {
+                sanitizedInstance = LookupManager.getInstance().getLookupClient()
+                        .getSanitizedInstanceInfo(internalInstance, tenantName);
+                itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
+                        sanitizedInstance, tenantName);
+            }
+            else {
+                logger.debug("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
+                sanitizedInstance = LookupManager.getInstance().getLookupClient()
+                        .getSanitizedInstanceInfo(internalInstance);
+                itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
+                        sanitizedInstance);
+            }
+        } catch(Exception ex) {
+            logger.error(ex.getLocalizedMessage(), ex);
+        }
+        return sanitizedInstance;
+    }
 
 	private static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
 			String tenantName)
