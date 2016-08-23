@@ -109,13 +109,15 @@ define([
                 retryOptions.beforeSend = function(jqXHR, settings) {
                     jqXHR.url = retryOptions.url;
                     //Call individual beforeSend callback if exists
-                    if (beforeSendCallback && $.isFunction(beforeSendCallback))
+                    if (beforeSendCallback && $.isFunction(beforeSendCallback)){
                         beforeSendCallback(jqXHR, settings);
+                    }
                     //Otherwise call beforeSend callback if it has been set up by $.ajaxSetup()
                     else {
                         var beforeSendInAjaxSetup = $.ajaxSetup()['beforeSend'];
-                        if (beforeSendInAjaxSetup && $.isFunction(beforeSendInAjaxSetup))
+                        if (beforeSendInAjaxSetup && $.isFunction(beforeSendInAjaxSetup)){
                             beforeSendInAjaxSetup(jqXHR, settings);
+                        }
                     }
                 };
 
@@ -254,10 +256,12 @@ define([
                 var argsLength = args.length;
                 var retryOptions = {};
                 if (argsLength === 1) {
-                    if (typeof(args[0]) === 'string')
+                    if (typeof(args[0]) === 'string'){
                         retryOptions.url = args[0];
-                    if (typeof(args[0]) === 'object')
+                    }
+                    if (typeof(args[0]) === 'object'){
                         retryOptions = args[0];
+                    }
                 }
                 else if (argsLength === 2) {
                     if (typeof(args[0]) === 'string' && args[1] !== null && typeof(args[1]) === 'object') {
@@ -313,8 +317,9 @@ define([
             }
 
             function logMessage(url, messageType, messageText) {
-                if (messageType)
+                if (messageType){
                     messageType = messageType.toLowerCase();
+                }
                 if (url === '/sso.static/dashboards.logging/logs') {
                     switch(messageType) {
                         case 'error':
@@ -370,12 +375,6 @@ define([
                     message = respJson.errorMessage;
                 }
                 //do not show response text for now, as it may contains information not friendly to the end user
-//                else {
-//                    var respText = xhr.responseText;
-//                    if (typeof respText !== "undefined" && respText !== "") {
-//                        message = respText;
-//                    }
-//                }
 
                 return message;
             }

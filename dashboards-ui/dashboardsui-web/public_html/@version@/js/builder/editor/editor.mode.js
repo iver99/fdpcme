@@ -18,57 +18,83 @@ define(['knockout',
         NormalEditorMode.prototype = {
             constructor: NormalEditorMode,
             getModeWidth : function(tile) {
-                if (!tile.modeWidth) tile.modeWidth = ko.observable(tile.width());
+                if (!tile.modeWidth) {
+                    tile.modeWidth = ko.observable(tile.width());
+                }
                 return tile.modeWidth();
             },
             setModeWidth : function(tile, width) {
                 tile.width(width);
-                tile.modeWidth ? tile.modeWidth(width) : tile.modeWidth = ko.observable(width);
+                if(tile.modeWidth){
+                    tile.modeWidth(width)
+                }else{
+                    tile.modeWidth = ko.observable(width);
+                }
             },
             resetModeWidth : function(tile) {
-                if (!tile.modeWidth) tile.modeWidth = ko.observable();
+                if (!tile.modeWidth) {
+                    tile.modeWidth = ko.observable();
+                }
                 tile.modeWidth(tile.width());
             },
             getModeHeight : function(tile) {
-                if (!tile.modeHeight) tile.modeHeight = ko.observable(tile.height());
+                if (!tile.modeHeight) {
+                    tile.modeHeight = ko.observable(tile.height());
+                }
                 return tile.modeHeight();
             },
             setModeHeight : function(tile, height) {
                 tile.height(height);
-                tile.modeHeight ? tile.modeHeight(height) : tile.modeHeight = ko.observable(height);
+                if(tile.modeHeight){
+                    tile.modeHeight(height)
+                }else{
+                    tile.modeHeight = ko.observable(height);
+                }
             },
             resetModeHeight : function(tile) {
-                if (!tile.modeHeight) tile.modeHeight = ko.observable();
+                if (!tile.modeHeight) {
+                    tile.modeHeight = ko.observable();
+                }
                 tile.modeHeight(tile.height());
             },
             getModeColumn : function(tile) {
-                if (!tile.modeColumn) tile.modeColumn = ko.observable(tile.column());
+                if (!tile.modeColumn) {
+                    tile.modeColumn = ko.observable(tile.column());
+                }
                 return tile.modeColumn();
             },
             setModeColumn : function(tile, modeColumn) {
                 // as this function could be inherited, so not to update tile column here.
                 // instead, don't use setModeColumn but set tile column directly when it's needed
-    //            tile.column(modeColumn);
-                !tile.modeColumn && (tile.modeColumn = ko.observable());
+                if(!tile.modeColumn){
+                    tile.modeColumn = ko.observable();
+                }
                 tile.modeColumn(modeColumn);
             },
             resetModeColumn : function(tile) {
-                if (!tile.modeColumn) tile.modeColumn = ko.observable();
+                if (!tile.modeColumn) {
+                    tile.modeColumn = ko.observable();
+                }
                 tile.modeColumn(tile.column());
             },
             getModeRow : function(tile) {
-                if (!tile.modeRow) tile.modeRow = ko.observable(tile.row());
+                if (!tile.modeRow) {
+                    tile.modeRow = ko.observable(tile.row());
+                }
                 return tile.modeRow();
             },
             setModeRow : function(tile, modeRow) {
                 // as this function could be inherited, so not to update tile row here.
                 // instead, don't use setModeRow but set tile row directly when it's needed
-    //            tile.row(modeRow);
-                !tile.modeRow && (tile.modeRow = ko.observable());
+                if(!tile.modeRow){
+                    tile.modeRow = ko.observable();
+                }
                 tile.modeRow(modeRow);
             },
             resetModeRow : function(tile) {
-                if (!tile.modeRow) tile.modeRow = ko.observable();
+                if (!tile.modeRow) {
+                    tile.modeRow = ko.observable();
+                }
                 tile.modeRow(tile.row());
             }
         };
@@ -83,8 +109,10 @@ define(['knockout',
         TabletEditorMode.prototype = new NormalEditorMode();
         TabletEditorMode.prototype.constructor = TabletEditorMode;
         TabletEditorMode.prototype.resetModeWidth = function(tile) {
-            !tile.modeWidth && (tile.modeWidth = ko.observable());
-            tile.modeWidth(1/*tile.width() <= 3 ? 1 : 2*/);
+            if(!tile.modeWidth){
+                tile.modeWidth = ko.observable();
+            }
+            tile.modeWidth(1);// EMCPDF-1781: one column for tablet mode
         };
         TabletEditorMode.prototype.setModeWidth = function(tile, width) {
             oj.Logger.error("Unsupport operation: TabletEditorMode.setModeWidth()");

@@ -235,7 +235,7 @@
                 </div>-->
 <!--                <div style="display: none;" class="text-widget-dialog" title="Add Text Widget" data-bind="ojComponent: {component: 'ojDialog', initialVisibility: 'hide'}, attr: {title: getNlsString('DBS_BUILDER_BTN_ADD_TEXT_TITLE')}">
                     <div class="oj-dialog-body">
-                        <input class="text-widget-content" type="text" data-bind="ojComponent: 'ojInputText', placeholder: getNlsString('ADD_TEXT_WIDGET_PLACEHOLDER')"/>
+                        <input class="text-widget-content" id="text-widget-content" type="text" data-bind="ojComponent: 'ojInputText', placeholder: getNlsString('ADD_TEXT_WIDGET_PLACEHOLDER')"/>
                         <button class="text-widget-ok-button" data-bind="ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_OK')}, click: handleAddTextWidgetOKClicked"></button>
                     </div>
                 </div>-->
@@ -291,7 +291,7 @@
                         </div>                        
                     </div>
                     <div class="oj-dialog-footer">
-                        <button class="okSettingsButton" data-bind="click: handleSettingsDialogOKClose,
+                        <button class="okSettingsButton" id="okSettingsButton" data-bind="click: handleSettingsDialogOKClose
                                 ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_OK')}"> 
                         </button>
                     </div>
@@ -316,16 +316,16 @@
                                           class="dbd-display-area-text single-dbd-description"></span>          
                                 </div>
                             </div>  
-                            <button class='dashboardOptsBtn dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print'
+                            <button class='dashboardOptsBtn dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print' id ="dashboardOptsBtn"
                                     data-bind="visible: true, ojComponent: { component: 'ojButton', chroming: 'half', icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
                                     menu: '#dashboardOptsMenu'+toolBarGuid},
-                                    attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
+                                    attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS'),id:'dashboardOptsBtn_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))}">
                             </button>
-                            <button class="dashboardSaveBtn dashboardOptsBtn oj-button oj-default oj-button-half-chrome no-print"
+                            <button class="dashboardSaveBtn dashboardOptsBtn oj-button oj-default oj-button-half-chrome no-print" id ="dashboardSaveBtn"
                                     data-bind="click: handleDashboardSave, ojComponent: {
                                         component:'ojButton', chroming: 'half', disabled: disableSave,
                                         icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
-                                        }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.isMobileDevice !== 'true'">
+                                        }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD'),id:'dashboardSaveBtn_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))}, visible: editDisabled() !== true && $root.isMobileDevice !== 'true'">
                             </button>
                             <ul class="no-print dropdown-menu" data-bind="ojComponent: {component: 'ojMenu',select: optionMenuItemSelect},attr:{id:'dashboardOptsMenu'+toolBarGuid}" style="display: none;">
                                 <!-- ko template: {name: 'dsbOptsMenuItemTemplate', foreach: dashboardOptsMenuItems, as: 'item'} -->
@@ -404,7 +404,7 @@
                                                         }"></button>
                                               </div>
                                                 <div class="dbd-btn-group">
-                                                    <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
+                                                    <button class="oj-button-half-chrome dbd-tile-action" id="dbd-tile-action" tabindex="0"
                                                             data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
                                                                        visible: ($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true'),
                                                                        ojComponent: {component: 'ojButton', 
@@ -476,7 +476,7 @@
                                                                 <li data-option="up" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': (!upEnabled() || !maximizeEnabled() || editDisabled())}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_window_up_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_UP')}, css: { 'dbd-icon-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}"/>
+                                                                            <img src="@version@/images/func_window_up_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_UP')}, css: { 'dbd-icon-disabled': (!upEnabled() || !maximizeEnabled() || editDisabled())}"/>
                                                                         </span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_UP')"></span>
                                                                     </a>
@@ -484,7 +484,7 @@
                                                                 <li data-option="down" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_window_down_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_DOWN')}, css: { 'dbd-icon-disabled': !narrowerEnabled() || !maximizeEnabled() || editDisabled()}"/>
+                                                                            <img src="@version@/images/func_window_down_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_DOWN')}, css: { 'dbd-icon-disabled': !maximizeEnabled() || editDisabled()}"/>
                                                                         </span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_DOWN')"></span>
                                                                     </a>
@@ -492,7 +492,7 @@
                                                                 <li data-option="left" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !leftEnabled() || !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_window_left_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_LEFT')}, css: {'dbd-icon-disabled': !maximizeEnabled() || editDisabled()}"/>
+                                                                            <img src="@version@/images/func_window_left_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_LEFT')}, css: {'dbd-icon-disabled': !leftEnabled() || !maximizeEnabled() || editDisabled()}"/>
                                                                         </span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_LEFT')"></span>
                                                                     </a>
@@ -500,7 +500,7 @@
                                                                 <li data-option="right" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !rightEnabled() || !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_window_right_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RIGHT')}, css: {'dbd-icon-disabled': !shorterEnabled() || !maximizeEnabled() || editDisabled()}"/>
+                                                                            <img src="@version@/images/func_window_right_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RIGHT')}, css: {'dbd-icon-disabled': !rightEnabled() || !maximizeEnabled() || editDisabled()}"/>
                                                                         </span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_RIGHT')"></span>
                                                                     </a>
@@ -757,8 +757,8 @@
                                 (323 + $root.scrollbarWidth) + 'px' :
                                 $root.scrollbarWidth+ 3 + 'px'
                         }">
-                    <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn rightpanel-wrench" style="display: block;"
-                            data-bind="ojComponent: {
+                    <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn rightpanel-wrench" style="display: block;" id="rightpanel-wrench"
+                            data-bind="attr:{id:'rightpanel-wrench_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},ojComponent: {
                                     component:'ojButton',
                                     display: 'icons',
                                     icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 dbd-wrench'},
@@ -770,8 +770,8 @@
                                'df-selected':rightPanelIcon()=='wrench'
                             }"/>
                     </button>
-                    <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn oj-buttonset-first rightpanel-pencil" style="display: block;"
-                            data-bind="ojComponent: {
+                    <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn oj-buttonset-first rightpanel-pencil" style="display: block;" id="rightpanel-pencil"
+                            data-bind="attr:{id:'rightpanel-pencil_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},ojComponent: {
                                     component:'ojButton',
                                     display: 'icons',
                                     icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-pencil'},
@@ -787,11 +787,11 @@
                                 }"/>
                     </button>
                     <!-- EMCPDF-1513:Help Tab on right drawer disabled -->
-                    <button class="right-panel-help-btn drawer-icon-btn" style="display: none;" data-bind="ojComponent: {
+                    <button class="right-panel-help-btn drawer-icon-btn" id="rightpanel-help" style="display: none;" data-bind="ojComponent: {
                                             component:'ojButton',
                                             display: 'icons',
                                             icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-question-circle'},
-                                            label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')}">
+                                            label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')},attr:{id:'rightpanel-help_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))}">
 
                     </button>
             </div>
@@ -1127,10 +1127,10 @@
                                 <div class="dbd-left-panel-header fit-size-vertical-sibling">
                                     <div class="dbd-left-panel-header-search">
                                         <div  class="dbd-left-panel-header-search-input">
-                                            <input class="widget-search-input" type="text" name="searchInput"
+                                            <input class="widget-search-input" type="text" name="searchInput" id="widget-search-input"
                                                    data-bind="event: { keypress: searchWidgetsInputKeypressed }, ojComponent:{component:'ojInputText', value: keyword,
                                               placeholder: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODER_CONTENT'), rootAttributes: {'class': 'dbs-search-box-input'}}
-                                              ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL') }"/>
+                                              ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL'),id:'widget-search-input_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1))) }"/>
                                         </div>
                                         <div>
                                             <!--                                <button class="oj-button-half-chrome" data-bind="click: clearWidgetSearchInputClicked, visible: keyword,
@@ -1142,11 +1142,11 @@
                                                                                     text-align: center;
                                                                                     float: left;">
                                                                             </button>-->
-                                            <button class="dbd-left-panel-header-search-btn oj-button-half-chrome" data-bind="click: searchWidgetsClicked,
+                                            <button class="dbd-left-panel-header-search-btn oj-button-half-chrome" id="dbd-left-panel-header-search-btn" data-bind="attr:{id:'dbd-left-panel-header-search-btn_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: searchWidgetsClicked,
                                         ojComponent: {component: 'ojButton',chroming: 'half', label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons',
                                         icons: {start:'left-panel-dbd-search-icon'}}" style="float:right">
                                             </button>
-                                            <button class="oj-button-half-chrome" data-bind="click: clearWidgetSearchInputClicked, visible: clearRightPanelSearch,
+                                            <button class="oj-button-half-chrome" id="clear-widget-search-input" data-bind="attr:{id:'clear-widget-search-input_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: clearWidgetSearchInputClicked, visible: clearRightPanelSearch,
                                                     ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons',
                                                     icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 31px;'}}" style="float:right;margin-bottom:0">
                                             </button>

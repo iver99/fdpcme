@@ -128,9 +128,9 @@ public class LoggingConfigAPI extends APIBase
 			Configuration cfg = loggerContext.getConfiguration();
 			Map<String, LoggerConfig> loggers = cfg.getLoggers();
 			LoggingItems items = new LoggingItems();
-			for (LoggerConfig logger : loggers.values()) {
-				Long timestamp = LogUtil.getLoggerUpdateTime(cfg, logger);
-				items.addLoggerConfig(logger, timestamp);
+			for (LoggerConfig tempLogger : loggers.values()) {
+				Long timestamp = LogUtil.getLoggerUpdateTime(cfg, tempLogger);
+				items.addLoggerConfig(tempLogger, timestamp);
 			}
 			return Response.ok(getJsonUtil().toJson(items)).build();
 		}

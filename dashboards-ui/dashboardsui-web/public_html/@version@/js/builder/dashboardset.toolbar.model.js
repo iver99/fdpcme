@@ -17,7 +17,6 @@ define(['knockout',
 ],
     function (ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu,mbu) {
         // dashboard type to keep the same with return data from REST API
-        var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
 
         function DashboardsetToolBarModel(dashboardInst) {
@@ -35,6 +34,7 @@ define(['knockout',
             });
 
             self.isDashboardSet = ko.observable(ko.unwrap(dashboardInst.type)  === "SET");
+            self.isOobDashboardset=ko.observable(ko.unwrap(dashboardInst.owner)  === "Oracle");
             self.dashboardsetId=ko.unwrap(dashboardInst.id());
             self.hasUserOptionInDB = false;
             self.noDashboardHome=ko.observable(true);
@@ -152,7 +152,6 @@ define(['knockout',
             };
 
             self.saveDashboardSet = function (fieldsToUpdate, successCallback, failureCallback) {
-//                if(dashboardInst.systemDashboard()) {
                 if(dashboardInst.owner() === "Oracle") { ///do not update dashboard set if it is OOB dsb set
                     self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;
                     self.saveUserOptions();
@@ -672,7 +671,7 @@ define(['knockout',
                     }
                     dfu.ajaxWithRetry(_url + dbsToolBar.dashboardsetId, {
                         type: 'DELETE',
-                        headers: dfu.getDashboardsRequestHeader(), //{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
+                        headers: dfu.getDashboardsRequestHeader(),
                         success: function (result) {
                             window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
                         },

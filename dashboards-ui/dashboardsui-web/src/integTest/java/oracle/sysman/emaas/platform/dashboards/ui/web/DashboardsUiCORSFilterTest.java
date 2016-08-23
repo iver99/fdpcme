@@ -1,11 +1,13 @@
 package oracle.sysman.emaas.platform.dashboards.ui.web;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,7 +28,7 @@ public class DashboardsUiCORSFilterTest
 	@Test(groups = { "s2" })
 	public void testDoFilter(@Mocked final FilterChain chain, @Mocked final HttpServletRequest request,
 			@Mocked final HttpServletResponse response, @Mocked final TenantSubscriptionUtil tenantUtil,
-			@Mocked final RegistryLookupUtil lookupUtil) throws Exception
+			@Mocked final RegistryLookupUtil lookupUtil) throws IOException, ServletException 
 	{
 		final String test = "TEST";
 		final String homePath = "http://xxxx/emsaasui/emcpdfui/home.html";

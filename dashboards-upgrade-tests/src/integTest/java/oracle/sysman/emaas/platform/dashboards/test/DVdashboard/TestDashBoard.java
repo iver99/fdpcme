@@ -1,27 +1,17 @@
 package oracle.sysman.emaas.platform.dashboards.test.DVdashboard;
 
-import org.testng.Assert;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import org.testng.annotations.*;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-
+import oracle.sysman.emaas.platform.dashboards.test.util.DashBoardUtils;
+import oracle.sysman.emaas.platform.dashboards.test.util.LoginAndLogout;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-import oracle.sysman.emaas.platform.dashboards.test.util.*;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.*;
 
-import java.util.Set;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
 
@@ -41,13 +31,19 @@ public class TestDashBoard extends LoginAndLogout
   
 
 
-	public void initTest(String testName) throws Exception
+	public void initTest(String testName) 
 	{
 		login(this.getClass().getName() + "." + testName);
-		DashBoardUtils.loadWebDriver(webd);
+		try {
+			DashBoardUtils.loadWebDriver(webd);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 @Test
-public void testSetHome() throws Exception
+public void testSetHome() 
 	{
 		dbName_setHome = "setHomeDashboard-" + generateTimeStamp();
 		String dbDesc = "SetHome_testDashboard desc";
@@ -95,7 +91,7 @@ public void testSetHome() throws Exception
  
 	}
 	@Test
-	public void testFavorite() throws Exception
+	public void testFavorite() 
 	{
 		dbName_favorite = "favoriteDashboard-" + generateTimeStamp();
 		String dbDesc = "favorite_testDashboard desc";

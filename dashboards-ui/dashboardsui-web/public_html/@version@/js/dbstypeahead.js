@@ -62,7 +62,6 @@ $.widget( "dbs.dbsTypeAhead", {
 		this.valueMethod = this.element[ isTextarea || isInput ? "val" : "text" ];
 
 		this.element
-			//.addClass( "ui-autocomplete-input" )
 			.attr( "autocomplete", "off" );
 
 		this._on( this.element, {
@@ -140,6 +139,8 @@ $.widget( "dbs.dbsTypeAhead", {
 				case keyCode.DOWN:
 					this._keyEvent( "next", event );
 					break;
+				default:
+					break;
 				}
 			},
 			input: function( event ) {
@@ -182,49 +183,28 @@ $.widget( "dbs.dbsTypeAhead", {
 			this.source = function( request, response ) {
 				response( filterFunc( array, request.term ) );
 			};
-		}/* else if ( typeof this.options.source === "string" ) {
-			url = this.options.source;
-			this.source = function( request, response ) {
-				if ( that.xhr ) {
-					that.xhr.abort();
-				}
-				that.xhr = dfu.ajaxWithRetry({
-					url: url,
-					data: request,
-					dataType: "json",
-					success: function( data ) {
-						response( data );
-					},
-					error: function() {
-						response([]);
-					}
-				});
-			};
-		}*/
+		}
                 else if ( this.options.source && this.options.source['dsFactory']){
 			var _dsFac = this.options.source['dsFactory'], _dsFetchSize = this.options.source['fetchSize'], _dataSource;
                         this.source = function( request, response ) {
                             var _fetchSize = 20, _searchText = (request.term && request.term !== null) ? request.term.trim() : request.term;
                             if (_dsFetchSize)
                             {
-                                if ($.isFunction(_dsFetchSize)) _fetchSize = _dsFetchSize();
-                                else _fetchSize = _dsFetchSize;
+                                if ($.isFunction(_dsFetchSize)) {
+                                	_fetchSize = _dsFetchSize();
+                                }
+                                else {
+                                	_fetchSize = _dsFetchSize;
+                                }
                             }
                             _dataSource = _dsFac.build(_searchText, _fetchSize);
-                            //var __callback = request.callback;
                             _dataSource['pagingDS'].setPage(0, {
                                 'silent': true,
                                 success: function() {
-                                    //console.log("[dbsTypeAhead] fetch success");
-                                    //if ($.isFunction(__callback))
-                                    //{
-                                    //    __callback();
-                                    //}
                                     _dataSource.serverError = false;
                                     response(_dataSource);
                                 },
                                 error: function() {
-                                    //console.log("[dbsTypeAhead] fetch failed");
                                     _dataSource.serverError = true;
                                     response(_dataSource);
 				}
@@ -244,7 +224,6 @@ $.widget( "dbs.dbsTypeAhead", {
                             modifierKey = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
 
 			if ( !equalValues || ( equalValues && !modifierKey ) ) {
-				//this.selectedItem = null;
 				this.search( null, event );
 			}
 		}, this.options.delay );
@@ -259,11 +238,9 @@ $.widget( "dbs.dbsTypeAhead", {
                 var keyCode = $.ui.keyCode;
                 if ( event.keyCode !== keyCode.BACKSPACE &&
                         event.keyCode !== keyCode.DELETE &&
-                        event.keyCode !== keyCode.ENTER )
-                {
-                    if ( value.length < this.options.minLength ) {
+                        event.keyCode !== keyCode.ENTER &&
+                        ( value.length < this.options.minLength )) {
 			return this.close( event );
-                    }
                 }
 		return this._search( value );
 	},
@@ -288,7 +265,6 @@ $.widget( "dbs.dbsTypeAhead", {
                 {
                     this._selfSearchStart();
                 }
-		//this.element.addClass( "ui-autocomplete-loading" );
                 //set busy crusor
                 if (this.options["busyElement"] && this.options["busyElement"] !== null)
                 {
@@ -325,10 +301,6 @@ $.widget( "dbs.dbsTypeAhead", {
 			}
 
 			this.pending--;
-			if ( !this.pending ) {
-				//this.element.removeClass( "ui-autocomplete-loading" );
-                            //this.element.css("cursor", "text");
-			}
 		}, this );
 	},
 
@@ -372,7 +344,6 @@ $.widget( "dbs.dbsTypeAhead", {
 
 	close: function( event ) {
 		this.cancelSearch = true;
-		//this._close( event );
 	},
 
 	_value: function() {
@@ -394,7 +365,6 @@ $.widget( "dbs.dbsTypeAhead", {
 	_destroy: function() {
 		clearTimeout( this.searching );
 		this.element
-			//.removeClass( "ui-autocomplete-input" )
 			.removeAttr( "autocomplete" );
 	}
 });

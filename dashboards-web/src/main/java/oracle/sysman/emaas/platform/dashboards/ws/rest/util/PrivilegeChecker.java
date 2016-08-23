@@ -26,6 +26,9 @@ import org.apache.logging.log4j.Logger;
  */
 public class PrivilegeChecker
 {
+	private PrivilegeChecker() {
+	  }
+
 	private static Logger logger = LogManager.getLogger(PrivilegeChecker.class);
 
 	public static final String ADMIN_ROLE_NAME_APM = "APM Administrator";
@@ -77,7 +80,7 @@ public class PrivilegeChecker
 	public static boolean isAdminUser(List<String> userRoles)
 	{
 		boolean isAdmin = false;
-		if (userRoles != null && userRoles.size() > 0) {
+		if (userRoles != null && !userRoles.isEmpty()) {
 			if (userRoles.contains(ADMIN_ROLE_NAME_APM) || userRoles.contains(ADMIN_ROLE_NAME_ITA)
 					|| userRoles.contains(ADMIN_ROLE_NAME_LA) || userRoles.contains(ADMIN_ROLE_NAME_MONITORING)
 					|| userRoles.contains(ADMIN_ROLE_NAME_SECURITY) || userRoles.contains(ADMIN_ROLE_NAME_COMPLIANCE)

@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.ui.webutils.util;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -41,6 +42,9 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
  */
 public class TenantSubscriptionUtil
 {
+	private TenantSubscriptionUtil() {
+	  }
+
 	public static class RestClient
 	{
 		public RestClient()
@@ -77,13 +81,13 @@ public class TenantSubscriptionUtil
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
 		if (tenant == null) {
-			return null;
+			return Collections.emptyList();
 		}
 		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "1.0+", "collection/domains", tenant);
 		if (domainLink == null || StringUtils.isEmpty(domainLink.getHref())) {
 			logger.warn("Checking tenant (" + tenant
 					+ ") subscriptions: null/empty entity naming service collection/domains is retrieved.");
-			return null;
+			return Collections.emptyList();
 		}
 		logger.info("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
 		String domainHref = domainLink.getHref();
@@ -93,10 +97,10 @@ public class TenantSubscriptionUtil
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
 			DomainsEntity de = ju.fromJson(domainsResponse, DomainsEntity.class);
-			if (de == null || de.getItems() == null || de.getItems().size() <= 0) {
+			if (de == null || de.getItems() == null || de.getItems().isEmpty()) {
 				logger.warn("Checking tenant (" + tenant
 						+ ") subscriptions: null/empty domains entity or domains item retrieved.");
-				return null;
+				return Collections.emptyList();
 			}
 			String tenantAppUrl = null;
 			for (DomainEntity domain : de.getItems()) {
@@ -107,7 +111,7 @@ public class TenantSubscriptionUtil
 			}
 			if (tenantAppUrl == null || "".equals(tenantAppUrl)) {
 				logger.warn("Checking tenant (" + tenant + ") subscriptions. 'TenantApplicationMapping' not found");
-				return null;
+				return Collections.emptyList();
 			}
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
 			logger.info("Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is "
@@ -115,12 +119,12 @@ public class TenantSubscriptionUtil
 			String appMappingJson = rc.get(appMappingUrl, tenant);
 			logger.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
-				return null;
+				return Collections.emptyList();
 			}
 			AppMappingCollection amec = ju.fromJson(appMappingJson, AppMappingCollection.class);
 			if (amec == null || amec.getItems() == null || amec.getItems().isEmpty()) {
 				logger.error("Checking tenant (" + tenant + ") subscriptions. Empty application mapping items are retrieved");
-				return null;
+				return Collections.emptyList();
 			}
 			AppMappingEntity ame = null;
 			for (AppMappingEntity entity : amec.getItems()) {
@@ -138,7 +142,7 @@ public class TenantSubscriptionUtil
 			if (ame == null || ame.getValues() == null || ame.getValues().isEmpty()) {
 				logger.error("Checking tenant (" + tenant
 						+ ") subscriptions. Failed to get an application mapping for the specified tenant");
-				return null;
+				return Collections.emptyList();
 			}
 			String apps = null;
 			for (AppMappingEntity.AppMappingValue amv : ame.getValues()) {
@@ -149,7 +153,7 @@ public class TenantSubscriptionUtil
 			}
 			logger.info("Checking tenant (" + tenant + ") subscriptions. applications for the tenant are " + apps);
 			if (apps == null || "".equals(apps)) {
-				return null;
+				return Collections.emptyList();
 			}
 			List<String> origAppsList = Arrays.asList(apps
 					.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
@@ -158,7 +162,7 @@ public class TenantSubscriptionUtil
 		}
 		catch (IOException e) {
 			logger.error(e);
-			return null;
+			return Collections.emptyList();
 		}
 	}
 
@@ -187,7 +191,7 @@ public class TenantSubscriptionUtil
 			return false;
 		}
 		//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
-		if (svc.equals("Monitoring")) {
+		if (("Monitoring").equals(svc)) {
 			return true;
 		}
 		return false;

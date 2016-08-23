@@ -272,7 +272,7 @@ task preBuildCompile(type: Copy) {
 compileJava.dependsOn preBuildCompile
 
 
-publishing.publications {
+project.publishing.publications {
     if (project.tasks.findByName('lrgMetadataZip')) {
         // Publication for publishing lrg metadata
         lrgMetadata(MavenPublication) {

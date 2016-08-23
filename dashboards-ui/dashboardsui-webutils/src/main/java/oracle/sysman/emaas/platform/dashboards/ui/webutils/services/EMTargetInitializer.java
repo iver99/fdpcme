@@ -60,7 +60,7 @@ public class EMTargetInitializer implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager#postStart(oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void postStart(ApplicationLifecycleEvent evt) throws Exception
+	public void postStart(ApplicationLifecycleEvent evt) 
 	{
 		// TODO Auto-generated method stub
 		String emTargetMBeanName = "";
@@ -89,7 +89,7 @@ public class EMTargetInitializer implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager#postStop(oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void postStop(ApplicationLifecycleEvent evt) throws Exception
+	public void postStop(ApplicationLifecycleEvent evt) 
 	{
 
 	}
@@ -98,7 +98,7 @@ public class EMTargetInitializer implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager#preStart(oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void preStart(ApplicationLifecycleEvent evt) throws Exception
+	public void preStart(ApplicationLifecycleEvent evt) 
 	{
 
 	}

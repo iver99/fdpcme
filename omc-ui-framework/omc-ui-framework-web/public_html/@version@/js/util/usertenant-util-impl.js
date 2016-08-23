@@ -27,29 +27,42 @@ define(['jquery', 'ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-uti
                 var tenantName = null; //in case tenant name is not got
                 var userName = null;   //in case use name is not got
                 var tenantUser = null; //in case tenantName.userName is not got
-
-                ajaxUtil.ajaxWithRetry({
-                    type: "GET",
-                    url: "/sso.static/loggedInUser",
-                    async: false,
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8"
-                })
-                .done(
-                    function (data) {
-                        var tenantIdDotUsername = data.currentUser;
-                        var indexOfDot = tenantIdDotUsername.indexOf(".");
-                        tenantName = tenantIdDotUsername.substring(0, indexOfDot);
-                        userName = tenantIdDotUsername.substring(indexOfDot + 1, tenantIdDotUsername.length);
-                        tenantUser = tenantIdDotUsername;
-                    });
+                if(window.omcUifwkCachedData && window.omcUifwkCachedData.loggedInUser){
+                    var tenantIdDotUsername = window.omcUifwkCachedData.loggedInUser.currentUser;
+                    var indexOfDot = tenantIdDotUsername.indexOf(".");
+                    tenantName = tenantIdDotUsername.substring(0, indexOfDot);
+                    userName = tenantIdDotUsername.substring(indexOfDot + 1, tenantIdDotUsername.length);
+                    tenantUser = tenantIdDotUsername;
+                }else{
+                    ajaxUtil.ajaxWithRetry({
+                        type: "GET",
+                        url: "/sso.static/loggedInUser",
+                        async: false,
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8"
+                    })
+                    .done(
+                        function (data) {
+                            if(window.omcUifwkCachedData){
+                                window.omcUifwkCachedData.loggedInUser = data;
+                            }else{
+                                window.omcUifwkCachedData = {loggedInUser : data};
+                            }
+                            var tenantIdDotUsername = data.currentUser;
+                            var indexOfDot = tenantIdDotUsername.indexOf(".");
+                            tenantName = tenantIdDotUsername.substring(0, indexOfDot);
+                            userName = tenantIdDotUsername.substring(indexOfDot + 1, tenantIdDotUsername.length);
+                            tenantUser = tenantIdDotUsername;
+                        });
+                }
 
                   if ((!tenantName || !userName) && location.href && location.href.indexOf("error.html") === -1) {
                         location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl="+ encodeURIComponent(location.href);
                         return null;
                   }
-                  else
+                  else{
                       return {"tenant": tenantName, "user": userName, "tenantUser": tenantUser};
+                  }
             };
 
             /**
@@ -66,7 +79,6 @@ define(['jquery', 'ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-uti
                 return self.getUserTenant();
             };
 
-//            var userTenant = self.getUserTenant();
             var userTenant = null;
             if (self.devMode){
                 userTenant=dfu.getDevData().userTenant;

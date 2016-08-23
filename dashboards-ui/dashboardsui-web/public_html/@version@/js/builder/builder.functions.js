@@ -14,30 +14,23 @@ define(['knockout',
     ],
     function(ko, $, oj, dfu, dtm, dfumodel) {
         function getTileDefaultWidth(wgt, mode) {
-            if (wgt && (typeof wgt.WIDGET_DEFAULT_WIDTH==='number') && (wgt.WIDGET_DEFAULT_WIDTH%1)===0 && wgt.WIDGET_DEFAULT_WIDTH >= mode.MODE_MIN_COLUMNS && wgt.WIDGET_DEFAULT_WIDTH <= mode.MODE_MAX_COLUMNS)
+            if (wgt && (typeof wgt.WIDGET_DEFAULT_WIDTH==='number') && (wgt.WIDGET_DEFAULT_WIDTH%1)===0 && wgt.WIDGET_DEFAULT_WIDTH >= mode.MODE_MIN_COLUMNS && wgt.WIDGET_DEFAULT_WIDTH <= mode.MODE_MAX_COLUMNS){
                     return wgt.WIDGET_DEFAULT_WIDTH;
+            }
             return Builder.BUILDER_DEFAULT_TILE_WIDTH;
         }
         Builder.registerFunction(getTileDefaultWidth, 'getTileDefaultWidth');
 
         function getTileDefaultHeight(wgt) {
-            if (wgt && (typeof wgt.WIDGET_DEFAULT_HEIGHT==='number') && (wgt.WIDGET_DEFAULT_HEIGHT%1)===0 && wgt.WIDGET_DEFAULT_HEIGHT >= 1)
+            if (wgt && (typeof wgt.WIDGET_DEFAULT_HEIGHT==='number') && (wgt.WIDGET_DEFAULT_HEIGHT%1)===0 && wgt.WIDGET_DEFAULT_HEIGHT >= 1){
                     return wgt.WIDGET_DEFAULT_HEIGHT;
+            }
             return Builder.BUILDER_DEFAULT_TILE_HEIGHT;
         }
         Builder.registerFunction(getTileDefaultHeight, 'getTileDefaultHeight');
 
         function isURL(str_url) {
                 var strRegex = "^((https|http|ftp|rtsp|mms)?://)";
-    //                        + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?"
-    //                        + "(([0-9]{1,3}\.){3}[0-9]{1,3}"
-    //                        + "|"
-    //                        + "([0-9a-z_!~*'()-]+\.)*"
-    //                        + "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\."
-    //                        + "[a-z]{2,6})"
-    //                        + "(:[0-9]{1,4})?"
-    //                        + "((/?)|"
-    //                        + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
                 var re = new RegExp(strRegex);
                 return re.test(str_url);
             }
@@ -45,10 +38,8 @@ define(['knockout',
 
         function getVisualAnalyzerUrl(pName, pVersion) {
             var url = dfu.discoverQuickLink(pName, pVersion, "visualAnalyzer");
-            if (url){
-                if (dfu.isDevMode()){
-                    url = dfu.getRelUrlFromFullUrl(url);
-                }
+            if (url && (dfu.isDevMode())){
+                url = dfu.getRelUrlFromFullUrl(url);
             }
             return url;
         }
@@ -62,8 +53,9 @@ define(['knockout',
         Builder.registerFunction(encodeHtml, 'encodeHtml');
 
         function isContentLengthValid(content, maxLength) {
-            if (!content)
+            if (!content){
                 return false;
+            }
             var encoded = encodeHtml(content);
             return encoded.length > 0 && encoded.length <= maxLength;
         }
@@ -133,11 +125,7 @@ define(['knockout',
                     var mapping = {
                        "tiles": {
                            "create" : function(options) {
-//                                if(options.data.type === "TEXT_WIDGET") {
-//                                    return new Builder.TextTileItem(options.data);
-//                                }else {
                                     return new Builder.TileItem(options.data);
-//                                }
                            }
                        }
                     };
@@ -158,22 +146,25 @@ define(['knockout',
                         }
                         return false;
                     };
-                    if (succCallBack)
+                    if (succCallBack){
                         succCallBack(dsb);
+                    }
                 },
                 error: function(e) {
                     console.log(e.responseText);
                     oj.Logger.error("Error to load dashboard: "+e.responseText);
-                    if (errorCallBack && e.responseText && e.responseText.indexOf("{") === 0)
+                    if (errorCallBack && e.responseText && e.responseText.indexOf("{") === 0){
                         errorCallBack(ko.mapping.fromJSON(e.responseText));
+                    }
                 }
             });
         }
         Builder.registerFunction(loadDashboard, 'loadDashboard');
 
         function isDashboardNameExisting(name) {
-            if (!name)
+            if (!name){
                 return false;
+            }
             var exists = false;
             var url = getBaseUrl() + "?queryString=" + name + "&limit=50&offset=0&owners=Me";
             $.ajax(url, {
@@ -216,13 +207,15 @@ define(['knockout',
                     {
                         data['description'] = $("<div/>").html(data['description']).text();
                     }
-                    if (succCallBack)
+                    if (succCallBack){
                         succCallBack(data);
+                    }
                 },
                 error: function(e) {
                     oj.Logger.error("Error to update dashboard: "+e.responseText);
-                    if (errorCallBack)
+                    if (errorCallBack){
                         errorCallBack(ko.mapping.fromJSON(e.responseText));
+                    }
                 }
             });
         }
@@ -236,13 +229,15 @@ define(['knockout',
                 headers: getDefaultHeaders(),
                 data: dashboard,
                 success: function(data) {
-                    if (succCallBack)
+                    if (succCallBack){
                         succCallBack(data);
+                    }
                 },
                 error: function(e) {
                     oj.Logger.error("Error to duplicate dashboard: "+e.responseText);
-                    if (errorCallBack)
+                    if (errorCallBack){
                         errorCallBack(ko.mapping.fromJSON(e.responseText));
+                    }
                 }
             });
         }
@@ -255,13 +250,15 @@ define(['knockout',
                 dataType: "json",
                 headers: getDefaultHeaders(),
                 success: function(data) {
-                    if (succCallBack)
+                    if (succCallBack){
                         succCallBack(data);
+                    }
                 },
                 error: function(e) {
                     oj.Logger.error("Error to fetch dashboard screen shot: "+e.responseText);
-                    if (errorCallBack)
+                    if (errorCallBack){
                         errorCallBack(ko.mapping.fromJSON(e.responseText));
+                    }
                 }
             });
         }
@@ -274,12 +271,14 @@ define(['knockout',
                 dataType: "json",
                 headers: getDefaultHeaders(),
                 success: function(data) {
-                    if (succCallBack)
+                    if (succCallBack){
                         succCallBack(data);
+                    }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    if (errorCallBack)
+                    if (errorCallBack){
                         errorCallBack(jqXHR, textStatus, errorThrown);
+                    }
                 }
             });
         }
@@ -292,12 +291,14 @@ define(['knockout',
                 dataType: "json",
                 headers: getDefaultHeaders(),
                 success: function(data) {
-                    if (succCallBack)
+                    if (succCallBack){
                         succCallBack(data);
+                    }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    if (errorCallBack)
+                    if (errorCallBack){
                         errorCallBack(jqXHR, textStatus, errorThrown);
+                    }
                 }
             });
         }
@@ -310,12 +311,14 @@ define(['knockout',
                 dataType: "json",
                 headers: getDefaultHeaders(),
                 success: function(data) {
-                    if (succCallBack)
+                    if (succCallBack){
                         succCallBack(data);
+                    }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    if (errorCallBack)
+                    if (errorCallBack){
                         errorCallBack(jqXHR, textStatus, errorThrown);
+                    }
                 }
             });
         }
@@ -340,7 +343,7 @@ define(['knockout',
                 return result;
             }
             function S4() {
-               return (((1+securedRandom())*0x10000)|0).toString(16).substring(1);
+               return parseInt(((1+securedRandom())*0x10000)).toString(16).substring(1);
             }
             return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
         }
@@ -350,8 +353,8 @@ define(['knockout',
             var smQuery = oj.ResponsiveUtils.getFrameworkQuery(
                                 oj.ResponsiveUtils.FRAMEWORK_QUERY_KEY.SM_ONLY);
             var smObservable = oj.ResponsiveKnockoutUtils.createMediaQueryObservable(smQuery);
-            window.DEV_MODE && console.debug("Checking sm media type result: " + (smObservable&smObservable()));
-            return smObservable & smObservable();
+            window.DEV_MODE && console.debug("Checking sm media type result: " + (smObservable&&smObservable()));
+            return smObservable && smObservable();
         }
         Builder.registerFunction(isSmallMediaQuery, 'isSmallMediaQuery');
 
@@ -362,12 +365,14 @@ define(['knockout',
                 dataType: "json",
                 headers: getDefaultHeaders(),
                 success: function(data) {
-                    if (succCallBack)
+                    if (succCallBack){
                         succCallBack(data);
+                    }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    if (errorCallBack)
+                    if (errorCallBack){
                         errorCallBack(jqXHR, textStatus, errorThrown);
+                    }
                 },
                 async: false
             });
@@ -383,12 +388,14 @@ define(['knockout',
                 headers: getDefaultHeaders(),
                 data:JSON.stringify(optionsJson),
                 success: function(data) {
-                    if (succCallBack)
+                    if (succCallBack){
                         succCallBack(data);
+                    }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    if (errorCallBack)
+                    if (errorCallBack){
                         errorCallBack(jqXHR, textStatus, errorThrown);
+                    }
                 }
             });
         }
@@ -403,12 +410,14 @@ define(['knockout',
                 headers: getDefaultHeaders(),
                 data:JSON.stringify(optionsJson),
                 success: function(data) {
-                    if (succCallBack)
+                    if (succCallBack){
                         succCallBack(data);
+                    }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    if (errorCallBack)
+                    if (errorCallBack){
                         errorCallBack(jqXHR, textStatus, errorThrown);
+                    }
                 }
             });
         }
@@ -423,8 +432,9 @@ define(['knockout',
         Builder.registerFunction(isTimeRangeAvailInUrl, 'isTimeRangeAvailInUrl');
 
         function removeScreenshotElementClone(clone) {
-            if (!(clone instanceof $))
+            if (!(clone instanceof $)){
                 throw new RangeError("Invalid clone element to remove: jquery object expected");
+            }
             var cloneId = clone.attr('id');
             var maskId = cloneId + "-mask";
             var mask = $('#' + maskId);
@@ -449,8 +459,9 @@ define(['knockout',
                 document.body.appendChild(mask[0]);
                 return mask;
             }
-            if (!(src instanceof $))
+            if (!(src instanceof $)){
                 throw new RangeError("Invalid source element to remove: jquery object expected");
+            }
             var cloneId = Builder.getGuid();
             var maskId = cloneId + "-mask";
             createMask(maskId, src.width(), src.height());

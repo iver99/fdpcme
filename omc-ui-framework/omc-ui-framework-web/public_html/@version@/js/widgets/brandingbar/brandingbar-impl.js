@@ -152,7 +152,7 @@ define([
                 self.notificationVisible = ko.observable(false);
                 self.notificationDisabled = ko.observable(true);
                 self.notificationPageUrl = null;
-                self.navLinksVisible = true; //self.appId === 'Error' ? false : true; EMCPDF-992
+                self.navLinksVisible = true;
 
                 var isAppIdNotEmpty = self.appId && $.trim(self.appId) !== "";
                 var appProperties = isAppIdNotEmpty && appMap[self.appId] ? appMap[self.appId] : {};
@@ -224,8 +224,9 @@ define([
                 self.handleSignout = function() {
                     //Clear interval for extending user session
                     /* globals clearInterval*/
-                    if (window.intervalToExtendCurrentUserSession)
+                    if (window.intervalToExtendCurrentUserSession){
                         clearInterval(window.intervalToExtendCurrentUserSession);
+                    }
                     var ssoLogoutEndUrl = encodeURI(window.location.protocol + '//' + window.location.host + dfWelcomeUrl);
                     var logoutUrlDiscovered = dfu.discoverLogoutUrl();
                     //If session timed out, redirect to sso login page and go to home page after re-login.
@@ -234,8 +235,9 @@ define([
                     }
                     //Else handle normal logout
                     else {
-                        if (logoutUrlDiscovered === null)
+                        if (logoutUrlDiscovered === null){
                             logoutUrlDiscovered = window.cachedSSOLogoutUrl;
+                        }
                         var logoutUrl = logoutUrlDiscovered + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
                         window.location.href = logoutUrl;
                     }
@@ -256,7 +258,7 @@ define([
                 };
 
                 //Open help link
-                var helpBaseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";//"http://tahiti-stage.us.oracle.com/pls/topic/lookup?ctx=cloud&id=";
+                var helpBaseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";
                 var helpTopicId = appProperties["helpTopicId"] ? appProperties["helpTopicId"] : "em_home_gs";
                 self.openHelpLink = function() {
                     oj.Logger.info("Open help link: " + helpBaseUrl + helpTopicId);
@@ -298,6 +300,8 @@ define([
                             break;
                         case "emcpdf_oba_logout":
                             self.handleSignout();
+                            break;
+                        default:
                             break;
                     }
                 };
@@ -438,8 +442,9 @@ define([
 
                 function receiveMessage(event)
                 {
-                    if (event.origin !== window.location.protocol + '//' + window.location.host)
+                    if (event.origin !== window.location.protocol + '//' + window.location.host){
                         return;
+                    }
                     var data = event.data;
                     //Only handle received message for showing page level messages
                     if (data && data.tag && data.tag === 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE') {
@@ -558,8 +563,9 @@ define([
                     }
                     else {
                         self.hasHiddenMessages(false);
-                        if (displayMessageCount <= maxMsgDisplayCnt)
+                        if (displayMessageCount <= maxMsgDisplayCnt){
                             self.hiddenMessagesExpanded(false);
+                        }
                     }
                 }
 
@@ -583,12 +589,15 @@ define([
                     if (self.relNotificationCheck && self.relNotificationShow) {
                         self.notificationVisible(true);
                         if (urlNotificationCheck === null) {
-                            if (self.relNotificationCheck.indexOf("/") === 0)
+                            if (self.relNotificationCheck.indexOf("/") === 0){
                                 urlNotificationCheck = self.relNotificationCheck;
-                            else if (self.relNotificationCheck.indexOf("sso.static/") === 0)
+                            }
+                            else if (self.relNotificationCheck.indexOf("sso.static/") === 0){
                                 urlNotificationCheck = "/" + self.relNotificationCheck;
-                            else if (self.relNotificationCheck.indexOf("static/") === 0)
+                            }
+                            else if (self.relNotificationCheck.indexOf("static/") === 0){
                                 urlNotificationCheck = "/sso." + self.relNotificationCheck;
+                            }
 
                             if (urlNotificationCheck) {
                                 self.checkNotificationAvailability();
@@ -634,10 +643,12 @@ define([
                             var appProps = appMap[subscribedApps[i]];
                             if (appProps) {
                                 var servicename = nls[appProps['appName']] ? nls[appProps['appName']] : "";
-                                if (i === 0)
+                                if (i === 0){
                                     subscribedServices = servicename;
-                                else
+                                }
+                                else{
                                     subscribedServices = subscribedServices + " | " + servicename;
+                                }
                             }
                         }
                     }

@@ -24,7 +24,6 @@ var refreshCallback = params.refreshCallback;
                         var newTo = now;
                         model.viewStart(newFrom);
                         model.viewEnd(newTo);
-//refreshCallback(newFrom, newTo);
                         console.log(newFrom + "..." + newTo);
                     }
                    model.timeRangeChange(true);

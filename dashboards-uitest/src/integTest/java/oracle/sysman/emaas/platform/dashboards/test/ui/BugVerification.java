@@ -21,14 +21,14 @@ import org.testng.annotations.Test;
 public class BugVerification extends LoginAndLogout
 {
 
-	public void initTest(String testName) throws Exception
+	public void initTest(String testName) 
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
 	@AfterClass
-	public void removeTestData() throws Exception
+	public void removeTestData() 
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -51,7 +51,7 @@ public class BugVerification extends LoginAndLogout
 	}
 
 	@Test
-	public void testEMCPDF_2040() throws Exception
+	public void testEMCPDF_2040() 
 	{
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -78,7 +78,7 @@ public class BugVerification extends LoginAndLogout
 	}
 
 	@Test
-	public void testEMPCDF_812_1() throws Exception
+	public void testEMPCDF_812_1() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_812");
@@ -114,7 +114,7 @@ public class BugVerification extends LoginAndLogout
 	}
 
 	@Test
-	public void testEMPCDF_832_1() throws Exception
+	public void testEMPCDF_832_1() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_832");

@@ -1,11 +1,4 @@
 requirejs.config({
-//    urlArgs: "v=1.0",
-//    //Set up module mapping
-//    map: {
-//        'prefutil':
-//            {'df-util': '/emsaasui/uifwk/js/util/df-util',
-//             'usertenant-util': '/emsaasui/uifwk/js/util/usertenant-util'}
-//    },
     // Path mappings for the logical module names
     paths: {
         'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.4.0',
@@ -79,7 +72,6 @@ require(['knockout',
 ],
         function(ko, $, oj, _emJETCustomLogger, userTenantUtilModel, msgUtilModel, dfumodel) // this callback gets executed when all required modules are loaded
         {
-            //appId: "Error";//"TenantManagement";//"LogAnalytics";//"ITAnalytics"; //"APM" //"Dashboard";
             var appId = getUrlParam("appId");
             appId = appId !== null && appId !== "" ? appId : "Dashboard";
             var isAdmin = getUrlParam("isAdmin");

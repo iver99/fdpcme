@@ -56,32 +56,12 @@ define(['knockout',
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
 
             self.targets = ko.observable(null);
-//            self.targetsFromParam = dfu_model.getUrlParam("targets");
-//            self.targets = ko.observable(null);
-//            if(self.targetsFromParam) {
-//                self.targets(JSON.parse(decodeURI(self.targetsFromParam)));
-////                console.log("***");
-////                console.log(JSON.stringify(self.targets()));
-//            }
-//
-//            //decompress targets obtained from url
-//            self.targetszFromParam = dfu_model.getUrlParam("targetsz");
-//            if(self.targetszFromParam) {
-//                var deCompressedTargets = self.targetszFromParam;
-//                require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
-//                    if(TargetSelectorUtils.decompress) {
-//                        deCompressedTargets = TargetSelectorUtils.decompress(self.targetszFromParam);
-//                    }
-//                    self.targets(JSON.parse(decodeURI(deCompressedTargets)));
-//                    console.log("***"+self.targets());
-//                });
-//            }
+
 
             self.timeSelectorModel = new Builder.TimeSelectorModel();
             self.tilesView = $b.getDashboardTilesView();
             self.isOnePageType = (self.dashboard.type() === Builder.SINGLEPAGE_TYPE);
-//            self.linkName = ko.observable();
-//            self.linkUrl = ko.observable();
+
             self.isCreator =  dfu.getUserName() === self.dashboard.owner();
 
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
@@ -137,6 +117,9 @@ define(['knockout',
 
             self.isDefaultTileExist = function() {
                 for(var i in self.dashboard.tiles()){
+                    if(!self.dashboard.tiles()[i]){
+                            continue;
+                    }
                     if(self.dashboard.tiles()[i].type() === "DEFAULT") {
                         return true;
                     }
@@ -148,19 +131,6 @@ define(['knockout',
                 $('#dashboardBuilderAddWidgetDialog').ojDialog('open');
             };
 
-//            self.appendTextTile = function () {
-//                var newTextTile;
-//                var widget = Builder.createTextWidget(self.editor.mode.MODE_MAX_COLUMNS);
-//
-//                var newTextTile = new Builder.DashboardTextTile($b, widget, self.show, self.editor.deleteTile);
-//                var textTileCell = new Builder.Cell(0, 0);
-//                newTextTile.row(textTileCell.row);
-//                newTextTile.column(textTileCell.column);
-//                self.editor.tiles.unshift(newTextTile);
-//                self.editor.tilesReorder(newTextTile);
-//                self.tilesView.enableDraggable(newTextTile);
-//                self.show();
-//            };
 
             self.appendNewTile = function(name, description, width, height, widget) {
                 if (widget) {
@@ -181,14 +151,8 @@ define(['knockout',
             self.initialize = function() {
                 $b.addNewWidgetDraggingListener(self.onNewWidgetDragging);
                 $b.addNewWidgetStopDraggingListener(self.onNewWidgetStopDragging);
-//                $b.addNewTextDraggingListener(self.onNewTextDragging);
-//                $b.addNewTextStopDraggingListener(self.onNewTextStopDragging);
-//                $b.addNewLinkDraggingListener(self.onNewLinkDragging);
-//                $b.addNewLinkStopDraggingListener(self.onNewLinkStopDragging);
                 $b.addBuilderResizeListener(self.onBuilderResize);
                 $b.addEventListener($b.EVENT_POST_DOCUMENT_SHOW, self.postDocumentShow);
-//                $b.addEventListener($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, self.dashboardTileSupportTimeControlHandler);
-//                $b.addEventListener($b.EVENT_DSB_ENABLE_TIMERANGE_CHANGED, self.dashboardTimeRangeChangedHandler);
                 $b.addEventListener($b.EVENT_ENTER_NORMAL_MODE, self.enterNormalModeHandler);
                 $b.addEventListener($b.EVENT_ENTER_TABLET_MODE, self.enterTabletModeHandler);
                 $b.addEventListener($b.EVENT_TILE_MAXIMIZED, self.dashboardMaximizedHandler);
@@ -222,10 +186,11 @@ define(['knockout',
                     self.hidePullRightBtn(self.prevFocusedClientGuid(), data, event);
                     self.prevFocusedClientGuid(clientGuid);
                 }
-            }
+            };
             self.openInDataExplorer = function (event, ui) {
-		if (!self.dashboard.systemDashboard())
+		        if (!self.dashboard.systemDashboard()){
                 	$b.getToolBarModel().handleDashboardSave();
+                }
                 var iId = setInterval(function() {
                     if (!$b.isDashboardUpdated()) {
                         clearInterval(iId);
@@ -252,7 +217,7 @@ define(['knockout',
 
             self.widgetMenuOpen = function(event, ui) {
                 self.editingWidgetId = event.target.id;
-            }
+            };
 
             self.menuItemSelect = function (event, ui) {
                 var tile = ko.dataFor(ui.item[0]);
@@ -316,81 +281,20 @@ define(['knockout',
                         tile.leftEnabled(self.editor.mode.getModeColumn(tile) > 0);
                         tile.rightEnabled(self.editor.mode.getModeColumn(tile)+self.editor.mode.getModeWidth(tile) < self.editor.mode.MODE_MAX_COLUMNS);
                         break;
+                    default:
+                        break;
                 }
 
                 $b.triggerEvent($b.EVENT_TILE_RESIZED, null, tile);
             };
 
-//           self.openEditTileLinkDialog = function(tile) {
-//               self.tileToEdit = ko.observable(tile);
-//               self.linkName(tile.linkText());
-//               self.linkUrl(tile.linkUrl());
-//               $("#tilesLinkEditorDialog").ojDialog("open");
-//           };
-//
-//           self.closeEditTileLinkDialog = function() {
-//               if(self.tileToEdit && self.tileToEdit()) {
-//                   var tile = self.tileToEdit();
-//                   if(!tile.linkText() || !tile.linkUrl()) {
-//                       tile.linkText(null);
-//                       tile.linkUrl(null);
-//                   }
-//               }
-//           };
-//
-//           self.deleteTileLink = function(tile) {
-//               tile.linkText(null);
-//               tile.linkUrl(null);
-//           };
-
-//           self.linkNameValidated = true;
-//           self.linkNameValidator = {
-//               'validate': function(value){
-//                   if(Builder.isContentLengthValid(value, Builder.LINK_NAME_MAX_LENGTH)) {
-//                       self.linkNameValidated = true;
-//                       return true;
-//                   }else {
-//                      self.linkNameValidated = false;
-//                      throw new oj.ValidatorError(oj.Translations.getTranslatedString("DBS_BUILDER_EDIT_WIDGET_LINK_NAME_VALIDATE_ERROR"));
-//                   }
-//               }
-//           };
-
-//           self.linkURLValidated = true;
-//           self.linkURLValidator = {
-//               'validate': function(value) {
-//                    if(isURL(value)) {
-//                        if(Builder.isContentLengthValid(value, Builder.LINK_URL_MAX_LENGTH)) {
-//                            self.linkURLValidated = true;
-//                        }else {
-//                            self.linkURLValidated = false;
-//                            throw new oj.ValidatorError(oj.Translations.getTranslatedString("DBS_BUILDER_EDIT_WIDGET_LINK_URL_LENGTH_VALIDATE_ERROR"));
-//                        }
-//                    }else {
-//                        self.linkURLValidated = false;
-//                        throw new oj.ValidatorError(oj.Translations.getTranslatedString("DBS_BUILDER_EDIT_WIDGET_LINK_URL_VALIDATE_ERROR"));
-//                    }
-//               }
-//           };
-
-//           self.editTileLinkConfirmed = function() {
-//               if(!self.linkName() || !self.linkUrl() || !self.linkNameValidated || !self.linkURLValidated) {
-//                   $("#tilesLinkEditorDialog").ojDialog("close");
-//                   return false;
-//               }
-//               if(self.tileToEdit && self.tileToEdit()) {
-//                  var tile = self.tileToEdit();
-//                  tile.linkText(self.linkName());
-//                  tile.linkUrl(self.linkUrl());
-//               }
-//               self.linkName(null);
-//               self.linkUrl(null);
-//               $("#tilesLinkEditorDialog").ojDialog("close");
-//           };
 
            self.initializeTiles = function() {
                 if(self.editor.tiles && self.editor.tiles()) {
                     for(var i=0; i< self.editor.tiles().length; i++) {
+                        if(!self.editor.tiles()[i]){
+                            continue;
+                        }
                         var tile = self.editor.tiles()[i];
                         self.editor.tilesGrid.registerTileToGrid(tile);
                     }
@@ -430,8 +334,9 @@ define(['knockout',
             self.maximize = function(tile) {
                 for (var i = 0; i < self.editor.tiles().length; i++) {
                     var eachTile = self.editor.tiles()[i];
-                    if (eachTile !== tile)
+                    if (eachTile !== tile){
                         eachTile.shouldHide(true);
+                    }
                 }
                 tile.shouldHide(false);
                 tile.isMaximized(true);
@@ -534,6 +439,11 @@ define(['knockout',
                         self.currentWigedtWidth(self.resizingTile().cssWidth());
                         self.currentWigedtHeight(self.resizingTile().cssHeight());
                         self.resizingTileCopy = self.resizingTile();
+                        
+                        //set move options enabld/disabled after resizing tile
+                        self.resizingTileCopy.upEnabled(self.editor.mode.getModeRow(self.resizingTileCopy) > 0);
+                        self.resizingTileCopy.leftEnabled(self.editor.mode.getModeColumn(self.resizingTileCopy) > 0);
+                        self.resizingTileCopy.rightEnabled(self.editor.mode.getModeColumn(self.resizingTileCopy)+self.editor.mode.getModeWidth(self.resizingTileCopy) < self.editor.mode.MODE_MAX_COLUMNS);
                     }
                     self.resizingTile(null);
                     self.resizingOptions(null);
@@ -556,8 +466,9 @@ define(['knockout',
             };
 
             self.isDraggingCellChanged = function(pos) {
-                if (!self.previousDragCell)
+                if (!self.previousDragCell){
                     return true;
+                }
                 return pos.row !== self.previousDragCell.row || pos.column !== self.previousDragCell.column;
             };
 
@@ -614,46 +525,19 @@ define(['knockout',
                 }
                 for (var i = 0; i < self.editor.tiles().length; i++) {
                     var tile = self.editor.tiles()[i];
-//                    if(tile.type() === "TEXT_WIDGET") {
-//                       tile.shouldHide(true);
-//                    }
                     tile.cssWidth(self.getDisplayWidthForTile(self.editor.mode.getModeWidth(tile)));
                     tile.cssHeight(self.getDisplayHeightForTile(self.editor.mode.getModeHeight(tile)));
                     tile.left(self.getDisplayLeftForTile(self.editor.mode.getModeColumn(tile)));
                     tile.top(self.getDisplayTopForTile(self.editor.mode.getModeRow(tile)));
                     tile.shouldHide(false);
-//                    if (tile.type() === 'TEXT_WIDGET') {
-//                        var displayHeight = tile.displayHeight();
-//                        if (!displayHeight)
-//                            self.detectTextTileRender(tile);
-//                        self.editor.setRowHeight(self.editor.mode.getModeRow(tile), displayHeight);
-//                    }
-//                    else {
                         for (var j = 0; j < self.editor.mode.getModeHeight(tile); j++) {
                             self.editor.setRowHeight(self.editor.mode.getModeRow(tile) + j);
                         }
-//                    }
                 }
                 self.tilesView.enableDraggable();
                 var height = self.editor.tilesGrid.getHeight();
                 $b.findEl('.tiles-wrapper').height(height);
             };
-
-//            self.detectTextTileRender = function(textTile) {
-//                if (!textTile)
-//                    return;
-//                var elem = self.tilesView.getTileElement(textTile);
-//                var lastHeight = elem.css('height');
-//
-//                function checkForChanges() {
-//                    if (elem.css('height') !== lastHeight) {
-//                        self.reRender();
-//                        return;
-//                    }
-//                    setTimeout(checkForChanges, 100);
-//                };
-//                checkForChanges();
-//            };
 
             // trigger an event to indicates if there is tile(s) supporting time control or not
             self.triggerTileTimeControlSupportEvent = function(exists) {
@@ -676,7 +560,7 @@ define(['knockout',
                 self.show();
                 self.tilesView.enableMovingTransition();
             };
-            var startTime, tilesToBeOccupied, startX, startY;
+            var startTime, startX, startY;
             self.handleStartDragging = function(event, ui) {
                 if(!ui) {
                     console.log(ui);
@@ -698,7 +582,6 @@ define(['knockout',
                     return;
                 }
                 var tile = ko.dataFor(ui.helper[0]);
-//                self.editor.tilesGrid.unregisterTileInGrid(tile);
                 var originalRow = self.editor.mode.getModeRow(tile);
                 var originalCol = self.editor.mode.getModeColumn(tile);
 
@@ -715,15 +598,16 @@ define(['knockout',
                     height: ui.helper.height() - 10
                 }).show();
 
-                var tileInCell = self.editor.tilesGrid.tileGrid[cell.row] ? self.editor.tilesGrid.tileGrid[cell.row][cell.column] : null;
-                if((self.previousDragCell) && cell.column+self.editor.mode.getModeWidth(tile) <= self.editor.mode.MODE_MAX_COLUMNS /*&&
-                        (!tileInCell || (tileInCell && tileInCell !== tile && self.editor.mode.getModeRow(tileInCell) === cell.row && self.editor.mode.getModeColumn(tileInCell) === cell.column))*/) {
+                if((self.previousDragCell) && cell.column+self.editor.mode.getModeWidth(tile) <= self.editor.mode.MODE_MAX_COLUMNS) {
                     var cellsOccupiedByTile = self.editor.getCellsOccupied(cell.row, cell.column, self.editor.mode.getModeWidth(tile), self.editor.mode.getModeHeight(tile));
                     var tilesUnderCell = self.editor.getTilesUnder(cellsOccupiedByTile, tile);
                     var tilesBelowOriginalCell = self.editor.getTilesBelow(tile);
                     self.editor.draggingTile = tile;
                     var rowDiff, iTile;
                     for(var i in tilesUnderCell) {
+                        if(!tilesUnderCell[i]){
+                            continue;
+                        }
                         iTile = tilesUnderCell[i];
                         rowDiff = cell.row - self.editor.mode.getModeRow(iTile) + self.editor.mode.getModeHeight(tile);
                         self.editor.moveTileDown(iTile, rowDiff);
@@ -733,6 +617,9 @@ define(['knockout',
 
                     rowDiff = Math.abs(cell.row - dragStartRow);
                     for(i in tilesBelowOriginalCell) {
+                        if(!tilesBelowOriginalCell[i]){
+                            continue;
+                        }
                         iTile = tilesBelowOriginalCell[i];
                         rowDiff = (rowDiff===0) ? self.editor.mode.getModeHeight(tile) : rowDiff;
                         self.editor.moveTileUp(iTile, rowDiff);
@@ -758,18 +645,16 @@ define(['knockout',
                 if(!ui) {
                     return;
                 }
-                if (!self.previousDragCell)
+                if (!self.previousDragCell){
                     return;
+                }
                 var tile = ko.dataFor(ui.helper[0]);
-//                var dragStartRow = tile.row();
                 var cell = self.editor.getCellFromPosition(widgetAreaWidth, ui.helper.position());
                 if(tile.content) {
                     cell.column = 0;
                 }
                 ui.helper.css({left:tile.left(), top:tile.top()});
 
-//                self.editor.tilesReorder();
-//                self.showTiles();
                 $(ui.helper).css("opacity", 1);
 
                 $b.findEl('.tile-dragging-placeholder').hide();
@@ -784,7 +669,6 @@ define(['knockout',
                 dragStartRow = null;
                 self.previousDragCell = null;
                 self.editor.draggingTile = null;
-//                tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
                 $b.triggerEvent($b.EVENT_TILE_MOVE_STOPED, null);
             };
 
@@ -818,7 +702,9 @@ define(['knockout',
                     $b.findEl('.tile-dragging-placeholder').hide();
                     return;
                 }else {
-                    if (self.isEmpty()) $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging into edit area (stopped dragging)", true);
+                    if (self.isEmpty()){
+                        $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging into edit area (stopped dragging)", true);
+                    }
                     //use tile's left as the cursor's left to calculate the cell so that placeholder closely follow users' mouse
                     var cellPos = {};
                     cellPos.left = pos.left;
@@ -827,12 +713,16 @@ define(['knockout',
                         cellPos.left = cellPos.left - tile.cssWidth()/2;
                     }
                     var cell = self.editor.getCellFromPosition(widgetAreaWidth, cellPos);
-                    if (!cell) return;
+                    if (!cell) {
+                        return;
+                    }
 
                     if(self.previousDragCell && self.previousDragCell.row === cell.row && self.previousDragCell.column === cell.column) {
                         return;
                     }
-                    if(!self.previousDragCell) self.previousDragCell = cell;
+                    if(!self.previousDragCell) {
+                        self.previousDragCell = cell;
+                    }
                     var widget = ko.mapping.toJS(ko.dataFor(u.helper[0]));
                     var width = Builder.getTileDefaultWidth(widget, self.editor.mode), height = Builder.getTileDefaultHeight(widget, self.editor.mode);
                     if(cell.column>self.editor.mode.MODE_MAX_COLUMNS-width) {
@@ -855,6 +745,9 @@ define(['knockout',
                     var tilesToMove = self.editor.getTilesUnder(cells, tile);
                     var tilesBelowOriginalCell = self.editor.getTilesBelow(tile);
                     for(var i in tilesToMove) {
+                        if(!tilesToMove[i]){
+                            continue;
+                        }
                         var rowDiff = cell.row-self.editor.mode.getModeRow(tilesToMove[i])+self.editor.mode.getModeHeight(tile);
                         self.editor.moveTileDown(tilesToMove[i], rowDiff);
                     }
@@ -863,6 +756,9 @@ define(['knockout',
 
                     var rowDiff = Math.abs(cell.row - self.editor.mode.getModeRow(tile));
                     for(i in tilesBelowOriginalCell) {
+                        if(!tilesBelowOriginalCell[i]){
+                            continue;
+                        }
                         var iTile = tilesBelowOriginalCell[i];
                         rowDiff = (rowDiff===0) ? self.editor.mode.getModeHeight(tile) : rowDiff;
                         self.editor.moveTileUp(iTile, rowDiff);
@@ -896,10 +792,8 @@ define(['knockout',
                 var rpt = $(".right-panel-toggler");
                 var tile = u.helper.tile;
 
-                if(u.helper.tile) {
-                    if($('#tile'+u.helper.tile.clientGuid).hasClass(draggingTileClass)) {
-                        $('#tile'+u.helper.tile.clientGuid).removeClass(draggingTileClass);
-                    }
+                if(u.helper.tile && ($('#tile'+u.helper.tile.clientGuid).hasClass(draggingTileClass))) {
+                    $('#tile'+u.helper.tile.clientGuid).removeClass(draggingTileClass);
                 }
                 if (e.clientY <= tcc.offset().top || e.clientX >= rpt.offset().left) {
                     if (self.isEmpty()) {
@@ -921,80 +815,6 @@ define(['knockout',
                 Builder.getTileConfigure(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targets, dashboardInst);
                 tile && tile.WIDGET_SUPPORT_TIME_CONTROL && self.triggerTileTimeControlSupportEvent(tile.WIDGET_SUPPORT_TIME_CONTROL()?true:null);
             };
-
-//            self.onNewTextDragging = function(e, u) {
-//                var tcc = $("#tiles-col-container");
-//                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
-//                    if (self.isEmpty()) {
-//                        $b.findEl('.tile-dragging-placeholder').hide();
-//                        $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new text widget dragging out of edit area", false);
-//                    }
-//                    return;
-//                }
-//                if (self.isEmpty()) $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new text widget dragging into edit area", true);
-//                var pos = {top: u.helper.offset().top - $b.findEl('.tiles-wrapper').offset().top, left: u.helper.offset().left - $b.findEl('.tiles-wrapper').offset().left};
-//                var cell = self.editor.getCellFromPosition(widgetAreaWidth, pos);
-//                if (!cell) return;
-//                cell.column = 0;
-//
-//                $b.findEl('.tile-dragging-placeholder').hide();
-//                tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
-//                tilesToBeOccupied = self.editor.getTilesToBeOccupied(cell, 8, 1);
-//                tilesToBeOccupied && self.editor.highlightTiles(tilesToBeOccupied);
-//                self.previousDragCell = cell;
-//            };
-//
-//            self.onNewTextStopDragging = function(e, u) {
-//                var tcc = $("#tiles-col-container");
-//                var tile = null;
-//                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
-//                    if (self.isEmpty()) {
-//                        $b.findEl('.tile-dragging-placeholder').hide();
-//                        $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (text) widget dragging out of edit area (stopped dragging)", false);
-//                    }
-//                    if (u.helper.tile) {
-//                        var idx = self.editor.tiles.indexOf(u.helper.tile);
-//                        self.editor.tiles.splice(idx, 1);
-//                    }
-//                }
-//                else {
-//                    if (self.isEmpty()) $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (text) widget dragging out of edit area (stopped dragging)", true);
-//                    var pos = {top: u.helper.offset().top - $b.findEl('.tiles-wrapper').offset().top, left: u.helper.offset().left - $b.findEl('.tiles-wrapper').offset().left};
-//                    var cell = self.editor.getCellFromPosition(widgetAreaWidth, pos);
-//                    if (!cell) return;
-//                    cell.column = 0;
-//                    tile = u.helper.tile;
-//                    if (!u.helper.tile) {
-//                        tile = new Builder.DashboardTextTile(self.editor.mode, $b, Builder.createTextWidget(self.editor.mode.MODE_MAX_COLUMNS), self.show, self.editor.deleteTile);
-//                        u.helper.tile = tile;
-//                        self.editor.tiles.push(tile);
-//                    }
-//                    if (!self.previousDragCell)
-//                        return;
-//
-//                    var tileInCell = self.editor.tilesGrid.tileGrid[cell.row] ? self.editor.tilesGrid.tileGrid[cell.row][cell.column] : null;
-//                    if(tileInCell && tileInCell.row() !== cell.row) {
-//                        return;
-//                    }
-//                    var cells = self.editor.getCellsOccupied(cell.row, cell.column, 8, 1);
-//                    var tilesToMove = self.editor.getTilesUnder(cells, tile);
-//                    for(var i in tilesToMove) {
-//                        var rowDiff = cell.row-tilesToMove[i].row()+tile.height();
-//                        self.editor.moveTileDown(tilesToMove[i], rowDiff);
-//                    }
-//                    self.editor.updateTilePosition(tile, cell.row, cell.column);
-//
-//                    self.editor.tilesReorder();
-//                    self.show();
-//                }
-//
-//                $b.findEl('.tile-dragging-placeholder').hide();
-//                self.previousDragCell = null;
-//                tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
-//                if (tile) {
-//                    $(u.helper).css({left: tile.left(), top: tile.top()});
-//                }
-//            };
 
             self.dashboardTileSupportTimeControlHandler = function(exists) {
                 window.DEV_MODE && console.debug('Received event EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL with value of ' + exists + '. ' + (exists?'Show':'Hide') + ' date time picker accordingly (self.dashboard.enableTimeRange() value is: ' + self.dashboard.enableTimeRange() + ')');
@@ -1021,7 +841,6 @@ define(['knockout',
                 self.showRightPanelToggler(true);
             };
 
-            var globalTimer = null;
             self.postDocumentShow = function() {
                 $b.triggerBuilderResizeEvent('resize builder after document show');
                 self.initializeMaximization();
@@ -1095,7 +914,6 @@ define(['knockout',
                 }
 
                 require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
-//                    var compressedTargets = TargetSelectorUtils.compress(targets);
                     self.toolbarModel.extendedOptions.tsel.entityContext = targets;
                     self.saveUserFilterOptions();
                 });
@@ -1133,16 +951,8 @@ define(['knockout',
             }else if(self.dashboardExtendedOptions && self.dashboardExtendedOptions.tsel) {
                 compressedTargets = self.dashboardExtendedOptions.tsel.entityContext;
                 self.userExtendedOptions.tsel = {};
-//                self.userExtendedOptions.tsel.entityContext = compressedTargets;
             }
             self.targets(compressedTargets);
-//            require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
-//                var targets = "";
-//                if(compressedTargets) {
-//                    targets = TargetSelectorUtils.decompress(compressedTargets);
-//                }
-//                self.targets(targets);
-//                });
 
             var timeSelectorChangelistener = ko.computed(function(){
                 return {

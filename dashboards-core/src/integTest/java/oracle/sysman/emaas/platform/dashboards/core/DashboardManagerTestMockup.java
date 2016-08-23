@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +21,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class DashboardManagerTestMockup
 {
+	private DashboardManagerTestMockup() {
+	  }
+
+	private static final Logger logger = LogManager.getLogger(DashboardManagerTestMockup.class);
+	
 	public static void executeRepeatedly(int threadNum, final int repeatsPerThread, final Runnable r,
 			final Runnable postThreadRun, final Runnable postAllRun) throws InterruptedException
 	{
@@ -34,21 +41,20 @@ public class DashboardManagerTestMockup
 						long start = System.currentTimeMillis();
 						for (int j = 0; j < repeatsPerThread; j++) {
 							r.run();
-							////System.out.println("Duration for operation is " + duration + "ms");
+							
 						}
 						long totalDuration = System.currentTimeMillis() - start;
 						threadAverageDuration[threadIndex] = totalDuration / repeatsPerThread;
-						//System.out.println("Average duration for each operation in current thread is "
-						//+ threadAverageDuration[threadIndex] + "ms");
+						
 						if (postThreadRun != null) {
 							postThreadRun.run();
 						}
 					}
 					catch (SecurityException e) {
-						e.printStackTrace();
+						logger.info("context",e);
 					}
 					catch (IllegalArgumentException e) {
-						e.printStackTrace();
+						logger.info("context",e);
 					}
 				}
 			});
@@ -60,7 +66,7 @@ public class DashboardManagerTestMockup
 			average += threadAverageDuration[i];
 		}
 		average /= threadNum;
-		////System.out.println("Average duration is: " + average + " ms");
+		
 		if (postAllRun != null) {
 			postAllRun.run();
 		}

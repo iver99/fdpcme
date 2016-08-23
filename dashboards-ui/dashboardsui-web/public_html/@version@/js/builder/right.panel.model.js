@@ -24,7 +24,7 @@ define(['knockout',
             };
 
             self.onResizeFitSize = function(width, height, leftWidth, topHeight) {
-                self.rebuildElementSet(),
+                self.rebuildElementSet();
                 self.$list.each(function() {
                     var elem = $(this)
                     ,_topHeight = topHeight
@@ -43,7 +43,6 @@ define(['knockout',
                         elem.height(height - _topHeight - h);
                     }
                     if(elem.hasClass("dbd-left-panel")||elem.hasClass("right-panel-toggler")){
-                        var _top = elem.css("top");
                         if(ko.dataFor($('.df-right-panel')[0]).isDashboardSet()){
                             elem.css("top",_topHeight-99);
                         }else{
@@ -94,6 +93,7 @@ define(['knockout',
 
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
+            self.isOobDashboardset=dashboardsetToolBarModel.isOobDashboardset;
             self.scrollbarWidth = uiutil.getScrollbarWidth();
 
             self.showRightPanelToggler =  ko.observable(self.isMobileDevice !== 'true');
@@ -148,7 +148,6 @@ define(['knockout',
                 }
             };
 
-//            self.datetimePickerParams = ko.observable(tilesViewModel && tilesViewModel.datetimePickerParams);
 
             self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
 
@@ -238,7 +237,7 @@ define(['knockout',
                 loadSeeableWidgetScreenshots();
             });
 
-            var loadSeeableWidgetScreenshots = function(startPosition){
+            function loadSeeableWidgetScreenshots(startPosition){
                 var fromWidgetIndex = startPosition?(Math.floor(startPosition/30)):0;
                 var toWidgetIndex = Math.ceil(widgetListHeight()/30)+fromWidgetIndex;
                 if (self.widgets && self.widgets().length > 0) {
@@ -272,7 +271,6 @@ define(['knockout',
 
             self.dashboardTileExistsChangedHandler = function(anyTileExists) {
                 console.debug('Received event EVENT_TILE_EXISTS_CHANGED with value of ' + anyTileExists + '. ' + (anyTileExists?'Show':'Hide') + ' time control settings accordingly');
-                //                self.showTimeControl(anyTileExists);
             };
 
             self.dashboardTileSupportTimeControlHandler = function(exists) {
@@ -291,7 +289,7 @@ define(['knockout',
              **/
 
             self.initialize = function() {
-                    if (self.isMobileDevice === 'true' ) {
+                    if (self.isMobileDevice === 'true' || self.isOobDashboardset()) {
                         self.completelyHidden(true);
                         self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
                     } else {
@@ -325,7 +323,6 @@ define(['knockout',
                         Builder.getWidgetAssetRoot(wgt.PROVIDER_NAME(), wgt.PROVIDER_VERSION(), wgt.PROVIDER_ASSET_ROOT());
                     }
                     self.initDraggable();
-//                    self.checkAndDisableLinkDraggable();
 
                     $('.widget-search-input').autocomplete({
                         source: self.autoSearchWidgets,
@@ -342,20 +339,13 @@ define(['knockout',
             }
 
             self.initEventHandlers = function() {
-//                $b.addBuilderResizeListener(self.resizeEventHandler);
                 self.$b.addEventListener(self.$b.EVENT_TILE_MAXIMIZED, self.tileMaximizedHandler);
                 self.$b.addEventListener(self.$b.EVENT_TILE_RESTORED, self.tileRestoredHandler);
                 self.$b.addEventListener(self.$b.EVENT_AUTO_REFRESH_CHANGED, self.autoRefreshChanged);
-//                $b.addEventListener($b.EVENT_TILE_ADDED, self.tileAddedHandler);
-//                $b.addEventListener($b.EVENT_TILE_DELETED, self.tileDeletedHandler);
-//                $b.addEventListener($b.EVENT_TILE_EXISTS_CHANGED, self.dashboardTileExistsChangedHandler);
-//                $b.addEventListener($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, self.dashboardTileSupportTimeControlHandler);
             };
 
             self.initDraggable = function() {
                 self.initWidgetDraggable();
-//                self.initTextWidgetDraggable();
-//                self.initWidgetLinkDraggable();
             };
 
             self.initWidgetDraggable = function() {
@@ -374,43 +364,6 @@ define(['knockout',
                 });
             };
 
-//            self.initTextWidgetDraggable = function() {
-//                $("#dbd-left-panel-text").draggable({
-//                    helper: "clone",
-//                    handle: "#dbd-left-panel-text-handle",
-//                    start: function(e, t) {
-//                        $b.triggerEvent($b.EVENT_NEW_TEXT_START_DRAGGING, null, e, t);
-//                    },
-//                    drag: function(e, t) {
-//                        $b.triggerEvent($b.EVENT_NEW_TEXT_DRAGGING, null, e, t);
-//                    },
-//                    stop: function(e, t) {
-//                        $b.triggerEvent($b.EVENT_NEW_TEXT_STOP_DRAGGING, null, e, t);
-//                    }
-//                });
-//            };
-
-//            self.initWidgetLinkDraggable = function() {
-//                $("#dbd-left-panel-link").draggable({
-//                    helper: "clone",
-//                    handle: "#dbd-left-panel-link-handle",
-//                    start: function(e, t) {
-//                        $b.triggerEvent($b.EVENT_NEW_LINK_START_DRAGGING, null, e, t);
-//                    },
-//                    drag: function(e, t) {
-//                        $b.triggerEvent($b.EVENT_NEW_LINK_DRAGGING, null, e, t);
-//                    },
-//                    stop: function(e, t) {
-//                        $b.triggerEvent($b.EVENT_NEW_LINK_STOP_DRAGGING, null, e, t);
-//                    }
-//                });
-//            };
-
-//            self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
-//                $('#dbd-left-panel').height(height - topHeight);
-//                $('#left-panel-text-helper').css("width", width - 20);
-//            };
-
             self.tileMaximizedHandler = function() {
                 self.maximized(true);
                 self.completelyHidden(true);
@@ -419,7 +372,7 @@ define(['knockout',
 
             self.tileRestoredHandler = function() {
                 self.maximized(false);
-                if(self.isMobileDevice !== 'true') {
+                if(self.isMobileDevice !== 'true' && !self.isOobDashboardset()) {
                     self.completelyHidden(false);
                 }
 
@@ -439,20 +392,11 @@ define(['knockout',
                     self.extendedOptions.autoRefresh.defaultValue = interval;
                     self.defaultValueChanged(new Date());
                 }
-            }
+            };
 
-//            self.tileAddedHandler = function(tile) {
-//                tile && tile.type() === "DEFAULT" && ($("#dbd-left-panel-link").draggable("enable"));
-//            };
 
-//            self.tileDeletedHandler = function(tile) {
-//                if (!tile || tile.type() !== "DEFAULT")
-//                    return;
-//                self.checkAndDisableLinkDraggable();
-//            };
             var AUTO_PAGE_NAV = 1;
             var widgetListHeight = ko.observable(0);
-            var pageSizeLastTime = 0;
             // try using MutationObserver to detect widget list height change.
             // if MutationObserver is not availbe, register builder resize listener.
             if (typeof window.MutationObserver !== 'undefined') {
@@ -485,13 +429,19 @@ define(['knockout',
                         self.widgets([]);
                         if (widgets && widgets.length > 0) {
                             for (var i = 0; i < widgets.length; i++) {
-                                if (!widgets[i].WIDGET_DESCRIPTION)
+                                if (!widgets[i].WIDGET_DESCRIPTION){
                                     widgets[i].WIDGET_DESCRIPTION = null;
+                                }
                                 var wgt = ko.mapping.fromJS(widgets[i]);
-                                wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
-                                wgt && !wgt.imgWidth && (wgt.imgWidth = ko.observable('120px'));
-                                wgt && !wgt.imgHeight && (wgt.imgHeight = ko.observable('120px'));
-//                                self.getWidgetScreenshot(wgt);
+                                if(wgt && !wgt.WIDGET_VISUAL){
+                                    wgt.WIDGET_VISUAL = ko.observable('');
+                                }
+                                if(wgt && !wgt.imgWidth){
+                                    wgt.imgWidth = ko.observable('120px');
+                                }
+                                if(wgt && !wgt.imgHeight){
+                                    wgt.imgHeight = ko.observable('120px');
+                                }
                                 self.widgets.push(wgt);
                             }
                         }
@@ -502,15 +452,15 @@ define(['knockout',
 
             self.getWidgetScreenshot = function(wgt) {
                 var url = null;
-                wgt.WIDGET_SCREENSHOT_HREF && (url = wgt.WIDGET_SCREENSHOT_HREF());
-//                if (!url) { // backward compility if SSF doesn't support .png screenshot. to be removed once SSF changes are merged
-//                    loadWidgetBase64Screenshot(wgt);
-//                    return;
-//                }
+                if(wgt.WIDGET_SCREENSHOT_HREF){
+                    url = wgt.WIDGET_SCREENSHOT_HREF();
+                }
                 if (!dfu.isDevMode()){
                     url = dfu.getRelUrlFromFullUrl(url);
                 }
-                wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
+                if(wgt && !wgt.WIDGET_VISUAL){
+                    wgt.WIDGET_VISUAL = ko.observable('');
+                }
                 url && wgt.WIDGET_VISUAL(url);
                 !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('@version@/images/no-image-available.png'));
 
@@ -523,9 +473,13 @@ define(['knockout',
 
             self.getWidgetBase64Screenshot = function(wgt) {
                 var url = '/sso.static/savedsearch.widgets';
-                dfu.isDevMode() && (url = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,'/widgets'));
+                if(dfu.isDevMode()){
+                    url = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,'/widgets');
+                }
                 url += '/'+wgt.WIDGET_UNIQUE_ID()+'/screenshot';
-                wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
+                if(wgt && !wgt.WIDGET_VISUAL){
+                    wgt.WIDGET_VISUAL = ko.observable('');
+                }
                 dfu.ajaxWithRetry({
                     url: url,
                     headers: dfu.getSavedSearchRequestHeader(),
@@ -591,10 +545,12 @@ define(['knockout',
             };
 
             self.widgetMouseOverHandler = function(widget,event) {
-                if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
+                if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0){
                     return;
-                if(!widget.WIDGET_VISUAL())
+                }
+                if(!widget.WIDGET_VISUAL()){
                     self.getWidgetScreenshot(widget);
+                }
                 var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
                 var popupContent=$(widgetItem).find('.dbd-left-panel-img-pop');
                 $(".dbd-right-panel-build-container i.fa-plus").hide();
@@ -644,8 +600,9 @@ define(['knockout',
             };
 
             self.containerMouseOverHandler = function() {
-                if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
+                if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0){
                     return;
+                }
                 if (!$('.right-container-pop').ojPopup("isOpen")) {
                    $('.right-container-pop').ojPopup("open", $('.dbd-left-panel-footer-contain'),
                    {
@@ -660,11 +617,6 @@ define(['knockout',
                 }
             };
 
-//            self.checkAndDisableLinkDraggable = function() {
-//                if(!self.dashboard.isDefaultTileExist()) {
-//                    $("#dbd-left-panel-link").draggable("disable");
-//                }
-//            };
 
             self.deleteDashboardClicked = function(){
                 queryDashboardSetsBySubId(self.dashboard.id(),function(resp){
@@ -721,8 +673,9 @@ define(['knockout',
             self.showdbOnHomePage = ko.observable([]);
 
             var dsbSaveDelay = ko.computed(function(){
-                if(self.editDashboardDialogModel())
+                if(self.editDashboardDialogModel()){
                     return self.editDashboardDialogModel().showdbDescription() + self.editDashboardDialogModel().name() + self.editDashboardDialogModel().description() + self.showdbOnHomePage();
+                }
             });
             dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } });
             dsbSaveDelay.subscribe(function(){
@@ -757,7 +710,7 @@ define(['knockout',
                 var timezoneOffset = date.getTimezoneOffset()/60;
                 timezoneOffset = timezoneOffset>0 ? ("GMT-"+timezoneOffset) : ("GMT+"+Math.abs(timezoneOffset));
                 return timezoneOffset;
-            }
+            };
 
             self.getTimeInfo = function(startTimeStamp, endTimeStamp) {
                 var startISO = oj.IntlConverterUtils.dateToLocalIso(new Date(startTimeStamp));
@@ -788,7 +741,7 @@ define(['knockout',
 
                 dateTimeInfo = start + " - " + end;
                 return dateTimeInfo;
-            }
+            };
 
             self.timeRangeOptions = ko.observableArray([
                 {value: 'last15mins', label: getNlsString('DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS')},
@@ -920,7 +873,7 @@ define(['knockout',
                     "enableEntityFilter": self.dashboard.enableEntityFilter(),
                     "extendedOptions": JSON.stringify(self.extendedOptions),
                     "enableTimeRange": self.dashboard.enableTimeRange()
-                }
+                };
 
                 if (self.dashboard.tiles() && self.dashboard.tiles().length > 0) {
                     var elem = $(".tiles-wrapper:visible");
@@ -942,12 +895,12 @@ define(['knockout',
                     if(!self.dashboard.extendedOptions) {
                         self.dashboard.extendedOptions = ko.observable();
                     }
-                    self.dashboard.extendedOptions(JSON.stringify(self.extendedOptions))
+                    self.dashboard.extendedOptions(JSON.stringify(self.extendedOptions));
                 },
                 function() {
                     console.log("***error");
                 });
-            }
+            };
 
             self.saveDsbFilterSettings = function(fieldsToUpdate, succCallback, errorCallback) {
                 var newDashboardJs = ko.mapping.toJS(self.dashboard, {
@@ -969,7 +922,7 @@ define(['knockout',
 
                 $.extend(newDashboardJs, fieldsToUpdate);
                 Builder.updateDashboard(self.dashboard.id(), JSON.stringify(newDashboardJs), succCallback, errorCallback);
-            }
+            };
 
 
             function queryDashboardSetsBySubId(dashboardId,callback){
@@ -988,7 +941,7 @@ define(['knockout',
 
             self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
             self.dashboardSharing.subscribe(function(val){
-                if(!self.toolBarModel) {
+                if(!self.toolBarModel || self.isDashboardSet()) {
                     // return if current selected tab is dashboard picker
                     return ;
                 }
@@ -1058,7 +1011,7 @@ define(['knockout',
                 });
                 dsbSetSaveDelay.extend({rateLimit: {method: "notifyWhenChangesStop", timeout: 800}});
 
-                //todo called when refresh page;
+                //todo called when refresh page
                 dsbSetSaveDelay.subscribe(function () {
                     self.dashboardsetToolBarModel.saveDashboardSet(
                             {

@@ -10,11 +10,15 @@
 
 package oracle.sysman.emaas.platform.dashboards.ui.webutils.services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.lang.management.ManagementFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.management.InstanceAlreadyExistsException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
@@ -31,6 +35,9 @@ import org.testng.annotations.Test;
  */
 public class LoggingServiceManagerTest
 {
+
+	private static final Logger logger = LogManager.getLogger(LoggingServiceManagerTest.class);
+
 	LoggingServiceManager lsm = new LoggingServiceManager();
 	@Mocked
 	private URL _url;
@@ -42,7 +49,7 @@ public class LoggingServiceManagerTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testStartStop(@Mocked final MBeanServer anyMbs, @Mocked final ManagementFactory anyMf) throws Exception
+	public void testStartStop(@Mocked final MBeanServer anyMbs, @Mocked final ManagementFactory anyMf) throws Exception 
 	{
 		new MockUp<Class<LoggingServiceManager>>() {
 			@Mock
@@ -52,6 +59,7 @@ public class LoggingServiceManagerTest
 					return new URL("TestURL1");
 				}
 				catch (MalformedURLException e) {
+					logger.info("context",e);
 					return null;
 				}
 			}
@@ -81,6 +89,7 @@ public class LoggingServiceManagerTest
 					return new URL("TestURL1");
 				}
 				catch (MalformedURLException e) {
+					logger.info("context",e);
 					return null;
 				}
 			}
@@ -105,7 +114,7 @@ public class LoggingServiceManagerTest
 			lsm.preStop(null);
 		}
 		catch (Exception e) {
-
+			logger.info("context",e);
 		}
 	}
 }

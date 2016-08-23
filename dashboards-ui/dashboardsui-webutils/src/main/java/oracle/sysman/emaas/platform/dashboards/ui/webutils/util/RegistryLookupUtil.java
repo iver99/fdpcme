@@ -30,6 +30,9 @@ import org.apache.logging.log4j.Logger;
  */
 public class RegistryLookupUtil
 {
+	private RegistryLookupUtil() {
+	  }
+
 	private static final Logger logger = LogManager.getLogger(RegistryLookupUtil.class);
 
 	// keep the following the same with service name
@@ -66,7 +69,7 @@ public class RegistryLookupUtil
 
 	private static List<Link> getLinksWithProtocol(String protocol, List<Link> links)
 	{
-		if (protocol == null || links == null || protocol.length() == 0 || links.size() == 0) {
+		if (protocol == null || links == null || protocol.length() == 0 || links.isEmpty()) {
 			if (links == null) {
 				return new ArrayList<Link>();
 			}
@@ -91,7 +94,7 @@ public class RegistryLookupUtil
 
 	private static List<Link> getLinksWithRelPrefixWithProtocol(String protocol, String relPrefix, List<Link> links)
 	{
-		if (protocol == null || relPrefix == null || links == null || protocol.length() == 0 || links.size() == 0) {
+		if (protocol == null || relPrefix == null || links == null || protocol.length() == 0 || links.isEmpty()) {
 			if (links == null) {
 				return new ArrayList<Link>();
 			}
@@ -141,7 +144,7 @@ public class RegistryLookupUtil
 			else {
 				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			}
-			if (result != null && result.size() > 0) {
+			if (result != null && !result.isEmpty()) {
 
 				//find https link first
 				for (InstanceInfo internalInstance : result) {
@@ -153,33 +156,17 @@ public class RegistryLookupUtil
 						links = internalInstance.getLinksWithProtocol(rel, "https");
 					}
 
-					try {
-						SanitizedInstanceInfo sanitizedInstance = null;
-						if (!StringUtil.isEmpty(tenantName)) {
-							sanitizedInstance = LookupManager.getInstance().getLookupClient()
-									.getSanitizedInstanceInfo(internalInstance, tenantName);
-							logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
-									sanitizedInstance, tenantName);
+					SanitizedInstanceInfo sanitizedInstance = findSaniInsInfo(tenantName, internalInstance);
+					if (sanitizedInstance != null) {
+						if (prefixMatch) {
+							links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("https", rel,
+									sanitizedInstance.getLinks());
 						}
 						else {
-							logger.warn("Failed to retrieve tenant when getting external end point. Using tenant non-specific APIs to get sanitized instance");
-							sanitizedInstance = LookupManager.getInstance().getLookupClient()
-									.getSanitizedInstanceInfo(internalInstance);
-						}
-						if (sanitizedInstance != null) {
-							if (prefixMatch) {
-								links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("https", rel,
-										sanitizedInstance.getLinks());
-							}
-							else {
-								links = RegistryLookupUtil.getLinksWithProtocol("https", sanitizedInstance.getLinks(rel));
-							}
+							links = RegistryLookupUtil.getLinksWithProtocol("https", sanitizedInstance.getLinks(rel));
 						}
 					}
-					catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-					if (links != null && links.size() > 0) {
+					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
 						break;
 					}
@@ -198,34 +185,18 @@ public class RegistryLookupUtil
 					else {
 						links = internalInstance.getLinksWithProtocol(rel, "http");
 					}
-					try {
-						SanitizedInstanceInfo sanitizedInstance = null;
-						if (!StringUtil.isEmpty(tenantName)) {
-							sanitizedInstance = LookupManager.getInstance().getLookupClient()
-									.getSanitizedInstanceInfo(internalInstance, tenantName);
-							logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
-									sanitizedInstance, tenantName);
+
+					SanitizedInstanceInfo sanitizedInstance = findSaniInsInfo(tenantName, internalInstance);
+					if (sanitizedInstance != null) {
+						if (prefixMatch) {
+							links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("https", rel,
+									sanitizedInstance.getLinks());
 						}
 						else {
-							logger.warn("Failed to retrieve tenant when getting external end point. Using tenant non-specific APIs to get sanitized instance");
-							sanitizedInstance = LookupManager.getInstance().getLookupClient()
-									.getSanitizedInstanceInfo(internalInstance);
-						}
-						if (sanitizedInstance != null) {
-							if (prefixMatch) {
-								links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("https", rel,
-										sanitizedInstance.getLinks());
-							}
-							else {
-								links = RegistryLookupUtil.getLinksWithProtocol("https", sanitizedInstance.getLinks(rel));
-							}
-
+							links = RegistryLookupUtil.getLinksWithProtocol("https", sanitizedInstance.getLinks(rel));
 						}
 					}
-					catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-					if (links != null && links.size() > 0) {
+					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
 						return lk;
 					}
@@ -238,6 +209,33 @@ public class RegistryLookupUtil
 			return lk;
 		}
 	}
+
+    /**
+     * @param tenantName
+     * @param internalInstance
+     * @return
+     * @throws Exception
+     */
+    private static SanitizedInstanceInfo findSaniInsInfo(String tenantName, InstanceInfo internalInstance)
+    {
+        SanitizedInstanceInfo sanitizedInstance = null;
+        try {
+            if (!StringUtil.isEmpty(tenantName)) {
+                sanitizedInstance = LookupManager.getInstance().getLookupClient()
+                        .getSanitizedInstanceInfo(internalInstance, tenantName);
+                logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
+                        sanitizedInstance, tenantName);
+            }
+            else {
+                logger.warn("Failed to retrieve tenant when getting external end point. Using tenant non-specific APIs to get sanitized instance");
+                sanitizedInstance = LookupManager.getInstance().getLookupClient()
+                        .getSanitizedInstanceInfo(internalInstance);
+            }
+        } catch(Exception ex) {
+            logger.error(ex.getLocalizedMessage(), ex);
+        }
+        return sanitizedInstance;
+    }
 
 	private static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
 			String tenantName)
@@ -266,7 +264,7 @@ public class RegistryLookupUtil
 			else {
 				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			}
-			if (result != null && result.size() > 0) {
+			if (result != null && !result.isEmpty()) {
 				// [EMCPDF-733] Rest client can't handle https currently, so http protocol is enough for internal use
 				// find http link only
 				for (InstanceInfo internalInstance : result) {
@@ -277,7 +275,7 @@ public class RegistryLookupUtil
 					else {
 						links = internalInstance.getLinksWithProtocol(rel, "http");
 					}
-					if (links != null && links.size() > 0) {
+					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
 						return lk;
 					}
@@ -299,7 +297,7 @@ public class RegistryLookupUtil
 		Map<String, String> map = new HashMap<String, String>();
 		try {
 			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
-			if (result != null && result.size() > 0) {
+			if (result != null && !result.isEmpty()) {
 				for (InstanceInfo internalInstance : result) {
 					if (map.containsKey(APM_SERVICE) && map.containsKey(ITA_SERVICE) && map.containsKey(LA_SERVICE)
 							&& map.containsKey(MONITORING_SERVICE) && map.containsKey(SECURITY_ANALYTICS_SERVICE) && map.containsKey(COMPLIANCE_SERVICE)) {
@@ -309,7 +307,7 @@ public class RegistryLookupUtil
 						List<Link> links = internalInstance.getLinksWithProtocol("vanity/apm", "https");
 						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
 
-						if (links != null && links.size() > 0) {
+						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							logger.debug("Retrieved base vanity URL for apm: {} ", lk.getHref());
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
@@ -321,7 +319,7 @@ public class RegistryLookupUtil
 						List<Link> links = internalInstance.getLinksWithProtocol("vanity/ita", "https");
 						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
 
-						if (links != null && links.size() > 0) {
+						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							logger.debug("Retrieved base vanity URL for ita: {} ", lk.getHref());
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
@@ -335,7 +333,7 @@ public class RegistryLookupUtil
 						List<Link> links = internalInstance.getLinksWithProtocol("vanity/la", "https");
 						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
 
-						if (links != null && links.size() > 0) {
+						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							logger.debug("Retrieved base vanity URL for la: {} ", lk.getHref());
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
@@ -347,7 +345,7 @@ public class RegistryLookupUtil
 						List<Link> links = internalInstance.getLinksWithProtocol("vanity/monitoring", "https");
 						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
 
-						if (links != null && links.size() > 0) {
+						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							logger.debug("Retrieved base vanity URL for monitoring service: {} ", lk.getHref());
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
@@ -360,7 +358,7 @@ public class RegistryLookupUtil
 						List<Link> links = internalInstance.getLinksWithProtocol("vanity/security", "https");
 						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
 
-						if (links != null && links.size() > 0) {
+						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							logger.debug("Retrieved base vanity URL for Security Analytics service: {} ", lk.getHref());
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
@@ -374,7 +372,7 @@ public class RegistryLookupUtil
 						List<Link> links = internalInstance.getLinksWithProtocol("vanity/compliance", "https");
 						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
 
-						if (links != null && links.size() > 0) {
+						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							logger.debug("Retrieved base vanity URL for Compliance service: {} ", lk.getHref());
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());

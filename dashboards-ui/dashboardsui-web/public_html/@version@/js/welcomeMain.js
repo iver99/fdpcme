@@ -73,6 +73,12 @@ require(['ojs/ojcore',
 
             logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
             logger.setLogLevel(oj.Logger.LEVEL_WARN);
+        
+            window.onerror = function (msg, url, lineNo, columnNo, error)
+            {
+                oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg, true); 
+                return false; 
+            }
 
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar", {
@@ -100,7 +106,6 @@ require(['ojs/ojcore',
 
             function TitleViewModel(){
                var self = this;
-//               self.homeTitle = getNlsString("DBS_HOME_TITLE");
                self.landingHomeTitle = dfu_model.generateWindowTitle(getNlsString("LANDING_HOME_WINDOW_TITLE"), null, null, null);
            }
 
@@ -199,7 +204,7 @@ require(['ojs/ojcore',
                         var cloudServices = data.cloudServices;
                         var cloudServicesNum = cloudServices.length;
                         for(i=0; i<cloudServicesNum; i++) {
-                            if(cloudServices[i].name == "Monitoring") {
+                            if(cloudServices[i].name === "Monitoring") {
                                 self.showInfraMonitoring(true);
                             }
                             if(cloudServices[i].name === "Compliance") {
@@ -208,7 +213,7 @@ require(['ojs/ojcore',
                             if(cloudServices[i].name === "SecurityAnalytics") {
                                 self.showSecurityAnalytics(true);
                             }
-                            if(cloudServices[i].name == "Orchestration") {
+                            if(cloudServices[i].name === "Orchestration") {
                                 self.showOrchestration(true);
                             }
                             landingHomeUrls[cloudServices[i].name] = cloudServices[i].href;
@@ -232,9 +237,6 @@ require(['ojs/ojcore',
                                 landingHomeUrls[self.dataExplorer] = dataExplorers[i].href;
                             }
                             //change name of data explorer in ITA starting with "Data Explorer - "
-//                            if(dataExplorers[i].serviceName === "emcitas-ui-apps" || dataExplorers[i].serviceName === "TargetAnalytics") {
-//                                self.exploreDataInITA.push(dataExplorers[i]);
-//                            }
                         }
                     }
                     landingHomeUrls["DB_perf"] = self.getITAVerticalAppUrl("verticalApplication.db-perf");
@@ -314,7 +316,7 @@ require(['ojs/ojcore',
                         oj.Logger.info("Trying to open Infrastructure Monitoring by URL: " + self.landingHomeUrls.Monitoring);
                         window.location.href = self.landingHomeUrls.Monitoring;
                     }
-                }
+                };
                 self.openDashboards = function() {
                     oj.Logger.info('Trying to open dashboards by URL: ' + self.dashboardsUrl);
                     if(self.dashboardsUrl) {
@@ -330,7 +332,7 @@ require(['ojs/ojcore',
                     if(self.landingHomeUrls.Compliance) {
                         window.location.href = self.landingHomeUrls.Compliance;
                     }
-                }
+                };
                 self.openSecurityAnalytics = function() {
                     if(!self.landingHomeUrls) {
                         console.log("---fetching service links is not finished yet!---");

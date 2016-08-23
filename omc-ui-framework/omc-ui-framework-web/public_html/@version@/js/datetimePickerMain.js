@@ -101,13 +101,13 @@ require(['ojs/ojcore',
                         return true;
                     }
                     return false;
-                }
+                };
 
                 self.getGMTTimezone = function(date) {
                     var timezoneOffset = date.getTimezoneOffset()/60;
                     timezoneOffset = timezoneOffset>0 ? ("GMT-"+timezoneOffset) : ("GMT+"+Math.abs(timezoneOffset));
                     return timezoneOffset;
-                }
+                };
 
                 self.timeParams1 = {
                     startDateTime: /*self.initStart,*/ start,
@@ -115,14 +115,6 @@ require(['ojs/ojcore',
                     timePeriodsNotToShow: /*["Last 30 days", "Last 90 days"],*/ self.timePeriodsNotToShow,
                     enableTimeFilter: true,
                     hideMainLabel: true,
-//                    changeLabel: self.changeLabel, //knockout observable to determine whether label changes when use select a specific time range. The default value is true
-//                    timeDisplay: self.timeDisplay,
-//                    customTimeBack: 90*24*60*60*1000,
-//                    appId: "APM",
-//                    hideTimeSelection: true,
-//                    KOCadvanced: {KOCname: 'time-filter',
-//                        KOCtemplate: '/emsaasui/uifwk/js/widgets/timeFilter/html/timeFilter.html',
-//                        KOCviewModel: /*{require: '/emsaasui/uifwk/js/widgets/timeFilter/js/timeFilter.js'}},*/ {instance: tf}},
                     dtpickerPosition: self.floatPosition1,
                     timePeriod: "Last 1 day", //self.timePeriodPre,
                     callbackAfterApply: function (start, end, tp, tf) {
@@ -130,7 +122,6 @@ require(['ojs/ojcore',
                         console.log(end);
                         console.log(tp);
                         console.log(tf);
-//                        $("#timeFilterValue").text("time filter value: " + JSON.stringify(tf));
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
                         if(self.isTimePeriodLessThan1day(tp) && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
@@ -164,8 +155,6 @@ require(['ojs/ojcore',
                         console.log(tf);
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
-//                        self.start3(self.dateTimeConverter1.format(appliedStart));
-//                        self.end3(self.dateTimeConverter1.format(appliedEnd));
                         if(self.isTimePeriodLessThan1day(tp) && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
                             self.start3(self.dateTimeConverter1.format(appliedStart)+" ("+self.getGMTTimezone(start)+")");
                             self.end3(self.dateTimeConverter1.format(appliedEnd)+" ("+self.getGMTTimezone(end)+")");
@@ -186,7 +175,7 @@ require(['ojs/ojcore',
                     self.timePeriodsNotToShow(["Last 90 days", "Latest"]);
                     self.timeDisplay("long");
                     self.timePeriodPre("Last 90 days");
-                }
+                };
 
                 self.lineSeriesValues = ko.observableArray();
                 self.lineGroupsValues = ko.observableArray();
@@ -195,7 +184,6 @@ require(['ojs/ojcore',
                     var lineSeries = [];
                     var lineGroups = [];
                     var timeInterval, dateTimeDiff;
-                    var startTmp, endTmp;
 
                     var dateTimeOption = {formatType: "datetime", dateFormat: "short"};
                     self.dateTimeConverter = oj.Validation.converterFactory("dateTime").createConverter(dateTimeOption);
@@ -221,26 +209,21 @@ require(['ojs/ojcore',
                     var n = 0;
 
                     if (timeInterval === 60 * 1000) {
-//                        lineGroups.push(self.dateFormatter(self.startDateISO()).format1 + " " + self.startTime().slice(1));
                         lineGroups.push(self.dateTimeConverter.format(start));
                         n++;
                         while ((start + n * timeInterval) <= end) {
-//                            lineGroups.push(oj.IntlConverterUtils.dateToLocalIso(new Date(start + n * timeInterval)).slice(11, 16));
                             lineGroups.push(self.timeConverter.format(start + n * timeInterval));
                             n++;
                         }
                     } else if (timeInterval === 60 * 60 * 1000) {
-//                        lineGroups.push(self.dateFormatter(self.startDateISO()).format1 + " " + self.startTime().slice(1));
                         lineGroups.push(self.dateTimeConverter.format(start));
                         n++;
                         day = new Date(start).getDate();
                         while ((start + n * timeInterval) <= end) {
                             tmp = new Date(start + n * timeInterval);
                             if (tmp.getDate() === day) {
-//                                lineGroups.push(oj.IntlConverterUtils.dateToLocalIso(tmp).slice(11, 16));
                                 lineGroups.push(self.timeConverter.format(oj.IntlConverterUtils.dateToLocalIso(tmp)));
                             } else {
-//                                lineGroups.push(self.dateFormatter(tmp).format1 + " " + oj.IntlConverterUtils.dateToLocalIso(tmp).slice(11, 16));
                                 lineGroups.push(self.dateTimeConverter.format(oj.IntlConverterUtils.dateToLocalIso(tmp)));
                                 day = tmp.getDate();
                             }
@@ -248,7 +231,6 @@ require(['ojs/ojcore',
                         }
                     } else {
                         while ((start + n * timeInterval) <= end) {
-//                            lineGroups.push(self.dateFormatter(start + n * timeInterval).format1);
                             lineGroups.push(self.dateTimeConverter.format(start + n * timeInterval));
                             n++;
                         }

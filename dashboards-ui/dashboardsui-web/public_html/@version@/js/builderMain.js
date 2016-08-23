@@ -210,6 +210,12 @@ require(['knockout',
         // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
         // If you comment the line below, our current log calls will not be output!
         logger.setLogLevel(oj.Logger.LEVEL_WARN);
+        
+        window.onerror = function (msg, url, lineNo, columnNo, error)
+        {
+            oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg, true); 
+            return false; 
+        }
 
         if (!ko.components.isRegistered('df-oracle-branding-bar')) {
             ko.components.register("df-oracle-branding-bar",{
@@ -263,10 +269,12 @@ require(['knockout',
 
             $("#headerWrapper").on("DOMSubtreeModified", function() {
                 var height = $("#headerWrapper").height();
-                if (!self.headerHeight)
+                if (!self.headerHeight){
                     self.headerHeight = height;
-                if (self.headerHeight === height)
+                }
+                if (self.headerHeight === height){
                     return;
+                }
                 var $visibleHeaderBar = $(".dashboard-content:visible .head-bar-container");
                 var $visibleRightDrawer = $(".dbd-left-panel:visible");
                 if ($visibleHeaderBar.length > 0 && ko.dataFor($visibleHeaderBar[0])) {
@@ -283,8 +291,6 @@ require(['knockout',
 
         var dsbId = dfu.getUrlParam("dashboardId");
         console.warn("TODO: validate valid dashboard id format");
-//                oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
-//                window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href) + "&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";
 
 
         Builder.initializeFromCookie();
@@ -317,7 +323,6 @@ require(['knockout',
     }
 );
 
-// method to be called by page inside iframe (especially inside one page type dashboard)
 function updateOnePageHeight(event) {
     if (event && event.data && event.data.messageType === 'onePageWidgetHeight') {
         onePageTile.height(event.data.height);
@@ -331,8 +336,9 @@ function truncateString(str, length) {
     if (str && length > 0 && str.length > length)
     {
         var _tlocation = str.indexOf(' ', length);
-        if ( _tlocation <= 0 )
+        if ( _tlocation <= 0 ){
             _tlocation = length;
+        }
         return str.substring(0, _tlocation) + "...";
     }
     return str;
@@ -344,11 +350,9 @@ function getNlsString(key, args) {
 }
 
 function getDateString(isoString) {
-    //console.log(isoString);
     if (isoString && isoString.length > 0)
     {
         var s = isoString.split(/[\-\.\+: TZ]/g);
-        //console.log(s);
         if (s.length > 1)
         {
             return new Date(s[0], parseInt(s[1], 10) - 1, s[2], s[3], s[4], s[5], s[6]).toLocaleDateString();

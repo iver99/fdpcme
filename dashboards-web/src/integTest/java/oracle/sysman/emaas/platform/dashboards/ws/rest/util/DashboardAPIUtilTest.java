@@ -19,17 +19,17 @@ public class DashboardAPIUtilTest {
     RegistryLookupUtil registryLookupUtil;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         dashboardAPIUtil = new DashboardAPIUtil();
     }
 
     @Test
-    public void testGetExternalDashboardAPIBase() throws Exception {
+    public void testGetExternalDashboardAPIBase() {
         Assert.assertNull(DashboardAPIUtil.getExternalDashboardAPIBase(null));
     }
 
     @Test
-    public void testGetExternalPreferenceAPIBase() throws Exception {
+    public void testGetExternalPreferenceAPIBase() {
         Assert.assertNull(DashboardAPIUtil.getExternalPreferenceAPIBase(null));
     }
 }

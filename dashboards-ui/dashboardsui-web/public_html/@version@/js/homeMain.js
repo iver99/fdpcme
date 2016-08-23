@@ -12,7 +12,6 @@ requirejs.config({
     //Set up module mapping
     map: {
         '*':
-//            {'df-util': '/emsaasui/uifwk/libs/@version@/js/uifwk/js/util/df-util'}
               {'prefutil':'uifwk/js/util/preference-util'}
     },
     // Path mappings for the logical module names
@@ -66,7 +65,6 @@ requirejs.config({
     waitSeconds: 300
 });
 
-//var dashboardsViewModle = undefined;
 
 /**
  * A top-level require call executed by the Application.
@@ -101,14 +99,17 @@ require(['dashboards/dbsmodel',
         function(model, ko, $, oj, dfu, dfumodel, dashboardhome_impl, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
         {
             var logger = new _emJETCustomLogger();
-//            var dfRestApi = dfu.discoverDFRestApiUrl();
-//            if (dfRestApi){
             var logReceiver = dfu.getLogUrl();
                 logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
                 // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                 // If you comment the line below, our current log calls will not be output!
                 logger.setLogLevel(oj.Logger.LEVEL_WARN);
-//            }
+        
+            window.onerror = function (msg, url, lineNo, columnNo, error)
+            {
+                oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg, true); 
+                return false; 
+            }
 
 
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
@@ -148,10 +149,8 @@ require(['dashboards/dbsmodel',
 
            function TitleViewModel(){
                var self = this;
-//               self.homeTitle = getNlsString("DBS_HOME_TITLE");
                self.homeTitle = dfu_model.generateWindowTitle(getNlsString("DBS_HOME_TITLE_HOME"), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
            }
-            //dashboardsViewModle = new model.ViewModel();
             var headerViewModel = new HeaderViewModel();
             var titleVM = new TitleViewModel();
 
@@ -179,8 +178,9 @@ function truncateString(str, length) {
     if (str && length > 0 && str.length > length)
     {
         var _tlocation = str.indexOf(' ', length);
-        if ( _tlocation <= 0 )
+        if ( _tlocation <= 0 ){
             _tlocation = length;
+        }
         return str.substring(0, _tlocation) + "...";
     }
     return str;
@@ -192,11 +192,9 @@ function getNlsString(key, args) {
 }
 
 function getDateString(isoString) {
-    //console.log(isoString);
     if (isoString && isoString.length > 0)
     {
         var s = isoString.split(/[\-\.\+: TZ]/g);
-        //console.log(s);
         if (s.length > 1)
         {
             return new Date(s[0], parseInt(s[1], 10) - 1, s[2], s[3], s[4], s[5], s[6]).toLocaleDateString();

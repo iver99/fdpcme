@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.test.common;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,6 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
@@ -30,6 +33,7 @@ import com.jayway.restassured.config.LogConfig;
 
 public class CommonTest
 {
+	private static final Logger logger = LogManager.getLogger(CommonTest.class);
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	private static class SchemaDeploymentUrls
@@ -81,7 +85,7 @@ public class CommonTest
 	public static List<String> getDeploymentUrl(String json)
 	{
 		if (json == null || "".equals(json)) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		java.util.HashSet<String> urlSet = new java.util.HashSet<String>();
@@ -91,7 +95,7 @@ public class CommonTest
 
 			List<SchemaDeploymentUrls> sdlist = ju.fromJsonToList(json, SchemaDeploymentUrls.class, "items");
 			if (sdlist == null | sdlist.isEmpty()) {
-				return null;
+				return Collections.emptyList();
 			}
 			for (SchemaDeploymentUrls sd : sdlist) {
 				for (String temp : sd.getCanonicalEndpoints()) {
@@ -110,33 +114,15 @@ public class CommonTest
 			}
 		}
 		catch (Exception e) {
-
+			logger.info("context",e);
 			//	logger.error("an error occureed while getting schema name", e);
-			return null;
+			return Collections.emptyList();
 		}
 		List<String> urls = new ArrayList<String>();
 		urls.addAll(urlSet);
 		return urls;
 	}
 
-	/**
-	 * Sets up RESTAssured defaults before executing test cases Enables logging Reading the inputs from the testenv.properties
-	 * file
-	 * 
-	 * @throws URISyntaxException
-	 */
-
-	/*public static void main(String ar[]) throws Exception
-	{
-		String  name = "http://slc08twq.us.oracle.com:7004/registry/servicemanager/registry/v1";
-		name = name + DSB_DEPLOY_URL;
-		String data = getData(name);
-		List<String>  url=  getDeploymentUrl(data);
-		System.out.println(url.get(0));
-
-		System.out.println(getDomainName(url.get(0)));
-		System.out.println(getPort(url.get(0)));
-	}*/
 
 	public static String getDomainName(String url) throws URISyntaxException
 	{
@@ -199,7 +185,7 @@ public class CommonTest
 			RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
 		}
 		catch (Exception e) {
-			//System.out.println("An error occurred while retriving deployment details:"+ e.toString()+" " + e.getCause());
+			logger.info("context",e);
 		}
 
 	}
@@ -212,7 +198,7 @@ public class CommonTest
 	public String getData(String url)
 	{
 
-		if (url == null || url.trim().equals("")) {
+		if (url == null || ("").equals(url.trim())) {
 			return null;
 		}
 
@@ -232,7 +218,7 @@ public class CommonTest
 			}
 		}
 		catch (IOException e) {
-			//	System.out.println("an error occureed while getting details by url" + " ::" + url + "  " + e.toString());
+			logger.info("context",e);
 		}
 		finally {
 			try {
@@ -245,6 +231,7 @@ public class CommonTest
 			}
 			catch (IOException ioEx) {
 				//ignore
+				logger.info("context",ioEx);
 			}
 		}
 		return response.toString();
@@ -275,7 +262,7 @@ public class CommonTest
 		return tenantid;
 	}
 
-	public String getTenantid_2()
+	public String getTenantid2()
 	{
 		return tenantid_2;
 	}

@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.core;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -10,10 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotData;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
@@ -37,6 +34,10 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DashboardManager
 {
@@ -356,6 +357,7 @@ public class DashboardManager
 		}
 		catch (NoResultException e) {
 			logger.debug("Dashboard not found for name \"{}\" because NoResultException is caught", name);
+			logger.info("context",e);
 			return null;
 		}
 		finally {
@@ -720,19 +722,19 @@ public class DashboardManager
 					if (i != 0) {
 						sb.append(" or ");
 					}
-					if (filter.getIncludedOwners().get(i).equals("Oracle")) {
+					if (("Oracle").equals(filter.getIncludedOwners().get(i))) {
 						sb.append(" p.owner = ?" + index++);
 						paramList.add("Oracle");
 					}
-					if (filter.getIncludedOwners().get(i).equals("Others")) {
+					if (("Others").equals(filter.getIncludedOwners().get(i))) {
 						sb.append(" p.owner != ?" + index++);
 						paramList.add("Oracle");
 					}
-					if (filter.getIncludedOwners().get(i).equals("Me")) {
+					if (("Me").equals(filter.getIncludedOwners().get(i))) {
 						sb.append(" p.owner = ?" + index++);
 						paramList.add(UserContext.getCurrentUser());
 					}
-					if (filter.getIncludedOwners().get(i).equals("Share")) {
+					if (("Share").equals(filter.getIncludedOwners().get(i))) {
 						sb.append(" p.owner != ?" + index++ + " and p.share_public > 0");
 						paramList.add(UserContext.getCurrentUser());
 					}
@@ -794,7 +796,7 @@ public class DashboardManager
 				"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
 						+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE ");
 		String jpqlQuery = sbQuery.toString();
-		//System.out.println("sql: " + jpqlQuery);
+		
 		logger.debug(jpqlQuery);
 		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 		EntityManager em = dsf.getEntityManager();
@@ -1180,11 +1182,11 @@ public class DashboardManager
 		if (opcTenantId == null || "".equals(opcTenantId)) {
 			logger.warn(
 					"When trying to retrieve subscribed application, it's found the tenant context is not set (TenantContext.getCurrentTenant() == null)");
-			return null;
+			return Collections.emptyList();
 		}
 		List<String> appNames = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId);
 		if (appNames == null || appNames.isEmpty()) {
-			return null;
+			return Collections.emptyList();
 		}
 		List<DashboardApplicationType> apps = new ArrayList<DashboardApplicationType>();
 		for (String appName : appNames) {

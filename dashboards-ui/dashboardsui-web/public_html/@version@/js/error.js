@@ -82,19 +82,23 @@ function(ko, $, dfu, oj)
         var serviceName = oj.Translations.getResource("SERVICE_NAME_" + serviceid) ? oj.Translations.getTranslatedString("SERVICE_NAME_" + serviceid) : null;
         if (msgKey) {
             var rsc = null;
-            if (serviceName)
+            if (serviceName){
                 rsc = oj.Translations.getResource(msgKey + "__PLUS_SERVICE");
-            if (rsc)
+            }
+            if (rsc){
                 msgKey += "__PLUS_SERVICE";
+            }
             else {
                 rsc = oj.Translations.getResource(msgKey);
                 serviceName = null;
             }
-            if (rsc)
+            if (rsc){
                 self.errorPageMessage = serviceName ? oj.Translations.getTranslatedString(msgKey, serviceName) : oj.Translations.getTranslatedString(msgKey);
+            }
         }
-        if (!self.errorPageMessage)
+        if (!self.errorPageMessage){
             self.errorPageMessage = oj.Translations.getTranslatedString('DBS_ERROR_PAGE_NOT_FOUND_MSG');
+        }
         self.defaultHomeLinkVisible = msgKey === 'DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG' ? true : false;
         self.clickText = oj.Translations.getTranslatedString('DBS_ERROR_TEXT_CLICK');
         self.hereText = oj.Translations.getTranslatedString('DBS_ERROR_TEXT_HERE');
@@ -108,8 +112,9 @@ function(ko, $, dfu, oj)
 
         self.signOut = function() {
             //Clear interval for extending user session
-            if (window.intervalToExtendCurrentUserSession)
+            if (window.intervalToExtendCurrentUserSession){
                 clearInterval(window.intervalToExtendCurrentUserSession);
+            }
             var ssoLogoutEndUrl = encodeURI(window.location.protocol + "//" + window.location.host + "/emsaasui/emcpdfui/welcome.html");
             var logoutUrlDiscovered = dfu.discoverLogoutUrl();
             //If session timed out, redirect to sso login page and go to home page after re-login.
@@ -118,8 +123,9 @@ function(ko, $, dfu, oj)
             }
             //Else handle normal logout
             else {
-                if (logoutUrlDiscovered === null)
+                if (logoutUrlDiscovered === null){
                     logoutUrlDiscovered = window.cachedSSOLogoutUrl;
+                }
                 var logoutUrl = logoutUrlDiscovered + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
                 window.location.href = logoutUrl;
             }
