@@ -27,7 +27,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
  */
 public class DashboardsFilter
 {
-	private static final Logger logger = LogManager.getLogger(DashboardsFilter.class);
+	private static final Logger LOGGER = LogManager.getLogger(DashboardsFilter.class);
 	// reserved actual strings for used in query
 	private static final List<String> typeFilterStrings = Arrays.asList(new String[] { Dashboard.DASHBOARD_TYPE_NORMAL,
 			Dashboard.DASHBOARD_TYPE_SET, Dashboard.DASHBOARD_TYPE_SINGLEPAGE });
@@ -98,7 +98,7 @@ public class DashboardsFilter
 			}
 		}
 		catch (IllegalArgumentException iae) {
-			logger.info("context",iae);
+			LOGGER.info("context",iae);
 		}
 		return types;
 	}
@@ -139,7 +139,7 @@ public class DashboardsFilter
 			}
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		return types;
 	}

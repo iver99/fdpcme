@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
 @Path("/v1/configurations")
 public class ConfigurationAPI extends APIBase
 {
-	private static Logger _logger = LogManager.getLogger(ConfigurationAPI.class);
+	private static final Logger _LOGGER = LogManager.getLogger(ConfigurationAPI.class);
 
 	@Path("/registration")
 	@GET
@@ -52,7 +52,7 @@ public class ConfigurationAPI extends APIBase
 
 		}
 		catch (DashboardException e) {
-			_logger.error(e.getLocalizedMessage(), e);
+			_LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity ee = new ErrorEntity(e);
 			return Response.status(ee.getStatusCode()).entity(JsonUtil.buildNormalMapper().toJson(ee)).build();
 		}

@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
 public class TestOtherPage extends CommonUIUtils
 {
 
-private static final Logger logger = LogManager.getLogger(TestOtherPage.class);
+private static final Logger LOGGER = LogManager.getLogger(TestOtherPage.class);
 	@BeforeClass
 	public static void initValue()
 	{
@@ -78,7 +78,7 @@ private static final Logger logger = LogManager.getLogger(TestOtherPage.class);
 
 		}
 		catch (Exception ex) {
-			logger.info("context",ex);
+			LOGGER.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}
@@ -140,7 +140,7 @@ private static final Logger logger = LogManager.getLogger(TestOtherPage.class);
 			CommonUIUtils.logoutCommonUI(webdriver);
 		}
 		catch (Exception ex) {
-			logger.info("context",ex);
+			LOGGER.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}
@@ -190,7 +190,7 @@ private static final Logger logger = LogManager.getLogger(TestOtherPage.class);
 
 		}
 		catch (Exception ex) {
-			logger.info("context",ex);
+			LOGGER.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}

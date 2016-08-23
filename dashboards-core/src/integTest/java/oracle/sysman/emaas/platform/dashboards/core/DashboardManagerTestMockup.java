@@ -24,7 +24,7 @@ public class DashboardManagerTestMockup
 	private DashboardManagerTestMockup() {
 	  }
 
-	private static final Logger logger = LogManager.getLogger(DashboardManagerTestMockup.class);
+	private static final Logger LOGGER = LogManager.getLogger(DashboardManagerTestMockup.class);
 	
 	public static void executeRepeatedly(int threadNum, final int repeatsPerThread, final Runnable r,
 			final Runnable postThreadRun, final Runnable postAllRun) throws InterruptedException
@@ -51,10 +51,10 @@ public class DashboardManagerTestMockup
 						}
 					}
 					catch (SecurityException e) {
-						logger.info("context",e);
+						LOGGER.info("context",e);
 					}
 					catch (IllegalArgumentException e) {
-						logger.info("context",e);
+						LOGGER.info("context",e);
 					}
 				}
 			});

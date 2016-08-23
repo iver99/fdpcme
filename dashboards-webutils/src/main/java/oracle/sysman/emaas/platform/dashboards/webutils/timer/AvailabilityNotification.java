@@ -36,7 +36,7 @@ public class AvailabilityNotification implements NotificationListener
 
 	private static final String ENTITY_NAMING_SERVICE_VERSION = "1.0+";
 	private static final String ENTITY_NAMING_SERVICE_REL = "collection/domains";
-	private final Logger logger = LogManager.getLogger(AvailabilityNotification.class);
+	private static final Logger LOGGER = LogManager.getLogger(AvailabilityNotification.class);
 
 	private final RegistryServiceManager rsm;
 
@@ -51,14 +51,14 @@ public class AvailabilityNotification implements NotificationListener
 	@Override
 	public void handleNotification(Notification notification, Object handback)
 	{
-		logger.debug("Time triggered handler method. sequenceNumber={}", notification.getSequenceNumber());
+		LOGGER.debug("Time triggered handler method. sequenceNumber={}", notification.getSequenceNumber());
 		if (rsm.isRegistrationComplete() == null) {
-			logger.warn("RegistryServiceManager hasn't registered. Check registry service next time");
+			LOGGER.warn("RegistryServiceManager hasn't registered. Check registry service next time");
 			return;
 		}
 		// check if service manager is up and registration is complete
 		if (!rsm.isRegistrationComplete() && !rsm.registerService()) {
-			logger.warn(
+			LOGGER.warn(
 					"Dashboards service registration is not completed. Ignore database or other dependant services availability checking");
 			return;
 		}
@@ -70,14 +70,14 @@ public class AvailabilityNotification implements NotificationListener
 		}
 		catch (Exception e) {
 			isDBAvailable = false;
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 		if (!isDBAvailable) {
 			List<String> otherReasons = new ArrayList<String>();
 			otherReasons.add("Dashboard-API service database is unavailable");
 			rsm.markOutOfService(null, null, otherReasons);
 			GlobalStatus.setDashboardDownStatus();
-			logger.error("Dashboards service is out of service because database is unavailable");
+			LOGGER.error("Dashboards service is out of service because database is unavailable");
 			return;
 		}
 
@@ -88,7 +88,7 @@ public class AvailabilityNotification implements NotificationListener
 		}
 		catch (Exception e) {
 			isEntityNamingAvailable = false;
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 		if (!isEntityNamingAvailable) {
 			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
@@ -98,7 +98,7 @@ public class AvailabilityNotification implements NotificationListener
 			services.add(ii);
 			rsm.markOutOfService(services, null, null);
 			GlobalStatus.setDashboardDownStatus();
-			logger.error("Dashboards service is out of service because entity naming service is unavailable");
+			LOGGER.error("Dashboards service is out of service because entity naming service is unavailable");
 			return;
 		}
 
@@ -106,10 +106,10 @@ public class AvailabilityNotification implements NotificationListener
 		try {
 			rsm.markServiceUp();
 			GlobalStatus.setDashboardUpStatus();
-			logger.debug("Dashboards service is up");
+			LOGGER.debug("Dashboards service is up");
 		}
 		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 	}
 

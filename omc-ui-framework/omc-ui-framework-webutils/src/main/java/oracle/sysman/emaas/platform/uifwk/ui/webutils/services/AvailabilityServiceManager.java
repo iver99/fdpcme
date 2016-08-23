@@ -45,7 +45,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 
 	private static final String SAVED_SEARCH_SERVICE_VERSION = "1.0+";
 	private static final String SAVED_SEARCH_SERVICE_REL = "search";
-	private final Logger logger = LogManager.getLogger(AvailabilityServiceManager.class);
+	private static final Logger LOGGER = LogManager.getLogger(AvailabilityServiceManager.class);
 
 	private Timer timer;
 	private Integer notificationId;
@@ -71,15 +71,15 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void handleNotification(Notification notification, Object handback)
 	{
-		logger.debug("Time triggered handler method. sequenceNumber={}, notificationId={}", notification.getSequenceNumber(),
+		LOGGER.debug("Time triggered handler method. sequenceNumber={}, notificationId={}", notification.getSequenceNumber(),
 				notificationId);
 		if (rsm.isRegistrationComplete() == null) {
-			logger.info("RegistryServiceManager hasn't registered. Check registry service next time");
+			LOGGER.info("RegistryServiceManager hasn't registered. Check registry service next time");
 			return;
 		}
 		// check if service manager is up and registration is complete
 		if (!rsm.isRegistrationComplete() && !rsm.registerService()) {
-			logger.info(
+			LOGGER.info(
 					"OMC UI Framework service registration is not completed. Ignore dependant services availability checking");
 			return;
 
@@ -91,7 +91,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		catch (Exception e) {
 			isSSFAvailable = false;
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 		if (!isSSFAvailable) {
 			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
@@ -101,7 +101,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			services.add(ii);
 			rsm.markOutOfService(services, null, null);
 			GlobalStatus.setOmcUiDownStatus();
-			logger.error("OMC UI Framework service is out of service because Saved Search API service is unavailable");
+			LOGGER.error("OMC UI Framework service is out of service because Saved Search API service is unavailable");
 			return;
 		}
 
@@ -112,7 +112,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		catch (Exception e) {
 			isDFApiAvailable = false;
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 		if (!isDFApiAvailable) {
 			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
@@ -122,7 +122,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			services.add(ii);
 			rsm.markOutOfService(services, null, null);
 			GlobalStatus.setOmcUiDownStatus();
-			logger.error("OMC UI Framework service is out of service because Dashboard API service is unavailable");
+			LOGGER.error("OMC UI Framework service is out of service because Dashboard API service is unavailable");
 			return;
 		}
 
@@ -130,10 +130,10 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		try {
 			rsm.markServiceUp();
 			GlobalStatus.setOmcUiUpStatus();
-			logger.debug("OMC UI Framework service is up");
+			LOGGER.debug("OMC UI Framework service is up");
 		}
 		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -148,7 +148,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		Date timerTriggerAt = new Date(new Date().getTime() + 10000L);
 		notificationId = timer.addNotification("OmcUiFrameworkServiceTimer", null, this, timerTriggerAt, PERIOD, 0);
 		timer.start();
-		logger.info("Timer for OMC UI Framework service dependencies checking started. notificationId={}", notificationId);
+		LOGGER.info("Timer for OMC UI Framework service dependencies checking started. notificationId={}", notificationId);
 	}
 
 	/* (non-Javadoc)
@@ -173,14 +173,14 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-		logger.info("Pre-stopping availability service");
+		LOGGER.info("Pre-stopping availability service");
 		try {
 			timer.stop();
 			timer.removeNotification(notificationId);
-			logger.info("Timer for OMC UI Framework dependencies checking stopped, notificationId={}", notificationId);
+			LOGGER.info("Timer for OMC UI Framework dependencies checking stopped, notificationId={}", notificationId);
 		}
 		catch (InstanceNotFoundException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 	}
 

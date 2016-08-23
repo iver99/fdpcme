@@ -67,7 +67,7 @@ public class TenantSubscriptionsAPI extends APIBase
 
 	private static final String APPLICATION_STATUS_ONBORDED = "TENANT_ONBOARDED";
 
-	private static Logger logger = LogManager.getLogger(TenantSubscriptionsAPI.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(TenantSubscriptionsAPI.class.getName());
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -93,11 +93,11 @@ public class TenantSubscriptionsAPI extends APIBase
 			return Response.ok(getJsonUtil().toJson(sae)).build();
 		}
 		catch (CommonSecurityException e) {
-			logger.error(e);
+			LOGGER.error(e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (TenantWithoutSubscriptionException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {
@@ -115,12 +115,12 @@ public class TenantSubscriptionsAPI extends APIBase
 			if (tenantsLink == null || tenantsLink.getHref() == null || "".equals(tenantsLink.getHref())) {
 				throw new TenantWithoutSubscriptionException();
 			}
-			logger.debug("Checking tenant (" + tenantName + ") subscriptions with edition. The tenant service href is "
+			LOGGER.debug("Checking tenant (" + tenantName + ") subscriptions with edition. The tenant service href is "
 					+ tenantsLink.getHref());
 			String tenantHref = tenantsLink.getHref() + "/" + tenantName;
 			TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
 			String tenantResponse = rc.get(tenantHref, tenantName);
-			logger.debug("Checking tenant (" + tenantName + ") subscriptions with edition. Tenant response is " + tenantResponse);
+			LOGGER.debug("Checking tenant (" + tenantName + ") subscriptions with edition. Tenant response is " + tenantResponse);
 			JsonUtil ju = JsonUtil.buildNormalMapper();
 			TenantDetailEntity de = ju.fromJson(tenantResponse, TenantDetailEntity.class);
 			if (de == null || de.getServices() == null) {
@@ -128,13 +128,13 @@ public class TenantSubscriptionsAPI extends APIBase
 			}
 			List<TenantEditionEntity> teeList = new ArrayList<TenantEditionEntity>();
 			for (ServiceEntity se : de.getServices()) {
-				logger.debug(
+				LOGGER.debug(
 						"Get one subscribed application for tenant {}: name - \"{}\", serviceType - \"{}\", edition - \"{}\", editionUUID - \"{}\", status - \"{}\", serviceId - \"{}\"",
 						tenantName, se.getServiceName(), se.getServiceType(), se.getEdition(), se.getEditionUUID(),
 						se.getStatus(), se.getServiceId());
 				// only application in state of onboarded are valid
 				if (!APPLICATION_STATUS_ONBORDED.equals(se.getStatus())) {
-					logger.debug("This application is ignored as it's status is \"{}\"", se.getStatus());
+					LOGGER.debug("This application is ignored as it's status is \"{}\"", se.getStatus());
 					continue;
 				}
 				TenantEditionEntity tee = new TenantEditionEntity(se.getServiceType(), se.getEdition());
@@ -144,11 +144,11 @@ public class TenantSubscriptionsAPI extends APIBase
 			return Response.ok(getJsonUtil().toJson(sae)).build();
 		}
 		catch (CommonSecurityException | TenantWithoutSubscriptionException e) {
-			logger.error(e);
+			LOGGER.error(e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (IOException | UniformInterfaceException e) {
-			logger.error(e);
+			LOGGER.error(e);
 			return buildErrorResponse(new ErrorEntity(new TenantWithoutSubscriptionException()));
 		}
 		finally {

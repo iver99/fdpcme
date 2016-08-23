@@ -49,7 +49,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class HomePageFilter implements Filter
 {
-	private final Logger logger = LogManager.getLogger(HomePageFilter.class);
+	private final static Logger LOGGER = LogManager.getLogger(HomePageFilter.class);
 	private static final String OAM_REMOTE_USER_HEADER = "OAM_REMOTE_USER";
 	private static final String USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
 	private static final String REMOTE_USER = "X-REMOTE-USER";
@@ -76,44 +76,44 @@ public class HomePageFilter implements Filter
 		HttpServletRequest httpReq = (HttpServletRequest) request;
 		HttpServletResponse httpRes = (HttpServletResponse) response;
 		String referer = httpReq.getHeader(REFERER);
-		logger.info("The Referer header get from http request is: \"{}\"", referer);
+		LOGGER.info("The Referer header get from http request is: \"{}\"", referer);
 		if (referer != null) {
-			logger.info("Start to check whether the http request comes just after the user login.");
+			LOGGER.info("Start to check whether the http request comes just after the user login.");
 			if (referer.toLowerCase().contains(AUTH_CRED_PATH)) {
-				logger.info("User logged in! Start to check the user preference of Home.");
+				LOGGER.info("User logged in! Start to check the user preference of Home.");
 				String userTenant = httpReq.getHeader(OAM_REMOTE_USER_HEADER);
-				logger.info("Current tenant user is: \"{}\"", userTenant);
+				LOGGER.info("Current tenant user is: \"{}\"", userTenant);
 				if (userTenant != null && !("").equals(userTenant)) {
 					String domainName = userTenant.substring(0, userTenant.indexOf("."));
 					String authorization = new String(LookupManager.getInstance().getAuthorizationToken());
 					String preference = getPreference(domainName, authorization, userTenant);
-					logger.info("Get the user preference of Home settings. Result: \"{}\"", preference);
+					LOGGER.info("Get the user preference of Home settings. Result: \"{}\"", preference);
 					if (preference != null && !("").equals(preference)) {
 						int flag = preference.indexOf("value");
 						if (flag > 0) {
 							String value = preference.substring(flag + 8, preference.length() - 2);
-							logger.info("The ID of the dashboard which has been set as Home is: \"{}\"", value);
+							LOGGER.info("The ID of the dashboard which has been set as Home is: \"{}\"", value);
 							if (!("").equals(value)) {
 								URLCodec codec = new URLCodec();
 								String urlEscaped = "";
 								try {
 									urlEscaped = codec.encode(value);
-									logger.info("The ID of the dashboard which has been set as Home has been encode as: \"{}\"", urlEscaped);
+									LOGGER.info("The ID of the dashboard which has been set as Home has been encode as: \"{}\"", urlEscaped);
 								}
 								catch (EncoderException e) {
-									logger.error("Failed to encode:" + value);
-									logger.info("failed to encode the url",e);
+									LOGGER.error("Failed to encode:" + value);
+									LOGGER.info("failed to encode the url",e);
 								}
 								String redirectUrl = "./builder.html?dashboardId=" + urlEscaped;
 								if (!isHomeDashboardExists(domainName, authorization, userTenant, value)) {
-									logger.info("The dashboard which has been set as Home is not existed. Id: \"{}\"", value);
-									logger.info("Removing the dashboard as Home from the user preferences...");
+									LOGGER.info("The dashboard which has been set as Home is not existed. Id: \"{}\"", value);
+									LOGGER.info("Removing the dashboard as Home from the user preferences...");
 									removeDashboardAsHomePreference(domainName, authorization, userTenant);
 									redirectUrl = "./error.html?msg=DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG";
-									logger.info("Redirecting to the error page. URL: \"{}\"", redirectUrl);
+									LOGGER.info("Redirecting to the error page. URL: \"{}\"", redirectUrl);
 								}
 								else {
-									logger.info("Redirecting to the dashboard page which has been set as Home. URL: \"{}\"",
+									LOGGER.info("Redirecting to the dashboard page which has been set as Home. URL: \"{}\"",
 											redirectUrl);
 								}
 								
@@ -153,10 +153,10 @@ public class HomePageFilter implements Filter
 				response = client.execute(get);
 			}
 			catch (ClientProtocolException e) {
-				logger.error(e.getLocalizedMessage(), e);
+				LOGGER.error(e.getLocalizedMessage(), e);
 			}
 			catch (IOException e) {
-				logger.error(e.getLocalizedMessage(), e);
+				LOGGER.error(e.getLocalizedMessage(), e);
 			}
 			InputStream instream = null;
 			try {
@@ -167,10 +167,10 @@ public class HomePageFilter implements Filter
 						value = getStrFromInputSteam(instream);
 					}
 					catch (IllegalStateException e) {
-						logger.error(e.getLocalizedMessage(), e);
+						LOGGER.error(e.getLocalizedMessage(), e);
 					}
 					catch (IOException e) {
-						logger.error(e.getLocalizedMessage(), e);
+						LOGGER.error(e.getLocalizedMessage(), e);
 					}
 				}
 			}
@@ -184,7 +184,7 @@ public class HomePageFilter implements Filter
 					}
 				}
 				catch (IOException e) {
-					logger.error(e.getLocalizedMessage(), e);
+					LOGGER.error(e.getLocalizedMessage(), e);
 				}
 			}
 		}
@@ -203,19 +203,19 @@ public class HomePageFilter implements Filter
 			}
 		}
 		catch (UnsupportedEncodingException e1) {
-			logger.error(e1.getLocalizedMessage(), e1);
+			LOGGER.error(e1.getLocalizedMessage(), e1);
 		}
 		catch (IOException e2) {
-			logger.error(e2.getLocalizedMessage(), e2);
+			LOGGER.error(e2.getLocalizedMessage(), e2);
 		} catch (Exception e3) {
-			logger.error(e3.getLocalizedMessage(), e3);
+			LOGGER.error(e3.getLocalizedMessage(), e3);
 		} finally {
 			if(bf != null) {
 				try {
 					bf.close();
 				}
 				catch (IOException e) {
-					logger.error(e.getLocalizedMessage(), e);
+					LOGGER.error(e.getLocalizedMessage(), e);
 				}
 			}
 		}
@@ -246,10 +246,10 @@ public class HomePageFilter implements Filter
 				}
 			}
 			catch (ClientProtocolException e) {
-				logger.error(e.getLocalizedMessage(), e);
+				LOGGER.error(e.getLocalizedMessage(), e);
 			}
 			catch (IOException e) {
-				logger.error(e.getLocalizedMessage(), e);
+				LOGGER.error(e.getLocalizedMessage(), e);
 			}
 			finally {
 				try {
@@ -258,7 +258,7 @@ public class HomePageFilter implements Filter
 					}
 				}
 				catch (IOException e) {
-					logger.error(e.getLocalizedMessage(), e);
+					LOGGER.error(e.getLocalizedMessage(), e);
 				}
 			}
 		}
@@ -281,10 +281,10 @@ public class HomePageFilter implements Filter
 				response = client.execute(delete);
 			}
 			catch (ClientProtocolException e) {
-				logger.error(e.getLocalizedMessage(), e);
+				LOGGER.error(e.getLocalizedMessage(), e);
 			}
 			catch (IOException e) {
-				logger.error(e.getLocalizedMessage(), e);
+				LOGGER.error(e.getLocalizedMessage(), e);
 			}
 			finally {
 				try {
@@ -293,7 +293,7 @@ public class HomePageFilter implements Filter
 					}
 				}
 				catch (IOException e) {
-					logger.error(e.getLocalizedMessage(), e);
+					LOGGER.error(e.getLocalizedMessage(), e);
 				}
 			}
 		}

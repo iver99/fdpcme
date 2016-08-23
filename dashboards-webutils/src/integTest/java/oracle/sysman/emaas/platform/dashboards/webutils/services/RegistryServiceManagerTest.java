@@ -38,7 +38,7 @@ public class RegistryServiceManagerTest
 {
 	private final static String VERSION = "1.0+";
 	
-	private static final Logger logger = LogManager.getLogger(RegistryServiceManagerTest.class);
+	private static final Logger LOGGER = LogManager.getLogger(RegistryServiceManagerTest.class);
 	RegistryServiceManager rsm = new RegistryServiceManager();
 
 	@Test(groups = { "s1" })
@@ -128,7 +128,7 @@ public class RegistryServiceManagerTest
 			Assert.assertFalse(rsm.isRegistrationComplete());
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 }

@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  */
 public class TestAnalyzerPage extends CommonUIUtils
 {
-	private static final Logger logger = LogManager.getLogger(TestAnalyzerPage.class);
+	private static final Logger LOGGER = LogManager.getLogger(TestAnalyzerPage.class);
 	@BeforeClass
 	public static void initValue()
 	{
@@ -78,7 +78,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 
 		}
 		catch (Exception ex) {
-			logger.info("context",ex);
+			LOGGER.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}
@@ -128,7 +128,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 
 		}
 		catch (Exception ex) {
-			logger.info("context",ex);
+			LOGGER.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}

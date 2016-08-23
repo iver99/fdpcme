@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
  */
 public class TestDashboardPage extends CommonUIUtils
 {
-	private static final Logger logger = LogManager.getLogger(TestDashboardPage.class);
+	private static final Logger LOGGER = LogManager.getLogger(TestDashboardPage.class);
 	@BeforeClass
 	public static void initValue()
 	{
@@ -79,7 +79,7 @@ public class TestDashboardPage extends CommonUIUtils
 
 		}
 		catch (Exception ex) {
-			logger.info("context",ex);
+			LOGGER.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}
@@ -129,7 +129,7 @@ public class TestDashboardPage extends CommonUIUtils
 
 		}
 		catch (Exception ex) {
-			logger.info("context",ex);
+			LOGGER.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}
@@ -182,7 +182,7 @@ public class TestDashboardPage extends CommonUIUtils
 			CommonUIUtils.logoutCommonUI(webdriver);
 		}
 		catch (Exception ex) {
-			logger.info("context",ex);
+			LOGGER.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}

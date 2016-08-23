@@ -36,7 +36,7 @@ import weblogic.application.ApplicationLifecycleEvent;
 public class EMTargetInitializer implements ApplicationServiceManager
 {
 
-	private static final Logger logger = LogManager.getLogger(EMTargetMXBeanImpl.class);
+	private static final Logger LOGGER = LogManager.getLogger(EMTargetMXBeanImpl.class);
 	private static final String M_TARGET_TYPE = EMTargetConstants.M_TARGET_TYPE;
 	private static final String SVR_MBEAN_NAME_PREFIX = "EMDomain:Type=EMIntegration,EMTargetType=" + M_TARGET_TYPE + ",Name=";
 
@@ -74,13 +74,13 @@ public class EMTargetInitializer implements ApplicationServiceManager
 			JMXUtil.getInstance().registerMBeans();
 		}
 		catch (InstanceAlreadyExistsException e) {
-			logger.error("EMTargetMXBeanImpl already exists ", e);
+			LOGGER.error("EMTargetMXBeanImpl already exists ", e);
 		}
 		catch (MalformedObjectNameException e) {
-			logger.error("Incorrect Object name for MBean", e);
+			LOGGER.error("Incorrect Object name for MBean", e);
 		}
 		catch (Exception e) {
-			logger.error("MBean Registration failed for EMTargetMxBean", e);
+			LOGGER.error("MBean Registration failed for EMTargetMxBean", e);
 		}
 
 	}
@@ -121,7 +121,7 @@ public class EMTargetInitializer implements ApplicationServiceManager
 
 		}
 		catch (Exception e) {
-			logger.error("Unregister MBean for " + M_TARGET_TYPE + " failed.", e);
+			LOGGER.error("Unregister MBean for " + M_TARGET_TYPE + " failed.", e);
 		}
 
 	}

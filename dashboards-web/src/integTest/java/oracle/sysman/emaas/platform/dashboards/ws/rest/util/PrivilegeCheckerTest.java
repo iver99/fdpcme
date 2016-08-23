@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
  */
 public class PrivilegeCheckerTest
 {
-	private static final Logger logger = LogManager.getLogger(PrivilegeCheckerTest.class);
+	private static final Logger LOGGER = LogManager.getLogger(PrivilegeCheckerTest.class);
 	@Test(groups = { "s2" })
 	public void testGetUserRoles(@Mocked final RegistryLookupUtil lookupUtil, @Mocked final TenantSubscriptionUtil.RestClient rc,
 			@Mocked final JsonUtil jsonUtl)
@@ -72,7 +72,7 @@ public class PrivilegeCheckerTest
 			};
 		}
 		catch (IOException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			//Ignore the expected exception here
 		}
 		Assert.assertNull(PrivilegeChecker.getUserRoles(tenantName, userName));

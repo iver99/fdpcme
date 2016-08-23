@@ -29,7 +29,7 @@ import weblogic.management.timer.Timer;
  */
 public class AvailabilityServiceManager implements ApplicationServiceManager
 {
-	private final Logger logger = LogManager.getLogger(AvailabilityServiceManager.class);
+	private final static Logger LOGGER = LogManager.getLogger(AvailabilityServiceManager.class);
 
 	private static final long PERIOD = Timer.ONE_MINUTE;
 
@@ -63,7 +63,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager
 		Date timerTriggerAt = new Date(new Date().getTime() + 10000L);
 		notificationId = timer.addNotification("DashboardsServiceTimer", null, notification, timerTriggerAt, PERIOD, 0);
 		timer.start();
-		logger.info("Timer for dashboard service dependencies checking started. notificationId={}", notificationId);
+		LOGGER.info("Timer for dashboard service dependencies checking started. notificationId={}", notificationId);
 	}
 
 	/* (non-Javadoc)
@@ -88,14 +88,14 @@ public class AvailabilityServiceManager implements ApplicationServiceManager
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) 
 	{
-		logger.info("Pre-stopping availability service");
+		LOGGER.info("Pre-stopping availability service");
 		try {
 			timer.stop();
 			timer.removeNotification(notificationId);
-			logger.info("Timer for dashboards dependencies checking stopped. notificationId={}", notificationId);
+			LOGGER.info("Timer for dashboards dependencies checking stopped. notificationId={}", notificationId);
 		}
 		catch (InstanceNotFoundException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 	}
 

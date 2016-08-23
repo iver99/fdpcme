@@ -26,7 +26,7 @@ public class RegistryLookup
 	static String tenantid;
 	static String remoteuser;
 	
-	private static final Logger logger = LogManager.getLogger(RegistryLookup.class);
+	private static final Logger LOGGER = LogManager.getLogger(RegistryLookup.class);
 
 	@BeforeClass
 	public static void setUp()
@@ -82,7 +82,7 @@ public class RegistryLookup
 		
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -123,7 +123,7 @@ public class RegistryLookup
 
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -171,7 +171,7 @@ public class RegistryLookup
 
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -196,7 +196,7 @@ public class RegistryLookup
 
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -289,7 +289,7 @@ public class RegistryLookup
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -314,7 +314,7 @@ public class RegistryLookup
 
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -409,7 +409,7 @@ public class RegistryLookup
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -438,7 +438,7 @@ public class RegistryLookup
 		
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -479,7 +479,7 @@ public class RegistryLookup
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 

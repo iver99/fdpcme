@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 public class PropertyReaderTest
 {
 
-	private static final Logger logger = LogManager.getLogger(PropertyReaderTest.class);
+	private static final Logger LOGGER = LogManager.getLogger(PropertyReaderTest.class);
 	@Test(groups = { "s1" })
 	public void testGetInstallDir()
 	{
@@ -45,7 +45,7 @@ public class PropertyReaderTest
 			prop = PropertyReader.loadProperty("");
 		}
 		catch (IOException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			e.printStackTrace();
 		}
 		Assert.assertNotNull(prop);

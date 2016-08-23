@@ -32,7 +32,7 @@ import weblogic.application.ApplicationLifecycleEvent;
 public class DashboardUiLifecycleServiceTest
 {
 	private final DashboardUiLifecycleService uils = new DashboardUiLifecycleService();
-	private static final Logger logger = LogManager.getLogger(DashboardUiLifecycleServiceTest.class);
+	private static final Logger LOGGER = LogManager.getLogger(DashboardUiLifecycleServiceTest.class);
 	@SuppressWarnings("unchecked")
 	@Test(groups = { "s2" })
 	public void testNewLifecycleInstance()
@@ -86,7 +86,7 @@ public class DashboardUiLifecycleServiceTest
 			uils.postStart(evt);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -124,7 +124,7 @@ public class DashboardUiLifecycleServiceTest
 			uils.postStop(evt);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -162,7 +162,7 @@ public class DashboardUiLifecycleServiceTest
 			uils.preStart(evt);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -200,7 +200,7 @@ public class DashboardUiLifecycleServiceTest
 			uils.preStop(evt);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 }

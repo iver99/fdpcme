@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 public class DashboardManagerPerfTest
 {
 	private static final long NUM_DASHBOARDS_FOR_PERF_TEST = 10000L;
-	private static final Logger logger = LogManager.getLogger(DashboardManagerPerfTest.class);
+	private static final Logger LOGGER = LogManager.getLogger(DashboardManagerPerfTest.class);
 
 
 	static {
@@ -68,7 +68,7 @@ public class DashboardManagerPerfTest
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getMessage());
 		}
 	}
@@ -86,7 +86,7 @@ public class DashboardManagerPerfTest
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getMessage());
 		}
 	}
@@ -103,14 +103,14 @@ public class DashboardManagerPerfTest
 						dm.getDashboardById(dashboards.get(dashboards.size() - 1).getDashboardId(), tenantId);
 					}
 					catch (DashboardException e) {
-						logger.info("context",e);
+						LOGGER.info("context",e);
 						// for dashboard exception, means dashboard not found. just ignore
 					}
 				}
 			}, null, null);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getMessage());
 		}
 	}
@@ -125,7 +125,7 @@ public class DashboardManagerPerfTest
 			Assert.assertNotNull(dbd);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getMessage());
 		}
 	}
@@ -141,7 +141,7 @@ public class DashboardManagerPerfTest
 			dm.getDashboardById(dashboardId, tenantId);
 		}
 		catch (DashboardException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			// for dashboard exception, means dashboard not found. just ignore
 		}
 		long end = System.currentTimeMillis();
@@ -171,7 +171,7 @@ public class DashboardManagerPerfTest
 			Assert.assertNotNull(dbd);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getMessage());
 		}
 	}
@@ -196,7 +196,7 @@ public class DashboardManagerPerfTest
 
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getMessage());
 		}
 	}

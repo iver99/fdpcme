@@ -30,7 +30,7 @@ public class DashboardCRUD
 	static String tenantid_2;
 	static String remoteuser;
 	
-	private static final Logger logger = LogManager.getLogger(DashboardCRUD.class);
+	private static final Logger LOGGER = LogManager.getLogger(DashboardCRUD.class);
 
 	@BeforeClass
 	public static void setUp()
@@ -243,7 +243,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 
 	}
@@ -285,7 +285,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 
 	}
@@ -346,7 +346,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		finally {
 			if (!("").equals(dashboard_id)) {
@@ -398,7 +398,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		finally {
 			if (!("").equals(dashboard_id)) {
@@ -437,7 +437,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -462,7 +462,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 
 	}
@@ -525,7 +525,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		finally {
 			if (!("").equals(dashboard_id)) {
@@ -571,7 +571,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		finally {
 			if (!("").equals(dashboard_id)) {
@@ -607,7 +607,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -651,7 +651,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		finally {
 			if (!("").equals(dashboard_id)) {
@@ -736,7 +736,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		finally {
 			if (!("").equals(dashboard_id)) {
@@ -815,7 +815,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		finally {
 			if (!("").equals(dashboard_id)) {
@@ -877,7 +877,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 
 	}
@@ -978,7 +978,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		finally {
 			if (!("").equals(dashboard_id)) {
@@ -1209,7 +1209,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		finally {
 			if (!("").equals(dashboard_id)) {
@@ -1249,7 +1249,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 
 	}
@@ -1301,7 +1301,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		finally {
 			if (!("").equals(dashboard_id)) {
@@ -1364,7 +1364,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		finally {
 			if (!("").equals(dashboard_id)) {
@@ -1430,7 +1430,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		finally {
 			if (!("").equals(dashboardset_id)) {
@@ -1507,7 +1507,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		finally {
 			if (!("").equals(dashboardset_id)) {
@@ -1570,7 +1570,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -1610,7 +1610,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		finally {
 			if (!("").equals(dashboard_id)) {
@@ -1695,7 +1695,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 

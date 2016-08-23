@@ -27,7 +27,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class CacheManager
 {
-	private static final Logger logger = LogManager.getLogger(CacheManager.class);
+	private static final Logger LOGGER = LogManager.getLogger(CacheManager.class);
 
 	public static final String CACHES_LOOKUP_CACHE = "lookupCache";
 	public static final String CACHES_SCREENSHOT_CACHE = "screenshotCache";
@@ -56,7 +56,7 @@ public class CacheManager
 	private CacheManager()
 	{
 		keyGen = new DefaultKeyGenerator();
-		logger.info("Initialization LRU CacheManager!!");
+		LOGGER.info("Initialization LRU CacheManager!!");
 		CacheFactory.getCache(CACHES_LOOKUP_CACHE,Integer.valueOf(conf.getString("CACHES_LOOKUP_CACHE_EXPIRE_TIME")));
 		CacheFactory.getCache(CACHES_SCREENSHOT_CACHE);
 		CacheFactory.getCache(CACHES_ETERNAL_CACHE);
@@ -103,18 +103,18 @@ public class CacheManager
 		}
 		Object value = cache.get(key.toString());
 		if (value == null && ff != null) {
-			logger.debug("Cache not retrieved, trying to load with fetch factory");
+			LOGGER.debug("Cache not retrieved, trying to load with fetch factory");
 			value = ff.fetchCachable(key);
 			if (value != null) {
 				cache.put(key.toString(), new Element(key,value));
-				logger.debug("Successfully fetched data, putting to cache");
+				LOGGER.debug("Successfully fetched data, putting to cache");
 			}
 		}
 		if (value == null) {
-			logger.debug("Not retrieved cache with cache name {} and key {} for tenant {}", cacheName, key, tenant);
+			LOGGER.debug("Not retrieved cache with cache name {} and key {} for tenant {}", cacheName, key, tenant);
 			return null;
 		}
-		logger.debug("Retrieved cacheable with key={} and value={} for tenant={}", key, value, tenant);
+		LOGGER.debug("Retrieved cacheable with key={} and value={} for tenant={}", key, value, tenant);
 		return value;
 	}
 
@@ -161,7 +161,7 @@ public class CacheManager
 			return null;
 		}
 		cache.put(key.toString(), new Element(key,value));
-		logger.debug("Cacheable with tenant={}, key={} and value={} is put to cache {}", tenant, key, value, cacheName);
+		LOGGER.debug("Cacheable with tenant={}, key={} and value={} is put to cache {}", tenant, key, value, cacheName);
 
 		return value;
 	}
@@ -188,7 +188,7 @@ public class CacheManager
 		}
 		Object obj = cache.get(key.toString());
 		cache.remove(key.toString());
-		logger.debug("Cacheable with key={} and value={} is removed from cache {}", key, obj, cacheName);
+		LOGGER.debug("Cacheable with key={} and value={} is removed from cache {}", key, obj, cacheName);
 		return obj;
 	}
 
@@ -210,7 +210,7 @@ public class CacheManager
 	private CacheUnit getInternalCache(String cacheName)
 	{
 		if (cacheName == null) {
-			logger.warn("Not retrieved from cache for null cache name");
+			LOGGER.warn("Not retrieved from cache for null cache name");
 			return null;
 		}
 		CacheUnit cache = null;
@@ -218,10 +218,10 @@ public class CacheManager
 			cache = CacheFactory.getCache(cacheName);
 		}
 		catch (IllegalArgumentException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 		if (cache == null) {
-			logger.debug("Not retrieved cache with cache name {}", cacheName);
+			LOGGER.debug("Not retrieved cache with cache name {}", cacheName);
 			return null;
 		}
 		return cache;
