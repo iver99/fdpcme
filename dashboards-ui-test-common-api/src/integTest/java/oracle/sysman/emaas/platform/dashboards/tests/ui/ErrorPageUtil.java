@@ -6,6 +6,9 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class ErrorPageUtil
 {
+	private ErrorPageUtil() {
+	  }
+
 	/**
 	 * click error page sign out button
 	 *

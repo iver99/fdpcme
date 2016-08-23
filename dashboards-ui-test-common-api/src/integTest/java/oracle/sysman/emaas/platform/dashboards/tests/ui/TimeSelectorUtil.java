@@ -7,6 +7,9 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class TimeSelectorUtil
 {
+	private TimeSelectorUtil() {
+	  }
+
 
 	public static String setCustomTime(WebDriver webd, int index, String startDateTime, String endDateTime) throws Exception 
 	{

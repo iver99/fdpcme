@@ -7,6 +7,9 @@ import org.testng.Assert;
 
 public class DashBoardUtils
 {
+	private DashBoardUtils() {
+	  }
+
 	private static WebDriver driver;
 
 	public static void apmOobGrid() 
