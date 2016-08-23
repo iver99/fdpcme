@@ -1,4 +1,4 @@
-define(['knockout', 'jquery', 'uifwk/js/util/message-util', 'ojs/ojdialog', 'ojs/ojbutton'],
+define(['knockout', 'jquery', 'uifwk/@version@/js/util/message-util-impl', 'ojs/ojdialog', 'ojs/ojbutton'],
     function(ko, $, msgUtilModel)
     {
         function AboutBox(params) {

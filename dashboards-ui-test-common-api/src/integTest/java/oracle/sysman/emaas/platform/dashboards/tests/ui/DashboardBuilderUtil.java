@@ -6,6 +6,9 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class DashboardBuilderUtil
 {
+	private DashboardBuilderUtil() {
+	  }
+
 	public static final String REFRESH_DASHBOARD_SETTINGS_OFF = IDashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF;
 	public static final String REFRESH_DASHBOARD_SETTINGS_5MIN = IDashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN;
 	public static final String TILE_WIDER = IDashboardBuilderUtil.TILE_WIDER;

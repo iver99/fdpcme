@@ -180,7 +180,7 @@ public class DashboardServiceFacadeTest
 
 	private EmsDashboardTile t;
 
-	private EmsDashboardTileParams p;
+	private EmsDashboardTileParams emDashboardTileParam;
 
 	//	/**
 	//	 * @throws java.lang.Exception
@@ -215,8 +215,8 @@ public class DashboardServiceFacadeTest
 			em = dashboardServiceFacade.getEntityManager();
 			d = DashboardServiceFacadeTest.newDashboard();
 			t = DashboardServiceFacadeTest.newTile();
-			p = DashboardServiceFacadeTest.newTileParams(testSeq++ % 3 + 1);
-			t.addEmsDashboardTileParams(p);
+			emDashboardTileParam = DashboardServiceFacadeTest.newTileParams(testSeq++ % 3 + 1);
+			t.addEmsDashboardTileParams(emDashboardTileParam);
 			d.addEmsDashboardTile(t);
 			//			f = DashboardServiceFacadeTest.newFavorite(d);
 

@@ -2,6 +2,9 @@ package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 
 public class PageId
 {
+	private PageId() {
+	  }
+
 	/*
 	 *
 	 *The following variable define the all elements id of Dashboard page, including the home page, create page

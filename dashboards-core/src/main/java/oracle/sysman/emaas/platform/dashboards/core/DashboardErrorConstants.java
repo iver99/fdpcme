@@ -19,6 +19,9 @@ package oracle.sysman.emaas.platform.dashboards.core;
  */
 public class DashboardErrorConstants
 {
+	private DashboardErrorConstants() {
+	  }
+
 	// error code for configuration/registry
 	public static final int CONFIGURATIONS_GENERIC_ERROR_CODE = 1000;
 	public static final int CONFIGURATIONS_REGISTRATION_ERROR_CODE = 1100;
