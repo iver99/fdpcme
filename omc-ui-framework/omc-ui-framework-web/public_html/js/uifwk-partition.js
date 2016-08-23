@@ -1,26 +1,3 @@
-if (window.DEV_MODE !==null && typeof window.DEV_MODE ==="object"){
-//define('uifwk/js/util/logging-util', ['uifwk/@version@/js/uifwk-partition'],
-//    function () {
-//        return require('uifwk/@version@/js/util/logging-util-impl');
-//    });
-//define('uifwk/js/util/usertenant-util', ['uifwk/@version@/js/uifwk-partition'],
-//    function () {
-//        return require('uifwk/@version@/js/util/usertenant-util-impl');
-//    });
-//define('uifwk/js/util/message-util', ['uifwk/@version@/js/uifwk-partition'],
-//    function () {
-//        return require('uifwk/@version@/js/util/message-util-impl');
-//    });
-//define('uifwk/js/util/df-util', ['uifwk/@version@/js/uifwk-partition'],
-//    function () {
-//        return require('uifwk/@version@/js/util/df-util-impl');
-//    });
-//define('uifwk/js/util/preference-util', ['uifwk/@version@/js/uifwk-partition'],
-//    function () {
-//        return require('uifwk/@version@/js/util/preference-util-impl');
-//    });
-}
-
 define([
 'uifwk/js/util/ajax-util',
 'uifwk/js/util/df-util',
