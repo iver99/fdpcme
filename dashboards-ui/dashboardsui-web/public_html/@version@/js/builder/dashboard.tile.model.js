@@ -439,6 +439,11 @@ define(['knockout',
                         self.currentWigedtWidth(self.resizingTile().cssWidth());
                         self.currentWigedtHeight(self.resizingTile().cssHeight());
                         self.resizingTileCopy = self.resizingTile();
+                        
+                        //set move options enabld/disabled after resizing tile
+                        self.resizingTileCopy.upEnabled(self.editor.mode.getModeRow(self.resizingTileCopy) > 0);
+                        self.resizingTileCopy.leftEnabled(self.editor.mode.getModeColumn(self.resizingTileCopy) > 0);
+                        self.resizingTileCopy.rightEnabled(self.editor.mode.getModeColumn(self.resizingTileCopy)+self.editor.mode.getModeWidth(self.resizingTileCopy) < self.editor.mode.MODE_MAX_COLUMNS);
                     }
                     self.resizingTile(null);
                     self.resizingOptions(null);
