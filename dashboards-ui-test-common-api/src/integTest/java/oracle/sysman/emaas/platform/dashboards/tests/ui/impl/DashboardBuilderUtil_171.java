@@ -1183,8 +1183,8 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 
 		driver.waitForElementPresent(DashBoardPageId.BUILDERDESCRIPTIONTEXTLOCATOR);
 		String realDesc = driver.getElement(DashBoardPageId.BUILDERDESCRIPTIONTEXTLOCATOR).getAttribute("title");
-		if (description == null || description.equals("")) {
-			if (realDesc != null && !realDesc.trim().equals("")) {
+		if (description == null || ("").equals(description)) {
+			if (realDesc != null && !("").equals(realDesc.trim())) {
 				driver.getLogger().info(
 						"verifyDashboard compelted and returns false. Expected description is " + description
 								+ ", actual dashboard description is " + realDesc);
@@ -1419,10 +1419,10 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	private boolean isRightDrawerVisible(WebDriver driver)
 	{
 		WebElement rightDrawerPanel = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RIGHTDRAWERPANELCSS));
-		boolean isDisplayed = rightDrawerPanel.getCssValue("display").equals("none") != true;
+		boolean isDisplayed = ("none").equals(rightDrawerPanel.getCssValue("display")) != true;
 		driver.getLogger().info("isRightDrawerVisible,the isDisplayed value is " + isDisplayed);
 
-		boolean isWidthValid = rightDrawerPanel.getCssValue("width").equals("0px") != true;
+		boolean isWidthValid = ("0px").equals(rightDrawerPanel.getCssValue("width")) != true;
 		driver.getLogger().info("isRightDrawerVisible,the isWidthValid value is " + isWidthValid);
 
 		return isDisplayed && isWidthValid;

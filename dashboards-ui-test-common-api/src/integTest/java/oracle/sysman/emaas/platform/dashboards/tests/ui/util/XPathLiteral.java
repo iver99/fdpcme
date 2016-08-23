@@ -69,7 +69,7 @@ public class XPathLiteral
 		String[] substrings = value.split("\"");
 		for (int i = 0; i < substrings.length; i++) {
 			boolean needComma = i > 0;
-			if (!substrings[i].equals("")) {
+			if (!("").equals(substrings[i])) {
 				if (i > 0) {
 					sb.append(", ");
 				}
