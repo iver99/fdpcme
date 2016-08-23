@@ -22,7 +22,7 @@ public class EMTargetMXBeanTest
 {
 	private static final Logger logger = LogManager.getLogger(EMTargetMXBeanTest.class);
 
-	private final String mbName = "Test_EMTargetMXBean";
+	private final static String mbName = "Test_EMTargetMXBean";
 	private final EMTargetMXBean mb = new EMTargetMXBeanImpl(mbName);
 
 	@Test(groups = { "s1" })

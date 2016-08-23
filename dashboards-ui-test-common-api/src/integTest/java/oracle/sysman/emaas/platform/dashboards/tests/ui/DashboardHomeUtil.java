@@ -8,6 +8,9 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class DashboardHomeUtil
 {
+	private DashboardHomeUtil() {
+	  }
+
 	public static final String DASHBOARD = IDashboardHomeUtil.DASHBOARD;
 	public static final String DASHBOARDSET = IDashboardHomeUtil.DASHBOARDSET;
 	public static final String EXPLOREDATA_MENU_ANALYZE = IDashboardHomeUtil.EXPLOREDATA_MENU_ANALYZE;

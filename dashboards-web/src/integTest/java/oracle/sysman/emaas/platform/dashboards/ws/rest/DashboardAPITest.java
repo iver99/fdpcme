@@ -1,15 +1,16 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
-import mockit.Deencapsulation;
-import mockit.Expectations;
-import mockit.Mocked;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.core.Response;
 
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
@@ -26,13 +27,6 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**

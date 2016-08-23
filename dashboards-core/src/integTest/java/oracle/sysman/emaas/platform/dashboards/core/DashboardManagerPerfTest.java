@@ -31,7 +31,7 @@ public class DashboardManagerPerfTest
 		PersistenceManager.setTestEnv(true);
 		UserContext.setCurrentUser("SYSMAN");
 	}
-	private final Long tenantId = 11L;
+	private final static Long tenantId = 11L;
 	private Long dashboard1stId;
 	private final DashboardManager dm = DashboardManager.getInstance();
 

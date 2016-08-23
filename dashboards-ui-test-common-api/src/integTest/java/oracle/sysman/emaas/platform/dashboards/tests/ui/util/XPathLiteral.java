@@ -17,6 +17,9 @@ import java.util.logging.Logger;
  */
 public class XPathLiteral
 {
+	private XPathLiteral() {
+	  }
+
 	/// Produce an XPath literal equal to the value if possible; if not, produce
 	/// an XPath expression that will match the value.
 	///

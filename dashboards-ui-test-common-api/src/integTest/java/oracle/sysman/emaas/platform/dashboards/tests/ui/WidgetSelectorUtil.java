@@ -6,6 +6,9 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class WidgetSelectorUtil
 {
+	private WidgetSelectorUtil() {
+	  }
+
 	public static void addWidget(WebDriver driver, String widgetName) 
 	{
 		IWidgetSelectorUtil wsu = new UtilLoader<IWidgetSelectorUtil>().loadUtil(driver, IWidgetSelectorUtil.class);

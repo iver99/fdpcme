@@ -30,6 +30,9 @@ import org.apache.logging.log4j.Logger;
  */
 public class RegistryLookupUtil
 {
+	private RegistryLookupUtil() {
+	  }
+
 	private static final Logger logger = LogManager.getLogger(RegistryLookupUtil.class);
 
 	// keep the following the same with service name
