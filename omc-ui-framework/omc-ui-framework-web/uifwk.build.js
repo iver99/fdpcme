@@ -21,16 +21,13 @@
                 "ojs/ojinputtext",
                 "text",
                 "ojL10n",
-                "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg",
-                "uifwk/libs/@version@/js/html2canvas/html2canvas",
-                "uifwk/libs/@version@/js/canvg/rgbcolor",
-                "uifwk/libs/@version@/js/canvg/StackBlur",
-                "uifwk/libs/@version@/js/canvg/canvg"
+                "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg"
             ]
         },
         {
             name: "uifwk/js/uifwk-partition",
-            exclude: ["uifwk/@version@/js/uifwk-impl-partition","knockout", 
+            exclude: ["uifwk/@version@/js/uifwk-impl-partition",
+                "knockout", 
                 "jquery",
                 "ojs/ojcore",
                 "ojs/ojdialog", 
@@ -44,11 +41,8 @@
                 "ojs/ojinputtext",
                 "text",
                 "ojL10n",
-                "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg",
-                "uifwk/libs/@version@/js/html2canvas/html2canvas",
-                "uifwk/libs/@version@/js/canvg/rgbcolor",
-                "uifwk/libs/@version@/js/canvg/StackBlur",
-                "uifwk/libs/@version@/js/canvg/canvg"]
+                "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg"
+            ]
         }
     ],
     paths: {
