@@ -51,13 +51,6 @@ public class TestBrandingBar extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testAdminLink");
 		WaitUtil.waitForPageFullyLoaded(webd);
-
-		// IT Analytics Administration link
-
-		WaitUtil.waitForPageFullyLoaded(webd);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcitas/warehouseadmin/html/admin-sources.html");
 	}
 
 	@Test
@@ -153,19 +146,11 @@ public class TestBrandingBar extends LoginAndLogout
 		// Visit ITA
 
 		WaitUtil.waitForPageFullyLoaded(webd);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcitas/warehouseadmin/html/admin-sources.html");
-
-		Assert.assertTrue(BrandingBarUtil.isAdmin(webd));
-
-		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT));
-		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT));
 
 		// Agents link
 		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT);
 		WaitUtil.waitForPageFullyLoaded(webd);
-		url = webd.getWebDriver().getCurrentUrl();
+		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "tenantmgmt/services/customersoftware");
 
