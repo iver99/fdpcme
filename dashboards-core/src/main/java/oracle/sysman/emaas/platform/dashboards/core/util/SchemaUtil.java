@@ -318,7 +318,7 @@ public class SchemaUtil
 
 	private static final String AUTH_STRING = "Basic d2VibG9naWM6d2VsY29tZTE=";
 
-	private static Logger logger = LogManager.getLogger(SchemaUtil.class);
+	private static final Logger LOGGER = LogManager.getLogger(SchemaUtil.class);
 
 	public static List<String> getDeploymentUrl(String json)
 	{
@@ -353,7 +353,7 @@ public class SchemaUtil
 		}
 		catch (Exception e) {
 
-			logger.error("an error occureed while getting schema name", e);
+			LOGGER.error("an error occureed while getting schema name", e);
 			return Collections.emptyList();
 		}
 		List<String> urls = new ArrayList<String>();
@@ -383,7 +383,7 @@ public class SchemaUtil
 			}
 		}
 		catch (IOException e) {
-			logger.error("an error occureed while getting details by url" + " ::" + url + "  " + e.toString());
+			LOGGER.error("an error occureed while getting details by url" + " ::" + url + "  " + e.toString());
 		} finally {
 			try {
 				if (in != null) {
@@ -395,6 +395,7 @@ public class SchemaUtil
 			}
 			catch (IOException ioEx) {
 				//ignore
+				LOGGER.info("context",ioEx);
 			}
 		}
 		return response.toString();
@@ -418,7 +419,7 @@ public class SchemaUtil
 			}
 		}
 		catch (IOException e) {
-			logger.error("an error occureed while getting schema user by software name", e);
+			LOGGER.error("an error occureed while getting schema user by software name", e);
 		}
 		return null;
 	}

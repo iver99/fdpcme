@@ -1,5 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.test.favoritedashboards;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +30,9 @@ public class FavoriteDashboardCRUD
 	static String tenantid;
 	static String tenantid_2;
 	static String remoteuser;
+
+	private static final Logger LOGGER = LogManager.getLogger(FavoriteDashboardCRUD.class);
+
 
 	@BeforeClass
 	public static void setUp()
@@ -72,6 +78,7 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -141,10 +148,11 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				
 				Response res5 = RestAssured
 						.given()
@@ -192,6 +200,7 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -258,7 +267,7 @@ public class FavoriteDashboardCRUD
 
 			if (id.size() - origin_id.size() == 1) {
 				for (int i = 0; i < id.size(); i++) {
-					if (name.get(i).equals("Test_Favorite_Dashboard") && id.get(i).toString().equals(dashboard_id)) {
+					if (("Test_Favorite_Dashboard").equals(name.get(i)) && id.get(i).toString().equals(dashboard_id)) {
 						Assert.assertTrue(true);
 					}
 				}
@@ -270,10 +279,11 @@ public class FavoriteDashboardCRUD
 
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				
 				Response res5 = RestAssured
 						.given()
@@ -318,6 +328,7 @@ public class FavoriteDashboardCRUD
 
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -390,10 +401,11 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				
 				Response res5 = RestAssured
 						.given()
@@ -449,6 +461,7 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -494,6 +507,7 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}

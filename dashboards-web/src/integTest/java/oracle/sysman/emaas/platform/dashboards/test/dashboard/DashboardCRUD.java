@@ -1,5 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.test.dashboard;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.test.common.CommonTest;
@@ -26,6 +29,8 @@ public class DashboardCRUD
 	static String tenantid;
 	static String tenantid_2;
 	static String remoteuser;
+	
+	private static final Logger LOGGER = LogManager.getLogger(DashboardCRUD.class);
 
 	@BeforeClass
 	public static void setUp()
@@ -238,6 +243,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 
 	}
@@ -279,6 +285,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 
 	}
@@ -339,9 +346,10 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				
 				Response res5 = RestAssured
 						.given()
@@ -390,9 +398,10 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				
 				Response res5 = RestAssured
 						.given()
@@ -428,6 +437,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -452,6 +462,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 
 	}
@@ -514,9 +525,10 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				
 				Response res = RestAssured
 						.given()
@@ -559,9 +571,10 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -594,6 +607,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -637,9 +651,10 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -721,9 +736,10 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				
 				Response res = RestAssured
 						.given()
@@ -799,9 +815,10 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				
 				Response res5 = RestAssured
 						.given()
@@ -860,6 +877,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 
 	}
@@ -960,9 +978,10 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				
 				Response res5 = RestAssured
 						.given()
@@ -1190,9 +1209,10 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res5 = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -1229,6 +1249,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 
 	}
@@ -1280,9 +1301,10 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res5 = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -1342,9 +1364,10 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res5 = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -1407,9 +1430,10 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 		finally {
-			if (!dashboardset_id.equals("")) {
+			if (!("").equals(dashboardset_id)) {
 				Response res5 = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -1483,9 +1507,10 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 		finally {
-			if (!dashboardset_id.equals("")) {
+			if (!("").equals(dashboardset_id)) {
 				Response res8 = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -1495,7 +1520,7 @@ public class DashboardCRUD
 								"Authorization", authToken).when().delete("/dashboards/" + dashboardset_id);
 				Assert.assertTrue(res8.getStatusCode() == 204);
 			}
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res9 = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -1545,6 +1570,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -1584,9 +1610,10 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 		finally {
-			if (!dashboard_id.equals("")) {
+			if (!("").equals(dashboard_id)) {
 				Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 						.headers("OAM_REMOTE_USER", tenantid + "." + remoteuser, "Authorization", authToken).when()
 						.delete("/dashboards/" + dashboard_id);
@@ -1668,6 +1695,7 @@ public class DashboardCRUD
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
 		}
 	}
 

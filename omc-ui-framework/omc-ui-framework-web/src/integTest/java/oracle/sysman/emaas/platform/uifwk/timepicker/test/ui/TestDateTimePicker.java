@@ -47,7 +47,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		String tmpReturnDate = "";
 
-		if (!timeRange.equals("Latest")) {
+		if (!("Latest").equals(timeRange)) {
 			tmpReturnDate = returnDate.substring(timeRange.length() + 1);
 			driver.getLogger().info("timerange: " + timeRange);
 			driver.getLogger().info("returnDate: " + tmpReturnDate);
@@ -121,6 +121,8 @@ public class TestDateTimePicker extends CommonUIUtils
 				break;
 			case "Latest":
 				Assert.assertEquals(lTimeRange, 0);
+				break;
+			default:
 				break;
 		}
 

@@ -32,18 +32,4 @@ public class FavoriteEntityTest {
 
     }
 
-    @Test
-    public void testSetHref() {
-
-    }
-
-    @Test
-    public void testSetId() {
-
-    }
-
-    @Test
-    public void testSetName() {
-
-    }
 }

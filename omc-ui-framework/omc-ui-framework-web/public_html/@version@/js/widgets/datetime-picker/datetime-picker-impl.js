@@ -1,4 +1,4 @@
-define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg", "ojs/ojdatetimepicker"],
+define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knockout", "jquery", "uifwk/@version@/js/util/message-util-impl", "ojs/ojcore", "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg", "ojs/ojdatetimepicker"],
         function (ko, $, msgUtilModel, oj, nls) {
 
             //Firefox ignores milliseconds when converting a date to Date object, while it doesn't when converting a number.
@@ -396,7 +396,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.panelPosition = {"my": "start top+16", "at": "start  bottom", "collision": "none", "of": "#dropDown_"+self.randomId};
                     self.pickerPanelPosition = {"my": "start top", "at": "end top", "collision": "none", "of": "#drawers_"+self.randomId};
                     self.timeFilterPosition = {"my": "start center", "at": "end center", "collision": "none"};
-                }
+                };
 
                 self.setDtpickerPositionToRight = function() {
                     self.drawerChosen("rightDrawerChosen");
@@ -407,7 +407,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.panelPosition = {"my": "end top+16", "at": "end  bottom", "collision": "none", "of": "#dropDown_"+self.randomId};
                     self.pickerPanelPosition = {"my": "end top", "at": "start top", "collision": "none", "of": "#drawers_"+self.randomId};
                     self.timeFilterPosition = {"my": "end center", "at": "start center", "collision": "none"};
-                }
+                };
 
                 self.setAllTimePeriodsNotChosen = function() {
                     self.last15minsChosen(false);
@@ -472,6 +472,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         case self.timePeriodCustom:
                             self.customChosen(true);
                             break;
+                        default:
+                            break;
                     }
                 };
 
@@ -531,6 +533,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             break;
                         case self.timePeriodLatest:
                             self.latestNotToShow(true);
+                        default:
+                            break;
                     }
                 };
 
@@ -718,8 +722,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                 if(!ko.components.isRegistered("time-filter")) {
                     ko.components.register("time-filter", {
-                        template: {require: "text!/emsaasui/uifwk/js/widgets/timeFilter/html/timeFilter.html"},
-                        viewModel: {require: "/emsaasui/uifwk/js/widgets/timeFilter/js/timeFilter.js"}//{instance: self.tfInstance}
+                        template: {require: "text!uifwk/js/widgets/timeFilter/html/timeFilter.html"},
+                        viewModel: {require: "uifwk/js/widgets/timeFilter/js/timeFilter"}//{instance: self.tfInstance}
                     });
                 }
 
@@ -908,7 +912,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         return true;
                     }
                     return false;
-                }
+                };
 
                 /**
                  *
@@ -919,7 +923,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     var timezoneOffset = date.getTimezoneOffset()/60;
                     timezoneOffset = timezoneOffset>0 ? ("GMT-"+timezoneOffset) : ("GMT+"+Math.abs(timezoneOffset));
                     return timezoneOffset;
-                }
+                };
 
                 /**
                  *
@@ -1115,7 +1119,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         self.lastDaysChecked(self.tfInstance.daysChecked());
                         self.lastMonthsChecked(self.tfInstance.monthsChecked());
                     }
-            }
+            };
 
             /**
              * type: 0 for initialize time picker, 1 for user's action. This param is used for not validating window limit when initialized.
@@ -1356,7 +1360,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.shouldSetLastDatas = true;
                     $(self.pickerPanelId).ojPopup('close');
                     $(self.panelId).ojPopup('close');
-                }
+                };
 
                 //contol whether the panel should popup or not
                 self.panelControl = function () {
@@ -1428,7 +1432,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }else {
                         return false;
                     }
-                }
+                };
 
                 /**
                  * set everyting to original state if not applied
@@ -1473,11 +1477,11 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     if(!$(event.target).hasClass(self.drawerChosen())) {
                         $(event.target).addClass(self.drawerHover);
                     }
-                }
+                };
 
                 self.hoverOutDrawer = function(data, event) {
                     $(event.target).removeClass(self.drawerHover);
-                }
+                };
 
                 //select time period
                 self.chooseTimePeriod = function (data, event) {
@@ -1729,18 +1733,18 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }else {
                         $(self.timeFilterId).ojPopup("open", "#pickerPanel_"+self.randomId, self.timeFilterPosition);
                     }
-                }
+                };
 
                 self.showTimeFilterInfo = function() {
                     $("#tfInfo_"+self.randomId).ojPopup("open", "#tfInfoIndicator_"+self.randomId);
                     if ($(self.panelId).ojPopup('isOpen')) {
                         self.closeAllPopups();
                     }
-                }
+                };
 
                 self.hideTimeFilterInfo = function() {
                     $("#tfInfo_"+self.randomId).ojPopup("close");
-                }
+                };
 
                 self.toggleTimeFilterInfo = function() {
                     if($("#tfInfo_"+self.randomId).ojPopup("isOpen")) {
@@ -1751,7 +1755,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             self.closeAllPopups();
                         }
                     }
-                }
+                };
 
                 self.generateTfTooltip = function(hoursOfDay, daysOfWeek, monthsOfYear) {
                     var i;
@@ -1787,9 +1791,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                                     break;
                                 }
-                                if(hoursExcluded[i] - hoursExcluded[i-1] === 1) {
-                                    continue;
-                                }else {
+                                if(hoursExcluded[i] - hoursExcluded[i-1] !== 1) {
                                     hoursExcludedEnd.push(hoursExcluded[i-1]);
                                     hoursExcludedStart.push(hoursExcluded[i]);
                                 }
@@ -1857,7 +1859,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         tfTooltip = hoursExcludedInfo + period1 + daysExcludedInfo + period2 + monthsExcludedInfo;
                         return tfTooltip;
                     }
-                }
+                };
 
 
                 self.tfParams = {

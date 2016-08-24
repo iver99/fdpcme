@@ -96,38 +96,5 @@ public class EmsDashboardTileParamsTest {
         assertEquals(emsDashboardTileParams.getParamValueTimestamp(), now);
     }
 
-    @Test
-    public void testSetDashboardTile() {
-
-    }
-
-    @Test
-    public void testSetIsSystem() {
-
-    }
-
-    @Test
-    public void testSetParamName() {
-
-    }
-
-    @Test
-    public void testSetParamType() {
-
-    }
-
-    @Test
-    public void testSetParamValueNum() {
-
-    }
-
-    @Test
-    public void testSetParamValueStr() {
-
-    }
-
-    @Test
-    public void testSetParamValueTimestamp() {
-
-    }
+   
 }

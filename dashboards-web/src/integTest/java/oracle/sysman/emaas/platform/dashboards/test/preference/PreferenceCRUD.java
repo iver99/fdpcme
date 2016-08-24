@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.test.preference;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.test.common.CommonTest;
@@ -26,6 +28,8 @@ public class PreferenceCRUD
 	static String tenantid;
 	static String tenantid_2;
 	static String remoteuser;
+	
+	private static final Logger LOGGER = LogManager.getLogger(PreferenceCRUD.class);
 
 	@BeforeClass
 	public static void setUp()
@@ -81,6 +85,7 @@ public class PreferenceCRUD
 
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -119,6 +124,7 @@ public class PreferenceCRUD
 
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -178,6 +184,7 @@ public class PreferenceCRUD
 
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -221,6 +228,7 @@ public class PreferenceCRUD
 
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -267,6 +275,7 @@ public class PreferenceCRUD
 
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -359,6 +368,7 @@ public class PreferenceCRUD
 
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -424,6 +434,7 @@ public class PreferenceCRUD
 			
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -497,6 +508,7 @@ public class PreferenceCRUD
 
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -546,6 +558,7 @@ public class PreferenceCRUD
 			}
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -599,6 +612,7 @@ public class PreferenceCRUD
 
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 

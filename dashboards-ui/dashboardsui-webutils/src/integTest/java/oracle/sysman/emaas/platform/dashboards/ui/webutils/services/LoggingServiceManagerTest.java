@@ -15,8 +15,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.management.InstanceAlreadyExistsException;
-import javax.management.InstanceNotFoundException;
-import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
@@ -25,6 +23,8 @@ import mockit.Mock;
 import mockit.MockUp;
 import mockit.Mocked;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
@@ -33,6 +33,9 @@ import org.testng.annotations.Test;
  */
 public class LoggingServiceManagerTest
 {
+
+	private static final Logger LOGGER = LogManager.getLogger(LoggingServiceManagerTest.class);
+
 	LoggingServiceManager lsm = new LoggingServiceManager();
 	@Mocked
 	private URL _url;
@@ -54,6 +57,7 @@ public class LoggingServiceManagerTest
 					return new URL("TestURL1");
 				}
 				catch (MalformedURLException e) {
+					LOGGER.info("context",e);
 					return null;
 				}
 			}
@@ -83,6 +87,7 @@ public class LoggingServiceManagerTest
 					return new URL("TestURL1");
 				}
 				catch (MalformedURLException e) {
+					LOGGER.info("context",e);
 					return null;
 				}
 			}
@@ -107,7 +112,7 @@ public class LoggingServiceManagerTest
 			lsm.preStop(null);
 		}
 		catch (Exception e) {
-
+			LOGGER.info("context",e);
 		}
 	}
 }

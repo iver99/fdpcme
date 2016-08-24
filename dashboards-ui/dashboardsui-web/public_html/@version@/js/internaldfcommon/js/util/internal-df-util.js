@@ -343,7 +343,7 @@ define(['knockout',
              */
             self.getScreenshotSizePerRatio = function(pWidth, pHeight, scrshotHref, callback) {
                 dfu.getScreenshotSizePerRatio(pWidth, pHeight, scrshotHref, callback);
-            }
+            };
 
         }
         return new InternalDashboardFrameworkUtility();

@@ -28,7 +28,7 @@ public class LoggingItemsTest {
 
     @AfterMethod
     public void tearDown()  {
-
+    	// do nothing
     }
 
     @Test

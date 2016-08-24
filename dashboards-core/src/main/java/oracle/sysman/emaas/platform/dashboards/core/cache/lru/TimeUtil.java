@@ -2,7 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.core.cache.lru;
 
 
 public class TimeUtil {
-	public TimeUtil()
+	private TimeUtil()
     {
     }
 

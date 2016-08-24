@@ -38,7 +38,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class APIBase
 {
-	private static Logger logger = LogManager.getLogger(APIBase.class);
+	private static final Logger LOGGER = LogManager.getLogger(APIBase.class);
 
 	@Context
 	protected UriInfo uriInfo;
@@ -54,7 +54,7 @@ public class APIBase
 	public Response buildErrorResponse(ErrorEntity error)
 	{
 		if (error == null) {
-			logger.error("Returning a empty response because specified error entity is empty");
+			LOGGER.error("Returning a empty response because specified error entity is empty");
 			return null;
 		}
 		return Response.status(error.getStatusCode()).entity(getJsonUtil().toJson(error)).build();
@@ -131,12 +131,12 @@ public class APIBase
 	protected Dashboard updateDashboardHref(Dashboard dbd, String tenantName)
 	{
 		if (dbd == null) {
-			logger.error("Error: updating href for a null dashboard");
+			LOGGER.error("Error: updating href for a null dashboard");
 			return null;
 		}
 		String externalBase = DashboardAPIUtil.getExternalDashboardAPIBase(tenantName);
 		if (StringUtil.isEmpty(externalBase)) {
-			logger.error("Error: updating href for a dashboard with null or empty base external url");
+			LOGGER.error("Error: updating href for a dashboard with null or empty base external url");
 			return null;
 		}
 		String href = externalBase + (externalBase.endsWith("/") ? "" : "/") + dbd.getDashboardId();

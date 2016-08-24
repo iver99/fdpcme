@@ -111,11 +111,7 @@ $.widget('dbs.dbsDashboardPanel',
                 this.element.addClass( "dbs-dsbnormal" );
             }
             setTimeout(function() {
-                if(_element.is(":hover")) {
-
-                }
-                else
-                {
+                if(!_element.is(":hover")) {
                     self._deactivate(null);
                 }
             }, 0);

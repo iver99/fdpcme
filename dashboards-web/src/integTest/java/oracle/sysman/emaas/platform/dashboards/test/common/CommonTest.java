@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.test.common;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,6 +33,7 @@ import com.jayway.restassured.config.LogConfig;
 
 public class CommonTest
 {
+	private static final Logger LOGGER = LogManager.getLogger(CommonTest.class);
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	private static class SchemaDeploymentUrls
@@ -111,8 +114,8 @@ public class CommonTest
 			}
 		}
 		catch (Exception e) {
-
-			//	logger.error("an error occureed while getting schema name", e);
+			LOGGER.info("context",e);
+			//	LOGGER.error("an error occureed while getting schema name", e);
 			return Collections.emptyList();
 		}
 		List<String> urls = new ArrayList<String>();
@@ -182,7 +185,7 @@ public class CommonTest
 			RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
 		}
 		catch (Exception e) {
-			
+			LOGGER.info("context",e);
 		}
 
 	}
@@ -195,7 +198,7 @@ public class CommonTest
 	public String getData(String url)
 	{
 
-		if (url == null || url.trim().equals("")) {
+		if (url == null || ("").equals(url.trim())) {
 			return null;
 		}
 
@@ -215,7 +218,7 @@ public class CommonTest
 			}
 		}
 		catch (IOException e) {
-			
+			LOGGER.info("context",e);
 		}
 		finally {
 			try {
@@ -228,6 +231,7 @@ public class CommonTest
 			}
 			catch (IOException ioEx) {
 				//ignore
+				LOGGER.info("context",ioEx);
 			}
 		}
 		return response.toString();

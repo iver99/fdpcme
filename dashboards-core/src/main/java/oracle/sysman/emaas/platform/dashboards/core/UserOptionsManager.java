@@ -28,7 +28,7 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
  * @author jishshi
  */
 public class UserOptionsManager {
-    private static final Logger logger = LogManager.getLogger(UserOptionsManager.class);
+    private static final Logger LOGGER = LogManager.getLogger(UserOptionsManager.class);
 
     private static final UserOptionsManager instance = new UserOptionsManager();
     public static final Long DEFAULT_REFRESH_INTERVAL = 300000L;
@@ -49,12 +49,12 @@ public class UserOptionsManager {
             em = dsf.getEntityManager();
 
             if (dashboardId == null || dashboardId <= 0) {
-                logger.debug("Dashboard not found for id {} is invalid", dashboardId);
+                LOGGER.debug("Dashboard not found for id {} is invalid", dashboardId);
                 throw new DashboardNotFoundException();
             }
             EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
             if (ed == null) {
-                logger.debug("Dashboard not found with the specified id {}", dashboardId);
+                LOGGER.debug("Dashboard not found with the specified id {}", dashboardId);
                 throw new DashboardNotFoundException();
             }
 
@@ -84,12 +84,12 @@ public class UserOptionsManager {
 
             Long dashboardId = userOptions.getDashboardId();
             if (dashboardId == null || dashboardId <= 0) {
-                logger.debug("Dashboard not found for id {} is invalid", dashboardId);
+                LOGGER.debug("Dashboard not found for id {} is invalid", dashboardId);
                 throw new DashboardNotFoundException();
             }
             EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
             if (ed == null) {
-                logger.debug("Dashboard not found with the specified id {}", dashboardId);
+                LOGGER.debug("Dashboard not found with the specified id {}", dashboardId);
                 throw new DashboardNotFoundException();
             }else{
                 // create or update if exists

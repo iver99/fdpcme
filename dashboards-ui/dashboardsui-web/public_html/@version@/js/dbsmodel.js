@@ -17,8 +17,8 @@ define([
     'knockout',
     'jquery',
     'dfutil',
-    'prefutil',
-    'mobileutil',
+    'uifwk/js/util/preference-util',
+    'uifwk/js/util/mobile-util',
     'ojs/ojknockout',
     'ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'
@@ -156,7 +156,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 
     function ViewModel(predata, parentElementId, defaultFilters, dashboardSetItem, isSet) {
 
-        var self = this, showWelcome = (predata === null ? false : predata.getShowWelcomePref());
+        var self = this, showWelcome = false; //(predata === null ? false : predata.getShowWelcomePref());
 
         self.parentElementId = parentElementId;
         self.getElementByCss = function(cssSelector) {

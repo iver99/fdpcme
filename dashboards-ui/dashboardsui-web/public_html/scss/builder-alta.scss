@@ -1531,6 +1531,18 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     background-color:black; 
     opacity: 0.4; 
 }
+
+.dbd-icon-disabled {
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+    filter: gray;
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+}
+
 .edit-setting-head{
     position:relative; 
     float:left; 

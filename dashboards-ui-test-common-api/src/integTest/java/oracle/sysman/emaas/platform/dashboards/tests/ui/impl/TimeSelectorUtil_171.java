@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -299,8 +300,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Latest);
 				webd.click("css=" + TimeSelectorUIControls.sTimeRange_Latest);
 				webd.takeScreenShot();
-				return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1)
-						.getText();
+				return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1).getText();
 			case Custom:
 				try {
 					throw new Exception("Please use setCustomTime API to set Custom Range");
@@ -309,6 +309,8 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			default:
+				break;
 
 		}
 		String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
@@ -513,11 +515,11 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 
 		//get separate hours to include
 		String[] hoursToExcludeRanges = hoursToExclude.split(",");
-		ArrayList<Integer> hoursToIncludeList = new ArrayList<Integer>();
+		List<Integer> hoursToIncludeList = new ArrayList<Integer>();
 		for (int i = 0; i < 24; i++) {
 			hoursToIncludeList.add(i);
 		}
-		ArrayList<Integer> hoursToExcludeList = new ArrayList<Integer>();
+		List<Integer> hoursToExcludeList = new ArrayList<Integer>();
 		for (String tmpRange : hoursToExcludeRanges) {
 			String[] bounds = tmpRange.split("-");
 			int start = Integer.parseInt(bounds[0].trim());
@@ -536,8 +538,8 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		Collections.sort(hoursToIncludeList);
 
 		//get hours filter input from separate hours to include
-		ArrayList<Integer> hoursIncludedStarts = new ArrayList<Integer>();
-		ArrayList<Integer> hoursIncludedEnds = new ArrayList<Integer>();
+		List<Integer> hoursIncludedStarts = new ArrayList<Integer>();
+		List<Integer> hoursIncludedEnds = new ArrayList<Integer>();
 		hoursIncludedStarts.add(hoursToIncludeList.get(0));
 		for (int i = 1; i < hoursToIncludeList.size(); i++) {
 			if (i == hoursToIncludeList.size() - 1) {

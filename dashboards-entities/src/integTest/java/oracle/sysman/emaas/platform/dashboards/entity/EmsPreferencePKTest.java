@@ -7,7 +7,6 @@ import static org.testng.Assert.*;
 
 @Test(groups={"s1"})
 public class EmsPreferencePKTest {
-    private EmsPreference emsPreference = new EmsPreference("elephant","elephant","elephant");
     private EmsPreferencePK emsPreferencePK = new EmsPreferencePK("elephant","dolphine");
     @Test
     public void testEquals() {
@@ -40,13 +39,4 @@ public class EmsPreferencePKTest {
 
     }
 
-    @Test
-    public void testSetPrefKey() {
-
-    }
-
-    @Test
-    public void testSetUserName() {
-
-    }
 }

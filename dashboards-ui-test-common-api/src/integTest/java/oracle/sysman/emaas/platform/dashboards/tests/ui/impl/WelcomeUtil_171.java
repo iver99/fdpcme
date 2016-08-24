@@ -23,39 +23,39 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 {
-	public final String DATA_EXPLORERS_LOG = "log";
+	public final static String DATA_EXPLORERS_LOG = "log";
 
-	public final String DATA_EXPLORERS_ANALYZE = "analyze";
+	public final static String DATA_EXPLORERS_ANALYZE = "analyze";
 
-	public final String DATA_EXPLORERS_SEARCH = "search";
+	public final static String DATA_EXPLORERS_SEARCH = "search";
 
-	public final String ITA_DEFAULT = "default";
+	public final static String ITA_DEFAULT = "default";
 
-	public final String ITA_PERFORMANCE_ANALYTICS_DATABASE = "performanceAnalyticsDatabase";
+	public final static String ITA_PERFORMANCE_ANALYTICS_DATABASE = "performanceAnalyticsDatabase";
 
-	public final String ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE = "performanceAnalyticsMiddleware";
+	public final static String ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE = "performanceAnalyticsMiddleware";
 
-	public final String ITA_RESOURCE_ANALYTICS_DATABASE = "resourceAnalyticsDatabase";
+	public final static String ITA_RESOURCE_ANALYTICS_DATABASE = "resourceAnalyticsDatabase";
 
-	public final String ITA_RESOURCE_ANALYTICS_MIDDLEWARE = "resourceAnalyticsMiddleware";
+	public final static String ITA_RESOURCE_ANALYTICS_MIDDLEWARE = "resourceAnalyticsMiddleware";
 
-	public final String ITA_DATA_EXPLORER_ANALYZE = "dataExplorerAnalyze";
+	public final static String ITA_DATA_EXPLORER_ANALYZE = "dataExplorerAnalyze";
 
-	public final String ITA_DATA_EXPLORER = "dataExplorer";
+	public final static String ITA_DATA_EXPLORER = "dataExplorer";
 
-	public final String LEARN_MORE_GET_STARTED = "getStarted";
+	public final static String LEARN_MORE_GET_STARTED = "getStarted";
 
-	public final String LEARN_MORE_VIDEOS = "videos";
+	public final static String LEARN_MORE_VIDEOS = "videos";
 
-	public final String LEARN_MORE_SERVICE_OFFERINGS = "serviceOfferings";
+	public final static String LEARN_MORE_SERVICE_OFFERINGS = "serviceOfferings";
 
-	public final String SERVICE_NAME_APM = "APM";
+	public final static String SERVICE_NAME_APM = "APM";
 
-	public final String SERVICE_NAME_LA = "LA";
-	public final String SERVICE_NAME_ITA = "ITA";
-	public final String SERVICE_NAME_DASHBOARDS = "dashboards";
+	public final static String SERVICE_NAME_LA = "LA";
+	public final static String SERVICE_NAME_ITA = "ITA";
+	public final static String SERVICE_NAME_DASHBOARDS = "dashboards";
 
-	public final String SERVICE_NAME_DATA_EXPLORERS = "dataExplorers";
+	public final static String SERVICE_NAME_DATA_EXPLORERS = "dataExplorers";
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#dataExplorers(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
@@ -86,6 +86,9 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_DATAEXP_SELECTID,
 						DashBoardPageId.WELCOME_DATAEXP_SEARCH);
 				break;
+			default:
+				break;
+				
 		}
 		driver.getWebDriver().findElement(By.xpath(eleXpath)).click();
 		driver.takeScreenShot();
@@ -258,6 +261,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				case ITA_DATA_EXPLORER:
 					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID, DashBoardPageId.WELCOME_ITA_DE);
 					break;
+				default:
+					break;
 			}
 			driver.click(eleXpath);
 			driver.takeScreenShot();
@@ -313,6 +318,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 			case LEARN_MORE_SERVICE_OFFERINGS:
 				expectedName = "Service Offerings";
 				break;
+			default:
+				break;
 		}
 		return expectedName;
 	}
@@ -336,6 +343,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				break;
 			case LEARN_MORE_SERVICE_OFFERINGS:
 				itemId = DashBoardPageId.WELCOME_LEARNMORE_SERVICEOFFERING;
+				break;
+			default:
 				break;
 		}
 		return itemId;
@@ -387,6 +396,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				break;
 			case SERVICE_NAME_DATA_EXPLORERS:
 				serviceWrapperId = DashBoardPageId.WELCOME_DATAEXP;
+				break;
+			default:
 				break;
 		}
 		return serviceWrapperId;
