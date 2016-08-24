@@ -768,6 +768,30 @@ define(['knockout',
                     self.reorderedDbsSetItems(tempAarray);
                     self.saveDashboardSet();
             });
+            
+            function dashboardsetToolBarChange(changeName, value) {
+                switch (changeName)
+                {
+                    case "dashboardsetName":
+                        self.dashboardsetName(value);
+                        self.dashboardInst.name(value);
+                        break;
+                    case "dashboardsetDes":
+                        var _isEmptyDes = !self.dashboardInst.description;
+                        var _changeToEmptyDes = !value;
+                        if (_isEmptyDes && !_changeToEmptyDes) {
+                            self.dashboardInst.description = ko.observable(value);
+                        } else if (!_isEmptyDes && !_changeToEmptyDes) {
+                            self.dashboardInst.description(value);
+                        } else if (!_isEmptyDes) {
+                            delete self.dashboardInst.description;
+                        }
+                        self.dashboardsetDescription(value);
+                        break;
+                }
+            }
+
+            Builder.registerModule(dashboardsetToolBarChange, 'dashboardsetToolBarChange');
         }
 
         Builder.registerModule(DashboardsetToolBarModel, 'DashboardsetToolBarModel');
