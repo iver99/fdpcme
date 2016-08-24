@@ -111,8 +111,8 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 self.editRightpanelLinkage(status);
             }          
         }
-
-        Builder.registerModule(rightPanelChange, 'rightPanelChange');
+        
+        Builder.registerFunction(rightPanelChange, 'rightPanelChange');
         
         self.initDraggable = function() {
                 self.initWidgetDraggable();

@@ -791,7 +791,7 @@ define(['knockout',
                 }
             }
 
-            Builder.registerModule(dashboardsetToolBarChange, 'dashboardsetToolBarChange');
+            Builder.registerFunction(dashboardsetToolBarChange, 'dashboardsetToolBarChange');
         }
 
         Builder.registerModule(DashboardsetToolBarModel, 'DashboardsetToolBarModel');
