@@ -145,7 +145,7 @@ define(['knockout',
                     if (self.isDashboardSet()) {
                         self.dashboardsetToolBarModel.reorderedDbsSetItems.subscribe(function () {
                             var isOnlyDashboardPicker = self.dashboardsetToolBarModel.dashboardsetItems.length === 1 && self.dashboardsetToolBarModel.dashboardsetItems[0].type === "new";
-                            self.dashboardsetShareDisabled(isOnlyDashboardPicker);
+                            self.rightPanelEdit.dashboardsetShareDisabled(isOnlyDashboardPicker);
                         });
                     }
 
@@ -170,7 +170,6 @@ define(['knockout',
             self.initEventHandlers = function() {
                 self.$b.addEventListener(self.$b.EVENT_TILE_MAXIMIZED, self.tileMaximizedHandler);
                 self.$b.addEventListener(self.$b.EVENT_TILE_RESTORED, self.tileRestoredHandler);
-                self.$b.addEventListener(self.$b.EVENT_DSBSET_AUTO_REFRESH_CHANGED, self.dsbSetAutoRefreshChanged);
                 self.$b.addEventListener(self.$b.EVENT_DASHBOARD_SHARE_CHANGED, self.dashboardShareChanged)
             };
 
@@ -208,22 +207,6 @@ define(['knockout',
 
                 self.initDraggable();
                 self.$b.triggerBuilderResizeEvent('hide left panel because restore');
-            };
-            
-            self.dsbSetAutoRefreshChanged = function(interval) {
-                if(self.dashboardsetShare() !== "on") {                    
-                    self.dashboardsetToolBarModel.dashboardExtendedOptions.autoRefresh.defaultValue = interval;
-                    var fieldsToUpdate = {
-                        extendedOptions: JSON.stringify(self.dashboardsetToolBarModel.dashboardExtendedOptions)
-                    };
-                    self.dashboardsetToolBarModel.saveDashboardSet(fieldsToUpdate,
-                        function(result) {
-                            if(!self.dashboardsetToolBarModel.dashboardInst.extendedOptions) {
-                                self.dashboardsetToolBarModel.dashboardInst.extendedOptions = ko.observable();
-                            }
-                            self.dashboardsetToolBarModel.dashboardInst.extendedOptions(result.extendedOptions);
-                        });
-                }
             };
             
             self.dashboardShareChanged = function(value) {

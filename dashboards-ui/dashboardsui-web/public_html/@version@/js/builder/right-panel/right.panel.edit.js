@@ -83,6 +83,13 @@ define([
 
             //todo called when refresh page
             dsbSetSaveDelay.subscribe(function () {
+                if(prevSharePublic !== self.dashboardsetShare() && self.dashboardsetShare()==="on") {
+                    var option = {"autoRefresh":{"defaultValue":self.dashboardsetToolBarModel.autoRefreshInterval()}};
+                    if(!self.dashboardsetToolBarModel.dashboardInst.extendedOptions) {
+                        self.dashboardsetToolBarModel.dashboardInst.extendedOptions = ko.observable();
+                    }
+                    self.dashboardsetToolBarModel.dashboardInst.extendedOptions(JSON.stringify(option));
+                }
                 self.dashboardsetToolBarModel.saveDashboardSet(
                         {
                             "name": self.dashboardsetName(),

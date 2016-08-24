@@ -608,10 +608,6 @@ define(['knockout',
                             dfu.showMessage({type: 'confirm', summary: getNlsString('DBS_BUILDER_MSG_AUTO_REFRESH_OFF'), detail: '', removeDelayTime: 5000});
                         }
                         
-                        if($(".dbd-left-panel:visible").length>0 && ko.dataFor($(".dbd-left-panel:visible")[0])) {
-                            var $b = ko.dataFor($(".dbd-left-panel:visible")[0]).$b;
-                            $b && $b.triggerEvent($b.EVENT_DSBSET_AUTO_REFRESH_CHANGED, "dashboard set auto-refresh value changed", self.autoRefreshInterval());
-                        }
                         self.extendedOptions.autoRefresh ? (self.extendedOptions.autoRefresh.defaultValue = self.autoRefreshInterval()) : (self.extendedOptions.autoRefresh={defaultValue: self.autoRefreshInterval()});
                     }
                     self.saveUserOptions();
