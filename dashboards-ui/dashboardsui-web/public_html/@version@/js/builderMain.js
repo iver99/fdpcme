@@ -42,9 +42,6 @@ requirejs.config({
         'dashboards': '.',
         'builder': './builder',
         'dfutil':'internaldfcommon/js/util/internal-df-util',
-        'prefutil':'/emsaasui/uifwk/js/util/preference-util',
-        'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
-        'mobileutil':'/emsaasui/uifwk/js/util/mobile-util',
         'uiutil':'internaldfcommon/js/util/ui-util',
         'idfbcutil':'internaldfcommon/js/util/internal-df-browser-close-util',
         'd3':'../../libs/@version@/js/d3/d3.min',
@@ -52,10 +49,33 @@ requirejs.config({
         'emcta':'/emsaasui/emcta/ta/js',
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
-//        'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
         'uifwk': '/emsaasui/uifwk'
     },
-    bundles: (window.DEV_MODE ? undefined : {
+    bundles: (window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ? undefined : {
+        'uifwk/js/uifwk-partition':
+            [
+            'uifwk/js/util/ajax-util',
+            'uifwk/js/util/df-util',
+            'uifwk/js/util/logging-util',
+            'uifwk/js/util/message-util',
+            'uifwk/js/util/mobile-util',
+            'uifwk/js/util/preference-util',
+            'uifwk/js/util/screenshot-util',
+            'uifwk/js/util/typeahead-search',
+            'uifwk/js/util/usertenant-util',
+            'uifwk/js/widgets/aboutbox/js/aboutbox',
+            'uifwk/js/widgets/brandingbar/js/brandingbar',
+            'uifwk/js/widgets/datetime-picker/js/datetime-picker',
+            'uifwk/js/widgets/navlinks/js/navigation-links',
+            'uifwk/js/widgets/timeFilter/js/timeFilter',
+            'uifwk/js/widgets/widgetselector/js/widget-selector',
+            'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
+            'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
+            'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
+            'text!uifwk/js/widgets/widgetselector/html/widget-selector.html',
+            'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
+            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
+            ],
         'builder/builder.jet.partition': [
             'ojs/ojcore',
             'ojs/ojknockout',
@@ -145,7 +165,7 @@ requirejs.config({
             'knockout',
             'jquery',
             'ojL10n']
-    }),
+    },
     // Shim configurations for modules that do not expose AMD
     shim: {
         'jquery': {
@@ -187,7 +207,7 @@ require(['knockout',
     'jquery',
     'dfutil',
     'uifwk/js/util/df-util',
-    'loggingutil',
+    'uifwk/js/util/logging-util',
     'ojs/ojcore',
     'dashboards/widgets/autorefresh/js/auto-refresh',
 //    'dashboards/widgets/textwidget/js/textwidget',
@@ -210,22 +230,28 @@ require(['knockout',
         // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
         // If you comment the line below, our current log calls will not be output!
         logger.setLogLevel(oj.Logger.LEVEL_WARN);
+        
+        window.onerror = function (msg, url, lineNo, columnNo, error)
+        {
+            oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg, true); 
+            return false; 
+        }
 
         if (!ko.components.isRegistered('df-oracle-branding-bar')) {
             ko.components.register("df-oracle-branding-bar",{
-                viewModel:{require:'/emsaasui/uifwk/js/widgets/brandingbar/js/brandingbar.js'},
-                template:{require:'text!/emsaasui/uifwk/js/widgets/brandingbar/html/brandingbar.html'}
+                viewModel:{require:'uifwk/js/widgets/brandingbar/js/brandingbar'},
+                template:{require:'text!uifwk/js/widgets/brandingbar/html/brandingbar.html'}
             });
         }
         if (!ko.components.isRegistered('df-widget-selector')) {
             ko.components.register("df-widget-selector",{
-                viewModel:{require:'/emsaasui/uifwk/js/widgets/widgetselector/js/widget-selector.js'},
-                template:{require:'text!/emsaasui/uifwk/js/widgets/widgetselector/html/widget-selector.html'}
+                viewModel:{require:'uifwk/js/widgets/widgetselector/js/widget-selector'},
+                template:{require:'text!uifwk/js/widgets/widgetselector/html/widget-selector.html'}
             });
         }
         ko.components.register("df-datetime-picker",{
-            viewModel: {require: '/emsaasui/uifwk/js/widgets/datetime-picker/js/datetime-picker.js'},
-            template: {require: 'text!/emsaasui/uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
+            viewModel: {require: 'uifwk/js/widgets/datetime-picker/js/datetime-picker'},
+            template: {require: 'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
         });
         ko.components.register("df-auto-refresh",{
             viewModel:auto_refresh,

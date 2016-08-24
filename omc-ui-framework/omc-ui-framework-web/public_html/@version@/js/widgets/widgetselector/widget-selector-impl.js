@@ -1,10 +1,10 @@
-define([
+define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
     'knockout',
     'jquery',
-    'uifwk/js/util/df-util',
+    'uifwk/@version@/js/util/df-util-impl', 
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
-    'uifwk/js/util/typeahead-search',
+    'uifwk/@version@/js/util/typeahead-search-impl', 
     'ojs/ojselectcombobox',
     'ojs/ojdialog',
     'ojs/ojinputtext',

@@ -4,6 +4,32 @@
 
 
 requirejs.config({
+    bundles: (window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ? undefined : {
+        'uifwk/js/uifwk-partition': 
+            [
+            'uifwk/js/util/ajax-util',
+            'uifwk/js/util/df-util',
+            'uifwk/js/util/logging-util',
+            'uifwk/js/util/message-util',
+            'uifwk/js/util/mobile-util',
+            'uifwk/js/util/preference-util',
+            'uifwk/js/util/screenshot-util',
+            'uifwk/js/util/typeahead-search',
+            'uifwk/js/util/usertenant-util',
+            'uifwk/js/widgets/aboutbox/js/aboutbox',
+            'uifwk/js/widgets/brandingbar/js/brandingbar',
+            'uifwk/js/widgets/datetime-picker/js/datetime-picker',
+            'uifwk/js/widgets/navlinks/js/navigation-links',
+            'uifwk/js/widgets/timeFilter/js/timeFilter',
+            'uifwk/js/widgets/widgetselector/js/widget-selector',
+            'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
+            'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
+            'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
+            'text!uifwk/js/widgets/widgetselector/html/widget-selector.html',
+            'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
+            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
+            ]
+    },
     // Path mappings for the logical module names
     paths: {
         'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.4.0',
@@ -69,8 +95,8 @@ require(['ojs/ojcore',
         function (oj, ko, $/*, timeFilter*/) // this callback gets executed when all required modules are loaded
         {
             ko.components.register("date-time-picker", {
-                viewModel: {require: "/emsaasui/uifwk/js/widgets/datetime-picker/js/datetime-picker.js"},
-                template: {require: "text!/emsaasui/uifwk/js/widgets/datetime-picker/html/datetime-picker.html"}
+                viewModel: {require: "uifwk/js/widgets/datetime-picker/js/datetime-picker"},
+                template: {require: "text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html"}
             });
 
             function MyViewModel() {

@@ -3,7 +3,7 @@ define([
     'knockout',
     'jquery',
     'dfutil',
-    'loggingutil',
+    'uifwk/js/util/logging-util',
     'idfbcutil',
     'ojs/ojcore',
     'jqueryui',

@@ -4,7 +4,7 @@ define([
     'ojs/ojcore',
     'dfutil',
     'uifwk/js/util/df-util',
-    'loggingutil',
+    'uifwk/js/util/logging-util',
     'ojs/ojmodel',
     'ojs/ojknockout',
     'ojs/ojknockout-model',

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['jquery', 'knockout', 'uifwk/js/util/ajax-util'],
+define(['jquery', 'knockout', 'uifwk/@version@/js/util/ajax-util-impl'],
        /*
         * @param {Object} oj
         * @param {jQuery} $

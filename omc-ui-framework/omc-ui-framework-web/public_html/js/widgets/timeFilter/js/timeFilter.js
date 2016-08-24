@@ -1,4 +1,4 @@
-define(['uifwk/@version@/js/widgets/time-filter/time-filter-impl'],
-    function (timFilterImpl) {
-        return timFilterImpl;
+define(['uifwk/@version@/js/uifwk-impl-partition'],
+    function () {
+        return require('uifwk/@version@/js/widgets/time-filter/time-filter-impl');
     });
