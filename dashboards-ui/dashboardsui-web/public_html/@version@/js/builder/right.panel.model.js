@@ -176,10 +176,8 @@ define(['knockout',
             self.initEventHandlers = function() {
                 self.$b.addEventListener(self.$b.EVENT_TILE_MAXIMIZED, self.tileMaximizedHandler);
                 self.$b.addEventListener(self.$b.EVENT_TILE_RESTORED, self.tileRestoredHandler);
-                self.$b.addEventListener(self.$b.EVENT_AUTO_REFRESH_CHANGED, self.autoRefreshChanged);
                 self.$b.addEventListener(self.$b.EVENT_DSBSET_AUTO_REFRESH_CHANGED, self.dsbSetAutoRefreshChanged);
-                self.$b.addEventListener(self.$b.EVENT_TIME_SELECTION_CHANGED, self.timeSelectionChanged);
-                self.$b.addEventListener(self.$b.EVENT_TARGET_SELECTION_CHANGED, self.targetSelectionChanged);
+                self.$b.addEventListener(self.$b.EVENT_DASHBOARD_SHARE_CHANGED, self.dashboardShareChanged)
             };
 
             self.initDraggable = function() {
@@ -217,20 +215,6 @@ define(['knockout',
                 self.initDraggable();
                 self.$b.triggerBuilderResizeEvent('hide left panel because restore');
             };
-
-            self.autoRefreshChanged = function(interval) {
-                if(self.rightPanelEdit.dashboardSharing() !== "shared") {
-                    var value;
-                    if(interval === 0) {
-                        value = "off";
-                    }else if(interval === 300000) {
-                        value = "every5minutes";
-                    }
-                    self.rightPanelFilter.defaultAutoRefreshValue(value);
-                    self.rightPanelFilter.extendedOptions.autoRefresh.defaultValue = interval;
-                    self.rightPanelFilter.defaultValueChanged(new Date());
-                }
-            };
             
             self.dsbSetAutoRefreshChanged = function(interval) {
                 if(self.dashboardsetShare() !== "on") {                    
@@ -248,26 +232,14 @@ define(['knockout',
                 }
             };
             
-            self.timeSelectionChanged = function(tp, start, end) {
-                if(self.rightPanelEdit.dashboardSharing() !== "shared") {
-                    self.rightPanelFilter.defaultTimeRangeValue([tp]);
-                    self.rightPanelFilter.defaultStartTime(start);
-                    self.rightPanelFilter.defaultEndTime(end);
-
-                    //set timeSel settings to save
-                    self.rightPanelFilter.extendedOptions.timeSel.start = start;
-                    self.rightPanelFilter.extendedOptions.timeSel.end = end;
-                    self.rightPanelFilter.extendedOptions.timeSel.defaultValue = tp;
-                    self.rightPanelFilter.defaultValueChanged(new Date());
+            self.dashboardShareChanged = function(value) {
+                if(!tilesViewModel) {
+                    return;
                 }
-            };
-            
-            self.targetSelectionChanged = function(targets) {
-                if(self.rightPanelEdit.dashboardSharing() !== "shared") {
-                    self.rightPanelFilter.defaultEntityContext(targets);
-                    self.rightPanelFilter.extendedOptions.tsel.entityContext = targets;
+                if(value === true) {                    
+                    self.rightPanelFilter.setDefaultValuesWhenSharing(tilesViewModel.userExtendedOptions);                    
                 }
-            };
+            }
                                 
             self.showdbOnHomePage = ko.observable([]);
 

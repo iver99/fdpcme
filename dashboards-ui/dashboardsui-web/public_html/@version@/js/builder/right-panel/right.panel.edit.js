@@ -72,6 +72,8 @@ define([
                     }
                 });
             } else {
+                //set default filter/auto-refresh values when sharing
+                $b.triggerEvent($b.EVENT_DASHBOARD_SHARE_CHANGED, "dashboard share settings is set to true", true);
                 self.toolbarModel().handleShareUnshare(true);
             }
         });
