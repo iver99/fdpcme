@@ -1,7 +1,8 @@
 define(['ojs/ojcore', 'knockout', 'jquery',
+    'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
     'builder/builder.core'
 ],
-    function (oj, ko, $)
+    function (oj, ko, $, TargetSelectorUtils)
     {
         function DashboardWidgetAPI() {
             var self = this;
@@ -15,7 +16,6 @@ define(['ojs/ojcore', 'knockout', 'jquery',
             };
 
             self.getTargetInstancesList = function (callback) {
-                 require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils){
                     if (self.tselContextChanged) {
                         TargetSelectorUtils.getSelection(TargetSelectorUtils.MEID_FORCE_QUERY, self.tselContext,
                             function (targets) {
@@ -27,7 +27,6 @@ define(['ojs/ojcore', 'knockout', 'jquery',
                     } else {
                         executeCallback(callback);
                     }
-                });;
             };
 
             function executeCallback(callback) {

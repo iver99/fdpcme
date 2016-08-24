@@ -55,7 +55,7 @@ define(['knockout',
             self.loginUser = ko.observable(dfu.getUserName());
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
 
-            self.targets = ko.observable(null);
+            self.targets = ko.observable({"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"});
 
 
             self.timeSelectorModel = new Builder.TimeSelectorModel();
@@ -913,10 +913,8 @@ define(['knockout',
                     self.toolbarModel.extendedOptions.tsel = {};
                 }
 
-                require(["emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
-                    self.toolbarModel.extendedOptions.tsel.entityContext = targets;
-                    self.saveUserFilterOptions();
-                });
+                self.toolbarModel.extendedOptions.tsel.entityContext = targets;
+                self.saveUserFilterOptions();
 
             };
 
@@ -941,7 +939,7 @@ define(['knockout',
                         rightPanelModel.extendedOptions.tsel.entityContext = targets;
                     }
             };
-
+            
             var compressedTargets;
             //set initial targets selector options. priority: user extendedOptions > dashboard extendedOptions
             //1. set selectionMode: byCriteria/single. Default is "byCriteria"
@@ -953,7 +951,7 @@ define(['knockout',
                 compressedTargets = self.dashboardExtendedOptions.tsel.entityContext;
                 self.userExtendedOptions.tsel = {};
             }
-            self.targets(compressedTargets);
+            compressedTargets && self.targets(compressedTargets);
 
             var timeSelectorChangelistener = ko.computed(function(){
                 return {
