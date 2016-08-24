@@ -13,8 +13,8 @@ import org.testng.annotations.Test;
 @Test(groups = {"s1"})
 public class EmsDashboardTileParamsPKTest { 
     Date now =  new Date();
-    private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10,10,10, now,
-            "elephant","elephant","elephant","elephant",10,10, "{}");
+    
+    /*
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
             now,
             emsDashboard,
@@ -25,7 +25,7 @@ public class EmsDashboardTileParamsPKTest {
             10,
             now,
             "elephant",
-            "elephant", /*Integer position, */
+            "elephant", Integer position, 
             "elephant",
             "elephant",
             "dolphine",
@@ -45,7 +45,8 @@ public class EmsDashboardTileParamsPKTest {
             "lion",
             10,
             10,
-            10L);
+            10L);*/
+    /*
     private EmsDashboardTileParams emsDashboardTileParams = new
             EmsDashboardTileParams(
             10,
@@ -55,6 +56,7 @@ public class EmsDashboardTileParamsPKTest {
             "dolphine",
             now,
             emsDashboardTile);
+            */
     private EmsDashboardTileParamsPK emsDashboardTileParamsPK = new EmsDashboardTileParamsPK("elephant",10L);
 
     @Test

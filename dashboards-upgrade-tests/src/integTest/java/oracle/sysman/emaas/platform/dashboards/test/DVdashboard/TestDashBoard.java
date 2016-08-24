@@ -26,7 +26,6 @@ public class TestDashBoard extends LoginAndLogout
 {
          //private String dbName_withWidgetGrid = "";
          private String dbName_setHome = "";
-         private String dbName_noWidgetGrid = "";
          private String dbName_favorite = "";
   
 

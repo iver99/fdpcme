@@ -11,7 +11,7 @@ import org.testng.annotations.AfterMethod;
 
 public class LoginAndLogout
 {
-	public static WebDriver webd = null;
+	protected static WebDriver webd = null;
 	private static final Logger LOGGER = LogManager.getLogger(LoginAndLogout.class);
 
 	@AfterMethod

@@ -43,9 +43,6 @@ public class TestDashboardSet extends LoginAndLogout
 	private String dbName_InSet = "";
 	private String dbName_OutSet = "";
 	private String dbName_DuplicateOOB = "";
-	private final static String dbsetName_ITA = "";
-	private final static String dbsetName_LA = "";
-	private final static String dbsetName_APM = "";
 
 	@BeforeClass
 	public void createTestData() 

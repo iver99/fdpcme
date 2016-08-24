@@ -11,7 +11,6 @@ package oracle.sysman.emaas.platform.uifwk.ui.webutils.services;
  */
 
 import java.lang.management.ManagementFactory;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.management.InstanceAlreadyExistsException;

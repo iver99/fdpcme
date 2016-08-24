@@ -103,7 +103,7 @@ public class CommonUIUtils
 
 	public static void commonUITestLog(String sDesc)
 	{
-		String sStr = "*** Dashboards Common UI TestLog ***:  " + sDesc;
+		//String sStr = "*** Dashboards Common UI TestLog ***:  " + sDesc;
 	}
 
 	public static String getAppName(String sTenant, String sUser)
@@ -121,8 +121,6 @@ public class CommonUIUtils
 		File emaasPropertiesFile = new File(System.getenv("T_WORK") + "/emaas.properties.log");
 
 		Properties emaasProp = new Properties();
-
-		String sUrl = "";
 
 		String sPropertyValue = "";
 

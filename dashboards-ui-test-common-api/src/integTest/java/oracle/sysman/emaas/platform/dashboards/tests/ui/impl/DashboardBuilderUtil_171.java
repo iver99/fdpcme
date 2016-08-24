@@ -678,7 +678,6 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.waitForElementPresent("id=" + DashBoardPageId.DASHBOARDSETOPTIONSMENUID);
 		driver.click("id=" + DashBoardPageId.DASHBOARDSETOPTIONSMENUID);
 		driver.waitForElementPresent("css=" + DashBoardPageId.DASHBOARDSETOPTIONSPRINTCSS);
-		DelayedPressEnterThread thr = new DelayedPressEnterThread("DelayedPressEnterThread", waitTime);
 		driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.DASHBOARDSETOPTIONSPRINTCSS)).click();
 		//have to use thread sleep to wait for the print window(windows dialog) to appear
 		try {
