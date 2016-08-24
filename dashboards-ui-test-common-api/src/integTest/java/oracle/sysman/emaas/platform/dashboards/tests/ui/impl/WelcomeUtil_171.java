@@ -86,6 +86,9 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_DATAEXP_SELECTID,
 						DashBoardPageId.WELCOME_DATAEXP_SEARCH);
 				break;
+			default:
+				break;
+				
 		}
 		driver.getWebDriver().findElement(By.xpath(eleXpath)).click();
 		driver.takeScreenShot();
@@ -258,6 +261,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				case ITA_DATA_EXPLORER:
 					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID, DashBoardPageId.WELCOME_ITA_DE);
 					break;
+				default:
+					break;
 			}
 			driver.click(eleXpath);
 			driver.takeScreenShot();
@@ -313,6 +318,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 			case LEARN_MORE_SERVICE_OFFERINGS:
 				expectedName = "Service Offerings";
 				break;
+			default:
+				break;
 		}
 		return expectedName;
 	}
@@ -336,6 +343,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				break;
 			case LEARN_MORE_SERVICE_OFFERINGS:
 				itemId = DashBoardPageId.WELCOME_LEARNMORE_SERVICEOFFERING;
+				break;
+			default:
 				break;
 		}
 		return itemId;
@@ -387,6 +396,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				break;
 			case SERVICE_NAME_DATA_EXPLORERS:
 				serviceWrapperId = DashBoardPageId.WELCOME_DATAEXP;
+				break;
+			default:
 				break;
 		}
 		return serviceWrapperId;

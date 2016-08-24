@@ -727,6 +727,8 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 				driver.waitForElementPresent(DashBoardPageId.BUILDERAUTOREFRESHON5MINSELECTEDLOCATOR);
 				driver.takeScreenShot();
 				break;
+			default:
+				break;
 		}
 		driver.getLogger().info("refreshDashboard completed");
 	}
@@ -762,6 +764,8 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 				break;
 			case REFRESH_DASHBOARD_SETTINGS_5MIN:
 				driver.check(DashBoardPageId.DASHBOARDSETOPTIONSAUTOREFRESHON5MINLOCATOR);
+				break;
+			default:
 				break;
 		}
 		driver.getLogger().info("refreshDashboardSet completed");

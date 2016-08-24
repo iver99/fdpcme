@@ -32,7 +32,7 @@ import javax.servlet.http.Part;
  */
 public class MockHttpServletRequest implements HttpServletRequest
 {
-	private final HashMap<String, String> headers = new HashMap<>();
+	private final Map<String, String> headers = new HashMap<>();
 
 	/* (non-Javadoc)
 	 * @see javax.servlet.http.HttpServletRequest#authenticate(javax.servlet.http.HttpServletResponse)

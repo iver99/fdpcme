@@ -198,6 +198,8 @@ private static final Logger LOGGER = LogManager.getLogger(BrandingBarUtil_171.cl
 				driver.getLogger().info("Click Sign Out menu.");
 				driver.click(DashBoardPageId.OPTION_LOGOUT);
 				break;
+			default:
+				break;
 		}
 		driver.takeScreenShot();
 	}
@@ -339,6 +341,8 @@ private static final Logger LOGGER = LogManager.getLogger(BrandingBarUtil_171.cl
 				//Administration links
 			case "admin":
 				parentId = DashBoardPageId.BRANDINGBARADMINLINKSID;
+				break;
+			default:
 				break;
 		}
 		return parentId;

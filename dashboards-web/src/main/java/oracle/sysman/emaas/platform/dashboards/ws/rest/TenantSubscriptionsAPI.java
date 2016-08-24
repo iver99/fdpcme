@@ -77,7 +77,7 @@ public class TenantSubscriptionsAPI extends APIBase
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/subscribedapps?withEdition={}",
 				withEdition);
-		if (withEdition != null && ("true").equals(withEdition.toLowerCase())) { // subscriptions with edition
+		if (withEdition != null && ("true").equalsIgnoreCase(withEdition)) { // subscriptions with edition
 			return getSubscribedApplicationsWithEdition(tenantIdParam, userTenant);
 		}
 

@@ -281,13 +281,13 @@ public class DashboardsFilter
 	{
 		if (filter != null) {
 			String filterUpcase = filter.trim().toUpperCase();
-			if (favoriteFilterString.toUpperCase().equals(filterUpcase)) {
+			if (favoriteFilterString. equalsIgnoreCase(filterUpcase)) {
 				setIncludedFavorites(true);
 				return;
 			}
 
 			for (String s : typeFilterStrings) {
-				if (s.toUpperCase().equals(filterUpcase)) {
+				if (s.equalsIgnoreCase(filterUpcase)) {
 					addIncludedType(s);
 					return;
 				}
@@ -295,7 +295,7 @@ public class DashboardsFilter
 
 			for (int i = 0; i < appFilterStrings_input.size(); i++) {
 				String s = appFilterStrings_input.get(i);
-				if (s.toUpperCase().equals(filterUpcase)) {
+				if (s.equalsIgnoreCase(filterUpcase)) {
 					addIncludedApplication(appFilterStrings.get(i));
 					return;
 				}
@@ -309,7 +309,7 @@ public class DashboardsFilter
 			//			}
 
 			for (String s : ownerFilterStrings) {
-				if (s.toUpperCase().equals(filterUpcase)) {
+				if (s.equalsIgnoreCase(filterUpcase)) {
 					addIncludedOwner(s);
 					return;
 				}

@@ -122,6 +122,8 @@ public class TestDateTimePicker extends CommonUIUtils
 			case "Latest":
 				Assert.assertEquals(lTimeRange, 0);
 				break;
+			default:
+				break;
 		}
 
 		driver.getLogger().info("Verify Result Pass!");

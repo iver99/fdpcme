@@ -132,7 +132,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.getLogger().info("[DashboardHomeUtil] call filterOptions filter: " + filter);
 		Validator.notEmptyString("filter", filter);
 		String[] fs = filter.split(",");
-		ArrayList<String> trimedFs = new ArrayList<String>();
+		List<String> trimedFs = new ArrayList<String>();
 		for (String s : fs) {
 			trimedFs.add(s.trim());
 		}

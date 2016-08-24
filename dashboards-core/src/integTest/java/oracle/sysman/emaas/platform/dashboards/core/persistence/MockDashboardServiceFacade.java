@@ -272,7 +272,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	public List<EmsDashboard> getFavoriteEmsDashboards(String username)
 	{
 		List<EmsUserOptions> ps = localFind(EmsUserOptions.class, new EmsUserOptionsSelector(username, null, 1));
-		ArrayList<EmsDashboard> result = new ArrayList<EmsDashboard>();
+		List<EmsDashboard> result = new ArrayList<EmsDashboard>();
 		for (EmsUserOptions p : ps) {
 			if (p.getDashboardId() != null) {
 				EmsDashboard d = getEmsDashboardById(p.getDashboardId());
@@ -437,7 +437,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	private <T> List<T> localFind(Class<T> clazz, EntitySelector<? super T> es)
 	{
 		List<T> storage = this.getLocalStorage(clazz);
-		ArrayList<T> result = new ArrayList<T>();
+		List<T> result = new ArrayList<T>();
 		for (T entity : storage) {
 			if (es == null || es.selectEntity(entity)) {
 				result.add(cloneEntity(entity));
@@ -487,7 +487,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	private <T> void localRemove(Class<T> clazz, EntitySelector<? super T> es)
 	{
 		List<T> storage = this.getLocalStorage(clazz);
-		ArrayList<T> result = new ArrayList<T>();
+		List<T> result = new ArrayList<T>();
 		for (T entity : storage) {
 			if (entity == null) {
 				

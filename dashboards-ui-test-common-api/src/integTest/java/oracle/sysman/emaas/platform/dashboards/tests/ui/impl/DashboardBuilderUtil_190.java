@@ -774,6 +774,8 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 				driver.waitForElementPresent(DashBoardPageId_190.BUILDERAUTOREFRESHON5MINSELECTEDLOCATOR);
 				driver.takeScreenShot();
 				break;
+			default:
+				break;
 		}
 		driver.getLogger().info("DashboardBuilderUtil.refreshDashboard completed");
 	}
@@ -806,6 +808,8 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 				break;
 			case REFRESH_DASHBOARD_SETTINGS_5MIN:
 				driver.check(DashBoardPageId_190.DASHBOARDSETOPTIONSAUTOREFRESHON5MINLOCATOR);
+				break;
+			default:
 				break;
 		}
 		driver.getLogger().info("DashboardBuilderUtil.refreshDashboardSet completed");
