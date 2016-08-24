@@ -117,7 +117,7 @@ define([
         //share dashboard fucntion  
         self.dashboardSharing = ko.observable(self.dashboard().sharePublic() ? "shared" : "notShared");
         self.dashboardSharing.subscribe(function (val) {
-            if (!self.toolbarModel || self.isDashboardSet) {
+            if (!self.toolbarModel || self.isDashboardSet()) {
                 // return if current selected tab is dashboard picker
                 return;
             }
@@ -140,6 +140,8 @@ define([
                     }
                 });
             } else {
+                //set default filter/auto-refresh values when sharing
+                $b.triggerEvent($b.EVENT_DASHBOARD_SHARE_CHANGED, "dashboard share settings is set to true", true);
                 self.toolbarModel().handleShareUnshare(true);
             }
         });

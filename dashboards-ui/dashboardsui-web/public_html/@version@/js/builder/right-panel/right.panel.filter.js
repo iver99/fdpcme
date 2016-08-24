@@ -208,7 +208,41 @@ define([
                 self.defaultTimeRangeValue([timeSel.defaultValue]);
                 self.defaultStartTime(parseInt(timeSel.start));
                 self.defaultEndTime(parseInt(timeSel.end));
-            }
+            };
+            
+            self.setDefaultValuesWhenSharing = function (creatorExtendedOptions) {
+                //creator settings is used as default dashboard settings when the dashboard is shared
+                //set what to show for filters/auto-refresh in share area
+                //1. timeSel
+                var timeSel = creatorExtendedOptions.timeSel;
+                self.defaultTimeRangeValue([timeSel.timePeriod]);
+                self.defaultStartTime(timeSel.start);
+                self.defaultEndTime(timeSel.end);
+                //2. tsel
+                var tsel = creatorExtendedOptions.tsel;
+                self.defaultEntityContext(tsel.entityContext);
+                //3. auto-refresh
+                var interval = creatorExtendedOptions.autoRefresh.defaultValue;
+                var intervalValue;
+                if (interval === 0) {
+                    intervalValue = "off";
+                } else if (interval === 300000) {
+                    intervalValue = "every5minutes";
+                }
+                self.defaultAutoRefreshValue(intervalValue);
+
+                //set what filter/auto_refreh settings to save when this dashboard is shared
+                //1. timesel
+                self.extendedOptions.timeSel.start = timeSel.start;
+                self.extendedOptions.timeSel.end = timeSel.end;
+                self.extendedOptions.timeSel.defaultValue = timeSel.timePeriod;
+                //2. tsel
+                self.extendedOptions.tsel.entityContext = tsel.entityContext;
+                //3. auto-refresh
+                self.extendedOptions.autoRefresh.defaultValue = interval;
+
+                self.defaultValueChanged(new Date());
+            };
         }
         
         return {'RightPanelFilterModel': RightPanelFilterModel};

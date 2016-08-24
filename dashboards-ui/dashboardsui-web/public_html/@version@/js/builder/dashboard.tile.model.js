@@ -851,7 +851,10 @@ define(['knockout',
                             self.userTimeSel = true;
                         }
                         
-                        self.autoRefreshInterval = data["autoRefreshInterval"];
+                        if(!self.userExtendedOptions.autoRefresh || isNaN(self.userExtendedOptions.autoRefresh.defaultValue)) {
+                            self.userExtendedOptions.autoRefresh = {"defaultValue": DEFAULT_AUTO_REFRESH_INTERVAL};
+                        }
+                        
                     },
                     function (jqXHR, textStatus, errorThrown) {
                         if(jqXHR.status === 404){
@@ -860,7 +863,7 @@ define(['knockout',
                             self.userExtendedOptions = {};
                             self.userExtendedOptions.tsel = {quickPick: "host", entityContext: ""};
                             self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: new Date(new Date()-14*24*60*60*1000), end: new Date()};
-                            self.autoRefreshInterval = DEFAULT_AUTO_REFRESH_INTERVAL;
+                            self.userExtendedOptions.autoRefresh = {"defaultValue": DEFAULT_AUTO_REFRESH_INTERVAL};
                         }
                     });
             };
@@ -901,7 +904,6 @@ define(['knockout',
 
             self.returnFromTsel = function(targets) {
                     self.returnFromPageTsel(targets);
-                    $b.triggerEvent($b.targetSelectionChanged, "target selection changed by target selector", targets);
             };
 
             var compressedTargets;
@@ -985,7 +987,7 @@ define(['knockout',
                             self.userExtendedOptions.timeSel.end = end.getTime();
                             self.saveUserFilterOptions();
 
-                            $b.triggerEvent($b.EVENT_TIME_SELECTION_CHANGED, "time selection is changed by selecting date/time picker", Builder.getTimePeriodValue(tp), start.getTime(), end.getTime());
+//                            $b.triggerEvent($b.EVENT_TIME_SELECTION_CHANGED, "time selection is changed by selecting date/time picker", Builder.getTimePeriodValue(tp), start.getTime(), end.getTime());
                         }
                         self.applyClickedByAutoRefresh(false);
                 }
@@ -995,14 +997,14 @@ define(['knockout',
                 var userFilterOptions = {
                     dashboardId: self.dashboard.id(),
                     extendedOptions: JSON.stringify(self.userExtendedOptions),
-                    autoRefreshInterval: self.autoRefreshInterval
+                    autoRefreshInterval: self.userExtendedOptions.autoRefresh.defaultValue
                 };
 
                 new Builder.DashboardDataSource().saveDashboardUserOptions(userFilterOptions);
             };
             
             self.autoRefreshChanged = function(interval) {
-                self.autoRefreshInterval = interval;
+                self.userExtendedOptions.autoRefresh = {"defaultValue": interval};                
                 self.saveUserFilterOptions();
             }
             
