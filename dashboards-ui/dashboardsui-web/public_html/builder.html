@@ -793,7 +793,7 @@
                                                 <div class="oj-flex-item">
                                                     <label for="dbsSetHNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
                                                     <input id="dbsSetHNameIn" maxlength="64" required
-                                                           data-bind="ojComponent: { component: 'ojInputText', value: dashboardsetName, rawValue: dashboardsetNameInputed,
+                                                           data-bind="ojComponent: { component: 'ojInputText', value: rightPanelEdit.dashboardsetName, rawValue: rightPanelEdit.dashboardsetNameInputed,
                                                validators : [{
                                                        type: 'regExp', options : {
                                                        pattern: '.{1,64}',
@@ -813,7 +813,7 @@
                                                 <div class="oj-flex-item">
                                                     <label for="editDbdSetDscp" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
                                                     <textarea id="editDbdSetDscp" maxlength="256" rows="3" style="resize: vertical"
-                                                              data-bind="ojComponent: {component: 'ojTextArea', value: dashboardsetDescription, rawValue: dashboardsetDescriptionInputed, rootAttributes: {style:'max-width:420px;'},
+                                                              data-bind="ojComponent: {component: 'ojTextArea', value: rightPanelEdit.dashboardsetDescription, rawValue: rightPanelEdit.dashboardsetDescriptionInputed, rootAttributes: {style:'max-width:420px;'},
                                                                 validators : [{type: 'regExp', options : {
                                                                        pattern: '(.|\\b|\\s){0,256}',
                                                                        messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
@@ -836,7 +836,7 @@
                                             </div>
                                             <div class="oj-flex">
                                                 <div class="oj-flex-item" style="margin-top: 10px">
-                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: dashboardsetShare,disabled:dashboardsetShareDisabled}" >
+                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: rightPanelEdit.dashboardsetShare,disabled:rightPanelEdit.dashboardsetShareDisabled}" >
                                                         <span class="oj-choice-row">
                                                             <input id="dashboardSetSharingNotShared" type="radio" name="dashboardSetSharing" value="off">
                                                             <label for="dashboardSetSharingNotShared" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING_NOT_SHARED')"></label>
@@ -1075,7 +1075,7 @@
                             <div id="dbd-edit-settings-container" class="dbd-edit-settings-container">
                                 <!-- ko if:isDashboardSet -->
                                     <span class="edit-setting-head" data-bind="text: getNlsString('DBSSET_BUILDER_DASHBOARDSET')"></span>
-                                    <span class="edit-setting-link edit-dsbset-link" data-bind="text:$data.dashboardsetToolBarModel.dashboardsetName, click: rightPanelControl.switchEditPanelContent"></span>
+                                    <span class="edit-setting-link edit-dsbset-link" data-bind="text:rightPanelEdit.dashboardsetName, click: rightPanelControl.switchEditPanelContent"></span>
                                     <!--ko if: !rightPanelControl.dashboardEditDisabled() && dashboardsetToolBarModel.dashboardsetItems.length>0-->
                                         <span class="edit-setting-head" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_SELECTED_DSB')"></span>
                                         <span class="edit-setting-link edit-dsb-link" data-bind="text:$data.dashboardsetToolBarModel.selectedDashboardItem().name, click: rightPanelControl.switchEditPanelContent"></span>

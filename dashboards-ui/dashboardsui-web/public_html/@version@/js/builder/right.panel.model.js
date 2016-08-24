@@ -70,7 +70,6 @@ define(['knockout',
             self.tilesViewModel = tilesViewModel;
             self.toolBarModel = toolBarModel;
             self.editDashboardDialogModel = ko.observable(null);
-            var editDashboardDialogModelChanged = false;
             self.sortedTiles = ko.computed(function(){
                 //add for detecting dashboard tabs switching in set
                 self.editDashboardDialogModel();
@@ -85,7 +84,7 @@ define(['knockout',
             self.rightPanelControl=new rpc.rightPanelControl(self.$b);
             self.rightPanelFilter = new rpf.RightPanelFilterModel(self.$b);
             self.rightPanelWidget= new rpw.rightPanelWidget(self.$b);
-            self.rightPanelEdit=new rpe.rightPanelEditModel(self.$b);
+            self.rightPanelEdit=new rpe.rightPanelEditModel(self.$b,self.dashboardsetToolBarModel);
             self.selectedDashboard = ko.observable(self.dashboard);
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
@@ -99,7 +98,7 @@ define(['knockout',
                 self.editDashboardDialogModel(new ed.EditDashboardDialogModel(_$b,toolBarModel));
                 self.rightPanelControl.$b(_$b);
                 self.rightPanelEdit.$b(_$b);
-                editDashboardDialogModelChanged = true;
+                self.rightPanelEdit.editDashboardDialogModel(self.editDashboardDialogModel());
                 if(toolBarModel) {
                     self.rightPanelControl.dashboardEditDisabled(toolBarModel.editDisabled()) ;
                 }else{
@@ -168,11 +167,6 @@ define(['knockout',
                     ResizableView(self.$b);
             };
 
-            function resetRightPanelWidth(){
-                $('.dbd-left-panel-show').css('width','320px');
-                $('.dbd-left-panel-hide').css('width','0');
-            }
-
             self.initEventHandlers = function() {
                 self.$b.addEventListener(self.$b.EVENT_TILE_MAXIMIZED, self.tileMaximizedHandler);
                 self.$b.addEventListener(self.$b.EVENT_TILE_RESTORED, self.tileRestoredHandler);
@@ -239,106 +233,13 @@ define(['knockout',
                 if(value === true) {                    
                     self.rightPanelFilter.setDefaultValuesWhenSharing(tilesViewModel.userExtendedOptions);                    
                 }
+            };
+            
+            function resetRightPanelWidth() {
+                $('.dbd-left-panel-show').css('width', '320px');
+                $('.dbd-left-panel-hide').css('width', '0');
             }
-                                
-            self.showdbOnHomePage = ko.observable([]);
-
-            var dsbSaveDelay = ko.computed(function(){
-                if(self.editDashboardDialogModel()){
-                    return self.editDashboardDialogModel().showdbDescription() + self.editDashboardDialogModel().name() + self.editDashboardDialogModel().description() + self.showdbOnHomePage();
-                }
-            });
-            dsbSaveDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 800 } });
-            dsbSaveDelay.subscribe(function(){
-                if(!self.$b.dashboard.systemDashboard || !self.$b.dashboard.systemDashboard()){
-                    if(!editDashboardDialogModelChanged){
-                        self.editDashboardDialogModel() && self.editDashboardDialogModel().save();
-                    }else{
-                        editDashboardDialogModelChanged = false;
-                    }
-                }
-            });
-
-            function queryDashboardSetsBySubId(dashboardId,callback){
-                var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
-                 dfu.ajaxWithRetry(_url + dashboardId + "/dashboardsets", {
-                        type: 'GET',
-                        headers: dfu.getDashboardsRequestHeader(), //{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
-                        success: function (resp) {
-                            callback(resp);
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            console.log(errorThrown);
-                        }
-                    });
-                }
-
-            if (self.isDashboardSet()) {
-                self.dashboardsetName = ko.observable(self.dashboardsetToolBarModel.dashboardsetName());
-                self.dashboardsetDescription = ko.observable(self.dashboardsetToolBarModel.dashboardsetDescription());
-                self.dashboardsetNameInputed = ko.observable(self.dashboardsetName());
-                self.dashboardsetDescriptionInputed = ko.observable(self.dashboardsetDescription());
-
-                var prevSharePublic = self.dashboardsetToolBarModel.dashboardsetConfig.share();
-                self.dashboardsetShare = ko.observable(prevSharePublic);
-                var isOnlyDashboardPicker = self.dashboardsetToolBarModel.dashboardsetItems.length === 1 && self.dashboardsetToolBarModel.dashboardsetItems[0].type === "new";
-                self.dashboardsetShareDisabled = ko.observable(isOnlyDashboardPicker);
-
-                self.defaultSetAutoRefreshValue = ko.observable("every5minutes"); // todo get from instance
-
-                self.dashboardsetNameInputed.subscribe(function (val) {
-                    self.dashboardsetName(val);
-                });
-                self.dashboardsetDescriptionInputed.subscribe(function (val) {
-                    self.dashboardsetDescription(val);
-                });
-                var dsbSetSaveDelay = ko.computed(function () {
-                    return self.dashboardsetName() + self.dashboardsetDescription() + self.dashboardsetShare();
-                });
-                dsbSetSaveDelay.extend({rateLimit: {method: "notifyWhenChangesStop", timeout: 800}});
-
-                //todo called when refresh page
-                dsbSetSaveDelay.subscribe(function () {
-                    self.dashboardsetToolBarModel.saveDashboardSet(
-                            {
-                                "name": self.dashboardsetName(),
-                                "description": self.dashboardsetDescription(),
-                                "sharePublic": self.dashboardsetShare() === "on" ? true : false
-                            },
-                            function (result) {
-                                var sharePublic = result.sharePublic  === true ? "on" : "off";
-                                if ( sharePublic !== prevSharePublic) {
-                                    var shareMsgKey = result.sharePublic ? 'DBS_BUILDER_DASHBOARD_SET_SHARE_SUCCESS' : 'DBS_BUILDER_DASHBOARD_SET_SHARE_ERROR';
-                                    dfu.showMessage({
-                                        type: 'confirm',
-                                        summary: getNlsString(shareMsgKey),
-                                        detail: '',
-                                        removeDelayTime: 5000
-                                    });
-                                    prevSharePublic = sharePublic;
-                                }
-
-                                self.dashboardsetShare(result.sharePublic === true ? "on" : "off");
-                                self.dashboardsetToolBarModel.dashboardsetName(result.name);
-                                self.dashboardsetToolBarModel.dashboardInst.name(result.name);
-                                if(self.dashboardsetToolBarModel.dashboardInst.description){
-                                    if(result.description){
-                                        self.dashboardsetToolBarModel.dashboardInst.description(result.description);
-                                    }else{
-                                        delete self.dashboardsetToolBarModel.dashboardInst.description;
-                                    }
-                                }else{
-                                    if(result.description){
-                                        self.dashboardsetToolBarModel.dashboardInst.description = ko.observable(result.description);
-                                    }
-                                }
-                                self.dashboardsetToolBarModel.dashboardsetDescription(result.description);
-                            },
-                            function (jqXHR, textStatus, errorThrown) {
-                                dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
-                            });
-                });        
-            }
+          
         }
 
         Builder.registerModule(RightPanelModel, 'RightPanelModel');
