@@ -22,7 +22,6 @@ public class BrandingBarUtil
 	public static final String NAV_LINK_TEXT_VA_LA = IBrandingBarUtil.NAV_LINK_TEXT_VA_LA;
 	//Administration
 	public static final String NAV_LINK_TEXT_ADMIN_AGENT = IBrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT;
-	public static final String NAV_LINK_TEXT_ADMIN_ITA = IBrandingBarUtil.NAV_LINK_TEXT_ADMIN_ITA;
 	public static final String NAV_LINK_TEXT_ADMIN_ALERT = IBrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT;
 	public static final String NAV_LINK_TEXT_ADMIN_ADMINCONSOLE = IBrandingBarUtil.NAV_LINK_TEXT_ADMIN_ADMINCONSOLE;
 
@@ -270,4 +269,3 @@ public class BrandingBarUtil
 	}
 
 }
-

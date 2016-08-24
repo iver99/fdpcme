@@ -30,7 +30,6 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public static final String NAV_LINK_TEXT_VA_LA = "Log";
 	//Administration
 	public static final String NAV_LINK_TEXT_ADMIN_AGENT = "Agents";
-	public static final String NAV_LINK_TEXT_ADMIN_ITA = "IT Analytics Administration";
 	public static final String NAV_LINK_TEXT_ADMIN_ALERT = "Alert Rules";
 	public static final String NAV_LINK_TEXT_ADMIN_ADMINCONSOLE = "Administration";
 
