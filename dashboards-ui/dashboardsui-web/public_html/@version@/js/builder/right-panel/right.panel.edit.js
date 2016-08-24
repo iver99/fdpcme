@@ -8,6 +8,7 @@ define([
     function rightPanelEditModel($b) {
         var self = this;
         self.$b = ko.observable($b);
+        self.isDashboardSet = window.selectedDashboardInst().dashboardsetToolBar? false:window.selectedDashboardInst().dashboardsetToolBar.isDashboardSet();
         self.dashboard=ko.computed(function(){
             return self.$b && self.$b().dashboard;
         });  
@@ -46,6 +47,34 @@ define([
                 }
             });
         }
+        self.dashboardSharing = ko.observable(self.dashboard().sharePublic()?"shared":"notShared");
+        self.dashboardSharing.subscribe(function(val){
+            if(!self.toolbarModel || self.isDashboardSet) {
+                // return if current selected tab is dashboard picker
+                return ;
+            }
+            if ("notShared" === val) {
+                queryDashboardSetsBySubId(self.dashboard().id(), function (resp) {
+                    var currentUser = dfu.getUserName();
+                    var setsSharedByOthers = resp.dashboardSets || [];
+                    setsSharedByOthers = setsSharedByOthers.filter(function(dbs){
+                        return dbs.owner !== currentUser;
+                    });
+                    if (setsSharedByOthers.length > 0) {
+                        window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(setsSharedByOthers);
+                        self.toolbarModel().openDashboardUnshareConfirmDialog(function(isShared){
+                            if(isShared){
+                                self.dashboardSharing("shared");
+                            }
+                        });
+                    }else{
+                        self.toolbarModel().handleShareUnshare(false);
+                    }
+                });
+            } else {
+                self.toolbarModel().handleShareUnshare(true);
+            }
+        });
     }
 
     return {'rightPanelEditModel': rightPanelEditModel};

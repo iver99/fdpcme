@@ -120,7 +120,7 @@ define(['knockout',
                 //reset filter settings in right drawer when selected dashboard is changed
                 self.rightPanelFilter.loadRightPanelFilter(tilesViewModel);
 
-                self.dashboardSharing(self.dashboard.sharePublic() ? "shared" : "notShared");      
+                self.rightPanelEdit.dashboardSharing(self.dashboard.sharePublic() ? "shared" : "notShared");      
             };
           
             self.initialize = function() {
@@ -219,7 +219,7 @@ define(['knockout',
             };
 
             self.autoRefreshChanged = function(interval) {
-                if(self.dashboardSharing() !== "shared") {
+                if(self.rightPanelEdit.dashboardSharing() !== "shared") {
                     var value;
                     if(interval === 0) {
                         value = "off";
@@ -237,7 +237,7 @@ define(['knockout',
                     self.dashboardsetToolBarModel.dashboardExtendedOptions.autoRefresh.defaultValue = interval;
                     var fieldsToUpdate = {
                         extendedOptions: JSON.stringify(self.dashboardsetToolBarModel.dashboardExtendedOptions)
-                    }
+                    };
                     self.dashboardsetToolBarModel.saveDashboardSet(fieldsToUpdate,
                         function(result) {
                             if(!self.dashboardsetToolBarModel.dashboardInst.extendedOptions) {
@@ -246,10 +246,10 @@ define(['knockout',
                             self.dashboardsetToolBarModel.dashboardInst.extendedOptions(result.extendedOptions);
                         });
                 }
-            }
+            };
             
             self.timeSelectionChanged = function(tp, start, end) {
-                if(self.dashboardSharing() !== "shared") {
+                if(self.rightPanelEdit.dashboardSharing() !== "shared") {
                     self.rightPanelFilter.defaultTimeRangeValue([tp]);
                     self.rightPanelFilter.defaultStartTime(start);
                     self.rightPanelFilter.defaultEndTime(end);
@@ -260,10 +260,10 @@ define(['knockout',
                     self.rightPanelFilter.extendedOptions.timeSel.defaultValue = tp;
                     self.rightPanelFilter.defaultValueChanged(new Date());
                 }
-            }
+            };
             
             self.targetSelectionChanged = function(targets) {
-                if(self.dashboardSharing() !== "shared") {
+                if(self.rightPanelEdit.dashboardSharing() !== "shared") {
                     self.rightPanelFilter.defaultEntityContext(targets);
                     self.rightPanelFilter.extendedOptions.tsel.entityContext = targets;
                 }
@@ -300,36 +300,6 @@ define(['knockout',
                         }
                     });
                 }
-
-            self.dashboardSharing = ko.observable(self.dashboard.sharePublic()?"shared":"notShared");
-            self.dashboardSharing.subscribe(function(val){
-                if(!self.toolBarModel || self.isDashboardSet()) {
-                    // return if current selected tab is dashboard picker
-                    return ;
-                }
-                if ("notShared" === val) {
-                    queryDashboardSetsBySubId(self.dashboard.id(), function (resp) {
-                        var currentUser = dfu.getUserName();
-                        var setsSharedByOthers = resp.dashboardSets || [];
-                        setsSharedByOthers = setsSharedByOthers.filter(function(dbs){
-                            return dbs.owner !== currentUser;
-                        });
-
-                        if (setsSharedByOthers.length > 0) {
-                            window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(setsSharedByOthers);
-                            self.toolBarModel.openDashboardUnshareConfirmDialog(function(isShared){
-                                if(isShared){
-                                    self.dashboardSharing("shared");
-                                }
-                            });
-                        }else{
-                            self.toolBarModel.handleShareUnshare(false);
-                        }
-                    });
-                } else {
-                    self.toolBarModel.handleShareUnshare(true);
-                }
-            });
 
             if (self.isDashboardSet()) {
                 self.dashboardsetName = ko.observable(self.dashboardsetToolBarModel.dashboardsetName());

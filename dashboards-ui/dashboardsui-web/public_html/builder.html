@@ -1013,7 +1013,7 @@
                                             </div>
                                             <div class="oj-flex">
                                                 <div class="oj-flex-item" style="margin-top:0px">
-                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: dashboardSharing}" >
+                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: rightPanelEdit.dashboardSharing}" >
                                                         <span class="oj-choice-row">
                                                             <input id="dashboardSharingNotShared" type="radio" name="dashboardSharing" value="notShared">
                                                             <label for="dashboardSharingNotShared" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING_NOT_SHARED')"></label>
@@ -1025,7 +1025,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="oj-flex" data-bind="visible: dashboardSharing() === 'shared'">
+                                            <div class="oj-flex" data-bind="visible: rightPanelEdit.dashboardSharing() === 'shared'">
                                                 <div class="oj-flex-item" style="margin-left: 25px;">
                                                     <div class="share-default-settings" style="margin-top: 5px;">
                                                         <div data-bind="text: getNlsString('DBS_BUILDER_DSB_DEFAULT_REFRESH')"></div>
