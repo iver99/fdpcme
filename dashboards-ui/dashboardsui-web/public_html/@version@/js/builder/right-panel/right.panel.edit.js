@@ -117,7 +117,7 @@ define([
         //share dashboard fucntion  
         self.dashboardSharing = ko.observable(self.dashboard().sharePublic() ? "shared" : "notShared");
         self.dashboardSharing.subscribe(function (val) {
-            if (!self.toolbarModel || self.isDashboardSet) {
+            if (!self.toolbarModel || self.isDashboardSet()) {
                 // return if current selected tab is dashboard picker
                 return;
             }
