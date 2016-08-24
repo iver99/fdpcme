@@ -72,6 +72,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager
 	@Override
 	public void postStop(ApplicationLifecycleEvent evt) 
 	{
+		// do nothing
 	}
 
 	/* (non-Javadoc)
@@ -80,6 +81,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager
 	@Override
 	public void preStart(ApplicationLifecycleEvent evt) 
 	{
+		// do nothing
 	}
 
 	/* (non-Javadoc)

@@ -433,19 +433,19 @@ public class MockHttpServletRequest implements HttpServletRequest
 	   @Override
 	public void removeAttribute(String s)
 	{
-
+		// do nothing
 	}
 
 	   @Override
 	public void setAttribute(String s, Object o)
 	{
-
-	}
+		// do nothing
+		}
 
 	   @Override
 	public void setCharacterEncoding(String s) throws UnsupportedEncodingException
 	{
-
+		// do nothing
 	}
 
 	   public void setHeader(String key, String value)

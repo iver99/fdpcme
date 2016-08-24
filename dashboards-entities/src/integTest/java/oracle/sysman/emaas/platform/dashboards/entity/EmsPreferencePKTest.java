@@ -40,13 +40,4 @@ public class EmsPreferencePKTest {
 
     }
 
-    @Test
-    public void testSetPrefKey() {
-
-    }
-
-    @Test
-    public void testSetUserName() {
-
-    }
 }

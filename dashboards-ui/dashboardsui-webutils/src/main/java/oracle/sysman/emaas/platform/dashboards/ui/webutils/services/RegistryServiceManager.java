@@ -276,11 +276,13 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	@Override
 	public void postStop(ApplicationLifecycleEvent evt) 
 	{
+		// do nothing
 	}
 
 	@Override
 	public void preStart(ApplicationLifecycleEvent evt) 
 	{
+		// do nothing
 	}
 
 	@Override

@@ -109,6 +109,7 @@ public class GzipServletResponseWrapper extends HttpServletResponseWrapper
 	@Override
 	public void setContentLength(int length)
 	{
+		// do nothing
 	}
 
 }
