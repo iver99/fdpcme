@@ -90,13 +90,4 @@ public class EmsDashboardTileParamsPKTest {
         assertNotNull(emsDashboardTileParamsPK.hashCode());
     }
 
-    @Test
-    public void testSetDashboardTile() {
-
-    }
-
-    @Test
-    public void testSetParamName() {
-
-    }
 }

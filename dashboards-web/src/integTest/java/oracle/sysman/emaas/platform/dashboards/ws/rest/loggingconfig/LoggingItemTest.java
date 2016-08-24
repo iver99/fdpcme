@@ -23,7 +23,7 @@ public class LoggingItemTest {
 
     @AfterMethod
     public void tearDown() {
-
+    	// do nothing
     }
 
     @Test

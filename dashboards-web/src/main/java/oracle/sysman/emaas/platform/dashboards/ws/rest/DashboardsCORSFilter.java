@@ -138,6 +138,7 @@ public class DashboardsCORSFilter implements Filter
 	@Override
 	public void destroy()
 	{
+		// do nothing
 	}
 
 	@Override

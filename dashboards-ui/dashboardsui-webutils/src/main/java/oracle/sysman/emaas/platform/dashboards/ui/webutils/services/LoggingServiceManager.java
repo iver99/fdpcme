@@ -57,6 +57,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) 
 	{
+		// do nothing
 	}
 
 	/* (non-Javadoc)
@@ -65,7 +66,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	@Override
 	public void postStop(ApplicationLifecycleEvent evt) 
 	{
-
+		// do nothing
 	}
 
 	/* (non-Javadoc)

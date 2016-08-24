@@ -91,6 +91,7 @@ public class EMTargetInitializer implements ApplicationServiceManager
 	@Override
 	public void postStop(ApplicationLifecycleEvent evt) 
 	{
+		// do nothing
 
 	}
 
@@ -100,7 +101,7 @@ public class EMTargetInitializer implements ApplicationServiceManager
 	@Override
 	public void preStart(ApplicationLifecycleEvent evt) 
 	{
-
+		// do nothing
 	}
 
 	/* (non-Javadoc)

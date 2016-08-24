@@ -21,7 +21,7 @@ public class TenantEditionEntityTest {
 
     @AfterMethod
     public void tearDown() {
-
+    	// do nothing
     }
 
     @Test
