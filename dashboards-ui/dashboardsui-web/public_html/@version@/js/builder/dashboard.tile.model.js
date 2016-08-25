@@ -11,6 +11,7 @@ define(['knockout',
         'uifwk/js/util/df-util',
         'mobileutil',
         'jquery',
+        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
         'builder/builder.core',
         'builder/time.selector.model',
         'builder/editor/editor.component',
@@ -22,7 +23,7 @@ define(['knockout',
 //        'ckeditor'
     ],
 
-    function(ko, oj, km, dfu, uiutil, dfumodel, mbu, $)
+    function(ko, oj, km, dfu, uiutil, dfumodel, mbu, $, TargetSelectorUtils)
     {
         ko.mapping = km;
         var draggingTileClass = 'dbd-tile-in-dragging';
@@ -939,6 +940,10 @@ define(['knockout',
                         rightPanelModel.extendedOptions.tsel.entityContext = targets;
                     }
             };
+            
+            self.initializedCallback = function() {
+                TargetSelectorUtils.setTargetSelectionContext("tsel_"+self.dashboard.id(), self.targets());
+            }
             
             var compressedTargets;
             //set initial targets selector options. priority: user extendedOptions > dashboard extendedOptions

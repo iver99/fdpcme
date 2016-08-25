@@ -336,16 +336,17 @@
                             <div class="df-targte-selector" data-bind="visible: dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE'">
                                 <emcta-target-selector data-bind="attr: {id: 'tsel_'+dashboard.id()}"
                                                        params="returnFunction: returnFromTsel,
-                                                           config:{
-                                                               selectionMode: selectionMode(),
-                                                               returnMode: returnMode,
-                                                               inputCriteria: getInputCriteria(),
-                                                               ui: {
-                                                                   showLaunchButton: true,
-                                                                   dropdownInitialLabel: dropdownInitialLabel(),
-                                                                   dropdownResultLabel: dropdownResultLabel()
-                                                               }
-                                                           }"></emcta-target-selector>
+                                                            initializeCallback: initializedCallback,
+                                                            config:{
+                                                                selectionMode: selectionMode(),
+                                                                returnMode: returnMode,
+                                                                inputCriteria: getInputCriteria(),
+                                                                ui: {
+                                                                    showLaunchButton: true,
+                                                                    dropdownInitialLabel: dropdownInitialLabel(),
+                                                                    dropdownResultLabel: dropdownResultLabel()
+                                                                }
+                                                            }"></emcta-target-selector>
                             </div>
 
                             <div tabindex="0" class="df-date-time-picker" data-bind="attr: {id: 'dtpicker_'+dashboard.id()}, component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>

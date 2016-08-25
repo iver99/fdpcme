@@ -11,11 +11,12 @@ define(['knockout',
         'ojs/ojcore',
         'builder/tool-bar/edit.dialog',
         'uifwk/js/util/screenshot-util',
+        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
         'jqueryui',
         'builder/builder.core',
         'builder/widget/widget.model'
     ],
-    function(ko, $, dfu, mbu, uiutil, oj, ed, ssu) {
+    function(ko, $, dfu, mbu, uiutil, oj, ed, ssu, TargetSelectorUtils) {
         function ResizableView($b) {
             var self = this;
 
@@ -185,6 +186,7 @@ define(['knockout',
                 self.entitySupport(tsel.entitySupport?(tsel.entitySupport==="byCriteria"?true:false):true);
                 self.defaultEntityContext(tsel.entityContext ? tsel.entityContext : {});
                 tilesViewModel.selectionMode(self.entitySupport()?"byCriteria":"single");
+                window.DashboardWidgetAPI && window.DashboardWidgetAPI.setTargetSelectionContext(self.tilesViewModel.targets());
                 //2. reset timeSel in right drawer
                 self.enableTimeRangeFilter((dashboard.enableTimeRange() === 'TRUE')?'ON':'OFF');
                 self.defaultTimeRangeValue([timeSel.defaultValue]);
@@ -834,7 +836,7 @@ define(['knockout',
                             clearInterval(self.labelIntervalId);
                         }
                        if($("#"+tselId).children().get(0) && ko.contextFor($('#' + tselId).children().get(0)).$component.cm.dropdownInitialLabel()) {
-                            label =  ko.contextFor($('#' + tselId).children().get(0)).$component.getDropdownLabelForContext(val);
+                            label =  TargetSelectorUtils.getDropdownLabelForContext(tselId, val);
                             self.labelInited = true;
                         }else {
                             label = getNlsString("DBS_BUILDER_ALL_ENTITIES");
