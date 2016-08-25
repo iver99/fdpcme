@@ -2,7 +2,7 @@ define(['knockout',
 'jquery',
 'ojs/ojcore',
 'dfutil',
-'mobileutil',
+'uifwk/js/util/mobile-util',
 'uiutil'
 ],
 function (ko, $, oj, dfu, mbu, uiutil) {
