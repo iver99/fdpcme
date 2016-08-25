@@ -96,7 +96,7 @@ define([
                 if(!self.dashboard.sharePublic() || !self.labelInited) {
                     var val = self.defaultEntityContext();
 
-                    if(val === "") {
+                    if(!val) {
                         self.defaultEntityValueText(getNlsString("DBS_BUILDER_ALL_ENTITIES"));
                         return getNlsString("DBS_BUILDER_ALL_ENTITIES");
                     }
@@ -212,15 +212,25 @@ define([
             
             self.setDefaultValuesWhenSharing = function (creatorExtendedOptions) {
                 //creator settings is used as default dashboard settings when the dashboard is shared
-                //set what to show for filters/auto-refresh in share area
+                //set what to show for filters/auto-refresh in share area & set what filter/auto_refreh settings to save when this dashboard is shared
                 //1. timeSel
                 var timeSel = creatorExtendedOptions.timeSel;
-                self.defaultTimeRangeValue([timeSel.timePeriod]);
-                self.defaultStartTime(timeSel.start);
-                self.defaultEndTime(timeSel.end);
+                if(!$.isEmptyObject(timeSel)) {
+                    self.defaultTimeRangeValue([timeSel.timePeriod]);
+                    self.defaultStartTime(timeSel.start);
+                    self.defaultEndTime(timeSel.end);
+                    
+                    self.extendedOptions.timeSel.start = timeSel.start;
+                    self.extendedOptions.timeSel.end = timeSel.end;
+                    self.extendedOptions.timeSel.defaultValue = timeSel.timePeriod;
+                }
                 //2. tsel
                 var tsel = creatorExtendedOptions.tsel;
-                self.defaultEntityContext(tsel.entityContext);
+                if(!$.isEmptyObject(tsel)) {                    
+                    self.defaultEntityContext(tsel.entityContext);
+                    
+                    self.extendedOptions.tsel.entityContext = tsel.entityContext;
+                }
                 //3. auto-refresh
                 var interval = creatorExtendedOptions.autoRefresh.defaultValue;
                 var intervalValue;
@@ -230,15 +240,6 @@ define([
                     intervalValue = "every5minutes";
                 }
                 self.defaultAutoRefreshValue(intervalValue);
-
-                //set what filter/auto_refreh settings to save when this dashboard is shared
-                //1. timesel
-                self.extendedOptions.timeSel.start = timeSel.start;
-                self.extendedOptions.timeSel.end = timeSel.end;
-                self.extendedOptions.timeSel.defaultValue = timeSel.timePeriod;
-                //2. tsel
-                self.extendedOptions.tsel.entityContext = tsel.entityContext;
-                //3. auto-refresh
                 self.extendedOptions.autoRefresh.defaultValue = interval;
 
                 self.defaultValueChanged(new Date());

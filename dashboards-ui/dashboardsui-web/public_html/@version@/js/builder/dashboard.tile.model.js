@@ -936,9 +936,9 @@ define(['knockout',
             //1. set selectionMode: byCriteria/single. Default is "byCriteria"
             //selectionMode is set in right.panel.model.js
             //2. set selected targets/entityContext
-            if(self.userTsel && self.userExtendedOptions && self.userExtendedOptions.tsel) {
+            if(self.userTsel && self.userExtendedOptions && !$.isEmptyObject(self.userExtendedOptions.tsel)) {
                 compressedTargets = self.userExtendedOptions.tsel.entityContext;
-            }else if(self.dashboardExtendedOptions && self.dashboardExtendedOptions.tsel) {
+            }else if(self.dashboardExtendedOptions && !$.isEmptyObject(self.dashboardExtendedOptions.tsel)) {
                 compressedTargets = self.dashboardExtendedOptions.tsel.entityContext;
                 self.userExtendedOptions.tsel = {};
             }
@@ -964,12 +964,12 @@ define(['knockout',
             self.timePeriod = ko.observable("custom");
             //initialize time selector. priority: time in url > time in user extendedOptions > time in dashboard extendedOptions > default time
             if(initStart === null || initEnd === null) {
-                if(self.userTimeSel && self.userExtendedOptions && self.userExtendedOptions.timeSel) {
+                if(self.userTimeSel && self.userExtendedOptions && !$.isEmptyObject(self.userExtendedOptions.timeSel)) {
                     initStart = new Date(parseInt(self.userExtendedOptions.timeSel.start));
                     initEnd = new Date(parseInt(self.userExtendedOptions.timeSel.end));
                     var tp = (self.userExtendedOptions.timeSel.timePeriod === "custom1") ? "custom" : self.userExtendedOptions.timeSel.timePeriod;
                     self.timePeriod(Builder.getTimePeriodString(tp));
-                }else if(self.dashboardExtendedOptions && self.dashboardExtendedOptions.timeSel) {
+                }else if(self.dashboardExtendedOptions && !$.isEmptyObject(self.dashboardExtendedOptions.timeSel)) {
                     initStart = new Date(parseInt(self.dashboardExtendedOptions.timeSel.start));
                     initEnd = new Date(parseInt(self.dashboardExtendedOptions.timeSel.end));
                     var tp = (self.dashboardExtendedOptions.timeSel.defaultValue === "custom1") ? "custom" : self.dashboardExtendedOptions.timeSel.defaultValue;
