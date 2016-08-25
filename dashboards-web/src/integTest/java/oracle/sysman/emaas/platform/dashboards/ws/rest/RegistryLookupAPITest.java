@@ -22,11 +22,6 @@ public class RegistryLookupAPITest {
     public void setUp() {
         registryLookupAPI = new RegistryLookupAPI();
 
-        new NonStrictExpectations() {
-            {
-
-            }
-        };
     }
 
     @Test

@@ -37,7 +37,7 @@ import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.RegistryLookupUtil;
  */
 public class RegistryServiceManagerTest
 {
-	private static final Logger logger = LogManager.getLogger(RegistryServiceManagerTest.class);
+	private static final Logger LOGGER = LogManager.getLogger(RegistryServiceManagerTest.class);
 	private static final String VERSION = "1.0+";
 	RegistryServiceManager rsm = new RegistryServiceManager();
 
@@ -129,7 +129,7 @@ public class RegistryServiceManagerTest
 			Assert.assertFalse(rsm.isRegistrationComplete());
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			e.printStackTrace();
 		}
 	}

@@ -47,7 +47,7 @@ public class RegistrationEntity implements Serializable
 {
 	private static final long serialVersionUID = 7632586542760891331L;
 
-	private static final Logger logger = LogManager.getLogger(RegistrationEntity.class);
+	private static final Logger LOGGER = LogManager.getLogger(RegistrationEntity.class);
 
 	public static final String NAME_REGISTRYUTILS = "registryUrls";
 	public static final String NAME_SSF_SERVICENAME = "SavedSearch";
@@ -104,7 +104,7 @@ public class RegistrationEntity implements Serializable
 	public static final String COMPLIANCE_VERSION = "1.7.5+";
 	public static final String COMPLIANCE_HOME_LINK = "sso.home";
 
-	private static final Logger _logger = LogManager.getLogger(RegistrationEntity.class);
+	private static final Logger _LOGGER = LogManager.getLogger(RegistrationEntity.class);
 	//	private String registryUrls;
 
 	static boolean successfullyInitialized = false;
@@ -121,7 +121,7 @@ public class RegistrationEntity implements Serializable
 		}
 		catch (Exception exception) {
 			//			exception.printStackTrace();
-			_logger.error("Failed to initialize Lookup Manager", exception);
+			_LOGGER.error("Failed to initialize Lookup Manager", exception);
 		}
 	}
 
@@ -183,7 +183,7 @@ public class RegistrationEntity implements Serializable
 			});
 		}
 		catch (Exception e) {
-			logger.error(e);
+			LOGGER.error(e);
 			return Collections.emptyList();
 		}
 	}
@@ -210,7 +210,7 @@ public class RegistrationEntity implements Serializable
 			}
 		}
 		catch (Exception e) {
-			logger.error(e);
+			LOGGER.error(e);
 		}
 		list = new ArrayList<LinkEntity>();
 		Set<String> subscribedApps = getTenantSubscribedApplicationSet(false);
@@ -284,7 +284,7 @@ public class RegistrationEntity implements Serializable
 				}
 			}
 			catch (Exception e) {
-				_logger.error("Failed to discover link of cloud service: " + app, e);
+				_LOGGER.error("Failed to discover link of cloud service: " + app, e);
 			}
 		}
 		list = sortServiceLinks(list);
@@ -326,7 +326,7 @@ public class RegistrationEntity implements Serializable
 			});
 		}
 		catch (Exception e) {
-			logger.error(e);
+			LOGGER.error(e);
 		}
 		return Collections.emptyList();
 	}
@@ -413,7 +413,7 @@ public class RegistrationEntity implements Serializable
 			});
 		}
 		catch (Exception e) {
-			logger.error(e);
+			LOGGER.error(e);
 			return Collections.emptyList();
 		}
 	}
@@ -572,14 +572,14 @@ public class RegistrationEntity implements Serializable
 
 	private List<LinkEntity> lookupLinksWithRelPrefix(String linkPrefix, boolean isAdminLink)
 	{
-		_logger.info("lookupLinksWithRelPrefix(" + linkPrefix + "," + isAdminLink + ")");
+		_LOGGER.info("lookupLinksWithRelPrefix(" + linkPrefix + "," + isAdminLink + ")");
 		List<LinkEntity> linkList = new ArrayList<LinkEntity>();
 
 		LookupClient lookUpClient = LookupManager.getInstance().getLookupClient();
 		List<InstanceInfo> instanceList = lookUpClient.getInstancesWithLinkRelPrefix(linkPrefix);
 
 		Set<String> subscribedApps = getTenantSubscribedApplicationSet(isAdminLink);
-		_logger.info("Got Subscribed applications:", subscribedApps != null ? subscribedApps.toString() : "null");
+		_LOGGER.info("Got Subscribed applications:", subscribedApps != null ? subscribedApps.toString() : "null");
 		Map<String, LinkEntity> linksMap = new HashMap<String, LinkEntity>();
 		Map<String, LinkEntity> dashboardLinksMap = new HashMap<String, LinkEntity>();
 		String tenantName = TenantContext.getCurrentTenant();
@@ -590,7 +590,7 @@ public class RegistrationEntity implements Serializable
 				if (!StringUtil.isEmpty(tenantName)) {
 					sanitizedInstance = LookupManager.getInstance().getLookupClient()
 							.getSanitizedInstanceInfo(internalInstance, tenantName);
-					logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
+					LOGGER.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
 							sanitizedInstance, tenantName);
 				}
 				else {
@@ -601,7 +601,7 @@ public class RegistrationEntity implements Serializable
 				}
 			}
 			catch (Exception e) {
-				_logger.error("Error to get SanitizedInstanceInfo", e);
+				_LOGGER.error("Error to get SanitizedInstanceInfo", e);
 			}
 			if (NAME_DASHBOARD_UI_SERVICENAME.equals(internalInstance.getServiceName())
 					&& NAME_DASHBOARD_UI_VERSION.equals(internalInstance.getVersion())) {
@@ -612,7 +612,7 @@ public class RegistrationEntity implements Serializable
 			}
 
 		}
-		_logger.info("dashboardLinksMap: " + dashboardLinksMap);
+		_LOGGER.info("dashboardLinksMap: " + dashboardLinksMap);
 		Iterator<Map.Entry<String, LinkEntity>> iterDashboardLinks = dashboardLinksMap.entrySet().iterator();
 		while (iterDashboardLinks.hasNext()) {
 			Map.Entry<String, LinkEntity> entry = iterDashboardLinks.next();
@@ -621,19 +621,19 @@ public class RegistrationEntity implements Serializable
 			linkList.add(val);
 		}
 
-		_logger.info("linksMap: " + dashboardLinksMap);
+		_LOGGER.info("linksMap: " + dashboardLinksMap);
 		Iterator<Map.Entry<String, LinkEntity>> iterLinks = linksMap.entrySet().iterator();
 		while (iterLinks.hasNext()) {
 			Map.Entry<String, LinkEntity> entry = iterLinks.next();
 			LinkEntity val = entry.getValue();
-			_logger.debug("Retrieved link for RegistrationEntity from linksMap. service name is {}, and href is {}",
+			_LOGGER.debug("Retrieved link for RegistrationEntity from linksMap. service name is {}, and href is {}",
 					val.getServiceName(), val.getHref());
 			if (!dashboardLinksMap.containsKey(entry.getKey())) {
 				val = replaceWithVanityUrl(val, tenantName, val.getServiceName());
 				linkList.add(val);
 			}
 		}
-		_logger.info("Got links matching prefix:" + linkPrefix, linkList.toString());
+		_LOGGER.info("Got links matching prefix:" + linkPrefix, linkList.toString());
 		return linkList;
 	}
 

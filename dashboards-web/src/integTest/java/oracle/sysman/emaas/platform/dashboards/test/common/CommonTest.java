@@ -33,7 +33,7 @@ import com.jayway.restassured.config.LogConfig;
 
 public class CommonTest
 {
-	private static final Logger logger = LogManager.getLogger(CommonTest.class);
+	private static final Logger LOGGER = LogManager.getLogger(CommonTest.class);
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	private static class SchemaDeploymentUrls
@@ -114,8 +114,8 @@ public class CommonTest
 			}
 		}
 		catch (Exception e) {
-			logger.info("context",e);
-			//	logger.error("an error occureed while getting schema name", e);
+			LOGGER.info("context",e);
+			//	LOGGER.error("an error occureed while getting schema name", e);
 			return Collections.emptyList();
 		}
 		List<String> urls = new ArrayList<String>();
@@ -185,7 +185,7 @@ public class CommonTest
 			RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 
 	}
@@ -218,7 +218,7 @@ public class CommonTest
 			}
 		}
 		catch (IOException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		finally {
 			try {
@@ -231,7 +231,7 @@ public class CommonTest
 			}
 			catch (IOException ioEx) {
 				//ignore
-				logger.info("context",ioEx);
+				LOGGER.info("context",ioEx);
 			}
 		}
 		return response.toString();

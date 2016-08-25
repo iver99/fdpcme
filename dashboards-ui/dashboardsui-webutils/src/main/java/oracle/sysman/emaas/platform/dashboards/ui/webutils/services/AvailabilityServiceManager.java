@@ -50,7 +50,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 
 	private static final String SAVED_SEARCH_SERVICE_VERSION = "1.0+";
 	private static final String SAVED_SEARCH_SERVICE_REL = "search";
-	private final Logger logger = LogManager.getLogger(AvailabilityServiceManager.class);
+	private final static Logger LOGGER = LogManager.getLogger(AvailabilityServiceManager.class);
 
 	private Timer timer;
 	private Integer notificationId;
@@ -76,15 +76,15 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void handleNotification(Notification notification, Object handback)
 	{
-		logger.debug("Time triggered handler method. sequenceNumber={}, notificationId={}", notification.getSequenceNumber(),
+		LOGGER.debug("Time triggered handler method. sequenceNumber={}, notificationId={}", notification.getSequenceNumber(),
 				notificationId);
 		if (rsm.isRegistrationComplete() == null) {
-			logger.info("RegistryServiceManager hasn't registered. Check registry service next time");
+			LOGGER.info("RegistryServiceManager hasn't registered. Check registry service next time");
 			return;
 		}
 		// check if service manager is up and registration is complete
 		if (!rsm.isRegistrationComplete() && !rsm.registerService()) {
-			logger.info("Dashboards UI service registration is not completed. Ignore dependant services availability checking");
+			LOGGER.info("Dashboards UI service registration is not completed. Ignore dependant services availability checking");
 			return;
 
 		}
@@ -95,7 +95,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		catch (Exception e) {
 			isSSFAvailable = false;
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 		if (!isSSFAvailable) {
 			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
@@ -105,7 +105,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			services.add(ii);
 			rsm.markOutOfService(services, null, null);
 			GlobalStatus.setDashboardUIDownStatus();
-			logger.error("Dashboards UI service is out of service because Saved Search API service is unavailable");
+			LOGGER.error("Dashboards UI service is out of service because Saved Search API service is unavailable");
 			return;
 		}
 
@@ -116,7 +116,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		catch (Exception e) {
 			isDFApiAvailable = false;
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 		if (!isDFApiAvailable) {
 			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
@@ -126,7 +126,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			services.add(ii);
 			rsm.markOutOfService(services, null, null);
 			GlobalStatus.setDashboardUIDownStatus();
-			logger.error("Dashboards UI service is out of service because Dashboard API service is unavailable");
+			LOGGER.error("Dashboards UI service is out of service because Dashboard API service is unavailable");
 			return;
 		}
 
@@ -137,7 +137,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		catch (Exception e) {
 			isCommonUIAvailable = false;
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 		if (!isCommonUIAvailable) {
 			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
@@ -147,7 +147,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			services.add(ii);
 			rsm.markOutOfService(services, null, null);
 			GlobalStatus.setDashboardUIDownStatus();
-			logger.info("Dashboards UI service is out of service because OMC UI Framework service is unavailable");
+			LOGGER.info("Dashboards UI service is out of service because OMC UI Framework service is unavailable");
 			return;
 		}
 
@@ -156,10 +156,10 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			rsm.markServiceUp();
 			GlobalStatus.setDashboardUIUpStatus();
 
-			logger.debug("Dashboards UI service is up");
+			LOGGER.debug("Dashboards UI service is up");
 		}
 		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -174,7 +174,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		Date timerTriggerAt = new Date(new Date().getTime() + 10000L);
 		notificationId = timer.addNotification("DashboardsUIServiceTimer", null, this, timerTriggerAt, PERIOD, 0);
 		timer.start();
-		logger.info("Timer for dashboards UI service dependencies checking started. notificationId={}", notificationId);
+		LOGGER.info("Timer for dashboards UI service dependencies checking started. notificationId={}", notificationId);
 	}
 
 	/* (non-Javadoc)
@@ -183,6 +183,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void postStop(ApplicationLifecycleEvent evt) 
 	{
+		// do nothing
 	}
 
 	/* (non-Javadoc)
@@ -191,6 +192,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void preStart(ApplicationLifecycleEvent evt) 
 	{
+		// do nothing
 	}
 
 	/* (non-Javadoc)
@@ -199,14 +201,14 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-		logger.info("Pre-stopping availability service");
+		LOGGER.info("Pre-stopping availability service");
 		try {
 			timer.stop();
 			timer.removeNotification(notificationId);
-			logger.info("Timer for dashboards UI dependencies checking stopped, notificationId={}", notificationId);
+			LOGGER.info("Timer for dashboards UI dependencies checking stopped, notificationId={}", notificationId);
 		}
 		catch (InstanceNotFoundException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -219,7 +221,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			return result != null && !result.isEmpty();
 		}
 		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return false;
 		}
 	}

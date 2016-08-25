@@ -1,4 +1,4 @@
-define(['uifwk/@version@/js/util/ajax-util-impl'],
-    function (ajaxUtilImpl) {
-        return ajaxUtilImpl;
+define(['uifwk/@version@/js/uifwk-impl-partition'],
+    function () {
+        return require('uifwk/@version@/js/util/ajax-util-impl');
     });

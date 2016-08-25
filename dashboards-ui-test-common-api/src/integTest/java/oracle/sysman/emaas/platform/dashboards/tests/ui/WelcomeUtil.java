@@ -48,6 +48,8 @@ public class WelcomeUtil
 				eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.WELCOME_DATAEXP_SELECTID,
 						DashBoardPageId.WELCOME_DATAEXP_SEARCH);
 				break;
+			default:
+				break;
 		}
 		driver.getWebDriver().findElement(By.xpath(eleXpath)).click();
 		driver.takeScreenShot();
@@ -100,6 +102,8 @@ public class WelcomeUtil
 			case LEARN_MORE_SERVICE_OFFERINGS:
 				expectedName = "Service Offerings";
 				break;
+			default:
+				break;
 		}
 		return expectedName;
 	}
@@ -123,6 +127,8 @@ public class WelcomeUtil
 				break;
 			case LEARN_MORE_SERVICE_OFFERINGS:
 				itemId = DashBoardPageId.WELCOME_LEARNMORE_SERVICEOFFERING;
+				break;
+			default:
 				break;
 		}
 		return itemId;
@@ -186,6 +192,8 @@ public class WelcomeUtil
 				break;
 			case SERVICE_NAME_DATA_EXPLORERS:
 				serviceWrapperId = DashBoardPageId.WELCOME_DATAEXP;
+				break;
+			default:
 				break;
 		}
 		return serviceWrapperId;
@@ -421,6 +429,8 @@ public class WelcomeUtil
 				case ITA_DATA_EXPLORER:
 					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
 							DashBoardPageId.WELCOME_ITA_DE);
+					break;
+				default:
 					break;
 			}
 			driver.click(eleXpath);

@@ -20,7 +20,7 @@ import org.testng.annotations.Test;
  */
 public class EMTargetMXBeanTest
 {
-	private static final Logger logger = LogManager.getLogger(EMTargetMXBeanTest.class);
+	private static final Logger LOGGER = LogManager.getLogger(EMTargetMXBeanTest.class);
 
 	private final static String mbName = "Test_EMTargetMXBean";
 	private final EMTargetMXBean mb = new EMTargetMXBeanImpl(mbName);
@@ -32,7 +32,7 @@ public class EMTargetMXBeanTest
 			Assert.assertEquals(mb.getEMTargetType(), EMTargetConstants.M_TARGET_TYPE);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -45,7 +45,7 @@ public class EMTargetMXBeanTest
 			Assert.assertEquals(mb.getName(), mbName);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

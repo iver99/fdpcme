@@ -32,7 +32,7 @@ public class LoggingServiceManagerTest
 	LoggingServiceManager lsm = new LoggingServiceManager();
 	
 
-	private static final Logger logger = LogManager.getLogger(LoggingServiceManagerTest.class);
+	private static final Logger LOGGER = LogManager.getLogger(LoggingServiceManagerTest.class);
 
 
 	@Test(groups = { "s1" })
@@ -81,7 +81,7 @@ public class LoggingServiceManagerTest
 			lsm.preStop(null);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 }

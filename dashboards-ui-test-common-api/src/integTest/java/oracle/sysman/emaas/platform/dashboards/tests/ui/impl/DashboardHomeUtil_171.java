@@ -32,7 +32,7 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements IDashboardHomeUtil
 {
-	private static final Logger logger = LogManager.getLogger(DashboardHomeUtil_171.class);
+	private static final Logger LOGGER = LogManager.getLogger(DashboardHomeUtil_171.class);
 
 	//	public static void createDashboardSet(WebDriver driver, String name, String descriptions, Boolean displayDesc,
 	//			Boolean selectorRefreshcontrol) 
@@ -132,7 +132,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.getLogger().info("[DashboardHomeUtil] call filterOptions filter: " + filter);
 		Validator.notEmptyString("filter", filter);
 		String[] fs = filter.split(",");
-		ArrayList<String> trimedFs = new ArrayList<String>();
+		List<String> trimedFs = new ArrayList<String>();
 		for (String s : fs) {
 			trimedFs.add(s.trim());
 		}
@@ -646,7 +646,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 			return element.getAttribute(attribute);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 
 		return null;
@@ -662,7 +662,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 			}
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 
 		return result;

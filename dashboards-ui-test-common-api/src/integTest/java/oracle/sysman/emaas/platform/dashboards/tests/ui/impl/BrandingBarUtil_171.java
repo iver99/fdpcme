@@ -31,7 +31,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 {
 	
 
-private static final Logger logger = LogManager.getLogger(BrandingBarUtil_171.class);
+private static final Logger LOGGER = LogManager.getLogger(BrandingBarUtil_171.class);
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isAdmin(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
@@ -198,6 +198,8 @@ private static final Logger logger = LogManager.getLogger(BrandingBarUtil_171.cl
 				driver.getLogger().info("Click Sign Out menu.");
 				driver.click(DashBoardPageId.OPTION_LOGOUT);
 				break;
+			default:
+				break;
 		}
 		driver.takeScreenShot();
 	}
@@ -340,6 +342,8 @@ private static final Logger logger = LogManager.getLogger(BrandingBarUtil_171.cl
 			case "admin":
 				parentId = DashBoardPageId.BRANDINGBARADMINLINKSID;
 				break;
+			default:
+				break;
 		}
 		return parentId;
 	}
@@ -406,7 +410,7 @@ private static final Logger logger = LogManager.getLogger(BrandingBarUtil_171.cl
 		}
 		catch (StaleElementReferenceException e) {
 
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			return true;
 		}
 	}
@@ -466,7 +470,7 @@ private static final Logger logger = LogManager.getLogger(BrandingBarUtil_171.cl
 			driver.click(locator);
 		}
 		catch (StaleElementReferenceException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			driver.getLogger().info("StaleElementReferenceException thrown, wait for element becoming not stale");
 			// wait until element is not stale
 			new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT).until(new ExpectedCondition<Boolean>() {

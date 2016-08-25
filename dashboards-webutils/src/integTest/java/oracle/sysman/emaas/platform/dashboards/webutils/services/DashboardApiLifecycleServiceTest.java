@@ -32,7 +32,7 @@ import weblogic.application.ApplicationLifecycleEvent;
 public class DashboardApiLifecycleServiceTest
 {
 	private final DashboardApiLifecycleService apils = new DashboardApiLifecycleService();
-	private static final Logger logger = LogManager.getLogger(DashboardApiLifecycleServiceTest.class);
+	private static final Logger LOGGER = LogManager.getLogger(DashboardApiLifecycleServiceTest.class);
 
 	@SuppressWarnings("unchecked")
 	@Test(groups = { "s2" })
@@ -87,7 +87,7 @@ public class DashboardApiLifecycleServiceTest
 			apils.postStart(evt);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -125,7 +125,7 @@ public class DashboardApiLifecycleServiceTest
 			apils.postStop(evt);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -163,7 +163,7 @@ public class DashboardApiLifecycleServiceTest
 			apils.preStart(evt);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -203,7 +203,7 @@ public class DashboardApiLifecycleServiceTest
 			apils.preStop(evt);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 }

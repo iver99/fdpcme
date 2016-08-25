@@ -50,7 +50,7 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("/v1/_logging/configs")
 public class LoggingConfigAPI extends APIBase
 {
-	private static final Logger logger = LogManager.getLogger(LoggingConfigAPI.class);
+	private static final Logger LOGGER = LogManager.getLogger(LoggingConfigAPI.class);
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -63,11 +63,11 @@ public class LoggingConfigAPI extends APIBase
 	}
 
 	@PUT
-	@Path("{loggerName}")
+	@Path("{LOGGERName}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response changeSpecificLoggerLevel(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("loggerName") String loggerName,
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("LOGGERName") String LOGGERName,
 			JSONObject inputJson)
 	{
 		UpdatedLoggerLevel input = null;
@@ -76,42 +76,42 @@ public class LoggingConfigAPI extends APIBase
 			input = getJsonUtil().fromJson(inputJson.toString(), UpdatedLoggerLevel.class);
 			if (input == null || StringUtil.isEmpty(input.getLevel())) {
 				throw new CommonResourceException(MessageUtils.getDefaultBundleString(
-						CommonResourceException.LOGGER_LEVEL_NOT_FOUND_TO_CONFIG, input.getLevel(), loggerName));
+						CommonResourceException.LOGGER_LEVEL_NOT_FOUND_TO_CONFIG, input.getLevel(), LOGGERName));
 			}
 			Level level = Level.getLevel(input.getLevel().toUpperCase());
 			if (level == null) {
 				throw new CommonResourceException(MessageUtils.getDefaultBundleString(
-						CommonResourceException.LOGGER_LEVEL_NOT_FOUND_TO_CONFIG, input.getLevel(), loggerName));
+						CommonResourceException.LOGGER_LEVEL_NOT_FOUND_TO_CONFIG, input.getLevel(), LOGGERName));
 			}
 			LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
 			Configuration cfg = ctx.getConfiguration();
-			Map<String, LoggerConfig> loggers = cfg.getLoggers();
+			Map<String, LoggerConfig> LOGGERs = cfg.getLoggers();
 			LoggingItem li = null;
-			for (LoggerConfig lc : loggers.values()) {
-				if (lc.getName().equalsIgnoreCase(loggerName)) {
+			for (LoggerConfig lc : LOGGERs.values()) {
+				if (lc.getName().equalsIgnoreCase(LOGGERName)) {
 					lc.setLevel(level);
 					Long timestamp = DateUtil.getCurrentUTCTime().getTime();
 					LogUtil.setLoggerUpdateTime(cfg, lc, timestamp);
 					ctx.updateLoggers();
 					li = new LoggingItem(lc, timestamp);
-					logger.info("Level for logger \"{}\" has been updated to \"{}\" by user \"{}\" from REST interface",
-							loggerName, input.getLevel(), UserContext.getCurrentUser());
+					LOGGER.info("Level for LOGGER \"{}\" has been updated to \"{}\" by user \"{}\" from REST interface",
+							LOGGERName, input.getLevel(), UserContext.getCurrentUser());
 					break;
 				}
 			}
 			if (li == null) {
 				throw new CommonResourceException(MessageUtils.getDefaultBundleString(
-						CommonResourceException.LOGGER_NOT_FOUND_TO_CONFIG, loggerName));
+						CommonResourceException.LOGGER_NOT_FOUND_TO_CONFIG, LOGGERName));
 			}
 			return Response.ok(getJsonUtil().toJson(li)).build();
 		}
 		catch (IOException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(e);
 			return buildErrorResponse(error);
 		}
 		catch (DashboardException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
@@ -123,19 +123,19 @@ public class LoggingConfigAPI extends APIBase
 	{
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
-			logger.info("User \"{}\" is getting all logger levels", UserContext.getCurrentUser());
-			LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
-			Configuration cfg = loggerContext.getConfiguration();
-			Map<String, LoggerConfig> loggers = cfg.getLoggers();
+			LOGGER.info("User \"{}\" is getting all LOGGER levels", UserContext.getCurrentUser());
+			LoggerContext LOGGERContext = (LoggerContext) LogManager.getContext(false);
+			Configuration cfg = LOGGERContext.getConfiguration();
+			Map<String, LoggerConfig> LOGGERs = cfg.getLoggers();
 			LoggingItems items = new LoggingItems();
-			for (LoggerConfig tempLogger : loggers.values()) {
+			for (LoggerConfig tempLogger : LOGGERs.values()) {
 				Long timestamp = LogUtil.getLoggerUpdateTime(cfg, tempLogger);
 				items.addLoggerConfig(tempLogger, timestamp);
 			}
 			return Response.ok(getJsonUtil().toJson(items)).build();
 		}
 		catch (CommonSecurityException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}

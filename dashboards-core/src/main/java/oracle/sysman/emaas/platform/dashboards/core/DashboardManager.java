@@ -41,7 +41,7 @@ import org.apache.logging.log4j.Logger;
 
 public class DashboardManager
 {
-	private static final Logger logger = LogManager.getLogger(DashboardManager.class);
+	private static final Logger LOGGER = LogManager.getLogger(DashboardManager.class);
 
 	private static DashboardManager instance;
 
@@ -133,11 +133,11 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
 			if (ed == null || ed.getDeleted() != null && ed.getDeleted() > 0) {
-				logger.debug("Dashboard with id {} and tenant id {} is not found, or deleted already", dashboardId, tenantId);
+				LOGGER.debug("Dashboard with id {} and tenant id {} is not found, or deleted already", dashboardId, tenantId);
 				throw new DashboardNotFoundException();
 			}
 			if (!isDashboardAccessbyCurrentTenant(ed)) {// system dashboard
-				logger.debug(
+				LOGGER.debug(
 						"Dashboard with id {} and tenant id {} is a system dashboard and cannot be accessed by current tenant",
 						dashboardId, tenantId);
 				throw new DashboardNotFoundException();
@@ -260,14 +260,14 @@ public class DashboardManager
 				throw new DashboardNotFoundException();
 			}
 			if (ed.getScreenShot() == null) {
-				logger.debug("Retrieved null screenshot base64 data from persistence layer, we use a blank screenshot then");
+				LOGGER.debug("Retrieved null screenshot base64 data from persistence layer, we use a blank screenshot then");
 				return new ScreenshotData(BLANK_SCREENSHOT, ed.getCreationDate(), ed.getLastModificationDate());
 			}
 			else if (!ed.getScreenShot().startsWith(SCREENSHOT_BASE64_PNG_PREFIX)
 					&& !ed.getScreenShot().startsWith(SCREENSHOT_BASE64_JPG_PREFIX)) {
-				logger.error(
+				LOGGER.error(
 						"Retrieved an invalid screenshot base64 data that is not started with specified prefix, we use a blank screenshot then");
-				logger.debug("Th screenshot string with an invalid base64 previs is: {}", ed.getScreenShot());
+				LOGGER.debug("Th screenshot string with an invalid base64 previs is: {}", ed.getScreenShot());
 				return new ScreenshotData(BLANK_SCREENSHOT, ed.getCreationDate(), ed.getLastModificationDate());
 			}
 			return new ScreenshotData(ed.getScreenShot(), ed.getCreationDate(), ed.getLastModificationDate());
@@ -291,33 +291,33 @@ public class DashboardManager
 		EntityManager em = null;
 		try {
 			if (dashboardId == null || dashboardId <= 0) {
-				logger.debug("Dashboard not found for id {} is invalid", dashboardId);
+				LOGGER.debug("Dashboard not found for id {} is invalid", dashboardId);
 				throw new DashboardNotFoundException();
 			}
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
 			if (ed == null) {
-				logger.debug("Dashboard not found with the specified id {}", dashboardId);
+				LOGGER.debug("Dashboard not found with the specified id {}", dashboardId);
 				throw new DashboardNotFoundException();
 			}
 			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
 			if (isDeleted != null && isDeleted.booleanValue()) {
-				logger.debug("Dashboard with id {} is not found for it's deleted already", dashboardId);
+				LOGGER.debug("Dashboard with id {} is not found for it's deleted already", dashboardId);
 				throw new DashboardNotFoundException();
 			}
 			String currentUser = UserContext.getCurrentUser();
 			// user can access owned or system dashboard
 			if (ed.getSharePublic().intValue() == 0) {
 				if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
-					logger.debug(
+					LOGGER.debug(
 							"Dashboard with id {} is not found for it's a non-OOB dashboard and not owned by current user {}",
 							dashboardId, currentUser);
 					throw new DashboardNotFoundException();
 				}
 			}
 			if (!isDashboardAccessbyCurrentTenant(ed)) {
-				logger.debug("Dashboard with id {} is not found for it can't be accessed by current tenant", dashboardId);
+				LOGGER.debug("Dashboard with id {} is not found for it can't be accessed by current tenant", dashboardId);
 				throw new DashboardNotFoundException();
 			}
 			updateLastAccessDate(dashboardId, tenantId, dsf);
@@ -337,7 +337,7 @@ public class DashboardManager
 	public Dashboard getDashboardByName(String name, Long tenantId)
 	{
 		if (name == null || "".equals(name)) {
-			logger.debug("Dashboard not found for name \"{}\" is invalid", name);
+			LOGGER.debug("Dashboard not found for name \"{}\" is invalid", name);
 			return null;
 		}
 		String currentUser = UserContext.getCurrentUser();
@@ -356,8 +356,8 @@ public class DashboardManager
 			return Dashboard.valueOf(ed);
 		}
 		catch (NoResultException e) {
-			logger.debug("Dashboard not found for name \"{}\" because NoResultException is caught", name);
-			logger.info("context",e);
+			LOGGER.debug("Dashboard not found for name \"{}\" because NoResultException is caught", name);
+			LOGGER.info("context",e);
 			return null;
 		}
 		finally {
@@ -372,33 +372,33 @@ public class DashboardManager
 		EntityManager em = null;
 		try {
 			if (dashboardId == null || dashboardId <= 0) {
-				logger.debug("Dashboard not found for id {} is invalid", dashboardId);
+				LOGGER.debug("Dashboard not found for id {} is invalid", dashboardId);
 				throw new DashboardNotFoundException();
 			}
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
 			if (ed == null) {
-				logger.debug("Dashboard not found with the specified id {}", dashboardId);
+				LOGGER.debug("Dashboard not found with the specified id {}", dashboardId);
 				throw new DashboardNotFoundException();
 			}
 			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
 			if (isDeleted != null && isDeleted.booleanValue()) {
-				logger.debug("Dashboard with id {} is not found for it's deleted already", dashboardId);
+				LOGGER.debug("Dashboard with id {} is not found for it's deleted already", dashboardId);
 				throw new DashboardNotFoundException();
 			}
 			String currentUser = UserContext.getCurrentUser();
 			// user can access owned or system dashboard
 			if (ed.getSharePublic().intValue() == 0) {
 				if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
-					logger.debug(
+					LOGGER.debug(
 							"Dashboard with id {} is not found for it's a non-OOB dashboard and not owned by current user {}",
 							dashboardId, currentUser);
 					throw new DashboardNotFoundException();
 				}
 			}
 			if (!isDashboardAccessbyCurrentTenant(ed)) {
-				logger.debug("Dashboard with id {} is not found for it can't be accessed by current tenant", dashboardId);
+				LOGGER.debug("Dashboard with id {} is not found for it can't be accessed by current tenant", dashboardId);
 				throw new DashboardNotFoundException();
 			}
 
@@ -407,7 +407,7 @@ public class DashboardManager
 
 			List<EmsDashboard> emsDashboards = dsf.getEmsDashboardsBySubId(dashboardId);
 			if (null == emsDashboards) {
-				logger.debug("Dashboard not found with the specified sub dashboard id {}", dashboardId);
+				LOGGER.debug("Dashboard not found with the specified sub dashboard id {}", dashboardId);
 				throw new DashboardNotFoundException();
 			}
 
@@ -470,7 +470,7 @@ public class DashboardManager
 	public Date getLastAccessDate(Long dashboardId, Long tenantId)
 	{
 		if (dashboardId == null || dashboardId <= 0) {
-			logger.debug("Last access for dashboard not found for dashboard id {} is invalid", dashboardId);
+			LOGGER.debug("Last access for dashboard not found for dashboard id {} is invalid", dashboardId);
 			return null;
 		}
 		EntityManager em = null;
@@ -479,11 +479,11 @@ public class DashboardManager
 			em = dsf.getEntityManager();
 			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
 			if (ed == null) {
-				logger.debug("Last access is not found for dashboard with id {} is not found", dashboardId);
+				LOGGER.debug("Last access is not found for dashboard with id {} is not found", dashboardId);
 				return null;
 			}
 			if (ed.getDeleted() != null && ed.getDeleted().equals(1)) {
-				logger.debug("Last access is not found for dashboard with id {} is deleted", dashboardId);
+				LOGGER.debug("Last access is not found for dashboard with id {} is deleted", dashboardId);
 				return null;
 			}
 			String currentUser = UserContext.getCurrentUser();
@@ -596,7 +596,7 @@ public class DashboardManager
 	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
 			boolean ic, String orderBy, DashboardsFilter filter) throws DashboardException
 	{
-		logger.debug(
+		LOGGER.debug(
 				"Listing dashboards with parameters: queryString={}, offset={}, pageSize={}, tenantId={}, ic={}, orderBy={}, filter={}",
 				queryString, offset, pageSize, tenantId, ic, orderBy, filter);
 		if (offset != null && offset < 0) {
@@ -797,7 +797,7 @@ public class DashboardManager
 						+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE ");
 		String jpqlQuery = sbQuery.toString();
 		
-		logger.debug(jpqlQuery);
+		LOGGER.debug(jpqlQuery);
 		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 		EntityManager em = dsf.getEntityManager();
 		Query listQuery = em.createNativeQuery(jpqlQuery, EmsDashboard.class);
@@ -821,7 +821,7 @@ public class DashboardManager
 		StringBuilder sbCount = new StringBuilder(sb);
 		sbCount.insert(0, "select count(*) ");
 		String jpqlCount = sbCount.toString();
-		logger.debug(jpqlCount);
+		LOGGER.debug(jpqlCount);
 		Query countQuery = em.createNativeQuery(jpqlCount);
 		initializeQueryParams(countQuery, paramList);
 		Long totalResults = ((BigDecimal) countQuery.getSingleResult()).longValue();
@@ -847,7 +847,7 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
 			if (ed == null || ed.getDeleted() != null && ed.getDeleted() > 0) {
-				logger.debug("Dashboard with id {} is not found for it does not exists or is deleted already", dashboardId);
+				LOGGER.debug("Dashboard with id {} is not found for it does not exists or is deleted already", dashboardId);
 				throw new DashboardNotFoundException();
 			}
 			em = dsf.getEntityManager();
@@ -882,7 +882,7 @@ public class DashboardManager
 	public Dashboard saveNewDashboard(Dashboard dbd, Long tenantId) throws DashboardException
 	{
 		if (dbd == null) {
-			logger.debug("Dashboard is not saved: it's impossible to save null dashboard");
+			LOGGER.debug("Dashboard is not saved: it's impossible to save null dashboard");
 			return null;
 		}
 		EntityManager em = null;
@@ -975,7 +975,7 @@ public class DashboardManager
 	public Dashboard updateDashboard(Dashboard dbd, Long tenantId) throws DashboardException
 	{
 		if (dbd == null) {
-			logger.debug("Dashboard is not updated: it's impossible to update null dashboard");
+			LOGGER.debug("Dashboard is not updated: it's impossible to update null dashboard");
 			return null;
 		}
 		EntityManager em = null;
@@ -997,7 +997,7 @@ public class DashboardManager
 				dbd.setOwner(currentUser);
 			}
 			if (dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET)) {
-
+				// do nothing
 			}
 			else {
 				if (dbd.getTileList() != null) {
@@ -1057,11 +1057,11 @@ public class DashboardManager
 	public int updateDashboardTilesName(Long tenantId, String widgetName, Long widgetId)
 	{
 		if (StringUtil.isEmpty(widgetName)) {
-			logger.debug("Dashboard names are not updated: null or empty widget name isn't expected");
+			LOGGER.debug("Dashboard names are not updated: null or empty widget name isn't expected");
 			return 0;
 		}
 		if (widgetId == null || widgetId < 0) {
-			logger.debug("Dashboard names are not updated: invalid widget ID is specified");
+			LOGGER.debug("Dashboard names are not updated: invalid widget ID is specified");
 			return 0;
 		}
 		EntityManager em = null;
@@ -1075,7 +1075,7 @@ public class DashboardManager
 			et.begin();
 			int affacted = query.executeUpdate();
 			et.commit();
-			logger.info("Update dashboard tiles name: title for {} tiles have been updated to \"{}\" for specified widget ID {}",
+			LOGGER.info("Update dashboard tiles name: title for {} tiles have been updated to \"{}\" for specified widget ID {}",
 					affacted, widgetName, widgetId);
 			return affacted;
 		}
@@ -1109,7 +1109,7 @@ public class DashboardManager
 	public void updateLastAccessDate(Long dashboardId, Long tenantId, DashboardServiceFacade dsf)
 	{
 		if (dashboardId == null || dashboardId <= 0) {
-			logger.debug("Last access date for dashboard is not updated: dashboard id with value {} is invalid", dashboardId);
+			LOGGER.debug("Last access date for dashboard is not updated: dashboard id with value {} is invalid", dashboardId);
 			return;
 		}
 		//EntityManager em = null;
@@ -1180,7 +1180,7 @@ public class DashboardManager
 	{
 		String opcTenantId = TenantContext.getCurrentTenant();
 		if (opcTenantId == null || "".equals(opcTenantId)) {
-			logger.warn(
+			LOGGER.warn(
 					"When trying to retrieve subscribed application, it's found the tenant context is not set (TenantContext.getCurrentTenant() == null)");
 			return Collections.emptyList();
 		}
@@ -1204,14 +1204,14 @@ public class DashboardManager
 		for (int i = 0; i < paramList.size(); i++) {
 			Object value = paramList.get(i);
 			query.setParameter(i + 1, value);
-			logger.debug("binding parameter [{}] as [{}]", i + 1, value);
+			LOGGER.debug("binding parameter [{}] as [{}]", i + 1, value);
 		}
 	}
 
 	private boolean isDashboardAccessbyCurrentTenant(EmsDashboard ed) throws TenantWithoutSubscriptionException
 	{
 		if (ed == null) {
-			logger.debug("null dashboard is not accessed by current tenant");
+			LOGGER.debug("null dashboard is not accessed by current tenant");
 			return false;
 		}
 		List<DashboardApplicationType> datList = getTenantApplications();
@@ -1220,17 +1220,17 @@ public class DashboardManager
 		}
 		Boolean isSystem = DataFormatUtils.integer2Boolean(ed.getIsSystem());
 		if (!isSystem) { // check system dashboard only
-			logger.debug("dashboard with id {} is accessed by current tenant", ed.getDashboardId());
+			LOGGER.debug("dashboard with id {} is accessed by current tenant", ed.getDashboardId());
 			return true;
 		}
 		Integer at = ed.getApplicationType();
 		if (at == null) { // should be always available for system dashboard
-			logger.error("Unexpected: application type for system dashboard with id {} is null", ed.getDashboardId());
+			LOGGER.error("Unexpected: application type for system dashboard with id {} is null", ed.getDashboardId());
 			return false;
 		}
 		DashboardApplicationType app = DashboardApplicationType.fromValue(at.intValue());
 		if (app == null) {
-			logger.debug("Failed to retrieve a valid DashboardApplicationType from given application type internal value {}", at);
+			LOGGER.debug("Failed to retrieve a valid DashboardApplicationType from given application type internal value {}", at);
 			return false;
 		}
 		for (DashboardApplicationType dat : datList) {
@@ -1238,7 +1238,7 @@ public class DashboardManager
 				return true;
 			}
 		}
-		logger.debug(
+		LOGGER.debug(
 				"dashboard can't be accessed by current tenant as it's application type isn't in the subscribed application list");
 		return false;
 	}

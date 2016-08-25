@@ -36,7 +36,7 @@ public class Dashboard
 				return null;
 			}
 			for (EnableDescriptionState eefs : EnableDescriptionState.values()) {
-				if (eefs.getName().toLowerCase().equals(name.toLowerCase())) {
+				if (eefs.getName().equalsIgnoreCase(name)) {
 					return eefs;
 				}
 			}
@@ -87,7 +87,7 @@ public class Dashboard
 				return null;
 			}
 			for (EnableEntityFilterState eefs : EnableEntityFilterState.values()) {
-				if (eefs.getName().toLowerCase().equals(name.toLowerCase())) {
+				if (eefs.getName().equalsIgnoreCase(name)) {
 					return eefs;
 				}
 			}
@@ -138,7 +138,7 @@ public class Dashboard
 				return null;
 			}
 			for (EnableTimeRangeState etrs : EnableTimeRangeState.values()) {
-				if (etrs.getName().toLowerCase().equals(name.toLowerCase())) {
+				if (etrs.getName().equalsIgnoreCase(name)) {
 					return etrs;
 				}
 			}

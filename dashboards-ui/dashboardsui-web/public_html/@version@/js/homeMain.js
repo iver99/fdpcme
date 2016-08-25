@@ -9,6 +9,32 @@
  * http://jquery.org/license
  */
 requirejs.config({
+    bundles: (window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ? undefined : {
+        'uifwk/js/uifwk-partition':
+            [
+            'uifwk/js/util/ajax-util',
+            'uifwk/js/util/df-util',
+            'uifwk/js/util/logging-util',
+            'uifwk/js/util/message-util',
+            'uifwk/js/util/mobile-util',
+            'uifwk/js/util/preference-util',
+            'uifwk/js/util/screenshot-util',
+            'uifwk/js/util/typeahead-search',
+            'uifwk/js/util/usertenant-util',
+            'uifwk/js/widgets/aboutbox/js/aboutbox',
+            'uifwk/js/widgets/brandingbar/js/brandingbar',
+            'uifwk/js/widgets/datetime-picker/js/datetime-picker',
+            'uifwk/js/widgets/navlinks/js/navigation-links',
+            'uifwk/js/widgets/timeFilter/js/timeFilter',
+            'uifwk/js/widgets/widgetselector/js/widget-selector',
+            'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
+            'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
+            'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
+            'text!uifwk/js/widgets/widgetselector/html/widget-selector.html',
+            'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
+            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
+            ]
+    },
     //Set up module mapping
     map: {
         '*':
@@ -33,9 +59,6 @@ requirejs.config({
         'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
         'dashboards': '.',
         'dfutil':'internaldfcommon/js/util/internal-df-util',
-        'prefutil':'/emsaasui/uifwk/js/util/preference-util',
-        'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
-        'mobileutil':'/emsaasui/uifwk/js/util/mobile-util',
         'uifwk': '/emsaasui/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
@@ -79,7 +102,7 @@ require(['dashboards/dbsmodel',
     'dfutil',
     'uifwk/js/util/df-util',
     'dashboards/dashboardhome-impl',
-    'loggingutil',
+    'uifwk/js/util/logging-util',
     'common.uifwk',
     'ojs/ojmodel',
     'ojs/ojknockout',
@@ -114,8 +137,8 @@ require(['dashboards/dbsmodel',
 
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
-                    viewModel:{require:'/emsaasui/uifwk/js/widgets/brandingbar/js/brandingbar.js'},
-                    template:{require:'text!/emsaasui/uifwk/js/widgets/brandingbar/html/brandingbar.html'}
+                    viewModel:{require:'uifwk/js/widgets/brandingbar/js/brandingbar'},
+                    template:{require:'text!uifwk/js/widgets/brandingbar/html/brandingbar.html'}
                 });
             }
 

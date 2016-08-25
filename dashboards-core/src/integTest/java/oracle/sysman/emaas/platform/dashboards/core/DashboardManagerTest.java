@@ -35,7 +35,7 @@ public class DashboardManagerTest
 		TenantSubscriptionUtil.setTestEnv();
 	}
 	
-	private static final Logger logger = LogManager.getLogger(DashboardManagerTest.class);
+	private static final Logger LOGGER = LogManager.getLogger(DashboardManagerTest.class);
 
 	@BeforeMethod
 	public void beforeMethod()
@@ -343,7 +343,7 @@ public class DashboardManagerTest
 			dm.updateDashboard(dbd1, tenantId1);
 		}
 		catch (CommonSecurityException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
 		Assert.assertEquals(queried.getName(), name1);
@@ -353,7 +353,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -376,7 +376,7 @@ public class DashboardManagerTest
 			dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			expectedException = true;
 		}
 		if (!expectedException) {
@@ -416,7 +416,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd3.getDashboardId(), false, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		queried = dm.getDashboardById(dbd3.getDashboardId(), tenantId2);
 		Assert.assertNotNull(queried);
@@ -424,7 +424,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd3.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		queried = dm.getDashboardById(dbd3.getDashboardId(), tenantId2);
 		Assert.assertNotNull(queried);
@@ -434,7 +434,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd4.getDashboardId(), false, tenantId1);
 		}
 		catch (CommonSecurityException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		queried = dm.getDashboardById(dbd4.getDashboardId(), tenantId1);
 		Assert.assertNotNull(queried);
@@ -444,25 +444,25 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.deleteDashboard(dbd3.getDashboardId(), true, tenantId2);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.deleteDashboard(dbd4.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -513,13 +513,13 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -562,7 +562,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		try {
 			UserContext.setCurrentUser("other user");
@@ -570,7 +570,7 @@ public class DashboardManagerTest
 			UserContext.setCurrentUser("SYSMAN");
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -602,7 +602,7 @@ public class DashboardManagerTest
 			queried = dm.getDashboardById(Long.MAX_VALUE, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			expectedException = true;
 		}
 		if (!expectedException) {
@@ -614,13 +614,13 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -655,7 +655,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
 		Assert.assertNull(lastAccess);

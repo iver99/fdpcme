@@ -17,7 +17,7 @@ import org.testng.annotations.Test;
 @Test(groups = {"s1"})
 public class UserOptionsTest {
     UserOptions userOptions;
-    private static final Logger logger = LogManager.getLogger(UserOptionsTest.class);
+    private static final Logger LOGGER = LogManager.getLogger(UserOptionsTest.class);
 
     @BeforeMethod
     public void setUp() {
@@ -75,7 +75,7 @@ public class UserOptionsTest {
 		catch (DashboardException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		if (emsUserOptions != null) {
 			 Assert.assertEquals(emsUserOptions.getUserName(),"new name");
@@ -91,7 +91,7 @@ public class UserOptionsTest {
             userOptions.setDashboardId(null);
             userOptions.toEntity(null, "new name");
         }catch (Exception ignored){
-        	logger.info("context",ignored);
+        	LOGGER.info("context",ignored);
         }
 
         try{
@@ -99,7 +99,7 @@ public class UserOptionsTest {
             userOptions.setAutoRefreshInterval(null);
             userOptions.toEntity(null,"new name");
         }catch (Exception ignored){
-        	logger.info("context",ignored);
+        	LOGGER.info("context",ignored);
         }
     }
 
