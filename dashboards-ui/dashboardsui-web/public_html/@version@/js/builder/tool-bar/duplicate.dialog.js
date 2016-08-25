@@ -91,7 +91,7 @@ define(['knockout',
                         newDashboard.screenShot = null;
                         self.saveDuplicatedDashboardToServer(newDashboard);
                     };
-                    new Builder.DashboardDataSource().fetchDashboardScreenshot(origDashboard.id(), succCallback, errorCallback);
+                    new Builder.DashboardDataSource().fetchScreenshotData(origDashboard.id(), succCallback, errorCallback);
                 }
                 else {
                     if (newDashboard.tiles() && newDashboard.tiles().length > 0) {
