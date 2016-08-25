@@ -32,7 +32,8 @@ public class ClickjackingFilterTest {
 		ClickjackingFilter filter = new ClickjackingFilter();
 		new Expectations() {
 			{
-				filterConfig.getInitParameter(anyString); result = "TEST";
+				filterConfig.getInitParameter(anyString); 
+				result = "TEST";
 			}
 		};
 		
