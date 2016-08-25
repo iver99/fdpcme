@@ -7,7 +7,7 @@
  * Then, call the usual JET oj.logger methods.  This custom logger intercepts those logs
  * and sends them to your logger url (passed in initialization).
  */
-define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
+define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@/js/util/df-util-impl'],
     function(oj, ajaxUtilModel, dfumodel)
     {
 

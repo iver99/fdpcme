@@ -114,6 +114,9 @@ define(['knockout',
                 self.removeTile(tile);
                 self.tilesGrid.unregisterTileInGrid(tile);
                 for(var i in tilesToMove) {
+                    if(!tilesToMove[i]){
+                        continue;
+                    }
                     self.moveTileUp(tilesToMove[i], self.mode.getModeHeight(tile));
                 }
                 self.tilesReorder();
@@ -132,6 +135,9 @@ define(['knockout',
                 var cells = self.getCellsOccupied(self.mode.getModeRow(tile), col, offsetValue, self.mode.getModeHeight(tile));
                 var tilesToMove = self.getTilesUnder(cells, tile);
                 for(var i in tilesToMove) {
+                    if(!tilesToMove[i]){
+                        continue;
+                    }
                     var iTile = tilesToMove[i];
                     var rowDiff = self.mode.getModeRow(tile)-self.mode.getModeRow(iTile)+self.mode.getModeHeight(tile);
                     self.moveTileDown(iTile, rowDiff);
@@ -156,6 +162,9 @@ define(['knockout',
                     offsetValue = value || 1;
                 var tilesToMove = self.getTilesUnder(cells, tile);
                 for(var i in tilesToMove) {
+                    if(!tilesToMove[i]){
+                        continue;
+                    }
                     self.moveTileDown(tilesToMove[i], offsetValue);
                 }
                 self.tilesGrid.updateTileSize(tile, self.mode.getModeWidth(tile), self.mode.getModeHeight(tile) + offsetValue);
@@ -171,6 +180,9 @@ define(['knockout',
                 var tilesToMove = self.getTilesBelow(tile);
                 self.tilesGrid.updateTileSize(tile, self.mode.getModeWidth(tile), height);
                 for(var i in tilesToMove) {
+                    if(!tilesToMove[i]){
+                        continue;
+                    }
                     self.moveTileUp(tilesToMove[i], offsetValue);
                 }
                 self.tilesReorder();
@@ -505,6 +517,9 @@ define(['knockout',
 
                 var nextTiles  = self.getTilesBelow(tile);
                 for(var i in nextTiles) {
+                    if(!nextTiles[i]){
+                        continue;
+                    }
                     var iTile = nextTiles[i];
                         if(self.draggingTile === iTile) {
                             self.moveTileDown(iTile, rowDiff-self.mode.getModeHeight(iTile));
@@ -558,6 +573,9 @@ define(['knockout',
                 var nextTiles = self.getTilesBelow(tile);
                 self.updateTilePosition(tile, nextRow, self.mode.getModeColumn(tile));
                 for(var i in nextTiles) {
+                    if(!nextTiles[i]){
+                        continue;
+                    }
                     var iTile = nextTiles[i];
                     self.moveTileUp(iTile, rowDiff);
                 }
@@ -588,14 +606,10 @@ define(['knockout',
                     for(var j=0; j<width; j++) {
                         col = cell.column + j;
                         self.tilesGrid.tileGrid[row] &&  (iTile = self.tilesGrid.tileGrid[row][col]);
-                        if(argNum === 2) {
-                            if(iTile && $.inArray(iTile, tiles) === -1 && tile !== iTile) {
-                                tiles.push(iTile);
-                            }
-                        }else if(argNum === 3) {
-                            if(iTile && $.inArray(iTile, tiles) === -1) {
-                                tiles.push(iTile);
-                            }
+                        if(argNum === 2 && iTile && $.inArray(iTile, tiles) === -1 && tile !== iTile) {
+                            tiles.push(iTile);
+                        }else if(argNum === 3 && iTile && $.inArray(iTile, tiles) === -1) {
+                            tiles.push(iTile);
                         }
                     }
                 }
@@ -627,9 +641,7 @@ define(['knockout',
                     }
 
                     for(j=self.mode.getModeRow(iTile)-1; j>=0; j--) {
-                        if(self.canMoveToRow(iTile, j)){
-                            continue;
-                        }else{
+                        if(!self.canMoveToRow(iTile, j)){
                             self.updateTilePosition(iTile, j+1, self.mode.getModeColumn(iTile));
                             break;
                         }
@@ -662,10 +674,8 @@ define(['knockout',
                     iTile.moved = false;
 
                     for(var j=0; j<emptyRows.length; j++) {
-                        if(iRow > emptyRows[j]) {
-                            if(self.canMoveToRow(iTile, iRow-j-1)) {
-                                self.updateTilePosition(iTile, iRow-j-1, self.mode.getModeColumn(iTile));
-                            }
+                        if(iRow > emptyRows[j] && self.canMoveToRow(iTile, iRow-j-1)) {
+                            self.updateTilePosition(iTile, iRow-j-1, self.mode.getModeColumn(iTile));
                         }
                     }
                 }

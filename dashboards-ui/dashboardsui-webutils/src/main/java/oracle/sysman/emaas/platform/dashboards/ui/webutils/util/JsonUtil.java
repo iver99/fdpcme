@@ -29,7 +29,7 @@ import org.codehaus.jackson.type.JavaType;
 
 public class JsonUtil
 {
-	private static Logger logger = LogManager.getLogger(JsonUtil.class);
+	private static final Logger LOGGER = LogManager.getLogger(JsonUtil.class);
 
 	/**
 	 * only initial changed value
@@ -176,7 +176,7 @@ public class JsonUtil
 			return mapper.writeValueAsString(object);
 		}
 		catch (IOException e) {
-			logger.error("an error occureed while getting Json string", e);
+			LOGGER.error("an error occureed while getting Json string", e);
 			return null;
 		}
 	}

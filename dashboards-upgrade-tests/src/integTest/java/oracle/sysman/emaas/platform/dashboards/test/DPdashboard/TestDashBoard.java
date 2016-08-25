@@ -1,20 +1,13 @@
 package oracle.sysman.emaas.platform.dashboards.test.DPdashboard;
 
 
-import org.testng.Assert;
-import org.testng.annotations.*;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.Select;
-
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-import oracle.sysman.emaas.platform.dashboards.test.util.*;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.*;
-
-import java.util.Set;
+import oracle.sysman.emaas.platform.dashboards.test.util.DashBoardUtils;
+import oracle.sysman.emaas.platform.dashboards.test.util.LoginAndLogout;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
 

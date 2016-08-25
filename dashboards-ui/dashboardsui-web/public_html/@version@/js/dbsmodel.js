@@ -17,8 +17,8 @@ define([
     'knockout',
     'jquery',
     'dfutil',
-    'prefutil',
-    'mobileutil',
+    'uifwk/js/util/preference-util',
+    'uifwk/js/util/mobile-util',
     'ojs/ojknockout',
     'ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'
@@ -89,7 +89,6 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             {
                 if (self.parentElementId && self.parentElementId.trim().length > 0)
                 {
-                    var y = $("#"+self.parentElementId+" "+cssSelector);
                     return $("#"+self.parentElementId+" "+cssSelector);
                 }
                 return $(cssSelector);
@@ -157,7 +156,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 
     function ViewModel(predata, parentElementId, defaultFilters, dashboardSetItem, isSet) {
 
-        var self = this, showWelcome = (predata === null ? false : predata.getShowWelcomePref());
+        var self = this, showWelcome = false; //(predata === null ? false : predata.getShowWelcomePref());
 
         self.parentElementId = parentElementId;
         self.getElementByCss = function(cssSelector) {
@@ -285,12 +284,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             'success': function() {
                 self.datasource['serverError'] = false;
                 self.refreshPagingSource();
-                if (self.datasource['pagingDS'].totalSize() <= 0)
-                {
-                    if (self.welcomeDialogModel.showWelcome === false)
-                    {
-                        $('#cbtn-tooltip').ojPopup('open', "#cbtn");
-                    }
+                if (self.datasource['pagingDS'].totalSize() <= 0 && (self.welcomeDialogModel.showWelcome === false)){
+                    $('#cbtn-tooltip').ojPopup('open', "#cbtn");
                 }
             },
             'error': function(jqXHR, textStatus, errorThrown) {
@@ -656,12 +651,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self._forceSearch = function (silent, endcallback)
         {
             var  _ts = self.dashboardsTS();
-            if (silent !== true)
+            if (silent !== true && ( _ts && _ts !== null ))
             {
-                if ( _ts && _ts !== null )
-                {
-                    _ts.handleEvent(oj.TableDataSource.EventType['REQUEST']);
-                }
+                _ts.handleEvent(oj.TableDataSource.EventType['REQUEST']);
             }
             self.getElementByCss(".dbs-sinput").dbsTypeAhead("forceSearch", endcallback);
         };

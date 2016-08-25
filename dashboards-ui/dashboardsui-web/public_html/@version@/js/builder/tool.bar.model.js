@@ -876,6 +876,8 @@ define(['knockout',
                         self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);// 5 minutes
                         dfu.showMessage({type: 'confirm', summary: getNlsString('DBS_BUILDER_MSG_AUTO_REFRESH_ON'), detail: '', removeDelayTime: 5000});
                         break;
+                    default:
+                        break;
                 }
             };
 

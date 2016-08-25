@@ -21,7 +21,10 @@ import org.apache.logging.log4j.Logger;
 
 public class PropertyReader
 {
-	private static final Logger logger = LogManager.getLogger(PropertyReader.class);
+	private PropertyReader() {
+	  }
+
+	private static final Logger LOGGER = LogManager.getLogger(PropertyReader.class);
 
 	public static final String getInstallDir()
 	{
@@ -53,7 +56,7 @@ public class PropertyReader
 
 		}
 		catch (IOException ex) {
-			logger.error(ex.getLocalizedMessage(), ex);
+			LOGGER.error(ex.getLocalizedMessage(), ex);
 		}
 		finally {
 			if (input != null) {
@@ -61,7 +64,7 @@ public class PropertyReader
 					input.close();
 				}
 				catch (IOException e) {
-					logger.error(e.getLocalizedMessage(), e);
+					LOGGER.error(e.getLocalizedMessage(), e);
 				}
 			}
 		}

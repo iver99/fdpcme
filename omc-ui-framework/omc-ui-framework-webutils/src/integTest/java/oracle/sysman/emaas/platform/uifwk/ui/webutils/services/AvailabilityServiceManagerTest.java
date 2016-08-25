@@ -40,13 +40,13 @@ public class AvailabilityServiceManagerTest
 {
 	private final RegistryServiceManager rsm = new RegistryServiceManager();
 	private final AvailabilityServiceManager asm = new AvailabilityServiceManager(rsm);
-	private final String DASHBOARD_API_SERVICE_NAME = "Dashboard-API";
-	private final String DASHBOARD_API_SERVICE_VERSION = "1.0+";
-	private final String DASHBOARD_API_SERVICE_REL = "base";
+	private final static String DASHBOARD_API_SERVICE_NAME = "Dashboard-API";
+	private final static String DASHBOARD_API_SERVICE_VERSION = "1.0+";
+	private final static String DASHBOARD_API_SERVICE_REL = "base";
 
-	private final String SAVED_SEARCH_SERVICE_NAME = "SavedSearch";
-	private final String SAVED_SEARCH_SERVICE_VERSION = "1.0+";
-	private final String SAVED_SEARCH_SERVICE_REL = "search";
+	private final static String SAVED_SEARCH_SERVICE_NAME = "SavedSearch";
+	private final static String SAVED_SEARCH_SERVICE_VERSION = "1.0+";
+	private final static String SAVED_SEARCH_SERVICE_REL = "search";
 
 	@Test(groups = { "s1" })
 	public void testGetName()

@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.uifwk.ui.webutils.services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.lang.management.ManagementFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -33,6 +35,7 @@ import org.testng.annotations.Test;
  */
 public class LoggingServiceManagerTest
 {
+	private static final Logger LOGGER = LogManager.getLogger(LoggingServiceManagerTest.class);
 	LoggingServiceManager lsm = new LoggingServiceManager();
 
 	@Mocked
@@ -55,6 +58,7 @@ public class LoggingServiceManagerTest
 					return new URL("TestURL");
 				}
 				catch (MalformedURLException e) {
+					LOGGER.info("context",e);
 					e.printStackTrace();
 					return null;
 				}
@@ -72,6 +76,7 @@ public class LoggingServiceManagerTest
 			};
 		}
 		catch (MBeanRegistrationException | InstanceNotFoundException e) {
+			LOGGER.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -80,6 +85,7 @@ public class LoggingServiceManagerTest
 			lsm.preStart(null);
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -87,6 +93,7 @@ public class LoggingServiceManagerTest
 			lsm.preStop(null);
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -103,6 +110,7 @@ public class LoggingServiceManagerTest
 					return new URL("TestURL1");
 				}
 				catch (MalformedURLException e) {
+					LOGGER.info("context",e);
 					e.printStackTrace();
 					return null;
 				}
@@ -124,7 +132,7 @@ public class LoggingServiceManagerTest
 			lsm.preStop(null);
 		}
 		catch (Exception e) {
-
+			LOGGER.info("context",e);
 		}
 	}
 }

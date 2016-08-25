@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.test.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import oracle.sysman.emsaas.login.LoginUtils;
 import oracle.sysman.emsaas.login.PageUtils;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
@@ -9,7 +11,8 @@ import org.testng.annotations.AfterMethod;
 
 public class LoginAndLogout
 {
-	public static WebDriver webd = null;
+	protected static WebDriver webd = null;
+	private static final Logger LOGGER = LogManager.getLogger(LoginAndLogout.class);
 
 	@AfterMethod
 	public static void logoutMethod()
@@ -19,6 +22,7 @@ public class LoginAndLogout
 			try{
                              webd.shutdownBrowser(true);
                         }catch(Exception e){
+                        	LOGGER.info("context",e);
                              webd.getLogger().warning("Failed to shutdown browser"+e.getMessage());
                         }
 		}
@@ -31,6 +35,7 @@ public class LoginAndLogout
 			tenantID = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			tenantID = "emaastesttenant1";
 		}
 		username = customUser;
@@ -50,6 +55,7 @@ public class LoginAndLogout
 			tenantID = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			tenantID = "emaastesttenant1";
 		}
 
@@ -58,6 +64,7 @@ public class LoginAndLogout
 
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			username = "emcsadmin";
 		}
 		try {
@@ -65,6 +72,7 @@ public class LoginAndLogout
 
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			password = "Welcome1!";
 		}
 
@@ -80,6 +88,7 @@ public class LoginAndLogout
 			url = PageUtils.getServiceLink(tenantId, rel, servicename);
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OMCS_DASHBOARD_URL");
 		}
 

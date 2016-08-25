@@ -1,5 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.test.RegistryLookup;
 
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import oracle.sysman.emaas.platform.dashboards.test.common.CommonTest;
 
 import org.testng.Assert;
@@ -22,6 +25,8 @@ public class RegistryLookup
 	static String authToken;
 	static String tenantid;
 	static String remoteuser;
+	
+	private static final Logger LOGGER = LogManager.getLogger(RegistryLookup.class);
 
 	@BeforeClass
 	public static void setUp()
@@ -77,6 +82,7 @@ public class RegistryLookup
 		
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -117,6 +123,7 @@ public class RegistryLookup
 
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -164,6 +171,7 @@ public class RegistryLookup
 
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -188,6 +196,7 @@ public class RegistryLookup
 
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -280,6 +289,7 @@ public class RegistryLookup
 			
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -304,6 +314,7 @@ public class RegistryLookup
 
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -398,6 +409,7 @@ public class RegistryLookup
 			
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -426,6 +438,7 @@ public class RegistryLookup
 		
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -466,6 +479,7 @@ public class RegistryLookup
 			
 		}
 		catch (Exception e) {
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['jquery', 'knockout', 'uifwk/js/util/ajax-util'],
+define(['jquery', 'knockout', 'uifwk/@version@/js/util/ajax-util-impl'],
        /*
         * @param {Object} oj
         * @param {jQuery} $
@@ -135,6 +135,8 @@ $.widget( "dbs.typeAheadSearch", {
 				case keyCode.DOWN:
 					this._keyEvent( "next", event );
 					break;
+				default:
+					break;
 				}
 			},
 			input: function( event ) {
@@ -245,11 +247,9 @@ $.widget( "dbs.typeAheadSearch", {
                 var keyCode = $.ui.keyCode;
                 if ( event.keyCode !== keyCode.BACKSPACE &&
                         event.keyCode !== keyCode.DELETE &&
-                        event.keyCode !== keyCode.ENTER )
-                {
-                    if ( value.length < this.options.minLength ) {
+                        event.keyCode !== keyCode.ENTER &&
+                        ( value.length < this.options.minLength )) {
 			return this.close( event );
-                    }
                 }
 		return this._search( value );
 	},

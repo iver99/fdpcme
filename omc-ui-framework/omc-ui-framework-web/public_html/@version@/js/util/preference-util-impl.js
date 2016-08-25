@@ -1,5 +1,5 @@
 
-define(['jquery', 'uifwk/js/util/ajax-util'],
+define(['jquery', 'uifwk/@version@/js/util/ajax-util-impl'],
 function($, ajaxUtilModel)
 {
     var ajaxUtil = new ajaxUtilModel();

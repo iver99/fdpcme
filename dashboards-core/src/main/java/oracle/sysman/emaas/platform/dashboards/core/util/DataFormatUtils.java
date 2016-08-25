@@ -11,6 +11,9 @@ import oracle.sysman.emaas.platform.dashboards.core.model.TileParam;
 
 public class DataFormatUtils
 {
+	private DataFormatUtils() {
+	  }
+
 	public static Integer bigDecimal2Integer(BigDecimal bd)
 	{
 		if (bd == null) {

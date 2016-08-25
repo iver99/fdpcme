@@ -10,7 +10,7 @@ import oracle.sysman.emaas.platform.dashboards.core.cache.lru.inter.ICacheUnit;
 
 public class CacheUnit implements ICacheUnit{
 	
-	private static final Logger logger = LogManager.getLogger(CacheUnit.class);
+	private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 	
 	private CacheLinkedHashMap<String,Element> cacheLinkedHashMap;
 	private final int timeToLive;
@@ -46,7 +46,7 @@ public class CacheUnit implements ICacheUnit{
 		this.timeToLive=timeToLive;
 		this.cacheCapacity=capacity;
 		this.cacheLinkedHashMap=new CacheLinkedHashMap<String, Element>(capacity);
-		logger.debug("Creating a CacheUnit named {} and expiration time is {}"+name,timeToLive);
+		LOGGER.debug("Creating a CacheUnit named {} and expiration time is {}"+name,timeToLive);
 	}
 	
 	

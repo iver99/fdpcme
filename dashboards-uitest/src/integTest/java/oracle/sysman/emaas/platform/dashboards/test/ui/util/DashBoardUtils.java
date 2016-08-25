@@ -14,6 +14,10 @@ import org.testng.Assert;
 public class DashBoardUtils
 {
 	private static WebDriver driver;
+	
+	private DashBoardUtils() {
+	  }
+
 
 	public static void apmOobExist() 
 	{

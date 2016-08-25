@@ -3,7 +3,7 @@ define([
     'knockout',
     'jquery',
     'dfutil',
-    'loggingutil',
+    'uifwk/js/util/logging-util',
     'idfbcutil',
     'ojs/ojcore',
     'jqueryui',
@@ -203,13 +203,13 @@ define([
                     //change dashboard name
                     toolBarModel.dashboardName.subscribe(function (dashboardName) {
                         var currentDashboardId = self.selectedDashboardInst().toolBarModel.dashboardId;
-                        dashboardsetToolBarModel.dashboardsetItems.filter(function isIdMatch(value) {
+                        dashboardsetToolBarModel.dashboardsetItems.filter(function(value) {
                             if(value.dashboardId===currentDashboardId){
                                 value.name(dashboardName);
                                 $('#dashboardTab-'+currentDashboardId).find('.tabs-name').text(dashboardName);
                             }
                         });
-                        dashboardsetToolBarModel.reorderedDbsSetItems().filter(function isIdMatch(value) {
+                        dashboardsetToolBarModel.reorderedDbsSetItems().filter(function(value) {
                             if(value.dashboardId===currentDashboardId){
                                 value.name(dashboardName);
                             }

@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.ui.web.gzip;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -25,6 +27,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
  */
 public class GzipServletResponseWrapper extends HttpServletResponseWrapper
 {
+	private static final Logger LOGGER = LogManager.getLogger(GzipServletResponseWrapper.class);
 	private final HttpServletResponse response;
 	private ServletOutputStream stream;
 	private PrintWriter writer;
@@ -51,6 +54,8 @@ public class GzipServletResponseWrapper extends HttpServletResponseWrapper
 			}
 		}
 		catch (IOException e) {
+			LOGGER.info("context",e);
+			
 		}
 	}
 
@@ -104,6 +109,7 @@ public class GzipServletResponseWrapper extends HttpServletResponseWrapper
 	@Override
 	public void setContentLength(int length)
 	{
+		// do nothing
 	}
 
 }

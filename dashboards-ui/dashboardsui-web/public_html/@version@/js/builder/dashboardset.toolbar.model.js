@@ -12,12 +12,11 @@ define(['knockout',
     'builder/tool-bar/edit.dialog',
     'builder/tool-bar/duplicate.dialog',
     'uifwk/js/util/preference-util',
-    'mobileutil',
+    'uifwk/js/util/mobile-util',
     'builder/builder.core'
 ],
     function (ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu,mbu) {
         // dashboard type to keep the same with return data from REST API
-        var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
 
         function DashboardsetToolBarModel(dashboardInst) {

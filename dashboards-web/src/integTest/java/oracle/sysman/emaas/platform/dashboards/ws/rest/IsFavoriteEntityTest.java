@@ -17,8 +17,4 @@ public class IsFavoriteEntityTest {
         assertEquals(isFavoriteEntity.getIsFavorite(), Boolean.TRUE);
     }
 
-    @Test
-    public void testSetIsFavorite() {
-
-    }
 }

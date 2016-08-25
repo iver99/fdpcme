@@ -18,7 +18,7 @@ import org.testng.annotations.Test;
  */
 public class EMTargetMXBeanTest
 {
-	private final String mbName = "Test_EMTargetMXBean";
+	private final static String mbName = "Test_EMTargetMXBean";
 	private final EMTargetMXBean mb = new EMTargetMXBeanImpl(mbName);
 
 	@Test(groups = { "s1" })
