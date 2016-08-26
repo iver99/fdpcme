@@ -11,6 +11,7 @@ define(['knockout',
         'uifwk/js/util/df-util',
         'uifwk/js/util/mobile-util',
         'jquery',
+        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
         'builder/builder.core',
         'builder/time.selector.model',
         'builder/editor/editor.component',
@@ -23,7 +24,7 @@ define(['knockout',
 //        'ckeditor'
     ],
 
-    function(ko, oj, km, dfu, uiutil, dfumodel, mbu, $)
+    function(ko, oj, km, dfu, uiutil, dfumodel, mbu, $, TargetSelectorUtils)
     {
         ko.mapping = km;
         var draggingTileClass = 'dbd-tile-in-dragging';
@@ -56,7 +57,7 @@ define(['knockout',
             self.loginUser = ko.observable(dfu.getUserName());
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
 
-            self.targets = ko.observable(null);
+            self.targets = ko.observable({"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"});
 
 
             self.timeSelectorModel = new Builder.TimeSelectorModel();
@@ -908,10 +909,8 @@ define(['knockout',
                     self.userExtendedOptions.tsel = {};
                 }
 
-                require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
-                    self.userExtendedOptions.tsel.entityContext = targets;
-                    self.saveUserFilterOptions();
-                });
+                self.userExtendedOptions.tsel.entityContext = targets;
+                self.saveUserFilterOptions();
 
             };
 
@@ -928,9 +927,14 @@ define(['knockout',
             });
 
             self.returnFromTsel = function(targets) {
+                window.DashboardWidgetAPI.setTargetSelectionContext(targets);
                     self.returnFromPageTsel(targets);
             };
-
+            
+            self.initializedCallback = function() {
+                TargetSelectorUtils.setTargetSelectionContext("tsel_"+self.dashboard.id(), self.targets());
+            }
+            
             var compressedTargets;
             //set initial targets selector options. priority: user extendedOptions > dashboard extendedOptions
             //1. set selectionMode: byCriteria/single. Default is "byCriteria"
@@ -942,7 +946,7 @@ define(['knockout',
                 compressedTargets = self.dashboardExtendedOptions.tsel.entityContext;
                 self.userExtendedOptions.tsel = {};
             }
-            self.targets(compressedTargets);
+            compressedTargets && self.targets(compressedTargets);
 
             var timeSelectorChangelistener = ko.computed(function(){
                 return {

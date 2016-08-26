@@ -4,8 +4,9 @@ define([
     'jquery',
     'builder/right-panel/right.panel.util',
     'uifwk/js/util/screenshot-util',
-    'dfutil'
-    ], function(ko, oj, $, rpu, ssu, dfu) {
+    'dfutil',    
+    'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'
+    ], function(ko, oj, $, rpu, ssu, dfu, TargetSelectorUtils) {
         
         function RightPanelFilterModel($b) {
             var self = this;
@@ -103,12 +104,12 @@ define([
 
                     var tselId = "tsel_"+self.dashboard.id();
                     var label;
-                    self.labelIntervalId = setInterval(function() {
+                    var labelIntervalId = setInterval(function() {
                         if(self.labelInited) {
-                            clearInterval(self.labelIntervalId);
+                            clearInterval(labelIntervalId);
                         }
-                       if($("#"+tselId).children().get(0)) {
-                            label =  ko.contextFor($('#' + tselId).children().get(0)).$component.getDropdownLabelForContext(val);
+                       if($("#"+tselId).children().get(0) && ko.contextFor($('#' + tselId).children().get(0)).$component.cm.dropdownInitialLabel()) {
+                            label =  TargetSelectorUtils.getDropdownLabelForContext(tselId, val);
                             self.labelInited = true;
                         }else {
                             label = getNlsString("DBS_BUILDER_ALL_ENTITIES");
@@ -203,6 +204,7 @@ define([
                 self.entitySupport(tsel.entitySupport?(tsel.entitySupport==="byCriteria"?true:false):true);
                 self.defaultEntityContext(tsel.entityContext ? tsel.entityContext : {});
                 tilesViewModel.selectionMode(self.entitySupport()?"byCriteria":"single");
+                window.DashboardWidgetAPI && window.DashboardWidgetAPI.setTargetSelectionContext(self.tilesViewModel.targets());
                 //2. reset timeSel in right drawer
                 self.enableTimeRangeFilter((dashboard.enableTimeRange() === 'TRUE')?'ON':'OFF');
                 self.defaultTimeRangeValue([timeSel.defaultValue]);

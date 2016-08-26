@@ -47,6 +47,7 @@ requirejs.config({
         'd3':'../../libs/@version@/js/d3/d3.min',
         'emsaasui':'/emsaasui',
         'emcta':'/emsaasui/emcta/ta/js',
+//        'emcta': '/emsaasui/emcta/ta/@version@/js', //for DEV_MODE
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
         'uifwk': '/emsaasui/uifwk'
@@ -212,6 +213,7 @@ require(['knockout',
     'dashboards/widgets/autorefresh/js/auto-refresh',
 //    'dashboards/widgets/textwidget/js/textwidget',
     'dashboards/dashboardhome-impl',
+    'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
     'jqueryui',
     'common.uifwk',
     'builder/builder.jet.partition',
@@ -221,12 +223,12 @@ require(['knockout',
     'builder/dashboardset.panels.model',
     'builder/dashboardDataSource/dashboard.datasource'
 ],
-    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, /*textwidget, */dashboardhome_impl) // this callback gets executed when all required modules are loaded
+    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, /*textwidget, */dashboardhome_impl, TargetSelectorUtils) // this callback gets executed when all required modules are loaded
     {
         var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
-        require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
-                TargetSelectorUtils.registerComponents();
+
+        TargetSelectorUtils.registerComponents();
         logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
         // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
         // If you comment the line below, our current log calls will not be output!
@@ -340,7 +342,6 @@ require(['knockout',
                 }
             });
         });
-    });
     }
 );
 
