@@ -103,9 +103,9 @@ define([
 
                     var tselId = "tsel_"+self.dashboard.id();
                     var label;
-                    self.labelIntervalId = setInterval(function() {
+                    labelIntervalId = setInterval(function() {
                         if(self.labelInited) {
-                            clearInterval(self.labelIntervalId);
+                            clearInterval(labelIntervalId);
                         }
                        if($("#"+tselId).children().get(0)) {
                             label =  ko.contextFor($('#' + tselId).children().get(0)).$component.getDropdownLabelForContext(val);
