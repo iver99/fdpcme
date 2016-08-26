@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -39,6 +40,8 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.persistence.config.QueryHints;
+import org.eclipse.persistence.config.ResultType;
 
 public class DashboardManager
 {
@@ -646,7 +649,7 @@ public class DashboardManager
 		sb1 = new StringBuilder(" from Ems_Dashboard p  ");
 
 		boolean joinOptions = false;
-		if (getListDashboardsOrderBy(orderBy).toLowerCase().contains("access_date")) {
+		if (getListDashboardsOrderBy(orderBy, false).toLowerCase().contains("access_date")) {
 			joinOptions = true;
 		}
 		if (filter != null && filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
@@ -692,7 +695,7 @@ public class DashboardManager
 					+ filter.getIncludedWidgetProvidersString() + " )) ");
 			sb1.append("AND p2.DASHBOARD_SET_ID >1000");
 			sb1.append(" ) ");
-			sb1.append("AND p.APPLICATION_TYPE IS NULL) t");
+			sb1.append("AND p.APPLICATION_TYPE IS NULL) p");
 
 			if (filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
 				//sb.append(" and df.user_name is not null ");
@@ -808,7 +811,7 @@ public class DashboardManager
 							+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE,le.access_Date ");
 			sbQuery.insert(0, "select * from (");
 			//order by
-			sb1.append(getListDashboardsOrderBy(orderBy));
+			sb1.append(getListDashboardsOrderBy(orderBy, true));
 			sbQuery.append(" union ");
 			sbQuery.append(sb1);
 			String jpqlQuery = sbQuery.toString();
@@ -816,6 +819,7 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			EntityManager em = dsf.getEntityManager();
 			Query listQuery = em.createNativeQuery(jpqlQuery);
+			listQuery.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
 			initializeQueryParams(listQuery, paramList);
 			listQuery.setFirstResult(firstResult);
 			listQuery.setMaxResults(maxResults);
@@ -824,12 +828,13 @@ public class DashboardManager
 			List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
 
 			if (edList != null && !edList.isEmpty()) {
+				LOGGER.debug("Begin to Convert Object to EmsDashboard Object!");
 				for (int i = 0; i < edList.size(); i++) {
 					dbdList.add(Dashboard.valueOf(convertObjectToEmsDashboard(edList.get(i)), null, false, false, false));
 				}
 			}
 
-			StringBuilder sbCount = new StringBuilder(sb);
+			StringBuilder sbCount = new StringBuilder(sbQuery);
 			sbCount.insert(0, "select count(*) from (");
 			sbCount.append(")");
 			String jpqlCount = sbCount.toString();
@@ -845,7 +850,8 @@ public class DashboardManager
 		else {
 			LOGGER.debug("not using union SQL...");
 			//order by
-			sb.append(getListDashboardsOrderBy(orderBy));
+			sbQuery.append(getListDashboardsOrderBy(orderBy, false));
+			//			sbQuery.append(sb);
 			sbQuery.insert(0,
 					"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
 							+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE ");
@@ -875,6 +881,7 @@ public class DashboardManager
 			Query countQuery = em.createNativeQuery(jpqlCount);
 			initializeQueryParams(countQuery, paramList);
 			Long totalResults = ((BigDecimal) countQuery.getSingleResult()).longValue();
+			LOGGER.debug("not using union, total results is " + totalResults);
 			PaginatedDashboards pd = new PaginatedDashboards(totalResults, firstResult, dbdList == null ? 0 : dbdList.size(),
 					maxResults, dbdList);
 			return pd;
@@ -1217,11 +1224,24 @@ public class DashboardManager
 			e.setApplicationType(Integer.valueOf(map.get("APPLICATION_TYPE").toString()));
 		}
 		if (map.get("CREATION_DATE") != null) {
-			//			e.setCreationDate(DateUtil.getDateFormatter().format(map.get("CREATION_DATE")));
-			e.setCreationDate(new Date());
+			LOGGER.debug("db creation date is " + map.get("CREATION_DATE"));
+			e.setCreationDate(Timestamp.valueOf(String.valueOf(map.get("CREATION_DATE"))));
+			if (e.getCreationDate() == null) {
+				LOGGER.debug("Creation date is null!");
+			}
+			else {
+				LOGGER.debug("Creation date is not null! " + e.getCreationDate());
+			}
 		}
 		if (map.get("LAST_MODIFICATION_DATE") != null) {
-			e.setLastModificationDate(new Date());
+			LOGGER.debug("db last modification date is " + map.get("LAST_MODIFICATION_DATE"));
+			e.setLastModificationDate(Timestamp.valueOf(String.valueOf(map.get("LAST_MODIFICATION_DATE"))));
+			if (e.getLastModificationDate() == null) {
+				LOGGER.debug("last modification is null!");
+			}
+			else {
+				LOGGER.debug("last modification is not null! " + e.getLastModificationDate());
+			}
 		}
 		if (map.get("NAME") != null) {
 			e.setName(map.get("NAME").toString());
@@ -1238,7 +1258,7 @@ public class DashboardManager
 		return e;
 	}
 
-	private String getListDashboardsOrderBy(String orderBy)
+	private String getListDashboardsOrderBy(String orderBy, boolean isUnion)
 	{
 		if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME.equals(orderBy)
 				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_ASC.equals(orderBy)) {
@@ -1256,10 +1276,20 @@ public class DashboardManager
 		}
 		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME.equals(orderBy)
 				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC.equals(orderBy)) {
-			return " order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC, p.dashboard_Id DESC";
+			if (isUnion) {
+				return " order by CASE WHEN p.access_Date IS NULL THEN 0 ELSE 1 END DESC, p.access_Date DESC, p.dashboard_Id DESC";
+			}
+			else {
+				return " order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC, p.dashboard_Id DESC";
+			}
 		}
 		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC.equals(orderBy)) {
-			return " order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END, le.access_Date, p.dashboard_Id";
+			if (isUnion) {
+				return " order by CASE WHEN p.access_Date IS NULL THEN 0 ELSE 1 END, p.access_Date, p.dashboard_Id";
+			}
+			else {
+				return " order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END, le.access_Date, p.dashboard_Id";
+			}
 		}
 		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID.equals(orderBy)
 				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_DSC.equals(orderBy)) {
@@ -1277,7 +1307,12 @@ public class DashboardManager
 		}
 		else {
 			//default order by
-			return " order by p.application_Type, p.type DESC, lower(p.name), p.name, CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC";
+			if (isUnion) {
+				return " order by p.application_Type, p.type DESC, lower(p.name), p.name, CASE WHEN p.access_Date IS NULL THEN 0 ELSE 1 END DESC, p.access_Date DESC";
+			}
+			else {
+				return " order by p.application_Type, p.type DESC, lower(p.name), p.name, CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC";
+			}
 		}
 	}
 
