@@ -103,7 +103,7 @@ define([
 
                     var tselId = "tsel_"+self.dashboard.id();
                     var label;
-                    labelIntervalId = setInterval(function() {
+                    var labelIntervalId = setInterval(function() {
                         if(self.labelInited) {
                             clearInterval(labelIntervalId);
                         }
