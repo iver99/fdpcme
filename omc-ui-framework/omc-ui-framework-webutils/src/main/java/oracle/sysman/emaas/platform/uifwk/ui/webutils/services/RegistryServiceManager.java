@@ -22,9 +22,6 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InfoManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.InstanceStatus;
@@ -32,9 +29,12 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.NonServiceResource;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.uifwk.ui.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.uifwk.ui.webutils.wls.lifecycle.ApplicationServiceManager;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import weblogic.application.ApplicationLifecycleEvent;
 
 public class RegistryServiceManager implements ApplicationServiceManager
@@ -221,8 +221,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 	private Boolean registrationComplete = null;
 
-	private static final Logger LOGGER = LogManager
-			.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM + ".serviceregistry");
+	private static final Logger LOGGER = LogManager.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
+			+ ".serviceregistry");
 
 	@Override
 	public String getName()
@@ -255,6 +255,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
+		if (new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-DISABLE_SM_REGISTRY").exists()) {
+			LOGGER.info("In DEVMODE :: Post-starting DO NOT register application service with 'Service Registry'");
+			return;
+		}
 		LOGGER.info("Post-starting 'Service Registry' application service");
 		registerService();
 	}
@@ -274,6 +278,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
+		if (new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-DISABLE_SM_REGISTRY").exists()) {
+			LOGGER.info("In DEVMODE :: Pre-stopping unregister NOT needed with 'Service Registry'");
+			return;
+		}
 		LOGGER.info("Pre-stopping 'Service Registry' application service");
 		RegistrationManager.getInstance().getRegistrationClient().shutdown();
 		LOGGER.debug("Pre-stopped 'Service Regsitry'");
@@ -294,12 +302,12 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			LOGGER.info("Initialize lookup manager");
 			LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
 
-//			LOGGER.info("Checking RegistryService");
-//			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
-//				setRegistrationComplete(Boolean.FALSE);
-//				LOGGER.error("Failed to found registryService. OMC-UI-Framework registration is not complete.");
-//				return false;
-//			}
+			//			LOGGER.info("Checking RegistryService");
+			//			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
+			//				setRegistrationComplete(Boolean.FALSE);
+			//				LOGGER.error("Failed to found registryService. OMC-UI-Framework registration is not complete.");
+			//				return false;
+			//			}
 
 			ServiceConfigBuilder builder = new ServiceConfigBuilder();
 			builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"));
@@ -320,7 +328,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 			builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
 			builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-			.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+					.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 			LOGGER.info("Initializing RegistrationManager");
 			RegistrationManager.getInstance().initComponent(builder.build());
