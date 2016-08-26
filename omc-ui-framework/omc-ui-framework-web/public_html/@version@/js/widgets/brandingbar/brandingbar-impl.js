@@ -135,7 +135,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                         "serviceDisplayName": "BRANDING_BAR_APP_NAME_COMPLIANCE",
                         "serviceName": "ComplianceUI",
                         "version": self.COMPLIANCE_SERVICE_VERSION,
-                        "helpTopicId": ""
+                        "helpTopicId": "em_moncs"
                     };
                 appMap[appIdOcs] = {
                     "appId": appIdOcs,
