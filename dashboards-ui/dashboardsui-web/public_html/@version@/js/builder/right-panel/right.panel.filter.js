@@ -204,7 +204,7 @@ define([
                 self.entitySupport(tsel.entitySupport?(tsel.entitySupport==="byCriteria"?true:false):true);
                 self.defaultEntityContext(tsel.entityContext ? tsel.entityContext : {});
                 tilesViewModel.selectionMode(self.entitySupport()?"byCriteria":"single");
-                window.DashboardWidgetAPI && window.DashboardWidgetAPI.setTargetSelectionContext(self.tilesViewModel.targets());
+                window.DashboardWidgetAPI && window.DashboardWidgetAPI.setTargetSelectionContext(tilesViewModel.targets());
                 //2. reset timeSel in right drawer
                 self.enableTimeRangeFilter((dashboard.enableTimeRange() === 'TRUE')?'ON':'OFF');
                 self.defaultTimeRangeValue([timeSel.defaultValue]);
