@@ -29,7 +29,8 @@ public class GzipFilterTest {
 	  
 	  new Verifications() {
 		  {
-			  chain.doFilter(request, response); times = 1;
+			  chain.doFilter(request, response); 
+			  times = 1;
 		  }
 	  };
   }
