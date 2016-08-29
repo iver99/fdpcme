@@ -32,7 +32,7 @@ import javax.servlet.http.Part;
  */
 public class MockHttpServletRequest implements HttpServletRequest
 {
-	private final HashMap<String, String> headers = new HashMap<>();
+	private final Map<String, String> headers = new HashMap<>();
 
 	/* (non-Javadoc)
 	 * @see javax.servlet.http.HttpServletRequest#authenticate(javax.servlet.http.HttpServletResponse)
@@ -433,19 +433,19 @@ public class MockHttpServletRequest implements HttpServletRequest
 	   @Override
 	public void removeAttribute(String s)
 	{
-
+		// do nothing
 	}
 
 	   @Override
 	public void setAttribute(String s, Object o)
 	{
-
-	}
+		// do nothing
+		}
 
 	   @Override
 	public void setCharacterEncoding(String s) throws UnsupportedEncodingException
 	{
-
+		// do nothing
 	}
 
 	   public void setHeader(String key, String value)

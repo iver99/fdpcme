@@ -31,7 +31,7 @@ define({
       "BRANDING_BAR_NAV_ALL_DASHBOARDS_LABEL": "All Dashboards",
       "BRANDING_BAR_ABOUT_DIALOG_TITLE": "About Cloud Service",
       "BRANDING_BAR_ABOUT_DIALOG_SUB_TITLE": "Oracle Management Cloud",
-      "BRANDING_BAR_ABOUT_DIALOG_COPY_RIGHT": "Copyright © {0}, Oracle and/or its affiliates. All rights reserved. Oracle is a registered trademark of Oracle Corporation and/or its affiliates.",
+      "BRANDING_BAR_ABOUT_DIALOG_COPY_RIGHT": "Copyright \u00a9 {0}, Oracle and/or its affiliates. All rights reserved. Oracle is a registered trademark of Oracle Corporation and/or its affiliates.",
       "BRANDING_BAR_ABOUT_DIALOG_COPY_RIGHT_WARNING": "Warning: Unauthorized access is strictly prohibited.",
       "BRANDING_BAR_ABOUT_DIALOG_CLOSE_BTN_LABEL": "Close",
       "BRANDING_BAR_ABOUT_DIALOG_ICON_ALT_TEXT": "About Cloud Service icon",

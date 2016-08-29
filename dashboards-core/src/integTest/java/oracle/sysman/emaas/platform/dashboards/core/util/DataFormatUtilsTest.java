@@ -18,7 +18,7 @@ import org.testng.annotations.Test;
  */
 public class DataFormatUtilsTest
 {
-	private static final Logger logger = LogManager.getLogger(DataFormatUtilsTest.class);
+	private static final Logger LOGGER = LogManager.getLogger(DataFormatUtilsTest.class);
 	@Test(groups = { "s2" })
 	public void testDashboardTypeString2Integer() throws CommonFunctionalException
 	{
@@ -30,7 +30,7 @@ public class DataFormatUtilsTest
 			Assert.fail("Fail: expecting CommonFunctionalException");
 		}
 		catch (CommonFunctionalException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			// expecting this exception
 		}
 
@@ -100,7 +100,7 @@ public class DataFormatUtilsTest
 			Assert.fail("Fail: expecting CommonFunctionalException here");
 		}
 		catch (CommonFunctionalException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			// this is the expected exception
 		}
 	}

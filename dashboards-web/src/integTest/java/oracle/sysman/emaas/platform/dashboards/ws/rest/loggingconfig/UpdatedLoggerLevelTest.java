@@ -19,7 +19,7 @@ public class UpdatedLoggerLevelTest {
 
     @AfterMethod
     public void tearDown() {
-
+    	// do nothing
     }
 
     @Test

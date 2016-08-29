@@ -65,7 +65,7 @@ public class TenantSubscriptionUtil
 			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
 			String auth = String.copyValueOf(authToken);
 			if (StringUtil.isEmpty(auth)) {
-				logger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
+				LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
 			}
 			else {
 				LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
@@ -78,7 +78,7 @@ public class TenantSubscriptionUtil
 				return builder.get(String.class);
 			}
 			catch (Exception e) {
-				logger.info("context",e);
+				LOGGER.info("context",e);
 				itrLogger.error("Exception when RestClient trying to get response from specified service. Message:"
 						+ e.getLocalizedMessage());
 				return null;
@@ -96,7 +96,7 @@ public class TenantSubscriptionUtil
 			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
 			String auth = String.copyValueOf(authToken);
 			if (StringUtil.isEmpty(auth)) {
-				logger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
+				LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
 			}
 			else {
 				LogUtil.setInteractionLogThreadContext(tenantName, url, InteractionLogDirection.OUT);
@@ -109,7 +109,7 @@ public class TenantSubscriptionUtil
 				return builder.get(String.class);
 			}
 			catch (Exception e) {
-				logger.info("context",e);
+				LOGGER.info("context",e);
 				itrLogger.error("Exception when RestClient trying to get response from specified service. Message:"
 						+ e.getLocalizedMessage());
 				return null;
@@ -122,7 +122,7 @@ public class TenantSubscriptionUtil
 
 	private static Object lock = new Object();
 
-	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
+	private static final Logger LOGGER = LogManager.getLogger(TenantSubscriptionUtil.class);
 	private static Logger itrLogger = LogUtil.getInteractionLogger();
 
 	@SuppressWarnings("unchecked")
@@ -130,14 +130,14 @@ public class TenantSubscriptionUtil
 	{
 		// for junit test only
 		if (Boolean.TRUE.equals(IS_TEST_ENV)) {
-			logger.warn(
+			LOGGER.warn(
 					"In test environment, the subscribed applications for are tenants are specified to \"APM\" and \"ITAnalytics\"");
 			return Arrays.asList(new String[] { "APM", "ITAnalytics" });
 		}
 
 		// normal behavior here
 		if (tenant == null) {
-			logger.warn("This is usually unexpected: now it's trying to retrieve subscribed applications for null tenant");
+			LOGGER.warn("This is usually unexpected: now it's trying to retrieve subscribed applications for null tenant");
 			return Collections.emptyList();
 		}
 		CacheManager cm = CacheManager.getInstance();
@@ -148,33 +148,33 @@ public class TenantSubscriptionUtil
 					CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 		}
 		catch (Exception e) {
-			logger.error("context",e);
+			LOGGER.error("context",e);
 			return Collections.emptyList();
 		}
 		if (cachedApps != null) {
-			logger.debug("retrieved subscribed apps for tenant {} from cache: "
+			LOGGER.debug("retrieved subscribed apps for tenant {} from cache: "
 					+ StringUtil.arrayToCommaDelimitedString(cachedApps.toArray()), tenant);
 			return cachedApps;
 		}
 		
 		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "1.0+", "collection/domains", null);
 		if (domainLink == null || domainLink.getHref() == null || "".equals(domainLink.getHref())) {
-			logger.warn(
+			LOGGER.warn(
 					"Failed to get entity naming service, or its rel (collection/domains) link is empty. Exists the retrieval of subscribed service for tenant {}",
 					tenant);
 			cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBE_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 			return Collections.emptyList();
 		}
-		logger.debug("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
+		LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
 		String domainHref = domainLink.getHref();
 		RestClient rc = new RestClient();
 		String domainsResponse = rc.get(domainHref, tenant);
-		logger.debug("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
+		LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
 			DomainsEntity de = ju.fromJson(domainsResponse, DomainsEntity.class);
 			if (de == null || de.getItems() == null || de.getItems().isEmpty()) {
-				logger.warn("Checking tenant (" + tenant
+				LOGGER.warn("Checking tenant (" + tenant
 						+ ") subscriptions: null/empty domains entity or domains item retrieved.");
 				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBE_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return Collections.emptyList();
@@ -187,22 +187,22 @@ public class TenantSubscriptionUtil
 				}
 			}
 			if (tenantAppUrl == null || "".equals(tenantAppUrl)) {
-				logger.warn("Checking tenant (" + tenant + ") subscriptions. 'TenantApplicationMapping' not found");
+				LOGGER.warn("Checking tenant (" + tenant + ") subscriptions. 'TenantApplicationMapping' not found");
 				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBE_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return Collections.emptyList();
 			}
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
-			logger.debug("Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is "
+			LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is "
 					+ appMappingUrl);
 			String appMappingJson = rc.get(appMappingUrl, tenant);
-			logger.debug("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
+			LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
 				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBE_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return Collections.emptyList();
 			}
 			AppMappingCollection amec = ju.fromJson(appMappingJson, AppMappingCollection.class);
 			if (amec == null || amec.getItems() == null || amec.getItems().isEmpty()) {
-				logger.error("Checking tenant (" + tenant + ") subscriptions. Empty application mapping items are retrieved");
+				LOGGER.error("Checking tenant (" + tenant + ") subscriptions. Empty application mapping items are retrieved");
 				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBE_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return Collections.emptyList();
 			}
@@ -220,7 +220,7 @@ public class TenantSubscriptionUtil
 				}
 			}
 			if (ame == null || ame.getValues() == null || ame.getValues().isEmpty()) {
-				logger.error("Checking tenant (" + tenant
+				LOGGER.error("Checking tenant (" + tenant
 						+ ") subscriptions. Failed to get an application mapping for the specified tenant");
 				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBE_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return Collections.emptyList();
@@ -232,7 +232,7 @@ public class TenantSubscriptionUtil
 					break;
 				}
 			}
-			logger.debug("Checking tenant (" + tenant + ") subscriptions. applications for the tenant are " + apps);
+			LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. applications for the tenant are " + apps);
 			if (apps == null || "".equals(apps)) {
 				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBE_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return Collections.emptyList();
@@ -245,14 +245,14 @@ public class TenantSubscriptionUtil
 
 		}
 		catch (IOException e) {
-			logger.error(e);
+			LOGGER.error(e);
 			return Collections.emptyList();
 		}
 	}
 
 	public static boolean isAPMServiceOnly(List<String> services)
 	{
-		logger.debug("Checking if only APM is subscribed, checked services are {}",
+		LOGGER.debug("Checking if only APM is subscribed, checked services are {}",
 				services == null ? null : services.toString());
 		if (services == null || services.size() != 1) {
 			return false;

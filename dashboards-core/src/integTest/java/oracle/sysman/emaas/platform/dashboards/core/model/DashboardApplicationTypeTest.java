@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 public class DashboardApplicationTypeTest
 {
 
-	private static final Logger logger = LogManager.getLogger(DashboardApplicationTypeTest.class);
+	private static final Logger LOGGER = LogManager.getLogger(DashboardApplicationTypeTest.class);
 	@Test(groups = { "s2" })
 	public void testFromJsonValue()
 	{
@@ -29,7 +29,7 @@ public class DashboardApplicationTypeTest
 		}
 		catch (IllegalArgumentException e) {
 			// expected exception
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -49,7 +49,7 @@ public class DashboardApplicationTypeTest
 		}
 		catch (IllegalArgumentException e) {
 			// expected exception
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 	}
 

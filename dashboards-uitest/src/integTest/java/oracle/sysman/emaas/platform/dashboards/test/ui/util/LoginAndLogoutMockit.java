@@ -20,9 +20,9 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
  */
 public class LoginAndLogoutMockit extends LocalEmaasWebDriverLoader
 {
-	public static WebDriver webd = null;
+	private static WebDriver webd = null;
 
-	public static String T_WORK_PATH = "/Users/wenjzhu/Documents/Temp";
+	public static final String T_WORK_PATH = "/Users/wenjzhu/Documents/Temp";
 
 	@AfterTest
 	public static void logout()
@@ -44,9 +44,6 @@ public class LoginAndLogoutMockit extends LocalEmaasWebDriverLoader
 			webd.shutdownBrowser(true);
 		}
 	}
-
-	private final java.util.logging.Logger log = java.util.logging.Logger
-			.getLogger(LocalEmaasWebDriverLoader.class.getCanonicalName());
 
 	public void customlogin(String testName, String customUser)
 	{

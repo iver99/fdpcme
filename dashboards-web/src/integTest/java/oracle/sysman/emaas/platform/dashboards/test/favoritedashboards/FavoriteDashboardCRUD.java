@@ -31,7 +31,7 @@ public class FavoriteDashboardCRUD
 	static String tenantid_2;
 	static String remoteuser;
 
-	private static final Logger logger = LogManager.getLogger(FavoriteDashboardCRUD.class);
+	private static final Logger LOGGER = LogManager.getLogger(FavoriteDashboardCRUD.class);
 
 
 	@BeforeClass
@@ -78,7 +78,7 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -148,7 +148,7 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -200,7 +200,7 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
@@ -279,7 +279,7 @@ public class FavoriteDashboardCRUD
 
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -328,7 +328,7 @@ public class FavoriteDashboardCRUD
 
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -401,7 +401,7 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -461,7 +461,7 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -507,7 +507,7 @@ public class FavoriteDashboardCRUD
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}

@@ -30,7 +30,7 @@ public class GetConfiguration
 	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the inputs from the testenv.properties file before
 	 * executing test cases
 	 */
-	private static final Logger logger = LogManager.getLogger(GetConfiguration.class);
+	private static final Logger LOGGER = LogManager.getLogger(GetConfiguration.class);
 	static String HOSTNAME;
 	static String portno;
 	static String serveruri;
@@ -72,7 +72,7 @@ public class GetConfiguration
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -95,7 +95,7 @@ public class GetConfiguration
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 

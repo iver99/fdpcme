@@ -20,6 +20,9 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public static final String USERMENU_OPTION_SIGNOUT = "signout";
 
 	//Branding bar link text
+
+	// home
+	public static final String NAV_LINK_TEXT_HOME_ALERTS = "Alerts";
 	//Cloud Services
 	public static final String NAV_LINK_TEXT_CS_ITA = "IT Analytics";
 	public static final String NAV_LINK_TEXT_CS_APM = "APM";
@@ -30,7 +33,6 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public static final String NAV_LINK_TEXT_VA_LA = "Log";
 	//Administration
 	public static final String NAV_LINK_TEXT_ADMIN_AGENT = "Agents";
-	public static final String NAV_LINK_TEXT_ADMIN_ITA = "IT Analytics Administration";
 	public static final String NAV_LINK_TEXT_ADMIN_ALERT = "Alert Rules";
 	public static final String NAV_LINK_TEXT_ADMIN_ADMINCONSOLE = "Administration";
 
@@ -44,6 +46,15 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public boolean isAdmin(WebDriver driver) ;
 
 	public boolean isAdminLinkExisted(WebDriver driver, String adminLinkName);
+
+	/**
+	 * Check if the Alerts link is existed or not
+	 *
+	 * @param driver
+	 *            WebDriver instance
+	 * @return
+	 */
+	public boolean isAlertsLinkExisted(WebDriver driver);
 
 	/**
 	 * Check if the specified cloud service link is existed or not by given name

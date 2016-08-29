@@ -9,6 +9,7 @@
             name: "uifwk/@version@/js/uifwk-impl-partition",
             exclude: ["knockout", 
                 "jquery",
+                //"jqueryui",
                 "ojs/ojcore",
                 "ojs/ojdialog", 
                 "ojs/ojbutton",
@@ -20,18 +21,15 @@
                 "ojs/ojselectcombobox", 
                 "ojs/ojinputtext",
                 "text",
-                "ojL10n",
-                "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg",
-                "uifwk/libs/@version@/js/html2canvas/html2canvas",
-                "uifwk/libs/@version@/js/canvg/rgbcolor",
-                "uifwk/libs/@version@/js/canvg/StackBlur",
-                "uifwk/libs/@version@/js/canvg/canvg"
+                "ojL10n"
             ]
         },
         {
             name: "uifwk/js/uifwk-partition",
-            exclude: ["uifwk/@version@/js/uifwk-impl-partition","knockout", 
+            exclude: ["uifwk/@version@/js/uifwk-impl-partition",
+                "knockout", 
                 "jquery",
+                "jqueryui",
                 "ojs/ojcore",
                 "ojs/ojdialog", 
                 "ojs/ojbutton",
@@ -44,11 +42,8 @@
                 "ojs/ojinputtext",
                 "text",
                 "ojL10n",
-                "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg",
-                "uifwk/libs/@version@/js/html2canvas/html2canvas",
-                "uifwk/libs/@version@/js/canvg/rgbcolor",
-                "uifwk/libs/@version@/js/canvg/StackBlur",
-                "uifwk/libs/@version@/js/canvg/canvg"]
+                "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg"
+            ]
         }
     ],
     paths: {
@@ -57,7 +52,7 @@
     	'knockout': 'libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.4.0',
         'knockout.mapping': 'libs/@version@/js/oraclejet/js/libs/knockout/knockout.mapping-latest',
         'jquery': 'libs/@version@/js/oraclejet/js/libs/jquery/jquery-2.1.3.min',
-        'jqueryui': 'libs/@version@/js/jquery/jquery-ui-1.11.4.custom.min',
+        'jqueryui': 'libs/@version@/js/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'hammerjs': 'libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
         'ojs': 'libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/min',

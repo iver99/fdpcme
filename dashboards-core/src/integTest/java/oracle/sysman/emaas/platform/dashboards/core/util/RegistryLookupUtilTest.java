@@ -61,8 +61,8 @@ public class RegistryLookupUtilTest
 			@Mocked final InstanceInfo anyInstanceInfo, @Mocked final LookupManager anyLockupManager,
 			@Mocked final LookupClient anyClient, @Injectable final Logger anyLogger) throws Exception
 	{
-		Logger logger = (Logger) Deencapsulation.getField(RegistryLookupUtil.class, "logger");
-		Deencapsulation.setField(RegistryLookupUtil.class, "logger", anyLogger);
+		Logger logger = (Logger) Deencapsulation.getField(RegistryLookupUtil.class, "LOGGER");
+		Deencapsulation.setField(RegistryLookupUtil.class, "LOGGER", anyLogger);
 		try {
 			new Expectations() {
 				{
@@ -78,7 +78,7 @@ public class RegistryLookupUtilTest
 			Assert.assertNull(endpoint);
 		}
 		finally {
-			Deencapsulation.setField(RegistryLookupUtil.class, "logger", logger);
+			Deencapsulation.setField(RegistryLookupUtil.class, "LOGGER", logger);
 		}
 	}
 

@@ -31,7 +31,7 @@ import weblogic.application.ApplicationLifecycleEvent;
 public class OmcUiFrameworkLifecycleServiceTest
 {
 	private final OmcUiFrameworkLifecycleService uils = new OmcUiFrameworkLifecycleService();
-	private static final Logger logger = LogManager.getLogger(OmcUiFrameworkLifecycleServiceTest.class);
+	private static final Logger LOGGER = LogManager.getLogger(OmcUiFrameworkLifecycleServiceTest.class);
 	@SuppressWarnings("unchecked")
 	@Test(groups = { "s2" })
 	public void testNewLifecycleInstance()
@@ -85,7 +85,7 @@ public class OmcUiFrameworkLifecycleServiceTest
 			uils.postStart(evt);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			e.printStackTrace();
 		}
 	}
@@ -124,7 +124,7 @@ public class OmcUiFrameworkLifecycleServiceTest
 			uils.postStop(evt);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			e.printStackTrace();
 		}
 	}
@@ -163,7 +163,7 @@ public class OmcUiFrameworkLifecycleServiceTest
 			uils.preStart(evt);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			e.printStackTrace();
 		}
 	}
@@ -202,7 +202,7 @@ public class OmcUiFrameworkLifecycleServiceTest
 			uils.preStop(evt);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			e.printStackTrace();
 		}
 	}
