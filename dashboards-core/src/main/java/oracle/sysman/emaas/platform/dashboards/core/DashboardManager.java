@@ -671,6 +671,8 @@ public class DashboardManager
 			//			index = 4;
 			sb.append("where p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
 					+ ") ");
+			sb1.append("where p.deleted =0 and p.tenant_Id = " + tenantId + " and (p.share_public =1 or p.owner=" + currentUser
+					+ ")");
 			paramList.add(tenantId);
 			paramList.add(currentUser);
 		}
@@ -686,12 +688,14 @@ public class DashboardManager
 
 			sb.append("where p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
 					+ " or (p.is_system = 1 and p.application_type in (" + sbApps.toString() + "))) ");
+			sb1.append("where p.deleted=0 and p.tenant_Id=" + tenantId + " and (p.share_public=1 or p.owner='" + currentUser
+					+ "') ");
 			paramList.add(tenantId);
 			paramList.add(currentUser);
 		}
 
 		if (filter != null) {
-			sb1.append("WHERE p.DASHBOARD_ID IN (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN (select t.dashboard_Id from Ems_Dashboard_Tile t where t.PROVIDER_NAME in ("
+			sb1.append("AND p.DASHBOARD_ID IN (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN (select t.dashboard_Id from Ems_Dashboard_Tile t where t.PROVIDER_NAME in ("
 					+ filter.getIncludedWidgetProvidersString() + " )) ");
 			sb1.append("AND p2.DASHBOARD_SET_ID >1000");
 			sb1.append(" ) ");
