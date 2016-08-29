@@ -13,6 +13,7 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
@@ -56,6 +57,20 @@ private static final Logger LOGGER = LogManager.getLogger(BrandingBarUtil_171.cl
 		boolean isExisted = false;
 		isExisted = isApplicationLinkExisted(driver, "admin", adminLinkName);
 		driver.getLogger().info("Existence check for admin link is completed. Result: " + isExisted);
+		return isExisted;
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isAlertsLinkExisted(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public boolean isAlertsLinkExisted(WebDriver driver)
+	{
+		driver.getLogger().info("Start to check if 'Alert' link is existed in navigation bar.");
+		boolean isExisted = false;
+		isExisted = isApplicationLinkExisted(driver, "home", BrandingBarUtil.NAV_LINK_TEXT_HOME_ALERTS);
+
+		driver.getLogger().info("Existence check for 'Alert' link is completed. Result: " + isExisted);
 		return isExisted;
 	}
 
@@ -247,10 +262,6 @@ private static final Logger LOGGER = LogManager.getLogger(BrandingBarUtil_171.cl
 		driver.getLogger().info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
 		visitApplicationLink(driver, "va", visualAnalyzerLinkName);
 	}
-
-	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#visitDashboardHome(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
-	 */
 
 	@Override
 	public void visitDashboardHome(WebDriver driver)
