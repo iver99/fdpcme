@@ -691,6 +691,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		driver.click("css=" + DashBoardPageId_190.BUILDEROPTIONSMENULOCATOR);
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.BUILDEROPTIONSPRINTLOCATORCSS);
 		driver.takeScreenShot();
+		new DelayedPressEnterThread("DelayedPressEnterThread", 5000);
 		driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId_190.BUILDEROPTIONSPRINTLOCATORCSS)).click();
 		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil print completed");
@@ -728,6 +729,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		driver.waitForElementPresent("id=" + DashBoardPageId_190.DASHBOARDSETOPTIONSMENUID);
 		driver.click("id=" + DashBoardPageId_190.DASHBOARDSETOPTIONSMENUID);
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.DASHBOARDSETOPTIONSPRINTCSS);
+		new DelayedPressEnterThread("DelayedPressEnterThread", waitTime);
 		driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId_190.DASHBOARDSETOPTIONSPRINTCSS)).click();
 		//have to use thread sleep to wait for the print window(windows dialog) to appear
 		try {
@@ -735,8 +737,6 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		}
 		catch (InterruptedException e) {
 			LOGGER.info("context",e);
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		driver.getLogger().info("DashboardBuilderUtil.printDashboardSet: print set completed");
 	}
