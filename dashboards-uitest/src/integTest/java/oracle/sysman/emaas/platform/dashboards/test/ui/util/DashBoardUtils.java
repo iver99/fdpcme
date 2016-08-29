@@ -1,7 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
@@ -15,10 +14,6 @@ import org.testng.Assert;
 public class DashBoardUtils
 {
 	private static WebDriver driver;
-	
-	private DashBoardUtils() {
-	  }
-
 
 	public static void apmOobExist()
 	{
@@ -56,8 +51,7 @@ public class DashBoardUtils
 
 	public static void deleteDashboard(WebDriver webdriver, String DashboardName)
 	{
-		webdriver.getElement(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR).clear();
-		webdriver.click(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR);
+		DashboardHomeUtil.search(webdriver, DashboardName);
 		if (DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName)) {
 			webdriver.getLogger().info("Start to delete the dashboard: " + DashboardName);
 			DashboardHomeUtil.deleteDashboard(webdriver, DashboardName, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
@@ -254,5 +248,9 @@ public class DashBoardUtils
 		webdriver.getLogger().info("url = " + currurl);
 		Assert.assertEquals(currurl.substring(currurl.indexOf("emsaasui") + 9), url);
 
+	}
+
+	private DashBoardUtils()
+	{
 	}
 }
