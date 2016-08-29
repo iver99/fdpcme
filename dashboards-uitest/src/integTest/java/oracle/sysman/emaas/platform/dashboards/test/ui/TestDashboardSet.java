@@ -696,7 +696,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	@Test(groups = "second run", dependsOnGroups = { "first run" })
+	//@Test(groups = "second run", dependsOnGroups = { "first run" })
 	public void testPrint() 
 	{
 		//init the test
