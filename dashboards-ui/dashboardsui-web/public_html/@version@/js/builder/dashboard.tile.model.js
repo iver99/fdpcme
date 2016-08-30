@@ -965,7 +965,7 @@ define(['knockout',
             var current = new Date();
             var initStart = dfu_model.getUrlParam("startTime") ? new Date(parseInt(dfu_model.getUrlParam("startTime"))) : null;
             var initEnd = dfu_model.getUrlParam("endTime") ? new Date(parseInt(dfu_model.getUrlParam("endTime"))) : null;
-            self.timePeriod = ko.observable("custom");
+            self.timePeriod = ko.observable("Custom");
             //initialize time selector. priority: time in url > time in user extendedOptions > time in dashboard extendedOptions > default time
             if(initStart === null || initEnd === null) {
                 if(self.userTimeSel && self.userExtendedOptions && !$.isEmptyObject(self.userExtendedOptions.timeSel)) {
