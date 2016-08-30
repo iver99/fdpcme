@@ -26,7 +26,7 @@ define(['knockout',
          * @param {Date} endTime: end time of new time range
          * @returns {DashboardTimeRangeChange} instance
          */
-        function DashboardTimeRangeChange(startTime, endTime){
+        function DashboardTimeRangeChange(startTime, endTime, timePeriod){
             var self = this;
             if (startTime instanceof Date){
                 self.viewStartTime = startTime;
@@ -34,6 +34,7 @@ define(['knockout',
             if (endTime instanceof Date){
                 self.viewEndTime = endTime;
             }
+            self.viewTimePeriod = timePeriod;
         }
         Builder.registerModule(DashboardTimeRangeChange, 'DashboardTimeRangeChange');
 
@@ -218,7 +219,7 @@ define(['knockout',
                 } else
                     return "#";
             });
-            tile.dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd()), targets, null, null, dashboard.enableTimeRange(), dashboard.enableEntityFilter());
+            tile.dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd(), timeSelectorModel.viewTimePeriod()), targets, null, null, dashboard.enableTimeRange(), dashboard.enableEntityFilter());
             /**
              * Integrator needs to override below FUNCTION to respond to DashboardItemChangeEvent
              * e.g.
@@ -363,7 +364,8 @@ define(['knockout',
                         }else {
                             var start = timeSelectorModel.viewStart().getTime();
                             var end = timeSelectorModel.viewEnd().getTime();
-                            widgetUrl += "&startTime="+start+"&endTime="+end;
+                            var timePeriod = timeSelectorModel.viewTimePeriod();
+                            widgetUrl += "&startTime="+start+"&endTime="+end+"&timePeriod="+timePeriod;
                         }
 
 

@@ -371,7 +371,7 @@ define(['knockout',
                 if (change instanceof Builder.TileChange){
                     tChange = change;
                 }
-                var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()), self.targets, null,tChange, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
+                var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd(), self.timeSelectorModel.viewTimePeriod()), self.targets, null,tChange, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
                 Builder.fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent);
             };
 
@@ -906,7 +906,7 @@ define(['knockout',
 
             self.returnFromPageTsel = function(targets) {
                 self.targets(targets);
-                var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()), self.targets, null, null, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
+                var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd(), self.timeSelectorModel.viewTimePeriod()), self.targets, null, null, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
                 Builder.fireDashboardItemChangeEvent(self.dashboard.tiles(), dashboardItemChangeEvent);
 
                 if(!self.toolbarModel.extendedOptions.tsel) {
@@ -962,7 +962,7 @@ define(['knockout',
 
             timeSelectorChangelistener.subscribe(function (value) {
                 if (value.timeRangeChange){
-                    var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),self.targets, null, null, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
+                    var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd(), self.timeSelectorModel.viewTimePeriod()),self.targets, null, null, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
                     Builder.fireDashboardItemChangeEvent(self.dashboard.tiles(), dashboardItemChangeEvent);
                     self.timeSelectorModel.timeRangeChange(false);
                 }
@@ -971,7 +971,7 @@ define(['knockout',
             var current = new Date();
             var initStart = dfu_model.getUrlParam("startTime") ? new Date(parseInt(dfu_model.getUrlParam("startTime"))) : null;
             var initEnd = dfu_model.getUrlParam("endTime") ? new Date(parseInt(dfu_model.getUrlParam("endTime"))) : null;
-            self.timePeriod = ko.observable("custom");
+            self.timePeriod = ko.observable("Custom");
             //initialize time selector. priority: time in url > time in user extendedOptions > time in dashboard extendedOptions > default time
             if(initStart === null || initEnd === null) {
                 if(self.userTimeSel && self.userExtendedOptions && self.userExtendedOptions.timeSel) {
@@ -996,6 +996,7 @@ define(['knockout',
             self.initEnd = ko.observable(initEnd);
             self.timeSelectorModel.viewStart(initStart);
             self.timeSelectorModel.viewEnd(initEnd);
+            self.timeSelectorModel.viewTimePeriod(self.timePeriod());
             self.datetimePickerParams = {
                 startDateTime: self.initStart,
                 endDateTime: self.initEnd,
@@ -1004,6 +1005,7 @@ define(['knockout',
                 callbackAfterApply: function(start, end, tp) {
                         self.timeSelectorModel.viewStart(start);
                         self.timeSelectorModel.viewEnd(end);
+                        self.timeSelectorModel.viewTimePeriod(tp);
                         if(tp === "Custom") {
                             self.initStart(start);
                             self.initEnd(end);
