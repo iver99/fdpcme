@@ -10,9 +10,15 @@
 
 package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.WidgetSelectorUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -122,6 +128,58 @@ public class TestDashboardPage extends CommonUIUtils
 			webdriver.getLogger().info("Logout");
 			CommonUIUtils.logoutCommonUI(webdriver);
 
+		}
+		catch (Exception ex) {
+			Assert.fail(ex.getLocalizedMessage());
+		}
+	}
+
+	//Testcase for adding widget using widgetselector
+
+	@Test
+	public void testWidgetSelector() throws Exception
+	{
+		try {
+			String WidgetName_1 = "Database Errors Trend";
+
+			String testName = this.getClass().getName() + ".testWidgetSelector";
+			WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+			webdriver.getLogger().info("This is to test Dashboard Page");
+
+			//login
+			Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver, sTenantId, sSsoUserName, sSsoPassword);
+			webdriver.getLogger().info("Assert that common UI login was successfuly");
+			Assert.assertTrue(bLoginSuccessful);
+
+			CommonUIUtils.verifyPageContent(webdriver, sAppName);
+
+			// let's try to wait until page is loaded and jquery loaded before calling waitForPageFullyLoaded
+			WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+			wait.until(ExpectedConditions.elementToBeClickable(By.id(DashBoardPageId.WidgetSelector_AddButtonId)));
+			WaitUtil.waitForPageFullyLoaded(webdriver);
+
+			//click on Add button
+			webdriver.click("id=" + DashBoardPageId.WidgetSelector_AddButtonId);
+			webdriver.takeScreenShot();
+
+			//Adding widgets using widgetSElector diagoue
+			webdriver.getLogger().info("satrt widget selector dialogue box opens");
+
+			//webdriver.getLogger().info("set Page # in widget selector dialog");
+			//WidgetSelectorUtil.page(webdriver, 2);
+
+			//webdriver.getLogger().info("Previous page");
+			//WidgetSelectorUtil.pagingPrevious(webdriver);
+
+			//webdriver.getLogger().info("Next page");
+			//WidgetSelectorUtil.pagingNext(webdriver);
+
+			webdriver.getLogger().info("Add widget");
+			WidgetSelectorUtil.addWidget(webdriver, WidgetName_1);
+
+			//logout
+			webdriver.getLogger().info("Logout");
+			CommonUIUtils.logoutCommonUI(webdriver);
 		}
 		catch (Exception ex) {
 			Assert.fail(ex.getLocalizedMessage());
