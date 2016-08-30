@@ -39,6 +39,11 @@ allprojects {
 	ext.dependenciesDir = new File(rootDir, 'common') 
 	repositories {  
 		mavenLocal()  
+        if(project.hasProperty('PUB_MAVEN_MY_MAVEN_REPO')) {
+          maven {
+            url = "${PUB_MAVEN_MY_MAVEN_REPO}"
+          }
+        }
 		maven {  
 			url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"  
 			credentials {  
@@ -266,6 +271,11 @@ compileJava.dependsOn preBuildCompile
 buildscript {  
 	repositories {  
 		mavenLocal()  
+        if(project.hasProperty('PUB_MAVEN_MY_MAVEN_REPO')) {
+          maven {
+            url = "${PUB_MAVEN_MY_MAVEN_REPO}"
+          }
+        }
 		maven {  
 			 url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
 			credentials {  
