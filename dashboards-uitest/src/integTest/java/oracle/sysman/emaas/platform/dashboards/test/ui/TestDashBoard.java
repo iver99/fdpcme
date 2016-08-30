@@ -44,14 +44,14 @@ public class TestDashBoard extends LoginAndLogout
 	private String dbName_ITADashboard = "";
 	private String dbName_LADashboard = "";
 
-	public void initTest(String testName) 
+	public void initTest(String testName)
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
 	@AfterClass
-	public void RemoveDashboard() 
+	public void RemoveDashboard()
 	{
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -75,7 +75,7 @@ public class TestDashBoard extends LoginAndLogout
 
 	//@Test(dependsOnMethods = { "testCreateDashboard_noWidget_ListView" })
 	/*
-	    public void Test_targetselector() 
+	    public void Test_targetselector()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards  in list view");
@@ -95,7 +95,7 @@ public class TestDashBoard extends LoginAndLogout
 	 */
 
 	@Test
-	public void testCreateDashboad_noDesc_GridView() 
+	public void testCreateDashboad_noDesc_GridView()
 	{
 		dbName_noDesc = "NoDesc-" + generateTimeStamp();
 
@@ -141,7 +141,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test
-	public void testCreateDashboad_noWidget_GridView() 
+	public void testCreateDashboad_noWidget_GridView()
 	{
 		dbName_noWidgetGrid = "NoWidgetGridView-" + generateTimeStamp();
 		String dbDesc = "Test Dashboard no Widget description";
@@ -167,7 +167,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test
-	public void testCreateDashboard_noWidget_ListView() 
+	public void testCreateDashboard_noWidget_ListView()
 	{
 		dbName_noWidgetList = "noWidgetListView-" + generateTimeStamp();
 		String dbDesc = "Test Dashboard no Widget description";
@@ -194,7 +194,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test
-	public void testCreateDashboard_withWidget_GridView() 
+	public void testCreateDashboard_withWidget_GridView()
 	{
 		dbName_withWidgetGrid = "withWidget-" + generateTimeStamp();
 		String dbDesc = "AAA_testDashBoard desc";
@@ -248,7 +248,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test
-	public void testDashboardWith12Columns() 
+	public void testDashboardWith12Columns()
 	{
 		dbName_columncheck = "DashboardWith12Columns-" + generateTimeStamp();
 		String desc = "Description for " + dbName_columncheck;
@@ -291,7 +291,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test
-	public void testDeleteOOB() 
+	public void testDeleteOOB()
 	{
 		//initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -313,7 +313,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
-	public void testDuplicateDashboard() 
+	public void testDuplicateDashboard()
 	{
 
 		String dbName = "Test_Dashboard_duplicate";
@@ -349,7 +349,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	/*@Test
-	public void testErrorPage() 
+	public void testErrorPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testErrorPage");
@@ -368,7 +368,7 @@ public class TestDashBoard extends LoginAndLogout
 	}*/
 
 	@Test
-	public void testFavorite() 
+	public void testFavorite()
 	{
 		dbName_favorite = "favoriteDashboard-" + generateTimeStamp();
 		String dbDesc = "favorite_testDashboard desc";
@@ -445,7 +445,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test
-	public void testFilterITADashboard() 
+	public void testFilterITADashboard()
 	{
 		dbName_ITADashboard = "ITADashboard-" + generateTimeStamp();
 		String dbDesc = "test filter ITA works for custom dashboard";
@@ -496,7 +496,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test
-	public void testFilterLADashboard() 
+	public void testFilterLADashboard()
 	{
 		dbName_LADashboard = "LADashboard-" + generateTimeStamp();
 		String dbDesc = "test filter LA works for custom dashboard";
@@ -547,7 +547,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
-	public void testHideEntityFilter() 
+	public void testHideEntityFilter()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testHideEntityFilter");
@@ -572,7 +572,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
-	public void testHideTimeRangeFilter() 
+	public void testHideTimeRangeFilter()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testHideTimeRangeFilter");
@@ -597,7 +597,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView" })
-	public void testModifyDashboard_namedesc() 
+	public void testModifyDashboard_namedesc()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test in testModifyDashBoard");
@@ -635,7 +635,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView" })
-	public void testModifyDashboard_widget() 
+	public void testModifyDashboard_widget()
 	{
 		String WidgetName_1 = "Top Hosts by Log Entries";
 		//		String WidgetName_2 = "Top 10 Listeners by Load";
@@ -679,7 +679,7 @@ public class TestDashBoard extends LoginAndLogout
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc", "testShareDashboard",
 			"testStopShareDashboard", "testDuplicateDashboard" })
-	public void testRemoveDashboard_GridView() 
+	public void testRemoveDashboard_GridView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testRemoveDashboard_GridView");
@@ -702,7 +702,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboard_noWidget_ListView" })
-	public void testRemoveDashboard_ListView() 
+	public void testRemoveDashboard_ListView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testRemoveDashboard_ListView");
@@ -725,7 +725,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView", "testModifyDashboard_widget", "testWidgetConfiguration" })
-	public void testRemoveDashboardInBuilderPage() 
+	public void testRemoveDashboardInBuilderPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testRemoveDashboardInBuilderPage");
@@ -753,7 +753,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test
-	public void testSaveConfirmation() 
+	public void testSaveConfirmation()
 	{
 		String dbName = "TestSaveConfirmation";
 
@@ -794,7 +794,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test
-	public void testSetHome() 
+	public void testSetHome()
 	{
 		dbName_setHome = "setHomeDashboard-" + generateTimeStamp();
 		String dbDesc = "SetHome_testDashboard desc";
@@ -842,7 +842,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
-	public void testShareDashboard() 
+	public void testShareDashboard()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testshareddashboard");
@@ -864,7 +864,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
-	public void testShowEntityFilter() 
+	public void testShowEntityFilter()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testShowEntityFilter");
@@ -890,7 +890,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
-	public void testShowTimeRangeFilter() 
+	public void testShowTimeRangeFilter()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testShowTimeRangeFilter");
@@ -915,7 +915,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(dependsOnMethods = { "testShareDashboard" })
-	public void testStopShareDashboard() 
+	public void testStopShareDashboard()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testshareddashboard");
@@ -936,7 +936,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test
-	public void testTimePicker() 
+	public void testTimePicker()
 	{
 		dbName_timepicker = "TestDashboardTimeselector-" + generateTimeStamp();
 		String dbDesc = "Test Dashboard timeselector description";
@@ -1048,17 +1048,16 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
-	//Testcase for validating Error page
-
 	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView", "testModifyDashboard_widget" })
-	public void testWidgetConfiguration() 
+	public void testWidgetConfiguration()
 	{
 		String WidgetName_1 = "Database Errors Trend";
-		//		String WidgetName_2 = "Top 10 Listeners by Load";
+		String WidgetName_2 = "Database Top Errors";
 
 		//initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testWidgetConfiguration");
+
 		//search the dashboard want to modify
 		webd.getLogger().info("search dashboard");
 		DashboardHomeUtil.search(webd, dbName_withWidgetGrid);
@@ -1071,15 +1070,23 @@ public class TestDashBoard extends LoginAndLogout
 		//widget operation
 		webd.getLogger().info("hide/show the widget title");
 		DashboardBuilderUtil.showWidgetTitle(webd, WidgetName_1, false);
-		//		DashboardBuilderUtil.showWidgetTitle(webd, WidgetName_2, true);
-		webd.getLogger().info("resize the widget title");
+		DashboardBuilderUtil.showWidgetTitle(webd, WidgetName_2, true);
+
+		webd.getLogger().info("resize the widge");
 		DashboardBuilderUtil.resizeWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_WIDER);
 		DashboardBuilderUtil.resizeWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_NARROWER);
-		//		DashboardBuilderUtil.resizeWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_TALLER);
-		//		DashboardBuilderUtil.resizeWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_SHORTER);
-		webd.getLogger().info("remove the widget title");
+		DashboardBuilderUtil.resizeWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_TALLER);
+		DashboardBuilderUtil.resizeWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_SHORTER);
+
+		webd.getLogger().info("move the widget");
+		DashboardBuilderUtil.moveWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_RIGHT);
+		DashboardBuilderUtil.moveWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_LEFT);
+		DashboardBuilderUtil.moveWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_DOWN);
+		DashboardBuilderUtil.moveWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_UP);
+
+		webd.getLogger().info("remove the widget");
 		DashboardBuilderUtil.removeWidget(webd, WidgetName_1);
-		//		DashboardBuilderUtil.removeWidget(webd, WidgetName_2);
+		DashboardBuilderUtil.removeWidget(webd, WidgetName_2);
 
 		//save the dashboard
 		webd.getLogger().info("save the dashboard");
