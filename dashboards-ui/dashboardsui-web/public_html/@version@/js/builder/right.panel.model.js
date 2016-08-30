@@ -71,11 +71,21 @@ define(['knockout',
             self.toolBarModel = toolBarModel;
             self.editDashboardDialogModel = ko.observable(null);
             self.sortedTiles = ko.computed(function(){
-                //add for detecting dashboard tabs switching in set
+//                //add for detecting dashboard tabs switching in set
                 self.editDashboardDialogModel();
-                return self.dashboard.tiles && self.dashboard.tiles() ? self.dashboard.tiles().sort(function (tileA, tileB) {
-                    return tileA.WIDGET_NAME() > tileB.WIDGET_NAME()?1:(tileA.WIDGET_NAME() < tileB.WIDGET_NAME()?-1:0);
-                }):[];
+                var names = [];
+                if (self.dashboard.tiles && self.dashboard.tiles()) {
+                    for (var i = 0; i < self.dashboard.tiles().length; i++) {
+                        names.push({'WIDGET_NAME': ko.observable(self.dashboard.tiles()[i].WIDGET_NAME())});
+                    }
+                    names.sort(function(tile1, tile2) {
+                        return tile1.WIDGET_NAME() > tile2.WIDGET_NAME() ? 1 : (tile1.WIDGET_NAME() < tile2.WIDGET_NAME() ? -1 : 0);
+                    })
+                }
+                return names;
+//                return self.dashboard.tiles && self.dashboard.tiles() ? self.dashboard.tiles().sort(function (tileA, tileB) {
+//                    return tileA.WIDGET_NAME() > tileB.WIDGET_NAME()?1:(tileA.WIDGET_NAME() < tileB.WIDGET_NAME()?-1:0);
+//                }):[];
             });
 
             $b.registerObject(this, 'RightPanelModel');
