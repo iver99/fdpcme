@@ -135,7 +135,6 @@ public class TestDashboardPage extends CommonUIUtils
 	}
 
 	//Testcase for adding widget using widgetselector
-
 	@Test
 	public void testWidgetSelector() 
 	{

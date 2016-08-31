@@ -886,7 +886,6 @@ public class TestDashBoard extends LoginAndLogout
 		//verify the target selector not displayed in the page
 		webd.getLogger().info("Verify the target selecotr diplayed in the page");
 		Assert.assertTrue(webd.isDisplayed("css=" + PageId.TARGETSELECTOR_CSS), "The target selector is NOT in the page");
-
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
