@@ -11,56 +11,64 @@ public class PageId
 	 * */
 	//home page
 	//public static final String DashboardDisplayPanelID = "dtabhomesc";
-	public static final String DashboardDisplayPanelCss = ".dbs-summaries-container";
-	public static final String DashboardCss = "div#dtabhomesc div.oj-panel";
-	public static final String ErrorPageSingOutBtnCss = "button[title='Sign Out']";
-	public static final String OverviewCloseID = "overviewClose";
-	public static final String WidgetSearchBtnID = "dbd-left-panel-header-search-btn";
-	public static final String ADashboardTestByAriaLabel = "//*[@aria-label='ADashboard Test']";
-	public static final String EnterpriseOverviewByAriaLabel = "//*[@aria-label='Enterprise Overview']";
-	public static final String SortbyID = "oj-select-choice-mainContentsortcb";
+	public static final String DASHBOARDDISPLAYPANELCSS = ".dbs-summaries-container";
+	public static final String DASHBOARDCSS = "div#dtabhomesc div.oj-panel";
+	public static final String ERRORPAGESINGOUTBTNCSS = "button[title='Sign Out']";
+	public static final String OVERVIEWCLOSEID = "overviewClose";
+	public static final String WIDGETSEARCHBTNID = "dbd-left-panel-header-search-btn";
+	public static final String ADASHBOARDTESTBYARIALABEL = "//*[@aria-label='ADashboard Test']";
+	public static final String ENTERPRISEOVERVIEWBYARIALABEL = "//*[@aria-label='Enterprise Overview']";
+	public static final String SORTBYID = "oj-select-choice-mainContentsortcb";
 
 	//OOB dashboards ID
-	public static final String Application_Performance_Monitoring_ID = "//div[@aria-dashboard='14']";
+	public static final String APPLICATION_PERFORMANCE_MONITORING_ID = "//div[@aria-dashboard='14']";
 	//public static final String Database_Health_Summary_ID = "//div[@aria-dashboard='11']";
 	//public static final String Host_Health_Summary_ID = "//div[@aria-dashboard='13']";
-	public static final String Database_Performance_Analytics_ID = "//div[@aria-dashboard='2']";
-	public static final String Middleware_Performance_Analytics_ID = "//div[@aria-dashboard='4']";
-	public static final String Database_Resource_Analytics_ID = "//div[@aria-dashboard='3']";
-	public static final String Middleware_Resource_Analytics_ID = "//div[@aria-dashboard='18']";
+	public static final String DATABASE_PERFORMANCE_ANALYTICS_ID = "//div[@aria-dashboard='2']";
+	public static final String MIDDLEWARE_PERFORMANCE_ANALYTICS_ID = "//div[@aria-dashboard='4']";
+	public static final String DATABASE_RESOURCE_ANALYTICS_ID = "//div[@aria-dashboard='3']";
+	public static final String MIDDLEWARE_RESOURCE_ANALYTICS_ID = "//div[@aria-dashboard='18']";
 	//public static final String WebLogic_Health_Summary_ID = "//div[@aria-dashboard='12']";
-	public static final String Database_Configuration_and_Storage_By_Version_ID = "//div[@aria-dashboard='6']";
-	public static final String Enterprise_OverView_ID = "//div[@aria-dashboard='1']";
-	public static final String Host_Inventory_By_Platform_ID = "//div[@aria-dashboard='5']";
-	public static final String Top_25_Databases_by_Resource_Consumption_ID = "//div[@aria-dashboard='8']";
-	public static final String Top_25_WebLogic_Servers_by_Heap_Usage_ID = "//div[@aria-dashboard='9']";
-	public static final String Top_25_WebLogic_Servers_by_Load_ID = "//div[@aria-dashboard='10']";
-	public static final String WebLogic_Servers_by_JDK_Version_ID = "//div[@aria-dashboard='7']";
-	public static final String Database_Operations_ID = "//div[@aria-dashboard='15']";
-	public static final String Host_Operations_ID = "//div[@aria-dashboard='16']";
-	public static final String Middleware_Operations_ID = "//div[@aria-dashboard='17']";
+	public static final String DATABASE_CONFIGURATION_AND_STORAGE_BY_VERSION_ID = "//div[@aria-dashboard='6']";
+	public static final String ENTERPRISE_OVERVIEW_ID = "//div[@aria-dashboard='1']";
+	public static final String HOST_INVENTORY_BY_PLATFORM_ID = "//div[@aria-dashboard='5']";
+	public static final String TOP_25_DATABASES_BY_RESOURCE_CONSUMPTION_ID = "//div[@aria-dashboard='8']";
+	public static final String TOP_25_WEBLOGIC_SERVERS_BY_HEAP_USAGE_ID = "//div[@aria-dashboard='9']";
+	public static final String TOP_25_WEBLOGIC_SERVERS_BY_LOAD_ID = "//div[@aria-dashboard='10']";
+	public static final String WEBLOGIC_SERVERS_BY_JDK_VERSION_ID = "//div[@aria-dashboard='7']";
+	public static final String DATABASE_OPERATIONS_ID = "//div[@aria-dashboard='15']";
+	public static final String HOST_OPERATIONS_ID = "//div[@aria-dashboard='16']";
+	public static final String MIDDLEWARE_OPERATIONS_ID = "//div[@aria-dashboard='17']";
 
 	//check box
-	public static final String ITA_BoxID = "itaopt";
+	public static final String ITA_BOXID = "itaopt";
 
 	//help id and about id
-	public static final String MenuBtnID = "menubutton";
-	public static final String SignOutID = "emcpdf_oba_logout";
+	public static final String MENUBTNID = "menubutton";
+	public static final String SIGNOUTID = "emcpdf_oba_logout";
 
 	//Branding bar
-	public static final String CompassIcon = "//*[@id='linksButton']";
-	public static final String DashboardLink = "//*[@id='obbNavDsbHome']";
+	public static final String COMPASSICON = "//*[@id='linksButton']";
+	public static final String DASHBOARDLINK = "//*[@id='obbNavDsbHome']";
 
 	//Branding bar link text
-	public static final String BrandingBarLinkText_CS_ITA = "IT Analytics";
-	public static final String BrandingBarLinkText_CS_APM = "APM";
-	public static final String BrandingBarLinkText_CS_LA = "Log Analytics";
-	public static final String BrandingBarLinkText_VA_ITA = "Analyze";
-	public static final String BrandingBarLinkText_VA_TA = "Search";
-	public static final String BrandingBarLinkText_VA_LA = "Log";
-	public static final String BrandingBarLinkText_ADMIN_AGENT = "Agents";
-	public static final String BrandingBarLinkText_ADMIN_ITA = "IT Analytics Administration";
+	public static final String BRANDINGBARLINKTEXT_CS_ITA = "IT Analytics";
+	public static final String BRANDINGBARLINKTEXT_CS_APM = "APM";
+	public static final String BRANDINGBARLINKTEXT_CS_LA = "Log Analytics";
+	public static final String BRANDINGBARLINKTEXT_VA_ITA = "Analyze";
+	public static final String BRANDINGBARLINKTEXT_VA_TA = "Search";
+	public static final String BRANDINGBARLINKTEXT_VA_LA = "Log";
+	public static final String BRANDINGBARLINKTEXT_ADMIN_AGENT = "Agents";
+	public static final String BRANDINGBARLINKTEXT_ADMIN_ITA = "IT Analytics Administration";
 
 	//builder page
-	public static final String DashboardSetAddDashboardIcon_Css = ".dbd-icon-add";
+	public static final String DASHBOARDSETADDDASHBOARDICON_CSS = ".dbd-icon-add";
+	public static final String DATETIMEPICK_CSS = "[id^='dateTimePicker_']";
+	public static final String TARGETSELECTOR_CSS = ".df-targte-selector.df-targte-selector";
+	public static final String DASHBOARDSETOPTIONS_CSS = "#tabs-caret";
+	public static final String DASHBOARDSETOPTIONSEDIT_CSS = "#dbs-edit [dashboardset-option='Edit']";
+	public static final String RIGHTDRAWEREDITSINGLEDBSHARE_CSS = ".dbd-right-panel-editdashboard-set-share .dbd-right-panel-editdashboard-innertitle.oj-collapsible-header";
+	public static final String DASHBOARDSETSHARE_CSS = "#dashboardSetSharingShared";
+	public static final String DASHBOARDSETNOTSHARE_CSS = "#dashboardSetSharingNotShared";
+
 }

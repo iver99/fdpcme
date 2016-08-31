@@ -19,7 +19,7 @@ requirejs.config({
               'message-util': 'uifwk/js/util/message-util',
               'df-util': 'uifwk/js/util/df-util',
               'prefutil':'uifwk/js/util/preference-util'
-             }        
+             }
     },
     // Path mappings for the logical module names
     paths: {
@@ -29,9 +29,9 @@ requirejs.config({
         'jqueryui': '../../libs/@version@/js/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/min',
-        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/ojL10n',
-        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/resources',
+        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/min',
+        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/ojL10n',
+        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/resources',
         'ojdnd': '../../libs/@version@/js/oraclejet/js/libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
@@ -67,7 +67,7 @@ requirejs.config({
             'ojs/ojselectcombobox',
             'ojs/ojpopup',
             'ojs/ojchart',
-            'ojs/ojcomponents',   
+            'ojs/ojcomponents',
             'ojs/ojcomponentcore',
             'ojs/ojdialog',
             'ojs/ojdatetimepicker',
@@ -76,17 +76,70 @@ requirejs.config({
             'ojs/ojtoolbar',
             'ojs/ojpagingcontrol',
             'ojs/ojeditablevalue',
-            'ojs/ojdatetimepicker',
             'ojs/internal-deps/dvt/DvtChart',
             'ojs/ojdvt-base',
             'ojs/ojcheckboxset',
-            'ojs/ojpopup',
             'ojs/ojpopupcore',
             'ojs/ojmessaging',
             'ojs/ojgauge',
             'ojs/ojdatasource-common',
             'ojs/ojinputtext',
+            'ojs/ojtabs',
+            'ojs/ojcollapsible',
+            'ojs/ojradioset',
             'ojs/ojpagingtabledatasource',
+            'ojs/ojcomposite',
+            'ojs/ojnavigationlist',
+            'ojs/ojslider',
+            'ojs/ojconveyorbelt',
+            'ojs/ojindexer',
+            'ojs/ojnbox',
+            'ojs/ojsunburst',
+            'ojs/ojinputnumber',
+            'ojs/ojoffcanvas',
+            'ojs/ojswipetoreveal',
+            'ojs/ojaccordion',
+            'ojs/ojcube',
+            'ojs/ojpagingcontrol-model',	
+            'ojs/ojswitch',
+            'ojs/ojarraydatagriddatasource',
+            'ojs/ojdatacollection-common',
+            'ojs/ojjquery-hammer',
+            'ojs/ojtable-model',
+            'ojs/ojarraypagingdatasource',
+            'ojs/ojdatagrid-model',
+            'ojs/ojjsontreedatasource',
+            'ojs/ojpagingdatagriddatasource',
+            'ojs/ojtable',
+            'ojs/ojarraytabledatasource',
+            'ojs/ojdatagrid',
+            'ojs/ojpictochart',
+            'ojs/ojtagcloud',
+            'ojs/ojthematicmap',
+            'ojs/ojdiagram',
+            'ojs/ojlegend',
+            'ojs/ojtimeline',
+            'ojs/ojlistview',
+            'ojs/ojprogressbar',
+            'ojs/ojcollectiondatagriddatasource',
+            'ojs/ojdomscroller',
+            'ojs/ojmasonrylayout',	
+            'ojs/ojpulltorefresh',
+            'ojs/ojtouchproxy',
+            'ojs/ojcollectionpagingdatasource',
+            'ojs/ojradiocheckbox',
+            'ojs/ojtrain',
+            'ojs/ojcollectiontabledatasource',
+            'ojs/ojtree-model',
+            'ojs/ojcollectiontreedatasource',
+            'ojs/ojfilmstrip',
+            'ojs/ojrouter',
+            'ojs/ojflattenedtreedatagriddatasource',
+            'ojs/ojmodule',
+            'ojs/ojrowexpander',
+            'ojs/ojtreemap',
+            'ojs/ojflattenedtreetabledatasource',
+            'ojs/ojmoduleanimations',
             'ojdnd',
             'promise',
             'knockout',
@@ -106,7 +159,7 @@ requirejs.config({
             exports: 'crossroads'
         }
     },
-    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation 
+    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation
     // resources with a custom translation file.
     // Any resource file added, must be placed under a directory named "nls". You can use a path mapping or you can define
     // a path that is relative to the location of this main.js file.
@@ -182,14 +235,14 @@ require(['knockout',
             viewModel: textwidget,
             template: {require: 'text!./widgets/textwidget/textwidget.html'}
         });*/
-            
+
         if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
             ko.components.register("df-oracle-dashboard-list",{
                 viewModel:dashboardhome_impl,
                 template:{require:'text!/emsaasui/emcpdfui/dashboardhome.html'}
             });
         }
-        
+
         function DashboardTitleModel(dashboard) {
             var self = this;
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
@@ -227,12 +280,12 @@ require(['knockout',
                 self.headerHeight = height;
             });
         };
-         
+
         var dsbId = dfu.getUrlParam("dashboardId");
         console.warn("TODO: validate valid dashboard id format");
 //                oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
 //                window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href) + "&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";
-       
+
 
         Builder.initializeFromCookie();
 
@@ -242,7 +295,7 @@ require(['knockout',
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
             Builder.loadDashboard(dsbId, function (dashboard) {
-                
+
                 var dashboardTitleModel = new DashboardTitleModel(dashboard);
                 ko.applyBindings(dashboardTitleModel, $("title")[0]);
                 var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dashboard);
@@ -273,7 +326,7 @@ function updateOnePageHeight(event) {
     }
 }
 
-            
+
 function truncateString(str, length) {
     if (str && length > 0 && str.length > length)
     {

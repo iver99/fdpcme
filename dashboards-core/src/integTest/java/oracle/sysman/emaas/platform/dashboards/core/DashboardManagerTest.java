@@ -857,6 +857,36 @@ public class DashboardManagerTest
 		dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 	}
 
+	@Test
+	public void testUpdateDashboardTilesName() throws InterruptedException, DashboardException
+	{
+		Dashboard dbd = new Dashboard();
+		Long widgetId = 1001L;
+		dbd.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
+		dbd.setType(Dashboard.DASHBOARD_TYPE_NORMAL);
+		Tile t1 = createTileForDashboard(dbd);
+		t1.setWidgetUniqueId(String.valueOf(widgetId));
+		createParameterForTile(t1);
+		Tile t2 = createTileForDashboard(dbd);
+		t2.setWidgetUniqueId(String.valueOf(widgetId));
+		createParameterForTile(t2);
+
+		DashboardManager dm = DashboardManager.getInstance();
+		Long tenantId = 1234L;
+		dm.saveNewDashboard(dbd, tenantId);
+
+		String newWidgetName = "Updated Widget Name";
+		int affacted = dm.updateDashboardTilesName(tenantId, newWidgetName, widgetId);
+		Assert.assertTrue(affacted >= 1); // currently we're using eclipselink 2.4, and it always be 1
+
+		dbd = dm.getDashboardById(dbd.getDashboardId(), tenantId);
+		Assert.assertEquals(dbd.getTileList().get(0).getTitle(), newWidgetName);
+		Assert.assertEquals(dbd.getTileList().get(1).getTitle(), newWidgetName);
+
+		// post test
+		dm.deleteDashboard(dbd.getDashboardId(), true, tenantId);
+	}
+
 	private TileParam createParameterForTile(Tile tile) throws InterruptedException
 	{
 		Thread.sleep(2);

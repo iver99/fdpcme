@@ -247,11 +247,13 @@ body, html {
   border: 1px solid #999999;
 }
 
+.builder-dbd-description .font-style-italic{
+    font-style: italic !important;
+}
+
 .builder-toolbar-left {
     /*  padding-right: 180px;
       margin-right: -180px;*/
-    border-bottom: solid 2px #3caf85;
-    margin-bottom: -3px;
     padding-right:5px;
 }
 
@@ -309,7 +311,7 @@ body, html {
   content: "\f040";
 }
 .dbd-wrench:before{
-   content: "\f0ad"; 
+   content: "\f067"; 
 }
 
 .dbd-toolbar-icon-refresh:before,.fa-refresh:before {
@@ -456,6 +458,7 @@ body, html {
 
 .dbd-tile-maximized {
   width: 100%;
+  max-width:100%;
 }
 
 @media print and (orientation: landscape), screen and (min-width: 1024px) {
@@ -1400,6 +1403,11 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
                         text-decoration: none;
                     }
                 }  
+            }
+        }
+        .other-nav:not(.oj-selected){
+            .oj-tabs-close-icon{
+                display: none;
             }
         }
         .other-nav:first-child{

@@ -6,9 +6,9 @@
     <body>
         <div data-testapiversion="1.7.5" data-bind="attr: {id: 'dateTimePicker_' + randomId}" style="display: table">
             <label for="dropdown" data-bind="attr: {id: 'dropdownLabel_'+randomId}" style="font-weight: bold; font-size: 14px; vertical-align: middle; padding-right: 5px;" data-bind="text: timeRangeMsg, style: {display: hideMainLabel}"></label>
-            <span class="oj-select-choice" tabindex="0"  style="width: auto; display: inline-block" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime"> 
+            <span class="oj-select-choice"  style="width: auto; display: inline-block" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime"> 
                 <span class="oj-select-chosen" style="padding-right: 24px;" data-bind="html: dateTimeInfo"></span>
-                <span class="time-filter-indicator fa-icon-font" tabindex ="0" 
+                <span class="time-filter-indicator fa-icon-font" 
                   data-bind="event: {mouseover: showTimeFilterInfo, mouseout: hideTimeFilterInfo, 
                               keypress: function(data, event) {event.stopPropagation(); if(isEnterPressed(data, event)) {toggleTimeFilterInfo();}}},
                               click: toggleTimeFilterInfo, clickBubble: false,

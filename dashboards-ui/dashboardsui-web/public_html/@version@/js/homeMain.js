@@ -11,7 +11,7 @@
 requirejs.config({
     //Set up module mapping
     map: {
-        '*': 
+        '*':
 //            {'df-util': '/emsaasui/uifwk/libs/@version@/js/uifwk/js/util/df-util'}
               {'prefutil':'uifwk/js/util/preference-util'}
     },
@@ -22,9 +22,9 @@ requirejs.config({
         'jqueryui': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/min',
-        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/ojL10n',
-        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/resources',
+        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/min',
+        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/ojL10n',
+        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/resources',
         'ojdnd': '../../libs/@version@/js/oraclejet/js/libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
@@ -52,7 +52,7 @@ requirejs.config({
             exports: 'crossroads'
         }
     },
-    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation 
+    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation
     // resources with a custom translation file.
     // Any resource file added, must be placed under a directory named "nls". You can use a path mapping or you can define
     // a path that is relative to the location of this main.js file.
@@ -110,14 +110,14 @@ require(['dashboards/dbsmodel',
                 logger.setLogLevel(oj.Logger.LEVEL_WARN);
 //            }
 
-           
+
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
                     viewModel:{require:'/emsaasui/uifwk/js/widgets/brandingbar/js/brandingbar.js'},
                     template:{require:'text!/emsaasui/uifwk/js/widgets/brandingbar/html/brandingbar.html'}
                 });
             }
-            
+
             if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
                 ko.components.register("df-oracle-dashboard-list",{
                     viewModel:dashboardhome_impl,
@@ -130,9 +130,9 @@ require(['dashboards/dbsmodel',
                 }
             };
             ko.virtualElements.allowedBindings.stopBinding = true;
-            
+
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
-            
+
             function HeaderViewModel() {
                 var self = this;
                 self.userName = dfu.getUserName();
@@ -145,10 +145,10 @@ require(['dashboards/dbsmodel',
                     isAdmin:true
                 };
             }
-           
+
            function TitleViewModel(){
                var self = this;
-//               self.homeTitle = getNlsString("DBS_HOME_TITLE");  
+//               self.homeTitle = getNlsString("DBS_HOME_TITLE");
                self.homeTitle = dfu_model.generateWindowTitle(getNlsString("DBS_HOME_TITLE_HOME"), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
            }
             //dashboardsViewModle = new model.ViewModel();
@@ -167,14 +167,14 @@ require(['dashboards/dbsmodel',
                     var dashboardsViewModle = new model.ViewModel(predataModel, "mainContent");
                     ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
                     $('#mainContent').show();
-                    
+
                 }
                 predataModel.loadAll().then(init, init); //nomatter there is error in predata loading, initiating
 
             });
         }
 );
-            
+
 function truncateString(str, length) {
     if (str && length > 0 && str.length > length)
     {

@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -20,7 +20,7 @@ define(['knockout',
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
 
-        function DashboardsetToolBarModel(dashboardInst) {                     
+        function DashboardsetToolBarModel(dashboardInst) {
             var self = this;
 
             self.dashboardInst = dashboardInst;
@@ -28,13 +28,14 @@ define(['knockout',
             self.reorderedDbsSetItems=ko.observableArray();
 
             self.selectedDashboardItem = ko.observable();
-                        
+
             self.selectedDashboardItem.subscribe(function (selected) {
                 console.log("current selectselectedDashboardItemed dashboard: %o", selected);
                 self.extendedOptions.selectedTab = selected.dashboardId;
             });
 
             self.isDashboardSet = ko.observable(ko.unwrap(dashboardInst.type)  === "SET");
+            self.isOobDashboardset=ko.observable(ko.unwrap(dashboardInst.owner)  === "Oracle");
             self.dashboardsetId=ko.unwrap(dashboardInst.id());
             self.hasUserOptionInDB = false;
             self.noDashboardHome=ko.observable(true);
@@ -47,8 +48,8 @@ define(['knockout',
                 if(self.dashboardExtendedOptions.autoRefresh) {
                     self.autoRefreshInterval(parseInt(self.dashboardExtendedOptions.autoRefresh.defaultValue));
                 }
-            }                    
-            
+            }
+
             self.dashboardsetName =ko.observable(ko.unwrap(dashboardInst.name()));
 
             self.dashboardsetDescription = ko.observable(ko.unwrap(dashboardInst.description) || "");
@@ -60,7 +61,7 @@ define(['knockout',
                 refreshOnIcon:ko.observable("dbd-icon-check"),
                 share: ko.observable(ko.unwrap(dashboardInst.sharePublic) ? "on" : "off")
             };
-            
+
             self.dashboardsetConfig.setHome = ko.observable(true);
             var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
             var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
@@ -75,14 +76,14 @@ define(['knockout',
                     }
                 });
             }
-           
+
             self.dashboardsetConfig.homeIcon = ko.observable("dbd-toolbar-icon-home");
             self.dashboardsetConfig.homeLabel = ko.pureComputed(function () {
                 return getNlsString(self.dashboardsetConfig.setHome() ?
                         "DBS_BUILDER_BTN_HOME_SET" :
                         "DBS_BUILDER_BTN_HOME_REMOVE");
             });
-             
+
             self.dashboardsetConfig.addFavorite = ko.observable(true);
             if("SET" === dashboardInst.type()){
                 Builder.checkDashboardFavorites(ko.unwrap(dashboardInst.id), function (resp) {
@@ -104,9 +105,9 @@ define(['knockout',
             };
 
             self.dashboardsetConfig.isCreator = ko.observable(dashboardsetEditDisabled());
-            
+
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
-            
+
             self.dashboardsetConfigMenu =function(event,data){
                 var configId = data.item.attr('id');
                 switch (configId) {
@@ -115,11 +116,11 @@ define(['knockout',
                         rightPanelModel && rightPanelModel.editRightpanelLinkage("dashboardset-edit");
                         break;
                     case 'refresh-off':
-                        self.dbConfigMenuClick.refreshDbs(self,'off');       
+                        self.dbConfigMenuClick.refreshDbs(self,'off');
                         break;
                     case 'refresh-time':
                         self.dbConfigMenuClick.refreshDbs(self,'on');
-                        break;    
+                        break;
                     case 'dbs-print':
                         self.dbConfigMenuClick.printAllDbs(self);
                         break;
@@ -136,7 +137,7 @@ define(['knockout',
                         break;
                 }
             };
-            
+
             self.saveUserOptions = function(){
                  var options = {
                     dashboardId: self.dashboardsetId,
@@ -154,7 +155,7 @@ define(['knockout',
             self.saveDashboardSet = function (fieldsToUpdate, successCallback, failureCallback) {
 //                if(dashboardInst.systemDashboard()) {
                 if(dashboardInst.owner() === "Oracle") { ///do not update dashboard set if it is OOB dsb set
-                    self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;  
+                    self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;
                     self.saveUserOptions();
                     console.log("This is an OOB dashboard set");
                     return;
@@ -191,8 +192,8 @@ define(['knockout',
                         successCallback,
                         failureCallback
                         );
-                 
-                // add delay for updating screenshots because 
+
+                // add delay for updating screenshots because
                 // a tab may take some time to render the tiles.
                 dfu.getAjaxUtil().actionAfterAjaxStop(function () {
                     var $tilesWrapper = $(".tiles-wrapper:visible");
@@ -218,7 +219,7 @@ define(['knockout',
                                     JSON.stringify(newDashboardJs));
                     }
                 }, 2000, 30000);
-                self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;  
+                self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;
                 self.saveUserOptions();
             };
 
@@ -232,7 +233,7 @@ define(['knockout',
                 self.selectedDashboardItem(newDashboardItem);
                 self.noDashboardHome(false);
             };
-            
+
             /**
              * replace the dashboard list page to the selected dashboard
              * @param {type} dashboardGuid dashboard list page id
@@ -243,10 +244,10 @@ define(['knockout',
                 var selectedDashboard = new dashboardItem(dashboardNameId);
                 var removeResult=findRemoveTab(self.dashboardsetItems,dashboardPickerId);
                 var reorderedResult=findRemoveTab(self.reorderedDbsSetItems(),dashboardPickerId);
-                
-                if (removeResult.removeIndex > -1) {  
+
+                if (removeResult.removeIndex > -1) {
                     removeTargetTab(removeResult.removeItem);
-                    addNewTab(selectedDashboard.name(),selectedDashboard.dashboardId,reorderedResult.removeIndex); 
+                    addNewTab(selectedDashboard.name(),selectedDashboard.dashboardId,reorderedResult.removeIndex);
                     self.dashboardsetItems.splice(removeResult.removeIndex, 1, selectedDashboard);
                     self.reorderedDbsSetItems.splice(reorderedResult.removeIndex, 1, selectedDashboard);
                     self.selectedDashboardItem(selectedDashboard);
@@ -293,8 +294,8 @@ define(['knockout',
                 $('#duplicateDsbDialog').ojDialog('close');
             };
 
-            self.dbConfigMenuClick = new dbConfigMenuClick();  
-            
+            self.dbConfigMenuClick = new dbConfigMenuClick();
+
             self.dashboardsetMenu = ko.observableArray([
                 {
                     "label": getNlsString("COMMON_BTN_EDIT"),
@@ -303,12 +304,12 @@ define(['knockout',
                     "icon": "fa-pencil",
                     "title": "",
                     "disabled": "",
-                    "endOfGroup": false,       
+                    "endOfGroup": false,
                     "showOnMobile": false,
-                    "showOnViewer":false, 
+                    "showOnViewer":false,
                     "visibility":visibilityOnDifDevice(false,false),
                     "subMenu": []
-                }, 
+                },
                 {
                     "label": getNlsString("COMMON_BTN_PRINT"),
                     "url": "#",
@@ -316,8 +317,8 @@ define(['knockout',
                     "icon": "fa-print",
                     "title": "",
                     "disabled": "",
-                    "endOfGroup": true,         
-                    "showOnMobile": true,          
+                    "endOfGroup": true,
+                    "showOnMobile": true,
                     "showOnViewer":true,
                     "visibility":visibilityOnDifDevice(true,true),
                     "subMenu": []
@@ -366,7 +367,7 @@ define(['knockout',
                             "icon": self.dashboardsetConfig.refreshOffIcon,
                             "title": "",
                             "disabled": "",
-                            "endOfGroup": false,    
+                            "endOfGroup": false,
                             "showOnMobile": true,
                             "showOnViewer":true,
                             "visibility":visibilityOnDifDevice(true,true),
@@ -389,30 +390,30 @@ define(['knockout',
 
             self.initializeDashboardset = function() {
                 var singleDashboardItem;
-                
+
                 var subDashboards = ko.unwrap(dashboardInst.subDashboards);
                 if (self.isDashboardSet()) {
-                    
+
                     function resolveLoadOptions (status, resp) {
                         if (status === "error") {
                             self.extendedOptions = {};
                             self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
                         } else {
-                            self.extendedOptions ={};                            
+                            self.extendedOptions ={};
                             if(typeof(resp.extendedOptions)!=="undefined"){
                                 self.extendedOptions = JSON.parse(resp.extendedOptions);
-                            };            
+                            };
                             self.autoRefreshInterval(parseInt(resp.autoRefreshInterval));
-                            if( isNaN(self.autoRefreshInterval())){//                                
+                            if( isNaN(self.autoRefreshInterval())){//
                                 if(self.dashboardExtendedOptions.autorefresh) {
                                     self.autoRefreshInterval(parseInt(self.dashboardExtendedOptions.autorefresh.defaultValue));
                                 }else {
-                                   self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL); 
+                                   self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
                                 }
                             }
                             self.hasUserOptionInDB = true;
                         }
-                        
+
                         if(self.autoRefreshInterval() === DEFAULT_AUTO_REFRESH_INTERVAL){
                             self.dashboardsetConfig.refreshOnIcon("dbd-icon-check");
                             self.dashboardsetConfig.refreshOffIcon("dbd-noselected");
@@ -420,13 +421,13 @@ define(['knockout',
                             self.dashboardsetConfig.refreshOnIcon("dbd-noselected");
                             self.dashboardsetConfig.refreshOffIcon("dbd-icon-check");
                         }
-                        
+
                         if ( subDashboards.length === 0) {
                             subDashboards = [
                                 null
                             ];
                         }
-                        
+
                         var indexOfSelectedTabInUserOption = 0;
                         $.each(subDashboards, function (index, simpleDashboardInst) {
                             singleDashboardItem = new dashboardItem(simpleDashboardInst);
@@ -442,14 +443,14 @@ define(['knockout',
                                 self.noDashboardHome(false);
                             }
                         });
-                        
+
                         singleDashboardItem = self.dashboardsetItems[indexOfSelectedTabInUserOption];
                         self.selectedDashboardItem(singleDashboardItem);
                         $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + singleDashboardItem.dashboardId});
                         $("#dbd-tabs-container").ojTabs("refresh");
                         $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
                     }
-                    
+
                     Builder.fetchDashboardOptions(
                             self.dashboardsetId,
                             resolveLoadOptions.bind(this, "success"),
@@ -461,14 +462,14 @@ define(['knockout',
                     self.reorderedDbsSetItems.push(singleDashboardItem);
                     self.selectedDashboardItem(singleDashboardItem);
                 }
-                
+
                 // TODO workaround for showing the dashboarset's add button.
                 setTimeout(function() {
                     $("#dbd-tabs-container").ojTabs("refresh");
                 }, 200);
-                
+
             };
-                        
+
             function dashboardItem(obj) {
 
                 var self = this;
@@ -485,8 +486,8 @@ define(['knockout',
                     self.raw = null;
                 }
             }
-            
-                function addNewTab(tabName, dashboardId, insertIndex, type) {                    
+
+                function addNewTab(tabName, dashboardId, insertIndex, type) {
                     var tabContent;
                     if (type === "new") {
                         tabContent = $("<li class='other-nav' id='dashboardTab-" + dashboardId + "' data-tabs-name='Dashboard'><span class='tabs-name'>" + tabName + "</span></li>");
@@ -501,7 +502,7 @@ define(['knockout',
                             });
                     $("#dbd-tabs-container").ojTabs("refresh");
                 }
-            
+
             function findRemoveTab(dashboardsetItems,dashboardPickerId){
                 var dashboardToRemove = -1;
                 var dashboardToRemoveItem;
@@ -514,7 +515,7 @@ define(['knockout',
                 var returnResult ={"removeIndex":dashboardToRemove,"removeItem":dashboardToRemoveItem};
                 return returnResult;
             }
-            
+
             function removeTargetTab(removeTargetItem){
                 $('#dashboardTab-'+removeTargetItem.dashboardId).remove();
                 $('#dashboardTabInfo-'+removeTargetItem.dashboardId).remove();
@@ -523,13 +524,13 @@ define(['knockout',
             function dbConfigMenuClick (){
                 this.saveDbsDescription = function (dashboardsetEditModel) {
                     var me = this;
-                    
+
                     var nameEdit = $('#nameDescription input').val();
                     var descriptionEdit = $('#nameDescription textarea').val();
                     var sharePublic = ko.unwrap(dashboardsetEditModel.dashboardsetConfig.share) === "on";
-                    
+
                     var fieldsToUpdate = {
-                            "name": nameEdit, 
+                            "name": nameEdit,
                             "description": descriptionEdit,
                             "sharePublic":sharePublic
                         };
@@ -543,7 +544,7 @@ define(['knockout',
                                         summary: getNlsString(shareMsgKey),
                                         detail: '',
                                         removeDelayTime: 5000
-                                    });                                    
+                                    });
                                 }
                                 dashboardInst.sharePublic(sharePublic);
                                 me.dashboardsetName(nameEdit);
@@ -555,13 +556,13 @@ define(['knockout',
                                 dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
                             }
                     );
-                }; 
+                };
                 this.cancelSaveDbsetInfo = function(){
-                     $('#changeDashboardsetInfo').ojDialog("close"); 
+                     $('#changeDashboardsetInfo').ojDialog("close");
                 };
                 this.favoriteDbs = function (dbsToolBar) {
                     var addFavorite = dbsToolBar.dashboardsetConfig.addFavorite();
-                    
+
                     if (addFavorite) {
                         Builder.addDashboardToFavorites(
                                 ko.unwrap(dashboardInst.id),
@@ -609,7 +610,7 @@ define(['knockout',
                         prefUtil.setPreference(prefKeyHomeDashboardId, ko.unwrap(dashboardInst.id), {
                             async: false,
                             success: function() {
-                                dbsToolBar.dashboardsetConfig.setHome(false);                    
+                                dbsToolBar.dashboardsetConfig.setHome(false);
                                 dfu.showMessage({
                                     type: 'confirm',
                                     summary: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_SUCC'),
@@ -646,7 +647,7 @@ define(['knockout',
                             }
                         });
                     }
-                };  
+                };
                 this.refreshDbs = function (dbsToolBar, option) {
                     if (dbsToolBar.dashboardsetConfig.refresh()) {
                         if (option === 'on') {
@@ -679,14 +680,14 @@ define(['knockout',
                         error: function (jqXHR, textStatus, errorThrown) {
                         }
                     });
-                    $('#deleteDashboardset').ojDialog("close");  
+                    $('#deleteDashboardset').ojDialog("close");
                 };
                 this.cancelDeleteDbs= function(){
-                     $('#deleteDashboardset').ojDialog("close");   
-                };  
-                
+                     $('#deleteDashboardset').ojDialog("close");
+                };
+
                 this.printAllDbs = function(dbsToolBar){
-                    
+
                     var showDashboardContent = function (dashboardTabItem) {
                         var promise = new Promise(function (resolve) {
                             var $loadedContent = $("#dashboard-" + dashboardTabItem.dashboardId);
@@ -710,12 +711,12 @@ define(['knockout',
                     $("body").append($printMask);
                     $("#printLoading").text(getNlsString("DBS_BUILDER_DASHBOARD_SET_PRINT_MASK"));
                     $("#printLoading").show();
-                    
+
                     var lastPromise = Promise.resolve();
                     self.reorderedDbsSetItems().forEach(function (dashboardTabItem) {
                           lastPromise = lastPromise.then(showDashboardContent.bind(this, dashboardTabItem));
                     });
-                    
+
                     lastPromise.then(function() {
                         $printMask.remove();
                         $("#printLoading").hide();
@@ -723,7 +724,7 @@ define(['knockout',
                     });
             };
         }
-            
+
             function visibilityOnDifDevice(showOnMobile,showOnViewer){
                 if(ko.unwrap(self.dashboardsetConfig.isCreator)){
                     if(self.isMobileDevice==='true'){
@@ -732,18 +733,18 @@ define(['knockout',
                         return true;
                     }
                 }else{
-                        return showOnViewer;                 
+                        return showOnViewer;
                 }
             };
-            
+
             function highlightNextTab(removeDashboardId,clickItem){
                  $("#dashboard-" + removeDashboardId).remove();
-                
+
                 var removeResult = findRemoveTab(self.dashboardsetItems, removeDashboardId);
                 var reorderResult = findRemoveTab(self.reorderedDbsSetItems(), removeDashboardId);
-                
+
                 if (removeResult.removeIndex > -1) {
-                     var currentShowIndex=$('.other-nav').index(clickItem); 
+                     var currentShowIndex=$('.other-nav').index(clickItem);
                      self.dashboardsetItems.splice(removeResult.removeIndex, 1);
                      self.reorderedDbsSetItems.splice(reorderResult.removeIndex, 1);
                      removeTargetTab(removeResult.removeItem);
@@ -751,18 +752,18 @@ define(['knockout',
                         if (self.dashboardsetItems.length === currentShowIndex && self.dashboardsetItems.length !== 0) {
                             $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + self.reorderedDbsSetItems()[currentShowIndex - 1].dashboardId});
                             self.selectedDashboardItem(self.reorderedDbsSetItems()[currentShowIndex - 1]);
-                        } else if (self.dashboardsetItems.length === 0) {                          
+                        } else if (self.dashboardsetItems.length === 0) {
                             self.addNewDashboard();
                         }
-                        else {   
+                        else {
                             $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + self.reorderedDbsSetItems()[currentShowIndex].dashboardId});
                             self.selectedDashboardItem(self.reorderedDbsSetItems()[currentShowIndex]);
                         }
-                    } 
+                    }
                     self.saveDashboardSet();
-                }  
+                }
             }
-            
+
            self.removeDashboardInSet = function (removeId,currentSelectedItem,whetherDelete,event){
                 if (self.dashboardInstMap[removeId].type !== 'new' && self.dashboardInstMap[removeId].$b.isDashboardUpdated() === true && !whetherDelete) {
                     $('#deleteDashboard').ojDialog("open");
@@ -774,13 +775,13 @@ define(['knockout',
                     self.noDashboardHome(true);
                 }
             };
-                                           
+
             $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
                 var removeDashboardId = Number(ui.tab.attr('id').split(/dashboardTab-/)[1]) || (ui.tab.attr('id').split(/dashboardTab-/)[1]);
-                var selectedItem = ui.tab;              
+                var selectedItem = ui.tab;
                 self.removeDashboardInSet(removeDashboardId,selectedItem,false,event);
             } );
-                        
+
             $("#dbd-tabs-container").on("ojdeselect", function (event, ui) {
                 if (typeof (event.originalEvent) !== 'undefined') {
 
@@ -790,15 +791,15 @@ define(['knockout',
                             self.selectedDashboardItem(item);
                             self.extendedOptions.selectedTab = selectedDashboardId;
                         }
-                    });           
+                    });
                     self.saveDashboardSet();
                     // hide right expanded panel
-                    $("#dbd-tabs-container").ojTabs("refresh"); 
+                    $("#dbd-tabs-container").ojTabs("refresh");
                     //scroll-bar reset
                     $('#dashboard-'+selectedDashboardId).find('.tiles-col-container').css({"overflow":"auto"});
-                }             
+                }
             });
-            
+
             $( "#dbd-tabs-container" ).on( "ojreorder", function( event, ui ) {
                     var tempAarray = [];
 
@@ -810,9 +811,9 @@ define(['knockout',
                             }
                         });
                     });
-                    self.reorderedDbsSetItems(tempAarray);        
+                    self.reorderedDbsSetItems(tempAarray);
                     self.saveDashboardSet();
-            });       
+            });
         }
 
         Builder.registerModule(DashboardsetToolBarModel, 'DashboardsetToolBarModel');

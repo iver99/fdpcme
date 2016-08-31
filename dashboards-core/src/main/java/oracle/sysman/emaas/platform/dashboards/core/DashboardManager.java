@@ -7,8 +7,13 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotData;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
@@ -26,16 +31,12 @@ import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class DashboardManager
 {
@@ -203,13 +204,13 @@ public class DashboardManager
 				ed.setDeleted(dashboardId);
 				dsf.mergeEmsDashboard(ed);
 				dsf.removeEmsSubDashboardBySubId(dashboardId);
-                dsf.removeEmsSubDashboardBySetId(dashboardId);
+				dsf.removeEmsSubDashboardBySetId(dashboardId);
 			}
 			else {
 				dsf.removeAllEmsUserOptions(dashboardId);
 				dsf.removeEmsSubDashboardBySubId(dashboardId);
-                dsf.removeEmsSubDashboardBySetId(dashboardId);
-                dsf.removeEmsDashboard(ed);
+				dsf.removeEmsSubDashboardBySetId(dashboardId);
+				dsf.removeEmsDashboard(ed);
 			}
 		}
 		finally {
@@ -328,64 +329,6 @@ public class DashboardManager
 		}
 	}
 
-	public Dashboard getDashboardSetsBySubId(Long dashboardId, Long tenantId) throws DashboardException{
-		EntityManager em = null;
-		try {
-            if (dashboardId == null || dashboardId <= 0) {
-                logger.debug("Dashboard not found for id {} is invalid", dashboardId);
-                throw new DashboardNotFoundException();
-            }
-            DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-            em = dsf.getEntityManager();
-            EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-            if (ed == null) {
-                logger.debug("Dashboard not found with the specified id {}", dashboardId);
-                throw new DashboardNotFoundException();
-            }
-            Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
-            if (isDeleted != null && isDeleted.booleanValue()) {
-                logger.debug("Dashboard with id {} is not found for it's deleted already", dashboardId);
-                throw new DashboardNotFoundException();
-            }
-            String currentUser = UserContext.getCurrentUser();
-            // user can access owned or system dashboard
-            if (ed.getSharePublic().intValue() == 0) {
-                if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
-                    logger.debug(
-                            "Dashboard with id {} is not found for it's a non-OOB dashboard and not owned by current user {}",
-                            dashboardId, currentUser);
-                    throw new DashboardNotFoundException();
-                }
-            }
-            if (!isDashboardAccessbyCurrentTenant(ed)) {
-                logger.debug("Dashboard with id {} is not found for it can't be accessed by current tenant", dashboardId);
-                throw new DashboardNotFoundException();
-            }
-
-            updateLastAccessDate(dashboardId, tenantId, dsf);
-            Dashboard dashboard = Dashboard.valueOf(ed, null, false, false, false);
-
-            List<EmsDashboard> emsDashboards = dsf.getEmsDashboardsBySubId(dashboardId);
-			if (null == emsDashboards) {
-				logger.debug("Dashboard not found with the specified sub dashboard id {}", dashboardId);
-				throw new DashboardNotFoundException();
-			}
-
-            List<Dashboard> dashboardList = new ArrayList<>();
-            for (EmsDashboard emsDashboard : emsDashboards) {
-                dashboardList.add(Dashboard.valueOf(emsDashboard,null,false,false,false));
-            }
-
-            dashboard.setDashboardSets(dashboardList);
-
-			return dashboard;
-		} finally {
-			if (em != null) {
-				em.close();
-			}
-		}
-	}
-
 	/**
 	 * Returns dashboard instance specified by name for current user Please note that same user under single tenant can't have
 	 * more than one dashboards with same name, so this method return single dashboard instance
@@ -414,6 +357,66 @@ public class DashboardManager
 		catch (NoResultException e) {
 			logger.debug("Dashboard not found for name \"{}\" because NoResultException is caught", name);
 			return null;
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+
+	public Dashboard getDashboardSetsBySubId(Long dashboardId, Long tenantId) throws DashboardException
+	{
+		EntityManager em = null;
+		try {
+			if (dashboardId == null || dashboardId <= 0) {
+				logger.debug("Dashboard not found for id {} is invalid", dashboardId);
+				throw new DashboardNotFoundException();
+			}
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+			if (ed == null) {
+				logger.debug("Dashboard not found with the specified id {}", dashboardId);
+				throw new DashboardNotFoundException();
+			}
+			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
+			if (isDeleted != null && isDeleted.booleanValue()) {
+				logger.debug("Dashboard with id {} is not found for it's deleted already", dashboardId);
+				throw new DashboardNotFoundException();
+			}
+			String currentUser = UserContext.getCurrentUser();
+			// user can access owned or system dashboard
+			if (ed.getSharePublic().intValue() == 0) {
+				if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
+					logger.debug(
+							"Dashboard with id {} is not found for it's a non-OOB dashboard and not owned by current user {}",
+							dashboardId, currentUser);
+					throw new DashboardNotFoundException();
+				}
+			}
+			if (!isDashboardAccessbyCurrentTenant(ed)) {
+				logger.debug("Dashboard with id {} is not found for it can't be accessed by current tenant", dashboardId);
+				throw new DashboardNotFoundException();
+			}
+
+			updateLastAccessDate(dashboardId, tenantId, dsf);
+			Dashboard dashboard = Dashboard.valueOf(ed, null, false, false, false);
+
+			List<EmsDashboard> emsDashboards = dsf.getEmsDashboardsBySubId(dashboardId);
+			if (null == emsDashboards) {
+				logger.debug("Dashboard not found with the specified sub dashboard id {}", dashboardId);
+				throw new DashboardNotFoundException();
+			}
+
+			List<Dashboard> dashboardList = new ArrayList<>();
+			for (EmsDashboard emsDashboard : emsDashboards) {
+				dashboardList.add(Dashboard.valueOf(emsDashboard, null, false, false, false));
+			}
+
+			dashboard.setDashboardSets(dashboardList);
+
+			return dashboard;
 		}
 		finally {
 			if (em != null) {
@@ -646,8 +649,8 @@ public class DashboardManager
 			joinOptions = true;
 		}
 		if (joinOptions) {
-			sb.append("left join Ems_Dashboard_User_Options le on (p.dashboard_Id =le.dashboard_Id and le.user_name = ?"
-					+ index++ + " and p.tenant_Id = le.tenant_Id) ");
+			sb.append("left join Ems_Dashboard_User_Options le on (p.dashboard_Id =le.dashboard_Id and le.user_name = ?" + index++
+					+ " and p.tenant_Id = le.tenant_Id) ");
 			paramList.add(currentUser);
 		}
 
@@ -756,6 +759,15 @@ public class DashboardManager
 			}
 			else {
 				sb.append(" or lower(p.description) like ?" + index++);
+				paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString.toLowerCase(locale)) + "%");
+			}
+
+			if (!ic) {
+				sb.append(" or p.owner like ?" + index++);
+				paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString) + "%");
+			}
+			else {
+				sb.append(" or lower(p.owner) like ?" + index++);
 				paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString.toLowerCase(locale)) + "%");
 			}
 
@@ -1003,7 +1015,7 @@ public class DashboardManager
 				throw new DashboardNotFoundException();
 			}
 
-            Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
+			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
 			if (isDeleted != null && isDeleted.booleanValue()) {
 				throw new DashboardNotFoundException();
 			}
@@ -1024,6 +1036,46 @@ public class DashboardManager
 			}
 			dsf.mergeEmsDashboard(ed);
 			return Dashboard.valueOf(ed, dbd, true, true, true);
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+
+	/**
+	 * update name of tiles from specified widget for ALL dashboard of specified tenant<br>
+	 * Note: currently we're using eclipse 2.4, so the returned value will always be 1
+	 *
+	 * @param tenantId
+	 * @param widgetName
+	 * @param widgetId
+	 */
+	public int updateDashboardTilesName(Long tenantId, String widgetName, Long widgetId)
+	{
+		if (StringUtil.isEmpty(widgetName)) {
+			logger.debug("Dashboard names are not updated: null or empty widget name isn't expected");
+			return 0;
+		}
+		if (widgetId == null || widgetId < 0) {
+			logger.debug("Dashboard names are not updated: invalid widget ID is specified");
+			return 0;
+		}
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			EntityTransaction et = em.getTransaction();
+			String jql = "update EmsDashboardTile t set t.title = :widgetName, t.widgetName = :widgetName where t.widgetUniqueId = :widgetId";
+			Query query = em.createQuery(jql).setParameter("widgetName", widgetName).setParameter("widgetId",
+					String.valueOf(widgetId));
+			et.begin();
+			int affacted = query.executeUpdate();
+			et.commit();
+			logger.info("Update dashboard tiles name: title for {} tiles have been updated to \"{}\" for specified widget ID {}",
+					affacted, widgetName, widgetId);
+			return affacted;
 		}
 		finally {
 			if (em != null) {

@@ -48,18 +48,18 @@ public class ScreenshotCacheManager
 	public ScreenshotElement getScreenshotFromCache(Tenant tenant, Long dashboardId, String fileName) throws Exception
 	{
 		if (dashboardId == null || dashboardId <= 0) {
-			logger.error("Unexpected dashboard id to get screenshot from cache for tenant={}, dashboard id={}, fileName={}",
+			logger.info("Unexpected dashboard id to get screenshot from cache for tenant={}, dashboard id={}, fileName={}",
 					tenant, dashboardId, fileName);
 			return null;
 		}
 		if (StringUtil.isEmpty(fileName)) {
-			logger.error("Unexpected empty screenshot file name for tenant={}, dashboard id={}", tenant, dashboardId);
+			logger.info("Unexpected empty screenshot file name for tenant={}, dashboard id={}", tenant, dashboardId);
 			return null;
 		}
-		ScreenshotElement se = (ScreenshotElement) cm.getCacheable(tenant, CacheManager.CACHES_SCREENSHOT_CACHE,
-				new Keys(dashboardId));
+		ScreenshotElement se = (ScreenshotElement) cm.getCacheable(tenant, CacheManager.CACHES_SCREENSHOT_CACHE, new Keys(
+				dashboardId));
 		if (se == null) {
-			logger.error("Retrieved null screenshot element from cache for tenant={}, dashboard id={}, fileName={}", tenant,
+			logger.info("Retrieved null screenshot element from cache for tenant={}, dashboard id={}, fileName={}", tenant,
 					dashboardId, fileName);
 			return null;
 		}
