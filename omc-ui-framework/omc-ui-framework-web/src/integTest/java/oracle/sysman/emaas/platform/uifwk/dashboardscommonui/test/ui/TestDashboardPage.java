@@ -130,7 +130,6 @@ public class TestDashboardPage extends CommonUIUtils
 	}
 
 	//Testcase for adding widget using widgetselector
-
 	@Test
 	public void testWidgetSelector() throws Exception
 	{
@@ -150,11 +149,11 @@ public class TestDashboardPage extends CommonUIUtils
 
 			// let's try to wait until page is loaded and jquery loaded before calling waitForPageFullyLoaded
 			WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-			wait.until(ExpectedConditions.elementToBeClickable(By.id(DashBoardPageId.WIDGETSELECTOR_ADDBUTTONID)));
+			wait.until(ExpectedConditions.elementToBeClickable(By.id(DashBoardPageId.WidgetSelector_AddButtonId)));
 			WaitUtil.waitForPageFullyLoaded(webdriver);
 
 			//click on Add button
-			webdriver.click("id=" + DashBoardPageId.WIDGETSELECTOR_ADDBUTTONID);
+			webdriver.click("id=" + DashBoardPageId.WidgetSelector_AddButtonId);
 			webdriver.takeScreenShot();
 
 			//Adding widgets using widgetSElector diagoue
