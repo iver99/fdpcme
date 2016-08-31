@@ -42,9 +42,9 @@ BEGIN
     IF (V_COUNT>0) THEN
       UPDATE EMS_DASHBOARD_TILE SET PROVIDER_NAME='LogAnalyticsUI' WHERE TENANT_ID=V_TENANT_ID AND PROVIDER_NAME='LoganService';
       COMMIT;
-      DBMS_OUTPUT.PUT_LINE('Provider name of LogAnalytics has been upgraded from [LoganService] to [LogAnalyticsUI] successfully for tenant: V_TENANT_ID ! Upgraded records: '||V_COUNT);
+      DBMS_OUTPUT.PUT_LINE('Provider name of LogAnalytics has been upgraded from [LoganService] to [LogAnalyticsUI] successfully for tenant: '||V_TENANT_ID ||'! Upgraded records: '||V_COUNT);
     ELSE
-      DBMS_OUTPUT.PUT_LINE('Provider name of LogAnalytics has been upgraded from [LoganService] to [LogAnalyticsUI] for tenant: V_TENANT_ID before, no need to upgrade again');
+      DBMS_OUTPUT.PUT_LINE('Provider name of LogAnalytics has been upgraded from [LoganService] to [LogAnalyticsUI] for tenant: '||V_TENANT_ID ||' before, no need to upgrade again');
     END IF;
 
     IF (V_TID<>-1) THEN
@@ -56,7 +56,7 @@ BEGIN
 EXCEPTION
   WHEN OTHERS THEN
     ROLLBACK;
-    DBMS_OUTPUT.PUT_LINE('Failed to upgrade provider name of LogAnalytics from [LoganService] to [LogAnalyticsUI] for tenant: V_TENANT_ID due to '||SQLERRM);
+    DBMS_OUTPUT.PUT_LINE('Failed to upgrade provider name of LogAnalytics from [LoganService] to [LogAnalyticsUI] for tenant: '||V_TENANT_ID ||' due to '||SQLERRM);
     RAISE;
 END;
 /
