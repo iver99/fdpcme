@@ -50,9 +50,9 @@ public class GetConfiguration
 	public void getServiceManagerProp()
 	{
 		try {
-			System.out.println("------------------------------------------");
-			System.out.println("GET details of service manager properties");
-			System.out.println("											");
+			//System.out.println("------------------------------------------");
+			//System.out.println("GET details of service manager properties");
+			//System.out.println("											");
 
 			Response res = RestAssured
 					.given()
@@ -61,10 +61,10 @@ public class GetConfiguration
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("/configurations/registration");
 
-			System.out.println("											");
-			System.out.println("Status code is: " + res.getStatusCode());
+			//	System.out.println("											");
+			//	System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
-			System.out.println(res.asString());
+			//	System.out.println(res.asString());
 			//Assert.assertNotNull(res.jsonPath().get("registryUrls"));
 			//Assert.assertNotNull(res.jsonPath().get("ssfServiceName"));
 			//Assert.assertNotNull(res.jsonPath().get("ssfVersion"));
@@ -74,9 +74,9 @@ public class GetConfiguration
 			//Assert.assertNotNull(res.jsonPath().get("adminLinks"));
 			Assert.assertNotNull(res.jsonPath().get("visualAnalyzers"));
 
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-			System.out.println("											");
+			//	System.out.println("											");
+			//	System.out.println("------------------------------------------");
+			//	System.out.println("											");
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
@@ -87,24 +87,24 @@ public class GetConfiguration
 	public void remotUser_headerCheck()
 	{
 		try {
-			System.out.println("------------------------------------------");
-			System.out.println("GET details of service manager properties");
-			System.out.println("											");
+			//	System.out.println("------------------------------------------");
+			//System.out.println("GET details of service manager properties");
+			//System.out.println("											");
 
 			Response res = RestAssured.given().log().everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "Authorization", authToken).when()
 					.get("/configurations/registration");
 
-			System.out.println("											");
-			System.out.println("Status code is: " + res.getStatusCode());
+			//System.out.println("											");
+			//System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 403);
 			Assert.assertEquals(res.jsonPath().get("errorCode"), 30000);
 			Assert.assertEquals(res.jsonPath().get("errorMessage"),
 					"Valid header \"X-REMOTE-USER\" in format of <tenant_name>.<user_name> is required");
 
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-			System.out.println("											");
+			//	System.out.println("											");
+			//	System.out.println("------------------------------------------");
+			//	System.out.println("											");
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());

@@ -26,30 +26,9 @@
 
 
 buildscript {
-    repositories {
-	 /* To check if the jar is available in local maven repository */
-         maven {
-             url = "${PUB_MAVEN_MY_MAVEN_REPO}"
-         }
-        maven {
-            url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
-        }
-    }
-    dependencies {
-        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true 
-        classpath group: "com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "${devinfraVersion}", transitive: true
-  }
+    apply from: 'test-buildscript-apply.gradle' 
 }
-repositories {
-	 maven {
-             url = "${PUB_MAVEN_MY_MAVEN_REPO}"
-         }
-    maven {
-        url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
-    }
-}
-apply plugin: 'DevInfraPlugin'
-apply plugin: 'TestInfraPlugin'
+apply from: 'test-project-apply.gradle'
 apply plugin: 'groovy'
 
 /***************** OMCTF Plugin **********************/
@@ -66,13 +45,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  *                   END OF TEST-INFRA-BLOCK
  ***************************************************************************************************/
 
-repositories {
-maven {
-	url = "${PUB_MAVEN_MY_MAVEN_REPO}"
- }
- maven {
-	url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
-}
+
 
 
 //Update the lrgConfig configuration to specify where the test jar is.
@@ -148,7 +121,6 @@ dependencies{
 }
 
 //Task added from "emcpdf_qa_test_3n"
-
 task QATest(type:EMTest,dependsOn:omcSetup ) {
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
@@ -162,10 +134,7 @@ task QATest(type:EMTest,dependsOn:omcSetup ) {
 	ext.set("testType", "integration")
 }
 
-
-
-
-
+//Task is for dashboard UI Test
 task e2e (type: EMTest, dependsOn:QATest ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'DashboardUITest') {
@@ -184,11 +153,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 
 }
 
-
-
-
 //Task is added from "emcpdf_uifwk_test_3n"
-
 task QATest1(type:EMTest,dependsOn:e2e ){ 
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestAnalyzerPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestDashboardPage.class"
@@ -212,7 +177,6 @@ task DEVTest(type:EMTest,dependsOn: QATest1){
 }
 
 //Task is added from "emcpdf_dev_ui_test_3n"
-
 task DEVUiTest(type:EMTest,dependsOn: DEVTest){
   	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/JsonUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/TenantSubscriptionUtilTest.class"
@@ -222,7 +186,6 @@ task DEVUiTest(type:EMTest,dependsOn: DEVTest){
 }
 
 //Task is added from "emcpdf_uifwk_dev_test_3n"
-
 task DEVTest2(type:EMTest,dependsOn: DEVUiTest){ 
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"	
@@ -232,5 +195,5 @@ task DEVTest2(type:EMTest,dependsOn: DEVUiTest){
 
 task emcpdf_test_3n (dependsOn:[DEVTest2, omcTeardown]) {
     omcTeardown.mustRunAfter(DEVTest2)
-    apply from: getAbsoluteFilePath(project.configurations.omctfConfig,"omctf_taskprocessor")
+    apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")
 }

@@ -34,12 +34,12 @@ public class DashboardManagerTestMockup
 						long start = System.currentTimeMillis();
 						for (int j = 0; j < repeatsPerThread; j++) {
 							r.run();
-							//System.out.println("Duration for operation is " + duration + "ms");
+							////System.out.println("Duration for operation is " + duration + "ms");
 						}
 						long totalDuration = System.currentTimeMillis() - start;
 						threadAverageDuration[threadIndex] = totalDuration / repeatsPerThread;
-						System.out.println("Average duration for each operation in current thread is "
-								+ threadAverageDuration[threadIndex] + "ms");
+						//System.out.println("Average duration for each operation in current thread is "
+						//+ threadAverageDuration[threadIndex] + "ms");
 						if (postThreadRun != null) {
 							postThreadRun.run();
 						}
@@ -60,7 +60,7 @@ public class DashboardManagerTestMockup
 			average += threadAverageDuration[i];
 		}
 		average /= threadNum;
-		System.out.println("Average duration is: " + average + " ms");
+		////System.out.println("Average duration is: " + average + " ms");
 		if (postAllRun != null) {
 			postAllRun.run();
 		}

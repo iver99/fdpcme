@@ -8,10 +8,10 @@ requirejs.config({
         'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.4.0',
         'jquery': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-2.1.3.min',
         'jqueryui-amd':'../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
-        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/min',
+        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/min',
         'dfutil':'internaldfcommon/js/util/internal-df-util',
-        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/ojL10n',
-        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/resources',
+        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/ojL10n',
+        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/resources',
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'uifwk': '/emsaasui/uifwk'
     },
@@ -21,7 +21,7 @@ requirejs.config({
             exports: ['jQuery', '$']
         }
     },
-    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation 
+    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation
     // resources with a custom translation file.
     // Any resource file added, must be placed under a directory named "nls". You can use a path mapping or you can define
     // a path that is relative to the location of this main.js file.
@@ -58,7 +58,7 @@ function(ko, $, dfu, oj)
             template:{require:'text!/emsaasui/uifwk/js/widgets/brandingbar/html/brandingbar.html'}
         });
     }
-    
+
     function HeaderViewModel() {
         var self = this;
         self.userName = dfu.getUserName();
@@ -71,12 +71,12 @@ function(ko, $, dfu, oj)
             isAdmin: false
         };
     }
-    
+
     function ErrorPageModel() {
         var self = this;
 
         self.errorPageTitle = oj.Translations.getTranslatedString("DBS_ERROR_PAGE_TITLE");
-        
+
         var msgKey = dfu.getUrlParam("msg");
         var serviceid = dfu.getUrlParam("service");
         var serviceName = oj.Translations.getResource("SERVICE_NAME_" + serviceid) ? oj.Translations.getTranslatedString("SERVICE_NAME_" + serviceid) : null;
@@ -84,7 +84,7 @@ function(ko, $, dfu, oj)
             var rsc = null;
             if (serviceName)
                 rsc = oj.Translations.getResource(msgKey + "__PLUS_SERVICE");
-            if (rsc) 
+            if (rsc)
                 msgKey += "__PLUS_SERVICE";
             else {
                 rsc = oj.Translations.getResource(msgKey);
@@ -105,12 +105,12 @@ function(ko, $, dfu, oj)
             self.invalidUrl = decodeURIComponent(self.invalidUrl);
         }
         self.invalidUrlLabel = oj.Translations.getResource("DBS_ERROR_URL");
-        
-        self.signOut = function() { 
+
+        self.signOut = function() {
             //Clear interval for extending user session
             if (window.intervalToExtendCurrentUserSession)
-                clearInterval(window.intervalToExtendCurrentUserSession); 
-            var ssoLogoutEndUrl = encodeURI(window.location.protocol + "//" + window.location.host + "/emsaasui/emcpdfui/welcome.html"); 
+                clearInterval(window.intervalToExtendCurrentUserSession);
+            var ssoLogoutEndUrl = encodeURI(window.location.protocol + "//" + window.location.host + "/emsaasui/emcpdfui/welcome.html");
             var logoutUrlDiscovered = dfu.discoverLogoutUrl();
             //If session timed out, redirect to sso login page and go to home page after re-login.
             if (window.currentUserSessionExpired === true && logoutUrlDiscovered === null) {
@@ -125,10 +125,10 @@ function(ko, $, dfu, oj)
             }
         };
     }
-    
+
     $(document).ready(function() {
         ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
-        ko.applyBindings(new ErrorPageModel(), $('#errorMain')[0]); 
+        ko.applyBindings(new ErrorPageModel(), $('#errorMain')[0]);
         $('#global-body').show();
     });
 });

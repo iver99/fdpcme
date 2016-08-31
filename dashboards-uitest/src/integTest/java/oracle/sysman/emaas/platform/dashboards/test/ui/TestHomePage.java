@@ -92,7 +92,7 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.listView(webd);
 
 		//verify the sort by is Default
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Default");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Default");
 
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by created by Ascending");
@@ -102,7 +102,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Ascending");
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Created By Ascending");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Created By Ascending");
 		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
 
 		//webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
@@ -115,7 +115,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Descending");
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Created By Descending");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Created By Descending");
 		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
 
 		//webd.waitForElementPresent(PageId.ADashboardTestByAriaLabel);
@@ -184,11 +184,11 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_ASC);
 
 		//verify the result
-//		webd.getLogger().info("Verify the sort result");
-//		DashboardHomeUtil.waitForDashboardPresent(webd, "Enterprise Overview");
-//		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
-//		Assert.assertEquals(names.get(0), "Enterprise Overview");
-//		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(0));
+		//		webd.getLogger().info("Verify the sort result");
+		//		DashboardHomeUtil.waitForDashboardPresent(webd, "Enterprise Overview");
+		//		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		//		Assert.assertEquals(names.get(0), "Enterprise Overview");
+		//		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(0));
 	}
 
 	@Test
@@ -202,11 +202,11 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_DSC);
 
 		//verify the result
-//		webd.getLogger().info("Verify the sort result");
-//		DashboardHomeUtil.waitForDashboardPresent(webd, "Enterprise Overview");
-//		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
-//		Assert.assertEquals(names.get(names.size() - 1), "Enterprise Overview");
-//		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(names.size() - 1));
+		//		webd.getLogger().info("Verify the sort result");
+		//		DashboardHomeUtil.waitForDashboardPresent(webd, "Enterprise Overview");
+		//		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		//		Assert.assertEquals(names.get(names.size() - 1), "Enterprise Overview");
+		//		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(names.size() - 1));
 
 	}
 
@@ -297,7 +297,7 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "ADashboard Test");
 
 		//edit the dashboard in builder page
-		DashboardBuilderUtil.editDashboard(webd, "ADashboard Test", "ADashboard Test desc2",false);
+		DashboardBuilderUtil.editDashboard(webd, "ADashboard Test", "ADashboard Test desc2", false);
 		DashboardBuilderUtil.saveDashboard(webd);
 
 		//back to home page
@@ -312,7 +312,7 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.listView(webd);
 
 		//verify the sort by is Default
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Default");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Default");
 
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by last modified Ascending");
@@ -320,7 +320,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Ascending");
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Last Modified Ascending");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Last Modified Ascending");
 		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
 		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
 		Assert.assertEquals(names.get(names.size() - 1), "ADashboard Test");
@@ -332,7 +332,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Descending");
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Last Modified Descending");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Last Modified Descending");
 		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
 		names = DashboardHomeUtil.listDashboardNames(webd);
 		Assert.assertEquals(names.get(0), "ADashboard Test");
@@ -357,7 +357,7 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "ADashboard Test");
 
 		//edit the dashboard in builder page
-		DashboardBuilderUtil.editDashboard(webd, "ADashboard Test", "ADashboard Test desc1",false);
+		DashboardBuilderUtil.editDashboard(webd, "ADashboard Test", "ADashboard Test desc1", false);
 		DashboardBuilderUtil.saveDashboard(webd);
 
 		//back to home page
@@ -399,7 +399,7 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "ADashboard Test");
 
 		//edit the dashboard in builder page
-		DashboardBuilderUtil.editDashboard(webd, "ADashboard Test", "ADashboard Test desc2",false);
+		DashboardBuilderUtil.editDashboard(webd, "ADashboard Test", "ADashboard Test desc2", false);
 		DashboardBuilderUtil.saveDashboard(webd);
 
 		//back to home page
@@ -433,7 +433,7 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.listView(webd);
 
 		//verify the sort by is Default
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Default");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Default");
 
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by name Ascending");
@@ -441,7 +441,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Ascending");
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Name Ascending");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Name Ascending");
 		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
 
 		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
@@ -453,7 +453,7 @@ public class TestHomePage extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Descending");
-		Assert.assertEquals(webd.getText(PageId.SortbyID).trim(), "Name Descending");
+		Assert.assertEquals(webd.getText(PageId.SORTBYID).trim(), "Name Descending");
 		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
 
 		names = DashboardHomeUtil.listDashboardNames(webd);
@@ -524,13 +524,32 @@ public class TestHomePage extends LoginAndLogout
 		webd.getLogger().info("start to test in verify_allOOB_GridView");
 
 		//switch to list view
+		webd.getLogger().info("Switch to Grid View");
+		DashboardHomeUtil.gridView(webd);
+
+		//verify all the oob display
+		DashBoardUtils.APM_OOB_Exist();
+		DashBoardUtils.ITA_OOB_Exist();
+		DashBoardUtils.LA_OOB_Exist();
+		DashBoardUtils.Outdate_OOB();
+	}
+
+	@Test
+	public void verify_allOOB_ListView() throws Exception
+	{
+		//login the dashboard
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verify_allOOB_ListView");
+
+		//switch to list view
 		webd.getLogger().info("Switch to List View");
 		DashboardHomeUtil.gridView(webd);
 
 		//verify all the oob display
-		DashBoardUtils.APM_OOB_GridView();
-		DashBoardUtils.ITA_OOB_GridView();
-		DashBoardUtils.LA_OOB_GridView();
+		DashBoardUtils.APM_OOB_Exist();
+		DashBoardUtils.ITA_OOB_Exist();
+		DashBoardUtils.LA_OOB_Exist();
+		DashBoardUtils.Outdate_OOB();
 	}
 
 	@Test
@@ -549,7 +568,9 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 
 		//verify APM oob display
-		DashBoardUtils.APM_OOB_GridView();
+		DashBoardUtils.APM_OOB_Exist();
+		DashBoardUtils.ITA_OOB_NotExist();
+		DashBoardUtils.LA_OOB_NotExist();
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -571,7 +592,29 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.filterOptions(webd, "me");
 
 		//verify all the oob not exsit
-		DashBoardUtils.noOOBCheck_GridView();
+		DashBoardUtils.noOOBCheck();
+
+		//reset cloud services checkbox
+		DashboardHomeUtil.resetFilterOptions(webd);
+	}
+
+	@Test
+	public void verify_CreatedBy_Me_ListView() throws Exception
+	{
+		//login the dashboard
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verify_CreatedBy_Me_ListView");
+
+		//click Grid View icon
+		webd.getLogger().info("click List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//click Created By Oracle checkbox
+		webd.getLogger().info("select Created By as Me");
+		DashboardHomeUtil.filterOptions(webd, "me");
+
+		//verify all the oob not exsit
+		DashBoardUtils.noOOBCheck();
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -585,7 +628,7 @@ public class TestHomePage extends LoginAndLogout
 		webd.getLogger().info("start to test in verify_CreatedBy_Oracle_GridView");
 
 		//switch to list view
-		webd.getLogger().info("Switch to List View");
+		webd.getLogger().info("Switch to Grid View");
 		DashboardHomeUtil.gridView(webd);
 
 		//click Created By Oracle checkbox
@@ -593,10 +636,35 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//verify all the oob display
-		//DashboardHomeUtil.waitForDashboardPresent(webd, "Database Health Summary");
-		DashBoardUtils.APM_OOB_GridView();
-		DashBoardUtils.ITA_OOB_GridView();
-		DashBoardUtils.LA_OOB_GridView();
+		DashBoardUtils.APM_OOB_Exist();
+		DashBoardUtils.ITA_OOB_Exist();
+		DashBoardUtils.LA_OOB_Exist();
+		DashBoardUtils.Outdate_OOB();
+
+		//reset cloud services checkbox
+		DashboardHomeUtil.resetFilterOptions(webd);
+	}
+
+	@Test
+	public void verify_CreatedBy_Oracle_ListView() throws Exception
+	{
+		//login the dashboard
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verify_CreatedBy_Oracle_ListView");
+
+		//switch to list view
+		webd.getLogger().info("Switch to List View");
+		DashboardHomeUtil.listView(webd);
+
+		//click Created By Oracle checkbox
+		webd.getLogger().info("select Created By as Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
+
+		//verify all the oob display
+		DashBoardUtils.APM_OOB_Exist();
+		DashBoardUtils.ITA_OOB_Exist();
+		DashBoardUtils.LA_OOB_Exist();
+		DashBoardUtils.Outdate_OOB();
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -618,7 +686,35 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 
 		//verify ITA oob display
-		DashBoardUtils.ITA_OOB_GridView();
+		DashBoardUtils.ITA_OOB_Exist();
+		DashBoardUtils.APM_OOB_NotExist();
+		DashBoardUtils.LA_OOB_NotExist();
+		DashBoardUtils.Outdate_OOB();
+
+		//reset cloud services checkbox
+		DashboardHomeUtil.resetFilterOptions(webd);
+	}
+
+	@Test
+	public void verify_ITAOOB_ListView() throws Exception
+	{
+		//login the dashboard
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verify_ITAOOB_GridView");
+
+		//select Cloud Services as IT Analytics
+		webd.getLogger().info("select Cloud Services as IT Analytics");
+		DashboardHomeUtil.filterOptions(webd, "ita");
+
+		//click Grid View icon
+		webd.getLogger().info("click List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//verify ITA oob display
+		DashBoardUtils.ITA_OOB_Exist();
+		DashBoardUtils.APM_OOB_NotExist();
+		DashBoardUtils.LA_OOB_NotExist();
+		DashBoardUtils.Outdate_OOB();
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -640,7 +736,35 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 
 		//verify LA oob display
-		DashBoardUtils.LA_OOB_GridView();
+		DashBoardUtils.LA_OOB_Exist();
+		DashBoardUtils.APM_OOB_NotExist();
+		DashBoardUtils.ITA_OOB_NotExist();
+		DashBoardUtils.Outdate_OOB();
+
+		//reset cloud services checkbox
+		DashboardHomeUtil.resetFilterOptions(webd);
+	}
+
+	@Test
+	public void verify_LAOOB_ListView() throws Exception
+	{
+		//login the dashboard
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verify_LAOOB_GridView");
+
+		//select Cloud Services as Log Analytics
+		webd.getLogger().info("select Cloud Services as Log Analytics");
+		DashboardHomeUtil.filterOptions(webd, "la");
+
+		//click Grid View icon
+		webd.getLogger().info("click List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//verify LA oob display
+		DashBoardUtils.LA_OOB_Exist();
+		DashBoardUtils.APM_OOB_NotExist();
+		DashBoardUtils.ITA_OOB_NotExist();
+		DashBoardUtils.Outdate_OOB();
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);

@@ -3,7 +3,7 @@ define(['jquery', 'uifwk/js/util/ajax-util'],
 function($, ajaxUtilModel)
 {
     var ajaxUtil = new ajaxUtilModel();
-    
+
     /**
      * @preserve Copyright (c) 2015, Oracle and/or its affiliates.
      * All rights reserved.
@@ -13,7 +13,7 @@ function($, ajaxUtilModel)
         this.prefRestApiUrl = prefRestApiUrl;
         this.requestHeader = requestHeader;
     };
-    
+
     PreferenceUtility.prototype.getPreferenceValue = function(prefArray, key) {
         if (prefArray && key) {
             var arr;
@@ -25,7 +25,7 @@ function($, ajaxUtilModel)
         }
         return undefined;
     };
-    
+
     PreferenceUtility.prototype.getPreference = function(key, options) {
         var self = this, _options = options || {}, _async = (_options['async'] === false) ? false : true;
         var _ajax = ajaxUtil.ajaxWithRetry({
@@ -42,7 +42,7 @@ function($, ajaxUtilModel)
         });
         return _ajax;
     };
-    
+
     PreferenceUtility.prototype.getAllPreferences = function(options) {
         var self = this, _options = options || {}, _async = (_options['async'] === false) ? false : true;
         var _ajax = ajaxUtil.ajaxWithRetry({
@@ -59,7 +59,7 @@ function($, ajaxUtilModel)
         });
         return _ajax;
     };
-    
+
     PreferenceUtility.prototype.removeAllPreferences = function(options) {
         var self = this, _options = options || {}, _async = (_options['async'] === false) ? false : true;
         var _ajax = ajaxUtil.ajaxWithRetry({
@@ -76,7 +76,7 @@ function($, ajaxUtilModel)
         });
         return _ajax;
     };
-    
+
     PreferenceUtility.prototype.removePreference = function(key, options) {
         var self = this, _options = options || {}, _async = (_options['async'] === false) ? false : true;
         var _ajax = ajaxUtil.ajaxWithRetry({
@@ -93,7 +93,7 @@ function($, ajaxUtilModel)
         });
         return _ajax;
     };
-    
+
     PreferenceUtility.prototype.setPreference = function(key, value, options) {
         var self = this, _options = options || {}, _async = (_options['async'] === false) ? false : true;
         var _ajax = ajaxUtil.ajaxWithRetry({
@@ -112,7 +112,7 @@ function($, ajaxUtilModel)
         });
         return _ajax;
     };
-    
+
     PreferenceUtility.prototype._processSuccess = function(response, options)
     {
         var _options = options || {};
@@ -121,7 +121,7 @@ function($, ajaxUtilModel)
             _options['success'](response);
         }
     };
-    
+
     PreferenceUtility.prototype._processError = function(jqXHR, textStatus, errorThrown, options)
     {
         var _options = options || {};
@@ -130,8 +130,8 @@ function($, ajaxUtilModel)
             _options['error'](jqXHR, textStatus, errorThrown);
         }
     };
-    
+
     return PreferenceUtility;
 });
-    
+
 

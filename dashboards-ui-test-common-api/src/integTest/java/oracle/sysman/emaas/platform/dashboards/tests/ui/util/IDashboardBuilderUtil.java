@@ -20,6 +20,10 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	public static final String TILE_NARROWER = "narrower";
 	public static final String TILE_TALLER = "taller";
 	public static final String TILE_SHORTER = "shorter";
+	public static final String TILE_UP = "up";
+	public static final String TILE_DOWN = "down";
+	public static final String TILE_LEFT = "left";
+	public static final String TILE_RIGHT = "right";
 
 	public void addNewDashboardToSet(WebDriver driver, String dashboardName) throws Exception;
 
@@ -59,7 +63,11 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	//	}
 
 	public void listView(WebDriver driver) throws Exception;
+	
+	public void moveWidget(WebDriver driver, String widgetName, int index, String moveOption) throws Exception;
 
+	public void moveWidget(WebDriver driver, String widgetName, String moveOption) throws Exception;
+	
 	public void openWidget(WebDriver driver, String widgetName) throws Exception;
 
 	public void openWidget(WebDriver driver, String widgetName, int index) throws Exception;

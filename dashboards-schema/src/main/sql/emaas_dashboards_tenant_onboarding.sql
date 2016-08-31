@@ -75,6 +75,7 @@ END;
 
 @&EMSAAS_SQL_ROOT/1.9.0/emaas_dashboards_seed_data_uigallery.sql &TENANT_ID
 
+@&EMSAAS_SQL_ROOT/1.10.0/emaas_dashboards_seed_data_ta.sql &TENANT_ID
 COMMIT;
 /
 BEGIN

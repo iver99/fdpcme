@@ -15,10 +15,10 @@ define(['dfutil', 'ojs/ojcore', 'jquery', 'knockout', 'ojs/ojpagingcontrol', 'oj
     this.dataWindow = [];
     this.showPagingObservable = ko.observable(false);
     this.setPageSize(10); // Default the page size to 10
-    this.Init();  
+    this.Init();
 };
 
-// Subclass from oj.PagingDataSource 
+// Subclass from oj.PagingDataSource
 oj.Object.createSubclass(DashboardPaging, oj.DataSource, "DashboardPaging");
 
 DashboardPaging.prototype.Init = function()
@@ -42,14 +42,14 @@ DashboardPaging.prototype._refreshDataWindow = function() {
     if (_isShow !== true && this.pageSize < this.totalSize()) this.showPagingObservable(true); //show paging
     if (_isShow === true && this.pageSize >= this.totalSize()) this.showPagingObservable(false); //show paging
     //console.log("[DashboardPaging] show paging? " + this.showPagingObservable());
-    
+
     this.dataWindow = new Array(this._getSize());
-    
+
     var self = this;
     if (this._getSize() === 0 && this.collection.length === 0)
     {
         return self.__getPromise(function(resolve, reject) {
-            self._refreshObservableDataWindow();  
+            self._refreshObservableDataWindow();
             resolve(self.dataWindow);
         });
     }
@@ -59,8 +59,8 @@ DashboardPaging.prototype._refreshDataWindow = function() {
             self.dataWindow[i] = array[i];
         }
         // Update the observable array
-        self._refreshObservableDataWindow();       
-    });        
+        self._refreshObservableDataWindow();
+    });
 };
 
 DashboardPaging.prototype.IterativeAt = function (start, end) {
@@ -141,9 +141,9 @@ DashboardPaging.prototype.getPage = function()
 
 DashboardPaging.prototype.setPage = function(v, opts)
 {
-  var self = this, options = opts || {}, value = parseInt(v, 10), 
+  var self = this, options = opts || {}, value = parseInt(v, 10),
           _successCallback = self.setPageCallback || options['success'], _errorCallbakc = options['error'];
-  try 
+  try
   {
     DashboardPaging.superclass.handleEvent.call(this, oj.PagingModel.EventType['BEFOREPAGE'], {'page' : value, 'previousPage' : this._page});
   }
@@ -155,7 +155,7 @@ DashboardPaging.prototype.setPage = function(v, opts)
   //options['startIndex'] = value * this.pageSize;
   var previousPage = this._page;
   this._page = value;
-  if (this._page >= 0 && this._page === previousPage) 
+  if (this._page >= 0 && this._page === previousPage)
   {
       var _event = {data: self.dataWindow, startIndex: self.startIndex()};
       if (options['silent'] !== true)
@@ -165,7 +165,7 @@ DashboardPaging.prototype.setPage = function(v, opts)
       return Promise.resolve(null);
   }
   this._startIndex = value * this.pageSize;
-  
+
   return new Promise(function(resolve, reject)
   {
     $("#loading").show();
@@ -189,7 +189,7 @@ DashboardPaging.prototype.setPage = function(v, opts)
                 {
                    _successCallback(jqXHR, textStatus, errorThrown);
                 }
-                reject(null);  
+                reject(null);
             }
         } );
   });
@@ -242,14 +242,14 @@ DashboardPaging.prototype.create = function(attributes, options)
                         success: function (_model, _resp, _options) {
                             opts['success'](_model, _resp, _options);
                             /* //no need for refresh, nav directly
-                            self._fetch( { 
+                            self._fetch( {
                                 'contentType': 'application/json',
                                 success: function() {
                                     if ($.isFunction(opts['success']))
                                     {
                                         opts['success'](_model, _resp, _options);
                                     }
-                                }, 
+                                },
                                 error: opts['error']});*/
                             //model.openDashboardPage();
                         },
@@ -293,7 +293,7 @@ DashboardPaging.prototype.remove = function(model, options)
             //console.log('Error in Create: ' + textStatus);
         }
     });
-    
+
 };
 
 
@@ -325,7 +325,7 @@ DashboardPaging.prototype.fetch = function(options)
 
 DashboardPaging.prototype._fetch = function(options)
 {
-    
+
     var self = this, opts = options || {};
     // Call collection fetch, and refresh the window on success
     // Allow for the fact that this collection might not be backed by a rest service
@@ -348,7 +348,7 @@ DashboardPaging.prototype._fetch = function(options)
             self._processError(opts, null, null, _e);
         });
     }
-    
+
 };
 
 DashboardPaging.prototype._processError = function(opts, jqXHR, textStatus, errorThrown) {
@@ -373,7 +373,7 @@ DashboardPaging.prototype._processSuccess = function(opts, eventType, event) {
     {
         this.handleEvent(eventType || "sync", _event);
     }
-    
+
     if (options['success']) {
         options['success']();
     }
@@ -471,19 +471,19 @@ DashboardPaging.prototype.getModelFromWindow = function(id)
             if (w[_i].id === id) return w[_i];
         }
     }
-        
+
     return null;
 };
 
 /**
- * Returns the confidence for the totalSize value. 
- * @return {string} "actual" if the totalSize is the time of the fetch is an exact number 
- *                  "estimate" if the totalSize is an estimate 
- *                  "atLeast" if the totalSize is at least a certain number 
+ * Returns the confidence for the totalSize value.
+ * @return {string} "actual" if the totalSize is the time of the fetch is an exact number
+ *                  "estimate" if the totalSize is an estimate
+ *                  "atLeast" if the totalSize is at least a certain number
  *                  "unknown" if the totalSize is unknown
  */
 DashboardPaging.prototype.totalSizeConfidence = function()
-{ 
+{
   return "actual";
 };
 

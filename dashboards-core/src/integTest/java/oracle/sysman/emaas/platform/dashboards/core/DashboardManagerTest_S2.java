@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
@@ -714,19 +715,19 @@ public class DashboardManagerTest_S2
 	{
 		EnableEntityFilterState eef = EnableEntityFilterState.fromName(null);
 		Assert.assertNull(eef);
-	
+
 		eef = EnableEntityFilterState.fromName("TRUE");
 		Assert.assertEquals(EnableEntityFilterState.TRUE, eef);
-	
+
 		eef = EnableEntityFilterState.fromName("ANYSTRING");
 		Assert.assertNull(eef);
-	
+
 		eef = EnableEntityFilterState.fromValue(0);
 		Assert.assertEquals(EnableEntityFilterState.FALSE, eef);
-	
+
 		eef = EnableEntityFilterState.fromValue(null);
 		Assert.assertNull(eef);
-	
+
 		Dashboard dsb = new Dashboard();
 		dsb.setEnableEntityFilter(EnableEntityFilterState.FALSE);
 		eef = dsb.getEnableEntityFilter();
@@ -1062,6 +1063,33 @@ public class DashboardManagerTest_S2
 
 		// post test
 		dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
+	}
+
+	@Test(groups = { "s2" })
+	public void testUpdateDashboardTilesName(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
+			@Mocked final EntityManager anyEntityManager, @Mocked final EntityTransaction andEntityTransaction,
+			@Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber)
+	{
+		DashboardManager dm = DashboardManager.getInstance();
+		Assert.assertEquals(dm.updateDashboardTilesName(1L, null, 1L), 0);
+		Assert.assertEquals(dm.updateDashboardTilesName(1L, "test", null), 0);
+
+		new Expectations() {
+			{
+				anyDashboardServiceFacade.getEntityManager();
+				result = anyEntityManager;
+				anyEntityManager.getTransaction();
+				result = andEntityTransaction;
+				anyEntityManager.createQuery(anyString);
+				result = anyQuery;
+				andEntityTransaction.begin();
+				anyQuery.executeUpdate();
+				result = 1234;
+				andEntityTransaction.commit();
+			}
+		};
+		int rtn = dm.updateDashboardTilesName(1L, "test", 1L);
+		Assert.assertEquals(rtn, 1234);
 	}
 
 	private TileParam createParameterForTile(Tile tile) throws InterruptedException
