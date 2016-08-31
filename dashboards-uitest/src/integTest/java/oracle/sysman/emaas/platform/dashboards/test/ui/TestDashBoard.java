@@ -824,12 +824,40 @@ public class TestDashBoard extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.toggleHome(webd), "Set the dasbhoard as Home failed!");
 
 		//check home page
-		webd.getLogger().info("Access to the home page");
+		/*webd.getLogger().info("Access to the home page");
 		BrandingBarUtil.visitMyHome(webd);
 		webd.getLogger().info("Verfiy the home page");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_setHome, dbDesc, true), "It is NOT the home page!");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_setHome, dbDesc, true), "It is NOT the home page!");*/
 
 		//set it not home
+          	/*webd.getLogger().info("Set not home page");
+		Assert.assertFalse(DashboardBuilderUtil.toggleHome(webd), "Remove the dasbhoard as Home failed!");*/
+
+		//check home page
+		/*webd.getLogger().info("Access to the home page");
+		BrandingBarUtil.visitMyHome(webd);
+		webd.getLogger().info("Verfiy the home page");
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS),
+				"It is NOT the home page!");*/
+	}
+
+     @Test(dependsOnMethods = { "testSetHome" })
+
+        	public void testSetHome_verify() 
+	{
+                String dbDesc = "SetHome_testDashboard desc";
+ 
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("testSetHome-Login again and verify if the home is set");
+                    
+
+               //Verifying sethome page for above dashbaoard 
+          //     webd.getLogger().info("Access to the home page");
+	//	BrandingBarUtil.visitMyHome(webd);
+		webd.getLogger().info("Verfiy the home page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_setHome, dbDesc, true), "It is NOT the home page!");
+               
+                //set it not home
 		webd.getLogger().info("Set not home page");
 		Assert.assertFalse(DashboardBuilderUtil.toggleHome(webd), "Remove the dasbhoard as Home failed!");
 
@@ -839,7 +867,13 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Verfiy the home page");
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS),
 				"It is NOT the home page!");
-	}
+          }
+
+                
+            
+              
+
+
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
 	public void testShareDashboard() 
