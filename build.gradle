@@ -312,7 +312,7 @@ apply from: "${project.ext.source_cc}/codeCoverage.gradle"
 if(project.plugins.hasPlugin('sonar-runner')) {
   sonarRunner {
     sonarProperties {
-      property "sonar.branch", 'master'
+      property "sonar.branch", 'greenchannel'
     }
   }
 }
