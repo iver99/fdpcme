@@ -8,11 +8,11 @@ define(['knockout',
         'jquery',
         'ojs/ojcore',
         'dfutil',
-        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
+//        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
         'builder/dashboard.tile.model',
         'builder/editor/editor.tiles'
     ],
-    function(ko, $, oj, dfu, TargetSelectorUtils) {
+    function(ko, $, oj, dfu/*, TargetSelectorUtils*/) {
         function Cell(row, column) {
             var self = this;
 
@@ -367,7 +367,7 @@ define(['knockout',
                             widgetUrl += "&startTime="+start+"&endTime="+end;
                         }
 
-
+                    require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils){
                         if(targets && targets()) {
                              var compressedTargets = encodeURI(JSON.stringify(targets()));
                             var targetUrlParam = "targets";
@@ -378,6 +378,7 @@ define(['knockout',
                             widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
                         }
                         window.location = widgetUrl;
+                    });
                     };
                 }
             }

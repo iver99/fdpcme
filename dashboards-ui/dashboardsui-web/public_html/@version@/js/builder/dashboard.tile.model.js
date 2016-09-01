@@ -11,7 +11,7 @@ define(['knockout',
         'uifwk/js/util/df-util',
         'uifwk/js/util/mobile-util',
         'jquery',
-        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
+//        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
         'builder/builder.core',
         'builder/time.selector.model',
         'builder/editor/editor.component',
@@ -24,7 +24,7 @@ define(['knockout',
 //        'ckeditor'
     ],
 
-    function(ko, oj, km, dfu, uiutil, dfumodel, mbu, $, TargetSelectorUtils)
+    function(ko, oj, km, dfu, uiutil, dfumodel, mbu, $/*, TargetSelectorUtils*/)
     {
         ko.mapping = km;
         var draggingTileClass = 'dbd-tile-in-dragging';
@@ -932,7 +932,9 @@ define(['knockout',
             };
             
             self.initializedCallback = function() {
-                TargetSelectorUtils.setTargetSelectionContext("tsel_"+self.dashboard.id(), self.targets());
+                require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
+                    TargetSelectorUtils.setTargetSelectionContext("tsel_"+self.dashboard.id(), self.targets());
+                });
             }
             
             var compressedTargets;

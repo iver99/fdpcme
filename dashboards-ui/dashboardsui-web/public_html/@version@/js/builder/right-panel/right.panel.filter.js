@@ -4,9 +4,9 @@ define([
     'jquery',
     'builder/right-panel/right.panel.util',
     'uifwk/js/util/screenshot-util',
-    'dfutil',    
-    'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'
-    ], function(ko, oj, $, rpu, ssu, dfu, TargetSelectorUtils) {
+    'dfutil'/*,    
+    'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'*/
+    ], function(ko, oj, $, rpu, ssu, dfu/*, TargetSelectorUtils*/) {
         
         function RightPanelFilterModel($b) {
             var self = this;
@@ -109,7 +109,7 @@ define([
                             clearInterval(labelIntervalId);
                         }
                        if($("#"+tselId).children().get(0) && ko.contextFor($('#' + tselId).children().get(0)).$component.cm.dropdownInitialLabel()) {
-                            label =  TargetSelectorUtils.getDropdownLabelForContext(tselId, val);
+                            label =  ko.contextFor($('#' + tselId).children().get(0)).$component.getDropdownLabelForContext(tselId, val);
                             self.labelInited = true;
                         }else {
                             label = getNlsString("DBS_BUILDER_ALL_ENTITIES");
