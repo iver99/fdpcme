@@ -291,6 +291,64 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test
+	public void testDeleteHomeDashboard()
+	{
+		String dbHomeDashboard = "HomeDashboard-" + generateTimeStamp();
+		String dbDesc = "Set the dashboard as home";
+
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testCreateDashboad_noWidget_GridView");
+		WaitUtil.waitForPageFullyLoaded(webd);
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard & set it as home
+		webd.getLogger().info("create a dashboard: with description, time refresh");
+		DashboardHomeUtil.createDashboard(webd, dbHomeDashboard, dbDesc, DashboardHomeUtil.DASHBOARD);
+
+		//verify dashboard in builder page
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbHomeDashboard, dbDesc, true), "Create dashboard failed!");
+
+		webd.getLogger().info("Set home page");
+		Assert.assertTrue(DashboardBuilderUtil.toggleHome(webd), "Set the dasbhoard as Home failed!");
+
+		//go to the home page & verify the home page
+		webd.getLogger().info("Access to the home page");
+		BrandingBarUtil.visitMyHome(webd);
+		webd.getLogger().info("Verfiy the home page");
+		String originalUrl = webd.getWebDriver().getCurrentUrl();
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbHomeDashboard, dbDesc, true), "It is NOT the home page!");
+
+		//delete the dashboard
+		webd.getLogger().info("Delete the dashboard");
+		DashboardBuilderUtil.deleteDashboard(webd);
+
+		//go to the home page
+		webd.getLogger().info("Access to the home page");
+		BrandingBarUtil.visitMyHome(webd);
+		webd.getLogger().info("Verify the error page displayed");
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("current url = " + url);
+		if (!url.substring(url.indexOf("emsaasui") + 9).contains("error.html?invalidUrl=")) {
+			Assert.fail("not open the error page");
+		}
+		else {
+			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
+			Assert.assertEquals(webd.getText("css=" + PageId.ERRORMESSAGE_CSS),
+					"Sorry, the page you have requested either doesn't exist or you do not have access to it.");
+			webd.getLogger().info(webd.getText("css=" + PageId.ERRORURL_CSS));
+			Assert.assertEquals(webd.getText("css=" + PageId.ERRORURL_CSS), "Requested URL is:" + originalUrl);
+		}
+	}
+
+	@Test
 	public void testDeleteOOB()
 	{
 		//initialize the test
@@ -311,6 +369,25 @@ public class TestDashBoard extends LoginAndLogout
 		WebElement removeButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.RMBTNID));
 		Assert.assertFalse(removeButton.isEnabled(), "delete is enabled for OOB dashboard");
 	}
+
+	/*@Test
+	public void testErrorPage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testErrorPage");
+
+		//ErrorPage link
+		//BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_Erpge);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = " + url);
+	           	webd.getWebDriver().navigate()
+	                             .to(url.substring(0, url.indexOf("emsaasui")) + "emcpdfui/error.html?invalidUrl=https%3A%2F%2Fden00bve.us.oracle.com%3A4443%2Femsaasui%2Femcpdfui%2Fbuilder.html%3FdashboardId%3D80");
+
+		//Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcpdfui/builder.html?dashboardId=80");
+		WaitUtil.waitForPageFullyLoaded(webd);
+		//validating Error page
+		ErrorPageUtil.signOut(webd);
+	}*/
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
 	public void testDuplicateDashboard()
@@ -347,25 +424,6 @@ public class TestDashBoard extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, dbDesc, true));
 
 	}
-
-	/*@Test
-	public void testErrorPage()
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testErrorPage");
-
-		//ErrorPage link
-		//BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_Erpge);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-	           	webd.getWebDriver().navigate()
-	                             .to(url.substring(0, url.indexOf("emsaasui")) + "emcpdfui/error.html?invalidUrl=https%3A%2F%2Fden00bve.us.oracle.com%3A4443%2Femsaasui%2Femcpdfui%2Fbuilder.html%3FdashboardId%3D80");
-
-		//Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcpdfui/builder.html?dashboardId=80");
-		WaitUtil.waitForPageFullyLoaded(webd);
-		//validating Error page
-		ErrorPageUtil.signOut(webd);
-	}*/
 
 	@Test
 	public void testFavorite()
@@ -830,7 +888,7 @@ public class TestDashBoard extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_setHome, dbDesc, true), "It is NOT the home page!");*/
 
 		//set it not home
-          	/*webd.getLogger().info("Set not home page");
+		/*webd.getLogger().info("Set not home page");
 		Assert.assertFalse(DashboardBuilderUtil.toggleHome(webd), "Remove the dasbhoard as Home failed!");*/
 
 		//check home page
@@ -841,23 +899,21 @@ public class TestDashBoard extends LoginAndLogout
 				"It is NOT the home page!");*/
 	}
 
-     @Test(dependsOnMethods = { "testSetHome" })
-
-        	public void testSetHome_verify() 
+	@Test(dependsOnMethods = { "testSetHome" })
+	public void testSetHome_verify()
 	{
-                String dbDesc = "SetHome_testDashboard desc";
- 
+		String dbDesc = "SetHome_testDashboard desc";
+
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("testSetHome-Login again and verify if the home is set");
-                    
 
-               //Verifying sethome page for above dashbaoard 
-          //     webd.getLogger().info("Access to the home page");
-	//	BrandingBarUtil.visitMyHome(webd);
+		//Verifying sethome page for above dashbaoard
+		//     webd.getLogger().info("Access to the home page");
+		//	BrandingBarUtil.visitMyHome(webd);
 		webd.getLogger().info("Verfiy the home page");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_setHome, dbDesc, true), "It is NOT the home page!");
-               
-                //set it not home
+
+		//set it not home
 		webd.getLogger().info("Set not home page");
 		Assert.assertFalse(DashboardBuilderUtil.toggleHome(webd), "Remove the dasbhoard as Home failed!");
 
@@ -867,13 +923,7 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Verfiy the home page");
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS),
 				"It is NOT the home page!");
-          }
-
-                
-            
-              
-
-
+	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
 	public void testShareDashboard()
