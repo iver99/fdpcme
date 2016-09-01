@@ -39,7 +39,7 @@ public class TestErrorPage extends LoginAndLogout
 	private final String MSG_COMMON_ACCESS_NO_SUBS = "You currently don't have access to this page because you're not subscribed to the service being accessed.";
 	private final String MSG_COMMON_ACCESS_NO_SUBS_WITH_SERVICESNAME = "You currently don't have access to this page because you're not subscribed to ";
 
-	private final String MSG_URL = "Requested URL is:http";
+	private final String MSG_URL = "Requested URL is: http";
 
 	@BeforeClass
 	public void getURL()

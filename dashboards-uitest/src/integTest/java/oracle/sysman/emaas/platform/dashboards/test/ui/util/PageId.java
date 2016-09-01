@@ -78,5 +78,5 @@ public class PageId
 
 	//error page
 	public static final String ERRORMESSAGE_CSS = ".dbd-error-msg";
-	public static final String ERRORURL_CSS = ".dbd-error-url";
+	public static final String ERRORURL_CSS = "div[data-bind=\"visible: invalidUrl\"]";
 }
