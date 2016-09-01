@@ -343,7 +343,7 @@ else {
                 property "sonar.jacoco.reportPath", "${buildDir}/jacoco/test.exec"
                 property "sonar.jacoco.itReportPath" , "${buildDir}/jacoco/integTest.exec"
                 property "sonar.sourceEncoding", "UTF-8"
-                property "sonar.exclusions", "**/js/d3/*.js, **/js/jquery/*.js"
+                property "sonar.exclusions", "**/js/d3/**,**/js/jquery/**"
         //property "sonar.exclusions", "**/IntervalTimeUnit.java,**/ImportCategorySet.java"
         }
     }

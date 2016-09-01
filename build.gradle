@@ -271,7 +271,16 @@ task preBuildCompile(type: Copy) {
 
 compileJava.dependsOn preBuildCompile
 
+buildscript { 
+	dependencies {  
+		classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.2.5'  
 
+	        classpath group: 'com.oracle.emaas.emdi', name: 'JSPlugin', version:'1.0+'
+		classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'
+
+		classpath 'org.gradle.plugins:gradle-compass:1.0.10.1'
+	}  
+}
 project.publishing.publications {
     if (project.tasks.findByName('lrgMetadataZip')) {
         // Publication for publishing lrg metadata
@@ -303,7 +312,7 @@ apply from: "${project.ext.source_cc}/codeCoverage.gradle"
 if(project.plugins.hasPlugin('sonar-runner')) {
   sonarRunner {
     sonarProperties {
-      property "sonar.branch", 'master'
+      property "sonar.branch", 'greenchannel'
     }
   }
 }
