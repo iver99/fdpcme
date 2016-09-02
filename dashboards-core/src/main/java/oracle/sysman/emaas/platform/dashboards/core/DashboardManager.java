@@ -1,19 +1,5 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
-
 import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotData;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
@@ -26,22 +12,22 @@ import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationTy
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
-import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
-import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
-import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
-import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.persistence.config.QueryHints;
 import org.eclipse.persistence.config.ResultType;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.*;
 
 public class DashboardManager
 {
@@ -694,6 +680,8 @@ public class DashboardManager
 			paramList.add(currentUser);
 		}
 
+		sb.append(" and p.show_inhome = 1");
+
 		if (filter != null) {
 			sb1.append("AND p.DASHBOARD_ID IN (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN (select t.dashboard_Id from Ems_Dashboard_Tile t where t.PROVIDER_NAME in ("
 					+ filter.getIncludedWidgetProvidersString() + " )) ");
@@ -807,11 +795,11 @@ public class DashboardManager
 			LOGGER.debug("using union SQL...");
 			sbQuery.insert(
 					0,
-					"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
+					"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.SHOW_INHOME,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
 							+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE,le.access_Date ");
 			sb1.insert(
 					0,
-					"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
+					"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.SHOW_INHOME,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
 							+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE,le.access_Date ");
 			sbQuery.insert(0, "select * from (");
 			//order by
@@ -819,7 +807,7 @@ public class DashboardManager
 			sbQuery.append(" union ");
 			sbQuery.append(sb1);
 			String jpqlQuery = sbQuery.toString();
-			LOGGER.debug("Exectuting SQL:" + jpqlQuery);
+			LOGGER.info("Exectuting SQL:" + jpqlQuery);
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			EntityManager em = dsf.getEntityManager();
 			Query listQuery = em.createNativeQuery(jpqlQuery);
@@ -842,11 +830,11 @@ public class DashboardManager
 			sbCount.insert(0, "select count(*) from (");
 			sbCount.append(")");
 			String jpqlCount = sbCount.toString();
-			LOGGER.debug(jpqlCount);
+			LOGGER.info(jpqlCount);
 			Query countQuery = em.createNativeQuery(jpqlCount);
 			initializeQueryParams(countQuery, paramList);
 			Long totalResults = ((BigDecimal) countQuery.getSingleResult()).longValue();
-			LOGGER.debug("using union,total results is " + totalResults);
+			LOGGER.info("using union,total results is " + totalResults);
 			PaginatedDashboards pd = new PaginatedDashboards(totalResults, firstResult, dbdList == null ? 0 : dbdList.size(),
 					maxResults, dbdList);
 			return pd;
@@ -857,7 +845,7 @@ public class DashboardManager
 			sbQuery.append(getListDashboardsOrderBy(orderBy, false));
 			//			sbQuery.append(sb);
 			sbQuery.insert(0,
-					"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
+					"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.SHOW_INHOME,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
 							+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE ");
 			String jpqlQuery = sbQuery.toString();
 
@@ -1211,6 +1199,9 @@ public class DashboardManager
 		}
 		if (map.get("DESCRIPTION") != null) {
 			e.setDescription(map.get("DESCRIPTION").toString());
+		}
+		if (map.get("SHOW_INHOME") != null) {
+			e.setShowInHome(Integer.valueOf(map.get("SHOW_INHOME").toString()));
 		}
 		if (map.get("ENABLE_TIME_RANGE") != null) {
 			e.setEnableTimeRange(Integer.valueOf(map.get("ENABLE_TIME_RANGE").toString()));
