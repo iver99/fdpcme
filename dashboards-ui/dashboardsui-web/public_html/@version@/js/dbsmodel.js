@@ -459,7 +459,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 
             var _addeddb = { "type":self.createDashboardModel.selectType(),
                             "name": self.createDashboardModel.name(),
-                            "showInHome":self.createDashboardModel.underSet ? true : false,
+                            "showInHome":self.createDashboardModel.underSet ? false : true,
                             "description": self.createDashboardModel.description(),
                             "enableTimeRange": self.createDashboardModel.isEnableTimeRange() ? "TRUE" : "FALSE",
                             "enableRefresh": self.createDashboardModel.isEnableTimeRange()};
