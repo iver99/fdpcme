@@ -488,7 +488,7 @@ public class Dashboard
 		if (ed == null) {
 			ed = new EmsDashboard(creationDate, dashboardId, 0L, htmlEcodedDesc, isEnableTimeRange, isEnableRefresh,
 					isEnableDescription, isEnableEntityFilter, isIsSystem, isShare, lastModificationDate, lastModifiedBy,
-					htmlEcodedName, owner, screenShot, dashboardType, appType, isShowInHome,extendedOptions);
+					htmlEcodedName, owner, screenShot, dashboardType, appType, isShowInHome, extendedOptions);
 
 			if (type.equals(Dashboard.DASHBOARD_TYPE_SET)) {
 				// support create subDashboards
