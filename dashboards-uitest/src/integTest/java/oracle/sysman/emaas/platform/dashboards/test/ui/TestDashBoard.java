@@ -41,8 +41,8 @@ public class TestDashBoard extends LoginAndLogout
 	private String dbName_favorite = "";
 	private String dbName_timepicker = "";
 	private String dbName_columncheck = "";
-	private String dbName_ITADashboard = "";
-	private String dbName_LADashboard = "";
+	private final String dbName_ITADashboard = "";
+	private final String dbName_LADashboard = "";
 
 	public void initTest(String testName)
 	{
@@ -93,6 +93,43 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 	 */
+
+	@Test(dependsOnMethods = { "testDeleteHomeDashboard" })
+	public void testAfterHomeDashboardRemoved()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testDeleteHomeDashboard");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//verify the current page is error page
+		webd.getLogger().info("Verify the error page displayed");
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("current url = " + url);
+		if (!url.substring(url.indexOf("emsaasui") + 9).contains("error.html?msg=DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG")) {
+			Assert.fail("not open the error page");
+		}
+		else {
+			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
+			Assert.assertEquals(webd.getText("css=" + PageId.ERRORMESSAGE_CSS),
+					"The dashboard which you have set as Home page no longer exists or you don't have access to it.");
+			webd.getLogger().info(webd.getText("css=" + PageId.ERRORURL_CSS));
+			Assert.assertEquals(webd.getText("css=" + PageId.ERRORURL_CSS), "Click here to go to the default Home page");
+		}
+
+		//click "here" link to go to default home page
+		webd.getLogger().info("Click 'here' link to go to default home page");
+		webd.waitForElementEnabled("css=" + PageId.DEFAULTHOMEURL_CSS);
+		webd.click("css=" + PageId.DEFAULTHOMEURL_CSS);
+
+		//verify the current page is default hoem page
+		webd.getLogger().info("Verify the current page is default hoem page");
+		url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("current url = " + url);
+		if (!url.substring(url.indexOf("emsaasui") + 9).contains("welcome.html")) {
+			Assert.fail("not open the error page");
+		}
+	}
 
 	@Test
 	public void testCreateDashboad_noDesc_GridView()
@@ -298,7 +335,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testCreateDashboad_noWidget_GridView");
+		webd.getLogger().info("Start to test in testDeleteHomeDashboard");
 		WaitUtil.waitForPageFullyLoaded(webd);
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -502,107 +539,107 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("the dashboard has been deleted");
 	}
 
-	@Test
-	public void testFilterITADashboard()
-	{
-		dbName_ITADashboard = "ITADashboard-" + generateTimeStamp();
-		String dbDesc = "test filter ITA works for custom dashboard";
-		//initialize the test
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testTimePicker");
-
-		//reset the home page
-		webd.getLogger().info("Reset all filter options in the home page");
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-		//switch to Grid View
-		webd.getLogger().info("Switch to grid view");
-		DashboardHomeUtil.gridView(webd);
-
-		//create dashboard
-		webd.getLogger().info("Create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_ITADashboard, dbDesc, DashboardHomeUtil.DASHBOARD);
-
-		//verify dashboard in builder page
-		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_ITADashboard, dbDesc, true),
-				"Create dashboard failed!");
-
-		//Add the widget to the dashboard
-		webd.getLogger().info("Start to add Widget into the dashboard");
-		DashboardBuilderUtil.addWidgetToDashboard(webd, "Analytics Line - Categorical");
-		webd.getLogger().info("Add widget finished");
-
-		//save dashboard
-		webd.getLogger().info("Save the dashboard");
-		DashboardBuilderUtil.saveDashboard(webd);
-
-		//back to home page
-		webd.getLogger().info("Back to dashboard home page");
-		BrandingBarUtil.visitDashboardHome(webd);
-
-		//set filter option, cloud services="IT Analytics" created by ME
-		webd.getLogger().info("set filter option, cloud services='IT Analytics' and Created by ME");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-		DashboardHomeUtil.filterOptions(webd, "me");
-		webd.getLogger().info("Verify the created dashboard exists");
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_ITADashboard), "The dashboard NOT exists");
-
-		//reset filter options
-		webd.getLogger().info("Reset filter options");
-		DashboardHomeUtil.resetFilterOptions(webd);
-	}
-
-	@Test
-	public void testFilterLADashboard()
-	{
-		dbName_LADashboard = "LADashboard-" + generateTimeStamp();
-		String dbDesc = "test filter LA works for custom dashboard";
-		//initialize the test
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testFilterLADashboard");
-
-		//reset the home page
-		webd.getLogger().info("Reset all filter options in the home page");
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-		//switch to Grid View
-		webd.getLogger().info("Switch to grid view");
-		DashboardHomeUtil.gridView(webd);
-
-		//create dashboard
-		webd.getLogger().info("Create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_LADashboard, dbDesc, DashboardHomeUtil.DASHBOARD);
-
-		//verify dashboard in builder page
-		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_LADashboard, dbDesc, true),
-				"Create dashboard failed!");
-
-		//Add the widget to the dashboard
-		webd.getLogger().info("Start to add Widget into the dashboard");
-		DashboardBuilderUtil.addWidgetToDashboard(webd, "Database Errors Trend");
-		webd.getLogger().info("Add widget finished");
-
-		//save dashboard
-		webd.getLogger().info("Save the dashboard");
-		DashboardBuilderUtil.saveDashboard(webd);
-
-		//back to home page
-		webd.getLogger().info("Back to dashboard home page");
-		BrandingBarUtil.visitDashboardHome(webd);
-
-		//set filter option, cloud services="IT Analytics" created by ME
-		webd.getLogger().info("set filter option, cloud services='LT Analytics' and Created by ME");
-		DashboardHomeUtil.filterOptions(webd, "la");
-		DashboardHomeUtil.filterOptions(webd, "me");
-		webd.getLogger().info("Verify the created dashboard exists");
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_LADashboard), "The dashboard NOT exists");
-
-		//reset filter options
-		webd.getLogger().info("Reset filter options");
-		DashboardHomeUtil.resetFilterOptions(webd);
-	}
+	//	@Test
+	//	public void testFilterITADashboard()
+	//	{
+	//		dbName_ITADashboard = "ITADashboard-" + generateTimeStamp();
+	//		String dbDesc = "test filter ITA works for custom dashboard";
+	//		//initialize the test
+	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+	//		webd.getLogger().info("Start to test in testTimePicker");
+	//
+	//		//reset the home page
+	//		webd.getLogger().info("Reset all filter options in the home page");
+	//		DashboardHomeUtil.resetFilterOptions(webd);
+	//
+	//		//switch to Grid View
+	//		webd.getLogger().info("Switch to grid view");
+	//		DashboardHomeUtil.gridView(webd);
+	//
+	//		//create dashboard
+	//		webd.getLogger().info("Create a dashboard: with description, time refresh");
+	//		DashboardHomeUtil.createDashboard(webd, dbName_ITADashboard, dbDesc, DashboardHomeUtil.DASHBOARD);
+	//
+	//		//verify dashboard in builder page
+	//		webd.getLogger().info("Verify the dashboard created Successfully");
+	//		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_ITADashboard, dbDesc, true),
+	//				"Create dashboard failed!");
+	//
+	//		//Add the widget to the dashboard
+	//		webd.getLogger().info("Start to add Widget into the dashboard");
+	//		DashboardBuilderUtil.addWidgetToDashboard(webd, "Analytics Line - Categorical");
+	//		webd.getLogger().info("Add widget finished");
+	//
+	//		//save dashboard
+	//		webd.getLogger().info("Save the dashboard");
+	//		DashboardBuilderUtil.saveDashboard(webd);
+	//
+	//		//back to home page
+	//		webd.getLogger().info("Back to dashboard home page");
+	//		BrandingBarUtil.visitDashboardHome(webd);
+	//
+	//		//set filter option, cloud services="IT Analytics" created by ME
+	//		webd.getLogger().info("set filter option, cloud services='IT Analytics' and Created by ME");
+	//		DashboardHomeUtil.filterOptions(webd, "ita");
+	//		DashboardHomeUtil.filterOptions(webd, "me");
+	//		webd.getLogger().info("Verify the created dashboard exists");
+	//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_ITADashboard), "The dashboard NOT exists");
+	//
+	//		//reset filter options
+	//		webd.getLogger().info("Reset filter options");
+	//		DashboardHomeUtil.resetFilterOptions(webd);
+	//	}
+	//
+	//	@Test
+	//	public void testFilterLADashboard()
+	//	{
+	//		dbName_LADashboard = "LADashboard-" + generateTimeStamp();
+	//		String dbDesc = "test filter LA works for custom dashboard";
+	//		//initialize the test
+	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+	//		webd.getLogger().info("Start to test in testFilterLADashboard");
+	//
+	//		//reset the home page
+	//		webd.getLogger().info("Reset all filter options in the home page");
+	//		DashboardHomeUtil.resetFilterOptions(webd);
+	//
+	//		//switch to Grid View
+	//		webd.getLogger().info("Switch to grid view");
+	//		DashboardHomeUtil.gridView(webd);
+	//
+	//		//create dashboard
+	//		webd.getLogger().info("Create a dashboard: with description, time refresh");
+	//		DashboardHomeUtil.createDashboard(webd, dbName_LADashboard, dbDesc, DashboardHomeUtil.DASHBOARD);
+	//
+	//		//verify dashboard in builder page
+	//		webd.getLogger().info("Verify the dashboard created Successfully");
+	//		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_LADashboard, dbDesc, true),
+	//				"Create dashboard failed!");
+	//
+	//		//Add the widget to the dashboard
+	//		webd.getLogger().info("Start to add Widget into the dashboard");
+	//		DashboardBuilderUtil.addWidgetToDashboard(webd, "Database Errors Trend");
+	//		webd.getLogger().info("Add widget finished");
+	//
+	//		//save dashboard
+	//		webd.getLogger().info("Save the dashboard");
+	//		DashboardBuilderUtil.saveDashboard(webd);
+	//
+	//		//back to home page
+	//		webd.getLogger().info("Back to dashboard home page");
+	//		BrandingBarUtil.visitDashboardHome(webd);
+	//
+	//		//set filter option, cloud services="IT Analytics" created by ME
+	//		webd.getLogger().info("set filter option, cloud services='LT Analytics' and Created by ME");
+	//		DashboardHomeUtil.filterOptions(webd, "la");
+	//		DashboardHomeUtil.filterOptions(webd, "me");
+	//		webd.getLogger().info("Verify the created dashboard exists");
+	//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_LADashboard), "The dashboard NOT exists");
+	//
+	//		//reset filter options
+	//		webd.getLogger().info("Reset filter options");
+	//		DashboardHomeUtil.resetFilterOptions(webd);
+	//	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
 	public void testHideEntityFilter()
