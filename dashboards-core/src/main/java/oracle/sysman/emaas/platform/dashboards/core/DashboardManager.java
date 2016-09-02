@@ -191,6 +191,7 @@ public class DashboardManager
 			//			if (ed.getDeleted() == null || ed.getDeleted() == 0) {
 			//				removeFavoriteDashboard(dashboardId, tenantId);
 			//			}
+			dsf.updateSubDashboardShowInHome(dashboardId);
 			if (!permanent) {
 				ed.setDeleted(dashboardId);
 				dsf.mergeEmsDashboard(ed);
