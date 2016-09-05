@@ -10,12 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IUiTestCommonAPI;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 /**
@@ -30,10 +25,8 @@ public class WidgetSelectorUtil_Version implements IUiTestCommonAPI
 	@Override
 	public String getApiVersion(WebDriver wdriver)
 	{
-		By locatorOfKeyEl = By.cssSelector("div[class^=widget-selector-main ]");
-		WebDriverWait wait = new WebDriverWait(wdriver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfKeyEl));
-		String version = wdriver.getWebDriver().findElement(locatorOfKeyEl).getAttribute(VERSION_ATTR);
+		wdriver.waitForElementPresent("css=" + "div[class^=widget-selector-main ]");
+		String version = wdriver.getAttribute("css=" + "div[class^=widget-selector-main ]");
 		if (version == null || "".equals(version.trim())) {
 			//1.7.1 or earlier
 			return "171";
