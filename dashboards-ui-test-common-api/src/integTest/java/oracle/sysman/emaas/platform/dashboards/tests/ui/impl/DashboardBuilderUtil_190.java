@@ -845,7 +845,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
 		driver.getLogger().info(
 				"DashboardBuilderUtil.removeDashboardFromSet has found and removed the dashboard named with \"" + dashboardName
-						+ "\"");
+				+ "\"");
 
 		String closeBtnLocator = DashBoardPageId_190.DASHBOARDSETTABNAMECSS.replace("_name_", dashboardName);
 		driver.waitForElementPresent("css=" + closeBtnLocator);
@@ -1101,7 +1101,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.showWidgetTitle started for widgetName=" + widgetName + ", index=" + index
-						+ ", visibility=" + visibility);
+				+ ", visibility=" + visibility);
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
 
@@ -1295,7 +1295,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.verifyDashboard started for name=\"" + dashboardName + "\", description=\"" + description
-						+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
+				+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
@@ -1481,7 +1481,6 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		//		builder.moveToElement(widgetDataExplore).click().perform();
 		//widgetDataExplore.click();
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
 		wait.until(ExpectedConditions.elementToBeClickable(widgetDataExplore));
 		widgetDataExplore.click();
 		driver.takeScreenShot();
