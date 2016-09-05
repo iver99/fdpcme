@@ -681,7 +681,7 @@ public class DashboardManager
 			paramList.add(currentUser);
 		}
 
-//		sb.append(" and p.show_inhome = 1");
+		sb.append(" and p.show_inhome = 1");
 
 		if (filter != null) {
 			sb1.append("AND p.DASHBOARD_ID IN (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN (select t.dashboard_Id from Ems_Dashboard_Tile t where t.PROVIDER_NAME in ("
@@ -695,9 +695,10 @@ public class DashboardManager
 				sb.append(" and le.is_favorite > 0 ");
 			}
 
-			if(filter.getIncludedInHome() == null  && filter.getIncludedInHome().booleanValue() == false){
-				sb.append(" and p.show_inhome = 1");
-			}
+//			if (filter.getIncludedInHome() != null && filter.getIncludedInHome().booleanValue() == true) {
+//			}else{
+//				sb.append(" and p.show_inhome = 1");
+//			}
 
 			if (filter.getIncludedTypeIntegers() != null && !filter.getIncludedTypeIntegers().isEmpty()) {
 				sb.append(" and ( ");
