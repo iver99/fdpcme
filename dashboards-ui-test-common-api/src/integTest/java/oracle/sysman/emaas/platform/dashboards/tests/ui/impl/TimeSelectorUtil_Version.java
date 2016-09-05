@@ -27,7 +27,7 @@ public class TimeSelectorUtil_Version implements IUiTestCommonAPI
 	{
 
 		wdriver.waitForElementPresent("css=" + "div[id^=dateTimePicker_]");
-		String version = wdriver.getAttribute("css=" + "div[id^=dateTimePicker_]");
+		String version = wdriver.getElement("css=" + "div[id^=dateTimePicker_]").getAttribute(VERSION_ATTR);
 		if (version == null || "".equals(version.trim())) {
 			//1.7.1 or earlier
 			return "171";

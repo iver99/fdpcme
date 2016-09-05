@@ -26,7 +26,7 @@ public class WidgetSelectorUtil_Version implements IUiTestCommonAPI
 	public String getApiVersion(WebDriver wdriver)
 	{
 		wdriver.waitForElementPresent("css=" + "div[class^=widget-selector-main ]");
-		String version = wdriver.getAttribute("css=" + "div[class^=widget-selector-main ]");
+		String version = wdriver.getElement("css=" + "div[class^=widget-selector-main ]").getAttribute(VERSION_ATTR);
 		if (version == null || "".equals(version.trim())) {
 			//1.7.1 or earlier
 			return "171";
