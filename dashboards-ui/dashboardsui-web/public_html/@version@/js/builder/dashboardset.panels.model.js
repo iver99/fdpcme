@@ -104,7 +104,7 @@ define([
 
 
                 function init() {
-                    var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share','Home'], dashboardsetToolBarModel.reorderedDbsSetItems, true);
+                    var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share'], dashboardsetToolBarModel.reorderedDbsSetItems, true);
 
                     dashboardsViewModle.showExploreDataBtn(false);
 

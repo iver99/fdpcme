@@ -10,9 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.core;
 
-import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
-import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
-import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,6 +17,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
+import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 
 /**
  * @author wenjzhu
@@ -39,7 +40,6 @@ public class DashboardsFilter
 	private static final List<String> appFilterStrings_input = Arrays.asList(new String[] { "apm", "ita", "la", "ocs" });
 
 	private static final String favoriteFilterString = "Favorites";
-	private static final String includeInHomeString = "Home";
 
 	public static final String APM_PROVIDER_APMUI = "ApmUI";
 	public static final String ITA_PROVIDER_EMCI = "emcitas-ui-apps";
@@ -51,7 +51,6 @@ public class DashboardsFilter
 	private List<String> includedApps;
 	private List<String> includedOwners;
 	private Boolean includedFavorites;
-	private Boolean includedInHome;
 
 	public DashboardsFilter()
 	{
@@ -118,14 +117,6 @@ public class DashboardsFilter
 	public Boolean getIncludedFavorites()
 	{
 		return includedFavorites;
-	}
-
-	/**
-	 * @return the includedInHome
-	 */
-
-	public Boolean getIncludedInHome(){
-		return includedInHome;
 	}
 
 	/**
@@ -253,15 +244,6 @@ public class DashboardsFilter
 		this.includedFavorites = includedFavorites;
 	}
 
-	/**
-	 * @param includedInHome
-	 *            the includedInHome to set
-	 */
-	public void setIncludedInHome(Boolean includedInHome)
-	{
-		this.includedInHome = includedInHome;
-	}
-
 	//	/**
 	//	 * @param includedTypes
 	//	 *            the includedTypes to set
@@ -301,11 +283,6 @@ public class DashboardsFilter
 			String filterUpcase = filter.trim().toUpperCase();
 			if (favoriteFilterString. equalsIgnoreCase(filterUpcase)) {
 				setIncludedFavorites(true);
-				return;
-			}
-
-			if (includeInHomeString. equalsIgnoreCase(filterUpcase)) {
-				setIncludedInHome(true);
 				return;
 			}
 

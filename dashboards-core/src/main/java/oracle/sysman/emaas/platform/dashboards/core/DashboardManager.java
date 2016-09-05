@@ -694,12 +694,6 @@ public class DashboardManager
 				//sb.append(" and df.user_name is not null ");
 				sb.append(" and le.is_favorite > 0 ");
 			}
-
-//			if (filter.getIncludedInHome() != null && filter.getIncludedInHome().booleanValue() == true) {
-//			}else{
-//				sb.append(" and p.show_inhome = 1");
-//			}
-
 			if (filter.getIncludedTypeIntegers() != null && !filter.getIncludedTypeIntegers().isEmpty()) {
 				sb.append(" and ( ");
 				for (int i = 0; i < filter.getIncludedTypeIntegers().size(); i++) {
