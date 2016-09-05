@@ -79,5 +79,6 @@ public class PageId
 	//error page
 	public static final String ERRORMESSAGE_CSS = ".dbd-error-msg";
 	public static final String ERRORURL_CSS = "div[data-bind=\"visible: invalidUrl\"]";
+	public static final String DEFAULTHOME_CSS = "div[data-bind=\"visible: defaultHomeLinkVisible\"]";
 	public static final String DEFAULTHOMEURL_CSS = ".dbd-error-url[href=\"/emsaasui/emcpdfui/welcome.html\"]";
 }

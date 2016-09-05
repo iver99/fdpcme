@@ -116,8 +116,8 @@ public class TestDashBoard extends LoginAndLogout
 			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
 			Assert.assertEquals(webd.getText("css=" + PageId.ERRORMESSAGE_CSS),
 					"The dashboard which you have set as Home page no longer exists or you don't have access to it.");
-			webd.getLogger().info(webd.getText("css=" + PageId.ERRORURL_CSS));
-			Assert.assertEquals(webd.getText("css=" + PageId.ERRORURL_CSS), "Click here to go to the default Home page");
+			webd.getLogger().info(webd.getText("css=" + PageId.DEFAULTHOME_CSS));
+			Assert.assertEquals(webd.getText("css=" + PageId.DEFAULTHOME_CSS), "Click  here  to go to the default Home page");
 		}
 
 		//click "here" link to go to default home page
@@ -373,7 +373,10 @@ public class TestDashBoard extends LoginAndLogout
 		//go to the home page
 		webd.getLogger().info("Access to the home page");
 		BrandingBarUtil.visitMyHome(webd);
+
 		webd.getLogger().info("Verify the error page displayed");
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.ERRORMESSAGE_CSS)));
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("current url = " + url);
 		if (!url.substring(url.indexOf("emsaasui") + 9).contains("error.html?invalidUrl=")) {
@@ -384,7 +387,7 @@ public class TestDashBoard extends LoginAndLogout
 			Assert.assertEquals(webd.getText("css=" + PageId.ERRORMESSAGE_CSS),
 					"Sorry, the page you have requested either doesn't exist or you do not have access to it.");
 			webd.getLogger().info(webd.getText("css=" + PageId.ERRORURL_CSS));
-			Assert.assertEquals(webd.getText("css=" + PageId.ERRORURL_CSS), "Requested URL is:" + originalUrl);
+			Assert.assertEquals(webd.getText("css=" + PageId.ERRORURL_CSS), "Requested URL is: " + originalUrl);
 		}
 	}
 
