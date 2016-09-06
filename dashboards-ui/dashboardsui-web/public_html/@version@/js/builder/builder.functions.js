@@ -105,49 +105,8 @@ define(['knockout',
                 dataType: "json",
                 headers: getDefaultHeaders(),
                 success: function(data) {
-                    // If dashboad is single page app, success callback will be ignored
-                    if (data.type === "SINGLEPAGE") {
-                        try {
-                            var tile = data.tiles[0];
-                            var url = dfu.df_util_widget_lookup_assetRootUrl(tile["PROVIDER_NAME"], tile["PROVIDER_VERSION"], tile["PROVIDER_ASSET_ROOT"], false);
-
-                            if (dfu.isDevMode()) {
-                                url = dfu.getRelUrlFromFullUrl(url);
-                            }
-                            window.location = url;
-                            return ;
-                        }catch(e){
-                            oj.Logger.error(e);
-                        }
-                    }
-
-
-                    var mapping = {
-                       "tiles": {
-                           "create" : function(options) {
-                                    return new Builder.TileItem(options.data);
-                           }
-                       }
-                    };
-                    if (data && data['name'] && data['name'] !== null)
-                    {
-                        data['name'] = $("<div/>").html(data['name']).text();
-                    }
-                    if (data && data['description'] && data['description'] !== null)
-                    {
-                        data['description'] = $("<div/>").html(data['description']).text();
-                    }
-                    var dsb = ko.mapping.fromJS(data, mapping);
-                    dsb.isDefaultTileExist = function() {
-                        for(var i in dsb.tiles()){
-                            if(dsb.tiles()[i].type() === "DEFAULT") {
-                                return true;
-                            }
-                        }
-                        return false;
-                    };
                     if (succCallBack){
-                        succCallBack(dsb);
+                        succCallBack(data);
                     }
                 },
                 error: function(e) {
@@ -199,14 +158,6 @@ define(['knockout',
                 headers: getDefaultHeaders(),
                 data: dashboard,
                 success: function(data) {
-                    if (data && data['name'] && data['name'] !== null)
-                    {
-                        data['name'] = $("<div/>").html(data['name']).text();
-                    }
-                    if (data && data['description'] && data['description'] !== null)
-                    {
-                        data['description'] = $("<div/>").html(data['description']).text();
-                    }
                     if (succCallBack){
                         succCallBack(data);
                     }
