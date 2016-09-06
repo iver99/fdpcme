@@ -54,6 +54,7 @@
         //'emcta':'../../emcta/ta/js',
 	'emsaasui':'/emsaasui',
         'emcta':'/emsaasui/emcta/ta/js',
+	'emsaasui/emcta/ta/js': 'empty:',
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
         'dbs': '../js',
