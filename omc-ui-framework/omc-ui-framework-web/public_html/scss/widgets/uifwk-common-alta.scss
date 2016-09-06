@@ -8,6 +8,14 @@ a:hover {
  cursor: pointer;
 }
 
+@font-face {
+  font-family: 'FaFont';
+  src: url("../../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff2") format('woff2'),
+       url("../../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff") format('woff');
+  font-weight: normal;
+  font-style: normal; 
+}
+
 .fa-icon-font {
   font-family: FaFont;
   font-size: 1.34rem;
@@ -50,15 +58,6 @@ a:hover {
   color: #454545;
   font-size: larger;
 }
-
-@font-face {
-  font-family: 'FaFont';
-  src: url("../../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff2") format('woff2'),
-       url("../../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff") format('woff');
-  font-weight: normal;
-  font-style: normal; 
-}
-
 
 #links_menu{
     background-color: white;
@@ -364,4 +363,28 @@ a:hover {
 .emaas-warn-msg-table-cell {
     display:table-cell;
     vertical-align: top;
+}
+
+.em-about-box
+{
+    background-color: #38A0D9; 
+    border-color: #38A0D9;
+    background-image: none;
+}
+.em-about-dialog-body 
+{
+    padding-top: 0px; 
+    padding-left: 0px; 
+    padding-right: 0px; 
+    background-color: white
+}
+.em-about-dialog-content
+{
+    display:table; 
+    background-repeat: repeat-x;
+    width:100%;
+}
+.em-about-box .oj-dialog-close-icon
+{
+    color: #FFFFFF;
 }

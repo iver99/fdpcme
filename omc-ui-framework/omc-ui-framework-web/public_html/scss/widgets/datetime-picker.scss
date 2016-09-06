@@ -1,11 +1,11 @@
-@font-face { 
+/*@font-face { 
     font-family: 'FaFont';
     src: url("../../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff2") format("woff2"),
          url("../../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff") format("woff"); 
     font-weight: normal; 
     font-style: normal; 
-}
-.fa-icon-font { 
+}*/
+.time-filter-indicator.fa-icon-font { 
     font-family: FaFont; 
     font-size: 1rem; 
     display: inline-block;
@@ -241,4 +241,34 @@ html:not([dir="rtl"]) .time-filter-indicator{
 }
 html[dir="rtl"] .time-filter-indicator{
     left: 20px;
+}
+
+.tf-wrapper {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    font-size: 14px;
+}
+
+.tf-hint {
+/*        background: #F0F0F0;
+    border: 1px dotted gray;*/
+    font-style: italic;
+    color: black;
+}
+
+.tf-row {
+    padding:5px;
+}
+
+.tf-label {
+    font-weight: bold;
+}
+
+.tf-errorMsg {
+    color: red;
+}
+
+.tf-errorBorder {
+    border: 2px solid #d66;
 }
