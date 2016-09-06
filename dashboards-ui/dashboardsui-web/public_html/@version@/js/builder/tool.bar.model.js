@@ -113,10 +113,6 @@ define(['knockout',
             };
             $(window).bind("beforeunload", showConfirmLeaveDialog);
 
-            self.initialize = function() {
-                self.initEventHandlers();
-            };
-
             self.intervalID = null;
             function setAutoRefreshInterval(interval) {
                 self.intervalID && clearInterval(self.intervalID); // clear interval if exists
@@ -142,10 +138,6 @@ define(['knockout',
                         }
                     }, interval);
                 }
-            };
-
-            self.initEventHandlers = function() {
-                $b.addEventListener($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, self.handleAddWidgetTooltip);
             };
 
             self.nameValidated = true;
@@ -335,60 +327,7 @@ define(['knockout',
                     errorCallback && errorCallback(error);
                 });
             };
-
-            //Add widget dialog
-            var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
-
-            self.addSelectedWidgetToDashboard = function(widget) {
-                var width = Builder.getTileDefaultWidth(widget, self.tilesViewModel.editor.mode),
-                        height = Builder.getTileDefaultHeight(widget, self.tilesViewModel.editor.mode);
-                self.tilesViewModel.appendNewTile(widget.WIDGET_NAME, "", width, height, widget);
-            };
-
-            self.addWidgetDialogParams = {
-                dialogId: addWidgetDialogId,
-                dialogTitle: getNlsString('DBS_BUILDER_ADD_WIDGET_DLG_TITLE'),
-                affirmativeButtonLabel: getNlsString('DBS_BUILDER_BTN_ADD'),
-                userName: dfu.getUserName(),
-                tenantName: dfu.getTenantName(),
-                widgetHandler: self.addSelectedWidgetToDashboard,
-                autoCloseDialog: false
-    //                ,providerName: null     //'TargetAnalytics'
-    //                ,providerVersion: null  //'1.0.5'
-    //                ,providerName: 'TargetAnalytics'
-    //                ,providerVersion: '1.0.5'
-    //                ,providerName: 'DashboardFramework'
-    //                ,providerVersion: '1.0'
-            };
-
-            self.openAddWidgetDialog = function() {
-                var maximizedTile = self.tilesViewModel.editor.getMaximizedTile();
-                if (maximizedTile){
-                    self.tilesViewModel.restore(maximizedTile);
-                }
-                $('#'+addWidgetDialogId).ojDialog('open');
-            };
-
-            self.closeAddWidgetDialog = function() {
-                $('#'+addWidgetDialogId).ojDialog('close');
-            };
-
-            self.handleAddWidgetTooltip = function(hasContent) {
-                if (hasContent === true){
-                    $b.findEl(".tooltip-add-widget").css("display", "none");
-                }
-                else if (hasContent === false){
-                    $b.findEl(".tooltip-add-widget").css("display", "block");
-                }
-                else if (self.tilesViewModel.isEmpty() && self.dashboard && self.dashboard.systemDashboard && !self.dashboard.systemDashboard()) {
-                    $b.findEl(".tooltip-add-widget").css("display", "block");
-                }else {
-                    $b.findEl(".tooltip-add-widget").css("display", "none");
-                }
-            };
-
-            self.initialize();
-
+                  
             var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
             var addFavoriteLabel = getNlsString('DBS_BUILDER_BTN_FAVORITES_ADD');
             var removeFavoriteLabel = getNlsString('DBS_BUILDER_BTN_FAVORITES_REMOVE');
@@ -720,18 +659,7 @@ define(['knockout',
                 }
             };
 
-            self.dashboardOptsMenuItems = [
-                {
-                    "label": getNlsString('DBS_BUILDER_BTN_ADD'),
-                    "url": "#",
-                    "id":"emcpdf_dsbopts_add",
-                    "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
-                    "icon":"dbd-toolbar-icon-add-widget",
-                    "title": "",
-                    "disabled": self.editDisabled() === true,
-                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
-                    "endOfGroup": false
-                },
+            self.dashboardOptsMenuItems = [         
                 {
                     "label": getNlsString('COMMON_BTN_EDIT'),
                     "url": "#",

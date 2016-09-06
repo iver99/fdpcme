@@ -273,12 +273,7 @@
                                 ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_OK')}"> 
                         </button>
                     </div>
-                </div>-->
-                <div data-bind="component: {
-                        name: 'df-widget-selector',
-                        params: addWidgetDialogParams
-                    }">
-                </div>
+                </div>-->               
             </div>
             <div class="oj-col stretch-height builder-main dashboard-content-main" role="main">
                 <div class="tiles-col-container oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size">
@@ -340,12 +335,7 @@
                             <!--add-widget-tooltip-->
                             <img src="/emsaasui/uifwk/@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -1064px;height:220px;"  width="240px" height="240px" margin-bottom="30px" data-bind="attr:{alt:oj.Translations.getTranslatedString('Add content to dashboard')}"/>
                             <p style="font-size: 24px; font-weight: bold;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></p>
-                            <p style="font-size: 16px;" data-bind="visible:($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())),text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1')"></p>
-                            <!--<p style="font-size: 16px;">
-                                <span data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_1')"></span>
-                                <a data-bind="attr: {href:'javascript: this.click()'}, click: $root.openAddWidgetDialog, text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_ADD_LINK')"></a>
-                                <span data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_2')"></span>
-                            </p>-->
+                            <p style="font-size: 16px;" data-bind="visible:($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())),text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1')"></p>                            
                         </div>
                         <!-- /ko -->
                         <div style="padding-left: 5px;">

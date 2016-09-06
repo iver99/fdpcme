@@ -130,11 +130,7 @@ define(['knockout',
                 }
                 return false;
             };
-
-            self.openAddWidgetDialog = function() {
-                $('#dashboardBuilderAddWidgetDialog').ojDialog('open');
-            };
-
+          
 
             self.appendNewTile = function(name, description, width, height, widget) {
                 if (widget) {
