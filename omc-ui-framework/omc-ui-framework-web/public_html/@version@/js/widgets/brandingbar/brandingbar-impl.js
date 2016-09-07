@@ -174,8 +174,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                     removeMessage(data);
                 };
 
-                //Get subscribed application names
-                getSubscribedApplications();
+//                //Get subscribed application names
+//                getSubscribedApplications();
+                refreshAppName();
 
                 var urlNotificationCheck = null;
                 var urlNotificationShow = null;
@@ -217,8 +218,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                     }, 10*60*1000);
                 }
 
-                //Discover logout url, which will be cached and used for session timeout handling
-                dfu.discoverLogoutUrlAsync(function(logoutUrl){window.cachedSSOLogoutUrl = logoutUrl;});
+//                //Discover logout url, which will be cached and used for session timeout handling
+//                dfu.discoverLogoutUrlAsync(function(logoutUrl){window.cachedSSOLogoutUrl = logoutUrl;});
 
                 //SSO logout handler
                 self.handleSignout = function() {
@@ -228,7 +229,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                         clearInterval(window.intervalToExtendCurrentUserSession);
                     }
                     var ssoLogoutEndUrl = encodeURI(window.location.protocol + '//' + window.location.host + dfWelcomeUrl);
-                    var logoutUrlDiscovered = dfu.discoverLogoutUrl();
+                    var logoutUrlDiscovered = window.cachedSSOLogoutUrl ? window.cachedSSOLogoutUrl : dfu.discoverLogoutUrl();
                     //If session timed out, redirect to sso login page and go to home page after re-login.
                     if (window.currentUserSessionExpired === true && logoutUrlDiscovered === null) {
                         window.location.href = ssoLogoutEndUrl;
@@ -236,7 +237,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                     //Else handle normal logout
                     else {
                         if (logoutUrlDiscovered === null){
-                            logoutUrlDiscovered = window.cachedSSOLogoutUrl;
+                            oj.Logger.error('SSO logout URL is not discovered. Sign Out may not work properly.');
+//                            logoutUrlDiscovered = window.cachedSSOLogoutUrl;
                         }
                         var logoutUrl = logoutUrlDiscovered + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
                         window.location.href = logoutUrl;
@@ -418,27 +420,27 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                 //Set up timer to handle session timeout
                 //Normally the timer will be setup in links navigator, when links navigator is not visible (e.g. in common error page),
                 //the session timeout timer need to be set inside here.
-                if (self.navLinksVisible === false) {
-                    setupTimerForSessionTimeout();
-                }
+//                if (self.navLinksVisible === false) {
+//                    setupTimerForSessionTimeout();
+//                }
 
-                function setupTimerForSessionTimeout() {
-                    if (!dfu.isDevMode()){
-                        var serviceUrl = "/sso.static/dashboards.configurations/registration";
-                        dfu.ajaxWithRetry({
-                            url: serviceUrl,
-                            headers: dfu.getDefaultHeader(),
-                            contentType:'application/json',
-                            success: function(data, textStatus) {
-                                dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, self.sessionTimeoutWarnDialogId);
-                            },
-                            error: function(xhr, textStatus, errorThrown){
-                                oj.Logger.error('Failed to get session expiry time by URL: '+serviceUrl);
-                            },
-                            async: true
-                        });
-                    }
-                }
+//                function setupTimerForSessionTimeout() {
+//                    if (!dfu.isDevMode()){
+//                        var serviceUrl = "/sso.static/dashboards.configurations/registration";
+//                        dfu.ajaxWithRetry({
+//                            url: serviceUrl,
+//                            headers: dfu.getDefaultHeader(),
+//                            contentType:'application/json',
+//                            success: function(data, textStatus) {
+//                                dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, self.sessionTimeoutWarnDialogId);
+//                            },
+//                            error: function(xhr, textStatus, errorThrown){
+//                                oj.Logger.error('Failed to get session expiry time by URL: '+serviceUrl);
+//                            },
+//                            async: true
+//                        });
+//                    }
+//                }
 
                 function receiveMessage(event)
                 {
@@ -614,16 +616,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                     }
                 }
 
-                function getSubscribedAppsCallback(apps) {
-                    oj.Logger.info("Finished getting subscribed applications for branding bar.", false);
-                    subscribedApps = apps;
-                    refreshAppName();
-                }
-
-                function getSubscribedApplications() {
-                    oj.Logger.info("Start to get subscribed applications for branding bar.", false);
-                    dfu.checkSubscribedApplications(getSubscribedAppsCallback);
-                }
+//                function getSubscribedAppsCallback(apps) {
+//                    oj.Logger.info("Finished getting subscribed applications for branding bar.", false);
+//                    subscribedApps = apps;
+//                    refreshAppName();
+//                }
+//
+//                function getSubscribedApplications() {
+//                    oj.Logger.info("Start to get subscribed applications for branding bar.", false);
+//                    dfu.checkSubscribedApplications(getSubscribedAppsCallback);
+//                }
 
                 function refreshAppName() {
                     var subscribedServices = null;
