@@ -65,7 +65,7 @@ public class TestBrandingBar extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "apmUi/index.html");
+		Assert.assertEquals(trimUrlParameters(url.substring(url.indexOf("emsaasui") + 9)), "apmUi/index.html");
 		Assert.assertTrue(BrandingBarUtil.isAdmin(webd));
 
 		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT));
@@ -117,7 +117,7 @@ public class TestBrandingBar extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "apmUi/index.html");
+		Assert.assertEquals(trimUrlParameters(url.substring(url.indexOf("emsaasui") + 9)), "apmUi/index.html");
 		Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
 		BrandingBarUtil.visitDashboardHome(webd);
 		WaitUtil.waitForPageFullyLoaded(webd);
@@ -291,7 +291,7 @@ public class TestBrandingBar extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "apmUi/index.html");
+		Assert.assertEquals(trimUrlParameters(url.substring(url.indexOf("emsaasui") + 9)), "apmUi/index.html");
 	}
 
 	@Test
@@ -383,5 +383,16 @@ public class TestBrandingBar extends LoginAndLogout
 		webd.getLogger().info("url = " + url);
 		String sub_str = url.substring(url.indexOf("emsaasui") + 9);
 		Assert.assertEquals(sub_str.substring(0, 23), "emcta/ta/analytics.html");
+	}
+
+	private String trimUrlParameters(String url)
+	{
+		String baseUrl = null;
+		if (url != null) {
+			String[] urlComponents = url.split("\\#|\\?");
+			baseUrl = urlComponents[0];
+		}
+
+		return baseUrl;
 	}
 }
