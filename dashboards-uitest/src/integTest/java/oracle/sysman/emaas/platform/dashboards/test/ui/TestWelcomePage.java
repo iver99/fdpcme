@@ -299,11 +299,4 @@ public class TestWelcomePage extends LoginAndLogout
 		return baseUrl;
 	}
 
-	@Test
-	private void trimUrlParameters1()
-	{
-		System.out.println(trimUrlParameters(
-				"apmUi/index.html?oj_Router=1N4IgTg9hAuIFygM4EsB2BjApvAjAFgHYBmABgFYyAmEmmgGhAFdVpkAbXQo-SgDgDZaJAL7CgA")
-				.toString());
-	}
 }
