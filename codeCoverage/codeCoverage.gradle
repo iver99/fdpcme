@@ -326,7 +326,7 @@ else {
             property "sonar.password", "emaas"
             property "sonar.jacoco.reportMissing.force.zero", "true"
             property "sonar.supportSourceFileDuplications", "true"
-            property "sonar.exclusions", "**/js/d3/*.js, **/js/jquery/*.js"
+            
         }
     }
 
@@ -343,6 +343,7 @@ else {
                 property "sonar.jacoco.reportPath", "${buildDir}/jacoco/test.exec"
                 property "sonar.jacoco.itReportPath" , "${buildDir}/jacoco/integTest.exec"
                 property "sonar.sourceEncoding", "UTF-8"
+                property "sonar.exclusions", "**/js/d3/**,**/js/jquery/**"
         //property "sonar.exclusions", "**/IntervalTimeUnit.java,**/ImportCategorySet.java"
         }
     }

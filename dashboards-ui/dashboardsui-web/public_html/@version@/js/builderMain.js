@@ -47,6 +47,7 @@ requirejs.config({
         'd3':'../../libs/@version@/js/d3/d3.min',
         'emsaasui':'/emsaasui',
         'emcta':'/emsaasui/emcta/ta/js',
+//        'emcta': '/emsaasui/emcta/ta/@version@/js', //for DEV_MODE
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
         'uifwk': '/emsaasui/uifwk'
@@ -209,21 +210,25 @@ require(['knockout',
     'uifwk/js/util/df-util',
     'uifwk/js/util/logging-util',
     'ojs/ojcore',
+    'dashboards/widgets/autorefresh/js/auto-refresh',
+//    'dashboards/widgets/textwidget/js/textwidget',
     'dashboards/dashboardhome-impl',
+//    'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
     'jqueryui',
     'common.uifwk',
     'builder/builder.jet.partition',
     'builder/builder.core',
     'dashboards/dbstypeahead',
     'builder/dashboardset.toolbar.model',
-    'builder/dashboardset.panels.model'
+    'builder/dashboardset.panels.model',
+    'builder/dashboardDataSource/dashboard.datasource'
 ],
-    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, dashboardhome_impl) // this callback gets executed when all required modules are loaded
+    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, /*textwidget, */dashboardhome_impl/*, TargetSelectorUtils*/) // this callback gets executed when all required modules are loaded
     {
         var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
-        require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
-                TargetSelectorUtils.registerComponents();
+        require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
+        TargetSelectorUtils.registerComponents();
         logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
         // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
         // If you comment the line below, our current log calls will not be output!
@@ -251,6 +256,14 @@ require(['knockout',
             viewModel: {require: 'uifwk/js/widgets/datetime-picker/js/datetime-picker'},
             template: {require: 'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
         });
+        ko.components.register("df-auto-refresh",{
+            viewModel:auto_refresh,
+            template:{require:'text!./widgets/autorefresh/auto-refresh.html'}
+        });
+        /*ko.components.register("DF_V1_WIDGET_TEXT", {
+            viewModel: textwidget,
+            template: {require: 'text!./widgets/textwidget/textwidget.html'}
+        });*/
 
         if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
             ko.components.register("df-oracle-dashboard-list",{
@@ -310,7 +323,7 @@ require(['knockout',
             var headerViewModel = new DashboardsetHeaderViewModel();
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
-            Builder.loadDashboard(dsbId, function (dashboard) {
+            new Builder.DashboardDataSource().loadDashboardData(dsbId, function (dashboard) {
 
                 var dashboardTitleModel = new DashboardTitleModel(dashboard);
                 ko.applyBindings(dashboardTitleModel, $("title")[0]);
@@ -329,7 +342,7 @@ require(['knockout',
                 }
             });
         });
-    });
+        });
     }
 );
 
