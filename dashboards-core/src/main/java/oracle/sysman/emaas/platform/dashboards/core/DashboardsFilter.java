@@ -45,8 +45,8 @@ public class DashboardsFilter
 	public static final String APM_PROVIDER_APMUI = "ApmUI";
 	public static final String ITA_PROVIDER_EMCI = "emcitas-ui-apps";
 	public static final String ITA_PROVIDER_TA = "TargetAnalytics";
-	public static final String LA_PROVIDER_LS = "LoganService";
-	public static final String OCS_PROVIDER_OCS = "Orchestration";
+	public static final String LA_PROVIDER_LS = "LogAnalyticsUI";
+        public static final String OCS_PROVIDER_OCS = "Orchestration";
 
 	private List<String> includedTypes;
 	private List<String> includedApps;
