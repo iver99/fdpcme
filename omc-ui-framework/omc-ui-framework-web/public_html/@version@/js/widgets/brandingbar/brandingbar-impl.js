@@ -81,8 +81,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                 };
                 appMap[appIdLogAnalytics] = {
                     "appId": "LogAnalytics",
-                    "appName": "BRANDING_BAR_APP_NAME_LOG_ANALYTICS",
-                    "serviceName": "LoganService",
+                    "appName": "BRANDING_BAR_APP_NAME_LOG_ANALYTICS", 
+                    "serviceName": "LogAnalyticsUI",
                     "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_log_gs"
                 };

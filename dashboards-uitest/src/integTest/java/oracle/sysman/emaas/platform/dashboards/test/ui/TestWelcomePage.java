@@ -179,7 +179,8 @@ public class TestWelcomePage extends LoginAndLogout
 		WelcomeUtil.visitITA(webd, "resourceAnalyticsHost");
 		String tmpUrl = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("Open ITA: Resource Analytics-Host by url: " + tmpUrl);
-		urlVerification(tmpUrl, "emcitas/resource-analytics/html/server-resource-analytics.html");
+        String noParamUrl = trimUrlParameters(tmpUrl);
+		urlVerification(noParamUrl, "emcitas/resource-analytics/html/server-resource-analytics.html");
 		webd.getLogger().info("Test opening ITA: Resource Analytics-Host in welcome page finished!!!");
 	}
 
@@ -280,6 +281,18 @@ public class TestWelcomePage extends LoginAndLogout
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "videos"));
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "serviceOfferings"));
 	}
+
+    private String trimUrlParameters(String url)
+    {
+        String baseUrl = null;
+        if (url != null)
+        {
+            String[] urlComponents = url.split("\\#|\\?");
+            baseUrl = urlComponents[0];
+        }
+
+        return baseUrl;
+    }
 
 	public void urlVerification(String pageUrl, String expectedUrl)
 	{
