@@ -210,7 +210,6 @@ require(['knockout',
     'uifwk/js/util/df-util',
     'uifwk/js/util/logging-util',
     'ojs/ojcore',
-    'dashboards/widgets/autorefresh/js/auto-refresh',
 //    'dashboards/widgets/textwidget/js/textwidget',
     'dashboards/dashboardhome-impl',
 //    'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
@@ -223,7 +222,7 @@ require(['knockout',
     'builder/dashboardset.panels.model',
     'builder/dashboardDataSource/dashboard.datasource'
 ],
-    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, /*textwidget, */dashboardhome_impl/*, TargetSelectorUtils*/) // this callback gets executed when all required modules are loaded
+    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, /*textwidget, */dashboardhome_impl/*, TargetSelectorUtils*/) // this callback gets executed when all required modules are loaded
     {
         var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
@@ -255,10 +254,6 @@ require(['knockout',
         ko.components.register("df-datetime-picker",{
             viewModel: {require: 'uifwk/js/widgets/datetime-picker/js/datetime-picker'},
             template: {require: 'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
-        });
-        ko.components.register("df-auto-refresh",{
-            viewModel:auto_refresh,
-            template:{require:'text!./widgets/autorefresh/auto-refresh.html'}
         });
         /*ko.components.register("DF_V1_WIDGET_TEXT", {
             viewModel: textwidget,
