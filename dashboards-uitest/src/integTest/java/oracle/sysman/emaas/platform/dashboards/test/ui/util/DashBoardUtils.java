@@ -130,10 +130,7 @@ public class DashBoardUtils
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Performance"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Timeseries"));
 
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Databases"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Entities"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Hosts"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Application Servers"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Summary"));
 
 	}
@@ -157,18 +154,10 @@ public class DashBoardUtils
 	public static void laOobNotExist()
 	{
 		driver.getLogger().info("Verify below Log Analytics OOB don't exist...");
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Host Health Summary"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Health Summary"));
 
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Operations"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Host Operations"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Middleware Operations"));
-
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Application Servers"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Databases"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Hosts"));
-
 	}
 
 	public static void loadWebDriver(WebDriver webDriver)
@@ -210,6 +199,10 @@ public class DashBoardUtils
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 WebLogic Servers by Heap Usage"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 WebLogic Servers by Load"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Servers by JDK Version"));
+
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Host Health Summary"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Health Summary"));
 	}
 
 	public static boolean verfiyShareOptionDisabled()
