@@ -264,6 +264,7 @@ public class Dashboard
 
 						dbd.setDashboardId(ed.getDashboardId());
 						dbd.setName(ed.getName());
+						dbd.setSharePublic(DataFormatUtils.integer2Boolean(ed.getSharePublic()));
 
 						subDashboardList.add(dbd);
 					}
