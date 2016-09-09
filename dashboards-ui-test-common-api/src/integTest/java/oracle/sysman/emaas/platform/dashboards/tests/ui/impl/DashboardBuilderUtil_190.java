@@ -1479,7 +1479,6 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		driver.takeScreenShot();
 		driver.getLogger().info("and clicks the widget config button");
 		//		builder.moveToElement(widgetDataExplore).click().perform();
-		//widgetDataExplore.click();
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.elementToBeClickable(widgetDataExplore));
 		widgetDataExplore.click();
