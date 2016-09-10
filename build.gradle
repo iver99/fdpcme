@@ -271,7 +271,16 @@ task preBuildCompile(type: Copy) {
 
 compileJava.dependsOn preBuildCompile
 
+buildscript { 
+	dependencies {  
+		classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.2.5'  
 
+	        classpath group: 'com.oracle.emaas.emdi', name: 'JSPlugin', version:'1.0+'
+		classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'
+
+		classpath 'org.gradle.plugins:gradle-compass:1.0.10.1'
+	}  
+}
 project.publishing.publications {
     if (project.tasks.findByName('lrgMetadataZip')) {
         // Publication for publishing lrg metadata
@@ -303,7 +312,7 @@ apply from: "${project.ext.source_cc}/codeCoverage.gradle"
 if(project.plugins.hasPlugin('sonar-runner')) {
   sonarRunner {
     sonarProperties {
-      property "sonar.branch", 'master'
+      property "sonar.branch", 'greenchannel'
     }
   }
 }
@@ -317,7 +326,7 @@ configurations.driver.each {File file ->
 }
 
 String CLEANUP_SQL = "cleanup_df.sql"
-String db_usr = "SYSEMS_T_3"
+String db_usr = "SYSEMS_T_1004"
 String db_pw = "welcome1"
 String db_url_pre = "jdbc:oracle:thin:@"
 String db_url_suf = ".us.oracle.com:1521:orcl12c"

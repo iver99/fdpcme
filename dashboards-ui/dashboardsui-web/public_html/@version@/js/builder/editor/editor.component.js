@@ -8,10 +8,11 @@ define(['knockout',
         'jquery',
         'ojs/ojcore',
         'dfutil',
+//        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
         'builder/dashboard.tile.model',
         'builder/editor/editor.tiles'
     ],
-    function(ko, $, oj, dfu) {
+    function(ko, $, oj, dfu/*, TargetSelectorUtils*/) {
         function Cell(row, column) {
             var self = this;
 
@@ -368,19 +369,18 @@ define(['knockout',
                             widgetUrl += "&startTime="+start+"&endTime="+end+"&timePeriod="+timePeriod;
                         }
 
-
-                        require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
-                            if(targets && targets()) {
-                                var compressedTargets = encodeURI(JSON.stringify(targets()));
-                                var targetUrlParam = "targets";
-                                if(TargetSelectorUtils.compress) {
-                                    compressedTargets = TargetSelectorUtils.compress(targets());
-                                    targetUrlParam = "targetsz";
-                                }
-                                widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
+                    require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils){
+                        if(targets && targets()) {
+                             var compressedTargets = encodeURI(JSON.stringify(targets()));
+                            var targetUrlParam = "targets";
+                            if(TargetSelectorUtils.compress) {
+                                compressedTargets = TargetSelectorUtils.compress(targets());
+                                targetUrlParam = "targetsz";
                             }
-                            window.location = widgetUrl;
-                        });
+                            widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
+                        }
+                        window.location = widgetUrl;
+                    });
                     };
                 }
             }

@@ -11,18 +11,20 @@ define(['knockout',
         'uifwk/js/util/df-util',
         'uifwk/js/util/mobile-util',
         'jquery',
+//        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
         'builder/builder.core',
         'builder/time.selector.model',
         'builder/editor/editor.component',
         'builder/editor/editor',
         'builder/editor/editor.mode',
+        'builder/dashboardDataSource/dashboard.datasource',
         'builder/widget/widget.model',
         'jqueryui',
         'builder/builder.jet.partition'
 //        'ckeditor'
     ],
 
-    function(ko, oj, km, dfu, uiutil, dfumodel, mbu, $)
+    function(ko, oj, km, dfu, uiutil, dfumodel, mbu, $/*, TargetSelectorUtils*/)
     {
         ko.mapping = km;
         var draggingTileClass = 'dbd-tile-in-dragging';
@@ -31,12 +33,12 @@ define(['knockout',
 
             var widgetAreaWidth = 0;
             var widgetAreaContainer = null;
+            var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
 
             var dragStartRow = null;
 
             var self = this;
             $b.registerObject(self, 'DashboardTilesViewModel');
-            self.hasUserOptionInDB = ko.observable(false); //use in tool.bar.model.js
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.scrollbarWidth = uiutil.getScrollbarWidth();
 
@@ -55,7 +57,7 @@ define(['knockout',
             self.loginUser = ko.observable(dfu.getUserName());
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
 
-            self.targets = ko.observable(null);
+            self.targets = ko.observable({"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"});
 
 
             self.timeSelectorModel = new Builder.TimeSelectorModel();
@@ -67,7 +69,6 @@ define(['knockout',
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
             self.showTimeRange = ko.observable(false);
             self.showWidgetTitle = ko.observable(true);
-            self.showRightPanelToggler = ko.observable(true);
 
             self.resizingTile = ko.observable();
             self.resizingTileCopy = null;
@@ -157,6 +158,8 @@ define(['knockout',
                 $b.addEventListener($b.EVENT_ENTER_TABLET_MODE, self.enterTabletModeHandler);
                 $b.addEventListener($b.EVENT_TILE_MAXIMIZED, self.dashboardMaximizedHandler);
                 $b.addEventListener($b.EVENT_TILE_RESTORED, self.dashboardRestoredHandler);
+                $b.addEventListener($b.EVENT_AUTO_REFRESH_CHANGED, self.autoRefreshChanged);
+                $b.addEventListener($b.EVENT_AUTO_REFRESHING_PAGE, self.autoRefreshingPage);
                 self.initializeTiles();
             };
 
@@ -833,14 +836,7 @@ define(['knockout',
                 self.editor.changeMode(self.tabletMode);
             };
 
-            self.dashboardMaximizedHandler = function() {
-                self.showRightPanelToggler(false);
-            };
-
-            self.dashboardRestoredHandler = function() {
-                self.showRightPanelToggler(true);
-            };
-
+            var globalTimer = null;
             self.postDocumentShow = function() {
                 $b.triggerBuilderResizeEvent('resize builder after document show');
                 self.initializeMaximization();
@@ -861,10 +857,11 @@ define(['knockout',
             };
 
             self.initUserFilterOptions = function() {
-                Builder.fetchDashboardOptions(
+                var dashboardDS = new Builder.DashboardDataSource();
+                
+                dashboardDS.loadDashboardUserOptionsData(
                     self.dashboard.id(),
                     function (data) {
-                        self.hasUserOptionInDB(true);
                         //sucessfully get extended options for page filters
                         self.userExtendedOptions = data["extendedOptions"] ? JSON.parse(data["extendedOptions"]) : {};
                         if(!self.userExtendedOptions.tsel || (self.userExtendedOptions.tsel && !self.userExtendedOptions.tsel.entityContext)) {
@@ -879,28 +876,27 @@ define(['knockout',
                         }else {
                             self.userTimeSel = true;
                         }
-                        if(!self.userExtendedOptions.autoRefresh) {
-                            self.userAutoRefresh = false;
-                            self.userExtendedOptions.autoRefresh = {defaultValue: 300000};
-                        }else {
-                            self.userAutoRefresh = true;
+                        
+                        if(!self.userExtendedOptions.autoRefresh || isNaN(self.userExtendedOptions.autoRefresh.defaultValue)) {
+                            self.userExtendedOptions.autoRefresh = {"defaultValue": DEFAULT_AUTO_REFRESH_INTERVAL};
                         }
+                        
                     },
                     function (jqXHR, textStatus, errorThrown) {
                         if(jqXHR.status === 404){
-                            self.hasUserOptionInDB(false);
                             self.userTsel = false;
                             self.userTimeSel = false;
                             self.userExtendedOptions = {};
                             self.userExtendedOptions.tsel = {quickPick: "host", entityContext: ""};
                             self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: new Date(new Date()-14*24*60*60*1000), end: new Date()};
+                            self.userExtendedOptions.autoRefresh = {"defaultValue": DEFAULT_AUTO_REFRESH_INTERVAL};
                         }
                     });
             };
 
             self.userTsel = false;
             self.userTimeSel = false;
-            self.userAutoRefresh = false;
+            self.applyClickedByAutoRefresh = ko.observable(false);
             self.initUserFilterOptions();
             self.dashboardExtendedOptions = self.dashboard.extendedOptions ? JSON.parse(self.dashboard.extendedOptions()) : null;
 
@@ -909,14 +905,12 @@ define(['knockout',
                 var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd(), self.timeSelectorModel.viewTimePeriod()), self.targets, null, null, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
                 Builder.fireDashboardItemChangeEvent(self.dashboard.tiles(), dashboardItemChangeEvent);
 
-                if(!self.toolbarModel.extendedOptions.tsel) {
-                    self.toolbarModel.extendedOptions.tsel = {};
+                if(!self.userExtendedOptions.tsel) {
+                    self.userExtendedOptions.tsel = {};
                 }
 
-                require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
-                    self.toolbarModel.extendedOptions.tsel.entityContext = targets;
-                    self.saveUserFilterOptions();
-                });
+                self.userExtendedOptions.tsel.entityContext = targets;
+                self.saveUserFilterOptions();
 
             };
 
@@ -933,26 +927,28 @@ define(['knockout',
             });
 
             self.returnFromTsel = function(targets) {
+                window.DashboardWidgetAPI.setTargetSelectionContext(targets);
                     self.returnFromPageTsel(targets);
-                    var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
-                    if(rightPanelModel.dashboardSharing() !== "shared") {
-                        rightPanelModel.defaultEntityContext(targets);
-                        rightPanelModel.extendedOptions.tsel.entityContext = targets;
-                    }
             };
-
+            
+            self.initializedCallback = function() {
+                require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
+                    TargetSelectorUtils.setTargetSelectionContext("tsel_"+self.dashboard.id(), self.targets());
+                });
+            }
+            
             var compressedTargets;
             //set initial targets selector options. priority: user extendedOptions > dashboard extendedOptions
             //1. set selectionMode: byCriteria/single. Default is "byCriteria"
             //selectionMode is set in right.panel.model.js
             //2. set selected targets/entityContext
-            if(self.userTsel && self.userExtendedOptions && self.userExtendedOptions.tsel) {
+            if(self.userTsel && self.userExtendedOptions && !$.isEmptyObject(self.userExtendedOptions.tsel)) {
                 compressedTargets = self.userExtendedOptions.tsel.entityContext;
-            }else if(self.dashboardExtendedOptions && self.dashboardExtendedOptions.tsel) {
+            }else if(self.dashboardExtendedOptions && !$.isEmptyObject(self.dashboardExtendedOptions.tsel)) {
                 compressedTargets = self.dashboardExtendedOptions.tsel.entityContext;
                 self.userExtendedOptions.tsel = {};
             }
-            self.targets(compressedTargets);
+            compressedTargets && self.targets(compressedTargets);
 
             var timeSelectorChangelistener = ko.computed(function(){
                 return {
@@ -974,12 +970,12 @@ define(['knockout',
             self.timePeriod = ko.observable("Custom");
             //initialize time selector. priority: time in url > time in user extendedOptions > time in dashboard extendedOptions > default time
             if(initStart === null || initEnd === null) {
-                if(self.userTimeSel && self.userExtendedOptions && self.userExtendedOptions.timeSel) {
+                if(self.userTimeSel && self.userExtendedOptions && !$.isEmptyObject(self.userExtendedOptions.timeSel)) {
                     initStart = new Date(parseInt(self.userExtendedOptions.timeSel.start));
                     initEnd = new Date(parseInt(self.userExtendedOptions.timeSel.end));
                     var tp = (self.userExtendedOptions.timeSel.timePeriod === "custom1") ? "custom" : self.userExtendedOptions.timeSel.timePeriod;
                     self.timePeriod(Builder.getTimePeriodString(tp));
-                }else if(self.dashboardExtendedOptions && self.dashboardExtendedOptions.timeSel) {
+                }else if(self.dashboardExtendedOptions && !$.isEmptyObject(self.dashboardExtendedOptions.timeSel)) {
                     initStart = new Date(parseInt(self.dashboardExtendedOptions.timeSel.start));
                     initEnd = new Date(parseInt(self.dashboardExtendedOptions.timeSel.end));
                     var tp = (self.dashboardExtendedOptions.timeSel.defaultValue === "custom1") ? "custom" : self.dashboardExtendedOptions.timeSel.defaultValue;
@@ -1014,48 +1010,40 @@ define(['knockout',
                             self.timePeriod(tp);
                         }
                         self.timeSelectorModel.timeRangeChange(true);
-
-                        if(!self.toolbarModel.applyClickedByAutoRefresh()) {
-                            if(!self.toolbarModel.extendedOptions.timeSel) {
-                                self.toolbarModel.extendedOptions.timeSel = {};
+                        
+                        if(!self.applyClickedByAutoRefresh()) {
+                            if(!self.userExtendedOptions.timeSel) {
+                                self.userExtendedOptions.timeSel = {};
                             }
-                            self.toolbarModel.extendedOptions.timeSel.timePeriod = Builder.getTimePeriodValue(tp);
-                            self.toolbarModel.extendedOptions.timeSel.start = start.getTime();
-                            self.toolbarModel.extendedOptions.timeSel.end = end.getTime();
+                            self.userExtendedOptions.timeSel.timePeriod = Builder.getTimePeriodValue(tp);
+                            self.userExtendedOptions.timeSel.start = start.getTime();
+                            self.userExtendedOptions.timeSel.end = end.getTime();
                             self.saveUserFilterOptions();
 
-                            var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
-                            if(rightPanelModel.dashboardSharing() !== "shared") {
-                                rightPanelModel.defaultTimeRangeValue([Builder.getTimePeriodValue(tp)]);
-                                rightPanelModel.defaultStartTime(start.getTime());
-                                rightPanelModel.defaultEndTime(end.getTime());
-
-                                //set timeSel settings to save
-                                rightPanelModel.extendedOptions.timeSel.start = start.getTime();
-                                rightPanelModel.extendedOptions.timeSel.end = end.getTime();
-                                rightPanelModel.extendedOptions.timeSel.defaultValue = Builder.getTimePeriodValue(tp);
-                                rightPanelModel.defaultValueChanged(new Date());
-                            }
+//                            $b.triggerEvent($b.EVENT_TIME_SELECTION_CHANGED, "time selection is changed by selecting date/time picker", Builder.getTimePeriodValue(tp), start.getTime(), end.getTime());
                         }
-                        self.toolbarModel.applyClickedByAutoRefresh(false);
+                        self.applyClickedByAutoRefresh(false);
                 }
             };
 
             self.saveUserFilterOptions = function() {
                 var userFilterOptions = {
                     dashboardId: self.dashboard.id(),
-                    extendedOptions: JSON.stringify(self.toolbarModel.extendedOptions),
-                    autoRefreshInterval: self.toolbarModel.autoRefreshInterval()
+                    extendedOptions: JSON.stringify(self.userExtendedOptions),
+                    autoRefreshInterval: self.userExtendedOptions.autoRefresh.defaultValue
                 };
-                if(self.toolbarModel.hasUserOptionInDB) {
-                    Builder.updateDashboardOptions(userFilterOptions);
-                }else {
-                    Builder.saveDashboardOptions(userFilterOptions);
-                    self.toolbarModel.hasUserOptionInDB = true;
-                }
-            };
 
-            self.toolbarModel = null;
+                new Builder.DashboardDataSource().saveDashboardUserOptions(userFilterOptions);
+            };
+            
+            self.autoRefreshChanged = function(interval) {
+                self.userExtendedOptions.autoRefresh = {"defaultValue": interval};                
+                self.saveUserFilterOptions();
+            }
+            
+            self.autoRefreshingPage = function() {
+                self.applyClickedByAutoRefresh(true);
+            }
         }
 
         Builder.registerModule(DashboardTilesViewModel, 'DashboardTilesViewModel');
