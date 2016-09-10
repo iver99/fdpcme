@@ -8,10 +8,11 @@ define(['knockout',
         'jquery',
         'ojs/ojcore',
         'dfutil',
+//        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
         'builder/dashboard.tile.model',
         'builder/editor/editor.tiles'
     ],
-    function(ko, $, oj, dfu) {
+    function(ko, $, oj, dfu/*, TargetSelectorUtils*/) {
         function Cell(row, column) {
             var self = this;
 
@@ -198,7 +199,7 @@ define(['knockout',
                 return typeof(tile.configure)==="function";
             });
             tile.tileDisplayClass = ko.computed(function() {
-                var css = 'oj-md-'+(mode.getModeWidth(tile)*3) + ' oj-sm-'+(mode.getModeWidth(tile)*3) + ' oj-lg-'+(mode.getModeWidth(tile)*3);
+                var css = 'oj-md-'+(mode.getModeWidth(tile)) + ' oj-sm-'+(mode.getModeWidth(tile)*6) + ' oj-lg-'+(mode.getModeWidth(tile));
                 css += tile.isMaximized() ? ' dbd-tile-maximized ' : '';
                 css += tile.shouldHide() ? ' dbd-tile-no-display' : '';
                 css += tile.editDisabled() ? ' dbd-tile-edit-disabled' : '';
@@ -366,19 +367,18 @@ define(['knockout',
                             widgetUrl += "&startTime="+start+"&endTime="+end;
                         }
 
-
-                        require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
-                            if(targets && targets()) {
-                                var compressedTargets = encodeURI(JSON.stringify(targets()));
-                                var targetUrlParam = "targets";
-                                if(TargetSelectorUtils.compress) {
-                                    compressedTargets = TargetSelectorUtils.compress(targets());
-                                    targetUrlParam = "targetsz";
-                                }
-                                widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
+                    require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils){
+                        if(targets && targets()) {
+                             var compressedTargets = encodeURI(JSON.stringify(targets()));
+                            var targetUrlParam = "targets";
+                            if(TargetSelectorUtils.compress) {
+                                compressedTargets = TargetSelectorUtils.compress(targets());
+                                targetUrlParam = "targetsz";
                             }
-                            window.location = widgetUrl;
-                        });
+                            widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
+                        }
+                        window.location = widgetUrl;
+                    });
                     };
                 }
             }

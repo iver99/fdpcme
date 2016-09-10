@@ -360,7 +360,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 });
 
                 self.minDate = ko.observable(null);
-                self.maxDate = ko.observable(new Date(new Date().toDateString()));
+                self.maxDate = ko.observable(oj.IntlConverterUtils.dateToLocalIso(new Date()).slice(0, 10));
                 self.timePeriodObject = ko.observable();
                 self.monthObject = ko.observable();
 

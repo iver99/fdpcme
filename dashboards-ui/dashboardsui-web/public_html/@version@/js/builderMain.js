@@ -26,7 +26,7 @@ requirejs.config({
         'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.4.0',
         'knockout.mapping': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout.mapping-latest',
         'jquery': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-2.1.3.min',
-        'jqueryui': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
+        'jqueryui': '../../libs/@version@/js/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
         'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/min',
@@ -47,6 +47,7 @@ requirejs.config({
         'd3':'../../libs/@version@/js/d3/d3.min',
         'emsaasui':'/emsaasui',
         'emcta':'/emsaasui/emcta/ta/js',
+//        'emcta': '/emsaasui/emcta/ta/@version@/js', //for DEV_MODE
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
         'uifwk': '/emsaasui/uifwk'
@@ -212,20 +213,22 @@ require(['knockout',
     'dashboards/widgets/autorefresh/js/auto-refresh',
 //    'dashboards/widgets/textwidget/js/textwidget',
     'dashboards/dashboardhome-impl',
+//    'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
     'jqueryui',
     'common.uifwk',
     'builder/builder.jet.partition',
     'builder/builder.core',
     'dashboards/dbstypeahead',
     'builder/dashboardset.toolbar.model',
-    'builder/dashboardset.panels.model'
+    'builder/dashboardset.panels.model',
+    'builder/dashboardDataSource/dashboard.datasource'
 ],
-    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, /*textwidget, */dashboardhome_impl) // this callback gets executed when all required modules are loaded
+    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, /*textwidget, */dashboardhome_impl/*, TargetSelectorUtils*/) // this callback gets executed when all required modules are loaded
     {
         var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
-        require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils) {
-                TargetSelectorUtils.registerComponents();
+        require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
+        TargetSelectorUtils.registerComponents();
         logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
         // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
         // If you comment the line below, our current log calls will not be output!
@@ -320,7 +323,7 @@ require(['knockout',
             var headerViewModel = new DashboardsetHeaderViewModel();
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
-            Builder.loadDashboard(dsbId, function (dashboard) {
+            new Builder.DashboardDataSource().loadDashboardData(dsbId, function (dashboard) {
 
                 var dashboardTitleModel = new DashboardTitleModel(dashboard);
                 ko.applyBindings(dashboardTitleModel, $("title")[0]);
@@ -339,7 +342,7 @@ require(['knockout',
                 }
             });
         });
-    });
+        });
     }
 );
 
