@@ -47,7 +47,7 @@ public class RegistryLookupUtil
 	public static final String TA_SERVICE = "TargetAnalytics";
 	public static final String MONITORING_SERVICE = "MonitoringServiceUI";
 	public static final String SECURITY_ANALYTICS_SERVICE = "SecurityAnalyticsUI";
-	public static final String COMPLIANCE_SERVICE = "ComplianceUI";
+	public static final String COMPLIANCE_SERVICE = "ComplianceUIService";
 
 	public static List<Link> getLinksWithRelPrefix(String relPrefix, SanitizedInstanceInfo instance)
 	{
