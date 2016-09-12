@@ -36,7 +36,8 @@ public class TestWelcomePage extends LoginAndLogout
 		WelcomeUtil.visitAPM(webd);
 		String tmpUrl = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("Open APM by url: " + tmpUrl);
-		urlVerification(tmpUrl, "apmUi/index.html");
+		String noParamUrl = trimUrlParameters(tmpUrl);
+		urlVerification(noParamUrl, "apmUi/index.html");
 		webd.getLogger().info("Test open APM in welcome page finished!!!");
 	}
 
@@ -103,7 +104,7 @@ public class TestWelcomePage extends LoginAndLogout
 	//	{
 	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 	//		webd.getLogger().info("Start to test open Infrastructure Monitoring in welcome page...");
-	//		
+	//
 	//		BrandingBarUtil.visitWelcome(webd);
 	//		WelcomeUtil.visitInfraMonitoring(webd);
 	//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
@@ -179,7 +180,7 @@ public class TestWelcomePage extends LoginAndLogout
 		WelcomeUtil.visitITA(webd, "resourceAnalyticsHost");
 		String tmpUrl = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("Open ITA: Resource Analytics-Host by url: " + tmpUrl);
-        String noParamUrl = trimUrlParameters(tmpUrl);
+		String noParamUrl = trimUrlParameters(tmpUrl);
 		urlVerification(noParamUrl, "emcitas/resource-analytics/html/server-resource-analytics.html");
 		webd.getLogger().info("Test opening ITA: Resource Analytics-Host in welcome page finished!!!");
 	}
@@ -282,20 +283,20 @@ public class TestWelcomePage extends LoginAndLogout
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "serviceOfferings"));
 	}
 
-    private String trimUrlParameters(String url)
-    {
-        String baseUrl = null;
-        if (url != null)
-        {
-            String[] urlComponents = url.split("\\#|\\?");
-            baseUrl = urlComponents[0];
-        }
-
-        return baseUrl;
-    }
-
 	public void urlVerification(String pageUrl, String expectedUrl)
 	{
 		Assert.assertEquals(pageUrl.substring(pageUrl.indexOf("emsaasui") + 9), expectedUrl);
 	}
+
+	private String trimUrlParameters(String url)
+	{
+		String baseUrl = null;
+		if (url != null) {
+			String[] urlComponents = url.split("\\#|\\?");
+			baseUrl = urlComponents[0];
+		}
+
+		return baseUrl;
+	}
+
 }
