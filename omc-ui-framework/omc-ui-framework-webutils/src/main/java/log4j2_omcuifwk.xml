@@ -75,7 +75,7 @@
 					 filePattern="${dir}/${startupShutdownLog}-%i.log">
 			<PatternLayout pattern="${startupShutdownPattern}"/>
 			<Policies>
-				<SizeBasedTriggeringPolicy size="50 MB" />
+				<SizeBasedTriggeringPolicy size="10 MB" />
 			</Policies>
 			<DefaultRolloverStrategy max="4" />
 		</RollingFile>
@@ -87,7 +87,7 @@
 					 filePattern="${dir}/${interactionLog}-%i.log">
 			<PatternLayout pattern="${interactionPattern}"/>
 			<Policies>
-				<SizeBasedTriggeringPolicy size="50 MB" />
+				<SizeBasedTriggeringPolicy size="25 MB" />
 			</Policies>
 			<DefaultRolloverStrategy max="4" />
 		</RollingFile>
