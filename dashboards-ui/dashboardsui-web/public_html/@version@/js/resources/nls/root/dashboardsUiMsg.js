@@ -357,6 +357,7 @@ define({
       "DBS_ERROR_URL": "Requested URL is: ",
       "DBS_ERROR_BTN_SIGN_OUT": "Sign Out",
       "DBS_ERROR_INTERNAL_ERROR": "Oracle Management Cloud service received a bad request and had an internal error. Try to access your service later.",
+    "DBS_ERROR_SENSITIVE_WORD": "Sorry,your request parameters contain sensitive words or characters, Please try again.",
 
       "SERVICE_NAME_APM":"Application Performance Monitoring",
       "SERVICE_NAME_ITAnalytics":"IT Analytics",
