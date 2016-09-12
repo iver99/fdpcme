@@ -329,6 +329,8 @@ public class TestDashboardSet extends LoginAndLogout
 		//verify the dashboard is in the dashboard set
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet);
 
+		WaitUtil.waitForPageFullyLoaded(webd);
+
 		//duplicate the dashboard in set
 		webd.getLogger().info("duplicate the dashboard in the dashboard set");
 		DashboardBuilderUtil.duplicateDashboardInsideSet(webd, dbName_InSet + "-duplicate", null, true);
@@ -377,6 +379,8 @@ public class TestDashboardSet extends LoginAndLogout
 		//create a dashboard in the dashboard set
 		webd.getLogger().info("create a dashboard in the set");
 		DashboardBuilderUtil.createDashboardInsideSet(webd, dbName_OutSet, null);
+
+		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//verify the dashboard is in the dashboard set
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_OutSet), "Create dashboard in set failed!");
@@ -429,6 +433,8 @@ public class TestDashboardSet extends LoginAndLogout
 		//add an OOB dashboard in the dashboard set
 		webd.getLogger().info("Add an OOB dashboard in the set");
 		DashboardBuilderUtil.addNewDashboardToSet(webd, "Database Operations");
+
+		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//verify the dashboard is in the dashboard set
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Database Operations"),
@@ -1034,5 +1040,4 @@ public class TestDashboardSet extends LoginAndLogout
 	{
 		return String.valueOf(System.currentTimeMillis());
 	}
-
 }
