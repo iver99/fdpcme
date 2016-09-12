@@ -635,7 +635,7 @@ public class DashboardManager
 		}
 
 		if (apps.isEmpty()) {
-			sb.append(" and where p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
+			sb.append(" and p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
 					+ ") ");
 			paramList.add(tenantId);
 			paramList.add(currentUser);
@@ -650,7 +650,7 @@ public class DashboardManager
 				sbApps.append(String.valueOf(app.getValue()));
 			}
 
-			sb.append(" and where p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (((p.share_public = 1 or p.owner = ?" + index++
+			sb.append(" and p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (((p.share_public = 1 or p.owner = ?" + index++
 					+ " or (p.is_system = 1 and p.application_type in (" + sbApps.toString() + "))) ");
 			paramList.add(tenantId);
 			paramList.add(currentUser);
