@@ -6,7 +6,6 @@
 * MODIFIED    (MM/DD/YY)
 *   skgupta     02/11/16 - Creation
 *
-*/
 //-----------------------------------------------------------------------------
 // Enable this to be a rootProject which uses project common files.
 //
@@ -15,15 +14,35 @@
 // -- gradle runs the buildscript block first during the configuration phase
 //
 buildscript {
-   if (System.env.BRANCH_TOP_DIR != null) {
-     project.ext.commonBranchTopDir = System.env.BRANCH_TOP_DIR
-   } else {
-     project.ext.commonBranchTopDir = ["sh", "-c", "cd $rootDir; git rev-parse --show-toplevel"].execute().text.trim()
-     // optional error message
-     if ( ! project.commonBranchTopDir) {
-       throw new GradleException("Error: git not found in sh search PATH\n" +
-         "=> If changing PATH to find git is not feasible, env variables BRANCH_TOP_DIR and BRANCH_NAME must be set")
-     }
-   }
-   apply from: "$project.commonBranchTopDir/common/scripts/buildscript-apply-delegate.gradle"
+  if (System.env.BRANCH_TOP_DIR) {
+    project.ext.commonBranchTopDir = System.env.BRANCH_TOP_DIR
+  } else {
+    def command = "cd '$rootDir' && git rev-parse --show-toplevel"
+    def stdout = new StringBuilder(); def stderr = new StringBuilder(); def exitCode = 1
+    try {
+      def proc = new ProcessBuilder("sh", "-c", command).start()
+      proc.waitForProcessOutput(stdout, stderr); exitCode = proc.exitValue()
+    } catch (Exception e) { stderr << e.message }
+    if (exitCode) {
+      throw new GradleException (
+        "[ERROR] sh or git command is not found or pwd=${System.properties.'user.dir'} is not a git project dir\n" +
+        "[Note] If git is not available, env variables BRANCH_TOP_DIR and BRANCH_NAME must be set\n" +
+        "[Command] sh -c \"$command\"\n" + "[Error] $stderr")
+    } else {
+      project.ext.commonBranchTopDir = "$stdout".trim()
+    }
+  }
+  apply from: "$project.commonBranchTopDir/common/scripts/buildscript-apply-delegate.gradle"
 }
+//
+// Apply common plugins,
+// configure the common publishing repository,
+// configure project repositories to resolve artifact specs,
+// and do other common configuration for allprojects{}.
+//
+def pubAllprojects = project.hasProperty('PUB_ALLPROJECTS') ?
+  project.PUB_ALLPROJECTS : "$project.pubBuildscriptDir/allprojects.gradle"
+apply from: new File(pubAllprojects).isAbsolute() ?
+  "$pubAllprojects" : "$project.commonBranchTopDir/$pubAllprojects"
+//
+//-----------------------------------------------------------------------------
