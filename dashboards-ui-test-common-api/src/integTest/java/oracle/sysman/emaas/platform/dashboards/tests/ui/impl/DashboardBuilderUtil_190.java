@@ -1541,6 +1541,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 			driver.sendKeys("id=" + DashBoardPageId_190.BUILDEROPTIONSDUPLICATEDESCRIPTIONCSS, descriptions);
 		}
 		driver.takeScreenShot();
+		driver.waitForValue("id=" + DashBoardPageId_190.BUILDEROPTIONSDUPLICATEDESCRIPTIONCSS, descriptions);
 
 		//press ok button
 		By locatorOfDuplicateSaveEl = By.cssSelector(DashBoardPageId_190.BUILDEROPTIONSDUPLICATESAVECSS);
