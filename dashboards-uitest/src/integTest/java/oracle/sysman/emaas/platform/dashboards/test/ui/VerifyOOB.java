@@ -614,7 +614,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcitas/mw-analytics-war/html/mw-perf-analytics.html");
+		DashBoardUtils.verifyURL(webd, "emcitas/mw-analytics-war/html/mw-perf-dashboard.html");
 
 		//verify all the widgets displayed
 		//TODO
