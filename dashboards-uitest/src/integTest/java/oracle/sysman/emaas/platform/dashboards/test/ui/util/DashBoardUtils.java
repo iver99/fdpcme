@@ -205,6 +205,17 @@ public class DashBoardUtils
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Health Summary"));
 	}
 
+	public static String trimUrlParameters(String url)
+	{
+		String baseUrl = null;
+		if (url != null) {
+			String[] urlComponents = url.split("\\#|\\?");
+			baseUrl = urlComponents[0];
+		}
+
+		return baseUrl;
+	}
+
 	public static boolean verfiyShareOptionDisabled()
 	{
 		driver.getLogger().info("Click the option icon of Dashboard Set");
@@ -241,9 +252,5 @@ public class DashBoardUtils
 		webdriver.getLogger().info("url = " + currurl);
 		Assert.assertEquals(currurl.substring(currurl.indexOf("emsaasui") + 9), url);
 
-	}
-
-	private DashBoardUtils()
-	{
 	}
 }

@@ -43,7 +43,9 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "apmUi/index.html");
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = " + url);
+		Assert.assertEquals(DashBoardUtils.trimUrlParameters(url.substring(url.indexOf("emsaasui") + 9)), "apmUi/index.html");
 
 		//verify the APM open correctly
 		//TODO
@@ -644,21 +646,21 @@ public class VerifyOOB extends LoginAndLogout
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test in verifyPerformance");
-	
+
 		//Open the OOB dashboard---Performance
 		webd.getLogger().info("Open the OOB dashboard---Performance");
 		DashboardHomeUtil.selectDashboard(webd, "Performance");
-	
+
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
 		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=30");
-	
+
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Performance opened correctly");
-	
+
 		webd.getLogger().info("Verify the dashboard titile...");
 		DashboardBuilderUtil.verifyDashboard(webd, "Performance", "", true);
-	
+
 		webd.getLogger().info("Verify all the widgets in dashboard");
 		DashboardBuilderUtil.verifyWidget(webd, "Oracle Exadata Storage Server Read Response Time");
 		DashboardBuilderUtil.verifyWidget(webd, "Top 5 Databases by Active Sessions");
@@ -667,10 +669,10 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardBuilderUtil.verifyWidget(webd, "Oracle Exadata Storage Server Write Response Time");
 		DashboardBuilderUtil.verifyWidget(webd, "Oracle Exadata Storage Server Read/Write Response Times");
 		DashboardBuilderUtil.verifyWidget(webd, "Oracle Exadata Storage Server I/O Utilization by DB Machine");
-	
+
 		webd.getLogger().info("Verify the icon in OOB");
 		verifyIconInOobDashboard();
-	
+
 		webd.getLogger().info("Verify the icon in widget");
 		verifyIconInWidget(webd, "Oracle Exadata Storage Server Read Response Time");
 		verifyIconInWidget(webd, "Top 5 Databases by Active Sessions");
@@ -679,9 +681,9 @@ public class VerifyOOB extends LoginAndLogout
 		verifyIconInWidget(webd, "Oracle Exadata Storage Server Write Response Time");
 		verifyIconInWidget(webd, "Oracle Exadata Storage Server Read/Write Response Times");
 		verifyIconInWidget(webd, "Oracle Exadata Storage Server I/O Utilization by DB Machine");
-	
+
 		webd.getLogger().info("the verification end...");
-	
+
 	}
 
 	@Test
