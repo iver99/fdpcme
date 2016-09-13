@@ -203,6 +203,7 @@ public class DashboardManager
 			//			if (ed.getDeleted() == null || ed.getDeleted() == 0) {
 			//				removeFavoriteDashboard(dashboardId, tenantId);
 			//			}
+			dsf.updateSubDashboardShowInHome(dashboardId);
 			if (!permanent) {
 				ed.setDeleted(dashboardId);
 				dsf.mergeEmsDashboard(ed);
@@ -642,8 +643,13 @@ public class DashboardManager
 			paramList.add(currentUser);
 		}
 
+		sb.append("where 1=1 ");
+		if (filter!= null && filter.getShowInHome()) {
+			sb.append(" and p.show_inhome = 1 ");
+		}
+
 		if (apps.isEmpty()) {
-			sb.append("where p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
+			sb.append(" and p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
 					+ ") ");
 			paramList.add(tenantId);
 			paramList.add(currentUser);
@@ -658,7 +664,7 @@ public class DashboardManager
 				sbApps.append(String.valueOf(app.getValue()));
 			}
 
-			sb.append("where p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (((p.share_public = 1 or p.owner = ?" + index++
+			sb.append(" and p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (((p.share_public = 1 or p.owner = ?" + index++
 					+ " or (p.is_system = 1 and p.application_type in (" + sbApps.toString() + "))) ");
 			paramList.add(tenantId);
 			paramList.add(currentUser);
@@ -683,7 +689,6 @@ public class DashboardManager
 
 			concatQueryString(queryString, ic, sb1, index, paramList, locale);
 		}
-		sb.append(") OR ( 1=1");
 		if (filter != null && filter.getIncludedWidgetProvidersString() != null) {
 			LOGGER.debug("provider name is not null!");
 			sb1.append(" AND (p.DASHBOARD_ID IN (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN "
@@ -691,8 +696,11 @@ public class DashboardManager
 					+ filter.getIncludedWidgetProvidersString()
 					+ " )) AND p2.DASHBOARD_SET_ID >1000)) AND p.APPLICATION_TYPE IS NULL");
 		}
-		sb.append(sb1);
-		sb.append("))");
+		if (sb1.length() > 0) {
+			sb.append(") OR ( 1=1");
+			sb.append(sb1);
+		}
+			sb.append("))");
 
 		//query
 		StringBuilder sbQuery = new StringBuilder(sb);
@@ -700,7 +708,7 @@ public class DashboardManager
 		sbQuery.append(getListDashboardsOrderBy(orderBy, false));
 		//			sbQuery.append(sb);
 		sbQuery.insert(0,
-				"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
+				"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.SHOW_INHOME,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
 						+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE ");
 		String jpqlQuery = sbQuery.toString();
 
@@ -1199,6 +1207,9 @@ public class DashboardManager
 		}
 		if (map.get("DESCRIPTION") != null) {
 			e.setDescription(map.get("DESCRIPTION").toString());
+		}
+		if (map.get("SHOW_INHOME") != null) {
+			e.setShowInHome(Integer.valueOf(map.get("SHOW_INHOME").toString()));
 		}
 		if (map.get("ENABLE_TIME_RANGE") != null) {
 			e.setEnableTimeRange(Integer.valueOf(map.get("ENABLE_TIME_RANGE").toString()));
