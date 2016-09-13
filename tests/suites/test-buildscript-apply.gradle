@@ -1,11 +1,12 @@
 /* Copyright (c) 2016, Oracle and/or its affiliates. All rights reserved.*/
 /*
-* DESCRIPTION
-*     Common buildscript to be applied for all lrgs.
-*
-* MODIFIED    (MM/DD/YY)
-*   skgupta     02/11/16 - Creation
-*
+ * DESCRIPTION
+ *   Common buildscript to be applied for all lrgs.
+ *
+ * MODIFIED MM/DD/YY
+ * skuchero 09/12/16 - update CBF template code
+ * skgupta  02/11/16 - Creation
+ */
 //-----------------------------------------------------------------------------
 // Enable this to be a rootProject which uses project common files.
 //
@@ -34,15 +35,3 @@ buildscript {
   }
   apply from: "$project.commonBranchTopDir/common/scripts/buildscript-apply-delegate.gradle"
 }
-//
-// Apply common plugins,
-// configure the common publishing repository,
-// configure project repositories to resolve artifact specs,
-// and do other common configuration for allprojects{}.
-//
-def pubAllprojects = project.hasProperty('PUB_ALLPROJECTS') ?
-  project.PUB_ALLPROJECTS : "$project.pubBuildscriptDir/allprojects.gradle"
-apply from: new File(pubAllprojects).isAbsolute() ?
-  "$pubAllprojects" : "$project.commonBranchTopDir/$pubAllprojects"
-//
-//-----------------------------------------------------------------------------
