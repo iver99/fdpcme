@@ -100,7 +100,7 @@ function(ko, $, dfu, oj)
         };
         }
         function checkParams(msgKey, serviceid, serviceName) {
-            var words = new Array("insert", "update", "drop", "delete", "and", "exec", "select", "truncate",
+            var words = new Array("insert", "update", "drop", "delete", "truncate",
                 ",", ";", "*", ".", "%27");
             for (var i in words) {
                 if (msgKey.toLowerCase().indexOf(words[i]) !== -1) {
