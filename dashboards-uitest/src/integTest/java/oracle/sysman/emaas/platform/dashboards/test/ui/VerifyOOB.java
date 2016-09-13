@@ -270,7 +270,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardBuilderUtil.verifyWidget(webd, "Database Status");
 		DashboardBuilderUtil.verifyWidget(webd, "Databases: Fatal Alerts");
 		DashboardBuilderUtil.verifyWidget(webd, "Databases: Critical Alerts");
-		DashboardBuilderUtil.verifyWidget(webd, "Databases: Warning Alert");
+		DashboardBuilderUtil.verifyWidget(webd, "Databases: Warning Alerts");
 		DashboardBuilderUtil.verifyWidget(webd, "Databases: Top 5 by Alert Count");
 		DashboardBuilderUtil.verifyWidget(webd, "Database Performance Metrics");
 		DashboardBuilderUtil.verifyWidget(webd, "Database Log Trends");
@@ -284,7 +284,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyIconInWidget(webd, "Database Status");
 		verifyIconInWidget(webd, "Databases: Fatal Alerts");
 		verifyIconInWidget(webd, "Databases: Critical Alerts");
-		verifyIconInWidget(webd, "Databases: Warning Alert");
+		verifyIconInWidget(webd, "Databases: Warning Alerts");
 		verifyIconInWidget(webd, "Databases: Top 5 by Alert Count");
 		verifyIconInWidget(webd, "Database Performance Metrics");
 		verifyIconInWidget(webd, "Database Log Trends");
