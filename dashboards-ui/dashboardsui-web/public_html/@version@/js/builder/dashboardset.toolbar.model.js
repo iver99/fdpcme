@@ -419,15 +419,18 @@ define(['knockout',
                         var indexOfSelectedTabInUserOption = 0;
                         $.each(subDashboards, function (index, simpleDashboardInst) {
                             singleDashboardItem = new dashboardItem(simpleDashboardInst);
+                            var ifCondition = self.dashboardsetConfig.isCreator() || (singleDashboardItem.raw !== null && singleDashboardItem.raw.sharePublic() === true) || singleDashboardItem === "new";
+                            if (ifCondition) {
+                                self.dashboardsetItems.push(singleDashboardItem);
+                                self.reorderedDbsSetItems.push(singleDashboardItem);
+                                addNewTab(singleDashboardItem.name(), singleDashboardItem.dashboardId, -1, singleDashboardItem.type);
 
-                            self.dashboardsetItems.push(singleDashboardItem);
-                            self.reorderedDbsSetItems.push(singleDashboardItem);
-                            addNewTab(singleDashboardItem.name(), singleDashboardItem.dashboardId, -1,singleDashboardItem.type);
-
-                            if (self.extendedOptions && self.extendedOptions.selectedTab === singleDashboardItem.dashboardId) {
-                                indexOfSelectedTabInUserOption = index;
+                                if (self.extendedOptions && self.extendedOptions.selectedTab === singleDashboardItem.dashboardId) {
+                                    var findResult = findTargetInArr(self.dashboardsetItems, self.extendedOptions.selectedTab);
+                                    indexOfSelectedTabInUserOption = findResult.removeIndex;
+                                }
                             }
-                            if(self.dashboardsetItems.length===1 && singleDashboardItem.type==='new'){
+                            if (self.dashboardsetItems.length === 1 && singleDashboardItem.type === 'new') {
                                 self.noDashboardHome(false);
                             }
                         });

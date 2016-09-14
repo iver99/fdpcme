@@ -1,11 +1,5 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
@@ -16,12 +10,13 @@ import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonValue;
+
+import java.util.*;
 
 public class Dashboard
 {
@@ -233,6 +228,7 @@ public class Dashboard
 		to.setEnableDescription(EnableDescriptionState.fromValue(from.getEnableDescription()));
 		to.setEnableRefresh(DataFormatUtils.integer2Boolean(from.getEnableRefresh()));
 		to.setIsSystem(DataFormatUtils.integer2Boolean(from.getIsSystem()));
+		to.setShowInHome(DataFormatUtils.integer2Boolean(from.getShowInHome()));
 		to.setSharePublic(DataFormatUtils.integer2Boolean(from.getSharePublic()));
 		to.setLastModificationDate(from.getLastModificationDate());
 		to.setLastModifiedBy(from.getLastModifiedBy());
@@ -264,6 +260,7 @@ public class Dashboard
 
 						dbd.setDashboardId(ed.getDashboardId());
 						dbd.setName(ed.getName());
+						dbd.setSharePublic(DataFormatUtils.integer2Boolean(ed.getSharePublic()));
 
 						subDashboardList.add(dbd);
 					}
@@ -314,6 +311,8 @@ public class Dashboard
 	@JsonProperty("systemDashboard")
 	private Boolean isSystem;
 
+	private Boolean showInHome;
+
 	private Boolean sharePublic;
 
 	@JsonProperty("lastModifiedOn")
@@ -357,6 +356,7 @@ public class Dashboard
 		deleted = DASHBOARD_DELETED_DEFAULT;
 		isSystem = Boolean.FALSE;
 		sharePublic = Boolean.FALSE;
+		showInHome=Boolean.TRUE;
 	}
 
 	public Tile addTile(Tile tile)
@@ -432,6 +432,11 @@ public class Dashboard
 		return isSystem;
 	}
 
+	public Boolean getShowInHome()
+	{
+		return showInHome;
+	}
+
 	public Date getLastModificationDate()
 	{
 		return lastModificationDate;
@@ -475,6 +480,7 @@ public class Dashboard
 		Integer isEnableRefresh = DataFormatUtils.boolean2Integer(enableRefresh);
 		Integer isIsSystem = DataFormatUtils.boolean2Integer(isSystem);
 		Integer isShare = DataFormatUtils.boolean2Integer(sharePublic);
+		Integer isShowInHome=DataFormatUtils.boolean2Integer(showInHome);
 		Integer dashboardType = DataFormatUtils.dashboardTypeString2Integer(type);
 		Integer appType = appicationType == null ? null : appicationType.getValue();
 		String htmlEcodedName = StringEscapeUtils.escapeHtml4(name);
@@ -483,7 +489,7 @@ public class Dashboard
 		if (ed == null) {
 			ed = new EmsDashboard(creationDate, dashboardId, 0L, htmlEcodedDesc, isEnableTimeRange, isEnableRefresh,
 					isEnableDescription, isEnableEntityFilter, isIsSystem, isShare, lastModificationDate, lastModifiedBy,
-					htmlEcodedName, owner, screenShot, dashboardType, appType, extendedOptions);
+					htmlEcodedName, owner, screenShot, dashboardType, appType, isShowInHome, extendedOptions);
 
 			if (type.equals(Dashboard.DASHBOARD_TYPE_SET)) {
 				// support create subDashboards
@@ -642,6 +648,11 @@ public class Dashboard
 	public void setIsSystem(Boolean isSystem)
 	{
 		this.isSystem = isSystem;
+	}
+
+	public void setShowInHome(Boolean showInHome)
+	{
+		this.showInHome = showInHome;
 	}
 
 	public void setLastModificationDate(Date lastModificationDate)

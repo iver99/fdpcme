@@ -1,20 +1,14 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
-import java.util.List;
+import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
+import oracle.sysman.emaas.platform.dashboards.entity.*;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
-
-import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsPreferencePK;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptionsPK;
-
-import org.apache.commons.lang3.StringEscapeUtils;
+import java.util.List;
 
 public class DashboardServiceFacade
 {
@@ -342,6 +336,19 @@ public class DashboardServiceFacade
 				.executeUpdate();
 		commitTransaction();
 		return deleteCout;
+	}
+
+	public void updateSubDashboardShowInHome(long dashboardId)
+	{
+		getEntityManager().getTransaction().begin();
+		List<EmsSubDashboard> emsSubDashboards = getEmsDashboardById(dashboardId).getSubDashboardList();
+		if (emsSubDashboards != null) {
+			for (EmsSubDashboard emsSubDashboard : emsSubDashboards) {
+				EmsDashboard dashboard = getEmsDashboardById(emsSubDashboard.getSubDashboardId());
+				dashboard.setShowInHome(1);
+				em.merge(dashboard);
+			}
+		}
 	}
 
 	public List<EmsDashboard> getEmsDashboardsBySubId(long subDashboardId)

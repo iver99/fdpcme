@@ -136,10 +136,8 @@ function(ko, $, dfu, oj)
                     self.errorPageMessage = oj.Translations.getTranslatedString('DBS_ERROR_SENSITIVE_WORD');
                 }
                 self.defaultHomeLinkVisible = msgKey === 'DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG' ? true : false;
-                self.clickText = oj.Translations.getTranslatedString('DBS_ERROR_TEXT_CLICK');
-                self.hereText = oj.Translations.getTranslatedString('DBS_ERROR_TEXT_HERE');
-                self.goHomePageText = oj.Translations.getTranslatedString('DBS_ERROR_TEXT_GO_HOME_PAGE');
-                self.defaultHomeUrl = '/emsaasui/emcpdfui/welcome.html';
+                var params = {"style" : "dbd-error-url", "url" : "/emsaasui/emcpdfui/welcome.html"};
+                self.goHomePageText = oj.Translations.getTranslatedString("DBS_ERROR_TEXT_GO_HOME_PAGE", params);
                 self.invalidUrl = dfu.getUrlParam("invalidUrl");
                 if (self.invalidUrl) {
                     self.invalidUrl = decodeURIComponent(self.invalidUrl);
@@ -165,10 +163,8 @@ function(ko, $, dfu, oj)
                     self.errorPageMessage = oj.Translations.getTranslatedString('DBS_ERROR_PAGE_NOT_FOUND_MSG');
                 }
                 self.defaultHomeLinkVisible = msgKey === 'DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG' ? true : false;
-                self.clickText = oj.Translations.getTranslatedString('DBS_ERROR_TEXT_CLICK');
-                self.hereText = oj.Translations.getTranslatedString('DBS_ERROR_TEXT_HERE');
-                self.goHomePageText = oj.Translations.getTranslatedString('DBS_ERROR_TEXT_GO_HOME_PAGE');
-                self.defaultHomeUrl = '/emsaasui/emcpdfui/welcome.html';
+                var params = {"style" : "dbd-error-url", "url" : "/emsaasui/emcpdfui/welcome.html"};
+                self.goHomePageText = oj.Translations.getTranslatedString("DBS_ERROR_TEXT_GO_HOME_PAGE", params);
                 self.invalidUrl = dfu.getUrlParam("invalidUrl");
                 if (self.invalidUrl) {
                     self.invalidUrl = decodeURIComponent(self.invalidUrl);
