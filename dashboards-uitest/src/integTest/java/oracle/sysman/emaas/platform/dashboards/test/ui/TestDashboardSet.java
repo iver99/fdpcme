@@ -632,7 +632,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testFilterITADashboardSet");
+		webd.getLogger().info("Start the test case: testFilterLADashboardSet");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");

@@ -161,6 +161,8 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Categorical");
 		DashboardHomeUtil.selectDashboard(webd, "Categorical");
 
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
 		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=26");

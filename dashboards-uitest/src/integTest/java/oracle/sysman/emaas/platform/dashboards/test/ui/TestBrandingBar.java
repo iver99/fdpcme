@@ -57,7 +57,7 @@ public class TestBrandingBar extends LoginAndLogout
 	public void testAdminLinkAPMAdmin()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_apm_admin1");
-		webd.getLogger().info("start to test in testAdminLink");
+		webd.getLogger().info("start to test in testAdminLinkAPMAdmin");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		// navigate to APM page
@@ -110,7 +110,7 @@ public class TestBrandingBar extends LoginAndLogout
 	public void testAdminLinkAPMUser()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_apm_user1");
-		webd.getLogger().info("start to test in testAdminLink");
+		webd.getLogger().info("start to test in testAdminLinkAPMUser");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_APM);
@@ -128,7 +128,7 @@ public class TestBrandingBar extends LoginAndLogout
 	public void testAdminLinkITAAdmin()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_admin1");
-		webd.getLogger().info("start to test in testAdminLink");
+		webd.getLogger().info("start to test in testAdminLinkITAAdmin");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		// Navigate to one of the subscribed applications firstly (e.g. APM),
@@ -182,7 +182,7 @@ public class TestBrandingBar extends LoginAndLogout
 	public void testAdminLinkITAUser()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_user1");
-		webd.getLogger().info("start to test in testAdminLink");
+		webd.getLogger().info("start to test in testAdminLinkITAUser");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		// Navigate to one of the subscribed applications firstly (e.g. APM),
@@ -205,7 +205,7 @@ public class TestBrandingBar extends LoginAndLogout
 	public void testAdminLinkLAAdmin()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_admin1");
-		webd.getLogger().info("start to test in testAdminLink");
+		webd.getLogger().info("start to test in testAdminLinkLAAdmin");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_LA);
@@ -252,7 +252,7 @@ public class TestBrandingBar extends LoginAndLogout
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_user1");
 		WaitUtil.waitForPageFullyLoaded(webd);
-		webd.getLogger().info("start to test in testAdminLink");
+		webd.getLogger().info("start to test in testAdminLinkLAUser");
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_LA);
 		WaitUtil.waitForPageFullyLoaded(webd);
 		String url = webd.getWebDriver().getCurrentUrl();
