@@ -544,6 +544,14 @@ public class DashboardManager
 		for (EmsDashboard ed : edList) {
 			dbdList.add(Dashboard.valueOf(ed, null, false, false, false));
 		}
+		EntityManager em = null;
+		try {
+			em = dsf.getEntityManager();
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
 		return dbdList;
 	}
 
@@ -713,35 +721,41 @@ public class DashboardManager
 		String jpqlQuery = sbQuery.toString();
 
 		LOGGER.debug("Executing SQL is: " + jpqlQuery);
-		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);	
 		EntityManager em = dsf.getEntityManager();
-		Query listQuery = em.createNativeQuery(jpqlQuery, EmsDashboard.class);
-		initializeQueryParams(listQuery, paramList);
-		listQuery.setFirstResult(firstResult);
-		listQuery.setMaxResults(maxResults);
-		@SuppressWarnings("unchecked")
-		List<EmsDashboard> edList = listQuery.getResultList();
-		LOGGER.debug("result number is " + edList.size());
-		List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
+		try {
+			Query listQuery = em.createNativeQuery(jpqlQuery, EmsDashboard.class);
+			initializeQueryParams(listQuery, paramList);
+			listQuery.setFirstResult(firstResult);
+			listQuery.setMaxResults(maxResults);
+			@SuppressWarnings("unchecked")
+			List<EmsDashboard> edList = listQuery.getResultList();
+			LOGGER.debug("result number is " + edList.size());
+			List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
 
-		if (edList != null && !edList.isEmpty()) {
-			for (int i = 0; i < edList.size(); i++) {
-				dbdList.add(Dashboard.valueOf(edList.get(i), null, false, false, false));
+			if (edList != null && !edList.isEmpty()) {
+				for (int i = 0; i < edList.size(); i++) {
+					dbdList.add(Dashboard.valueOf(edList.get(i), null, false, false, false));
+				}
+			}
+
+			StringBuilder sbCount = new StringBuilder(sb);
+			sbCount.insert(0, "select count(*) ");
+			String jpqlCount = sbCount.toString();
+			LOGGER.debug(jpqlCount);
+			Query countQuery = em.createNativeQuery(jpqlCount);
+			initializeQueryParams(countQuery, paramList);
+			Long totalResults = ((BigDecimal) countQuery.getSingleResult()).longValue();
+			LOGGER.debug("Total results is " + totalResults);
+			PaginatedDashboards pd = new PaginatedDashboards(totalResults, firstResult, dbdList == null ? 0 : dbdList.size(),
+				maxResults, dbdList);
+			return pd;
+			}
+			finally {
+				if (em != null) {
+					em.close();
 			}
 		}
-
-		StringBuilder sbCount = new StringBuilder(sb);
-		sbCount.insert(0, "select count(*) ");
-		String jpqlCount = sbCount.toString();
-		LOGGER.debug(jpqlCount);
-		Query countQuery = em.createNativeQuery(jpqlCount);
-		initializeQueryParams(countQuery, paramList);
-		Long totalResults = ((BigDecimal) countQuery.getSingleResult()).longValue();
-		LOGGER.debug("Total results is " + totalResults);
-		PaginatedDashboards pd = new PaginatedDashboards(totalResults, firstResult, dbdList == null ? 0 : dbdList.size(),
-				maxResults, dbdList);
-		return pd;
-
 	}
 
 	/**
@@ -867,16 +881,25 @@ public class DashboardManager
 	 */
 	public void setDashboardIncludeTimeControl(Long dashboardId, boolean enable, Long tenantId)
 	{
-		if (dashboardId == null || dashboardId <= 0) {
-			return;
+		EntityManager em = null;
+		try {
+			if (dashboardId == null || dashboardId <= 0) {
+				return;
+			}
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+			if (ed == null) {
+				return;
+			}
+			ed.setEnableTimeRange(DataFormatUtils.boolean2Integer(enable));
+			dsf.mergeEmsDashboard(ed);
+			em = dsf.getEntityManager();
 		}
-		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-		if (ed == null) {
-			return;
+		finally {
+			if (em != null) {
+				em.close();
+			}
 		}
-		ed.setEnableTimeRange(DataFormatUtils.boolean2Integer(enable));
-		dsf.mergeEmsDashboard(ed);
 	}
 
 	/**
@@ -1020,7 +1043,7 @@ public class DashboardManager
 		}
 	}
 
-	public void updateLastAccessDate(Long dashboardId, Long tenantId, DashboardServiceFacade dsf)
+	private void updateLastAccessDate(Long dashboardId, Long tenantId, DashboardServiceFacade dsf)
 	{
 		if (dashboardId == null || dashboardId <= 0) {
 			LOGGER.debug("Last access date for dashboard is not updated: dashboard id with value {} is invalid", dashboardId);
