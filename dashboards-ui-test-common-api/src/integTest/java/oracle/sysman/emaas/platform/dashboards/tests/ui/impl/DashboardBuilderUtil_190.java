@@ -1541,7 +1541,10 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 			driver.sendKeys("id=" + DashBoardPageId_190.BUILDEROPTIONSDUPLICATEDESCRIPTIONCSS, descriptions);
 		}
 		driver.takeScreenShot();
-		driver.waitForValue("id=" + DashBoardPageId_190.BUILDEROPTIONSDUPLICATEDESCRIPTIONCSS, descriptions);
+		if (descriptions != null) {
+			driver.waitForValue("id=" + DashBoardPageId_190.BUILDEROPTIONSDUPLICATEDESCRIPTIONCSS, descriptions);
+		}
+		WaitUtil.waitForPageFullyLoaded(driver);
 		//press ok button
 		By locatorOfDuplicateSaveEl = By.cssSelector(DashBoardPageId_190.BUILDEROPTIONSDUPLICATESAVECSS);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateSaveEl));
