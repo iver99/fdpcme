@@ -719,7 +719,10 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcitas/resource-analytics/html/server-resource-analytics.html");
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = " + url);
+		Assert.assertEquals(DashBoardUtils.trimUrlParameters(url.substring(url.indexOf("emsaasui") + 9)),
+				"emcitas/resource-analytics/html/server-resource-analytics.html");
 
 		//verify all the widgets displayed
 		//TODO
