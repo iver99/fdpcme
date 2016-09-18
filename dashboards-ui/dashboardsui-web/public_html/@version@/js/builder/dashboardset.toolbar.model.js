@@ -476,9 +476,9 @@ define(['knockout',
                 function addNewTab(tabName, dashboardId, insertIndex, type) {
                     var tabContent;
                     if (type === "new") {
-                        tabContent = $("<li class='other-nav' id='dashboardTab-" + dashboardId + "' data-tabs-name='Dashboard'><span class='tabs-name'>" + tabName + "</span></li>");
+                        tabContent = $("<li class='other-nav creator-"+self.dashboardsetConfig.isCreator()+"' id='dashboardTab-" + dashboardId + "' data-tabs-name='Dashboard'><span class='tabs-name'>" + tabName + "</span></li>");
                     } else {
-                        tabContent = $("<li class='other-nav' id='dashboardTab-" + dashboardId + "' data-tabs-name='" + tabName + "'data-dashboard-name-in-set='" + tabName + "'><span class='tabs-name'>" + tabName + "</span></li>");
+                        tabContent = $("<li class='other-nav creator-"+self.dashboardsetConfig.isCreator()+"' id='dashboardTab-" + dashboardId + "' data-tabs-name='" + tabName + "'data-dashboard-name-in-set='" + tabName + "'><span class='tabs-name'>" + tabName + "</span></li>");
                     }
                     $("#dbd-tabs-container").ojTabs("addTab",
                             {
