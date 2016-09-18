@@ -2,12 +2,15 @@ package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
 import oracle.sysman.emaas.platform.dashboards.entity.*;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+
+import java.util.Collections;
 import java.util.List;
 
 public class DashboardServiceFacade
@@ -128,6 +131,30 @@ public class DashboardServiceFacade
 		Query query = em.createQuery(hql);
 		return query.getResultList();
 	}
+	
+	public List<EmsDashboard> getEmsDashboardByIds(List<Long> dashboardIds)
+	{
+		if (dashboardIds != null && !dashboardIds.isEmpty()) {
+			StringBuilder parameters = new StringBuilder();
+			int flag = 0;
+			for (Long id : dashboardIds) {
+				if (flag++ > 0) {
+					parameters.append(",");
+				}
+				parameters.append(id);
+			}
+			String sql = "select * from ems_dashboard p where p.dashboard_id in("
+					+ parameters.toString() + ")";
+			Query query = em.createNativeQuery(sql, EmsDashboard.class);
+			@SuppressWarnings("unchecked")
+			List<EmsDashboard> subDashboards = query.getResultList();
+			return subDashboards;
+		}
+		return Collections.emptyList();
+
+	}
+ 
+
 
 	public EmsDashboard mergeEmsDashboard(EmsDashboard emsDashboard)
 	{

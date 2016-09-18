@@ -10,6 +10,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -17,6 +18,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonValue;
 
 import java.util.*;
+
+import javax.persistence.EntityManager;
 
 public class Dashboard
 {
@@ -242,30 +245,29 @@ public class Dashboard
 			to.setEnableTimeRange(null);
 			to.setIsSystem(null);
 			if (loadSubDashboards) {
-				List<EmsSubDashboard> emsSubDashboards = from.getSubDashboardList();
+				List<EmsSubDashboard> emsSubDashboards = from
+						.getSubDashboardList();
 				if (emsSubDashboards != null) {
-					List<Dashboard> subDashboardList = new ArrayList<>();
-					for (EmsSubDashboard esd : emsSubDashboards) {
-						Dashboard dbd = new Dashboard();
-						dbd.setEnableTimeRange(null);
-						dbd.setEnableRefresh(null);
-						dbd.setIsSystem(null);
-						dbd.setSharePublic(null);
-						dbd.setType(null);
-
-						Long subDashboardId = esd.getSubDashboardId();
-						Long tenantId = from.getTenantId();
-						DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-						EmsDashboard ed = dsf.getEmsDashboardById(subDashboardId);
-
-						dbd.setDashboardId(ed.getDashboardId());
-						dbd.setName(ed.getName());
-						dbd.setSharePublic(DataFormatUtils.integer2Boolean(ed.getSharePublic()));
-
-						subDashboardList.add(dbd);
+					List<Long> subDashboardIds = new ArrayList<Long>();
+					getSubDashboardIds(emsSubDashboards, subDashboardIds);
+					Long tenantId = from.getTenantId();
+					EntityManager em = null;
+					try {
+						DashboardServiceFacade dsf = new DashboardServiceFacade(
+								tenantId);
+						List<EmsDashboard> subEmsDashboards = dsf
+								.getEmsDashboardByIds(subDashboardIds);
+						List<Dashboard> subDashboardList = new ArrayList<Dashboard>();
+						getSubDashboardsFromEmsSubDashboards(subEmsDashboards,
+								subDashboardList);
+						to.setSubDashboards(subDashboardList);
+						em = dsf.getEntityManager();
+					} finally {
+						if (em != null) {
+							em.close();
+						}
 					}
-					to.setSubDashboards(subDashboardList);
-				}
+				}	
 			}
 		}else {
 			to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
@@ -714,6 +716,38 @@ public class Dashboard
 	{
 		this.type = type;
 	}
+	
+	private static void getSubDashboardIds(List<EmsSubDashboard> subDashboards,
+			List<Long> subDashboardIds) {
+		if (subDashboards != null) {
+			for (EmsSubDashboard emsSubDashboard : subDashboards) {
+				subDashboardIds.add(emsSubDashboard.getSubDashboardId());
+			}
+		}
+	}
+
+	private static void getSubDashboardsFromEmsSubDashboards(
+			List<EmsDashboard> emsSubDashboards, List<Dashboard> subDashboards) {
+		if (emsSubDashboards != null) {
+			for (EmsDashboard emsDashboard : emsSubDashboards) {
+				Dashboard dbd = new Dashboard();
+				dbd.setEnableTimeRange(null);
+				dbd.setEnableRefresh(null);
+				dbd.setIsSystem(null);
+				dbd.setType(null);
+				dbd.setDashboardId(emsDashboard.getDashboardId());
+				dbd.setName(emsDashboard.getName());
+				dbd.setSharePublic(DataFormatUtils.integer2Boolean(emsDashboard
+						.getSharePublic()));
+				subDashboards.add(dbd);
+
+			}
+
+		}
+
+	}
+	 
+
 
     public List<Dashboard> getDashboardSets() {
         return dashboardSets;

@@ -83,6 +83,8 @@ END;
 
 @&EMSAAS_SQL_ROOT/1.10.0/emaas_drop_tables.sql
 
+@&EMSAAS_SQL_ROOT/1.11.0/emaas_dashboards_seed_data_ta.sql &TENANT_ID
+
 COMMIT;
 /
 BEGIN
