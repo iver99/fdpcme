@@ -216,6 +216,8 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Database Operations");
 		DashboardHomeUtil.selectDashboard(webd, "Database Operations");
 
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
 		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=15");
@@ -256,6 +258,8 @@ public class VerifyOOB extends LoginAndLogout
 		//open Databases
 		webd.getLogger().info("Open the OOB dashboard---Databases");
 		DashboardHomeUtil.selectDashboard(webd, "Databases");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
@@ -307,6 +311,8 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Enterprise Health");
 		DashboardHomeUtil.selectDashboard(webd, "Enterprise Health");
 
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
 		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=31");
@@ -337,6 +343,8 @@ public class VerifyOOB extends LoginAndLogout
 		//Open the OOB dashboard---Entities
 		webd.getLogger().info("Open the OOB dashboard---Entities");
 		DashboardHomeUtil.selectDashboard(webd, "Entities");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
@@ -372,6 +380,8 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Exadata Health");
 		DashboardHomeUtil.selectDashboard(webd, "Exadata Health");
 
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
 		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=28");
@@ -399,6 +409,8 @@ public class VerifyOOB extends LoginAndLogout
 		//open Host Operations
 		webd.getLogger().info("Open the OOB dashboard---Host Operations");
 		DashboardHomeUtil.selectDashboard(webd, "Host Operations");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
@@ -440,6 +452,8 @@ public class VerifyOOB extends LoginAndLogout
 		//Open the OOB dashboard---Hosts
 		webd.getLogger().info("Open the OOB dashboard---Hosts");
 		DashboardHomeUtil.selectDashboard(webd, "Hosts");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
@@ -492,6 +506,8 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Middleware Operations");
 		DashboardHomeUtil.selectDashboard(webd, "Middleware Operations");
 
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
 		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=17");
@@ -530,6 +546,8 @@ public class VerifyOOB extends LoginAndLogout
 		//Open the OOB dashboard---Others
 		webd.getLogger().info("Open the OOB dashboard---Others");
 		DashboardHomeUtil.selectDashboard(webd, "Others");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
@@ -574,6 +592,8 @@ public class VerifyOOB extends LoginAndLogout
 		//Open the OOB dashboard---Overview
 		webd.getLogger().info("Open the OOB dashboard---Overview");
 		DashboardHomeUtil.selectDashboard(webd, "Overview");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
@@ -652,6 +672,8 @@ public class VerifyOOB extends LoginAndLogout
 		//Open the OOB dashboard---Performance
 		webd.getLogger().info("Open the OOB dashboard---Performance");
 		DashboardHomeUtil.selectDashboard(webd, "Performance");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
@@ -760,6 +782,8 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Summary");
 		DashboardHomeUtil.selectDashboard(webd, "Summary");
 
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
 		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=32");
@@ -817,6 +841,8 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Timeseries");
 		DashboardHomeUtil.selectDashboard(webd, "Timeseries");
 
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
 		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=25");
@@ -871,6 +897,8 @@ public class VerifyOOB extends LoginAndLogout
 		//Open the OOB dashboard---UI Gallery
 		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
 		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
