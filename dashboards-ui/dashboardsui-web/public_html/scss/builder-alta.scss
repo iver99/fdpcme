@@ -1405,6 +1405,13 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
                 }  
             }
         }
+        .other-nav.creator-false{
+            margin-left:10px;
+            .oj-tabs-gen-a{
+                padding-left: 5px;
+                padding-right: 0;
+            }
+        }
         .other-nav:not(.oj-selected){
             .oj-tabs-close-icon{
                 display: none;
