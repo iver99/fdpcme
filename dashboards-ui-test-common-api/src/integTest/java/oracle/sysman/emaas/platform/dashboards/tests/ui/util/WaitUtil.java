@@ -36,7 +36,16 @@ public class WaitUtil
 			@Override
 			public boolean apply(org.openqa.selenium.WebDriver d)
 			{
-				boolean activeAjax = (Boolean) ((JavascriptExecutor) d).executeScript("return $ !== undefined && $.active === 0");
+		            boolean activeAjax =false;
+                            try{
+                                activeAjax = (Boolean) ((JavascriptExecutor) d).executeScript("return $ !== undefined && $.active === 0");
+                            }catch(org.openqa.selenium.WebDriverException e){
+                                if (e.getMessage()!=null && e.getMessage().contains("$ is not defined")){
+                                   webd.getLogger().info("$ is not loaded, will wait more");
+                                }else{
+                                   throw e;
+                                }
+                            }
 				webd.getLogger().info(
 						"Wait for ajax finished: " + System.currentTimeMillis() + " has active ajax: " + !activeAjax);
 				return activeAjax;
