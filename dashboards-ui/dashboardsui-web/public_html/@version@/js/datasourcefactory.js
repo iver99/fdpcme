@@ -23,8 +23,10 @@ function(dm, dc, dp, oj, ko, $)
             if (pageSize)
             {
                 _pageSize = pageSize;
-                _fetchSize = pageSize;//((_pageSize * 2) > 300 ? _pageSize : (_pageSize * 2));
-                if (_fetchSize > _modelLimit) _modelLimit = _fetchSize;
+                _fetchSize = pageSize;
+                if (_fetchSize > _modelLimit) {
+                  _modelLimit = _fetchSize;
+                }
             }
             var _collection = new dc.DashboardCollection([],
                         {'fetchSize': _fetchSize,
@@ -33,12 +35,8 @@ function(dm, dc, dp, oj, ko, $)
                          'query': query,
                          'orderBy': _orderby,
                          'filter': _filter,
-//                         'types': _types,
-//                         'appTypes': _appTypes,
-//                         'owners': _owners,
-//                         "favoritesOnly": _favoritesOnly,
                          'model': _model});
-            var _pagingds = new dp.DashboardPaging(_collection);// new oj.CollectionPagingDataSource(_collection);
+            var _pagingds = new dp.DashboardPaging(_collection);
             _pagingds.setPageSize(_pageSize);
             return {'model' : _model, 'collection': _collection, "pagingDS": _pagingds};
           })();

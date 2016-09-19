@@ -17,6 +17,9 @@ import java.util.logging.Logger;
  */
 public class XPathLiteral
 {
+	private XPathLiteral() {
+	  }
+
 	/// Produce an XPath literal equal to the value if possible; if not, produce
 	/// an XPath expression that will match the value.
 	///
@@ -69,7 +72,7 @@ public class XPathLiteral
 		String[] substrings = value.split("\"");
 		for (int i = 0; i < substrings.length; i++) {
 			boolean needComma = i > 0;
-			if (!substrings[i].equals("")) {
+			if (!("").equals(substrings[i])) {
 				if (i > 0) {
 					sb.append(", ");
 				}

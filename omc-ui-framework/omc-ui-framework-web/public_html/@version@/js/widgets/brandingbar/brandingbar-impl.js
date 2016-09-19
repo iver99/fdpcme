@@ -1,8 +1,8 @@
-define([
+define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
     'knockout',
     'jquery',
-    'uifwk/js/util/df-util',
-    'uifwk/js/util/message-util',
+    'uifwk/@version@/js/util/df-util-impl', 
+    'uifwk/@version@/js/util/message-util-impl',
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'ojs/ojknockout',
@@ -57,7 +57,7 @@ define([
                 var appIdError = "Error";
                 self.SERVICE_VERSION=encodeURIComponent('1.0+');
                 self.MONITORING_SERVICE_VERSION=encodeURIComponent('1.5+');
-                self.COMPLIANCE_SERVICE_VERSION = encodeURIComponent('1.7.5+');
+                self.COMPLIANCE_SERVICE_VERSION = encodeURIComponent('0.1+');
                 var appIdEventUI = "EventUI";
                 var appIdMonitoring = "Monitoring";
                 var appIdSecurityAnalytics = "SecurityAnalytics";
@@ -133,9 +133,9 @@ define([
                         "appId": appIdCompliance,
                         "appName": "BRANDING_BAR_APP_NAME_COMPLIANCE",
                         "serviceDisplayName": "BRANDING_BAR_APP_NAME_COMPLIANCE",
-                        "serviceName": "ComplianceUI",
+                        "serviceName": "ComplianceUIService",
                         "version": self.COMPLIANCE_SERVICE_VERSION,
-                        "helpTopicId": ""
+                        "helpTopicId": "em_moncs"
                     };
                 appMap[appIdOcs] = {
                     "appId": appIdOcs,
@@ -152,7 +152,7 @@ define([
                 self.notificationVisible = ko.observable(false);
                 self.notificationDisabled = ko.observable(true);
                 self.notificationPageUrl = null;
-                self.navLinksVisible = true; //self.appId === 'Error' ? false : true; EMCPDF-992
+                self.navLinksVisible = true;
 
                 var isAppIdNotEmpty = self.appId && $.trim(self.appId) !== "";
                 var appProperties = isAppIdNotEmpty && appMap[self.appId] ? appMap[self.appId] : {};
@@ -224,8 +224,9 @@ define([
                 self.handleSignout = function() {
                     //Clear interval for extending user session
                     /* globals clearInterval*/
-                    if (window.intervalToExtendCurrentUserSession)
+                    if (window.intervalToExtendCurrentUserSession){
                         clearInterval(window.intervalToExtendCurrentUserSession);
+                    }
                     var ssoLogoutEndUrl = encodeURI(window.location.protocol + '//' + window.location.host + dfWelcomeUrl);
                     var logoutUrlDiscovered = dfu.discoverLogoutUrl();
                     //If session timed out, redirect to sso login page and go to home page after re-login.
@@ -234,8 +235,9 @@ define([
                     }
                     //Else handle normal logout
                     else {
-                        if (logoutUrlDiscovered === null)
+                        if (logoutUrlDiscovered === null){
                             logoutUrlDiscovered = window.cachedSSOLogoutUrl;
+                        }
                         var logoutUrl = logoutUrlDiscovered + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
                         window.location.href = logoutUrl;
                     }
@@ -256,7 +258,7 @@ define([
                 };
 
                 //Open help link
-                var helpBaseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";//"http://tahiti-stage.us.oracle.com/pls/topic/lookup?ctx=cloud&id=";
+                var helpBaseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";
                 var helpTopicId = appProperties["helpTopicId"] ? appProperties["helpTopicId"] : "em_home_gs";
                 self.openHelpLink = function() {
                     oj.Logger.info("Open help link: " + helpBaseUrl + helpTopicId);
@@ -299,11 +301,13 @@ define([
                         case "emcpdf_oba_logout":
                             self.handleSignout();
                             break;
+                        default:
+                            break;
                     }
                 };
 
-                var templatePath = "/emsaasui/uifwk/js/widgets/navlinks/html/navigation-links.html";
-                var vmPath = "/emsaasui/uifwk/js/widgets/navlinks/js/navigation-links.js";
+                var templatePath = "uifwk/js/widgets/navlinks/html/navigation-links.html";
+                var vmPath = "uifwk/js/widgets/navlinks/js/navigation-links";
 
                 //Parameters for navigation links ko component
                 self.navLinksKocParams = {
@@ -331,8 +335,8 @@ define([
                     id: self.aboutBoxId,
                     nlsStrings: nls };
                 //Register a Knockout component for about box
-                var aboutTemplatePath = "/emsaasui/uifwk/js/widgets/aboutbox/html/aboutbox.html";
-                var aboutVmPath = "/emsaasui/uifwk/js/widgets/aboutbox/js/aboutbox.js";
+                var aboutTemplatePath = "uifwk/js/widgets/aboutbox/html/aboutbox.html";
+                var aboutVmPath = "uifwk/js/widgets/aboutbox/js/aboutbox";
                 if (!ko.components.isRegistered('df-oracle-about-box')) {
                     ko.components.register("df-oracle-about-box",{
                         viewModel:{require:aboutVmPath},
@@ -438,8 +442,9 @@ define([
 
                 function receiveMessage(event)
                 {
-                    if (event.origin !== window.location.protocol + '//' + window.location.host)
+                    if (event.origin !== window.location.protocol + '//' + window.location.host){
                         return;
+                    }
                     var data = event.data;
                     //Only handle received message for showing page level messages
                     if (data && data.tag && data.tag === 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE') {
@@ -558,8 +563,9 @@ define([
                     }
                     else {
                         self.hasHiddenMessages(false);
-                        if (displayMessageCount <= maxMsgDisplayCnt)
+                        if (displayMessageCount <= maxMsgDisplayCnt){
                             self.hiddenMessagesExpanded(false);
+                        }
                     }
                 }
 
@@ -583,12 +589,15 @@ define([
                     if (self.relNotificationCheck && self.relNotificationShow) {
                         self.notificationVisible(true);
                         if (urlNotificationCheck === null) {
-                            if (self.relNotificationCheck.indexOf("/") === 0)
+                            if (self.relNotificationCheck.indexOf("/") === 0){
                                 urlNotificationCheck = self.relNotificationCheck;
-                            else if (self.relNotificationCheck.indexOf("sso.static/") === 0)
+                            }
+                            else if (self.relNotificationCheck.indexOf("sso.static/") === 0){
                                 urlNotificationCheck = "/" + self.relNotificationCheck;
-                            else if (self.relNotificationCheck.indexOf("static/") === 0)
+                            }
+                            else if (self.relNotificationCheck.indexOf("static/") === 0){
                                 urlNotificationCheck = "/sso." + self.relNotificationCheck;
+                            }
 
                             if (urlNotificationCheck) {
                                 self.checkNotificationAvailability();
@@ -634,10 +643,12 @@ define([
                             var appProps = appMap[subscribedApps[i]];
                             if (appProps) {
                                 var servicename = nls[appProps['appName']] ? nls[appProps['appName']] : "";
-                                if (i === 0)
+                                if (i === 0){
                                     subscribedServices = servicename;
-                                else
+                                }
+                                else{
                                     subscribedServices = subscribedServices + " | " + servicename;
+                                }
                             }
                         }
                     }

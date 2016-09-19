@@ -212,7 +212,7 @@ public class TileParam
 			strValue = value;
 		}
 		else if (PARAM_TYPE_NUMBER.equals(type)) {
-			if (value == null || value.equals("")) {
+			if (value == null || ("").equals(value)) {
 				numValue = new BigDecimal(0);
 				return;
 			}
@@ -226,7 +226,7 @@ public class TileParam
 		}
 		else if (PARAM_TYPE_BOOLEAN.equals(type)) {
 			int booleanValue = 0; // 0 for false, 1 for true
-			if (value == null || value.equals("")) {
+			if (value == null || ("").equals(value)) {
 				numValue = new BigDecimal(0);
 				return;
 			}

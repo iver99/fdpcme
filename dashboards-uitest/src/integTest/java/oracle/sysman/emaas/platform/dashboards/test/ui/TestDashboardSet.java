@@ -43,12 +43,11 @@ public class TestDashboardSet extends LoginAndLogout
 	private String dbName_InSet = "";
 	private String dbName_OutSet = "";
 	private String dbName_DuplicateOOB = "";
-	private final String dbsetName_ITA = "";
-	private final String dbsetName_LA = "";
-	private final String dbsetName_APM = "";
+
+	private static String OOBAddToSet = "Others";
 
 	@BeforeClass
-	public void createTestData() throws Exception
+	public void createTestData()
 	{
 		dbsetName = "DashboardSet_Test-" + generateTimeStamp();
 		dbName = "Dashboard_Test-" + generateTimeStamp();
@@ -86,14 +85,14 @@ public class TestDashboardSet extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, "", true), "Dashboard NOT found!");
 	}
 
-	public void initTest(String testName) throws Exception
+	public void initTest(String testName)
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
 	@AfterClass
-	public void removeTestData() throws Exception
+	public void removeTestData()
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -121,7 +120,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "third run", dependsOnGroups = { "second run" })
-	public void testAddDashboardInGridView() throws Exception
+	public void testAddDashboardInGridView()
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -154,7 +153,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "third run", dependsOnMethods = { "testShareWithoutDashboardInSet" })
-	public void testAddDashboardInListView() throws Exception
+	public void testAddDashboardInListView()
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -188,7 +187,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "forth run", dependsOnGroups = { "third run" })
-	public void testCreateDashboardInSet() throws Exception
+	public void testCreateDashboardInSet()
 	{
 		//create dashboard set
 		dbsetName_Test1 = "DashboardSet_For_Test-" + generateTimeStamp();
@@ -231,7 +230,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "first run")
-	public void testCreateDashboardSet() throws Exception
+	public void testCreateDashboardSet()
 	{
 		dbsetName_Test = "DashboardSet-" + generateTimeStamp();
 		String dbsetDesc = "Test the dashboard set";
@@ -259,7 +258,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "forth run", dependsOnMethods = { "testSearchDashboardInSet" })
-	public void testDeleteDashboardInSet() throws Exception
+	public void testDeleteDashboardInSet()
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -301,7 +300,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "forth run", dependsOnMethods = { "testDeleteDashboardInSet" })
-	public void testDuplicateDashboardAddToSet() throws Exception
+	public void testDuplicateDashboardAddToSet()
 	{
 		dbName_InSet = "DashboardInSet-" + generateTimeStamp();
 		//init the test
@@ -330,6 +329,8 @@ public class TestDashboardSet extends LoginAndLogout
 		//verify the dashboard is in the dashboard set
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet);
 
+		WaitUtil.waitForPageFullyLoaded(webd);
+
 		//duplicate the dashboard in set
 		webd.getLogger().info("duplicate the dashboard in the dashboard set");
 		DashboardBuilderUtil.duplicateDashboardInsideSet(webd, dbName_InSet + "-duplicate", null, true);
@@ -353,7 +354,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "forth run", dependsOnMethods = { "testDuplicateDashboardAddToSet" })
-	public void testDuplicateDashboardNotAddToSet() throws Exception
+	public void testDuplicateDashboardNotAddToSet()
 	{
 		dbName_OutSet = "DashboardOutSet-" + generateTimeStamp();
 		//init the test
@@ -378,6 +379,8 @@ public class TestDashboardSet extends LoginAndLogout
 		//create a dashboard in the dashboard set
 		webd.getLogger().info("create a dashboard in the set");
 		DashboardBuilderUtil.createDashboardInsideSet(webd, dbName_OutSet, null);
+
+		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//verify the dashboard is in the dashboard set
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_OutSet), "Create dashboard in set failed!");
@@ -404,7 +407,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "forth run", dependsOnMethods = { "testDuplicateDashboardNotAddToSet" })
-	public void testDuplicateOOBAddToSet() throws Exception
+	public void testDuplicateOOBAddToSet()
 	{
 		dbName_DuplicateOOB = "OOBDashboard-duplicate-" + generateTimeStamp();
 
@@ -429,10 +432,12 @@ public class TestDashboardSet extends LoginAndLogout
 
 		//add an OOB dashboard in the dashboard set
 		webd.getLogger().info("Add an OOB dashboard in the set");
-		DashboardBuilderUtil.addNewDashboardToSet(webd, "Database Operations");
+		DashboardBuilderUtil.addNewDashboardToSet(webd, OOBAddToSet);
+
+		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//verify the dashboard is in the dashboard set
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Database Operations"),
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, OOBAddToSet),
 				"The OOB dashboard is not added into dashboard set");
 
 		//duplicate the dashboard in set
@@ -457,7 +462,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "forth run", dependsOnMethods = { "testDuplicateOOBAddToSet" })
-	public void testDuplicateOOBNotAddToSet() throws Exception
+	public void testDuplicateOOBNotAddToSet()
 	{
 		dbName_DuplicateOOB = "OOBDashboard-duplicate-" + generateTimeStamp();
 
@@ -482,13 +487,11 @@ public class TestDashboardSet extends LoginAndLogout
 
 		//select the OOB dashboard in the set
 		webd.getLogger().info("Select the OOB dashboard in the set");
-		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Database Operations");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, OOBAddToSet);
 
 		//verify the edit menu & save icon are not displayed in OOB
 		webd.getLogger().info("Verify the save icon is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DASHBOARDSAVECSS), "Save icon is displayed in OOB");
-		//		webd.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsMenuLocator);
-		//		webd.click("css=" + DashBoardPageId.BuilderOptionsMenuLocator);
 		webd.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
 		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(PageId.DASHBOARDSETOPTIONS_CSS)));
@@ -500,7 +503,8 @@ public class TestDashboardSet extends LoginAndLogout
 		Assert.assertFalse(webd.isDisplayed("css" + PageId.DASHBOARDSETOPTIONSEDIT_CSS), "Edit menu is displayed in OOB");
 
 		webd.getLogger().info("Select the OOB dashboard in the set");
-		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Database Operations");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, OOBAddToSet);
+
 		//duplicate the dashboard in set
 		webd.getLogger().info("duplicate the dashboard in the dashboard set");
 		DashboardBuilderUtil.duplicateDashboardInsideSet(webd, dbName_DuplicateOOB, null, false);
@@ -523,7 +527,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "second run", dependsOnGroups = { "first run" })
-	public void testFavorite() throws Exception
+	public void testFavorite()
 	{
 		dbsetName_Favorite = "DashboardSet_Favorite-" + generateTimeStamp();
 		String dbsetDesc = "set the dashboard set as favorite";
@@ -576,13 +580,13 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	//	@Test(groups = "fifth run", dependsOnGroups = { "forth run" })
-	//	public void testFilterAPMDashboardSet() throws Exception
+	//	public void testFilterAPMDashboardSet()
 	//	{
 	//
 	//	}
 	//
 	//	@Test(groups = "fifth run", dependsOnGroups = { "forth run" })
-	//	public void testFilterITADashboardSet() throws Exception
+	//	public void testFilterITADashboardSet()
 	//	{
 	//		dbsetName_ITA = "DashboardSet-ITA-" + generateTimeStamp();
 	//
@@ -627,7 +631,7 @@ public class TestDashboardSet extends LoginAndLogout
 	//	}
 	//
 	//	@Test(groups = "fifth run", dependsOnGroups = { "forth run" })
-	//	public void testFilterLADashboardSet() throws Exception
+	//	public void testFilterLADashboardSet()
 	//	{
 	//		dbsetName_LA = "DashboardSet-LA-" + generateTimeStamp();
 	//
@@ -671,7 +675,7 @@ public class TestDashboardSet extends LoginAndLogout
 	//	}
 
 	@Test(groups = "first run", dependsOnMethods = { "testCreateDashboardSet" })
-	public void testModifyDashboardSet() throws Exception
+	public void testModifyDashboardSet()
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -700,7 +704,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "second run", dependsOnGroups = { "first run" })
-	public void testPrint() throws Exception
+	public void testPrint()
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -724,7 +728,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "second run", dependsOnGroups = { "first run" })
-	public void testRefresh() throws Exception
+	public void testRefresh()
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -763,7 +767,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "third run", dependsOnMethods = { "testAddDashboardInGridView" })
-	public void testRemoveDashboardFromDashboardSet() throws Exception
+	public void testRemoveDashboardFromDashboardSet()
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -799,7 +803,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "first run", dependsOnMethods = { "testCreateDashboardSet", "testModifyDashboardSet" })
-	public void testRemoveDashboardSetFromBuilderPage() throws Exception
+	public void testRemoveDashboardSetFromBuilderPage()
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -833,7 +837,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "last run", dependsOnGroups = { "forth run" })
-	public void testRemoveDashboardSetFromHomePage() throws Exception
+	public void testRemoveDashboardSetFromHomePage()
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -857,7 +861,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "last run", dependsOnMethods = { "testSetHome" })
-	public void testRemoveHome() throws Exception
+	public void testRemoveHome()
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -883,7 +887,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "forth run", dependsOnMethods = { "testCreateDashboardInSet" })
-	public void testSearchDashboardInSet() throws Exception
+	public void testSearchDashboardInSet()
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -923,7 +927,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "last run", dependsOnGroups = { "forth run" })
-	public void testSetHome() throws Exception
+	public void testSetHome()
 	{
 		dbsetName_setHome = "DashboardSet_TestSetHome-" + generateTimeStamp();
 		String dbsetDesc = "Test the dashboardset set home";
@@ -959,7 +963,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "third run", dependsOnMethods = { "testAddDashboardInListView" })
-	public void testShare() throws Exception
+	public void testShare()
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -984,7 +988,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "third run", dependsOnMethods = { "testRemoveDashboardFromDashboardSet" })
-	public void testShareWithoutDashboardInSet() throws Exception
+	public void testShareWithoutDashboardInSet()
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -1013,7 +1017,7 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "third run", dependsOnMethods = { "testShare" })
-	public void testStopSharing() throws Exception
+	public void testStopSharing()
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());

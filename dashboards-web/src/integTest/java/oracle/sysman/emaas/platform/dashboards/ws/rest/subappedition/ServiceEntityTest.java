@@ -13,12 +13,12 @@ public class ServiceEntityTest {
     ServiceEntity serviceEntity;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp()  {
         serviceEntity = new ServiceEntity();
     }
 
     @Test
-    public void testGetCanonicalLink() throws Exception {
+    public void testGetCanonicalLink() {
         Assert.assertNull(serviceEntity.getCanonicalLink());
 
         serviceEntity.setCanonicalLink("link");
@@ -29,7 +29,7 @@ public class ServiceEntityTest {
     }
 
     @Test
-    public void testGetEdition() throws Exception {
+    public void testGetEdition() {
         Assert.assertNull(serviceEntity.getEdition());
 
         serviceEntity.setEdition("edition");
@@ -41,7 +41,7 @@ public class ServiceEntityTest {
     }
 
     @Test
-    public void testGetEditionUUID() throws Exception {
+    public void testGetEditionUUID() {
         Assert.assertNull(serviceEntity.getEditionUUID());
 
         serviceEntity.setEditionUUID("editionUUID");
@@ -52,7 +52,7 @@ public class ServiceEntityTest {
     }
 
     @Test
-    public void testGetServiceId() throws Exception {
+    public void testGetServiceId() {
         Assert.assertNull(serviceEntity.getServiceId());
 
         serviceEntity.setServiceId("serviceId");
@@ -63,7 +63,7 @@ public class ServiceEntityTest {
     }
 
     @Test
-    public void testGetServiceName() throws Exception {
+    public void testGetServiceName() {
         Assert.assertNull(serviceEntity.getServiceName());
 
         serviceEntity.setServiceName("serviceName");
@@ -74,7 +74,7 @@ public class ServiceEntityTest {
     }
 
     @Test
-    public void testGetServiceType() throws Exception {
+    public void testGetServiceType() {
         Assert.assertNull(serviceEntity.getServiceType());
 
         serviceEntity.setServiceType("serviceType");
@@ -85,7 +85,7 @@ public class ServiceEntityTest {
     }
 
     @Test
-    public void testGetStatus() throws Exception {
+    public void testGetStatus() {
         Assert.assertNull(serviceEntity.getStatus());
 
         serviceEntity.setStatus("status");

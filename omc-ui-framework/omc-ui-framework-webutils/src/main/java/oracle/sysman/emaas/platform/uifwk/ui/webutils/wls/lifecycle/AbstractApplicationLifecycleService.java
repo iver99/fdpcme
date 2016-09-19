@@ -22,7 +22,7 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 {
 	public static final String APPLICATION_LOGGER_SUBSYSTEM = "oracle.sysman.emaas.platform.uifwk.ui";
 
-	private final NonCatalogLogger logger = new NonCatalogLogger(APPLICATION_LOGGER_SUBSYSTEM + ".services");
+	private final NonCatalogLogger LOGGER = new NonCatalogLogger(APPLICATION_LOGGER_SUBSYSTEM + ".services");
 
 	private final List<ApplicationServiceManager> registeredServices = new ArrayList<ApplicationServiceManager>();
 
@@ -41,16 +41,16 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws ApplicationException
 	{
-		logger.notice("Post-starting registered OMC UI Framework services");
+		LOGGER.notice("Post-starting registered OMC UI Framework services");
 		try {
-			logger.info("Post-starting 'Service Registry'");
+			LOGGER.info("Post-starting 'Service Registry'");
 			for (ApplicationServiceManager service : registeredServices) {
 				service.postStart(evt);
 			}
-			logger.debug("Post-started 'Service Registry'");
+			LOGGER.debug("Post-started 'Service Registry'");
 		}
 		catch (Exception t) {
-			logger.error("Service failed to post-start", t);
+			LOGGER.error("Service failed to post-start", t);
 			throw new ApplicationException("Service failed to post-start", t);
 		}
 	}
@@ -58,16 +58,16 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 	@Override
 	public void postStop(ApplicationLifecycleEvent evt) throws ApplicationException
 	{
-		logger.notice("Post-stopping registered OMC UI Framework services");
+		LOGGER.notice("Post-stopping registered OMC UI Framework services");
 		try {
-			logger.info("Post-stopping 'Service Registry'");
+			LOGGER.info("Post-stopping 'Service Registry'");
 			for (ApplicationServiceManager service : registeredServices) {
 				service.postStop(evt);
 			}
-			logger.debug("Post-stopped 'Service Regsitry'");
+			LOGGER.debug("Post-stopped 'Service Regsitry'");
 		}
 		catch (Exception t) {
-			logger.error("Service failed to post-stop", t);
+			LOGGER.error("Service failed to post-stop", t);
 			throw new ApplicationException("some of the essential services failed to post-stop");
 		}
 	}
@@ -75,16 +75,16 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 	@Override
 	public void preStart(ApplicationLifecycleEvent evt) throws ApplicationException
 	{
-		logger.debug("Pre-starting registered OMC UI Framework services");
+		LOGGER.debug("Pre-starting registered OMC UI Framework services");
 		try {
-			logger.info("Pre-starting 'Service Registry'");
+			LOGGER.info("Pre-starting 'Service Registry'");
 			for (ApplicationServiceManager service : registeredServices) {
 				service.preStart(evt);
 			}
-			logger.debug("Pre-started 'Service Registry'");
+			LOGGER.debug("Pre-started 'Service Registry'");
 		}
 		catch (Exception t) {
-			logger.error("Service failed to pre-start", t);
+			LOGGER.error("Service failed to pre-start", t);
 			throw new ApplicationException("Service failed to pre-start", t);
 		}
 	}
@@ -92,16 +92,16 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws ApplicationException
 	{
-		logger.debug("Pre-stopping registered OMC UI Framework services");
+		LOGGER.debug("Pre-stopping registered OMC UI Framework services");
 		try {
-			logger.info("Pre-stopping 'Service Registry'");
+			LOGGER.info("Pre-stopping 'Service Registry'");
 			for (ApplicationServiceManager service : registeredServices) {
 				service.preStop(evt);
 			}
-			logger.debug("Pre-stopped 'Service Registry'");
+			LOGGER.debug("Pre-stopped 'Service Registry'");
 		}
 		catch (Exception t) {
-			logger.error("Service failed to pre-stop", t);
+			LOGGER.error("Service failed to pre-stop", t);
 			throw new ApplicationException("some of the essential services failed to pre-stop");
 		}
 	}

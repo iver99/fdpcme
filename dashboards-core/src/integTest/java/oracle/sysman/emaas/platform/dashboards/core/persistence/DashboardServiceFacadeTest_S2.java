@@ -106,6 +106,8 @@ public class DashboardServiceFacadeTest_S2
 			case 3:
 				Assert.assertNotNull(time);
 				break;
+			default:
+				break;
 		}
 	}
 
@@ -177,6 +179,8 @@ public class DashboardServiceFacadeTest_S2
 			case 3:
 				p.setParamValueTimestamp(DateUtil.getCurrentUTCTime());
 				break;
+			default:
+				break;
 		}
 		return p;
 	}
@@ -187,7 +191,7 @@ public class DashboardServiceFacadeTest_S2
 
 	private EmsDashboardTile t;
 
-	private EmsDashboardTileParams p;
+	private EmsDashboardTileParams emDashboardTileParam;
 
 	private EmsUserOptions uo;
 
@@ -195,7 +199,7 @@ public class DashboardServiceFacadeTest_S2
 	 * @throws java.lang.Exception
 	 */
 	//@BeforeMethod
-	public void setUp() throws Exception
+	public void setUp()
 	{
 		//load mock
 		new MockDashboardServiceFacade();
@@ -214,8 +218,8 @@ public class DashboardServiceFacadeTest_S2
 			em = dashboardServiceFacade.getEntityManager();
 			d = DashboardServiceFacadeTest_S2.newDashboard();
 			t = DashboardServiceFacadeTest_S2.newTile();
-			p = DashboardServiceFacadeTest_S2.newTileParams(testSeq++ % 3 + 1);
-			t.addEmsDashboardTileParams(p);
+			emDashboardTileParam = DashboardServiceFacadeTest_S2.newTileParams(testSeq++ % 3 + 1);
+			t.addEmsDashboardTileParams(emDashboardTileParam);
 			d.addEmsDashboardTile(t);
 			//f = DashboardServiceFacadeTest_S2.newFavorite(d);
 
@@ -244,7 +248,7 @@ public class DashboardServiceFacadeTest_S2
 	 * @throws java.lang.Exception
 	 */
 	//@AfterMethod
-	public void tearDown() throws Exception
+	public void tearDown()
 	{
 		EntityManager em = null;
 		try {
@@ -267,7 +271,7 @@ public class DashboardServiceFacadeTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testAll() throws Exception
+	public void testAll()
 	{
 		setUp();
 		testGetEmsUserOptions();
@@ -376,7 +380,7 @@ public class DashboardServiceFacadeTest_S2
 			EmsUserOptions rd = dashboardServiceFacade.getEmsUserOptions(uo.getUserName(), uo.getDashboardId());
 			Assert.assertNotNull(rd);
 			List<EmsDashboard> ds = dashboardServiceFacade.getFavoriteEmsDashboards(uo.getUserName());
-			Assert.assertEquals(ds.size() > 0, true);
+			Assert.assertEquals(!ds.isEmpty(), true);
 		}
 		finally {
 			if (em != null) {

@@ -8,7 +8,6 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'builder/builder.core'], function(ko
     function TimeSelectorModel() {
         var me = this;
         var now = new Date();
-//        var lastMonth = new Date(now.getTime() - 30*24*60*60*1000);
         var last60mins = new Date(now.getTime() - 60*60*1000);
         me.viewStart = ko.observable(last60mins);
         me.viewEnd = ko.observable(now);

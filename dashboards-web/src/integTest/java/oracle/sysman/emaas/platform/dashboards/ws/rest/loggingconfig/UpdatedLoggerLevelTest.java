@@ -13,17 +13,17 @@ import org.testng.annotations.Test;
 public class UpdatedLoggerLevelTest {
     UpdatedLoggerLevel updatedLoggerLevel;
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         updatedLoggerLevel = new UpdatedLoggerLevel();
     }
 
     @AfterMethod
-    public void tearDown() throws Exception {
-
+    public void tearDown() {
+    	// do nothing
     }
 
     @Test
-    public void testGetLevel() throws Exception {
+    public void testGetLevel() {
         Assert.assertNull(updatedLoggerLevel.getLevel());
 
         updatedLoggerLevel.setLevel("level");

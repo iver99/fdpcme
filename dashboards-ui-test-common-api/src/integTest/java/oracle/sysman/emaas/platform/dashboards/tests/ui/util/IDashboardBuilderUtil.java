@@ -25,11 +25,11 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	public static final String TILE_LEFT = "left";
 	public static final String TILE_RIGHT = "right";
 
-	public void addNewDashboardToSet(WebDriver driver, String dashboardName) throws Exception;
+	public void addNewDashboardToSet(WebDriver driver, String dashboardName) ;
 
-	public void addWidgetToDashboard(WebDriver driver, String searchString) throws Exception;
+	public void addWidgetToDashboard(WebDriver driver, String searchString) ;
 
-    public void createDashboardInsideSet(WebDriver driver, String name, String descriptions) throws Exception;
+    public void createDashboardInsideSet(WebDriver driver, String name, String descriptions) ;
 
 	public void deleteDashboard(WebDriver driver);
 
@@ -37,70 +37,70 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 
 	public void deleteDashboardSet(WebDriver driver);
 
-	public void duplicateDashboard(WebDriver driver, String name, String descriptions) throws Exception;
+	public void duplicateDashboard(WebDriver driver, String name, String descriptions) ;
 
-    public void duplicateDashboardInsideSet(WebDriver driver, String name, String descriptions, boolean addToSet) throws Exception;
+    public void duplicateDashboardInsideSet(WebDriver driver, String name, String descriptions, boolean addToSet) ;
 
-    public void editDashboard(WebDriver driver, String name, String descriptions) throws Exception;
+    public void editDashboard(WebDriver driver, String name, String descriptions) ;
 
-	public void editDashboard(WebDriver driver, String name, String descriptions, Boolean toShowDscptn) throws Exception;
+	public void editDashboard(WebDriver driver, String name, String descriptions, Boolean toShowDscptn) ;
 
-    public void editDashboardSet(WebDriver driver, String name, String descriptions) throws Exception;
+    public void editDashboardSet(WebDriver driver, String name, String descriptions) ;
 
-	public Boolean favoriteOption(WebDriver driver) throws Exception;
+	public Boolean favoriteOption(WebDriver driver) ;
 
-	public Boolean favoriteOptionDashboardSet(WebDriver driver) throws Exception;
+	public Boolean favoriteOptionDashboardSet(WebDriver driver) ;
 
-	public void gridView(WebDriver driver) throws Exception;
+	public void gridView(WebDriver driver) ;
 
-	public boolean isRefreshSettingChecked(WebDriver driver, String refreshSettings) throws Exception;
+	public boolean isRefreshSettingChecked(WebDriver driver, String refreshSettings) ;
 
 	public boolean isRefreshSettingCheckedForDashbaordSet(WebDriver driver, String refreshSettings);
 
-	//	public void loadWebDriverOnly(WebDriver webDriver) throws Exception
+	//	public void loadWebDriverOnly(WebDriver webDriver) 
 	//	{
 	//		driver = webDriver;
 	//	}
 
-	public void listView(WebDriver driver) throws Exception;
+	public void listView(WebDriver driver) ;
 	
-	public void moveWidget(WebDriver driver, String widgetName, int index, String moveOption) throws Exception;
+	public void moveWidget(WebDriver driver, String widgetName, int index, String moveOption) ;
 
-	public void moveWidget(WebDriver driver, String widgetName, String moveOption) throws Exception;
+	public void moveWidget(WebDriver driver, String widgetName, String moveOption) ;
 	
-	public void openWidget(WebDriver driver, String widgetName) throws Exception;
+	public void openWidget(WebDriver driver, String widgetName) ;
 
-	public void openWidget(WebDriver driver, String widgetName, int index) throws Exception;
+	public void openWidget(WebDriver driver, String widgetName, int index) ;
 
-	public void printDashboard(WebDriver driver) throws Exception;
+	public void printDashboard(WebDriver driver) ;
 
-	public void printDashboardSet(WebDriver driver) throws Exception;
+	public void printDashboardSet(WebDriver driver) ;
 
 	public void refreshDashboard(WebDriver driver, String refreshSettings);
 
 	public void refreshDashboardSet(WebDriver driver, String refreshSettings);
 
-	public void removeWidget(WebDriver driver, String widgetName) throws Exception;
+	public void removeWidget(WebDriver driver, String widgetName) ;
 
-	public void removeWidget(WebDriver driver, String widgetName, int index) throws Exception;
+	public void removeWidget(WebDriver driver, String widgetName, int index) ;
 
-    public void removeDashboardFromSet(WebDriver driver, String dashboardName) throws Exception;
+    public void removeDashboardFromSet(WebDriver driver, String dashboardName) ;
 
-    public void resizeWidget(WebDriver driver, String widgetName, int index, String resizeOptions) throws Exception;
+    public void resizeWidget(WebDriver driver, String widgetName, int index, String resizeOptions) ;
 
-	public void resizeWidget(WebDriver driver, String widgetName, String resizeOptions) throws Exception;
+	public void resizeWidget(WebDriver driver, String widgetName, String resizeOptions) ;
 
-	public void saveDashboard(WebDriver driver) throws Exception;
+	public void saveDashboard(WebDriver driver) ;
 
-	public void search(WebDriver driver, String searchString) throws Exception;
+	public void search(WebDriver driver, String searchString) ;
 
-	public void selectDashboard(WebDriver driver, String dashboardName) throws Exception;
+	public void selectDashboard(WebDriver driver, String dashboardName) ;
 
-    public void selectDashboardInsideSet(WebDriver driver,String dashboardName) throws Exception;
+    public void selectDashboardInsideSet(WebDriver driver,String dashboardName) ;
 
-    public void showWidgetTitle(WebDriver driver, String widgetName, boolean visibility) throws Exception;
+    public void showWidgetTitle(WebDriver driver, String widgetName, boolean visibility) ;
 
-	public void showWidgetTitle(WebDriver driver, String widgetName, int index, boolean visibility) throws Exception;
+	public void showWidgetTitle(WebDriver driver, String widgetName, int index, boolean visibility) ;
 
 	/**
 	 * sort dashboards
@@ -109,17 +109,17 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	 * @param option
 	 *            sort by - default, access_date_asc, access_date_dsc, name_asc, name_dsc, creation_date_asc, creation_date_dsc,
 	 *            last_modification_date_asc, last_modification_date_dsc, owner_asc, owner_dsc
-	 * @throws Exception
+	 * @
 	 */
-	public void sortBy(WebDriver driver, String option) throws Exception;
+	public void sortBy(WebDriver driver, String option) ;
 
-	public Boolean toggleHome(WebDriver driver) throws Exception;
+	public Boolean toggleHome(WebDriver driver) ;
 
-	public Boolean toggleHomeDashboardSet(WebDriver driver) throws Exception;
+	public Boolean toggleHomeDashboardSet(WebDriver driver) ;
 
-	public Boolean toggleShareDashboard(WebDriver driver) throws Exception;
+	public Boolean toggleShareDashboard(WebDriver driver) ;
 
-	public Boolean toggleShareDashboardset(WebDriver driver) throws Exception;
+	public Boolean toggleShareDashboardset(WebDriver driver) ;
 
 	public boolean verifyDashboard(WebDriver driver, String dashboardName, String description, boolean showTimeSelector);
 
@@ -131,11 +131,11 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 
 	public boolean verifyWidget(WebDriver driver, String widgetName, int index);
 	
-	public void setEntitySupport(WebDriver driver, String mode) throws Exception;
+	public void setEntitySupport(WebDriver driver, String mode) ;
 
-	public boolean showEntityFilter(WebDriver driver, boolean showEntityFilter) throws Exception;
+	public boolean showEntityFilter(WebDriver driver, boolean showEntityFilter) ;
 	
-	public boolean showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) throws Exception;
+	public boolean showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) ;
 	
 
 }

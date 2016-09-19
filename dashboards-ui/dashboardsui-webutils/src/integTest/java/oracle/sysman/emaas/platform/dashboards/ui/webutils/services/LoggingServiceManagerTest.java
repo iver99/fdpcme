@@ -23,6 +23,8 @@ import mockit.Mock;
 import mockit.MockUp;
 import mockit.Mocked;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
@@ -31,6 +33,9 @@ import org.testng.annotations.Test;
  */
 public class LoggingServiceManagerTest
 {
+
+	private static final Logger LOGGER = LogManager.getLogger(LoggingServiceManagerTest.class);
+
 	LoggingServiceManager lsm = new LoggingServiceManager();
 	@Mocked
 	private URL _url;
@@ -42,7 +47,7 @@ public class LoggingServiceManagerTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testStartStop(@Mocked final MBeanServer anyMbs, @Mocked final ManagementFactory anyMf) throws Exception
+	public void testStartStop(@Mocked final MBeanServer anyMbs, @Mocked final ManagementFactory anyMf) throws Exception 
 	{
 		new MockUp<Class<LoggingServiceManager>>() {
 			@Mock
@@ -52,6 +57,7 @@ public class LoggingServiceManagerTest
 					return new URL("TestURL1");
 				}
 				catch (MalformedURLException e) {
+					LOGGER.info("context",e);
 					return null;
 				}
 			}
@@ -81,6 +87,7 @@ public class LoggingServiceManagerTest
 					return new URL("TestURL1");
 				}
 				catch (MalformedURLException e) {
+					LOGGER.info("context",e);
 					return null;
 				}
 			}
@@ -105,7 +112,7 @@ public class LoggingServiceManagerTest
 			lsm.preStop(null);
 		}
 		catch (Exception e) {
-
+			LOGGER.info("context",e);
 		}
 	}
 }

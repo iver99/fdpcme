@@ -23,7 +23,7 @@ public class GzipServletResponseWrapperTest {
   }
   
   @Test(groups = { "s1" }, expectedExceptions = IOException.class, expectedExceptionsMessageRegExp="Cannot write to a closed output stream")
-  public void testClose1(@Mocked final HttpServletResponse response) throws Exception {
+  public void testClose1(@Mocked final HttpServletResponse response) throws IOException {
 	  GzipServletResponseWrapper rw = new GzipServletResponseWrapper(response);
 	  rw.getOutputStream();
 	  rw.close();
