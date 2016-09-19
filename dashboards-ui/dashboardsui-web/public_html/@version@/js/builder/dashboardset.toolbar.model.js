@@ -625,6 +625,9 @@ define(['knockout',
                         type: 'DELETE',
                         headers: dfu.getDashboardsRequestHeader(),
                         success: function (result) {
+                            if (!self.dashboardsetConfig.setHome()) {                                
+                                localStorage.deleteHomeDbd=true;
+                            }
                             window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
