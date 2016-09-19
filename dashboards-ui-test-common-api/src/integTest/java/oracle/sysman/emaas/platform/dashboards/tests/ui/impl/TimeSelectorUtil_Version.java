@@ -30,7 +30,7 @@ public class TimeSelectorUtil_Version implements IUiTestCommonAPI
 	@Override
 	public String getApiVersion(WebDriver wdriver)
 	{
-		By locatorOfKeyEl = By.cssSelector("div[id^=dateTimePicker_]");
+		By locatorOfKeyEl = By.xpath("//div[contains(@data-bind, 'dateTimePicker_')]");
 		WebDriverWait wait = new WebDriverWait(wdriver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfKeyEl));
 		String version = wdriver.getWebDriver().findElement(locatorOfKeyEl).getAttribute(VERSION_ATTR);
