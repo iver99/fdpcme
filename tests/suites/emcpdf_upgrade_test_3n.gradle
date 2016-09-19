@@ -15,7 +15,7 @@ apply from: getAbsoluteFilePath(project.configurations.omctfPluginConfig,"OMCTFP
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest
 
 /******* ExtraProperties declaration ******/
-def emcpdfCommonAPIVer = getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.0.0')
+def emcpdfCommonAPIVer = getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.0.0+')
 
 dependencies {
     testConfig group: 'com.oracle.emaas.emcpdf.test', name:'dashboards-upgrade-tests-integ-tests', version: "${REPO_BID}"
