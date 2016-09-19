@@ -312,7 +312,7 @@ apply from: "${project.ext.source_cc}/codeCoverage.gradle"
 if(project.plugins.hasPlugin('sonar-runner')) {
   sonarRunner {
     sonarProperties {
-      property "sonar.branch", 'master'
+      property "sonar.branch", 'greenchannel'
     }
   }
 }
@@ -326,7 +326,7 @@ configurations.driver.each {File file ->
 }
 
 String CLEANUP_SQL = "cleanup_df.sql"
-String db_usr = "SYSEMS_T_3"
+String db_usr = "SYSEMS_T_1004"
 String db_pw = "welcome1"
 String db_url_pre = "jdbc:oracle:thin:@"
 String db_url_suf = ".us.oracle.com:1521:orcl12c"

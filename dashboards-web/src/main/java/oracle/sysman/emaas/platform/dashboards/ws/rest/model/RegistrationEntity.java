@@ -100,8 +100,8 @@ public class RegistrationEntity implements Serializable
 	public static final String ORCHESTRATION_URL = "/emsaasui/emcpdfui/home.html?filter=ocs";
 	// Security Analytics service
 	public static final String COMPLIANCE_OPC_APPNAME = "Compliance";
-	public static final String COMPLIANCE_SERVICENAME = "ComplianceUI";
-	public static final String COMPLIANCE_VERSION = "1.7.5+";
+	public static final String COMPLIANCE_SERVICENAME = "ComplianceUIService";
+	public static final String COMPLIANCE_VERSION = "0.1+";
 	public static final String COMPLIANCE_HOME_LINK = "sso.home";
 
 	private static final Logger _LOGGER = LogManager.getLogger(RegistrationEntity.class);

@@ -1,31 +1,14 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
+import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.MultitenantType;
+import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.eclipse.persistence.annotations.Multitenant;
-import org.eclipse.persistence.annotations.MultitenantType;
-import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 @Entity
 @NamedQueries({@NamedQuery(name = "EmsDashboard.findAll", query = "select o from EmsDashboard o where o.deleted=0"),
@@ -59,6 +42,8 @@ public class EmsDashboard implements Serializable
 	private Integer enableEntityFilter;
 	@Column(name = "IS_SYSTEM", nullable = false)
 	private Integer isSystem;
+	@Column(name = "SHOW_INHOME", nullable = false)
+	private Integer showInHome;
 	@Column(name = "SHARE_PUBLIC", nullable = false)
 	private Integer sharePublic;
 	@Column(name = "APPLICATION_TYPE")
@@ -103,7 +88,7 @@ public class EmsDashboard implements Serializable
 	public EmsDashboard(Date creationDate, Long dashboardId, Long deleted, String description, Integer enableTimeRange,
 			Integer enableRefresh, Integer enableDescription, Integer enableEntityFilter, Integer isSystem,
 			Integer sharePublic, Date lastModificationDate, String lastModifiedBy, String name, String owner, String screenShot,
-			Integer type, Integer applicationType, String extendedOptions)
+			Integer type, Integer applicationType,Integer showInHome,String extendedOptions)
 	{
 		this.creationDate = creationDate;
 		this.dashboardId = dashboardId;
@@ -122,6 +107,7 @@ public class EmsDashboard implements Serializable
 		this.screenShot = screenShot;
 		this.type = type;
 		this.applicationType = applicationType;
+		this.showInHome=showInHome;
 		this.extendedOptions = extendedOptions;
 	}
 
@@ -206,6 +192,11 @@ public class EmsDashboard implements Serializable
 	public Integer getIsSystem()
 	{
 		return isSystem;
+	}
+
+	public Integer getShowInHome()
+	{
+		return showInHome;
 	}
 
 	public Date getLastModificationDate()
@@ -336,6 +327,11 @@ public class EmsDashboard implements Serializable
 	public void setIsSystem(Integer isSystem)
 	{
 		this.isSystem = isSystem;
+	}
+
+	public void setShowInHome(Integer showInHome)
+	{
+		this.showInHome = showInHome;
 	}
 
 	public void setLastModificationDate(Date lastModificationDate)

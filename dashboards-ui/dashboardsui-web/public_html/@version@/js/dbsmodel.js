@@ -43,7 +43,12 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.showHideDescription=ko.observable(false);
         self.singleVisible = ko.observable(true);
         self.setVisible=ko.observable(false);
-
+        if(!$('#dbd-set-tabs')[0]){
+            self.underSet=false;
+        }else{
+            self.underSet=true;
+        }
+        
         self.dashboardtypeSelectFuc=function(){
             if(self.selectType()==="NORMAL"){
                 self.singleVisible(true);
@@ -454,6 +459,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 
             var _addeddb = { "type":self.createDashboardModel.selectType(),
                             "name": self.createDashboardModel.name(),
+                            "showInHome":self.createDashboardModel.underSet ? false : true,
                             "description": self.createDashboardModel.description(),
                             "enableTimeRange": self.createDashboardModel.isEnableTimeRange() ? "TRUE" : "FALSE",
                             "enableRefresh": self.createDashboardModel.isEnableTimeRange()};
