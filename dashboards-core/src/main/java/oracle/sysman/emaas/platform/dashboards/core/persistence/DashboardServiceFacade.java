@@ -86,6 +86,18 @@ public class DashboardServiceFacade
 	//		return em.createNamedQuery("EmsDashboardLastAccess.findAll", EmsDashboardLastAccess.class).getResultList();
 	//	}
 
+	public void removePreferenceByKey(String userName, String key, long tenantId)
+	{
+		String sql = "select * from ems_preference p where p.user_Name ='"+userName+"' and p.pref_key = '"+key+"' and p.tenant_id="+tenantId;		
+		Query query = em.createNativeQuery(sql, EmsPreference.class);
+		@SuppressWarnings("unchecked")
+		List<EmsPreference> emsPreferenceList = query.getResultList();
+		if (emsPreferenceList != null && !emsPreferenceList.isEmpty()) {
+			em.remove(emsPreferenceList.get(0));
+			commitTransaction();
+		}
+	}
+	
 	public EmsPreference getEmsPreference(String username, String prefKey)
 	{
 		return em.find(EmsPreference.class, new EmsPreferencePK(prefKey, username));
