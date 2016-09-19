@@ -57,7 +57,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                 var appIdError = "Error";
                 self.SERVICE_VERSION=encodeURIComponent('1.0+');
                 self.MONITORING_SERVICE_VERSION=encodeURIComponent('1.5+');
-                self.COMPLIANCE_SERVICE_VERSION = encodeURIComponent('1.7.5+');
+                self.COMPLIANCE_SERVICE_VERSION = encodeURIComponent('0.1+');
                 var appIdEventUI = "EventUI";
                 var appIdMonitoring = "Monitoring";
                 var appIdSecurityAnalytics = "SecurityAnalytics";
@@ -133,7 +133,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                         "appId": appIdCompliance,
                         "appName": "BRANDING_BAR_APP_NAME_COMPLIANCE",
                         "serviceDisplayName": "BRANDING_BAR_APP_NAME_COMPLIANCE",
-                        "serviceName": "ComplianceUI",
+                        "serviceName": "ComplianceUIService",
                         "version": self.COMPLIANCE_SERVICE_VERSION,
                         "helpTopicId": "em_moncs"
                     };

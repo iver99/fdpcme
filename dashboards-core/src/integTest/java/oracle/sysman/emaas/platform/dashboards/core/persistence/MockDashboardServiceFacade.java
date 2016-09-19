@@ -10,20 +10,15 @@
 
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.EntityManager;
-
 import mockit.Mock;
 import mockit.MockUp;
 import oracle.sysman.emaas.platform.dashboards.core.util.FacadeUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
+
+import javax.persistence.EntityManager;
+import java.util.*;
 
 /**
  * @author wenjzhu
@@ -397,6 +392,11 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	public int removeUnsharedEmsSubDashboard(long subDashboardId, String owner)
 	{
 		return 1;
+	}
+
+	@Mock
+	public void updateSubDashboardShowInHome(long dashboardId){
+
 	}
 
 	@SuppressWarnings("unchecked")

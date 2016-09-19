@@ -49,9 +49,7 @@
                     <img src="@version@/images/alert.png" data-bind="attr: {alt: errorPageMessage}">
                     <h4 class="dbd-error-msg" data-bind="text: errorPageMessage"></h4>
                     <div data-bind="visible: defaultHomeLinkVisible">
-                        <span data-bind="text: clickText"></span>&nbsp;
-                        <a class="dbd-error-url" data-bind="text: hereText, attr: {href: defaultHomeUrl}"></a>&nbsp;
-                        <span data-bind="text: goHomePageText"></span>
+                        <span data-bind="html: goHomePageText"></span>
                     </div>
                     <div data-bind="visible: invalidUrl">
                         <span data-bind="text: invalidUrlLabel"></span>
