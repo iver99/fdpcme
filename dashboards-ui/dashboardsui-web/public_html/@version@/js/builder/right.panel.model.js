@@ -69,7 +69,7 @@ define(['knockout',
                     }
                 });
             }
-    
+
             self.initialize();
         }
 
