@@ -18,6 +18,11 @@
                  <pipeline name="STAGE"/>
              </pipelines>
      </lrg>
+     <lrg name="emcpdf_allsrg_3n" launcher="tests/suites/emcpdf_allsrg_3n.gradle" description="srg for emcpdf 3n automation">
+             <pipelines>
+                 <pipeline name="STAGE"/>
+             </pipelines>
+     </lrg>
 
  </lrg-metadata>
 
