@@ -60,6 +60,13 @@ define(['knockout',
                 self.$list = $([].concat.apply($b.findEl(".fit-size"),$(".df-right-panel .fit-size")));
             };
 
+            if(!self.brandingbarCssLoaded){
+                self.brandingbarCssLoaded = $(".emaas-appheader").resize(function(){
+                    $b.triggerBuilderResizeEvent('uifwk-common-alta.css loaded');
+                    $(".emaas-appheader").unbind("resize");
+                });
+            }
+    
             self.initialize();
         }
 
