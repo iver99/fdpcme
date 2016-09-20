@@ -15,7 +15,10 @@ public class Element implements Serializable{
     	this.creationTime=getCurrentTime();
     	this.lastAccessTime=creationTime;
     }
-    
+
+	/**
+	 * currently,we only compare the key,not the value
+	 */
     public final boolean equals(Object object)
     {
         if(object == null || !(object instanceof Element))

@@ -40,6 +40,7 @@ public class DashboardsFilter
 	private static final List<String> appFilterStrings_input = Arrays.asList(new String[] { "apm", "ita", "la", "ocs" });
 
 	private static final String favoriteFilterString = "Favorites";
+	private static final String showAllDashboardsString = "ShowAll";
 
 	public static final String APM_PROVIDER_APMUI = "ApmUI";
 	public static final String ITA_PROVIDER_EMCI = "emcitas-ui-apps";
@@ -51,6 +52,7 @@ public class DashboardsFilter
 	private List<String> includedApps;
 	private List<String> includedOwners;
 	private Boolean includedFavorites;
+	private Boolean showInHome =  true;
 
 	public DashboardsFilter()
 	{
@@ -64,6 +66,14 @@ public class DashboardsFilter
 		if (appFilterStrings.contains(app.trim())) {
 			includedApps.add(app.trim());
 		}
+	}
+	
+	public Boolean getShowInHome() {
+		return showInHome;
+	}
+
+	public void setShowInHome(Boolean showInHome) {
+		this.showInHome = showInHome;
 	}
 
 	public void addIncludedOwner(String o)
@@ -283,6 +293,11 @@ public class DashboardsFilter
 			String filterUpcase = filter.trim().toUpperCase();
 			if (favoriteFilterString. equalsIgnoreCase(filterUpcase)) {
 				setIncludedFavorites(true);
+				return;
+			}
+			
+			if (showAllDashboardsString.equalsIgnoreCase(filterUpcase)) {
+				setShowInHome(false);
 				return;
 			}
 
