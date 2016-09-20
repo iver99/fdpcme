@@ -15,10 +15,11 @@ Rem      if one want to verify a specific tenant, input the parameter which is t
 Rem
 Rem    MODIFIED   (MM/DD/YY)
 Rem    chehao   9/14/2016  Created
-DEFINE TENANT_ID = '&1'
+DEFINE TENANT_ID = '&tenant_id'
+DEFINE EMSAAS_SQL_ROOT ='&log_root'
 SET FEEDBACK ON
 SET SERVEROUTPUT ON
-
+spool '&EMSAAS_SQL_ROOT/oob_dashboards_verify.log';
 DECLARE
   V_DASHBOARD_COUNT     NUMBER;
   V_TENANT_ID NUMBER(38,0);
@@ -331,3 +332,4 @@ BEGIN
 
 END;
 /
+spool off;
