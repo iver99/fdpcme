@@ -1052,6 +1052,7 @@ public class DashboardManagerTest_S2
 		filter.setIncludedAppsFromString("APM,ITAnalytics");
 		filter.setIncludedTypesFromString(Dashboard.DASHBOARD_TYPE_NORMAL + "," + Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
 		filter.setIncludedOwnersFromString("Oracle,Others,Me,Share");
+		filter.setShowInHome(false);
 		TenantContext.setCurrentTenant("TenantOPC1");
 		dm.listDashboards(null, null, 11L, false);
 		dm.listDashboards("key", null, null, 11L, false, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
