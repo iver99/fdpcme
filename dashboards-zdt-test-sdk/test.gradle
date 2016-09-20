@@ -29,8 +29,8 @@ dependencies {
 	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 	testConfig('com.sun.jersey:jersey-servlet:1.17.1') { transitive = false }
 	testConfig('com.sun.jersey:jersey-server:1.17.1') { transitive = false }
-        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}")
-        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}")
-        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}")
+        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "1.0.+")
+        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "1.0.+")
+        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "1.0.+")
 //	testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){ transitive = false }
 }
