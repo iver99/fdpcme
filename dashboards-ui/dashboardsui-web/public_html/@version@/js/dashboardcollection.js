@@ -48,16 +48,12 @@ function(dfu, oj, ko, $)
                      __url = __url + "&filter=" + self.filter.trim();
                 }
             }
-            //console.log("[DashboardCollection] operation: "+ _operation +"  "+__url + " \n      Header: " + JSON.stringify(dfu.getDashboardsRequestHeader())); //return __url;
             return {
                     url: __url,
-                    headers: dfu.getDashboardsRequestHeader()//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()}//Pass the required header information
+                    headers: dfu.getDashboardsRequestHeader()
                };
         };
 
-        //_options['model'] = dm.DashboardModel();
-        //_options['fetchSize'] = 100;
-        //_options['modelLimit'] = 5000;
         _options['customPagingOptions'] = _customPagingOptions;
         _options['customURL'] = _customURL;
 

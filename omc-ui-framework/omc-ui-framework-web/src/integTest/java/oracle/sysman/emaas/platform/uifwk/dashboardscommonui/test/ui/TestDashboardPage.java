@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WidgetSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
@@ -28,6 +30,7 @@ import org.testng.annotations.Test;
  */
 public class TestDashboardPage extends CommonUIUtils
 {
+	private static final Logger LOGGER = LogManager.getLogger(TestDashboardPage.class);
 	@BeforeClass
 	public static void initValue()
 	{
@@ -36,7 +39,7 @@ public class TestDashboardPage extends CommonUIUtils
 	}
 
 	@Test
-	public void testDashboardPage_noPara() throws Exception
+	public void testDashboardPage_noPara() 
 	{
 		try {
 			String testName = this.getClass().getName() + ".testDashboardPage_noPara";
@@ -76,12 +79,13 @@ public class TestDashboardPage extends CommonUIUtils
 
 		}
 		catch (Exception ex) {
+			LOGGER.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}
 
 	@Test
-	public void testDashboardPage_withPara() throws Exception
+	public void testDashboardPage_withPara() 
 	{
 		try {
 			CommonUIUtils.commonUITestLog("This is to test Dashboard Page");
@@ -125,13 +129,14 @@ public class TestDashboardPage extends CommonUIUtils
 
 		}
 		catch (Exception ex) {
+			LOGGER.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}
 
 	//Testcase for adding widget using widgetselector
 	@Test
-	public void testWidgetSelector() throws Exception
+	public void testWidgetSelector() 
 	{
 		try {
 			String WidgetName_1 = "Database Errors Trend";
@@ -176,6 +181,7 @@ public class TestDashboardPage extends CommonUIUtils
 			CommonUIUtils.logoutCommonUI(webdriver);
 		}
 		catch (Exception ex) {
+			LOGGER.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}

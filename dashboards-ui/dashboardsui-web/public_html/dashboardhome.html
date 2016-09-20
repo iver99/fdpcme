@@ -3,15 +3,15 @@
         <button style=" margin-right: 5px;" data-bind="visible: (isMobileDevice() !== true && isDashboardSet === true), attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, 
                                          ojComponent: { component:'ojButton', rootAttributes: {'class': 'dbs-home-blue-button'}, label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button>
         <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-3 oj-xl-6">
-            <input class="dbs-sinput" type="text" name="searchInput"
+            <input class="dbs-sinput" id="dbs-sinput" type="text" name="searchInput"
                data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
                           ,dbsTypeAhead: {response: searchResponse, acceptInput: acceptInput, selfSearchStart: typeaheadSearchStart, busyElement: '#dhometab', busyClassName: 'busy', source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
-                          ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL') }"/>
-            <button class="oj-button-half-chrome" data-bind="click: clearSearch, visible: showSeachClear,
+                          ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL'),id:'searchInput_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1))) }"/>
+            <button class="oj-button-half-chrome" id="clear-search" data-bind="attr:{id:'clear-search_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: clearSearch, visible: showSeachClear,
                     ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
                     icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 30px;'}}"> 
             </button>
-            <button class="oj-button-half-chrome" data-bind="click: forceSearch,
+            <button class="oj-button-half-chrome" id="force-search" data-bind="attr:{id:'force-search'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: forceSearch,
                     ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_SEARCH_BTN_LABEL'), display: 'icons', 
                     icons: {start:'dbs-search-icon'}, rootAttributes: {'style': 'width: 30px;'}}"> 
             </button> 
@@ -20,7 +20,7 @@
         <span class="oj-md-float-end" style=" padding-right: 10px;">
             <label class="oj-label-inline" data-bind="attr: { 'for': sortById }, text: getNlsString('DBS_HOME_SELECT_SORT_BY_LABEL')"></label>
             <select aria-controls="dtabhomesc" data-bind="attr: { 'id': sortById }, ojComponent: {component: 'ojSelect', minimumResultsForSearch: 20, value: sortBy, optionChange: $component.handleSortByChanged, 
-                                                   rootAttributes: {style:'width: 14em; max-width:20em', class: 'dsb-sortcb'}}">
+                                                   rootAttributes: {style:'width: 15em; max-width:20em', class: 'dsb-sortcb'}}">
             <option value="default" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_DEFAULT')"></option>
             <option value="name_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME_ASC')"></option>
             <option value="name_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME_DSC')"></option>
@@ -36,9 +36,9 @@
 
             <!--button id="cbtn" class="dbs-home-button-create-new-dashboard"
                     data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, ojComponent: { component:'ojButton', label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button-->
-            <button name="exploreDataBtn" data-bind="visible:showExploreDataBtn,ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_EXPLORE_BTN_LABEL'), 
+            <button name="exploreDataBtn" id="explore-data-btn" data-bind="visible:showExploreDataBtn,ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_EXPLORE_BTN_LABEL'), 
                                                                              menu: '#exploreDataMenu-'+sortById, rootAttributes: {'style': 'margin-left: 8px;'}}, 
-                                                               attr: { 'title': getNlsString('DBS_HOME_EXPLORE_BTN_TT') }">
+                                                               attr: { 'title': getNlsString('DBS_HOME_EXPLORE_BTN_TT'),id:'explore-data-btn_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1))) }">
             </button>
             <ul style="display:none" name="exploreDataMenu"
                 data-bind="ojComponent: {component: 'ojMenu', select: exploreDataMenuItemSelect},attr:{id:'exploreDataMenu-'+sortById}">
@@ -52,10 +52,10 @@
             <div class="viewbtnset" aria-label="Choose one view"
                  data-bind="ojComponent: {component: 'ojButtonset', checked: $component.isTilesView, optionChange: handleViewChanged}" >
                 <label data-bind="attr: { 'for': tilesViewGridId }"></label>
-                <input type="radio" name="view" data-bind="value: tilesViewGrid, attr: { 'id': tilesViewGridId },
+                <input type="radio" name="view" id="tiles-view-grid-1" data-bind="value: tilesViewGrid, attr: { 'id': tilesViewGridId },
                                     ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_VIEW_GRID_LABEL'), icons: {start: 'icon-gridview-16 oj-fwk-icon dbs-icon-size-16'}}" />
                 <label data-bind="attr: { 'for': tilesViewListId }"></label>
-                <input type="radio" name="view" title="List" data-bind="value: tilesViewList, attr: { 'id': tilesViewListId },
+                <input type="radio" name="view" id="tiles-view-grid-2" title="List" data-bind="value: tilesViewList, attr: { 'id': tilesViewListId },
                                     ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_VIEW_LIST_LABEL'), icons: {start: 'icon-listview-16 oj-fwk-icon dbs-icon-size-16'}}" />
             </div>
         </span>

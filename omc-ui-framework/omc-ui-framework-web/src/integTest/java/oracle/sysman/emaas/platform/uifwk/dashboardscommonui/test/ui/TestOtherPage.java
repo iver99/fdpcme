@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
@@ -22,6 +24,8 @@ import org.testng.annotations.Test;
  */
 public class TestOtherPage extends CommonUIUtils
 {
+
+private static final Logger LOGGER = LogManager.getLogger(TestOtherPage.class);
 	@BeforeClass
 	public static void initValue()
 	{
@@ -30,7 +34,7 @@ public class TestOtherPage extends CommonUIUtils
 	}
 
 	@Test
-	public void testAPMPage() throws Exception
+	public void testAPMPage() 
 	{
 		try {
 			CommonUIUtils.commonUITestLog("This is to test APM Page");
@@ -74,12 +78,13 @@ public class TestOtherPage extends CommonUIUtils
 
 		}
 		catch (Exception ex) {
+			LOGGER.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}
 
 	@Test
-	public void testErrorPage() throws Exception
+	public void testErrorPage() 
 	{
 		try {
 			String testName = this.getClass().getName() + ".testErrorPage";
@@ -135,12 +140,13 @@ public class TestOtherPage extends CommonUIUtils
 			CommonUIUtils.logoutCommonUI(webdriver);
 		}
 		catch (Exception ex) {
+			LOGGER.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}
 
 	@Test
-	public void testTenantPage() throws Exception
+	public void testTenantPage() 
 	{
 		try {
 			CommonUIUtils.commonUITestLog("This is to test Tenant Manager Page");
@@ -184,13 +190,14 @@ public class TestOtherPage extends CommonUIUtils
 
 		}
 		catch (Exception ex) {
+			LOGGER.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}
 
 	/*
 	@Test
-	public void testAPMPage_withAllPara_Admin() throws Exception
+	public void testAPMPage_withAllPara_Admin() 
 	{
 		String testName = this.getClass().getName() + ".testAPMPage_withAllPara_Admin";
 		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
@@ -276,7 +283,7 @@ public class TestOtherPage extends CommonUIUtils
 	}
 
 	@Test
-	public void testAPMPage_withAllPara_notAdmin() throws Exception
+	public void testAPMPage_withAllPara_notAdmin() 
 	{
 		String testName = this.getClass().getName() + ".testAPMPage_withAllPara_notAdmin";
 		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
@@ -363,7 +370,7 @@ public class TestOtherPage extends CommonUIUtils
 	}
 
 	@Test
-	public void testAPMPage_withOnePara_Admin() throws Exception
+	public void testAPMPage_withOnePara_Admin() 
 	{
 		String testName = this.getClass().getName() + ".testAPMPage_withOnePara_Admin";
 		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
@@ -448,7 +455,7 @@ public class TestOtherPage extends CommonUIUtils
 	}
 
 	@Test
-	public void testErrorPage_Admin() throws Exception
+	public void testErrorPage_Admin() 
 	{
 		String testName = this.getClass().getName() + ".testErrorPage_Admin";
 		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
@@ -494,7 +501,7 @@ public class TestOtherPage extends CommonUIUtils
 	}
 
 	@Test
-	public void testErrorPage_notAdmin() throws Exception
+	public void testErrorPage_notAdmin() 
 	{
 		String testName = this.getClass().getName() + ".testErrorPage_notAdmin";
 		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
@@ -540,7 +547,7 @@ public class TestOtherPage extends CommonUIUtils
 	}
 
 	@Test
-	public void testTenantPage_withAllPara_Admin() throws Exception
+	public void testTenantPage_withAllPara_Admin() 
 	{
 		String testName = this.getClass().getName() + ".testTenantPage_withAllPara_Admin";
 		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
@@ -624,7 +631,7 @@ public class TestOtherPage extends CommonUIUtils
 	}
 
 	@Test
-	public void testTenantPage_withAllPara_notAdmin() throws Exception
+	public void testTenantPage_withAllPara_notAdmin() 
 	{
 		String testName = this.getClass().getName() + ".testTenantPage_withAllPara_notAdmin";
 		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
@@ -709,7 +716,7 @@ public class TestOtherPage extends CommonUIUtils
 	}
 
 	@Test
-	public void testTenantPage_withOnePara_Admin() throws Exception
+	public void testTenantPage_withOnePara_Admin() 
 	{
 		String testName = this.getClass().getName() + ".testTenantPage_withOnePara_Admin";
 		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);

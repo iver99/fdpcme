@@ -25,7 +25,10 @@ import org.apache.logging.log4j.Logger;
  */
 public class RegistryLookupUtil
 {
-	private static final Logger logger = LogManager.getLogger(RegistryLookupUtil.class);
+	private RegistryLookupUtil() {
+	  }
+
+	private static final Logger LOGGER = LogManager.getLogger(RegistryLookupUtil.class);
 	private static final Logger itrLogger = LogUtil.getInteractionLogger();
 
 	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
@@ -36,7 +39,7 @@ public class RegistryLookupUtil
 	private static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
 			String tenantName)
 	{
-		logger.debug(
+		LOGGER.debug(
 				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, prefixMatch, tenantName);
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
@@ -45,7 +48,7 @@ public class RegistryLookupUtil
 			LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", result, tenantName);
-			if (result != null && result.size() > 0) {
+			if (result != null && !result.isEmpty()) {
 
 				//find https link first
 				for (InstanceInfo internalInstance : result) {
@@ -57,7 +60,7 @@ public class RegistryLookupUtil
 						links = internalInstance.getLinksWithProtocol(rel, "https");
 					}
 
-					if (links != null && links.size() > 0) {
+					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
 						itrLogger.debug("Retrieved link {} by using getLinks(WithRelPrefix)WithProtocol for rel={} for https",
 								lk, rel);
@@ -78,7 +81,7 @@ public class RegistryLookupUtil
 					else {
 						links = internalInstance.getLinksWithProtocol(rel, "http");
 					}
-					if (links != null && links.size() > 0) {
+					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
 						itrLogger.debug("Retrieved link {} by using getLinks(WithRelPrefix)WithProtocol for rel={} for https",
 								lk, rel);
@@ -89,7 +92,7 @@ public class RegistryLookupUtil
 			return lk;
 		}
 		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return lk;
 		}
 	}

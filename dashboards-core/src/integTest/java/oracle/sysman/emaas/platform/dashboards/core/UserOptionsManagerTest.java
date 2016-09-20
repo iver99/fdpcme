@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
@@ -7,6 +8,7 @@ import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManag
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -31,60 +33,108 @@ public class UserOptionsManagerTest {
     }
 
     @Test
-    public void testGetInstance() throws Exception {
+    public void testGetInstance() {
         Assert.assertNotNull(UserOptionsManager.getInstance());
     }
 
     @Test
-    public void testGetOptionsById() throws Exception {
+    public void testGetOptionsById() {
         UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
-        Assert.assertNotNull(userOptionsManager.getOptionsById(1001L,1L));
+        try {
+			Assert.assertNotNull(userOptionsManager.getOptionsById(1001L,1L));
+		}
+		catch (DashboardException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     @Test(expectedExceptions = DashboardNotFoundException.class)
-    public void testGetOptionsByIdWithNullId() throws Exception {
+    public void testGetOptionsByIdWithNullId() {
         UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
-        userOptionsManager.getOptionsById(null, 1L);
+        try {
+			userOptionsManager.getOptionsById(null, 1L);
+		}
+		catch (DashboardException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     @Test(expectedExceptions = DashboardNotFoundException.class)
-    public void testGetOptionsByIdWithInvalidId() throws Exception {
+    public void testGetOptionsByIdWithInvalidId() {
         UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
-        userOptionsManager.getOptionsById(1001L,1L);
+        try {
+			userOptionsManager.getOptionsById(1001L,1L);
+		}
+		catch (DashboardException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     @Test(expectedExceptions = UserOptionsNotFoundException.class)
-    public void testGetOptionsByIdWithInvalidId2() throws Exception {
+    public void testGetOptionsByIdWithInvalidId2() {
         UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
-        userOptionsManager.getOptionsById(1001L,1L);
+        try {
+			userOptionsManager.getOptionsById(1001L,1L);
+		}
+		catch (DashboardException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     @Test
-    public void testSaveOrUpdateUserOptions() throws Exception {
+    public void testSaveOrUpdateUserOptions() {
         UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
-        userOptionsManager.saveOrUpdateUserOptions(null,1001L);
+        try {
+			userOptionsManager.saveOrUpdateUserOptions(null,1001L);
+		}
+		catch (DashboardException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         UserOptions userOptions = new UserOptions();
         userOptions.setDashboardId(100L);
         userOptions.setAutoRefreshInterval(3000L);
-        userOptionsManager.saveOrUpdateUserOptions(userOptions,1001L);
+        try {
+			userOptionsManager.saveOrUpdateUserOptions(userOptions,1001L);
+		}
+		catch (DashboardException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
     }
 
     @Test(expectedExceptions = DashboardNotFoundException.class)
-    public void testSaveOrUpdateUserOptionsWithNullId() throws Exception {
+    public void testSaveOrUpdateUserOptionsWithNullId() {
 
         UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
-        userOptionsManager.saveOrUpdateUserOptions(new UserOptions(),1001L);
+        try {
+			userOptionsManager.saveOrUpdateUserOptions(new UserOptions(),1001L);
+		}
+		catch (DashboardException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
     }
 
     @Test(expectedExceptions = DashboardNotFoundException.class)
-    public void testSaveOrUpdateUserOptionsWithInvalidId() throws Exception {
+    public void testSaveOrUpdateUserOptionsWithInvalidId() {
         UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
         UserOptions userOptions = new UserOptions();
         userOptions.setDashboardId(100L);
         userOptions.setAutoRefreshInterval(3000L);
-        userOptionsManager.saveOrUpdateUserOptions(userOptions,1001L);
+        try {
+			userOptionsManager.saveOrUpdateUserOptions(userOptions,1001L);
+		}
+		catch (DashboardException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }

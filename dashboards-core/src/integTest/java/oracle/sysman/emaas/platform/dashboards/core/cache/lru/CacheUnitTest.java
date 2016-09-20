@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
 @SuppressWarnings("all")
 public class CacheUnitTest {
 	
-	public static Logger logger=Logger.getLogger(CacheUnitTest.class.getName());
+	public static final Logger LOGGER=Logger.getLogger(CacheUnitTest.class.getName());
 
 	/**
 	 * test put action begins

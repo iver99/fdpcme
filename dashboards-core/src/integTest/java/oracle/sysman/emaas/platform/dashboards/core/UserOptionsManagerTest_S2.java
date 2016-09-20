@@ -14,6 +14,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
@@ -31,6 +34,7 @@ import org.testng.annotations.Test;
  */
 public class UserOptionsManagerTest_S2
 {
+	private static final Logger LOGGER = LogManager.getLogger(UserOptionsManagerTest_S2.class);
 	@Test(groups = { "s2" })
 	public void testUserOptionsManagerCC(@Mocked final PersistenceManager mockpm, @Mocked final EntityManager mockem,
 			@Mocked final EntityManagerFactory mockemf, @Mocked final EntityTransaction mocket,
@@ -69,23 +73,26 @@ public class UserOptionsManagerTest_S2
 			dbcm.getOptionsById(1L, 0L);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dbcm.getOptionsById(-1L, 0L);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dbcm.saveOrUpdateUserOptions(uo1, 1L);
 		}
 		catch (DashboardNotFoundException e) {
-
+			LOGGER.info("context",e);
 		}
 		uo1.setDashboardId(1L);
 		try {
 			dbcm.saveOrUpdateUserOptions(uo1, 1L);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		new NonStrictExpectations() {
 			{

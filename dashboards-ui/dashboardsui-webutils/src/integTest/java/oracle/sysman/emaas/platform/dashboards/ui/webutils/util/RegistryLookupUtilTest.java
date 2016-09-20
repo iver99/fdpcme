@@ -56,7 +56,7 @@ public class RegistryLookupUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetServiceExternalLink_NoTenant(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
+	public void testGetServiceExternalLinkNoTenant(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
 			@Mocked final InstanceQuery anyInstanceQuery, @Mocked final LookupManager anyLockupManager,
 			@Mocked final SanitizedInstanceInfo anySanitizedInfo) throws Exception
 	{

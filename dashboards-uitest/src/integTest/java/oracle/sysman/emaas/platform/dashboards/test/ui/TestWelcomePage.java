@@ -20,14 +20,14 @@ import org.testng.annotations.Test;
 public class TestWelcomePage extends LoginAndLogout
 {
 
-	public void initTest(String testName) throws Exception
+	public void initTest(String testName) 
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
 	@Test
-	public void testOpenAPMPage() throws Exception
+	public void testOpenAPMPage() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening APM in welcome page...");
@@ -42,7 +42,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testOpenDashboardPage() throws Exception
+	public void testOpenDashboardPage() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening Dashboards in welcome page...");
@@ -56,7 +56,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testOpenDE_LAPage() throws Exception
+	public void testOpenDE_LAPage() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening Data Explorers-Log in welcome page...");
@@ -70,7 +70,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testOpenDE_SearchPage() throws Exception
+	public void testOpenDE_SearchPage() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening Data Explorers-Search in welcome page...");
@@ -85,7 +85,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	//	@Test
-	//	public void testOpenGetStartedPage() throws Exception
+	//	public void testOpenGetStartedPage() 
 	//	{
 	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 	//		webd.getLogger().info("Start to test opening 'How to get started' in welcome page...");
@@ -100,7 +100,7 @@ public class TestWelcomePage extends LoginAndLogout
 	//	}
 
 	//	@Test
-	//	public void testOpenInfraMonitoring() throws Exception
+	//	public void testOpenInfraMonitoring() 
 	//	{
 	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 	//		webd.getLogger().info("Start to test open Infrastructure Monitoring in welcome page...");
@@ -114,7 +114,7 @@ public class TestWelcomePage extends LoginAndLogout
 	//	}
 
 	@Test
-	public void testOpenITA_DEPage() throws Exception
+	public void testOpenITA_DEPage() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Data Explorer in welcome page...");
@@ -129,7 +129,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testOpenITA_PADatabasePage() throws Exception
+	public void testOpenITA_PADatabasePage() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Performance Analytics-Database in welcome page...");
@@ -143,7 +143,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	//@Test
-	public void testOpenITA_PAMiddlewarePage() throws Exception
+	public void testOpenITA_PAMiddlewarePage() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Performance Analytics-Middleware in welcome page...");
@@ -157,7 +157,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testOpenITA_RADatabasePage() throws Exception
+	public void testOpenITA_RADatabasePage() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Resource Analytics-Database in welcome page...");
@@ -171,7 +171,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testOpenITA_RAHostPage() throws Exception
+	public void testOpenITA_RAHostPage() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Resource Analytics-Host in welcome page...");
@@ -186,7 +186,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testOpenITA_RAMiddlewarePage() throws Exception
+	public void testOpenITA_RAMiddlewarePage() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Resource Analytics-Middleware in welcome page...");
@@ -200,7 +200,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testOpenITAPage() throws Exception
+	public void testOpenITAPage() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA in welcome page...");
@@ -213,15 +213,15 @@ public class TestWelcomePage extends LoginAndLogout
 
 		WebElement el = webd.getWebDriver().findElement(By.id(PageId.ITA_BOXID));
 		Assert.assertTrue(el.isSelected());
-		DashBoardUtils.ITA_OOB_Exist();
-		DashBoardUtils.Outdate_OOB();
-		DashBoardUtils.LA_OOB_NotExist();
-		DashBoardUtils.APM_OOB_NotExist();
+		DashBoardUtils.itaOobExist();
+		DashBoardUtils.outDateOob();
+		DashBoardUtils.laOobNotExist();
+		DashBoardUtils.apmOobNotExist();
 		webd.getLogger().info("Test open ITA in welcome page finished!!!");
 	}
 
 	@Test
-	public void testOpenLAPage() throws Exception
+	public void testOpenLAPage() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening LA in welcome page...");
@@ -235,7 +235,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	//	@Test
-	//	public void testOpenServiceOfferingPage() throws Exception
+	//	public void testOpenServiceOfferingPage() 
 	//	{
 	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 	//		webd.getLogger().info("Start to test opening 'Service Offerings' in welcome page...");
@@ -250,7 +250,7 @@ public class TestWelcomePage extends LoginAndLogout
 	//	}
 
 	//	@Test
-	//	public void testOpenVideosPage() throws Exception
+	//	public void testOpenVideosPage() 
 	//	{
 	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 	//		webd.getLogger().info("Start to test opening 'Videos' in welcome page...");
@@ -265,7 +265,7 @@ public class TestWelcomePage extends LoginAndLogout
 	//	}
 
 	@Test
-	public void testWelcomepage() throws Exception
+	public void testWelcomepage() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in test Welcome Page");

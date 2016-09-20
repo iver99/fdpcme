@@ -95,7 +95,8 @@ public class FavoriteAPITest {
     @Test
     public void testGetAllFavoriteDashboards(@Mocked final APIBase anyAPIBase, @Mocked final DashboardManager anyDm) throws Exception {
         final List<Dashboard> list = new ArrayList<>();
-        for(int i=0;i<=3;i++) list.add(new Dashboard());
+        for(int i=0;i<=3;i++) 
+        	list.add(new Dashboard());
         new Expectations(){
             {
                 anyAPIBase.getTenantId(anyString);

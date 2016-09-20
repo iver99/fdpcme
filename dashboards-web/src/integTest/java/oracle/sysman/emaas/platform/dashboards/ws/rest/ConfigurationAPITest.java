@@ -18,7 +18,7 @@ public class ConfigurationAPITest {
     ConfigurationAPI configurationAPI;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         configurationAPI = new ConfigurationAPI();
     }
 

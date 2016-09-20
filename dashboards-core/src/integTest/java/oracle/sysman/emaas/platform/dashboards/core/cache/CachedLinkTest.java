@@ -9,8 +9,8 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 public class CachedLinkTest
 {
 	private Link link;
-	private final String testHref = "test href";
-	private final String testRel = "test rel";
+	private final static String testHref = "test href";
+	private final static String testRel = "test rel";
 
 	@BeforeMethod
 	public void beforeMethod()
