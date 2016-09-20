@@ -1,0 +1,19 @@
+# EMCPDF messages
+Contact: Rex.Liang@oracle.com
+Author   : raghuram.guda@oracle.com
+Languages: Std_Admin
+
+#--- OJET FIles ---
+omc-ui-framework/omc-ui-framework-web/public_html/@version@/js/resources/nls/root
+        uifwkCommonMsg.js Target: omc-ui-framework/omc-ui-framework-web/public_html/@version@/js/resources/nls/%B FileType: ojet Languages: Std_Admin  Group: Log Analytics
+
+dashboards-ui/dashboardsui-web/public_html/@version@/js/resources/nls/root
+        dashboardsUiMsg.js Target: dashboards-ui/dashboardsui-web/public_html/@version@/js/resources/nls/%B FileType: ojet Languages: Std_Admin  Group: Log Analytics
+
+# --- .properties Files ---
+
+
+# --- .java Files ---
+
+
+#  ---- END OF emcpdf.wptg FILE ----
