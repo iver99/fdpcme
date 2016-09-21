@@ -118,7 +118,7 @@ dependencies{
 	restAssured.exclude module:'groovy'
     }
 }
-
+project.ext.omctf_omcCloudSetup_additionalParam = "-skipagents -skipomr"
 //Task added from "emcpdf_qa_test_3n"
 task QATest(type:EMTest,dependsOn:omcSetup ) {
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
