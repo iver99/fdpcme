@@ -10,13 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -40,7 +33,7 @@ import org.apache.logging.log4j.Logger;
 @Path("/v1/configurations")
 public class ConfigurationAPI extends APIBase
 {
-	private static Logger _logger = LogManager.getLogger(ConfigurationAPI.class);
+	private static final Logger _LOGGER = LogManager.getLogger(ConfigurationAPI.class);
 
 	@Path("/registration")
 	@GET
@@ -59,7 +52,7 @@ public class ConfigurationAPI extends APIBase
 
 		}
 		catch (DashboardException e) {
-			_logger.error(e.getLocalizedMessage(), e);
+			_LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity ee = new ErrorEntity(e);
 			return Response.status(ee.getStatusCode()).entity(JsonUtil.buildNormalMapper().toJson(ee)).build();
 		}

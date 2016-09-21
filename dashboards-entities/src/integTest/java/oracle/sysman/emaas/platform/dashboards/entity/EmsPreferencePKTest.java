@@ -4,15 +4,12 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
 
-/**
- * Created by Troy on 2016/1/20.
- */
+
 @Test(groups={"s1"})
 public class EmsPreferencePKTest {
-    private EmsPreference emsPreference = new EmsPreference("elephant","elephant","elephant");
     private EmsPreferencePK emsPreferencePK = new EmsPreferencePK("elephant","dolphine");
     @Test
-    public void testEquals() throws Exception {
+    public void testEquals() {
         EmsPreferencePK emsPreferencePK1 = new EmsPreferencePK("elephant","dolphine");
         EmsPreferencePK emsPreferencePK2 = new EmsPreferencePK("elephant","kitten");
         EmsPreferencePK emsPreferencePK3 = new EmsPreferencePK("kitten","dolphine");
@@ -23,13 +20,13 @@ public class EmsPreferencePKTest {
     }
 
     @Test
-    public void testGetPrefKey() throws Exception {
+    public void testGetPrefKey() {
         emsPreferencePK.setPrefKey("elephant");
         assertEquals(emsPreferencePK.getPrefKey(),"elephant");
     }
 
     @Test
-    public void testGetUserName() throws Exception {
+    public void testGetUserName() {
         emsPreferencePK = new EmsPreferencePK();
         emsPreferencePK.setUserName("dolphine");
         assertEquals(emsPreferencePK.getUserName(),"dolphine");
@@ -37,18 +34,9 @@ public class EmsPreferencePKTest {
     }
 
     @Test
-    public void testHashCode() throws Exception {
+    public void testHashCode() {
         assertNotNull(emsPreferencePK.hashCode());
 
     }
 
-    @Test
-    public void testSetPrefKey() throws Exception {
-
-    }
-
-    @Test
-    public void testSetUserName() throws Exception {
-
-    }
 }

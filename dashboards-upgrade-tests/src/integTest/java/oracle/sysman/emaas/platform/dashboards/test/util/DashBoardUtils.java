@@ -7,9 +7,12 @@ import org.testng.Assert;
 
 public class DashBoardUtils
 {
+	private DashBoardUtils() {
+	  }
+
 	private static WebDriver driver;
 
-	public static void APM_OOB_GridView() throws Exception
+	public static void apmOobGrid() 
 	{
 		DashboardHomeUtil.gridView(driver);
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Application Performance Monitoring");
@@ -17,7 +20,7 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Monitoring"));
 	}
 
-	public static void closeOverviewPage() throws Exception
+	public static void closeOverviewPage() 
 	{
 
 		driver.getLogger().info("before clicking overview button");
@@ -25,7 +28,7 @@ public class DashBoardUtils
 		driver.getLogger().info("after clicking overview button");
 	}
 
-	public static void ITA_OOB_GridView() throws Exception
+	public static void itaOobGridView() 
 	{
 		DashboardHomeUtil.gridView(driver);
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Database Health Summary");
@@ -46,7 +49,7 @@ public class DashBoardUtils
 //		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Servers by JDK Version"));
 	}
 
-	public static void LA_OOB_GridView() throws Exception
+	public static void laOobGridView() 
 	{
 		DashboardHomeUtil.gridView(driver);
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Database Operations");
@@ -56,7 +59,7 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Middleware Operations"));
 	}
 
-	public static void loadWebDriver(WebDriver webDriver) throws Exception
+	public static void loadWebDriver(WebDriver webDriver) 
 	{
 		driver = webDriver;
 
@@ -69,12 +72,12 @@ public class DashBoardUtils
 		driver.takeScreenShot();
 	}
 
-	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
+	public static void loadWebDriverOnly(WebDriver webDriver) 
 	{
 		driver = webDriver;
 	}
 
-	public static void noOOBCheck_GridView() throws Exception
+	public static void noOOBCheckGridView() 
 	{
 		//verify all the oob dashboard not exsit
 		driver.getLogger().info("verify all the oob dashboard not exsit");
@@ -99,19 +102,19 @@ public class DashBoardUtils
 	}
 
 	//Sharing and stopping dashbaord
-	//	public static void sharedashboard() throws Exception
+	//	public static void sharedashboard() 
 	//	{
 	//		driver.click(PageId.option);
 	//		driver.click(PageId.dashboardshare);
 	//	}
 	//
-	//	public static void sharestopping() throws Exception
+	//	public static void sharestopping() 
 	//	{
 	//		driver.click(PageId.option);
 	//		driver.click(PageId.stopshare_btn);
 	//	}
 
-	//	public static void waitForMilliSeconds(long millisSec) throws Exception
+	//	public static void waitForMilliSeconds(long millisSec) 
 	//	{
 	//		Thread.sleep(millisSec);
 	//	}

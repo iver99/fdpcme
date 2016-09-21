@@ -2,6 +2,9 @@ package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 
 public class PageId
 {
+	private PageId() {
+	  }
+
 	/*
 	 *
 	 *The following variable define the all elements id of Dashboard page, including the home page, create page
@@ -70,5 +73,8 @@ public class PageId
 	public static final String RIGHTDRAWEREDITSINGLEDBSHARE_CSS = ".dbd-right-panel-editdashboard-set-share .dbd-right-panel-editdashboard-innertitle.oj-collapsible-header";
 	public static final String DASHBOARDSETSHARE_CSS = "#dashboardSetSharingShared";
 	public static final String DASHBOARDSETNOTSHARE_CSS = "#dashboardSetSharingNotShared";
+
+	//error page
+	public static final String ERRORMESSAGE_CSS = ".dbd-error-msg";
 
 }

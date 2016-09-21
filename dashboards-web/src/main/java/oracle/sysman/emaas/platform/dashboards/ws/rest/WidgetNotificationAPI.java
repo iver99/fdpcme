@@ -39,7 +39,7 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.ssfnotification.WidgetNot
 @Path("/v1/widgetnotification")
 public class WidgetNotificationAPI extends APIBase
 {
-	private static final Logger logger = LogManager.getLogger(WidgetNotificationAPI.class);
+	private static final Logger LOGGER = LogManager.getLogger(WidgetNotificationAPI.class);
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -62,16 +62,16 @@ public class WidgetNotificationAPI extends APIBase
 			return Response.status(Status.OK).entity(getJsonUtil().toJson(wne)).build();
 		}
 		catch (IOException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(e);
 			return buildErrorResponse(error);
 		}
 		catch (DashboardException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}

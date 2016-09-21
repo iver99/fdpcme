@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -8,6 +10,8 @@ import org.testng.annotations.Test;
  */
 public class DashboardApplicationTypeTest
 {
+
+	private static final Logger LOGGER = LogManager.getLogger(DashboardApplicationTypeTest.class);
 	@Test(groups = { "s2" })
 	public void testFromJsonValue()
 	{
@@ -25,6 +29,7 @@ public class DashboardApplicationTypeTest
 		}
 		catch (IllegalArgumentException e) {
 			// expected exception
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -44,6 +49,7 @@ public class DashboardApplicationTypeTest
 		}
 		catch (IllegalArgumentException e) {
 			// expected exception
+			LOGGER.info("context",e);
 		}
 	}
 

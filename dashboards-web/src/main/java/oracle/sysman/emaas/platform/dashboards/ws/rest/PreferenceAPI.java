@@ -42,7 +42,7 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("/v1/preferences")
 public class PreferenceAPI extends APIBase
 {
-	private final Logger logger = LogManager.getLogger(PreferenceAPI.class);
+	private final Logger LOGGER = LogManager.getLogger(PreferenceAPI.class);
 
 	@DELETE
 	public Response deleteAllPreferenceByKey(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
@@ -61,7 +61,7 @@ public class PreferenceAPI extends APIBase
 		}
 		catch (BasicServiceMalfunctionException e) {
 			//e.printStackTrace();
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {
@@ -89,7 +89,7 @@ public class PreferenceAPI extends APIBase
 		}
 		catch (BasicServiceMalfunctionException e) {
 			//e.printStackTrace();
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {
@@ -118,7 +118,7 @@ public class PreferenceAPI extends APIBase
 		}
 		catch (BasicServiceMalfunctionException e) {
 			//e.printStackTrace();
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {
@@ -149,7 +149,7 @@ public class PreferenceAPI extends APIBase
 		}
 		catch (BasicServiceMalfunctionException e) {
 			//e.printStackTrace();
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {
@@ -176,7 +176,7 @@ public class PreferenceAPI extends APIBase
 		}
 		catch (IOException e) {
 			//e.printStackTrace();
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(e);
 			return buildErrorResponse(error);
 		}
@@ -196,7 +196,7 @@ public class PreferenceAPI extends APIBase
 		}
 		catch (BasicServiceMalfunctionException e) {
 			//e.printStackTrace();
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {

@@ -6,9 +6,7 @@ import java.util.Date;
 
 import org.testng.annotations.Test;
 
-/**
- * Created by Troy on 2016/1/20.
- */
+
 @Test(groups = {"s1"})
 public class EmsDashboardTileParamsTest { 
     Date now = new Date();
@@ -55,81 +53,48 @@ public class EmsDashboardTileParamsTest {
             now,
             emsDashboardTile);
     @Test
-    public void testGetDashboardTile() throws Exception {
+    public void testGetDashboardTile() {
         emsDashboardTileParams.setDashboardTile(emsDashboardTile);
         assertEquals(emsDashboardTileParams.getDashboardTile(),emsDashboardTile);
     }
 
     @Test
-    public void testGetIsSystem() throws Exception {
+    public void testGetIsSystem() {
         emsDashboardTileParams.setIsSystem(10);
         assertEquals(emsDashboardTileParams.getIsSystem(),new Integer(10));
     }
 
     @Test
-    public void testGetParamName() throws Exception {
+    public void testGetParamName() {
         emsDashboardTileParams.setParamName("elephant");
         assertEquals(emsDashboardTileParams.getParamName(),"elephant");
     }
 
     @Test
-    public void testGetParamType() throws Exception {
+    public void testGetParamType() {
         emsDashboardTileParams.setParamType(10);
         assertEquals(emsDashboardTileParams.getParamType(),new Integer(10));
     }
 
     @Test
-    public void testGetParamValueNum() throws Exception {
+    public void testGetParamValueNum() {
         emsDashboardTileParams.setParamValueNum(10);
         assertEquals(emsDashboardTileParams.getParamValueNum(),new Integer(10));
 
     }
 
     @Test
-    public void testGetParamValueStr() throws Exception {
+    public void testGetParamValueStr() {
         emsDashboardTileParams.setParamValueStr("elephant");
         assertEquals(emsDashboardTileParams.getParamValueStr(),"elephant");
     }
 
     @Test
-    public void testGetParamValueTimestamp() throws Exception {
+    public void testGetParamValueTimestamp() {
         emsDashboardTileParams = new EmsDashboardTileParams();
         emsDashboardTileParams.setParamValueTimestamp(now);
         assertEquals(emsDashboardTileParams.getParamValueTimestamp(), now);
     }
 
-    @Test
-    public void testSetDashboardTile() throws Exception {
-
-    }
-
-    @Test
-    public void testSetIsSystem() throws Exception {
-
-    }
-
-    @Test
-    public void testSetParamName() throws Exception {
-
-    }
-
-    @Test
-    public void testSetParamType() throws Exception {
-
-    }
-
-    @Test
-    public void testSetParamValueNum() throws Exception {
-
-    }
-
-    @Test
-    public void testSetParamValueStr() throws Exception {
-
-    }
-
-    @Test
-    public void testSetParamValueTimestamp() throws Exception {
-
-    }
+   
 }

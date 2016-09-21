@@ -42,8 +42,9 @@ define(['builder/builder.core'
             };
 
             self.registerTileToGrid = function(tile) {
-                if (!tile)
+                if (!tile){
                     return;
+                }
                 self.initializeGridRows(self.mode.getModeRow(tile) + self.mode.getModeHeight(tile));
                 for (var i = self.mode.getModeRow(tile); i < self.mode.getModeRow(tile) + self.mode.getModeHeight(tile); i++) {
                     for (var j = self.mode.getModeColumn(tile); j < self.mode.getModeColumn(tile) + self.mode.getModeWidth(tile); j++) {
@@ -53,14 +54,17 @@ define(['builder/builder.core'
             };
 
             self.unregisterTileInGrid = function(tile) {
-                if (!tile)
+                if (!tile){
                     return;
+                }
                 for (var x = self.mode.getModeRow(tile); x < self.mode.getModeRow(tile) + self.mode.getModeHeight(tile); x++) {
-                    if (!self.tileGrid[x])
+                    if (!self.tileGrid[x]){
                         continue;
+                    }
                     for (var y = self.mode.getModeColumn(tile); y < self.mode.getModeColumn(tile) + self.mode.getModeWidth(tile); y++) {
-                        if (self.tileGrid[x][y] === tile)
+                        if (self.tileGrid[x][y] === tile){
                             self.tileGrid[x][y] = null;
+                        }
                     }
                 }
             };
@@ -84,25 +88,30 @@ define(['builder/builder.core'
             };
 
             self.updateTileSize = function(tile, width, height) {
-                if (!tile || width < 0 || width > self.mode.MODE_MAX_COLUMNS)
+                if (!tile || width < 0 || width > self.mode.MODE_MAX_COLUMNS){
                     return;
-                if (tile.row !== null && tile.column !== null)
+                }
+                if (tile.row !== null && tile.column !== null){
                     self.unregisterTileInGrid(tile);
+                }
                 self.mode.setModeWidth(tile, width);
                 self.mode.setModeHeight(tile, height);
                 self.registerTileToGrid(tile);
             };
 
             self.isPositionOkForTile = function(tile, row, column) {
-                if (row < 0 || column < 0 || column + self.mode.getModeWidth(tile) > self.mode.MODE_MAX_COLUMNS)
+                if (row < 0 || column < 0 || column + self.mode.getModeWidth(tile) > self.mode.MODE_MAX_COLUMNS){
                     return false;
+                }
                 for (var i = row; i < row + self.mode.getModeHeight(tile); i++) {
                     var gridRow = self.getRow(i);
-                    if (!gridRow)
+                    if (!gridRow){
                         continue;
+                    }
                     for (var j = column; j < column + self.mode.getModeWidth(tile); j++) {
-                        if (gridRow[j] && gridRow[j] !== tile)
+                        if (gridRow[j] && gridRow[j] !== tile){
                             return false;
+                        }
                     }
                 }
                 return true;
@@ -110,8 +119,9 @@ define(['builder/builder.core'
 
             self.setRowHeight = function(rowIndex, height) {
                 var row = self.getRow(rowIndex);
-                if (!row)
+                if (!row){
                     return;
+                }
                 if (height) {
                     row[heightProperty] = height;
                 }
@@ -121,8 +131,9 @@ define(['builder/builder.core'
 
             self.getRowHeight = function(rowIndex) {
                 var row = self.getRow(rowIndex);
-                if (!row)
+                if (!row){
                     return Builder.DEFAULT_HEIGHT;
+                }
                 var height = row[heightProperty];
                 return height || Builder.DEFAULT_HEIGHT;
             };
@@ -130,8 +141,9 @@ define(['builder/builder.core'
             self.getHeight = function() {
                 for (var i = 0, height = 0; i < self.size(); i++) {
                     var row = self.getRow(i);
-                    if (row && row[heightProperty])
+                    if (row && row[heightProperty]){
                         height += row[heightProperty];
+                    }
                 }
                 return height;
             };

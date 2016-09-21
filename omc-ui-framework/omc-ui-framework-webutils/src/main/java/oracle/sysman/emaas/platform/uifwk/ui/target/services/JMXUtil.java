@@ -27,7 +27,7 @@ import javax.management.ObjectName;
  */
 public class JMXUtil
 {
-	private static final Logger _logger = LogManager.getLogger(JMXUtil.class);
+	private static final Logger _LOGGER = LogManager.getLogger(JMXUtil.class);
 	private MBeanServer server = null;
 
 	private static volatile JMXUtil instance = null;
@@ -58,7 +58,7 @@ public class JMXUtil
 			server.registerMBean(savedSearchStatus, statusObjectName);
 		}
 
-		_logger.info("start OMC UI MBeans!");
+		_LOGGER.info("start OMC UI MBeans!");
 	}
 
 	public void unregisterMBeans() throws MalformedObjectNameException, MBeanRegistrationException, InstanceNotFoundException
@@ -67,7 +67,7 @@ public class JMXUtil
 		if (server.isRegistered(statusObjectName)) {
 			server.unregisterMBean(statusObjectName);
 		}
-		_logger.info("stop OMC UI MBeans!");
+		_LOGGER.info("stop OMC UI MBeans!");
 	}
 
 }

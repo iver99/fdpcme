@@ -1,4 +1,4 @@
-define(['knockout', 'jquery', 'uifwk/js/util/message-util', 'ojs/ojdialog', 'ojs/ojbutton'],
+define(['knockout', 'jquery', 'uifwk/@version@/js/util/message-util-impl', 'ojs/ojdialog', 'ojs/ojbutton'],
     function(ko, $, msgUtilModel)
     {
         function AboutBox(params) {
@@ -7,8 +7,9 @@ define(['knockout', 'jquery', 'uifwk/js/util/message-util', 'ojs/ojdialog', 'ojs
             var msgUtil = new msgUtilModel();
 
             var startYear = 2015;
-            if (params.startYear)
+            if (params.startYear){
                 startYear = params.startYear;
+            }
             var currentYear = new Date().getFullYear();
             var copyrightYearString = (startYear === currentYear) ? currentYear :
                     startYear + nlsStrings.BRANDING_BAR_COMMA + ' ' + currentYear;
@@ -23,8 +24,9 @@ define(['knockout', 'jquery', 'uifwk/js/util/message-util', 'ojs/ojdialog', 'ojs
             self.aboutIconAltTxt = nlsStrings.BRANDING_BAR_ABOUT_DIALOG_ICON_ALT_TEXT;
 
             self.id = 'aboutbox';
-            if (params.id)
+            if (params.id){
                 self.id = params.id;
+            }
 
             self.okButtonHandle = function()
             {
