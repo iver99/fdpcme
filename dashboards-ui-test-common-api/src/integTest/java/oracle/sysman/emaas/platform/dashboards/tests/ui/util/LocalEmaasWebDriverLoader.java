@@ -30,7 +30,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
  */
 public class LocalEmaasWebDriverLoader
 {
-	public static String T_WORK_PATH = "/Users/wenjzhu/Documents/Temp";
+	public static final String T_WORK_PATH = "/Users/wenjzhu/Documents/Temp";
 
 	private final java.util.logging.Logger log = java.util.logging.Logger.getLogger(LocalEmaasWebDriverLoader.class
 			.getCanonicalName());
@@ -60,13 +60,12 @@ public class LocalEmaasWebDriverLoader
 			@Mock
 			public void $init(String testName)
 			{
-				//System.out.println("Init mock SetUpBrowser");
+				
 			}
 
 			@Mock
 			public org.openqa.selenium.WebDriver launch(WebDriver wd)
 			{
-				//System.out.println("mock SetUpBrowser: launch");
 				return webDriver;
 			}
 		}

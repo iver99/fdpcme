@@ -17,8 +17,8 @@ define([
     'knockout',
     'jquery',
     'dfutil',
-    'prefutil',
-    'mobileutil',
+    'uifwk/js/util/preference-util',
+    'uifwk/js/util/mobile-util',
     'ojs/ojknockout',
     'ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'
@@ -68,7 +68,6 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             self.description('');
             self.timeRangeFilterValue(["ON"]);
             self.targetFilterValue(["OFF"]);
-            //self.isDisabled(false);
         };
 
         self.isEnableTimeRange = function() {
@@ -84,14 +83,12 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 
     function confirmDialogModel(parentElementId, title, okLabel, message, okFunction) {
         var self = this;
-        //self.style = ko.observable('min-width: 450px; min-height:150px;');
         self.parentElementId = parentElementId;
         self.getElementByCss = function(cssSelector) {
             if (cssSelector && cssSelector !== null)
             {
                 if (self.parentElementId && self.parentElementId.trim().length > 0)
                 {
-                    var y = $("#"+self.parentElementId+" "+cssSelector);
                     return $("#"+self.parentElementId+" "+cssSelector);
                 }
                 return $(cssSelector);
@@ -113,7 +110,6 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             self.okFunction = function () {
                 var _okfunc = (okFunction && $.isFunction(okFunction)) ? okFunction : function() {};
                 _okfunc();
-                //self.close();
             };
             self.getElementByCss( ".dbs_cfmDialog" ).ojDialog( "open" );
         };
@@ -131,7 +127,6 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 
     function welcomeDialogModel(prefUtil, showWel) {
         var self = this;
-        //self.showWelcomePrefKey = "Dashboards.showWelcomeDialog";
         self.userName = dfu.getUserName();
         self.prefUtil = prefUtil;
         self.showWelcome = showWel;
@@ -161,7 +156,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 
     function ViewModel(predata, parentElementId, defaultFilters, dashboardSetItem, isSet) {
 
-        var self = this, showWelcome = (predata === null ? false : predata.getShowWelcomePref());
+        var self = this, showWelcome = false; //(predata === null ? false : predata.getShowWelcomePref());
 
         self.parentElementId = parentElementId;
         self.getElementByCss = function(cssSelector) {
@@ -221,12 +216,10 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.sortBy = ko.observable(['default']);
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel(parentElementId);
-        //self.comingsoonDialogModel = new comingsoonDialogModel();
 
         self.pageSize = ko.observable(120);
 
         self.serviceURL = DASHBOARDS_REST_URL;
-        //console.log("Service url: "+self.serviceURL);
 
         self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource([]));
         self.dashboards = ko.computed(function() {
@@ -235,7 +228,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.dashboardsTS = ko.observable(new dts.DashboardArrayTableSource([], {idAttribute: 'id'}));
         self.showPaging = ko.computed(function() {
             var _pds = ko.utils.unwrapObservable(self.pagingDatasource());
-            if (_pds instanceof  oj.ArrayPagingDataSource) return false;
+            if (_pds instanceof  oj.ArrayPagingDataSource) {
+                return false;
+            }
             var _spo = ko.utils.unwrapObservable(self.pagingDatasource().getShowPagingObservable());
             return _spo;
         });
@@ -249,12 +244,6 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), filterString);
         self.datasourceCallback = function (_event) {
                     var _i = 0, _rawdbs = [];
-//                    if (self.datasource['serverError'] === true)
-//                    {
-//                        self.showTilesMsg(true);
-//                        self.tilesMsg(getNlsString('DBS_HOME_TILES_INTERNAL_ERROR'));
-//                        return;
-//                    }
                     if (_event['data'])
                     {
                         for (_i = 0; _i < _event['data'].length; _i++)
@@ -279,11 +268,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                         self.showTilesMsg(false);
                     }
 
-                    //self.dashboardsTS(new oj.ArrayTableDataSource(_rawdbs, {idAttribute: 'id'}));
-                    //var _event = _event = {data: _rawdbs, startIndex: 0};
                     if (self.dashboardsTS() && self.dashboardsTS() !== null)
                     {
-                        //self.dashboardsTS().handleEvent(oj.TableDataSource.EventType['SYNC'], _event);
                         self.dashboardsTS().reset(_rawdbs);
                     }
                     else
@@ -298,12 +284,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             'success': function() {
                 self.datasource['serverError'] = false;
                 self.refreshPagingSource();
-                if (self.datasource['pagingDS'].totalSize() <= 0)
-                {
-                    if (self.welcomeDialogModel.showWelcome === false)
-                    {
-                        $('#cbtn-tooltip').ojPopup('open', "#cbtn");
-                    }
+                if (self.datasource['pagingDS'].totalSize() <= 0 && (self.welcomeDialogModel.showWelcome === false)){
+                    $('#cbtn-tooltip').ojPopup('open', "#cbtn");
                 }
             },
             'error': function(jqXHR, textStatus, errorThrown) {
@@ -315,12 +297,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.refreshPagingSource = function() {
             self.datasource['pagingDS'].on("sync", self.datasourceCallback);
             self.pagingDatasource( self.datasource['pagingDS'] );
-            //self.dashboardsTS(new oj.ArrayTableDataSource(self.datasource['pagingDS'].getWindow(), {idAttribute: 'id'}));
         };
 
         self.handleDashboardClicked = function(event, data) {
-            //console.log(data);
-            //data.dashboard.openDashboard();
             var _dmodel = data['dashboardModel'];
             if (data['id'])
             {
@@ -334,12 +313,11 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         };
 
         self.handleShowDashboardPop = function(event, data) {
-            //console.log(data);
             var popup = self.getElementByCss(".dashboard-picker:visible .dsbinfopop");
             var isOpen = !popup.ojPopup("isOpen");
             if (!isOpen)
             {
-                popup.ojPopup("close");//popup.html("");
+                popup.ojPopup("close");
             }
             if (data['id'])
             {
@@ -365,12 +343,11 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         };
 
         self.handleCloseDashboardPop = function(event, data) {
-            //console.log(data);
             var popup = $(".dashboard-picker:visible .dsbinfopop");
             var isOpen = !popup.ojPopup("isOpen");
             if (!isOpen)
             {
-                popup.ojPopup("close");//popup.html("");
+                popup.ojPopup("close");
             }
         };
 
@@ -408,7 +385,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         };
 
         self.confirmDashboardDelete = function() {
-            if ( !self.selectedDashboard() || self.selectedDashboard() === null ) return;
+            if ( !self.selectedDashboard() || self.selectedDashboard() === null ) {
+                return;
+            }
 
             self.datasource['pagingDS'].remove(self.selectedDashboard().dashboardModel,
                    {
@@ -434,7 +413,6 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 
 
         self.exploreDataMenuItemSelect = function( event, ui ) {
-            //window.open(ui.item.children("a")[0].value);
             if (ui.item.children("a")[0] && ui.item.children("a")[0].value)
             {
                 if (dfu.isDevMode()){
@@ -472,46 +450,37 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                 return;
             }
             //clear tracker
-            //self.tracker(undefined);
             self.createMessages.removeAll();
 
             var _addeddb = { "type":self.createDashboardModel.selectType(),
                             "name": self.createDashboardModel.name(),
                             "description": self.createDashboardModel.description(),
-//                            "showhidedescription":self.showHideDescription(),
                             "enableTimeRange": self.createDashboardModel.isEnableTimeRange() ? "TRUE" : "FALSE",
                             "enableRefresh": self.createDashboardModel.isEnableTimeRange()};
             if (!_addeddb['name'] || _addeddb['name'] === "" || _addeddb['name'].length > 64)
             {
-                //_trackObj = new oj.InvalidComponentTracker();
-                //self.tracker(_trackObj);
                 self.createMessages.push(new oj.Message(getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME')));
                 _trackObj.showMessages();
                 _trackObj.focusOnFirstInvalid();
                 return;
             }
 
-            //self.createDashboardModel.isDisabled(true);
             $( "#cDsbDialog" ).css("cursor", "progress");
             self.datasource['pagingDS'].create(_addeddb, {
                         'contentType': 'application/json',
 
                         success: function(_model, _resp, _options) {
-                            //console.log( " success ");
-                            //self.refreshPagingSource(true);
                             $( "#cDsbDialog" ).css("cursor", "default");
                             $( "#cDsbDialog" ).ojDialog( "close" );
                             self.afterConfirmDashboardCreate(_model, _resp, _options);
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
-                            //console.log('Error in Create: ' + textStatus);
                             $( "#cDsbDialog" ).css("cursor", "default");
-                            //self.createDashboardModel.isDisabled(false);
-                            var _m = null; //getNlsString('COMMON_SERVER_ERROR');
+                            var _m = null;
                             var _mdetail;
                             if (jqXHR && jqXHR[0] && jqXHR[0].responseJSON && jqXHR[0].responseJSON.errorCode === 10001)
                             {
-                                 _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR'); //jqXHR[0].responseJSON.errorMessage;
+                                 _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
                                  _mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
                             }else if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.errorCode === 10001)
                             {
@@ -537,11 +506,6 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                                 $( "#cDsbDialog" ).css("cursor", "default");
                                 $( "#cDsbDialog" ).ojDialog( "close" );
                             }
-                            /*
-                            $( "#cDsbDialog" ).ojDialog( "close" );
-                            self.confirmDialogModel.show("Error", "Ok",
-                                    "Error on creating dashboard." + " " +_m,
-                                    function () {self.confirmDialogModel.close()});*/
                         }
                     });
         };
@@ -574,7 +538,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.handleListColumnSort = function( event, ui ) {
             if (ui)
             {
-                var _option = ui.header + (ui.direction == 'descending' ? '_dsc' : '_asc');
+                var _option = ui.header + (ui.direction === 'descending' ? '_dsc' : '_asc');
                 self.sortBy([_option]);
             }
         };
@@ -584,10 +548,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             if ( valueParam.option === "value" && _value[0] !== _preValue[0] )
             {
                 self.dsFactory.sortBy = _value[0];
-                if (valueParam.optionMetadata.writeback == 'shouldNotWrite')
+                if (valueParam.optionMetadata.writeback === 'shouldNotWrite')
                 {
                     // change by set self.sortBy triggered by list table sort
-                    //self.getElementByCss(".sinput").dbsTypeAhead("forceSearch");
                     self.forceSearch();
                 }
                 else
@@ -599,7 +562,6 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                             if (__sortui === null)
                             {
                                 //sort column not in table, clear the table header sorting icon
-                                //$("#dbstable")
                                 var _headercolumns = self.getElementByCss('.oj-table-column-header-cell');
                                 _headercolumns.data('sorted', null);
                                 var headerColumnAscLink =  self.getElementByCss('.oj-table-column-header-asc-link.oj-enabled');
@@ -613,7 +575,6 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                             {
                                 _ts.handleEvent(oj.TableDataSource.EventType['SORT'], __sortui);
                             }
-                        //_ts.handleEvent(oj.TableDataSource.EventType['REQUEST']);
                     }
                     setTimeout(function() { self._forceSearch();}, 0);
                 }
@@ -622,32 +583,32 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 
         self._getListTableSortUi = function(sortOption)
         {
-            if (sortOption == 'name_asc')
+            if (sortOption === 'name_asc')
             {
                 return {'header': 'name', 'direction': 'ascending'};
             }
 
-            if (sortOption == 'name_dsc')
+            if (sortOption === 'name_dsc')
             {
                 return {'header': 'name', 'direction': 'descending'};
             }
 
-            if (sortOption == 'owner_asc')
+            if (sortOption === 'owner_asc')
             {
                 return {'header': 'owner', 'direction': 'ascending'};
             }
 
-            if (sortOption == 'owner_dsc')
+            if (sortOption === 'owner_dsc')
             {
                 return {'header': 'owner', 'direction': 'descending'};
             }
 
-            if (sortOption == 'last_modification_date_asc')
+            if (sortOption === 'last_modification_date_asc')
             {
                 return {'header': 'last_modification_date', 'direction': 'ascending'};
             }
 
-            if (sortOption == 'last_modification_date_dsc')
+            if (sortOption === 'last_modification_date_dsc')
             {
                 return {'header': 'last_modification_date', 'direction': 'descending'};
             }
@@ -678,9 +639,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 
         self.searchResponse = function (event, data)
         {
-            //console.log("searchResponse: "+data.content.collection.length);
             self.datasource = data.content;
-            //self.datasourceCallback({'data': self.datasource['pagingDS'].getWindow()});
             self.refreshPagingSource();
         };
 
@@ -692,12 +651,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self._forceSearch = function (silent, endcallback)
         {
             var  _ts = self.dashboardsTS();
-            if (silent !== true)
+            if (silent !== true && ( _ts && _ts !== null ))
             {
-                if ( _ts && _ts !== null )
-                {
-                    _ts.handleEvent(oj.TableDataSource.EventType['REQUEST']);
-                }
+                _ts.handleEvent(oj.TableDataSource.EventType['REQUEST']);
             }
             self.getElementByCss(".dbs-sinput").dbsTypeAhead("forceSearch", endcallback);
         };
@@ -748,10 +704,11 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                 self.datasource['pagingDS'].refreshModel(_id, {
                     success: function(model) {
                         var _e = $(".dbs-summary-container[aria-dashboard=\""+_id+"\"]");
-                        if (_e && _e.length > 0) _e.dbsDashboardPanel("refresh");
+                        if (_e && _e.length > 0) {
+                            _e.dbsDashboardPanel("refresh");
+                        }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
-                        //console.log("Error on update dashboard");
                         oj.Logger.error("Error when updating dashboard. " + (jqXHR ? jqXHR.responseText : ""));
                     }
                 });
@@ -766,9 +723,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.sApplications = undefined;
 
         var getUrlParam = function(name) {
-                        //name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
             var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(window.location.search);
-            return results === null ? "" : results[1];//decodeURIComponent(results[1].replace(/\+/g, " "));
+            return results === null ? "" : results[1];
         };
 
         self.getDashboardsFilter = function (options) {
@@ -791,7 +747,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 
         self.getDashboardsFilterPref = function () {
             var filter = self.getPreferenceValue(DASHBOARDS_FILTER_PREF_KEY);
-            if (filter === undefined || filter.length === 0) return undefined;
+            if (filter === undefined || filter.length === 0) {
+                return undefined;
+            }
             filter = $("<div/>").html(filter).text();
             return filter;
         };
@@ -819,13 +777,19 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         };
 
         self.getPreferenceValue = function(key) {
-            if (self.preferences === undefined) return undefined;
+            if (self.preferences === undefined) {
+                return undefined;
+            }
             var arr;
             arr = $.grep(self.preferences, function( pref ) {
-                if (pref !== undefined && pref['key'] === key) return true;
+                if (pref !== undefined && pref['key'] === key) {
+                    return true;
+                }
                 return false;
             });
-            if (arr !== undefined && arr.length > 0) return arr[0]['value'];
+            if (arr !== undefined && arr.length > 0) {
+                return arr[0]['value'];
+            }
             return undefined;
         };
 

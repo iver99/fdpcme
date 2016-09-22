@@ -37,7 +37,7 @@ public interface IDashboardHomeUtil extends IUiTestCommonAPI
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_ASC = "owner_asc";
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_DSC = "owner_dsc";
 
-	public void closeOverviewPage(WebDriver driver) throws Exception;
+	public void closeOverviewPage(WebDriver driver) ;
 
 	/**
 	 * Create one Dashboard
@@ -47,9 +47,9 @@ public interface IDashboardHomeUtil extends IUiTestCommonAPI
 	 *            dashboard name
 	 * @param descriptions
 	 *            dashboard description(optional)
-	 * @throws Exception
+	 * @
 	 */
-	public void createDashboard(WebDriver driver, String name, String descriptions) throws Exception;
+	public void createDashboard(WebDriver driver, String name, String descriptions) ;
 
 	/**
 	 * Create one Dashboard or Dashbaord Set
@@ -61,9 +61,9 @@ public interface IDashboardHomeUtil extends IUiTestCommonAPI
 	 *            dashboard description(optional)
 	 * @param type
 	 *            dashboard | dashboardSet
-	 * @throws Exception
+	 * @
 	 */
-	public void createDashboard(WebDriver driver, String name, String descriptions, String type) throws Exception;
+	public void createDashboard(WebDriver driver, String name, String descriptions, String type) ;
 
 	/**
 	 * Create one Dashbaord Set
@@ -73,9 +73,9 @@ public interface IDashboardHomeUtil extends IUiTestCommonAPI
 	 *            dashboard set name
 	 * @param descriptions
 	 *            dashboard set description(optional)
-	 * @throws Exception
+	 * @
 	 */
-	public void createDashboardSet(WebDriver driver, String name, String descriptions) throws Exception;
+	public void createDashboardSet(WebDriver driver, String name, String descriptions) ;
 
 	/**
 	 * Delete one dashboard by name
@@ -84,9 +84,9 @@ public interface IDashboardHomeUtil extends IUiTestCommonAPI
 	 *            dashboard name
 	 * @param view
 	 *            dashboards_grid_view | dashboards_list_view
-	 * @throws Exception
+	 * @
 	 */
-	public void deleteDashboard(WebDriver driver, String dashboardName, String view) throws Exception;
+	public void deleteDashboard(WebDriver driver, String dashboardName, String view) ;
 
 	/**
 	 * add filter
@@ -94,26 +94,26 @@ public interface IDashboardHomeUtil extends IUiTestCommonAPI
 	 * @param driver
 	 * @param filter
 	 *            filter name - apm,la,ita,oracle,share,me,favorites(multiple choice and split with comma)
-	 * @throws Exception
+	 * @
 	 */
-	public void filterOptions(WebDriver driver, String filter) throws Exception;
+	public void filterOptions(WebDriver driver, String filter) ;
 
 	/**
 	 * goto the link in Data Explorer by displayed name
 	 *
 	 * @param option
 	 *            Analyze | Log Visual Analyzer | Search
-	 * @throws Exception
+	 * @
 	 */
-	public void gotoDataExplorer(WebDriver driver, String option) throws Exception;
+	public void gotoDataExplorer(WebDriver driver, String option) ;
 
 	/**
 	 * choose grid view
 	 *
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public void gridView(WebDriver driver) throws Exception;
+	public void gridView(WebDriver driver) ;
 
 	/**
 	 * check if the dashboard is existing or not by name
@@ -121,9 +121,9 @@ public interface IDashboardHomeUtil extends IUiTestCommonAPI
 	 * @param driver
 	 * @param dashboardName
 	 * @return
-	 * @throws Exception
+	 * @
 	 */
-	public boolean isDashboardExisted(WebDriver driver, String dashboardName) throws Exception;
+	public boolean isDashboardExisted(WebDriver driver, String dashboardName) ;
 
 	/**
 	 * check if the filter is selected by filter name
@@ -132,54 +132,54 @@ public interface IDashboardHomeUtil extends IUiTestCommonAPI
 	 * @param filter
 	 *            filer name - apm, la , ita, oracle, share, me favorites(single choice)
 	 * @return
-	 * @throws Exception
+	 * @
 	 */
-	public boolean isFilterOptionSelected(WebDriver driver, String filter) throws Exception;
+	public boolean isFilterOptionSelected(WebDriver driver, String filter) ;
 
-	public List<String> listDashboardNames(WebDriver driver) throws Exception;
+	public List<String> listDashboardNames(WebDriver driver) ;
 
 	/**
 	 * choose the list view
 	 *
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public void listView(WebDriver driver) throws Exception;
+	public void listView(WebDriver driver) ;
 
 	/**
 	 * reset the filters
 	 *
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public void resetFilterOptions(WebDriver driver) throws Exception;
+	public void resetFilterOptions(WebDriver driver) ;
 
 	/**
 	 * search dashboard
 	 *
 	 * @param driver
 	 * @param searchString
-	 * @throws Exception
+	 * @
 	 */
-	public void search(WebDriver driver, String searchString) throws Exception;
+	public void search(WebDriver driver, String searchString) ;
 
 	/**
 	 * Select an any-type dashboard by name, including OOB dashboard & user created dashboard
 	 *
 	 * @param driver
 	 * @param dashboardName
-	 * @throws Exception
+	 * @
 	 */
-	public void selectDashboard(WebDriver driver, String dashboardName) throws Exception;
+	public void selectDashboard(WebDriver driver, String dashboardName) ;
 
 	/**
 	 * Select an OOB dashboard by name
 	 *
 	 * @param driver
 	 * @param dashboardName
-	 * @throws Exception
+	 * @
 	 */
-	public void selectOOB(WebDriver driver, String dashboardName) throws Exception;
+	public void selectOOB(WebDriver driver, String dashboardName) ;
 
 	/**
 	 * sort dashboards
@@ -188,35 +188,35 @@ public interface IDashboardHomeUtil extends IUiTestCommonAPI
 	 * @param option
 	 *            sort by - default, access_date_asc, access_date_dsc, name_asc, name_dsc, creation_date_asc, creation_date_dsc,
 	 *            last_modification_date_asc, last_modification_date_dsc, owner_asc, owner_dsc
-	 * @throws Exception
+	 * @
 	 */
-	public void sortBy(WebDriver driver, String option) throws Exception;
+	public void sortBy(WebDriver driver, String option) ;
 
 	/**
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public void sortListViewByCreateBy(WebDriver driver) throws Exception;
+	public void sortListViewByCreateBy(WebDriver driver) ;
 
 	/**
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public void sortListViewByLastModified(WebDriver driver) throws Exception;
+	public void sortListViewByLastModified(WebDriver driver) ;
 
 	/**
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public void sortListViewByName(WebDriver driver) throws Exception;
+	public void sortListViewByName(WebDriver driver) ;
 
 	/**
 	 * wait the dashboard by name
 	 *
 	 * @param driver
 	 * @param dashboardName
-	 * @throws Exception
+	 * @
 	 */
-	public void waitForDashboardPresent(WebDriver driver, String dashboardName) throws Exception;
+	public void waitForDashboardPresent(WebDriver driver, String dashboardName) ;
 
 }

@@ -1,5 +1,5 @@
 
-define(['jquery', 'uifwk/js/util/ajax-util'],
+define(['jquery', 'uifwk/@version@/js/util/ajax-util-impl'],
 function($, ajaxUtilModel)
 {
     var ajaxUtil = new ajaxUtilModel();
@@ -18,10 +18,14 @@ function($, ajaxUtilModel)
         if (prefArray && key) {
             var arr;
             arr = $.grep(prefArray, function(pref) {
-                if (pref !== undefined && pref['key'] === key) return true;
+                if (pref !== undefined && pref['key'] === key) {
+                    return true;
+                }
                 return false;
             });
-            if (arr !== undefined && arr.length > 0) return arr[0]['value'];
+            if (arr !== undefined && arr.length > 0) {
+                return arr[0]['value'];
+            }
         }
         return undefined;
     };

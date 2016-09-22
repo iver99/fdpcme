@@ -29,7 +29,7 @@ public class RegistryLookupUtilTest
 	private static final String END_POINT_HTTPS = "https://sample.endpoint.com";
 
 	@Test(groups = { "s2" })
-	public void testGetLinksWithRelPrefix_S2()
+	public void testGetLinksWithRelPrefixS2()
 	{
 		final List<Link> links = new ArrayList<Link>();
 		Link lk1 = new Link();
@@ -57,12 +57,12 @@ public class RegistryLookupUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetServiceExternalEndPoint_ExceptionOccurred_S2(@Mocked final Builder anyBuilder,
+	public void testGetServiceExternalEndPointExceptionOccurredS2(@Mocked final Builder anyBuilder,
 			@Mocked final InstanceInfo anyInstanceInfo, @Mocked final LookupManager anyLockupManager,
 			@Mocked final LookupClient anyClient, @Injectable final Logger anyLogger) throws Exception
 	{
-		Logger logger = (Logger) Deencapsulation.getField(RegistryLookupUtil.class, "logger");
-		Deencapsulation.setField(RegistryLookupUtil.class, "logger", anyLogger);
+		Logger logger = (Logger) Deencapsulation.getField(RegistryLookupUtil.class, "LOGGER");
+		Deencapsulation.setField(RegistryLookupUtil.class, "LOGGER", anyLogger);
 		try {
 			new Expectations() {
 				{
@@ -78,12 +78,12 @@ public class RegistryLookupUtilTest
 			Assert.assertNull(endpoint);
 		}
 		finally {
-			Deencapsulation.setField(RegistryLookupUtil.class, "logger", logger);
+			Deencapsulation.setField(RegistryLookupUtil.class, "LOGGER", logger);
 		}
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetServiceExternalEndPoint_S2(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
+	public void testGetServiceExternalEndPointS2(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
 			@Mocked final LookupManager anyLockupManager, @Mocked final LookupClient anyClient) throws Exception
 	{
 		new Expectations() {
@@ -152,7 +152,7 @@ public class RegistryLookupUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetServiceExternalEndPointEntity_S2()
+	public void testGetServiceExternalEndPointEntityS2()
 	{
 		String href = "htt://www.test.com", serviceName = "serviceName", version = "version", tenantName = "tenantName";
 		final Link link = new Link();
@@ -170,7 +170,7 @@ public class RegistryLookupUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetServiceExternalLink_NoTenant_S2(@Mocked final Builder anyBuilder,
+	public void testGetServiceExternalLinkNoTenantS2(@Mocked final Builder anyBuilder,
 			@Mocked final InstanceInfo anyInstanceInfo, @Mocked final InstanceQuery anyInstanceQuery,
 			@Mocked final LookupManager anyLockupManager, @Mocked final SanitizedInstanceInfo anySanitizedInfo) throws Exception
 	{
@@ -211,7 +211,7 @@ public class RegistryLookupUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetServiceExternalLink_S2(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
+	public void testGetServiceExternalLinkS2(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
 			@Mocked final LookupManager anyLockupManager, @Mocked final SanitizedInstanceInfo anySanitizedInfo) throws Exception
 	{
 		String testHref = "https://test1.link.com";
@@ -246,7 +246,7 @@ public class RegistryLookupUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetServiceExternalLinkWithRelPrefix_S2(@Mocked final Builder anyBuilder,
+	public void testGetServiceExternalLinkWithRelPrefixS2(@Mocked final Builder anyBuilder,
 			@Mocked final InstanceInfo anyInstanceInfo, @Mocked final LookupManager anyLockupManager,
 			@Mocked final SanitizedInstanceInfo anySanitizedInfo) throws Exception
 	{
@@ -331,7 +331,7 @@ public class RegistryLookupUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testReplaceWithVanityUrlForEndpointEntity_S2(@Mocked final Builder anyBuilder,
+	public void testReplaceWithVanityUrlForEndpointEntityS2(@Mocked final Builder anyBuilder,
 			@Mocked final InstanceInfo anyInstanceInfo, @Mocked final LookupManager anyLockupManager,
 			@Mocked final LookupClient anyClient, @Mocked final InstanceQuery anyInstanceQuery) throws Exception
 	{
@@ -344,7 +344,7 @@ public class RegistryLookupUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testReplaceWithVanityUrlForLink_S2(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
+	public void testReplaceWithVanityUrlForLinkS2(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
 			@Mocked final LookupManager anyLockupManager, @Mocked final LookupClient anyClient,
 			@Mocked final InstanceQuery anyInstanceQuery) throws Exception
 	{
@@ -360,7 +360,7 @@ public class RegistryLookupUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testReplaceWithVanityUrlForString_S2(@Mocked final Builder anyBuilder,
+	public void testReplaceWithVanityUrlForStringS2(@Mocked final Builder anyBuilder,
 			@Mocked final InstanceInfo anyInstanceInfo, @Mocked final LookupManager anyLockupManager,
 			@Mocked final LookupClient anyClient, @Mocked final InstanceQuery anyInstanceQuery) throws Exception
 	{

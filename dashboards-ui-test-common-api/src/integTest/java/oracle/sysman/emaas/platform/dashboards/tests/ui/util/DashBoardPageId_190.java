@@ -9,6 +9,9 @@ public class DashBoardPageId_190
 	 *
 	 *
 	 * */
+	private DashBoardPageId_190() {
+	  }
+
 	public static final String CREATEDSBUTTONID = "cbtn";
 	public static final String CREATEDSOFDIALOGID = "createDsb";
 	public static final String DASHBOARDNAMEBOXID = "dbsHNameIn";

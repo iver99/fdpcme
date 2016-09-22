@@ -1,11 +1,30 @@
 requirejs.config({
-//    urlArgs: "v=1.0",
-//    //Set up module mapping
-//    map: {
-//        'prefutil':
-//            {'df-util': '/emsaasui/uifwk/js/util/df-util',
-//             'usertenant-util': '/emsaasui/uifwk/js/util/usertenant-util'}
-//    },
+    bundles: (window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ? undefined : {
+        'uifwk/js/uifwk-partition': 
+            [
+            'uifwk/js/util/ajax-util',
+            'uifwk/js/util/df-util',
+            'uifwk/js/util/logging-util',
+            'uifwk/js/util/message-util',
+            'uifwk/js/util/mobile-util',
+            'uifwk/js/util/preference-util',
+            'uifwk/js/util/screenshot-util',
+            'uifwk/js/util/typeahead-search',
+            'uifwk/js/util/usertenant-util',
+            'uifwk/js/widgets/aboutbox/js/aboutbox',
+            'uifwk/js/widgets/brandingbar/js/brandingbar',
+            'uifwk/js/widgets/datetime-picker/js/datetime-picker',
+            'uifwk/js/widgets/navlinks/js/navigation-links',
+            'uifwk/js/widgets/timeFilter/js/timeFilter',
+            'uifwk/js/widgets/widgetselector/js/widget-selector',
+            'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
+            'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
+            'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
+            'text!uifwk/js/widgets/widgetselector/html/widget-selector.html',
+            'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
+            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
+            ]
+    },
     // Path mappings for the logical module names
     paths: {
         'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.4.0',
@@ -22,7 +41,6 @@ requirejs.config({
         'history': '../../libs/@version@/js/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
-        'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
         'uifwk': '/emsaasui/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
@@ -67,7 +85,7 @@ requirejs.config({
 require(['knockout',
     'jquery',
     'ojs/ojcore',
-    'loggingutil',
+    'uifwk/js/util/logging-util',
     'uifwk/js/util/usertenant-util',
     'uifwk/js/util/message-util',
     'uifwk/js/util/df-util',
@@ -79,7 +97,6 @@ require(['knockout',
 ],
         function(ko, $, oj, _emJETCustomLogger, userTenantUtilModel, msgUtilModel, dfumodel) // this callback gets executed when all required modules are loaded
         {
-            //appId: "Error";//"TenantManagement";//"LogAnalytics";//"ITAnalytics"; //"APM" //"Dashboard";
             var appId = getUrlParam("appId");
             appId = appId !== null && appId !== "" ? appId : "Dashboard";
             var isAdmin = getUrlParam("isAdmin");
@@ -102,14 +119,14 @@ require(['knockout',
 
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
-                    viewModel:{require:'/emsaasui/uifwk/js/widgets/brandingbar/js/brandingbar.js'},
-                    template:{require:'text!/emsaasui/uifwk/js/widgets/brandingbar/html/brandingbar.html'}
+                    viewModel:{require:'uifwk/js/widgets/brandingbar/js/brandingbar'},
+                    template:{require:'text!uifwk/js/widgets/brandingbar/html/brandingbar.html'}
                 });
             }
             if (!ko.components.isRegistered('df-widget-selector')) {
                 ko.components.register("df-widget-selector",{
-                    viewModel:{require:'/emsaasui/uifwk/js/widgets/widgetselector/js/widget-selector.js'},
-                    template:{require:'text!/emsaasui/uifwk/js/widgets/widgetselector/html/widget-selector.html'}
+                    viewModel:{require:'uifwk/js/widgets/widgetselector/js/widget-selector'},
+                    template:{require:'text!uifwk/js/widgets/widgetselector/html/widget-selector.html'}
                 });
             }
 

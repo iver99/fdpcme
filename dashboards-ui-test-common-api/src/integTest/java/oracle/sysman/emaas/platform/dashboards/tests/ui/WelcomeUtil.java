@@ -9,11 +9,12 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class WelcomeUtil
 {
+	private WelcomeUtil() {
+	  }
+
 	/**
 	 * Visit Log/Analyze/Search from Data Explorers dropdown in welcome
 	 * 
@@ -21,7 +22,7 @@ public class WelcomeUtil
 	 * @param selection
 	 * 				log | analyze | search
 	 */
-	public static void dataExplorers(WebDriver driver, String selection) throws Exception
+	public static void dataExplorers(WebDriver driver, String selection) 
 	{
 		String eleXpath = null;
 		driver.getLogger().info("Visiting Data Explorer-" + selection + " from Welcome Page...");
@@ -46,6 +47,8 @@ public class WelcomeUtil
 			case DATA_EXPLORERS_SEARCH:
 				eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.WELCOME_DATAEXP_SELECTID,
 						DashBoardPageId.WELCOME_DATAEXP_SEARCH);
+				break;
+			default:
 				break;
 		}
 		driver.getWebDriver().findElement(By.xpath(eleXpath)).click();
@@ -99,6 +102,8 @@ public class WelcomeUtil
 			case LEARN_MORE_SERVICE_OFFERINGS:
 				expectedName = "Service Offerings";
 				break;
+			default:
+				break;
 		}
 		return expectedName;
 	}
@@ -123,6 +128,8 @@ public class WelcomeUtil
 			case LEARN_MORE_SERVICE_OFFERINGS:
 				itemId = DashBoardPageId.WELCOME_LEARNMORE_SERVICEOFFERING;
 				break;
+			default:
+				break;
 		}
 		return itemId;
 	}
@@ -134,9 +141,9 @@ public class WelcomeUtil
 	 * @param selectId
 	 * @param optionId
 	 * @return
-	 * @throws Exception
+	 * @
 	 */
-	private static String getOptionXpath(WebDriver driver, String selectId, String optionId) throws Exception
+	private static String getOptionXpath(WebDriver driver, String selectId, String optionId) 
 	{
 		String optionXpath;
 		WebElement li = driver.getWebDriver().findElement(By.id(optionId));
@@ -186,6 +193,8 @@ public class WelcomeUtil
 			case SERVICE_NAME_DATA_EXPLORERS:
 				serviceWrapperId = DashBoardPageId.WELCOME_DATAEXP;
 				break;
+			default:
+				break;
 		}
 		return serviceWrapperId;
 	}
@@ -225,9 +234,9 @@ public class WelcomeUtil
 	 * @param serviceName
 	 * 			APM | LA | ITA | infraMonitoring | compliance | securityAnalytics | orchestration | dashboards | dataExplorers 
 	 * @return
-	 * @throws Exception
+	 * @
 	 */
-	public static boolean isServiceExistedInWelcome(WebDriver driver, String serviceName) throws Exception
+	public static boolean isServiceExistedInWelcome(WebDriver driver, String serviceName) 
 	{
 		driver.getLogger().info("Start to check if service: " + serviceName + " is existed in welcome page...");
 
@@ -256,9 +265,9 @@ public class WelcomeUtil
 	 * Visit "How to get started" in welcome
 	 * 
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public static void learnMoreHow(WebDriver driver) throws Exception
+	public static void learnMoreHow(WebDriver driver) 
 	{
 		driver.getLogger().info("Visiting 'Learn More-How to get started' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -271,9 +280,9 @@ public class WelcomeUtil
 	 * Visit "Service Offerings" in welcome
 	 * 
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public static void learnMoreServiceOffering(WebDriver driver) throws Exception
+	public static void learnMoreServiceOffering(WebDriver driver) 
 	{
 		driver.getLogger().info("Visiting 'Learn More-Service Offerings' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -286,9 +295,9 @@ public class WelcomeUtil
 	 * Visit "Videos" in welcome
 	 * 
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public static void learnMoreVideo(WebDriver driver) throws Exception
+	public static void learnMoreVideo(WebDriver driver) 
 	{
 		driver.getLogger().info("Visiting 'Learn More-Videos' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -301,9 +310,9 @@ public class WelcomeUtil
 	 * Visit "Application Performance Monitoring" in welcome
 	 * 
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public static void visitAPM(WebDriver driver) throws Exception
+	public static void visitAPM(WebDriver driver) 
 	{
 		driver.getLogger().info("Visit APM from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -317,9 +326,9 @@ public class WelcomeUtil
 	 * Visit "Complliance Service" in welcome
 	 * 
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public static void visitCompliance(WebDriver driver) throws Exception
+	public static void visitCompliance(WebDriver driver) 
 	{
 		driver.getLogger().info("Visit Compliance Service from Welcome page..");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -333,9 +342,9 @@ public class WelcomeUtil
 	 * Visit "Dashboards" in welcome
 	 * 
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public static void visitDashboards(WebDriver driver) throws Exception
+	public static void visitDashboards(WebDriver driver) 
 	{
 		driver.getLogger().info("Visit Dashboards from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -349,9 +358,9 @@ public class WelcomeUtil
 	 * Visit "Infrustructure Monitoring" in welcome
 	 * 
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public static void visitInfraMonitoring(WebDriver driver) throws Exception
+	public static void visitInfraMonitoring(WebDriver driver) 
 	{
 		driver.getLogger().info("Visit Infrastructure Monitoring from Welcome page..");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -369,9 +378,9 @@ public class WelcomeUtil
 	 * 		default | performanceAnayticsDatabase | performanceAnalyticsMiddleware | 
 	 * 		resourceAnalyticsDatabase | resourceAnalyticsMiddleware | resourceAnalyticsHost | 
 	 *  	dataExplorerAnalyze | dataExplorer
-	 * @throws Exception
+	 * @
 	 */
-	public static void visitITA(WebDriver driver, String selection) throws Exception
+	public static void visitITA(WebDriver driver, String selection) 
 	{
 		driver.getLogger().info("Visiting ITA-" + selection + " from Welcome Page...");
 
@@ -421,6 +430,8 @@ public class WelcomeUtil
 					eleXpath = WelcomeUtil.getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
 							DashBoardPageId.WELCOME_ITA_DE);
 					break;
+				default:
+					break;
 			}
 			driver.click(eleXpath);
 			driver.takeScreenShot();
@@ -431,9 +442,9 @@ public class WelcomeUtil
 	 * Visit "Log Analytics" in welcome
 	 * 
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public static void visitLA(WebDriver driver) throws Exception
+	public static void visitLA(WebDriver driver) 
 	{
 		driver.getLogger().info("Visiting LA from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -447,9 +458,9 @@ public class WelcomeUtil
 	 * Visit "Security Monitoring and Analytics" in welcome
 	 * 
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public static void visitSecurityAnalytics(WebDriver driver) throws Exception
+	public static void visitSecurityAnalytics(WebDriver driver) 
 	{
 		driver.getLogger().info("Visit Security Monitoring and Analytics from Welcome page..");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -463,9 +474,9 @@ public class WelcomeUtil
 	 * Visit "Orchestration" in welcome
 	 * 
 	 * @param driver
-	 * @throws Exception
+	 * @
 	 */
-	public static void visitOrchestration(WebDriver driver) throws Exception
+	public static void visitOrchestration(WebDriver driver) 
 	{
 		driver.getLogger().info("Visit Orchestration from Welcome page..");
 		WaitUtil.waitForPageFullyLoaded(driver);

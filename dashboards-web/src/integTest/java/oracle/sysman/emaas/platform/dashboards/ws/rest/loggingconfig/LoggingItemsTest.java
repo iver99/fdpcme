@@ -22,17 +22,17 @@ public class LoggingItemsTest {
     LoggingItem loggingItem;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp()  {
          loggingItems = new LoggingItems();
     }
 
     @AfterMethod
-    public void tearDown() throws Exception {
-
+    public void tearDown()  {
+    	// do nothing
     }
 
     @Test
-    public void testGetItems() throws Exception {
+    public void testGetItems()  {
         Assert.assertNull(loggingItems.getItems());
 
         List<LoggingItem> list = new ArrayList<>();
@@ -43,7 +43,7 @@ public class LoggingItemsTest {
     }
 
     @Test
-    public void testGetTotal() throws Exception {
+    public void testGetTotal()  {
         Assert.assertEquals(loggingItems.getTotal(),0);
 
         List<LoggingItem> list = new ArrayList<>();
@@ -58,7 +58,7 @@ public class LoggingItemsTest {
     }
 
     @Test
-    public void testAddLoggerConfig() throws Exception {
+    public void testAddLoggerConfig()  {
         loggingItems.setItems(null);
         loggingItems.addLoggerConfig(new LoggerConfig(), 123L);
         Assert.assertEquals(loggingItems.getTotal(),1);

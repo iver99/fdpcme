@@ -15,7 +15,7 @@ public class DashboardsApplicationTest
 	DashboardsApplication dashboardsApplication;
 
 	@Test
-	public void testGetClasses() throws Exception
+	public void testGetClasses() 
 	{
 		dashboardsApplication = new DashboardsApplication();
 		Set<Class<?>> hs = dashboardsApplication.getClasses();
