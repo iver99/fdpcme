@@ -1211,11 +1211,11 @@ public class DashboardManager
 					"TYPE").toString())))) {
 				EntityManager em=null;
 				try{
-					LOGGER.debug("Handling SINGLEPAGE type...");
+					LOGGER.debug("When listing dashboard, loading dashboard tiles data for SINGLEPAGE dashboard with ID={}", e.getDashboardId());
 					DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 					em = dsf.getEntityManager();
 					EmsDashboard ed = dsf.getEmsDashboardById(e.getDashboardId());
-					LOGGER.debug("handled singlepage type, EmsDashboard is " + ed);
+					LOGGER.debug("Completed loading singlepage dashboard for ID={}, EmsDashboard is {}", e.getDashboardId(), ed);
 					return ed;
 				}finally{
 					if (em != null) {
