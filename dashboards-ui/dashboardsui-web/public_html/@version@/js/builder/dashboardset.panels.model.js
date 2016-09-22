@@ -3,11 +3,11 @@ define([
     'knockout',
     'jquery',
     'dfutil',
-    'loggingutil',
+    'uifwk/js/util/logging-util',
     'idfbcutil',
     'ojs/ojcore',
     'jqueryui',
-    'builder/builder.jet.partition', 
+    'builder/builder.jet.partition',
     'builder/builder.core',
     'builder/right.panel.model',
     'builder/builder.functions',
@@ -15,7 +15,9 @@ define([
     'builder/dashboard.tile.view',
     'builder/tool.bar.model',
     'builder/integrate/builder.integrate',
-    'dashboards/dbstypeahead'],
+    'dashboards/dbstypeahead',
+    'builder/integrate/dashboard.widget.api',
+    'builder/dashboardDataSource/dashboard.datasource'],
     function (model, ko, $, dfu, _emJETCustomLogger, idfbcutil, oj) {
 
         function DashboardsetPanelsModel(dashboardsetToolBarModel) {
@@ -24,15 +26,15 @@ define([
             }
 
             var self = this;
-            
+
             var dashboardInstMap =dashboardsetToolBarModel.dashboardInstMap = {};
             var options = {"autoRefreshInterval":dashboardsetToolBarModel.autoRefreshInterval};
-            
+
             window.selectedDashboardInst = self.selectedDashboardInst = ko.observable(null);
-            
+
             self.windowWidth=ko.observable($(window).width());
             self.windowHeight=ko.observable($(window).height());
-            
+
             self.rightPanelModel = null;
             self.loadRightPanelModel = function (toolBarModel, tilesViewModel, $b) {
                 if (self.rightPanelModel) {
@@ -47,23 +49,26 @@ define([
                 self.rightPanelModel.initialize();
             };
             
-            self.showDashboard = function (dashboardItem) {
-                var dashboardId = dashboardItem.dashboardId;
-                var divId = "dashboard-" + dashboardId;
-                var $showDashboard = $("#" + divId);
-                var alreadyLoaded = $("#" + divId).length > 0;
+            self.showDashboard = function (dashboardsetToolBarModel) {
+                document.activeElement.blur();//to blur the focused item on another tab
+                var dashboardItem=dashboardsetToolBarModel.selectedDashboardItem(),               
+                    dashboardId = dashboardItem.dashboardId,
+                    divId = "dashboard-" + dashboardId,
+                    $showDashboard = $("#" + divId),
+                    alreadyLoaded = $("#" + divId).length > 0;
                 
                 //hide the right panel
                 if (self.rightPanelModel) {
                     //resize right panel before shown
-                    self.rightPanelModel.completelyHidden(true);
+                    Builder.rightPanelChange("complete-hidden-rightpanel");                 
                     $(".dashboard-picker-container").removeClass("df-collaps");
                 }
-                
+
                 if (alreadyLoaded) {
                     $showDashboard.show();
                     self.selectedDashboardInst(dashboardInstMap[dashboardId]);
-                    if (self.selectedDashboardInst().type === "included") {
+                    var _isIncludingDbsHome=self.selectedDashboardInst().type === "new";
+                    if (!_isIncludingDbsHome) {
                         resetContainerScroll();
                         setTimeout(function() {
                             $(window).trigger("resize");
@@ -77,7 +82,8 @@ define([
                         self.loadRightPanelModel(null, null, $b);
                     }
                 } else {
-                    if (dashboardItem.type === "new") {
+                    var _isIncludingDbsHome=dashboardItem.type === "new";
+                    if (_isIncludingDbsHome) {
                         self.includingDashboard(dashboardId);
                         //new dashboard home css change:align
                         setTimeout(function () {
@@ -88,25 +94,24 @@ define([
                         self.loadRightPanelModel(null, null, $b);
                     } else {
                         resetContainerScroll();
-                        self.loadDashboard(dashboardId);
+                        self.loadDashboard(dashboardsetToolBarModel);
                     }
                 }
             };
-            
+
             self.includingDashboard = function (guid) {
                 var $includingEl = $($("#dashboard-include-template").text());
                 $("#dashboards-tabs-contents").append($includingEl);
                 $includingEl.attr("id", "dashboard-" + guid);
 
-                //var predataModel = new model.PredataModel();
-                
-                function init() {              
+
+                function init() {
                     var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share'], dashboardsetToolBarModel.reorderedDbsSetItems, true);
-                    
+
                     dashboardsViewModle.showExploreDataBtn(false);
-                    
+
                     dashboardsViewModle.handleDashboardClicked = function(event, data) {
-                        
+
                         var hasDuplicatedDashboard = false;
                         var dataId;
                         var dataName;
@@ -115,9 +120,9 @@ define([
                                dataName=data.dashboard.name;
                             }else{
                                dataId= data.id;
-                               dataName=data.name; 
+                               dataName=data.name;
                             }
-                        dashboardsetToolBarModel.dashboardsetItems.forEach(function(dashboardItem) {                         
+                        dashboardsetToolBarModel.dashboardsetItems.forEach(function(dashboardItem) {
                             if (dashboardItem.dashboardId === dataId) {
                                 hasDuplicatedDashboard = true;
                                     dfu.showMessage({
@@ -127,7 +132,7 @@ define([
                                         removeDelayTime: 5000});
                                 }
                         });
-                        
+
                         if (!hasDuplicatedDashboard) {
                             dashboardsetToolBarModel.pickDashboard(selectedDashboardInst().guid, {
                                 id: ko.observable(dataId),
@@ -150,42 +155,63 @@ define([
                 };
                 dashboardInstMap[guid] = dashboardInst;
                 self.selectedDashboardInst(dashboardInst);
-                
-                //predataModel.loadAll().then(init, init); //nomatter there is error in predata loading, initiating
+
                 init();
             };
 
-            self.loadDashboard = function (dsbId) {
-                
+            self.loadDashboard = function (dashboardsetToolBarModel) {
                 $("#loading").show();
-                Builder.loadDashboard(dsbId, function (dashboard) {
-                    
-                    var $dashboardEl = $($("#dashboard-content-template").text());
+                var dashboardItem = dashboardsetToolBarModel.selectedDashboardItem(),
+                    dashboardId = dashboardItem.dashboardId;
+                new Builder.DashboardDataSource().loadDashboardData(dashboardId, function (dashboard) {
+                    initializeSingleDashboard(dashboard, dashboardId);
+                }, function (e) {
+                    $("#loading").hide();
+                    console.log(e.errorMessage());
+                    if (e.errorCode && e.errorCode() === 20001) {
+                        oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
+                        window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href);
+                    }
+                });
+            };
+
+            self.hideAllDashboards = function () {
+                $(".dashboard-content").hide();
+            };
+            
+            function initDashboard() {
+                self.hideAllDashboards();
+                dashboardsetToolBarModel.selectedDashboardItem() && 
+                        self.showDashboard(dashboardsetToolBarModel);
+            }
+            
+            function initializeSingleDashboard(dashboard,dsbId){
+                var $dashboardEl = $($("#dashboard-content-template").text());
                     $("#dashboards-tabs-contents").append($dashboardEl);
                     $dashboardEl.attr("id", "dashboard-" + dsbId);
-                    
+
                     var $b = new Builder.DashboardBuilder(dashboard, $dashboardEl);
                     var tilesView = new Builder.DashboardTilesView($b);
                     var tilesViewModel = new Builder.DashboardTilesViewModel($b, dashboardsetToolBarModel.dashboardInst/*, tilesView, urlChangeView*/);
                     var toolBarModel = new Builder.ToolBarModel($b, options);
                     tilesViewModel.toolbarModel = toolBarModel;
-                    
+
                     //change dashboard name
                     toolBarModel.dashboardName.subscribe(function (dashboardName) {
                         var currentDashboardId = self.selectedDashboardInst().toolBarModel.dashboardId;
-                        dashboardsetToolBarModel.dashboardsetItems.filter(function isIdMatch(value) {
+                        dashboardsetToolBarModel.dashboardsetItems.filter(function(value) {
                             if(value.dashboardId===currentDashboardId){
                                 value.name(dashboardName);
                                 $('#dashboardTab-'+currentDashboardId).find('.tabs-name').text(dashboardName);
                             }
                         });
-                        dashboardsetToolBarModel.reorderedDbsSetItems().filter(function isIdMatch(value) {
+                        dashboardsetToolBarModel.reorderedDbsSetItems().filter(function(value) {
                             if(value.dashboardId===currentDashboardId){
-                                value.name(dashboardName);                            
+                                value.name(dashboardName);
                             }
                         });
                     });
-                                        
+
                     if (dashboard.tiles && dashboard.tiles()) {
                         for (var i = 0; i < dashboard.tiles().length; i++) {
                             var tile = dashboard.tiles()[i];
@@ -193,7 +219,7 @@ define([
                                 Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.editor.tiles.deleteTile, Builder.isContentLengthValid);
                             } else {
                                 Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, true, dashboardsetToolBarModel.dashboardInst);
-                                Builder.getTileConfigure(dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, dashboardsetToolBarModel.dashboardInst);
+                                Builder.getTileConfigure(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, dashboardsetToolBarModel.dashboardInst);
                             }
                         }
                     }
@@ -226,7 +252,7 @@ define([
 
                     ko.applyBindings(toolBarModel, $dashboardEl.find('.head-bar-container')[0]);
                     tilesViewModel.initialize();
-                    
+
                     dashboardInstMap[dsbId] = {
                         type: "included",
                         $b: $b,
@@ -240,7 +266,7 @@ define([
                     ko.applyBindings(tilesViewModel, $dashboardEl.find('.dashboard-content-main')[0]);
 
                     self.loadRightPanelModel(toolBarModel,tilesViewModel,$b);
-                    
+
                     $("#loading").hide();
                     $('#globalBody').show();
                     $dashboardEl.css("visibility", "visible");
@@ -253,7 +279,7 @@ define([
                                 $(element).css({display: "none"});
                             }
                         });
-                        
+
                         // hide the options button if there are no menu items in the menu.
                         var allMenusHidden = true;
                         $b.findEl('.dropdown-menu li').each(function () {
@@ -263,10 +289,6 @@ define([
                         });
                         if (allMenusHidden) {
                             $b.findEl(".dashboardOptsBtn").hide();
-                        }
-                        
-                        if (!dashboardsetToolBarModel.dashboardsetConfig.isCreator()) {
-                            $($b.findEl('.builder-toolbar-right')).css({display: "none"});
                         }
                     }
 
@@ -279,38 +301,20 @@ define([
                     idfbcutil.hookupBrowserCloseEvent(function () {
                         oj.Logger.info("Dashboard: [id=" + dashboard.id() + ", name=" + dashboard.name() + "] is closed", true);
                     });
-                    
+
                     $("#loading").hide();
                     /*
                      * Code to test df_util_widget_lookup_assetRootUrl
                      var testvalue = df_util_widget_lookup_assetRootUrl('SavedSearch','0.1','search');
                      console.log('value for asetRootUrl(search) is ' + testvalue + ', and the expected value is + http://slc08upg.us.oracle.com:7001/savedsearch/v1/search');
-                     */
-                }, function (e) {
-                    $("#loading").hide();
-                    console.log(e.errorMessage());
-                    if (e.errorCode && e.errorCode() === 20001) {
-                        oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
-                        window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href);
-                    }
-                });
-            };
-
-            self.hideAllDashboards = function () {
-                $(".dashboard-content").hide();
-            };
-            
-            function initDashboard() {
-                self.hideAllDashboards();
-                dashboardsetToolBarModel.selectedDashboardItem() && 
-                        self.showDashboard(dashboardsetToolBarModel.selectedDashboardItem());
+                     */                
             }
 
             dashboardsetToolBarModel.selectedDashboardItem.subscribe(initDashboard);
 
             initDashboard();
 
-            //resize function   
+            //resize function
             $(window).resize(function () {
                 if (self.windowWidth() === $(window).width()) {
                     self.windowHeight($(window).height());
@@ -321,14 +325,14 @@ define([
 
             self.windowWidth.extend({rateLimit: 200, method: 'notifyWhenChangesStop '});
             self.windowHeight.extend({rateLimit: 200, method: 'notifyWhenChangesStop '});
-            
+
             self.windowHeight.subscribe(function () {
                 windowResizeProcess();
             });
             self.windowWidth.subscribe(function () {
                 windowResizeProcess();
             });
-            
+
             function windowResizeProcess() {
                 if ($('.dbs-list-container').length !== 0 && self.selectedDashboardInst().type === 'new') {
                     var $target = $('.dashboard-picker-container:visible');
@@ -340,10 +344,10 @@ define([
                 }
             }
             function homeScrollbarReset(target) {
-                var bodyHeight = $(window).height();
-                var titleToolbarHeight = target.position().top;
-                var newHeight = Number(bodyHeight) - Number(titleToolbarHeight);
-                var targetContainer = target.closest('#dashboards-tabs-contents');
+                var bodyHeight = $(window).height(),
+                    titleToolbarHeight = target.position().top,
+                    newHeight = Number(bodyHeight) - Number(titleToolbarHeight),
+                    targetContainer = target.closest('#dashboards-tabs-contents');
                 targetContainer.css({'height': newHeight});
                 targetContainer.css({'overflow-y': 'scroll'});
             }

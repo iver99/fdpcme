@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -8,11 +8,11 @@ define(['knockout',
         'dfutil',
         'builder/builder.core',
         'builder/editor/editor.grid'
-    ], 
+    ],
     function(ko, oj, dfu) {
         function TilesEditor($b, mode) {
             var self = this;
-            
+
             self.mode = mode;
             self.tiles = ko.observableArray([]);
             self.tilesGrid = new Builder.TilesGrid(mode);
@@ -24,8 +24,9 @@ define(['knockout',
             };
 
             self.changeMode = function(newMode) {
-                if (newMode)
+                if (newMode){
                     self.mode = newMode;
+                }
                 if (!self.mode) {
                     console.error("Error: tiles editor holds an empty mode!");
                     return;
@@ -33,8 +34,9 @@ define(['knockout',
                 self.tilesGrid.initializeGridRows(self.tilesGrid.size());
                 self.tilesGrid.changeMode(self.mode);
                 self.resetTiles();
-                if (self.mode.POSITION_TYPE === Builder.EDITOR_POS_BASED_ON_ROW_COLUMN)
+                if (self.mode.POSITION_TYPE === Builder.EDITOR_POS_BASED_ON_ROW_COLUMN){
                     self.tilesReorder();
+                }
                 else if (self.mode.POSITION_TYPE === Builder.EDITOR_POS_FIND_SUITABLE_SPACE) {
                     self.sortTilesByRowsThenColumns();
                     self.tilesGrid.setNullToGridRows(self.tilesGrid.size());
@@ -42,22 +44,21 @@ define(['knockout',
                     for(var i=0; i<self.tiles().length; i++) {
                         var tile = self.tiles()[i];
                         var pos = self.calAvailablePositionForTile(tile, startrow, startcolumn);
-                        self.mode.setModeRow(tile, pos.row), self.mode.setModeColumn(tile, pos.column);
+                        self.mode.setModeRow(tile, pos.row);
+                        self.mode.setModeColumn(tile, pos.column);
                         pos = self.getAvailableCellAfterTile(tile);
-//                        if (pos.column >= newMode.MODE_MAX_COLUMNS) {
-//                            pos.row += newMode.getModeHeight(tile), pos.column = 0;
-//                        }
-                        startrow = pos.row, startcolumn = pos.column;
+                        startrow = pos.row;
+                        startcolumn = pos.column;
                         self.tilesGrid.registerTileToGrid(self.tiles()[i]);
                     }
                 }
             };
-            
+
             // initialize with the initial mode passed as parameter of TilesEditor
             self.initializeMode = function() {
                 self.changeMode();
             };
-            
+
             self.resetTiles = function() {
                 for(var i=0; i<self.tiles().length; i++) {
                     self.mode.resetModeRow(self.tiles()[i]);
@@ -66,12 +67,12 @@ define(['knockout',
                     self.mode.resetModeHeight(self.tiles()[i]);
                 }
             };
-            
+
             self.push = function(tile) {
                 tile.clientGuid = Builder.getGuid();
                 self.tiles.push(tile);
             };
-            
+
             self.showHideTitle =function(tile){
                 if(tile.hideTitle() === "false") {
                     tile.hideTitle("true");
@@ -80,7 +81,7 @@ define(['knockout',
                 }
                 tile.setParameter("DF_HIDE_TITLE",tile.hideTitle());
             };
-            
+
             self.getMaximizedTile = function() {
                 if(!(self.tiles && self.tiles())) {
                     return null;
@@ -93,13 +94,13 @@ define(['knockout',
                 }
                 return null;
             };
-            
+
             self.configure = function(tile) {
                 if(tile.configure) {
                     tile.configure();
                 }
             };
-            
+
             self.removeTile = function(tile) {
                 self.tiles.remove(tile);
                 for (var i = 0; i < self.tiles().length; i++) {
@@ -107,21 +108,25 @@ define(['knockout',
                     eachTile.shouldHide(false);
                 }
             };
-            
+
             self.deleteTile = function(tile) {
                 var tilesToMove = self.getTilesBelow(tile);
                 self.removeTile(tile);
                 self.tilesGrid.unregisterTileInGrid(tile);
                 for(var i in tilesToMove) {
+                    if(!tilesToMove[i]){
+                        continue;
+                    }
                     self.moveTileUp(tilesToMove[i], self.mode.getModeHeight(tile));
                 }
                 self.tilesReorder();
             };
-            
+
             self.broadenTile = function(tile,value,fromLeft) {
                 var width = self.mode.getModeWidth(tile),offsetValue = value || 1;
-                if (width >= self.mode.MODE_MAX_COLUMNS)
+                if (width >= self.mode.MODE_MAX_COLUMNS){
                     return;
+                }
                 var col = fromLeft ? self.mode.getModeColumn(tile) : self.mode.getModeColumn(tile) + self.mode.getModeWidth(tile);
                 if(col + 1 > self.mode.MODE_MAX_COLUMNS){
                     self.mode.setModeColumn(tile, self.mode.getModeColumn(tile) - offsetValue);
@@ -130,6 +135,9 @@ define(['knockout',
                 var cells = self.getCellsOccupied(self.mode.getModeRow(tile), col, offsetValue, self.mode.getModeHeight(tile));
                 var tilesToMove = self.getTilesUnder(cells, tile);
                 for(var i in tilesToMove) {
+                    if(!tilesToMove[i]){
+                        continue;
+                    }
                     var iTile = tilesToMove[i];
                     var rowDiff = self.mode.getModeRow(tile)-self.mode.getModeRow(iTile)+self.mode.getModeHeight(tile);
                     self.moveTileDown(iTile, rowDiff);
@@ -138,39 +146,103 @@ define(['knockout',
                 self.tilesGrid.updateTileSize(tile, width, self.mode.getModeHeight(tile));
                 self.tilesReorder();
             };
-            
+
             self.narrowTile = function(tile,value) {
                 var width = self.mode.getModeWidth(tile),offsetValue = value || 1;
-                if (width <= self.mode.MODE_MIN_COLUMNS)
+                if (width <= self.mode.MODE_MIN_COLUMNS){
                     return;
+                }
                 width = width - offsetValue;
                 self.tilesGrid.updateTileSize(tile, width, self.mode.getModeHeight(tile));
                 self.tilesReorder();
             };
-            
+
             self.tallerTile = function(tile,value) {
                 var cells = self.getCellsOccupied(self.mode.getModeRow(tile)+self.mode.getModeHeight(tile), self.mode.getModeColumn(tile), self.mode.getModeWidth(tile), 1),
                     offsetValue = value || 1;
                 var tilesToMove = self.getTilesUnder(cells, tile);
-                for(var i in tilesToMove) {                    
+                for(var i in tilesToMove) {
+                    if(!tilesToMove[i]){
+                        continue;
+                    }
                     self.moveTileDown(tilesToMove[i], offsetValue);
                 }
                 self.tilesGrid.updateTileSize(tile, self.mode.getModeWidth(tile), self.mode.getModeHeight(tile) + offsetValue);
                 self.tilesReorder();
             };
-            
+
             self.shorterTile = function(tile,value) {
                 var height = self.mode.getModeHeight(tile),offsetValue = value || 1;
-                if (height <= 1)
+                if (height <= 1){
                     return;
+                }
                 height = height - offsetValue;
                 var tilesToMove = self.getTilesBelow(tile);
                 self.tilesGrid.updateTileSize(tile, self.mode.getModeWidth(tile), height);
                 for(var i in tilesToMove) {
+                    if(!tilesToMove[i]){
+                        continue;
+                    }
                     self.moveTileUp(tilesToMove[i], offsetValue);
                 }
                 self.tilesReorder();
             };
+
+            self.moveTileTo = function(cell, tile) {
+                var dragStartRow = self.mode.getModeRow(tile);
+                var cellsOccupiedByTile = self.getCellsOccupied(cell.row, cell.column, self.mode.getModeWidth(tile), self.mode.getModeHeight(tile));
+                var tilesUnderCell = self.getTilesUnder(cellsOccupiedByTile, tile);
+                var tilesBelowOriginalCell = self.getTilesBelow(tile);
+                var rowDiff, iTile;
+                for(var i in tilesUnderCell) {
+                    iTile = tilesUnderCell[i];
+                    rowDiff = cell.row - self.mode.getModeRow(iTile) + self.mode.getModeHeight(tile);
+                    self.moveTileDown(iTile, rowDiff);
+                }
+
+                self.updateTilePosition(tile, cell.row, cell.column);
+
+                rowDiff = Math.abs(cell.row - dragStartRow);
+                for(i in tilesBelowOriginalCell) {
+                    iTile = tilesBelowOriginalCell[i];
+                    rowDiff = (rowDiff===0) ? self.mode.getModeHeight(tile) : rowDiff;
+                    self.moveTileUp(iTile, rowDiff);
+                }
+
+                self.tilesReorder();
+            }
+
+            self.moveUpTile = function(tile, value) {
+                var row = self.mode.getModeRow(tile);
+                var col = self.mode.getModeColumn(tile);
+                var cell = new Builder.Cell(row-1, col);
+                self.draggingTile = tile;
+                self.moveTileTo(cell, tile);
+            }
+
+            self.moveDownTile = function(tile, value) {
+                var row = self.mode.getModeRow(tile);
+                var col = self.mode.getModeColumn(tile);
+                var cell = new Builder.Cell(row+1, col);
+                self.draggingTile = tile;
+                self.moveTileTo(cell, tile);
+            }
+
+            self.moveLeftTile = function(tile, value) {
+               var row = self.mode.getModeRow(tile);
+               var col = self.mode.getModeColumn(tile);
+               var cell = new Builder.Cell(row, col-1);
+               self.draggingTile = tile;
+               self.moveTileTo(cell, tile);
+            }
+
+            self.moveRightTile = function(tile, value) {
+                var row = self.mode.getModeRow(tile);
+                var col = self.mode.getModeColumn(tile);
+                var cell = new Builder.Cell(row, col+1);
+                self.draggingTile = tile;
+                self.moveTileTo(cell, tile);
+            }
 
             self.resizeTile = function (tile,options) {
                 var isPositionValid = options && options.left && options.top;
@@ -281,29 +353,30 @@ define(['knockout',
                     self.tilesGrid.registerTileToGrid(self.tiles()[i]);
                 }
             };
-            
+
             self.areTilesOverlapped = function(tile1, tile2) {
                var minx1 = self.mode.getModeRow(tile1), maxx1 = self.mode.getModeRow(tile1) + self.mode.getModeHeight(tile1);
                var miny1 = self.mode.getModeColumn(tile1), maxy1 = self.mode.getModeColumn(tile1) + self.mode.getModeWidth(tile1);
                var minx2 = self.mode.getModeRow(tile2), maxx2 = self.mode.getModeRow(tile2) + self.mode.getModeHeight(tile2);
-               var miny2 = self.mode.getModeColumn(tile2), maxy2 = self.mode.getModeColumn(tile2) + self.mode.getModeWidth(tile2); 
+               var miny2 = self.mode.getModeColumn(tile2), maxy2 = self.mode.getModeColumn(tile2) + self.mode.getModeWidth(tile2);
                var minx = Math.max(minx1, minx2);
                var miny = Math.max(miny1, miny2);
                var maxx = Math.min(maxx1, maxx2);
                var maxy = Math.min(maxy1, maxy2);
-               return (minx<maxx) && (miny<maxy);               
+               return (minx<maxx) && (miny<maxy);
             };
 
             self.updateTilePosition = function(tile, row, column) {
-                if (self.mode.getModeRow(tile) !== null && self.mode.getModeColumn(tile) !== null)
+                if (self.mode.getModeRow(tile) !== null && self.mode.getModeColumn(tile) !== null){
                     self.tilesGrid.unregisterTileInGrid(tile);
+                }
                 tile.row(row);
                 self.mode.resetModeRow(tile, row);
                 tile.column(column);
                 self.mode.resetModeColumn(tile, column);
                 self.tilesGrid.registerTileToGrid(tile);
             };
-            
+
             self.getAvailableCellAfterTile = function(tile) {
                 var startRow = 0, startCol = 0;
                 if (self.mode.getModeColumn(tile) + self.mode.getModeWidth(tile) <= self.mode.MODE_MAX_COLUMNS) {
@@ -316,51 +389,57 @@ define(['knockout',
                 }
                 return new Builder.Cell(startRow, startCol);
             };
-            
+
             self.calAvailablePositionForTile = function(tile, startRow, startCol) {
                 var row, column;
                 self.tilesGrid.initializeGridRows(startRow + self.mode.getModeHeight(tile));
                 for (row = startRow; row < self.tilesGrid.size(); row++) {
                     var columnStart = row === startRow ? startCol : 0;
                     for (column = columnStart; column < self.mode.MODE_MAX_COLUMNS; column++) {
-                        if (self.tilesGrid.isPositionOkForTile(tile, row, column))
+                        if (self.tilesGrid.isPositionOkForTile(tile, row, column)){
                             return new Builder.Cell(row, column);
+                        }
                     }
                 }
-                if (column !== undefined && column >= self.mode.MODE_MAX_COLUMNS)
+                if (column !== undefined && column >= self.mode.MODE_MAX_COLUMNS){
                     column = 0;
+                }
                 return new Builder.Cell(row, column);
             };
-            
+
             self.sortTilesByColumnsThenRows = function() {
                 // note that sort is based on the internal position, not the mode position
                 self.tiles.sort(function(tile1, tile2) {
-                    if (self.mode.getModeColumn(tile1) !== self.mode.getModeColumn(tile2))
+                    if (self.mode.getModeColumn(tile1) !== self.mode.getModeColumn(tile2)){
                         return self.mode.getModeColumn(tile1) - self.mode.getModeColumn(tile2);
-                    else
+                    }
+                    else{
                         return self.mode.getModeRow(tile1) - self.mode.getModeRow(tile2);
+                    }
                 });
             };
-            
+
             self.sortTilesByRowsThenColumns = function() {
                 // note that sort is based on the internal position, not the mode position
                 self.tiles.sort(function(tile1, tile2) {
-                    if (self.mode.getModeRow(tile1) !== self.mode.getModeRow(tile2))
+                    if (self.mode.getModeRow(tile1) !== self.mode.getModeRow(tile2)){
                         return self.mode.getModeRow(tile1) - self.mode.getModeRow(tile2);
-                    else
+                    }
+                    else{
                         return self.mode.getModeColumn(tile1) - self.mode.getModeColumn(tile2);
+                    }
                 });
             };
-                        
+
             self.setRowHeight = function(rowIndex, height) {
                 self.tilesGrid.setRowHeight(rowIndex, height);
             };
-            
-                      
+
+
             self.getRowHeight = function(rowIndex) {
                 return self.tilesGrid.getRowHeight(rowIndex);
             };
-                        
+
             self.getCellsOccupied = function(row, column, width, height) {
                var cells = {cols:[], rows: []};
                var i;
@@ -368,14 +447,14 @@ define(['knockout',
                    var col = column + i;
                    cells.cols.push(col);
                }
-               
+
                for(i=0; i<height; i++) {
                    var r = row + i;
                    cells.rows.push(r);
                }
                return cells;
             };
-            
+
             //get first row tiles under target tile
             self.getTilesUnder = function(cells, tile) {
                 var tiles = [];
@@ -399,7 +478,7 @@ define(['knockout',
                 }
                 return tiles;
             };
-            
+
             self.getTilesBelow = function(tile) {
                 var width = self.mode.getModeWidth(tile);
                 var height = self.mode.getModeHeight(tile);
@@ -407,7 +486,7 @@ define(['knockout',
                 var column = self.mode.getModeColumn(tile);
                 var nextRow = row + height;
                 var nexts = [];
-                
+
                 for(var col=column; col<column+width; col++) { //find one tile below each coloumn of this tile
                     nextRow = row + height;
                     while(self.tilesGrid.tileGrid[nextRow]) {
@@ -424,7 +503,6 @@ define(['knockout',
                 }
                 return nexts;
             };
-//            self.moved = [];
             self.draggingTile = null;
             self.moveTileDown = function(tile, rowDiff) {
                 if(rowDiff <= 0) {
@@ -432,13 +510,16 @@ define(['knockout',
                 }
                 //set flag for moved tile
                 tile.moved = true;
-                
+
                 var actualRow = self.mode.getModeRow(tile);
-                
+
                 var nextRow = actualRow +rowDiff;
-                
+
                 var nextTiles  = self.getTilesBelow(tile);
                 for(var i in nextTiles) {
+                    if(!nextTiles[i]){
+                        continue;
+                    }
                     var iTile = nextTiles[i];
                         if(self.draggingTile === iTile) {
                             self.moveTileDown(iTile, rowDiff-self.mode.getModeHeight(iTile));
@@ -448,14 +529,14 @@ define(['knockout',
                 }
                 self.updateTilePosition(tile, nextRow, self.mode.getModeColumn(tile));
             };
-            
+
             self.canMoveToRow = function(tile, nextRow) {
                 var initialRow = self.mode.getModeRow(tile);
-                
+
                 if(initialRow === 0 || nextRow<0) {
                     return false;
                 }
-                
+
                 for(var i=0; i<self.mode.getModeHeight(tile); i++) {
                     var row = nextRow + i;
                     for(var j=0; j<self.mode.getModeWidth(tile); j++) {
@@ -467,16 +548,16 @@ define(['knockout',
                 }
                 return true;
             };
-            
+
             self.moveTileUp = function(tile, rowDiff) {
                 if(rowDiff <= 0) {
                     return;
                 }
                 //set flag for moved tile
                 tile.moved = true;
-                
-                var actualRow = self.mode.getModeRow(tile);                               
-                                
+
+                var actualRow = self.mode.getModeRow(tile);
+
                 var nextRow = actualRow - rowDiff;
                 while(rowDiff>0) {
                     if(self.canMoveToRow(tile, nextRow)) {
@@ -488,22 +569,25 @@ define(['knockout',
                 if(rowDiff <= 0) {
                     return;
                 }
-                                
+
                 var nextTiles = self.getTilesBelow(tile);
                 self.updateTilePosition(tile, nextRow, self.mode.getModeColumn(tile));
                 for(var i in nextTiles) {
+                    if(!nextTiles[i]){
+                        continue;
+                    }
                     var iTile = nextTiles[i];
                     self.moveTileUp(iTile, rowDiff);
                 }
             };
-            
+
             //get first row tiles to be occupied
             self.getTilesToBeOccupied = function() {
                 var argNum = arguments.length;
-                
+
                 var tiles = [];
                 var row, col, iTile, width, height, tile;
-                
+
                 var cell = arguments[0];
                 if(argNum === 2) {
                     tile = arguments[1];
@@ -513,7 +597,7 @@ define(['knockout',
                     width = arguments[1];
                     height = arguments[2];
                 }
-                
+
                 for(var i=0; i<height; i++) {
                     if(tiles.length > 0) {
                         return tiles;
@@ -522,67 +606,49 @@ define(['knockout',
                     for(var j=0; j<width; j++) {
                         col = cell.column + j;
                         self.tilesGrid.tileGrid[row] &&  (iTile = self.tilesGrid.tileGrid[row][col]);
-                        if(argNum === 2) {
-                            if(iTile && $.inArray(iTile, tiles) === -1 && tile !== iTile) {
-                                tiles.push(iTile);
-                            }
-                        }else if(argNum === 3) {
-                            if(iTile && $.inArray(iTile, tiles) === -1) {
-                                tiles.push(iTile); 
-                            }
-                        }                        
+                        if(argNum === 2 && iTile && $.inArray(iTile, tiles) === -1 && tile !== iTile) {
+                            tiles.push(iTile);
+                        }else if(argNum === 3 && iTile && $.inArray(iTile, tiles) === -1) {
+                            tiles.push(iTile);
+                        }
                     }
                 }
                 return tiles;
             };
-            
+
             self.highlightTiles = function(tiles) {
                 for(var i=0; i<tiles.length; i++) {
                     tiles[i].toBeOccupied(true);
                 }
             };
-            
+
             self.unhighlightTiles = function(tiles) {
                for(var i=0; i<tiles.length; i++) {
                    tiles[i].toBeOccupied(false);
-               } 
+               }
             };
-            
+
             //move tiles up if they can and remove empty rows
             self.checkToMoveTilesUp = function() {
                 var iTile, j;
                 for(var i=0; i<self.tiles().length; i++) {
                     iTile = self.tiles()[i];
-                    
+
                     //do not move the current dragging tile or tiles not moved in this dragging
                     if(iTile === self.draggingTile || iTile.moved !== true) {
                         self.draggingTile && (self.draggingTile.moved = false);
                         continue;
                     }
-                    
+
                     for(j=self.mode.getModeRow(iTile)-1; j>=0; j--) {
-                        if(self.canMoveToRow(iTile, j)){
-                            continue;
-                        }else{
+                        if(!self.canMoveToRow(iTile, j)){
                             self.updateTilePosition(iTile, j+1, self.mode.getModeColumn(iTile));
                             break;
                         }
                     }
-                    if(j == -1) {
+                    if(j === -1) {
                         self.updateTilePosition(iTile, j+1, self.mode.getModeColumn(iTile));
                     }
-//                    var preTile = self.tiles()[i-1];
-//                    if(i === 0) {
-//                        j = 0;
-//                    }else {
-//                        j = (preTile.row() > iTile.row()) ? 0 : preTile.row();
-//                    }
-//                    for(; j<iTile.row(); j++) {
-//                        if(self.canMoveToRow(iTile, j)) {
-//                            self.updateTilePosition(iTile, j, iTile.column());
-//                            break;
-//                        }
-//                    }
                 }
                 //check for empry rows
                 var rows = self.tilesGrid.size();
@@ -598,45 +664,45 @@ define(['knockout',
                 }
                 //remove empty rows
                 for(i=emptyRows.length-1; i>=0; i--) {
-                       self.tilesGrid.tileGrid.splice(emptyRows[i], 1); 
+                       self.tilesGrid.tileGrid.splice(emptyRows[i], 1);
                 }
                 //reset rows of tiles below empty rows
                 for(var i=0; i<self.tiles().length; i++) {
                     var iRow = self.mode.getModeRow(self.tiles()[i]);
-                    var iTile = self.tiles()[i];                  
-                                        
+                    var iTile = self.tiles()[i];
+
                     iTile.moved = false;
-                    
+
                     for(var j=0; j<emptyRows.length; j++) {
-                        if(iRow > emptyRows[j]) {
-                            if(self.canMoveToRow(iTile, iRow-j-1)) {
-                                self.updateTilePosition(iTile, iRow-j-1, self.mode.getModeColumn(iTile));
-                            }
+                        if(iRow > emptyRows[j] && self.canMoveToRow(iTile, iRow-j-1)) {
+                            self.updateTilePosition(iTile, iRow-j-1, self.mode.getModeColumn(iTile));
                         }
                     }
                 }
             };
-            
+
             self.getCellFromPosition = function(widgetAreaWidth, position) {
                 var row = 0, height = 0-Builder.DEFAULT_HEIGHT / 2;
                 var grid = self.tilesGrid;
                 for (; row < grid.size(); row++) {
                     height += grid.getRowHeight(row);
-                    if (position.top < (height >= Builder.DEFAULT_HEIGHT / 2 ? height : Builder.DEFAULT_HEIGHT / 2))
+                    if (position.top < (height >= Builder.DEFAULT_HEIGHT / 2 ? height : Builder.DEFAULT_HEIGHT / 2)){
                         break;
+                    }
                 }
                 var columnWidth = widgetAreaWidth / self.mode.MODE_MAX_COLUMNS;
                 var column = Math.round(position.left / columnWidth);
                 column = (column <= 0) ? 0 : (column >= self.mode.MODE_MAX_COLUMNS ? self.mode.MODE_MAX_COLUMNS - 1 : column);
                 return new Builder.Cell(row, column);
             };
-            
+
             self.createNewTile = function(name, description, width, height, widget, timeSelectorModel, targets, loadImmediately, dashboardInst) {
-                if (!widget)
+                if (!widget){
                     return null;
-                
+                }
+
                 var newTile = null;
-                
+
                 var koc_name = widget.WIDGET_KOC_NAME;
                 var template = widget.WIDGET_TEMPLATE;
                 var viewmodel = widget.WIDGET_VIEWMODEL;
@@ -656,7 +722,6 @@ define(['knockout',
                     if (koc_name && viewmodel && template) {
                         if (widget_source===1){
                              if (!ko.components.isRegistered(koc_name)) {
-//                                var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root, true);
                                 var assetRoot = Builder.getWidgetAssetRoot(provider_name,provider_version,provider_asset_root);
                                 if (assetRoot===null){
                                     oj.Logger.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
@@ -664,10 +729,10 @@ define(['knockout',
                                 ko.components.register(koc_name,{
                                       viewModel:{require:assetRoot+viewmodel},
                                       template:{require:'text!'+assetRoot+template}
-                                  }); 
+                                  });
                                 oj.Logger.log("widget: "+koc_name+" is registered");
                                 oj.Logger.log("widget template: "+assetRoot+template);
-                                oj.Logger.log("widget viewmodel:: "+assetRoot+viewmodel);    
+                                oj.Logger.log("widget viewmodel:: "+assetRoot+viewmodel);
                             }
 
                             newTile =new Builder.DashboardTile(self.mode, $b.dashboard, koc_name, name, description, widget, timeSelectorModel, targets, loadImmediately, dashboardInst);
@@ -680,49 +745,7 @@ define(['knockout',
                             newTile.row(tileCell.row);
                             newTile.column(tileCell.column);
                             self.tilesGrid.registerTileToGrid(newTile);
-//                                if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
-//                                    var worksheetName = 'WS_4_QDG_WIDGET';
-//                                    var workSheetCreatedBy = 'sysman';
-//                                    var qdgId = 'chart1';
-//                                    var ssfUrl = '/sso.static/savedsearch.categories'; 
-//                                    if (ssfUrl && ssfUrl !== '') {
-//                                        var href = ssfUrl + '/search/'+widget.WIDGET_UNIQUE_ID;
-//                                        var widgetDetails = null;
-//                                        dfu.ajaxWithRetry({
-//                                            url: href,
-//                                            headers: dfu.getSavedSearchServiceRequestHeader(),
-//                                            success: function(data, textStatus) {
-//                                                widgetDetails = data;
-//                                            },
-//                                            error: function(xhr, textStatus, errorThrown){
-//                                                console.log('Error when get widget details!');
-//                                            },
-//                                            async: false
-//                                        });
-//
-//                                        if (widgetDetails){
-//                                            if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
-//                                               widget.parameters = {};
-//                                               for(var i=0;i<widgetDetails.parameters.length;i++){
-//                                                   widget.parameters[widgetDetails.parameters[i]["name"]] = widgetDetails.parameters[i]["value"];
-//                                               }
-//                                            }                        
-//                                        }
-//                                    }
-//                                    
-//                                    // specific parameters for ita which is required. Retrieve them from SSF
-//                                    if (widget.parameters["ITA_WIDGET_WORKSHEETNAME"])
-//                                        worksheetName = widget.parameters["ITA_WIDGET_WORKSHEETNAME"];
-//                                    if (widget.parameters["ITA_WIDGET_CREATEDBY"])
-//                                        workSheetCreatedBy = widget.parameters["ITA_WIDGET_CREATEDBY"];
-//                                    if (widget.parameters["ITA_WIDGET_QDGID"])
-//                                        qdgId = widget.parameters["ITA_WIDGET_QDGID"];
-//
-//                                    newTile.worksheetName = worksheetName;
-//                                    newTile.createdBy = workSheetCreatedBy;
-//                                    newTile.qdgId = qdgId;  
-//                                }
-                        } 
+                        }
                         else {
                             oj.Logger.error("Invalid WIDGET_SOURCE: "+widget_source);
                         }
@@ -730,13 +753,12 @@ define(['knockout',
                     else {
                         oj.Logger.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
                     }
-//                    } 
                 return newTile;
             };
         }
-        
+
         Builder.registerModule(TilesEditor, 'TilesEditor');
-        
+
         return TilesEditor;
     }
 );

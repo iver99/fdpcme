@@ -10,15 +10,15 @@ public class CacheLinkedHashMap<K,V> {
 	private int cacheCapacity;
 	
 	public CacheLinkedHashMap(int cacheCapacity){
-		this.cacheCapacity=cacheCapacity;
-		int hashTableSize = (int) Math.ceil(cacheCapacity/0.75f) + 1;  
-        cacheMap = new LinkedHashMap<K,V>(hashTableSize, 0.75f, true) {//ordered by access time  
-            private static final long serialVersionUID = 1L;  
-            @Override  
-            protected boolean removeEldestEntry(java.util.Map.Entry<K,V> eldest) {  
-                return size() >CacheLinkedHashMap.this.cacheCapacity ;  
-            };  
-        }; 
+		this.cacheCapacity = cacheCapacity;
+		int hashTableSize = (int) Math.ceil(cacheCapacity/0.75f) + 1;
+        cacheMap = new LinkedHashMap<K,V>(hashTableSize, 0.75f, true) {//ordered by access time
+            private static final long serialVersionUID = 1L;
+            @Override
+            protected boolean removeEldestEntry(java.util.Map.Entry<K,V> eldest) {
+                return size() > CacheLinkedHashMap.this.cacheCapacity;
+            }
+        };
 	}
 	//synchronized put
 	public void put(K key, V value) {

@@ -2,6 +2,9 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.util;
 
 public class TimeSelectorExludedDayMonth
 {
+	private TimeSelectorExludedDayMonth() {
+	  }
+
 	public static final String ALL_DAY = "all";
 	public static final String EXCLUDE_SUNDAY = "Sunday";
 	public static final String EXCLUDE_MONDAY = "Monday";

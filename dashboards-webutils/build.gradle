@@ -1,5 +1,4 @@
 
-apply plugin: 'eclipse' 
 apply from: 'test.gradle'
 jar {
         from('src/main/java') {
@@ -10,11 +9,11 @@ publishing.publications {
 
 	integTest(MavenPublication) {
                         setArtifactId(project.name + '-' + integTestJar.appendix)
-                        setGroupId('com.oracle.emaas.emcpdf.test')
+                        setGroupId("${publishGroup}")
                         artifact integTestJar.archivePath
     }
         thisJarPublication(MavenPublication) {
-                setGroupId('com.oracle.emaas.emcpdf.test')
+                setGroupId("${publishGroup}")
                 artifact jar
         }
 }
@@ -34,19 +33,10 @@ test {
         }
 }
 
-sourceSets {
-        test{
-                java {
-                        srcDirs = ['src/integTest/java']
-                }
-                resources.srcDirs = ['src/integTest/java']
-        }
-}
 
  
 dependencies { 
         compile project(':dashboards-core')
-	compile configurations.testNG
         compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
         compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
         compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0'){ transitive = false }
@@ -57,7 +47,6 @@ dependencies {
         compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.3.0'){ transitive = false }
         compile(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.3.0'){ transitive = false }
         compile(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
-	testCompile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 } 
-build.dependsOn integTestJar
+
 

@@ -31,7 +31,7 @@ public class LogUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetLoggerUpdateTime_EmptyProperties_S2(@Mocked final LogManager anyLogManager,
+	public void testGetLoggerUpdateTimeEmptyPropertiesS2(@Mocked final LogManager anyLogManager,
 			@Mocked final LoggerContext anyLoggerContext, @Mocked final Configuration anyConfiguration,
 			@Mocked final LoggerConfig anyLoggerConfig)
 	{
@@ -52,7 +52,7 @@ public class LogUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetLoggerUpdateTime_EmptyTime_S2(@Mocked final LogManager anyLogManager,
+	public void testGetLoggerUpdateTimeEmptyTimeS2(@Mocked final LogManager anyLogManager,
 			@Mocked final LoggerContext anyLoggerContext, @Mocked final Configuration anyConfiguration,
 			@Mocked final LoggerConfig anyLoggerConfig)
 	{
@@ -79,7 +79,7 @@ public class LogUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetLoggerUpdateTime_S2(@Mocked final LogManager anyLogManager, @Mocked final LoggerContext anyLoggerContext,
+	public void testGetLoggerUpdateTimeS2(@Mocked final LogManager anyLogManager, @Mocked final LoggerContext anyLoggerContext,
 			@Mocked final Configuration anyConfiguration, @Mocked final LoggerConfig anyLoggerConfig)
 	{
 		final String testCfgName = "test config name";
@@ -115,7 +115,7 @@ public class LogUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testSetLoggerUpdateTime_S2(@Mocked final LoggerContext anyLoggerContext,
+	public void testSetLoggerUpdateTimeS2(@Mocked final LoggerContext anyLoggerContext,
 			@Mocked final Configuration anyConfiguration, @Mocked final LoggerConfig anyLoggerConfig)
 	{
 		final String testCfgName = "test config name";
@@ -141,7 +141,7 @@ public class LogUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testSetThenClearInteractionLogThreadContext_S2()
+	public void testSetThenClearInteractionLogThreadContextS2()
 	{
 		String tenantId = "emaastesttenant1";
 		String serviceInvoked = "ApmUI";

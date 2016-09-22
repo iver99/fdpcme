@@ -1,11 +1,30 @@
 requirejs.config({
-//    urlArgs: "v=1.0",
-//    //Set up module mapping
-//    map: {
-//        'prefutil': 
-//            {'df-util': '/emsaasui/uifwk/js/util/df-util',
-//             'usertenant-util': '/emsaasui/uifwk/js/util/usertenant-util'}
-//    },
+    bundles: (window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ? undefined : {
+        'uifwk/js/uifwk-partition': 
+            [
+            'uifwk/js/util/ajax-util',
+            'uifwk/js/util/df-util',
+            'uifwk/js/util/logging-util',
+            'uifwk/js/util/message-util',
+            'uifwk/js/util/mobile-util',
+            'uifwk/js/util/preference-util',
+            'uifwk/js/util/screenshot-util',
+            'uifwk/js/util/typeahead-search',
+            'uifwk/js/util/usertenant-util',
+            'uifwk/js/widgets/aboutbox/js/aboutbox',
+            'uifwk/js/widgets/brandingbar/js/brandingbar',
+            'uifwk/js/widgets/datetime-picker/js/datetime-picker',
+            'uifwk/js/widgets/navlinks/js/navigation-links',
+            'uifwk/js/widgets/timeFilter/js/timeFilter',
+            'uifwk/js/widgets/widgetselector/js/widget-selector',
+            'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
+            'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
+            'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
+            'text!uifwk/js/widgets/widgetselector/html/widget-selector.html',
+            'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
+            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
+            ]
+    },
     // Path mappings for the logical module names
     paths: {
         'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.4.0',
@@ -14,15 +33,14 @@ requirejs.config({
         'jqueryui': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/debug',
-        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/ojL10n',
-        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/resources',
+        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/debug',
+        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/ojL10n',
+        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/resources',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../../libs/@version@/js/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
-        'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
         'uifwk': '/emsaasui/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
@@ -38,7 +56,7 @@ requirejs.config({
             exports: 'crossroads'
         }
     },
-    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation 
+    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation
     // resources with a custom translation file.
     // Any resource file added, must be placed under a directory named "nls". You can use a path mapping or you can define
     // a path that is relative to the location of this main.js file.
@@ -67,7 +85,7 @@ requirejs.config({
 require(['knockout',
     'jquery',
     'ojs/ojcore',
-    'loggingutil', 
+    'uifwk/js/util/logging-util',
     'uifwk/js/util/usertenant-util',
     'uifwk/js/util/message-util',
     'uifwk/js/util/df-util',
@@ -78,17 +96,16 @@ require(['knockout',
     'ojs/ojdialog'
 ],
         function(ko, $, oj, _emJETCustomLogger, userTenantUtilModel, msgUtilModel, dfumodel) // this callback gets executed when all required modules are loaded
-        { 
-            //appId: "Error";//"TenantManagement";//"LogAnalytics";//"ITAnalytics"; //"APM" //"Dashboard";
-            var appId = getUrlParam("appId"); 
-            appId = appId !== null && appId !== "" ? appId : "Dashboard"; 
+        {
+            var appId = getUrlParam("appId");
+            appId = appId !== null && appId !== "" ? appId : "Dashboard";
             var isAdmin = getUrlParam("isAdmin");
             isAdmin = isAdmin === "false" ? false : true;
             var userTenantUtil = new userTenantUtilModel();
-            var userName = userTenantUtil.getUserName(); 
-            var tenantName = userTenantUtil.getTenantName(); 
+            var userName = userTenantUtil.getUserName();
+            var tenantName = userTenantUtil.getTenantName();
             var tenantDotUser = userName && tenantName ? tenantName+"."+userName : "";
-            
+
             var logger = new _emJETCustomLogger();
             var logReceiver = "/sso.static/dashboards.logging/logs";
             var dfu = new dfumodel();
@@ -99,20 +116,20 @@ require(['knockout',
             // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
             // If you comment the line below, our current log calls will not be output!
             logger.setLogLevel(oj.Logger.LEVEL_LOG);
-                
+
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
-                    viewModel:{require:'/emsaasui/uifwk/js/widgets/brandingbar/js/brandingbar.js'},
-                    template:{require:'text!/emsaasui/uifwk/js/widgets/brandingbar/html/brandingbar.html'}
+                    viewModel:{require:'uifwk/js/widgets/brandingbar/js/brandingbar'},
+                    template:{require:'text!uifwk/js/widgets/brandingbar/html/brandingbar.html'}
                 });
             }
             if (!ko.components.isRegistered('df-widget-selector')) {
                 ko.components.register("df-widget-selector",{
-                    viewModel:{require:'/emsaasui/uifwk/js/widgets/widgetselector/js/widget-selector.js'},
-                    template:{require:'text!/emsaasui/uifwk/js/widgets/widgetselector/html/widget-selector.html'}
+                    viewModel:{require:'uifwk/js/widgets/widgetselector/js/widget-selector'},
+                    template:{require:'text!uifwk/js/widgets/widgetselector/html/widget-selector.html'}
                 });
-            } 
-            
+            }
+
             /**
             * Get URL parameter value according to URL parameter name
             * @param {String} name
@@ -121,12 +138,12 @@ require(['knockout',
             function getUrlParam(name){
                 /* globals location */
                 var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
-                return results === null ? "" : results[1];                
+                return results === null ? "" : results[1];
             }
-            
+
             function HeaderViewModel() {
                 var self = this;
-                
+
                 self.brandingbarParams = {
                     userName: userName,
                     tenantName: tenantName,
@@ -136,7 +153,7 @@ require(['knockout',
                     isAdmin: isAdmin
                 };
             }
-            
+
             function MainViewModel() {
                 var self = this;
                 //Add widget dialog
@@ -156,7 +173,7 @@ require(['knockout',
                 self.widgetList = ko.observableArray(widgetArray);
                 self.addWidgetBtnLabel = appId === "Dashboard" ? "Add" : "Open";
                 self.addWidgetBtnDisabled = (appId === "Dashboard" || appId === "ITAnalytics" || appId === "LogAnalytics") ? false : true;
-                
+
                 var appIdAPM = "APM";
                 var appIdITAnalytics = "ITAnalytics";
                 var appIdLogAnalytics = "LogAnalytics";
@@ -174,7 +191,7 @@ require(['knockout',
                     "providerVersion": "1.0.5"
                 };
                 appMap[appIdLogAnalytics] = {
-                    "providerName": "LoganService",
+                    "providerName": "LogAnalyticsUI",
                     "providerVersion": "1.0"
                 };
                 appMap[appIdDashboard] = {
@@ -184,16 +201,16 @@ require(['knockout',
                 appMap[appIdTenantManagement] = {
                     "providerName": null,
                     "providerVersion": null
-                };     
+                };
                 appMap[appIdError] = {
                     "providerName": null,
                     "providerVersion": null
-                };  
+                };
                 appMap[appIdMonitoring] = {
                     "providerName": null,
                     "providerVersion": null
                 };
-                
+
                 self.addSelectedWidgetToDashboard = function(widget) {
                     widgetArray.push(widget);
                     self.widgetList(widgetArray);
@@ -208,7 +225,7 @@ require(['knockout',
 
                 self.widgetSelectorParams = {
                     dialogId: widgetSelectorDialogId,
-                    dialogTitle: dialogTitle, 
+                    dialogTitle: dialogTitle,
                     affirmativeButtonLabel: dialogConfirmBtnLabel,
                     userName: userName,
                     tenantName: tenantName,
@@ -216,9 +233,9 @@ require(['knockout',
                     providerName: appMap[appId] ? appMap[appId].providerName: null,
                     providerVersion: appMap[appId] ? appMap[appId].providerVersion : null,
                     autoCloseDialog: autoCloseWidgetSelector
-    //                ,providerName: 'TargetAnalytics' 
+    //                ,providerName: 'TargetAnalytics'
     //                ,providerVersion: '1.0.5'
-    //                ,providerName: 'DashboardFramework' 
+    //                ,providerName: 'DashboardFramework'
     //                ,providerVersion: '1.0'
                 };
 
@@ -226,10 +243,10 @@ require(['knockout',
                     $('#'+widgetSelectorDialogId).ojDialog('open');
                 };
             }
-            
+
             $(document).ready(function() {
-                ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]); 
-                ko.applyBindings(new MainViewModel(), $('#main-container')[0]); 
+                ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
+                ko.applyBindings(new MainViewModel(), $('#main-container')[0]);
                 $("#loading").hide();
                 $('#globalBody').show();
             });

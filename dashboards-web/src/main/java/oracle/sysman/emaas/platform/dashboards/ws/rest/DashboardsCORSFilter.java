@@ -54,7 +54,7 @@ public class DashboardsCORSFilter implements Filter
 			super(request);
 
 			oam_remote_user = request.getHeader(OAM_REMOTE_USER_HEADER);
-			logger.debug(OAM_REMOTE_USER_HEADER + "=" + oam_remote_user);
+			LOGGER.debug(OAM_REMOTE_USER_HEADER + "=" + oam_remote_user);
 			//oamRemoteUser could be null in dev mode. In dev mode, there is no OHS configured
 			if (oam_remote_user != null) {
 				int pos = oam_remote_user.indexOf(".");
@@ -135,11 +135,12 @@ public class DashboardsCORSFilter implements Filter
 		}
 	}
 
-	private static final Logger logger = LogManager.getLogger(DashboardsCORSFilter.class);
+	private static final Logger LOGGER = LogManager.getLogger(DashboardsCORSFilter.class);
 
 	@Override
 	public void destroy()
 	{
+		// do nothing
 	}
 
 	@Override
@@ -157,18 +158,18 @@ public class DashboardsCORSFilter implements Filter
 		//			String value = hReq.getHeader(key);
 		//			sb.append("[" + key + " : " + value + "]");
 		//		}
-		//		logger.debug("Headers: " + sb.toString());
+		//		LOGGER.debug("Headers: " + sb.toString());
 
 		ZDTContext.clear();
 		String requestIdHeader = hReq.getHeader("X-ORCL-OMC-APIGW-REQGUID");
 		String requestTimeHeader = hReq.getHeader("X-ORCL-OMC-APIGW-REQTIME");
 		if (requestIdHeader != null) {
-			logger.debug("X-ORCL-OMC-APIGW-REQGUID : " + requestIdHeader);
+			LOGGER.debug("X-ORCL-OMC-APIGW-REQGUID : " + requestIdHeader);
 			UUID uuid = UUID.fromString(requestIdHeader);
 			ZDTContext.setRequestId(uuid);
 		}
 		if (requestTimeHeader != null) {
-			logger.debug("X-ORCL-OMC-APIGW-REQTIME : " + requestTimeHeader);
+			LOGGER.debug("X-ORCL-OMC-APIGW-REQTIME : " + requestTimeHeader);
 			Long time = Long.valueOf(requestTimeHeader);
 			ZDTContext.setRequestTime(time);
 		}
@@ -176,13 +177,13 @@ public class DashboardsCORSFilter implements Filter
 		// Only add CORS headers if the developer mode is enabled to add them
 		if (!new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists()) {
 			try {
-				chain.doFilter(oamRequest, response);
-			}
-			catch (Exception e) {
-				logger.error(e.getLocalizedMessage(), e);
-				hRes.sendError(500, MessageUtils.getDefaultBundleString("REST_API_EXCEPTION"));
-			}
-			logger.debug("developer mode is NOT enabled on server side");
+			        chain.doFilter(oamRequest, response);
+		        }
+		        catch (Exception e) {
+			        LOGGER.error(e.getLocalizedMessage(), e);
+			        hRes.sendError(500, MessageUtils.getDefaultBundleString("REST_API_EXCEPTION"));
+		        }
+			LOGGER.debug("developer mode is NOT enabled on server side");
 			return;
 		}
 		hRes.addHeader("Access-Control-Allow-Origin", "*");
@@ -203,7 +204,7 @@ public class DashboardsCORSFilter implements Filter
 			chain.doFilter(oamRequest, response);
 		}
 		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			hRes.sendError(500, MessageUtils.getDefaultBundleString("REST_API_EXCEPTION"));
 		}
 	}

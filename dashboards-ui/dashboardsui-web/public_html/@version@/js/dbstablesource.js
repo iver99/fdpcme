@@ -9,10 +9,10 @@ define(['ojs/ojcore', 'jquery', 'knockout', 'ojs/ojdatacollection-common'],
 
 var DashboardArrayTableSource = function(data, options)
 {
-    DashboardArrayTableSource.superclass.constructor.call(this, data, options); 
+    DashboardArrayTableSource.superclass.constructor.call(this, data, options);
 };
 
-// Subclass from oj.PagingDataSource 
+// Subclass from oj.PagingDataSource
 oj.Object.createSubclass(DashboardArrayTableSource, oj.ArrayTableDataSource, "DashboardArrayTableSource");
 
 DashboardArrayTableSource.prototype.Init = function()

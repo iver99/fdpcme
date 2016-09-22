@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.webutils.services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Properties;
 
@@ -35,6 +37,8 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.R
 public class RegistryServiceManagerTest
 {
 	private final static String VERSION = "1.0+";
+	
+	private static final Logger LOGGER = LogManager.getLogger(RegistryServiceManagerTest.class);
 	RegistryServiceManager rsm = new RegistryServiceManager();
 
 	@Test(groups = { "s1" })
@@ -124,7 +128,7 @@ public class RegistryServiceManagerTest
 			Assert.assertFalse(rsm.isRegistrationComplete());
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.info("context",e);
 		}
 	}
 }

@@ -4,22 +4,48 @@
 
 
 requirejs.config({
+    bundles: (window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ? undefined : {
+        'uifwk/js/uifwk-partition':
+            [
+            'uifwk/js/util/ajax-util',
+            'uifwk/js/util/df-util',
+            'uifwk/js/util/logging-util',
+            'uifwk/js/util/message-util',
+            'uifwk/js/util/mobile-util',
+            'uifwk/js/util/preference-util',
+            'uifwk/js/util/screenshot-util',
+            'uifwk/js/util/typeahead-search',
+            'uifwk/js/util/usertenant-util',
+            'uifwk/js/widgets/aboutbox/js/aboutbox',
+            'uifwk/js/widgets/brandingbar/js/brandingbar',
+            'uifwk/js/widgets/datetime-picker/js/datetime-picker',
+            'uifwk/js/widgets/navlinks/js/navigation-links',
+            'uifwk/js/widgets/timeFilter/js/timeFilter',
+            'uifwk/js/widgets/widgetselector/js/widget-selector',
+            'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
+            'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
+            'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
+            'text!uifwk/js/widgets/widgetselector/html/widget-selector.html',
+            'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
+            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
+            ]
+    },
     // Path mappings for the logical module names
     paths: {
         'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.4.0',
         'jquery': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-2.1.3.min',
+        'jqueryui': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd': '../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/min',
-        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/ojL10n',
-        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/resources',
+        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/min',
+        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/ojL10n',
+        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/resources',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'dfutil': 'internaldfcommon/js/util/internal-df-util',
-        'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
         'uifwk': '/emsaasui/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
@@ -32,7 +58,7 @@ requirejs.config({
             exports: 'crossroads'
         }
     },
-    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation 
+    // This section configures the i18n plugin. It is merging the Oracle JET built-in translation
     // resources with a custom translation file.
     // Any resource file added, must be placed under a directory named "nls". You can use a path mapping or you can define
     // a path that is relative to the location of this main.js file.
@@ -60,7 +86,7 @@ require(['ojs/ojcore',
     'jquery',
     'dfutil',
     'uifwk/js/util/df-util',
-    'loggingutil',
+    'uifwk/js/util/logging-util',
     'ojs/ojknockout',
     'ojs/ojselectcombobox',
     'common.uifwk'
@@ -70,14 +96,20 @@ require(['ojs/ojcore',
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             var logger = new _emJETCustomLogger();
             var logReceiver = dfu.getLogUrl();
-           
+
             logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
             logger.setLogLevel(oj.Logger.LEVEL_WARN);
-            
+        
+            window.onerror = function (msg, url, lineNo, columnNo, error)
+            {
+                oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg, true); 
+                return false; 
+            }
+
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar", {
-                    viewModel: {require: '/emsaasui/uifwk/js/widgets/brandingbar/js/brandingbar.js'},
-                    template: {require: 'text!/emsaasui/uifwk/js/widgets/brandingbar/html/brandingbar.html'}
+                    viewModel: {require: 'uifwk/js/widgets/brandingbar/js/brandingbar'},
+                    template: {require: 'text!uifwk/js/widgets/brandingbar/html/brandingbar.html'}
                 });
             }
 
@@ -97,10 +129,9 @@ require(['ojs/ojcore',
             function getNlsString(key, args) {
                 return oj.Translations.getTranslatedString(key, args);
             }
-            
+
             function TitleViewModel(){
                var self = this;
-//               self.homeTitle = getNlsString("DBS_HOME_TITLE");  
                self.landingHomeTitle = dfu_model.generateWindowTitle(getNlsString("LANDING_HOME_WINDOW_TITLE"), null, null, null);
            }
 
@@ -109,7 +140,7 @@ require(['ojs/ojcore',
 
             function landingHomeModel() {
                 var self = this;
-                
+
                 self.dashboardsUrl = "/emsaasui/emcpdfui/home.html";
                 self.landingHomeUrls = null;
                 self.baseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";
@@ -118,13 +149,13 @@ require(['ojs/ojcore',
                 self.getStartedUrl = self.baseUrl + self.gsID;
                 self.videosUrl = self.baseUrl + self.videoID;
                 self.communityUrl = "http://cloud.oracle.com/management";
-                
+
                 self.welcomeSlogan = getNlsString("LANDING_HOME_WELCOME_SLOGAN");
                 self.APM = getNlsString("LANDING_HOME_APM");
                 self.APMDesc = getNlsString("LANDING_HOME_APM_DESC");
                 self.LA = getNlsString("LANDING_HOME_LA");
                 self.LADesc = getNlsString("LANDING_HOME_LA_DESC");
-                self.ITA = getNlsString("LANDING_HOME_ITA");                
+                self.ITA = getNlsString("LANDING_HOME_ITA");
                 self.ITADesc = getNlsString("LANDING_HOME_ITA_DESC");
                 self.select = getNlsString("LANDING_HOME_SELECT");
                 self.ITA_DB_Performance = getNlsString("LANDING_HOME_ITA_DB_PERFORMANCE");
@@ -134,42 +165,45 @@ require(['ojs/ojcore',
                 self.ITA_Server_Resource = getNlsString("LANDING_HOME_ITA_SERVER_RESOURCE");
                 self.ITA_Application_Performance = getNlsString("LANDING_HOME_ITA_APPLICATION_PERFORMANCE");
                 self.ITA_Avail_Analytics = getNlsString("LANDING_HOME_ITA_AVAIL_ANALYTICS");
-                
+
                 self.infraMonitoring = getNlsString("LANDING_HOME_INFRA_MONITORING");
                 self.infraMonitoringDesc = getNlsString("LANDING_HOME_INFRA_MONITORING_DESC");
 
                 self.dashboards = getNlsString("LANDING_HOME_DASHBOARDS");
                 self.dashboardsDesc = getNlsString("LANDING_HOME_DASHBOARDS_DESC");
-                
+
+                self.compliance = getNlsString("LANDING_HOME_COMPLIANCE");
+                self.complianceDesc = getNlsString("LANDING_HOME_COMPLIANCE_DESC");
                 self.securityAnalytics = getNlsString("LANDING_HOME_SECURITY_ANALYTICS");
                 self.securityAnalyticsDesc = getNlsString("LANDING_HOME_SECURITY_ANALYTICS_DESC");
                 self.orchestration = getNlsString("LANDING_HOME_ORCHESTRATION");
                 self.orchestrationDesc = getNlsString("LANDING_HOME_ORCHESTRATION_DESC");
-                
+
                 self.dataExplorers = getNlsString("LANDING_HOME_DATA_EXPLORERS");
                 self.dataExplorersDesc = getNlsString("LANDING_HOME_DATA_EXPLORERS_DESC");
                 self.dataExplorer = getNlsString("LANDING_HOME_DATA_EXPLORER");
-                
+
                 self.exploreDataLinkList = ko.observableArray();
                 self.exploreDataInITA = ko.observableArray();
-                
+
                 self.learnMore = getNlsString("LANDING_HOME_LEARN_MORE");
                 self.getStarted = getNlsString("LANDING_HOME_GET_STARTED_LINK");
                 self.videos = getNlsString("LANDING_HOME_VIDEOS_LINK");
                 self.community = getNlsString("LANDING_HOME_COMMUNITY_LINK");
-                
+
                 self.ITA_Type = "select";
                 self.data_type = "select";
-                
+
                 self.showInfraMonitoring = ko.observable(false);
+                self.showCompliance = ko.observable(false);
                 self.showSecurityAnalytics = ko.observable(false);
                 self.showOrchestration = ko.observable(false);
-                
+
                 self.getServiceUrls = function() {
                     var serviceUrl = dfu.getRegistrationUrl();
                     dfu.ajaxWithRetry({
                         url: serviceUrl,
-                        headers: dfu_model.getDefaultHeader(), 
+                        headers: dfu_model.getDefaultHeader(),
                         contentType:'application/json',
                         success: function(data, textStatus) {
                             fetchServiceLinks(data);
@@ -178,31 +212,34 @@ require(['ojs/ojcore',
                             oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
                         },
                         async: true
-                    }); 
+                    });
                 };
-                
+
                 //get urls of databases and middleware
                 self.getITAVerticalAppUrl = function(rel) {
                     var serviceName = "emcitas-ui-apps";
-                    var version = "1.0";                   
+                    var version = "1.0";
                     var url = dfu_model.discoverUrl(serviceName, version, rel);
                     return url;
                 };
-                
-                function fetchServiceLinks(data) { 
+
+                function fetchServiceLinks(data) {
                     var landingHomeUrls = {};
                     var i;
                     if(data.cloudServices && data.cloudServices.length>0) {
                         var cloudServices = data.cloudServices;
                         var cloudServicesNum = cloudServices.length;
                         for(i=0; i<cloudServicesNum; i++) {
-                            if(cloudServices[i].name == "Monitoring") {
+                            if(cloudServices[i].name === "Monitoring") {
                                 self.showInfraMonitoring(true);
+                            }
+                            if(cloudServices[i].name === "Compliance") {
+                                self.showCompliance(true);
                             }
                             if(cloudServices[i].name === "SecurityAnalytics") {
                                 self.showSecurityAnalytics(true);
                             }
-                            if(cloudServices[i].name == "Orchestration") {
+                            if(cloudServices[i].name === "Orchestration") {
                                 self.showOrchestration(true);
                             }
                             landingHomeUrls[cloudServices[i].name] = cloudServices[i].href;
@@ -214,11 +251,11 @@ require(['ojs/ojcore',
                         for(i=0; i<dataExplorersNum; i++) {
                             var originalName = dataExplorers[i].name;
                             dataExplorers[i].name = originalName.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, '');
-                            self.exploreDataLinkList.push(dataExplorers[i]);                                                        
+                            self.exploreDataLinkList.push(dataExplorers[i]);
                             landingHomeUrls[dataExplorers[i].name] = dataExplorers[i].href;
                             //change name of data explorer in ITA to "Data Explorer - Analyze" & "Data Explorer"
 
-                            if(dataExplorers[i].serviceName === "emcitas-ui-apps") {                             
+                            if(dataExplorers[i].serviceName === "emcitas-ui-apps") {
                                 self.exploreDataInITA.push({id: 'ITA_Analyze', href: dataExplorers[i].href, name: self.dataExplorer+" - " +dataExplorers[i].name, serviceName: dataExplorers[i].serviceName, version: dataExplorers[i].version});
 			    	landingHomeUrls[self.dataExplorer+" - " +dataExplorers[i].name] = dataExplorers[i].href;
                             }else if (dataExplorers[i].serviceName === "TargetAnalytics") {
@@ -226,9 +263,6 @@ require(['ojs/ojcore',
                                 landingHomeUrls[self.dataExplorer] = dataExplorers[i].href;
                             }
                             //change name of data explorer in ITA starting with "Data Explorer - "
-//                            if(dataExplorers[i].serviceName === "emcitas-ui-apps" || dataExplorers[i].serviceName === "TargetAnalytics") {
-//                                self.exploreDataInITA.push(dataExplorers[i]);
-//                            }
                         }
                     }
                     landingHomeUrls["DB_perf"] = self.getITAVerticalAppUrl("verticalApplication.db-perf");
@@ -241,7 +275,7 @@ require(['ojs/ojcore',
                     self.landingHomeUrls = landingHomeUrls;
                 }
                 self.getServiceUrls();
-                                
+
                 self.openAPM = function() {
                     if(!self.landingHomeUrls) {
                         console.log("---fetching service links is not finished yet!---");
@@ -273,7 +307,7 @@ require(['ojs/ojcore',
                         if(self.landingHomeUrls.ITAnalytics) {
                             window.location.href = self.landingHomeUrls.ITAnalytics;
                         }
-                    } else if (event.type === "keypress" && event.keyCode === 9) {  //keyboard handle for Firefox                      
+                    } else if (event.type === "keypress" && event.keyCode === 9) {  //keyboard handle for Firefox
                         if (event.shiftKey) {
                             if (event.target.id === "ITA_wrapper") {
                                 $(event.target).blur();
@@ -308,11 +342,21 @@ require(['ojs/ojcore',
                         oj.Logger.info("Trying to open Infrastructure Monitoring by URL: " + self.landingHomeUrls.Monitoring);
                         window.location.href = self.landingHomeUrls.Monitoring;
                     }
-                }
+                };
                 self.openDashboards = function() {
                     oj.Logger.info('Trying to open dashboards by URL: ' + self.dashboardsUrl);
                     if(self.dashboardsUrl) {
                         window.location.href = self.dashboardsUrl;
+                    }
+                };
+                self.openCompliance = function() {
+                    if(!self.landingHomeUrls) {
+                        console.log("---fetching service links is not finished yet!---");
+                        return;
+                    }
+                    oj.Logger.info('Trying to open Compliance by URL: ' + self.landingHomeUrls.Compliance);
+                    if(self.landingHomeUrls.Compliance) {
+                        window.location.href = self.landingHomeUrls.Compliance;
                     }
                 };
                 self.openSecurityAnalytics = function() {
@@ -361,7 +405,7 @@ require(['ojs/ojcore',
                     oj.Logger.info('Trying to open Management Cloud Community by URL: ' + self.communityUrl);
                     if(self.communityUrl) {
                         window.open(self.communityUrl, "_blank");
-                    }                   
+                    }
                 };
             }
 

@@ -4,6 +4,7 @@ import mockit.*;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.util.EndpointEntity;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -18,18 +19,13 @@ public class RegistryLookupAPITest {
     RegistryLookupAPI registryLookupAPI;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         registryLookupAPI = new RegistryLookupAPI();
 
-        new NonStrictExpectations() {
-            {
-
-            }
-        };
     }
 
     @Test
-    public void testGetRegistryLink() throws Exception {
+    public void testGetRegistryLink() {
         // Test 403 Exception;
         Assert.assertEquals(registryLookupAPI.getRegistryLink("tenantIdParam", "userTenant", "refer", "serviceName", "version").getStatus(), 403);
 
@@ -47,7 +43,7 @@ public class RegistryLookupAPITest {
     }
 
     @Test
-    public void testGetRegistryLink1(@Mocked final RegistryLookupUtil registryLookupUtil) throws Exception {
+    public void testGetRegistryLink1(@Mocked final RegistryLookupUtil registryLookupUtil) {
         //Test 200 valid endpoint
         String validUserTenant = "userTenant.userName";
         new Expectations() {{
@@ -59,7 +55,7 @@ public class RegistryLookupAPITest {
 
 
     @Test
-    public void testGetRegistryLink2() throws Exception {
+    public void testGetRegistryLink2() {
         // Test 403 Exception;
         Assert.assertEquals(registryLookupAPI.getRegistryLink("tenantIdParam", "userTenant", "refer", "serviceName", "version", "rel").getStatus(), 403);
 
@@ -81,7 +77,7 @@ public class RegistryLookupAPITest {
     }
 
     @Test
-    public void testGetRegistryLink3(@Mocked final RegistryLookupUtil registryLookupUtil) throws Exception {
+    public void testGetRegistryLink3(@Mocked final RegistryLookupUtil registryLookupUtil) {
         //Test 200 valid endpoint
         String validUserTenant = "userTenant.userName";
         new Expectations() {{
@@ -93,7 +89,7 @@ public class RegistryLookupAPITest {
     }
 
     @Test
-    public void testGetRegistryLinkWithRelPrefix4() throws Exception {
+    public void testGetRegistryLinkWithRelPrefix4() {
         String validUserTenant = "userTenant.userName";
         new MockUp<RegistryLookupUtil>() {
             @Mock
@@ -112,7 +108,7 @@ public class RegistryLookupAPITest {
     }
 
     @Test
-    public void testGetRegistryLinkWithRelPrefix() throws Exception {
+    public void testGetRegistryLinkWithRelPrefix() {
         // Test 403 Exception;
         Assert.assertEquals(registryLookupAPI.getRegistryLinkWithRelPrefix("tenantIdParam", "userTenant", "refer", "serviceName", "version", "rel").getStatus(), 403);
 
@@ -134,7 +130,7 @@ public class RegistryLookupAPITest {
     }
 
     @Test
-    public void testGetRegistryLinkWithRelPrefix1(@Mocked final RegistryLookupUtil registryLookupUtil) throws Exception {
+    public void testGetRegistryLinkWithRelPrefix1(@Mocked final RegistryLookupUtil registryLookupUtil) {
         //Test 200 valid endpoint
         String validUserTenant = "userTenant.userName";
         new Expectations() {{
@@ -146,7 +142,7 @@ public class RegistryLookupAPITest {
     }
 
     @Test
-    public void testGetRegistryLinkWithRelPrefix2() throws Exception {
+    public void testGetRegistryLinkWithRelPrefix2() {
         String validUserTenant = "userTenant.userName";
         new MockUp<RegistryLookupUtil>() {
             @Mock

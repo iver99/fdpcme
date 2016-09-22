@@ -44,8 +44,8 @@ public class EMTargetInitializerTest
 	public void testStartStop(@Mocked final InitialContext anyInitContext, @Mocked final MBeanServer anyMbs,
 			@Mocked final ManagementFactory anyMf, @Mocked final JMXUtil anyJmxUtil) throws Exception
 	{
-		String targetType = Deencapsulation.getField(emti, "m_target_type");
-		Assert.assertEquals(targetType, EMTargetConstants.m_target_type);
+		String targetType = Deencapsulation.getField(emti, "M_TARGET_TYPE");
+		Assert.assertEquals(targetType, EMTargetConstants.M_TARGET_TYPE);
 
 		new Expectations() {
 			{
