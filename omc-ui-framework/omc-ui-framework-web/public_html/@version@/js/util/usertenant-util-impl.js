@@ -107,7 +107,7 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
             
             
             
-            self.getUserRoles = function(callback) {
+            self.getUserRoles = function(callback,sendAsync) {
                 var serviceUrl = "/sso.static/dashboards.configurations/roles";
                 if (dfu.isDevMode()){
                     callback(["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]);
@@ -118,8 +118,8 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                 }else{
                     ajaxUtil.ajaxWithRetry({
                         url: serviceUrl,
-                        async: true,
-                        headers: dfu.getDashboardsRequestHeader(),
+                        async: sendAsync === false? false:true,
+                        headers: dfu.getDefaultHeader(),
                         contentType:'application/json'
                     })
                     .done(
@@ -131,6 +131,37 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                             }
                             callback(data);
                         });
+                }
+            };
+            
+            self.ADMIN_ROLE_NAME_APM = "APM Administrator";
+            self.ADMIN_ROLE_NAME_ITA = "IT Analytics Administrator";
+            self.ADMIN_ROLE_NAME_LA = "Log Analytics Administrator";
+            self.ADMIN_ROLE_NAME_MONITORING = "Monitoring Service Administrator";
+            self.ADMIN_ROLE_NAME_SECURITY = "Security Analytics Administrator";
+            self.ADMIN_ROLE_NAME_COMPLIANCE = "Compliance Administrator";
+            self.ADMIN_ROLE_NAME_ORCHESTRATION = "Orchestration Administrator";
+            self.userHasRole = function(role){
+                switch(role){
+                    case self.ADMIN_ROLE_NAME_APM:
+                    case self.ADMIN_ROLE_NAME_ITA:
+                    case self.ADMIN_ROLE_NAME_LA:
+                    case self.ADMIN_ROLE_NAME_MONITORING:
+                    case self.ADMIN_ROLE_NAME_SECURITY:
+                    case self.ADMIN_ROLE_NAME_COMPLIANCE:
+                    case self.ADMIN_ROLE_NAME_ORCHESTRATION:
+                        self.getUserRoles(function(data){
+                            self.userRoles = data; 
+                        },false);
+                        if(self.userRoles.indexOf(role)<0){
+                            return false;
+                        }else{
+                            return true;
+                        }
+                    break;
+                    default:
+                        return false;
+                    break;
                 }
             };
         }
