@@ -315,15 +315,6 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(DashBoardPageId_190.DASHBOARDSETOPTIONSMENUID)));
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		//wait for scrollbar to display
-		//TODO replace with more reliable way
-		try {
-			Thread.sleep(5000L);
-		}
-		catch (Exception e) {
-			LOGGER.info("context", e);
-		}
-
 		//open settings menu
 		driver.click("id=" + DashBoardPageId_190.DASHBOARDSETOPTIONSMENUID);
 
@@ -472,17 +463,6 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		driver.waitForElementPresent("id=" + DashBoardPageId_190.DASHBOARDSETOPTIONSMENUID);
 		driver.getLogger().info("DashboardBuilderUtil.editDashboardSet started");
 		WaitUtil.waitForPageFullyLoaded(driver);
-
-		//wait for scrollbar to display
-		//TODO replace with more reliable way
-		try {
-			Thread.sleep(5000L);
-		}
-		catch (InterruptedException e) {
-			LOGGER.info("context", e);
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 		//open settings menu
 		driver.click("id=" + DashBoardPageId_190.DASHBOARDSETOPTIONSMENUID);
@@ -845,7 +825,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
 		driver.getLogger().info(
 				"DashboardBuilderUtil.removeDashboardFromSet has found and removed the dashboard named with \"" + dashboardName
-						+ "\"");
+				+ "\"");
 
 		String closeBtnLocator = DashBoardPageId_190.DASHBOARDSETTABNAMECSS.replace("_name_", dashboardName);
 		driver.waitForElementPresent("css=" + closeBtnLocator);
@@ -1101,7 +1081,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.showWidgetTitle started for widgetName=" + widgetName + ", index=" + index
-						+ ", visibility=" + visibility);
+				+ ", visibility=" + visibility);
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
 
@@ -1295,7 +1275,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.verifyDashboard started for name=\"" + dashboardName + "\", description=\"" + description
-						+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
+				+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
