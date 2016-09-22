@@ -20,14 +20,14 @@ buildscript {
 }
 apply plugin: 'DevInfraPlugin'
 apply plugin: 'TestInfraPlugin'
-ext.emcpdf_REPO_BID = getRepoBuildIDInProduct(System.env.SAAS_VERSION, 'emcpdf')
+//ext.emcpdf_REPO_BID = getRepoBuildIDInProduct(System.env.SAAS_VERSION, 'emcpdf')
 
 
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest  
 
 dependencies
 {
-    testConfig group: 'com.oracle.emaas.emcpdf.testsdk', name: 'dashboards-zdt-test-sdk', version: "${emcpdf_REPO_BID}"    
+    testConfig group: 'com.oracle.emaas.emcpdf.testsdk', name: 'dashboards-zdt-test-sdk', version: "1.0.+"    
 }
 
  
