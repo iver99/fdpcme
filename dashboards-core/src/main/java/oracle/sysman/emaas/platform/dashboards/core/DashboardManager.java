@@ -1207,12 +1207,15 @@ public class DashboardManager
 			e.setDashboardId(Long.valueOf(map.get("DASHBOARD_ID").toString()));
 		}
 		if (map.get("TYPE") != null) {
-			if (Dashboard.DASHBOARD_TYPE_SINGLEPAGE.equals(map.get("TYPE").toString())) {
+			if (Dashboard.DASHBOARD_TYPE_SINGLEPAGE.equals(DataFormatUtils.dashboardTypeInteger2String(Integer.valueOf(map.get(
+					"TYPE").toString())))) {
 				EntityManager em=null;
 				try{
+					LOGGER.debug("Handling SINGLEPAGE type...");
 					DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 					em = dsf.getEntityManager();
 					EmsDashboard ed = dsf.getEmsDashboardById(e.getDashboardId());
+					LOGGER.debug("handled singlepage type, EmsDashboard is " + ed);
 					return ed;
 				}finally{
 					if (em != null) {
