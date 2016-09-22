@@ -31,7 +31,7 @@ dependencies
 }
 
  
-taskemcpdf_zdtPlay(type: EMTest) {
+task emcpdf_zdtPlay(type: EMTest) {
   include "oracle/sysman/emaas/platform/dashboards/testsdk/DashboardOrderWriteCURD.class"  
 }
 task emcpdf_zdtReplay(type: EMTest) {
