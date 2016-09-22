@@ -834,7 +834,7 @@ public class DashboardManager
 			if (edList != null && !edList.isEmpty()) {
 				LOGGER.debug("Begin to Convert Object to EmsDashboard Object!");
 				for (int i = 0; i < edList.size(); i++) {
-					dbdList.add(Dashboard.valueOf(convertObjectToEmsDashboard(edList.get(i)), null, false, false, false));
+					dbdList.add(Dashboard.valueOf(convertObjectToEmsDashboard(edList.get(i), tenantId), null, false, false, false));
 				}
 			}
 
@@ -1196,7 +1196,7 @@ public class DashboardManager
 		}
 	}
 
-	private EmsDashboard convertObjectToEmsDashboard(Map<String, Object> map)
+	private EmsDashboard convertObjectToEmsDashboard(Map<String, Object> map, Long tenantId)
 	{
 		if (map == null) {
 			LOGGER.debug("Object is null,can not convert null to EMSDashboard object!");
@@ -1205,6 +1205,22 @@ public class DashboardManager
 		EmsDashboard e = new EmsDashboard();
 		if (map.get("DASHBOARD_ID") != null) {
 			e.setDashboardId(Long.valueOf(map.get("DASHBOARD_ID").toString()));
+		}
+		if (map.get("TYPE") != null) {
+			if (Dashboard.DASHBOARD_TYPE_SINGLEPAGE.equals(map.get("TYPE").toString())) {
+				EntityManager em=null;
+				try{
+					DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+					em = dsf.getEntityManager();
+					EmsDashboard ed = dsf.getEmsDashboardById(e.getDashboardId());
+					return ed;
+				}finally{
+					if (em != null) {
+						em.close();
+					}
+				}
+			}
+			e.setType(Integer.valueOf(map.get("TYPE").toString()));
 		}
 		if (map.get("DELETED") != null) {
 			e.setDeleted(Long.valueOf(map.get("DELETED").toString()));
@@ -1255,9 +1271,6 @@ public class DashboardManager
 		}
 		if (map.get("TENANT_ID") != null) {
 			e.setTenantId(Long.valueOf(map.get("TENANT_ID").toString()));
-		}
-		if (map.get("TYPE") != null) {
-			e.setType(Integer.valueOf(map.get("TYPE").toString()));
 		}
 		return e;
 	}
