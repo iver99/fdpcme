@@ -1,15 +1,17 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
-import mockit.Deencapsulation;
-import mockit.Expectations;
-import mockit.Mocked;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.core.Response;
 
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
@@ -26,14 +28,6 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * @author danfjian
@@ -110,7 +104,7 @@ public class DashboardAPITest
 	{
 		new Expectations() {
 			{
-				mockedDashboardManager.deleteDashboard(anyLong, anyLong);
+				mockedDashboardManager.deleteDashboard((BigInteger) any, anyLong);
 			}
 		};
 		assertDeleteDashboard();
@@ -133,7 +127,7 @@ public class DashboardAPITest
 	{
 		new Expectations() {
 			{
-				mockedDashboardManager.deleteDashboard(anyLong, anyLong);
+				mockedDashboardManager.deleteDashboard((BigInteger) any, anyLong);
 				result = new CommonSecurityException("Test Security Error");
 			}
 		};
@@ -145,7 +139,7 @@ public class DashboardAPITest
 	{
 		new Expectations() {
 			{
-				mockedDashboardManager.getDashboardById(anyLong, anyLong);
+				mockedDashboardManager.getDashboardById((BigInteger) any, anyLong);
 				Dashboard mockDashboardResult = new Dashboard();
 				mockDashboardResult.setIsSystem(true);
 				result = mockDashboardResult;
@@ -184,7 +178,7 @@ public class DashboardAPITest
 	{
 		new Expectations() {
 			{
-				mockedDashboardManager.getDashboardBase64ScreenShotById(anyLong, anyLong);
+				mockedDashboardManager.getDashboardBase64ScreenShotById((BigInteger) any, anyLong);
 				result = new CommonSecurityException("Test Security Error");
 			}
 		};
@@ -192,11 +186,26 @@ public class DashboardAPITest
 	}
 
 	@Test
+	public void testGetUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager) throws Exception
+	{
+		new Expectations() {
+			{
+				mockedAPIBase.initializeUserContext(anyString, anyString);
+				result = null;
+
+				mockedUserOptionsManager.getOptionsById((BigInteger) any, anyLong);
+				result = any;
+			}
+		};
+		assertGetUserOptions();
+	}
+
+	@Test
 	public void testQueryDashboardById() throws Exception
 	{
 		new Expectations() {
 			{
-				mockedDashboardManager.getDashboardById(anyLong, anyLong);
+				mockedDashboardManager.getDashboardById((BigInteger) any, anyLong);
 				result = new Dashboard();
 
 				Deencapsulation.invoke(dashboardAPI, "updateDashboardAllHref", withAny(new Dashboard()), anyString);
@@ -299,7 +308,7 @@ public class DashboardAPITest
 	{
 		new Expectations() {
 			{
-				mockedDashboardManager.getDashboardById(anyLong, anyLong);
+				mockedDashboardManager.getDashboardById((BigInteger) any, anyLong);
 				Dashboard dashboardResult = new Dashboard();
 				dashboardResult.setIsSystem(true);
 				result = dashboardResult;
@@ -345,6 +354,22 @@ public class DashboardAPITest
 			}
 		};
 		assertQuickUpdateDashboard();
+	}
+
+	@Test
+	public void testSaveUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager) throws Exception
+	{
+		new Expectations() {
+			{
+				mockedAPIBase.initializeUserContext(anyString, anyString);
+				result = null;
+
+				mockedUserOptionsManager.saveOrUpdateUserOptions(withAny(new UserOptions()), anyLong);
+				result = any;
+			}
+		};
+		assertSaveUserOptions();
+
 	}
 
 	@Test
@@ -417,48 +442,20 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testSaveUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager) throws Exception {
-        new Expectations() {
-            {
-                mockedAPIBase.initializeUserContext(anyString, anyString);
-                result = null;
+	public void testUpdateUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager) throws Exception
+	{
+		new Expectations() {
+			{
+				mockedAPIBase.initializeUserContext(anyString, anyString);
+				result = null;
 
-                mockedUserOptionsManager.saveOrUpdateUserOptions(withAny(new UserOptions()), anyLong);
-                result = any;
-            }
-        };
-        assertSaveUserOptions();
+				mockedUserOptionsManager.saveOrUpdateUserOptions(withAny(new UserOptions()), anyLong);
+				result = any;
+			}
+		};
 
+		assertUpdateUserOptions();
 	}
-
-	@Test
-	public void testUpdateUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager) throws Exception {
-        new Expectations() {
-            {
-                mockedAPIBase.initializeUserContext(anyString, anyString);
-                result = null;
-
-                mockedUserOptionsManager.saveOrUpdateUserOptions(withAny(new UserOptions()), anyLong);
-                result = any;
-            }
-        };
-
-        assertUpdateUserOptions();
-	}
-
-    @Test
-    public void testGetUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager) throws Exception {
-        new Expectations() {
-            {
-                mockedAPIBase.initializeUserContext(anyString, anyString);
-                result = null;
-
-                mockedUserOptionsManager.getOptionsById(anyLong,anyLong);
-                result = any;
-            }
-        };
-        assertGetUserOptions();
-    }
 
 	private void assertCreateDashboard()
 	{
@@ -470,64 +467,69 @@ public class DashboardAPITest
 	private void assertDeleteDashboard()
 	{
 		Response resp = dashboardAPI.deleteDashboard("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L);
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", BigInteger.valueOf(123L));
 		Assert.assertNotNull(resp);
 	}
 
 	private void assertGetDashboardBase64ScreenShot()
 	{
 		Assert.assertNotNull(dashboardAPI.getDashboardScreenShot("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L, "1.0", "test.png"));
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", BigInteger.valueOf(123L),
+				"1.0", "test.png"));
+	}
+
+	private void assertGetUserOptions()
+	{
+		Assert.assertNotNull(dashboardAPI.getDashboardUserOptions("tenant01", "tenant01.emcsadmin",
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101/options",
+				BigInteger.valueOf(123L)));
 	}
 
 	private void assertQueryDashboardById()
 	{
 		Assert.assertNotNull(dashboardAPI.queryDashboardById("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L));
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", BigInteger.valueOf(123L)));
 	}
 
 	private void assertQueryDashboards()
 	{
 		Assert.assertNotNull(dashboardAPI.queryDashboards("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", "query str", 10, 5, "name",
-				null));
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", "query str", 10, 5,
+				"name", null));
 	}
 
 	private void assertQuickUpdateDashboard() throws JSONException
 	{
-		Assert.assertNotNull(dashboardAPI
-				.quickUpdateDashboard(
-						"tenant01",
-						"tenant01.emcsadmin",
-						"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101",
-						123L,
-						new JSONObject(
-								"{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false, \"enableDescription\": false, \"enableEntityFilter\": true, \"enableTimeRange\": true}")));
+		Assert.assertNotNull(dashboardAPI.quickUpdateDashboard(
+				"tenant01",
+				"tenant01.emcsadmin",
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101",
+				BigInteger.valueOf(123L),
+				new JSONObject(
+						"{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false, \"enableDescription\": false, \"enableEntityFilter\": true, \"enableTimeRange\": true}")));
+	}
+
+	private void assertSaveUserOptions() throws JSONException
+	{
+		Assert.assertNotNull(dashboardAPI.saveUserOptions("tenant01", "tenant01.emcsadmin",
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101/options", BigInteger
+						.valueOf(1101L), new JSONObject(
+						"{ \"dashboardId\": 1127, \"autoRefreshInterval\": 600000, \"extendedOptions\":\"2000\" }")));
 	}
 
 	private void assertUpdateDashboard() throws JSONException
 	{
 		Assert.assertNotNull(dashboardAPI.updateDashboard("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L,
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", BigInteger.valueOf(123L),
 				new JSONObject("{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false}")));
 	}
 
-    private void assertGetUserOptions(){
-        Assert.assertNotNull(dashboardAPI.getDashboardUserOptions("tenant01", "tenant01.emcsadmin",
-                "https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101/options", 1101L));
-    }
-
-    private void assertSaveUserOptions() throws JSONException {
-        Assert.assertNotNull(dashboardAPI.saveUserOptions("tenant01", "tenant01.emcsadmin",
-                "https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101/options", 1101L,new JSONObject(
-                        "{ \"dashboardId\": 1127, \"autoRefreshInterval\": 600000, \"extendedOptions\":\"2000\" }")));
-    }
-
-    private void assertUpdateUserOptions() throws JSONException {
-        Assert.assertNotNull(dashboardAPI.updateUserOptions("tenant01", "tenant01.emcsadmin",
-                "https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101/options", 1101L,new JSONObject(
-                        "{ \"dashboardId\": 1127, \"autoRefreshInterval\": 600000, \"extendedOptions\":\"2000\" }")));
-    }
+	private void assertUpdateUserOptions() throws JSONException
+	{
+		Assert.assertNotNull(dashboardAPI.updateUserOptions("tenant01", "tenant01.emcsadmin",
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101/options", BigInteger
+						.valueOf(1101L), new JSONObject(
+						"{ \"dashboardId\": 1127, \"autoRefreshInterval\": 600000, \"extendedOptions\":\"2000\" }")));
+	}
 
 }
-

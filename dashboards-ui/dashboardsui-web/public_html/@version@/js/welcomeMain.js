@@ -12,9 +12,9 @@ requirejs.config({
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/min',
-        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/ojL10n',
-        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/resources',
+        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/min',
+        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/ojL10n',
+        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/resources',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
@@ -124,7 +124,7 @@ require(['ojs/ojcore',
                 self.APMDesc = getNlsString("LANDING_HOME_APM_DESC");
                 self.LA = getNlsString("LANDING_HOME_LA");
                 self.LADesc = getNlsString("LANDING_HOME_LA_DESC");
-                self.ITA = getNlsString("LANDING_HOME_ITA");
+                self.ITA = getNlsString("LANDING_HOME_ITA");                
                 self.ITADesc = getNlsString("LANDING_HOME_ITA_DESC");
                 self.select = getNlsString("LANDING_HOME_SELECT");
                 self.ITA_DB_Performance = getNlsString("LANDING_HOME_ITA_DB_PERFORMANCE");
@@ -140,6 +140,12 @@ require(['ojs/ojcore',
 
                 self.dashboards = getNlsString("LANDING_HOME_DASHBOARDS");
                 self.dashboardsDesc = getNlsString("LANDING_HOME_DASHBOARDS_DESC");
+                
+                self.securityAnalytics = getNlsString("LANDING_HOME_SECURITY_ANALYTICS");
+                self.securityAnalyticsDesc = getNlsString("LANDING_HOME_SECURITY_ANALYTICS_DESC");
+                self.orchestration = getNlsString("LANDING_HOME_ORCHESTRATION");
+                self.orchestrationDesc = getNlsString("LANDING_HOME_ORCHESTRATION_DESC");
+                
                 self.dataExplorers = getNlsString("LANDING_HOME_DATA_EXPLORERS");
                 self.dataExplorersDesc = getNlsString("LANDING_HOME_DATA_EXPLORERS_DESC");
                 self.dataExplorer = getNlsString("LANDING_HOME_DATA_EXPLORER");
@@ -156,6 +162,8 @@ require(['ojs/ojcore',
                 self.data_type = "select";
                 
                 self.showInfraMonitoring = ko.observable(false);
+                self.showSecurityAnalytics = ko.observable(false);
+                self.showOrchestration = ko.observable(false);
                 
                 self.getServiceUrls = function() {
                     var serviceUrl = dfu.getRegistrationUrl();
@@ -190,6 +198,12 @@ require(['ojs/ojcore',
                         for(i=0; i<cloudServicesNum; i++) {
                             if(cloudServices[i].name == "Monitoring") {
                                 self.showInfraMonitoring(true);
+                            }
+                            if(cloudServices[i].name === "SecurityAnalytics") {
+                                self.showSecurityAnalytics(true);
+                            }
+                            if(cloudServices[i].name == "Orchestration") {
+                                self.showOrchestration(true);
                             }
                             landingHomeUrls[cloudServices[i].name] = cloudServices[i].href;
                         }
@@ -299,6 +313,26 @@ require(['ojs/ojcore',
                     oj.Logger.info('Trying to open dashboards by URL: ' + self.dashboardsUrl);
                     if(self.dashboardsUrl) {
                         window.location.href = self.dashboardsUrl;
+                    }
+                };
+                self.openSecurityAnalytics = function() {
+                    if(!self.landingHomeUrls) {
+                        console.log("---fetching service links is not finished yet!---");
+                        return;
+                    }
+                    if(self.landingHomeUrls.SecurityAnalytics) {
+                        oj.Logger.info('Trying to open Security Analytics by URL: ' + self.landingHomeUrls.SecurityAnalytics);
+                        window.location.href = self.landingHomeUrls.SecurityAnalytics;
+                    }
+                };
+                self.openOrchestration = function() {
+                    if(!self.landingHomeUrls) {
+                        console.log("---fetching service links is not finished yet!---");
+                        return;
+                    }
+                    oj.Logger.info('Trying to open Orchestration by URL: ' + self.landingHomeUrls.Orchestration);
+                    if(self.landingHomeUrls.Orchestration) {
+                        window.location.href = self.landingHomeUrls.Orchestration;
                     }
                 };
                 self.dataExplorersChosen = function (event, data) {

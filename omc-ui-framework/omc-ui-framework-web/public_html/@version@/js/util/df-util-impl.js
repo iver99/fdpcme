@@ -335,8 +335,8 @@ define([
             self.getDefaultHeader = function() {
                 var defHeader = {};
                 if (self.isDevMode()){
-                    defHeader["X-USER-IDENTITY-DOMAIN-NAME"] = self.tenantName;
-                    defHeader["X-REMOTE-USER"] = self.tenantName+'.'+self.userName;
+                    defHeader["X-USER-IDENTITY-DOMAIN-NAME"] = self.getDevData().tenant;
+                    defHeader["X-REMOTE-USER"] = self.getDevData().tenant+'.'+self.getDevData().user;
                     defHeader.Authorization="Basic "+btoa(self.getDevData().wlsAuth);
                 }
                 oj.Logger.info("Sent Header: "+JSON.stringify(defHeader));
@@ -614,8 +614,15 @@ define([
              * @returns {String}
              */ 
             self.getGuid = function() {
+                function securedRandom(){
+                    var arr = new Uint32Array(1);
+                    var crypto = window.crypto || window.msCrypto;
+                    crypto.getRandomValues(arr);
+                    var result = arr[0] * Math.pow(2,-32);
+                    return result;
+                }
                 function S4() {
-                   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+                   return (((1+securedRandom())*0x10000)|0).toString(16).substring(1);
                 }
                 
                 return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());

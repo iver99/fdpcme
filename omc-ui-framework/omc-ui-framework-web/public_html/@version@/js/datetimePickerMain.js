@@ -11,9 +11,9 @@ requirejs.config({
         'jqueryui-amd': '../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/min',
-        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/ojL10n',
-        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/resources',
+        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/min',
+        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/ojL10n',
+        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.1/resources',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../../libs/@version@/js/oraclejet/js/libs/history/history.iegte8.min',
@@ -92,6 +92,7 @@ require(['ojs/ojcore',
                 self.timePeriodsNotToShow = ko.observableArray([]);
                 self.timeDisplay = ko.observable("short");
                 self.timePeriodPre = ko.observable("Last 7 days");
+                self.changeLabel = ko.observable(true);
                 
                 self.isTimePeriodLessThan1day = function(timePeriod) {
                     if(timePeriod==="Last 15 minutes" || timePeriod==="Last 30 minutes" || timePeriod==="Last 60 minutes" ||
@@ -113,6 +114,7 @@ require(['ojs/ojcore',
                     timePeriodsNotToShow: /*["Last 30 days", "Last 90 days"],*/ self.timePeriodsNotToShow,
                     enableTimeFilter: true,
                     hideMainLabel: true,
+//                    changeLabel: self.changeLabel, //knockout observable to determine whether label changes when use select a specific time range. The default value is true
 //                    timeDisplay: self.timeDisplay,
 //                    customTimeBack: 90*24*60*60*1000,
 //                    appId: "APM",
@@ -140,6 +142,9 @@ require(['ojs/ojcore',
                         var eles = $('div').filter(function(){return this.id.match(/tfInfo_.*\d$/);});
                         self.filterInfo($(eles[0]).find("span").text());
                         self.generateData(start, end);
+                    },
+                    callbackAfterCancel: function() { //calback after "Cancel" is clicked
+                        console.log("***");
                     }
                 };
                 
@@ -173,7 +178,8 @@ require(['ojs/ojcore',
                     }
                 };
                 
-                self.changeOption = function() {        
+                self.changeOption = function() { 
+                    self.changeLabel(false);
                     self.initStart(new Date(new Date() - 48*60*60*1000));
                     self.initEnd(new Date(new Date() - 3*60*60*1000));
                     self.timePeriodsNotToShow(["Last 90 days", "Latest"]);
@@ -248,6 +254,13 @@ require(['ojs/ojcore',
                     }
 
                     //series
+                    function securedRandom(){
+                        var arr = new Uint32Array(1);
+                        var crypto = window.crypto || window.msCrypto;
+                        crypto.getRandomValues(arr);
+                        var result = arr[0] * Math.pow(2,-32);
+                        return result;
+                    }
                     var seriesNames = ["p1", "p2", "p3"];
                     var seriesMax = [30, 50, 100];
                     var seriesNumber = seriesNames.length;
@@ -255,7 +268,7 @@ require(['ojs/ojcore',
                         var max = seriesMax[i];
                         var itemsValues = [];
                         for (var j = 0; j < n; j++) {
-                            itemsValues.push(Math.floor(Math.random() * max));
+                            itemsValues.push(Math.floor(securedRandom() * max));
                         }
                         lineSeries.push({name: seriesNames[i], items: itemsValues});
                     }

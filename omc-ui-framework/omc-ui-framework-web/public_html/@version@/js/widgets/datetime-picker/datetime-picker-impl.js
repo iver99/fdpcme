@@ -46,12 +46,17 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 var self = this;
                 var msgUtil = new msgUtilModel();
                 console.log("Initialize date time picker! The params are: ");
-                console.log(params);
+                if(ko.mapping && ko.mapping.toJS) {
+                    console.log(ko.mapping.toJS(params));
+                }else {
+                    console.log(params);
+                }
                 
                 var start, end;
                 var timeDiff, dateTimeDiff;
 
-                self.tfInstance = {"timeFilterValue": ko.observable("0-23"), "daysChecked": ko.observableArray(["1", "2", "3", "4", "5", "6", "7"]), "monthsChecked": ko.observableArray(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"])};
+                self.tfInstance = {"showTimeFilterError": ko.observable(false), "timeFilterValue": ko.observable("0-23"), "daysChecked": ko.observableArray(["1", "2", "3", "4", "5", "6", "7"]), "monthsChecked": ko.observableArray(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"])};
+                self.showTimeFilterError = ko.observable(self.tfInstance.showTimeFilterError());
 
                 if(params.appId) {
                     self.randomId = params.appId;
@@ -59,9 +64,15 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.randomId = new Date().getTime(); 
                 }
                 
+                self.changeLabel = ko.observable(true);
+                if(params.changeLabel) {
+                    self.changeLabel = params.changeLabel;
+                }
+                
                 self.postbox = new ko.subscribable();
                 self.postbox.subscribe(function(newValue) {
                     self.tfInstance = newValue;
+                    self.showTimeFilterError(self.tfInstance.showTimeFilterError());
                 }, null, "tfChanged");
                 
                 self.enableTimeFilter = ko.observable(false);
@@ -277,7 +288,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                 self.applyButtonDisable = ko.computed(function() {
                     return self.startDateError() || self.endDateError() || self.startTimeError() || self.endTimeError() || 
-                            self.timeValidateError() || self.beyondWindowLimitError();
+                            self.timeValidateError() || self.beyondWindowLimitError() || self.showTimeFilterError();
                 }, self);
 
                 self.startDateSubscriber = ko.computed(function () {
@@ -730,6 +741,10 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 
                 if (params.callbackAfterApply && typeof params.callbackAfterApply === "function") {
                     self.callbackAfterApply = params.callbackAfterApply;
+                }
+                
+                if(params.callbackAfterCancel && typeof params.callbackAfterCancel === "function") {
+                    self.callbackAfterCancel = params.callbackAfterCancel;
                 }
 
                 self.timePeriodObject = ko.computed(function () {
@@ -1215,9 +1230,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             self.updateRange(self.startDate(), self.endDate());
                         }
                         timeValidate();
-                        if (self.pickerPanelId) {
-                            $(self.pickerPanelId + " #applyButton_"+self.randomId).ojButton({"disabled": self.applyButtonDisable()});
-                        }
+//                        if (self.pickerPanelId) {
+//                            $(self.pickerPanelId + " #applyButton_"+self.randomId).ojButton({"disabled": self.applyButtonDisable()});
+//                        }
                     } catch (e) {
                         if (value === 1) {
                             self.startDateError(true);
@@ -1251,9 +1266,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         customClick(1);
                     }
                     timeValidate();
-                    if (self.pickerPanelId) {
-                        $(self.pickerPanelId + " #applyButton_"+self.randomId).ojButton({"disabled": self.applyButtonDisable()});
-                    }
+//                    if (self.pickerPanelId) {
+//                        $(self.pickerPanelId + " #applyButton_"+self.randomId).ojButton({"disabled": self.applyButtonDisable()});
+//                    }
                 };
                 
                 self.changeTimeError = function (event, data, whichTime) {
@@ -1408,6 +1423,31 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }
                 };
                 
+                /**
+                 * The function is used to launch right panel with calender to specific position
+                 * 
+                 * @param {type} ele The right panel popup will apear relative to this element
+                 * @param {type} position The location of the right panel popup 
+                 * @returns {undefined}
+                 */
+                self.launchTimePickerCustom = function(ele, position, option) {
+                    if(self.init === true) {
+                        self.init = false;
+                    }
+                    self.autoFocus("inputStartDate_" + self.randomId);
+                    self.lastFocus(1);
+                                                
+                    self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
+                    setTimeout(function(){self.updateRange(self.startDate(), self.endDate());}, 0);
+                        
+                    self.showRightPanel(true);
+                    
+                    $("#pickerPanel_"+self.randomId).ojPopup("option", option);
+                    $("#pickerPanel_"+self.randomId).ojPopup("open", ele,  position);
+
+                    self.showCalendar(true);
+                };
+                
                 self.isEnterPressed = function(data, event) {
                     var keyCode = event.which ? event.which : event.keyCode;
                     if(keyCode === 13) {
@@ -1523,6 +1563,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         setTimeout(function() {self.applyClick();}, 0);
                     }else {
                         self.showRightPanel(true);
+                        //set modality to "modeless" in case it is set as "modal" in launchTimePickerCucstom function
+                        $("#pickerPanel_"+self.randomId).ojPopup("option", "modality", "modeless");
                         $("#pickerPanel_"+self.randomId).ojPopup("open", "#dateTimePicker_"+self.randomId+" .drawers", self.pickerPanelPosition);
                         self.showCalendar(true);
                     }
@@ -1551,6 +1593,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.lastStartTime(self.startTime());
                     self.lastEndTime(self.endTime());
                     self.lastTimePeriod(self.timePeriod());
+                    self.setMinMaxDate(null, null);
                     var start, end;
                     
                     if(self.enableTimeFilter()) {
@@ -1566,8 +1609,10 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         start = oj.IntlConverterUtils.isoToLocalDate(self.startDateISO().slice(0, 10));
                         end = oj.IntlConverterUtils.isoToLocalDate(self.endDateISO().slice(0, 10));
                     }
-                                                          
-                    self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO().slice(0, 10), self.endDateISO().slice(0, 10), self.startTime(), self.endTime()));
+                    
+                    if(self.getParam(self.changeLabel)) {
+                        self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO().slice(0, 10), self.endDateISO().slice(0, 10), self.startTime(), self.endTime()));
+                    }       
                     self.closeAllPopups();
                     var timePeriod = self.getTimePeriodString(self.timePeriod());
                     
@@ -1618,7 +1663,18 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                 self.cancelClick = function () {
                     self.closeAllPopups();
-                    return;
+                    if(self.callbackAfterCancel) {
+                        $.ajax({
+                            url: "/emsaasui/uifwk/empty.html",
+                            success: function () {
+                                self.callbackAfterCancel();
+                            },
+                            error: function () {
+                                console.log(self.errorMsg);
+                            }
+                        });
+                    }
+                    return false;
                 };
                 
                 self.renderDateRange = function (startRange, endRange) {

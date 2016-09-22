@@ -51,14 +51,14 @@ if (project.hasProperty("debugTsel"))
 }
 else
 {
-    tselVersion =  getDependentSdkVersion('com.oracle.emaas.emctas.tgtsel', 'emcs-targetselector', '1.8.+')
+    tselVersion =  getDependentSdkVersion('com.oracle.emaas.emctas.tgtsel', 'emcs-targetselector', '1.9.+')
 }
 
 dependencies {
 	compile configurations.testNG
 	compile configurations.webdriver
 	compile configurations.restAssured
-        compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.2.0-22069', ext: 'war'){ transitive = false }	
+        compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '2.0.1-24669', ext: 'war'){ transitive = false }	
         compile(group: 'files', name: 'canvg', version: '1.3', ext: 'zip'){ transitive = false }
         compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
 	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
@@ -118,6 +118,14 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass]) {
 
 //define the JS source locations
 javascript.source {
+	externaljs {
+	    js {
+		srcDir stagingDir+"/libs/@version@/js"
+		include "**/canvg/*.js"
+		include "**/html2canvas/*.js"
+		exclude "**/*.orig.js"
+	    }
+	}
 	staticjs {
             js {
                 srcDir 'public_html/js'
@@ -141,31 +149,15 @@ javascript.source {
     }
 }
 
-javascript.source.staticjs.js.files.eachWithIndex { File jsFile, idx ->
-    tasks.add(name: "dominifystaticjs${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
-	String fileName = "${jsFile.name}"
+task dominifycanvasjs(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+	String fileName = "html2canvas.js"
 	String renamedFile = fileName.replace(".",".orig.")
-	def parentDir = jsFile.parent
-	def tmpFolder= parentDir.split("js")
 	def sourceFile = "";
 	def destFile = "";
 	def tmp ="";
 
-	if ( parentDir.endsWith("/js")){
-		for(int i=1; i<tmpFolder.length;i++){
-		    tmp=tmp+'js'+tmpFolder[i]
-		}
-		sourceFile = stagingDir+"/"+tmp+"/js/"+fileName
-		destFile = stagingDir+"/"+tmp+"/js/"+renamedFile
-	}
-	else
-	{
-		for(int i=1; i<tmpFolder.length;i++){
-		    tmp=tmp+'js'+tmpFolder[i]
-		}
-		sourceFile = stagingDir+"/"+tmp+"/"+fileName
-		destFile = stagingDir+"/"+tmp+"/"+renamedFile
-	}
+	sourceFile = stagingDir+"/libs/"+versionPathElement+"/js/html2canvas/"+fileName
+	destFile = stagingDir+"/libs/"+versionPathElement+"/js/html2canvas/"+renamedFile
 	
 	doFirst{ 
 	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
@@ -175,14 +167,7 @@ javascript.source.staticjs.js.files.eachWithIndex { File jsFile, idx ->
 	dest = sourceFile
 	String sourceMapFile = fileName.replace(".js",".map")
 		
-	if ( parentDir.endsWith("/js") )
-	{
-	    sourceMap = file(stagingDir+"/"+tmp+"/js/"+sourceMapFile)
-	}
-	else
-	{
-	    sourceMap = file(stagingDir+"/"+tmp+"/"+sourceMapFile)
-	}
+        sourceMap = file(stagingDir+"/libs/"+versionPathElement+"/js/html2canvas/"+sourceMapFile)
 	
 	closure {
 	        warningLevel = 'QUIET'
@@ -195,23 +180,135 @@ javascript.source.staticjs.js.files.eachWithIndex { File jsFile, idx ->
 
 		//fix file path in source map file
 		File mapFile = compiledFile
-		
-		if ( parentDir.endsWith("/js") )
-		{
-	    	     mapFile = new File(stagingDir+"/"+tmp+"/js/"+sourceMapFile)
-		}
-		else
-		{
-	    	    mapFile = new File(stagingDir+"/"+tmp+"/"+sourceMapFile)
-		}
+       	        mapFile = new File(stagingDir+"/libs/"+versionPathElement+"/js/html2canvas/"+sourceMapFile)
 
 		String contents = mapFile.getText('UTF-8')
 		String absPath = compiledFile
 		contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
 		mapFile.write(contents, 'UTF-8')
-    	}	
-    }
+    	}
 }
+
+task dominifycanvgjs(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+	String fileName = "canvg.js"
+	String renamedFile = fileName.replace(".",".orig.")
+	def sourceFile = "";
+	def destFile = "";
+	def tmp ="";
+
+	sourceFile = stagingDir+"/libs/"+versionPathElement+"/js/canvg/"+fileName
+	destFile = stagingDir+"/libs/"+versionPathElement+"/js/canvg/"+renamedFile
+	
+	doFirst{ 
+	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
+	}
+
+        source = sourceFile
+	dest = sourceFile
+	String sourceMapFile = fileName.replace(".js",".map")
+		
+        sourceMap = file(stagingDir+"/libs/"+versionPathElement+"/js/canvg/"+sourceMapFile)
+	
+	closure {
+	        warningLevel = 'QUIET'
+	}
+
+	doLast {
+		//update the compiled JS to point to the source map
+		File compiledFile = new File(sourceFile)
+		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
+
+		//fix file path in source map file
+		File mapFile = compiledFile
+       	        mapFile = new File(stagingDir+"/libs/"+versionPathElement+"/js/canvg/"+sourceMapFile)
+
+		String contents = mapFile.getText('UTF-8')
+		String absPath = compiledFile
+		contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
+		mapFile.write(contents, 'UTF-8')
+    	}
+}
+
+task dominifyrgbcolorjs(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+	String fileName = "rgbcolor.js"
+	String renamedFile = fileName.replace(".",".orig.")
+	def sourceFile = "";
+	def destFile = "";
+	def tmp ="";
+
+	sourceFile = stagingDir+"/libs/"+versionPathElement+"/js/canvg/"+fileName
+	destFile = stagingDir+"/libs/"+versionPathElement+"/js/canvg/"+renamedFile
+	
+	doFirst{ 
+	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
+	}
+
+        source = sourceFile
+	dest = sourceFile
+	String sourceMapFile = fileName.replace(".js",".map")
+		
+        sourceMap = file(stagingDir+"/libs/"+versionPathElement+"/js/canvg/"+sourceMapFile)
+	
+	closure {
+	        warningLevel = 'QUIET'
+	}
+
+	doLast {
+		//update the compiled JS to point to the source map
+		File compiledFile = new File(sourceFile)
+		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
+
+		//fix file path in source map file
+		File mapFile = compiledFile
+       	        mapFile = new File(stagingDir+"/libs/"+versionPathElement+"/js/canvg/"+sourceMapFile)
+
+		String contents = mapFile.getText('UTF-8')
+		String absPath = compiledFile
+		contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
+		mapFile.write(contents, 'UTF-8')
+    	}
+}
+
+task dominifystackblurjs(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+	String fileName = "StackBlur.js"
+	String renamedFile = fileName.replace(".",".orig.")
+	def sourceFile = "";
+	def destFile = "";
+	def tmp ="";
+
+	sourceFile = stagingDir+"/libs/"+versionPathElement+"/js/canvg/"+fileName
+	destFile = stagingDir+"/libs/"+versionPathElement+"/js/canvg/"+renamedFile
+	
+	doFirst{ 
+	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
+	}
+
+        source = sourceFile
+	dest = sourceFile
+	String sourceMapFile = fileName.replace(".js",".map")
+		
+        sourceMap = file(stagingDir+"/libs/"+versionPathElement+"/js/canvg/"+sourceMapFile)
+	
+	closure {
+	        warningLevel = 'QUIET'
+	}
+
+	doLast {
+		//update the compiled JS to point to the source map
+		File compiledFile = new File(sourceFile)
+		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
+
+		//fix file path in source map file
+		File mapFile = compiledFile
+       	        mapFile = new File(stagingDir+"/libs/"+versionPathElement+"/js/canvg/"+sourceMapFile)
+
+		String contents = mapFile.getText('UTF-8')
+		String absPath = compiledFile
+		contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
+		mapFile.write(contents, 'UTF-8')
+    	}
+}
+
 
 javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
     tasks.add(name: "dominifycachejs${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {

@@ -10,29 +10,23 @@
 
 package oracle.sysman.emaas.platform.dashboards.test.common;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.config.LogConfig;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Properties;
+import java.util.ArrayList;
+import java.util.List;
+
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
-
-
 import oracle.sysman.qatool.uifwk.utils.Utils;
+
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.config.LogConfig;
 public class CommonTest
 {
 
@@ -43,7 +37,6 @@ public class CommonTest
 	private  String tenantid;
 	private  String remoteuser;
 	private  String tenantid_2;
-	private static final String SERVICE_NAME = "Dashboard-API";
 	private static final String DOMAIN = "www.";
 	private static final String DSB_DEPLOY_URL = "/instances?servicename=Dashboard-API";
 	private static final String AUTHORIZATION = "Authorization";
@@ -235,8 +228,8 @@ public class CommonTest
 			}
 		}
 		catch (IOException e) {
-
 			System.out.println("an error occureed while getting details by url" + " ::" + url + "  " + e.toString());
+		} finally {
 			try {
 				if (in != null) {
 					in.close();
@@ -248,7 +241,6 @@ public class CommonTest
 			catch (IOException ioEx) {
 				//ignore
 			}
-
 		}
 		return response.toString();
 	}

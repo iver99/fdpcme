@@ -5,12 +5,13 @@ define([
     'uifwk/js/util/message-util',
     'ojs/ojcore', 
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
+    'uifwk/js/util/zdt-util',
     'ojs/ojknockout', 
     'ojs/ojtoolbar', 
     'ojs/ojmenu', 
     'ojs/ojbutton',
     'ojs/ojdialog'],
-        function (ko, $, dfumodel,msgUtilModel, oj, nls) {
+        function (ko, $, dfumodel,msgUtilModel, oj, nls, zdtUtilModel) {
             function BrandingBarViewModel(params) {
                 var self = this;
                 var msgUtil = new msgUtilModel();
@@ -59,6 +60,8 @@ define([
                 self.MONITORING_SERVICE_VERSION=encodeURIComponent('1.5+');
                 var appIdEventUI = "EventUI";
                 var appIdMonitoring = "Monitoring";
+                var appIdSecurityAnalytics = "SecurityAnalytics";
+                var appIdOcs = "Orchestration";
                 var appMap = {};
                 appMap[appIdAPM] = {
                     "appId": "APM",
@@ -117,6 +120,22 @@ define([
                     "version": self.MONITORING_SERVICE_VERSION,
                     "helpTopicId": "em_moncs"
                 }; 
+                appMap[appIdSecurityAnalytics] = {
+                        "appId": appIdSecurityAnalytics,
+                        "appName": "BRANDING_BAR_APP_NAME_SECURITY_ANALYTICS", 
+                        "serviceDisplayName": "BRANDING_BAR_CLOUD_SERVICE_NAME_SA",
+                        "serviceName": "SecurityAnalyticsUI",
+                        "version": self.SERVICE_VERSION,
+                        "helpTopicId": "em_samcs"
+                    }; 
+                appMap[appIdOcs] = {
+                    "appId": appIdOcs,
+                    "appName": "BRANDING_BAR_APP_NAME_ORCHESTRATION", 
+                    "serviceDisplayName": "BRANDING_BAR_APP_NAME_ORCHESTRATION",
+                    "serviceName": "Dashboard-UI", //Orchestration has no UI service, use Dashboard-UI now
+                    "version": self.SERVICE_VERSION,
+                    "helpTopicId": "em_home_gs"
+                };  
             
                 self.appId = $.isFunction(params.appId) ? params.appId() : params.appId;
                 self.relNotificationCheck = $.isFunction(params.relNotificationCheck) ? params.relNotificationCheck() : params.relNotificationCheck;
@@ -340,8 +359,10 @@ define([
                 var retryingMessageIds = [];
                 var currentRetryingMsgId = null;
                 var currentRetryFailMsgId = null;
+                var currentPlannedDowntimeMsgId = null;
                 var catRetryInProgress = "retry_in_progress";
                 var catRetryFail = "retry_fail";
+                var catPlannedDowntime = "omc_planned_downtime";
                 self.hasHiddenMessages = ko.observable(false);
                 self.hiddenMessagesExpanded = ko.observable(false);
                 
@@ -389,6 +410,10 @@ define([
                 if (self.navLinksVisible === false) {
                     setupTimerForSessionTimeout();
                 }
+                
+                //Detect planned downtime
+                var zdtUtil = new zdtUtilModel();
+                zdtUtil.detectPlannedDowntime(function(isDown){});
                 
                 function setupTimerForSessionTimeout() {
                     if (!dfu.isDevMode()){
@@ -455,14 +480,25 @@ define([
                             message.icon = infoMessageIcon;
                         }
                         
-                        if (message.category === catRetryInProgress) {
-                            if (retryingMessageIds.length === 0) {
+                        if (message.category === catPlannedDowntime) {
+                            if (currentPlannedDowntimeMsgId === null) {
+                                currentPlannedDowntimeMsgId = message.id;
                                 displayMessages.splice(0, 0, message);
+                            }
+                        }
+                        else if (message.category === catRetryInProgress) {
+                            if (retryingMessageIds.length === 0) {
+                                if (currentPlannedDowntimeMsgId === null) {
+                                    displayMessages.splice(0, 0, message);
+                                }
+                                else {
+                                    displayMessages.splice(1, 0, message);
+                                }
                                 currentRetryingMsgId = message.id;
                             }
                             retryingMessageIds.push(message.id);
                         }
-                        else if (message.category !== catRetryInProgress) {
+                        else {
                             var isMsgNeeded = true;
                             if (message.category === catRetryFail && currentRetryFailMsgId !== null) {
                                 isMsgNeeded = false;
@@ -520,6 +556,9 @@ define([
                         }
                         if (data.category === catRetryFail) {
                             currentRetryFailMsgId = null;
+                        }
+                        if (data.category === catPlannedDowntime) {
+                            currentPlannedDowntimeMsgId = null;
                         }
                     }
                     

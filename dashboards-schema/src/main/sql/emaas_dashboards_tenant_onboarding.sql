@@ -67,10 +67,19 @@ END;
 
 @&EMSAAS_SQL_ROOT/1.8.0/emaas_dashboards_seed_data.sql &TENANT_ID
 
+@&EMSAAS_SQL_ROOT/1.9.0/emaas_dashboards_seed_data.sql &TENANT_ID
+
+@&EMSAAS_SQL_ROOT/1.9.0/emaas_dashboards_seed_data_ocs.sql &TENANT_ID
+
+@&EMSAAS_SQL_ROOT/1.9.0/emaas_dashboards_remove_brownfield.sql  &TENANT_ID
+
+@&EMSAAS_SQL_ROOT/1.9.0/emaas_dashboards_seed_data_uigallery.sql &TENANT_ID
+
 COMMIT;
 /
 BEGIN
   DBMS_OUTPUT.PUT_LINE('Inserting OOB dashboards for &TENANT_ID is completed');
 END;
 /
+
 
