@@ -145,7 +145,7 @@ require(['ojs/ojcore',
                     hideMainLabel: true,
                     dtpickerPosition: self.floatPosition1,
                     timePeriod: "Last 1 day", //self.timePeriodPre,
-                    timeFilterParams: self.timeFilterParams,
+//                    timeFilterParams: self.timeFilterParams,
                     callbackAfterApply: function (start, end, tp, tf) {
                         console.log(start);
                         console.log(end);
