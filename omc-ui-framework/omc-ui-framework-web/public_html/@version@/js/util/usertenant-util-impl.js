@@ -102,6 +102,37 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
             self.getTenantName = function() {
                 return userTenant && userTenant.tenant ? userTenant.tenant : null;
             };
+            
+            
+            
+            
+            
+            self.getUserRoles = function(callback) {
+                var serviceUrl = "/sso.static/dashboards.configurations/roles";
+                if (dfu.isDevMode()){
+                    callback(["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]);
+                    return;
+                }
+                if(window.omcUifwkCachedData && window.omcUifwkCachedData.roles){
+                    callback(window.omcUifwkCachedData.roles);
+                }else{
+                    ajaxUtil.ajaxWithRetry({
+                        url: serviceUrl,
+                        async: true,
+                        headers: dfu.getDashboardsRequestHeader(),
+                        contentType:'application/json'
+                    })
+                    .done(
+                        function (data) {
+                            if(window.omcUifwkCachedData){
+                                window.omcUifwkCachedData.roles = data;
+                            }else{
+                                window.omcUifwkCachedData = {roles : data};
+                            }
+                            callback(data);
+                        });
+                }
+            };
         }
 
         return DashboardFrameworkUserTenantUtility;
