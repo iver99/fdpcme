@@ -57,7 +57,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                 var appIdError = "Error";
                 self.SERVICE_VERSION=encodeURIComponent('1.0+');
                 self.MONITORING_SERVICE_VERSION=encodeURIComponent('1.5+');
-                self.COMPLIANCE_SERVICE_VERSION = encodeURIComponent('0.1+');
+                self.COMPLIANCE_SERVICE_VERSION = encodeURIComponent(null);
                 var appIdEventUI = "EventUI";
                 var appIdMonitoring = "Monitoring";
                 var appIdSecurityAnalytics = "SecurityAnalytics";
