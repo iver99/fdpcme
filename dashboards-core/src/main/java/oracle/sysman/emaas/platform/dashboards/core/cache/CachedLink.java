@@ -12,7 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.core.cache;
 
 import java.io.Serializable;
 
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 
 /**
  * @author guochen
@@ -23,11 +23,13 @@ public class CachedLink implements Serializable
 
 	private final String href;
 	private final String rel;
+	private final String version;
 
-	public CachedLink(Link link)
+	public CachedLink(VersionedLink link)
 	{
 		href = link.getHref();
 		rel = link.getRel();
+		version = link.getVersion();
 	}
 
 	/**
@@ -38,11 +40,12 @@ public class CachedLink implements Serializable
 		return href;
 	}
 
-	public Link getLink()
+	public VersionedLink getLink()
 	{
-		Link link = new Link();
+		VersionedLink link = new VersionedLink();
 		link.withHref(href);
 		link.withRel(rel);
+		link.setVersion(version);
 		return link;
 	}
 
@@ -52,5 +55,13 @@ public class CachedLink implements Serializable
 	public String getRel()
 	{
 		return rel;
+	}
+
+	/**
+	 * @return the version
+	 */
+	public String getVersion()
+	{
+		return version;
 	}
 }

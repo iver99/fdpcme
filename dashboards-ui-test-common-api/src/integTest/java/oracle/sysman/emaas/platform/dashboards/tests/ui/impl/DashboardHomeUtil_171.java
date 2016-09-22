@@ -331,6 +331,10 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		if (el.isSelected()) {
 			el.click();
 		}
+		el = driver.getElement(DashBoardPageId.FILTERORCHESTRATIONLOCATOR);
+		if (el.isSelected()) {
+			el.click();
+		}
 		el = driver.getElement(DashBoardPageId.FILTERORACLELOCATOR);
 		if (el.isSelected()) {
 			el.click();
