@@ -20,8 +20,6 @@ define(['knockout',
             var msgUtil = new msgUtilModel();
 
             self.getUserTenant = function() {
-                userTenantUtil.getUserRoles(function(data){console.log("test getUserRoles: "+data);});
-                console.log("test userHasRole: "+userTenantUtil.userHasRole(userTenantUtil.ADMIN_ROLE_NAME_APM));
                 return userTenantUtil.getUserTenant();
             };
 
