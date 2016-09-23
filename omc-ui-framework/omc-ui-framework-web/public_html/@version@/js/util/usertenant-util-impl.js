@@ -114,6 +114,7 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                     return;
                 }
                 if(window.omcUifwkCachedData && window.omcUifwkCachedData.roles){
+                    self.userRoles = window.omcUifwkCachedData.roles; 
                     callback(window.omcUifwkCachedData.roles);
                 }else{
                     ajaxUtil.ajaxWithRetry({
@@ -124,6 +125,7 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                     })
                     .done(
                         function (data) {
+                            self.userRoles = data; 
                             if(window.omcUifwkCachedData){
                                 window.omcUifwkCachedData.roles = data;
                             }else{
