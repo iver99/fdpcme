@@ -20,7 +20,7 @@ buildscript {
 }
 apply plugin: 'DevInfraPlugin'
 apply plugin: 'TestInfraPlugin'
-//ext.emcpdf_REPO_BID = getRepoBuildIDInProduct(System.env.SAAS_VERSION, 'emcpdf')
+ext.emcpdf_REPO_BID = getRepoBuildIDInProduct(System.env.SAAS_VERSION, 'emcpdf')
 
 
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest  
