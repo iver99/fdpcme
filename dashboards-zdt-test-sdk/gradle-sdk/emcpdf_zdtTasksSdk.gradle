@@ -27,7 +27,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest
 
 dependencies
 {
-    testConfig group: 'com.oracle.emaas.emcpdf.testsdk', name: 'dashboards-zdt-test-sdk', version: "1.0.+"    
+    testConfig group: 'com.oracle.emaas.emcpdf.testsdk', name: 'dashboards-zdt-test-sdk', version: "${emcpdf_REPO_BID}"    
 }
 
  
