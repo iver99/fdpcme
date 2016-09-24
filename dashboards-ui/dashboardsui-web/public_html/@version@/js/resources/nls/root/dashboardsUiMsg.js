@@ -244,6 +244,7 @@ define({
       "DBS_ERROR_URL": "Requested URL is: ",
       "DBS_ERROR_BTN_SIGN_OUT": "Sign Out",
       "DBS_ERROR_SENSITIVE_WORD": "Sorry,your request parameters contain sensitive words or characters, Please try again.",
+      "DBS_ERROR_INTERNAL_ERROR": "Oracle Management Cloud service received a bad request and had an internal error. Try to access your service later.",
 
       // common messages for error page are put here: add __PLUS_SERVICE to support url pattern '&service=APM|ITAnalytics|LogAnalytics'
       "SERVICE_NAME_APM":"Application Performance Monitoring",
