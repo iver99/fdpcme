@@ -5,7 +5,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
     'uifwk/@version@/js/util/message-util-impl',
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
-    'uifwk/js/util/zdt-util',
+    'uifwk/@version@/js/util/zdt-util-impl',
     'ojs/ojknockout',
     'ojs/ojtoolbar',
     'ojs/ojmenu',
