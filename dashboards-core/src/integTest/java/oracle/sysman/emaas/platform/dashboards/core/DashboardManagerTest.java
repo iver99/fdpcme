@@ -3,11 +3,6 @@ package oracle.sysman.emaas.platform.dashboards.core;
 import java.util.Date;
 import java.util.List;
 
-import org.testng.Assert;
-import org.testng.AssertJUnit;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
@@ -22,6 +17,13 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.testng.Assert;
+import org.testng.AssertJUnit;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 /**
  * @author guobaochen
  */
@@ -32,6 +34,8 @@ public class DashboardManagerTest
 		UserContext.setCurrentUser("SYSMAN");
 		TenantSubscriptionUtil.setTestEnv();
 	}
+
+	private static final Logger LOGGER = LogManager.getLogger(DashboardManagerTest.class);
 
 	@BeforeMethod
 	public void beforeMethod()
@@ -339,6 +343,7 @@ public class DashboardManagerTest
 			dm.updateDashboard(dbd1, tenantId1);
 		}
 		catch (CommonSecurityException e) {
+			LOGGER.info("context", e);
 		}
 		queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
 		Assert.assertEquals(queried.getName(), name1);
@@ -348,6 +353,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context", e);
 		}
 	}
 
@@ -370,6 +376,7 @@ public class DashboardManagerTest
 			dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context", e);
 			expectedException = true;
 		}
 		if (!expectedException) {
@@ -409,6 +416,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd3.getDashboardId(), false, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context", e);
 		}
 		queried = dm.getDashboardById(dbd3.getDashboardId(), tenantId2);
 		Assert.assertNotNull(queried);
@@ -416,6 +424,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd3.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context", e);
 		}
 		queried = dm.getDashboardById(dbd3.getDashboardId(), tenantId2);
 		Assert.assertNotNull(queried);
@@ -425,6 +434,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd4.getDashboardId(), false, tenantId1);
 		}
 		catch (CommonSecurityException e) {
+			LOGGER.info("context", e);
 		}
 		queried = dm.getDashboardById(dbd4.getDashboardId(), tenantId1);
 		Assert.assertNotNull(queried);
@@ -434,21 +444,25 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context", e);
 		}
 		try {
 			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context", e);
 		}
 		try {
 			dm.deleteDashboard(dbd3.getDashboardId(), true, tenantId2);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context", e);
 		}
 		try {
 			dm.deleteDashboard(dbd4.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context", e);
 		}
 	}
 
@@ -499,11 +513,13 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context", e);
 		}
 		try {
 			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context", e);
 		}
 	}
 
@@ -546,6 +562,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context", e);
 		}
 		try {
 			UserContext.setCurrentUser("other user");
@@ -553,6 +570,7 @@ public class DashboardManagerTest
 			UserContext.setCurrentUser("SYSMAN");
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context", e);
 		}
 	}
 
@@ -584,6 +602,7 @@ public class DashboardManagerTest
 			queried = dm.getDashboardById(Long.MAX_VALUE, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context", e);
 			expectedException = true;
 		}
 		if (!expectedException) {
@@ -595,11 +614,13 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context", e);
 		}
 		try {
 			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context", e);
 		}
 	}
 
@@ -634,6 +655,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context", e);
 		}
 		lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
 		Assert.assertNull(lastAccess);
@@ -772,8 +794,8 @@ public class DashboardManagerTest
 				AssertJUnit.fail("Failed: unexpected dashboard returned: deleted");
 			}
 			if (dbd.getName().equals(dbd12.getName())) {
-				AssertJUnit.fail(
-						"Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
+				AssertJUnit
+						.fail("Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
 			}
 			if (dbd.getName().equals(dbd13.getName())) {
 				AssertJUnit.fail("Failed: unexpected dashboard returned: system dashboard from unsubscribed service");
@@ -889,7 +911,6 @@ public class DashboardManagerTest
 
 	private TileParam createParameterForTile(Tile tile) throws InterruptedException
 	{
-		Thread.sleep(2);
 		TileParam tp = new TileParam();
 		tp.setName("param " + System.currentTimeMillis());
 		tp.setStringValue("value for " + tp.getName());
@@ -900,7 +921,6 @@ public class DashboardManagerTest
 
 	private Tile createTileForDashboard(Dashboard dbd) throws InterruptedException
 	{
-		Thread.sleep(2);
 		Tile tile = new Tile();
 		tile.setTitle("tile " + System.currentTimeMillis());
 		tile.setType(Tile.TILE_TYPE_DEFAULT);

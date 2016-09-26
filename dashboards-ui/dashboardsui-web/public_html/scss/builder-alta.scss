@@ -307,7 +307,7 @@ body, html {
   content: url(../images/func_gear_16_ena.png);
 }
 
-.dbd-toolbar-icon-edit:before,.fa-pencil:before {
+.dbd-toolbar-icon-edit:before,.fa-pencil-df:before {
   content: "\f040";
 }
 .dbd-wrench:before{
@@ -1405,6 +1405,13 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
                 }  
             }
         }
+        .other-nav.creator-false{
+            margin-left:10px;
+            .oj-tabs-gen-a{
+                padding-left: 5px;
+                padding-right: 0;
+            }
+        }
         .other-nav:not(.oj-selected){
             .oj-tabs-close-icon{
                 display: none;
@@ -1531,6 +1538,18 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     background-color:black; 
     opacity: 0.4; 
 }
+
+.dbd-icon-disabled {
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+    filter: gray;
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+}
+
 .edit-setting-head{
     position:relative; 
     float:left; 

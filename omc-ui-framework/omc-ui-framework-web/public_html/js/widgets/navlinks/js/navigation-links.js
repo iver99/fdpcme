@@ -1,4 +1,4 @@
-define(['uifwk/@version@/js/widgets/navlinks/navigation-links-impl'],
-    function (navLinksViewModelImpl) {
-        return navLinksViewModelImpl;
+define(['uifwk/@version@/js/uifwk-impl-partition'],
+    function () {
+        return require('uifwk/@version@/js/widgets/navlinks/navigation-links-impl');
     });

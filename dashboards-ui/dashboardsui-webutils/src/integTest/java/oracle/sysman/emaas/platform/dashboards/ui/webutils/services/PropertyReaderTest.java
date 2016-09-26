@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.ui.webutils.services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -21,6 +23,8 @@ import org.testng.annotations.Test;
  */
 public class PropertyReaderTest
 {
+
+	private static final Logger LOGGER = LogManager.getLogger(PropertyReaderTest.class);
 	@Test(groups = { "s1" })
 	public void testGetInstallDir()
 	{
@@ -41,6 +45,7 @@ public class PropertyReaderTest
 			prop = PropertyReader.loadProperty("");
 		}
 		catch (IOException e) {
+			LOGGER.info("context",e);
 			e.printStackTrace();
 		}
 		Assert.assertNotNull(prop);

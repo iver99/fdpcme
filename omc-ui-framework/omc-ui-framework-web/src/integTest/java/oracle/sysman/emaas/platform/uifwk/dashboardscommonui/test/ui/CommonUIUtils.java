@@ -10,6 +10,9 @@
 
 package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,6 +36,7 @@ import com.jayway.restassured.response.Response;
  */
 public class CommonUIUtils
 {
+	private static final Logger LOGGER = LogManager.getLogger(CommonUIUtils.class);
 	static String sTenantId = CommonUIUtils.getEmaasPropertyValue("TENANT_ID");
 	static String sOhsUrl = CommonUIUtils.getEmaasPropertyValue("OHS_URL");
 	static String sRegistryUrl = CommonUIUtils.getEmaasPropertyValue("OHS_REGISTRY_URL");
@@ -52,7 +56,7 @@ public class CommonUIUtils
 	static Boolean isLAAdmin = false;
 	static Boolean isDSAdmin = false;
 
-	public static void addWidget(WebDriver driver) throws Exception
+	public static void addWidget(WebDriver driver) 
 	{
 		//click Add Widget icon
 		driver.getLogger().info("Verify if Add Widgets icon displayed");
@@ -99,62 +103,12 @@ public class CommonUIUtils
 
 	public static void commonUITestLog(String sDesc)
 	{
-		String sStr = "*** Dashboards Common UI TestLog ***:  " + sDesc;
-		//System.out.println(sStr);
+		//String sStr = "*** Dashboards Common UI TestLog ***:  " + sDesc;
 	}
 
 	public static String getAppName(String sTenant, String sUser)
 	{
-		//		//String sAppName = "";
-		//
-		//		RestAssured.useRelaxedHTTPSValidation();
-		//		RestAssured.baseURI = sAPIUrl;
-		//
-		//		Response res1 = RestAssured
-		//				.given()
-		//				.contentType(ContentType.JSON)
-		//				.log()
-		//				.everything()
-		//				.headers("X-USER-IDENTITY-DOMAIN-NAME", sTenant, "X-REMOTE-USER", sTenant + "." + sUser, "Authorization",
-		//						sAuthToken).when().get("/subscribedapps");
-		//		CommonUIUtils.commonUITestLog("The statu code is:" + res1.getStatusCode() + res1.jsonPath().get("applications"));
-		//		String s_appname = res1.jsonPath().getString("applications");
-		//		//The response content contains "[" and "]", need to remove them before storing into array
-		//		CommonUIUtils.commonUITestLog("The response content is:" + s_appname);
-		//		s_appname = s_appname.replaceAll("\\[", "").replaceAll("\\]", "");
-		//		String[] ls_appname = s_appname.split(",");
-		//		for (int i = 0; i < ls_appname.length; i++) {
-		//			//Trim the whitespace
-		//			ls_appname[i] = ls_appname[i].trim();
-		//		}
-		//		Arrays.sort(ls_appname);
-		//		for (int i = 0; i < ls_appname.length; i++) {
-		//			CommonUIUtils.commonUITestLog(i + " : " + ls_appname[i]);
-		//			if (ls_appname[i].contains("APM")) {
-		//				if (sAppName.equals("")) {
-		//					sAppName = "Application Performance Monitoring";
-		//				}
-		//				else {
-		//					sAppName = sAppName + " | Application Performance Monitoring";
-		//				}
-		//			}
-		//			else if (ls_appname[i].contains("ITAnalytics")) {
-		//				if (sAppName.equals("")) {
-		//					sAppName = "IT Analytics";
-		//				}
-		//				else {
-		//					sAppName = sAppName + " | IT Analytics";
-		//				}
-		//			}
-		//			else if (ls_appname[i].contains("LogAnalytics")) {
-		//				if (sAppName.equals("")) {
-		//					sAppName = "Log Analytics";
-		//				}
-		//				else {
-		//					sAppName = sAppName + " | Log Analytics";
-		//				}
-		//			}
-		//		}
+		
 		sAppName = ""; //With fix to EMCPDF-1220, the application name in Dashboard pages will be blank
 		CommonUIUtils.commonUITestLog("The App Name is:" + sAppName);
 		return sAppName;
@@ -168,8 +122,6 @@ public class CommonUIUtils
 
 		Properties emaasProp = new Properties();
 
-		String sUrl = "";
-
 		String sPropertyValue = "";
 
 		InputStream input = null;
@@ -181,7 +133,7 @@ public class CommonUIUtils
 
 			CommonUIUtils.commonUITestLog("Get the " + sProperty + " property value.");
 
-			if (sProperty.equals("TENANT_ID")) {
+			if (("TENANT_ID").equals(sProperty)) {
 				CommonUIUtils.commonUITestLog("Get the TENANT_ID property value.");
 				sPropertyValue = emaasProp.getProperty("TENANT_ID");
 				if (sPropertyValue == null) {
@@ -189,7 +141,7 @@ public class CommonUIUtils
 					sPropertyValue = "emaastesttenant1";
 				}
 			}
-			else if (sProperty.equals("OHS_REGISTRY_URL")) {
+			else if (("OHS_REGISTRY_URL").equals(sProperty)) {
 				sPropertyValue = emaasProp.getProperty("OHS_REGISTRY_URL");
 				if (sPropertyValue == null) {
 					CommonUIUtils.commonUITestLog("The OHS_REGISTRY_URL property value is null ... set it to a different value.");
@@ -203,7 +155,7 @@ public class CommonUIUtils
 					}
 				}
 			}
-			else if (sProperty.equals("SSO_USERNAME")) {
+			else if (("SSO_USERNAME").equals(sProperty)) {
 				sPropertyValue = emaasProp.getProperty("SSO_USERNAME");
 				if (sPropertyValue == null) {
 					CommonUIUtils
@@ -211,7 +163,7 @@ public class CommonUIUtils
 					sPropertyValue = "emcsadmin";
 				}
 			}
-			else if (sProperty.equals("SSO_PASSWORD")) {
+			else if (("SSO_PASSWORD").equals(sProperty)) {
 				//	below password is being using in tests/dev mode only
 				sPropertyValue = emaasProp.getProperty("SSO_PASSWORD");
 				if (sPropertyValue == null) {
@@ -221,7 +173,7 @@ public class CommonUIUtils
 					sPropertyValue = "Welcome1!";
 				}
 			}
-			else if (sProperty.equals("COMMON_UI_URL_SUFFIX")) {
+			else if (("COMMON_UI_URL_SUFFIX").equals(sProperty)) {
 				sPropertyValue = emaasProp.getProperty("COMMON_UI_URL_SUFFIX");
 				if (sPropertyValue == null) {
 					CommonUIUtils
@@ -229,7 +181,7 @@ public class CommonUIUtils
 					sPropertyValue = "/emsaasui/uifwk/test.html";
 				}
 			}
-			else if (sProperty.equals("SAAS_AUTH_TOKEN")) {
+			else if (("SAAS_AUTH_TOKEN").equals(sProperty)) {
 				sPropertyValue = emaasProp.getProperty("SAAS_AUTH_TOKEN");
 				if (sPropertyValue == null) {
 					CommonUIUtils
@@ -237,7 +189,7 @@ public class CommonUIUtils
 					sPropertyValue = "Basic d2VibG9naWM6d2VsY29tZTE=";
 
 				}
-				else if (sProperty.equals("DASHBOARD_API_ENDPOINT")) {
+				else if (("DASHBOARD_API_ENDPOINT").equals(sProperty)) {
 					sPropertyValue = emaasProp.getProperty("DASHBOARD_API_ENDPOINT");
 					if (sPropertyValue == null) {
 						CommonUIUtils
@@ -246,7 +198,7 @@ public class CommonUIUtils
 					}
 				}
 			}
-			else if (sProperty.equals("TARGETMODEL_SERVICE_SHARD_ENDPOINT")) {
+			else if (("TARGETMODEL_SERVICE_SHARD_ENDPOINT").equals(sProperty)) {
 				sPropertyValue = emaasProp.getProperty("TARGETMODEL_SERVICE_SHARD_ENDPOINT");
 				if (sPropertyValue == null) {
 					CommonUIUtils
@@ -268,6 +220,7 @@ public class CommonUIUtils
 
 		}
 		catch (IOException ex) {
+			LOGGER.info("context",ex);
 			ex.printStackTrace();
 		}
 		finally {
@@ -276,6 +229,7 @@ public class CommonUIUtils
 					input.close();
 				}
 				catch (IOException e) {
+					LOGGER.info("context",e);
 					e.printStackTrace();
 				}
 			}
@@ -379,7 +333,7 @@ public class CommonUIUtils
 		}
 	}
 
-	public static void openWidget(WebDriver driver, boolean isEnabled) throws Exception
+	public static void openWidget(WebDriver driver, boolean isEnabled) 
 	{
 		if (isEnabled) {
 			//click Open Widget icon
@@ -407,12 +361,13 @@ public class CommonUIUtils
 				driver.getLogger().info("the category display is: " + driver.isDisplayed(UIControls.SCATEGORYSELECT));
 			}
 			catch (RuntimeException re) {
+				LOGGER.info("context",re);
 				Assert.fail(re.getLocalizedMessage());
 			}
 			//Assert.assertFalse(driver.isElementPresent(UIControls.sCategorySelect));
 
 			//Open a widget
-			if (!driver.getAttribute(UIControls.SWIDGETDISPLAY + "@childElementCount").equals("0")) {
+			if (!("0").equals(driver.getAttribute(UIControls.SWIDGETDISPLAY + "@childElementCount"))) {
 				driver.getLogger().info("Select a widget and open it in the main page");
 				driver.getLogger().info("Select a widget");
 				driver.waitForElementPresent(UIControls.SWIDGETSELECT);
@@ -440,7 +395,7 @@ public class CommonUIUtils
 		}
 	}
 
-	public static void verifyMenu(WebDriver driver, boolean isAdmin) throws Exception
+	public static void verifyMenu(WebDriver driver, boolean isAdmin) 
 	{
 		//verify the menus
 		driver.getLogger().info("Verify the Links menu displayed");
@@ -492,7 +447,7 @@ public class CommonUIUtils
 		}
 	}
 
-	public static void verifyNoLinksMenu(WebDriver driver) throws Exception
+	public static void verifyNoLinksMenu(WebDriver driver) 
 	{
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), 900L);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(UIControls.SLINKSMENU)));
@@ -500,7 +455,7 @@ public class CommonUIUtils
 
 	}
 
-	public static void verifyPageContent(WebDriver driver, String sAppName) throws Exception
+	public static void verifyPageContent(WebDriver driver, String sAppName) 
 	{
 		//verify the product name,app name,content of page
 		driver.getLogger().info("Verify the page content");

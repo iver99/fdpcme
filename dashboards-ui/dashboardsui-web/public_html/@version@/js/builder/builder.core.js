@@ -42,7 +42,6 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
     // dashboard type to keep the same with return data from REST API
     Builder.SINGLEPAGE_TYPE = "SINGLEPAGE";
     Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK = 0;
-    //Builder.TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
     Builder.LINK_NAME_MAX_LENGTH = 4000;
     Builder.LINK_URL_MAX_LENGTH = 4000;
     Builder.BUILDER_DEFAULT_TILE_WIDTH = 6;
@@ -89,13 +88,6 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
 
         self.EVENT_DSB_ENABLE_TIMERANGE_CHANGED = "EVENT_DSB_ENABLE_TIMERANGE_CHANGED";
 
-        /*self.EVENT_NEW_TEXT_START_DRAGGING = "EVENT_NEW_TEXT_START_DRAGGING";
-        self.EVENT_NEW_TEXT_DRAGGING = "EVENT_NEW_TEXT_DRAGGING";
-        self.EVENT_NEW_TEXT_STOP_DRAGGING = "EVENT_NEW_TEXT_STOP_DRAGGING";
-
-        self.EVENT_NEW_LINK_START_DRAGGING = "EVENT_NEW_LINK_START_DRAGGING";
-        self.EVENT_NEW_LINK_DRAGGING = "EVENT_NEW_LINK_DRAGGING";
-        self.EVENT_NEW_LINK_STOP_DRAGGING = "EVENT_NEW_LINK_STOP_DRAGGING";*/
 
         self.EVENT_NEW_WIDGET_START_DRAGGING = "EVENT_NEW_WIDGET_START_DRAGGING";
         self.EVENT_NEW_WIDGET_DRAGGING = "EVENT_NEW_WIDGET_DRAGGING";
@@ -120,7 +112,11 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         self.EVENT_TILE_RESIZED = "EVENT_TILE_RESIZED";
 
         self.EVENT_AUTO_REFRESH_CHANGED = "EVENT_AUTO_REFRESH_CHANGED";
-
+        
+        self.EVENT_AUTO_REFRESHING_PAGE = "EVENT_AUTO_REFRESHING_PAGE";
+        
+        self.EVENT_DASHBOARD_SHARE_CHANGED = "EVENT_DASHBOARD_SHARE_CHANGED";
+        
         self.dispatcher = new dsp.Dispatcher();
         self.addEventListener = function(event, listener) {
             self.dispatcher.registerEventHandler(event, listener);
@@ -130,30 +126,6 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
             window.DEV_MODE && console.debug('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')+(p4?'(p4:'+p4+')':'')):""));
             self.dispatcher.triggerEvent(event, p1, p2, p3, p4);
         };
-
-        /*self.addNewTextStartDraggingListener = function(listener) {
-            self.addEventListener(self.EVENT_NEW_TEXT_START_DRAGGING, listener);
-        };
-
-        self.addNewTextDraggingListener = function(listener) {
-            self.addEventListener(self.EVENT_NEW_TEXT_DRAGGING, listener);
-        };
-
-        self.addNewTextStopDraggingListener = function(listener) {
-            self.addEventListener(self.EVENT_NEW_TEXT_STOP_DRAGGING, listener);
-        };
-
-        self.addNewLinkStartDraggingListener = function(listener) {
-            self.addEventListener(self.EVENT_NEW_LINK_START_DRAGGING, listener);
-        };
-
-        self.addNewLinkDraggingListener = function(listener) {
-            self.addEventListener(self.EVENT_NEW_LINK_DRAGGING, listener);
-        };
-
-        self.addNewLinkStopDraggingListener = function(listener) {
-            self.addEventListener(self.EVENT_NEW_LINK_STOP_DRAGGING, listener);
-        };*/
 
         self.addNewWidgetStartDraggingListener = function(listener) {
             self.addEventListener(self.EVENT_NEW_WIDGET_START_DRAGGING, listener);
@@ -184,10 +156,12 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
                     tabSetHeight +
                     $visibleDashboard.find('.head-bar-container:visible').outerHeight();
             self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth, topHeight);
-            if (previousWidth && width >= NORMAL_MIN_WIDTH && previousWidth < NORMAL_MIN_WIDTH)
+            if (previousWidth && width >= NORMAL_MIN_WIDTH && previousWidth < NORMAL_MIN_WIDTH){
                 self.triggerEvent(self.EVENT_ENTER_NORMAL_MODE, null, width, height, leftWidth, topHeight);
-            else if (previousWidth && width < NORMAL_MIN_WIDTH && previousWidth >= NORMAL_MIN_WIDTH)
+            }
+            else if (previousWidth && width < NORMAL_MIN_WIDTH && previousWidth >= NORMAL_MIN_WIDTH){
                 self.triggerEvent(self.EVENT_ENTER_TABLET_MODE, null, width, height, leftWidth, topHeight);
+            }
             previousWidth = width;
         };
 
@@ -196,13 +170,11 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         };
 
         function dashboardUpdatedListener(event) {
-            //console.log("Dahsbaord updated. Data: " + JSON.stringify(event));
             self.isDashboardUpdated(true);
         };
         self.addEventListener(self.EVENT_TILE_ADDED, dashboardUpdatedListener);
         self.addEventListener(self.EVENT_TILE_DELETED, dashboardUpdatedListener);
         self.addEventListener(self.EVENT_DSB_ENABLE_TIMERANGE_CHANGED, dashboardUpdatedListener);
-        //self.addEventListener(self.EVENT_BUILDER_RESIZE, dashboardUpdatedListener);
         self.addEventListener(self.EVENT_TILE_MOVE_STOPED, dashboardUpdatedListener);
         self.addEventListener(self.EVENT_TILE_RESIZED, dashboardUpdatedListener);
     }

@@ -10,6 +10,9 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil;
@@ -27,12 +30,14 @@ import org.testng.Assert;
 
 public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBrandingBarUtil
 {
+	
 
+private static final Logger LOGGER = LogManager.getLogger(BrandingBarUtil_171.class);
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isAdmin(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public boolean isAdmin(WebDriver driver) throws Exception
+	public boolean isAdmin(WebDriver driver)
 	{
 		driver.getLogger().info("start validating admin tab");
 		//Open the navigation bar if it's not displayed
@@ -174,7 +179,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#userMenuOptions(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void userMenuOptions(WebDriver driver, String option) throws Exception
+	public void userMenuOptions(WebDriver driver, String option)
 	{
 		Validator.fromValidValues("option", option, USERMENU_OPTION_HELP, USERMENU_OPTION_ABOUT, USERMENU_OPTION_SIGNOUT);
 
@@ -208,6 +213,8 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 				driver.getLogger().info("Click Sign Out menu.");
 				driver.click(DashBoardPageId.OPTION_LOGOUT);
 				break;
+			default:
+				break;
 		}
 		driver.takeScreenShot();
 	}
@@ -216,7 +223,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#visitApplicationAdministration(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void visitApplicationAdministration(WebDriver driver, String adminLinkName) throws Exception
+	public void visitApplicationAdministration(WebDriver driver, String adminLinkName)
 	{
 		Validator.notEmptyString("adminLinkName in [visitApplicationAdministration]", adminLinkName);
 		driver.getLogger().info("Start to visit admin link from branding bar. Link name: " + adminLinkName);
@@ -227,7 +234,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#visitApplicationCloudService(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void visitApplicationCloudService(WebDriver driver, String cloudServiceLinkName) throws Exception
+	public void visitApplicationCloudService(WebDriver driver, String cloudServiceLinkName)
 	{
 		Validator.notEmptyString("cloudServiceLinkName in [visitApplicationCloudService]", cloudServiceLinkName);
 		driver.getLogger().info("Start to visit cloud service link from branding bar. Link name: " + cloudServiceLinkName);
@@ -238,7 +245,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#visitApplicationHome(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void visitApplicationHome(WebDriver driver, String homeLinkName) throws Exception
+	public void visitApplicationHome(WebDriver driver, String homeLinkName)
 	{
 		Validator.notEmptyString("homeLinkName in [visitApplicationHome]", homeLinkName);
 		driver.getLogger().info("Start to visit home link from branding bar. Link name: " + homeLinkName);
@@ -249,7 +256,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#visitApplicationVisualAnalyzer(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void visitApplicationVisualAnalyzer(WebDriver driver, String visualAnalyzerLinkName) throws Exception
+	public void visitApplicationVisualAnalyzer(WebDriver driver, String visualAnalyzerLinkName)
 	{
 		Validator.notEmptyString("visualAnalyzerLinkName in [visitApplicationVisualAnalyzer]", visualAnalyzerLinkName);
 		driver.getLogger().info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
@@ -257,7 +264,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	}
 
 	@Override
-	public void visitDashboardHome(WebDriver driver) throws Exception
+	public void visitDashboardHome(WebDriver driver)
 	{
 		driver.getLogger().info("Start to visit 'Dashboards' link from branding bar.");
 		visitApplicationLink(driver, DashBoardPageId.BRANDINGBARDASHBOARDLINKLOCATOR);
@@ -267,7 +274,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#visitMyFavorites(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void visitMyFavorites(WebDriver driver) throws Exception
+	public void visitMyFavorites(WebDriver driver)
 	{
 		driver.getLogger().info("[visitMyFavorites] start to visit 'My Favorites' link from branding bar.");
 		visitApplicationLink(driver, DashBoardPageId.BRANDINGBARMYFAVORITESLINKID);
@@ -277,7 +284,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#visitMyHome(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void visitMyHome(WebDriver driver) throws Exception
+	public void visitMyHome(WebDriver driver)
 	{
 		driver.getLogger().info("[visitMyHome] start to visit 'Home' link from branding bar.");
 		visitApplicationLink(driver, DashBoardPageId.BRANDINGBARMYHOMELINKID);
@@ -287,7 +294,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#visitWelcome(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void visitWelcome(WebDriver driver) throws Exception
+	public void visitWelcome(WebDriver driver)
 	{
 		driver.getLogger().info("[visitWelcome] start to visit 'Welcome' link from branding bar.");
 		visitApplicationLink(driver, DashBoardPageId.BRANDINGBARWELCOMELINKID);
@@ -345,6 +352,8 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 				//Administration links
 			case "admin":
 				parentId = DashBoardPageId.BRANDINGBARADMINLINKSID;
+				break;
+			default:
 				break;
 		}
 		return parentId;
@@ -411,6 +420,8 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 			return false;
 		}
 		catch (StaleElementReferenceException e) {
+
+			LOGGER.info("context",e);
 			return true;
 		}
 	}
@@ -470,6 +481,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 			driver.click(locator);
 		}
 		catch (StaleElementReferenceException e) {
+			LOGGER.info("context",e);
 			driver.getLogger().info("StaleElementReferenceException thrown, wait for element becoming not stale");
 			// wait until element is not stale
 			new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT).until(new ExpectedCondition<Boolean>() {

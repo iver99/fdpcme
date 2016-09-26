@@ -52,17 +52,14 @@ DashboardsFilter.prototype.initFilterListeners = function()
 {
     var self = this;
     self.serviceFilter.subscribe(function(newValue) {
-        //console.log("Service Filter:  " + newValue);
         self.saveFilter();
         self.handleFilterChange({filterType: 'serviceFilter', newValue: newValue});
     });
     self.creatorFilter.subscribe(function(newValue) {
-        //console.log("creatorFilter Filter:  " + newValue);
         self.saveFilter();
         self.handleFilterChange({filterType: 'serviceFilter', newValue: newValue});
     });
     self.favoritesFilter.subscribe(function(newValue) {
-        //console.log("favoritesFilter Filter:  " + newValue);
         self.saveFilter();
         self.handleFilterChange({filterType: 'serviceFilter', newValue: newValue});
     });
@@ -71,9 +68,6 @@ DashboardsFilter.prototype.initFilterListeners = function()
 DashboardsFilter.prototype.initServiceFilter = function()
 {
     var self = this, _showServiceFilter = false;
-    //if (self.sApplications !== undefined && $.inArray("LogAnalytics", self.sApplications['applications']) >= 0)
-    //if (self.sApplications !== undefined && $.inArray("APM", self.sApplications['applications']) >= 0)
-    //if (self.sApplications !== undefined && $.inArray("ITAnalytics", self.sApplications['applications']) >= 0)
     if (self.sApplications && self.sApplications !== null)
     {
         $.each(self.sApplications, function(i, _item) {
@@ -193,16 +187,6 @@ DashboardsFilter.prototype.handleFilterChange = function(event)
 {
     this.handleEvent(DASHBOARDS_FILTER_CHANGE_EVENT, event);
 };
-
-//DashboardsFilter.prototype.handleEvent = function(eventType, event)
-//{
-//    DashboardsFilter.superclass.handleEvent.call(this, eventType, event);
-//};
-//
-//DashboardsFilter.prototype.on = function(eventType, eventHandler)
-//{
-//    DashboardsFilter.superclass.on.call(this, eventType, eventHandler);
-//};
 
 return {'DashboardsFilter': DashboardsFilter};
 });

@@ -29,7 +29,7 @@ import com.sun.jersey.core.util.Base64;
  */
 public class ScreenshotCacheManager
 {
-	private static final Logger logger = LogManager.getLogger(ScreenshotCacheManager.class);
+	private static final Logger LOGGER = LogManager.getLogger(ScreenshotCacheManager.class);
 
 	private static ScreenshotCacheManager instance = new ScreenshotCacheManager();
 
@@ -48,18 +48,18 @@ public class ScreenshotCacheManager
 	public ScreenshotElement getScreenshotFromCache(Tenant tenant, Long dashboardId, String fileName) throws Exception
 	{
 		if (dashboardId == null || dashboardId <= 0) {
-			logger.info("Unexpected dashboard id to get screenshot from cache for tenant={}, dashboard id={}, fileName={}",
+			LOGGER.info("Unexpected dashboard id to get screenshot from cache for tenant={}, dashboard id={}, fileName={}",
 					tenant, dashboardId, fileName);
 			return null;
 		}
 		if (StringUtil.isEmpty(fileName)) {
-			logger.info("Unexpected empty screenshot file name for tenant={}, dashboard id={}", tenant, dashboardId);
+			LOGGER.info("Unexpected empty screenshot file name for tenant={}, dashboard id={}", tenant, dashboardId);
 			return null;
 		}
 		ScreenshotElement se = (ScreenshotElement) cm.getCacheable(tenant, CacheManager.CACHES_SCREENSHOT_CACHE, new Keys(
 				dashboardId));
 		if (se == null) {
-			logger.info("Retrieved null screenshot element from cache for tenant={}, dashboard id={}, fileName={}", tenant,
+			LOGGER.info("Retrieved null screenshot element from cache for tenant={}, dashboard id={}, fileName={}", tenant,
 					dashboardId, fileName);
 			return null;
 		}
@@ -81,7 +81,7 @@ public class ScreenshotCacheManager
 			decoded = Base64.decode(screenshot.substring(DashboardManager.SCREENSHOT_BASE64_JPG_PREFIX.length()));
 		}
 		else {
-			logger.debug("Failed to retrieve screenshot decoded bytes as the previs isn't supported");
+			LOGGER.debug("Failed to retrieve screenshot decoded bytes as the previs isn't supported");
 			return null;
 		}
 		Binary bin = new Binary(decoded);

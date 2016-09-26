@@ -18,7 +18,7 @@ define(['knockout', 'jquery'],
                     return result;
                 }
                 function S4() {
-                   return (((1+securedRandom())*0x10000)|0).toString(16).substring(1);
+                   return parseInt(((1+securedRandom())*0x10000)).toString(16).substring(1);
                 }
                 return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
             };
@@ -75,7 +75,9 @@ define(['knockout', 'jquery'],
              */
             self.formatMessage = function(message) {
                 var i=1;
-                while(i<arguments.length) message=message.replace("{"+(i-1)+"}",arguments[i++]);
+                while(i<arguments.length) {
+                    message=message.replace("{"+(i-1)+"}",arguments[i++]);
+                }
                 return message;
             };
         }

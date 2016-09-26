@@ -15,6 +15,9 @@ package oracle.sysman.emaas.platform.uifwk.timepicker.test.ui;
  */
 public class UIControls
 {
+	private UIControls() {
+	  }
+
 	//Begin: Text
 	public static final String SSTARTTEXT = "//*[@id='start']";
 	public static final String SENDTEXT = "//*[@id='end']";
