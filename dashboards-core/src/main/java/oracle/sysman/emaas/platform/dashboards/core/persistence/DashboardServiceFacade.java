@@ -1,17 +1,22 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
-import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
-import oracle.sysman.emaas.platform.dashboards.entity.*;
-
-import org.apache.commons.lang3.StringEscapeUtils;
+import java.util.Collections;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
-import java.util.Collections;
-import java.util.List;
+import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsPreferencePK;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptionsPK;
+
+import org.apache.commons.lang3.StringEscapeUtils;
 
 public class DashboardServiceFacade
 {
@@ -144,7 +149,7 @@ public class DashboardServiceFacade
 		return query.getResultList();
 	}
 	
-	public List<EmsDashboard> getEmsDashboardByIds(List<Long> dashboardIds)
+	public List<EmsDashboard> getEmsDashboardByIds(List<Long> dashboardIds, Long tenantId)
 	{
 		if (dashboardIds != null && !dashboardIds.isEmpty()) {
 			StringBuilder parameters = new StringBuilder();
@@ -155,9 +160,10 @@ public class DashboardServiceFacade
 				}
 				parameters.append(id);
 			}
-			String sql = "select * from ems_dashboard p where p.dashboard_id in("
+			String sql = "select * from ems_dashboard p where p.tenant_id=? and p.dashboard_id in("
 					+ parameters.toString() + ")";
 			Query query = em.createNativeQuery(sql, EmsDashboard.class);
+			query.setParameter("1", tenantId);
 			@SuppressWarnings("unchecked")
 			List<EmsDashboard> subDashboards = query.getResultList();
 			return subDashboards;
