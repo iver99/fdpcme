@@ -137,33 +137,23 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
             };
             
             self.ADMIN_ROLE_NAME_APM = "APM Administrator";
+            self.USER_ROLE_NAME_APM = "APM User";
             self.ADMIN_ROLE_NAME_ITA = "IT Analytics Administrator";
+            self.USER_ROLE_NAME_ITA = "IT Analytics User";
             self.ADMIN_ROLE_NAME_LA = "Log Analytics Administrator";
+            self.USER_ROLE_NAME_LA = "Log Analytics User";
             self.ADMIN_ROLE_NAME_MONITORING = "Monitoring Service Administrator";
             self.ADMIN_ROLE_NAME_SECURITY = "Security Analytics Administrator";
             self.ADMIN_ROLE_NAME_COMPLIANCE = "Compliance Administrator";
             self.ADMIN_ROLE_NAME_ORCHESTRATION = "Orchestration Administrator";
             self.userHasRole = function(role){
-                switch(role){
-                    case self.ADMIN_ROLE_NAME_APM:
-                    case self.ADMIN_ROLE_NAME_ITA:
-                    case self.ADMIN_ROLE_NAME_LA:
-                    case self.ADMIN_ROLE_NAME_MONITORING:
-                    case self.ADMIN_ROLE_NAME_SECURITY:
-                    case self.ADMIN_ROLE_NAME_COMPLIANCE:
-                    case self.ADMIN_ROLE_NAME_ORCHESTRATION:
-                        self.getUserRoles(function(data){
-                            self.userRoles = data; 
-                        },false);
-                        if(self.userRoles.indexOf(role)<0){
-                            return false;
-                        }else{
-                            return true;
-                        }
-                    break;
-                    default:
-                        return false;
-                    break;
+                self.getUserRoles(function(data){
+                    self.userRoles = data; 
+                },false);
+                if(self.userRoles.indexOf(role)<0){
+                    return false;
+                }else{
+                    return true;
                 }
             };
         }
