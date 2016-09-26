@@ -643,7 +643,7 @@ public class VerifyOOB extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(dependsOnMethods = { "verifyPerfAnalyticsDatabaseWithFilter" })
 	public void verifyPerfAnalyticsDatabase()
 	{
 		//initTest
@@ -662,7 +662,7 @@ public class VerifyOOB extends LoginAndLogout
 		//TODO
 	}
 
-	@Test
+	@Test(dependsOnMethods = { "verifyPerformance" })
 	public void verifyPerfAnalyticsDatabaseWithFilter()
 	{
 		//initTest
