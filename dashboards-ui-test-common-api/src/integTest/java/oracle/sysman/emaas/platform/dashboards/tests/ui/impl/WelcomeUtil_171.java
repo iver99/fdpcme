@@ -12,14 +12,14 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
 import java.util.List;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 {
@@ -33,13 +33,17 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 
 	public final static String ITA_PERFORMANCE_ANALYTICS_DATABASE = "performanceAnalyticsDatabase";
 
-	public final static String ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE = "performanceAnalyticsMiddleware";
+	public final static String ITA_PERFORMANCE_ANALYTICS_APPLICATION_SERVER = "performanceAnalyticsApplicationServer";
 
 	public final static String ITA_RESOURCE_ANALYTICS_DATABASE = "resourceAnalyticsDatabase";
 
 	public final static String ITA_RESOURCE_ANALYTICS_MIDDLEWARE = "resourceAnalyticsMiddleware";
 
-	public final static String ITA_DATA_EXPLORER_ANALYZE = "dataExplorerAnalyze";
+	public final static String ITA_RESOURCE_ANALYTICS_HOST = "resourceAnalyticsHost";
+
+	public final static String ITA_APPLICATION_PERFORMANCE_ANALYTICS = "applicationPerformanceAnalytic";
+
+	public final static String ITA_AVAILABILITY_ANALYTICS = "availabilityAnalytics";
 
 	public final static String ITA_DATA_EXPLORER = "dataExplorer";
 
@@ -61,7 +65,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#dataExplorers(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void dataExplorers(WebDriver driver, String selection) 
+	public void dataExplorers(WebDriver driver, String selection)
 	{
 		String eleXpath = null;
 		driver.getLogger().info("Visiting Data Explorer-" + selection + " from Welcome Page...");
@@ -88,7 +92,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				break;
 			default:
 				break;
-				
+
 		}
 		driver.getWebDriver().findElement(By.xpath(eleXpath)).click();
 		driver.takeScreenShot();
@@ -122,7 +126,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#isServiceExistedInWelcome(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public boolean isServiceExistedInWelcome(WebDriver driver, String serviceName) 
+	public boolean isServiceExistedInWelcome(WebDriver driver, String serviceName)
 	{
 		driver.getLogger().info("Start to check if service: " + serviceName + " is existed in welcome page...");
 
@@ -131,7 +135,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 
 		boolean isExisted = false;
 		String serviceWrapperId = getServiceWrapperId(serviceName);
-		String xpath = "//*[@id='" + serviceWrapperId
+		String xpath = "//*[@id='"
+				+ serviceWrapperId
 				+ "']/div[@class='service-box-wrapper']/div[@class='landing-home-box-content']/div[@class='landing-home-box-content-head']";
 
 		String nameExpected = getExpectedText(serviceName);
@@ -141,8 +146,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		if (nameDisplayed.equals(nameExpected)) {
 			isExisted = true;
 		}
-		driver.getLogger()
-				.info("Check of service: " + serviceName + " existence in welcome page is finished! Result: " + isExisted);
+		driver.getLogger().info(
+				"Check of service: " + serviceName + " existence in welcome page is finished! Result: " + isExisted);
 		return isExisted;
 	}
 
@@ -150,7 +155,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#learnMoreHow(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void learnMoreHow(WebDriver driver) 
+	public void learnMoreHow(WebDriver driver)
 	{
 		driver.getLogger().info("Visiting 'Learn More-How to get started' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -163,7 +168,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#learnMoreServiceOffering(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void learnMoreServiceOffering(WebDriver driver) 
+	public void learnMoreServiceOffering(WebDriver driver)
 	{
 		driver.getLogger().info("Visiting 'Learn More-Service Offerings' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -176,7 +181,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#learnMoreVideo(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void learnMoreVideo(WebDriver driver) 
+	public void learnMoreVideo(WebDriver driver)
 	{
 		driver.getLogger().info("Visiting 'Learn More-Videos' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -189,7 +194,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitAPM(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void visitAPM(WebDriver driver) 
+	public void visitAPM(WebDriver driver)
 	{
 		driver.getLogger().info("Visit APM from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -203,7 +208,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitDashboards(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void visitDashboards(WebDriver driver) 
+	public void visitDashboards(WebDriver driver)
 	{
 		driver.getLogger().info("Visit Dashboards from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -217,13 +222,15 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitITA(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void visitITA(WebDriver driver, String selection) 
+	public void visitITA(WebDriver driver, String selection)
 	{
 		driver.getLogger().info("Visiting ITA-" + selection + " from Welcome Page...");
 
-		Validator.fromValidValues("ITASelection", selection, ITA_DEFAULT, ITA_PERFORMANCE_ANALYTICS_DATABASE,
-				ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE, ITA_RESOURCE_ANALYTICS_DATABASE, ITA_RESOURCE_ANALYTICS_MIDDLEWARE,
-				ITA_DATA_EXPLORER_ANALYZE, ITA_DATA_EXPLORER);
+		Validator
+				.fromValidValues("ITASelection", selection, ITA_DEFAULT, ITA_PERFORMANCE_ANALYTICS_DATABASE,
+						ITA_PERFORMANCE_ANALYTICS_APPLICATION_SERVER, ITA_RESOURCE_ANALYTICS_DATABASE,
+						ITA_RESOURCE_ANALYTICS_MIDDLEWARE, ITA_RESOURCE_ANALYTICS_HOST, ITA_APPLICATION_PERFORMANCE_ANALYTICS,
+						ITA_AVAILABILITY_ANALYTICS, ITA_DATA_EXPLORER);
 
 		WaitUtil.waitForPageFullyLoaded(driver);
 
@@ -242,7 +249,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
 							DashBoardPageId.WELCOME_ITA_PADATABASE);
 					break;
-				case ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE:
+				case ITA_PERFORMANCE_ANALYTICS_APPLICATION_SERVER:
 					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
 							DashBoardPageId.WELCOME_ITA_PAMIDDLEWARE);
 					break;
@@ -254,9 +261,15 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
 							DashBoardPageId.WELCOME_ITA_RAMIDDLEWARE);
 					break;
-				case ITA_DATA_EXPLORER_ANALYZE:
+				case ITA_RESOURCE_ANALYTICS_HOST:
+					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID, DashBoardPageId.WELCOME_ITA_RA_HOST);
+					break;
+				case ITA_APPLICATION_PERFORMANCE_ANALYTICS:
+					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID, DashBoardPageId.WELCOME_ITA_PANALYTIC);
+					break;
+				case ITA_AVAILABILITY_ANALYTICS:
 					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
-							DashBoardPageId.WELCOME_ITA_DEANALYZE);
+							DashBoardPageId.WELCOME_ITA_AVANALYTIC);
 					break;
 				case ITA_DATA_EXPLORER:
 					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID, DashBoardPageId.WELCOME_ITA_DE);
@@ -273,7 +286,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitLA(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void visitLA(WebDriver driver) 
+	public void visitLA(WebDriver driver)
 	{
 		driver.getLogger().info("Visiting LA from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -356,10 +369,9 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @param driver
 	 * @param selectId
 	 * @param optionId
-	 * @return
-	 * @
+	 * @return @
 	 */
-	private String getOptionXpath(WebDriver driver, String selectId, String optionId) 
+	private String getOptionXpath(WebDriver driver, String selectId, String optionId)
 	{
 		String optionXpath;
 		WebElement li = driver.getWebDriver().findElement(By.id(optionId));
