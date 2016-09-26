@@ -1221,7 +1221,7 @@ public class DashboardManager
 		}
 		EmsDashboard e = new EmsDashboard();
 		if (map.get("DASHBOARD_ID") != null) {
-			e.setDashboardId(BigInteger.valueOf(Long.valueOf(map.get("DASHBOARD_ID").toString())));
+			e.setDashboardId(new BigInteger(map.get("DASHBOARD_ID").toString()));
 		}
 		if (map.get("TYPE") != null) {
 			if (Dashboard.DASHBOARD_TYPE_SINGLEPAGE.equals(DataFormatUtils.dashboardTypeInteger2String(Integer.valueOf(map.get(
@@ -1243,7 +1243,7 @@ public class DashboardManager
 			e.setType(Integer.valueOf(map.get("TYPE").toString()));
 		}
 		if (map.get("DELETED") != null) {
-			e.setDeleted(BigInteger.valueOf(Long.valueOf(map.get("DELETED").toString())));
+			e.setDeleted(new BigInteger(map.get("DELETED").toString()));
 		}
 		if (map.get("DESCRIPTION") != null) {
 			e.setDescription(map.get("DESCRIPTION").toString());
