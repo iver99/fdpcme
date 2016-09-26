@@ -362,7 +362,7 @@
                                               <div class="dbd-btn-editor">                 
                                                   <button class="oj-button-half-chrome dbd-data-explore" tabindex="0"
                                                           data-bind="
-                                                             visible: $root.isMobileDevice !== 'true' && isItaAdmin,                                                        
+                                                             visible: $root.isMobileDevice !== 'true',                                                        
                                                              attr:{'id': 'editButton' + clientGuid,title: getNlsString('DBS_BUILDER_TILE_EDIT')},
                                                              click:$root.openInDataExplorer,
                                                              ojComponent: {
@@ -753,7 +753,7 @@
                             data-bind="attr:{id:'rightpanel-pencil_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},ojComponent: {
                                     component:'ojButton',
                                     display: 'icons',
-                                    icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-pencil'},
+                                    icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-pencil-df'},
                                     label: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_SETTINGS_TITLE')
                                 },
                                 visible:!rightPanelControl.dashboardEditDisabled() || isDashboardSet(),

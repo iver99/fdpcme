@@ -11,6 +11,25 @@ define(['jquery',
         'uifwk/libs/@version@/js/canvg/canvg'],
     function($)
     {
+        //SVG doesn't support innerHTML, outerHtml for IE 9-11
+        //fix to make this work (EMCLAS-11451)
+        function activeInnerHtml() {
+            Object.defineProperty(SVGElement.prototype, "outerHTML", {
+                get: function() {
+                    return new XMLSerializer().serializeToString(this);
+                }
+            });
+
+            Object.defineProperty(SVGElement.prototype, "innerHTML", {
+                get: function() {
+                    var s = this.outerHTML;
+                    var ropen = new RegExp("<" + this.nodeName + '\\b(?:(["\'])[^"]*?(\\1)|[^>])*>', "i");
+                    var rclose = new RegExp("<\/" + this.nodeName + ">$", "i");
+                    return  s.replace(ropen, "").replace(rclose, "");
+                }
+            });
+        }
+        
         function ScreenShotUtils() {
             this.getBase64ScreenShot = function(elem_id, target_width, target_height, quality, callback) {
                 // if elem_id is already a jquery object, just take it as $elemInst
@@ -42,6 +61,9 @@ define(['jquery',
                 });
                 $elemInst.find('svg').each(function(idx, node) {
                     var parentNode = node.parentNode, nodeWidth = $(node).width(), nodeHeight = $(node).height();
+                    if (node.innerHTML === undefined) {
+                        activeInnerHtml();
+                    }
                     var svg = '<svg width="' + nodeWidth + 'px" height="' + nodeHeight + 'px">' + node.innerHTML + '</svg>';
                     var canvas = document.createElement('canvas');
                     try {
@@ -137,6 +159,9 @@ define(['jquery',
                 });
                 $elemInst.find('svg').each(function(idx, node) {
                     var parentNode = node.parentNode, nodeWidth = $(node).width(), nodeHeight = $(node).height();
+                    if (node.innerHTML === undefined) {
+                        activeInnerHtml();
+                    }
                     var svg = '<svg width="' + nodeWidth + 'px" height="' + nodeHeight + 'px">' + node.innerHTML + '</svg>';
                     var canvas = document.createElement('canvas');
                     try {

@@ -738,6 +738,62 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJ
     
     doLast {
         delete 'public_html/@version@/css'
+	
+	//add setting to testMain.js
+	File testMainFile = new File(stagingDir+'/@version@/js/testMain.js')
+	File newFile1 = new File(stagingDir+'/@version@/js/testMain-output.js')
+	newFile1.withPrintWriter { out ->
+	    def linenumber = 1
+	    testMainFile.eachLine { line ->
+		if (linenumber == 1){		    
+		    out.println("\nwindow.gradleDevMode=true; \n")
+		    out.print(line)
+		} else {
+		    out.println(line)
+		}
+		linenumber += 1
+	    }
+	}
+	
+	//add setting to datetimePickerMain.js
+	File datetimePickerMainFile = new File(stagingDir+'/@version@/js/datetimePickerMain.js')
+	File newFile2 = new File(stagingDir+'/@version@/js/datetimePickerMain-output.js')
+	newFile2.withPrintWriter { out ->
+	    def linenumber = 1
+	    datetimePickerMainFile.eachLine { line ->
+		if (linenumber == 3){
+		    out.print(line)
+		    out.println("\nwindow.gradleDevMode=true; \n")
+		} else {
+		    out.println(line)
+		}
+		linenumber += 1
+	    }
+	}
+
+	testMainFile.renameTo(stagingDir+'/@version@/js/testMain_bak.js')
+	newFile1.renameTo(stagingDir+'/@version@/js/testMain.js')
+	
+	datetimePickerMainFile.renameTo(stagingDir+'/@version@/js/datetimePickerMain_bak.js')
+	newFile2.renameTo(stagingDir+'/@version@/js/datetimePickerMain.js')
+
+	String originalCode = "bundles: (window.DEV_MODE !==null && typeof window.DEV_MODE ===\"object\")"
+	String replacedCode = "bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ===\"object\") || (window.gradleDevMode !==null && typeof window.gradleDevMode===\"boolean\"))"
+
+ 	File mapFile = new File(stagingDir+'/@version@/js/testMain.js')
+        String contents = mapFile.getText('UTF-8')        
+        contents = contents.replaceAll(Pattern.quote(originalCode), replacedCode)
+        mapFile.write(contents, 'UTF-8')
+
+	mapFile = new File(stagingDir+'/@version@/js/datetimePickerMain.js')
+        contents = mapFile.getText('UTF-8')        
+        contents = contents.replaceAll(Pattern.quote(originalCode), replacedCode)
+        mapFile.write(contents, 'UTF-8')
+
+	delete stagingDir+'/@version@/js/testMain-output.js'
+	delete stagingDir+'/@version@/js/testMain_bak.js'
+	delete stagingDir+'/@version@/js/datetimePickerMain-output.js'
+	delete stagingDir+'/@version@/js/datetimePickerMain_bak.js'
     }  
 }
 
