@@ -46,8 +46,8 @@ requirejs.config({
         'idfbcutil':'internaldfcommon/js/util/internal-df-browser-close-util',
         'd3':'../../libs/@version@/js/d3/d3.min',
         'emsaasui':'/emsaasui',
-        'emcta':'/emsaasui/emcta/ta/js',
-//        'emcta': '/emsaasui/emcta/ta/@version@/js', //for DEV_MODE
+//        'emcta':'/emsaasui/emcta/ta/js',
+        'emcta': '/emsaasui/emcta/ta/@version@/js', //for DEV_MODE
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
         'uifwk': '/emsaasui/uifwk'
@@ -236,7 +236,10 @@ require(['knockout',
         
         window.onerror = function (msg, url, lineNo, columnNo, error)
         {
-            oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg, true); 
+            oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo, true);
+            if(error.stack) {
+                oj.Logger.error("Error: " + JSON.stringify(error.stack), true);
+            }
             return false; 
         }
 
