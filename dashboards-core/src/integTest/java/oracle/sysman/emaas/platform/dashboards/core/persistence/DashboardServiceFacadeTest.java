@@ -99,6 +99,8 @@ public class DashboardServiceFacadeTest
 			case 3:
 				Assert.assertNotNull(time);
 				break;
+			default:
+				break;
 		}
 	}
 
@@ -170,6 +172,8 @@ public class DashboardServiceFacadeTest
 			case 3:
 				p.setParamValueTimestamp(DateUtil.getCurrentUTCTime());
 				break;
+			default:
+				break;
 		}
 		return p;
 	}
@@ -180,13 +184,13 @@ public class DashboardServiceFacadeTest
 
 	private EmsDashboardTile t;
 
-	private EmsDashboardTileParams p;
+	private EmsDashboardTileParams emDashboardTileParam;
 
 	//	/**
 	//	 * @throws java.lang.Exception
 	//	 */
 	//	@BeforeClass
-	//	public static void setUpBeforeClass() throws Exception {
+	//	public static void setUpBeforeClass() {
 	//		PersistenceManager.setTestEnv(true);
 	//	}
 	//
@@ -194,7 +198,7 @@ public class DashboardServiceFacadeTest
 	//	 * @throws java.lang.Exception
 	//	 */
 	//	@AfterClass
-	//	public static void tearDownAfterClass() throws Exception {
+	//	public static void tearDownAfterClass() {
 	//	}
 
 	private static int testSeq = 1;
@@ -204,7 +208,7 @@ public class DashboardServiceFacadeTest
 	 * @throws java.lang.Exception
 	 */
 	@BeforeTest
-	public void setUp() throws Exception
+	public void setUp()
 	{
 		PersistenceManager.setTestEnv(true);
 		UserContext.setCurrentUser("SYSMAN");
@@ -215,8 +219,8 @@ public class DashboardServiceFacadeTest
 			em = dashboardServiceFacade.getEntityManager();
 			d = DashboardServiceFacadeTest.newDashboard();
 			t = DashboardServiceFacadeTest.newTile();
-			p = DashboardServiceFacadeTest.newTileParams(testSeq++ % 3 + 1);
-			t.addEmsDashboardTileParams(p);
+			emDashboardTileParam = DashboardServiceFacadeTest.newTileParams(testSeq++ % 3 + 1);
+			t.addEmsDashboardTileParams(emDashboardTileParam);
 			d.addEmsDashboardTile(t);
 			//			f = DashboardServiceFacadeTest.newFavorite(d);
 
@@ -240,7 +244,7 @@ public class DashboardServiceFacadeTest
 	 * @throws java.lang.Exception
 	 */
 	@AfterTest
-	public void tearDown() throws Exception
+	public void tearDown()
 	{
 		EntityManager em = null;
 		try {

@@ -19,30 +19,24 @@ set end = $argv[6] #20
 
 # 3n : "emcpdf_test_3n" "emcpdf_upgrade_test_3n"
 # non-3n : "emcpdf_l0_test" "emcpdf_l1_test"
-set lrgs=("emcpdf_l0_test" "emcpdf_l1_test")
+set lrgs=("emcpdf_test_3n" "emcpdf_upgrade_test_3n")
 set workPath = "temp"
 if (! -d $workPath) then
   mkdir $workPath
 endif
 
+setenv SKIP_OMCSETUP true
+echo "SKIP_OMCSETUP $SKIP_OMCSETUP"
+setenv SKIP_OMCTEARDOWN 1
+echo "SKIP_OMCSETUP $SKIP_OMCTEARDOWN"
+setenv T_WORK $PWD/oracle/work
+echo "T_WORK $T_WORK"
+
+echo "GRADLE_USER_HOME $GRADLE_USER_HOME"
+
 git pull
 gradle clean build artifactoryPublish -PFORCE_PUBLISH_SDK=1 -PBuildID=$buildID -PlrgMetadata=1 -x test --refresh-dependencies
 echo "[gradle clean build artifactoryPublish] success"
-
-setenv SKIP_OMCSETUP true
-echo "SKIP_OMCSETUP $SKIP_OMCSETUP" 
-setenv SKIP_OMCTEARDOWN 1
-echo "SKIP_OMCSETUP $SKIP_OMCTEARDOWN" 
-setenv FARMUSER_NAME emga
-echo "FARMUSER_NAME $FARMUSER_NAME"
-setenv FARMUSER_PWD beSmart11
-echo "FARMUSER_PWD $FARMUSER_PWD"
-setenv EMIN_RUN_AS_ROOT /usr/local/packages/aime/ias/run_as_root
-echo "EMIN_RUN_AS_ROOT $EMIN_RUN_AS_ROOT"
-setenv LRG_NAME emcpdf_upgrade_test_3n
-echo "LRG_NAME $LRG_NAME"
-setenv T_WORK $PWD/oracle/work
-echo "T_WORK $T_WORK"
 
 set j = $start
 while ( $j <= $end )

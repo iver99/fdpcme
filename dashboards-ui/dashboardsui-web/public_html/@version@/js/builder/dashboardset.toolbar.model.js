@@ -12,12 +12,11 @@ define(['knockout',
     'builder/tool-bar/edit.dialog',
     'builder/tool-bar/duplicate.dialog',
     'uifwk/js/util/preference-util',
-    'mobileutil',
+    'uifwk/js/util/mobile-util',
     'builder/builder.core'
 ],
     function (ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu,mbu) {
         // dashboard type to keep the same with return data from REST API
-        var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
 
         function DashboardsetToolBarModel(dashboardInst) {
@@ -48,6 +47,8 @@ define(['knockout',
                 if(self.dashboardExtendedOptions.autoRefresh) {
                     self.autoRefreshInterval(parseInt(self.dashboardExtendedOptions.autoRefresh.defaultValue));
                 }
+            }else {
+                self.dashboardExtendedOptions.autoRefresh = {};
             }
 
             self.dashboardsetName =ko.observable(ko.unwrap(dashboardInst.name()));
@@ -86,9 +87,9 @@ define(['knockout',
 
             self.dashboardsetConfig.addFavorite = ko.observable(true);
             if("SET" === dashboardInst.type()){
-                Builder.checkDashboardFavorites(ko.unwrap(dashboardInst.id), function (resp) {
+                new Builder.DashboardDataSource().checkDashboardFavorites(ko.unwrap(dashboardInst.id), function (resp) {
                     self.dashboardsetConfig.addFavorite(!(resp && resp.isFavorite));
-                });
+                });  
             }
             self.dashboardsetConfig.favoriteIcon = ko.pureComputed(function () {
                 return self.dashboardsetConfig.addFavorite() ? "fa-star" : "fa-star-o";
@@ -112,8 +113,7 @@ define(['knockout',
                 var configId = data.item.attr('id');
                 switch (configId) {
                     case 'dbs-edit':
-                        var rightPanelModel = ko.dataFor($('.df-right-panel')[0]);
-                        rightPanelModel && rightPanelModel.editRightpanelLinkage("dashboardset-edit");
+                        self.notifyRightPanelChange("dashboardset-edit");
                         break;
                     case 'refresh-off':
                         self.dbConfigMenuClick.refreshDbs(self,'off');
@@ -137,6 +137,10 @@ define(['knockout',
                         break;
                 }
             };
+            
+            self.notifyRightPanelChange = function (changeEvent) {
+                Builder.rightPanelChange(changeEvent);
+            };
 
             self.saveUserOptions = function(){
                  var options = {
@@ -144,17 +148,11 @@ define(['knockout',
                     extendedOptions: JSON.stringify(self.extendedOptions),
                     autoRefreshInterval: self.autoRefreshInterval()
                 };
-                if (self.hasUserOptionInDB) {
-                    Builder.updateDashboardOptions(options);
-                } else {
-                    Builder.saveDashboardOptions(options);
-                    self.hasUserOptionInDB = true;
-                }
+                new Builder.DashboardDataSource().saveDashboardUserOptions(options);                
             };
 
             self.saveDashboardSet = function (fieldsToUpdate, successCallback, failureCallback) {
-//                if(dashboardInst.systemDashboard()) {
-                if(dashboardInst.owner() === "Oracle") { ///do not update dashboard set if it is OOB dsb set
+                if(dashboardInst.owner() === "Oracle" || dashboardInst.owner() !== dfu.getUserName()) { ///do not update dashboard set if it is OOB dsb set or if the user is not owner
                     self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;
                     self.saveUserOptions();
                     console.log("This is an OOB dashboard set");
@@ -185,39 +183,29 @@ define(['knockout',
                         });
                     }
                 });
+                if(dashboardInst.extendedOptions) {
+                    newDashboardJs.extendedOptions = ko.unwrap(dashboardInst.extendedOptions);
+                }
                 $.extend(newDashboardJs, fieldsToUpdate);
-                Builder.updateDashboard(
-                        ko.unwrap(dashboardInst.id),
-                        JSON.stringify(newDashboardJs),
-                        successCallback,
-                        failureCallback
-                        );
-
+                new Builder.DashboardDataSource().updateDashboardData(ko.unwrap(dashboardInst.id),JSON.stringify(newDashboardJs),successCallback,failureCallback);
+               
                 // add delay for updating screenshots because
                 // a tab may take some time to render the tiles.
                 dfu.getAjaxUtil().actionAfterAjaxStop(function () {
                     var $tilesWrapper = $(".tiles-wrapper:visible");
-                    if($tilesWrapper && selectedDashboardInst().type==='new'){
+                    if ($tilesWrapper && selectedDashboardInst().type === 'new') {
                         newDashboardJs.screenShot = null;
-                            Builder.updateDashboard(
-                                    ko.unwrap(dashboardInst.id),
-                                    JSON.stringify(newDashboardJs));
                     }
                     else if ($tilesWrapper && selectedDashboardInst().tilesViewModel.tilesView.dashboard.tiles().length > 0) {
                         var $clone = Builder.createScreenshotElementClone($tilesWrapper);
                         ssu.getBase64ScreenShot($clone, 314, 165, 0.8, function (data) {
                             newDashboardJs.screenShot = data;
                             Builder.removeScreenshotElementClone($clone);
-                            Builder.updateDashboard(
-                                    ko.unwrap(dashboardInst.id),
-                                    JSON.stringify(newDashboardJs));
                         });
-                    }else{
+                    } else {
                         newDashboardJs.screenShot = null;
-                            Builder.updateDashboard(
-                                    ko.unwrap(dashboardInst.id),
-                                    JSON.stringify(newDashboardJs));
                     }
+                    new Builder.DashboardDataSource().updateDashboardData(ko.unwrap(dashboardInst.id), JSON.stringify(newDashboardJs));
                 }, 2000, 30000);
                 self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;
                 self.saveUserOptions();
@@ -242,8 +230,8 @@ define(['knockout',
              */
             self.pickDashboard = function(dashboardPickerId, dashboardNameId) {
                 var selectedDashboard = new dashboardItem(dashboardNameId);
-                var removeResult=findRemoveTab(self.dashboardsetItems,dashboardPickerId);
-                var reorderedResult=findRemoveTab(self.reorderedDbsSetItems(),dashboardPickerId);
+                var removeResult=findTargetInArr(self.dashboardsetItems,dashboardPickerId);
+                var reorderedResult=findTargetInArr(self.reorderedDbsSetItems(),dashboardPickerId);
 
                 if (removeResult.removeIndex > -1) {
                     removeTargetTab(removeResult.removeItem);
@@ -301,7 +289,7 @@ define(['knockout',
                     "label": getNlsString("COMMON_BTN_EDIT"),
                     "url": "#",
                     "id": "dbs-edit",
-                    "icon": "fa-pencil",
+                    "icon": "fa-pencil-df",
                     "title": "",
                     "disabled": "",
                     "endOfGroup": false,
@@ -402,16 +390,16 @@ define(['knockout',
                             self.extendedOptions ={};
                             if(typeof(resp.extendedOptions)!=="undefined"){
                                 self.extendedOptions = JSON.parse(resp.extendedOptions);
-                            };
-                            self.autoRefreshInterval(parseInt(resp.autoRefreshInterval));
-                            if( isNaN(self.autoRefreshInterval())){//
-                                if(self.dashboardExtendedOptions.autorefresh) {
-                                    self.autoRefreshInterval(parseInt(self.dashboardExtendedOptions.autorefresh.defaultValue));
+                                if(self.extendedOptions.autoRefresh && self.extendedOptions.autoRefresh.defaultValue) {
+                                    self.autoRefreshInterval(parseInt(self.extendedOptions.autoRefresh.defaultValue));
                                 }else {
-                                   self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
+                                    if(self.dashboardExtendedOptions.autoRefresh && self.dashboardExtendedOptions.autoRefresh.defaultValue) {
+                                        self.autoRefreshInterval(parseInt(self.dashboardExtendedOptions.autoRefresh.defaultValue));
+                                    }else {
+                                       self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
+                                    }
                                 }
-                            }
-                            self.hasUserOptionInDB = true;
+                            };
                         }
 
                         if(self.autoRefreshInterval() === DEFAULT_AUTO_REFRESH_INTERVAL){
@@ -431,15 +419,19 @@ define(['knockout',
                         var indexOfSelectedTabInUserOption = 0;
                         $.each(subDashboards, function (index, simpleDashboardInst) {
                             singleDashboardItem = new dashboardItem(simpleDashboardInst);
+                            var isOobSet=self.dashboardInst.owner()==="Oracle";
+                            var sharedVisibleCondition = self.dashboardsetConfig.isCreator() || (singleDashboardItem.raw !== null && singleDashboardItem.raw.sharePublic() === true) || singleDashboardItem === "new";
+                            if (sharedVisibleCondition || isOobSet) {
+                                self.dashboardsetItems.push(singleDashboardItem);
+                                self.reorderedDbsSetItems.push(singleDashboardItem);
+                                addNewTab(singleDashboardItem.name(), singleDashboardItem.dashboardId, -1, singleDashboardItem.type);
 
-                            self.dashboardsetItems.push(singleDashboardItem);
-                            self.reorderedDbsSetItems.push(singleDashboardItem);
-                            addNewTab(singleDashboardItem.name(), singleDashboardItem.dashboardId, -1,singleDashboardItem.type);
-
-                            if (self.extendedOptions && self.extendedOptions.selectedTab === singleDashboardItem.dashboardId) {
-                                indexOfSelectedTabInUserOption = index;
+                                if (self.extendedOptions && self.extendedOptions.selectedTab === singleDashboardItem.dashboardId) {
+                                    var findResult = findTargetInArr(self.dashboardsetItems, self.extendedOptions.selectedTab);
+                                    indexOfSelectedTabInUserOption = findResult.removeIndex;
+                                }
                             }
-                            if(self.dashboardsetItems.length===1 && singleDashboardItem.type==='new'){
+                            if (self.dashboardsetItems.length === 1 && singleDashboardItem.type === 'new') {
                                 self.noDashboardHome(false);
                             }
                         });
@@ -450,12 +442,7 @@ define(['knockout',
                         $("#dbd-tabs-container").ojTabs("refresh");
                         $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
                     }
-
-                    Builder.fetchDashboardOptions(
-                            self.dashboardsetId,
-                            resolveLoadOptions.bind(this, "success"),
-                            resolveLoadOptions.bind(this, "error"));
-
+                    new Builder.DashboardDataSource().loadDashboardUserOptionsData(self.dashboardsetId,resolveLoadOptions.bind(this, "success"),resolveLoadOptions.bind(this, "error"));
                 } else {
                     singleDashboardItem = new dashboardItem(dashboardInst);
                     self.dashboardsetItems.push(singleDashboardItem);
@@ -490,9 +477,9 @@ define(['knockout',
                 function addNewTab(tabName, dashboardId, insertIndex, type) {
                     var tabContent;
                     if (type === "new") {
-                        tabContent = $("<li class='other-nav' id='dashboardTab-" + dashboardId + "' data-tabs-name='Dashboard'><span class='tabs-name'>" + tabName + "</span></li>");
+                        tabContent = $("<li class='other-nav creator-"+self.dashboardsetConfig.isCreator()+"' id='dashboardTab-" + dashboardId + "' data-tabs-name='Dashboard'><span class='tabs-name'>" + tabName + "</span></li>");
                     } else {
-                        tabContent = $("<li class='other-nav' id='dashboardTab-" + dashboardId + "' data-tabs-name='" + tabName + "'data-dashboard-name-in-set='" + tabName + "'><span class='tabs-name'>" + tabName + "</span></li>");
+                        tabContent = $("<li class='other-nav creator-"+self.dashboardsetConfig.isCreator()+"' id='dashboardTab-" + dashboardId + "' data-tabs-name='" + tabName + "'data-dashboard-name-in-set='" + tabName + "'><span class='tabs-name'>" + tabName + "</span></li>");
                     }
                     $("#dbd-tabs-container").ojTabs("addTab",
                             {
@@ -503,7 +490,7 @@ define(['knockout',
                     $("#dbd-tabs-container").ojTabs("refresh");
                 }
 
-            function findRemoveTab(dashboardsetItems,dashboardPickerId){
+            function findTargetInArr(dashboardsetItems,dashboardPickerId){
                 var dashboardToRemove = -1;
                 var dashboardToRemoveItem;
                 ko.utils.arrayForEach(dashboardsetItems, function (item, index) {
@@ -522,49 +509,11 @@ define(['knockout',
             }
 
             function dbConfigMenuClick (){
-                this.saveDbsDescription = function (dashboardsetEditModel) {
-                    var me = this;
-
-                    var nameEdit = $('#nameDescription input').val();
-                    var descriptionEdit = $('#nameDescription textarea').val();
-                    var sharePublic = ko.unwrap(dashboardsetEditModel.dashboardsetConfig.share) === "on";
-
-                    var fieldsToUpdate = {
-                            "name": nameEdit,
-                            "description": descriptionEdit,
-                            "sharePublic":sharePublic
-                        };
-                    self.saveDashboardSet(
-                            fieldsToUpdate,
-                            function (result) {
-                                if (sharePublic !== ko.unwrap(dashboardInst.sharePublic)) {
-                                    var shareMsgKey = sharePublic ? 'DBS_BUILDER_DASHBOARD_SET_SHARE_SUCCESS' : 'DBS_BUILDER_DASHBOARD_SET_SHARE_ERROR';
-                                    dfu.showMessage({
-                                        type: 'confirm',
-                                        summary: getNlsString(shareMsgKey),
-                                        detail: '',
-                                        removeDelayTime: 5000
-                                    });
-                                }
-                                dashboardInst.sharePublic(sharePublic);
-                                me.dashboardsetName(nameEdit);
-                                me.dashboardsetDescription(descriptionEdit);
-                                $('#changeDashboardsetInfo').ojDialog("close");
-                            },
-                            function (jqXHR, textStatus, errorThrown) {
-                                $('#changeDashboardsetInfo').ojDialog("close");
-                                dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
-                            }
-                    );
-                };
-                this.cancelSaveDbsetInfo = function(){
-                     $('#changeDashboardsetInfo').ojDialog("close");
-                };
-                this.favoriteDbs = function (dbsToolBar) {
+                    this.favoriteDbs = function (dbsToolBar) {
                     var addFavorite = dbsToolBar.dashboardsetConfig.addFavorite();
 
                     if (addFavorite) {
-                        Builder.addDashboardToFavorites(
+                       new Builder.DashboardDataSource().addDashboardToFavorites(
                                 ko.unwrap(dashboardInst.id),
                                 function () {
                                     dbsToolBar.dashboardsetConfig.addFavorite(false);
@@ -583,7 +532,7 @@ define(['knockout',
                                     });
                                 });
                     } else {
-                        Builder.removeDashboardFromFavorites(
+                        new Builder.DashboardDataSource().removeDashboardFromFavorites(
                                 ko.unwrap(dashboardInst.id),
                                 function () {
                                     dbsToolBar.dashboardsetConfig.addFavorite(true);
@@ -653,7 +602,7 @@ define(['knockout',
                         if (option === 'on') {
                             dbsToolBar.dashboardsetConfig.refreshOnIcon("dbd-icon-check");
                             dbsToolBar.dashboardsetConfig.refreshOffIcon("dbd-noselected");
-                            self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
+                            self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL); 
                             dfu.showMessage({type: 'confirm', summary: getNlsString('DBS_BUILDER_MSG_AUTO_REFRESH_ON'), detail: '', removeDelayTime: 5000});
                         }
                         if(option === 'off'){
@@ -662,6 +611,8 @@ define(['knockout',
                             self.autoRefreshInterval(0);
                             dfu.showMessage({type: 'confirm', summary: getNlsString('DBS_BUILDER_MSG_AUTO_REFRESH_OFF'), detail: '', removeDelayTime: 5000});
                         }
+                        
+                        self.extendedOptions.autoRefresh ? (self.extendedOptions.autoRefresh.defaultValue = self.autoRefreshInterval()) : (self.extendedOptions.autoRefresh={defaultValue: self.autoRefreshInterval()});
                     }
                     self.saveUserOptions();
                 };
@@ -673,8 +624,11 @@ define(['knockout',
                     }
                     dfu.ajaxWithRetry(_url + dbsToolBar.dashboardsetId, {
                         type: 'DELETE',
-                        headers: dfu.getDashboardsRequestHeader(), //{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
+                        headers: dfu.getDashboardsRequestHeader(),
                         success: function (result) {
+                            if (!self.dashboardsetConfig.setHome()) {                                
+                                localStorage.deleteHomeDbd=true;
+                            }
                             window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
@@ -740,19 +694,22 @@ define(['knockout',
             function highlightNextTab(removeDashboardId,clickItem){
                  $("#dashboard-" + removeDashboardId).remove();
 
-                var removeResult = findRemoveTab(self.dashboardsetItems, removeDashboardId);
-                var reorderResult = findRemoveTab(self.reorderedDbsSetItems(), removeDashboardId);
+                var removeResult = findTargetInArr(self.dashboardsetItems, removeDashboardId);
+                var reorderResult = findTargetInArr(self.reorderedDbsSetItems(), removeDashboardId);
 
                 if (removeResult.removeIndex > -1) {
-                     var currentShowIndex=$('.other-nav').index(clickItem);
-                     self.dashboardsetItems.splice(removeResult.removeIndex, 1);
-                     self.reorderedDbsSetItems.splice(reorderResult.removeIndex, 1);
-                     removeTargetTab(removeResult.removeItem);
-                    if (clickItem.hasClass('oj-selected')) {
-                        if (self.dashboardsetItems.length === currentShowIndex && self.dashboardsetItems.length !== 0) {
+                    var currentShowIndex = $('.other-nav').index(clickItem);
+                    self.dashboardsetItems.splice(removeResult.removeIndex, 1);
+                    self.reorderedDbsSetItems.splice(reorderResult.removeIndex, 1);
+                    removeTargetTab(removeResult.removeItem);
+                    var _removeSelectedTab = clickItem.hasClass('oj-selected'),
+                        _removeTab = self.dashboardsetItems.length === currentShowIndex && self.dashboardsetItems.length !== 0,
+                        _hasNoDashboard = self.dashboardsetItems.length === 0;
+                    if (_removeSelectedTab) {
+                        if (_removeTab) {
                             $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + self.reorderedDbsSetItems()[currentShowIndex - 1].dashboardId});
                             self.selectedDashboardItem(self.reorderedDbsSetItems()[currentShowIndex - 1]);
-                        } else if (self.dashboardsetItems.length === 0) {
+                        } else if (_hasNoDashboard) {
                             self.addNewDashboard();
                         }
                         else {
@@ -814,6 +771,30 @@ define(['knockout',
                     self.reorderedDbsSetItems(tempAarray);
                     self.saveDashboardSet();
             });
+            
+            function dashboardsetToolBarChange(changeName, value) {
+                switch (changeName)
+                {
+                    case "dashboardsetName":
+                        self.dashboardsetName(value);
+                        self.dashboardInst.name(value);
+                        break;
+                    case "dashboardsetDes":
+                        var _isEmptyDes = !self.dashboardInst.description;
+                        var _changeToEmptyDes = !value;
+                        if (_isEmptyDes && !_changeToEmptyDes) {
+                            self.dashboardInst.description = ko.observable(value);
+                        } else if (!_isEmptyDes && !_changeToEmptyDes) {
+                            self.dashboardInst.description(value);
+                        } else if (!_isEmptyDes) {
+                            delete self.dashboardInst.description;
+                        }
+                        self.dashboardsetDescription(value);
+                        break;
+                }
+            }
+
+            Builder.registerFunction(dashboardsetToolBarChange, 'dashboardsetToolBarChange');
         }
 
         Builder.registerModule(DashboardsetToolBarModel, 'DashboardsetToolBarModel');

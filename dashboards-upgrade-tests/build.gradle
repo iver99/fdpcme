@@ -13,7 +13,8 @@ clean{
 
 dependencies {
 	testConfig project(':dashboards-ui-test-common-api') {transitive = false }
-	
+ testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
+    testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }	
 	testCompile configurations.testConfig
     testCompile configurations.webdriver
     testCompile configurations.testNG

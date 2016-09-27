@@ -1,4 +1,4 @@
-define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/util/preference-util'],
+define(['knockout', 'jquery', 'uifwk/@version@/js/util/df-util-impl', 'ojs/ojcore', 'uifwk/@version@/js/util/preference-util-impl'],
         function (ko, $, dfumodel, oj, pfu) {
             function NavigationLinksViewModel(params) {
                 var self = this;
@@ -57,8 +57,9 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                     if (str && length > 0 && str.length > length)
                     {
                         var _tlocation = str.indexOf(' ', length);
-                        if ( _tlocation <= 0 )
+                        if ( _tlocation <= 0 ){
                             _tlocation = length;
+                        }
                         return str.substring(0, _tlocation) + "...";
                     }
                     return str;
@@ -140,15 +141,17 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                             var cloudServices = data.cloudServices;
                             var cloudServiceList = [];
                                 for (var index = 0; index < cloudServices.length; index++) {
-                                    if (appMap !== null)
+                                    if (appMap !== null){
                                         cloudServiceList.push(
                                             {name: appMap[cloudServices[index].name].serviceDisplayName ? nlsStrings[appMap[cloudServices[index].name].serviceDisplayName] :
                                                 nlsStrings[appMap[cloudServices[index].name].appName],
                                             href: cloudServices[index].href});
-                                    else
+                                    }
+                                    else{
                                         cloudServiceList.push(
                                             {name: cloudServices[index].name,
                                             href: cloudServices[index].href});
+                                    }
                                 }
                             self.cloudServices(cloudServiceList);
                         }

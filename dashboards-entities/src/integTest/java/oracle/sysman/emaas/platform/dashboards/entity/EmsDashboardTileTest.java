@@ -1,21 +1,19 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
-import static org.testng.Assert.assertEquals;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
 
-/**
- * Created by Troy on 2016/1/20.
- */
+
 @Test(groups={"s1"})
 public class EmsDashboardTileTest { 
     Date now = new Date();
     private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10,10,10, now,
-            "elephant","elephant","elephant","elephant",10,10, "{}");
+            "elephant","elephant","elephant","elephant",10,10,1, "{}");
 
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
             now,
@@ -59,12 +57,12 @@ public class EmsDashboardTileTest {
             now,
             emsDashboardTile);
     @Test
-    public void testAddEmsDashboardTileParams() throws Exception {
+    public void testAddEmsDashboardTileParams() {
         assertEquals(emsDashboardTile.addEmsDashboardTileParams(emsDashboardTileParams),emsDashboardTileParams);
     }
 
     @Test
-    public void testGetColumn() throws Exception {
+    public void testGetColumn() {
         EmsDashboardTile emsDashboardTile1 = new EmsDashboardTile();
         emsDashboardTile1.setColumn(10);
         assertEquals(emsDashboardTile1.getColumn(),new Integer(10));
@@ -72,19 +70,19 @@ public class EmsDashboardTileTest {
     }
 
     @Test
-    public void testGetCreationDate() throws Exception { 
+    public void testGetCreationDate() { 
         emsDashboardTile.setCreationDate(now);
         assertEquals(emsDashboardTile.getCreationDate(), now); 
     }
 
     @Test
-    public void testGetDashboard() throws Exception {
+    public void testGetDashboard() {
         emsDashboardTile.setDashboard(emsDashboard);
         assertEquals(emsDashboardTile.getDashboard(),emsDashboard);
     }
 
     @Test
-    public void testGetDashboardTileParamsList() throws Exception{
+    public void testGetDashboardTileParamsList(){
 
         List<EmsDashboardTileParams> list = new ArrayList<EmsDashboardTileParams>();
         emsDashboardTile.setDashboardTileParamsList(list);
@@ -93,344 +91,190 @@ public class EmsDashboardTileTest {
     }
 
     @Test
-    public void testGetHeight() throws Exception {
+    public void testGetHeight() {
         emsDashboardTile.setHeight(10);
         assertEquals(emsDashboardTile.getHeight(),new Integer(10));
     }
 
     @Test
-    public void testGetIsMaximized() throws Exception {
+    public void testGetIsMaximized() {
         emsDashboardTile.setIsMaximized(10);
         assertEquals(emsDashboardTile.getIsMaximized(),new Integer(10));
     }
 
     @Test
-    public void testGetLastModificationDate() throws Exception {
+    public void testGetLastModificationDate() {
         emsDashboardTile.setLastModificationDate(now);
         assertEquals(emsDashboardTile.getLastModificationDate(), now);
     }
 
     @Test
-    public void testGetLastModifiedBy() throws Exception {
+    public void testGetLastModifiedBy() {
         emsDashboardTile.setLastModifiedBy("elephant");
         assertEquals(emsDashboardTile.getLastModifiedBy(),"elephant");
     }
 
     @Test
-    public void testGetOwner() throws Exception {
+    public void testGetOwner() {
         emsDashboardTile.setOwner("elephant");
         assertEquals(emsDashboardTile.getOwner(),"elephant");
     }
 
     @Test
-    public void testGetPosition() throws Exception {
+    public void testGetPosition() {
         emsDashboardTile.setPosition(10);
         assertEquals(emsDashboardTile.getPosition(),new Integer(0));
 
     }
 
     @Test
-    public void testGetProviderAssetRoot() throws Exception {
+    public void testGetProviderAssetRoot() {
         emsDashboardTile.setProviderAssetRoot("elephant");
         assertEquals(emsDashboardTile.getProviderAssetRoot(),"elephant");
     }
 
     @Test
-    public void testGetProviderName() throws Exception {
+    public void testGetProviderName() {
         emsDashboardTile.setProviderName("elephant");
         assertEquals(emsDashboardTile.getProviderName(),"elephant");
     }
 
     @Test
-    public void testGetProviderVersion() throws Exception {
+    public void testGetProviderVersion() {
         emsDashboardTile.setProviderVersion("elephant");
         assertEquals(emsDashboardTile.getProviderVersion(),"elephant");
 
     }
 
     @Test
-    public void testGetRow() throws Exception {
+    public void testGetRow() {
         emsDashboardTile.setRow(10);
         assertEquals(emsDashboardTile.getRow(),new Integer(10));
     }
 
     @Test
-    public void testGetTileId() throws Exception {
+    public void testGetTileId() {
         assertEquals(emsDashboardTile.getTileId(),new Long(10));
 
     }
 
     @Test
-    public void testGetTitle() throws Exception {
+    public void testGetTitle() {
         emsDashboardTile.setTitle("elephant");
         assertEquals(emsDashboardTile.getTitle(),"elephant");
 
     }
 
     @Test
-    public void testGetType() throws Exception {
+    public void testGetType() {
         emsDashboardTile.setType(10);
         assertEquals(emsDashboardTile.getType(),new Integer(10));
 
     }
 
     @Test
-    public void testGetWidgetCreationTime() throws Exception {
+    public void testGetWidgetCreationTime() {
         emsDashboardTile.setWidgetCreationTime("elephant");
         assertEquals(emsDashboardTile.getWidgetCreationTime(),"elephant");
     }
 
     @Test
-    public void testGetWidgetDescription() throws Exception {
+    public void testGetWidgetDescription() {
         emsDashboardTile.setWidgetDescription("elephant");
         assertEquals(emsDashboardTile.getWidgetDescription(),"elephant");
 
     }
 
     @Test
-    public void testGetWidgetGroupName() throws Exception {
+    public void testGetWidgetGroupName() {
         emsDashboardTile.setWidgetGroupName("elephant");
         assertEquals(emsDashboardTile.getWidgetGroupName(),"elephant");
 
     }
 
     @Test
-    public void testGetWidgetHistogram() throws Exception {
+    public void testGetWidgetHistogram() {
         emsDashboardTile.setWidgetHistogram("elephant");
         assertEquals(emsDashboardTile.getWidgetHistogram(),"elephant");
     }
 
     @Test
-    public void testGetWidgetIcon() throws Exception {
+    public void testGetWidgetIcon() {
         emsDashboardTile.setWidgetIcon("elephant");
         assertEquals(emsDashboardTile.getWidgetIcon(),"elephant");
     }
 
     @Test
-    public void testGetWidgetKocName() throws Exception {
+    public void testGetWidgetKocName() {
         emsDashboardTile.setWidgetKocName("elephant");
         assertEquals(emsDashboardTile.getWidgetKocName(),"elephant");
     }
 
     @Test
-    public void testGetWidgetLinkedDashboard() throws Exception {
+    public void testGetWidgetLinkedDashboard() {
         emsDashboardTile.setWidgetLinkedDashboard(10L);
         assertEquals(emsDashboardTile.getWidgetLinkedDashboard(),new Long(10));
 
     }
 
     @Test
-    public void testGetWidgetName() throws Exception {
+    public void testGetWidgetName() {
         emsDashboardTile.setWidgetName("elephant");
         assertEquals(emsDashboardTile.getWidgetName(),"elephant");
 
     }
 
     @Test
-    public void testGetWidgetOwner() throws Exception {
+    public void testGetWidgetOwner() {
         emsDashboardTile.setWidgetOwner("elephant");
         assertEquals(emsDashboardTile.getWidgetOwner(),"elephant");
     }
 
     @Test
-    public void testGetWidgetSource() throws Exception {
+    public void testGetWidgetSource() {
         emsDashboardTile.setWidgetSource(10);
         assertEquals(emsDashboardTile.getWidgetSource(),new Integer(10));
 
     }
 
     @Test
-    public void testGetWidgetSupportTimeControl() throws Exception {
+    public void testGetWidgetSupportTimeControl() {
         emsDashboardTile.setWidgetSupportTimeControl(10);
         assertEquals(emsDashboardTile.getWidgetSupportTimeControl(),new Integer(10));
 
     }
 
     @Test
-    public void testGetWidgetTemplate() throws Exception {
+    public void testGetWidgetTemplate() {
         emsDashboardTile.setWidgetTemplate("elephant");
         assertEquals(emsDashboardTile.getWidgetTemplate(),"elephant");
     }
 
     @Test
-    public void testGetWidgetUniqueId() throws Exception {
+    public void testGetWidgetUniqueId() {
         emsDashboardTile.setWidgetUniqueId("123456");
         assertEquals(emsDashboardTile.getWidgetUniqueId(),"123456");
 
     }
 
     @Test
-    public void testGetWidgetViewmode() throws Exception {
+    public void testGetWidgetViewmode() {
         emsDashboardTile.setWidgetViewmode("elephant");
         assertEquals(emsDashboardTile.getWidgetViewmode(),"elephant");
     }
 
     @Test
-    public void testGetWidth() throws Exception {
+    public void testGetWidth() {
         emsDashboardTile.setWidth(10);
         assertEquals(emsDashboardTile.getWidth(),new Integer(10));
     }
 
     @Test
-    public void testRemoveEmsDashboardTileParams() throws Exception {
+    public void testRemoveEmsDashboardTileParams() {
         List<EmsDashboardTileParams> list = new ArrayList<EmsDashboardTileParams>();
         list.add(emsDashboardTileParams);
         emsDashboardTile.setDashboardTileParamsList(list);
         emsDashboardTile.removeEmsDashboardTileParams(emsDashboardTileParams);
     }
 
-    @Test
-    public void testSetColumn() throws Exception {
-
-    }
-
-    @Test
-    public void testSetCreationDate() throws Exception {
-
-    }
-
-    @Test
-    public void testSetDashboard() throws Exception {
-
-    }
-
-    @Test
-    public void testSetDashboardTileParamsList() throws Exception {
-
-    }
-
-    @Test
-    public void testSetHeight() throws Exception {
-
-    }
-
-    @Test
-    public void testSetIsMaximized() throws Exception {
-
-    }
-
-    @Test
-    public void testSetLastModificationDate() throws Exception {
-
-    }
-
-    @Test
-    public void testSetLastModifiedBy() throws Exception {
-
-    }
-
-    @Test
-    public void testSetOwner() throws Exception {
-
-    }
-
-    @Test
-    public void testSetPosition() throws Exception {
-
-    }
-
-    @Test
-    public void testSetProviderAssetRoot() throws Exception {
-
-    }
-
-    @Test
-    public void testSetProviderName() throws Exception {
-
-    }
-
-    @Test
-    public void testSetProviderVersion() throws Exception {
-
-    }
-
-    @Test
-    public void testSetRow() throws Exception {
-
-    }
-
-    @Test
-    public void testSetTitle() throws Exception {
-
-    }
-
-    @Test
-    public void testSetType() throws Exception {
-
-    }
-
-    @Test
-    public void testSetWidgetCreationTime() throws Exception {
-
-    }
-
-    @Test
-    public void testSetWidgetDescription() throws Exception {
-
-    }
-
-    @Test
-    public void testSetWidgetGroupName() throws Exception {
-
-    }
-
-    @Test
-    public void testSetWidgetHistogram() throws Exception {
-
-    }
-
-    @Test
-    public void testSetWidgetIcon() throws Exception {
-
-    }
-
-    @Test
-    public void testSetWidgetKocName() throws Exception {
-
-    }
-
-    @Test
-    public void testSetWidgetLinkedDashboard() throws Exception {
-
-    }
-
-    @Test
-    public void testSetWidgetName() throws Exception {
-
-    }
-
-    @Test
-    public void testSetWidgetOwner() throws Exception {
-
-    }
-
-    @Test
-    public void testSetWidgetSource() throws Exception {
-
-    }
-
-    @Test
-    public void testSetWidgetSupportTimeControl() throws Exception {
-
-    }
-
-    @Test
-    public void testSetWidgetTemplate() throws Exception {
-
-    }
-
-    @Test
-    public void testSetWidgetUniqueId() throws Exception {
-
-    }
-
-    @Test
-    public void testSetWidgetViewmode() throws Exception {
-
-    }
-
-    @Test
-    public void testSetWidth() throws Exception {
-
-    }
 }

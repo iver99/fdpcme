@@ -14,21 +14,21 @@ import org.testng.annotations.Test;
 
 /**
  * @version
- * @author charles.c.chen
+ * @author
  * @since release specific (what release of product did this appear in)
  */
 
 public class BugVerification extends LoginAndLogout
 {
 
-	public void initTest(String testName) throws Exception
+	public void initTest(String testName)
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
 	@AfterClass
-	public void removeTestData() throws Exception
+	public void removeTestData()
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -51,7 +51,7 @@ public class BugVerification extends LoginAndLogout
 	}
 
 	@Test
-	public void testEMCPDF_2040() throws Exception
+	public void testEMCPDF_2040()
 	{
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -73,12 +73,14 @@ public class BugVerification extends LoginAndLogout
 				"Create dashboard failed!");
 
 		//set the timepicker as Custom
-		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, "04/14/2016 12:00 AM", "04/14/2016 12:30 PM"));
+		webd.getLogger().info("Set the custom date time");
+		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, "04/14/2016 12:00 AM", "04/14/2016 12:30 PM"),
+				"The restun date time is null");
 
 	}
 
 	@Test
-	public void testEMPCDF_812_1() throws Exception
+	public void testEMPCDF_812_1()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_812");
@@ -114,7 +116,7 @@ public class BugVerification extends LoginAndLogout
 	}
 
 	@Test
-	public void testEMPCDF_832_1() throws Exception
+	public void testEMPCDF_832_1()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_832");

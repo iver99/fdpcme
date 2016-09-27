@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.ui.web;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.Locale;
 
 import org.apache.http.Header;
@@ -71,7 +72,7 @@ public class MockCloseableHttpResponse implements CloseableHttpResponse
 	public Header[] getAllHeaders()
 	{
 		// TODO Auto-generated method stub
-		return null;
+		return new Header[10];
 	}
 
 	@Override
@@ -93,7 +94,7 @@ public class MockCloseableHttpResponse implements CloseableHttpResponse
 	public Header[] getHeaders(String arg0)
 	{
 		// TODO Auto-generated method stub
-		return null;
+		return new Header[10];
 	}
 
 	@Override

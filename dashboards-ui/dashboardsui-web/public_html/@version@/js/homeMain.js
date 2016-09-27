@@ -9,10 +9,36 @@
  * http://jquery.org/license
  */
 requirejs.config({
+    bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
+                (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
+        'uifwk/js/uifwk-partition':
+            [
+            'uifwk/js/util/ajax-util',
+            'uifwk/js/util/df-util',
+            'uifwk/js/util/logging-util',
+            'uifwk/js/util/message-util',
+            'uifwk/js/util/mobile-util',
+            'uifwk/js/util/preference-util',
+            'uifwk/js/util/screenshot-util',
+            'uifwk/js/util/typeahead-search',
+            'uifwk/js/util/usertenant-util',
+            'uifwk/js/widgets/aboutbox/js/aboutbox',
+            'uifwk/js/widgets/brandingbar/js/brandingbar',
+            'uifwk/js/widgets/datetime-picker/js/datetime-picker',
+            'uifwk/js/widgets/navlinks/js/navigation-links',
+            'uifwk/js/widgets/timeFilter/js/timeFilter',
+            'uifwk/js/widgets/widgetselector/js/widget-selector',
+            'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
+            'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
+            'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
+            'text!uifwk/js/widgets/widgetselector/html/widget-selector.html',
+            'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
+            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
+            ]
+    },
     //Set up module mapping
     map: {
         '*':
-//            {'df-util': '/emsaasui/uifwk/libs/@version@/js/uifwk/js/util/df-util'}
               {'prefutil':'uifwk/js/util/preference-util'}
     },
     // Path mappings for the logical module names
@@ -34,9 +60,6 @@ requirejs.config({
         'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
         'dashboards': '.',
         'dfutil':'internaldfcommon/js/util/internal-df-util',
-        'prefutil':'/emsaasui/uifwk/js/util/preference-util',
-        'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
-        'mobileutil':'/emsaasui/uifwk/js/util/mobile-util',
         'uifwk': '/emsaasui/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
@@ -66,7 +89,6 @@ requirejs.config({
     waitSeconds: 300
 });
 
-//var dashboardsViewModle = undefined;
 
 /**
  * A top-level require call executed by the Application.
@@ -81,7 +103,7 @@ require(['dashboards/dbsmodel',
     'dfutil',
     'uifwk/js/util/df-util',
     'dashboards/dashboardhome-impl',
-    'loggingutil',
+    'uifwk/js/util/logging-util',
     'common.uifwk',
     'ojs/ojmodel',
     'ojs/ojknockout',
@@ -101,20 +123,23 @@ require(['dashboards/dbsmodel',
         function(model, ko, $, oj, dfu, dfumodel, dashboardhome_impl, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
         {
             var logger = new _emJETCustomLogger();
-//            var dfRestApi = dfu.discoverDFRestApiUrl();
-//            if (dfRestApi){
             var logReceiver = dfu.getLogUrl();
                 logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
                 // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                 // If you comment the line below, our current log calls will not be output!
                 logger.setLogLevel(oj.Logger.LEVEL_WARN);
-//            }
+        
+            window.onerror = function (msg, url, lineNo, columnNo, error)
+            {
+                oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg, true); 
+                return false; 
+            }
 
 
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
-                    viewModel:{require:'/emsaasui/uifwk/js/widgets/brandingbar/js/brandingbar.js'},
-                    template:{require:'text!/emsaasui/uifwk/js/widgets/brandingbar/html/brandingbar.html'}
+                    viewModel:{require:'uifwk/js/widgets/brandingbar/js/brandingbar'},
+                    template:{require:'text!uifwk/js/widgets/brandingbar/html/brandingbar.html'}
                 });
             }
 
@@ -148,10 +173,8 @@ require(['dashboards/dbsmodel',
 
            function TitleViewModel(){
                var self = this;
-//               self.homeTitle = getNlsString("DBS_HOME_TITLE");
                self.homeTitle = dfu_model.generateWindowTitle(getNlsString("DBS_HOME_TITLE_HOME"), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
            }
-            //dashboardsViewModle = new model.ViewModel();
             var headerViewModel = new HeaderViewModel();
             var titleVM = new TitleViewModel();
 
@@ -179,8 +202,9 @@ function truncateString(str, length) {
     if (str && length > 0 && str.length > length)
     {
         var _tlocation = str.indexOf(' ', length);
-        if ( _tlocation <= 0 )
+        if ( _tlocation <= 0 ){
             _tlocation = length;
+        }
         return str.substring(0, _tlocation) + "...";
     }
     return str;
@@ -192,11 +216,9 @@ function getNlsString(key, args) {
 }
 
 function getDateString(isoString) {
-    //console.log(isoString);
     if (isoString && isoString.length > 0)
     {
         var s = isoString.split(/[\-\.\+: TZ]/g);
-        //console.log(s);
         if (s.length > 1)
         {
             return new Date(s[0], parseInt(s[1], 10) - 1, s[2], s[3], s[4], s[5], s[6]).toLocaleDateString();

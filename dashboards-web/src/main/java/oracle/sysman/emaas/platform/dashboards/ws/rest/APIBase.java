@@ -14,6 +14,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
@@ -29,16 +33,12 @@ import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * @author wenjzhu
  */
 public class APIBase
 {
-	private static Logger logger = LogManager.getLogger(APIBase.class);
+	private static final Logger LOGGER = LogManager.getLogger(APIBase.class);
 
 	@Context
 	protected UriInfo uriInfo;
@@ -54,7 +54,7 @@ public class APIBase
 	public Response buildErrorResponse(ErrorEntity error)
 	{
 		if (error == null) {
-			logger.error("Returning a empty response because specified error entity is empty");
+			LOGGER.error("Returning a empty response because specified error entity is empty");
 			return null;
 		}
 		return Response.status(error.getStatusCode()).entity(getJsonUtil().toJson(error)).build();
@@ -80,6 +80,7 @@ public class APIBase
 
 		try {
 			long internalTenantId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tenantId);
+			LOGGER.info("Get internal tenant id {} from opc tenant id {}", internalTenantId, tenantId);
 			return internalTenantId;
 		}
 		catch (BasicServiceMalfunctionException e) {
@@ -131,12 +132,12 @@ public class APIBase
 	protected Dashboard updateDashboardHref(Dashboard dbd, String tenantName)
 	{
 		if (dbd == null) {
-			logger.error("Error: updating href for a null dashboard");
+			LOGGER.error("Error: updating href for a null dashboard");
 			return null;
 		}
 		String externalBase = DashboardAPIUtil.getExternalDashboardAPIBase(tenantName);
 		if (StringUtil.isEmpty(externalBase)) {
-			logger.error("Error: updating href for a dashboard with null or empty base external url");
+			LOGGER.error("Error: updating href for a dashboard with null or empty base external url");
 			return null;
 		}
 		String href = externalBase + (externalBase.endsWith("/") ? "" : "/") + dbd.getDashboardId();

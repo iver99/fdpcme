@@ -2,7 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.core.cache.lru;
 
 
 public class TimeUtil {
-	public TimeUtil()
+	private TimeUtil()
     {
     }
 
@@ -24,11 +24,5 @@ public class TimeUtil {
             return (int)seconds;
     }
 
-    static final long ONE_SECOND = 1000L;
-    
-    public static  long getCurrentTime()
-    {
-        return System.currentTimeMillis();
-    }
 }
 

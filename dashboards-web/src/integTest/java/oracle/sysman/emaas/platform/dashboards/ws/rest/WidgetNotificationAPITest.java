@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import javax.ws.rs.core.Response.Status;
 
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -19,14 +20,14 @@ public class WidgetNotificationAPITest
 	private WidgetNotificationAPI api;
 
 	@BeforeMethod
-	public void setUp() throws Exception
+	public void setUp() 
 	{
 		api = new WidgetNotificationAPI();
 	}
 
 	@Test
 	public void testNotifyWidgetChanged(@Mocked final DashboardManager anyDashboardManager,
-			@Mocked final TenantIdProcessor anyTenantIdProcessor) throws Exception
+			@Mocked final TenantIdProcessor anyTenantIdProcessor) throws BasicServiceMalfunctionException, JSONException 
 	{
 		//Test 403 with invalid tenantIdParam DashboardException exception;
 		Assert.assertEquals(api.notifyWidgetChanged("", new JSONObject()).getStatus(), 403);

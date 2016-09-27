@@ -9,6 +9,7 @@ define([
         var self = this;
         var postbox = params ? params.postbox : null;
         self.randomId = params ? params.randomId : "";
+        self.timeFilterParams = params ? params.timeFilterParams : null;
         self.timeFilterTitle = nls.TIME_FILTER_TITLE;
         self.timeFilterLabel = nls.TIME_FILTER_TIME_LABEL;
         self.hintForTimeFilter = nls.TIME_FILTER_TIME_HINT;
@@ -20,11 +21,22 @@ define([
         self.monthsFilterOptions = oj.LocaleData.getMonthNames("wide");
 
         self.daysArray = ["1", "2", "3", "4", "5", "6", "7"];
-        self.monthsArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]; //[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-
-        self.timeFilterValue = ko.observable('0-23');
-        self.daysChecked = ko.observableArray(self.daysArray);
-        self.monthsChecked = ko.observableArray(self.monthsArray);
+        self.monthsArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+        if(self.timeFilterParams && self.timeFilterParams.hoursIncluded) {
+            self.timeFilterValue = ko.observable(self.timeFilterParams.hoursIncluded);
+        }else {
+            self.timeFilterValue = ko.observable('0-23');
+        }
+        if(self.timeFilterParams && self.timeFilterParams.daysIncluded) {
+            self.daysChecked = ko.observableArray(self.timeFilterParams.daysIncluded);
+        }else {
+            self.daysChecked = ko.observableArray(self.daysArray);
+        }
+        if(self.timeFilterParams && self.timeFilterParams.monthsIncluded) {
+            self.monthsChecked = ko.observable(self.timeFilterParams.monthsIncluded);
+        }else {
+            self.monthsChecked = ko.observableArray(self.monthsArray);
+        }
 
         self.showHoursFilterErrorMsg = ko.observable(true);
         self.hoursFilterErrorMsg = nls.TIME_FILTER_HOURS_FILTER_ERRMSG;
@@ -150,11 +162,11 @@ define([
                 "timeFilterValule": self.timeFilterValue(),
                 "daysChecked" : self.daysChecked(),
                 "monthsChecked" : self.monthsChecked()
-            }
+            };
         });
         self.tfChangedSubscriber.subscribe(function() {
             self.tfChangedCallback && self.tfChangedCallback();
-        })
+        });
     }
     return AdvancedViewModel;
 });
