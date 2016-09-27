@@ -98,7 +98,29 @@ function(ko, $, dfu, oj)
             appId: self.appId,
             isAdmin: false
         };
-    }
+        }
+        function checkParams(msgKey, serviceid, serviceName) {
+            var words = new Array("insert", "update", "drop", "delete", "truncate",
+                ",", ";", "*", ".", "%27");
+            for (var i in words) {
+                if (msgKey.toLowerCase().indexOf(words[i]) !== -1) {
+                    return false;
+                }
+            }
+            for (var i in words) {
+                if (serviceid.toLowerCase().indexOf(words[i]) !== -1) {
+                    return false;
+                }
+            }
+            if (serviceName !== null) {
+                for (var i in words) {
+                    if (serviceName.toLowerCase().indexOf(words[i]) !== -1) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
 
     function ErrorPageModel() {
         var self = this;
@@ -108,35 +130,48 @@ function(ko, $, dfu, oj)
         var msgKey = dfu.getUrlParam("msg");
         var serviceid = dfu.getUrlParam("service");
         var serviceName = oj.Translations.getResource("SERVICE_NAME_" + serviceid) ? oj.Translations.getTranslatedString("SERVICE_NAME_" + serviceid) : null;
-        if (msgKey) {
-            var rsc = null;
-            if (serviceName){
-                rsc = oj.Translations.getResource(msgKey + "__PLUS_SERVICE");
+            var isValid = checkParams(msgKey, serviceid, serviceName);
+            if (!isValid) {
+                if (!self.errorPageMessage) {
+                    self.errorPageMessage = oj.Translations.getTranslatedString('DBS_ERROR_SENSITIVE_WORD');
+                }
+                self.defaultHomeLinkVisible = msgKey === 'DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG' ? true : false;
+                var params = {"style" : "dbd-error-url", "url" : "/emsaasui/emcpdfui/welcome.html"};
+                self.goHomePageText = oj.Translations.getTranslatedString("DBS_ERROR_TEXT_GO_HOME_PAGE", params);
+                self.invalidUrl = dfu.getUrlParam("invalidUrl");
+                if (self.invalidUrl) {
+                    self.invalidUrl = decodeURIComponent(self.invalidUrl);
+                }
+                self.invalidUrlLabel = oj.Translations.getResource("DBS_ERROR_URL");
+            } else {
+                if (msgKey) {
+                    var rsc = null;
+                    if (serviceName) {
+                        rsc = oj.Translations.getResource(msgKey + "__PLUS_SERVICE");
+                    }
+                    if (rsc) {
+                        msgKey += "__PLUS_SERVICE";
+                    } else {
+                        rsc = oj.Translations.getResource(msgKey);
+                        serviceName = null;
+                    }
+                    if (rsc) {
+                        self.errorPageMessage = serviceName ? oj.Translations.getTranslatedString(msgKey, serviceName) : oj.Translations.getTranslatedString(msgKey);
+                    }
+                }
+                if (!self.errorPageMessage) {
+                    self.errorPageMessage = oj.Translations.getTranslatedString('DBS_ERROR_PAGE_NOT_FOUND_MSG');
+                }
+                self.defaultHomeLinkVisible = msgKey === 'DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG' ? true : false;
+                var params = {"style" : "dbd-error-url", "url" : "/emsaasui/emcpdfui/welcome.html"};
+                self.goHomePageText = oj.Translations.getTranslatedString("DBS_ERROR_TEXT_GO_HOME_PAGE", params);
+                self.invalidUrl = dfu.getUrlParam("invalidUrl");
+                if (self.invalidUrl) {
+                    self.invalidUrl = decodeURIComponent(self.invalidUrl);
+                }
+                self.invalidUrlLabel = oj.Translations.getResource("DBS_ERROR_URL");
             }
-            if (rsc){
-                msgKey += "__PLUS_SERVICE";
-            }
-            else {
-                rsc = oj.Translations.getResource(msgKey);
-                serviceName = null;
-            }
-            if (rsc){
-                self.errorPageMessage = serviceName ? oj.Translations.getTranslatedString(msgKey, serviceName) : oj.Translations.getTranslatedString(msgKey);
-            }
-        }
-        if (!self.errorPageMessage){
-            self.errorPageMessage = oj.Translations.getTranslatedString('DBS_ERROR_PAGE_NOT_FOUND_MSG');
-        }
-        self.defaultHomeLinkVisible = msgKey === 'DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG' ? true : false;
-        self.clickText = oj.Translations.getTranslatedString('DBS_ERROR_TEXT_CLICK');
-        self.hereText = oj.Translations.getTranslatedString('DBS_ERROR_TEXT_HERE');
-        self.goHomePageText = oj.Translations.getTranslatedString('DBS_ERROR_TEXT_GO_HOME_PAGE');
-        self.defaultHomeUrl = '/emsaasui/emcpdfui/welcome.html';
-        self.invalidUrl = dfu.getUrlParam("invalidUrl");
-        if (self.invalidUrl) {
-            self.invalidUrl = decodeURIComponent(self.invalidUrl);
-        }
-        self.invalidUrlLabel = oj.Translations.getResource("DBS_ERROR_URL");
+
 
         self.signOut = function() {
             //Clear interval for extending user session

@@ -307,7 +307,7 @@ body, html {
   content: url(../images/func_gear_16_ena.png);
 }
 
-.dbd-toolbar-icon-edit:before,.fa-pencil:before {
+.dbd-toolbar-icon-edit:before,.fa-pencil-df:before {
   content: "\f040";
 }
 .dbd-wrench:before{
@@ -1403,6 +1403,13 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
                         text-decoration: none;
                     }
                 }  
+            }
+        }
+        .other-nav.creator-false{
+            margin-left:10px;
+            .oj-tabs-gen-a{
+                padding-left: 5px;
+                padding-right: 0;
             }
         }
         .other-nav:not(.oj-selected){

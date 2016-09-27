@@ -121,6 +121,7 @@ require(['ojs/ojcore',
                 self.timeDisplay = ko.observable("short");
                 self.timePeriodPre = ko.observable("Last 7 days");
                 self.changeLabel = ko.observable(true);
+                self.timeFilterParams = {hoursIncluded: "8-18", daysIncluded: ["2", "3", "4", "5", "6"], monthsIncluded: ["2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]};
 
                 self.isTimePeriodLessThan1day = function(timePeriod) {
                     if(timePeriod==="Last 15 minutes" || timePeriod==="Last 30 minutes" || timePeriod==="Last 60 minutes" ||
@@ -144,6 +145,7 @@ require(['ojs/ojcore',
                     hideMainLabel: true,
                     dtpickerPosition: self.floatPosition1,
                     timePeriod: "Last 1 day", //self.timePeriodPre,
+//                    timeFilterParams: self.timeFilterParams,
                     callbackAfterApply: function (start, end, tp, tf) {
                         console.log(start);
                         console.log(end);

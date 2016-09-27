@@ -753,7 +753,7 @@
                             data-bind="attr:{id:'rightpanel-pencil_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},ojComponent: {
                                     component:'ojButton',
                                     display: 'icons',
-                                    icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-pencil'},
+                                    icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-pencil-df'},
                                     label: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_SETTINGS_TITLE')
                                 },
                                 visible:!rightPanelControl.dashboardEditDisabled() || isDashboardSet(),
@@ -1146,6 +1146,10 @@
                                                     </div>
                                                     <div class="oj-col oj-sm-8 oj-md-8">
                                                         <span data-bind="text:WIDGET_DESCRIPTION" style="color: #9e9e9e;"></span>
+                                                    </div>
+                                                    <div class="oj-col oj-sm-8 oj-md-8" style="position:absolute;right:0;bottom:15px">
+                                                        <span style="color: #9e9e9e;">Created By:</span>
+                                                        <span data-bind="text:WIDGET_OWNER" style="color: #9e9e9e;"></span>
                                                     </div>
                                                 </div>
                                             </div>

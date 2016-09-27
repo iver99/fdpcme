@@ -18,11 +18,19 @@
                  <pipeline name="STAGE"/>
              </pipelines>
      </lrg>
+
      <lrg name="emcitats_allsrg_3n" repos="emcitats" description="Run LRG from emcpdf to ensure the SDK is not breaking it."> 
 	     <pipelines>
 	     <pipeline name="PRODUCT"/> 
 	     </pipelines> 
 </lrg>
+
+     <lrg name="emcpdf_allsrg_3n" launcher="tests/suites/emcpdf_allsrg_3n.gradle" description="srg for emcpdf 3n automation">
+             <pipelines>
+                 <pipeline name="STAGE"/>
+             </pipelines>
+     </lrg>
+
 
  </lrg-metadata>
 

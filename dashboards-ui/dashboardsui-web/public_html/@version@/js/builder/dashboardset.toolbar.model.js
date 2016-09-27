@@ -289,7 +289,7 @@ define(['knockout',
                     "label": getNlsString("COMMON_BTN_EDIT"),
                     "url": "#",
                     "id": "dbs-edit",
-                    "icon": "fa-pencil",
+                    "icon": "fa-pencil-df",
                     "title": "",
                     "disabled": "",
                     "endOfGroup": false,
@@ -419,15 +419,19 @@ define(['knockout',
                         var indexOfSelectedTabInUserOption = 0;
                         $.each(subDashboards, function (index, simpleDashboardInst) {
                             singleDashboardItem = new dashboardItem(simpleDashboardInst);
+                            var isOobSet=self.dashboardInst.owner()==="Oracle";
+                            var sharedVisibleCondition = self.dashboardsetConfig.isCreator() || (singleDashboardItem.raw !== null && singleDashboardItem.raw.sharePublic() === true) || singleDashboardItem === "new";
+                            if (sharedVisibleCondition || isOobSet) {
+                                self.dashboardsetItems.push(singleDashboardItem);
+                                self.reorderedDbsSetItems.push(singleDashboardItem);
+                                addNewTab(singleDashboardItem.name(), singleDashboardItem.dashboardId, -1, singleDashboardItem.type);
 
-                            self.dashboardsetItems.push(singleDashboardItem);
-                            self.reorderedDbsSetItems.push(singleDashboardItem);
-                            addNewTab(singleDashboardItem.name(), singleDashboardItem.dashboardId, -1,singleDashboardItem.type);
-
-                            if (self.extendedOptions && self.extendedOptions.selectedTab === singleDashboardItem.dashboardId) {
-                                indexOfSelectedTabInUserOption = index;
+                                if (self.extendedOptions && self.extendedOptions.selectedTab === singleDashboardItem.dashboardId) {
+                                    var findResult = findTargetInArr(self.dashboardsetItems, self.extendedOptions.selectedTab);
+                                    indexOfSelectedTabInUserOption = findResult.removeIndex;
+                                }
                             }
-                            if(self.dashboardsetItems.length===1 && singleDashboardItem.type==='new'){
+                            if (self.dashboardsetItems.length === 1 && singleDashboardItem.type === 'new') {
                                 self.noDashboardHome(false);
                             }
                         });
@@ -473,9 +477,9 @@ define(['knockout',
                 function addNewTab(tabName, dashboardId, insertIndex, type) {
                     var tabContent;
                     if (type === "new") {
-                        tabContent = $("<li class='other-nav' id='dashboardTab-" + dashboardId + "' data-tabs-name='Dashboard'><span class='tabs-name'>" + tabName + "</span></li>");
+                        tabContent = $("<li class='other-nav creator-"+self.dashboardsetConfig.isCreator()+"' id='dashboardTab-" + dashboardId + "' data-tabs-name='Dashboard'><span class='tabs-name'>" + tabName + "</span></li>");
                     } else {
-                        tabContent = $("<li class='other-nav' id='dashboardTab-" + dashboardId + "' data-tabs-name='" + tabName + "'data-dashboard-name-in-set='" + tabName + "'><span class='tabs-name'>" + tabName + "</span></li>");
+                        tabContent = $("<li class='other-nav creator-"+self.dashboardsetConfig.isCreator()+"' id='dashboardTab-" + dashboardId + "' data-tabs-name='" + tabName + "'data-dashboard-name-in-set='" + tabName + "'><span class='tabs-name'>" + tabName + "</span></li>");
                     }
                     $("#dbd-tabs-container").ojTabs("addTab",
                             {
@@ -622,6 +626,9 @@ define(['knockout',
                         type: 'DELETE',
                         headers: dfu.getDashboardsRequestHeader(),
                         success: function (result) {
+                            if (!self.dashboardsetConfig.setHome()) {                                
+                                localStorage.deleteHomeDbd=true;
+                            }
                             window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
