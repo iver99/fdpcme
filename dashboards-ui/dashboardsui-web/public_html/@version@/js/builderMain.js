@@ -46,8 +46,8 @@ requirejs.config({
         'idfbcutil':'internaldfcommon/js/util/internal-df-browser-close-util',
         'd3':'../../libs/@version@/js/d3/d3.min',
         'emsaasui':'/emsaasui',
-//        'emcta':'/emsaasui/emcta/ta/js',
-        'emcta': '/emsaasui/emcta/ta/@version@/js', //for DEV_MODE
+        'emcta':'/emsaasui/emcta/ta/js',
+//        'emcta': '/emsaasui/emcta/ta/@version@/js', //for DEV_MODE
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
         'uifwk': '/emsaasui/uifwk'
