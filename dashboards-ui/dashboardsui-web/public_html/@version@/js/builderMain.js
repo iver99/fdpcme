@@ -52,7 +52,8 @@ requirejs.config({
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
         'uifwk': '/emsaasui/uifwk'
     },
-    bundles: (window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ? undefined : {
+    bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
+                (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
         'uifwk/js/uifwk-partition':
             [
             'uifwk/js/util/ajax-util',
