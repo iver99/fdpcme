@@ -977,7 +977,7 @@ public class DashboardManager
 				throw new DashboardSameNameException();
 			}
 			// init creation date, owner to prevent null insertion
-			Date created = DateUtil.getCurrentUTCTime();
+			Date created = DateUtil.getGatewayTime();
 			if (dbd.getCreationDate() == null) {
 				dbd.setCreationDate(created);
 			}
