@@ -204,7 +204,17 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         else
         {
             self.filter = null;
+        }        
+        
+        if (localStorage.deleteHomeDbd ==='true') {
+            dfu.showMessage({
+                type: 'info',
+                summary: oj.Translations.getTranslatedString("DBS_HOME_MSG_DELETED_HOME_DASHBOARD"),
+                detail: '',
+                removeDelayTime: 10000});
+            localStorage.deleteHomeDbd = false;
         }
+        
         self.showTilesMsg = ko.observable(false);
         self.tilesMsg = ko.observable("");
         self.showExploreDataBtn= ko.observable(true);

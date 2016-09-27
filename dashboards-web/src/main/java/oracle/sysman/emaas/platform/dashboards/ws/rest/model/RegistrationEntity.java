@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
@@ -31,14 +34,12 @@ import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
 import oracle.sysman.emaas.platform.dashboards.core.cache.ICacheFetchFactory;
 import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * @author miao
@@ -48,7 +49,6 @@ public class RegistrationEntity implements Serializable
 	private static final long serialVersionUID = 7632586542760891331L;
 
 	private static final Logger LOGGER = LogManager.getLogger(RegistrationEntity.class);
-
 	public static final String NAME_REGISTRYUTILS = "registryUrls";
 	public static final String NAME_SSF_SERVICENAME = "SavedSearch";
 	public static final String NAME_SSF_VERSION = "1.0+";
@@ -62,8 +62,8 @@ public class RegistrationEntity implements Serializable
 	public static final String NAME_DASHBOARD_UI_VERSION = "1.0+";
 	public static final String NAME_REGISTRY_SERVICENAME = "RegistryService";
 	public static final String NAME_REGISTRY_VERSION = "1.0+";
-	public static final String NAME_REGISTRY_REL_SSO = "sso.endpoint/virtual";
 
+	public static final String NAME_REGISTRY_REL_SSO = "sso.endpoint/virtual";
 	public static final String APM_SERVICENAME = "ApmUI";
 	public static final String APM_VERSION = "1.0+";
 	public static final String APM_HOME_LINK = "sso.home";
@@ -80,14 +80,14 @@ public class RegistrationEntity implements Serializable
 	//	public static final String TA_URL = "/emsaasui/emcta/ta/analytics.html";
 	public static final String TMUI_SERVICENAME = "TenantManagementUI";
 	public static final String EVENTUI_SERVICENAME = "EventUI";
-	public static final String ADMIN_CONSOLE_UI_SERVICENAME = "AdminConsoleSaaSUi";
 
+	public static final String ADMIN_CONSOLE_UI_SERVICENAME = "AdminConsoleSaaSUi";
 	// Infrastructure Monitoring service
 	public static final String MONITORING_OPC_APPNAME = "Monitoring";
 	public static final String MONITORING_SERVICENAME = "MonitoringServiceUI";
 	public static final String MONITORING_VERSION = "1.5+";
-	public static final String MONITORING_HOME_LINK = "sso.home";
 
+	public static final String MONITORING_HOME_LINK = "sso.home";
 	// Security Analytics service
 	public static final String SECURITY_ANALYTICS_OPC_APPNAME = "SecurityAnalytics";
 	public static final String SECURITY_ANALYTICS_SERVICENAME = "SecurityAnalyticsUI";
@@ -101,7 +101,8 @@ public class RegistrationEntity implements Serializable
 	// Security Analytics service
 	public static final String COMPLIANCE_OPC_APPNAME = "Compliance";
 	public static final String COMPLIANCE_SERVICENAME = "ComplianceUIService";
-	public static final String COMPLIANCE_VERSION = "0.1+";
+	public static final String COMPLIANCE_VERSION = null;
+
 	public static final String COMPLIANCE_HOME_LINK = "sso.home";
 
 	private static final Logger _LOGGER = LogManager.getLogger(RegistrationEntity.class);
@@ -149,38 +150,38 @@ public class RegistrationEntity implements Serializable
 		try {
 			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_ADMIN_LINKS, new ICacheFetchFactory() {
-				@Override
-				public Object fetchCachable(Object key) throws Exception
-				{
-					List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
 									UserContext.getCurrentUser());
-					if (!PrivilegeChecker.isAdminUser(userRoles)) {
-						return null;
-					}
+							if (!PrivilegeChecker.isAdminUser(userRoles)) {
+								return null;
+							}
 
-					List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
-					List<LinkEntity> filteredAdminLinks = filterAdminLinksByUserRoles(registeredAdminLinks, userRoles);
-					// Try to find Administration Console link
-					LinkEntity adminConsoleLink = null;
-					for (LinkEntity le : filteredAdminLinks) {
-						if (ADMIN_CONSOLE_UI_SERVICENAME.equals(le.getServiceName())) {
-							adminConsoleLink = le;
-							filteredAdminLinks.remove(le);
-							break;
+							List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
+							List<LinkEntity> filteredAdminLinks = filterAdminLinksByUserRoles(registeredAdminLinks, userRoles);
+							// Try to find Administration Console link
+							LinkEntity adminConsoleLink = null;
+							for (LinkEntity le : filteredAdminLinks) {
+								if (ADMIN_CONSOLE_UI_SERVICENAME.equals(le.getServiceName())) {
+									adminConsoleLink = le;
+									filteredAdminLinks.remove(le);
+									break;
+								}
+							}
+
+							List<LinkEntity> sortedAdminLinks = new ArrayList<LinkEntity>();
+							// The Administration Console link should be always shown at the top
+							if (adminConsoleLink != null) {
+								sortedAdminLinks.add(adminConsoleLink);
+							}
+							// The others should be sorted in alphabetical order
+							sortedAdminLinks.addAll(sortServiceLinks(filteredAdminLinks));
+
+							return sortedAdminLinks;
 						}
-					}
-
-					List<LinkEntity> sortedAdminLinks = new ArrayList<LinkEntity>();
-					// The Administration Console link should be always shown at the top
-					if (adminConsoleLink != null) {
-						sortedAdminLinks.add(adminConsoleLink);
-					}
-					// The others should be sorted in alphabetical order
-					sortedAdminLinks.addAll(sortServiceLinks(filteredAdminLinks));
-
-					return sortedAdminLinks;
-				}
-			});
+					});
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
@@ -252,8 +253,8 @@ public class RegistrationEntity implements Serializable
 					list.add(le);
 				}
 				else if (SECURITY_ANALYTICS_SERVICENAME.equals(app)) {
-					Link l = RegistryLookupUtil.getServiceExternalLink(SECURITY_ANALYTICS_SERVICENAME,
-							SECURITY_ANALYTICS_VERSION, SECURITY_ANALYTICS_HOME_LINK, tenantName);
+					Link l = RegistryLookupUtil.getServiceExternalLink(SECURITY_ANALYTICS_SERVICENAME, SECURITY_ANALYTICS_VERSION,
+							SECURITY_ANALYTICS_HOME_LINK, tenantName);
 					if (l == null) {
 						throw new Exception("Link for " + app + "return null");
 					}
@@ -271,14 +272,13 @@ public class RegistrationEntity implements Serializable
 							NAME_DASHBOARD_UI_VERSION));
 				}
 				else if (COMPLIANCE_SERVICENAME.equals(app)) {
-					Link l = RegistryLookupUtil.getServiceExternalLink(COMPLIANCE_SERVICENAME,
-							COMPLIANCE_VERSION, COMPLIANCE_HOME_LINK, tenantName);
+					VersionedLink l = RegistryLookupUtil.getServiceExternalLink(COMPLIANCE_SERVICENAME, COMPLIANCE_VERSION,
+							COMPLIANCE_HOME_LINK, tenantName);
 					if (l == null) {
 						throw new Exception("Link for " + app + "return null");
 					}
 					//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
-					LinkEntity le = new LinkEntity(COMPLIANCE_OPC_APPNAME, l.getHref(), COMPLIANCE_SERVICENAME,
-							COMPLIANCE_VERSION);
+					LinkEntity le = new LinkEntity(COMPLIANCE_OPC_APPNAME, l.getHref(), COMPLIANCE_SERVICENAME, l.getVersion());
 					le = replaceWithVanityUrl(le, tenantName, COMPLIANCE_SERVICENAME);
 					list.add(le);
 				}
@@ -318,12 +318,12 @@ public class RegistrationEntity implements Serializable
 		try {
 			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS, new ICacheFetchFactory() {
-				@Override
-				public Object fetchCachable(Object key) throws Exception
-				{
-					return sortServiceLinks(lookupLinksWithRelPrefix(NAME_HOME_LINK));
-				}
-			});
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_HOME_LINK));
+						}
+					});
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
@@ -405,12 +405,12 @@ public class RegistrationEntity implements Serializable
 		try {
 			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_VISUAL_ANALYZER, new ICacheFetchFactory() {
-				@Override
-				public Object fetchCachable(Object key) throws Exception
-				{
-					return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
-				}
-			});
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
+						}
+					});
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
@@ -588,8 +588,8 @@ public class RegistrationEntity implements Serializable
 			try {
 				SanitizedInstanceInfo sanitizedInstance = null;
 				if (!StringUtil.isEmpty(tenantName)) {
-					sanitizedInstance = LookupManager.getInstance().getLookupClient()
-							.getSanitizedInstanceInfo(internalInstance, tenantName);
+					sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance,
+							tenantName);
 					LOGGER.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
 							sanitizedInstance, tenantName);
 				}

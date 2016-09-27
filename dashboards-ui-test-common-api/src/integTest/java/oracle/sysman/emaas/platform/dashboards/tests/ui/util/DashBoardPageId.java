@@ -77,6 +77,7 @@ public class DashBoardPageId
 	public static final String FILTERAPMLOCATOR = "//*[@id='apmopt']";
 	public static final String FILTERITALOCATOR = "//*[@id='itaopt']";
 	public static final String FILTERLALOCATOR = "//*[@id='laopt']";
+	public static final String FILTERORCHESTRATIONLOCATOR = "//*[@id='ocsopt']";
 	public static final String FILTERORACLELOCATOR = "//*[@id='oracleopt']";
 	public static final String FILTERSHARELOCATOR = "//*[@id='shareopt']";
 	public static final String FILTERMELOCATOR = "//*[@id='otheropt']";
