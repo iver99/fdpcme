@@ -1,22 +1,7 @@
 {
-"#": "=======================================================================",
-"#": "Format -- <artifactName>: { <artifactSpecMap> },",
-"#": "-- keep each section sorted by artifactName",
-"#": "-- artifactName is name field unless duplicate requires '-<xxx>' suffix",
-"#": "-- Note: transitive is true by default,",
- 
-"#": "-- entries are emaas artifact specs, which are by definition SDK artifacts if they come from another project",
-"#": "-- entries should have a group key with value starting with com.oracle.emaas.",
-"#": "-- entries should have a method key with value artifactFilterSdkVersion",
-"#": "-- entries should have a dynamic version spec (ends with "+"), not a fixed version",
- 
-"#": "=====================================================================",
-"#": "internal com.oracle.emaas SDK artifacts",
- 
-
 "deploy_application-emclas": { "method": "artifactFilterSdkVersion", "group": "com.oracle.emaas.emclas", "name": "deploy_application", "version": "1.+", "ext": "xml" },
 "deploy_application-emcpa": { "method": "artifactFilterSdkVersion", "group": "com.oracle.emaas.emcpa", "name": "deploy_application", "version": "1.+", "ext": "xml" },
 "registry-client": { "method": "artifactFilterSdkVersion", "group": "com.oracle.emaas.emcpsm", "name": "registry-client", "version": "1.+" },
 "registry-lookup-client":{ "method": "artifactFilterSdkVersion", "group": "com.oracle.emaas.emcpsm", "name": "registry-lookup-client", "version": "1.+" },
+"emaas-platform-tenant-sdk":{ "method": "artifactFilterSdkVersion","group": "com.oracle.emaas", "name":"emaas-platform-tenant-sdk", "version":"0.2+"}
 }
-
