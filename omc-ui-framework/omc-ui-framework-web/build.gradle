@@ -53,25 +53,225 @@ else
 {
     tselVersion =  getDependentSdkVersion('com.oracle.emaas.emctas.tgtsel', 'emcs-targetselector', '1.9.+')
 }
+
 dependencies {
     compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '2.0.2-26417', ext: 'war'){ transitive = false }	
     compile(group: 'files', name: 'canvg', version: '1.3', ext: 'zip'){ transitive = false }
     compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
-compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = 
-false }
-        compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ 
-transitive = false }
-	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
+    compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
+    compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
+    compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
     compile(group: 'com.oracle.emaas.emctas.tgtsel', name:'emcs-targetselector', version:tselVersion, ext:'zip'){ transitive = false }
-	providedCompile project(':dashboards-ui-test-common-api')  { transitive = false }
-    compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')	
-	jscover (group:'com.github.tntim96', name:'JSCover-all', version:'1.0.19')
+    providedCompile project(':dashboards-ui-test-common-api')  { transitive = false }
+    compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')
+    jscover (group:'com.github.tntim96', name:'JSCover-all', version:'1.0.19')
 }
 
 task cleanJs(type:Delete) {
 	delete fileTree(dir: stagingDir)
-    delete fileTree(dir: compiledDir)	
+	delete fileTree(dir: compiledDir)	
 }
+
+project.task("unpackJETFromArtifactory") << {
+    def File buildJetUnzipDir = new File(buildDir.absolutePath, 'jet')
+    //first time or if custom cleans removes it
+    sourceJetDestDir.mkdirs()
+
+    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+        if (artifact.name.equals('oraclejet') && files(sourceJetDestDir.listFiles()).isEmpty()) {
+            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+            buildJetUnzipDir.mkdirs()
+            project.copy {
+                from project.zipTree(artifact.file.absolutePath)
+                into buildJetUnzipDir.absolutePath
+            }
+		    project.copy {
+				from  buildJetUnzipDir
+				into sourceJetDestDir.absolutePath
+		    }
+	        if(!project.hasProperty("devMode")){
+				def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/oraclejet");
+				outputs.dir outputDir
+				project.copy {
+				    from  buildJetUnzipDir
+				    into outputDir
+				}
+		    }
+	    project.delete(buildJetUnzipDir)
+    	}
+    }
+}
+
+//unpack js libs from artifactory
+project.task("unpackJSLibFromArtifactory") << {
+    def File buildJsCanvgUnzipDir = new File(buildDir.absolutePath, 'canvg')
+    def File buildJsCanvasUnzipDir = new File(buildDir.absolutePath, 'html2canvas')
+    //first time or if custom cleans removes it
+    sourceJsCanvgDestDir.mkdirs()
+    sourceJsCanvasDesDir.mkdirs()
+
+    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+        if (artifact.name.equals('canvg') && files(sourceJsCanvgDestDir.listFiles()).isEmpty()) {
+            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+            sourceJsCanvgDestDir.mkdirs()
+            project.copy {
+                from project.zipTree(artifact.file.absolutePath)
+                into buildJsCanvgUnzipDir.absolutePath
+            }
+            project.copy {
+                from  buildJsCanvgUnzipDir
+                into sourceJsCanvgDestDir.absolutePath
+            }
+		    if(!project.hasProperty("devMode")){
+		        def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/canvg");
+		        outputs.dir outputDir
+		        project.copy {
+				    from sourceJsCanvgDestDir.absolutePath
+				    into outputDir
+		        }
+		    }	
+            project.delete(buildJsCanvgUnzipDir)
+        }
+
+        if (artifact.name.equals('html2canvas') && files(sourceJsCanvasDesDir.listFiles()).isEmpty()) {
+            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+            sourceJsCanvasDesDir.mkdirs()
+            project.copy {
+                from artifact.file.absolutePath
+                into buildJsCanvasUnzipDir.absolutePath
+            }
+            project.copy {
+                from  buildJsCanvasUnzipDir
+                into sourceJsCanvasDesDir.absolutePath
+                rename 'html2canvas-(.+)', 'html2canvas.js'
+            }
+		    if(!project.hasProperty("devMode")){
+		        def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/html2canvas");
+		        outputs.dir outputDir
+		        project.copy {
+			    from sourceJsCanvasDesDir.absolutePath
+			    into outputDir
+		        }
+		    }	
+            project.delete(buildJsCanvasUnzipDir)
+        }
+    }
+}
+
+project.task("cleanJet") << {
+    println 'Cleaning up jet directories ...'
+    println 'oraclejet dir: ' + sourceJetDestDir.absolutePath
+    sourceJetDestDir.deleteDir()
+    println 'JS lib canvg dir: ' + sourceJsCanvgDestDir.absolutePath
+    sourceJsCanvgDestDir.deleteDir()
+    println 'JS lib html2canvas dir : ' + sourceJsCanvasDesDir.absolutePath
+    sourceJsCanvasDesDir.deleteDir()
+
+}
+
+project.task("unpackFontFromArtifactory") << {    
+    def File buildFontUnzipDir = new File(buildDir.absolutePath, 'font-awesome')
+    //first time or if custom cleans removes it
+    sourceFontDestDir.mkdirs()
+
+    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+        if (artifact.name.equals('font-awesome') && files(sourceFontDestDir.listFiles()).isEmpty()) {
+            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+            buildFontUnzipDir.mkdirs()
+            project.copy {  
+				from project.file(artifact.file.absolutePath)
+				into buildFontUnzipDir.absolutePath
+			}	    
+		    ant.unzip(src: buildFontUnzipDir.absolutePath+"/font-awesome-4.3.0.zip", dest:buildFontUnzipDir.absolutePath)		    
+		    project.copy {
+		    	    from buildFontUnzipDir.absolutePath+"/font-awesome-4.3.0"
+			    into sourceFontDestDir.absolutePath
+		    }
+		    if(!project.hasProperty("devMode")){
+		        def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/css/font-awesome");
+		        outputs.dir outputDir
+		        project.copy {
+				    from sourceFontDestDir.absolutePath
+				    into outputDir
+		        }
+		    }
+		    project.delete(buildFontUnzipDir)
+        }
+    }
+}
+
+project.task("cleanFont") << {
+    println 'Cleaning up font directories ...'
+    println 'font-awesome dir: ' + sourceFontDestDir.absolutePath
+    sourceFontDestDir.deleteDir()
+}
+
+project.task("unpackTargetSelectorFromArtifactory") << {  
+    def File buildTargetSelectorUnzipDir = new File(buildDir.absolutePath, 'emcs-targetselector')
+    //first time or if custom cleans removes it
+    sourceTargetSelectorDestDir.mkdirs()
+    sourceTargetSelectorAPIDestDir.mkdirs()
+
+    //project.configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+        if (artifact.name.equals('emcs-targetselector') && files(sourceTargetSelectorDestDir.listFiles()).isEmpty()) {
+            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+            buildTargetSelectorUnzipDir.mkdirs()
+            project.copy {
+                from project.zipTree(artifact.file.absolutePath)
+                into buildTargetSelectorUnzipDir.absolutePath
+            }
+
+            if (!files(buildTargetSelectorUnzipDir.listFiles().findAll{
+                        it.name.startsWith('TargetSelectorUtil')
+                    }).isEmpty())
+            {
+                logger.lifecycle("Target Selector artifact contains Source and Test API Zip")
+                logger.lifecycle("Unpacking Test API..")
+                //Copy the Test API classes to a dir so they can be added to the distributed jar
+                project.copy {
+                    from buildTargetSelectorUnzipDir.listFiles().findAll{
+                        it.name.startsWith('TargetSelectorUtil')
+                    }.collect {
+                        zipTree(it)
+                    }
+                    into sourceTargetSelectorAPIDestDir
+                }
+	
+                logger.lifecycle("Unpacking Source..")
+                //Copy Tsel source code to destination dir
+                project.copy {
+                    from buildTargetSelectorUnzipDir.listFiles().findAll{
+                        it.name.startsWith('emcs-targetselector')
+                    }.collect {
+                        zipTree(it)
+                    }
+                    into sourceTargetSelectorDestDir
+                }
+            }
+            else
+            {
+                logger.lifecycle("Unpacking Source..")
+                project.copy {
+                    from buildTargetSelectorUnzipDir
+                    into sourceTargetSelectorDestDir
+                }
+            }            
+            //finally delete the build directory
+            project.delete(buildTargetSelectorUnzipDir)
+        }
+    }
+}
+
+project.task("cleanTargetSelector") << {
+    println 'Cleaning up target selector directories ...'
+    println 'target selector dir: ' + sourceTargetSelectorDestDir.absolutePath
+    sourceTargetSelectorDestDir.deleteDir()
+    println 'target selector API dir: ' + sourceTargetSelectorAPIDestDir.absolutePath
+    sourceTargetSelectorAPIDestDir.deleteDir()
+}
+
+clean.dependsOn cleanJet,cleanFont,cleanTargetSelector
 
 project.task("cleanCompassCss")<<{
 }
@@ -86,13 +286,13 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass]) {
                 fileCopyDetails.name = fileCopyDetails.name.replaceAll(/(.*)@version@(.*)/, '$1'+versionPathElement+'$2')
             }
             //replace @version@ with versionPathElement
-            filesMatching("**/*.js") {               
-		filter(ReplaceTokens, tokens: [version: versionPathElement])
+            filesMatching("**/*.js") {
+            	filter(ReplaceTokens, tokens: [version: versionPathElement])
             }
             filesMatching("**/*.html") {
                 filter(ReplaceTokens, tokens: [version: versionPathElement])
-            }	
-	    filesMatching("**/*.css") {
+            }
+            filesMatching("**/*.css") {
                 filter(ReplaceTokens, tokens: [version: versionPathElement])
             }
     }
@@ -112,42 +312,43 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass]) {
        //this is here because of gradle bug, the old @version@ directory remains
        delete stagingDir+'/@version@'
        delete stagingDir+'/libs/@version@'
-       //delete webRootSourceDir+'/@version@/css'
     }
+}
+
+task stageJs(dependsOn:[unpackJETFromArtifactory,unpackJSLibFromArtifactory,unpackFontFromArtifactory,unpackTargetSelectorFromArtifactory,copyJsSource]) {
 }
 
 //define the JS source locations
 javascript.source {
 	externaljs {
 	    js {
-		srcDir stagingDir+"/libs/@version@/js"
-		include "**/canvg/*.js"
-		include "**/html2canvas/*.js"
-		exclude "**/*.orig.js"
+			srcDir stagingDir+"/libs/@version@/js"
+			include "**/canvg/*.js"
+			include "**/html2canvas/*.js"
+			exclude "**/*.orig.js"
 	    }
 	}
 	staticjs {
-            js {
-                srcDir 'public_html/js'
-                include "**/*.js"
-		exclude "**/*.orig.js"
-                exclude "**/uifwk-partition.js"
-            }
+        js {
+        	srcDir 'public_html/js'
+        	include "**/*.js"
+        	exclude "**/*.orig.js"
+        	exclude "**/uifwk-partition.js"
         }
+    }
 	cachedjs {
 	    js {
-		srcDir 'public_html/@version@/js'
-		//scrDir stagingDir+"/@version@/js"
-		include "**/*.js"
-		exclude "**/*.orig.js"
-                exclude "**/uifwk-impl-partition.js"
+			srcDir 'public_html/@version@/js'			
+			include "**/*.js"
+			exclude "**/*.orig.js"
+			exclude "**/uifwk-impl-partition.js"
 	    }
 	}
     jshint {
-	js {
-		srcDir 'public_html'
-                include "**/*.js"
-	}
+		js {
+			srcDir 'public_html'
+	                include "**/*.js"
+		}
     }
 }
 
@@ -311,120 +512,107 @@ task dominifystackblurjs(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
     	}
 }
 
-
 javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
     tasks.add(name: "dominifycachejs${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
-	String fileName = "${jsFile.name}"
-	String renamedFile = fileName.replace(".",".orig.")
-	def parentDir = jsFile.parent
-	def tmpFolder= parentDir.split("js") as String[]
-	def sourceFile = "";
-	def destFile = "";
-	def tmp ="";
-
-	if ( parentDir.endsWith("/js")){
-		for(int i=1; i<tmpFolder.length;i++){
-		    tmp=tmp+'js'+tmpFolder[i]
-		}
-		sourceFile = stagingDir+"/"+versionPathElement+"/"+tmp+"/js/"+fileName
-		destFile = stagingDir+"/"+versionPathElement+"/"+tmp+"/js/"+renamedFile
-	}
-	else
-	{
-		for(int i=1; i<tmpFolder.length;i++){
-		    tmp=tmp+'js'+tmpFolder[i]
-		}
-		sourceFile = stagingDir+"/"+versionPathElement+"/"+tmp+"/"+fileName
-		destFile = stagingDir+"/"+versionPathElement+"/"+tmp+"/"+renamedFile
-	}
+		String fileName = "${jsFile.name}"
+		String renamedFile = fileName.replace(".",".orig.")
+		def parentDir = jsFile.parent
+		def tmpFolder= parentDir.split("js") as String[]
+		def sourceFile = "";
+		def destFile = "";
+		def tmp ="";
 	
-	doFirst{ 
-	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
-	}
-
-        source = sourceFile
-	dest = sourceFile
-	String sourceMapFile = fileName.replace(".js",".map")
-	if ( parentDir.endsWith("/js") )
-	{
-	    sourceMap = file(stagingDir+"/"+versionPathElement+"/"+tmp+"/js/"+sourceMapFile)
-	}
-	else
-	{
-	    sourceMap = file(stagingDir+"/"+versionPathElement+"/"+tmp+"/"+sourceMapFile)
-	}
-
-	closure {
-	        warningLevel = 'QUIET'
-	}
-
-	doLast {
-		//update the compiled JS to point to the source map
-		File compiledFile = new File(sourceFile)
-		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
-
-		//fix file path in source map file
-		File mapFile = compiledFile
-		if ( parentDir.endsWith("/js") )
-		{
-	    	     mapFile = new File(stagingDir+"/"+versionPathElement+"/"+tmp+"/js/"+sourceMapFile)
+		if ( parentDir.endsWith("/js")){
+			for(int i=1; i<tmpFolder.length;i++){
+			    tmp=tmp+'js'+tmpFolder[i]
+			}
+			sourceFile = stagingDir+"/"+versionPathElement+"/"+tmp+"/js/"+fileName
+			destFile = stagingDir+"/"+versionPathElement+"/"+tmp+"/js/"+renamedFile
 		}
 		else
 		{
-	    	    mapFile = new File(stagingDir+"/"+versionPathElement+"/"+tmp+"/"+sourceMapFile)
+			for(int i=1; i<tmpFolder.length;i++){
+			    tmp=tmp+'js'+tmpFolder[i]
+			}
+			sourceFile = stagingDir+"/"+versionPathElement+"/"+tmp+"/"+fileName
+			destFile = stagingDir+"/"+versionPathElement+"/"+tmp+"/"+renamedFile
 		}
 		
-		String contents = mapFile.getText('UTF-8')
-		String absPath = compiledFile
-		contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
-		mapFile.write(contents, 'UTF-8')
-    	}	
+		doFirst{ 
+		    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
+		}
+	
+	    source = sourceFile
+		dest = sourceFile
+		String sourceMapFile = fileName.replace(".js",".map")
+		if ( parentDir.endsWith("/js") )
+		{
+		    sourceMap = file(stagingDir+"/"+versionPathElement+"/"+tmp+"/js/"+sourceMapFile)
+		}
+		else
+		{
+		    sourceMap = file(stagingDir+"/"+versionPathElement+"/"+tmp+"/"+sourceMapFile)
+		}
+	
+		closure {
+		        warningLevel = 'QUIET'
+		}
+	
+		doLast {
+			//update the compiled JS to point to the source map
+			File compiledFile = new File(sourceFile)
+			compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
+	
+			//fix file path in source map file
+			File mapFile = compiledFile
+			if ( parentDir.endsWith("/js") )
+			{
+				mapFile = new File(stagingDir+"/"+versionPathElement+"/"+tmp+"/js/"+sourceMapFile)
+			}
+			else
+			{
+				mapFile = new File(stagingDir+"/"+versionPathElement+"/"+tmp+"/"+sourceMapFile)
+			}
+			
+			String contents = mapFile.getText('UTF-8')
+			String absPath = compiledFile
+			contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
+			mapFile.write(contents, 'UTF-8')
+	    }
     }
 }
 
-task jsCodeCoverage(type:JavaExec, dependsOn:[cleanJs, copyJsSource]) {
-
-    //vmArgs '-Dfile.encoding=UTF-8'
+task jsCodeCoverage(type:JavaExec, dependsOn:[cleanJs, stageJs]) {    
     main '-jar'
     configurations.jscover.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-	logger.lifecycle("filepath:  "+artifact.name)
+    	logger.lifecycle("filepath:  "+artifact.name)
         if (artifact.name.equals('JSCover-all')) {
-		logger.lifecycle("filepath"+artifact.file.absolutePath)
-		//args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/ckeditor\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
-		args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/d3\\/.*', '--no-instrument-reg=.*\\/canvg\\/.*', '--no-instrument-reg=.*\\/html2canvas\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*', '--no-instrument-reg=.*\\/ita-tool\\/.*', '--no-instrument-reg=.*\\/ckeditor\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
-            }
-	}      
+			logger.lifecycle("filepath"+artifact.file.absolutePath)
+			args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/d3\\/.*', '--no-instrument-reg=.*\\/canvg\\/.*', '--no-instrument-reg=.*\\/html2canvas\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*', '--no-instrument-reg=.*\\/ita-tool\\/.*', '--no-instrument-reg=.*\\/ckeditor\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
+        }
+	}   
     
     doLast {
         //delete uninstrumented source
-        //delete stagingDir+'/js'
-	delete stagingDir
+        delete stagingDir
         //rename instrumented source to source folder
-        //file(stagingDir+'/jscc').renameTo(file(stagingDir+'/js'))
-	file(buildDir.absolutePath+'/staging/public_htmlcc').renameTo(file(stagingDir))
+        file(buildDir.absolutePath+'/staging/public_htmlcc').renameTo(file(stagingDir))
         //now zip up original-src so we can download and generate reports
-        //ant.zip(destfile: stagingDir+'/js/original-src.zip',basedir: stagingDir+'/js/original-src/');
-	ant.zip(destfile: stagingDir+'/original-src.zip',basedir: stagingDir+'/original-src/');
+        ant.zip(destfile: stagingDir+'/original-src.zip',basedir: stagingDir+'/original-src/');
    }
 }
+
 jsCodeCoverage.onlyIf{jscc}
 
 compass {
-    // We package the gems into the .jar file (see compass dependencies)
-    // so that http proxy issues do not affect us.  To enable this, 
-    // we also build our own plugin for use.
     gemPath = file('build/.jruby/gems')
     gemJars = ['compass-gems:compass-gems:1.0.1']
     gems = []
-    //if(project.hasProperty("devMode")){
+    
 	cssDir file('public_html/@version@/css')
-    //}
-    //else{
-//	cssDir file('public_html/'+versionPathElement+'/css')
-  //  }
+    
     sassDir file ('public_html/scss')
-    debugInfo false // Defaults to true,
-                    // set to false to remove debug info from generated css file
+    debugInfo false // Defaults to true, set to false to remove debug info from generated css file
     noLineComments true
     force true
 }
@@ -434,217 +622,18 @@ compileSass {
 }
 
 task jsHint(type:com.eriwen.gradle.js.tasks.JsHintTask){
-        source = javascript.source.jshint.js.files
-        dest = file(buildDir.absolutePath+'/jshint.out')
-        reporter = 'checkstyle'
-        jshint.options = [expr: "true", unused: "true", sub: "true"]
-        jshint.predef = [define: 1, require:2, requirejs:3, window:4, document:5, setTimeout:6, console:7, d3:8, $: 9, canvg:10, html2canvas:11, clearTimeout: 12, Promise: 13, setInterval: 14, importScripts:15, Worker: 16, postMessage: 17, btoa: 18, escape: 19, unescape: 20, atob: 21, Storage: 22]
+	source = javascript.source.jshint.js.files
+	dest = file(buildDir.absolutePath+'/jshint.out')
+	reporter = 'checkstyle'
+	jshint.options = [expr: "true", unused: "true", sub: "true"]
+	jshint.predef = [define: 1, require:2, requirejs:3, window:4, document:5, setTimeout:6, console:7, d3:8, $: 9, canvg:10, html2canvas:11, clearTimeout: 12, Promise: 13, setInterval: 14, importScripts:15, Worker: 16, postMessage: 17, btoa: 18, escape: 19, unescape: 20, atob: 21, Storage: 22]
 }
-
-project.task("unpackJETFromArtifactory") << {
-    // if the resources/web/js/libs directory is empty - either the first time this task is
-    // run or the directory has been cleaned, then
-    // iterate over the project artifacts and look for the oraclejet.zip,
-    // - downloaded on the local file system (generally found in <user_home_dir>/.gradle)
-    // - unzip to the build/jet directory
-    // - copy over the directories to different common/resources directories
-    // (these directories are specified in the .gitignore file)
-    // - delete the build/jet directory
-    // build directory where the oraclejet.zip will be unzipped
-    
-    def File buildJetUnzipDir = new File(buildDir.absolutePath, 'jet')
-    //first time or if custom cleans removes it
-    sourceJetDestDir.mkdirs()
-
-    //project.configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-        if (artifact.name.equals('oraclejet') && files(sourceJetDestDir.listFiles()).isEmpty()) {
-            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-            buildJetUnzipDir.mkdirs()
-            project.copy {
-                from project.zipTree(artifact.file.absolutePath)
-                into buildJetUnzipDir.absolutePath
-            }
-            // Copy each of the unzipped jet directories to
-            // the appropriate source directories
-            // 1. build/jet/ >> public_html/emcsDependencies/oraclejet/
-            project.copy {
-                from  buildJetUnzipDir
-                into sourceJetDestDir.absolutePath
-            }
-            
-            //finally delete the build/jet directory
-            project.delete(buildJetUnzipDir)
-        }
-    }
-}
-
-//unpack js libs from artifactory
-project.task("unpackJSLibFromArtifactory") << {
-    def File buildJsCanvgUnzipDir = new File(buildDir.absolutePath, 'canvg')
-    def File buildJsCanvasUnzipDir = new File(buildDir.absolutePath, 'html2canvas')
-    //first time or if custom cleans removes it
-    sourceJsCanvgDestDir.mkdirs()
-    sourceJsCanvasDesDir.mkdirs()
-
-    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-        if (artifact.name.equals('canvg') && files(sourceJsCanvgDestDir.listFiles()).isEmpty()) {
-            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-            sourceJsCanvgDestDir.mkdirs()
-            project.copy {
-                from project.zipTree(artifact.file.absolutePath)
-                into buildJsCanvgUnzipDir.absolutePath
-            }
-            project.copy {
-                from  buildJsCanvgUnzipDir
-                into sourceJsCanvgDestDir.absolutePath
-            }
-            project.delete(buildJsCanvgUnzipDir)
-        }
-
-    if (artifact.name.equals('html2canvas') && files(sourceJsCanvasDesDir.listFiles()).isEmpty()) {
-            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-            sourceJsCanvasDesDir.mkdirs()
-            project.copy {
-                from artifact.file.absolutePath
-                into buildJsCanvasUnzipDir.absolutePath
-            }
-            project.copy {
-                from  buildJsCanvasUnzipDir
-                into sourceJsCanvasDesDir.absolutePath
-        rename 'html2canvas-(.+)', 'html2canvas.js'
-            }
-            project.delete(buildJsCanvasUnzipDir)
-        }
-
-    }
-}
-
-project.task("cleanJet") << {
-    println 'Cleaning up jet directories ...'
-    println 'oraclejet dir: ' + sourceJetDestDir.absolutePath
-    sourceJetDestDir.deleteDir()
-    println 'JS lib canvg dir: ' + sourceJsCanvgDestDir.absolutePath
-    sourceJsCanvgDestDir.deleteDir()
-    println 'JS lib html2canvas dir : ' + sourceJsCanvasDesDir.absolutePath
-    sourceJsCanvasDesDir.deleteDir()
-
-}
-
-project.task("unpackFontFromArtifactory") << {
-    
-    def File buildFontUnzipDir = new File(buildDir.absolutePath, 'font-awesome')
-    //first time or if custom cleans removes it
-    sourceFontDestDir.mkdirs()
-
-    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-        if (artifact.name.equals('font-awesome') && files(sourceFontDestDir.listFiles()).isEmpty()) {
-            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-            buildFontUnzipDir.mkdirs()
-            project.copy {  
-		from project.file(artifact.file.absolutePath)
-		into buildFontUnzipDir.absolutePath
-	    }
-	    
-	    ant.unzip(src: buildFontUnzipDir.absolutePath+"/font-awesome-4.3.0.zip", dest:buildFontUnzipDir.absolutePath)
-		    
-	    project.copy {
-	    	    from buildFontUnzipDir.absolutePath+"/font-awesome-4.3.0"
-		    into sourceFontDestDir.absolutePath
-	    }
-		    
-	    project.delete(buildFontUnzipDir)
-        }
-    }
-}
-
-project.task("cleanFont") << {
-    println 'Cleaning up font directories ...'
-    println 'font-awesome dir: ' + sourceFontDestDir.absolutePath
-    sourceFontDestDir.deleteDir()
-}
-
-project.task("unpackTargetSelectorFromArtifactory") << {
-    // iterate over the project artifacts and look for the emcs-targetselector.zip,
-    // - downloaded on the local file system (generally found in <user_home_dir>/.gradle)
-    // - unzip to the build directory
-    // - copy over the directories to different common/resources directories
-    // (these directories are specified in the .gitignore file)
-    // - delete the build directory
-    
-    def File buildTargetSelectorUnzipDir = new File(buildDir.absolutePath, 'emcs-targetselector')
-    //first time or if custom cleans removes it
-    sourceTargetSelectorDestDir.mkdirs()
-    sourceTargetSelectorAPIDestDir.mkdirs()
-
-    //project.configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-        if (artifact.name.equals('emcs-targetselector') && files(sourceTargetSelectorDestDir.listFiles()).isEmpty()) {
-            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-            buildTargetSelectorUnzipDir.mkdirs()
-            project.copy {
-                from project.zipTree(artifact.file.absolutePath)
-                into buildTargetSelectorUnzipDir.absolutePath
-            }
-
-            if (!files(buildTargetSelectorUnzipDir.listFiles().findAll{
-                        it.name.startsWith('TargetSelectorUtil')
-                    }).isEmpty())
-            {
-                logger.lifecycle("Target Selector artifact contains Source and Test API Zip")
-                logger.lifecycle("Unpacking Test API..")
-                //Copy the Test API classes to a dir so they can be added to the distributed jar
-                project.copy {
-                    from buildTargetSelectorUnzipDir.listFiles().findAll{
-                        it.name.startsWith('TargetSelectorUtil')
-                    }.collect {
-                        zipTree(it)
-                    }
-                    into sourceTargetSelectorAPIDestDir
-                }
-	
-                logger.lifecycle("Unpacking Source..")
-                //Copy Tsel source code to destination dir
-                project.copy {
-                    from buildTargetSelectorUnzipDir.listFiles().findAll{
-                        it.name.startsWith('emcs-targetselector')
-                    }.collect {
-                        zipTree(it)
-                    }
-                    into sourceTargetSelectorDestDir
-                }
-            }
-            else
-            {
-                logger.lifecycle("Unpacking Source..")
-                project.copy {
-                    from buildTargetSelectorUnzipDir
-                    into sourceTargetSelectorDestDir
-                }
-            }
-            
-            //finally delete the build directory
-            project.delete(buildTargetSelectorUnzipDir)
-        }
-    }
-}
-
-project.task("cleanTargetSelector") << {
-    println 'Cleaning up target selector directories ...'
-    println 'target selector dir: ' + sourceTargetSelectorDestDir.absolutePath
-    sourceTargetSelectorDestDir.deleteDir()
-    println 'target selector API dir: ' + sourceTargetSelectorAPIDestDir.absolutePath
-    sourceTargetSelectorAPIDestDir.deleteDir()
-}
-
-
-clean.dependsOn cleanJet,cleanFont,cleanTargetSelector
 
 //Combine start
 /**
  * combine -> minify -> fingerprint JavaScript
  */
-task copyStagedJs(type:Copy, dependsOn:[copyJsSource]) {
+task copyStagedJs(type:Copy, dependsOn:[stageJs]) {
     from (stagingDir) {
 	include "**/*"	
     }
@@ -727,7 +716,7 @@ task minifyUIFwkImplPartitionJs(dependsOn: [minifyUIFwkPartitionJs],type: com.er
 
 war.archiveName "omc-ui-framework-web.war"
 
-copyJsSource.dependsOn unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory, unpackTargetSelectorFromArtifactory
+//copyJsSource.dependsOn unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory, unpackTargetSelectorFromArtifactory
 
 //copy files without minify when -PdevMode enabled
 task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory,compileSass, unpackTargetSelectorFromArtifactory,jsCodeCoverage]){
