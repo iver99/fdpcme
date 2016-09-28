@@ -699,7 +699,7 @@ public class VerifyOOB extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(dependsOnMethods = { "verifyPerfAnalyticsDatabaseWithFilter" })
 	public void verifyPerfAnalyticsDatabase()
 	{
 		//initTest
@@ -708,6 +708,27 @@ public class VerifyOOB extends LoginAndLogout
 
 		//open Performance Analytics: Database
 		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Database");
+		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics: Database");
+
+		//verify the current url
+		webd.getLogger().info("Verify the current url");
+		DashBoardUtils.verifyURL(webd, "emcitas/db-analytics-war/html/db-performance-analytics.html");
+
+		//verify all the widgets displayed
+		//TODO
+	}
+
+	@Test(dependsOnMethods = { "verifyPerformance" })
+	public void verifyPerfAnalyticsDatabaseWithFilter()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyPerfAnalyticsDatabase");
+
+		//open Performance Analytics: Database
+		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Database");
+		DashboardHomeUtil.filterOptions(webd, "ita");
+		DashboardHomeUtil.isFilterOptionSelected(webd, "ita");
 		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics: Database");
 
 		//verify the current url

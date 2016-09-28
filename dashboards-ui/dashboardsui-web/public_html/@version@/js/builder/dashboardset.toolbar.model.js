@@ -419,8 +419,9 @@ define(['knockout',
                         var indexOfSelectedTabInUserOption = 0;
                         $.each(subDashboards, function (index, simpleDashboardInst) {
                             singleDashboardItem = new dashboardItem(simpleDashboardInst);
-                            var ifCondition = self.dashboardsetConfig.isCreator() || (singleDashboardItem.raw !== null && singleDashboardItem.raw.sharePublic() === true) || singleDashboardItem === "new";
-                            if (ifCondition) {
+                            var isOobSet=self.dashboardInst.owner()==="Oracle";
+                            var sharedVisibleCondition = self.dashboardsetConfig.isCreator() || (singleDashboardItem.raw !== null && singleDashboardItem.raw.sharePublic() === true) || singleDashboardItem === "new";
+                            if (sharedVisibleCondition || isOobSet) {
                                 self.dashboardsetItems.push(singleDashboardItem);
                                 self.reorderedDbsSetItems.push(singleDashboardItem);
                                 addNewTab(singleDashboardItem.name(), singleDashboardItem.dashboardId, -1, singleDashboardItem.type);
