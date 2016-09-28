@@ -42,6 +42,8 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                 self.clearButtonVisible = ko.computed(function(){return self.searchText() && '' !== self.searchText() ? true : false;});
 
                 var dfu = new dfumodel(self.userName, self.tenantName);
+                //Append uifwk css file into document head
+                dfu.loadUifwkCss();
 
                 // Initialize widget group and widget data
                 var labelAll = nls.WIDGET_SELECTOR_WIDGET_GROUP_ALL;

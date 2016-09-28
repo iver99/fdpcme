@@ -14,6 +14,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
             function BrandingBarViewModel(params) {
                 var self = this;
                 var msgUtil = new msgUtilModel();
+                self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
+                self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
+                var dfu = new dfumodel(self.userName, self.tenantName);
+                //Append uifwk css file into document head
+                dfu.loadUifwkCss();
 
                 //NLS strings
                 self.productName = nls.BRANDING_BAR_MANAGEMENT_CLOUD;
@@ -44,9 +49,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
 
                 self.navLinksNeedRefresh = ko.observable(false);
                 self.aboutBoxNeedRefresh = ko.observable(false);
-                self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
-                self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
-                var dfu = new dfumodel(self.userName, self.tenantName);
                 var dfWelcomeUrl =dfu.discoverWelcomeUrl();
                 var subscribedApps = null;
                 var appIdAPM = "APM";
