@@ -408,7 +408,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 	@Test(groups = "forth run", dependsOnMethods = { "testDuplicateDashboardNotAddToSet" })
 	public void testDuplicateOOBAddToSet()
-	{
+	{/*
 		dbName_DuplicateOOB = "OOBDashboard-duplicate-" + generateTimeStamp();
 
 		//init the test
@@ -458,7 +458,7 @@ public class TestDashboardSet extends LoginAndLogout
 		BrandingBarUtil.visitDashboardHome(webd);
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_DuplicateOOB), "Delete dashboard: "
 				+ dbName_DuplicateOOB + " failed!");
-
+*/
 	}
 
 	@Test(groups = "forth run", dependsOnMethods = { "testDuplicateOOBAddToSet" })
