@@ -1097,7 +1097,7 @@ public class DashboardManager
 				throw new DashboardNotFoundException();
 			}
 
-			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted().longValue() > 0;
+			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted().compareTo(BigInteger.ZERO) > 0;
 			if (isDeleted != null && isDeleted.booleanValue()) {
 				throw new DashboardNotFoundException();
 			}
