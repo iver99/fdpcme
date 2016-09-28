@@ -45,26 +45,26 @@ test {
 }
 
 dependencies {
-	compile project(':dashboards-entities') { transitive = false }
-	testRuntime getProjectArtifact('ojdbc6') { transitive = false }
-	compile getProjectArtifact('log4j-core')  { transitive = false }
-	compile getProjectArtifact('log4j-api')  { transitive = false }
-	compile getProjectArtifact('log4j-slf4j-impl')  { transitive = false }
-    compile getProjectArtifact('commons-lang3') { transitive = false }
-	compile getProjectArtifact('javax.persistence')  { transitive = false }
-	compile getProjectArtifact('eclipselink')   { transitive = false }
-	compile getProjectArtifact('javax.transaction-api')  { transitive = false }
-	compile getProjectArtifact('jettison')  { transitive = false }
-	compile getProjectArtifact('jackson-core-asl')  { transitive = false }
-	compile getProjectArtifact('jackson-mapper-asl')  { transitive = false }
-	compile getProjectArtifact('jackson-xc')  { transitive = false }
+	compile project(':dashboards-entities')  
+	testRuntime getProjectArtifact('ojdbc6')  
+	compile getProjectArtifact('log4j-core')   
+	compile getProjectArtifact('log4j-api')   
+	compile getProjectArtifact('log4j-slf4j-impl')   
+    compile getProjectArtifact('commons-lang3')  
+	compile getProjectArtifact('javax.persistence')   
+	compile getProjectArtifact('eclipselink')    
+	compile getProjectArtifact('javax.transaction-api')   
+	compile getProjectArtifact('jettison')   
+	compile getProjectArtifact('jackson-core-asl')   
+	compile getProjectArtifact('jackson-mapper-asl')   
+	compile getProjectArtifact('jackson-xc')   
 	compile	getProjectArtifact('registry-client')
     compile getProjectArtifact('registry-lookup-client') 
-	compile getProjectArtifact('emaas-platform-tenant-sdk')  { transitive = false }
+	compile getProjectArtifact('emaas-platform-tenant-sdk')   
 	compile getProjectArtifact('coherence') {transitive=false}
 	compile getProjectArtifact('jersey-core') {transitive=false}
 	compile getProjectArtifact('jersey-client') {transitive=false}
-	compile getProjectArtifact('jmockit') { transitive = false }
+	compile getProjectArtifact('jmockit')  
 	compile getProjectArtifact('em-qatool-os-webdriver') {transitive=false}
 
 	

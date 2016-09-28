@@ -37,16 +37,20 @@ test {
  
 dependencies { 
         compile project(':dashboards-core')
-        compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
-        compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
-        compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0'){ transitive = false }
-        compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.+'){ transitive = false }
-        compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.+'){ transitive = false }
-        compile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){ transitive = false }
-        compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.3.0'){ transitive = false }
-        compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.3.0'){ transitive = false }
-        compile(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.3.0'){ transitive = false }
-        compile(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
+        compile getProjectArtifact('log4j-core')   
+        compile getProjectArtifact('log4j-api')   
+        compile getProjectArtifact('wls-api')   
+        compile getProjectArtifact('registry-lookup-client')   
+        compile getProjectArtifact('registry-client')   
+        
+        compile getProjectArtifact('emaas-platform-tenant-sdk')   
+        compile getProjectArtifact('jackson-core')   
+        compile getProjectArtifact('log4j-core')   
+        compile getProjectArtifact('jackson-databind')   
+        compile getProjectArtifact('jackson-annotations')   
+        compile getProjectArtifact('wlfullclient')   
+        
+     
 } 
 
 

@@ -21,35 +21,31 @@ dependencies {
 	testCompile configurations.testNG
 	testConfig project(':dashboards-ui:dashboardsui-webutils')   { transitive = false }
 	testConfig project(':dashboards-ui:dashboardsui-web')   { transitive = false }
-	testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
-    testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
-	testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
-	testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
-	testConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
-	testConfig(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2') { transitive = false }
-	testConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13') { transitive = false }
-	testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13') { transitive = false }
-	testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
-//	testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){transitive=false }
-	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
-
-
-
-
-        testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.+'){ transitive = false }
-        testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.+'){ transitive = false }
-
-   
- 	testConfig(group: 'commons-codec', name:'commons-codec', version:'1.6') { transitive = false }
-    	testConfig(group: 'org.apache.commons', name:'commons-lang3', version:'3.1') { transitive = false }
-    	testConfig(group: 'commons-logging', name:'commons-logging', version:'1.1.1') { transitive = false }
-    	testConfig(group: 'org.apache.httpcomponents', name:'httpclient', version:'4.3.1') { transitive = false }
-        testConfig(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3') { transitive = false }
-        testConfig(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1') { transitive = false }
-  	
-    	
-       testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
-        testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
+	testConfig getProjectArtifact('log4j-core')  { transitive = false }
+	testConfig getProjectArtifact('log4j-api')  { transitive = false }
+	testConfig getProjectArtifact('ojdbc6')  { transitive = false }
+	testConfig getProjectArtifact('javax.persistence')  { transitive = false }
+	testConfig getProjectArtifact('eclipselink')  { transitive = false }
+	testConfig getProjectArtifact('javax.transaction-api')  { transitive = false }
+	testConfig getProjectArtifact('jackson-core-asl')  { transitive = false }
+	testConfig getProjectArtifact('jackson-mapper-asl')  { transitive = false }
+	testConfig getProjectArtifact('jackson-xc')  { transitive = false }
+	
+	testConfig getProjectArtifact('jmockit')  { transitive = false }
+	testConfig getProjectArtifact('registry-lookup-client')  { transitive = false }
+	testConfig getProjectArtifact('registry-client')  { transitive = false }
+	testConfig getProjectArtifact('commons-codec')  { transitive = false }
+	testConfig getProjectArtifact('commons-lang3')  { transitive = false }
+	testConfig getProjectArtifact('commons-logging')  { transitive = false }
+	testConfig getProjectArtifact('httpclient')  { transitive = false }
+	testConfig getProjectArtifact('httpcore')  { transitive = false }
+	testConfig getProjectArtifact('httpmime')  { transitive = false }
+	testConfig getProjectArtifact('servlet-api)  { transitive = false }
+	testConfig getProjectArtifact('javax.ws.rs-api')  { transitive = false }
+	
+        
+        
+        
         
     
 }

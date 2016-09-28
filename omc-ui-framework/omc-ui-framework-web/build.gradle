@@ -33,7 +33,7 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 configurations{
-	jscover { transitive = false }
+	jscover  
 	compass
 }
 
@@ -54,18 +54,17 @@ else
     tselVersion =  getDependentSdkVersion('com.oracle.emaas.emctas.tgtsel', 'emcs-targetselector', '1.9.+')
 }
 dependencies {
-    compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '2.0.2-26417', ext: 'war'){ transitive = false }	
-    compile(group: 'files', name: 'canvg', version: '1.3', ext: 'zip'){ transitive = false }
-    compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
-compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = 
-false }
-        compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ 
-transitive = false }
-	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
-    compile(group: 'com.oracle.emaas.emctas.tgtsel', name:'emcs-targetselector', version:tselVersion, ext:'zip'){ transitive = false }
-	providedCompile project(':dashboards-ui-test-common-api')  { transitive = false }
-    compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')	
-	jscover (group:'com.github.tntim96', name:'JSCover-all', version:'1.0.19')
+	compile getProjectArtifact('oraclejet')   
+	compile getProjectArtifact('canvg')   
+	compile getProjectArtifact('html2canvas')   
+	compile getProjectArtifact('log4j-core')   
+	compile getProjectArtifact('log4j-api')   
+	compile getProjectArtifact('font-awesome')   
+	compile getProjectArtifact('emcs-targetselector')   
+    
+	providedCompile project(':dashboards-ui-test-common-api')   
+    compass getProjectArtifact('jruby-complete')
+	jscover getProjectArtifact('JSCover-all')
 }
 
 task cleanJs(type:Delete) {

@@ -31,15 +31,28 @@ dependencies
 	deploy (project(path:':omc-ui-framework:omc-ui-framework-web', configuration:'archives')) {transitive = false}
 	
 	earlib (project(':omc-ui-framework:omc-ui-framework-webutils')){transitive = false} 
-	earlib(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.+') {transitive=false }
-	earlib(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.+') {transitive=false }
-        earlib(group: 'org.apache.zookeeper', name: 'zookeeper', version: '3.4.6') {transitive=false }	
-	earlib (group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2') {transitive=false }
-	earlib (group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2') {transitive=false }
-    earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.3.0'){transitive=false }
-    earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.3.0'){transitive=false }
-    earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.3.0'){transitive=false }
-    earlib(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){transitive=false }
+
+    
+    earlib getProjectArtifact('log4j-core')   
+	
+	earlib getProjectArtifact('jackson-core')   
+	earlib getProjectArtifact('jackson-databind')   
+	earlib getProjectArtifact('jackson-annotations')   
+  
+    earlib	getProjectArtifact('zookeeper'){transitive=false}
+    earlib	getProjectArtifact('registry-client'){transitive=false}
+    earlib getProjectArtifact('registry-lookup-client'){transitive=false} 
+	earlib getProjectArtifact('emaas-platform-tenant-sdk')    
+
+
+
+	earlib getProjectArtifact('log4j-slf4j-impl')   
+	earlib getProjectArtifact('httpclient')   
+	earlib getProjectArtifact('httpcore')   
+
+	earlib getProjectArtifact('commons-logging')   
+        earlib  getProjectArtifact('zookeeper')   
+        earlib getProjectArtifact('commons-lang3')   
 }
 
 // All WLS Related things
