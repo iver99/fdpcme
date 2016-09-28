@@ -57,6 +57,16 @@ function(oj)
         self.isIpad = checkIpad();
 
         self.isMobile = (self.isIphone === true || self.isAndroid === true || self.mssurface === true || self.isIpad === true) ? true : false;
+        
+        self.isSmallDevice = isSmallMediaQuery();
+        
+        function isSmallMediaQuery() {
+            var smQuery = oj.ResponsiveUtils.getFrameworkQuery(
+                    oj.ResponsiveUtils.FRAMEWORK_QUERY_KEY.SM_ONLY);
+            var smObservable = oj.ResponsiveKnockoutUtils.createMediaQueryObservable(smQuery);
+            window.DEV_MODE && console.debug("Checking sm media type result: " + (smObservable && smObservable()));
+            return smObservable && smObservable();
+        }
     }
 
     return MobileUtility;

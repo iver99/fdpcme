@@ -53,7 +53,7 @@ requirejs.config({
         'uifwk': '/emsaasui/uifwk'
     },
     bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
-                (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
+                (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
         'uifwk/js/uifwk-partition':
             [
             'uifwk/js/util/ajax-util',

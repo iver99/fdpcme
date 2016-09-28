@@ -40,6 +40,8 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.persistence.config.QueryHints;
+import org.eclipse.persistence.config.ResultType;
 
 public class DashboardManager
 {
@@ -200,13 +202,15 @@ public class DashboardManager
 			}
 			String currentUser = UserContext.getCurrentUser();
 			// user can access owned or system dashboard
-			if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
+                 	if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
 				throw new DashboardNotFoundException();
 			}
 			//			if (ed.getDeleted() == null || ed.getDeleted() == 0) {
 			//				removeFavoriteDashboard(dashboardId, tenantId);
 			//			}
+
 			dsf.updateSubDashboardShowInHome(dashboardId);
+
 			if (!permanent) {
 				ed.setDeleted(dashboardId);
 				dsf.mergeEmsDashboard(ed);
@@ -1217,75 +1221,6 @@ public class DashboardManager
 					+ index++ + " )) ");
 			paramList.add("%" + queryString.toLowerCase(locale) + "%");
 		}
-	}
-
-	private EmsDashboard convertObjectToEmsDashboard(Map<String, Object> map)
-	{
-		if (map == null) {
-			LOGGER.debug("Object is null,can not convert null to EMSDashboard object!");
-			return null;
-		}
-		EmsDashboard e = new EmsDashboard();
-		if (map.get("DASHBOARD_ID") != null) {
-			e.setDashboardId(Long.valueOf(map.get("DASHBOARD_ID").toString()));
-		}
-		if (map.get("DELETED") != null) {
-			e.setDeleted(Long.valueOf(map.get("DELETED").toString()));
-		}
-		if (map.get("DESCRIPTION") != null) {
-			e.setDescription(map.get("DESCRIPTION").toString());
-		}
-		if (map.get("SHOW_INHOME") != null) {
-			e.setShowInHome(Integer.valueOf(map.get("SHOW_INHOME").toString()));
-		}
-		if (map.get("ENABLE_TIME_RANGE") != null) {
-			e.setEnableTimeRange(Integer.valueOf(map.get("ENABLE_TIME_RANGE").toString()));
-		}
-		if (map.get("ENABLE_REFRESH	") != null) {
-			e.setEnableRefresh(Integer.valueOf(map.get("ENABLE_REFRESH	").toString()));
-		}
-		if (map.get("IS_SYSTEM") != null) {
-			e.setIsSystem(Integer.valueOf(map.get("IS_SYSTEM").toString()));
-		}
-		if (map.get("SHARE_PUBLIC") != null) {
-			e.setSharePublic(Integer.valueOf(map.get("SHARE_PUBLIC").toString()));
-		}
-		if (map.get("APPLICATION_TYPE") != null) {
-			e.setApplicationType(Integer.valueOf(map.get("APPLICATION_TYPE").toString()));
-		}
-		if (map.get("CREATION_DATE") != null) {
-			LOGGER.debug("db creation date is " + map.get("CREATION_DATE"));
-			e.setCreationDate(Timestamp.valueOf(String.valueOf(map.get("CREATION_DATE"))));
-			if (e.getCreationDate() == null) {
-				LOGGER.debug("Creation date is null!");
-			}
-			else {
-				LOGGER.debug("Creation date is not null! " + e.getCreationDate());
-			}
-		}
-		if (map.get("LAST_MODIFICATION_DATE") != null) {
-			LOGGER.debug("db last modification date is " + map.get("LAST_MODIFICATION_DATE"));
-			e.setLastModificationDate(Timestamp.valueOf(String.valueOf(map.get("LAST_MODIFICATION_DATE"))));
-			if (e.getLastModificationDate() == null) {
-				LOGGER.debug("last modification is null!");
-			}
-			else {
-				LOGGER.debug("last modification is not null! " + e.getLastModificationDate());
-			}
-		}
-		if (map.get("NAME") != null) {
-			e.setName(map.get("NAME").toString());
-		}
-		if (map.get("OWNER") != null) {
-			e.setOwner(map.get("OWNER").toString());
-		}
-		if (map.get("TENANT_ID") != null) {
-			e.setTenantId(Long.valueOf(map.get("TENANT_ID").toString()));
-		}
-		if (map.get("TYPE") != null) {
-			e.setType(Integer.valueOf(map.get("TYPE").toString()));
-		}
-		return e;
 	}
 
 	private String getListDashboardsOrderBy(String orderBy, boolean isUnion)

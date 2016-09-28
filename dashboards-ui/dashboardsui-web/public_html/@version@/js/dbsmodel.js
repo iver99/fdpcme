@@ -184,7 +184,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         //dashboards
         self.isDashboardSet = isSet === true ? true : false;
         self.userName = dfu.getUserName();
-        self.isMobileDevice = ko.observable( (new mbu()).isMobile );
+        self.isMobileDevice = ko.observable( (new mbu()).isSmallDevice );
         self.currentDashboardSetItem=dashboardSetItem;
         self.dashboardInTabs=ko.observable(false);
 
