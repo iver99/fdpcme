@@ -53,11 +53,67 @@ public class VerifyOOB extends LoginAndLogout
 	}
 
 	@Test
+	public void verifyAPM_withFilter()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyAPM_withFilter");
+
+		//click Filter-APM
+		webd.getLogger().info("Click Cloud Services - APM");
+		DashboardHomeUtil.filterOptions(webd, "apm");		
+
+		//open APM
+		webd.getLogger().info("Open the OOB dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "Application Performance Monitoring");
+
+		//verify the current url
+		webd.getLogger().info("Verify the current url");
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = " + url);
+		Assert.assertEquals(DashBoardUtils.trimUrlParameters(url.substring(url.indexOf("emsaasui") + 9)), "apmUi/index.html");
+
+		//verify the APM open correctly
+		//TODO
+
+	}
+
+	@Test
 	public void verifyApplicationPerfAnalytics()
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in verifyApplicationPerfAnalytics");
+
+		//open Application Performance Analytics
+		webd.getLogger().info("Open the OOB dashboard---Application Performance Analytics");
+		DashboardHomeUtil.selectDashboard(webd, "Application Performance Analytics");
+
+		//verify the current url
+		webd.getLogger().info("Verify the current url");
+		DashBoardUtils.verifyURL(webd, "emcitas/ap-analytics-war/html/ap-perf-analytics.html");
+
+		//verify the dashboard title & time picker
+		webd.getLogger().info("Verify the dashboard title");
+		webd.isTextPresent("Application Performance Analytics", "css=" + PageId.DASHBOARDTITLE_CSS);
+		webd.getLogger().info("Verify the time picker");
+		webd.isDisplayed("css=" + PageId.DATETIMEPICKER_OOB_CSS);
+
+		//verify all the widgets displayed
+		//TODO
+
+	}
+
+	@Test
+	public void verifyApplicationPerfAnalytics_withFilter()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyApplicationPerfAnalytics_withFilter");
+
+		//click Filter-APM
+		webd.getLogger().info("Click Cloud Services - IT Analytics");
+		DashboardHomeUtil.filterOptions(webd, "ita");
 
 		//open Application Performance Analytics
 		webd.getLogger().info("Open the OOB dashboard---Application Performance Analytics");
