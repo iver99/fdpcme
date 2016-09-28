@@ -114,7 +114,7 @@ public class DashBoardPageId
 	public static final String OOBDASHBOARDNAMELOCATOR = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbsystem') and (@aria-label = '_name_' or text() = '_name_')]";
 	public static final String DASHBOARDNAMECONTAINERS = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele')]";
 	public static final String DASHBOARDNAMEINDEXLOCATOR = "xpath=(//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele')])[_index_]";
-
+	public static final String OOBDASHBOARDNAMELOCATORLISTVIEW = "//div[not(contains(@style, 'display:none'))]//*[contains(@class, 'dbs-summaries-container')]";
 	//Branding Bar links
 	//Home Link
 	//public static final String HomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[1]/a";
@@ -370,7 +370,7 @@ public class DashBoardPageId
 	//grid view and list view id
 	public static final String GRIDVIEWID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[1]/label";
 	public static final String LISTVIEWID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[2]/label";
-
+	public static final String OOBDASHBOARD_LIST_LINK = "//a[contains(text(), '_name_') and contains(@class, 'dbs-dsbsystem')]";
 	public static final String DASHBOARDLISTVIEWDASHBOARDID = "/html/body/div[2]/div/div[1]/div/div/div[2]/div[2]/table/tbody/tr/td[2]/a";
 	public static final String DASHBOARDINFOID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/table/tbody/tr/td[5]/button";
 	public static final String DASHBOARDDELETEID = "/html/body/div[1]/div/div/div[1]/div/div/div/button";
