@@ -28,7 +28,7 @@ public class EmsDashboardTest {
             "elephant",
             "elephant",
             "dolphine",
-            BigInteger.valueOf(10L),
+            "10",
             "dolphine",
             "dolphine",
             "dolphine",

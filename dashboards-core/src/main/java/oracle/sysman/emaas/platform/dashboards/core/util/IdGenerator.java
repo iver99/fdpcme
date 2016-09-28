@@ -27,13 +27,13 @@ public class IdGenerator
 		return IdGenerator.toBigInteger(id);
 	}
 
-	public static BigInteger getTileId(UUID uuid, long index)
+	public static String getTileId(UUID uuid, long index)
 	{
 		UUID id = uuid == null ? UUID.randomUUID() : uuid;
 		BigInteger idnum = IdGenerator.toBigInteger(id);
 		idnum = idnum.multiply(tileIdOffset);
 		idnum = idnum.add(BigInteger.valueOf(index));
-		return idnum;
+		return idnum.toString();
 	}
 
 	private static BigInteger toBigInteger(UUID randomUUID)

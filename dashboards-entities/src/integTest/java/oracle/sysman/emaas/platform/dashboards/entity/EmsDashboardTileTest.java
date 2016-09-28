@@ -28,7 +28,7 @@ public class EmsDashboardTileTest {
             "elephant",
             "elephant",
             "dolphine",
-            BigInteger.valueOf(10L),
+            "10",
             "dolphine",
             "dolphine",
             "dolphine",
@@ -153,7 +153,7 @@ public class EmsDashboardTileTest {
 
     @Test
     public void testGetTileId() {
-    	Assert.assertEquals(emsDashboardTile.getTileId(),BigInteger.valueOf(10L));
+    	Assert.assertEquals(emsDashboardTile.getTileId(), "10");
 
     }
 

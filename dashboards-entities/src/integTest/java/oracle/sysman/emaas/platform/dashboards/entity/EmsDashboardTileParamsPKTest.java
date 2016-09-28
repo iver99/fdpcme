@@ -1,6 +1,5 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
-import java.math.BigInteger;
 import java.util.Date;
 
 import org.testng.Assert;
@@ -10,14 +9,14 @@ import org.testng.annotations.Test;
 public class EmsDashboardTileParamsPKTest { 
     Date now =  new Date();
   
-    private EmsDashboardTileParamsPK emsDashboardTileParamsPK = new EmsDashboardTileParamsPK("elephant",BigInteger.valueOf(10L));
+    private EmsDashboardTileParamsPK emsDashboardTileParamsPK = new EmsDashboardTileParamsPK("elephant", "10");
 
     @Test
     public void testEquals() {
-        EmsDashboardTileParamsPK emsDashboardTileParamsPK1 = new EmsDashboardTileParamsPK("elephant",BigInteger.valueOf(10L));
-        EmsDashboardTileParamsPK emsDashboardTileParamsPK2 = new EmsDashboardTileParamsPK("elephant",BigInteger.valueOf(11L));
-        EmsDashboardTileParamsPK emsDashboardTileParamsPK3 = new EmsDashboardTileParamsPK("dolphine",BigInteger.valueOf(11L));
-        EmsDashboardTileParamsPK emsDashboardTileParamsPK4 = new EmsDashboardTileParamsPK("dolphine",BigInteger.valueOf(10L));
+        EmsDashboardTileParamsPK emsDashboardTileParamsPK1 = new EmsDashboardTileParamsPK("elephant", "10");
+        EmsDashboardTileParamsPK emsDashboardTileParamsPK2 = new EmsDashboardTileParamsPK("elephant", "11");
+        EmsDashboardTileParamsPK emsDashboardTileParamsPK3 = new EmsDashboardTileParamsPK("dolphine", "11");
+        EmsDashboardTileParamsPK emsDashboardTileParamsPK4 = new EmsDashboardTileParamsPK("dolphine", "10");
         Assert.assertFalse(emsDashboardTileParamsPK.equals(new Integer(10)));
         Assert.assertTrue(emsDashboardTileParamsPK.equals(emsDashboardTileParamsPK1));
         Assert.assertFalse(emsDashboardTileParamsPK.equals(emsDashboardTileParamsPK2));
@@ -27,8 +26,8 @@ public class EmsDashboardTileParamsPKTest {
 
     @Test
     public void testGetDashboardTile() {
-        emsDashboardTileParamsPK.setDashboardTile(BigInteger.valueOf(10L));
-        Assert.assertEquals(emsDashboardTileParamsPK.getDashboardTile(),BigInteger.valueOf(10L));
+        emsDashboardTileParamsPK.setDashboardTile("10");
+        Assert.assertEquals(emsDashboardTileParamsPK.getDashboardTile(), "10");
 	}
     
     @Test

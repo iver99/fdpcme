@@ -8,6 +8,32 @@ Rem
 DECLARE
   v_count     INTEGER;
 BEGIN
+  --alter column EMS_DASHBOARD_TILE.TILE_ID
+  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_TILE' AND column_name='TILE_ID';
+  IF v_count>0 THEN
+    EXECUTE IMMEDIATE 'alter table EMS_DASHBOARD_TILE drop constraint EMS_DASHBOARD_TILE_PK cascade drop index';
+    EXECUTE IMMEDIATE 'alter table EMS_DASHBOARD_TILE rename column TILE_ID to TEMP_ID';
+    EXECUTE IMMEDIATE 'alter table EMS_DASHBOARD_TILE add TILE_ID varchar2(63)';
+    EXECUTE IMMEDIATE 'update EMS_DASHBOARD_TILE set TILE_ID = to_char(TEMP_ID)';
+    EXECUTE IMMEDIATE 'alter table EMS_DASHBOARD_TILE drop column TEMP_ID';
+    EXECUTE IMMEDIATE 'alter table EMS_DASHBOARD_TILE add constraint EMS_DASHBOARD_TILE_PK primary key(TILE_ID, TENANT_ID) USING INDEX';
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.TILE_ID does not exist, no change is needed');
+  END IF;
+  
+  --alter column EMS_DASHBOARD_TILE_PARAMS.TILE_ID
+  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_TILE_PARAMS' AND column_name='TILE_ID';
+  IF v_count>0 THEN
+    EXECUTE IMMEDIATE 'alter table EMS_DASHBOARD_TILE_PARAMS drop constraint EMS_DASHBOARD_TILE_PARAMS_PK cascade drop index';
+    EXECUTE IMMEDIATE 'alter table EMS_DASHBOARD_TILE_PARAMS rename column TILE_ID to TEMP_ID';
+    EXECUTE IMMEDIATE 'alter table EMS_DASHBOARD_TILE_PARAMS add TILE_ID varchar2(63)';
+    EXECUTE IMMEDIATE 'update EMS_DASHBOARD_TILE_PARAMS set TILE_ID = to_char(TEMP_ID)';
+    EXECUTE IMMEDIATE 'alter table EMS_DASHBOARD_TILE_PARAMS drop column TEMP_ID';
+    EXECUTE IMMEDIATE 'alter table EMS_DASHBOARD_TILE_PARAMS add constraint EMS_DASHBOARD_TILE_PARAMS_PK primary key(TILE_ID, TENANT_ID, PARAM_NAME) USING INDEX';
+    EXECUTE IMMEDIATE 'alter table EMS_DASHBOARD_TILE_PARAMS add constraint EMS_DASHBOARD_TILE_PARAMS_FK1 FOREIGN KEY (TILE_ID, TENANT_ID) REFERENCES EMS_DASHBOARD_TILE (TILE_ID, TENANT_ID)';
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE_PARAMS.TILE_ID does not exist, no change is needed');
+  END IF;
   
   --add new column 'EMS_DASHBOARD_SET.CREATION_DATE'
   SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_SET' AND column_name='CREATION_DATE';
