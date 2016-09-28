@@ -71,10 +71,7 @@ function(dfu, oj, ko, $)
                 }
                 this.fetch(); //record last access on rest api
                 if (typeof url==="string"){
-                   if ("emcitas-ui-apps"===providerName && version && version.indexOf('1.0') === 0 && "flex-analyzer"===assetRoot){
-                       var dsbName = this.get('name');
-                        url=url+"?name="+encodeURI(dsbName)+"&createdBy=oracle";
-                    }
+                    oj.Logger.info("Single page URL for dashboard ID=" + this.get("id") + " is: " + url);
                    return url;
                 }else{
                    oj.Logger.error("Single Page Dashboard URL is not found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot);

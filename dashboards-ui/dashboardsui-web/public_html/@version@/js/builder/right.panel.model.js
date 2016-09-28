@@ -96,7 +96,7 @@ define(['knockout',
             self.rightPanelWidget= new rpw.rightPanelWidget(self.$b);
             self.rightPanelEdit=new rpe.rightPanelEditModel(self.$b,self.dashboardsetToolBarModel);
             self.selectedDashboard = ko.observable(self.dashboard);
-            self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
+            self.isMobileDevice = self.$b.getDashboardTilesViewModel().isMobileDevice;
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
             self.isOobDashboardset=dashboardsetToolBarModel.isOobDashboardset; 
             self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
