@@ -195,17 +195,19 @@ define(['knockout',
                     var $tilesWrapper = $(".tiles-wrapper:visible");
                     if ($tilesWrapper && selectedDashboardInst().type === 'new') {
                         newDashboardJs.screenShot = null;
+                        new Builder.DashboardDataSource().updateDashboardData(ko.unwrap(dashboardInst.id), JSON.stringify(newDashboardJs));
                     }
                     else if ($tilesWrapper && selectedDashboardInst().tilesViewModel.tilesView.dashboard.tiles().length > 0) {
                         var $clone = Builder.createScreenshotElementClone($tilesWrapper);
                         ssu.getBase64ScreenShot($clone, 314, 165, 0.8, function (data) {
                             newDashboardJs.screenShot = data;
                             Builder.removeScreenshotElementClone($clone);
+                            new Builder.DashboardDataSource().updateDashboardData(ko.unwrap(dashboardInst.id), JSON.stringify(newDashboardJs));
                         });
                     } else {
                         newDashboardJs.screenShot = null;
+                        new Builder.DashboardDataSource().updateDashboardData(ko.unwrap(dashboardInst.id), JSON.stringify(newDashboardJs));
                     }
-                    new Builder.DashboardDataSource().updateDashboardData(ko.unwrap(dashboardInst.id), JSON.stringify(newDashboardJs));
                 }, 2000, 30000);
                 self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;
                 self.saveUserOptions();
