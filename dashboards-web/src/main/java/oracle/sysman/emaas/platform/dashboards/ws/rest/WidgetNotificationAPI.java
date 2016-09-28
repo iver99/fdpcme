@@ -31,6 +31,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.ssfnotification.WidgetNotificationType;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.ssfnotification.WidgetNotifyEntity;
 
 /**
@@ -56,8 +57,14 @@ public class WidgetNotificationAPI extends APIBase
 			}
 			Long tenantId = getTenantId(tenantIdParam);
 			WidgetNotifyEntity wne = getJsonUtil().fromJson(data.toString(), WidgetNotifyEntity.class);
-			// always be 1 for eclipselink 2.4
-			int affacted = DashboardManager.getInstance().updateDashboardTilesName(tenantId, wne.getName(), wne.getUniqueId());
+			// the return value for affacted objects in eclipse 2.4 will always be 1
+			int affacted = 0;
+			if (wne.getType() == null || wne.getType().equals(WidgetNotificationType.UPDATE_NAME)) {
+				affacted = updateDashboardTilesName(tenantId, wne.getName(), wne.getUniqueId());
+			}
+			else {
+				affacted = updateDashboardTilesWidgetDeleted(tenantId, wne.getUniqueId());
+			}
 			wne.setAffactedObjects(affacted);
 			return Response.status(Status.OK).entity(getJsonUtil().toJson(wne)).build();
 		}
@@ -74,5 +81,15 @@ public class WidgetNotificationAPI extends APIBase
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+	}
+
+	private int updateDashboardTilesName(Long tenantId, String widgetName, long widgetUniqueId)
+	{
+		return DashboardManager.getInstance().updateDashboardTilesName(tenantId, widgetName, widgetUniqueId);
+	}
+
+	private int updateDashboardTilesWidgetDeleted(Long tenantId, long widgetUniqueId)
+	{
+		return DashboardManager.getInstance().updateWidgetDeleteForTilesByWidgetId(tenantId, widgetUniqueId);
 	}
 }
