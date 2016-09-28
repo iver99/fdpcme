@@ -35,8 +35,8 @@ dependencies
 	earlib getProjectArtifact('log4j-slf4j-impl')   
 	earlib getProjectArtifact('httpclient')   
 	earlib getProjectArtifact('httpcore')   
-	earlib	getProjectArtifact('registry-client'){transitive=false}
-    earlib getProjectArtifact('registry-lookup-client'){transitive=false} 
+	earlib	getProjectArtifact('registry-client') 
+    earlib getProjectArtifact('registry-lookup-client')  
 	earlib getProjectArtifact('emaas-platform-tenant-sdk')    
 	earlib getProjectArtifact('commons-logging')   
         earlib  getProjectArtifact('zookeeper')   

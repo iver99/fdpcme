@@ -61,11 +61,11 @@ dependencies {
 	compile	getProjectArtifact('registry-client')
     compile getProjectArtifact('registry-lookup-client') 
 	compile getProjectArtifact('emaas-platform-tenant-sdk')   
-	compile getProjectArtifact('coherence') {transitive=false}
-	compile getProjectArtifact('jersey-core') {transitive=false}
-	compile getProjectArtifact('jersey-client') {transitive=false}
+	compile getProjectArtifact('coherence')  
+	compile getProjectArtifact('jersey-core')  
+	compile getProjectArtifact('jersey-client')  
 	compile getProjectArtifact('jmockit')  
-	compile getProjectArtifact('em-qatool-os-webdriver') {transitive=false}
+	compile getProjectArtifact('em-qatool-os-webdriver')  
 
 	
 

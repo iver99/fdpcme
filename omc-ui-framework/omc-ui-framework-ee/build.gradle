@@ -39,9 +39,9 @@ dependencies
 	earlib getProjectArtifact('jackson-databind')   
 	earlib getProjectArtifact('jackson-annotations')   
   
-    earlib	getProjectArtifact('zookeeper'){transitive=false}
-    earlib	getProjectArtifact('registry-client'){transitive=false}
-    earlib getProjectArtifact('registry-lookup-client'){transitive=false} 
+    earlib	getProjectArtifact('zookeeper') 
+    earlib	getProjectArtifact('registry-client') 
+    earlib getProjectArtifact('registry-lookup-client')  
 	earlib getProjectArtifact('emaas-platform-tenant-sdk')    
 
 

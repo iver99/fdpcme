@@ -25,21 +25,21 @@ task integTestJar (type:Jar) {
 dependencies {
 	testCompile configurations.testNG
 	testCompile configurations.restAssured
-	testConfig project(':dashboards-entities') { transitive = false }
-	testConfig project(':dashboards-core')   { transitive = false }
-	testConfig project(':dashboards-web')   { transitive = false }
-	testConfig getProjectArtifact('servlet-api')  { transitive = false }
-	testConfig getProjectArtifact('jersey-client')  { transitive = false }
-	testConfig getProjectArtifact('jersey-multipart')  { transitive = false }
-	testConfig getProjectArtifact('javax.ws.rs-api')  { transitive = false }
-	testConfig getProjectArtifact('jackson-core-asl')  { transitive = false }
-	testConfig getProjectArtifact('jackson-mapper-asl')  { transitive = false }
-	testConfig getProjectArtifact('jackson-xc')  { transitive = false }
-	testConfig getProjectArtifact('commons-logging')  { transitive = false }
-	testConfig getProjectArtifact('registry-lookup-client')  { transitive = false }
-	testConfig getProjectArtifact('jmockit')  { transitive = false }
-	testConfig getProjectArtifact('jersey-servlet')  { transitive = false }
-	testConfig getProjectArtifact('jersey-server')  { transitive = false }
+	testConfig project(':dashboards-entities')  
+	testConfig project(':dashboards-core')    
+	testConfig project(':dashboards-web')    
+	testConfig getProjectArtifact('servlet-api')   
+	testConfig getProjectArtifact('jersey-client')   
+	testConfig getProjectArtifact('jersey-multipart')   
+	testConfig getProjectArtifact('javax.ws.rs-api')   
+	testConfig getProjectArtifact('jackson-core-asl')   
+	testConfig getProjectArtifact('jackson-mapper-asl')   
+	testConfig getProjectArtifact('jackson-xc')   
+	testConfig getProjectArtifact('commons-logging')   
+	testConfig getProjectArtifact('registry-lookup-client')   
+	testConfig getProjectArtifact('jmockit')   
+	testConfig getProjectArtifact('jersey-servlet')   
+	testConfig getProjectArtifact('jersey-server')   
 
 
 	

@@ -17,11 +17,11 @@ task integTestJar (type:Jar) {
 }
 
 dependencies {
-    testConfig getProjectArtifact('log4j-core')  { transitive = false }
-	testConfig getProjectArtifact('log4j-api')  { transitive = false }
+    testConfig getProjectArtifact('log4j-core')   
+	testConfig getProjectArtifact('log4j-api')   
 	testCompile configurations.testNG
 	testCompile configurations.webdriver
 	testCompile configurations.restAssured
-    testConfig project(':dashboards-ui-test-common-api') { transitive = false }
+    testConfig project(':dashboards-ui-test-common-api')  
 }
 build.dependsOn integTestJar

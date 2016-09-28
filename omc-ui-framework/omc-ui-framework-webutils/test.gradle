@@ -18,17 +18,17 @@ task integTestJar (type:Jar) {
 
 dependencies {
 	testCompile configurations.testNG
-	testConfig project(':omc-ui-framework:omc-ui-framework-webutils')   { transitive = false }
-	testConfig getProjectArtifact('log4j-core')  { transitive = false }
-    testConfig getProjectArtifact('log4j-api')  { transitive = false }
-    testConfig getProjectArtifact('ojdbc6')  { transitive = false }
-	testConfig getProjectArtifact('javax.persistence')  { transitive = false }
-	testConfig getProjectArtifact('eclipselink')  { transitive = false }
-	testConfig getProjectArtifact('javax.transaction-api')  { transitive = false }
-	testConfig getProjectArtifact('jackson-core-asl')  { transitive = false }
-	testConfig getProjectArtifact('jackson-mapper-asl')  { transitive = false }
-	testConfig getProjectArtifact('jackson-xc')  { transitive = false }
-	testConfig getProjectArtifact('jmockit')  { transitive = false }
+	testConfig project(':omc-ui-framework:omc-ui-framework-webutils')    
+	testConfig getProjectArtifact('log4j-core')   
+    testConfig getProjectArtifact('log4j-api')   
+    testConfig getProjectArtifact('ojdbc6')   
+	testConfig getProjectArtifact('javax.persistence')   
+	testConfig getProjectArtifact('eclipselink')   
+	testConfig getProjectArtifact('javax.transaction-api')   
+	testConfig getProjectArtifact('jackson-core-asl')   
+	testConfig getProjectArtifact('jackson-mapper-asl')   
+	testConfig getProjectArtifact('jackson-xc')   
+	testConfig getProjectArtifact('jmockit')   
 	
 	
 }

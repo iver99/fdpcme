@@ -19,29 +19,29 @@ task integTestJar (type:Jar) {
 
 dependencies {
 	testCompile configurations.testNG
-	testConfig project(':dashboards-ui:dashboardsui-webutils')   { transitive = false }
-	testConfig project(':dashboards-ui:dashboardsui-web')   { transitive = false }
-	testConfig getProjectArtifact('log4j-core')  { transitive = false }
-	testConfig getProjectArtifact('log4j-api')  { transitive = false }
-	testConfig getProjectArtifact('ojdbc6')  { transitive = false }
-	testConfig getProjectArtifact('javax.persistence')  { transitive = false }
-	testConfig getProjectArtifact('eclipselink')  { transitive = false }
-	testConfig getProjectArtifact('javax.transaction-api')  { transitive = false }
-	testConfig getProjectArtifact('jackson-core-asl')  { transitive = false }
-	testConfig getProjectArtifact('jackson-mapper-asl')  { transitive = false }
-	testConfig getProjectArtifact('jackson-xc')  { transitive = false }
+	testConfig project(':dashboards-ui:dashboardsui-webutils')    
+	testConfig project(':dashboards-ui:dashboardsui-web')    
+	testConfig getProjectArtifact('log4j-core')   
+	testConfig getProjectArtifact('log4j-api')   
+	testConfig getProjectArtifact('ojdbc6')   
+	testConfig getProjectArtifact('javax.persistence')   
+	testConfig getProjectArtifact('eclipselink')   
+	testConfig getProjectArtifact('javax.transaction-api')   
+	testConfig getProjectArtifact('jackson-core-asl')   
+	testConfig getProjectArtifact('jackson-mapper-asl')   
+	testConfig getProjectArtifact('jackson-xc')   
 	
-	testConfig getProjectArtifact('jmockit')  { transitive = false }
-	testConfig getProjectArtifact('registry-lookup-client')  { transitive = false }
-	testConfig getProjectArtifact('registry-client')  { transitive = false }
-	testConfig getProjectArtifact('commons-codec')  { transitive = false }
-	testConfig getProjectArtifact('commons-lang3')  { transitive = false }
-	testConfig getProjectArtifact('commons-logging')  { transitive = false }
-	testConfig getProjectArtifact('httpclient')  { transitive = false }
-	testConfig getProjectArtifact('httpcore')  { transitive = false }
-	testConfig getProjectArtifact('httpmime')  { transitive = false }
-	testConfig getProjectArtifact('servlet-api)  { transitive = false }
-	testConfig getProjectArtifact('javax.ws.rs-api')  { transitive = false }
+	testConfig getProjectArtifact('jmockit')   
+	testConfig getProjectArtifact('registry-lookup-client')   
+	testConfig getProjectArtifact('registry-client')   
+	testConfig getProjectArtifact('commons-codec')   
+	testConfig getProjectArtifact('commons-lang3')   
+	testConfig getProjectArtifact('commons-logging')   
+	testConfig getProjectArtifact('httpclient')   
+	testConfig getProjectArtifact('httpcore')   
+	testConfig getProjectArtifact('httpmime')   
+	testConfig getProjectArtifact('servlet-api)   
+	testConfig getProjectArtifact('javax.ws.rs-api')   
 	
         
         
