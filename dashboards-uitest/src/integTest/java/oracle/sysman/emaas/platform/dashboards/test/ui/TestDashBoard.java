@@ -634,7 +634,7 @@ public class TestDashBoard extends LoginAndLogout
 				"Test_Dashboard_no_Widget_GridView desc modify-not displayed", true), "Dashboard edit failed!");
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView" })
+	//@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView" })
 	public void testModifyDashboard_widget()
 	{
 		String WidgetName_1 = "Top Hosts by Log Entries";
