@@ -8,8 +8,8 @@ define(['knockout',
 function (ko, $, oj, dfu, mbu, uiutil) {
     function rightPanelControl($b) {
         var self = this;
-        self.$b=ko.observable($b);
-        self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
+        self.$b = ko.observable($b);
+        self.isMobileDevice = self.$b().getDashboardTilesViewModel().isMobileDevice;
         self.dashboardEditDisabled = ko.observable(self.$b().getToolBarModel&&self.$b().getToolBarModel() ? self.$b().getToolBarModel().editDisabled() : true);
         self.showRightPanelToggler = ko.observable(self.isMobileDevice !== 'true');
         self.showRightPanel = ko.observable(false);
