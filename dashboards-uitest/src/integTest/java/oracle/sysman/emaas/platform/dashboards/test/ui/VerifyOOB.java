@@ -71,7 +71,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyAPM_withFilter");
+		webd.getLogger().info("start to test in verifyAPM_withFilter_GridView");
 
 		//click Filter-APM
 		webd.getLogger().info("Click Cloud Services - APM");
@@ -94,7 +94,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyAPM_withFilter");
+		webd.getLogger().info("start to test in verifyAPM_withFilter_ListView");
 
 		//click Filter-APM
 		webd.getLogger().info("Click Cloud Services - APM");
@@ -117,7 +117,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyApplicationPerfAnalytics");
+		webd.getLogger().info("start to test in verifyApplicationPerfAnalytics_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -136,7 +136,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyApplicationPerfAnalytics");
+		webd.getLogger().info("start to test in verifyApplicationPerfAnalytics_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -155,7 +155,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyApplicationPerfAnalytics_withFilter");
+		webd.getLogger().info("start to test in verifyApplicationPerfAnalytics_withFilter_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -239,7 +239,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyApplicationServers_GridView");
+		webd.getLogger().info("start to test in verifyApplicationServers_withFilter_ITA_GridView");
 
 		//click Filter-Application Servers
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -262,7 +262,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyApplicationServers_ListView");
+		webd.getLogger().info("start to test in verifyApplicationServers_withFilter_ITA_ListView");
 
 		//click Filter-Application Servers
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -285,7 +285,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyApplicationServers_GridView");
+		webd.getLogger().info("start to test in verifyApplicationServers_withFilter_LA_GridView");
 
 		//click Filter-Application Servers
 		webd.getLogger().info("Click Cloud Services - Log Analytics");
@@ -308,7 +308,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyApplicationServers_ListView");
+		webd.getLogger().info("start to test in verifyApplicationServers_withFilter_LA_ListView");
 
 		//click Filter-Application Servers
 		webd.getLogger().info("Click Cloud Services - Log Analytics");
@@ -331,7 +331,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyAvailabilityAnalytics");
+		webd.getLogger().info("start to test in verifyAvailabilityAnalytics_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -350,7 +350,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyAvailabilityAnalytics");
+		webd.getLogger().info("start to test in verifyAvailabilityAnalytics_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -369,7 +369,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyAvailabilityAnalytics");
+		webd.getLogger().info("start to test in verifyAvailabilityAnalytics_WithFilter_GridView");
 
 		//click Filter-Application Servers
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -392,7 +392,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyAvailabilityAnalytics");
+		webd.getLogger().info("start to test in verifyAvailabilityAnalytics_WithFilter_ListView");
 
 		//click Filter-Application Servers
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -415,7 +415,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyCategorical");
+		webd.getLogger().info("start to test in verifyCategorical_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -436,7 +436,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyCategorical");
+		webd.getLogger().info("start to test in verifyCategorical_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -457,7 +457,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyCategorical");
+		webd.getLogger().info("start to test in verifyCategorical_WithFilter_GridView");
 
 		//click Filter-Application Servers
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -482,7 +482,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyCategorical");
+		webd.getLogger().info("start to test in verifyCategorical_WithFilter_ListView");
 
 		//click Filter-Application Servers
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -507,7 +507,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyDatabaseOperations");
+		webd.getLogger().info("start to test in verifyDatabaseOperations_GridView");
 
 		//lick on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -528,7 +528,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyDatabaseOperations");
+		webd.getLogger().info("start to test in verifyDatabaseOperations_ListView");
 
 		//lick on List View
 		webd.getLogger().info("Click on List View icon");
@@ -549,7 +549,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyDatabaseOperations");
+		webd.getLogger().info("start to test in verifyDatabaseOperations_WithFilter_GridView");
 
 		//click Filter-Application Servers
 		webd.getLogger().info("Click Cloud Services - Log Analytics");
@@ -574,7 +574,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyDatabaseOperations");
+		webd.getLogger().info("start to test in verifyDatabaseOperations_WithFilter_ListView");
 
 		//click Filter-Application Servers
 		webd.getLogger().info("Click Cloud Services - Log Analytics");
@@ -600,7 +600,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyDatabaseOperations");
+		webd.getLogger().info("start to test in verifyDatabases_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -622,7 +622,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyDatabaseOperations");
+		webd.getLogger().info("start to test in verifyDatabases_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -644,7 +644,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyDatabaseOperations");
+		webd.getLogger().info("start to test in verifyDatabases_WithFilter_ITA_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -670,7 +670,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyDatabaseOperations");
+		webd.getLogger().info("start to test in verifyDatabases_WithFilter_ITA_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -696,7 +696,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyDatabaseOperations");
+		webd.getLogger().info("start to test in verifyDatabases_WithFilter_LA_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - Log Analytics");
@@ -722,7 +722,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyDatabaseOperations");
+		webd.getLogger().info("start to test in verifyDatabases_WithFilter_LA_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - Log Analytics");
@@ -747,7 +747,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyEnterpriseHealth");
+		webd.getLogger().info("Start the test in verifyEnterpriseHealth_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -768,7 +768,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyEnterpriseHealth");
+		webd.getLogger().info("Start the test in verifyEnterpriseHealth_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -789,7 +789,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyEnterpriseHealth");
+		webd.getLogger().info("Start the test in verifyEnterpriseHealth_WithFilter_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -814,7 +814,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyEnterpriseHealth");
+		webd.getLogger().info("Start the test in verifyEnterpriseHealth_WithFilter_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -839,7 +839,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyEntities");
+		webd.getLogger().info("Start the test in verifyEntities_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -860,7 +860,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyEntities");
+		webd.getLogger().info("Start the test in verifyEntities_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -881,7 +881,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyEntities");
+		webd.getLogger().info("Start the test in verifyEntities_WithFilter_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -906,7 +906,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyEntities");
+		webd.getLogger().info("Start the test in verifyEntities_WithFilter_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -931,7 +931,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyExadataHealth");
+		webd.getLogger().info("Start the test in verifyExadataHealth_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -952,7 +952,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyExadataHealth");
+		webd.getLogger().info("Start the test in verifyExadataHealth_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -973,7 +973,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyExadataHealth");
+		webd.getLogger().info("Start the test in verifyExadataHealth_WithFilter_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -998,7 +998,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyExadataHealth");
+		webd.getLogger().info("Start the test in verifyExadataHealth_WithFilter_ridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -1023,7 +1023,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyHostOperations");
+		webd.getLogger().info("start to test in verifyHostOperations_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -1044,7 +1044,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyHostOperations");
+		webd.getLogger().info("start to test in verifyHostOperations_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -1065,7 +1065,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyHostOperations");
+		webd.getLogger().info("start to test in verifyHostOperations_WithFilter_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - Log Analytics");
@@ -1090,7 +1090,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyHostOperations");
+		webd.getLogger().info("start to test in verifyHostOperations_WithFilter_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - Log Analytics");
@@ -1115,7 +1115,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyHosts");
+		webd.getLogger().info("Start the test in verifyHosts_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -1136,7 +1136,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyHosts");
+		webd.getLogger().info("Start the test in verifyHosts_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -1157,7 +1157,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyHosts");
+		webd.getLogger().info("Start the test in verifyHosts_WithFilter_ITA_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -1182,7 +1182,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyHosts");
+		webd.getLogger().info("Start the test in verifyHosts_WithFilter_ITA_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -1207,7 +1207,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyHosts");
+		webd.getLogger().info("Start the test in verifyHosts_WithFilter_LA_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - Log Analytics");
@@ -1232,7 +1232,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyHosts");
+		webd.getLogger().info("Start the test in verifyHosts_WithFilter_LA_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - Log Analytics");
@@ -1257,7 +1257,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyMiddlewareOperations");
+		webd.getLogger().info("Start the test in verifyMiddlewareOperations_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -1278,7 +1278,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyMiddlewareOperations");
+		webd.getLogger().info("Start the test in verifyMiddlewareOperations_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -1299,7 +1299,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyMiddlewareOperations");
+		webd.getLogger().info("Start the test in verifyMiddlewareOperations_WithFilter_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - Log Analytics");
@@ -1324,7 +1324,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyMiddlewareOperations");
+		webd.getLogger().info("Start the test in verifyMiddlewareOperations_WithFilter_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - Log Analytics");
@@ -1344,12 +1344,12 @@ public class VerifyOOB extends LoginAndLogout
 		verifyMiddlewareOperations();
 	}
 
-	@Test
+	//@Test
 	public void verifyOthers_GridView()
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOthers");
+		webd.getLogger().info("Start the test in verifyOthers_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -1365,12 +1365,12 @@ public class VerifyOOB extends LoginAndLogout
 		verifyOthers();
 	}
 
-	@Test
+	//@Test
 	public void verifyOthers_ListView()
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOthers");
+		webd.getLogger().info("Start the test in verifyOthers_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -1386,12 +1386,12 @@ public class VerifyOOB extends LoginAndLogout
 		verifyOthers();
 	}
 
-	@Test
+	//@Test
 	public void verifyOthers_WithFilter_GridView()
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOthers");
+		webd.getLogger().info("Start the test in verifyOthers_WithFilter_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -1411,12 +1411,12 @@ public class VerifyOOB extends LoginAndLogout
 		verifyOthers();
 	}
 
-	@Test
+	//@Test
 	public void verifyOthers_WithFilter_ListView()
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOthers");
+		webd.getLogger().info("Start the test in verifyOthers_WithFilter_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -1441,7 +1441,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOverview");
+		webd.getLogger().info("Start the test in verifyOverview_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -1462,7 +1462,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOverview");
+		webd.getLogger().info("Start the test in verifyOverview_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -1483,7 +1483,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOverview");
+		webd.getLogger().info("Start the test in verifyOverview_WithFilter_idView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -1508,7 +1508,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOverview");
+		webd.getLogger().info("Start the test in verifyOverview_WithFilter_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -1533,7 +1533,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyPerfAnalyticsApplication");
+		webd.getLogger().info("start to test in verifyPerfAnalyticsApplication_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -1552,7 +1552,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyPerfAnalyticsApplication");
+		webd.getLogger().info("start to test in verifyPerfAnalyticsApplication_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -1571,7 +1571,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyPerfAnalyticsApplication");
+		webd.getLogger().info("start to test in verifyPerfAnalyticsApplication_WithFilter_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -1594,7 +1594,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyPerfAnalyticsApplication");
+		webd.getLogger().info("start to test in verifyPerfAnalyticsApplication_WithFilter_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -1617,7 +1617,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyPerfAnalyticsDatabase");
+		webd.getLogger().info("start to test in verifyPerfAnalyticsDatabase_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -1636,7 +1636,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyPerfAnalyticsDatabase");
+		webd.getLogger().info("start to test in verifyPerfAnalyticsDatabase_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -1655,7 +1655,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyPerfAnalyticsDatabase");
+		webd.getLogger().info("start to test in verifyPerfAnalyticsDatabase_WithFilter_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -1678,7 +1678,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyPerfAnalyticsDatabase");
+		webd.getLogger().info("start to test in verifyPerfAnalyticsDatabase_WithFilter_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -1701,7 +1701,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyPerformance");
+		webd.getLogger().info("Start the test in verifyPerformance_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -1722,7 +1722,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyPerformance");
+		webd.getLogger().info("Start the test in verifyPerformance_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -1743,7 +1743,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyPerformance");
+		webd.getLogger().info("Start the test in verifyPerformance_WithFilter_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -1768,7 +1768,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyPerformance");
+		webd.getLogger().info("Start the test in verifyPerformance_WithFilter_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -1793,7 +1793,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsDatabase");
+		webd.getLogger().info("start to test in verifyResourceAnalyticsDatabase_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -1812,7 +1812,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsDatabase");
+		webd.getLogger().info("start to test in verifyResourceAnalyticsDatabase_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -1831,7 +1831,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsDatabase");
+		webd.getLogger().info("start to test in verifyResourceAnalyticsDatabase_WithFilter_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -1854,7 +1854,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsDatabase");
+		webd.getLogger().info("start to test in verifyResourceAnalyticsDatabase_WithFilter_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -1877,7 +1877,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsHost");
+		webd.getLogger().info("start to test in verifyResourceAnalyticsHost_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -1896,7 +1896,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsHost");
+		webd.getLogger().info("start to test in verifyResourceAnalyticsHost_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -1915,7 +1915,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsHost");
+		webd.getLogger().info("start to test in verifyResourceAnalyticsHost_WithFilter_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -1938,7 +1938,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsHost");
+		webd.getLogger().info("start to test in verifyResourceAnalyticsHost_WithFilter_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -1961,7 +1961,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsMiddleware");
+		webd.getLogger().info("start to test in verifyResourceAnalyticsMiddleware_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -1980,7 +1980,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsMiddleware");
+		webd.getLogger().info("start to test in verifyResourceAnalyticsMiddleware_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -1999,7 +1999,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsMiddleware");
+		webd.getLogger().info("start to test in verifyResourceAnalyticsMiddleware_WithFilter_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -2022,7 +2022,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsMiddleware");
+		webd.getLogger().info("start to test in verifyResourceAnalyticsMiddleware_WithFilter_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -2045,7 +2045,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifySummary");
+		webd.getLogger().info("Start the test in verifySummary_GridView()");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -2066,7 +2066,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifySummary");
+		webd.getLogger().info("Start the test in verifySummary_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -2087,7 +2087,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifySummary");
+		webd.getLogger().info("Start the test in verifySummary_WithFilter_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -2112,7 +2112,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifySummary");
+		webd.getLogger().info("Start the test in verifySummary_WithFilter_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -2137,7 +2137,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyTimeseries");
+		webd.getLogger().info("Start the test in verifyTimeseries_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -2158,7 +2158,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyTimeseries");
+		webd.getLogger().info("Start the test in verifyTimeseries_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -2179,7 +2179,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyTimeseries");
+		webd.getLogger().info("Start the test in verifyTimeseries_WithFilter_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -2204,7 +2204,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyTimeseries");
+		webd.getLogger().info("Start the test in verifyTimeseries_WithFilter_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -2229,7 +2229,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyUIGallery");
+		webd.getLogger().info("Start the test in verifyUIGallery_GridView");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -2250,7 +2250,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyUIGallery");
+		webd.getLogger().info("Start the test in verifyUIGallery_ListView");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -2271,7 +2271,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyUIGallery");
+		webd.getLogger().info("Start the test in verifyUIGallery_WithFilter_GridView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
@@ -2296,7 +2296,7 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyUIGallery");
+		webd.getLogger().info("Start the test in verifyUIGallery_WithFilter_ListView");
 
 		//click Filter-Application PerfAnalytics
 		webd.getLogger().info("Click Cloud Services - IT Analytics");
