@@ -31,12 +31,22 @@ dependencies {
         compile getProjectArtifact('wls-api')   
 	    compile getProjectArtifact('registry-lookup-client')   
 	    compile getProjectArtifact('registry-client')   
-	     compile getProjectArtifact('emaas-platform-tenant-sdk')   
+	    compile getProjectArtifact('emaas-platform-tenant-sdk')   
    		compile getProjectArtifact('wlfullclient')   
         
         compile getProjectArtifact('jackson-core-asl')   
         compile getProjectArtifact('jackson-mapper-asl')   
         compile getProjectArtifact('jackson-xc')   
+        compile getProjectArtifact('jmockit')
+        compile getProjectArtifact('jettison')  
+        compile getProjectArtifact('jersey-core')  
+      	compile getProjectArtifact('jersey-client') 
+      	
+      	
+      	
+      	
+      	
+     
 } 
 test {
         useTestNG()

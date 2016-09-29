@@ -42,13 +42,12 @@ dependencies {
         compile getProjectArtifact('wls-api')   
         compile getProjectArtifact('registry-lookup-client')   
         compile getProjectArtifact('registry-client')   
-        
         compile getProjectArtifact('emaas-platform-tenant-sdk')   
         compile getProjectArtifact('jackson-core')   
-        compile getProjectArtifact('log4j-core')   
         compile getProjectArtifact('jackson-databind')   
         compile getProjectArtifact('jackson-annotations')   
-        compile getProjectArtifact('wlfullclient')   
+        compile getProjectArtifact('wlfullclient') 
+        testCompile getProjectArtifact('registry-lookup-client')    
         
      
 } 

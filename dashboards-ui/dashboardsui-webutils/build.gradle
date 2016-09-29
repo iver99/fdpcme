@@ -48,11 +48,13 @@ dependencies {
         compile getProjectArtifact('registry-client')   
         compile getProjectArtifact('emaas-platform-tenant-sdk')   
         compile getProjectArtifact('wlfullclient')   
-
-	    compile(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0') 
        	compile getProjectArtifact('jackson-core-asl')   
 		compile getProjectArtifact('jackson-mapper-asl')   
-		compile getProjectArtifact('jackson-xc')   
+		compile getProjectArtifact('jackson-xc')  
+		compile getProjectArtifact('jersey-core') 
+		compile getProjectArtifact('jersey-client')   
+		compile getProjectArtifact('jmockit')
+		compile getProjectArtifact('jettison')
         
     
 } 

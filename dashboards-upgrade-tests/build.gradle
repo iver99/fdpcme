@@ -12,9 +12,9 @@ clean{
 }
 
 dependencies {
-	testConfig project(':dashboards-ui-test-common-api') {transitive = false }
-	testConfig getProjectArtifact('log4j-core') {transitive = false }
-	testConfig getProjectArtifact('log4j-api') {transitive = false }
+	testConfig project(':dashboards-ui-test-common-api')
+	testConfig getProjectArtifact('log4j-core') 
+	testConfig getProjectArtifact('log4j-api') 
 
 	testCompile configurations.testConfig
     testCompile configurations.webdriver

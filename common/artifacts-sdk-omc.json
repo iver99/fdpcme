@@ -43,5 +43,16 @@
 		"version": "1.1+",
 		"transitive": false
 	},
+	
+
+
+	"emcs-targetselector": {
+		"method": "artifactFilterSdkVersion",
+		"group": "com.oracle.emaas.emctas.tgtsel",
+		"name": "emcs-targetselector",
+		"version": "1.9.0+",
+		"ext": "zip",
+		"transitive": false
+	},
 
 }

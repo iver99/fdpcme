@@ -40,7 +40,7 @@ dependencies {
 	testConfig getProjectArtifact('httpclient')   
 	testConfig getProjectArtifact('httpcore')   
 	testConfig getProjectArtifact('httpmime')   
-	testConfig getProjectArtifact('servlet-api)   
+	testConfig getProjectArtifact('servlet-api')   
 	testConfig getProjectArtifact('javax.ws.rs-api')   
 	
         

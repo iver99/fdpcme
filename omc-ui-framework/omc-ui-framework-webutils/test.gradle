@@ -28,7 +28,8 @@ dependencies {
 	testConfig getProjectArtifact('jackson-core-asl')   
 	testConfig getProjectArtifact('jackson-mapper-asl')   
 	testConfig getProjectArtifact('jackson-xc')   
-	testConfig getProjectArtifact('jmockit')   
+	testConfig getProjectArtifact('jmockit') 
+
 	
 	
 }

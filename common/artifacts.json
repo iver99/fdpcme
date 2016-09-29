@@ -35,7 +35,7 @@
 	"jackson-mapper-asl": {
 		"group": "org.codehaus.jackson",
 		"name": "jackson-mapper-asl",
-		"version": "1.9.2",
+		"version": "1.9.12",
 		"transitive": false
 	},
 	"testng": {
@@ -85,7 +85,7 @@
 	"jackson-core-asl": {
 		"group": "org.codehaus.jackson",
 		"name": "jackson-core-asl",
-		"version": "1.9.13",
+		"version": "1.9.12",
 		"transitive": false
 	},
 	"jackson-xc": {
@@ -96,7 +96,7 @@
 	},
 
 	"jackson-core": {
-		"group": "com.fasterxml.jackson.core ",
+		"group": "com.fasterxml.jackson.core",
 		"name": "jackson-core",
 		"version": "2.3.0",
 		"transitive": false
@@ -246,13 +246,6 @@
 		"group": "com.font-awesome",
 		"name": "font-awesome",
 		"version": "4.3.0",
-		"ext": "zip",
-		"transitive": false
-	},
-	"emcs-targetselector": {
-		"group": "com.oracle.emaas.emctas.tgtsel",
-		"name": "emcs-targetselector",
-		"version": "tselVersion",
 		"ext": "zip",
 		"transitive": false
 	},

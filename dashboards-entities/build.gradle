@@ -35,6 +35,7 @@ test {
 
 dependencies {
 	compile getProjectArtifact('eclipselink')    
-	compile getProjectArtifact('javax.transaction-api')   
+	compile getProjectArtifact('javax.persistence')  
+  
 }
 
