@@ -419,6 +419,7 @@ define(['knockout',
                         self.beforeResizeHeight = self.resizingTile().cssHeight();
                         self.currentWigedtWidth(self.resizingTile().cssWidth());
                         self.currentWigedtHeight(self.resizingTile().cssHeight());
+                        targetHandler.closest('.dbd-tile-container').addClass("clicking-border");
                     }
                     self.tilesView.disableDraggable();
                 });
@@ -453,7 +454,8 @@ define(['knockout',
                     self.resizingOptions(null);
                     $(this).css('cursor', 'default');
                     $('#globalBody').removeClass('none-user-select');
-                    self.tilesView.enableDraggable();
+                    $('.dbd-tile-container').removeClass("clicking-border");
+                    self.tilesView.enableDraggable();                 
                 });
 
                 //close widget menu if the page is moved up/down by scroll bar
