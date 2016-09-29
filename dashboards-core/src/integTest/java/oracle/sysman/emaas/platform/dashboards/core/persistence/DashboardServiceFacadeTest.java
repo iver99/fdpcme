@@ -99,6 +99,8 @@ public class DashboardServiceFacadeTest
 			case 3:
 				Assert.assertNotNull(time);
 				break;
+			default:
+				break;
 		}
 	}
 
@@ -169,6 +171,8 @@ public class DashboardServiceFacadeTest
 				break;
 			case 3:
 				p.setParamValueTimestamp(DateUtil.getCurrentUTCTime());
+				break;
+			default:
 				break;
 		}
 		return p;

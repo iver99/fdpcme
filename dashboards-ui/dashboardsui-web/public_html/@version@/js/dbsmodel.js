@@ -17,8 +17,8 @@ define([
     'knockout',
     'jquery',
     'dfutil',
-    'prefutil',
-    'mobileutil',
+    'uifwk/js/util/preference-util',
+    'uifwk/js/util/mobile-util',
     'ojs/ojknockout',
     'ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'
@@ -43,7 +43,12 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.showHideDescription=ko.observable(false);
         self.singleVisible = ko.observable(true);
         self.setVisible=ko.observable(false);
-
+        if(!$('#dbd-set-tabs')[0]){
+            self.underSet=false;
+        }else{
+            self.underSet=true;
+        }
+        
         self.dashboardtypeSelectFuc=function(){
             if(self.selectType()==="NORMAL"){
                 self.singleVisible(true);
@@ -179,7 +184,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         //dashboards
         self.isDashboardSet = isSet === true ? true : false;
         self.userName = dfu.getUserName();
-        self.isMobileDevice = ko.observable( (new mbu()).isMobile );
+        self.isMobileDevice = ko.observable( (new mbu()).isSmallDevice );
         self.currentDashboardSetItem=dashboardSetItem;
         self.dashboardInTabs=ko.observable(false);
 
@@ -199,7 +204,17 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         else
         {
             self.filter = null;
+        }        
+        
+        if (localStorage.deleteHomeDbd ==='true') {
+            dfu.showMessage({
+                type: 'info',
+                summary: oj.Translations.getTranslatedString("DBS_HOME_MSG_DELETED_HOME_DASHBOARD"),
+                detail: '',
+                removeDelayTime: 10000});
+            localStorage.deleteHomeDbd = false;
         }
+        
         self.showTilesMsg = ko.observable(false);
         self.tilesMsg = ko.observable("");
         self.showExploreDataBtn= ko.observable(true);
@@ -454,6 +469,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 
             var _addeddb = { "type":self.createDashboardModel.selectType(),
                             "name": self.createDashboardModel.name(),
+                            "showInHome":self.createDashboardModel.underSet ? false : true,
                             "description": self.createDashboardModel.description(),
                             "enableTimeRange": self.createDashboardModel.isEnableTimeRange() ? "TRUE" : "FALSE",
                             "enableRefresh": self.createDashboardModel.isEnableTimeRange()};

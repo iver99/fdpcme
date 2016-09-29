@@ -3,14 +3,14 @@ package oracle.sysman.emaas.platform.dashboards.core.cache.lru;
 
 import java.util.ResourceBundle;
 
+import oracle.sysman.emaas.platform.dashboards.core.cache.lru.inter.ICacheUnit;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import oracle.sysman.emaas.platform.dashboards.core.cache.lru.inter.ICacheUnit;
-
 public class CacheUnit implements ICacheUnit{
 	
-	private static final Logger logger = LogManager.getLogger(CacheUnit.class);
+	private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 	
 	private CacheLinkedHashMap<String,Element> cacheLinkedHashMap;
 	private final int timeToLive;
@@ -46,16 +46,20 @@ public class CacheUnit implements ICacheUnit{
 		this.timeToLive=timeToLive;
 		this.cacheCapacity=capacity;
 		this.cacheLinkedHashMap=new CacheLinkedHashMap<String, Element>(capacity);
-		logger.debug("Creating a CacheUnit named {} and expiration time is {}"+name,timeToLive);
+		LOGGER.debug("Creating a CacheUnit named {} and expiration time is {}"+name,timeToLive);
 	}
 	
 	
 	@Override
 	public boolean put(String key,Element value){
-		if(key ==null)
-			throw new IllegalArgumentException("cannot put into CacheUnit:key cannot be null!");
-		if(value ==null)
-			throw new IllegalArgumentException("cannot put into CacheUnit:value cannot be null!");
+		if (key == null) {
+			LOGGER.debug("CacheUnit:Cannot put into CacheUnit:key cannot be null!");
+			throw new IllegalArgumentException("Cannot put into CacheUnit:key cannot be null!");
+		}
+		if (value == null) {
+			LOGGER.debug("CacheUnit:Cannot put into CacheUnit:value cannot be null!");
+			throw new IllegalArgumentException("Cannot put into CacheUnit:value cannot be null!");
+		}
 		value.setLastAccessTime(getCurrentTime());
 		cacheLinkedHashMap.put(key, value);
 		return true;
@@ -78,18 +82,25 @@ public class CacheUnit implements ICacheUnit{
 	 * @return
 	 */
 	private Object getElementValue(String key) {
-		if (key == null)
+		if (key == null) {
+			LOGGER.debug("CacheUnit:key is null,returning null...");
 			return null;
+		}
 		Element e = (Element) cacheLinkedHashMap.get(key);
-		if (e == null)
+		if (e == null) {
+			LOGGER.debug("CacheUnit:Element is null,returning null...");
 			return null;
+		}
 		if(e.isExpired(timeToLive)){
 			//remove action
+			LOGGER.debug("CacheUnit:The Element is expired,removing it from cache unit..");
 			cacheLinkedHashMap.remove(key);
+			LOGGER.debug("CacheUnit:Element is expired,returning null...");
 			return null;
 		}
 		e.setLastAccessTime(getCurrentTime());
 		cacheLinkedHashMap.putWithoutLock(key, e);//update cache 
+		LOGGER.debug("CacheUnit:Get element from cache successful,and element has been updated!");
 		return e.getValue();
 	}
 

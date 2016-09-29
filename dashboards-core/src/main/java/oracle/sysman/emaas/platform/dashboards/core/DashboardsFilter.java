@@ -27,7 +27,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
  */
 public class DashboardsFilter
 {
-	private static final Logger logger = LogManager.getLogger(DashboardsFilter.class);
+	private static final Logger LOGGER = LogManager.getLogger(DashboardsFilter.class);
 	// reserved actual strings for used in query
 	private static final List<String> typeFilterStrings = Arrays.asList(new String[] { Dashboard.DASHBOARD_TYPE_NORMAL,
 			Dashboard.DASHBOARD_TYPE_SET, Dashboard.DASHBOARD_TYPE_SINGLEPAGE });
@@ -40,17 +40,19 @@ public class DashboardsFilter
 	private static final List<String> appFilterStrings_input = Arrays.asList(new String[] { "apm", "ita", "la", "ocs" });
 
 	private static final String favoriteFilterString = "Favorites";
+	private static final String showAllDashboardsString = "ShowAll";
 
 	public static final String APM_PROVIDER_APMUI = "ApmUI";
 	public static final String ITA_PROVIDER_EMCI = "emcitas-ui-apps";
 	public static final String ITA_PROVIDER_TA = "TargetAnalytics";
-	public static final String LA_PROVIDER_LS = "LoganService";
-	public static final String OCS_PROVIDER_OCS = "Orchestration";
+	public static final String LA_PROVIDER_LS = "LogAnalyticsUI";
+        public static final String OCS_PROVIDER_OCS = "Orchestration";
 
 	private List<String> includedTypes;
 	private List<String> includedApps;
 	private List<String> includedOwners;
 	private Boolean includedFavorites;
+	private Boolean showInHome =  true;
 
 	public DashboardsFilter()
 	{
@@ -64,6 +66,14 @@ public class DashboardsFilter
 		if (appFilterStrings.contains(app.trim())) {
 			includedApps.add(app.trim());
 		}
+	}
+	
+	public Boolean getShowInHome() {
+		return showInHome;
+	}
+
+	public void setShowInHome(Boolean showInHome) {
+		this.showInHome = showInHome;
 	}
 
 	public void addIncludedOwner(String o)
@@ -98,7 +108,7 @@ public class DashboardsFilter
 			}
 		}
 		catch (IllegalArgumentException iae) {
-			logger.info("context",iae);
+			LOGGER.info("context",iae);
 		}
 		return types;
 	}
@@ -139,7 +149,7 @@ public class DashboardsFilter
 			}
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		return types;
 	}
@@ -281,13 +291,18 @@ public class DashboardsFilter
 	{
 		if (filter != null) {
 			String filterUpcase = filter.trim().toUpperCase();
-			if (favoriteFilterString.toUpperCase().equals(filterUpcase)) {
+			if (favoriteFilterString. equalsIgnoreCase(filterUpcase)) {
 				setIncludedFavorites(true);
+				return;
+			}
+			
+			if (showAllDashboardsString.equalsIgnoreCase(filterUpcase)) {
+				setShowInHome(false);
 				return;
 			}
 
 			for (String s : typeFilterStrings) {
-				if (s.toUpperCase().equals(filterUpcase)) {
+				if (s.equalsIgnoreCase(filterUpcase)) {
 					addIncludedType(s);
 					return;
 				}
@@ -295,7 +310,7 @@ public class DashboardsFilter
 
 			for (int i = 0; i < appFilterStrings_input.size(); i++) {
 				String s = appFilterStrings_input.get(i);
-				if (s.toUpperCase().equals(filterUpcase)) {
+				if (s.equalsIgnoreCase(filterUpcase)) {
 					addIncludedApplication(appFilterStrings.get(i));
 					return;
 				}
@@ -309,7 +324,7 @@ public class DashboardsFilter
 			//			}
 
 			for (String s : ownerFilterStrings) {
-				if (s.toUpperCase().equals(filterUpcase)) {
+				if (s.equalsIgnoreCase(filterUpcase)) {
 					addIncludedOwner(s);
 					return;
 				}

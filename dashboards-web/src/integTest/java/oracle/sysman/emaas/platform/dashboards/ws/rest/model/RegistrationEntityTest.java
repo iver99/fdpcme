@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import mockit.Expectations;
 import mockit.Mocked;
@@ -60,7 +61,7 @@ public class RegistrationEntityTest
 				final String LA_SERVICENAME = "LogAnalytics";
 				final String ITA_SERVICENAME = "ITAnalytics";
 				final String MONITORING_SERVICENAME = "Monitoring";
-				ArrayList<String> apps = new ArrayList<>();
+				List<String> apps = new ArrayList<>();
 				apps.add(APM_SERVICENAME);
 				apps.add(LA_SERVICENAME);
 				apps.add(ITA_SERVICENAME);
@@ -108,7 +109,7 @@ public class RegistrationEntityTest
 				linkEntity.getHref();
 				result = "http://sampleHost:port";
 
-				ArrayList<Link> linkArrayList = new ArrayList<>();
+				List<Link> linkArrayList = new ArrayList<>();
 				linkArrayList.add(link);
 				linkArrayList.add(link);
 				instanceInfo.getLinksWithRelPrefix(anyString);
@@ -117,7 +118,7 @@ public class RegistrationEntityTest
 				RegistryLookupUtil.getLinksWithRelPrefix(anyString, withAny(new SanitizedInstanceInfo()));
 				result = linkArrayList;
 
-				ArrayList<InstanceInfo> infoArrayList = new ArrayList<>();
+				List<InstanceInfo> infoArrayList = new ArrayList<>();
 				infoArrayList.add(instanceInfo);
 				lookupClient.getInstancesWithLinkRelPrefix(anyString);
 				result = infoArrayList;

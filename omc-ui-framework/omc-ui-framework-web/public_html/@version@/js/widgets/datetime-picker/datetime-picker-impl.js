@@ -1,4 +1,4 @@
-define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg", "ojs/ojdatetimepicker"],
+define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knockout", "jquery", "uifwk/@version@/js/util/message-util-impl", "ojs/ojcore", "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg", "ojs/ojdatetimepicker"],
         function (ko, $, msgUtilModel, oj, nls) {
 
             //Firefox ignores milliseconds when converting a date to Date object, while it doesn't when converting a number.
@@ -54,8 +54,11 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                 var start, end;
                 var timeDiff, dateTimeDiff;
+                
+                var daysArray = ["1", "2", "3", "4", "5", "6", "7"];
+                var monthsArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
 
-                self.tfInstance = {"showTimeFilterError": ko.observable(false), "timeFilterValue": ko.observable("0-23"), "daysChecked": ko.observableArray(["1", "2", "3", "4", "5", "6", "7"]), "monthsChecked": ko.observableArray(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"])};
+                self.tfInstance = {"showTimeFilterError": ko.observable(false), "timeFilterValue": ko.observable("0-23"), "daysChecked": ko.observableArray(daysArray), "monthsChecked": ko.observableArray(monthsArray)};
                 self.showTimeFilterError = ko.observable(self.tfInstance.showTimeFilterError());
 
                 if(params.appId) {
@@ -357,7 +360,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 });
 
                 self.minDate = ko.observable(null);
-                self.maxDate = ko.observable(new Date(new Date().toDateString()));
+                self.maxDate = ko.observable(oj.IntlConverterUtils.dateToLocalIso(new Date()).slice(0, 10));
                 self.timePeriodObject = ko.observable();
                 self.monthObject = ko.observable();
 
@@ -722,8 +725,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                 if(!ko.components.isRegistered("time-filter")) {
                     ko.components.register("time-filter", {
-                        template: {require: "text!/emsaasui/uifwk/js/widgets/timeFilter/html/timeFilter.html"},
-                        viewModel: {require: "/emsaasui/uifwk/js/widgets/timeFilter/js/timeFilter.js"}//{instance: self.tfInstance}
+                        template: {require: "text!uifwk/js/widgets/timeFilter/html/timeFilter.html"},
+                        viewModel: {require: "uifwk/js/widgets/timeFilter/js/timeFilter"}//{instance: self.tfInstance}
                     });
                 }
 
@@ -1108,7 +1111,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.endTime(end.slice(10, 16));
 
                     self.dateTimeInfo(self.getDateTimeInfo(start.slice(0, 10), end.slice(0, 10), self.startTime(), self.endTime()));
-
+                    
                     self.lastStartDate(self.startDate());
                     self.lastEndDate(self.endDate());
                     self.lastStartTime(self.startTime());
@@ -1595,20 +1598,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                     //if time filter is enabled, pass time info in JSON format.
                     if(self.enableTimeFilter()) {
-                        var hourOfDay = [];
-                        var hourRangesOfDay = self.tfInstance.timeFilterValue().split(",");
-                        for(var i=0; i<hourRangesOfDay.length; i++) {
-                            var hourRange = hourRangesOfDay[i].split("-");
-                            if(hourRange.length !== 2) {
-                                console.error("wrong input for time filter!");
-                                return;
-                            }
-                            var hourRangeStart = parseInt(hourRange[0].trim());
-                            var hourRangeEnd = parseInt(hourRange[1].trim());
-                            for(var j=hourRangeStart; j<=hourRangeEnd; j++) {
-                                hourOfDay.push(j.toString());
-                            }
-                        }
+                        var hourOfDay = self.getHourOfDayInArray(self.tfInstance.timeFilterValue());
+                        
                         self.timeFilter({
                             "STARTTIME": new Date(start),
                             "ENDTIME": new Date(end),
@@ -1757,6 +1748,24 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }
                 };
 
+                self.getHourOfDayInArray = function(timeFilterValue) {
+                    var hourOfDay = [];
+                    var hourRangesOfDay = timeFilterValue.split(",");
+                    for (var i = 0; i < hourRangesOfDay.length; i++) {
+                        var hourRange = hourRangesOfDay[i].split("-");
+                        if (hourRange.length !== 2) {
+                            console.error("wrong input for time filter!");
+                            return;
+                        }
+                        var hourRangeStart = parseInt(hourRange[0].trim());
+                        var hourRangeEnd = parseInt(hourRange[1].trim());
+                        for (var j = hourRangeStart; j <= hourRangeEnd; j++) {
+                            hourOfDay.push(j.toString());
+                        }
+                    }
+                    return hourOfDay;
+                }
+
                 self.generateTfTooltip = function(hoursOfDay, daysOfWeek, monthsOfYear) {
                     var i;
                     var tfTooltip = "";
@@ -1764,7 +1773,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         self.tfInfoIndicatorVisible(false);
                         return null;
                     }else {
-                        $("#dateTimePicker_"+self.randomId+" .oj-select-chosen").css("padding-right", "44px");
+//                        $("#dateTimePicker_"+self.randomId+" .oj-select-chosen").css("padding-right", "44px");
+                        $(".oj-select-chosen").css("padding-right", "44px");
                         self.tfInfoIndicatorVisible(true);
                         //get hours excluded
                         var hoursExcludedInfo = "";
@@ -1860,11 +1870,27 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         return tfTooltip;
                     }
                 };
-
-
+                                    
+                if(params.timeFilterParams) {
+                    self.timeFilterParams = params.timeFilterParams;
+                    if(self.enableTimeFilter()) {
+                        var timeFilterValue = self.timeFilterParams.hoursIncluded ? self.timeFilterParams.hoursIncluded : "0-23";
+                        var hourOfDay = self.getHourOfDayInArray(timeFilterValue);
+                        var daysChecked = self.timeFilterParams.daysIncluded ? self.timeFilterParams.daysIncluded : daysArray;
+                        var monthsChecked = self.timeFilterParams.monthsIncluded ? self.timeFilterParams.monthsIncluded : monthsArray;
+                        self.timeFilterInfo(self.generateTfTooltip(hourOfDay, daysChecked, monthsChecked));
+                        self.tfInstance.timeFilterValue(timeFilterValue);
+                        self.tfInstance.daysChecked(daysChecked);
+                        self.tfInstance.monthsChecked(monthsChecked);
+                    }
+                }else {
+                    self.timeFilterParams = null;
+                }
+                    
                 self.tfParams = {
                     postbox: self.postbox,
                     randomId: self.randomId,
+                    timeFilterParams: self.timeFilterParams,
                     tfChangedCallback: self.updateRange
                 };
                 self.initialize();

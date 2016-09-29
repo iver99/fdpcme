@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
  */
 public class UserOptionsManagerTest_S2
 {
-	private static final Logger logger = LogManager.getLogger(UserOptionsManagerTest_S2.class);
+	private static final Logger LOGGER = LogManager.getLogger(UserOptionsManagerTest_S2.class);
 	@Test(groups = { "s2" })
 	public void testUserOptionsManagerCC(@Mocked final PersistenceManager mockpm, @Mocked final EntityManager mockem,
 			@Mocked final EntityManagerFactory mockemf, @Mocked final EntityTransaction mocket,
@@ -73,26 +73,26 @@ public class UserOptionsManagerTest_S2
 			dbcm.getOptionsById(1L, 0L);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		try {
 			dbcm.getOptionsById(-1L, 0L);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		try {
 			dbcm.saveOrUpdateUserOptions(uo1, 1L);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		uo1.setDashboardId(1L);
 		try {
 			dbcm.saveOrUpdateUserOptions(uo1, 1L);
 		}
 		catch (DashboardNotFoundException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 		new NonStrictExpectations() {
 			{

@@ -1,8 +1,8 @@
-define([
+define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
     'knockout',
     'jquery',
-    'uifwk/js/util/df-util',
-    'uifwk/js/util/message-util',
+    'uifwk/@version@/js/util/df-util-impl', 
+    'uifwk/@version@/js/util/message-util-impl',
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'ojs/ojknockout',
@@ -57,7 +57,7 @@ define([
                 var appIdError = "Error";
                 self.SERVICE_VERSION=encodeURIComponent('1.0+');
                 self.MONITORING_SERVICE_VERSION=encodeURIComponent('1.5+');
-                self.COMPLIANCE_SERVICE_VERSION = encodeURIComponent('1.7.5+');
+                self.COMPLIANCE_SERVICE_VERSION = encodeURIComponent(null);
                 var appIdEventUI = "EventUI";
                 var appIdMonitoring = "Monitoring";
                 var appIdSecurityAnalytics = "SecurityAnalytics";
@@ -81,8 +81,8 @@ define([
                 };
                 appMap[appIdLogAnalytics] = {
                     "appId": "LogAnalytics",
-                    "appName": "BRANDING_BAR_APP_NAME_LOG_ANALYTICS",
-                    "serviceName": "LoganService",
+                    "appName": "BRANDING_BAR_APP_NAME_LOG_ANALYTICS", 
+                    "serviceName": "LogAnalyticsUI",
                     "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_log_gs"
                 };
@@ -133,9 +133,9 @@ define([
                         "appId": appIdCompliance,
                         "appName": "BRANDING_BAR_APP_NAME_COMPLIANCE",
                         "serviceDisplayName": "BRANDING_BAR_APP_NAME_COMPLIANCE",
-                        "serviceName": "ComplianceUI",
+                        "serviceName": "ComplianceUIService",
                         "version": self.COMPLIANCE_SERVICE_VERSION,
-                        "helpTopicId": ""
+                        "helpTopicId": "em_moncs"
                     };
                 appMap[appIdOcs] = {
                     "appId": appIdOcs,
@@ -306,8 +306,8 @@ define([
                     }
                 };
 
-                var templatePath = "/emsaasui/uifwk/js/widgets/navlinks/html/navigation-links.html";
-                var vmPath = "/emsaasui/uifwk/js/widgets/navlinks/js/navigation-links.js";
+                var templatePath = "uifwk/js/widgets/navlinks/html/navigation-links.html";
+                var vmPath = "uifwk/js/widgets/navlinks/js/navigation-links";
 
                 //Parameters for navigation links ko component
                 self.navLinksKocParams = {
@@ -335,8 +335,8 @@ define([
                     id: self.aboutBoxId,
                     nlsStrings: nls };
                 //Register a Knockout component for about box
-                var aboutTemplatePath = "/emsaasui/uifwk/js/widgets/aboutbox/html/aboutbox.html";
-                var aboutVmPath = "/emsaasui/uifwk/js/widgets/aboutbox/js/aboutbox.js";
+                var aboutTemplatePath = "uifwk/js/widgets/aboutbox/html/aboutbox.html";
+                var aboutVmPath = "uifwk/js/widgets/aboutbox/js/aboutbox";
                 if (!ko.components.isRegistered('df-oracle-about-box')) {
                     ko.components.register("df-oracle-about-box",{
                         viewModel:{require:aboutVmPath},

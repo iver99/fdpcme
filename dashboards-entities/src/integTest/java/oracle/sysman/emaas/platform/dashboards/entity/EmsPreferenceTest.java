@@ -29,17 +29,4 @@ public class EmsPreferenceTest {
         assertEquals(emsPreference.getUserName(),"elephant");
     }
 
-    @Test
-    public void testSetPrefKey() {
-    }
-
-    @Test
-    public void testSetPrefValue() {
-
-    }
-
-    @Test
-    public void testSetUserName() {
-
-    }
 }

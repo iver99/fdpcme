@@ -22,7 +22,7 @@ public class TenantSubscriptions
 	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the inputs from the testenv.properties file before
 	 * executing test cases
 	 */
-	private static final Logger logger = LogManager.getLogger(TenantSubscriptions.class);
+	private static final Logger LOGGER = LogManager.getLogger(TenantSubscriptions.class);
 	static String HOSTNAME;
 	static String portno;
 	static String serveruri;
@@ -79,7 +79,7 @@ public class TenantSubscriptions
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -122,7 +122,7 @@ public class TenantSubscriptions
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 

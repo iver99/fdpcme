@@ -1,10 +1,10 @@
-define([
+define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
     'knockout',
     'jquery',
-    'uifwk/js/util/df-util',
+    'uifwk/@version@/js/util/df-util-impl', 
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
-    'uifwk/js/util/typeahead-search',
+    'uifwk/@version@/js/util/typeahead-search-impl', 
     'ojs/ojselectcombobox',
     'ojs/ojdialog',
     'ojs/ojinputtext',
@@ -511,7 +511,7 @@ define([
                                     var laImagePath = "/emsaasui/uifwk/@version@/images/widgets/sample-widget-histogram.png";
                                     var taImagePath = "/emsaasui/uifwk/@version@/images/widgets/sample-widget-histogram.png";
                                     var itaImagePath = "/emsaasui/uifwk/@version@/images/widgets/sample-widget-histogram.png";
-                                    if ('LoganService' === widget.PROVIDER_NAME) {
+                                    if ('LogAnalyticsUI' === widget.PROVIDER_NAME) {
                                         widget.WIDGET_VISUAL(laImagePath);
                                     }
                                     else if ('TargetAnalytics' === widget.PROVIDER_NAME) {

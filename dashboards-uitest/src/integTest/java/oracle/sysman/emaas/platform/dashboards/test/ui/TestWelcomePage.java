@@ -13,21 +13,21 @@ import org.testng.annotations.Test;
 
 /**
  * @version
- * @author charles.c.chen
+ * @author
  * @since release specific (what release of product did this appear in)
  */
 
 public class TestWelcomePage extends LoginAndLogout
 {
 
-	public void initTest(String testName) 
+	public void initTest(String testName)
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
 	@Test
-	public void testOpenAPMPage() 
+	public void testOpenAPMPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening APM in welcome page...");
@@ -36,12 +36,13 @@ public class TestWelcomePage extends LoginAndLogout
 		WelcomeUtil.visitAPM(webd);
 		String tmpUrl = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("Open APM by url: " + tmpUrl);
-		urlVerification(tmpUrl, "apmUi/index.html");
+		String noParamUrl = DashBoardUtils.trimUrlParameters(tmpUrl);
+		urlVerification(noParamUrl, "apmUi/index.html");
 		webd.getLogger().info("Test open APM in welcome page finished!!!");
 	}
 
 	@Test
-	public void testOpenDashboardPage() 
+	public void testOpenDashboardPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening Dashboards in welcome page...");
@@ -55,7 +56,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testOpenDE_LAPage() 
+	public void testOpenDE_LAPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening Data Explorers-Log in welcome page...");
@@ -69,7 +70,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testOpenDE_SearchPage() 
+	public void testOpenDE_SearchPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening Data Explorers-Search in welcome page...");
@@ -84,7 +85,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	//	@Test
-	//	public void testOpenGetStartedPage() 
+	//	public void testOpenGetStartedPage()
 	//	{
 	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 	//		webd.getLogger().info("Start to test opening 'How to get started' in welcome page...");
@@ -99,11 +100,11 @@ public class TestWelcomePage extends LoginAndLogout
 	//	}
 
 	//	@Test
-	//	public void testOpenInfraMonitoring() 
+	//	public void testOpenInfraMonitoring()
 	//	{
 	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 	//		webd.getLogger().info("Start to test open Infrastructure Monitoring in welcome page...");
-	//		
+	//
 	//		BrandingBarUtil.visitWelcome(webd);
 	//		WelcomeUtil.visitInfraMonitoring(webd);
 	//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
@@ -113,7 +114,7 @@ public class TestWelcomePage extends LoginAndLogout
 	//	}
 
 	@Test
-	public void testOpenITA_DEPage() 
+	public void testOpenITA_DEPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Data Explorer in welcome page...");
@@ -128,7 +129,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testOpenITA_PADatabasePage() 
+	public void testOpenITA_PADatabasePage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Performance Analytics-Database in welcome page...");
@@ -142,7 +143,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	//@Test
-	public void testOpenITA_PAMiddlewarePage() 
+	public void testOpenITA_PAMiddlewarePage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Performance Analytics-Middleware in welcome page...");
@@ -156,7 +157,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testOpenITA_RADatabasePage() 
+	public void testOpenITA_RADatabasePage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Resource Analytics-Database in welcome page...");
@@ -170,7 +171,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testOpenITA_RAHostPage() 
+	public void testOpenITA_RAHostPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Resource Analytics-Host in welcome page...");
@@ -179,12 +180,13 @@ public class TestWelcomePage extends LoginAndLogout
 		WelcomeUtil.visitITA(webd, "resourceAnalyticsHost");
 		String tmpUrl = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("Open ITA: Resource Analytics-Host by url: " + tmpUrl);
-		urlVerification(tmpUrl, "emcitas/resource-analytics/html/server-resource-analytics.html");
+		String noParamUrl = DashBoardUtils.trimUrlParameters(tmpUrl);
+		urlVerification(noParamUrl, "emcitas/resource-analytics/html/server-resource-analytics.html");
 		webd.getLogger().info("Test opening ITA: Resource Analytics-Host in welcome page finished!!!");
 	}
 
 	@Test
-	public void testOpenITA_RAMiddlewarePage() 
+	public void testOpenITA_RAMiddlewarePage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Resource Analytics-Middleware in welcome page...");
@@ -198,7 +200,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testOpenITAPage() 
+	public void testOpenITAPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA in welcome page...");
@@ -219,7 +221,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testOpenLAPage() 
+	public void testOpenLAPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening LA in welcome page...");
@@ -233,7 +235,7 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	//	@Test
-	//	public void testOpenServiceOfferingPage() 
+	//	public void testOpenServiceOfferingPage()
 	//	{
 	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 	//		webd.getLogger().info("Start to test opening 'Service Offerings' in welcome page...");
@@ -248,7 +250,7 @@ public class TestWelcomePage extends LoginAndLogout
 	//	}
 
 	//	@Test
-	//	public void testOpenVideosPage() 
+	//	public void testOpenVideosPage()
 	//	{
 	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 	//		webd.getLogger().info("Start to test opening 'Videos' in welcome page...");
@@ -263,7 +265,7 @@ public class TestWelcomePage extends LoginAndLogout
 	//	}
 
 	@Test
-	public void testWelcomepage() 
+	public void testWelcomepage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in test Welcome Page");
@@ -281,8 +283,9 @@ public class TestWelcomePage extends LoginAndLogout
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "serviceOfferings"));
 	}
 
-	public void urlVerification(String pageUrl, String expectedUrl)
+	private void urlVerification(String pageUrl, String expectedUrl)
 	{
 		Assert.assertEquals(pageUrl.substring(pageUrl.indexOf("emsaasui") + 9), expectedUrl);
 	}
+
 }

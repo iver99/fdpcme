@@ -19,13 +19,13 @@ import org.apache.logging.log4j.ThreadContext;
  */
 public class TenantContext
 {
-	private static final Logger logger = LogManager.getLogger(TenantContext.class);
+	private static final Logger LOGGER = LogManager.getLogger(TenantContext.class);
 
 	private static final ThreadLocal<String> tenantThreadLocal = new ThreadLocal<String>();
 
 	public static void clearCurrentUser()
 	{
-		logger.debug("TenantContext is cleared");
+		LOGGER.debug("TenantContext is cleared");
 		String tenant = tenantThreadLocal.get();
 		if (tenant != null) {
 			tenantThreadLocal.remove();
@@ -40,7 +40,7 @@ public class TenantContext
 
 	public static void setCurrentTenant(String tenant)
 	{
-		logger.debug("TenantContext is set with new tenant value {}", tenant);
+		LOGGER.debug("TenantContext is set with new tenant value {}", tenant);
 		tenantThreadLocal.set(tenant);
 		ThreadContext.put(LogUtil.INTERACTION_LOG_PROP_TENANTID, tenant);
 	}

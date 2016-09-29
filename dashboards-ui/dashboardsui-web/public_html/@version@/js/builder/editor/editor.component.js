@@ -8,10 +8,11 @@ define(['knockout',
         'jquery',
         'ojs/ojcore',
         'dfutil',
+//        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
         'builder/dashboard.tile.model',
         'builder/editor/editor.tiles'
     ],
-    function(ko, $, oj, dfu) {
+    function(ko, $, oj, dfu/*, TargetSelectorUtils*/) {
         function Cell(row, column) {
             var self = this;
 
@@ -26,7 +27,7 @@ define(['knockout',
          * @param {Date} endTime: end time of new time range
          * @returns {DashboardTimeRangeChange} instance
          */
-        function DashboardTimeRangeChange(startTime, endTime){
+        function DashboardTimeRangeChange(startTime, endTime, timePeriod){
             var self = this;
             if (startTime instanceof Date){
                 self.viewStartTime = startTime;
@@ -34,6 +35,7 @@ define(['knockout',
             if (endTime instanceof Date){
                 self.viewEndTime = endTime;
             }
+            self.viewTimePeriod = timePeriod;
         }
         Builder.registerModule(DashboardTimeRangeChange, 'DashboardTimeRangeChange');
 
@@ -198,7 +200,7 @@ define(['knockout',
                 return typeof(tile.configure)==="function";
             });
             tile.tileDisplayClass = ko.computed(function() {
-                var css = 'oj-md-'+(mode.getModeWidth(tile)) + ' oj-sm-'+(mode.getModeWidth(tile)*16) + ' oj-lg-'+(mode.getModeWidth(tile));
+                var css = 'oj-md-'+(mode.getModeWidth(tile)) + ' oj-sm-'+(mode.getModeWidth(tile)*12) + ' oj-lg-'+(mode.getModeWidth(tile));
                 css += tile.isMaximized() ? ' dbd-tile-maximized ' : '';
                 css += tile.shouldHide() ? ' dbd-tile-no-display' : '';
                 css += tile.editDisabled() ? ' dbd-tile-edit-disabled' : '';
@@ -218,7 +220,7 @@ define(['knockout',
                 } else
                     return "#";
             });
-            tile.dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd()), targets, null, null, dashboard.enableTimeRange(), dashboard.enableEntityFilter());
+            tile.dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd(), timeSelectorModel.viewTimePeriod()), targets, null, null, dashboard.enableTimeRange(), dashboard.enableEntityFilter());
             /**
              * Integrator needs to override below FUNCTION to respond to DashboardItemChangeEvent
              * e.g.
@@ -363,22 +365,22 @@ define(['knockout',
                         }else {
                             var start = timeSelectorModel.viewStart().getTime();
                             var end = timeSelectorModel.viewEnd().getTime();
-                            widgetUrl += "&startTime="+start+"&endTime="+end;
+                            var timePeriod = timeSelectorModel.viewTimePeriod();
+                            widgetUrl += "&startTime="+start+"&endTime="+end+"&timePeriod="+timePeriod;
                         }
 
-
-                        require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
-                            if(targets && targets()) {
-                                var compressedTargets = encodeURI(JSON.stringify(targets()));
-                                var targetUrlParam = "targets";
-                                if(TargetSelectorUtils.compress) {
-                                    compressedTargets = TargetSelectorUtils.compress(targets());
-                                    targetUrlParam = "targetsz";
-                                }
-                                widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
+                    require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils){
+                        if(targets && targets()) {
+                             var compressedTargets = encodeURI(JSON.stringify(targets()));
+                            var targetUrlParam = "targets";
+                            if(TargetSelectorUtils.compress) {
+                                compressedTargets = TargetSelectorUtils.compress(targets());
+                                targetUrlParam = "targetsz";
                             }
-                            window.location = widgetUrl;
-                        });
+                            widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
+                        }
+                        window.location = widgetUrl;
+                    });
                     };
                 }
             }

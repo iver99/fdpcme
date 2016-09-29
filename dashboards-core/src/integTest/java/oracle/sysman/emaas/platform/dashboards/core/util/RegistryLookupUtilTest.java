@@ -18,6 +18,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
@@ -61,8 +62,8 @@ public class RegistryLookupUtilTest
 			@Mocked final InstanceInfo anyInstanceInfo, @Mocked final LookupManager anyLockupManager,
 			@Mocked final LookupClient anyClient, @Injectable final Logger anyLogger) throws Exception
 	{
-		Logger logger = (Logger) Deencapsulation.getField(RegistryLookupUtil.class, "logger");
-		Deencapsulation.setField(RegistryLookupUtil.class, "logger", anyLogger);
+		Logger logger = (Logger) Deencapsulation.getField(RegistryLookupUtil.class, "LOGGER");
+		Deencapsulation.setField(RegistryLookupUtil.class, "LOGGER", anyLogger);
 		try {
 			new Expectations() {
 				{
@@ -78,7 +79,7 @@ public class RegistryLookupUtilTest
 			Assert.assertNull(endpoint);
 		}
 		finally {
-			Deencapsulation.setField(RegistryLookupUtil.class, "logger", logger);
+			Deencapsulation.setField(RegistryLookupUtil.class, "LOGGER", logger);
 		}
 	}
 
@@ -155,7 +156,7 @@ public class RegistryLookupUtilTest
 	public void testGetServiceExternalEndPointEntityS2()
 	{
 		String href = "htt://www.test.com", serviceName = "serviceName", version = "version", tenantName = "tenantName";
-		final Link link = new Link();
+		final VersionedLink link = new VersionedLink();
 		link.withHref("htt://www.test.com");
 		new Expectations(RegistryLookupUtil.class) {
 			{

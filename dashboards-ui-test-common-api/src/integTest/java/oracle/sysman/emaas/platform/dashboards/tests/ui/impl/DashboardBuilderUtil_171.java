@@ -33,7 +33,7 @@ import org.testng.Assert;
 
 public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version implements IDashboardBuilderUtil
 {
-	private static final Logger logger = LogManager.getLogger(DashboardBuilderUtil_171.class);
+	private static final Logger LOGGER = LogManager.getLogger(DashboardBuilderUtil_171.class);
 	private final static String DASHBOARD_SELECTION_TAB_NAME = "Dashboard";
 
 	/* (non-Javadoc)
@@ -87,7 +87,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			e.printStackTrace();
 		}
 		driver.getLogger().info("removeDashboardInSet has selected the dashboard named with \"" + dashboardName + "\"");
@@ -482,7 +482,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			DashboardHomeUtil.gridView(driver);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -577,7 +577,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			DashboardHomeUtil.listView(driver);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -678,14 +678,13 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.waitForElementPresent("id=" + DashBoardPageId.DASHBOARDSETOPTIONSMENUID);
 		driver.click("id=" + DashBoardPageId.DASHBOARDSETOPTIONSMENUID);
 		driver.waitForElementPresent("css=" + DashBoardPageId.DASHBOARDSETOPTIONSPRINTCSS);
-		DelayedPressEnterThread thr = new DelayedPressEnterThread("DelayedPressEnterThread", waitTime);
 		driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.DASHBOARDSETOPTIONSPRINTCSS)).click();
 		//have to use thread sleep to wait for the print window(windows dialog) to appear
 		try {
 			Thread.sleep(waitTime);
 		}
 		catch (InterruptedException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -728,6 +727,8 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 				driver.waitForElementPresent(DashBoardPageId.BUILDERAUTOREFRESHON5MINSELECTEDLOCATOR);
 				driver.takeScreenShot();
 				break;
+			default:
+				break;
 		}
 		driver.getLogger().info("refreshDashboard completed");
 	}
@@ -764,6 +765,8 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			case REFRESH_DASHBOARD_SETTINGS_5MIN:
 				driver.check(DashBoardPageId.DASHBOARDSETOPTIONSAUTOREFRESHON5MINLOCATOR);
 				break;
+			default:
+				break;
 		}
 		driver.getLogger().info("refreshDashboardSet completed");
 	}
@@ -798,7 +801,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			widgetEl = getWidgetByName(driver, widgetName, index);
 		}
 		catch (InterruptedException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -828,7 +831,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			widgetEl = getWidgetByName(driver, widgetName, index);
 		}
 		catch (InterruptedException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -896,7 +899,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			DashboardHomeUtil.search(driver, searchString);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -912,7 +915,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			DashboardHomeUtil.selectDashboard(driver, dashboardName);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -1006,7 +1009,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			DashboardHomeUtil.sortBy(driver, option);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -1308,7 +1311,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			we = getTileTitleElement(driver, widgetName, index);
 		}
 		catch (NoSuchElementException e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			driver.getLogger().info("verifyWidget compelted and returns false");
 			return false;
 		}

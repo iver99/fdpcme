@@ -3,7 +3,7 @@ define([
     'knockout',
     'jquery',
     'dfutil',
-    'loggingutil',
+    'uifwk/js/util/logging-util',
     'idfbcutil',
     'ojs/ojcore',
     'jqueryui',
@@ -15,7 +15,9 @@ define([
     'builder/dashboard.tile.view',
     'builder/tool.bar.model',
     'builder/integrate/builder.integrate',
-    'dashboards/dbstypeahead'],
+    'dashboards/dbstypeahead',
+    'builder/integrate/dashboard.widget.api',
+    'builder/dashboardDataSource/dashboard.datasource'],
     function (model, ko, $, dfu, _emJETCustomLogger, idfbcutil, oj) {
 
         function DashboardsetPanelsModel(dashboardsetToolBarModel) {
@@ -58,7 +60,7 @@ define([
                 //hide the right panel
                 if (self.rightPanelModel) {
                     //resize right panel before shown
-                    self.rightPanelModel.completelyHidden(true);
+                    Builder.rightPanelChange("complete-hidden-rightpanel");                 
                     $(".dashboard-picker-container").removeClass("df-collaps");
                 }
 
@@ -104,7 +106,7 @@ define([
 
 
                 function init() {
-                    var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share'], dashboardsetToolBarModel.reorderedDbsSetItems, true);
+                    var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share','ShowAll'], dashboardsetToolBarModel.reorderedDbsSetItems, true);
 
                     dashboardsViewModle.showExploreDataBtn(false);
 
@@ -160,23 +162,17 @@ define([
             self.loadDashboard = function (dashboardsetToolBarModel) {
                 $("#loading").show();
                 var dashboardItem = dashboardsetToolBarModel.selectedDashboardItem(),
-                    dashboardId = dashboardItem.dashboardId,
-                    dashboardSetId = dashboardsetToolBarModel.dashboardsetId;
-                var _isDashboard= dashboardId === dashboardSetId;
-                if (_isDashboard) {
-                     initializeSingleDashboard(dashboardItem.raw, dashboardId);
-                } else {
-                    Builder.loadDashboard(dashboardId, function (dashboard) {
-                        initializeSingleDashboard(dashboard, dashboardId);
-                    }, function (e) {
-                        $("#loading").hide();
-                        console.log(e.errorMessage());
-                        if (e.errorCode && e.errorCode() === 20001) {
-                            oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
-                            window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href);
-                        }
-                    });
-                }
+                    dashboardId = dashboardItem.dashboardId;
+                new Builder.DashboardDataSource().loadDashboardData(dashboardId, function (dashboard) {
+                    initializeSingleDashboard(dashboard, dashboardId);
+                }, function (e) {
+                    $("#loading").hide();
+                    console.log(e.errorMessage());
+                    if (e.errorCode && e.errorCode() === 20001) {
+                        oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
+                        window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href);
+                    }
+                });
             };
 
             self.hideAllDashboards = function () {
@@ -294,10 +290,6 @@ define([
                         if (allMenusHidden) {
                             $b.findEl(".dashboardOptsBtn").hide();
                         }
-
-                        if (!dashboardsetToolBarModel.dashboardsetConfig.isCreator()) {
-                            $($b.findEl('.builder-toolbar-right')).css({display: "none"});
-                        }
                     }
 
                     tilesView.enableDraggable();
@@ -352,10 +344,10 @@ define([
                 }
             }
             function homeScrollbarReset(target) {
-                var bodyHeight = $(window).height();
-                var titleToolbarHeight = target.position().top;
-                var newHeight = Number(bodyHeight) - Number(titleToolbarHeight);
-                var targetContainer = target.closest('#dashboards-tabs-contents');
+                var bodyHeight = $(window).height(),
+                    titleToolbarHeight = target.position().top,
+                    newHeight = Number(bodyHeight) - Number(titleToolbarHeight),
+                    targetContainer = target.closest('#dashboards-tabs-contents');
                 targetContainer.css({'height': newHeight});
                 targetContainer.css({'overflow-y': 'scroll'});
             }

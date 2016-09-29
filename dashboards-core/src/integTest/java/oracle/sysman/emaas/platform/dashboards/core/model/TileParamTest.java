@@ -16,17 +16,17 @@ import org.testng.annotations.Test;
 public class TileParamTest
 {
 
-	private static final Logger logger = LogManager.getLogger(TileParamTest.class);
+	private static final Logger LOGGER = LogManager.getLogger(TileParamTest.class);
 	@Test(groups = { "s2" })
 	public void testGetValue()
 	{
-		//Logger logger = EMTestLogger.getLogger("testGetValue");
+		//Logger LOGGER = EMTestLogger.getLogger("testGetValue");
 
 		TileParam tp = new TileParam();
 		tp.setType(TileParam.PARAM_TYPE_STRING);
 		tp.setStringValue("test");
 		Assert.assertEquals("test", tp.getValue(), tp.toString());
-		//logger.info("Values inside TileParam is: " + tp.toString());
+		//LOGGER.info("Values inside TileParam is: " + tp.toString());
 
 		tp.setType(null);
 		BigDecimal bd = new BigDecimal(1024);
@@ -48,7 +48,7 @@ public class TileParamTest
 	@Test(groups = { "s2" })
 	public void testSetValue() throws CommonFunctionalException
 	{
-		//Logger logger = EMTestLogger.getLogger("testSetValue");
+		//Logger LOGGER = EMTestLogger.getLogger("testSetValue");
 
 		TileParam tp = new TileParam();
 		tp.setType(TileParam.PARAM_TYPE_NUMBER);
@@ -64,7 +64,7 @@ public class TileParamTest
 		}
 		catch (CommonFunctionalException e) {
 			// expected exception
-			logger.info("context",e);
+			LOGGER.info("context",e);
 		}
 
 		tp.setType(TileParam.PARAM_TYPE_BOOLEAN);

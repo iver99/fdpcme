@@ -36,7 +36,7 @@ import com.jayway.restassured.response.Response;
  */
 public class CommonUIUtils
 {
-	private static final Logger logger = LogManager.getLogger(CommonUIUtils.class);
+	private static final Logger LOGGER = LogManager.getLogger(CommonUIUtils.class);
 	static String sTenantId = CommonUIUtils.getEmaasPropertyValue("TENANT_ID");
 	static String sOhsUrl = CommonUIUtils.getEmaasPropertyValue("OHS_URL");
 	static String sRegistryUrl = CommonUIUtils.getEmaasPropertyValue("OHS_REGISTRY_URL");
@@ -103,7 +103,7 @@ public class CommonUIUtils
 
 	public static void commonUITestLog(String sDesc)
 	{
-		String sStr = "*** Dashboards Common UI TestLog ***:  " + sDesc;
+		//String sStr = "*** Dashboards Common UI TestLog ***:  " + sDesc;
 	}
 
 	public static String getAppName(String sTenant, String sUser)
@@ -121,8 +121,6 @@ public class CommonUIUtils
 		File emaasPropertiesFile = new File(System.getenv("T_WORK") + "/emaas.properties.log");
 
 		Properties emaasProp = new Properties();
-
-		String sUrl = "";
 
 		String sPropertyValue = "";
 
@@ -222,7 +220,7 @@ public class CommonUIUtils
 
 		}
 		catch (IOException ex) {
-			logger.info("context",ex);
+			LOGGER.info("context",ex);
 			ex.printStackTrace();
 		}
 		finally {
@@ -231,7 +229,7 @@ public class CommonUIUtils
 					input.close();
 				}
 				catch (IOException e) {
-					logger.info("context",e);
+					LOGGER.info("context",e);
 					e.printStackTrace();
 				}
 			}
@@ -363,7 +361,7 @@ public class CommonUIUtils
 				driver.getLogger().info("the category display is: " + driver.isDisplayed(UIControls.SCATEGORYSELECT));
 			}
 			catch (RuntimeException re) {
-				logger.info("context",re);
+				LOGGER.info("context",re);
 				Assert.fail(re.getLocalizedMessage());
 			}
 			//Assert.assertFalse(driver.isElementPresent(UIControls.sCategorySelect));

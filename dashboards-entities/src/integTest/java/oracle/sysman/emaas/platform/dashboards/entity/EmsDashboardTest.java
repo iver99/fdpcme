@@ -1,12 +1,12 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
-import static org.testng.Assert.assertEquals;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
 
 
 
@@ -14,7 +14,7 @@ import org.testng.annotations.Test;
 public class EmsDashboardTest {
      Date now = new Date();
     private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10,10,10, now,
-             "elephant","elephant","elephant","elephant",10,10, "{}");
+             "elephant","elephant","elephant","elephant",10,10,1,"{}");
 
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
             now,
@@ -193,103 +193,4 @@ public class EmsDashboardTest {
         assertEquals(emsDashboard.removeEmsDashboardTile(emsDashboardTile),emsDashboardTile);
     }
 
-    @Test
-    public void testSetApplicationType() {
-
-    }
-
-    @Test
-    public void testSetCreationDate() {
-
-    }
-
-    @Test
-    public void testSetDashboardId() {
-
-    }
-
-    @Test
-    public void testSetDashboardTileList() {
-
-    }
-
-    @Test
-    public void testSetDeleted() {
-
-    }
-
-    @Test
-    public void testSetDescription() {
-
-    }
-
-    @Test
-    public void testSetEnableRefresh() {
-
-    }
-    
-    @Test
-    public void testSetEnableDescription() {
-
-    }
-    
-    @Test
-    public void testSetEnableEntityFilter() {
-
-    }
-
-    @Test
-    public void testSetEnableTimeRange() {
-
-    }
-    
-    @Test
-    public void testSetExtendedOptions() {
-    	
-    }
-
-    @Test
-    public void testSetIsSystem() {
-
-    }
-
-    @Test
-    public void testSetLastModificationDate() {
-
-    }
-
-    @Test
-    public void testSetLastModifiedBy() {
-
-    }
-
-    @Test
-    public void testSetName() {
-
-    }
-
-    @Test
-    public void testSetOwner() {
-
-    }
-
-    @Test
-    public void testSetScreenShot() {
-
-    }
-
-    @Test
-    public void testSetSharePublic() {
-
-    }
-
-    @Test
-    public void testSetTenantId() {
-
-    }
-
-    @Test
-    public void testSetType() {
-
-    }
 }

@@ -1,19 +1,19 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
-import static org.testng.Assert.assertEquals;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
 
 
 @Test(groups={"s1"})
 public class EmsDashboardTileTest { 
     Date now = new Date();
     private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10,10,10, now,
-            "elephant","elephant","elephant","elephant",10,10, "{}");
+            "elephant","elephant","elephant","elephant",10,10,1, "{}");
 
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
             now,
@@ -277,158 +277,4 @@ public class EmsDashboardTileTest {
         emsDashboardTile.removeEmsDashboardTileParams(emsDashboardTileParams);
     }
 
-    @Test
-    public void testSetColumn() {
-
-    }
-
-    @Test
-    public void testSetCreationDate() {
-
-    }
-
-    @Test
-    public void testSetDashboard() {
-
-    }
-
-    @Test
-    public void testSetDashboardTileParamsList() {
-
-    }
-
-    @Test
-    public void testSetHeight() {
-
-    }
-
-    @Test
-    public void testSetIsMaximized() {
-
-    }
-
-    @Test
-    public void testSetLastModificationDate() {
-
-    }
-
-    @Test
-    public void testSetLastModifiedBy() {
-
-    }
-
-    @Test
-    public void testSetOwner() {
-
-    }
-
-    @Test
-    public void testSetPosition() {
-
-    }
-
-    @Test
-    public void testSetProviderAssetRoot() {
-
-    }
-
-    @Test
-    public void testSetProviderName() {
-
-    }
-
-    @Test
-    public void testSetProviderVersion() {
-
-    }
-
-    @Test
-    public void testSetRow() {
-
-    }
-
-    @Test
-    public void testSetTitle() {
-
-    }
-
-    @Test
-    public void testSetType() {
-
-    }
-
-    @Test
-    public void testSetWidgetCreationTime() {
-
-    }
-
-    @Test
-    public void testSetWidgetDescription() {
-
-    }
-
-    @Test
-    public void testSetWidgetGroupName() {
-
-    }
-
-    @Test
-    public void testSetWidgetHistogram() {
-
-    }
-
-    @Test
-    public void testSetWidgetIcon() {
-
-    }
-
-    @Test
-    public void testSetWidgetKocName() {
-
-    }
-
-    @Test
-    public void testSetWidgetLinkedDashboard() {
-
-    }
-
-    @Test
-    public void testSetWidgetName() {
-
-    }
-
-    @Test
-    public void testSetWidgetOwner() {
-
-    }
-
-    @Test
-    public void testSetWidgetSource() {
-
-    }
-
-    @Test
-    public void testSetWidgetSupportTimeControl() {
-
-    }
-
-    @Test
-    public void testSetWidgetTemplate() {
-
-    }
-
-    @Test
-    public void testSetWidgetUniqueId() {
-
-    }
-
-    @Test
-    public void testSetWidgetViewmode() {
-
-    }
-
-    @Test
-    public void testSetWidth() {
-
-    }
 }

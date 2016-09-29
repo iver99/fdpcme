@@ -21,7 +21,7 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
  */
 public class DashboardHomeUtil_Version implements IUiTestCommonAPI
 {
-	private static final Logger logger = LogManager.getLogger(DashboardHomeUtil_Version.class);
+	private static final Logger LOGGER = LogManager.getLogger(DashboardHomeUtil_Version.class);
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IUiTestCommonAPI#getApiVersion(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
@@ -34,7 +34,7 @@ public class DashboardHomeUtil_Version implements IUiTestCommonAPI
                 try{
                     version = wdriver.getElement("//div[contains(@data-bind,'df-oracle-dashboard-list')]//div[boolean(@data-testapiversion)]").getAttribute(VERSION_ATTR);
                 }catch(Exception e){
-                	logger.info("context",e);
+                	LOGGER.info("context",e);
                 }
                 //compatible with 1.7.5
                 if (version == null || "".equals(version.trim())) {

@@ -20,7 +20,7 @@ public class ScreenshorCRUD
 	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the inputs from the testenv.properties file before
 	 * executing test cases
 	 */
-	private static final Logger logger = LogManager.getLogger(ScreenshorCRUD.class);
+	private static final Logger LOGGER = LogManager.getLogger(ScreenshorCRUD.class);
 	static String HOSTNAME;
 	static String portno;
 	static String serveruri;
@@ -78,7 +78,7 @@ public class ScreenshorCRUD
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -116,7 +116,7 @@ public class ScreenshorCRUD
 			Assert.assertTrue(res2.getStatusCode() == 403);
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -146,7 +146,7 @@ public class ScreenshorCRUD
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -182,7 +182,7 @@ public class ScreenshorCRUD
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -232,7 +232,7 @@ public class ScreenshorCRUD
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
@@ -259,7 +259,7 @@ public class ScreenshorCRUD
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
@@ -297,7 +297,7 @@ public class ScreenshorCRUD
 			
 		}
 		catch (Exception e) {
-			logger.info("context",e);
+			LOGGER.info("context",e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 		finally {
