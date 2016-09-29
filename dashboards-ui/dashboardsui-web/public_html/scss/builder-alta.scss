@@ -509,6 +509,11 @@ body, html {
                         font-size 0.5s,
                         line-height 0.5s;
 }
+.widget-area{
+    .clicking-border{
+        outline:0;
+    }
+}
 
 .tile-dragging-placeholder {    
     -webkit-transition: top 0.5s, 
