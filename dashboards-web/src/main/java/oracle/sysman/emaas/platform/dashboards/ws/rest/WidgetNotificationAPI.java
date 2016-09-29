@@ -45,7 +45,7 @@ public class WidgetNotificationAPI extends APIBase
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response notifyWidgetChanged(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam, JSONObject data)
+	public Response notifyWidgetChangedOrDeleted(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam, JSONObject data)
 	{
 		try {
 			infoInteractionLogAPIIncomingCall(tenantIdParam, "Saved Search Service",
