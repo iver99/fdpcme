@@ -107,7 +107,10 @@ define(['knockout',
 
             self.dashboardsetConfig.isCreator = ko.observable(dashboardsetEditDisabled());
 
-            self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
+            self.normalMode = new Builder.NormalEditorMode();
+            self.tabletMode = new Builder.TabletEditorMode();
+            self.modeType = Builder.isSmallMediaQuery() ? self.tabletMode : self.normalMode;
+            self.isMobileDevice = self.modeType.editable === true ? 'false' : 'true';
 
             self.dashboardsetConfigMenu =function(event,data){
                 var configId = data.item.attr('id');

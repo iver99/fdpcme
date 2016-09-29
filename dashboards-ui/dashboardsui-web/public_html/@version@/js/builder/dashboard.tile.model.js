@@ -39,7 +39,6 @@ define(['knockout',
 
             var self = this;
             $b.registerObject(self, 'DashboardTilesViewModel');
-            self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.scrollbarWidth = uiutil.getScrollbarWidth();
 
             widgetAreaContainer = $b.findEl('.widget-area');
@@ -49,6 +48,7 @@ define(['knockout',
 
             self.editor = new Builder.TilesEditor($b, Builder.isSmallMediaQuery() ? self.tabletMode : self.normalMode);
             self.editor.tiles = $b.dashboard.tiles;
+            self.isMobileDevice = self.editor.mode.editable === true ? 'false' : 'true';
             widgetAreaWidth = widgetAreaContainer.width();
 
             self.previousDragCell = null;
