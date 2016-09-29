@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import mockit.Expectations;
 import mockit.Mocked;
@@ -47,7 +48,7 @@ public class RegistrationEntityTest
 	RegistryLookupUtil registryLookupUtil;
 
 	@BeforeMethod
-	public void setUp() throws Exception
+	public void setUp() 
 	{
 		registrationEntity = new RegistrationEntity();
 
@@ -60,7 +61,7 @@ public class RegistrationEntityTest
 				final String LA_SERVICENAME = "LogAnalytics";
 				final String ITA_SERVICENAME = "ITAnalytics";
 				final String MONITORING_SERVICENAME = "Monitoring";
-				ArrayList<String> apps = new ArrayList<>();
+				List<String> apps = new ArrayList<>();
 				apps.add(APM_SERVICENAME);
 				apps.add(LA_SERVICENAME);
 				apps.add(ITA_SERVICENAME);
@@ -73,20 +74,20 @@ public class RegistrationEntityTest
 	}
 
 	@Test
-	public void testGetAdminLinks() throws Exception
+	public void testGetAdminLinks() 
 	{
 		Assert.assertFalse(CollectionUtils.hasElements(registrationEntity.getAdminLinks()));
 	}
 
 	@Test
-	public void testGetCloudServices() throws Exception
+	public void testGetCloudServices() 
 	{
 		Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getCloudServices()));
 	}
 
 	@Test
 	public void testGetHomeLinks(@Mocked final LookupClient lookupClient, @Mocked final InstanceInfo instanceInfo,
-			@Mocked final Link link, @Mocked final LinkEntity linkEntity) throws Exception
+			@Mocked final Link link, @Mocked final LinkEntity linkEntity) 
 	{
 		new Expectations() {
 			{
@@ -108,7 +109,7 @@ public class RegistrationEntityTest
 				linkEntity.getHref();
 				result = "http://sampleHost:port";
 
-				ArrayList<Link> linkArrayList = new ArrayList<>();
+				List<Link> linkArrayList = new ArrayList<>();
 				linkArrayList.add(link);
 				linkArrayList.add(link);
 				instanceInfo.getLinksWithRelPrefix(anyString);
@@ -117,7 +118,7 @@ public class RegistrationEntityTest
 				RegistryLookupUtil.getLinksWithRelPrefix(anyString, withAny(new SanitizedInstanceInfo()));
 				result = linkArrayList;
 
-				ArrayList<InstanceInfo> infoArrayList = new ArrayList<>();
+				List<InstanceInfo> infoArrayList = new ArrayList<>();
 				infoArrayList.add(instanceInfo);
 				lookupClient.getInstancesWithLinkRelPrefix(anyString);
 				result = infoArrayList;
@@ -142,7 +143,7 @@ public class RegistrationEntityTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetSessionExpiryTime() throws Exception
+	public void testGetSessionExpiryTime() 
 	{
 		Assert.assertNull(registrationEntity.getSessionExpiryTime());
 		registrationEntity = new RegistrationEntity("201217");
@@ -151,7 +152,7 @@ public class RegistrationEntityTest
 	}
 
 	@Test
-	public void testGetVisualAnalyzers() throws Exception
+	public void testGetVisualAnalyzers() 
 	{
 		Assert.assertNotNull(registrationEntity.getVisualAnalyzers());
 	}

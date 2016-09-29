@@ -5,6 +5,12 @@ sourceSets {
 	resources.srcDir 'src/integTest/java'
         compileClasspath = configurations.testNG+configurations.restAssured+configurations.testConfig
     }
+     test{
+                java {
+                        srcDirs = ['src/integTest/java']
+                }
+                resources.srcDirs = ['src/integTest/java']
+        }
 }
 
 task integTestJar (type:Jar) {
@@ -13,7 +19,7 @@ task integTestJar (type:Jar) {
 }
 
 dependencies {
-
+	testCompile configurations.testNG
 	testConfig project(':dashboards-entities') { transitive = false }
 	testConfig project(':dashboards-core')   { transitive = false }
 	testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
@@ -25,3 +31,4 @@ dependencies {
 	testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
 	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 }
+build.dependsOn integTestJar

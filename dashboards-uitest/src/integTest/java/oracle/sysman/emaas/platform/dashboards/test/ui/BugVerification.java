@@ -3,10 +3,13 @@ package oracle.sysman.emaas.platform.dashboards.test.ui;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 /**
@@ -18,14 +21,64 @@ import org.testng.annotations.Test;
 public class BugVerification extends LoginAndLogout
 {
 
-	public void initTest(String testName) throws Exception
+	public void initTest(String testName) 
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
+	@AfterClass
+	public void removeTestData() 
+	{
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: removeTestData");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to the grid view
+		webd.getLogger().info("Swtich to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//remove the test data
+		webd.getLogger().info("Start to remove the test data...");
+
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF2040");
+
+		webd.getLogger().info("All test data have been removed");
+	}
+
 	@Test
-	public void testEMPCDF_812_1() throws Exception
+	public void testEMCPDF_2040() 
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testEMCPDF_2040");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//create dashboard
+		webd.getLogger().info("Create a dashboard: no description, with time refresh");
+		DashboardHomeUtil.createDashboard(webd, "Dashboard_EMCPDF2040", null, DashboardHomeUtil.DASHBOARD);
+		webd.getLogger().info("verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_EMCPDF2040", null, true),
+				"Create dashboard failed!");
+
+		//set the timepicker as Custom
+		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, "04/14/2016 12:00 AM", "04/14/2016 12:30 PM"));
+
+	}
+
+	@Test
+	public void testEMPCDF_812_1() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_812");
@@ -40,8 +93,8 @@ public class BugVerification extends LoginAndLogout
 		DashboardHomeUtil.filterOptions(webd, "la");
 
 		//signout menu
-		webd.click(PageId.MenuBtnID);
-		webd.click(PageId.SignOutID);
+		webd.click(PageId.MENUBTNID);
+		webd.click(PageId.SIGNOUTID);
 
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_812");
@@ -61,7 +114,7 @@ public class BugVerification extends LoginAndLogout
 	}
 
 	@Test
-	public void testEMPCDF_832_1() throws Exception
+	public void testEMPCDF_832_1() 
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_832");
@@ -71,10 +124,10 @@ public class BugVerification extends LoginAndLogout
 
 		webd.getWebDriver().navigate()
 				.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
-		webd.waitForElementPresent("css=" + PageId.ErrorPageSingOutBtnCss);
+		webd.waitForElementPresent("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
 		webd.takeScreenShot();
 
-		webd.click("css=" + PageId.ErrorPageSingOutBtnCss);
+		webd.click("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
 		webd.getLogger().info("Sing out button is clicked");
 		webd.takeScreenShot();
 

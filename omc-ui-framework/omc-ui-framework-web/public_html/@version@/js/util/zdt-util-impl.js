@@ -1,7 +1,7 @@
 define([
     'ojs/ojcore',
-    'uifwk/js/util/df-util',
-    'uifwk/js/util/ajax-util'
+    'uifwk/@version@/js/util/df-util-impl',
+    'uifwk/@version@/js/util/ajax-util-impl'
 ],
     function(oj, dfuModel, ajaxUtilModel)
     {

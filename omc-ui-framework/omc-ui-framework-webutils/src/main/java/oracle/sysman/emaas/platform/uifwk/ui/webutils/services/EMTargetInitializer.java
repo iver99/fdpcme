@@ -11,17 +11,21 @@
 package oracle.sysman.emaas.platform.uifwk.ui.webutils.services;
 
 import java.lang.management.ManagementFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import oracle.sysman.emaas.platform.uifwk.ui.webutils.wls.lifecycle.ApplicationServiceManager;
+
 import javax.annotation.Resource;
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
-import weblogic.application.ApplicationLifecycleEvent;
+
 import oracle.sysman.emaas.platform.uifwk.ui.target.services.JMXUtil;
+import oracle.sysman.emaas.platform.uifwk.ui.webutils.wls.lifecycle.ApplicationServiceManager;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import weblogic.application.ApplicationLifecycleEvent;
 
 /**
  * @author vinjoshi
@@ -29,9 +33,9 @@ import oracle.sysman.emaas.platform.uifwk.ui.target.services.JMXUtil;
 public class EMTargetInitializer implements ApplicationServiceManager
 {
 
-	private static final Logger logger = LogManager.getLogger(EMTargetMXBeanImpl.class);
-	private static final String m_target_type = EMTargetConstants.m_target_type;
-	private static final String SVR_MBEAN_NAME_PREFIX = "EMDomain:Type=EMIntegration,EMTargetType=" + m_target_type + ",Name=";
+	private static final Logger LOGGER = LogManager.getLogger(EMTargetMXBeanImpl.class);
+	private static final String M_TARGET_TYPE = EMTargetConstants.M_TARGET_TYPE;
+	private static final String SVR_MBEAN_NAME_PREFIX = "EMDomain:Type=EMIntegration,EMTargetType=" + M_TARGET_TYPE + ",Name=";
 
 	@Resource(lookup = "java:module/ModuleName")
 	private String moduleName;
@@ -39,7 +43,6 @@ public class EMTargetInitializer implements ApplicationServiceManager
 	@Resource(lookup = "java:app/AppName")
 	private String appName;
 
-	
 	@Override
 	public String getName()
 	{
@@ -48,9 +51,8 @@ public class EMTargetInitializer implements ApplicationServiceManager
 		return "OMC UI Target Initializer";
 	}
 
-	
 	@Override
-	public void postStart(ApplicationLifecycleEvent evt) throws Exception
+	public void postStart(ApplicationLifecycleEvent evt) 
 	{
 		// TODO Auto-generated method stub
 		String emTargetMBeanName = "";
@@ -64,40 +66,31 @@ public class EMTargetInitializer implements ApplicationServiceManager
 			JMXUtil.getInstance().registerMBeans();
 		}
 		catch (InstanceAlreadyExistsException e) {
-			logger.error("EMTargetMXBeanImpl already exists ", e);
+			LOGGER.error("EMTargetMXBeanImpl already exists ", e);
 		}
 		catch (MalformedObjectNameException e) {
-			logger.error("Incorrect Object name for MBean", e);
+			LOGGER.error("Incorrect Object name for MBean", e);
 		}
 		catch (Exception e) {
-			logger.error("MBean Registration failed for EMTargetMxBean", e);
+			LOGGER.error("MBean Registration failed for EMTargetMxBean", e);
 		}
 
 	}
 
-
-
-
 	@Override
-	public void postStop(ApplicationLifecycleEvent evt) throws Exception
+	public void postStop(ApplicationLifecycleEvent evt) 
 	{
-
+		// do nothing
 	}
 
-
-
-
 	@Override
-	public void preStart(ApplicationLifecycleEvent evt) throws Exception
+	public void preStart(ApplicationLifecycleEvent evt) 
 	{
-
+		// do nothing
 	}
 
-
-
-
 	@Override
-	public void preStop(ApplicationLifecycleEvent evt) throws Exception
+	public void preStop(ApplicationLifecycleEvent evt) 
 	{
 		// TODO Auto-generated method stub
 		String emTargetMBeanName = SVR_MBEAN_NAME_PREFIX + appName;
@@ -111,7 +104,7 @@ public class EMTargetInitializer implements ApplicationServiceManager
 
 		}
 		catch (Exception e) {
-			logger.error("Unregister MBean for " + m_target_type + " failed.", e);
+			LOGGER.error("Unregister MBean for " + M_TARGET_TYPE + " failed.", e);
 		}
 
 	}

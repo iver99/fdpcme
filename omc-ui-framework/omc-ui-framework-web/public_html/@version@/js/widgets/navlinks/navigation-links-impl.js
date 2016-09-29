@@ -1,4 +1,4 @@
-define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/util/preference-util'],
+define(['knockout', 'jquery', 'uifwk/@version@/js/util/df-util-impl', 'ojs/ojcore', 'uifwk/@version@/js/util/preference-util-impl'],
         function (ko, $, dfumodel, oj, pfu) {
             function NavigationLinksViewModel(params) {
                 var self = this;
@@ -16,7 +16,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                 var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
                 self.isAdmin = false;
                 self.isAdminLinksVisible = ko.observable(self.isAdmin);
-                
+
                 //NLS strings
                 self.visualAnalyzersLabel = nlsStrings.BRANDING_BAR_NAV_VISUAL_ANALYZER_LABEL;
                 self.administrationLabel = nlsStrings.BRANDING_BAR_NAV_ADMIN_LABEL;
@@ -25,7 +25,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                 self.dashboardLinkLabel = nlsStrings.BRANDING_BAR_NAV_DASHBOARDS_LABEL;
                 self.welcomeLabel = nlsStrings.BRANDING_BAR_NAV_WELCOME_LABEL;
                 self.favoritesLabel = nlsStrings.BRANDING_BAR_NAV_FAVORITES_LABEL;
-                
+
                 self.homeLinks = ko.observableArray();
                 self.cloudServices = ko.observableArray();
                 self.adminLinks = ko.observableArray();
@@ -33,13 +33,13 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
 
                 //Fetch links and session expiry time from server side
                 refreshLinks();
-                
+
                 var refreshListener = ko.computed(function(){
                     return {
                         needRefresh: params.navLinksNeedRefresh()
                     };
                 });
-                
+
                 refreshListener.subscribe(function (value) {
                     if (value.needRefresh){
                         refreshLinks();
@@ -48,28 +48,29 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                         params.navLinksNeedRefresh(false);
                     }
                 });
-                
+
                 self.refresh = function() {
                     refreshLinks();
                 };
-                
+
                 self.truncateString =function(str, length) {
                     if (str && length > 0 && str.length > length)
                     {
                         var _tlocation = str.indexOf(' ', length);
-                        if ( _tlocation <= 0 )
+                        if ( _tlocation <= 0 ){
                             _tlocation = length;
+                        }
                         return str.substring(0, _tlocation) + "...";
                     }
                     return str;
                 };
-                
+
                 self.openLink = function(data, event) {
                     if (data && data.href) {
                         window.location.href = data.href;
                     }
                 };
-               
+
                 self.openHome = function() {
                     oj.Logger.info('Trying to open Home page by URL: ' + dfHomeUrl);
                     if(dfHomeUrl) {
@@ -79,27 +80,27 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                         window.location.href = dfWelcomeUrl;
                     }
                 };
-                
+
                 self.openMyFavorites = function() {
                     var favoritesUrl = '/emsaasui/emcpdfui/home.html?filter=favorites';
                     oj.Logger.info('Trying to open my favorites by URL: ' + favoritesUrl);
                     window.location.href = favoritesUrl;
                 };
-                
+
                 self.openWelcomePage = function() {
                     oj.Logger.info('Trying to open welcome page by URL: ' + dfWelcomeUrl);
                     if(dfWelcomeUrl) {
                         window.location.href = dfWelcomeUrl;
                     }
                 };
-                
+
                 self.openDashboardHome = function(data, event) {
                     oj.Logger.info('Trying to open Dashboard Home by URL: ' + dfDashboardsUrl);
                     if (dfDashboardsUrl) {
                         window.location.href = dfDashboardsUrl;
                     }
                 };
-                
+
                 function refreshAdminLinks() {
                     if (self.isAdmin) {
                         var link;
@@ -107,7 +108,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                              link = discoveredAdminLinks[i];
                             if (
                                 // let's use relative url for customer software for admin link
-                                (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName && 
+                                (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName &&
                                     link.href.indexOf('customersoftware') !== -1) ||
                                 // use relative url for EventUI admin links
                                 (params.appEventUI && params.appEventUI.serviceName === link.serviceName)) {
@@ -117,7 +118,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                         self.adminLinks(discoveredAdminLinks);
                     }
                 }
-                
+
                 /**
                 * Discover available quick links and administration links by calling registration api
                 */
@@ -140,15 +141,17 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                             var cloudServices = data.cloudServices;
                             var cloudServiceList = [];
                                 for (var index = 0; index < cloudServices.length; index++) {
-                                    if (appMap !== null)
+                                    if (appMap !== null){
                                         cloudServiceList.push(
-                                            {name: appMap[cloudServices[index].name].serviceDisplayName ? nlsStrings[appMap[cloudServices[index].name].serviceDisplayName] : 
-                                                nlsStrings[appMap[cloudServices[index].name].appName], 
+                                            {name: appMap[cloudServices[index].name].serviceDisplayName ? nlsStrings[appMap[cloudServices[index].name].serviceDisplayName] :
+                                                nlsStrings[appMap[cloudServices[index].name].appName],
                                             href: cloudServices[index].href});
-                                    else 
+                                    }
+                                    else{
                                         cloudServiceList.push(
-                                            {name: cloudServices[index].name, 
+                                            {name: cloudServices[index].name,
                                             href: cloudServices[index].href});
+                                    }
                                 }
                             self.cloudServices(cloudServiceList);
                         }
@@ -157,7 +160,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                             var analyzerList = [];
                             for (var subindex = 0; subindex < analyzers.length; subindex++) {
                                 var aurl = analyzers[subindex].href;
-                                analyzerList.push({name: analyzers[subindex].name.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, ''), 
+                                analyzerList.push({name: analyzers[subindex].name.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, ''),
                                     href: aurl});
                             }
                             self.visualAnalyzers(analyzerList);
@@ -171,19 +174,19 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                                 refreshAdminLinks();
                             }
                          }
-                        
+
                         //Setup timer to handle session timeout
                         if (!dfu.isDevMode()) {
                             dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, sessionTimeoutWarnDialogId);
                         }
-                    };                   
+                    };
                     var serviceUrl = "/sso.static/dashboards.configurations/registration";
                     if (dfu.isDevMode()){
                         serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"configurations/registration");
                     }
                     dfu.ajaxWithRetry({
                         url: serviceUrl,
-                        headers: dfu.getDefaultHeader(), 
+                        headers: dfu.getDefaultHeader(),
                         contentType:'application/json',
                         success: function(data, textStatus) {
                             fetchServiceLinks(data);
@@ -195,9 +198,9 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                             self.cloudServices([]);
                         },
                         async: true
-                    });                
+                    });
                 }
-                
+
                 function checkDashboardAsHomeSettings() {
                     function succCallback(data) {
                         var homeDashboardId = prefUtil.getPreferenceValue(data, prefKeyHomeDashboardId);
@@ -217,14 +220,14 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                     };
                     prefUtil.getAllPreferences(options);
                 }
-                
+
                 function refreshLinks() {
                     dfDashboardsUrl = '/emsaasui/emcpdfui/home.html';
                     dfWelcomeUrl = '/emsaasui/emcpdfui/welcome.html';
-                    
+
                     //Fetch available cloud services, visual analyzers and administration links
                     discoverLinks();
-                }       
+                }
             }
             return NavigationLinksViewModel;
         });

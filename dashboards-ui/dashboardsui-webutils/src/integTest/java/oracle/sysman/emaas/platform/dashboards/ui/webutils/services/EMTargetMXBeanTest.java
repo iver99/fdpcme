@@ -18,18 +18,30 @@ import org.testng.annotations.Test;
  */
 public class EMTargetMXBeanTest
 {
-	private final String mbName = "Test_EMTargetMXBean";
+	private final static String mbName = "Test_EMTargetMXBean";
 	private final EMTargetMXBean mb = new EMTargetMXBeanImpl(mbName);
 
 	@Test(groups = { "s1" })
-	public void testGetEMTargetType() throws Exception
+	public void testGetEMTargetType() 
 	{
-		Assert.assertEquals(mb.getEMTargetType(), EMTargetConstants.m_target_type);
+		try {
+			Assert.assertEquals(mb.getEMTargetType(), EMTargetConstants.M_TARGET_TYPE);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetName() throws Exception
+	public void testGetName() 
 	{
-		Assert.assertEquals(mb.getName(), mbName);
+		try {
+			Assert.assertEquals(mb.getName(), mbName);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

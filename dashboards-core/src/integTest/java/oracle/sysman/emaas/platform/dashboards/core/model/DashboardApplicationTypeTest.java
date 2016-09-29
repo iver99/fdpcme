@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -8,6 +10,8 @@ import org.testng.annotations.Test;
  */
 public class DashboardApplicationTypeTest
 {
+
+	private static final Logger LOGGER = LogManager.getLogger(DashboardApplicationTypeTest.class);
 	@Test(groups = { "s2" })
 	public void testFromJsonValue()
 	{
@@ -18,12 +22,14 @@ public class DashboardApplicationTypeTest
 		Assert.assertEquals(DashboardApplicationType.SecurityAnalytics,
 				DashboardApplicationType.fromJsonValue("SecurityAnalytics"));
 		Assert.assertEquals(DashboardApplicationType.Orchestration, DashboardApplicationType.fromJsonValue("Orchestration"));
+		Assert.assertEquals(DashboardApplicationType.Compliance, DashboardApplicationType.fromJsonValue("Compliance"));
 		try {
 			DashboardApplicationType.fromJsonValue("Not Existing");
 			Assert.fail("Fail: trying to get application type from invalid value");
 		}
 		catch (IllegalArgumentException e) {
 			// expected exception
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -36,12 +42,14 @@ public class DashboardApplicationTypeTest
 		Assert.assertEquals(DashboardApplicationType.Monitoring, DashboardApplicationType.fromValue(4));
 		Assert.assertEquals(DashboardApplicationType.SecurityAnalytics, DashboardApplicationType.fromValue(5));
 		Assert.assertEquals(DashboardApplicationType.Orchestration, DashboardApplicationType.fromValue(6));
+		Assert.assertEquals(DashboardApplicationType.Compliance, DashboardApplicationType.fromValue(7));
 		try {
 			DashboardApplicationType.fromValue(Integer.MAX_VALUE);
 			Assert.fail("Fail: trying to get application type from invalid value");
 		}
 		catch (IllegalArgumentException e) {
 			// expected exception
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -55,5 +63,6 @@ public class DashboardApplicationTypeTest
 		Assert.assertEquals(DashboardApplicationType.SECURITY_ANALYTICS_STRING,
 				DashboardApplicationType.SecurityAnalytics.getJsonValue());
 		Assert.assertEquals(DashboardApplicationType.ORCHESTRATION_STRING, DashboardApplicationType.Orchestration.getJsonValue());
+		Assert.assertEquals(DashboardApplicationType.COMPLIANCE_STRING, DashboardApplicationType.Compliance.getJsonValue());
 	}
 }

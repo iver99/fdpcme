@@ -52,7 +52,7 @@ public class TileTest
 		tile.setProviderName("ss");
 		tile.setProviderVersion("ss");
 		tile.setRow(1);
-		tile.setTileId(BigInteger.valueOf(1L));
+		tile.setTileId("1");
 		tile.setTitle("ss");
 		tile.setType("ss");
 		tile.setWidgetCreationTime("ss");

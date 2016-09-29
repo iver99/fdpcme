@@ -10,8 +10,6 @@ apply plugin: 'war'
 apply plugin: 'eclipse-wtp'
 apply plugin: 'compass'
 
-group = 'com.oracle.emaas.emcpdf'
-
 jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
 def versionPathElement = jsversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
 
@@ -59,7 +57,7 @@ dependencies {
         providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
         providedCompile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
         
-	compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '2.0.1-24669', ext: 'war'){ transitive = false }
+	compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '2.0.2-26417', ext: 'war'){ transitive = false }
 	//compile(group: 'CKSource', name: 'ckeditor_full', version: '4.5.1', ext: 'zip'){transitive = false}
 	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
         compile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
@@ -537,14 +535,7 @@ task restDoc {
     outputs.dir restDocOutputDir
 }
 
-sourceSets {
-        test{
-                java {
-                        srcDirs = ['src/integTest/java']
-                }
-                resources.srcDirs = ['src/integTest/java']
-        }
-}
+
 
 
 //copy files without any convert when -PdevMode enabled
@@ -604,12 +595,12 @@ else
 publishing.publications {
         integTest(MavenPublication) {
                 setArtifactId(project.name + '-' + integTestJar.appendix)
-                setGroupId('com.oracle.emaas.emcpdf.test')
+                setGroupId("${publishGroup}")
                 artifact integTestJar.archivePath
         }
 
         thisJarPublication(MavenPublication) {
-                setGroupId('com.oracle.emaas.emcpdf.test')
+                setGroupId("${publishGroup}")
                 artifact jar
         }
 }
@@ -618,4 +609,4 @@ artifactoryPublish {
         publications('integTest')
         publications('thisJarPublication')
 }
-build.dependsOn integTestJar
+

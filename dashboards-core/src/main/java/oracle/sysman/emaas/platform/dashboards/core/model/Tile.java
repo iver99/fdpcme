@@ -159,8 +159,8 @@ public class Tile
 	@JsonProperty("PROVIDER_VERSION")
 	private String providerVersion;
 
-	@JsonSerialize(using = BigIntegerSerializer.class)
-	private BigInteger tileId;
+//	@JsonSerialize(using = BigIntegerSerializer.class)
+	private String tileId;
 	private String title;
 	@JsonProperty("WIDGET_CREATION_TIME")
 	private String widgetCreationTime;
@@ -360,7 +360,7 @@ public class Tile
 		return row;
 	}
 
-	public BigInteger getTileId()
+	public String getTileId()
 	{
 		return tileId;
 	}
@@ -577,7 +577,7 @@ public class Tile
 		this.row = row;
 	}
 
-	public void setTileId(BigInteger tileId)
+	public void setTileId(String tileId)
 	{
 		this.tileId = tileId;
 	}

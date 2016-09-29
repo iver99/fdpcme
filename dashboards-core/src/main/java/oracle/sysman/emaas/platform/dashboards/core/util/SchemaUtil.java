@@ -16,7 +16,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
 
 //import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -316,12 +318,12 @@ public class SchemaUtil
 
 	private static final String AUTH_STRING = "Basic d2VibG9naWM6d2VsY29tZTE=";
 
-	private static Logger logger = LogManager.getLogger(SchemaUtil.class);
+	private static final Logger LOGGER = LogManager.getLogger(SchemaUtil.class);
 
 	public static List<String> getDeploymentUrl(String json)
 	{
 		if (json == null || "".equals(json)) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		java.util.HashSet<String> urlSet = new java.util.HashSet<String>();
@@ -331,7 +333,7 @@ public class SchemaUtil
 
 			List<SchemaDeploymentUrls> sdlist = ju.fromJsonToList(json, SchemaDeploymentUrls.class, ITEMS);
 			if (sdlist == null | sdlist.isEmpty()) {
-				return null;
+				return Collections.emptyList();
 			}
 			for (SchemaDeploymentUrls sd : sdlist) {
 				for (String temp : sd.getCanonicalEndpoints()) {
@@ -351,8 +353,8 @@ public class SchemaUtil
 		}
 		catch (Exception e) {
 
-			logger.error("an error occureed while getting schema name", e);
-			return null;
+			LOGGER.error("an error occureed while getting schema name", e);
+			return Collections.emptyList();
 		}
 		List<String> urls = new ArrayList<String>();
 		urls.addAll(urlSet);
@@ -381,7 +383,7 @@ public class SchemaUtil
 			}
 		}
 		catch (IOException e) {
-			logger.error("an error occureed while getting details by url" + " ::" + url + "  " + e.toString());
+			LOGGER.error("an error occureed while getting details by url" + " ::" + url + "  " + e.toString());
 		} finally {
 			try {
 				if (in != null) {
@@ -393,6 +395,7 @@ public class SchemaUtil
 			}
 			catch (IOException ioEx) {
 				//ignore
+				LOGGER.info("context",ioEx);
 			}
 		}
 		return response.toString();
@@ -416,7 +419,7 @@ public class SchemaUtil
 			}
 		}
 		catch (IOException e) {
-			logger.error("an error occureed while getting schema user by software name", e);
+			LOGGER.error("an error occureed while getting schema user by software name", e);
 		}
 		return null;
 	}

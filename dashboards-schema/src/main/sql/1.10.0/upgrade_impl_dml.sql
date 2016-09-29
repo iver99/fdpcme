@@ -1,8 +1,7 @@
-Rem
-Rem    DML change during upgrade
-Rem    seed init timestamp
-Rem    MODIFIED   (MM/DD/YY)
-Rem    Rex Liang    06/29/2016 - created
-Rem
-Rem
+REM --update OOB data
+
+@&EMSAAS_SQL_ROOT/1.10.0/emaas_dashboards_seed_data_ta.sql -1
+@&EMSAAS_SQL_ROOT/1.10.0/emaas_dashboards_seed_data_la.sql -1
+
+COMMIT;
 

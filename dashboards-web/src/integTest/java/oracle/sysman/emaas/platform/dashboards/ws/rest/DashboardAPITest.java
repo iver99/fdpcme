@@ -29,6 +29,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+
 /**
  * @author danfjian
  * @since 2016/1/14.
@@ -150,7 +151,7 @@ public class DashboardAPITest
 
 	@Test
 	public void testGetDashboardBase64ScreenShot(@SuppressWarnings("unused") @Mocked DashboardAPIUtil dashboardAPIUtil)
-			throws Exception
+			
 	{
 		//		new Expectations() {
 		//			{

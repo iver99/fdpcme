@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.webutils.services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.lang.management.ManagementFactory;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -28,6 +30,10 @@ import org.testng.annotations.Test;
 public class LoggingServiceManagerTest
 {
 	LoggingServiceManager lsm = new LoggingServiceManager();
+	
+
+	private static final Logger LOGGER = LogManager.getLogger(LoggingServiceManagerTest.class);
+
 
 	@Test(groups = { "s1" })
 	public void testGetName()
@@ -75,7 +81,7 @@ public class LoggingServiceManagerTest
 			lsm.preStop(null);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.info("context",e);
 		}
 	}
 }
