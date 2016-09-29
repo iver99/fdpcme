@@ -115,7 +115,7 @@ public class TestDashboardSet extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_InSet);
 		DashBoardUtils.deleteDashboard(webd, dbName_OutSet);
 		DashBoardUtils.deleteDashboard(webd, dbName_OutSet + "-duplicate");
-		DashBoardUtils.deleteDashboard(webd, dbName_DuplicateOOB);
+//		DashBoardUtils.deleteDashboard(webd, dbName_DuplicateOOB);
 		webd.getLogger().info("All test data have been removed");
 	}
 
