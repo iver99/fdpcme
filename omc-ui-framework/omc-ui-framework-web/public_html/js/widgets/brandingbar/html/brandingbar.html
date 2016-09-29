@@ -18,19 +18,12 @@
 
                 <!-- Toolbar -->  
                 <div id='emaas-appheader-menu-and-toolbar-container' data-bind="attr: {'aria-label': toolbarLabel}">
-                    <script type="text/html" id="menuItemTemplate">
-                        <li>
-                            <a data-bind="attr:{'id':id},href: url"><span data-bind="text: label"></span></a>
-                            <!-- ko if: item.subNavItems -->
-                            <ul data-bind="template: {name: 'menuItemTemplate', foreach: item.subNavItems, as: 'item'}">
-                            </ul>
-                            <!-- /ko -->
-                        </li>
-                    </script>
-
                     <ul id="emaasAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu', select: globalNavMenuItemSelect}" style="display: none;">
-                      <!-- ko template: {name: 'menuItemTemplate', foreach: globalNavItems, as: 'item'} -->
-                      <!-- /ko -->
+                        <!-- ko foreach: globalNavItems -->
+                        <li>
+                            <a data-bind="attr:{'id':id}, href: url"><span data-bind="text: label"></span></a>
+                        </li>
+                        <!-- /ko -->
                     </ul>
 
                     <div class="emaas-appheader-toolbar-container">
