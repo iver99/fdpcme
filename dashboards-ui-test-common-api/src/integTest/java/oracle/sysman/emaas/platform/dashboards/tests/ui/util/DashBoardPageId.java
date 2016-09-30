@@ -176,12 +176,10 @@ public class DashBoardPageId
 	public static final String INFOBTNID = "//button[@title='Dashboard Information']";//"/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";//"/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";///html/body/div[*]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button";
 	public static final String RMBTNID = "/html/body/div[1]/div/div/div[1]/div/div/div[2]/button";//"/html/body/div/div/div/div/div/div/div[2]/button";
 
-	public static final String RMBTNID = "/html/body/div[1]/div/div/div[1]/div/div/div[2]/button";//"/html/body/div/div/div/div/div/div/div[2]/button";
 	//Explore Data
 	public static final String EXPLOREDATABTNID = "exploreDataBtn";
 	public static final String EXPLOREDATAMENU = "exploreDataMenu";
 
-	public static final String EXPLOREDATAMENU = "exploreDataMenu";
 	//help id and about id
 	public static final String MENUBTNID = "menubutton";
 
@@ -285,12 +283,10 @@ public class DashBoardPageId
 	public static final String BUILDERDELETEDIALOGLOCATOR = "id=ojDialogWrapper-delete-dashboard";
 	public static final String BUILDERDELETEDIALOGDELETEBTNLOCATOR = "//button[@data-delete-dialog='Delete']";
 
-	public static final String BUILDERDELETEDIALOGDELETEBTNLOCATOR = "//button[@data-delete-dialog='Delete']";
 	// auto refresh menu items
 	public static final String BUILDERAUTOREFRESHOFFSELECTEDLOCATOR = "//li[@data-singledb-option='Off']/a/span[contains(@class, 'fa-check')]";
 	public static final String BUILDERAUTOREFRESHON5MINSELECTEDLOCATOR = "//li[@data-singledb-option='On (Every 5 Minutes)']/a/span[contains(@class, 'fa-check')]";
 
-	public static final String BUILDERAUTOREFRESHON5MINSELECTEDLOCATOR = "//li[@data-singledb-option='On (Every 5 Minutes)']/a/span[contains(@class, 'fa-check')]";
 	// for R1.6, following ids are not used any more
 	//refresh //*[@id='ojChoiceId_autoRefreshSelect_selected
 	public static final String AUTOREFRESHID = "//*[@id='ojChoiceId_autoRefreshSelect_selected']";
@@ -373,8 +369,8 @@ public class DashBoardPageId
 	public static final String EXTERNALLINK = "/html/body/div[*]/header/div/div[1]/div[1]/div[1]/div[3]/span";
 	public static final String EXTERNALTARGETLINKID = "/html/body/div[4]/div[3]/div/div/div[7]/div/div[2]/div[2]/div[1]/div/div[1]/span";
 
-	public static final String EXTERNALTARGETLINKID = "/html/body/div[4]/div[3]/div/div/div[7]/div/div[2]/div[2]/div[1]/div/div[1]/span";
 	//grid view and list view id
+	public static final String OOBDASHBOARDNAMELOCATORLISTVIEW = "//div[not(contains(@style, 'display:none'))]//*[contains(@class, 'dbs-summaries-container')]";
 	public static final String GRIDVIEWID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[1]/label";
 
 	public static final String LISTVIEWID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[2]/label";
