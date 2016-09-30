@@ -65,7 +65,7 @@ public class PageId
 	public static final String DASHBOARDSETADDDASHBOARDICON_CSS = ".dbd-icon-add";
 
 	public static final String DATETIMEPICK_CSS = "[id^='dateTimePicker_']";
-	public static final String TARGETSELECTOR_CSS = ".df-targte-selector.df-targte-selector";
+	public static final String TARGETSELECTOR_CSS = ".df-target-selector.df-target-selector";
 	public static final String DASHBOARDSETOPTIONS_CSS = "#tabs-caret";
 	public static final String DASHBOARDSETOPTIONSEDIT_CSS = "#dbs-edit [dashboardset-option='Edit']";
 	public static final String RIGHTDRAWEREDITSINGLEDBSHARE_CSS = ".dbd-right-panel-editdashboard-set-share .dbd-right-panel-editdashboard-innertitle.oj-collapsible-header";
