@@ -1344,7 +1344,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyMiddlewareOperations();
 	}
 
-	//@Test
+	@Test
 	public void verifyOthers_GridView()
 	{
 		//initTest
@@ -1365,7 +1365,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyOthers();
 	}
 
-	//@Test
+	@Test
 	public void verifyOthers_ListView()
 	{
 		//initTest
@@ -1386,7 +1386,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyOthers();
 	}
 
-	//@Test
+	@Test
 	public void verifyOthers_WithFilter_GridView()
 	{
 		//initTest
@@ -1411,7 +1411,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyOthers();
 	}
 
-	//@Test
+	@Test
 	public void verifyOthers_WithFilter_ListView()
 	{
 		//initTest
