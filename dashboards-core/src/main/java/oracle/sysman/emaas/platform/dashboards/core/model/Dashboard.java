@@ -349,6 +349,9 @@ public class Dashboard
 
 	@JsonProperty("dashboardSets")
 	private List<Dashboard> dashboardSets;
+	
+	@JsonProperty("dupDashboardId")
+	private Long dupDashboardId;
 
 	public Dashboard()
 	{		
@@ -465,6 +468,23 @@ public class Dashboard
 	public String getOwner()
 	{
 		return owner;
+	}
+	
+
+	/**
+	 * @return the dupDashboardId
+	 */
+	public Long getDupDashboardId()
+	{
+		return dupDashboardId;
+	}
+
+	/**
+	 * @param dupDashboardId the dupDashboardId to set
+	 */
+	public void setDupDashboardId(Long dupDashboardId)
+	{
+		this.dupDashboardId = dupDashboardId;
 	}
 
 	public EmsDashboard getPersistenceEntity(EmsDashboard ed) throws DashboardException
