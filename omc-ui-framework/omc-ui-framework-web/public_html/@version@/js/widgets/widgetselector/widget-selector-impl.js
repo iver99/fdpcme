@@ -216,7 +216,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                     else {
                         for (i = 0; i < widgetArray.length; i++) {
                             var widget = widgetArray[i];
-                            if (widget.PROVIDER_NAME === providerName &&
+                            if (//widget.PROVIDER_NAME === providerName &&
                     //                widget.PROVIDER_VERSION === providerVersion &&
                                     widget.WIDGET_GROUP_NAME === groupName) {
                                 availWidgets.push(widget);
