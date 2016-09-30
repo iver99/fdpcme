@@ -390,7 +390,7 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Verify back to the dashboard home page");
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("current url = " + url);
-		if (!url.substring(url.indexOf("emsaasui") + 9).contains("home.html")) {
+		if (!url.substring(url.indexOf("emsaasui") + 9).contains("welcome.html")) {
 			Assert.fail("not open the dashboard home page");
 		}
 		else {
