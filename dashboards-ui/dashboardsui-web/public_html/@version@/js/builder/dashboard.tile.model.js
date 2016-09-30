@@ -872,7 +872,7 @@ define(['knockout',
                         }
                         if(!self.userExtendedOptions.timeSel || (self.userExtendedOptions.timeSel && !self.userExtendedOptions.timeSel.timePeriod)) {
                             self.userTimeSel = false;
-                            self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: new Date(new Date()-14*24*60*60*1000), end: new Date()};
+                            self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: new Date(new Date()-14*24*60*60*1000).getTime(), end: new Date().getTime()};
                         }else {
                             self.userTimeSel = true;
                         }
@@ -888,7 +888,7 @@ define(['knockout',
                             self.userTimeSel = false;
                             self.userExtendedOptions = {};
                             self.userExtendedOptions.tsel = {quickPick: "host", entityContext: ""};
-                            self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: new Date(new Date()-14*24*60*60*1000), end: new Date()};
+                            self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: new Date(new Date()-14*24*60*60*1000).getTime(), end: new Date().getTime()};
                             self.userExtendedOptions.autoRefresh = {"defaultValue": DEFAULT_AUTO_REFRESH_INTERVAL};
                         }
                     });
