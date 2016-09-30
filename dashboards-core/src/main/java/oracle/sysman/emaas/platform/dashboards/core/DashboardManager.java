@@ -869,6 +869,13 @@ public class DashboardManager
 			EmsDashboard ed = dbd.getPersistenceEntity(null);
 			ed.setCreationDate(dbd.getCreationDate());
 			ed.setOwner(currentUser);
+			//EMCPDF-2288,if this dashboard is duplicated from other dashboard,copy its screenshot to new dashboard
+			if(dbd.getDupDashboardId()!=null){
+				LOGGER.debug("Duplicating screenshot from dashoard {} to new Dashboard..",dbd.getDupDashboardId());
+				Long dupId=dbd.getDupDashboardId();
+				EmsDashboard emsd=dsf.getEmsDashboardById(dupId);
+				ed.setScreenShot(emsd.getScreenShot());
+			}
 			dsf.persistEmsDashboard(ed);
 			updateLastAccessDate(ed.getDashboardId(), tenantId);
 			return Dashboard.valueOf(ed, dbd, true, true, true);
