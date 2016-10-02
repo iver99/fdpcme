@@ -418,8 +418,7 @@ define(['knockout',
                         self.beforeResizeWidth = self.resizingTile().cssWidth();
                         self.beforeResizeHeight = self.resizingTile().cssHeight();
                         self.currentWigedtWidth(self.resizingTile().cssWidth());
-                        self.currentWigedtHeight(self.resizingTile().cssHeight());
-                        targetHandler.closest('.dbd-tile-container').addClass("clicking-border");
+                        self.currentWigedtHeight(self.resizingTile().cssHeight());                  
                     }
                     self.tilesView.disableDraggable();
                 });
@@ -453,8 +452,7 @@ define(['knockout',
                     self.resizingTile(null);
                     self.resizingOptions(null);
                     $(this).css('cursor', 'default');
-                    $('#globalBody').removeClass('none-user-select');
-                    $('.dbd-tile-container').removeClass("clicking-border");
+                    $('#globalBody').removeClass('none-user-select');       
                     self.tilesView.enableDraggable();                 
                 });
 

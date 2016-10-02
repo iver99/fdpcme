@@ -102,6 +102,60 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
             self.getTenantName = function() {
                 return userTenant && userTenant.tenant ? userTenant.tenant : null;
             };
+            
+            
+            
+            
+            
+            self.getUserRoles = function(callback,sendAsync) {
+                var serviceUrl = "/sso.static/dashboards.configurations/roles";
+                if (dfu.isDevMode()){
+                    callback(["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]);
+                    return;
+                }
+                if(window.omcUifwkCachedData && window.omcUifwkCachedData.roles){
+                    self.userRoles = window.omcUifwkCachedData.roles; 
+                    callback(window.omcUifwkCachedData.roles);
+                }else{
+                    ajaxUtil.ajaxWithRetry({
+                        url: serviceUrl,
+                        async: sendAsync === false? false:true,
+                        headers: dfu.getDefaultHeader(),
+                        contentType:'application/json'
+                    })
+                    .done(
+                        function (data) {
+                            self.userRoles = data; 
+                            if(window.omcUifwkCachedData){
+                                window.omcUifwkCachedData.roles = data;
+                            }else{
+                                window.omcUifwkCachedData = {roles : data};
+                            }
+                            callback(data);
+                        });
+                }
+            };
+            
+            self.ADMIN_ROLE_NAME_APM = "APM Administrator";
+            self.USER_ROLE_NAME_APM = "APM User";
+            self.ADMIN_ROLE_NAME_ITA = "IT Analytics Administrator";
+            self.USER_ROLE_NAME_ITA = "IT Analytics User";
+            self.ADMIN_ROLE_NAME_LA = "Log Analytics Administrator";
+            self.USER_ROLE_NAME_LA = "Log Analytics User";
+            self.ADMIN_ROLE_NAME_MONITORING = "Monitoring Service Administrator";
+            self.ADMIN_ROLE_NAME_SECURITY = "Security Analytics Administrator";
+            self.ADMIN_ROLE_NAME_COMPLIANCE = "Compliance Administrator";
+            self.ADMIN_ROLE_NAME_ORCHESTRATION = "Orchestration Administrator";
+            self.userHasRole = function(role){
+                self.getUserRoles(function(data){
+                    self.userRoles = data; 
+                },false);
+                if(self.userRoles.indexOf(role)<0){
+                    return false;
+                }else{
+                    return true;
+                }
+            };
         }
 
         return DashboardFrameworkUserTenantUtility;
