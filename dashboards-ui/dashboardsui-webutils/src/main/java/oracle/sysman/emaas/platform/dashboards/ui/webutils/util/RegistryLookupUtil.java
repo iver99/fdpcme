@@ -41,7 +41,7 @@ public class RegistryLookupUtil
 	public static final String MONITORING_SERVICE = "MonitoringServiceUI";
 	public static final String SECURITY_ANALYTICS_SERVICE = "SecurityAnalyticsUI";
 	public static final String COMPLIANCE_SERVICE = "ComplianceUIService";
-	public static final String ORCHESTRATION_SERVICE = "CosServiceUI";
+	public static final String ORCHESTRATION_SERVICE = "CosUIService";
 
 	public static Link getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
 	{

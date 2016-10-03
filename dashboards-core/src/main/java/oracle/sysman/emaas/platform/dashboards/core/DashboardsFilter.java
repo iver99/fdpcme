@@ -45,7 +45,7 @@ public class DashboardsFilter
 	public static final String ITA_PROVIDER_EMCI = "emcitas-ui-apps";
 	public static final String ITA_PROVIDER_TA = "TargetAnalytics";
 	public static final String LA_PROVIDER_LS = "LogAnalyticsUI";
-	public static final String OCS_PROVIDER_OCS = "CosServiceUI";
+	public static final String OCS_PROVIDER_OCS = "CosUIService";
 
 	private List<String> includedTypes;
 	private List<String> includedApps;

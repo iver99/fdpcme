@@ -375,7 +375,7 @@ BEGIN
       V_WIDGET_KOC_NAME             := 'Workflow Status Summary';
       V_WIDGET_VIEWMODE             := '/executionWidget/js/inProgressWidget.js';
       V_WIDGET_TEMPLATE             := '/executionWidget/html/inProgressWidget.html';
-      V_PROVIDER_NAME               := 'CosServiceUI';
+      V_PROVIDER_NAME               := 'CosUIService';
       V_PROVIDER_VERSION            := '1.0';
       V_PROVIDER_ASSET_ROOT         := 'assetRoot';
       V_TILE_ROW                    := 0;
@@ -417,7 +417,7 @@ BEGIN
       V_WIDGET_KOC_NAME             := 'Running Workflow Submission';
       V_WIDGET_VIEWMODE             := '/executionWidget/js/executionWidget.js';
       V_WIDGET_TEMPLATE             := '/executionWidget/html/executionWidget.html';
-      V_PROVIDER_NAME               := 'CosServiceUI';
+      V_PROVIDER_NAME               := 'CosUIService';
       V_PROVIDER_VERSION            := '1.0';
       V_PROVIDER_ASSET_ROOT         := 'assetRoot';
       V_TILE_ROW                    := 2;

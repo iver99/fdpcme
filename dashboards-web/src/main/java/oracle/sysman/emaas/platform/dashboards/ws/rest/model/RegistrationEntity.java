@@ -95,7 +95,7 @@ public class RegistrationEntity implements Serializable
 	public static final String SECURITY_ANALYTICS_HOME_LINK = "sso.analytics-ui";
 	// Orchestration cloud service
 	public static final String ORCHESTRATION_OPC_APPNAME = "Orchestration";
-	public static final String ORCHESTRATION_SERVICENAME = "CosServiceUI";
+	public static final String ORCHESTRATION_SERVICENAME = "CosUIService";
 	public static final String ORCHESTRATION_VERSION = "1.0+";
 	public static final String ORCHESTRATION_URL = "/emsaasui/emcpdfui/home.html?filter=ocs";
 	// Security Analytics service
