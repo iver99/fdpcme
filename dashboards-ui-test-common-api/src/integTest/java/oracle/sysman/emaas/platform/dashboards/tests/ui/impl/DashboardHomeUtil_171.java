@@ -194,12 +194,12 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		Validator.notEmptyString("option", option);
 
 		driver.click(convertName(DashBoardPageId.EXPLOREDATABTNID));
-		WebElement menu = driver.getElement(convertName(DashBoardPageId.EXPLOREDATAMENU));
+		//WebElement menu = driver.getElement(convertName(DashBoardPageId.EXPLOREDATAMENU));
                  
                 if ("Log Visual Analyzer".equals(option)) {                 
-                        menu.click(DashBoardPageId.EXPLORE_LOG);
+                        driver.click(DashBoardPageId.EXPLORE_LOG);
                  } else {
-                     	menu.click(DashBoardPageId.EXPLORE_Search);
+                     	driver.click(DashBoardPageId.EXPLORE_Search);
 		 }
  
                
