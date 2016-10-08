@@ -12,14 +12,14 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
 import java.util.List;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 {
@@ -61,7 +61,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#dataExplorers(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void dataExplorers(WebDriver driver, String selection) 
+	public void dataExplorers(WebDriver driver, String selection)
 	{
 		String eleXpath = null;
 		driver.getLogger().info("Visiting Data Explorer-" + selection + " from Welcome Page...");
@@ -88,7 +88,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				break;
 			default:
 				break;
-				
+
 		}
 		driver.getWebDriver().findElement(By.xpath(eleXpath)).click();
 		driver.takeScreenShot();
@@ -122,7 +122,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#isServiceExistedInWelcome(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public boolean isServiceExistedInWelcome(WebDriver driver, String serviceName) 
+	public boolean isServiceExistedInWelcome(WebDriver driver, String serviceName)
 	{
 		driver.getLogger().info("Start to check if service: " + serviceName + " is existed in welcome page...");
 
@@ -131,7 +131,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 
 		boolean isExisted = false;
 		String serviceWrapperId = getServiceWrapperId(serviceName);
-		String xpath = "//*[@id='" + serviceWrapperId
+		String xpath = "//*[@id='"
+				+ serviceWrapperId
 				+ "']/div[@class='service-box-wrapper']/div[@class='landing-home-box-content']/div[@class='landing-home-box-content-head']";
 
 		String nameExpected = getExpectedText(serviceName);
@@ -141,8 +142,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		if (nameDisplayed.equals(nameExpected)) {
 			isExisted = true;
 		}
-		driver.getLogger()
-				.info("Check of service: " + serviceName + " existence in welcome page is finished! Result: " + isExisted);
+		driver.getLogger().info(
+				"Check of service: " + serviceName + " existence in welcome page is finished! Result: " + isExisted);
 		return isExisted;
 	}
 
@@ -150,7 +151,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#learnMoreHow(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void learnMoreHow(WebDriver driver) 
+	public void learnMoreHow(WebDriver driver)
 	{
 		driver.getLogger().info("Visiting 'Learn More-How to get started' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -163,7 +164,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#learnMoreServiceOffering(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void learnMoreServiceOffering(WebDriver driver) 
+	public void learnMoreServiceOffering(WebDriver driver)
 	{
 		driver.getLogger().info("Visiting 'Learn More-Service Offerings' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -176,7 +177,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#learnMoreVideo(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void learnMoreVideo(WebDriver driver) 
+	public void learnMoreVideo(WebDriver driver)
 	{
 		driver.getLogger().info("Visiting 'Learn More-Videos' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -189,7 +190,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitAPM(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void visitAPM(WebDriver driver) 
+	public void visitAPM(WebDriver driver)
 	{
 		driver.getLogger().info("Visit APM from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -203,7 +204,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitDashboards(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void visitDashboards(WebDriver driver) 
+	public void visitDashboards(WebDriver driver)
 	{
 		driver.getLogger().info("Visit Dashboards from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -217,7 +218,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitITA(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void visitITA(WebDriver driver, String selection) 
+	public void visitITA(WebDriver driver, String selection)
 	{
 		driver.getLogger().info("Visiting ITA-" + selection + " from Welcome Page...");
 
@@ -255,8 +256,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 							DashBoardPageId.WELCOME_ITA_RAMIDDLEWARE);
 					break;
 				case ITA_DATA_EXPLORER_ANALYZE:
-					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
-							DashBoardPageId.WELCOME_ITA_DEANALYZE);
+					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID, DashBoardPageId.WELCOME_ITA_DEANALYZE);
 					break;
 				case ITA_DATA_EXPLORER:
 					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID, DashBoardPageId.WELCOME_ITA_DE);
@@ -273,7 +273,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitLA(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void visitLA(WebDriver driver) 
+	public void visitLA(WebDriver driver)
 	{
 		driver.getLogger().info("Visiting LA from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -351,27 +351,6 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	}
 
 	/**
-	 * Get jet's option xpath according to "select" id and "option" id
-	 *
-	 * @param driver
-	 * @param selectId
-	 * @param optionId
-	 * @return
-	 * @
-	 */
-	private String getOptionXpath(WebDriver driver, String selectId, String optionId) 
-	{
-		String optionXpath;
-		WebElement li = driver.getWebDriver().findElement(By.id(optionId));
-		List<WebElement> list = driver.getWebDriver().findElements(By.xpath("//select[@id='" + selectId + "']/option"));
-		//get the index of option in select dropdown
-		int index = list.indexOf(li);
-		//get option's xpath generated by jet
-		optionXpath = "//ul[@id='oj-listbox-results-" + selectId + "']/li[" + (index + 1) + "]/div";
-		return optionXpath;
-	}
-
-	/**
 	 * Get wrapper id of each service
 	 *
 	 * @param serviceName
@@ -401,5 +380,25 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				break;
 		}
 		return serviceWrapperId;
+	}
+
+	/**
+	 * Get jet's option xpath according to "select" id and "option" id
+	 *
+	 * @param driver
+	 * @param selectId
+	 * @param optionId
+	 * @return @
+	 */
+	protected String getOptionXpath(WebDriver driver, String selectId, String optionId)
+	{
+		String optionXpath;
+		WebElement li = driver.getWebDriver().findElement(By.id(optionId));
+		List<WebElement> list = driver.getWebDriver().findElements(By.xpath("//select[@id='" + selectId + "']/option"));
+		//get the index of option in select dropdown
+		int index = list.indexOf(li);
+		//get option's xpath generated by jet
+		optionXpath = "//ul[@id='oj-listbox-results-" + selectId + "']/li[" + (index + 1) + "]/div";
+		return optionXpath;
 	}
 }

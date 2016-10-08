@@ -862,6 +862,9 @@ public class DashboardManager
 						if (tile.getOwner() == null) {
 							tile.setOwner(currentUser);
 						}
+						if(tile.getWidgetDeleted()==null) {
+							tile.setWidgetDeleted(Boolean.FALSE);
+						}
 					}
 				}
 			}
@@ -869,6 +872,13 @@ public class DashboardManager
 			EmsDashboard ed = dbd.getPersistenceEntity(null);
 			ed.setCreationDate(dbd.getCreationDate());
 			ed.setOwner(currentUser);
+			//EMCPDF-2288,if this dashboard is duplicated from other dashboard,copy its screenshot to new dashboard
+			if(dbd.getDupDashboardId()!=null){
+				LOGGER.debug("Duplicating screenshot from dashoard {} to new Dashboard..",dbd.getDupDashboardId());
+				Long dupId=dbd.getDupDashboardId();
+				EmsDashboard emsd=dsf.getEmsDashboardById(dupId);
+				ed.setScreenShot(emsd.getScreenShot());
+			}
 			dsf.persistEmsDashboard(ed);
 			updateLastAccessDate(ed.getDashboardId(), tenantId);
 			return Dashboard.valueOf(ed, dbd, true, true, true);
@@ -953,6 +963,9 @@ public class DashboardManager
 						if (tile.getOwner() == null) {
 							tile.setOwner(currentUser);
 						}
+						if (tile.getWidgetDeleted() == null) {
+							tile.setWidgetDeleted(Boolean.FALSE);
+						}
 					}
 				}
 			}
@@ -1022,6 +1035,41 @@ public class DashboardManager
 			et.commit();
 			LOGGER.info("Update dashboard tiles name: title for {} tiles have been updated to \"{}\" for specified widget ID {}",
 					affacted, widgetName, widgetId);
+			return affacted;
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+
+	/**
+	 * Update tiles' 'widgetDeleted' by specifying widget ID for ALL dashboard of specified tenant<br>
+	 * Note: currently we're using eclipse 2.4, so the returned value will always be 1
+	 *
+	 * @param tenantId
+	 * @param widgetId
+	 */
+	public int updateWidgetDeleteForTilesByWidgetId(Long tenantId, Long widgetId)
+	{
+		if (widgetId == null || widgetId < 0) {
+			LOGGER.debug("Dashboard tiles 'widgetDeleted' are not updated: invalid widget ID is specified");
+			return 0;
+		}
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			EntityTransaction et = em.getTransaction();
+			String jql = "update EmsDashboardTile t set t.widgetDeleted = 1 where t.widgetUniqueId = :widgetId";
+			Query query = em.createQuery(jql).setParameter("widgetId", String.valueOf(widgetId));
+			et.begin();
+			int affacted = query.executeUpdate();
+			et.commit();
+			LOGGER.info(
+					"Update dashboard tile 'widgetDeleted': {} tiles have been updated to widgetDeleted=true for specified widget ID {}",
+					affacted, widgetId);
 			return affacted;
 		}
 		finally {

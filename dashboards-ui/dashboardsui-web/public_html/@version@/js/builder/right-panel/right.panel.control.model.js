@@ -9,7 +9,10 @@ function (ko, $, oj, dfu, mbu, uiutil) {
     function rightPanelControl($b) {
         var self = this;
         self.$b = ko.observable($b);
-        self.isMobileDevice = self.$b().getDashboardTilesViewModel().isMobileDevice;
+        self.normalMode = new Builder.NormalEditorMode();
+        self.tabletMode = new Builder.TabletEditorMode();
+        self.modeType = Builder.isSmallMediaQuery() ? self.tabletMode : self.normalMode;
+        self.isMobileDevice = self.modeType.editable === true ? 'false' : 'true';
         self.dashboardEditDisabled = ko.observable(self.$b().getToolBarModel&&self.$b().getToolBarModel() ? self.$b().getToolBarModel().editDisabled() : true);
         self.showRightPanelToggler = ko.observable(self.isMobileDevice !== 'true');
         self.showRightPanel = ko.observable(false);

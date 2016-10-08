@@ -60,6 +60,16 @@ define(['knockout',
                 self.$list = $([].concat.apply($b.findEl(".fit-size"),$(".df-right-panel .fit-size")));
             };
 
+            if(!window.DEV_MODE && !self.brandingbarCssLoaded){
+                var brandingbarOldHeight = $(".emaas-appheader").height();
+                self.brandingbarCssLoaded = setInterval(function(){
+                    if(brandingbarOldHeight !== $(".emaas-appheader").height()){
+                        $b.triggerBuilderResizeEvent('uifwk-common-alta.css loaded');
+                        clearInterval(self.brandingbarCssLoaded);
+                    }
+                });
+            }
+
             self.initialize();
         }
 
@@ -96,7 +106,10 @@ define(['knockout',
             self.rightPanelWidget= new rpw.rightPanelWidget(self.$b);
             self.rightPanelEdit=new rpe.rightPanelEditModel(self.$b,self.dashboardsetToolBarModel);
             self.selectedDashboard = ko.observable(self.dashboard);
-            self.isMobileDevice = self.$b.getDashboardTilesViewModel().isMobileDevice;
+            self.normalMode = new Builder.NormalEditorMode();
+            self.tabletMode = new Builder.TabletEditorMode();
+            self.modeType = Builder.isSmallMediaQuery() ? self.tabletMode : self.normalMode;
+            self.isMobileDevice = self.modeType.editable === true ? 'false' : 'true';
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
             self.isOobDashboardset=dashboardsetToolBarModel.isOobDashboardset; 
             self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();

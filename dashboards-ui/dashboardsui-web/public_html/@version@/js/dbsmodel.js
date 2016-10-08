@@ -342,6 +342,10 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                     data['dashboard'] = data['dashboardModel'].attributes;
                 }
             }
+            if(data.dashboard.description)
+            {
+                data.dashboard.description = data.dashboard.description.toString().replace(/\n/g,"<br>");
+            }
             self.selectedDashboard(data);
             if (data.element)
             {
