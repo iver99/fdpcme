@@ -36,11 +36,35 @@ define(['knockout',
             }
         Builder.registerFunction(isURL, 'isURL');
 
+        var visualAnalyzerUrls = [];
+        function addVisualAnalyzerUrl(pName, url) {
+            if(pName && !isVisualAnalyzerUrlExisted(pName)) {
+                visualAnalyzerUrls.push({provider_name: pName, visual_analyzer_url: url});
+            }
+        }
+        Builder.registerFunction(addVisualAnalyzerUrl, "addVisualAnalyzerUrl");
+        
+        function isVisualAnalyzerUrlExisted(pName) {
+            for(var i=0; i<visualAnalyzerUrls.length; i++) {
+                if(visualAnalyzerUrls[i].provider_name === pName) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        Builder.registerFunction(isVisualAnalyzerUrlExisted, "isVisualAnalyzerUrlExisted");
+        
         function getVisualAnalyzerUrl(pName, pVersion) {
+            for(var i=0; i<visualAnalyzerUrls.length; i++) {
+                if(visualAnalyzerUrls[i].provider_name === pName) {
+                    return visualAnalyzerUrls[i].visual_analyzer_url;
+                }
+            }
             var url = dfu.discoverQuickLink(pName, pVersion, "visualAnalyzer");
             if (url && (dfu.isDevMode())){
                 url = dfu.getRelUrlFromFullUrl(url);
             }
+            addVisualAnalyzerUrl(pName, url);
             return url;
         }
         Builder.registerFunction(getVisualAnalyzerUrl, 'getVisualAnalyzerUrl');
