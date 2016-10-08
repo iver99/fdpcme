@@ -95,7 +95,7 @@ public class RegistrationEntity implements Serializable
 	public static final String SECURITY_ANALYTICS_HOME_LINK = "sso.analytics-ui";
 	// Orchestration cloud service
 	public static final String ORCHESTRATION_OPC_APPNAME = "Orchestration";
-	public static final String ORCHESTRATION_SERVICENAME = "Orchestration";
+	public static final String ORCHESTRATION_SERVICENAME = "CosUIService";
 	public static final String ORCHESTRATION_VERSION = "1.0+";
 	public static final String ORCHESTRATION_URL = "/emsaasui/emcpdfui/home.html?filter=ocs";
 	// Security Analytics service
@@ -154,7 +154,7 @@ public class RegistrationEntity implements Serializable
 						public Object fetchCachable(Object key) throws Exception
 						{
 							List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
-									UserContext.getCurrentUser());
+							UserContext.getCurrentUser());
 							if (!PrivilegeChecker.isAdminUser(userRoles)) {
 								return null;
 							}
@@ -265,11 +265,8 @@ public class RegistrationEntity implements Serializable
 					list.add(le);
 				}
 				else if (ORCHESTRATION_SERVICENAME.equals(app)) {
-					// Orchestration has no UI service, and its landing page will be
-					// the Dashboard Home page with the Orchestration filter set.
-					// So the service name here will be set to Dashboard-UI for now
-					list.add(new LinkEntity(ORCHESTRATION_OPC_APPNAME, ORCHESTRATION_URL, NAME_DASHBOARD_UI_SERVICENAME,
-							NAME_DASHBOARD_UI_VERSION));
+					list.add(new LinkEntity(ORCHESTRATION_OPC_APPNAME, ORCHESTRATION_URL, ORCHESTRATION_SERVICENAME,
+							ORCHESTRATION_VERSION));
 				}
 				else if (COMPLIANCE_SERVICENAME.equals(app)) {
 					VersionedLink l = RegistryLookupUtil.getServiceExternalLink(COMPLIANCE_SERVICENAME, COMPLIANCE_VERSION,
@@ -462,6 +459,10 @@ public class RegistrationEntity implements Serializable
 				}
 				else if (le.getServiceName().equals(COMPLIANCE_SERVICENAME)
 						&& roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_COMPLIANCE)) {
+					resultLinks.add(le);
+				}
+				else if (le.getServiceName().equals(ORCHESTRATION_SERVICENAME)
+						&& roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_ORCHESTRATION)) {
 					resultLinks.add(le);
 				}
 				else if (le.getServiceName().equals(EVENTUI_SERVICENAME) || le.getServiceName().equals(TMUI_SERVICENAME)

@@ -40,7 +40,6 @@ public class DashBoardPageId
 	public static final String DASHBOARDLINKID = "link=All Dashboards";
 	public static final String DELETEBTN_CFMDIALOG = "/html/body/div[1]/div[2]/div/div[3]/button[1]";
 	public static final String DASHBOARDSERACHRESULT_PANELID = "dtabhomesc";
-
 	public static final String WIDGETSEARCHINPUTID = "widget-search-input";
 
 	public static final String WIDGETSEARCHBTNID = "dbd-left-panel-header-search-btn";
@@ -66,7 +65,6 @@ public class DashBoardPageId
 	public static final String DATABASE_OPERATIONS_CSS = ".dbs-summary-page-image[alt='Database Operations']";
 	public static final String HOST_OPERATIONS_CSS = ".dbs-summary-page-image[alt='Host Operations']";
 	public static final String MIDDLEWARE_OPERATIONS_CSS = ".dbs-summary-page-image[alt='Middleware Operations']";
-
 	public static final String SORTDROPLISTID = "//*[@id='ojChoiceId_sortcb_selected']";//ojChoiceId_sortcb";//ojChoiceId_sortcb_selected";//sortcb";
 
 	public static final String ACCESS_DATE_ID = "/html/body/div/div/div/ul/li[2]/div";
@@ -97,7 +95,6 @@ public class DashBoardPageId
 	public static final String SORTBYLASTACCESSDSCLOCATOR = "/html/body/div/div/div/ul/li[11]/div";
 	//search
 	//public static final String SearchDSBoxID = "sinput";
-
 	public static final String SEARCHDASHBOARDINPUTLOCATOR = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-sinput')]";
 
 	public static final String SEARCHDASHBOARDSEARCHBTNLOCATOR = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-search-icon')]";
@@ -174,12 +171,12 @@ public class DashBoardPageId
 	//remove dashboard/html/body/div[3]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button
 	//Note: below xpath is used to identify this 1st dashboard only
 	public static final String INFOBTNID = "//button[@title='Dashboard Information']";//"/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";//"/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";///html/body/div[*]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button";
-	public static final String RMBTNID = "/html/body/div[1]/div/div/div[1]/div/div/div[2]/button";//"/html/body/div/div/div/div/div/div/div[2]/button";
 
+	public static final String RMBTNID = "/html/body/div[1]/div/div/div[1]/div/div/div[2]/button";//"/html/body/div/div/div/div/div/div/div[2]/button";
 	//Explore Data
 	public static final String EXPLOREDATABTNID = "exploreDataBtn";
-	public static final String EXPLOREDATAMENU = "exploreDataMenu";
 
+	public static final String EXPLOREDATAMENU = "exploreDataMenu";
 	//help id and about id
 	public static final String MENUBTNID = "menubutton";
 
@@ -281,12 +278,12 @@ public class DashBoardPageId
 
 	//dashboard delete dialog
 	public static final String BUILDERDELETEDIALOGLOCATOR = "id=ojDialogWrapper-delete-dashboard";
-	public static final String BUILDERDELETEDIALOGDELETEBTNLOCATOR = "//button[@data-delete-dialog='Delete']";
 
+	public static final String BUILDERDELETEDIALOGDELETEBTNLOCATOR = "//button[@data-delete-dialog='Delete']";
 	// auto refresh menu items
 	public static final String BUILDERAUTOREFRESHOFFSELECTEDLOCATOR = "//li[@data-singledb-option='Off']/a/span[contains(@class, 'fa-check')]";
-	public static final String BUILDERAUTOREFRESHON5MINSELECTEDLOCATOR = "//li[@data-singledb-option='On (Every 5 Minutes)']/a/span[contains(@class, 'fa-check')]";
 
+	public static final String BUILDERAUTOREFRESHON5MINSELECTEDLOCATOR = "//li[@data-singledb-option='On (Every 5 Minutes)']/a/span[contains(@class, 'fa-check')]";
 	// for R1.6, following ids are not used any more
 	//refresh //*[@id='ojChoiceId_autoRefreshSelect_selected
 	public static final String AUTOREFRESHID = "//*[@id='ojChoiceId_autoRefreshSelect_selected']";
@@ -328,7 +325,6 @@ public class DashBoardPageId
 	public static final String RIGHTDRAWEREDITSINGLEDBBTNCSS = ".edit-setting-link.edit-dsb-link";
 	public static final String RIGHTDRAWEREDITSINGLEDBSHARECSS = ".dbd-right-panel-editdashboard-share>span";
 	public static final String RIGHTDRAWEREDITDBFILTERCSS = ".dbd-right-panel-editdashboard-filters>span";
-
 	public static final String RIGHTDRAWERSEARCHINPUTCSS = ".dbd-left-panel input.widget-search-input";
 
 	public static final String RIGHTDRAWERSEARCHBUTTONCSS = ".dbd-left-panel button.dbd-left-panel-header-search-btn";
@@ -352,7 +348,6 @@ public class DashBoardPageId
 	public static final String RIGHTDRAWEREDITDBDEFAULTTIMERANGELATEST = "/html/body/div/div/div/ul/li[12]/div";
 	public static final String RIGHTDRAWEREDITDBDEFAULTTIMERANGECUSTOM = "/html/body/div/div/div/ul/li[13]/div";
 	public static final String RIGHTDRAWEREDITDBDEFAULTTIMERANGECUSOMRESULT = "/html/body/div/div/div/ul/li[14]/div";
-
 	public static final String RIGHTDRAWEREDITSINGLEDBTOSHARESELECTEDCSS = "#dashboardSharingShared.oj-selected";
 
 	public static final String RIGHTDRAWEREDITSINGLEDBTOSHARECSS = "#dashboardSharingShared";
@@ -367,8 +362,8 @@ public class DashBoardPageId
 	public static final String DATEID2 = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[2]/div/div/div[2]/table/tbody/tr[4]/td[3]/a";
 	//check external link
 	public static final String EXTERNALLINK = "/html/body/div[*]/header/div/div[1]/div[1]/div[1]/div[3]/span";
-	public static final String EXTERNALTARGETLINKID = "/html/body/div[4]/div[3]/div/div/div[7]/div/div[2]/div[2]/div[1]/div/div[1]/span";
 
+	public static final String EXTERNALTARGETLINKID = "/html/body/div[4]/div[3]/div/div/div[7]/div/div[2]/div[2]/div[1]/div/div[1]/span";
 	//grid view and list view id
 	public static final String OOBDASHBOARDNAMELOCATORLISTVIEW = "//div[not(contains(@style, 'display:none'))]//*[contains(@class, 'dbs-summaries-container')]";
 	public static final String GRIDVIEWID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[1]/label";
