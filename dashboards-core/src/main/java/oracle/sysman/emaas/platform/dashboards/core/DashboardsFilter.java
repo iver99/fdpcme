@@ -10,9 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.core;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,6 +18,9 @@ import java.util.List;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author wenjzhu
@@ -45,7 +45,7 @@ public class DashboardsFilter
 	public static final String ITA_PROVIDER_EMCI = "emcitas-ui-apps";
 	public static final String ITA_PROVIDER_TA = "TargetAnalytics";
 	public static final String LA_PROVIDER_LS = "LogAnalyticsUI";
-        public static final String OCS_PROVIDER_OCS = "Orchestration";
+	public static final String OCS_PROVIDER_OCS = "CosUIService";
 
 	private List<String> includedTypes;
 	private List<String> includedApps;
@@ -98,7 +98,7 @@ public class DashboardsFilter
 			}
 		}
 		catch (IllegalArgumentException iae) {
-			LOGGER.info("context",iae);
+			LOGGER.info("context", iae);
 		}
 		return types;
 	}
@@ -139,7 +139,7 @@ public class DashboardsFilter
 			}
 		}
 		catch (Exception e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 		}
 		return types;
 	}
@@ -281,7 +281,7 @@ public class DashboardsFilter
 	{
 		if (filter != null) {
 			String filterUpcase = filter.trim().toUpperCase();
-			if (favoriteFilterString. equalsIgnoreCase(filterUpcase)) {
+			if (favoriteFilterString.equalsIgnoreCase(filterUpcase)) {
 				setIncludedFavorites(true);
 				return;
 			}
