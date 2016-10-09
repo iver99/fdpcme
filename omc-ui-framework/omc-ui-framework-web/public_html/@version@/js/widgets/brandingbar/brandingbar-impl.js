@@ -137,13 +137,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                         "serviceDisplayName": "BRANDING_BAR_APP_NAME_COMPLIANCE",
                         "serviceName": "ComplianceUIService",
                         "version": self.COMPLIANCE_SERVICE_VERSION,
-                        "helpTopicId": "em_moncs"
+                        "helpTopicId": "em_comcs"
                     };
                 appMap[appIdOcs] = {
                     "appId": appIdOcs,
                     "appName": "BRANDING_BAR_APP_NAME_ORCHESTRATION",
                     "serviceDisplayName": "BRANDING_BAR_APP_NAME_ORCHESTRATION",
-                    "serviceName": "Dashboard-UI", //Orchestration has no UI service, use Dashboard-UI now
+                    "serviceName": "CosServiceUI",
                     "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_home_gs"
                 };

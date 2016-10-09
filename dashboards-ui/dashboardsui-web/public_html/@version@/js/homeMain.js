@@ -131,7 +131,10 @@ require(['dashboards/dbsmodel',
         
             window.onerror = function (msg, url, lineNo, columnNo, error)
             {
-                oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg, true); 
+                oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo, true);
+                if(error.stack) {
+                    oj.Logger.error("Error: " + JSON.stringify(error.stack), true);
+                }
                 return false; 
             }
 
