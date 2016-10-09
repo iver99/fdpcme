@@ -551,7 +551,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                             pversion = data[i].PROVIDER_VERSION;
                             gname = data[i].WIDGET_GROUP_NAME;
                             if ((!widgetProviderName /*&& !widgetProviderVersion */) ||
-                                    widgetProviderName === pname
+                                    widgetProviderName === pname || (widgetProviderName === 'TargetAnalytics' && gname === 'Orchestration')
                                 /*    && widgetProviderVersion === pversion */) {
                                 //Enable ITA widget group since ITA widgets are enabled now.
                                     var widgetGroup = {value:pname+'|'+pversion+'|'+gname, label:gname};
