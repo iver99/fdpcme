@@ -57,7 +57,7 @@ define(['jquery',
                     throw new RangeError("Invalid target screenshot quality");
                 }
                 var nodesToRecover = [], nodesToRemove = [], overflowElems = [], parents = $elemInst.parents();
-                console.log("Start setting elements' properties");
+                console.log("Start setting elements' overflow-x and overflow-y properties");
                 parents && parents.each(function() {
                     if ($(this).css("overflow") && $(this).css("overflow") !== "visible") {
                         overflowElems.push({element: $(this), field: "overflow", value: $(this).css("overflow")});
@@ -72,6 +72,7 @@ define(['jquery',
                         $(this).css("overflow-y", "visible");
                     }
                 });
+                console.log("Finished setting elements' overflow-x and overflow-y properties");
                 $elemInst.find('svg').each(function(idx, node) {
                     var parentNode = node.parentNode, nodeWidth = $(node).width(), nodeHeight = $(node).height();
                     if (node.innerHTML === undefined) {
@@ -104,7 +105,6 @@ define(['jquery',
                 } else {
                     optWidth = (optHeight * target_width) / target_height;
                 }
-                console.log("Finished setting elements' properties");
                 console.log("Start html2canvas...");
                 html2canvas($elemInst, {
                     background: "#fff",
@@ -166,7 +166,7 @@ define(['jquery',
                     throw new RangeError("Invalid resizing ratio");
                 }
                 var nodesToRecover = [], nodesToRemove = [], overflowElems = [], parents = $elemInst.parents();
-                console.log("Start finding elements");
+                console.log("Start setting elements' overflow-x and overflow-y properties");
                 parents && parents.each(function() {
                     if ($(this).css("overflow") && $(this).css("overflow") !== "visible") {
                         overflowElems.push({element: $(this), field: "overflow", value: $(this).css("overflow")});
@@ -181,6 +181,7 @@ define(['jquery',
                         $(this).css("overflow-y", "visible");
                     }
                 });
+                console.log("Finished setting elements' overflow-x and overflow-y properties");
                 $elemInst.find('svg').each(function(idx, node) {
                     var parentNode = node.parentNode, nodeWidth = $(node).width(), nodeHeight = $(node).height();
                     if (node.innerHTML === undefined) {
@@ -204,7 +205,6 @@ define(['jquery',
                     });
                     parentNode.appendChild(canvas);
                 });
-                console.log("Finished finding elements");
                 if (isNaN(src_left) || src_left < 0 || src_left >= $elemInst.width()){
                     oj.Logger.error("Invalid source left position for screenshot capturing");
                     if(error.stack){
