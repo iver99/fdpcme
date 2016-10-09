@@ -103,10 +103,12 @@ require(['ojs/ojcore',
         
             window.onerror = function (msg, url, lineNo, columnNo, error)
             {
-                oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo, true);
+                var msg = "Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo;
                 if(error.stack) {
-                    oj.Logger.error("Error: " + JSON.stringify(error.stack), true);
+                    msg = msg + ". Error: " + JSON.stringify(error.stack);
                 }
+                oj.Logger.error(msg, true);
+
                 return false; 
             }
 
