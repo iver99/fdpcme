@@ -290,7 +290,8 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                 };
 
                 function getWidgets() {
-                    var widgetsUrl = '/sso.static/savedsearch.widgets';
+                    var widgetsBaseUrl = '/sso.static/savedsearch.widgets';
+                    var widgetsUrl = widgetsBaseUrl;
                     if (dfu.isDevMode()){
                         widgetsUrl=dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
                         if (includeDashboardIneligible) {
@@ -316,7 +317,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                         var loadedCnt = 0;
                         for (var i = 0; i < availableWidgetGroups.length; i++) {
                             //Get widgets by widget group id
-                            widgetsUrl = widgetsUrl + "?widgetGroupId=" + availableWidgetGroups[i].WIDGET_GROUP_ID;
+                            widgetsUrl = widgetsBaseUrl + "?widgetGroupId=" + availableWidgetGroups[i].WIDGET_GROUP_ID;
                             if (includeDashboardIneligible) {
                                 widgetsUrl = widgetsUrl + "&includeDashboardIneligible=true";
                             }
