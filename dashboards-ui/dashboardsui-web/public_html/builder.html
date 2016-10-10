@@ -288,10 +288,10 @@
                             <!-- ko with:toolbarModel -->
                             <div class="builder-dbd-description" data-bind="visible: dashboardDescriptionEnabled()==='TRUE'">
                                 <div class="builder-dbd-description-display-area dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
-                                    <span data-bind="text: dashboardDescription()?dashboardDescription:'No description',
+                                               <div data-bind="text: dashboardDescription()?dashboardDescription:'No description', 
                                                      css:{'font-style-italic':!dashboardDescription()},
                                                      attr: {title: dashboardDescription}" 
-                                          class="dbd-display-area-text single-dbd-description"></span>          
+                                               class="dbd-display-area-text single-dbd-description" style="display:block; white-space: pre;"></div>          
                                 </div>
                             </div>  
                             <button class='dashboardOptsBtn dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print' id ="dashboardOptsBtn"
@@ -366,7 +366,7 @@
                                                   <button class="oj-button-half-chrome dbd-data-explore" tabindex="0"
                                                           data-bind="
                                                              visible: $root.isMobileDevice !== 'true' && isOpenInExplorerShown,                                                        
-                                                             attr:{'id': 'editButton' + clientGuid,title: getNlsString('DBS_BUILDER_TILE_EDIT')},
+                                                             attr:{'id': 'editButton' + clientGuid,title: getNlsString('DBS_BUILDER_MSG_AUTO_OPEN_IN')+$data.WIDGET_GROUP_NAME()},
                                                              click:$root.openInDataExplorer,
                                                              ojComponent: {
                                                                 component:'ojButton', chroming: 'half',
