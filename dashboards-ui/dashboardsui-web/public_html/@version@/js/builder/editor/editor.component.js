@@ -318,15 +318,21 @@ define(['knockout',
             tile.leftEnabled(mode.getModeColumn(tile) > 0);
             tile.rightEnabled(mode.getModeColumn(tile)+mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS);
 
-            judgeAdmin();
+            hideOpenInExplorer();
 
-            function judgeAdmin(data) {
-                var userTenantUtil = new userTenantUtilModel();
-                var itaAdmin = userTenantUtil.userHasRole("IT Analytics Administrator") || userTenantUtil.userHasRole("IT Analytics User");
-                if ((tile.WIDGET_GROUP_NAME() === 'Data Explorer' || tile.WIDGET_GROUP_NAME() === 'IT Analytics') && !itaAdmin) {
+            function hideOpenInExplorer(data) {
+                if (tile.PROVIDER_NAME() !== 'TargetAnalytics' && tile.PROVIDER_NAME() !== 'LogAnalyticsUI') {
                     tile.isOpenInExplorerShown(false);
+                    return;
                 }
-            }   
+                if (tile.PROVIDER_NAME() === 'TargetAnalytics') {
+                    var userTenantUtil = new userTenantUtilModel();
+                    var itaAdmin = userTenantUtil.userHasRole("IT Analytics Administrator") || userTenantUtil.userHasRole("IT Analytics User");
+                    if (!itaAdmin) {
+                        tile.isOpenInExplorerShown(false);
+                    }
+                }
+            }
             
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                 var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');
