@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
@@ -52,7 +53,7 @@ public class DashboardServiceFacade
 	//	{
 	//		return em.createNamedQuery("EmsDashboardFavorite.findAll", EmsDashboardFavorite.class).getResultList();
 	//	}
-
+	@SuppressWarnings("unchecked")
 	public EmsDashboard getEmsDashboardByName(String name, String owner)
 	{
 		String jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.deleted = ?3";
@@ -61,8 +62,10 @@ public class DashboardServiceFacade
 		for (int i = 1; i <= params.length; i++) {
 			query.setParameter(i, params[i - 1]);
 		}
-		if(query.getSingleResult()!=null){
-			return (EmsDashboard)query.getSingleResult();
+		//EMCPDF-2396
+		List <Object> list=query.getResultList();
+		if(!list.isEmpty()){
+			return (EmsDashboard)list.get(0);
 		}
 		return null;
 	}

@@ -839,7 +839,7 @@ public class DashboardManager
 						MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_NAME_ERROR));
 			}
 			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
-			if (sameName != null && !sameName.getName().equals(dbd.getName())) {
+			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
 				throw new DashboardSameNameException();
 			}
 			// init creation date, owner to prevent null insertion
