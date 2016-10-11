@@ -44,17 +44,13 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
         /**
          * Writes a warning message.
          */
-        customLogger.warn = function(args,flush,redirectMsg)
+        customLogger.warn = function(args,flush)
         {
             var output = _format(args);
-            var redirect = false;
-            if(redirectMsg=="redirect to another page"){
-                redirect= true;
-            }
             if (window && window.console) {
                 window.console.warn(output);
             }
-            _cacheOrSend(oj.Logger.LEVEL_WARN, output,flush,redirect);
+            _cacheOrSend(oj.Logger.LEVEL_WARN, output,flush);
         };
 
         /**
@@ -93,7 +89,7 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
         /**
          * Cache the log and send to server if cache limit is reached.
          */
-        function _cacheOrSend(level, msg, flush,redirect)
+        function _cacheOrSend(level, msg, flush)
         {
             // TODO: Look into guarding against too many logs in a short period
             // of time.  Use case: Something bad may have happened and now we are getting
@@ -105,7 +101,7 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
 
             // If cache is full, then send.
             if (flush || logsCache.length >= logsCacheLimit) {
-                _sendToServer(redirect);
+                _sendToServer();
             }
         };
 
@@ -122,10 +118,10 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
         /**
          * Send the cached logs to server
          */
-        function _sendToServer(redirect)
+        function _sendToServer()
         {
             // Send the logs asynchronously and clear the cache.
-            new _asyncSender(redirect)();
+            new _asyncSender()();
             logsCache = [];
             logsCacheLastTimeWeSent = new Date().getTime();
         };
@@ -134,7 +130,7 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
          * An asynchronous sender that clones the cache and then sends the logs from the clone.
          * A new instance of this object must be created for each use.
          */
-        function _asyncSender(redirect)
+        function _asyncSender()
         {
             var logsCacheCloned = [];
 
@@ -144,10 +140,6 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
                 //TODO: Why not get tenantId from cookie?
                 //TODO: Should global be false?
                 var headers;
-                var asynStatus= true;
-                if(redirect){
-                    asynStatus =false;
-                }
                 if (dfu.isDevMode()){
                     headers = {"Authorization":"Basic " + btoa(dfu.getDevData().wlsAuth)};
                 }
@@ -168,7 +160,7 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
                     },
                     description: "custom logger: Sending logs to server",
                     headers: headers,
-                    async:asynStatus
+                    async:false
                 });
             };
 
