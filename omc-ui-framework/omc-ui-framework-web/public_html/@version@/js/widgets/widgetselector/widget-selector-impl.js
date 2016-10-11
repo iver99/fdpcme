@@ -555,7 +555,8 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                                     widgetProviderName === pname || (widgetProviderName === 'TargetAnalytics' && gname === 'Orchestration')
                                 /*    && widgetProviderVersion === pversion */) {
                                 //Enable ITA widget group since ITA widgets are enabled now.
-                                    var widgetGroup = {value:pname+'|'+pversion+'|'+gname, label:gname};
+                                    var widgetGroup = {value:pname+'|'+pversion+'|'+gname, 
+                                                        label:gname === 'Data Explorer' ? nls.WIDGET_SELECTOR_WIDGET_GROUP_NAME_TA : gname};
                                     targetWidgetGroupArray.push(widgetGroup);
                                     availableWidgetGroups.push(data[i]);
                             }
