@@ -94,19 +94,6 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Database"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Host"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Middleware"));
-
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Categorical"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Others"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Overview"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Performance"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Timeseries"));
-
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Databases"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Entities"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Hosts"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Application Servers"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Summary"));
-
 	}
 
 	public static void itaOobNotExist()
@@ -144,11 +131,6 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Database Operations"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Host Operations"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Middleware Operations"));
-
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Application Servers"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Databases"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Hosts"));
-
 	}
 
 	public static void laOobNotExist()
