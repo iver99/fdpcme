@@ -231,6 +231,41 @@ public class DashboardManager
 			}
 		}
 	}
+	
+	/**
+	 * Delete dashboards by a given tenant. Soft deletion is supported
+	 *
+	 * @param tenantId
+	 * @throws DashboardNotFoundException
+	 */
+	public void deleteDashboards(Long tenantId) throws DashboardException
+	{
+		deleteDashboards(false, tenantId);
+	}
+	
+	public void deleteDashboards(boolean permanent, Long tenantId) 
+	{
+		if (tenantId == null || tenantId <= 0) {
+			return;
+		}
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			dsf.removeDashboardsByTenant(permanent, tenantId);
+			dsf.removeDashboardSetsByTenant(permanent, tenantId);
+			dsf.removeDashboardTilesByTenant(permanent, tenantId);
+			dsf.removeDashboardTileParamsByTenant(permanent, tenantId);
+			dsf.removeDashboardPreferenceByTenant(permanent, tenantId);
+			dsf.removeUserOptionsByTenant(permanent, tenantId);			
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}		
+	}
+	
 
 	/**
 	 * Delete a dashboard specified by dashboard id for given tenant. Soft deletion is supported

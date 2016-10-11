@@ -145,6 +145,28 @@ public class DashboardAPI extends APIBase
 			clearUserContext();
 		}
 	}
+	
+	@DELETE
+	@Path("tenant/{id: [1-9][0-9]*}")
+	public Response deleteDashboardsByTenant(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@PathParam("id") Long tenantId)
+	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/tenant/{}", tenantId);
+		DashboardManager manager = DashboardManager.getInstance();
+		try {
+			logkeyHeaders("deleteDashboardsByTenant()", userTenant, tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);
+			manager.deleteDashboards(tenantId);
+			return Response.status(Status.NO_CONTENT).build();
+		}
+		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
+		}
+	}
 
 	//	@GET
 	//	@Path("{id: [1-9][0-9]*}/screenshot")
