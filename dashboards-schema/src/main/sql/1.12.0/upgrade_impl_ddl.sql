@@ -39,5 +39,17 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.WIDGET_DELETION_DATE exists already, no change is needed');
   END IF;
 
+    ---update coluum show_inhome value
+  SELECT count(*) into v_count from user_tab_columns WHERE table_name='EMS_DASHBOARD' AND column_name='SHOW_INHOME';
+  IF v_count=0 THEN
+     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.SHOW_INHOME not exist');
+  ELSE
+     EXECUTE IMMEDIATE 'UPDATE EMS_DASHBOARD SET SHOW_INHOME=0 WHERE DASHBOARD_ID in (32,33,34,35,36,29,30,25,26,27)';
+  END IF;
+  EXCEPTION
+  WHEN OTHERS THEN
+    ROLLBACK;
+    DBMS_OUTPUT.PUT_LINE('Failed to update the sql due to '||SQLERRM);
+    RAISE;
 END;
 /

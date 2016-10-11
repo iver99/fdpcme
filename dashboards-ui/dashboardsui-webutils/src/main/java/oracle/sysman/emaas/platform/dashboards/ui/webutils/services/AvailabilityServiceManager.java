@@ -156,7 +156,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			rsm.markServiceUp();
 			GlobalStatus.setDashboardUIUpStatus();
 
-			LOGGER.debug("Dashboards UI service is up");
+			LOGGER.info("Dashboards UI service is up");
 		}
 		catch (Exception e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
