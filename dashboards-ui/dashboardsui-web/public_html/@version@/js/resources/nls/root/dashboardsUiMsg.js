@@ -231,7 +231,8 @@ define({
       "DBS_BUILDER_MSG_ERROR_NAME_DUPLICATED_DETAIL": "Provide a unique name.",
       "DBS_BUILDER_MSG_AUTO_REFRESH_ON": "Auto-refresh enabled.",
       "DBS_BUILDER_MSG_AUTO_REFRESH_OFF": "Auto-refresh disabled.",
-      "DBS_BUILDER_MSG_AUTO_OPEN_IN":"Open in ",
+      "DBS_BUILDER_MSG_AUTO_OPEN_IN_DATA_EXPLORER":"Open in Data Explorer",
+      "DBS_BUILDER_MSG_AUTO_OPEN_IN_LOG_EXPLORER":"Open in Log Explorer",
       // DO NOT DELETE since error page will use it as a parameter in URL
       // -----start
       "DBS_ERROR_PAGE_TITLE":"Error",

@@ -366,7 +366,7 @@
                                                   <button class="oj-button-half-chrome dbd-data-explore" tabindex="0"
                                                           data-bind="
                                                              visible: $root.isMobileDevice !== 'true' && isOpenInExplorerShown,                                                        
-                                                             attr:{'id': 'editButton' + clientGuid,title: getNlsString('DBS_BUILDER_MSG_AUTO_OPEN_IN')+$data.WIDGET_GROUP_NAME()},
+                                                             attr:{'id': 'editButton' + clientGuid,title:$data.WIDGET_GROUP_NAME() === getNlsString('SERVICE_NAME_LogAnalytics') ? getNlsString('DBS_BUILDER_MSG_AUTO_OPEN_IN_LOG_EXPLORER'):getNlsString('DBS_BUILDER_MSG_AUTO_OPEN_IN_DATA_EXPLORER')},
                                                              click:$root.openInDataExplorer,
                                                              ojComponent: {
                                                                 component:'ojButton', chroming: 'half',
