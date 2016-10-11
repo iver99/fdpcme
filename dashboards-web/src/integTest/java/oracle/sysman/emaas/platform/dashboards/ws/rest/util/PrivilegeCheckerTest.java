@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +31,7 @@ import org.testng.annotations.Test;
  */
 public class PrivilegeCheckerTest
 {
+	private static final Logger LOGGER = LogManager.getLogger(PrivilegeCheckerTest.class);
 	@Test(groups = { "s2" })
 	public void testGetUserRoles(@Mocked final RegistryLookupUtil lookupUtil, @Mocked final TenantSubscriptionUtil.RestClient rc,
 			@Mocked final JsonUtil jsonUtl)
@@ -69,6 +72,7 @@ public class PrivilegeCheckerTest
 			};
 		}
 		catch (IOException e) {
+			LOGGER.info("context",e);
 			//Ignore the expected exception here
 		}
 		Assert.assertNull(PrivilegeChecker.getUserRoles(tenantName, userName));
@@ -94,6 +98,7 @@ public class PrivilegeCheckerTest
 		Assert.assertFalse(PrivilegeChecker.isAdminUser(Arrays.asList("Orchestration User")));
 		Assert.assertFalse(PrivilegeChecker.isAdminUser(Arrays.asList("APM User", "Monitoring Service User")));
 		Assert.assertFalse(PrivilegeChecker.isAdminUser(Arrays.asList("Security Analytics User")));
+		Assert.assertFalse(PrivilegeChecker.isAdminUser(Arrays.asList("Compliance User")));
 		Assert.assertTrue(PrivilegeChecker.isAdminUser(Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_APM)));
 		Assert.assertTrue(PrivilegeChecker.isAdminUser(Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_ITA)));
 		Assert.assertTrue(PrivilegeChecker.isAdminUser(Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_LA)));
@@ -102,5 +107,6 @@ public class PrivilegeCheckerTest
 				"Monitoring Service User")));
 		Assert.assertTrue(PrivilegeChecker.isAdminUser(Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_SECURITY)));
 		Assert.assertTrue(PrivilegeChecker.isAdminUser(Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_ORCHESTRATION)));
+		Assert.assertTrue(PrivilegeChecker.isAdminUser(Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_COMPLIANCE)));
 	}
 }

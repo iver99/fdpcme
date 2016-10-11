@@ -28,7 +28,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class DashboardsUiCORSFilter implements Filter
 {
-	private final Logger logger = LogManager.getLogger(DashboardsUiCORSFilter.class);
+	private final static Logger LOGGER = LogManager.getLogger(DashboardsUiCORSFilter.class);
 	private static final String OAM_REMOTE_USER_HEADER = "OAM_REMOTE_USER";
 
 	//	private static final String DEFAULT_USER = "SYSMAN";
@@ -42,6 +42,7 @@ public class DashboardsUiCORSFilter implements Filter
 	@Override
 	public void destroy()
 	{
+		// do nothing
 	}
 
 	@Override
@@ -101,7 +102,7 @@ public class DashboardsUiCORSFilter implements Filter
 						updatedCookie = cookie;
 						updatedCookie.setValue(userTenant);
 						updatedCookie.setPath(COOKIE_X_REMOTE_USER_PATH);
-						logger.info("Value of Cookie:" + COOKIE_X_REMOTE_USER + " is updated to " + userTenant);
+						LOGGER.info("Value of Cookie:" + COOKIE_X_REMOTE_USER + " is updated to " + userTenant);
 					}
 					break;
 				}
@@ -111,7 +112,7 @@ public class DashboardsUiCORSFilter implements Filter
 			//X-REMOTE-USER should contain <tenant name>.<user name>, keep the original value then
 			updatedCookie = new Cookie(COOKIE_X_REMOTE_USER, userTenant);
 			updatedCookie.setPath(COOKIE_X_REMOTE_USER_PATH);
-			logger.info("New Cookie:" + COOKIE_X_REMOTE_USER + " with value: " + userTenant + " is created");
+			LOGGER.info("New Cookie:" + COOKIE_X_REMOTE_USER + " with value: " + userTenant + " is created");
 
 		}
 		if (updatedCookie != null) {
@@ -121,13 +122,13 @@ public class DashboardsUiCORSFilter implements Filter
 
 		// redirecting check: make sure exception(s) don't have impact on the process
 		try {
-			logger.info("The tenant.user is " + userTenant + ", and the request URI is " + hReq.getRequestURI());
+			LOGGER.info("The tenant.user is " + userTenant + ", and the request URI is " + hReq.getRequestURI());
 			if (!StringUtil.isEmpty(userTenant) && userTenant.indexOf(".") > 0) {
 				String opcTenantId = userTenant.substring(0, userTenant.indexOf("."));
 				if (hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/home.html")) {
 					List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId);
 					if (apps == null || apps.isEmpty()) {
-						logger.error("Tenant (" + opcTenantId
+						LOGGER.error("Tenant (" + opcTenantId
 								+ ") does not subscribe to any service. Redirect dashboard home to error page");
 						hRes.sendRedirect("./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG");
 						return;
@@ -136,18 +137,18 @@ public class DashboardsUiCORSFilter implements Filter
 						// redirect to apm home
 						Link apmLink = RegistryLookupUtil.getServiceExternalLink("ApmUI", "1.0+", "home", opcTenantId);
 						if (apmLink != null && !StringUtil.isEmpty(apmLink.getHref())) {
-							logger.info("Tenant subscribes to APM only, and redirecting dashboard home page to APM home: "
+							LOGGER.info("Tenant subscribes to APM only, and redirecting dashboard home page to APM home: "
 									+ apmLink.getHref());
 							String targetUrl = RegistryLookupUtil.replaceWithVanityUrl(apmLink.getHref(), opcTenantId,
 									RegistryLookupUtil.APM_SERVICE);
-							logger.info(
+							LOGGER.info(
 									"The APM link is replaced with vanity URL from original url: \"{}\" to final url: \"{}\"",
 									apmLink.getHref(), targetUrl);
 							hRes.sendRedirect(targetUrl);
 							return;
 						}
 						else {
-							logger.warn("Retrieved an empty APM home linke for service: 'ApmUI', '1.0+', 'home' from service manager");
+							LOGGER.warn("Retrieved an empty APM home linke for service: 'ApmUI', '1.0+', 'home' from service manager");
 						}
 					}
 					else if (TenantSubscriptionUtil.isMonitoringServiceOnly(apps)) {
@@ -155,25 +156,25 @@ public class DashboardsUiCORSFilter implements Filter
 						Link monitoringLink = RegistryLookupUtil.getServiceExternalLink(RegistryLookupUtil.MONITORING_SERVICE,
 								"1.5+", "home", opcTenantId);
 						if (monitoringLink != null && !StringUtil.isEmpty(monitoringLink.getHref())) {
-							logger.info("Tenant subscribes to Monitoring service only, and redirecting dashboard home page to Monitoring home: "
+							LOGGER.info("Tenant subscribes to Monitoring service only, and redirecting dashboard home page to Monitoring home: "
 									+ monitoringLink.getHref());
 							String targetUrl = RegistryLookupUtil.replaceWithVanityUrl(monitoringLink.getHref(), opcTenantId,
 									RegistryLookupUtil.MONITORING_SERVICE);
-							logger.info(
+							LOGGER.info(
 									"The Monitoring service link is replaced with vanity URL from original url: \"{}\" to final url: \"{}\"",
 									monitoringLink.getHref(), targetUrl);
 							hRes.sendRedirect(targetUrl);
 							return;
 						}
 						else {
-							logger.warn("Retrieved an empty Monitoring home linke for service: 'MonitoringServiceUI', '1.5+', 'home' from service manager");
+							LOGGER.warn("Retrieved an empty Monitoring home linke for service: 'MonitoringServiceUI', '1.5+', 'home' from service manager");
 						}
 					}
 				}
 				else if (hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/builder.html")) {
 					List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId);
 					if (apps == null || apps.isEmpty()) {
-						logger.error("Tenant (" + opcTenantId
+						LOGGER.error("Tenant (" + opcTenantId
 								+ ") does not subscribe to any service. Redirect dashboard builder page to error page");
 						hRes.sendRedirect("./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG");
 						return;
@@ -182,7 +183,7 @@ public class DashboardsUiCORSFilter implements Filter
 			}
 		}
 		catch (Exception t) {
-			logger.error(t.getLocalizedMessage(), t);
+			LOGGER.error(t.getLocalizedMessage(), t);
 		}
 		chain.doFilter(request, response);
 	}
@@ -190,6 +191,7 @@ public class DashboardsUiCORSFilter implements Filter
 	@Override
 	public void init(FilterConfig config) throws ServletException
 	{
+		// do nothing
 	}
 
 }

@@ -56,7 +56,7 @@ public class RegistryLookupUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetServiceExternalLink_NoTenant(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
+	public void testGetServiceExternalLinkNoTenant(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
 			@Mocked final InstanceQuery anyInstanceQuery, @Mocked final LookupManager anyLockupManager,
 			@Mocked final SanitizedInstanceInfo anySanitizedInfo) throws Exception
 	{
@@ -172,11 +172,21 @@ public class RegistryLookupUtilTest
 		href = "https://tenant5.security.original.link/somepage.html";
 		replacedHref = RegistryLookupUtil.replaceWithVanityUrl(href, "tenant5", RegistryLookupUtil.SECURITY_ANALYTICS_SERVICE);
 		Assert.assertEquals(replacedHref, "https://tenant5.security.replaced.link/somepage.html");
+
+		testReplaceWithVanityUrlExpectations(anyBuilder, anyInstanceInfo, anyLockupManager, anyClient, anyInstanceQuery);
+		href = "https://tenant6.compliance.original.link/somepage.html";
+		replacedHref = RegistryLookupUtil.replaceWithVanityUrl(href, "tenant6", RegistryLookupUtil.COMPLIANCE_SERVICE);
+		Assert.assertEquals(replacedHref, "https://tenant6.compliance.replaced.link/somepage.html");
+
+		testReplaceWithVanityUrlExpectations(anyBuilder, anyInstanceInfo, anyLockupManager, anyClient, anyInstanceQuery);
+		href = "https://tenant7.orchestration.original.link/somepage.html";
+		replacedHref = RegistryLookupUtil.replaceWithVanityUrl(href, "tenant7", RegistryLookupUtil.ORCHESTRATION_SERVICE);
+		Assert.assertEquals(replacedHref, "https://tenant7.orchestration.replaced.link/somepage.html");
 	}
 
 	private void testReplaceWithVanityUrlExpectations(final Builder anyBuilder, final InstanceInfo anyInstanceInfo,
 			final LookupManager anyLockupManager, final LookupClient anyClient, final InstanceQuery anyInstanceQuery)
-					throws Exception
+			throws Exception
 	{
 		new Expectations() {
 			{
@@ -198,7 +208,7 @@ public class RegistryLookupUtilTest
 					List<InstanceInfo> lookup(InstanceQuery query)
 					{
 						List<InstanceInfo> list = new ArrayList<InstanceInfo>();
-						for (int i = 0; i < 5; i++) {
+						for (int i = 0; i < 7; i++) {
 							list.add(anyInstanceInfo);
 						}
 						return list;
@@ -214,9 +224,13 @@ public class RegistryLookupUtilTest
 				lkMonitoring.withHref("https://monitoring.replaced.link");
 				Link lkSecurity = new Link();
 				lkSecurity.withHref("https://security.replaced.link");
+				Link lkCompliance = new Link();
+				lkCompliance.withHref("https://compliance.replaced.link");
+				Link lkOrchestration = new Link();
+				lkOrchestration.withHref("https://orchestration.replaced.link");
 				anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
 				returns(Arrays.asList(lkAPM), Arrays.asList(lkITA), Arrays.asList(lkLA), Arrays.asList(lkMonitoring),
-						Arrays.asList(lkSecurity));
+						Arrays.asList(lkSecurity), Arrays.asList(lkCompliance), Arrays.asList(lkOrchestration));
 			}
 		};
 	}

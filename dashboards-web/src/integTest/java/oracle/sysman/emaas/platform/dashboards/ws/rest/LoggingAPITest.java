@@ -24,7 +24,7 @@ public class LoggingAPITest {
     HttpServletRequest request;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         loggingAPI = new LoggingAPI();
         new NonStrictExpectations() {
             {
@@ -42,12 +42,12 @@ public class LoggingAPITest {
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void testLogMsgWithNull() throws Exception {
+    public void testLogMsgWithNull() {
         Assert.assertNull(loggingAPI.logMsg(null));
     }
 
     @Test
-    public void testLogMsg(@Mocked final JSONObject jsonObject) throws Exception {
+    public void testLogMsg(@Mocked final JSONObject jsonObject) throws JSONException {
         final JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < 6; i++) {
             jsonArray.put(i, new JSONObject());
@@ -71,7 +71,7 @@ public class LoggingAPITest {
     }
 
     @Test
-    public void testLogMsg1() throws Exception {
+    public void testLogMsg1() {
 
         new MockUp<JSONObject>() {
             @Mock
@@ -85,7 +85,7 @@ public class LoggingAPITest {
     }
 
     @Test
-    public void testLogMsg2() throws Exception {
+    public void testLogMsg2() {
 
         new MockUp<JSONObject>() {
             @Mock

@@ -15,10 +15,6 @@
     	</wls:security-role-assignment>
 	</wls:security>    
     <wls:session-descriptor>
-       <wls:cookie-secure>true</wls:cookie-secure>
-       <wls:cookie-name>EMCS_JSESSIONID</wls:cookie-name>
-       <wls:cookie-path>/emcpdf</wls:cookie-path>
-       <wls:timeout-secs>60</wls:timeout-secs>
-       <wls:cookie-max-age-secs>10</wls:cookie-max-age-secs>
+        <wls:tracking-enabled>false</wls:tracking-enabled>
     </wls:session-descriptor>
 </wls:weblogic-application>

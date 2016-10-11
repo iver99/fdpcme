@@ -7,9 +7,12 @@ import org.testng.Assert;
 
 public class DashBoardUtils
 {
+	private DashBoardUtils() {
+	  }
+
 	private static WebDriver driver;
 
-	public static void APM_OOB_GridView() throws Exception
+	public static void apmOobGrid() 
 	{
 		DashboardHomeUtil.gridView(driver);
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Application Performance Monitoring");
@@ -17,15 +20,15 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Monitoring"));
 	}
 
-	public static void closeOverviewPage() throws Exception
+	public static void closeOverviewPage() 
 	{
 
 		driver.getLogger().info("before clicking overview button");
-		driver.click(PageId.OverviewCloseID);
+		driver.click(PageId.OVERVIEWCLOSEID);
 		driver.getLogger().info("after clicking overview button");
 	}
 
-	public static void ITA_OOB_GridView() throws Exception
+	public static void itaOobGridView() 
 	{
 		DashboardHomeUtil.gridView(driver);
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Database Health Summary");
@@ -46,7 +49,7 @@ public class DashBoardUtils
 //		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Servers by JDK Version"));
 	}
 
-	public static void LA_OOB_GridView() throws Exception
+	public static void laOobGridView() 
 	{
 		DashboardHomeUtil.gridView(driver);
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Database Operations");
@@ -56,62 +59,62 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Middleware Operations"));
 	}
 
-	public static void loadWebDriver(WebDriver webDriver) throws Exception
+	public static void loadWebDriver(WebDriver webDriver) 
 	{
 		driver = webDriver;
 
-		if (driver.isDisplayed(PageId.OverviewCloseID)) {
+		if (driver.isDisplayed(PageId.OVERVIEWCLOSEID)) {
 			DashBoardUtils.closeOverviewPage();
 		}
 
-		Assert.assertFalse(driver.isDisplayed(PageId.OverviewCloseID));
+		Assert.assertFalse(driver.isDisplayed(PageId.OVERVIEWCLOSEID));
 
 		driver.takeScreenShot();
 	}
 
-	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
+	public static void loadWebDriverOnly(WebDriver webDriver) 
 	{
 		driver = webDriver;
 	}
 
-	public static void noOOBCheck_GridView() throws Exception
+	public static void noOOBCheckGridView() 
 	{
 		//verify all the oob dashboard not exsit
 		driver.getLogger().info("verify all the oob dashboard not exsit");
-		Assert.assertFalse(driver.isElementPresent(PageId.Application_Performance_Monitoring_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.Database_Health_Summary_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.Host_Health_Summary_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.Database_Performance_Analytics_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.Middleware_Performance_Analytics_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.Database_Resource_Analytics_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.Middleware_Resource_Analytics_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.WebLogic_Health_Summary_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.Database_Configuration_and_Storage_By_Version_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.Enterprise_OverView_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.Host_Inventory_By_Platform_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.Top_25_Databases_by_Resource_Consumption_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.Top_25_WebLogic_Servers_by_Heap_Usage_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.Top_25_WebLogic_Servers_by_Load_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.WebLogic_Servers_by_JDK_Version_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.Database_Operations_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.Host_Operations_ID));
-		Assert.assertFalse(driver.isElementPresent(PageId.Middleware_Operations_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.APPLICATION_PERFORMANCE_MONITORING_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.DATABASE_HEALTH_SUMMARY_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.HOST_HEALTH_SUMMARY_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.DATABASE_PERFORMANCE_ANALYTICS_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.MIDDLEWARE_PERFORMANCE_ANALYTICS_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.DATABASE_RESOURCE_ANALYTICS_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.MIDDLEWARE_RESOURCE_ANALYTICS_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.WEBLOGIC_HEALTH_SUMMARY_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.DATABASE_CONFIGURATION_AND_STORAGE_BY_VERSION_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.ENTERPRISE_OVERVIEW_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.HOST_INVENTORY_BY_PLATFORM_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.TOP_25_DATABASES_BY_RESOURCE_CONSUMPTION_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.TOP_25_WEBLOGIC_SERVERS_BY_HEAP_USAGE_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.TOP_25_WEBLOGIC_SERVERS_BY_LOAD_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.WEBLOGIC_SERVERS_BY_JDK_VERSION_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.DATABASE_OPERATIONS_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.HOST_OPERATIONS_ID));
+		Assert.assertFalse(driver.isElementPresent(PageId.MIDDLEWARE_OPERATIONS_ID));
 	}
 
 	//Sharing and stopping dashbaord
-	//	public static void sharedashboard() throws Exception
+	//	public static void sharedashboard() 
 	//	{
 	//		driver.click(PageId.option);
 	//		driver.click(PageId.dashboardshare);
 	//	}
 	//
-	//	public static void sharestopping() throws Exception
+	//	public static void sharestopping() 
 	//	{
 	//		driver.click(PageId.option);
 	//		driver.click(PageId.stopshare_btn);
 	//	}
 
-	//	public static void waitForMilliSeconds(long millisSec) throws Exception
+	//	public static void waitForMilliSeconds(long millisSec) 
 	//	{
 	//		Thread.sleep(millisSec);
 	//	}

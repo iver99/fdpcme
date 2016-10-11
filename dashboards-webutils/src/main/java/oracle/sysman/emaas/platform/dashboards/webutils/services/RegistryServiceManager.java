@@ -22,9 +22,6 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InfoManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.InstanceStatus;
@@ -34,6 +31,10 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupM
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import weblogic.application.ApplicationLifecycleEvent;
 
 public class RegistryServiceManager implements ApplicationServiceManager
@@ -203,6 +204,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_STATIC_CONFIGURATIONS = NAV_API_BASE + "configurations";
 	private static final String NAV_LOGGING_CONFIG = NAV_API_BASE + "_logging/configs";
 	private static final String NAV_ZDT_COUNTS = NAV_API_BASE + "zdt/counts";
+	private static final String NAV_STATIC_OMCSTATUS = NAV_API_BASE + "omcstatus";
+	private static final String NAV_WIDGET_NOTIFY = NAV_API_BASE + "widgetnotification";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
@@ -240,9 +243,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 	private Boolean registrationComplete = null;
 
-	private final Logger logger = LogManager
+	private final static Logger LOGGER = LogManager
 			.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM + ".serviceregistry");
-
 	@Override
 	public String getName()
 	{
@@ -274,54 +276,55 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
-		logger.info("Post-starting 'Service Registry' application service");
+		LOGGER.info("Post-starting 'Service Registry' application service");
 		registerService();
 	}
 
 	@Override
 	public void postStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-
+		// do nothing
 	}
 
 	@Override
 	public void preStart(ApplicationLifecycleEvent evt) throws Exception
 	{
+		// do nothing
 	}
 
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-		logger.info("Pre-stopping 'Service Registry' application service");
+		LOGGER.info("Pre-stopping 'Service Registry' application service");
 		RegistrationManager.getInstance().getRegistrationClient().shutdown();
-		logger.debug("Pre-stopped 'Service Regsitry'");
+		LOGGER.debug("Pre-stopped 'Service Regsitry'");
 	}
 
 	public boolean registerService()
 	{
 		try {
-			logger.info("Registering service...");
+			LOGGER.info("Registering service...");
 			String applicationUrlHttp = RegistryServiceManager.getApplicationUrl(UrlType.HTTP);
-			logger.debug("Application URL(http) to register with 'Service Registry': " + applicationUrlHttp);
+			LOGGER.debug("Application URL(http) to register with 'Service Registry': " + applicationUrlHttp);
 			String applicationUrlHttps = RegistryServiceManager.getApplicationUrl(UrlType.HTTPS);
-			logger.debug("Application URL(https) to register with 'Service Registry': " + applicationUrlHttps);
+			LOGGER.debug("Application URL(https) to register with 'Service Registry': " + applicationUrlHttps);
 
-			logger.info("Building 'Service Registry' configuration");
+			LOGGER.info("Building 'Service Registry' configuration");
 			Properties serviceProps = PropertyReader.loadProperty(PropertyReader.SERVICE_PROPS);
 
-			logger.info("Initialize lookup manager");
+			LOGGER.info("Initialize lookup manager");
 			LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
 
-			//			logger.info("Checking RegistryService");
+			//			LOGGER.info("Checking RegistryService");
 			//			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
 			//				setRegistrationComplete(Boolean.FALSE);
-			//				logger.error("Failed to found registryService. Dashboard-API registration is not complete.");
+			//				LOGGER.error("Failed to found registryService. Dashboard-API registration is not complete.");
 			//				return false;
 			//			}
 
 			ServiceConfigBuilder builder = new ServiceConfigBuilder();
 			builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"))
-					.characteristics(serviceProps.getProperty("characteristics"));
+			.characteristics(serviceProps.getProperty("characteristics"));
 			StringBuilder virtualEndPoints = new StringBuilder();
 			StringBuilder canonicalEndPoints = new StringBuilder();
 			if (applicationUrlHttp != null) {
@@ -339,9 +342,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 			builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
 			builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-					.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+			.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
-			logger.info("Initializing RegistrationManager");
+			LOGGER.info("Initializing RegistrationManager");
 			RegistrationManager.getInstance().initComponent(builder.build());
 
 			List<Link> links = new ArrayList<Link>();
@@ -359,20 +362,20 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("static/dashboards.service").withHref(applicationUrlHttps + NAV_STATIC_DASHBOARDS));
 			}
 			if (applicationUrlHttp != null) {
-				links.add(
-						new Link().withRel("static/dashboards.preferences").withHref(applicationUrlHttp + NAV_STATIC_PREFERENCE));
+				links.add(new Link().withRel("static/dashboards.preferences")
+						.withHref(applicationUrlHttp + NAV_STATIC_PREFERENCE));
 			}
 			if (applicationUrlHttps != null) {
-				links.add(new Link().withRel("static/dashboards.preferences")
-						.withHref(applicationUrlHttps + NAV_STATIC_PREFERENCE));
+				links.add(new Link().withRel("static/dashboards.preferences").withHref(
+						applicationUrlHttps + NAV_STATIC_PREFERENCE));
 			}
 			if (applicationUrlHttp != null) {
-				links.add(new Link().withRel("static/dashboards.subscribedapps")
-						.withHref(applicationUrlHttp + NAV_STATIC_SUBSCRIBEDAPPS));
+				links.add(new Link().withRel("static/dashboards.subscribedapps").withHref(
+						applicationUrlHttp + NAV_STATIC_SUBSCRIBEDAPPS));
 			}
 			if (applicationUrlHttps != null) {
-				links.add(new Link().withRel("static/dashboards.subscribedapps")
-						.withHref(applicationUrlHttps + NAV_STATIC_SUBSCRIBEDAPPS));
+				links.add(new Link().withRel("static/dashboards.subscribedapps").withHref(
+						applicationUrlHttps + NAV_STATIC_SUBSCRIBEDAPPS));
 			}
 			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("static/dashboards.logging").withHref(applicationUrlHttp + NAV_STATIC_LOGGING));
@@ -387,12 +390,18 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("static/dashboards.registry").withHref(applicationUrlHttps + NAV_STATIC_REGISTRY));
 			}
 			if (applicationUrlHttp != null) {
-				links.add(new Link().withRel("static/dashboards.configurations")
-						.withHref(applicationUrlHttp + NAV_STATIC_CONFIGURATIONS));
+				links.add(new Link().withRel("static/dashboards.configurations").withHref(
+						applicationUrlHttp + NAV_STATIC_CONFIGURATIONS));
 			}
 			if (applicationUrlHttps != null) {
-				links.add(new Link().withRel("static/dashboards.configurations")
-						.withHref(applicationUrlHttps + NAV_STATIC_CONFIGURATIONS));
+				links.add(new Link().withRel("static/dashboards.configurations").withHref(
+						applicationUrlHttps + NAV_STATIC_CONFIGURATIONS));
+			}
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("static/dashboards.omcstatus").withHref(applicationUrlHttp + NAV_STATIC_OMCSTATUS));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("static/dashboards.omcstatus").withHref(applicationUrlHttps + NAV_STATIC_OMCSTATUS));
 			}
 			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("log/configuration").withHref(applicationUrlHttp + NAV_LOGGING_CONFIG));
@@ -405,27 +414,31 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			}
 			if (applicationUrlHttps != null) {
 				links.add(new Link().withRel("zdt/counts").withHref(applicationUrlHttps + NAV_ZDT_COUNTS));
+				links.add(new Link().withRel("ssf.widget.changed").withHref(applicationUrlHttp + NAV_WIDGET_NOTIFY));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("ssf.widget.changed").withHref(applicationUrlHttps + NAV_WIDGET_NOTIFY));
 			}
 			InfoManager.getInstance().getInfo().setLinks(links);
 
-			logger.info("Registering service with 'Service Registry'");
+			LOGGER.info("Registering service with 'Service Registry'");
 			RegistrationManager.getInstance().getRegistrationClient().register();
 			RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
 
 			setRegistrationComplete(Boolean.TRUE);
-			logger.info("Service manager is up. Completed dashboard-API registration");
+			LOGGER.info("Service manager is up. Completed dashboard-API registration");
 		}
 		catch (Exception e) {
 			setRegistrationComplete(Boolean.FALSE);
-			logger.error(
+			LOGGER.error(
 					"Errors occurrs in registration. Service manager might be down. Dashboard-API registration is not complete.");
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			//			throw e;
 		}
 
-		//		logger.info("Post-starting service, attempting to create entityimanager factory");
+		//		LOGGER.info("Post-starting service, attempting to create entityimanager factory");
 		//		PersistenceManager.getInstance().createEntityManagerFactory();
-		//		logger.info("Post-starting service, entityimanager factory created");
+		//		LOGGER.info("Post-starting service, entityimanager factory created");
 		return registrationComplete;
 	}
 

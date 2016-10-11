@@ -96,8 +96,8 @@ public class DashboardServiceFacadeSoftDeletionTest
 	public void testDashboardTile()
 	{
 		BigInteger dashboardId = IdGenerator.getDashboardId(UUID.randomUUID());
-		BigInteger tileId1 = IdGenerator.getDashboardId(UUID.randomUUID());
-		BigInteger tileId2 = IdGenerator.getDashboardId(UUID.randomUUID());
+		String tileId1 = IdGenerator.getDashboardId(UUID.randomUUID()).toString();
+		String tileId2 = IdGenerator.getDashboardId(UUID.randomUUID()).toString();
 		EntityManager em = null;
 		DashboardServiceFacade dsf = new DashboardServiceFacade(TENANT_ID);
 		try {
@@ -149,7 +149,7 @@ public class DashboardServiceFacadeSoftDeletionTest
 	public void testDashboardTileParams()
 	{
 		BigInteger dashboardId = IdGenerator.getDashboardId(UUID.randomUUID());
-		BigInteger tileId = IdGenerator.getDashboardId(UUID.randomUUID());
+		String tileId = IdGenerator.getDashboardId(UUID.randomUUID()).toString();
 		String paramName = "paramName";
 		String paramValue = "paramName";
 		EntityManager em = null;
@@ -256,7 +256,7 @@ public class DashboardServiceFacadeSoftDeletionTest
 	 * @param tileId
 	 * @return
 	 */
-	private EmsDashboardTile createTestTile(BigInteger tileId)
+	private EmsDashboardTile createTestTile(String tileId)
 	{
 		EmsDashboardTile tile = new EmsDashboardTile();
 		tile.setTileId(tileId);

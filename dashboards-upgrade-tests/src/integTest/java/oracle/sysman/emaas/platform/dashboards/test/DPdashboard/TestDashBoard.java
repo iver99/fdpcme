@@ -1,21 +1,13 @@
 package oracle.sysman.emaas.platform.dashboards.test.DPdashboard;
 
 
+import oracle.sysman.emaas.platform.dashboards.test.util.DashBoardUtils;
+import oracle.sysman.emaas.platform.dashboards.test.util.LoginAndLogout;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+
 import org.testng.Assert;
-
-import org.testng.annotations.*;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.Select;
-
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-
-import oracle.sysman.emaas.platform.dashboards.test.util.*;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.*;
-
-import java.util.Set;
-import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
 
@@ -31,14 +23,20 @@ public class TestDashBoard extends LoginAndLogout
        private String dbName_noWidgetGrid = "";
        
 
-	public void initTest(String testName) throws Exception
+	public void initTest(String testName) 
 	{
 		login(this.getClass().getName() + "." + testName);
-		DashBoardUtils.loadWebDriver(webd);
+		try {
+			DashBoardUtils.loadWebDriver(webd);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
          @Test
-	public void testCreateDashboad_noWidget_GridView() throws Exception
+	public void testCreateDashboad_noWidget_GridView() 
 	{
 		dbName_noWidgetGrid = "NoWidgetGridView-" + generateTimeStamp();
 		String dbDesc = "Test Dashboard no Widget description";
@@ -64,7 +62,7 @@ public class TestDashBoard extends LoginAndLogout
 	}
 	
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView" })
-		public void testModifyDashboard_namedesc() throws Exception
+		public void testModifyDashboard_namedesc() 
 		{
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 			webd.getLogger().info("Start to test in testModifyDashBoard");
@@ -89,7 +87,7 @@ public class TestDashBoard extends LoginAndLogout
 		}
 
 @Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
-	public void testDuplicateDashboard() throws Exception
+	public void testDuplicateDashboard() 
 	{
 
 		String dbName = "Test_Dashboard_duplicate";

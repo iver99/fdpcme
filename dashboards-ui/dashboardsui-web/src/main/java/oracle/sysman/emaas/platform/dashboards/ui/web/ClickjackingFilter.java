@@ -33,6 +33,7 @@ public class ClickjackingFilter implements Filter
 	@Override
 	public void destroy()
 	{
+		// do nothing
 	}
 
 	/**

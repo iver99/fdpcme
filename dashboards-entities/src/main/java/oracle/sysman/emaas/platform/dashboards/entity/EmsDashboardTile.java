@@ -42,7 +42,7 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 	@Id
 	@Column(name = "TILE_ID", nullable = false)
 	//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EmsDashboardTile_Id_Seq_Gen")
-	private BigInteger tileId;
+	private String tileId;
 	@Column(nullable = false, length = 64)
 	private String title;
 	@Column(name = "TILE_ROW")
@@ -116,9 +116,8 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 	}
 
 	public EmsDashboardTile(Date creationDate, EmsDashboard emsDashboard1, Integer type, Integer row, Integer column,
-			Integer height, Integer isMaximized, Date lastModificationDate, String lastModifiedBy,
-			String owner, /*Integer position, */
-			String providerAssetRoot, String providerName, String providerVersion, BigInteger tileId, String title,
+			Integer height, Integer isMaximized, Date lastModificationDate, String lastModifiedBy, String owner, /*Integer position, */
+			String providerAssetRoot, String providerName, String providerVersion, String tileId, String title,
 			String widgetCreationTime, String widgetDescription, String widgetGroupName, String widgetHistogram,
 			String widgetIcon, String widgetKocName, String widgetName, String widgetOwner, Integer widgetSource,
 			String widgetTemplate, String widgetUniqueId, String widgetViewmode, Integer widgetSupportTimeControl, Integer width,
@@ -242,7 +241,7 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 		return row;
 	}
 
-	public BigInteger getTileId()
+	public String getTileId()
 	{
 		return tileId;
 	}
@@ -420,7 +419,7 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 		this.row = row;
 	}
 
-	public void setTileId(BigInteger tileId)
+	public void setTileId(String tileId)
 	{
 		this.tileId = tileId;
 	}

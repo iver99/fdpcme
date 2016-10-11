@@ -29,7 +29,7 @@ public class LoggingConfigAPITest {
     LoggingConfigAPI loggingConfigAPI;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         loggingConfigAPI = new LoggingConfigAPI();
         new NonStrictExpectations() {
             {
@@ -40,12 +40,12 @@ public class LoggingConfigAPITest {
     }
 
     @Test
-    public void testChangeSpecificLoggerLevelwithDashboardException() throws Exception {
+    public void testChangeSpecificLoggerLevelwithDashboardException() {
         Assert.assertNull(loggingConfigAPI.changeSpecificLoggerLevel("tenantIdParam", "userTenant", "", new JSONObject()));
     }
 
     @Test
-    public void testChangeSpecificLoggerLevelwithIOException() throws Exception {
+    public void testChangeSpecificLoggerLevelwithIOException() {
 
         new MockUp<JsonUtil>() {
             @Mock
@@ -58,7 +58,7 @@ public class LoggingConfigAPITest {
     }
 
     @Test
-    public void testChangeSpecificLoggerLevel(@Mocked final Level level, @Mocked final DefaultConfiguration configuration) throws Exception {
+    public void testChangeSpecificLoggerLevel(@Mocked final Level level, @Mocked final DefaultConfiguration configuration) throws IOException {
 
         final String loggerName = "loggerName";
         new Expectations() {
@@ -89,13 +89,13 @@ public class LoggingConfigAPITest {
     }
 
     @Test
-    public void testChangeRootLoggerLevel() throws Exception {
+    public void testChangeRootLoggerLevel() {
         loggingConfigAPI.changeRootLoggerLevel("tenantIdParam", "userTenant",new JSONObject());
     }
 
 
     @Test
-    public void testGetAllLoggerLevels(@Mocked final Level level, @Mocked final DefaultConfiguration configuration) throws Exception {
+    public void testGetAllLoggerLevels(@Mocked final Level level, @Mocked final DefaultConfiguration configuration)  {
         final String loggerName = "loggerName";
         new Expectations() {
             {

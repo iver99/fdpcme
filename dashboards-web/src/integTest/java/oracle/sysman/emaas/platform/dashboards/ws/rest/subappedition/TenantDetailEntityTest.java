@@ -18,12 +18,12 @@ public class TenantDetailEntityTest {
     TenantDetailEntity tenantDetailEntity;
 
     @BeforeClass
-    public  void setUp() throws Exception{
+    public  void setUp() {
         tenantDetailEntity = new TenantDetailEntity();
     }
 
     @Test
-    public void testGetName() throws Exception {
+    public void testGetName() {
         Assert.assertNull(tenantDetailEntity.getName());
 
         tenantDetailEntity.setName("name");
@@ -34,7 +34,7 @@ public class TenantDetailEntityTest {
     }
 
     @Test
-    public void testGetServices(@Mocked List<ServiceEntity> serviceEntityList) throws Exception {
+    public void testGetServices(@Mocked List<ServiceEntity> serviceEntityList) {
         Assert.assertNull(tenantDetailEntity.getServices());
 
         tenantDetailEntity.setServices(serviceEntityList);
@@ -45,7 +45,7 @@ public class TenantDetailEntityTest {
     }
 
     @Test
-    public void testGetStatus() throws Exception {
+    public void testGetStatus() {
         Assert.assertNull(tenantDetailEntity.getStatus());
 
         tenantDetailEntity.setStatus("status");
@@ -56,7 +56,7 @@ public class TenantDetailEntityTest {
     }
 
     @Test
-    public void testGetTenantId() throws Exception {
+    public void testGetTenantId() {
         Assert.assertNull(tenantDetailEntity.getTenantId());
 
         tenantDetailEntity.setTenantId("tenantId");

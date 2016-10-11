@@ -6,9 +6,9 @@
     <body>
         <div data-testapiversion="1.7.5" data-bind="attr: {id: 'dateTimePicker_' + randomId}" style="display: table">
             <label for="dropdown" data-bind="attr: {id: 'dropdownLabel_'+randomId}" style="font-weight: bold; font-size: 14px; vertical-align: middle; padding-right: 5px;" data-bind="text: timeRangeMsg, style: {display: hideMainLabel}"></label>
-            <span class="oj-select-choice" tabindex="0"  style="width: auto; display: inline-block" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime"> 
+            <span class="oj-select-choice"  style="width: auto; display: inline-block" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime"> 
                 <span class="oj-select-chosen" style="padding-right: 24px;" data-bind="html: dateTimeInfo"></span>
-                <span class="time-filter-indicator fa-icon-font" tabindex ="0" 
+                <span class="time-filter-indicator fa-icon-font" 
                   data-bind="event: {mouseover: showTimeFilterInfo, mouseout: hideTimeFilterInfo, 
                               keypress: function(data, event) {event.stopPropagation(); if(isEnterPressed(data, event)) {toggleTimeFilterInfo();}}},
                               click: toggleTimeFilterInfo, clickBubble: false,
@@ -58,11 +58,11 @@
                         </span>
                         <div style="display:inline-block;">
                             <div class="chosenDate">
-                                <input data-bind="attr: {id: 'inputStartDate_'+randomId, 'aria-label': startDateLabel}, ojComponent: {component: 'ojInputText', value: startDate, placeholder: 'mm/dd/yyyy', rootAttributes:{style : 'width: 70px;'}, optionChange: function(event, data){changeDate(event, data, 1)}}, click: focusOnStartDate, hasFocus: startDateFocus"/>
+                                <input id="chosen-date-1" data-bind="attr: {id: 'inputStartDate_'+randomId, 'aria-label': startDateLabel}, ojComponent: {component: 'ojInputText', value: startDate, placeholder: 'mm/dd/yyyy', rootAttributes:{style : 'width: 70px;'}, optionChange: function(event, data){changeDate(event, data, 1)}}, click: focusOnStartDate, hasFocus: startDateFocus"/>
                             </div>
 
                             <div class="chosenTime" data-bind="attr: {id: 'divStartTime_'+randomId}, click: focusOnStartTime, visible: !hideTimeSelection()">
-                                <input data-bind="attr:{id: 'inputStartTime_'+randomId, 'aria-label': startTimeLabel}, ojComponent:{component: 'ojInputTime', value: startTime, timePicker:{timeIncrement: '00:10:00:00'}, optionChange: changeStartTime, displayOptions: {'messages': 'none'}}, hasFocus: startTimeFocus"/>
+                                <input id="chosen-time-1" data-bind="attr:{id: 'inputStartTime_'+randomId, 'aria-label': startTimeLabel}, ojComponent:{component: 'ojInputTime', value: startTime, timePicker:{timeIncrement: '00:10:00:00'}, optionChange: changeStartTime, displayOptions: {'messages': 'none'}}, hasFocus: startTimeFocus"/>
                             </div>
 
                             <div class="to">
@@ -70,11 +70,11 @@
                             </div>
 
                             <div class="chosenDate">
-                                <input data-bind="attr: {id: 'inputEndDate_'+randomId, 'aria-label': endDateLabel}, ojComponent: {component: 'ojInputText', value: endDate, placeholder: 'mm/dd/yyyy', rootAttributes: {style : 'width: 70px;'}, optionChange: function(event, data){changeDate(event, data, 2)}}, click: focusOnEndDate, hasFocus: endDateFocus"/>
+                                <input id="chosen-date-2" data-bind="attr: {id: 'inputEndDate_'+randomId, 'aria-label': endDateLabel}, ojComponent: {component: 'ojInputText', value: endDate, placeholder: 'mm/dd/yyyy', rootAttributes: {style : 'width: 70px;'}, optionChange: function(event, data){changeDate(event, data, 2)}}, click: focusOnEndDate, hasFocus: endDateFocus"/>
                             </div>
 
                             <div class="chosenTime" data-bind="attr: {id: 'divEndTime_'+randomId}, click: focusOnEndTime, visible: !hideTimeSelection()">
-                                <input data-bind="attr:{id: 'inputEndTime_'+randomId, 'aria-label': endTimeLabel}, ojComponent:{component: 'ojInputTime', value: endTime, timePicker:{timeIncrement: '00:10:00:00'}, optionChange: changeEndTime, displayOptions: {'messages': 'none'}}, hasFocus: endTimeFocus"/>
+                                <input id="chosen-time-2" data-bind="attr:{id: 'inputEndTime_'+randomId, 'aria-label': endTimeLabel}, ojComponent:{component: 'ojInputTime', value: endTime, timePicker:{timeIncrement: '00:10:00:00'}, optionChange: changeEndTime, displayOptions: {'messages': 'none'}}, hasFocus: endTimeFocus"/>
                             </div>
                         </div>
 
@@ -98,9 +98,9 @@
                     
                     <!-- Apply & Cancel button -->
                     <div class="buttons">
-                        <button data-bind="click: applyClick, ojComponent:{component: 'ojButton', label: applyButton, disabled: applyButtonDisable}, attr: {id: 'applyButton_'+randomId}">
+                        <button id="apply-button" data-bind="click: applyClick, ojComponent:{component: 'ojButton', label: applyButton, disabled: applyButtonDisable}, attr: {id: 'applyButton_'+randomId}">
                         </button>
-                        <button data-bind="click: cancelClick, ojComponent:{component: 'ojButton', label: cancelButton}, attr: {id: 'cancelButton_'+randomId}"> 
+                        <button id="cancel-button" data-bind="click: cancelClick, ojComponent:{component: 'ojButton', label: cancelButton}, attr: {id: 'cancelButton_'+randomId}"> 
                         </button>
                     </div>
                     <!-- ko if: showErrorMsg -->

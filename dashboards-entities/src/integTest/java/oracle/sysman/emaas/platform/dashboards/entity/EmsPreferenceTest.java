@@ -4,44 +4,29 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
 
-/**
- * Created by Troy on 2016/1/19.
- */
+
 @Test(groups = {"s1"})
 public class EmsPreferenceTest {
 
     private EmsPreference emsPreference = new EmsPreference("elephant","elephant","elephant");
 
     @Test
-    public void testGetPrefKey() throws Exception {
+    public void testGetPrefKey() {
         emsPreference.setPrefKey("elephant");
         assertEquals(emsPreference.getPrefKey(), "elephant");
     }
 
     @Test
-    public void testGetPrefValue() throws Exception {
+    public void testGetPrefValue() {
         emsPreference = new EmsPreference();
         emsPreference.setPrefValue("elephant");
         assertEquals(emsPreference.getPrefValue(),"elephant");
     }
 
     @Test
-    public void testGetUserName() throws Exception {
+    public void testGetUserName() {
         emsPreference.setUserName("elephant");
         assertEquals(emsPreference.getUserName(),"elephant");
     }
 
-    @Test
-    public void testSetPrefKey() throws Exception {
-    }
-
-    @Test
-    public void testSetPrefValue() throws Exception {
-
-    }
-
-    @Test
-    public void testSetUserName() throws Exception {
-
-    }
 }

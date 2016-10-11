@@ -15,10 +15,10 @@ define(['dfutil', 'ojs/ojcore', 'jquery', 'knockout', 'ojs/ojpagingcontrol', 'oj
     this.dataWindow = [];
     this.showPagingObservable = ko.observable(false);
     this.setPageSize(10); // Default the page size to 10
-    this.Init();  
+    this.Init();
 };
 
-// Subclass from oj.PagingDataSource 
+// Subclass from oj.PagingDataSource
 oj.Object.createSubclass(DashboardPaging, oj.DataSource, "DashboardPaging");
 
 DashboardPaging.prototype.Init = function()
@@ -39,17 +39,21 @@ DashboardPaging.prototype._getSize = function() {
 DashboardPaging.prototype._refreshDataWindow = function() {
     // Reinit the array
     var _isShow = this.showPagingObservable();
-    if (_isShow !== true && this.pageSize < this.totalSize()) this.showPagingObservable(true); //show paging
-    if (_isShow === true && this.pageSize >= this.totalSize()) this.showPagingObservable(false); //show paging
-    //console.log("[DashboardPaging] show paging? " + this.showPagingObservable());
-    
-    this.dataWindow = new Array(this._getSize());
-    
+    if (_isShow !== true && this.pageSize < this.totalSize()) {
+        this.showPagingObservable(true);
+    }//show paging
+    if (_isShow === true && this.pageSize >= this.totalSize()) {
+        this.showPagingObservable(false);
+    }//show paging
+
+    this.dataWindow = [];
+    this.dataWindow.length = this._getSize();
+
     var self = this;
     if (this._getSize() === 0 && this.collection.length === 0)
     {
         return self.__getPromise(function(resolve, reject) {
-            self._refreshObservableDataWindow();  
+            self._refreshObservableDataWindow();
             resolve(self.dataWindow);
         });
     }
@@ -59,8 +63,8 @@ DashboardPaging.prototype._refreshDataWindow = function() {
             self.dataWindow[i] = array[i];
         }
         // Update the observable array
-        self._refreshObservableDataWindow();       
-    });        
+        self._refreshObservableDataWindow();
+    });
 };
 
 DashboardPaging.prototype.IterativeAt = function (start, end) {
@@ -70,7 +74,9 @@ DashboardPaging.prototype.IterativeAt = function (start, end) {
         var doTask = function(index) {
                         return self.__getPromise(function(resolve, reject) {
                             self.collection.at(index, null).then(function(model) {
-                                if (model) array.push(model);
+                                if (model) {
+                                    array.push(model);
+                                }
                                 if (model.isDsbAttrsHtmlDecoded !== true)
                                 {
                                     var __dname = $("<div/>").html(model.get('name')).text();
@@ -141,9 +147,9 @@ DashboardPaging.prototype.getPage = function()
 
 DashboardPaging.prototype.setPage = function(v, opts)
 {
-  var self = this, options = opts || {}, value = parseInt(v, 10), 
+  var self = this, options = opts || {}, value = parseInt(v, 10),
           _successCallback = self.setPageCallback || options['success'], _errorCallbakc = options['error'];
-  try 
+  try
   {
     DashboardPaging.superclass.handleEvent.call(this, oj.PagingModel.EventType['BEFOREPAGE'], {'page' : value, 'previousPage' : this._page});
   }
@@ -151,11 +157,9 @@ DashboardPaging.prototype.setPage = function(v, opts)
   {
     return Promise.reject(null);
   }
-  //this.pageSize = options['pageSize'] != null ? options['pageSize'] : this.pageSize;
-  //options['startIndex'] = value * this.pageSize;
   var previousPage = this._page;
   this._page = value;
-  if (this._page >= 0 && this._page === previousPage) 
+  if (this._page >= 0 && this._page === previousPage)
   {
       var _event = {data: self.dataWindow, startIndex: self.startIndex()};
       if (options['silent'] !== true)
@@ -165,7 +169,7 @@ DashboardPaging.prototype.setPage = function(v, opts)
       return Promise.resolve(null);
   }
   this._startIndex = value * this.pageSize;
-  
+
   return new Promise(function(resolve, reject)
   {
     $("#loading").show();
@@ -189,7 +193,7 @@ DashboardPaging.prototype.setPage = function(v, opts)
                 {
                    _successCallback(jqXHR, textStatus, errorThrown);
                 }
-                reject(null);  
+                reject(null);
             }
         } );
   });
@@ -203,18 +207,17 @@ DashboardPaging.prototype.getStartItemIndex = function()
 DashboardPaging.prototype.getEndItemIndex = function()
 {
   var self = this;
-  return self._startIndex + self.dataWindow.length - 1;//this._endIndex;
+  return self._startIndex + self.dataWindow.length - 1;
 };
 
 DashboardPaging.prototype.getPageCount = function()
 {
   var totalSize = this.totalSize();
-  return totalSize == -1 ? -1 : Math.ceil(totalSize / this.pageSize);
+  return totalSize === -1 ? -1 : Math.ceil(totalSize / this.pageSize);
 };
 
 DashboardPaging.prototype.refreshModel = function(modelId, options)
 {
-//    var opts = options || {};
     var self = this;
     self.collection.get(modelId).then(
                 function (model){
@@ -230,7 +233,6 @@ DashboardPaging.prototype.create = function(attributes, options)
     var opts = options || {};
     var self = this, _m = null;
     try {
-       // var _url =  this.collection['url'];
        if ($.isFunction(this.collection['model'])) {
             _m = new this.collection['model'](undefined, {collection: this.collection});
         }
@@ -241,21 +243,9 @@ DashboardPaging.prototype.create = function(attributes, options)
                         'forceNew': true,
                         success: function (_model, _resp, _options) {
                             opts['success'](_model, _resp, _options);
-                            /* //no need for refresh, nav directly
-                            self._fetch( { 
-                                'contentType': 'application/json',
-                                success: function() {
-                                    if ($.isFunction(opts['success']))
-                                    {
-                                        opts['success'](_model, _resp, _options);
-                                    }
-                                }, 
-                                error: opts['error']});*/
-                            //model.openDashboardPage();
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             self._processError(opts, jqXHR, textStatus, errorThrown);
-                            //console.log('Error in Create: ' + textStatus);
                         }});
     }
     catch (e) {
@@ -274,33 +264,26 @@ DashboardPaging.prototype.remove = function(model, options)
     }
     dfu.ajaxWithRetry(url + model.get('id'), {
        type: 'DELETE',
-       headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
+       headers: dfu.getDashboardsRequestHeader(),
        success: function(result) {
           // Do something with the result
           self.collection.remove(model);
           self._refreshDataWindow().then(function() { self._processSuccess(options); });
-          /*
-          if (self.pageSize <= self.totalSize())
-          {
-              self._refreshDataWindow().then(function() { self._processSuccess(options, "remove"); });
-          }
-          else {
-              self._refreshDataWindow().then(function() { self._processSuccess(options); });
-          }*/
         },
         error: function(jqXHR, textStatus, errorThrown) {
             self._processError(options, jqXHR, textStatus, errorThrown);
-            //console.log('Error in Create: ' + textStatus);
         }
     });
-    
+
 };
 
 
 
 DashboardPaging.prototype.fetch = function(options)
 {
-    if (!this.collection) return;
+    if (!this.collection) {
+        return;
+    }
     var self = this, opts = options || {}, _forceFetch = options['forceFetch'];
     if (opts['startIndex'] !== undefined) {
          this.current = opts['startIndex'];
@@ -309,23 +292,18 @@ DashboardPaging.prototype.fetch = function(options)
         this.pageSize = opts['pageSize'];
     }
     var _lastFetchSize = self.collection.lastFetchSize, _offset = self.collection.offset;
-    if (_forceFetch !== true)
+    if (_forceFetch !== true && (this.current >= _offset && (this.pageSize + this.current) <= (_offset + _lastFetchSize)))
     {
-        if (this.current >= _offset && (this.pageSize + this.current) <= (_offset + _lastFetchSize))
-        {
-            //console.log("[DashboardPaging] resolve fetch");
-            return this._refreshDataWindow().then(function() {
+        return this._refreshDataWindow().then(function() {
                               self._processSuccess(opts);
                           });
-        }
     }
-    //console.log("[DashboardPaging] called fetch");
     self._fetch(options);
 };
 
 DashboardPaging.prototype._fetch = function(options)
 {
-    
+
     var self = this, opts = options || {};
     // Call collection fetch, and refresh the window on success
     // Allow for the fact that this collection might not be backed by a rest service
@@ -338,7 +316,6 @@ DashboardPaging.prototype._fetch = function(options)
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 self._processError(options, jqXHR, textStatus, errorThrown);
-            //console.log('Error in Create: ' + textStatus);
             }
         });
     }
@@ -348,7 +325,7 @@ DashboardPaging.prototype._fetch = function(options)
             self._processError(opts, null, null, _e);
         });
     }
-    
+
 };
 
 DashboardPaging.prototype._processError = function(opts, jqXHR, textStatus, errorThrown) {
@@ -373,13 +350,10 @@ DashboardPaging.prototype._processSuccess = function(opts, eventType, event) {
     {
         this.handleEvent(eventType || "sync", _event);
     }
-    
+
     if (options['success']) {
         options['success']();
     }
-/*    else if (this.fetchCallback) {
-        this.fetchCallback();
-    }*/
 };
 
 DashboardPaging.prototype.handleEvent = function(eventType, event)
@@ -468,22 +442,24 @@ DashboardPaging.prototype.getModelFromWindow = function(id)
     {
         for (_i= 0 ; _i < w.length; _i++)
         {
-            if (w[_i].id === id) return w[_i];
+            if (w[_i].id === id) {
+                return w[_i];
+            }
         }
     }
-        
+
     return null;
 };
 
 /**
- * Returns the confidence for the totalSize value. 
- * @return {string} "actual" if the totalSize is the time of the fetch is an exact number 
- *                  "estimate" if the totalSize is an estimate 
- *                  "atLeast" if the totalSize is at least a certain number 
+ * Returns the confidence for the totalSize value.
+ * @return {string} "actual" if the totalSize is the time of the fetch is an exact number
+ *                  "estimate" if the totalSize is an estimate
+ *                  "atLeast" if the totalSize is at least a certain number
  *                  "unknown" if the totalSize is unknown
  */
 DashboardPaging.prototype.totalSizeConfidence = function()
-{ 
+{
   return "actual";
 };
 

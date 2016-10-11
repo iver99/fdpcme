@@ -15,19 +15,19 @@ public class LoggingItemTest {
 
     LoggingItem loggingItem ;
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         LoggerConfig loggerConfig = new LoggerConfig();
         Long timeStamp = 122L;
         loggingItem = new LoggingItem( loggerConfig,timeStamp );
     }
 
     @AfterMethod
-    public void tearDown() throws Exception {
-
+    public void tearDown() {
+    	// do nothing
     }
 
     @Test
-    public void testGetCurrentLoggingLevel() throws Exception {
+    public void testGetCurrentLoggingLevel()  {
         loggingItem.setCurrentLoggingLevel(null);
         Assert.assertNull(loggingItem.getCurrentLoggingLevel());
         loggingItem.setCurrentLoggingLevel("level");
@@ -35,7 +35,7 @@ public class LoggingItemTest {
     }
 
     @Test
-    public void testGetLastUpdatedEpoch() throws Exception {
+    public void testGetLastUpdatedEpoch()  {
         loggingItem.setLastUpdatedEpoch(null);
         Assert.assertNull(loggingItem.getLastUpdatedEpoch());
         Long myTimeStamp = 1234L;
@@ -44,7 +44,7 @@ public class LoggingItemTest {
     }
 
     @Test
-    public void testGetLoggerName() throws Exception {
+    public void testGetLoggerName()  {
         loggingItem.setLoggerName(null);
         Assert.assertNull(loggingItem.getLoggerName());
         loggingItem.setLoggerName("loggerName");

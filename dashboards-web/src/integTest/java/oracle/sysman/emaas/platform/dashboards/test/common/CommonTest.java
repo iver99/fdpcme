@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.test.common;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,6 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
@@ -27,97 +30,11 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.config.LogConfig;
+
 public class CommonTest
 {
+	private static final Logger LOGGER = LogManager.getLogger(CommonTest.class);
 
-	private  String HOSTNAME;
-	private  String portno;
-	private  String serveruri;
-	private  String authToken;
-	private  String tenantid;
-	private  String remoteuser;
-	private  String tenantid_2;
-	private static final String DOMAIN = "www.";
-	private static final String DSB_DEPLOY_URL = "/instances?servicename=Dashboard-API";
-	private static final String AUTHORIZATION = "Authorization";
-	private static final String AUTH_STRING = "Basic d2VibG9naWM6d2VsY29tZTE=";
-
-
-
-	/**
-	 * Sets up RESTAssured defaults before executing test cases Enables logging Reading the inputs from the testenv.properties
-	 * file
-	 * @throws URISyntaxException 
-	 */
-	
-	/*public static void main(String ar[]) throws Exception
-	{
-		String  name = "http://slc08twq.us.oracle.com:7004/registry/servicemanager/registry/v1";
-		name = name + DSB_DEPLOY_URL;
-		String data = getData(name);		
-		List<String>  url=  getDeploymentUrl(data);
-		System.out.println(url.get(0));
-		
-		System.out.println(getDomainName(url.get(0)));
-		System.out.println(getPort(url.get(0)));
-	}*/
-	
-
-	public static String getDomainName(String url) throws URISyntaxException
-	{
-		URI uri = new URI(url);
-		String domain = uri.getHost();
-		return domain.startsWith(DOMAIN) ? domain.substring(4) : domain;
-	}
-
-	public static int getPort(String url) throws URISyntaxException
-	{
-		URI uri = new URI(url);
-		int port = uri.getPort();
-		return port;
-	}
-	
-	public CommonTest()
-	{
-		
-		try
-		{
-		String  name = getServiceManagerUrl();
-		name = name + DSB_DEPLOY_URL;
-		String data = getData(name);
-		
-		List<String>  url=   getDeploymentUrl(data);
-		           
-		//HOSTNAME = prop.getProperty("hostname");
-		HOSTNAME= getDomainName(url.get(0));
-	//portno = prop.getProperty("port");
-		portno = getPort(url.get(0))+"";
-	
-		//	authToken = prop.getProperty("authToken");
-		authToken = Utils.getProperty("SAAS_AUTH_TOKEN");
-		//tenantid = prop.getProperty("tenantid");
-		tenantid = Utils.getProperty("TENANT_ID");
-		//tenantid_2 = prop.getProperty("tenantid_2");
-		//remoteuser = prop.getProperty("RemoteUser");
-		remoteuser = Utils.getProperty("SSO_USERNAME");
-		serveruri = "http://" + HOSTNAME + ":" + portno;
-		RestAssured.useRelaxedHTTPSValidation();
-		RestAssured.baseURI = serveruri;
-		RestAssured.basePath = "/emcpdf/api/v1";
-		RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
-		}catch(Exception e){
-			System.out.println("An error occurred while retriving deployment details:"+ e.toString()+" " + e.getCause());			
-		}
-
-	}
-	
-	
-	private static String getServiceManagerUrl()
-	{
-		return  Utils.getProperty("SERVICE_MANAGER_URL");
-	}
-	
-	
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	private static class SchemaDeploymentUrls
 	{
@@ -160,21 +77,25 @@ public class CommonTest
 
 	}
 
+	private static final String DOMAIN = "www.";
+	private static final String DSB_DEPLOY_URL = "/instances?servicename=Dashboard-API";
+	private static final String AUTHORIZATION = "Authorization";
+	private static final String AUTH_STRING = "Basic d2VibG9naWM6d2VsY29tZTE=";
 
 	public static List<String> getDeploymentUrl(String json)
 	{
 		if (json == null || "".equals(json)) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		java.util.HashSet<String> urlSet = new java.util.HashSet<String>();
 
 		try {
 			JsonUtil ju = JsonUtil.buildNormalMapper();
-			
+
 			List<SchemaDeploymentUrls> sdlist = ju.fromJsonToList(json, SchemaDeploymentUrls.class, "items");
 			if (sdlist == null | sdlist.isEmpty()) {
-				return null;
+				return Collections.emptyList();
 			}
 			for (SchemaDeploymentUrls sd : sdlist) {
 				for (String temp : sd.getCanonicalEndpoints()) {
@@ -193,9 +114,9 @@ public class CommonTest
 			}
 		}
 		catch (Exception e) {
-
-		//	logger.error("an error occureed while getting schema name", e);
-			return null;
+			LOGGER.info("context",e);
+			//	LOGGER.error("an error occureed while getting schema name", e);
+			return Collections.emptyList();
 		}
 		List<String> urls = new ArrayList<String>();
 		urls.addAll(urlSet);
@@ -203,12 +124,81 @@ public class CommonTest
 	}
 
 
-	
-	
+	public static String getDomainName(String url) throws URISyntaxException
+	{
+		URI uri = new URI(url);
+		String domain = uri.getHost();
+		return domain.startsWith(DOMAIN) ? domain.substring(4) : domain;
+	}
+
+	public static int getPort(String url) throws URISyntaxException
+	{
+		URI uri = new URI(url);
+		int port = uri.getPort();
+		return port;
+	}
+
+	private static String getServiceManagerUrl()
+	{
+		return Utils.getProperty("SERVICE_MANAGER_URL");
+	}
+
+	private String HOSTNAME;
+	private String portno;
+
+	private String serveruri;
+
+	private String authToken;
+
+	private String tenantid;
+
+	private String remoteuser;
+
+	private String tenantid_2;
+
+	public CommonTest()
+	{
+
+		try {
+			String name = CommonTest.getServiceManagerUrl();
+			name = name + DSB_DEPLOY_URL;
+			String data = getData(name);
+
+			List<String> url = CommonTest.getDeploymentUrl(data);
+
+			//HOSTNAME = prop.getProperty("hostname");
+			HOSTNAME = CommonTest.getDomainName(url.get(0));
+			//portno = prop.getProperty("port");
+			portno = CommonTest.getPort(url.get(0)) + "";
+
+			//	authToken = prop.getProperty("authToken");
+			authToken = Utils.getProperty("SAAS_AUTH_TOKEN");
+			//tenantid = prop.getProperty("tenantid");
+			tenantid = Utils.getProperty("TENANT_ID");
+			//tenantid_2 = prop.getProperty("tenantid_2");
+			//remoteuser = prop.getProperty("RemoteUser");
+			remoteuser = Utils.getProperty("SSO_USERNAME");
+			serveruri = "http://" + HOSTNAME + ":" + portno;
+			RestAssured.useRelaxedHTTPSValidation();
+			RestAssured.baseURI = serveruri;
+			RestAssured.basePath = "/emcpdf/api/v1";
+			RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
+		}
+		catch (Exception e) {
+			LOGGER.info("context",e);
+		}
+
+	}
+
+	public String getAuthToken()
+	{
+		return authToken;
+	}
+
 	public String getData(String url)
 	{
-		
-		 if (url==null || url.trim().equals("")) {
+
+		if (url == null || ("").equals(url.trim())) {
 			return null;
 		}
 
@@ -228,8 +218,9 @@ public class CommonTest
 			}
 		}
 		catch (IOException e) {
-			System.out.println("an error occureed while getting details by url" + " ::" + url + "  " + e.toString());
-		} finally {
+			LOGGER.info("context",e);
+		}
+		finally {
 			try {
 				if (in != null) {
 					in.close();
@@ -240,15 +231,10 @@ public class CommonTest
 			}
 			catch (IOException ioEx) {
 				//ignore
+				LOGGER.info("context",ioEx);
 			}
 		}
 		return response.toString();
-	}
-
-
-	public String getAuthToken()
-	{
-		return authToken;
 	}
 
 	public String getHOSTNAME()
@@ -276,7 +262,7 @@ public class CommonTest
 		return tenantid;
 	}
 
-	public String getTenantid_2()
+	public String getTenantid2()
 	{
 		return tenantid_2;
 	}

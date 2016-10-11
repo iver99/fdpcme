@@ -16,6 +16,8 @@ package oracle.sysman.emaas.platform.dashboards.core.util;
  */
 public class StringUtil
 {
+	private StringUtil() {
+	  }
 	/**
 	 * Convert a {@code String} array into a comma delimited {@code String}.
 	 * <p>

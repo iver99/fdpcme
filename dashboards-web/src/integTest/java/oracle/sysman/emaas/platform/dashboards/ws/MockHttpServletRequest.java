@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
@@ -31,7 +32,7 @@ import javax.servlet.http.Part;
  */
 public class MockHttpServletRequest implements HttpServletRequest
 {
-	private final HashMap<String, String> headers = new HashMap<>();
+	private final Map<String, String> headers = new HashMap<>();
 
 	/* (non-Javadoc)
 	 * @see javax.servlet.http.HttpServletRequest#authenticate(javax.servlet.http.HttpServletResponse)
@@ -219,7 +220,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	  public Collection<Part> getParts() throws IOException, ServletException
 	  {
 		  // TODO Auto-generated method stub
-		  return null;
+		  return Collections.emptySet();
 	  }
 
 	@Override
@@ -432,19 +433,19 @@ public class MockHttpServletRequest implements HttpServletRequest
 	   @Override
 	public void removeAttribute(String s)
 	{
-
+		// do nothing
 	}
 
 	   @Override
 	public void setAttribute(String s, Object o)
 	{
-
-	}
+		// do nothing
+		}
 
 	   @Override
 	public void setCharacterEncoding(String s) throws UnsupportedEncodingException
 	{
-
+		// do nothing
 	}
 
 	   public void setHeader(String key, String value)
