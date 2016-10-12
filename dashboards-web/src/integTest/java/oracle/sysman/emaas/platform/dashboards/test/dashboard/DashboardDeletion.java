@@ -20,6 +20,7 @@ public class DashboardDeletion {
 	static String remoteuser;
 	
 	static String dashboardId = "";
+	
 	static String dashboardSetId = "";
 	
 	private static final Logger LOGGER = LogManager.getLogger(DashboardDeletion.class);
@@ -28,10 +29,10 @@ public class DashboardDeletion {
 	public static void setUp()
 	{
 		CommonTest ct = new CommonTest();
-		HOSTNAME = "den00ytq.us.oracle.com";//ct.getHOSTNAME();
-		authToken = "Basic RU0wMV9FTUNTX0dMT0JBTF9JTlRFUl9TRVJWSUNFX0FQUElEOkN6czBwd2FkM3ZrX3Vo=";//ct.getAuthToken();
-		tenantid = "emaastesttenant1";ct.getTenantid();
-		remoteuser = "emcsadmin";//ct.getRemoteUser();
+		HOSTNAME = ct.getHOSTNAME(); //"den00ytq.us.oracle.com";//
+		authToken = ct.getAuthToken();//"Basic RU0wMV9FTUNTX0dMT0JBTF9JTlRFUl9TRVJWSUNFX0FQUElEOkN6czBwd2FkM3ZrX3Vo=";//
+		tenantid = ct.getTenantid(); //"emaastesttenant1";
+		remoteuser = ct.getRemoteUser();// "emcsadmin";//
 	}
 	
 	@Test(dependsOnMethods = { "createDashboard"})
@@ -119,6 +120,7 @@ public class DashboardDeletion {
 						"Authorization", authToken).body(jsonString2).when().post("/dashboards");
 		
 		Assert.assertTrue(res3.getStatusCode() == 201);
+		dashboardSetId = res3.jsonPath().getString("id");
 		
 		// insert data to ems_preference
 		String jsonString4 = "{\"value\":\"test\"}";
