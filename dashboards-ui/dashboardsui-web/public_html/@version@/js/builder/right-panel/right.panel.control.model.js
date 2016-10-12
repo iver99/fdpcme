@@ -6,7 +6,7 @@ define(['knockout',
 'uiutil'
 ],
 function (ko, $, oj, dfu, mbu, uiutil) {
-    function rightPanelControl($b) {
+    function rightPanelControl($b,selectedContent) {
         var self = this;
         self.$b = ko.observable($b);
         self.normalMode = new Builder.NormalEditorMode();
@@ -95,8 +95,12 @@ function (ko, $, oj, dfu, mbu, uiutil) {
 
         self.switchEditPanelContent = function (data, event) {
             if ($(event.currentTarget).hasClass('edit-dsb-link')) {
-                self.editPanelContent("edit");
+                self.editPanelContent("editdashboard");
                 self.expandDBEditor("singleDashboard-edit", true);
+            } else if($(event.currentTarget).hasClass('edit-content-link')){
+                self.editPanelContent("editcontent");
+                $('.dbd-right-panel-editcontent-title').ojCollapsible("option", "expanded", true);
+                selectedContent && selectedContent(ko.dataFor(event.currentTarget));
             } else if ($(event.currentTarget).hasClass('edit-dsbset-link')) {
                 self.editPanelContent("editset");
                 self.expandDBEditor("dashboardset-edit", true);
@@ -171,6 +175,21 @@ function (ko, $, oj, dfu, mbu, uiutil) {
         $('.dbd-right-panel-editdashboard-set-share').on({
             "ojexpand": function (event, ui) {
                 $('.dbd-right-panel-editdashboard-set-general').ojCollapsible("option", "expanded", false);
+            }
+        });
+        
+        $('.dbd-right-panel-editcontent-title').ojCollapsible({"expanded": false});
+        $('.dbd-right-panel-editcontent-filters').ojCollapsible({"expanded": false});
+        
+        $('.dbd-right-panel-editcontent-filters').on({
+            "ojexpand": function (event, ui) {
+                $('.dbd-right-panel-editcontent-title').ojCollapsible("option", "expanded", false);
+            }
+        });
+        
+        $('.dbd-right-panel-editcontent-title').on({
+            "ojexpand": function (event, ui) {
+                $('.dbd-right-panel-editcontent-filters').ojCollapsible("option", "expanded", false);
             }
         });
 

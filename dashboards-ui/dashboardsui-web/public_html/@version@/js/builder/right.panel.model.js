@@ -15,11 +15,12 @@ define(['knockout',
         'builder/right-panel/right.panel.filter',
         'builder/right-panel/right.panel.widget',
         'builder/right-panel/right.panel.edit',
+        'builder/right-panel/right.panel.edit.content',
         'jqueryui',
         'builder/builder.core',
         'builder/widget/widget.model'
     ],
-    function(ko, $, dfu, mbu, uiutil, oj, ed, ssu, rpc, rpf, rpw,rpe) {
+    function(ko, $, dfu, mbu, uiutil, oj, ed, ssu, rpc, rpf, rpw, rpe, rpec) {
         function ResizableView($b) {
             var self = this;
 
@@ -83,16 +84,16 @@ define(['knockout',
             self.sortedTiles = ko.computed(function(){
 //                //add for detecting dashboard tabs switching in set
                 self.editDashboardDialogModel();
-                var names = [];
+                var tiles = [];
                 if (self.dashboard.tiles && self.dashboard.tiles()) {
                     for (var i = 0; i < self.dashboard.tiles().length; i++) {
-                        names.push({'WIDGET_NAME': ko.observable(self.dashboard.tiles()[i].WIDGET_NAME())});
+                        tiles.push(self.dashboard.tiles()[i]);
                     }
-                    names.sort(function(tile1, tile2) {
+                    tiles.sort(function(tile1, tile2) {
                         return tile1.WIDGET_NAME() > tile2.WIDGET_NAME() ? 1 : (tile1.WIDGET_NAME() < tile2.WIDGET_NAME() ? -1 : 0);
-                    })
+                    });
                 }
-                return names;
+                return tiles;
 //                return self.dashboard.tiles && self.dashboard.tiles() ? self.dashboard.tiles().sort(function (tileA, tileB) {
 //                    return tileA.WIDGET_NAME() > tileB.WIDGET_NAME()?1:(tileA.WIDGET_NAME() < tileB.WIDGET_NAME()?-1:0);
 //                }):[];
@@ -101,10 +102,12 @@ define(['knockout',
             $b.registerObject(this, 'RightPanelModel');
 
             self.$b = $b;
-            self.rightPanelControl=new rpc.rightPanelControl(self.$b);
+            self.selectedContent = ko.observable();
+            self.rightPanelControl=new rpc.rightPanelControl(self.$b,self.selectedContent);
             self.rightPanelFilter = new rpf.RightPanelFilterModel(self.$b);
             self.rightPanelWidget= new rpw.rightPanelWidget(self.$b);
             self.rightPanelEdit=new rpe.rightPanelEditModel(self.$b,self.dashboardsetToolBarModel);
+            self.rightPanelEditContent=new rpec.rightPanelEditContentModel(self.$b,self.dashboardsetToolBarModel,self.selectedContent);
             self.selectedDashboard = ko.observable(self.dashboard);
             self.normalMode = new Builder.NormalEditorMode();
             self.tabletMode = new Builder.TabletEditorMode();
@@ -151,6 +154,9 @@ define(['knockout',
                         self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
                     } else {
                         self.rightPanelControl.completelyHidden(false);
+                        if("editcontent" === self.rightPanelControl.editPanelContent()){
+                            self.rightPanelControl.editPanelContent("settings");
+                        }
                         if (self.emptyDashboard) {
                             self.rightPanelControl.showRightPanel(true);
                         } else {

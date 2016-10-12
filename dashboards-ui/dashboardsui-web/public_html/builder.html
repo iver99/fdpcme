@@ -399,14 +399,6 @@
                                                         data-bind="attr: {'id': 'tileMenu' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
                                                         event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}},
                                                         ojComponent: {component: 'ojMenu', select: $root.menuItemSelect, open: $root.widgetMenuOpen, openOptions: {position: {'my': 'left center', 'at': 'right center'} } }">
-                                                        <li data-option="showhide-title">
-                                                            <a href="#" data-bind="attr: {'data-show-hide-title': hideTitle() === 'true' ? 'show' : 'hide'}">
-                                                                <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <i class="fa-icon-font fa-icon-font-16" data-bind="css: hideTitle() === 'true' ? 'dbd-icon-eye':'dbd-icon-eye-slash'"></i>
-                                                                </span>
-                                                                <span data-bind="text: hideTitle() === 'true' ? getNlsString('DBS_BUILDER_TILE_SHOW'):getNlsString('DBS_BUILDER_TILE_HIDE')"></span>
-                                                            </a>
-                                                        </li>  
                                                         <!-- EMCPDF-1131: this should be changed in next sprint
                                                         <li data-option="resize">
                                                             <a href="#">
@@ -492,14 +484,6 @@
                                                         </li>
                                                         -->
                                                         <li></li>
-                                                        <li data-option="remove" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': editDisabled()}">
-                                                            <a href="#">
-                                                                <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <i class="fa-icon-font fa-icon-font-16 dbd-icon-remove"></i>
-                                                                </span>
-                                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REMOVE')"></span>
-                                                            </a>
-                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -883,7 +867,7 @@
                         <!-- /ko -->
 
                         <!-- ko if: $data.editDashboardDialogModel -->
-                        <div class="dbd-right-panel-editdashboard" data-bind="visible:rightPanelControl.rightPanelIcon()=='pencil' && $data.rightPanelControl.editPanelContent()=='edit'">
+                        <div class="dbd-right-panel-editdashboard" data-bind="visible:rightPanelControl.rightPanelIcon()=='pencil' && $data.rightPanelControl.editPanelContent()=='editdashboard'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" >
                                 <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: rightPanelControl.switchEditPanelContent"style="color:#0572ce"></a>
                                 <span data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_DSB_TITLE')"></span>
@@ -1074,6 +1058,142 @@
                             </div>
                         </div>
                         <!-- /ko -->
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <div class="dbd-right-panel-editdashboard" data-bind="visible:rightPanelControl.rightPanelIcon()=='pencil' && $data.rightPanelControl.editPanelContent()=='editcontent'">
+                            <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" >
+                                <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: rightPanelControl.switchEditPanelContent"style="color:#0572ce"></a>
+                                <span data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_CONTENT_TITLE')"></span>
+                            </div>
+                            <div class="dbd-right-panel-editdashboard-container fit-size" style="padding-left:0; padding-right:0;overflow-y: scroll">
+                                <div class="dbd-right-panel-editcontent-title" data-bind="ojComponent: {component: 'ojCollapsible'}"  style="margin-top: 10px;">
+                                    <span class="dbd-right-panel-editdashboard-innertitle" data-bind="text: getNlsString('DBS_BUILDER_EDIT_CONTENT_TITLE')"></span>
+                                    <div class="cDsbDialog oj-form-layout">
+                                        <div class="oj-form">
+                                            <div class="oj-flex">
+                                                <div class="oj-flex-item">
+                                                    <div data-bind="ojComponent: {component: 'ojCheckboxset', value: rightPanelEditContent.hideTitle}" >
+                                                        <span class="oj-choice-row">
+                                                            <input id="hideTitle" type="checkbox" value="hideTitle">
+                                                            <label for="hideTitle" data-bind="text: getNlsString('DBS_BUILDER_EDIT_CONTENT_TITLE_HIDE')"></label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="oj-flex" data-bind="style:{ display: rightPanelEditContent.hasLinkedToTitle()?'none':'block'}">
+                                                <div class="oj-flex-item" style="overflow: hidden;">
+                                                    <span data-bind="text: getNlsString('DBS_BUILDER_EDIT_CONTENT_ADD_LINK_TO_TITLE')"></span>
+                                                    <!-- ko ifnot:rightPanelEditContent.hasLinkedToTitle() -->
+                                                    <div class="dbd-left-panel-header-search">
+                                                        <div  class="dbd-left-panel-header-search-input">
+                                                            <input class="dashboard-search-input" type="text" name="searchInput"
+                                                                   data-bind="event: {focus: function(){rightPanelEditContent.onContentSearching(true);}, blur: function(){setTimeout(function(){rightPanelEditContent.onContentSearching(false);},100)}, keypress: rightPanelEditContent.searchDashboardInputKeypressed }, ojComponent:{component:'ojInputText', value: rightPanelEditContent.keyword,
+                                                              placeholder: getNlsString('DBS_BUILDER_EDIT_CONTENT_ADD_LINK_TO_TITLE_SEARCH_PLACEHODER_CONTENT'), rootAttributes: {'class': 'dbs-search-box-input'}}
+                                                              ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL'),id:'widget-search-input_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1))) }"/>
+                                                        </div>
+                                                        <div>
+                                                            <button data-bind="attr:{id:'dbd-left-panel-header-search-btn_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click:rightPanelEditContent.searchDashboardClicked,
+                                                        ojComponent: {component: 'ojButton',chroming: 'half', label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons',
+                                                        icons: {start:'left-panel-dbd-search-icon'}}" style="float:right">
+                                                            </button>
+                                                            <button class="oj-button-half-chrome" id="clear-content-search-input" data-bind="attr:{id:'clear-widget-search-input_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: rightPanelEditContent.clearDashboardSearchInputClicked, visible: rightPanelEditContent.clearContentSearch,
+                                                                    ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons',
+                                                                    icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 31px;'}}" style="float:right;margin-bottom:0">
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <button data-bind="disable: !rightPanelEditContent.addToTitleAbled(), css: {'oj-button-primary': rightPanelEditContent.addToTitleAbled()}, attr:{id:'dbd-left-panel-header-add-btn_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click:rightPanelEditContent.addLinkToTitleClicked,
+                                                        ojComponent: {component: 'ojButton',chroming: 'half', label: 'Add'}" style="float:right;margin-top:10px;">
+                                                    </button>
+                                                    <!-- /ko -->
+                                                </div>
+                                                <div>
+                                                    <script type="text/html" id="search-content-li-template">
+                                                        <li data-bind="attr: {id: 'search-dashboard-id-' + $data.id}">
+                                                            <span data-bind="text: $data.name"></span>
+                                                        </li>
+                                                    </script>
+                                                    <div class="search-content-dropdown-list-container" data-bind="style:{ display: rightPanelEditContent.onContentSearching()?'block':'none'}">
+                                                        <ul id="listview" aria-label="list using observable array" style="height: 300px"
+                                                            data-bind="ojComponent: {
+                                                                component: 'ojListView', 
+                                                                data: rightPanelEditContent.dataSource,
+                                                                selectionMode: 'single',
+                                                                optionChange: rightPanelEditContent.logSelected,
+                                                                item: 
+                                                                {
+                                                                    template: 'search-content-li-template'
+                                                                }
+                                                            }">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <!-- ko if:rightPanelEditContent.showSelectedDashboard() -->
+                                                <div class="search-content-display" data-bind="style:{display: rightPanelEditContent.showSelectedDashboard()?'block':'none'}">
+                                                    <img style="width: 250px; height: 200px;" data-bind="attr: {src: rightPanelEditContent.selectedDashboard().screenShotHref}">
+                                                    <p>
+                                                        <label data-bind="title: getNlsString('DBS_HOME_DSB_PAGE_INFO_DESC'), text: getNlsString('DBS_HOME_DSB_PAGE_INFO_DESC')"></label>
+                                                        <span data-bind="text: rightPanelEditContent.selectedDashboard().description"></span>
+                                                    </p>
+                                                    <p>
+                                                        <label data-bind="title: getNlsString('DBS_HOME_DSB_PAGE_INFO_CREATE'), text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CREATE')"></label>
+                                                        <span data-bind="text: rightPanelEditContent.selectedDashboard().owner"></span>
+                                                    </p>
+                                                    <p>
+                                                        <label data-bind="title: getNlsString('DBS_HOME_VIEW_LIST_MODIFIEDDATE')+':', text: getNlsString('DBS_HOME_VIEW_LIST_MODIFIEDDATE')"></label>
+                                                        <span data-bind="text: rightPanelEditContent.selectedDashboard().lastModifiedOn"></span>
+                                                    </p>
+                                                </div>
+                                                <!-- /ko -->
+                                                
+                                            </div>
+                                            <!-- ko if:rightPanelEditContent.hasLinkedToTitle() -->
+                                            <div data-bind="style:{ display: rightPanelEditContent.hasLinkedToTitle()?'block':'none'}" style="overflow: hidden">
+                                                <span data-bind="text: rightPanelEditContent.selectedDashboard().name"></span>
+                                                <button class="oj-button-half-chrome" id="remove-linked-dashboard" data-bind="attr:{id:'clear-widget-search-input_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: rightPanelEditContent.removeLinkToTitleClicked,
+                                                    ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons',
+                                                    icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 31px; margin-bottom: 5px;'}}" style="float:right;">
+                                                </button>
+                                            </div>
+                                            <!-- /ko -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="dbd-right-panel-editcontent-filters" data-bind="ojComponent: {component: 'ojCollapsible'}">
+                                    <span  class="dbd-right-panel-editdashboard-innertitle"  data-bind="text: getNlsString('DSB_BUILDER_EDIT_DASHBOARD_FILTERS')"></span>
+                                    <div class="filter-settings oj-form-layout">
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div>
+                                    <button class="dbd-right-panel-editcontent-remove-content" data-bind="click: rightPanelEditContent.removeContentClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_CONTENT_REMOVE') }"></button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         <div id="dbd-right-panel-editsettings"  class="dbd-right-panel-editsettings"  data-bind="visible:rightPanelControl.rightPanelIcon()=='pencil'&&$data.rightPanelControl.editPanelContent()=='settings'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_SETTINGS_TITLE')"></div>
                             <div id="dbd-edit-settings-container" class="dbd-edit-settings-container">
@@ -1086,7 +1206,7 @@
                                         <!-- ko if:sortedTiles().length > 0 -->
                                             <span class="edit-setting-head">Widgets</span>
                                             <!--ko foreach:sortedTiles-->
-                                                <span class="edit-setting-link" data-bind="text:WIDGET_NAME"></span>
+                                                <span class="edit-setting-link edit-content-link" data-bind="text:WIDGET_NAME(), click: $root.rightPanelControl.switchEditPanelContent"></span>
                                             <!--/ko-->
                                         <!--/ko-->
                                     <!-- /ko -->
@@ -1097,7 +1217,7 @@
                                     <!--ko if: $data.dashboard.tiles().length>0-->
                                     <span class="edit-setting-head">Widgets</span>
                                         <!--ko foreach: sortedTiles -->
-                                        <span class="edit-setting-link"  data-bind="text:WIDGET_NAME"></span>
+                                        <span class="edit-setting-link edit-content-link"  data-bind="text:WIDGET_NAME(), click: $root.rightPanelControl.switchEditPanelContent"></span>
                                         <!--/ko-->
                                     <!--/ko-->
                                 <!--/ko-->

@@ -1026,6 +1026,61 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
       }
     }
 
+    .dbd-right-panel-editcontent-title {
+      .left-panel-dbd-clear-icon:before {
+        height:16px;
+        width:16px;
+        content:url("../images/clearEntry_ena.png");
+      }
+
+      .left-panel-dbd-search-icon:before {
+        height:16px;
+        width:16px;
+        content:url("../images/func_search_16_ena.png");
+      }
+
+      .dbd-left-panel-header-search {
+        border: 1px;
+        border-radius: 2px;
+        border-color: #c4ced7;
+        border-style: solid;
+        height: 32px;
+        margin: 10px 0 10px 0;
+        background-color: #fcfdfe;
+        float: left;
+        box-sizing: border-box;
+        width: 205px;
+
+        .dbd-left-panel-header-search-input {
+          float: left;
+          height: 30px;
+          width: 130px;
+          input {
+            border: 0;
+            height: 30px;
+          }
+        }
+
+        .dbd-left-panel-header-search-btn {
+          margin: 0px;
+          height: 30px;
+          width: 30px;
+          line-height: 30px;
+          vertical-align: middle;
+          text-align: center;
+        }
+
+      }
+      
+      .search-content-dropdown-list-container{
+        position: absolute;
+        width: 205px;
+        background-color: white;
+        margin-top: -10px;
+        z-index: 9999;
+      }
+    }
+    
     .dbd-left-panel-widgets {
       width: 100%; 
       height: auto; 
