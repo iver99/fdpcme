@@ -1,9 +1,9 @@
 
-define(['knockout', 
+define(['knockout',
         'jquery',
         'ojs/ojcore',
         'dfutil'
-    ], 
+    ],
     function(ko, $, oj, dfu) {
         function EditDashboardDialogModel($b, tbModel) {
             var dsb = $b.dashboard;
@@ -11,7 +11,6 @@ define(['knockout',
             self.dashboard = dsb;
             self.tbModel = tbModel;
             self.name = ko.observable(dsb.name());
-            var savedName = dsb.name();
             self.nameInputed = ko.observable(undefined); //read only input text
             self.nameFocused = ko.observable(false);
             self.descriptionFocused = ko.observable(false);
@@ -28,30 +27,17 @@ define(['knockout',
             };
             self.showdbDescription = ko.observable(isEditDsbOptionEnabled(self.descriptionValue) ?["showdbDescription"]:[]);
 
-            self.entityFilterValue = ko.observable(dsb.enableEntityFilter ? (dsb.enableEntityFilter()==="TRUE"?["ON"]:["OFF"]) : ["OFF"]);//ko.observable(["OFF"]);
-            self.timeRangeFilterValue = ko.observable(dsb.enableTimeRange ? (dsb.enableTimeRange()==="TRUE"?["ON"]:["OFF"]) : ["ON"]); //ko.observable(["ON"]);//for now ON always and hide option in UI
-//            self.targetFilterValue = ko.observable(["OFF"]);
+            self.entityFilterValue = ko.observable(dsb.enableEntityFilter ? (dsb.enableEntityFilter()==="TRUE"?["ON"]:["OFF"]) : ["OFF"]);
+            self.timeRangeFilterValue = ko.observable(dsb.enableTimeRange ? (dsb.enableTimeRange()==="TRUE"?["ON"]:["OFF"]) : ["ON"]);
             self.nameValidated = ko.observable(true);
-            self.isDisabled = ko.computed(function() { 
+            self.isDisabled = ko.computed(function() {
                 if (self.nameInputed() && self.nameInputed().length > 0)
                 {
                     return false;
                 }
                 return true;
             });
-            
-//            self.onNameOrDescriptionEditing = ko.computed(function(){
-//                return self.nameFocused()||self.descriptionFocused();
-//            });
-//            
-//            self.onNameOrDescriptionEditing.subscribe(function(val){
-//                if(val){
-//                    self.tbModel.onNameOrDescriptionEditing = true;
-//                }else{
-////                    self.tbModel.onNameOrDescriptionEditing = false;
-//                }
-//            });
-//            
+
             if (self.tbModel) {
                 self.nameInputed.subscribe(function (val) {
                     self.dashboard.name(val);
@@ -88,21 +74,18 @@ define(['knockout',
                     self.description(val);
                 });
             }
-          
-            
-          
-            
+
+
+
+
             self.noSameNameValidator = {
                     'validate' : function (value) {
                         self.nameValidated(true);
-//                        if (savedName === value)
-//                            return true;
                         value = value + "";
 
                         if (value && Builder.isDashboardNameExisting(value)) {
-                            //$('#builder-dbd-name-input').focus();
                             self.nameValidated(false);
-                            throw new oj.ValidatorError(oj.Translations.getTranslatedString("COMMON_DASHBAORD_SAME_NAME_ERROR"), 
+                            throw new oj.ValidatorError(oj.Translations.getTranslatedString("COMMON_DASHBAORD_SAME_NAME_ERROR"),
                                              oj.Translations.getTranslatedString("COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL"));
                         }
                         return true;
@@ -110,21 +93,21 @@ define(['knockout',
             };
 
             self.save = function() {
-                if (self.nameValidated() === false || dfu.getUserName()!==self.dashboard.owner()) 
+                if (self.nameValidated() === false || dfu.getUserName()!==self.dashboard.owner()){
                     return;
-                
+                }
+
                 var url = "/sso.static/dashboards.service/";
                 if (dfu.isDevMode()) {
                         url = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/");
                 }
-//                self.tbModel.onNameOrDescriptionEditing = false;
                 dfu.ajaxWithRetry(url + self.dashboard.id() + "/quickUpdate", {
                         type: 'PUT',
                         dataType: "json",
                         contentType: 'application/json',
                         data: JSON.stringify({name: self.name(), description: self.description(), enableDescription: isEditDsbOptionEnabled(self.descriptionValue) ? "TRUE" : "FALSE", enableEntityFilter: (isEditDsbOptionEnabled(self.entityFilterValue) ? "TRUE" : "FALSE"), enableTimeRange: (isEditDsbOptionEnabled(self.timeRangeFilterValue) ? "TRUE" : "FALSE")}),
 
-                        headers: dfu.getDashboardsRequestHeader(), //{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
+                        headers: dfu.getDashboardsRequestHeader(),
                         success: function (result) {
                             self.dashboard.name(self.name());
                             self.tbModel && self.tbModel.dashboardName(self.name());
@@ -136,14 +119,8 @@ define(['knockout',
                             {
                                 self.dashboard.description = ko.observable(self.description());
                             }
-//                            self.tbModel.dashboardDescription(self.description());
-//
-//                            self.dashboard.enableDescription(isEditDsbOptionEnabled(self.descriptionValue) ? "TRUE" : "FALSE");
-//                            self.tbModel.dashboardDescriptionEnabled(isEditDsbOptionEnabled(self.descriptionValue) ? "TRUE" : "FALSE");
-//                            self.dashboard.enableEntityFilter(isEditDsbOptionEnabled(self.entityFilterValue) ? "TRUE" : "FALSE");
-//                            self.dashboard.enableTimeRange(isEditDsbOptionEnabled(self.timeRangeFilterValue) ? "TRUE" : "FALSE");
 
-                            $('#edit-dashboard').ojDialog("close"); 
+                            $('#edit-dashboard').ojDialog("close");
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
@@ -158,7 +135,7 @@ define(['knockout',
 
 
         }
-        
+
         return {"EditDashboardDialogModel": EditDashboardDialogModel};
     }
 );

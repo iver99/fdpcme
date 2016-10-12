@@ -12,56 +12,56 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
 import java.util.List;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
 public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 {
-	public final String DATA_EXPLORERS_LOG = "log";
+	public final static String DATA_EXPLORERS_LOG = "log";
 
-	public final String DATA_EXPLORERS_ANALYZE = "analyze";
+	public final static String DATA_EXPLORERS_ANALYZE = "analyze";
 
-	public final String DATA_EXPLORERS_SEARCH = "search";
+	public final static String DATA_EXPLORERS_SEARCH = "search";
 
-	public final String ITA_DEFAULT = "default";
+	public final static String ITA_DEFAULT = "default";
 
-	public final String ITA_PERFORMANCE_ANALYTICS_DATABASE = "performanceAnalyticsDatabase";
+	public final static String ITA_PERFORMANCE_ANALYTICS_DATABASE = "performanceAnalyticsDatabase";
 
-	public final String ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE = "performanceAnalyticsMiddleware";
+	public final static String ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE = "performanceAnalyticsMiddleware";
 
-	public final String ITA_RESOURCE_ANALYTICS_DATABASE = "resourceAnalyticsDatabase";
+	public final static String ITA_RESOURCE_ANALYTICS_DATABASE = "resourceAnalyticsDatabase";
 
-	public final String ITA_RESOURCE_ANALYTICS_MIDDLEWARE = "resourceAnalyticsMiddleware";
+	public final static String ITA_RESOURCE_ANALYTICS_MIDDLEWARE = "resourceAnalyticsMiddleware";
 
-	public final String ITA_DATA_EXPLORER_ANALYZE = "dataExplorerAnalyze";
+	public final static String ITA_DATA_EXPLORER_ANALYZE = "dataExplorerAnalyze";
 
-	public final String ITA_DATA_EXPLORER = "dataExplorer";
+	public final static String ITA_DATA_EXPLORER = "dataExplorer";
 
-	public final String LEARN_MORE_GET_STARTED = "getStarted";
+	public final static String LEARN_MORE_GET_STARTED = "getStarted";
 
-	public final String LEARN_MORE_VIDEOS = "videos";
+	public final static String LEARN_MORE_VIDEOS = "videos";
 
-	public final String LEARN_MORE_SERVICE_OFFERINGS = "serviceOfferings";
+	public final static String LEARN_MORE_SERVICE_OFFERINGS = "serviceOfferings";
 
-	public final String SERVICE_NAME_APM = "APM";
+	public final static String SERVICE_NAME_APM = "APM";
 
-	public final String SERVICE_NAME_LA = "LA";
-	public final String SERVICE_NAME_ITA = "ITA";
-	public final String SERVICE_NAME_DASHBOARDS = "dashboards";
+	public final static String SERVICE_NAME_LA = "LA";
+	public final static String SERVICE_NAME_ITA = "ITA";
+	public final static String SERVICE_NAME_DASHBOARDS = "dashboards";
 
-	public final String SERVICE_NAME_DATA_EXPLORERS = "dataExplorers";
+	public final static String SERVICE_NAME_DATA_EXPLORERS = "dataExplorers";
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#dataExplorers(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void dataExplorers(WebDriver driver, String selection) throws Exception
+	public void dataExplorers(WebDriver driver, String selection)
 	{
 		String eleXpath = null;
 		driver.getLogger().info("Visiting Data Explorer-" + selection + " from Welcome Page...");
@@ -71,21 +71,24 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.Welcome_DataExp_SelectID);
-		driver.click("id=oj-select-choice-" + DashBoardPageId.Welcome_DataExp_SelectID);
+		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.WELCOME_DATAEXP_SELECTID);
+		driver.click("id=oj-select-choice-" + DashBoardPageId.WELCOME_DATAEXP_SELECTID);
 		driver.takeScreenShot();
 		switch (selection) {
 			case DATA_EXPLORERS_LOG:
-				eleXpath = getOptionXpath(driver, DashBoardPageId.Welcome_DataExp_SelectID, DashBoardPageId.Welcome_DataExp_Log);
+				eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_DATAEXP_SELECTID, DashBoardPageId.WELCOME_DATAEXP_LOG);
 				break;
 			case DATA_EXPLORERS_ANALYZE:
-				eleXpath = getOptionXpath(driver, DashBoardPageId.Welcome_DataExp_SelectID,
-						DashBoardPageId.Welcome_DataExp_Analyze);
+				eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_DATAEXP_SELECTID,
+						DashBoardPageId.WELCOME_DATAEXP_ANALYZE);
 				break;
 			case DATA_EXPLORERS_SEARCH:
-				eleXpath = getOptionXpath(driver, DashBoardPageId.Welcome_DataExp_SelectID,
-						DashBoardPageId.Welcome_DataExp_Search);
+				eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_DATAEXP_SELECTID,
+						DashBoardPageId.WELCOME_DATAEXP_SEARCH);
 				break;
+			default:
+				break;
+
 		}
 		driver.getWebDriver().findElement(By.xpath(eleXpath)).click();
 		driver.takeScreenShot();
@@ -119,7 +122,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#isServiceExistedInWelcome(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public boolean isServiceExistedInWelcome(WebDriver driver, String serviceName) throws Exception
+	public boolean isServiceExistedInWelcome(WebDriver driver, String serviceName)
 	{
 		driver.getLogger().info("Start to check if service: " + serviceName + " is existed in welcome page...");
 
@@ -128,7 +131,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 
 		boolean isExisted = false;
 		String serviceWrapperId = getServiceWrapperId(serviceName);
-		String xpath = "//*[@id='" + serviceWrapperId
+		String xpath = "//*[@id='"
+				+ serviceWrapperId
 				+ "']/div[@class='service-box-wrapper']/div[@class='landing-home-box-content']/div[@class='landing-home-box-content-head']";
 
 		String nameExpected = getExpectedText(serviceName);
@@ -138,8 +142,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		if (nameDisplayed.equals(nameExpected)) {
 			isExisted = true;
 		}
-		driver.getLogger()
-				.info("Check of service: " + serviceName + " existence in welcome page is finished! Result: " + isExisted);
+		driver.getLogger().info(
+				"Check of service: " + serviceName + " existence in welcome page is finished! Result: " + isExisted);
 		return isExisted;
 	}
 
@@ -147,12 +151,12 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#learnMoreHow(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void learnMoreHow(WebDriver driver) throws Exception
+	public void learnMoreHow(WebDriver driver)
 	{
 		driver.getLogger().info("Visiting 'Learn More-How to get started' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_LearnMore_getStarted);
-		driver.click("id=" + DashBoardPageId.Welcome_LearnMore_getStarted);
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_LEARNMORE_GETSTARTED);
+		driver.click("id=" + DashBoardPageId.WELCOME_LEARNMORE_GETSTARTED);
 		driver.takeScreenShot();
 	}
 
@@ -160,12 +164,12 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#learnMoreServiceOffering(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void learnMoreServiceOffering(WebDriver driver) throws Exception
+	public void learnMoreServiceOffering(WebDriver driver)
 	{
 		driver.getLogger().info("Visiting 'Learn More-Service Offerings' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_LearnMore_ServiceOffering);
-		driver.click("id=" + DashBoardPageId.Welcome_LearnMore_ServiceOffering);
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_LEARNMORE_SERVICEOFFERING);
+		driver.click("id=" + DashBoardPageId.WELCOME_LEARNMORE_SERVICEOFFERING);
 		driver.takeScreenShot();
 	}
 
@@ -173,12 +177,12 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#learnMoreVideo(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void learnMoreVideo(WebDriver driver) throws Exception
+	public void learnMoreVideo(WebDriver driver)
 	{
 		driver.getLogger().info("Visiting 'Learn More-Videos' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_LearnMore_Videos);
-		driver.click("id=" + DashBoardPageId.Welcome_LearnMore_Videos);
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_LEARNMORE_VIDEOS);
+		driver.click("id=" + DashBoardPageId.WELCOME_LEARNMORE_VIDEOS);
 		driver.takeScreenShot();
 	}
 
@@ -186,13 +190,13 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitAPM(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void visitAPM(WebDriver driver) throws Exception
+	public void visitAPM(WebDriver driver)
 	{
 		driver.getLogger().info("Visit APM from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_APMLinkCSS);
-		driver.click("id=" + DashBoardPageId.Welcome_APMLinkCSS);
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_APMLINKCSS);
+		driver.click("id=" + DashBoardPageId.WELCOME_APMLINKCSS);
 		driver.takeScreenShot();
 	}
 
@@ -200,13 +204,13 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitDashboards(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void visitDashboards(WebDriver driver) throws Exception
+	public void visitDashboards(WebDriver driver)
 	{
 		driver.getLogger().info("Visit Dashboards from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_DashboardsLinkID);
-		driver.click("id=" + DashBoardPageId.Welcome_DashboardsLinkID);
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_DASHBOARDSLINKID);
+		driver.click("id=" + DashBoardPageId.WELCOME_DASHBOARDSLINKID);
 		driver.takeScreenShot();
 	}
 
@@ -214,7 +218,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitITA(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void visitITA(WebDriver driver, String selection) throws Exception
+	public void visitITA(WebDriver driver, String selection)
 	{
 		driver.getLogger().info("Visiting ITA-" + selection + " from Welcome Page...");
 
@@ -225,38 +229,39 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		WaitUtil.waitForPageFullyLoaded(driver);
 
 		if (ITA_DEFAULT.equals(selection)) {
-			driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_ITALinkID);
-			driver.click("id=" + DashBoardPageId.Welcome_ITALinkID);
+			driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_ITALINKID);
+			driver.click("id=" + DashBoardPageId.WELCOME_ITALINKID);
 			driver.takeScreenShot();
 		}
 		else {
 			String eleXpath = null;
-			driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.Welcome_ITA_SelectID);
-			driver.click("id=oj-select-choice-" + DashBoardPageId.Welcome_ITA_SelectID);
+			driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.WELCOME_ITA_SELECTID);
+			driver.click("id=oj-select-choice-" + DashBoardPageId.WELCOME_ITA_SELECTID);
 			driver.takeScreenShot();
 			switch (selection) {
 				case ITA_PERFORMANCE_ANALYTICS_DATABASE:
-					eleXpath = getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
-							DashBoardPageId.Welcome_ITA_PADatabase);
+					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
+							DashBoardPageId.WELCOME_ITA_PADATABASE);
 					break;
 				case ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE:
-					eleXpath = getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
-							DashBoardPageId.Welcome_ITA_PAMiddleware);
+					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
+							DashBoardPageId.WELCOME_ITA_PAMIDDLEWARE);
 					break;
 				case ITA_RESOURCE_ANALYTICS_DATABASE:
-					eleXpath = getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
-							DashBoardPageId.Welcome_ITA_RADatabase);
+					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
+							DashBoardPageId.WELCOME_ITA_RADATABASE);
 					break;
 				case ITA_RESOURCE_ANALYTICS_MIDDLEWARE:
-					eleXpath = getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
-							DashBoardPageId.Welcome_ITA_RAMiddleware);
+					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
+							DashBoardPageId.WELCOME_ITA_RAMIDDLEWARE);
 					break;
 				case ITA_DATA_EXPLORER_ANALYZE:
-					eleXpath = getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID,
-							DashBoardPageId.Welcome_ITA_DEAnalyze);
+					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID, DashBoardPageId.WELCOME_ITA_DEANALYZE);
 					break;
 				case ITA_DATA_EXPLORER:
-					eleXpath = getOptionXpath(driver, DashBoardPageId.Welcome_ITA_SelectID, DashBoardPageId.Welcome_ITA_DE);
+					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID, DashBoardPageId.WELCOME_ITA_DE);
+					break;
+				default:
 					break;
 			}
 			driver.click(eleXpath);
@@ -268,13 +273,13 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitLA(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void visitLA(WebDriver driver) throws Exception
+	public void visitLA(WebDriver driver)
 	{
 		driver.getLogger().info("Visiting LA from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		driver.waitForElementPresent("id=" + DashBoardPageId.Welcome_LALinkCSS);
-		driver.click("id=" + DashBoardPageId.Welcome_LALinkCSS);
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_LALINKCSS);
+		driver.click("id=" + DashBoardPageId.WELCOME_LALINKCSS);
 		driver.takeScreenShot();
 	}
 
@@ -313,6 +318,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 			case LEARN_MORE_SERVICE_OFFERINGS:
 				expectedName = "Service Offerings";
 				break;
+			default:
+				break;
 		}
 		return expectedName;
 	}
@@ -329,37 +336,18 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		String itemId = null;
 		switch (itemName) {
 			case LEARN_MORE_GET_STARTED:
-				itemId = DashBoardPageId.Welcome_LearnMore_getStarted;
+				itemId = DashBoardPageId.WELCOME_LEARNMORE_GETSTARTED;
 				break;
 			case LEARN_MORE_VIDEOS:
-				itemId = DashBoardPageId.Welcome_LearnMore_Videos;
+				itemId = DashBoardPageId.WELCOME_LEARNMORE_VIDEOS;
 				break;
 			case LEARN_MORE_SERVICE_OFFERINGS:
-				itemId = DashBoardPageId.Welcome_LearnMore_ServiceOffering;
+				itemId = DashBoardPageId.WELCOME_LEARNMORE_SERVICEOFFERING;
+				break;
+			default:
 				break;
 		}
 		return itemId;
-	}
-
-	/**
-	 * Get jet's option xpath according to "select" id and "option" id
-	 *
-	 * @param driver
-	 * @param selectId
-	 * @param optionId
-	 * @return
-	 * @throws Exception
-	 */
-	private String getOptionXpath(WebDriver driver, String selectId, String optionId) throws Exception
-	{
-		String optionXpath;
-		WebElement li = driver.getWebDriver().findElement(By.id(optionId));
-		List<WebElement> list = driver.getWebDriver().findElements(By.xpath("//select[@id='" + selectId + "']/option"));
-		//get the index of option in select dropdown
-		int index = list.indexOf(li);
-		//get option's xpath generated by jet
-		optionXpath = "//ul[@id='oj-listbox-results-" + selectId + "']/li[" + (index + 1) + "]/div";
-		return optionXpath;
 	}
 
 	/**
@@ -374,21 +362,43 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		String serviceWrapperId = null;
 		switch (serviceName) {
 			case SERVICE_NAME_APM:
-				serviceWrapperId = DashBoardPageId.Welcome_APMLinkCSS;
+				serviceWrapperId = DashBoardPageId.WELCOME_APMLINKCSS;
 				break;
 			case SERVICE_NAME_LA:
-				serviceWrapperId = DashBoardPageId.Welcome_LALinkCSS;
+				serviceWrapperId = DashBoardPageId.WELCOME_LALINKCSS;
 				break;
 			case SERVICE_NAME_ITA:
-				serviceWrapperId = DashBoardPageId.Welcome_ITALinkID;
+				serviceWrapperId = DashBoardPageId.WELCOME_ITALINKID;
 				break;
 			case SERVICE_NAME_DASHBOARDS:
-				serviceWrapperId = DashBoardPageId.Welcome_DashboardsLinkID;
+				serviceWrapperId = DashBoardPageId.WELCOME_DASHBOARDSLINKID;
 				break;
 			case SERVICE_NAME_DATA_EXPLORERS:
-				serviceWrapperId = DashBoardPageId.Welcome_DataExp;
+				serviceWrapperId = DashBoardPageId.WELCOME_DATAEXP;
+				break;
+			default:
 				break;
 		}
 		return serviceWrapperId;
+	}
+
+	/**
+	 * Get jet's option xpath according to "select" id and "option" id
+	 *
+	 * @param driver
+	 * @param selectId
+	 * @param optionId
+	 * @return @
+	 */
+	protected String getOptionXpath(WebDriver driver, String selectId, String optionId)
+	{
+		String optionXpath;
+		WebElement li = driver.getWebDriver().findElement(By.id(optionId));
+		List<WebElement> list = driver.getWebDriver().findElements(By.xpath("//select[@id='" + selectId + "']/option"));
+		//get the index of option in select dropdown
+		int index = list.indexOf(li);
+		//get option's xpath generated by jet
+		optionXpath = "//ul[@id='oj-listbox-results-" + selectId + "']/li[" + (index + 1) + "]/div";
+		return optionXpath;
 	}
 }

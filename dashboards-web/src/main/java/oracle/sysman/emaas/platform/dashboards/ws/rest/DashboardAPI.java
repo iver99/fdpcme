@@ -71,7 +71,7 @@ import com.sun.jersey.core.util.Base64;
 @Path("/v1/dashboards")
 public class DashboardAPI extends APIBase
 {
-	private static final Logger logger = LogManager.getLogger(DashboardAPI.class);
+	private static final Logger LOGGER = LogManager.getLogger(DashboardAPI.class);
 
 	public DashboardAPI()
 	{
@@ -97,7 +97,7 @@ public class DashboardAPI extends APIBase
 			return Response.status(Status.CREATED).entity(getJsonUtil().toJson(d)).build();
 		}
 		catch (IOException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(e);
 			return buildErrorResponse(error);
 		}
@@ -106,7 +106,7 @@ public class DashboardAPI extends APIBase
 		}
 		catch (BasicServiceMalfunctionException e) {
 			//e.printStackTrace();
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {
@@ -138,7 +138,29 @@ public class DashboardAPI extends APIBase
 		}
 		catch (BasicServiceMalfunctionException e) {
 			//e.printStackTrace();
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
+		}
+	}
+	
+	@DELETE
+	@Path("tenant/{id: [1-9][0-9]*}")
+	public Response deleteDashboardsByTenant(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@PathParam("id") Long tenantId)
+	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/tenant/{}", tenantId);
+		DashboardManager manager = DashboardManager.getInstance();
+		try {
+			logkeyHeaders("deleteDashboardsByTenant()", userTenant, tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);
+			manager.deleteDashboards(tenantId);
+			return Response.status(Status.NO_CONTENT).build();
+		}
+		catch (DashboardException e) {
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {
@@ -171,7 +193,7 @@ public class DashboardAPI extends APIBase
 	//		}
 	//		catch (BasicServiceMalfunctionException e) {
 	//			//e.printStackTrace();
-	//			logger.error(e.getLocalizedMessage(), e);
+	//			LOGGER.error(e.getLocalizedMessage(), e);
 	//			return buildErrorResponse(new ErrorEntity(e));
 	//		}
 	//		finally {
@@ -199,11 +221,11 @@ public class DashboardAPI extends APIBase
 			initializeUserContext(tenantIdParam, userTenant);
 		}
 		catch (CommonSecurityException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		ScreenshotCacheManager scm = ScreenshotCacheManager.getInstance();
@@ -232,36 +254,36 @@ public class DashboardAPI extends APIBase
 				}
 				else { // invalid screenshot file name
 					if (!ScreenshotPathGenerator.getInstance().validFileName(dashboardId, fileName, se.getFileName())) {
-						logger.error("The requested screenshot file name {} for tenant={}, dashboard id={} is not a valid name",
+						LOGGER.error("The requested screenshot file name {} for tenant={}, dashboard id={} is not a valid name",
 								fileName, TenantContext.getCurrentTenant(), dashboardId, se.getFileName());
 						return Response.status(Status.NOT_FOUND).build();
 					}
-					logger.debug("The request screenshot file name is not equal to the file name in cache, but it is valid. "
+					LOGGER.debug("The request screenshot file name is not equal to the file name in cache, but it is valid. "
 							+ "Try to query from database to see if screenshot is actually updated already");
 				}
 			}
 		}
 		catch (Exception e) {
-			logger.error("Exception when getting screenshot from cache. Continue to get from database", e);
+			LOGGER.error("Exception when getting screenshot from cache. Continue to get from database", e);
 		}
 		//try to get from persist layer
 		try {
 			final ScreenshotData ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
 			if (ss == null || ss.getScreenshot() == null) {
-				logger.error("Does not retrieved base64 screenshot data");
+				LOGGER.error("Does not retrieved base64 screenshot data");
 				return Response.status(Status.NOT_FOUND).build();
 			}
 			final ScreenshotElement se = scm.storeBase64ScreenshotToCache(cacheTenant, dashboardId, ss);
 			if (se == null || se.getBuffer() == null) {
-				logger.debug("Does not retrieved base64 screenshot data after store to cache. return 404 then");
+				LOGGER.debug("Does not retrieved base64 screenshot data after store to cache. return 404 then");
 				return Response.status(Status.NOT_FOUND).build();
 			}
 			if (!fileName.equals(se.getFileName())) {
-				logger.error("The requested screenshot file name {} for tenant={}, dashboard id={} does not exist", fileName,
+				LOGGER.error("The requested screenshot file name {} for tenant={}, dashboard id={} does not exist", fileName,
 						TenantContext.getCurrentTenant(), dashboardId, se.getFileName());
 				return Response.status(Status.NOT_FOUND).build();
 			}
-			logger.debug(
+			LOGGER.debug(
 					"Retrieved screenshot data from persistence layer, and build response now. Data is {}" + ss.getScreenshot());
 			return Response.ok(new StreamingOutput() {
 				/* (non-Javadoc)
@@ -280,7 +302,7 @@ public class DashboardAPI extends APIBase
 								DashboardManager.SCREENSHOT_BASE64_JPG_PREFIX.length()));
 					}
 					else {
-						logger.debug("Failed to retrieve screenshot decoded bytes as the previs isn't supported");
+						LOGGER.debug("Failed to retrieve screenshot decoded bytes as the previs isn't supported");
 						decoded = Base64.decode(DashboardManager.BLANK_SCREENSHOT
 								.substring(DashboardManager.SCREENSHOT_BASE64_PNG_PREFIX.length()));
 					}
@@ -292,7 +314,7 @@ public class DashboardAPI extends APIBase
 			}).cacheControl(cc).build();
 		}
 		catch (DashboardException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {
@@ -319,7 +341,7 @@ public class DashboardAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {
@@ -345,11 +367,11 @@ public class DashboardAPI extends APIBase
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
 		}
 		catch (DashboardException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {
@@ -377,7 +399,7 @@ public class DashboardAPI extends APIBase
 			qs = queryString == null ? null : java.net.URLDecoder.decode(queryString, "UTF-8");
 		}
 		catch (UnsupportedEncodingException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 
 		try {
@@ -399,11 +421,11 @@ public class DashboardAPI extends APIBase
 			return Response.ok(getJsonUtil().toJson(pd)).build();
 		}
 		catch (DashboardException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {
@@ -449,7 +471,7 @@ public class DashboardAPI extends APIBase
 			}
 		}
 		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(new IOException("Can't parse input parameters.", e));
 			return buildErrorResponse(error);
 		}
@@ -492,11 +514,11 @@ public class DashboardAPI extends APIBase
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
 		}
 		catch (DashboardException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {
@@ -519,7 +541,7 @@ public class DashboardAPI extends APIBase
 			userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
 		}
 		catch (IOException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(e);
 			return buildErrorResponse(error);
 		}
@@ -536,7 +558,7 @@ public class DashboardAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {
@@ -558,7 +580,7 @@ public class DashboardAPI extends APIBase
 			input = getJsonUtil().fromJson(inputJson.toString(), Dashboard.class);
 		}
 		catch (IOException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(e);
 			return buildErrorResponse(error);
 		}
@@ -577,11 +599,11 @@ public class DashboardAPI extends APIBase
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
 		}
 		catch (DashboardException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {
@@ -603,7 +625,7 @@ public class DashboardAPI extends APIBase
 			userOption.setDashboardId(dashboardId);
 		}
 		catch (IOException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(e);
 			return buildErrorResponse(error);
 		}
@@ -619,7 +641,7 @@ public class DashboardAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {
@@ -643,10 +665,10 @@ public class DashboardAPI extends APIBase
 			Dashboard dbd = dm.getDashboardSetsBySubId(dashboardId, tenantId);
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
 		} catch (DashboardException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		} catch (BasicServiceMalfunctionException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		} finally {
 			clearUserContext();
@@ -655,7 +677,7 @@ public class DashboardAPI extends APIBase
 
 	private void logkeyHeaders(String api, String x_remote_user, String domain_name)
 	{
-		logger.info("Headers of " + api + ": X-REMOTE-USER=" + x_remote_user + ", X-USER-IDENTITY-DOMAIN-NAME=" + domain_name);
+		LOGGER.info("Headers of " + api + ": X-REMOTE-USER=" + x_remote_user + ", X-USER-IDENTITY-DOMAIN-NAME=" + domain_name);
 	}
 
 	/*
@@ -701,7 +723,7 @@ public class DashboardAPI extends APIBase
 		}
 		String screenShotUrl = ScreenshotPathGenerator.getInstance().generateScreenshotUrl(externalBase, dbd.getDashboardId(),
 				dbd.getCreationDate(), dbd.getLastModificationDate());
-		logger.debug("Generate screenshot URL is {} for dashboard id={}", screenShotUrl, dbd.getDashboardId());
+		LOGGER.debug("Generate screenshot URL is {} for dashboard id={}", screenShotUrl, dbd.getDashboardId());
 		dbd.setScreenShotHref(screenShotUrl);
 		return dbd;
 	}

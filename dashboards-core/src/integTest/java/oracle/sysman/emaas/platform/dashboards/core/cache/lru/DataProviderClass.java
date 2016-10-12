@@ -4,6 +4,10 @@ package oracle.sysman.emaas.platform.dashboards.core.cache.lru;
 import org.testng.annotations.DataProvider;
 
 public class DataProviderClass {
+	
+	private DataProviderClass() {
+	  }
+
 
 	/**
 	 * CacheUnit Test Data

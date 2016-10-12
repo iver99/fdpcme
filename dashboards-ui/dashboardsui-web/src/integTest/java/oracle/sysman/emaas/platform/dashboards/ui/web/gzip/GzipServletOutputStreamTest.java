@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.ui.web.gzip;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletResponse;
 
 import mockit.Deencapsulation;
@@ -10,7 +12,7 @@ import org.testng.annotations.Test;
 
 public class GzipServletOutputStreamTest {
   @Test(groups = { "s1" })
-  public void testClose(@Mocked final HttpServletResponse response) throws Exception {
+  public void testClose(@Mocked final HttpServletResponse response) throws IOException {
 	  GzipServletOutputStream os = new GzipServletOutputStream(response);
 	  
 	  os.write(10);

@@ -4,14 +4,18 @@ import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emaas.platform.dashboards.ws.MockHttpServletRequest;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author jishshi
@@ -22,30 +26,48 @@ public class DashboardsCORSFilterTest {
     DashboardsCORSFilter dashboardsCORSFilter;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp()  {
         dashboardsCORSFilter = new DashboardsCORSFilter();
     }
 
     @Test
-    public void testDestroy() throws Exception {
+    public void testDestroy() {
         dashboardsCORSFilter.destroy();
     }
 
     @Test
-    public void testInit(@Mocked final  FilterConfig filterConfig) throws Exception {
-        dashboardsCORSFilter.init(null);
-        dashboardsCORSFilter.init(filterConfig);
+    public void testInit(@Mocked final  FilterConfig filterConfig) {
+        try {
+			dashboardsCORSFilter.init(null);
+		}
+		catch (ServletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        try {
+			dashboardsCORSFilter.init(filterConfig);
+		}
+		catch (ServletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     @Test
-    public void testDoFilter(@Mocked final HttpServletRequest httpServletRequest, @Mocked final HttpServletResponse httpServletResponse, @Mocked final FilterChain filterChain) throws Exception {
+    public void testDoFilter(@Mocked final HttpServletRequest httpServletRequest, @Mocked final HttpServletResponse httpServletResponse, @Mocked final FilterChain filterChain) {
         //do nothing return
-        dashboardsCORSFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
+        try {
+			dashboardsCORSFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
+		}
+		catch (IOException | ServletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
 
     @Test
-    public void testDoFilterInnerClass(@SuppressWarnings("unused")@Mocked final HttpServletRequest httpServletRequest, @SuppressWarnings("unused")@Mocked final HttpServletResponse httpServletResponse, @SuppressWarnings("unused")@Mocked final FilterChain filterChain) throws Exception {
+    public void testDoFilterInnerClass(@SuppressWarnings("unused")@Mocked final HttpServletRequest httpServletRequest, @SuppressWarnings("unused")@Mocked final HttpServletResponse httpServletResponse, @SuppressWarnings("unused")@Mocked final FilterChain filterChain) {
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
         mockHttpServletRequest.setHeader("OAM_REMOTE_USER", "tenant01.emcsadmin");
 
@@ -56,7 +78,7 @@ public class DashboardsCORSFilterTest {
     }
 
     @Test
-    public void testDoFilter1(@Mocked final File file, @Mocked final HttpServletRequest httpServletRequest, @Mocked final HttpServletResponse httpServletResponse, @Mocked final FilterChain filterChain) throws Exception {
+    public void testDoFilter1(@Mocked final File file, @Mocked final HttpServletRequest httpServletRequest, @Mocked final HttpServletResponse httpServletResponse, @Mocked final FilterChain filterChain) {
         new Expectations() {
             {
                 httpServletRequest.getHeader("Origin");
@@ -67,10 +89,26 @@ public class DashboardsCORSFilterTest {
                 result = true;
             }
         };
-        dashboardsCORSFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
+        try {
+			dashboardsCORSFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
+		}
+		catch (IOException | ServletException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
         //if header with "Origin"
-        dashboardsCORSFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
+        try {
+			dashboardsCORSFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (ServletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
     }
 

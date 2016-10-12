@@ -20,6 +20,9 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public static final String USERMENU_OPTION_SIGNOUT = "signout";
 
 	//Branding bar link text
+
+	// home
+	public static final String NAV_LINK_TEXT_HOME_ALERTS = "Alerts";
 	//Cloud Services
 	public static final String NAV_LINK_TEXT_CS_ITA = "IT Analytics";
 	public static final String NAV_LINK_TEXT_CS_APM = "APM";
@@ -30,7 +33,6 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public static final String NAV_LINK_TEXT_VA_LA = "Log";
 	//Administration
 	public static final String NAV_LINK_TEXT_ADMIN_AGENT = "Agents";
-	public static final String NAV_LINK_TEXT_ADMIN_ITA = "IT Analytics Administration";
 	public static final String NAV_LINK_TEXT_ADMIN_ALERT = "Alert Rules";
 	public static final String NAV_LINK_TEXT_ADMIN_ADMINCONSOLE = "Administration";
 
@@ -41,9 +43,18 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            WebDriver instance
 	 * @return
 	 */
-	public boolean isAdmin(WebDriver driver) throws Exception;
+	public boolean isAdmin(WebDriver driver) ;
 
 	public boolean isAdminLinkExisted(WebDriver driver, String adminLinkName);
+
+	/**
+	 * Check if the Alerts link is existed or not
+	 *
+	 * @param driver
+	 *            WebDriver instance
+	 * @return
+	 */
+	public boolean isAlertsLinkExisted(WebDriver driver);
 
 	/**
 	 * Check if the specified cloud service link is existed or not by given name
@@ -123,7 +134,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            Name of the option, should one of "about", "help", "signout"
 	 * @return
 	 */
-	public void userMenuOptions(WebDriver driver, String option) throws Exception;
+	public void userMenuOptions(WebDriver driver, String option) ;
 
 	/**
 	 * Navigate to the specified administration page by given link name
@@ -134,7 +145,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            Name of the link
 	 * @return
 	 */
-	public void visitApplicationAdministration(WebDriver driver, String adminLinkName) throws Exception;
+	public void visitApplicationAdministration(WebDriver driver, String adminLinkName) ;
 
 	/**
 	 * Navigate to the specified cloud service page by given link name
@@ -145,9 +156,9 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            Name of the link
 	 * @return
 	 */
-	public void visitApplicationCloudService(WebDriver driver, String cloudServiceLinkName) throws Exception;
+	public void visitApplicationCloudService(WebDriver driver, String cloudServiceLinkName) ;
 
-	public void visitApplicationHome(WebDriver driver, String homeLinkName) throws Exception;
+	public void visitApplicationHome(WebDriver driver, String homeLinkName) ;
 
 	/**
 	 * Navigate to the specified visual analyzer page by given link name
@@ -158,7 +169,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            Name of the link
 	 * @return
 	 */
-	public void visitApplicationVisualAnalyzer(WebDriver driver, String visualAnalyzerLinkName) throws Exception;
+	public void visitApplicationVisualAnalyzer(WebDriver driver, String visualAnalyzerLinkName) ;
 
 	/**
 	 * Navigate to the dashboard home page
@@ -167,7 +178,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            WebDriver instance
 	 * @return
 	 */
-	public void visitDashboardHome(WebDriver driver) throws Exception;
+	public void visitDashboardHome(WebDriver driver) ;
 
 	/**
 	 * Navigate to My Favorites page
@@ -176,7 +187,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            WebDriver instance
 	 * @return
 	 */
-	public void visitMyFavorites(WebDriver driver) throws Exception;
+	public void visitMyFavorites(WebDriver driver) ;
 
 	/**
 	 * Navigate to my home page
@@ -185,7 +196,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            WebDriver instance
 	 * @return
 	 */
-	public void visitMyHome(WebDriver driver) throws Exception;
+	public void visitMyHome(WebDriver driver) ;
 
 	/**
 	 * Navigate to the welcome page
@@ -194,6 +205,6 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            WebDriver instance
 	 * @return
 	 */
-	public void visitWelcome(WebDriver driver) throws Exception;
+	public void visitWelcome(WebDriver driver) ;
 
 }

@@ -1,6 +1,6 @@
 
 
-define(['dfutil', 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmodel'], 
+define(['dfutil', 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmodel'],
 function(dfu, oj, ko, $)
 {
 /**
@@ -12,9 +12,8 @@ function(dfu, oj, ko, $)
     var DashboardModel = function(attrs, options) {
         var self = this, _attrs = attrs, _options = options || {};
         this.screenShot = undefined;
-        
-        //_options['idAttribute'] = "id";
-        
+
+
         var _customURL = function(_operation, _col, _opt) {
             var __url =  self.get('href');
             if (!__url) {
@@ -23,7 +22,6 @@ function(dfu, oj, ko, $)
             if (!__url) {
                 __url = null;
             }
-            //console.log("[DashboardModel] operation: "+ _operation +"  "+__url + " \n      Header: " + JSON.stringify(dfu.getDashboardsRequestHeader())); //return __url;
             return {
                     url: __url,
                     headers: dfu.getDashboardsRequestHeader()
@@ -44,21 +42,22 @@ function(dfu, oj, ko, $)
         // super
         DashboardModel.superclass.Init.call(this);
     };
-    
+
     DashboardModel.prototype.openDashboardPage = function()
     {
         var self = this;
         var url = self.getNavLink();
         if (typeof url==="string"){
-            //window.open(self.getNavLink());
             window.location = self.getNavLink();
         }
     };
-    
+
     DashboardModel.prototype.getNavLink = function()
     {
         var _id = this.get('id');
-        if (!_id) return null;
+        if (!_id) {
+            return null;
+        }
         var _type = this.get('type');
         if ("SINGLEPAGE"===_type){
             var tiles = this.get('tiles');
@@ -72,14 +71,10 @@ function(dfu, oj, ko, $)
                 }
                 this.fetch(); //record last access on rest api
                 if (typeof url==="string"){
-                   //console.log("Single Page Dashboard URL is found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot); 
-                   if ("emcitas-ui-apps"===providerName && version && version.indexOf('1.0') === 0 && "flex-analyzer"===assetRoot){
-                       var dsbName = this.get('name');
-                        url=url+"?name="+encodeURI(dsbName)+"&createdBy=oracle";
-                    }
+                    oj.Logger.info("Single page URL for dashboard ID=" + this.get("id") + " is: " + url);
                    return url;
                 }else{
-                   oj.Logger.error("Single Page Dashboard URL is not found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot); 
+                   oj.Logger.error("Single Page Dashboard URL is not found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot);
                    return null;
                 }
             }else{
@@ -87,7 +82,7 @@ function(dfu, oj, ko, $)
             }
         }else{
             return document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/builder.html?dashboardId=' + _id;
-            
+
         }
     };
 

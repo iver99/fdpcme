@@ -8,8 +8,14 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import mockit.Expectations;
 import mockit.Mocked;
@@ -42,11 +48,12 @@ import org.testng.annotations.Test;
  */
 public class DashboardManagerTest_S2
 {
-	static {
+	static {	
 		PersistenceManager.setTestEnv(true);
 		UserContext.setCurrentUser("SYSMAN");
 		TenantSubscriptionUtil.setTestEnv();
 	}
+	private static final Logger LOGGER = LogManager.getLogger(DashboardManagerTest_S2.class);
 
 	//@BeforeMethod
 	public void loadMockBeforeMethod()
@@ -65,16 +72,19 @@ public class DashboardManagerTest_S2
 			dm.addFavoriteDashboard(null, 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.getDashboardBase64ScreenShotById(null, 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.getDashboardById(null, 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		dm.getDashboardByName(null, 0L);
 		dm.getLastAccessDate(null, 0L);
@@ -82,16 +92,19 @@ public class DashboardManagerTest_S2
 			dm.isDashboardFavorite(null, 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.removeFavoriteDashboard(null, 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.saveNewDashboard(null, 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		dm.setDashboardIncludeTimeControl(null, true, 0L);
 		dm.updateDashboard(null, 0L);
@@ -111,21 +124,25 @@ public class DashboardManagerTest_S2
 			dm.addFavoriteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.deleteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.getDashboardBase64ScreenShotById(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.getDashboardById(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 
 		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
@@ -133,11 +150,13 @@ public class DashboardManagerTest_S2
 			dm.isDashboardFavorite(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.removeFavoriteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		dm.setDashboardIncludeTimeControl(BigInteger.valueOf(1L), true, 0L);
 		dm.updateLastAccessDate(BigInteger.valueOf(1L), 0L);
@@ -158,21 +177,25 @@ public class DashboardManagerTest_S2
 			dm.addFavoriteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.deleteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.getDashboardBase64ScreenShotById(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.getDashboardById(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 
 		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
@@ -180,11 +203,13 @@ public class DashboardManagerTest_S2
 			dm.isDashboardFavorite(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.removeFavoriteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		dm.setDashboardIncludeTimeControl(BigInteger.valueOf(1L), true, 0L);
 		dm.updateLastAccessDate(BigInteger.valueOf(1L), 0L);
@@ -194,6 +219,7 @@ public class DashboardManagerTest_S2
 			dm.saveNewDashboard(d, 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		//dm.getDashboardByName("ss", 0L);
 		//dm.saveNewDashboard(null, 0L);
@@ -209,6 +235,7 @@ public class DashboardManagerTest_S2
 			dm.deleteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		new NonStrictExpectations() {
 			{
@@ -235,16 +262,19 @@ public class DashboardManagerTest_S2
 			dm.addFavoriteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.getDashboardBase64ScreenShotById(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.getDashboardById(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 
 		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
@@ -252,11 +282,13 @@ public class DashboardManagerTest_S2
 			dm.isDashboardFavorite(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.removeFavoriteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
+			LOGGER.info("context",e);
 		}
 		dm.setDashboardIncludeTimeControl(BigInteger.valueOf(1L), true, 0L);
 		dm.updateLastAccessDate(BigInteger.valueOf(1L), 0L);
@@ -266,7 +298,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testCreateDashboardDifUserSameNameSameTenant_S2() throws DashboardException
+	public void testCreateDashboardDifUserSameNameSameTenantS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		DashboardManager dm0 = DashboardManager.getInstance();
@@ -298,7 +330,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testCreateDashboardSameNameDifTenant_S2() throws DashboardException
+	public void testCreateDashboardSameNameDifTenantS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		Dashboard dbd1 = new Dashboard();
@@ -324,7 +356,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(expectedExceptions = DashboardException.class, groups = { "s2" })
-	public void testCreateDashboardSameNameSameUserSameTenant_S2() throws DashboardException
+	public void testCreateDashboardSameNameSameUserSameTenantS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		Dashboard dbd1 = null;
@@ -355,7 +387,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testCreateSimpleDashboard_S2() throws DashboardException, InterruptedException
+	public void testCreateSimpleDashboardS2() throws DashboardException, InterruptedException
 	{
 		loadMockBeforeMethod();
 		Dashboard dbd = new Dashboard();
@@ -386,7 +418,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testCreateUpdateDashboard_S2() throws DashboardException, InterruptedException
+	public void testCreateUpdateDashboardS2() throws DashboardException, InterruptedException
 	{
 		loadMockBeforeMethod();
 		String currentUser = UserContext.getCurrentUser();
@@ -549,7 +581,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testCreateUpdateSystemDashboard_S2() throws DashboardException
+	public void testCreateUpdateSystemDashboardS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		DashboardManager dm = DashboardManager.getInstance();
@@ -571,6 +603,7 @@ public class DashboardManagerTest_S2
 			dm.updateDashboard(dbd1, tenantId1);
 		}
 		catch (CommonSecurityException e) {
+			LOGGER.info("context",e);
 		}
 		queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
 		Assert.assertEquals(queried.getName(), name1);
@@ -580,11 +613,12 @@ public class DashboardManagerTest_S2
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			e.printStackTrace();
 		}
 	}
 
 	@Test(groups = { "s2" })
-	public void testDeleteDashboard_S2() throws DashboardException
+	public void testDeleteDashboardS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		DashboardManager dm = DashboardManager.getInstance();
@@ -604,6 +638,7 @@ public class DashboardManagerTest_S2
 		}
 		catch (DashboardNotFoundException e) {
 			expectedException = true;
+			LOGGER.info("context",e);
 		}
 		if (!expectedException) {
 			Assert.fail("Expected exception not happended");
@@ -642,6 +677,7 @@ public class DashboardManagerTest_S2
 			dm.deleteDashboard(dbd3.getDashboardId(), false, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		queried = dm.getDashboardById(dbd3.getDashboardId(), tenantId2);
 		Assert.assertNotNull(queried);
@@ -649,6 +685,7 @@ public class DashboardManagerTest_S2
 			dm.deleteDashboard(dbd3.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		queried = dm.getDashboardById(dbd3.getDashboardId(), tenantId2);
 		Assert.assertNotNull(queried);
@@ -658,6 +695,7 @@ public class DashboardManagerTest_S2
 			dm.deleteDashboard(dbd4.getDashboardId(), false, tenantId1);
 		}
 		catch (CommonSecurityException e) {
+			LOGGER.info("context",e);
 		}
 		queried = dm.getDashboardById(dbd4.getDashboardId(), tenantId1);
 		Assert.assertNotNull(queried);
@@ -667,21 +705,25 @@ public class DashboardManagerTest_S2
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.deleteDashboard(dbd3.getDashboardId(), true, tenantId2);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.deleteDashboard(dbd4.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -759,7 +801,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testFavoriteDashboards_S2() throws DashboardException
+	public void testFavoriteDashboardsS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		DashboardManager dm = DashboardManager.getInstance();
@@ -806,11 +848,13 @@ public class DashboardManagerTest_S2
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -834,7 +878,7 @@ public class DashboardManagerTest_S2
 		Assert.assertEquals(shot.getScreenshot(), testScreenshotDate);
 
 		List<Dashboard> ds = dm.listAllDashboards(tenantId1);
-		Assert.assertEquals(ds.size() > 0, true);
+		Assert.assertEquals(!ds.isEmpty(), true);
 		Assert.assertEquals(ds.get(0).getName(), dbd1.getName());
 		Assert.assertEquals(ds.get(0).getLastModifiedBy(), dbd1.getLastModifiedBy());
 		Assert.assertEquals(ds.get(0).getLastModificationDate(), dbd1.getLastModificationDate());
@@ -844,7 +888,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetDashboardByName_S2() throws DashboardException
+	public void testGetDashboardByNameS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		DashboardManager dm = DashboardManager.getInstance();
@@ -883,6 +927,7 @@ public class DashboardManagerTest_S2
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			UserContext.setCurrentUser("other user");
@@ -890,11 +935,12 @@ public class DashboardManagerTest_S2
 			UserContext.setCurrentUser("SYSMAN");
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetDashboardId_S2() throws DashboardException
+	public void testGetDashboardIdS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		DashboardManager dm = DashboardManager.getInstance();
@@ -923,6 +969,7 @@ public class DashboardManagerTest_S2
 		}
 		catch (DashboardNotFoundException e) {
 			expectedException = true;
+			LOGGER.info("context",e);
 		}
 		if (!expectedException) {
 			Assert.fail("Expected exception not happended");
@@ -933,16 +980,18 @@ public class DashboardManagerTest_S2
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetUpdateLastAccessDate_S2() throws DashboardException, InterruptedException
+	public void testGetUpdateLastAccessDateS2() throws DashboardException, InterruptedException
 	{
 		loadMockBeforeMethod();
 		DashboardManager dm = DashboardManager.getInstance();
@@ -973,13 +1022,14 @@ public class DashboardManagerTest_S2
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
 		Assert.assertNull(lastAccess);
 	}
 
 	@Test(groups = "s2")
-	public void testListDashboard_S2(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
+	public void testListDashboardS2(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
 			@Mocked final EntityManager anyEntityManager, @Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber)
 			throws DashboardException, InterruptedException
 	{
@@ -1014,11 +1064,13 @@ public class DashboardManagerTest_S2
 			dm.listDashboards("key", -3, 50, 11L, false, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
 		}
 		catch (CommonFunctionalException cfe) {
+			LOGGER.info("context",cfe);
 		}
 		try {
 			dm.listDashboards("key", 3, -50, 11L, false, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
 		}
 		catch (CommonFunctionalException cfe) {
+			LOGGER.info("context",cfe);
 		}
 
 		filter = new DashboardsFilter();
@@ -1043,7 +1095,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
-	public void testSetDashboardIncludeTimeControl_S2() throws DashboardException
+	public void testSetDashboardIncludeTimeControlS2() throws DashboardException
 	{
 		loadMockBeforeMethod();
 		Dashboard dbd1 = new Dashboard();
@@ -1063,6 +1115,33 @@ public class DashboardManagerTest_S2
 
 		// post test
 		dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
+	}
+
+	@Test(groups = { "s2" })
+	public void testUpdateDashboardTilesName(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
+			@Mocked final EntityManager anyEntityManager, @Mocked final EntityTransaction andEntityTransaction,
+			@Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber)
+	{
+		DashboardManager dm = DashboardManager.getInstance();
+		Assert.assertEquals(dm.updateDashboardTilesName(1L, null, 1L), 0);
+		Assert.assertEquals(dm.updateDashboardTilesName(1L, "test", null), 0);
+
+		new Expectations() {
+			{
+				anyDashboardServiceFacade.getEntityManager();
+				result = anyEntityManager;
+				anyEntityManager.getTransaction();
+				result = andEntityTransaction;
+				anyEntityManager.createQuery(anyString);
+				result = anyQuery;
+				andEntityTransaction.begin();
+				anyQuery.executeUpdate();
+				result = 1234;
+				andEntityTransaction.commit();
+			}
+		};
+		int rtn = dm.updateDashboardTilesName(1L, "test", 1L);
+		Assert.assertEquals(rtn, 1234);
 	}
 
 	private TileParam createParameterForTile(Tile tile) throws InterruptedException

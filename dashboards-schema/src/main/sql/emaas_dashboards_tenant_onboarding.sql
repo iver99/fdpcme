@@ -44,9 +44,11 @@ BEGIN
   IF oob_dsb_count    >0 THEN
     DBMS_OUTPUT.PUT_LINE('OOB dashboards for &TENANT_ID are already present');
     RAISE_APPLICATION_ERROR(-20000, ' OOB dashboards for &TENANT_ID are already present');
-  END IF;
+  END IF; 
 END;
 /
+@&EMSAAS_SQL_ROOT/1.10.0/emaas_create_tables.sql
+
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_dashboards_seed_data.sql &TENANT_ID
 
 @&EMSAAS_SQL_ROOT/1.0.25/emaas_dashboards_seed_data.sql &TENANT_ID
@@ -75,11 +77,18 @@ END;
 
 @&EMSAAS_SQL_ROOT/1.9.0/emaas_dashboards_seed_data_uigallery.sql &TENANT_ID
 
+@&EMSAAS_SQL_ROOT/1.10.0/emaas_dashboards_seed_data_ta.sql &TENANT_ID
+
+@&EMSAAS_SQL_ROOT/1.10.0/emaas_dashboards_seed_data_la.sql &TENANT_ID
+
+@&EMSAAS_SQL_ROOT/1.10.0/emaas_drop_tables.sql
+
+@&EMSAAS_SQL_ROOT/1.11.0/emaas_dashboards_seed_data_ocs.sql &TENANT_ID
+
 COMMIT;
 /
 BEGIN
   DBMS_OUTPUT.PUT_LINE('Inserting OOB dashboards for &TENANT_ID is completed');
 END;
 /
-
 

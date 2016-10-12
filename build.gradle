@@ -1,4 +1,46 @@
-apply plugin: 'DevInfraPlugin'
+
+//-----------------------------------------------------------------------------
+// Enable this to be a rootProject which uses project common files.
+//
+// Configure the project classpath to enable applying plugins,
+// and define some global project properties and methods.
+// -- gradle runs the buildscript block first during the configuration phase
+//
+buildscript {
+  if (System.env.BRANCH_TOP_DIR) {
+    project.ext.commonBranchTopDir = System.env.BRANCH_TOP_DIR
+  } else {
+    project.ext.commonBranchTopDir = ["sh", "-c", "cd $rootDir; git rev-parse --show-toplevel"].execute().text.trim()
+    if ( ! project.commonBranchTopDir) {
+      throw new GradleException("Error: git not found in sh search PATH\n" +
+        "=> If changing PATH to find git is not feasible, env variables BRANCH_TOP_DIR and BRANCH_NAME must be set")
+    }
+  }
+  apply from: "$project.commonBranchTopDir/common/scripts/buildscript-apply-delegate.gradle"
+}
+//
+// Apply common plugins,
+// configure the common publishing repository,
+// configure project repositories to resolve artifact specs,
+// and do other common configuration for allprojects{}.
+//
+def pubAllprojects = project.hasProperty('PUB_ALLPROJECTS') ?
+  project.PUB_ALLPROJECTS : "$project.pubBuildscriptDir/allprojects.gradle"
+apply from: new File(pubAllprojects).isAbsolute() ?
+  "$pubAllprojects" : "$project.commonBranchTopDir/$pubAllprojects"
+//
+//-----------------------------------------------------------------------------
+
+buildscript {  
+  dependencies {  
+    classpath group: 'com.oracle.emaas.emdi', name: 'JSPlugin', version:'1.0+'
+    classpath 'org.gradle.plugins:gradle-compass:1.0.10.1'
+  }  
+}
+
+
+
+
 apply plugin: 'groovy'
 import groovy.sql.Sql
 import java.util.logging.LogManager.Cleaner;
@@ -29,24 +71,8 @@ if (ext.disableBuildTests)
 
 
 allprojects { 
-	apply plugin: "java" 
-	apply plugin: 'artifactory-publish'	
-	apply plugin: 'DevInfraPlugin' 
-	apply plugin: 'maven-publish'
-        apply plugin: 'TestInfraPlugin'
-	apply plugin: 'gavsetting'
 	apply plugin: 'JSPlugin'
 	ext.dependenciesDir = new File(rootDir, 'common') 
-	repositories {  
-		mavenLocal()  
-		maven {  
-			url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"  
-			credentials {  
-			username = "${artifactory_user}"  
-			password = "${artifactory_password}"  
-		} 
-	}  
-
 	} 
 	
 	configurations.all {
@@ -111,32 +137,15 @@ allprojects {
 	
     }
     s2tests.enabled = !project.rootProject.disableBuildTests
-}
 
-artifactory {
-    contextUrl = "${artifactory_contextUrl}"
-    publish {
-        repository {
-            repoKey = "${artifactory_publish_repoKey}"
-            username = "${artifactory_user}"
-            password = "${artifactory_password}"
-        }
-    }
-    resolve {
-            repository {
-                repoKey = "${artifactory_virtual_repoKey}"
-                username = "${artifactory_user}"
-                password = "${artifactory_password}"
-                maven = true
-        }
-    }
-}
+
+
 
 
 
 
 subprojects { 
-	apply plugin: 'java' 
+
 	jar { manifest.attributes provider: 'Oracle EMaaS Applications' } 
 	ext.archiveBaseName = artifactPrefix + project.name  
 } 
@@ -262,23 +271,9 @@ task preBuildCompile(type: Copy) {
 
 compileJava.dependsOn preBuildCompile
 
-
-buildscript {  
-	repositories {  
-		mavenLocal()  
-		maven {  
-			 url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
-			credentials {  
-			username = "${artifactory_user}"  
-			password = "${artifactory_password}"  
-			}  
-		} 
-	}
-
+buildscript { 
 	dependencies {  
 		classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.2.5'  
-		classpath group: 'com.oracle.emaas.emdi', name: 'DevInfraPlugin', version: "${devinfraVersion}", transitive: true
-		classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
 
 	        classpath group: 'com.oracle.emaas.emdi', name: 'JSPlugin', version:'1.0+'
 		classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'
@@ -286,31 +281,19 @@ buildscript {
 		classpath 'org.gradle.plugins:gradle-compass:1.0.10.1'
 	}  
 }
-
-publishing {
-    publications {
- 
-        if (project.tasks.findByName('lrgMetadataZip')) {
-            // Publication for publishing lrg metadata
-            lrgMetadata(MavenPublication) {
-                groupId 'com.oracle.emaas.emcpdf.test' 
-                artifact lrgMetadataZip
-                setArtifactId(lrgMetadataZip.baseName)
-            }
-        }
-    }
-    // (Optional) This is required ONLY when you wish to publish the lrgMetadata zip alone (as it is not possible with artifactoryPublish task)
-    repositories {
-        maven {
-            name = "artifactory"
-            url "${artifactory_contextUrl}/${artifactory_repoKey}"
-            credentials {
-                username = "${artifactory_user}"
-                password =  "${artifactory_password}"
-            }
+project.publishing.publications {
+    if (project.tasks.findByName('lrgMetadataZip')) {
+        // Publication for publishing lrg metadata
+        lrgMetadata(MavenPublication) {
+            groupId "${publishGroup}"
+            artifact lrgMetadataZip
+            setArtifactId(lrgMetadataZip.baseName)
         }
     }
 }
+
+
+
 artifactoryPublish {
     if (project.tasks.findByName('lrgMetadataZip')) {
         publications ('lrgMetadata')

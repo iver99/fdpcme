@@ -24,6 +24,9 @@ import org.apache.logging.log4j.core.config.LoggerConfig;
  */
 public class LogUtil
 {
+	private LogUtil() {
+	  }
+
 	/**
 	 * Class that represents the interaction log context, containing tenant id, service invoked, and service invocation direction
 	 *
@@ -116,7 +119,7 @@ public class LogUtil
 		}
 	}
 
-	private static final Logger logger = LogManager.getLogger(LogUtil.class);
+	private static final Logger LOGGER = LogManager.getLogger(LogUtil.class);
 	public static final String INTERACTION_LOG_PROP_TENANTID = "tenantId";
 	public static final String INTERACTION_LOG_VALUE_NA = "N/A";
 	public static final String INTERACTION_LOG_PROP_SERVICE_INVOKED = "serviceInvoked";
@@ -149,7 +152,7 @@ public class LogUtil
 	}
 
 	/**
-	 * Retrieve the long timestamp for update time for specified logger
+	 * Retrieve the long timestamp for update time for specified LOGGER
 	 *
 	 * @param cfg
 	 * @param lc
@@ -169,19 +172,19 @@ public class LogUtil
 	}
 
 	/**
-	 * Initialize all loggers update time
+	 * Initialize all LOGGERs update time
 	 *
 	 * @return
 	 */
 	public static void initializeLoggersUpdateTime()
 	{
 		Long timestamp = DateUtil.getCurrentUTCTime().getTime();
-		LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
-		Configuration cfg = loggerContext.getConfiguration();
-		Map<String, LoggerConfig> loggers = cfg.getLoggers();
-		for (LoggerConfig lc : loggers.values()) {
+		LoggerContext LOGGERContext = (LoggerContext) LogManager.getContext(false);
+		Configuration cfg = LOGGERContext.getConfiguration();
+		Map<String, LoggerConfig> LOGGERs = cfg.getLoggers();
+		for (LoggerConfig lc : LOGGERs.values()) {
 			LogUtil.setLoggerUpdateTime(cfg, lc, timestamp);
-			loggerContext.updateLoggers();
+			LOGGERContext.updateLoggers();
 		}
 	}
 
@@ -206,15 +209,15 @@ public class LogUtil
 		InteractionLogContext ilc = new InteractionLogContext(ThreadContext.get(INTERACTION_LOG_PROP_TENANTID),
 				ThreadContext.get(INTERACTION_LOG_PROP_SERVICE_INVOKED), ThreadContext.get(INTERACTION_LOG_PROP_DIRECTION));
 		if (StringUtil.isEmpty(tenantId)) {
-			logger.debug("Initialize interaction log context: tenantId is null or empty");
+			LOGGER.debug("Initialize interaction log context: tenantId is null or empty");
 			tenantId = INTERACTION_LOG_VALUE_NA;
 		}
 		if (StringUtil.isEmpty(serviceInvoked)) {
-			logger.debug("Failed to initialize interaction log context: serviceInvoked is null or empty");
+			LOGGER.debug("Failed to initialize interaction log context: serviceInvoked is null or empty");
 			serviceInvoked = "Service invoked: N/A";
 		}
 		if (direction == null) {
-			logger.warn("Initialize interaction log context: direction is null");
+			LOGGER.warn("Initialize interaction log context: direction is null");
 			direction = InteractionLogDirection.NA;
 		}
 		ThreadContext.put(INTERACTION_LOG_PROP_TENANTID, tenantId);
@@ -224,7 +227,7 @@ public class LogUtil
 	}
 
 	/**
-	 * Sets the update timestamp for specified logger
+	 * Sets the update timestamp for specified LOGGER
 	 *
 	 * @param cfg
 	 * @param lc

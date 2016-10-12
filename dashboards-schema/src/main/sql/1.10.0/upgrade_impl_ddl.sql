@@ -1,37 +1,23 @@
+Rem --DDL change during upgrade
 Rem
-Rem    DDL change during upgrade
-Rem    add column CREATION_DATE & LAST_MODIFICATION_DATE to all tables
-Rem    MODIFIED   (MM/DD/YY)
-Rem    Rex Liang    06/29/2016 - created
+Rem upgrade_impl_ddl.sql
 Rem
+Rem Copyright (c) 2013, 2014, 2015, 2016 Oracle and/or its affiliates.
+Rem All rights reserved.
+Rem
+Rem    NAME
+Rem      upgrade_impl_ddl.sql 
+Rem
+Rem    DESCRIPTION
+Rem      DDL change during upgrade
+Rem
+Rem    NOTES
+Rem      None
 Rem
 
 DECLARE
   v_count     INTEGER;
 BEGIN
-  --add new column 'EMS_DASHBOARD_FAVORITE.LAST_MODIFICATION_DATE'
-  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_FAVORITE' AND column_name='LAST_MODIFICATION_DATE';
-  IF v_count=0 THEN
-    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_FAVORITE ADD LAST_MODIFICATION_DATE TIMESTAMP(6) DEFAULT LOCALTIMESTAMP';
-  ELSE
-    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_FAVORITE.LAST_MODIFICATION_DATE exists already, no change is needed');
-  END IF;
-
-  --add new column 'EMS_DASHBOARD_LAST_ACCESS.CREATION_DATE'
-  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_LAST_ACCESS' AND column_name='CREATION_DATE';
-  IF v_count=0 THEN
-    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_LAST_ACCESS ADD CREATION_DATE TIMESTAMP(6) DEFAULT LOCALTIMESTAMP';
-  ELSE
-    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_LAST_ACCESS.CREATION_DATE exists already, no change is needed');
-  END IF;
-  
-  --add new column 'EMS_DASHBOARD_LAST_ACCESS.LAST_MODIFICATION_DATE'
-  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_LAST_ACCESS' AND column_name='LAST_MODIFICATION_DATE';
-  IF v_count=0 THEN
-    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_LAST_ACCESS ADD LAST_MODIFICATION_DATE TIMESTAMP(6) DEFAULT LOCALTIMESTAMP';
-  ELSE
-    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_LAST_ACCESS.LAST_MODIFICATION_DATE exists already, no change is needed');
-  END IF;
   
   --add new column 'EMS_DASHBOARD_SET.CREATION_DATE'
   SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_SET' AND column_name='CREATION_DATE';
@@ -128,6 +114,15 @@ BEGIN
   ELSE
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_PREFERENCE.DELETED exists already, no change is needed');
   END IF;
+  
+  --add new column 'DELETED' for EMS_DASHBOARD_USER_OPTIONS  
+  --this is not required by ZDT but required by EMCPDF-2337
+  SELECT count(*) into v_count from user_tab_columns WHERE table_name='EMS_DASHBOARD_USER_OPTIONS' AND column_name='DELETED';
+  IF v_count=0 THEN
+    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_USER_OPTIONS ADD "DELETED" NUMBER(1, 0) DEFAULT(0) NOT NULL';
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_USER_OPTIONS.DELETED exists already, no change is needed');
+  END IF;
 END;
 /
 
@@ -151,3 +146,4 @@ BEGIN
       END IF;
 END;
 /
+

@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 public class PersistenceManager
 {
-	private static final Logger logger = LogManager.getLogger(PersistenceManager.class);
+	private static final Logger LOGGER = LogManager.getLogger(PersistenceManager.class);
 
 	/**
 	 * For the whole JVM life cycle, IS_TEST_ENV can only be set once
@@ -45,17 +45,7 @@ public class PersistenceManager
 		}
 	}
 
-/*	public static void main(String args[])
-	{
 
-		SchemaUtil rct = new SchemaUtil();
-		String url = "http://slc08twq.us.oracle.com:7004/registry/servicemanager/registry/v1" + DEPLOY_URL;
-		String data = rct.get(url);
-		List<String> urlList = SchemaUtil.getDeploymentUrl(data);
-		data = rct.get(urlList.get(0) + DEPLY_SCHEMA);
-		String schemaName = rct.getSchemaUserBySoftwareName(data, SERVICE_NAME);
-		System.out.println(schemaName);
-	}*/
 
 	public static void setTestEnv(boolean value)
 	{
@@ -106,7 +96,7 @@ public class PersistenceManager
 	private void initialize()
 	{
 		if (IS_TEST_ENV) {
-			logger.info("Dashboard JPA Persistence Manager is now running in test environment");
+			LOGGER.info("Dashboard JPA Persistence Manager is now running in test environment");
 			// testng local properties
 			Properties props = loadProperties(CONNECTION_PROPS_FILE);
 			// lrg env only
@@ -151,14 +141,14 @@ public class PersistenceManager
 			return connectionProps;
 		}
 		catch (Exception ex) {
-			logger.error(ex.getLocalizedMessage(), ex);
+			LOGGER.error(ex.getLocalizedMessage(), ex);
 		} finally {
 			if (input != null) {
 				try {
 					input.close();
 				}
 				catch (IOException e) {
-					logger.error(e.getLocalizedMessage(), e);
+					LOGGER.error(e.getLocalizedMessage(), e);
 				}
 			}
 		}
@@ -169,6 +159,6 @@ public class PersistenceManager
 	protected synchronized void createEntityManagerFactory(String puName, Properties props)
 	{
 		emf = Persistence.createEntityManagerFactory(puName, props);
-		logger.debug("EntityManagerFactory has been created with properties {}", props == null ? null : props.toString());
+		LOGGER.debug("EntityManagerFactory has been created with properties {}", props == null ? null : props.toString());
 	}
 }

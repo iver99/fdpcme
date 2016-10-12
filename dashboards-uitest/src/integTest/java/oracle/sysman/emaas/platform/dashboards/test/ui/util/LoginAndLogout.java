@@ -9,18 +9,20 @@ import org.testng.annotations.AfterMethod;
 
 public class LoginAndLogout
 {
-	public static WebDriver webd = null;
+	protected static WebDriver webd = null;
 
 	@AfterMethod
-	public static void logout_method()
+	public static void logoutMethod()
 	{
 		if (webd != null) {
 			LoginUtils.doLogout(webd);
-			try{
-                             webd.shutdownBrowser(true);
-                        }catch(Exception e){
-                             webd.getLogger().warning("Failed to shutdown browser"+e.getMessage());
-                        }
+			try {
+				webd.shutdownBrowser(true);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				webd.getLogger().warning("Failed to shutdown browser" + e.getMessage());
+			}
 		}
 	}
 
@@ -31,6 +33,7 @@ public class LoginAndLogout
 			tenantID = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			tenantID = "emaastesttenant1";
 		}
 		username = customUser;
@@ -50,6 +53,7 @@ public class LoginAndLogout
 			tenantID = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			tenantID = "emaastesttenant1";
 		}
 
@@ -58,6 +62,7 @@ public class LoginAndLogout
 
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			username = "emcsadmin";
 		}
 		try {
@@ -65,6 +70,7 @@ public class LoginAndLogout
 
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			password = "Welcome1!";
 		}
 
@@ -80,7 +86,8 @@ public class LoginAndLogout
 			url = PageUtils.getServiceLink(tenantId, rel, servicename);
 		}
 		catch (Exception e) {
-
+			e.printStackTrace();
+			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OMCS_DASHBOARD_URL");
 		}
 
 		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");
@@ -91,6 +98,55 @@ public class LoginAndLogout
 
 			LoginUtils.doLogin(webd, username, password, tenantId, url);
 		}
+	}
+
+	public void loginErrorPage(String testName, String url)
+	{
+		String tenantID = null, username = null, password = null;
+		try {
+			tenantID = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			tenantID = "emaastesttenant1";
+		}
+
+		try {
+			username = oracle.sysman.emsaas.login.utils.Utils.getProperty("SSO_USERNAME");
+
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			username = "emcsadmin";
+		}
+		try {
+			password = oracle.sysman.emsaas.login.utils.Utils.getProperty("SSO_PASSWORD");
+
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			password = "Welcome1!";
+		}
+
+		webd = WebDriverUtils.initWebDriver(testName);
+		//		String url = null;
+		//		webd.getLogger().info("before::start to test in LoginAndOut");
+		//		try {
+		//			url = PageUtils.getServiceLink(tenantID, "home", "Dashboard-UI");
+		//		}
+		//		catch (Exception e) {
+		//
+		//		}
+		//
+		//		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");
+		//		webd.getLogger().info("url is " + url + "   properties file is " + testPropertiesFile);
+		webd.getLogger().info("after::start to test in LoginAndOut");
+		// if the ui have been login, do not login ,again
+		if (!webd.getWebDriver().getCurrentUrl().equals(url)) {
+
+			LoginUtils.doLogin(webd, username, password, tenantID, url);
+		}
+
 	}
 
 }

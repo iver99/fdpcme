@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class GzipFilter implements Filter
 {
-	private static Logger logger = LogManager.getLogger(GzipFilter.class);
+	private static final Logger LOGGER = LogManager.getLogger(GzipFilter.class);
 
 	/* (non-Javadoc)
 	 * @see javax.servlet.Filter#destroy()
@@ -41,7 +41,7 @@ public class GzipFilter implements Filter
 	@Override
 	public void destroy()
 	{
-		logger.debug("destroy for GzipFiler");
+		LOGGER.debug("destroy for GzipFiler");
 	}
 
 	/* (non-Javadoc)
@@ -70,7 +70,7 @@ public class GzipFilter implements Filter
 	@Override
 	public void init(FilterConfig arg0) throws ServletException
 	{
-		logger.debug("init for GzipFiler");
+		LOGGER.debug("init for GzipFiler");
 	}
 
 }

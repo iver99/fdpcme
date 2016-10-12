@@ -26,13 +26,17 @@ import org.apache.logging.log4j.Logger;
  */
 public class PrivilegeChecker
 {
-	private static Logger logger = LogManager.getLogger(PrivilegeChecker.class);
+	private PrivilegeChecker() {
+	  }
+
+	private static final Logger LOGGER = LogManager.getLogger(PrivilegeChecker.class);
 
 	public static final String ADMIN_ROLE_NAME_APM = "APM Administrator";
 	public static final String ADMIN_ROLE_NAME_ITA = "IT Analytics Administrator";
 	public static final String ADMIN_ROLE_NAME_LA = "Log Analytics Administrator";
 	public static final String ADMIN_ROLE_NAME_MONITORING = "Monitoring Service Administrator";
 	public static final String ADMIN_ROLE_NAME_SECURITY = "Security Analytics Administrator";
+	public static final String ADMIN_ROLE_NAME_COMPLIANCE = "Compliance Administrator";
 	public static final String ADMIN_ROLE_NAME_ORCHESTRATION = "Orchestration Administrator";
 	public static final String SECURITY_AUTH_ROLE_CHECK_API = "api/v1/roles/grants/getRoles?grantee=";
 	private static final String SECURITY_AUTHORIZATION_SERVICENAME = "SecurityAuthorization";
@@ -46,7 +50,7 @@ public class PrivilegeChecker
 				String endPoint = RegistryLookupUtil.getServiceInternalEndpoint(SECURITY_AUTHORIZATION_SERVICENAME,
 						SECURITY_AUTHORIZATION_VERSION, tenantName);
 				if (endPoint == null) {
-					logger.error("Failed to discover SecurityAuthorization service URL for privilege checking.");
+					LOGGER.error("Failed to discover SecurityAuthorization service URL for privilege checking.");
 				}
 				else {
 					String tenantDotUser = tenantName + "." + userName;
@@ -54,7 +58,7 @@ public class PrivilegeChecker
 							: endPoint + "/" + SECURITY_AUTH_ROLE_CHECK_API + tenantDotUser;
 					TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
 					String roleCheckResponse = rc.get(secAuthRolesApiUrl, tenantName, userName);
-					logger.debug("Checking roles for tenant user (" + tenantDotUser + "). The response is " + roleCheckResponse);
+					LOGGER.debug("Checking roles for tenant user (" + tenantDotUser + "). The response is " + roleCheckResponse);
 					JsonUtil ju = JsonUtil.buildNormalMapper();
 					RoleNamesEntity rne = ju.fromJson(roleCheckResponse, RoleNamesEntity.class);
 					if (rne != null && rne.getRoleNames() != null) {
@@ -63,11 +67,11 @@ public class PrivilegeChecker
 				}
 			}
 			catch (IOException e) {
-				logger.error(e);
+				LOGGER.error(e);
 			}
 		}
 		else {
-			logger.warn("Tenant name or user name is empty. isAdminUser checking is skipped.");
+			LOGGER.warn("Tenant name or user name is empty. isAdminUser checking is skipped.");
 		}
 
 		return roleNames;
@@ -76,10 +80,11 @@ public class PrivilegeChecker
 	public static boolean isAdminUser(List<String> userRoles)
 	{
 		boolean isAdmin = false;
-		if (userRoles != null && userRoles.size() > 0) {
+		if (userRoles != null && !userRoles.isEmpty()) {
 			if (userRoles.contains(ADMIN_ROLE_NAME_APM) || userRoles.contains(ADMIN_ROLE_NAME_ITA)
 					|| userRoles.contains(ADMIN_ROLE_NAME_LA) || userRoles.contains(ADMIN_ROLE_NAME_MONITORING)
-					|| userRoles.contains(ADMIN_ROLE_NAME_SECURITY) || userRoles.contains(ADMIN_ROLE_NAME_ORCHESTRATION)) {
+					|| userRoles.contains(ADMIN_ROLE_NAME_SECURITY) || userRoles.contains(ADMIN_ROLE_NAME_COMPLIANCE)
+					|| userRoles.contains(ADMIN_ROLE_NAME_ORCHESTRATION)) {
 				isAdmin = true;
 			}
 		}
