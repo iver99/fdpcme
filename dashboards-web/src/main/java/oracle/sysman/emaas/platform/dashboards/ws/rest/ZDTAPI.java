@@ -44,8 +44,6 @@ public class ZDTAPI extends APIBase
 
 	private static final String TABLE_DATA_KEY_DASHBOARD = "EMS_DASHBOARD";
 	private static final String TABLE_DATA_KEY_DASHBOARD_SET = "EMS_DASHBOARD_SET";
-	private static final String TABLE_DATA_KEY_DASHBOARD_FAVORITE = "EMS_DASHBOARD_FAVORITE";
-	private static final String TABLE_DATA_KEY_DASHBOARD_LAST_ACCESS = "EMS_DASHBOARD_LAST_ACCESS";
 	private static final String TABLE_DATA_KEY_DASHBOARD_TILES = "EMS_DASHBOARD_TILE";
 	private static final String TABLE_DATA_KEY_DASHBOARD_TILE_PARAMS = "EMS_DASHBOARD_TILE_PARAMS";
 	private static final String TABLE_DATA_KEY_DASHBOARD_USER_OPTIONS = "EMS_DASHBOARD_USER_OPTIONS";
@@ -67,10 +65,6 @@ public class ZDTAPI extends APIBase
 		try {
 			JSONArray tableData = getDashboardTableData();
 			obj.put(TABLE_DATA_KEY_DASHBOARD, tableData);
-			tableData = getDashboardFavoriteTableData();
-			obj.put(TABLE_DATA_KEY_DASHBOARD_FAVORITE, tableData);
-			tableData = getDashboardLastAccessTableData();
-			obj.put(TABLE_DATA_KEY_DASHBOARD_LAST_ACCESS, tableData);
 			tableData = getDashboardSetTableData();
 			obj.put(TABLE_DATA_KEY_DASHBOARD_SET, tableData);
 			tableData = getDashboardTileTableData();
@@ -119,18 +113,6 @@ public class ZDTAPI extends APIBase
 			ErrorEntity error = new ErrorEntity(e);
 			return buildErrorResponse(error);
 		}
-	}
-
-	private JSONArray getDashboardFavoriteTableData()
-	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardFavoriteTableData();
-		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_FAVORITE, list);
-	}
-
-	private JSONArray getDashboardLastAccessTableData()
-	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardLastAccessTableData();
-		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_LAST_ACCESS, list);
 	}
 
 	private JSONArray getDashboardSetTableData()

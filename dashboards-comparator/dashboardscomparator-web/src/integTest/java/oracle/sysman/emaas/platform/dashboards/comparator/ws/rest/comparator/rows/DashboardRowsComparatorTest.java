@@ -7,8 +7,6 @@ import org.testng.annotations.Test;
 
 import mockit.Deencapsulation;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
-import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardFavoriteRowEntity;
-import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardLastAccessRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardSetRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardTileParamsRowEntity;
@@ -45,27 +43,6 @@ public class DashboardRowsComparatorTest
 			+ 		"\"LAST_MODIFICATION_DATE\":\"" + LAST_MODIFICATION_DATE + "\","
 			+ 		"\"EXTENDED_OPTIONS\":\"" + DASHBOARD1_OPTIONS + "\""
 			+ 	"}],"
-			+ "\"EMS_DASHBOARD_FAVORITE\": [{"
-			+ 			"\"USER_NAME\":\"emcsadmin\","
-			+ 			"\"DASHBOARD_ID\":1,"
-			+ 			"\"CREATION_DATE\":\"" + CREATION_DATE + "\","
-			+ 			"\"LAST_MODIFICATION_DATE\":\"" + LAST_MODIFICATION_DATE + "\","
-			+ 			"\"TENANT_ID\":1"
-			+ 		"},{"
-			+ 			"\"USER_NAME\":\"emcsadmin\","
-			+ 			"\"DASHBOARD_ID\":2,"
-			+ 			"\"CREATION_DATE\":\"" + CREATION_DATE + "\","
-			+ 			"\"LAST_MODIFICATION_DATE\":\"" + LAST_MODIFICATION_DATE + "\","
-			+ 			"\"TENANT_ID\":1"
-			+ 		"}"
-			+ "],"
-			+ "\"EMS_DASHBOARD_LAST_ACCESS\": [{"
-			+ 		"\"DASHBOARD_ID\":1,"
-			+ 		"\"ACCESSED_BY\": 0,"
-			+ 		"\"CREATION_DATE\":\"" + CREATION_DATE + "\","
-			+ 		"\"LAST_MODIFICATION_DATE\":\"" + LAST_MODIFICATION_DATE + "\","
-			+ 		"\"TENANT_ID\": 1"
-			+ "}],"
 			+ "\"EMS_DASHBOARD_SET\": [{"
 			+ 		"\"DASHBOARD_SET_ID\": 12, "
 			+ 		"\"TENANT_ID\":1, "
@@ -138,16 +115,13 @@ public class DashboardRowsComparatorTest
 		TableRowsEntity result1 = cd.getInstance1().getData();
 		TableRowsEntity result2 = cd.getInstance1().getData();
 		Assert.assertNull(result1.getEmsDashboard());
-		Assert.assertNull(result1.getEmsDashboardFavorite());
-		Assert.assertNull(result1.getEmsDashboardLastAccess());
+		
 		Assert.assertNull(result1.getEmsDashboardSet());
 		Assert.assertNull(result1.getEmsDashboardTile());
 		Assert.assertNull(result1.getEmsDashboardTileParams());
 		Assert.assertNull(result1.getEmsDashboardUserOptions());
 		Assert.assertNull(result1.getEmsPreference());
 		Assert.assertNull(result2.getEmsDashboard());
-		Assert.assertNull(result2.getEmsDashboardFavorite());
-		Assert.assertNull(result2.getEmsDashboardLastAccess());
 		Assert.assertNull(result2.getEmsDashboardSet());
 		Assert.assertNull(result2.getEmsDashboardTile());
 		Assert.assertNull(result2.getEmsDashboardTileParams());
@@ -163,16 +137,7 @@ public class DashboardRowsComparatorTest
 		dre1.setDeleted(1L);
 		dre1.setIsSystem(1);
 		tre1.getEmsDashboard().add(dre1);
-		DashboardFavoriteRowEntity dfre1 = new DashboardFavoriteRowEntity();
-		dfre1.setDashboardId(1001L);
-		dfre1.setTenantId(1L);
-		dfre1.setUserName("emcsadmin");
-		tre1.getEmsDashboardFavorite().add(dfre1);
-		DashboardLastAccessRowEntity dlare1 = new DashboardLastAccessRowEntity();
-		dlare1.setDashboardId(1001L);
-		dlare1.setTenantId(1L);
-		dlare1.setAccessedBy("ecmsadmin");
-		tre1.getEmsDashboardLastAccess().add(dlare1);
+		
 		DashboardSetRowEntity dsre1 = new DashboardSetRowEntity();
 		dsre1.setDashboardSetId(1002L);
 		dsre1.setPosition(0L);
@@ -215,12 +180,6 @@ public class DashboardRowsComparatorTest
 		pre1.setUserName("emcsadmin");
 		tre1.getEmsPreference().add(pre1);
 
-		// let's introduce more 'difference' to instance 2
-		DashboardFavoriteRowEntity dfre2 = new DashboardFavoriteRowEntity();
-		dfre2.setDashboardId(2001L);
-		dfre2.setTenantId(1L);
-		dfre2.setUserName("emcsadmin");
-		tre2.getEmsDashboardFavorite().add(dfre2);
 
 		// let's introduce the same records for both the instances
 		PreferenceRowEntity preboth = new PreferenceRowEntity();
@@ -241,8 +200,7 @@ public class DashboardRowsComparatorTest
 		result1 = cd.getInstance1().getData();
 		result2 = cd.getInstance2().getData();
 		Assert.assertEquals(result1.getEmsDashboard().get(0), dre1);
-		Assert.assertEquals(result1.getEmsDashboardFavorite().get(0), dfre1);
-		Assert.assertEquals(result1.getEmsDashboardLastAccess().get(0), dlare1);
+		
 		Assert.assertEquals(result1.getEmsDashboardSet().get(0), dsre1);
 		Assert.assertEquals(result1.getEmsDashboardTileParams().get(0), dtpre1);
 		Assert.assertEquals(result1.getEmsDashboardTile().get(0), dtre1);
@@ -250,8 +208,7 @@ public class DashboardRowsComparatorTest
 		Assert.assertEquals(result1.getEmsPreference().get(0), pre1);
 		Assert.assertEquals(result1.getEmsPreference().size(), 1);// preference appear in both side won't appear here
 		Assert.assertNull(result2.getEmsDashboard());
-		Assert.assertEquals(result2.getEmsDashboardFavorite().get(0), dfre2);
-		Assert.assertNull(result2.getEmsDashboardLastAccess());
+		
 		Assert.assertNull(result2.getEmsDashboardSet());
 		Assert.assertNull(result2.getEmsDashboardTile());
 		Assert.assertNull(result2.getEmsDashboardTileParams());
@@ -269,17 +226,7 @@ public class DashboardRowsComparatorTest
 		Assert.assertEquals(tre.getEmsDashboard().get(0).getName(), DASHBOARD1_NAME);
 		Assert.assertEquals(tre.getEmsDashboard().get(0).getCreationDate(), CREATION_DATE);
 		Assert.assertEquals(tre.getEmsDashboard().get(0).getLastModificationDate(), LAST_MODIFICATION_DATE);
-		Assert.assertEquals(tre.getEmsDashboardFavorite().size(), 2);
-		Assert.assertEquals(tre.getEmsDashboardFavorite().get(0).getDashboardId().longValue(), 1);
-		Assert.assertEquals(tre.getEmsDashboardFavorite().get(0).getCreationDate(), CREATION_DATE);
-		Assert.assertEquals(tre.getEmsDashboardFavorite().get(0).getLastModificationDate(), LAST_MODIFICATION_DATE);
-		Assert.assertEquals(tre.getEmsDashboardFavorite().get(1).getDashboardId().longValue(), 2);
-		Assert.assertEquals(tre.getEmsDashboardFavorite().get(1).getCreationDate(), CREATION_DATE);
-		Assert.assertEquals(tre.getEmsDashboardFavorite().get(1).getLastModificationDate(), LAST_MODIFICATION_DATE);
-		Assert.assertEquals(tre.getEmsDashboardLastAccess().size(), 1);
-		Assert.assertEquals(tre.getEmsDashboardLastAccess().get(0).getDashboardId().longValue(), 1);
-		Assert.assertEquals(tre.getEmsDashboardLastAccess().get(0).getCreationDate(), CREATION_DATE);
-		Assert.assertEquals(tre.getEmsDashboardLastAccess().get(0).getLastModificationDate(), LAST_MODIFICATION_DATE);
+		
 		Assert.assertEquals(tre.getEmsDashboardSet().size(), 1);
 		Assert.assertEquals(tre.getEmsDashboardSet().get(0).getDashboardSetId().longValue(), 12);
 		Assert.assertEquals(tre.getEmsDashboardSet().get(0).getCreationDate(), CREATION_DATE);

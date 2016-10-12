@@ -112,27 +112,7 @@ public class DataManager
 		}
 	}
 
-	/**
-	 * Retrieves all dashboard favorite data rows for all tenant
-	 *
-	 * @return
-	 */
-	public List<Map<String, Object>> getDashboardFavoriteTableData()
-	{
-		String sql = "select * FROM EMS_DASHBOARD_FAVORITE";
-		return getDatabaseTableData(sql);
-	}
-
-	/**
-	 * Retrieves all dashboard last access data rows for all tenant
-	 *
-	 * @return
-	 */
-	public List<Map<String, Object>> getDashboardLastAccessTableData()
-	{
-		String sql = "select * FROM EMS_DASHBOARD_LAST_ACCESS";
-		return getDatabaseTableData(sql);
-	}
+	
 
 	/**
 	 * Retrieves all dashboard set data rows for all tenant

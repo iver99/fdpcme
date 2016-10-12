@@ -39,29 +39,11 @@ public class TableRowsSynchronizer
 			return;
 		}
 		syncDashboardTableRows(data.getEmsDashboard());
-		syncDashboardFavoriteTableRows(data.getEmsDashboardFavorite());
-		syncDashboardLastAccessTableRows(data.getEmsDashboardLastAccess());
 		syncDashboardSetTableRows(data.getEmsDashboardSet());
 		syncDashboardTileTableRows(data.getEmsDashboardTile());
 		syncDashboardTileParamsTableRows(data.getEmsDashboardTileParams());
 		syncDashboardUserOptionsTableRows(data.getEmsDashboardUserOptions());
 		syncPreferenceTableRows(data.getEmsPreference());
-	}
-
-	private void syncDashboardFavoriteTableRows(List<DashboardFavoriteRowEntity> rows)
-	{
-		if (rows == null) {
-			return;
-		}
-		// TODO: call DataManager implementation to insert or update data to database
-	}
-
-	private void syncDashboardLastAccessTableRows(List<DashboardLastAccessRowEntity> rows)
-	{
-		if (rows == null) {
-			return;
-		}
-		// TODO: call DataManager implementation to insert or update data to database
 	}
 
 	private void syncDashboardSetTableRows(List<DashboardSetRowEntity> rows)

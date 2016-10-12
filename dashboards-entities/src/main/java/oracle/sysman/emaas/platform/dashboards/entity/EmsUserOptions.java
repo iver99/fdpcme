@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.MultitenantType;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
@@ -29,6 +30,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @IdClass(EmsUserOptionsPK.class)
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
+@AdditionalCriteria("this.deleted = '0'")
 public class EmsUserOptions extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 8723513639667559582L;
