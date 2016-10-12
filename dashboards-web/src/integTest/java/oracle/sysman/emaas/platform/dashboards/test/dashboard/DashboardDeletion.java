@@ -2,8 +2,8 @@ package oracle.sysman.emaas.platform.dashboards.test.dashboard;
 
 import oracle.sysman.emaas.platform.dashboards.test.common.CommonTest;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -35,7 +35,7 @@ public class DashboardDeletion {
 		remoteuser = ct.getRemoteUser();// "emcsadmin";//
 	}
 	
-	@Test(dependsOnMethods = { "createDashboard"})
+	//@Test(dependsOnMethods = { "createDashboard"})
 	public void testDeleteAllByTenant()
 	{
 		Response res = RestAssured
@@ -75,7 +75,7 @@ public class DashboardDeletion {
 		Assert.assertTrue(res3.getStatusCode() == 404);
 	}
 	
-	@Test
+	//@Test
 	public static void createDashboard()
 	{
 		// insert data to ems_dashboard, ems_user_options and ems_dashboard_tile tables;
