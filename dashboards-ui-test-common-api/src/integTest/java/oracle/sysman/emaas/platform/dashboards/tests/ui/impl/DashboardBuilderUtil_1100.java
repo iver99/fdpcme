@@ -3,10 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1100;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DelayedPressEnterThread;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.*;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.*;
@@ -113,5 +110,60 @@ public class DashboardBuilderUtil_1100 extends DashboardBuilderUtil_190
         Actions actions = new Actions(driver.getWebDriver());
         actions.moveToElement(widgetHeader).build().perform();
         driver.getLogger().info("Focus to the widget");
+    }
+
+    @Override
+    public boolean verifyDashboard(WebDriver driver, String dashboardName, String description, boolean showTimeSelector)
+    {
+        driver.getLogger().info(
+                "DashboardBuilderUtil.verifyDashboard started for name=\"" + dashboardName + "\", description=\"" + description
+                        + "\", showTimeSelector=\"" + showTimeSelector + "\"");
+        Validator.notEmptyString("dashboardName", dashboardName);
+
+        driver.waitForElementPresent(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
+        WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR)));
+        WaitUtil.waitForPageFullyLoaded(driver);
+
+        driver.waitForElementPresent(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
+        driver.click(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
+        driver.takeScreenShot();
+        String realName = driver.getElement(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR).getAttribute("title");
+        if (!dashboardName.equals(realName)) {
+            driver.getLogger().info(
+                    "DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected dashboard name is "
+                            + dashboardName + ", actual dashboard name is " + realName);
+            return false;
+        }
+
+        driver.waitForElementPresent(DashBoardPageId_190.BUILDERDESCRIPTIONTEXTLOCATOR);
+        String realDesc = driver.getElement(DashBoardPageId_190.BUILDERDESCRIPTIONTEXTLOCATOR).getAttribute("title");
+        if (description == null || "".equals(description)) {
+            if (realDesc != null && !"".equals(realDesc.trim())) {
+                driver.getLogger().info(
+                        "DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected description is "
+                                + description + ", actual dashboard description is " + realDesc);
+                return false;
+            }
+        }
+        else {
+            if (!description.equals(realDesc)) {
+                driver.getLogger().info(
+                        "DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected description is "
+                                + description + ", actual dashboard description is " + realDesc);
+                return false;
+            }
+        }
+
+        boolean actualTimeSelectorShown = driver.isDisplayed(DashBoardPageId_190.BUILDERDATETIMEPICKERLOCATOR);
+        if (actualTimeSelectorShown != showTimeSelector) {
+            driver.getLogger().info(
+                    "DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected showTimeSelector is "
+                            + showTimeSelector + ", actual dashboard showTimeSelector is " + actualTimeSelectorShown);
+            return false;
+        }
+
+        driver.getLogger().info("DashboardBuilderUtil.verifyDashboard compelted and returns true");
+        return true;
     }
 }
