@@ -293,9 +293,10 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                     var widgetsBaseUrl = '/sso.static/savedsearch.widgets';
                     var widgetsUrl = widgetsBaseUrl;
                     if (dfu.isDevMode()){
-                        widgetsUrl=dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
+                        widgetsBaseUrl = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
+                        widgetsUrl = widgetsBaseUrl;
                         if (includeDashboardIneligible) {
-                            widgetsUrl = widgetsUrl + "?includeDashboardIneligible=true";
+                            widgetsUrl = widgetsBaseUrl + "?includeDashboardIneligible=true";
                         }
                     }
 
@@ -545,18 +546,20 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                     var pname = null;
                     var pversion = null;
                     var gname = null;
+                    var groupId = null;
                     targetWidgetGroupArray.push(groupAll);
                     if (data && data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
+                            groupId = data[i].WIDGET_GROUP_ID;
                             pname = data[i].PROVIDER_NAME;
                             pversion = data[i].PROVIDER_VERSION;
                             gname = data[i].WIDGET_GROUP_NAME;
-                            if ((!widgetProviderName /*&& !widgetProviderVersion */) ||
-                                    widgetProviderName === pname || (widgetProviderName === 'TargetAnalytics' && gname === 'Orchestration')
+                            // Disable ITA widget group since no ITA widgets for now. (group id === 3)
+                            if ((!widgetProviderName && groupId !== 3 /*&& !widgetProviderVersion */) ||
+                                    widgetProviderName === pname || (widgetProviderName === 'TargetAnalytics' && groupId === 7)
                                 /*    && widgetProviderVersion === pversion */) {
-                                //Enable ITA widget group since ITA widgets are enabled now.
                                     var widgetGroup = {value:pname+'|'+pversion+'|'+gname, 
-                                                        label:gname === 'Data Explorer' ? nls.WIDGET_SELECTOR_WIDGET_GROUP_NAME_TA : gname};
+                                                        label: groupId === 2 ? nls.WIDGET_SELECTOR_WIDGET_GROUP_NAME_TA : gname};
                                     targetWidgetGroupArray.push(widgetGroup);
                                     availableWidgetGroups.push(data[i]);
                             }
