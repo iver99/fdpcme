@@ -123,6 +123,8 @@ define([
 
                 var ajaxCallDfd = $.Deferred();
                 var jqXhrObj = null;
+                var firstCalled = false;
+                var underPlannedDowntime = false;
                 //Add ability to abort ajaxWithRetry calls
                 ajaxCallDfd.abort = function(){
                     if (jqXhrObj !== null && $.isFunction(jqXhrObj.abort)) {
@@ -139,6 +141,45 @@ define([
                     .fail(function (jqXHR, textStatus, errorThrown) {
                         //Do retry
                         if (jqXHR.status === 408 || jqXHR.status === 503 || (jqXHR.status === 0 && textStatus !== 'abort')) {
+                            if (!firstCalled) {
+                                //When API Gateway node can't process an incoming ordered write request because an ordered write request 
+                                //from that tenant is already in progress. In this case the client (GUI code) should retry the request 
+                                //after every "retry-after" number of seconds every "num-retry" number of times before giving up and 
+                                //returning the error to the user. In the following example GUI shall retry 3 times after every 2 secs 
+                                //before returning the error message to the user
+                                //X-ORCL-OMC-APIGW-RETRYAFTER : retry-after=2, num-retry=3, msg="tenant locked"
+                                var apigwHeaders = self.getAPIGWHeaderValues(jqXHR, 'X-ORCL-OMC-APIGW-RETRYAFTER');
+                                if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'].toLowerCase() === 'tenant locked') {
+                                    if (apigwHeaders['retry-after'] && apigwHeaders['num-retry'] && retries!== 0) {
+                                        retries = apigwHeaders['num-retry'];
+                                        retryDelayTime = apigwHeaders['retry-after']*1000; //Convert to milliseconds
+                                        retryLimit = apigwHeaders['num-retry'];
+                                    }
+                                }
+                                //Check to see if OMC is under planned downtime, if yes, show a warning message to user and no need to retry
+                                else if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'].toLowerCase() === 'planned downtime') {
+                                    retries = 0;
+                                    underPlannedDowntime = true;
+                                    //show message to user when OMC is under planned downtime
+                                    messageId = messageUtil.getGuid();
+                                    var summaryMsg = nls.BRANDING_BAR_MESSAGE_PLANNED_DOWNTIME_SUMMARY;
+                                    var detailMsg = null;
+                                    //Show planned downtime message detail
+                                    detailMsg = nls.BRANDING_BAR_MESSAGE_PLANNED_DOWNTIME_DETAIL;
+                                    messageObj = {
+                                        id: messageId, 
+                                        action: 'show', 
+                                        type: 'warn', 
+                                        category: 'omc_planned_downtime',
+                                        summary: summaryMsg, 
+                                        detail: detailMsg};
+
+                                    //Always show retry message summary and detail on UI
+                                    messageUtil.showMessage(messageObj);
+                                }
+                                firstCalled = true;
+                            }
+                            
                             retryCount++;
                             if (retries > 0) {
                                 //remove old retry message
@@ -170,8 +211,8 @@ define([
 
                             //remove old retrying message after retries
                             removeMessage(messageId);
-
-                            if (showMessages !== 'none') {
+                            
+                            if (showMessages !== 'none' && !underPlannedDowntime) {
                                 //show new retry error message
                                 //Set failure message to be shown on UI after retries
                                 var errorSummaryMsg = nls.BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY;
@@ -309,6 +350,31 @@ define([
                 }
 
                 return retryOptions;
+            };
+            
+            /**
+             * Get header values map from API Gateway's response.
+             * 
+             * @param {Object} jqXHR
+             * @param {String} headerName
+             * 
+             * @returns {Object} headerValuesMap
+             */ 
+            self.getAPIGWHeaderValues = function(jqXHR, headerName) {
+                var headerValuesMap = null;
+                var apigwHeader = jqXHR.getResponseHeader(headerName); //'retry-after=3600, num-retry=0, msg="planned downtime"';
+                if (apigwHeader) {
+                    var headerValues = apigwHeader.split(',');
+                    headerValuesMap = {};
+                    for (var i = 0; i < headerValues.length; i++) {
+                        var headerItem = headerValues[i];
+                        var itemValuePair = headerItem.split('=');
+                        if (itemValuePair.length === 2) {
+                            headerValuesMap[$.trim(itemValuePair[0])] = $.trim(itemValuePair[1].replace(/["']/g, ''));
+                        }
+                    }
+                }
+                return headerValuesMap;
             };
 
             function isValidShowMessageOption(messageOption) {

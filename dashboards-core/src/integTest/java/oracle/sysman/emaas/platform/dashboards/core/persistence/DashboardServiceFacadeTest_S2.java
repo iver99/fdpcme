@@ -3,6 +3,7 @@
  */
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -116,7 +117,7 @@ public class DashboardServiceFacadeTest_S2
 		EmsDashboard d = new EmsDashboard();
 		d.setName("test" + System.currentTimeMillis());
 		d.setCreationDate(DateUtil.getCurrentUTCTime());
-		d.setDeleted(0L);
+		d.setDeleted(BigInteger.ZERO);
 		d.setDescription("test");
 		d.setEnableTimeRange(1);
 		d.setEnableRefresh(1);
@@ -159,7 +160,7 @@ public class DashboardServiceFacadeTest_S2
 		tile.setWidgetViewmode("widgetViewmode");
 		tile.setWidgetHistogram("widgetHistogram");
 		tile.setWidgetSupportTimeControl(1);
-		tile.setWidgetLinkedDashboard(1L);
+		tile.setWidgetLinkedDashboard(BigInteger.valueOf(1L));
 		return tile;
 	}
 
@@ -310,7 +311,7 @@ public class DashboardServiceFacadeTest_S2
 
 		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
 		dsf.commitTransaction();
-		dsf.getEmsDashboardById(0L);
+		dsf.getEmsDashboardById(BigInteger.ZERO);
 		dsf.getEmsDashboardFindAll();
 		dsf.getEmsDashboardByName("ss", "test");
 		dsf.getEmsPreference("ss", "ss");
@@ -323,7 +324,7 @@ public class DashboardServiceFacadeTest_S2
 		dsf.persistEmsPreference(new EmsPreference());
 		dsf.removeAllEmsPreferences("");
 		EmsDashboard rd = new EmsDashboard();
-		rd.setDashboardId(0L);
+		rd.setDashboardId(BigInteger.ZERO);
 		dsf.removeEmsDashboard(rd);
 		EmsPreference rp = new EmsPreference();
 		rp.setPrefKey("");
@@ -401,7 +402,7 @@ public class DashboardServiceFacadeTest_S2
 			dashboardServiceFacade = new DashboardServiceFacade(TENANT_ID);
 			d = dashboardServiceFacade.getEmsDashboardById(d.getDashboardId());
 			d.setLastModificationDate(DateUtil.getCurrentUTCTime());
-			d.setDeleted(1L);
+			d.setDeleted(BigInteger.valueOf(1L));
 			dashboardServiceFacade.mergeEmsDashboard(d);
 			//List<EmsDashboard> ds = dashboardServiceFacade.getEmsDashboardFindAll();
 			Assert.assertNull(dashboardServiceFacade.getEmsDashboardByName(d.getName(), d.getOwner()));

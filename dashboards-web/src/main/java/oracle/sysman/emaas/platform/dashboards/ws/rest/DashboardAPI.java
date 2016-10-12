@@ -10,7 +10,29 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
-import com.sun.jersey.core.util.Base64;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.StreamingOutput;
+
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
@@ -35,19 +57,12 @@ import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONObject;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.StreamingOutput;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import com.sun.jersey.core.util.Base64;
 
 /**
  * @author wenjzhu
@@ -103,7 +118,7 @@ public class DashboardAPI extends APIBase
 	@Path("{id: [1-9][0-9]*}")
 	public Response deleteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") Long dashboardId)
+			@PathParam("id") BigInteger dashboardId)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/{}", dashboardId);
 		DashboardManager manager = DashboardManager.getInstance();
@@ -170,7 +185,7 @@ public class DashboardAPI extends APIBase
 	@Produces("image/png")
 	public Object getDashboardScreenShot(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") Long dashboardId, @PathParam("serviceVersion") String serviceVersion,
+			@PathParam("id") BigInteger dashboardId, @PathParam("serviceVersion") String serviceVersion,
 			@PathParam("fileName") String fileName)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
@@ -257,12 +272,12 @@ public class DashboardAPI extends APIBase
 				{
 					byte[] decoded = null;
 					if (ss.getScreenshot().startsWith(DashboardManager.SCREENSHOT_BASE64_PNG_PREFIX)) {
-						decoded = Base64
-								.decode(ss.getScreenshot().substring(DashboardManager.SCREENSHOT_BASE64_PNG_PREFIX.length()));
+						decoded = Base64.decode(ss.getScreenshot().substring(
+								DashboardManager.SCREENSHOT_BASE64_PNG_PREFIX.length()));
 					}
 					else if (ss.getScreenshot().startsWith(DashboardManager.SCREENSHOT_BASE64_JPG_PREFIX)) {
-						decoded = Base64
-								.decode(ss.getScreenshot().substring(DashboardManager.SCREENSHOT_BASE64_JPG_PREFIX.length()));
+						decoded = Base64.decode(ss.getScreenshot().substring(
+								DashboardManager.SCREENSHOT_BASE64_JPG_PREFIX.length()));
 					}
 					else {
 						LOGGER.debug("Failed to retrieve screenshot decoded bytes as the previs isn't supported");
@@ -290,7 +305,7 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDashboardUserOptions(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") Long dashboardId)
+			@PathParam("id") BigInteger dashboardId)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}/options", dashboardId);
 		UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
@@ -317,7 +332,7 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryDashboardById(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") long dashboardId)
+			@PathParam("id") BigInteger dashboardId)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
 		DashboardManager dm = DashboardManager.getInstance();
@@ -354,8 +369,8 @@ public class DashboardAPI extends APIBase
 	@QueryParam("onlyFavorites") Boolean onlyFavorites*/)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
-				"Service call to [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&filter={}", queryString, limit,
-				offset, orderBy, filterString);
+				"Service call to [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&filter={}", queryString,
+				limit, offset, orderBy, filterString);
 		logkeyHeaders("queryDashboards()", userTenant, tenantIdParam);
 		String qs = null;
 		try {
@@ -401,7 +416,7 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response quickUpdateDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") long dashboardId, JSONObject inputJson)
+			@PathParam("id") BigInteger dashboardId, JSONObject inputJson)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}/quickUpdate",
 				dashboardId);
@@ -495,7 +510,7 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response saveUserOptions(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") Long dashboardId, JSONObject inputJson)
+			@PathParam("id") BigInteger dashboardId, JSONObject inputJson)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [POST] /v1/dashboards/{}/options/",
 				dashboardId);
@@ -534,7 +549,7 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") long dashboardId, JSONObject inputJson)
+			@PathParam("id") BigInteger dashboardId, JSONObject inputJson)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}", dashboardId);
 		logkeyHeaders("updateDashboard()", userTenant, tenantIdParam);
@@ -579,10 +594,9 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateUserOptions(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") Long dashboardId, JSONObject inputJson)
+			@PathParam("id") BigInteger dashboardId, JSONObject inputJson)
 	{
-		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}/options/",
-				dashboardId);
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}/options/", dashboardId);
 		UserOptions userOption;
 		try {
 			userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
@@ -618,7 +632,7 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryDashboardSetsBySubId(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 									   @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-									   @PathParam("id") long dashboardId)
+									   @PathParam("id") BigInteger dashboardId)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}/dashboardsets", dashboardId);
 		DashboardManager dm = DashboardManager.getInstance();
@@ -652,9 +666,10 @@ public class DashboardAPI extends APIBase
 		updateDashboardHref(dbd, tenantName);
 		updateDashboardScreenshotHref(dbd, tenantName);
 		updateDashboardOptionsHref(dbd, tenantName);
-		if(dbd != null && dbd.getType()!= null && dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET) && dbd.getSubDashboards() != null){
-			for(Dashboard subDbd :dbd.getSubDashboards()){
-				updateDashboardHref(subDbd,tenantName);
+		if (dbd != null && dbd.getType() != null && dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET)
+				&& dbd.getSubDashboards() != null) {
+			for (Dashboard subDbd : dbd.getSubDashboards()) {
+				updateDashboardHref(subDbd, tenantName);
 			}
 		}
 		return dbd;

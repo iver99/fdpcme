@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import java.math.BigInteger;
+
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
@@ -17,7 +19,6 @@ import org.testng.annotations.Test;
  * @author jishshi
  * @since 2016/3/8.
  */
-@Test
 public class UserOptionsManagerTest {
     static {
         PersistenceManager.setTestEnv(true);
@@ -41,7 +42,7 @@ public class UserOptionsManagerTest {
     public void testGetOptionsById() {
         UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
         try {
-			Assert.assertNotNull(userOptionsManager.getOptionsById(1001L,1L));
+			Assert.assertNotNull(userOptionsManager.getOptionsById(BigInteger.valueOf(1001L),1L));
 		}
 		catch (DashboardException e) {
 			// TODO Auto-generated catch block
@@ -65,7 +66,7 @@ public class UserOptionsManagerTest {
     public void testGetOptionsByIdWithInvalidId() {
         UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
         try {
-			userOptionsManager.getOptionsById(1001L,1L);
+			userOptionsManager.getOptionsById(BigInteger.valueOf(1001L),1L);
 		}
 		catch (DashboardException e) {
 			// TODO Auto-generated catch block
@@ -77,7 +78,7 @@ public class UserOptionsManagerTest {
     public void testGetOptionsByIdWithInvalidId2() {
         UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
         try {
-			userOptionsManager.getOptionsById(1001L,1L);
+			userOptionsManager.getOptionsById(BigInteger.valueOf(1001L),1L);
 		}
 		catch (DashboardException e) {
 			// TODO Auto-generated catch block
@@ -97,7 +98,7 @@ public class UserOptionsManagerTest {
 		}
 
         UserOptions userOptions = new UserOptions();
-        userOptions.setDashboardId(100L);
+        userOptions.setDashboardId(BigInteger.valueOf(1001L));
         userOptions.setAutoRefreshInterval(3000L);
         try {
 			userOptionsManager.saveOrUpdateUserOptions(userOptions,1001L);
@@ -127,7 +128,7 @@ public class UserOptionsManagerTest {
     public void testSaveOrUpdateUserOptionsWithInvalidId() {
         UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
         UserOptions userOptions = new UserOptions();
-        userOptions.setDashboardId(100L);
+        userOptions.setDashboardId(BigInteger.valueOf(1001L));
         userOptions.setAutoRefreshInterval(3000L);
         try {
 			userOptionsManager.saveOrUpdateUserOptions(userOptions,1001L);

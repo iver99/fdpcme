@@ -22,7 +22,8 @@ define([
 'uifwk/@version@/js/util/typeahead-search-impl',
 'uifwk/@version@/js/util/usertenant-util-impl',
 'uifwk/@version@/js/resources/nls/uifwkCommonMsg',
-'uifwk/@version@/js/resources/nls/root/uifwkCommonMsg'
+'uifwk/@version@/js/resources/nls/root/uifwkCommonMsg',
+'uifwk/@version@/js/util/zdt-util-impl'
 ],
     function (ko, aboutVM, aboutTemplate, navVM, navTemplate, brandingVM, brandingTemplate, widgetsVM, widgetsTemplate, timefilterVM, timeFilterTemplate, timePickerVM, timePickerTemplate) {
 //        function registerComponent(kocName, kocViewModel, kocTemplate)

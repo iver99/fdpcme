@@ -1,24 +1,27 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
+import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 public class Tile
 {
@@ -158,7 +161,8 @@ public class Tile
 	@JsonProperty("PROVIDER_VERSION")
 	private String providerVersion;
 
-	private Long tileId;
+//	@JsonSerialize(using = BigIntegerSerializer.class)
+	private String tileId;
 	private String title;
 	@JsonProperty("WIDGET_CREATION_TIME")
 	private String widgetCreationTime;
@@ -199,7 +203,8 @@ public class Tile
 	private Boolean widgetSupportTimeControl;
 
 	@JsonProperty("WIDGET_LINKED_DASHBOARD")
-	private Long widgetLinkedDashboard;
+	@JsonSerialize(using = BigIntegerSerializer.class)
+	private BigInteger widgetLinkedDashboard;
 
 	private Integer width;
 
@@ -362,7 +367,7 @@ public class Tile
 		return row;
 	}
 
-	public Long getTileId()
+	public String getTileId()
 	{
 		return tileId;
 	}
@@ -431,7 +436,7 @@ public class Tile
 	//        this.position = position;
 	//    }
 
-	public Long getWidgetLinkedDashboard()
+	public BigInteger getWidgetLinkedDashboard()
 	{
 		return widgetLinkedDashboard;
 	}
@@ -592,7 +597,7 @@ public class Tile
 		this.row = row;
 	}
 
-	public void setTileId(Long tileId)
+	public void setTileId(String tileId)
 	{
 		this.tileId = tileId;
 	}
@@ -655,7 +660,7 @@ public class Tile
 		this.widgetKocName = widgetKocName;
 	}
 
-	public void setWidgetLinkedDashboard(Long widgetLinkedDashboard)
+	public void setWidgetLinkedDashboard(BigInteger widgetLinkedDashboard)
 	{
 		this.widgetLinkedDashboard = widgetLinkedDashboard;
 	}
@@ -941,6 +946,8 @@ public class Tile
 
 	private void updateSpecificType(EmsDashboardTile to) throws CommonFunctionalException
 	{
+		to.setCreationDate(DateUtil.getGatewayTime());
+		to.setLastModificationDate(to.getCreationDate());
 		if (Tile.TILE_TYPE_TEXT_WIDGET.equals(getType())) {
 			to.setWidgetName(Tile.TEXT_WIDGET_NAME);
 			to.setWidgetDescription(Tile.TEXT_WIDGET_DESCRIPTION);
@@ -952,7 +959,7 @@ public class Tile
 			to.setWidgetTemplate(Tile.TEXT_WIDGET_TEMPLATE);
 			to.setWidth(Tile.TEXT_WIDGET_WIDTH);
 			to.setWidgetUniqueId(Tile.TEXT_WIDGET_NAME);
-			to.setWidgetCreationTime(String.valueOf(DateUtil.getCurrentUTCTime()));
+			to.setWidgetCreationTime(String.valueOf(DateUtil.getGatewayTime()));
 			String encodedContent = StringEscapeUtils.escapeHtml4(getContent());
 			if (StringUtil.isEmpty(encodedContent) || encodedContent.length() > TEXT_WIDGET_MAX_CONTENT_LEN) {
 				throw new CommonFunctionalException(

@@ -1,6 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
-
+import java.math.BigInteger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
@@ -33,8 +33,8 @@ public class UserOptionsTest {
 
     @Test
     public void testGetDashboardId() {
-        Long id= 1L;
-        userOptions.setDashboardId(id);
+    	BigInteger id = BigInteger.valueOf(1L);
+    	userOptions.setDashboardId(id);
         Assert.assertEquals(userOptions.getDashboardId(),id);
     }
 
@@ -49,10 +49,10 @@ public class UserOptionsTest {
     public void testValueOf() {
         Assert.assertNull(UserOptions.valueOf(null));
 
-        Long id = 1L;
+        BigInteger id = BigInteger.valueOf(1L);
         EmsUserOptions emsUserOptions = new EmsUserOptions();
         emsUserOptions.setUserName("name");
-        emsUserOptions.setDashboardId(1L);
+        emsUserOptions.setDashboardId(BigInteger.valueOf(1L));
         emsUserOptions.setAutoRefreshInterval(30000L);
 
         userOptions = UserOptions.valueOf(emsUserOptions);
@@ -65,7 +65,7 @@ public class UserOptionsTest {
     @Test
     public void testToEntity() {
         userOptions.setUserName("name");
-        userOptions.setDashboardId(1L);
+        userOptions.setDashboardId(BigInteger.valueOf(1L));
         userOptions.setAutoRefreshInterval(30000L);
 
         EmsUserOptions emsUserOptions = null;
@@ -79,7 +79,8 @@ public class UserOptionsTest {
 		}
 		if (emsUserOptions != null) {
 			 Assert.assertEquals(emsUserOptions.getUserName(),"new name");
-		     Assert.assertEquals(emsUserOptions.getDashboardId(),new Long(1L));
+			 Assert.assertEquals(emsUserOptions.getDashboardId(), BigInteger.valueOf(1L));
+		     //Assert.assertEquals(emsUserOptions.getDashboardId(),BigInteger.ONE);
 		     Assert.assertEquals(emsUserOptions.getAutoRefreshInterval(),new Long(30000L));
 		}
     }
@@ -95,7 +96,7 @@ public class UserOptionsTest {
         }
 
         try{
-            userOptions.setDashboardId(1L);
+            userOptions.setDashboardId(BigInteger.valueOf(1L));
             userOptions.setAutoRefreshInterval(null);
             userOptions.toEntity(null,"new name");
         }catch (Exception ignored){

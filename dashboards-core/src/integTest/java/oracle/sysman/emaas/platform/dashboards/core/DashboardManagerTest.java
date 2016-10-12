@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -149,7 +150,7 @@ public class DashboardManagerTest
 		Dashboard dbd2 = new Dashboard();
 		dbd2.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
 		dbd2.setType(Dashboard.DASHBOARD_TYPE_NORMAL);
-		dbd2.setDashboardId(Long.MAX_VALUE); // specify id not existing in database
+		dbd2.setDashboardId(BigInteger.valueOf(Long.MAX_VALUE)); // specify id not existing in database
 		dm.saveNewDashboard(dbd2, tenantId1);
 		Dashboard queried = dm.getDashboardById(dbd2.getDashboardId(), tenantId1);
 		Assert.assertEquals(dbd2.getName(), queried.getName());
@@ -599,7 +600,7 @@ public class DashboardManagerTest
 		// not existing ones
 		boolean expectedException = false;
 		try {
-			queried = dm.getDashboardById(Long.MAX_VALUE, tenantId1);
+			queried = dm.getDashboardById(BigInteger.valueOf(Long.MAX_VALUE), tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
 			LOGGER.info("context", e);

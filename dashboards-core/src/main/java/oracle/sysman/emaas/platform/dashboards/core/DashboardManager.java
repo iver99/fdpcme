@@ -1,13 +1,12 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -29,19 +28,19 @@ import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardService
 import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.IdGenerator;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.persistence.config.QueryHints;
-import org.eclipse.persistence.config.ResultType;
 
 public class DashboardManager
 {
@@ -130,16 +129,16 @@ public class DashboardManager
 	 * @param tenantId
 	 * @throws DashboardNotFoundException
 	 */
-	public void addFavoriteDashboard(Long dashboardId, Long tenantId) throws DashboardException
+	public void addFavoriteDashboard(BigInteger dashboardId, Long tenantId) throws DashboardException
 	{
-		if (dashboardId == null || dashboardId <= 0) {
+		if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
 			throw new DashboardNotFoundException();
 		}
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-			if (ed == null || ed.getDeleted() != null && ed.getDeleted() > 0) {
+			if (ed == null || ed.getDeleted() != null && ed.getDeleted().compareTo(BigInteger.ZERO) > 0) {
 				LOGGER.debug("Dashboard with id {} and tenant id {} is not found, or deleted already", dashboardId, tenantId);
 				throw new DashboardNotFoundException();
 			}
@@ -180,9 +179,9 @@ public class DashboardManager
 	 *            delete permanently or not
 	 * @throws DashboardException
 	 */
-	public void deleteDashboard(Long dashboardId, boolean permanent, Long tenantId) throws DashboardException
+	public void deleteDashboard(BigInteger dashboardId, boolean permanent, Long tenantId) throws DashboardException
 	{
-		if (dashboardId == null || dashboardId <= 0) {
+		if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
 			return;
 		}
 		EntityManager em = null;
@@ -193,7 +192,7 @@ public class DashboardManager
 			if (ed == null) {
 				throw new DashboardNotFoundException();
 			}
-			if (permanent == false && ed.getDeleted() != null && ed.getDeleted() > 0) {
+			if (permanent == false && ed.getDeleted() != null && ed.getDeleted().compareTo(BigInteger.ZERO) > 0) {
 				throw new DashboardNotFoundException();
 			}
 			if (!permanent && DataFormatUtils.integer2Boolean(ed.getIsSystem())) {
@@ -239,16 +238,16 @@ public class DashboardManager
 	 * @param tenantId
 	 * @throws DashboardNotFoundException
 	 */
-	public void deleteDashboard(Long dashboardId, Long tenantId) throws DashboardException
+	public void deleteDashboard(BigInteger dashboardId, Long tenantId) throws DashboardException
 	{
 		deleteDashboard(dashboardId, false, tenantId);
 	}
 
-	public ScreenshotData getDashboardBase64ScreenShotById(Long dashboardId, Long tenantId) throws DashboardException
+	public ScreenshotData getDashboardBase64ScreenShotById(BigInteger dashboardId, Long tenantId) throws DashboardException
 	{
 		EntityManager em = null;
 		try {
-			if (dashboardId == null || dashboardId <= 0) {
+			if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
 				throw new DashboardNotFoundException();
 			}
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
@@ -257,7 +256,7 @@ public class DashboardManager
 			if (ed == null) {
 				throw new DashboardNotFoundException();
 			}
-			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
+			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted().compareTo(BigInteger.ZERO) > 0;
 			if (isDeleted != null && isDeleted.booleanValue()) {
 				throw new DashboardNotFoundException();
 			}
@@ -296,11 +295,11 @@ public class DashboardManager
 	 * @return
 	 * @throws DashboardException
 	 */
-	public Dashboard getDashboardById(Long dashboardId, Long tenantId) throws DashboardException
+	public Dashboard getDashboardById(BigInteger dashboardId, Long tenantId) throws DashboardException
 	{
 		EntityManager em = null;
 		try {
-			if (dashboardId == null || dashboardId <= 0) {
+			if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
 				LOGGER.debug("Dashboard not found for id {} is invalid", dashboardId);
 				throw new DashboardNotFoundException();
 			}
@@ -311,7 +310,7 @@ public class DashboardManager
 				LOGGER.debug("Dashboard not found with the specified id {}", dashboardId);
 				throw new DashboardNotFoundException();
 			}
-			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
+			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted().compareTo(BigInteger.ZERO) > 0;
 			if (isDeleted != null && isDeleted.booleanValue()) {
 				LOGGER.debug("Dashboard with id {} is not found for it's deleted already", dashboardId);
 				throw new DashboardNotFoundException();
@@ -377,11 +376,11 @@ public class DashboardManager
 		}
 	}
 
-	public Dashboard getDashboardSetsBySubId(Long dashboardId, Long tenantId) throws DashboardException
+	public Dashboard getDashboardSetsBySubId(BigInteger dashboardId, Long tenantId) throws DashboardException
 	{
 		EntityManager em = null;
 		try {
-			if (dashboardId == null || dashboardId <= 0) {
+			if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
 				LOGGER.debug("Dashboard not found for id {} is invalid", dashboardId);
 				throw new DashboardNotFoundException();
 			}
@@ -392,7 +391,7 @@ public class DashboardManager
 				LOGGER.debug("Dashboard not found with the specified id {}", dashboardId);
 				throw new DashboardNotFoundException();
 			}
-			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
+			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted().compareTo(BigInteger.ZERO) > 0;
 			if (isDeleted != null && isDeleted.booleanValue()) {
 				LOGGER.debug("Dashboard with id {} is not found for it's deleted already", dashboardId);
 				throw new DashboardNotFoundException();
@@ -477,9 +476,9 @@ public class DashboardManager
 	 * @param tenantId
 	 * @return
 	 */
-	public Date getLastAccessDate(Long dashboardId, Long tenantId)
+	public Date getLastAccessDate(BigInteger dashboardId, Long tenantId)
 	{
-		if (dashboardId == null || dashboardId <= 0) {
+		if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
 			LOGGER.debug("Last access for dashboard not found for dashboard id {} is invalid", dashboardId);
 			return null;
 		}
@@ -518,9 +517,9 @@ public class DashboardManager
 	 * @return
 	 * @throws DashboardException
 	 */
-	public boolean isDashboardFavorite(Long dashboardId, Long tenantId) throws DashboardException
+	public boolean isDashboardFavorite(BigInteger dashboardId, Long tenantId) throws DashboardException
 	{
-		if (dashboardId == null || dashboardId <= 0) {
+		if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
 			throw new DashboardNotFoundException();
 		}
 		EntityManager em = null;
@@ -773,16 +772,16 @@ public class DashboardManager
 	 * @param tenantId
 	 * @throws DashboardNotFoundException
 	 */
-	public void removeFavoriteDashboard(Long dashboardId, Long tenantId) throws DashboardNotFoundException
+	public void removeFavoriteDashboard(BigInteger dashboardId, Long tenantId) throws DashboardNotFoundException
 	{
-		if (dashboardId == null || dashboardId <= 0) {
+		if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
 			throw new DashboardNotFoundException();
 		}
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-			if (ed == null || ed.getDeleted() != null && ed.getDeleted() > 0) {
+			if (ed == null || ed.getDeleted() != null && ed.getDeleted().compareTo(BigInteger.ZERO) > 0) {
 				LOGGER.debug("Dashboard with id {} is not found for it does not exists or is deleted already", dashboardId);
 				throw new DashboardNotFoundException();
 			}
@@ -828,10 +827,14 @@ public class DashboardManager
 			String currentUser = UserContext.getCurrentUser();
 			if (dbd.getDashboardId() != null) {
 				EmsDashboard sameId = dsf.getEmsDashboardById(dbd.getDashboardId());
-				if (sameId != null && sameId.getDeleted() <= 0) {
+				if (sameId != null && sameId.getDeleted().compareTo(BigInteger.ZERO) <= 0) {
 					throw new CommonFunctionalException(
 							MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_CREATE_SAME_ID_ERROR));
 				}
+			}
+			else {
+				// initialize id
+				dbd.setDashboardId(IdGenerator.getDashboardId(ZDTContext.getRequestId()));
 			}
 			//check dashboard name
 			if (dbd.getName() == null || "".equals(dbd.getName().trim()) || dbd.getName().length() > 64) {
@@ -843,7 +846,7 @@ public class DashboardManager
 				throw new DashboardSameNameException();
 			}
 			// init creation date, owner to prevent null insertion
-			Date created = DateUtil.getCurrentUTCTime();
+			Date created = DateUtil.getGatewayTime();
 			if (dbd.getCreationDate() == null) {
 				dbd.setCreationDate(created);
 			}
@@ -854,8 +857,11 @@ public class DashboardManager
 				//				dbd.setEnableTimeRange(null);
 			}
 			else {
-				if (dbd.getTileList() != null) {
-					for (Tile tile : dbd.getTileList()) {
+				if (dbd.getTileList() != null && !dbd.getTileList().isEmpty()) {
+					List<Tile> tiles = dbd.getTileList();
+					for (int i = 0; i < tiles.size(); i++) {
+						Tile tile = tiles.get(i);
+						tile.setTileId(IdGenerator.getTileId(ZDTContext.getRequestId(), i));
 						if (tile.getCreationDate() == null) {
 							tile.setCreationDate(created);
 						}
@@ -865,6 +871,7 @@ public class DashboardManager
 						if(tile.getWidgetDeleted()==null) {
 							tile.setWidgetDeleted(Boolean.FALSE);
 						}
+						tile.setLastModificationDate(created);
 					}
 				}
 			}
@@ -875,7 +882,7 @@ public class DashboardManager
 			//EMCPDF-2288,if this dashboard is duplicated from other dashboard,copy its screenshot to new dashboard
 			if(dbd.getDupDashboardId()!=null){
 				LOGGER.debug("Duplicating screenshot from dashoard {} to new Dashboard..",dbd.getDupDashboardId());
-				Long dupId=dbd.getDupDashboardId();
+				BigInteger dupId=dbd.getDupDashboardId();
 				EmsDashboard emsd=dsf.getEmsDashboardById(dupId);
 				ed.setScreenShot(emsd.getScreenShot());
 			}
@@ -897,11 +904,11 @@ public class DashboardManager
 	 * @param enable
 	 * @param tenantId
 	 */
-	public void setDashboardIncludeTimeControl(Long dashboardId, boolean enable, Long tenantId)
+	public void setDashboardIncludeTimeControl(BigInteger dashboardId, boolean enable, Long tenantId)
 	{
 		EntityManager em = null;
 		try {
-			if (dashboardId == null || dashboardId <= 0) {
+			if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
 				return;
 			}
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
@@ -944,7 +951,7 @@ public class DashboardManager
 				throw new DashboardSameNameException();
 			}
 			// init creation date, owner to prevent null insertion
-			Date created = DateUtil.getCurrentUTCTime();
+			Date created = DateUtil.getGatewayTime();			
 			//			if (dbd.getCreationDate() == null) {
 			//				dbd.setCreationDate(created);
 			//			}
@@ -955,8 +962,13 @@ public class DashboardManager
 				// do nothing
 			}
 			else {
-				if (dbd.getTileList() != null) {
-					for (Tile tile : dbd.getTileList()) {
+				if (dbd.getTileList() != null && !dbd.getTileList().isEmpty()) {
+					List<Tile> tiles = dbd.getTileList();
+					for (int i = 0; i < tiles.size(); i++) {
+						Tile tile = tiles.get(i);
+						if (tile.getTileId() == null) {
+							tile.setTileId(IdGenerator.getTileId(ZDTContext.getRequestId(), i));
+						}
 						if (tile.getCreationDate() == null) {
 							tile.setCreationDate(created);
 						}
@@ -966,6 +978,7 @@ public class DashboardManager
 						if (tile.getWidgetDeleted() == null) {
 							tile.setWidgetDeleted(Boolean.FALSE);
 						}
+						tile.setLastModificationDate(created);
 					}
 				}
 			}
@@ -975,7 +988,7 @@ public class DashboardManager
 				throw new DashboardNotFoundException();
 			}
 
-			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
+			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted().compareTo(BigInteger.ZERO) > 0;
 			if (isDeleted != null && isDeleted.booleanValue()) {
 				throw new DashboardNotFoundException();
 			}
@@ -1085,7 +1098,7 @@ public class DashboardManager
 	 * @param dashboardId
 	 * @param tenantId
 	 */
-	public void updateLastAccessDate(Long dashboardId, Long tenantId)
+	public void updateLastAccessDate(BigInteger dashboardId, Long tenantId)
 	{
 		EntityManager em = null;
 		try {
@@ -1099,9 +1112,9 @@ public class DashboardManager
 		}
 	}
 
-	private void updateLastAccessDate(Long dashboardId, Long tenantId, DashboardServiceFacade dsf)
+	private void updateLastAccessDate(BigInteger dashboardId, Long tenantId, DashboardServiceFacade dsf)
 	{
-		if (dashboardId == null || dashboardId <= 0) {
+		if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
 			LOGGER.debug("Last access date for dashboard is not updated: dashboard id with value {} is invalid", dashboardId);
 			return;
 		}
@@ -1143,7 +1156,6 @@ public class DashboardManager
 			sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.PROVIDER_NAME in ("
 					+ filter.getIncludedWidgetProvidersString() + " )) ");
 			sb.append(" ) ");
-
 		}
 	}
 

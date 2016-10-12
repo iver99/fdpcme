@@ -71,7 +71,7 @@ define(['knockout',
                     async: false,
                     success: function(resp) {
                         var value = prefUtil.getPreferenceValue(resp, prefKeyHomeDashboardId);
-                        if (Number(value) === ko.unwrap(dashboardInst.id)) {
+                        if (value === ko.unwrap(dashboardInst.id)) {
                             self.dashboardsetConfig.setHome = ko.observable(false);
                         }
                     }
@@ -739,7 +739,8 @@ define(['knockout',
             };
 
             $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
-                var removeDashboardId = Number(ui.tab.attr('id').split(/dashboardTab-/)[1]) || (ui.tab.attr('id').split(/dashboardTab-/)[1]);
+                var removeDashboardId = (ui.tab.attr('id').split(/dashboardTab-/)[1]);
+                //var removeDashboardId = Number(ui.tab.attr('id').split(/dashboardTab-/)[1]) || (ui.tab.attr('id').split(/dashboardTab-/)[1]);
                 var selectedItem = ui.tab;
                 self.removeDashboardInSet(removeDashboardId,selectedItem,false,event);
             } );
@@ -747,7 +748,7 @@ define(['knockout',
             $("#dbd-tabs-container").on("ojdeselect", function (event, ui) {
                 if (typeof (event.originalEvent) !== 'undefined') {
 
-                    var selectedDashboardId=Number(event.originalEvent.currentTarget.id.split(/dashboardTab-/)[1])||event.originalEvent.currentTarget.id.split(/dashboardTab-/)[1];
+                    var selectedDashboardId=event.originalEvent.currentTarget.id.split(/dashboardTab-/)[1];
                     ko.utils.arrayForEach(self.dashboardsetItems, function (item, index) {
                         if (item.dashboardId === selectedDashboardId) {
                             self.selectedDashboardItem(item);
@@ -766,7 +767,7 @@ define(['knockout',
                     var tempAarray = [];
 
                     $(".other-nav").each(function () {
-                        var sortedDashboardId = Number($(this).attr('id').split(/dashboardTab-/)[1]) || $(this).attr('id').split(/dashboardTab-/)[1];
+                        var sortedDashboardId = $(this).attr('id').split(/dashboardTab-/)[1];
                         ko.utils.arrayForEach(self.reorderedDbsSetItems(), function (item, index) {
                             if (item.dashboardId === sortedDashboardId) {
                                 tempAarray.push(item);
