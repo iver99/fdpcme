@@ -11,13 +11,11 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -100,9 +98,11 @@ public class ZDTAPI extends APIBase
 
 	@PUT
 	@Path("sync")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response sync(JSONObject dataToSync)
 	{
 		infoInteractionLogAPIIncomingCall(null, null, "Service call to [PUT] /v1/zdt/sync");
+		logger.info("Service call to /v1/zdt/sync");
 		try {
 			TableRowsEntity data = getJsonUtil().fromJson(dataToSync.toString(), TableRowsEntity.class);
 			new TableRowsSynchronizer().sync(data);

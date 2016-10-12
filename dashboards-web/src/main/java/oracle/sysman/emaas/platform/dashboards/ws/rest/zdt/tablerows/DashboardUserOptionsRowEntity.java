@@ -12,6 +12,8 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import java.math.BigInteger;
+
 /**
  * @author guochen
  */
@@ -24,7 +26,7 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	private Long tenantId;
 
 	@JsonProperty("DASHBOARD_ID")
-	private Long dashboardId;
+	private BigInteger dashboardId;
 
 	@JsonProperty("AUTO_REFRESH_INTERVAL")
 	private Long autoRefreshInterval;
@@ -38,6 +40,11 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	@JsonProperty("EXTENDED_OPTIONS")
 	private String extendedOptions;
 
+	@JsonProperty("CREATION_DATE")
+	private String creationDate;
+
+	@JsonProperty("LAST_MODIFICATION_DATE")
+	private String lastModificationDate;
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -54,6 +61,22 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 			return false;
 		}
 		DashboardUserOptionsRowEntity other = (DashboardUserOptionsRowEntity) obj;
+		if (creationDate == null) {
+			if (other.creationDate != null) {
+				return false;
+			}
+		}
+		else if (!creationDate.equals(other.creationDate)) {
+			return false;
+		}
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null) {
+				return false;
+			}
+		}
+		else if (!lastModificationDate.equals(other.lastModificationDate)) {
+			return false;
+		}
 		if (accessDate == null) {
 			if (other.accessDate != null) {
 				return false;
@@ -132,7 +155,7 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	/**
 	 * @return the dashboardId
 	 */
-	public Long getDashboardId()
+	public BigInteger getDashboardId()
 	{
 		return dashboardId;
 	}
@@ -169,6 +192,22 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 		return userName;
 	}
 
+	/**
+	 * @return the creationDate
+	 */
+	public String getCreationDate()
+	{
+		return creationDate;
+	}
+
+	/**
+	 * @return the lastModificationDate
+	 */
+	public String getLastModificationDate()
+	{
+		return lastModificationDate;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -184,6 +223,8 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 		result = prime * result + (isFavorite == null ? 0 : isFavorite.hashCode());
 		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
 		result = prime * result + (userName == null ? 0 : userName.hashCode());
+		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
+		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
 		return result;
 	}
 
@@ -209,7 +250,7 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	 * @param dashboardId
 	 *            the dashboardId to set
 	 */
-	public void setDashboardId(Long dashboardId)
+	public void setDashboardId(BigInteger dashboardId)
 	{
 		this.dashboardId = dashboardId;
 	}
@@ -250,6 +291,25 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 		this.userName = userName;
 	}
 
+	/**
+	 * @param creationDate
+	 *            the creationDate to set
+	 */
+	public void setCreationDate(String creationDate)
+	{
+		this.creationDate = creationDate;
+	}
+
+	/**
+	 * @param lastModificationDate
+	 *            the lastModificationDate to set
+	 */
+	public void setLastModificationDate(String lastModificationDate)
+	{
+		this.lastModificationDate = lastModificationDate;
+	}
+
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -258,6 +318,6 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	{
 		return "DashboardUserOptionsRowEntity [userName=" + userName + ", tenantId=" + tenantId + ", dashboardId=" + dashboardId
 				+ ", autoRefreshInterval=" + autoRefreshInterval + ", accessDate=" + accessDate + ", isFavorite=" + isFavorite
-				+ ", extendedOptions=" + extendedOptions + "]";
+				+ ", extendedOptions=" + extendedOptions + ", creationDate=" + creationDate + ", lastModificationDate=" + lastModificationDate+ "]";
 	}
 }
