@@ -8,11 +8,12 @@ define(['knockout',
         'jquery',
         'ojs/ojcore',
         'dfutil',
+        'uifwk/js/util/usertenant-util',
 //        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
         'builder/dashboard.tile.model',
         'builder/editor/editor.tiles'
     ],
-    function(ko, $, oj, dfu/*, TargetSelectorUtils*/) {
+    function(ko, $, oj, dfu,userTenantUtilModel/*, TargetSelectorUtils*/) {
         function Cell(row, column) {
             var self = this;
 
@@ -174,7 +175,7 @@ define(['knockout',
                 return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard() || _currentUser !== dashboard.owner();
             });
 
-            tile.isItaAdmin = ko.observable(false);
+            tile.isOpenInExplorerShown = ko.observable(true);
 
             tile.widerEnabled = ko.computed(function() {
                 return mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS;
@@ -317,42 +318,22 @@ define(['knockout',
             tile.leftEnabled(mode.getModeColumn(tile) > 0);
             tile.rightEnabled(mode.getModeColumn(tile)+mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS);
 
-            judgeAdmin();
-                function judgeAdmin() {
-                    if (!$('.links-content-container')[0]) {
-                        var serviceUrl = "/sso.static/dashboards.configurations/registration";
-                        if (dfu.isDevMode()) {
-                            serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "configurations/registration");
-                        }
-                        dfu.ajaxWithRetry({
-                            url: serviceUrl,
-                            headers: dfu.getDashboardsRequestHeader(),
-                            contentType: 'application/json',
-                            success: function (data, textStatus) {
-                                data.adminLinks.forEach(function (item) {
-                                    if (item.name === "IT Analytics Administration") {
-                                        tile.isItaAdmin(true);
-                                    }
-                                    ;
-                                });
-                            },
-                            error: function (xhr, textStatus, errorThrown) {
-                                oj.Logger.error('Failed to get service instances by URL: ' + serviceUrl);
-                            },
-                            async: true
-                        });
-                    } else {
-                        var brandingbarAdmin = ko.dataFor($('.links-content-container')[0]).adminLinks();
-                        brandingbarAdmin.forEach(function (item) {
-                            if (item.name === "IT Analytics Administration") {
-                                tile.isItaAdmin(true);
-                            }
-                            ;
-                        });
+            hideOpenInExplorer();
+
+            function hideOpenInExplorer(data) {
+                if (tile.PROVIDER_NAME() !== 'TargetAnalytics' && tile.PROVIDER_NAME() !== 'LogAnalyticsUI') {
+                    tile.isOpenInExplorerShown(false);
+                    return;
+                }
+                if (tile.PROVIDER_NAME() === 'TargetAnalytics') {
+                    var userTenantUtil = new userTenantUtilModel();
+                    var itaAdmin = userTenantUtil.userHasRole("IT Analytics Administrator") || userTenantUtil.userHasRole("IT Analytics User");
+                    if (!itaAdmin) {
+                        tile.isOpenInExplorerShown(false);
                     }
-
-                };
-
+                }
+            }
+            
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                 var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');
                 var url = Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), versionPlus);

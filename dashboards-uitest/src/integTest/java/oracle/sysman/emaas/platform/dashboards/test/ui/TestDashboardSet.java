@@ -91,6 +91,11 @@ public class TestDashboardSet extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
 	}
 
 	@AfterClass

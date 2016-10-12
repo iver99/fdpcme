@@ -105,7 +105,7 @@ define([
                     var tselId = "tsel_"+self.dashboard.id();
                     var label;
                     var labelIntervalId = setInterval(function() {
-                        if(self.labelInited) {
+                        if(self.labelInited || self.enableEntityFilter() === "OFF") {
                             clearInterval(labelIntervalId);
                         }
                        if($("#"+tselId).children().get(0) && ko.contextFor($('#' + tselId).children().get(0)).$component.cm.dropdownInitialLabel()) {

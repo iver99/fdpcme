@@ -311,7 +311,8 @@
                             </ul>
                             <!-- /ko -->
                             <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator no-print"></span>
-                            <div class="df-targte-selector" data-bind="visible: dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE'">
+                            <!--ko if: dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE' -->
+                            <div class="df-target-selector">   
                                 <emcta-target-selector data-bind="attr: {id: 'tsel_'+dashboard.id()}"
                                                        params="returnFunction: returnFromTsel,
                                                             initializeCallback: initializedCallback,
@@ -326,8 +327,10 @@
                                                                 }
                                                             }"></emcta-target-selector>
                             </div>
-
-                            <div tabindex="0" class="df-date-time-picker" data-bind="attr: {id: 'dtpicker_'+dashboard.id()}, component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>
+                            <!-- /ko -->
+                            <!--ko if: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' -->
+                            <div tabindex="0" class="df-date-time-picker" data-bind="attr: {id: 'dtpicker_'+dashboard.id()}, component: {name: 'df-datetime-picker', params: datetimePickerParams}" data-show-time-picker></div>
+                            <!-- /ko -->
                         </div>
                     </div>
 
@@ -362,7 +365,7 @@
                                               <div class="dbd-btn-editor">                 
                                                   <button class="oj-button-half-chrome dbd-data-explore" tabindex="0"
                                                           data-bind="
-                                                             visible: $root.isMobileDevice !== 'true',                                                        
+                                                             visible: $root.isMobileDevice !== 'true' && isOpenInExplorerShown,                                                        
                                                              attr:{'id': 'editButton' + clientGuid,title: getNlsString('DBS_BUILDER_TILE_EDIT')},
                                                              click:$root.openInDataExplorer,
                                                              ojComponent: {
@@ -608,7 +611,7 @@
                             <p data-bind="html: getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_HEAD')"></p>
                             <ul>
                                 <!-- ko foreach:dashboardSets -->
-                                    <li style="list-style-type:none;" data-bind="text: '<'+$data.name+'>'"></li>
+                                    <li style="list-style-type:none;" data-bind="text: $data.name"></li>
                                 <!-- /ko -->
                             </ul>
                             <p data-bind="html: getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_TAILE', toolBarModel.dashboardName())"></p>
@@ -634,7 +637,7 @@
                             <p data-bind="html: getNlsString('COMMON_UNSHAER_USED_DASHBOARD_MSG_HEAD')"></p>
                             <ul>
                                 <!-- ko foreach:dashboardSets -->
-                                    <li style="list-style-type:none;" data-bind="text: '<'+$data.name+'>'"></li>
+                                    <li style="list-style-type:none;" data-bind="text: $data.name"></li>
                                 <!-- /ko -->
                             </ul>
                              <p data-bind="html: getNlsString('COMMON_UNSHAER_USED_DASHBOARD_MSG_TAILE', toolBarModel.dashboardName())"></p>

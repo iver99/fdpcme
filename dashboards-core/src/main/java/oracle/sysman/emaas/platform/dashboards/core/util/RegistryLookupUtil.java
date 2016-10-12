@@ -75,16 +75,18 @@ public class RegistryLookupUtil
 	}
 
 	private static final Logger LOGGER = LogManager.getLogger(RegistryLookupUtil.class);
-	private static final Logger itrLogger = LogUtil.getInteractionLogger();
 
+	private static final Logger itrLogger = LogUtil.getInteractionLogger();
 	// keep the following the same with service name
 	public static final String APM_SERVICE = "ApmUI";
+
 	public static final String ITA_SERVICE = "emcitas-ui-apps";
 	public static final String LA_SERVICE = "LogAnalyticsUI";
 	public static final String TA_SERVICE = "TargetAnalytics";
 	public static final String MONITORING_SERVICE = "MonitoringServiceUI";
 	public static final String SECURITY_ANALYTICS_SERVICE = "SecurityAnalyticsUI";
 	public static final String COMPLIANCE_SERVICE = "ComplianceUIService";
+	public static final String ORCHESTRATION_SERVICE = "CosUIService";
 
 	public static List<Link> getLinksWithRelPrefix(String relPrefix, SanitizedInstanceInfo instance)
 	{
@@ -112,8 +114,8 @@ public class RegistryLookupUtil
 		try {
 			if (!StringUtil.isEmpty(tenantName)) {
 				internalInstance = LookupManager.getInstance().getLookupClient().getInstanceForTenant(queryInfo, tenantName);
-				itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance,
-						tenantName);
+				itrLogger
+						.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance, tenantName);
 				if (internalInstance == null) {
 					LOGGER.error(
 							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
@@ -303,14 +305,13 @@ public class RegistryLookupUtil
 		SanitizedInstanceInfo sanitizedInstance = null;
 		try {
 			if (!StringUtil.isEmpty(tenantName)) {
-				sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance,
-						tenantName);
+				sanitizedInstance = LookupManager.getInstance().getLookupClient()
+						.getSanitizedInstanceInfo(internalInstance, tenantName);
 				itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
 						sanitizedInstance, tenantName);
 			}
 			else {
-				LOGGER.debug(
-						"Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
+				LOGGER.debug("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
 				sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
 				itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
 						sanitizedInstance);
@@ -702,7 +703,7 @@ public class RegistryLookupUtil
 				for (InstanceInfo internalInstance : result) {
 					if (map.containsKey(APM_SERVICE) && map.containsKey(ITA_SERVICE) && map.containsKey(LA_SERVICE)
 							&& map.containsKey(MONITORING_SERVICE) && map.containsKey(SECURITY_ANALYTICS_SERVICE)
-							&& map.containsKey(COMPLIANCE_SERVICE)) {
+							&& map.containsKey(COMPLIANCE_SERVICE) && map.containsKey(ORCHESTRATION_SERVICE)) {
 						break;
 					}
 					if (!map.containsKey(APM_SERVICE)) {
@@ -781,6 +782,20 @@ public class RegistryLookupUtil
 							LOGGER.debug("Tenant id is inserted into the base vanity URL for Compliance service. The URL is {}",
 									url);
 							map.put(COMPLIANCE_SERVICE, url);
+						}
+					}
+					if (!map.containsKey(ORCHESTRATION_SERVICE)) {
+						List<Link> links = internalInstance.getLinksWithProtocol("vanity/ocs", "https");
+						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
+
+						if (links != null && !links.isEmpty()) {
+							lk = links.get(0);
+							LOGGER.debug("Retrieved base vanity URL for Orchestration service: {} ", lk.getHref());
+							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
+							LOGGER.debug(
+									"Tenant id is inserted into the base vanity URL for Orchestration service. The URL is {}",
+									url);
+							map.put(ORCHESTRATION_SERVICE, url);
 						}
 					}
 				}

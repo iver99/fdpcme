@@ -1,9 +1,3 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <link rel="stylesheet" href="/emsaasui/uifwk/@version@/css/widgets/datetime-picker.css" type="text/css"/>
-    </head>
-    <body>
         <div data-testapiversion="1.7.5" data-bind="attr: {id: 'dateTimePicker_' + randomId}" style="display: table">
             <label for="dropdown" data-bind="attr: {id: 'dropdownLabel_'+randomId}" style="font-weight: bold; font-size: 14px; vertical-align: middle; padding-right: 5px;" data-bind="text: timeRangeMsg, style: {display: hideMainLabel}"></label>
             <span class="oj-select-choice"  style="width: auto; display: inline-block" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime"> 
@@ -80,20 +74,16 @@
 
                     </div>
 
-                    <script type="text/html" data-bind="attr: {id: 'calendar_'+randomId}">
+                    <!-- ko if: showCalendar -->
+                    <div style="display: inline-block; padding: 0px 10px;">
                         <!--date picker -->
                         <div class="datePicker" data-bind="attr: {id: 'datePicker_'+randomId}, ojComponent:{component: 'ojInputDate', 
-                                                                        datePicker:{changeMonth: 'none', changeYear: 'none', daysOutsideMonth: 'hidden', numberOfMonths: 2, stepMonths: 1},
-                                                                        value: value, min: minDate, max: maxDate, displayOptions: {'messages':'none', validatorHint: 'none'}
-                                                                        }, 
-                                                                      event: {mouseup: calendarClicked}
-
-                             ">
-                        </div>                    
-                    </script>
-                    
-                    <!-- ko if: showCalendar -->
-                    <div style="display: inline-block; padding: 0px 10px;" data-bind="template: {name: 'calendar_'+randomId}"></div>
+                                                                datePicker:{changeMonth: 'none', changeYear: 'none', daysOutsideMonth: 'hidden', numberOfMonths: 2, stepMonths: 1},
+                                                                value: value, min: minDate, max: maxDate, displayOptions: {'messages':'none', validatorHint: 'none'}
+                                                                }, 
+                                                            event: {mouseup: calendarClicked}">
+                        </div>   
+                    </div>
                     <!-- /ko -->
                     
                     <!-- Apply & Cancel button -->
@@ -123,5 +113,3 @@
             </div> 
 
         </div>
-    </body>
-</html>

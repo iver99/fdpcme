@@ -1,5 +1,5 @@
-define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knockout", "jquery", "uifwk/@version@/js/util/message-util-impl", "ojs/ojcore", "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg", "ojs/ojdatetimepicker"],
-        function (ko, $, msgUtilModel, oj, nls) {
+define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knockout", "jquery", "uifwk/@version@/js/util/message-util-impl", "uifwk/@version@/js/util/df-util-impl", "ojs/ojcore", "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg", "ojs/ojdatetimepicker"],
+        function (ko, $, msgUtilModel, dfuModel, oj, nls) {
 
             //Firefox ignores milliseconds when converting a date to Date object, while it doesn't when converting a number.
             //The funciton is used to keep the milliseconds no matter it is a Date Object or number so that when calculating time periods, it is precise.
@@ -43,6 +43,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
              * @returns {undefined}
              */
             function dateTimePickerViewModel(params) {
+                //Append uifwk css file into document head
+                var dfu = new dfuModel();
+                dfu.loadUifwkCss();
+                
                 var self = this;
                 var msgUtil = new msgUtilModel();
                 console.log("Initialize date time picker! The params are: ");

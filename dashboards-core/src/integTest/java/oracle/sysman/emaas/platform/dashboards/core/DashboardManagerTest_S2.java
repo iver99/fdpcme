@@ -11,6 +11,11 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
@@ -34,11 +39,6 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 /**
  * @author guobaochen
  */
@@ -49,6 +49,7 @@ public class DashboardManagerTest_S2
 		UserContext.setCurrentUser("SYSMAN");
 		TenantSubscriptionUtil.setTestEnv();
 	}
+
 	private static final Logger LOGGER = LogManager.getLogger(DashboardManagerTest_S2.class);
 
 	//@BeforeMethod
@@ -1138,6 +1139,33 @@ public class DashboardManagerTest_S2
 			}
 		};
 		int rtn = dm.updateDashboardTilesName(1L, "test", 1L);
+		Assert.assertEquals(rtn, 1234);
+	}
+
+	@Test(groups = { "s2" })
+	public void testUpdateWidgetDeleteForTilesByWidgetId(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
+			@Mocked final EntityManager anyEntityManager, @Mocked final EntityTransaction andEntityTransaction,
+			@Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber)
+	{
+		DashboardManager dm = DashboardManager.getInstance();
+		Assert.assertEquals(dm.updateWidgetDeleteForTilesByWidgetId(1L, 1L), 0);
+		Assert.assertEquals(dm.updateWidgetDeleteForTilesByWidgetId(1L, null), 0);
+
+		new Expectations() {
+			{
+				anyDashboardServiceFacade.getEntityManager();
+				result = anyEntityManager;
+				anyEntityManager.getTransaction();
+				result = andEntityTransaction;
+				anyEntityManager.createQuery(anyString);
+				result = anyQuery;
+				andEntityTransaction.begin();
+				anyQuery.executeUpdate();
+				result = 1234;
+				andEntityTransaction.commit();
+			}
+		};
+		int rtn = dm.updateWidgetDeleteForTilesByWidgetId(1L, 1L);
 		Assert.assertEquals(rtn, 1234);
 	}
 

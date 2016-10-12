@@ -30,6 +30,10 @@ BEGIN
   ELSE
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.SHOW_INHOME exists already, no change is needed');
   END IF;
-
+EXCEPTION
+WHEN OTHERS THEN
+  ROLLBACK;
+  DBMS_OUTPUT.PUT_LINE('Failed to add new column due to '||SQLERRM);
+  RAISE;
 END;
 /
