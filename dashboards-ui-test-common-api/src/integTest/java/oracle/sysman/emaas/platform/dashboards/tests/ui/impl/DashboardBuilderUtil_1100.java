@@ -136,8 +136,8 @@ public class DashboardBuilderUtil_1100 extends DashboardBuilderUtil_190
             return false;
         }
 
-        driver.waitForElementPresent(DashBoardPageId_190.BUILDERDESCRIPTIONTEXTLOCATOR);
-        String realDesc = driver.getElement(DashBoardPageId_190.BUILDERDESCRIPTIONTEXTLOCATOR).getAttribute("title");
+        driver.waitForElementPresent(DashBoardPageId_1120.BUILDERDESCRIPTIONTEXTLOCATOR);
+        String realDesc = driver.getElement(DashBoardPageId_1120.BUILDERDESCRIPTIONTEXTLOCATOR).getAttribute("title");
         if (description == null || "".equals(description)) {
             if (realDesc != null && !"".equals(realDesc.trim())) {
                 driver.getLogger().info(
