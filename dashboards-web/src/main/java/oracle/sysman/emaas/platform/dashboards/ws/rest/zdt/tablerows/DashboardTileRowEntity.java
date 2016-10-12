@@ -12,16 +12,18 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import java.math.BigInteger;
+
 /**
  * @author guochen
  */
 public class DashboardTileRowEntity implements RowEntity
 {
 	@JsonProperty("TILE_ID")
-	private Long tileId;
+	private BigInteger tileId;
 
 	@JsonProperty("DASHBOARD_ID")
-	private Long dashboardId;
+	private BigInteger dashboardId;
 
 	@JsonProperty("CREATION_DATE")
 	private String creationDate;
@@ -399,7 +401,7 @@ public class DashboardTileRowEntity implements RowEntity
 	/**
 	 * @return the dashboardId
 	 */
-	public Long getDashboardId()
+	public BigInteger getDashboardId()
 	{
 		return dashboardId;
 	}
@@ -495,7 +497,7 @@ public class DashboardTileRowEntity implements RowEntity
 	/**
 	 * @return the tileId
 	 */
-	public Long getTileId()
+	public BigInteger getTileId()
 	{
 		return tileId;
 	}
@@ -700,7 +702,7 @@ public class DashboardTileRowEntity implements RowEntity
 	 * @param dashboardId
 	 *            the dashboardId to set
 	 */
-	public void setDashboardId(Long dashboardId)
+	public void setDashboardId(BigInteger dashboardId)
 	{
 		this.dashboardId = dashboardId;
 	}
@@ -808,7 +810,7 @@ public class DashboardTileRowEntity implements RowEntity
 	 * @param tileId
 	 *            the tileId to set
 	 */
-	public void setTileId(Long tileId)
+	public void setTileId(BigInteger tileId)
 	{
 		this.tileId = tileId;
 	}

@@ -12,13 +12,15 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import java.math.BigInteger;
+
 /**
  * @author guochen
  */
 public class DashboardTileParamsRowEntity implements RowEntity
 {
 	@JsonProperty("TILE_ID")
-	private Long tileId;
+	private BigInteger tileId;
 
 	@JsonProperty("PARAM_NAME")
 	private String paramName;
@@ -41,6 +43,12 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	@JsonProperty("PARAM_VALUE_TIMESTAMP")
 	private String paramValueTimestamp;
 
+	@JsonProperty("CREATION_DATE")
+	private String creationDate;
+
+	@JsonProperty("LAST_MODIFICATION_DATE")
+	private String lastModificationDate;
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -57,6 +65,22 @@ public class DashboardTileParamsRowEntity implements RowEntity
 			return false;
 		}
 		DashboardTileParamsRowEntity other = (DashboardTileParamsRowEntity) obj;
+		if (creationDate == null) {
+			if (other.creationDate != null) {
+				return false;
+			}
+		}
+		else if (!creationDate.equals(other.creationDate)) {
+			return false;
+		}
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null) {
+				return false;
+			}
+		}
+		else if (!lastModificationDate.equals(other.lastModificationDate)) {
+			return false;
+		}
 		if (isSystem == null) {
 			if (other.isSystem != null) {
 				return false;
@@ -183,10 +207,27 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	/**
 	 * @return the tileId
 	 */
-	public Long getTileId()
+	public BigInteger getTileId()
 	{
 		return tileId;
 	}
+
+	/**
+	 * @return the creationDate
+	 */
+	public String getCreationDate()
+	{
+		return creationDate;
+	}
+
+	/**
+	 * @return the lastModificationDate
+	 */
+	public String getLastModificationDate()
+	{
+		return lastModificationDate;
+	}
+
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -204,6 +245,8 @@ public class DashboardTileParamsRowEntity implements RowEntity
 		result = prime * result + (paramValueTimestamp == null ? 0 : paramValueTimestamp.hashCode());
 		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
 		result = prime * result + (tileId == null ? 0 : tileId.hashCode());
+		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
+		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
 		return result;
 	}
 
@@ -274,9 +317,27 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	 * @param tileId
 	 *            the tileId to set
 	 */
-	public void setTileId(Long tileId)
+	public void setTileId(BigInteger tileId)
 	{
 		this.tileId = tileId;
+	}
+
+	/**
+	 * @param creationDate
+	 *            the creationDate to set
+	 */
+	public void setCreationDate(String creationDate)
+	{
+		this.creationDate = creationDate;
+	}
+
+	/**
+	 * @param lastModificationDate
+	 *            the lastModificationDate to set
+	 */
+	public void setLastModificationDate(String lastModificationDate)
+	{
+		this.lastModificationDate = lastModificationDate;
 	}
 
 	/* (non-Javadoc)
@@ -287,6 +348,6 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	{
 		return "DashboardTileParamsRowEntity [tileId=" + tileId + ", paramName=" + paramName + ", tenantId=" + tenantId
 				+ ", isSystem=" + isSystem + ", paramType=" + paramType + ", paramValueStr=" + paramValueStr + ", paramValueNum="
-				+ paramValueNum + ", paramValueTimestamp=" + paramValueTimestamp + "]";
+				+ paramValueNum + ", paramValueTimestamp=" + paramValueTimestamp + ", creationDate=" + creationDate + ", lastModificationDate=" + lastModificationDate+ "]";
 	}
 }
