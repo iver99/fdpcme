@@ -27,7 +27,10 @@ define(['dashboards/dbsmodel',
 //        var dashboardsViewModel = new dbsmodel.ViewModel(predataModel, "mainContent");
         self.dashboards = ko.observableArray();
         self.allDashboards = ko.observableArray();
-        var serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards?offset=0&limit=120&orderBy=default");
+        var serviceUrl = "/sso.static/dashboards.service?offset=0&limit=120&orderBy=default";
+        if (dfu.isDevMode()) {
+            var serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards?offset=0&limit=120&orderBy=default");
+        }
         dfu.ajaxWithRetry({
                         url: serviceUrl,
                         headers: dfu.getDashboardsRequestHeader(),
