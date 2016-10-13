@@ -15,7 +15,7 @@ and open the template in the editor.
     font-weight: normal;
     font-style: normal;
 } 
-
+ 
 
 .fa-icon-font {
   font-family: FaFont;
@@ -155,7 +155,7 @@ body, html {
             margin-bottom: 1px;
         }
         
-        .df-targte-selector {
+        .df-target-selector {
             display: inline-block;
             margin-top:5px;
             margin-left:8px;
@@ -307,7 +307,7 @@ body, html {
   content: url(../images/func_gear_16_ena.png);
 }
 
-.dbd-toolbar-icon-edit:before,.fa-pencil:before {
+.dbd-toolbar-icon-edit:before,.fa-pencil-df:before {
   content: "\f040";
 }
 .dbd-wrench:before{
@@ -622,6 +622,7 @@ body, html {
     max-width:none;
     border: 1px solid #d6dfe6; 
     border-radius: 0;
+    outline:0;
     
     .dbd-tile-header{
         color: #333;

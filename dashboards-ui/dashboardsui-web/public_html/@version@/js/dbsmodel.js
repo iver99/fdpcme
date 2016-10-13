@@ -184,7 +184,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         //dashboards
         self.isDashboardSet = isSet === true ? true : false;
         self.userName = dfu.getUserName();
-        self.isMobileDevice = ko.observable( (new mbu()).isMobile );
+        self.isMobileDevice = ko.observable( (new mbu()).isSmallDevice );
         self.currentDashboardSetItem=dashboardSetItem;
         self.dashboardInTabs=ko.observable(false);
 
@@ -341,6 +341,10 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                 {
                     data['dashboard'] = data['dashboardModel'].attributes;
                 }
+            }
+            if(data.dashboard.description)
+            {
+                data.dashboard.description = data.dashboard.description.toString().replace(/\n/g,"<br>");
             }
             self.selectedDashboard(data);
             if (data.element)

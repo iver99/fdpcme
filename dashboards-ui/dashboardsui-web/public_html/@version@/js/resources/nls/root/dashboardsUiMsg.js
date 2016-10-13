@@ -231,7 +231,8 @@ define({
       "DBS_BUILDER_MSG_ERROR_NAME_DUPLICATED_DETAIL": "Provide a unique name.",
       "DBS_BUILDER_MSG_AUTO_REFRESH_ON": "Auto-refresh enabled.",
       "DBS_BUILDER_MSG_AUTO_REFRESH_OFF": "Auto-refresh disabled.",
-
+      "DBS_BUILDER_MSG_AUTO_OPEN_IN_DATA_EXPLORER":"Open in Data Explorer",
+      "DBS_BUILDER_MSG_AUTO_OPEN_IN_LOG_EXPLORER":"Open in Log Explorer",
       // DO NOT DELETE since error page will use it as a parameter in URL
       // -----start
       "DBS_ERROR_PAGE_TITLE":"Error",
@@ -244,8 +245,12 @@ define({
       "DBS_ERROR_URL": "Requested URL is: ",
       "DBS_ERROR_BTN_SIGN_OUT": "Sign Out",
       "DBS_ERROR_SENSITIVE_WORD": "Sorry,your request parameters contain sensitive words or characters, Please try again.",
+      "DBS_ERROR_INTERNAL_ERROR": "Oracle Management Cloud service received a bad request and had an internal error. Try to access your service later.",
 
       // common messages for error page are put here: add __PLUS_SERVICE to support url pattern '&service=APM|ITAnalytics|LogAnalytics'
+      "SERVICE_NAME_APM":"Application Performance Monitoring",
+      "SERVICE_NAME_ITAnalytics":"IT Analytics",
+      "SERVICE_NAME_LogAnalytics":"Log Analytics",
       "COMMON_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG__PLUS_SERVICE":"You currently don't have access to this page because you're not subscribed to {0}.",
       "COMMON_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG":"You currently don't have access to this page because you're not subscribed to the service being accessed.",
       "COMMON_ERROR_PAGE_NOT_FOUND_MSG":"Sorry, the page you've requested is not available.",

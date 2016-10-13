@@ -45,7 +45,6 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 
 def emcpsmRegClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
 def emcpsmRegLookupClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
-def emcpdfCommonAPIVer = getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.0.0-greenchannel+')
 
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies{
@@ -72,7 +71,7 @@ dependencies{
       	exclude('module':'groovy')
     }
 
-     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
+     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.0.0-oct17+')
 
      
      testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
@@ -118,7 +117,7 @@ dependencies{
 	restAssured.exclude module:'groovy'
     }
 }
-
+project.ext.omctf_omcCloudSetup_additionalParam = "-skipagents -skipomr"
 //Task added from "emcpdf_qa_test_3n"
 task QATest(type:EMTest,dependsOn:omcSetup ) {
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
@@ -180,7 +179,6 @@ task DEVTest(type:EMTest,dependsOn: QATest1){
 //Task is added from "emcpdf_dev_ui_test_3n"
 task DEVUiTest(type:EMTest,dependsOn: DEVTest){
   	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/JsonUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/TenantSubscriptionUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"
  	useRestAssured=true
 	ext.set("testType", "unit")

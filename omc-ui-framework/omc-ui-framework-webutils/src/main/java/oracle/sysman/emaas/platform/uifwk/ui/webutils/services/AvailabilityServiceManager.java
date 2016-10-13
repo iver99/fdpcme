@@ -130,7 +130,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		try {
 			rsm.markServiceUp();
 			GlobalStatus.setOmcUiUpStatus();
-			LOGGER.debug("OMC UI Framework service is up");
+			LOGGER.info("OMC UI Framework service is up");
 		}
 		catch (Exception e) {
 			LOGGER.error(e.getLocalizedMessage(), e);

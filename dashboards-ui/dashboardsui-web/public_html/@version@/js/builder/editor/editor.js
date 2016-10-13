@@ -36,6 +36,8 @@ define(['knockout',
                 self.resetTiles();
                 if (self.mode.POSITION_TYPE === Builder.EDITOR_POS_BASED_ON_ROW_COLUMN){
                     self.tilesReorder();
+                    // let's 'delete' tiles created from widgets already deleted
+                    $b.triggerEvent($b.EVENT_DASHBOARD_CLEANUP_DELETED_WIDGETS, "handle deleted widgets");
                 }
                 else if (self.mode.POSITION_TYPE === Builder.EDITOR_POS_FIND_SUITABLE_SPACE) {
                     self.sortTilesByRowsThenColumns();

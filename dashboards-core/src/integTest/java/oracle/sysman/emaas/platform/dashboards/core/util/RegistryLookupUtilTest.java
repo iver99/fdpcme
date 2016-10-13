@@ -18,6 +18,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
@@ -54,6 +55,24 @@ public class RegistryLookupUtilTest
 		Assert.assertTrue(rtn.contains(lk1));
 		Assert.assertFalse(rtn.contains(lk2));
 		Assert.assertTrue(rtn.contains(lk3));
+	}
+
+	@Test(groups = { "s2" })
+	public void testGetServiceExternalEndPointEntityS2()
+	{
+		String href = "htt://www.test.com", serviceName = "serviceName", version = "version", tenantName = "tenantName";
+		final VersionedLink link = new VersionedLink();
+		link.withHref("htt://www.test.com");
+		new Expectations(RegistryLookupUtil.class) {
+			{
+				RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString);
+				result = link;
+			}
+		};
+		EndpointEntity ee = RegistryLookupUtil.getServiceExternalEndPointEntity(serviceName, version, tenantName);
+		Assert.assertEquals(ee.getServiceName(), serviceName);
+		Assert.assertEquals(ee.getVersion(), version);
+		Assert.assertEquals(ee.getHref(), href);
 	}
 
 	@Test(groups = { "s2" })
@@ -149,24 +168,6 @@ public class RegistryLookupUtilTest
 		endpoint = RegistryLookupUtil.getServiceExternalEndPoint("test_service", "test_version", "test_tenant");
 		// http is returned if https does not exist
 		Assert.assertEquals(endpoint, END_POINT_HTTP);
-	}
-
-	@Test(groups = { "s2" })
-	public void testGetServiceExternalEndPointEntityS2()
-	{
-		String href = "htt://www.test.com", serviceName = "serviceName", version = "version", tenantName = "tenantName";
-		final Link link = new Link();
-		link.withHref("htt://www.test.com");
-		new Expectations(RegistryLookupUtil.class) {
-			{
-				RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString);
-				result = link;
-			}
-		};
-		EndpointEntity ee = RegistryLookupUtil.getServiceExternalEndPointEntity(serviceName, version, tenantName);
-		Assert.assertEquals(ee.getServiceName(), serviceName);
-		Assert.assertEquals(ee.getVersion(), version);
-		Assert.assertEquals(ee.getHref(), href);
 	}
 
 	@Test(groups = { "s2" })
@@ -360,9 +361,9 @@ public class RegistryLookupUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testReplaceWithVanityUrlForStringS2(@Mocked final Builder anyBuilder,
-			@Mocked final InstanceInfo anyInstanceInfo, @Mocked final LookupManager anyLockupManager,
-			@Mocked final LookupClient anyClient, @Mocked final InstanceQuery anyInstanceQuery) throws Exception
+	public void testReplaceWithVanityUrlForStringS2(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
+			@Mocked final LookupManager anyLockupManager, @Mocked final LookupClient anyClient,
+			@Mocked final InstanceQuery anyInstanceQuery) throws Exception
 	{
 		testReplaceWithVanityUrlExpectations(anyBuilder, anyInstanceInfo, anyLockupManager, anyClient, anyInstanceQuery);
 
@@ -379,16 +380,21 @@ public class RegistryLookupUtilTest
 		href = "https://tenant5.security.original.link/somepage.html";
 		replacedHref = RegistryLookupUtil.replaceWithVanityUrl(href, "tenant5", RegistryLookupUtil.SECURITY_ANALYTICS_SERVICE);
 		Assert.assertEquals(replacedHref, "https://tenant5.security.replaced.link/somepage.html");
-		
+
 		testReplaceWithVanityUrlExpectations(anyBuilder, anyInstanceInfo, anyLockupManager, anyClient, anyInstanceQuery);
 		href = "https://tenant6.compliance.original.link/somepage.html";
 		replacedHref = RegistryLookupUtil.replaceWithVanityUrl(href, "tenant6", RegistryLookupUtil.COMPLIANCE_SERVICE);
 		Assert.assertEquals(replacedHref, "https://tenant6.compliance.replaced.link/somepage.html");
+
+		testReplaceWithVanityUrlExpectations(anyBuilder, anyInstanceInfo, anyLockupManager, anyClient, anyInstanceQuery);
+		href = "https://tenant7.orchestration.original.link/somepage.html";
+		replacedHref = RegistryLookupUtil.replaceWithVanityUrl(href, "tenant7", RegistryLookupUtil.ORCHESTRATION_SERVICE);
+		Assert.assertEquals(replacedHref, "https://tenant7.orchestration.replaced.link/somepage.html");
 	}
 
 	private void testReplaceWithVanityUrlExpectations(final Builder anyBuilder, final InstanceInfo anyInstanceInfo,
 			final LookupManager anyLockupManager, final LookupClient anyClient, final InstanceQuery anyInstanceQuery)
-			throws Exception
+					throws Exception
 	{
 		new Expectations() {
 			{
@@ -410,7 +416,7 @@ public class RegistryLookupUtilTest
 					List<InstanceInfo> lookup(InstanceQuery query)
 					{
 						List<InstanceInfo> list = new ArrayList<InstanceInfo>();
-						for (int i = 0; i < 6; i++) {
+						for (int i = 0; i < 7; i++) {
 							list.add(anyInstanceInfo);
 						}
 						return list;
@@ -428,9 +434,11 @@ public class RegistryLookupUtilTest
 				lkSecurity.withHref("https://security.replaced.link");
 				Link lkCompliance = new Link();
 				lkCompliance.withHref("https://compliance.replaced.link");
+				Link lkOrchestration = new Link();
+				lkOrchestration.withHref("https://orchestration.replaced.link");
 				anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
 				returns(Arrays.asList(lkAPM), Arrays.asList(lkITA), Arrays.asList(lkLA), Arrays.asList(lkMonitoring),
-						Arrays.asList(lkSecurity), Arrays.asList(lkCompliance));
+						Arrays.asList(lkSecurity), Arrays.asList(lkCompliance), Arrays.asList(lkOrchestration));
 			}
 		};
 	}

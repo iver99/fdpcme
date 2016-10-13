@@ -51,6 +51,11 @@ public class TestDashBoard extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
 	}
 
 	@AfterClass
@@ -105,33 +110,41 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Start to test in testAfterHomeDashboardRemoved");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
-		//verify the current page is error page
+		//verify the current page is home page
 		webd.getLogger().info("Verify the error page displayed");
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("current url = " + url);
-		if (!url.substring(url.indexOf("emsaasui") + 9).contains("error.html?msg=DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG")) {
-			Assert.fail("not open the error page");
-		}
-		else {
-			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
-			Assert.assertEquals(webd.getText("css=" + PageId.ERRORMESSAGE_CSS),
-					"The dashboard which you have set as Home page no longer exists or you don't have access to it.");
-			webd.getLogger().info(webd.getText("css=" + PageId.DEFAULTHOME_CSS));
-			Assert.assertEquals(webd.getText("css=" + PageId.DEFAULTHOME_CSS), "Click  here  to go to the default Home page");
+		if (!url.substring(url.indexOf("emsaasui") + 9).contains("home.html")) {
+			Assert.fail("not open the dashboard home page");
 		}
 
-		//click "here" link to go to default home page
-		webd.getLogger().info("Click 'here' link to go to default home page");
-		webd.waitForElementEnabled("css=" + PageId.DEFAULTHOMEURL_CSS);
-		webd.click("css=" + PageId.DEFAULTHOMEURL_CSS);
-
-		//verify the current page is default hoem page
-		webd.getLogger().info("Verify the current page is default hoem page");
-		url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("current url = " + url);
-		if (!url.substring(url.indexOf("emsaasui") + 9).contains("welcome.html")) {
-			Assert.fail("not open the error page");
-		}
+		//verify the current page is error page
+		//		webd.getLogger().info("Verify the error page displayed");
+		//		String url = webd.getWebDriver().getCurrentUrl();
+		//		webd.getLogger().info("current url = " + url);
+		//		if (!url.substring(url.indexOf("emsaasui") + 9).contains("error.html?msg=DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG")) {
+		//			Assert.fail("not open the error page");
+		//		}
+		//		else {
+		//			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
+		//			Assert.assertEquals(webd.getText("css=" + PageId.ERRORMESSAGE_CSS),
+		//					"The dashboard which you have set as Home page no longer exists or you don't have access to it.");
+		//			webd.getLogger().info(webd.getText("css=" + PageId.DEFAULTHOME_CSS));
+		//			Assert.assertEquals(webd.getText("css=" + PageId.DEFAULTHOME_CSS), "Click  here  to go to the default Home page");
+		//		}
+		//
+		//		//click "here" link to go to default home page
+		//		webd.getLogger().info("Click 'here' link to go to default home page");
+		//		webd.waitForElementEnabled("css=" + PageId.DEFAULTHOMEURL_CSS);
+		//		webd.click("css=" + PageId.DEFAULTHOMEURL_CSS);
+		//
+		//		//verify the current page is default hoem page
+		//		webd.getLogger().info("Verify the current page is default hoem page");
+		//		url = webd.getWebDriver().getCurrentUrl();
+		//		webd.getLogger().info("current url = " + url);
+		//		if (!url.substring(url.indexOf("emsaasui") + 9).contains("welcome.html")) {
+		//			Assert.fail("not open the error page");
+		//		}
 	}
 
 	@Test(groups = "Group1")
@@ -374,21 +387,33 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Access to the home page");
 		BrandingBarUtil.visitMyHome(webd);
 
-		webd.getLogger().info("Verify the error page displayed");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.ERRORMESSAGE_CSS)));
+		webd.getLogger().info("Verify back to the dashboard home page");
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("current url = " + url);
-		if (!url.substring(url.indexOf("emsaasui") + 9).contains("error.html?invalidUrl=")) {
-			Assert.fail("not open the error page");
+		if (!url.substring(url.indexOf("emsaasui") + 9).contains("welcome.html")) {
+			Assert.fail("not open the dashboard home page");
 		}
 		else {
-			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
-			Assert.assertEquals(webd.getText("css=" + PageId.ERRORMESSAGE_CSS),
-					"Sorry, the page you have requested either doesn't exist or you do not have access to it.");
-			webd.getLogger().info(webd.getText("css=" + PageId.ERRORURL_CSS));
-			Assert.assertEquals(webd.getText("css=" + PageId.ERRORURL_CSS), "Requested URL is: " + originalUrl);
+			//TODO
+			//verify the warn info displayed
+			//info: The dashboard you set as your Home page has been deleted. You may want to choose a new Home page.
 		}
+
+		//		webd.getLogger().info("Verify the error page displayed");
+		//		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		//		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.ERRORMESSAGE_CSS)));
+		//		String url = webd.getWebDriver().getCurrentUrl();
+		//		webd.getLogger().info("current url = " + url);
+		//		if (!url.substring(url.indexOf("emsaasui") + 9).contains("error.html?invalidUrl=")) {
+		//			Assert.fail("not open the error page");
+		//		}
+		//		else {
+		//			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
+		//			Assert.assertEquals(webd.getText("css=" + PageId.ERRORMESSAGE_CSS),
+		//					"Sorry, the page you have requested either doesn't exist or you do not have access to it.");
+		//			webd.getLogger().info(webd.getText("css=" + PageId.ERRORURL_CSS));
+		//			Assert.assertEquals(webd.getText("css=" + PageId.ERRORURL_CSS), "Requested URL is: " + originalUrl);
+		//		}
 	}
 
 	@Test(groups = "Group7", dependsOnGroups = { "Group6" })

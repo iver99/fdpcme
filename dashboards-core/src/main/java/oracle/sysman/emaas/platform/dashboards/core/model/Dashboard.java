@@ -1,5 +1,13 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.persistence.EntityManager;
+
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
@@ -16,10 +24,6 @@ import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonValue;
-
-import java.util.*;
-
-import javax.persistence.EntityManager;
 
 public class Dashboard
 {
@@ -255,8 +259,7 @@ public class Dashboard
 					try {
 						DashboardServiceFacade dsf = new DashboardServiceFacade(
 								tenantId);
-						List<EmsDashboard> subEmsDashboards = dsf
-								.getEmsDashboardByIds(subDashboardIds);
+						List<EmsDashboard> subEmsDashboards = dsf.getEmsDashboardByIds(subDashboardIds, tenantId);
 						List<Dashboard> subDashboardList = new ArrayList<Dashboard>();
 						getSubDashboardsFromEmsSubDashboards(subEmsDashboards,
 								subDashboardList);
@@ -346,6 +349,9 @@ public class Dashboard
 
 	@JsonProperty("dashboardSets")
 	private List<Dashboard> dashboardSets;
+	
+	@JsonProperty("dupDashboardId")
+	private Long dupDashboardId;
 
 	public Dashboard()
 	{		
@@ -462,6 +468,23 @@ public class Dashboard
 	public String getOwner()
 	{
 		return owner;
+	}
+	
+
+	/**
+	 * @return the dupDashboardId
+	 */
+	public Long getDupDashboardId()
+	{
+		return dupDashboardId;
+	}
+
+	/**
+	 * @param dupDashboardId the dupDashboardId to set
+	 */
+	public void setDupDashboardId(Long dupDashboardId)
+	{
+		this.dupDashboardId = dupDashboardId;
 	}
 
 	public EmsDashboard getPersistenceEntity(EmsDashboard ed) throws DashboardException

@@ -9,7 +9,8 @@
  * http://jquery.org/license
  */
 requirejs.config({
-    bundles: (window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ? undefined : {
+    bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
+                (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
         'uifwk/js/uifwk-partition':
             [
             'uifwk/js/util/ajax-util',
@@ -128,7 +129,12 @@ require(['dashboards/dbsmodel',
         
             window.onerror = function (msg, url, lineNo, columnNo, error)
             {
-                oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg, true); 
+                var msg = "Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo;
+                if(error.stack) {
+                    msg = msg + ". Error: " + JSON.stringify(error.stack);
+                }
+                oj.Logger.error(msg, true);
+
                 return false; 
             }
 
