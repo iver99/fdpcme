@@ -26,13 +26,15 @@ define(['dashboards/dbsmodel',
 //        var predataModel = new dbsmodel.PredataModel();
 //        var dashboardsViewModel = new dbsmodel.ViewModel(predataModel, "mainContent");
         self.dashboards = ko.observableArray();
+        self.allDashboards = ko.observableArray();
         var serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards?offset=0&limit=120&orderBy=default");
         dfu.ajaxWithRetry({
                         url: serviceUrl,
                         headers: dfu.getDashboardsRequestHeader(),
                         contentType:'application/json',
                         success: function(data, textStatus) {
-                            self.dashboards(data.dashboards);
+                            self.allDashboards(data.dashboards);
+                            self.dashboards(data.dashboards.slice(0));
                         },
                         error: function(xhr, textStatus, errorThrown){
                             oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
@@ -49,10 +51,12 @@ define(['dashboards/dbsmodel',
             if(!tile){
                 return;
             }
+            self.dashboardTilesViewModel = ko.dataFor($(".tiles-wrapper:visible")[0]);
+            resetAddLinkToTitle();
             self.hideTitle("true" === tile.hideTitle()?["hideTitle"]:[]);
-            if(self.selectedContent().WIDGET_LINKED_DASHBOARD && self.selectedContent().WIDGET_LINKED_DASHBOARD()){
-                self.selectedDashboardId(self.selectedContent().WIDGET_LINKED_DASHBOARD());
-                self.dashboards().forEach(function(dashboard){
+            if(tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()){
+                self.selectedDashboardId(tile.WIDGET_LINKED_DASHBOARD());
+                self.allDashboards().forEach(function(dashboard){
                         if(self.selectedDashboardId() === dashboard.id){
                             self.selectedDashboard(dashboard);
                             self.hasLinkedToTitle(true);
@@ -89,7 +93,16 @@ define(['dashboards/dbsmodel',
 
         self.dataSource = new oj.ArrayTableDataSource(self.dashboards, {idAttribute: "id"});
         self.keyword = ko.observable();
+        self.selectedDashboardLastModifiedTime = ko.observable();
         self.selectedDashboard = ko.observable();
+        self.selectedDashboard.subscribe(function(dashboard){
+            if(dashboard){
+                var time = new Date(dashboard.lastModifiedOn);
+                var month = (time.getMonth()+1)<10?"0"+(time.getMonth()+1):(time.getMonth()+1);
+                var date = time.getDate()<10?"0"+time.getDate():time.getDate();
+                self.selectedDashboardLastModifiedTime(month + '/' + date + '/' + time.getFullYear());
+            }
+        });
         self.selectedDashboardId = ko.observable();
         self.showSelectedDashboard = ko.observable(false);
         self.logSelected = function(event, ui)
@@ -113,12 +126,27 @@ define(['dashboards/dbsmodel',
         self.searchDashboardClicked = function(){};
         self.clearContentSearch = ko.observable();
         self.autoSearchDashboard = function (req) {
-            if (req.term.length === 0) {
+            self.dashboards.removeAll();
+            if(req.term.length>1){
+                self.allDashboards().forEach(function(dashboard){
+                    if(dashboard.name.toLowerCase().indexOf(req.term.toLowerCase())>-1){
+                        debugger;
+                        self.dashboards.push(dashboard);
+                    }
+                });
+            }else if (req.term.length === 0) {
+                self.allDashboards().forEach(function(dashboard){
+                    self.dashboards.push(dashboard);
+                });
                 self.clearContentSearch(false);
             } else {
+                self.allDashboards().forEach(function(dashboard){
+                    self.dashboards.push(dashboard);
+                });
                 self.clearContentSearch(true);
             }
         };
+        
         $('.dashboard-search-input').autocomplete({
             source: self.autoSearchDashboard,
             delay: 700,
@@ -148,7 +176,10 @@ define(['dashboards/dbsmodel',
         };
         
         self.addLinkToTitleClicked = function(e, d){
-            self.selectedContent().WIDGET_LINKED_DASHBOARD = ko.observable(self.selectedDashboardId()?self.selectedDashboardId():"#");
+            if(!self.selectedContent().WIDGET_LINKED_DASHBOARD){
+                self.selectedContent().WIDGET_LINKED_DASHBOARD = ko.observable();
+            }
+            self.selectedContent().WIDGET_LINKED_DASHBOARD(self.selectedDashboardId()?self.selectedDashboardId():null);
             self.hasLinkedToTitle(true);
         };
 
@@ -157,6 +188,16 @@ define(['dashboards/dbsmodel',
             self.hasLinkedToTitle(false);
         };
 
+        function resetAddLinkToTitle(){
+            self.keyword(null);
+            self.searchDashboardClicked();
+            self.showSelectedDashboard(false);
+            self.selectedDashboardId(null);
+            self.addToTitleAbled(false);
+            self.clearContentSearch(false);
+            self.hasLinkedToTitle(false);
+            $(".search-content-dropdown-list-container #listview li").removeClass("oj-selected");
+        }
 
 
     }

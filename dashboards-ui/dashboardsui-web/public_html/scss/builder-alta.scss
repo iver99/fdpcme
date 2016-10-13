@@ -1072,6 +1072,25 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 
       }
       
+      .oj-button-primary{
+        background-color: #0572ce;
+        border-color: #0572ce;
+        color: #fff;
+      }
+      
+      .search-content-display{
+        img{
+              margin-bottom: 10px;
+          }
+        label{
+            display: block;
+            color: gray;
+        }
+        .font-style-italic{
+            font-style: italic !important;
+        }
+      }
+      
       .search-content-dropdown-list-container{
         position: absolute;
         width: 205px;
