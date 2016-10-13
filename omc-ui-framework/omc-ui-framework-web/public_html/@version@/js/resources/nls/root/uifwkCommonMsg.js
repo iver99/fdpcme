@@ -74,6 +74,7 @@ define({
       "WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE": "Screen Shot",
       "WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE": "Description",
       "WIDGET_SELECTOR_WIDGETS_LOADING_HINT": "Loading...",
+      "WIDGET_SELECTOR_WIDGET_GROUP_NAME_TA": "IT Analytics",
       "BRANDING_BAR_MESSAGE_AJAX_RETRYING_SUMMARY":"Not connected.",
       "BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL":"Retrying to connect to your cloud service now...",
       "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY":"Oracle Management Cloud is unreachable.",

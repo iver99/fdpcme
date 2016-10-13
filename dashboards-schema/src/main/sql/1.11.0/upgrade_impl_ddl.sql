@@ -22,21 +22,3 @@ SET FEEDBACK ON
 SET SERVEROUTPUT ON
 
 
-DECLARE
-  v_count     INTEGER;
-BEGIN
-
-  --add new column 'EMS_DASHBOARD.EXTENDED_OPTIONS'
-  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD' AND column_name='SHOW_INHOME';
-  IF v_count=0 THEN
-    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD ADD "SHOW_INHOME" NUMBER(1,0) DEFAULT(1) NOT NULL';
-  ELSE
-    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.SHOW_INHOME exists already, no change is needed');
-  END IF;
-EXCEPTION
-WHEN OTHERS THEN
-  ROLLBACK;
-  DBMS_OUTPUT.PUT_LINE('Failed to add new column due to '||SQLERRM);
-  RAISE;
-END;
-/
