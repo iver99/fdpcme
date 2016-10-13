@@ -18,6 +18,8 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.BeforeMethod;
@@ -33,6 +35,8 @@ public class DashboardManagerTest
 		UserContext.setCurrentUser("SYSMAN");
 		TenantSubscriptionUtil.setTestEnv();
 	}
+	
+	private static final Logger LOGGER = LogManager.getLogger(DashboardManagerTest.class);
 
 	@BeforeMethod
 	public void beforeMethod()
@@ -340,6 +344,7 @@ public class DashboardManagerTest
 			dm.updateDashboard(dbd1, tenantId1);
 		}
 		catch (CommonSecurityException e) {
+			LOGGER.info("context",e);
 		}
 		queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
 		Assert.assertEquals(queried.getName(), name1);
@@ -349,6 +354,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -371,6 +377,7 @@ public class DashboardManagerTest
 			dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 			expectedException = true;
 		}
 		if (!expectedException) {
@@ -410,6 +417,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd3.getDashboardId(), false, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		queried = dm.getDashboardById(dbd3.getDashboardId(), tenantId2);
 		Assert.assertNotNull(queried);
@@ -417,6 +425,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd3.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		queried = dm.getDashboardById(dbd3.getDashboardId(), tenantId2);
 		Assert.assertNotNull(queried);
@@ -426,6 +435,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd4.getDashboardId(), false, tenantId1);
 		}
 		catch (CommonSecurityException e) {
+			LOGGER.info("context",e);
 		}
 		queried = dm.getDashboardById(dbd4.getDashboardId(), tenantId1);
 		Assert.assertNotNull(queried);
@@ -435,21 +445,25 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.deleteDashboard(dbd3.getDashboardId(), true, tenantId2);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.deleteDashboard(dbd4.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -500,11 +514,13 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -547,6 +563,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			UserContext.setCurrentUser("other user");
@@ -554,6 +571,7 @@ public class DashboardManagerTest
 			UserContext.setCurrentUser("SYSMAN");
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -585,6 +603,7 @@ public class DashboardManagerTest
 			queried = dm.getDashboardById(BigInteger.valueOf(Long.MAX_VALUE), tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 			expectedException = true;
 		}
 		if (!expectedException) {
@@ -596,11 +615,13 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		try {
 			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 	}
 
@@ -635,6 +656,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
+			LOGGER.info("context",e);
 		}
 		lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
 		Assert.assertNull(lastAccess);
@@ -856,6 +878,36 @@ public class DashboardManagerTest
 
 		// post test
 		dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
+	}
+
+	@Test
+	public void testUpdateDashboardTilesName() throws InterruptedException, DashboardException
+	{
+		Dashboard dbd = new Dashboard();
+		Long widgetId = 1001L;
+		dbd.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
+		dbd.setType(Dashboard.DASHBOARD_TYPE_NORMAL);
+		Tile t1 = createTileForDashboard(dbd);
+		t1.setWidgetUniqueId(String.valueOf(widgetId));
+		createParameterForTile(t1);
+		Tile t2 = createTileForDashboard(dbd);
+		t2.setWidgetUniqueId(String.valueOf(widgetId));
+		createParameterForTile(t2);
+
+		DashboardManager dm = DashboardManager.getInstance();
+		Long tenantId = 1234L;
+		dm.saveNewDashboard(dbd, tenantId);
+
+		String newWidgetName = "Updated Widget Name";
+		int affacted = dm.updateDashboardTilesName(tenantId, newWidgetName, widgetId);
+		Assert.assertTrue(affacted >= 1); // currently we're using eclipselink 2.4, and it always be 1
+
+		dbd = dm.getDashboardById(dbd.getDashboardId(), tenantId);
+		Assert.assertEquals(dbd.getTileList().get(0).getTitle(), newWidgetName);
+		Assert.assertEquals(dbd.getTileList().get(1).getTitle(), newWidgetName);
+
+		// post test
+		dm.deleteDashboard(dbd.getDashboardId(), true, tenantId);
 	}
 
 	private TileParam createParameterForTile(Tile tile) throws InterruptedException

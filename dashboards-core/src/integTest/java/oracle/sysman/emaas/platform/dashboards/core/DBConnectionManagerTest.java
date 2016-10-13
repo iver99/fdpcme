@@ -54,7 +54,6 @@ public class DBConnectionManagerTest
 		};
 
 		DBConnectionManager dbcm = DBConnectionManager.getInstance();
-		boolean isException = false;
 		Assert.assertEquals(dbcm.isDatabaseConnectionAvailable(), false);
 	}
 

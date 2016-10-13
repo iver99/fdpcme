@@ -326,6 +326,7 @@ else {
             property "sonar.password", "emaas"
             property "sonar.jacoco.reportMissing.force.zero", "true"
             property "sonar.supportSourceFileDuplications", "true"
+            property "sonar.exclusions", "**/js/d3/*.js, **/js/jquery/*.js"
         }
     }
 

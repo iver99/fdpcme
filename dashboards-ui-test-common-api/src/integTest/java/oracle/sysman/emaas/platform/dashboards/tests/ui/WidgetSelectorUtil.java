@@ -6,25 +6,28 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class WidgetSelectorUtil
 {
-	public static void addWidget(WebDriver driver, String widgetName) throws Exception
+	private WidgetSelectorUtil() {
+	  }
+
+	public static void addWidget(WebDriver driver, String widgetName) 
 	{
 		IWidgetSelectorUtil wsu = new UtilLoader<IWidgetSelectorUtil>().loadUtil(driver, IWidgetSelectorUtil.class);
 		wsu.addWidget(driver, widgetName);
 	}
 
-	public static void page(WebDriver driver, int pageNo) throws Exception
+	public static void page(WebDriver driver, int pageNo) throws IllegalAccessException 
 	{
 		IWidgetSelectorUtil wsu = new UtilLoader<IWidgetSelectorUtil>().loadUtil(driver, IWidgetSelectorUtil.class);
 		wsu.page(driver, pageNo);
 	}
 
-	public static void pagingNext(WebDriver driver) throws Exception
+	public static void pagingNext(WebDriver driver) throws IllegalAccessException 
 	{
 		IWidgetSelectorUtil wsu = new UtilLoader<IWidgetSelectorUtil>().loadUtil(driver, IWidgetSelectorUtil.class);
 		wsu.pagingNext(driver);
 	}
 
-	public static void pagingPrevious(WebDriver driver) throws Exception
+	public static void pagingPrevious(WebDriver driver) throws IllegalAccessException 
 	{
 		IWidgetSelectorUtil wsu = new UtilLoader<IWidgetSelectorUtil>().loadUtil(driver, IWidgetSelectorUtil.class);
 		wsu.pagingPrevious(driver);

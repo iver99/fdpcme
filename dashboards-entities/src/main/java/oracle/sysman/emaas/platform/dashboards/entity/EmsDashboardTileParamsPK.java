@@ -1,20 +1,19 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 
 public class EmsDashboardTileParamsPK implements Serializable
 {
 	private static final long serialVersionUID = 7310567904803274617L;
 
 	private String paramName;
-	private BigInteger dashboardTile;
+	private String dashboardTile;
 
 	public EmsDashboardTileParamsPK()
 	{
 	}
 
-	public EmsDashboardTileParamsPK(String paramName, BigInteger emsDashboardTile)
+	public EmsDashboardTileParamsPK(String paramName, String emsDashboardTile)
 	{
 		this.paramName = paramName;
 		dashboardTile = emsDashboardTile;
@@ -32,7 +31,7 @@ public class EmsDashboardTileParamsPK implements Serializable
 		return false;
 	}
 
-	public BigInteger getDashboardTile()
+	public String getDashboardTile()
 	{
 		return dashboardTile;
 	}
@@ -48,7 +47,7 @@ public class EmsDashboardTileParamsPK implements Serializable
 		return super.hashCode();
 	}
 
-	public void setDashboardTile(BigInteger emsDashboardTile)
+	public void setDashboardTile(String emsDashboardTile)
 	{
 		dashboardTile = emsDashboardTile;
 	}

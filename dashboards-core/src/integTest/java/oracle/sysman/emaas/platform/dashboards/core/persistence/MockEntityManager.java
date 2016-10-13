@@ -37,7 +37,7 @@ public class MockEntityManager implements EntityManager
 	@Override
 	public void close()
 	{
-		System.out.println("[MockEntityManager] close called");
+		
 	}
 
 	@Override

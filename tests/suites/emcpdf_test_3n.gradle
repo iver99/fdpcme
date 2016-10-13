@@ -23,33 +23,10 @@
 /**
  * Run the buildscript{} configuration to pull the em-test-infraplugin.
  */
-
-
 buildscript {
-    repositories {
-	 /* To check if the jar is available in local maven repository */
-         maven {
-             url = "${PUB_MAVEN_MY_MAVEN_REPO}"
-         }
-        maven {
-            url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
-        }
-    }
-    dependencies {
-        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true 
-        classpath group: "com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "${devinfraVersion}", transitive: true
-  }
+    apply from: 'test-buildscript-apply.gradle' 
 }
-repositories {
-	 maven {
-             url = "${PUB_MAVEN_MY_MAVEN_REPO}"
-         }
-    maven {
-        url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
-    }
-}
-apply plugin: 'DevInfraPlugin'
-apply plugin: 'TestInfraPlugin'
+apply from: 'test-project-apply.gradle'
 apply plugin: 'groovy'
 
 /***************** OMCTF Plugin **********************/
@@ -66,14 +43,8 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  *                   END OF TEST-INFRA-BLOCK
  ***************************************************************************************************/
 
-repositories {
-maven {
-	url = "${PUB_MAVEN_MY_MAVEN_REPO}"
- }
- maven {
-	url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
-}
-
+def emcpsmRegClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
+def emcpsmRegLookupClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
 
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies{
@@ -94,13 +65,13 @@ dependencies{
     	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils', version:"${REPO_BID}")
 	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 	testConfig(group: 'commons-lang', name: 'commons-lang', version: '2.4'){ transitive = false }
-             testConfig(group: 'com.oracle.emaas.emcpsm', name:'registry-client', version:'1.+'){ transitive = false }
+             testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: emcpsmRegClientVer){ transitive = false }
     
       testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-web-integ-tests', version: "${REPO_BID}") {
       	exclude('module':'groovy')
     }
 
-     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.0.0-greenchannel+')
+     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.0.0+')
 
      
      testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
@@ -128,7 +99,7 @@ dependencies{
              testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
              
              testConfig(group: 'commons-logging', name:'commons-logging', version:'1.1.1'){ transitive = false }
-             testConfig(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.+'){ transitive = false }
+             testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: emcpsmRegLookupClientVer){ transitive = false }
      
        	testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
              testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
@@ -172,6 +143,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestBrandingBar')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
             }
         }
     }
@@ -206,7 +178,6 @@ task DEVTest(type:EMTest,dependsOn: QATest1){
 //Task is added from "emcpdf_dev_ui_test_3n"
 task DEVUiTest(type:EMTest,dependsOn: DEVTest){
   	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/JsonUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/TenantSubscriptionUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"
  	useRestAssured=true
 	ext.set("testType", "unit")
@@ -222,5 +193,5 @@ task DEVTest2(type:EMTest,dependsOn: DEVUiTest){
 
 task emcpdf_test_3n (dependsOn:[DEVTest2, omcTeardown]) {
     omcTeardown.mustRunAfter(DEVTest2)
-    apply from: getAbsoluteFilePath(project.configurations.omctfConfig,"omctf_taskprocessor")
+    apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")
 }

@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -31,7 +31,7 @@ define({
       "BRANDING_BAR_NAV_ALL_DASHBOARDS_LABEL": "All Dashboards",
       "BRANDING_BAR_ABOUT_DIALOG_TITLE": "About Cloud Service",
       "BRANDING_BAR_ABOUT_DIALOG_SUB_TITLE": "Oracle Management Cloud",
-      "BRANDING_BAR_ABOUT_DIALOG_COPY_RIGHT": "Copyright © {0}, Oracle and/or its affiliates. All rights reserved. Oracle is a registered trademark of Oracle Corporation and/or its affiliates.",
+      "BRANDING_BAR_ABOUT_DIALOG_COPY_RIGHT": "Copyright \u00a9 {0}, Oracle and/or its affiliates. All rights reserved. Oracle is a registered trademark of Oracle Corporation and/or its affiliates.",
       "BRANDING_BAR_ABOUT_DIALOG_COPY_RIGHT_WARNING": "Warning: Unauthorized access is strictly prohibited.",
       "BRANDING_BAR_ABOUT_DIALOG_CLOSE_BTN_LABEL": "Close",
       "BRANDING_BAR_ABOUT_DIALOG_ICON_ALT_TEXT": "About Cloud Service icon",
@@ -43,6 +43,7 @@ define({
       "BRANDING_BAR_APP_NAME_TENANT_MANAGEMENT_UI":"Set up Oracle Management Cloud",
       "BRANDING_BAR_APP_NAME_MONITORING": "Infrastructure Monitoring",
       "BRANDING_BAR_APP_NAME_SECURITY_ANALYTICS": "Security Monitoring and Analytics",
+      "BRANDING_BAR_APP_NAME_COMPLIANCE": "Compliance",
       "BRANDING_BAR_APP_NAME_ORCHESTRATION": "Orchestration",
       "BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_ERROR":"Error",
       "BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_WARN":"Warning",
@@ -137,8 +138,8 @@ define({
       "DATETIME_PICKER_TIME_FILTER_INFO_HOURS_EXCLUDED": "Hours excluded: ",
       "DATETIME_PICKER_TIME_FILTER_INFO_DAYS_EXCLUDED": "Days excluded: ",
       "DATETIME_PICKER_TIME_FILTER_INFO_MONTHS_EXCLUDED": "Months excluded: ",
-      
-      
+
+
       //time filter
       "TIME_FILTER_TITLE": "Filters",
       "TIME_FILTER_TIME_LABEL": "Time",

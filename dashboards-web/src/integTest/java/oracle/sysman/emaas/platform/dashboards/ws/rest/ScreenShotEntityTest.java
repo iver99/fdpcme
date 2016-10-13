@@ -14,26 +14,26 @@ public class ScreenShotEntityTest {
     ScreenShotEntity screenShotEntity;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         screenShotEntity = new ScreenShotEntity();
     }
 
     @Test
-    public void testGetHref() throws Exception {
+    public void testGetHref() {
         Assert.assertNull(screenShotEntity.getHref());
         screenShotEntity.setHref("href");
         Assert.assertEquals(screenShotEntity.getHref(),"href");
     }
 
     @Test
-    public void testGetScreenShot() throws Exception {
+    public void testGetScreenShot() {
         Assert.assertNull(screenShotEntity.getScreenShot());
         screenShotEntity.setScreenShot("shot");
         Assert.assertEquals(screenShotEntity.getScreenShot(),"shot");
     }
 
     @Test
-    public void testConstruct() throws Exception {
+    public void testConstruct() {
         screenShotEntity = new ScreenShotEntity("anotherHref","anotherSceen");
         Assert.assertEquals(screenShotEntity.getScreenShot(),"anotherSceen");
         Assert.assertEquals(screenShotEntity.getHref(),"anotherHref");

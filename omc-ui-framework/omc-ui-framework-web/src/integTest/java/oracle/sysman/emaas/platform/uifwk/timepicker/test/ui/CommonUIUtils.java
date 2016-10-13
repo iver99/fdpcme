@@ -28,6 +28,7 @@ import com.jayway.restassured.response.Response;
  */
 public class CommonUIUtils
 {
+	
 	static String sTenantId = CommonUIUtils.getEmaasPropertyValue("TENANT_ID");
 	static String sOhsUrl = CommonUIUtils.getEmaasPropertyValue("OHS_URL");
 	static String sRegistryUrl = CommonUIUtils.getEmaasPropertyValue("OHS_REGISTRY_URL");
@@ -42,8 +43,7 @@ public class CommonUIUtils
 
 	public static void commonUITestLog(String sDesc)
 	{
-		String sStr = "*** Dashboards Common UI TestLog ***:  " + sDesc;
-		System.out.println(sStr);
+		//String sStr = "*** Dashboards Common UI TestLog ***:  " + sDesc;
 	}
 
 	public static String getEmaasPropertyValue(String sProperty)
@@ -52,8 +52,6 @@ public class CommonUIUtils
 		File emaasPropertiesFile = new File(System.getenv("T_WORK") + "/emaas.properties.log");
 
 		Properties emaasProp = new Properties();
-
-		String sUrl = "";
 
 		String sPropertyValue = "";
 
@@ -66,7 +64,7 @@ public class CommonUIUtils
 
 			CommonUIUtils.commonUITestLog("Get the " + sProperty + " property value.");
 
-			if (sProperty.equals("TENANT_ID")) {
+			if (("TENANT_ID").equals(sProperty)) {
 				CommonUIUtils.commonUITestLog("Get the TENANT_ID property value.");
 				sPropertyValue = emaasProp.getProperty("TENANT_ID");
 				if (sPropertyValue == null) {
@@ -74,7 +72,7 @@ public class CommonUIUtils
 					sPropertyValue = "emaastesttenant1";
 				}
 			}
-			else if (sProperty.equals("OHS_REGISTRY_URL")) {
+			else if (("OHS_REGISTRY_URL").equals(sProperty)) {
 				sPropertyValue = emaasProp.getProperty("OHS_REGISTRY_URL");
 				if (sPropertyValue == null) {
 					CommonUIUtils.commonUITestLog("The OHS_REGISTRY_URL property value is null ... set it to a different value.");
@@ -88,45 +86,45 @@ public class CommonUIUtils
 					}
 				}
 			}
-			else if (sProperty.equals("SSO_USERNAME")) {
+			else if (("SSO_USERNAME").equals(sProperty)) {
 				sPropertyValue = emaasProp.getProperty("SSO_USERNAME");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-					.commonUITestLog("The SSO_USERNAME property value is null ... set it to a different value -- 'emcsadmin'.");
+							.commonUITestLog("The SSO_USERNAME property value is null ... set it to a different value -- 'emcsadmin'.");
 					sPropertyValue = "emcsadmin";
 				}
 			}
-			else if (sProperty.equals("SSO_PASSWORD")) {
+			else if (("SSO_PASSWORD").equals(sProperty)) {
 				//	below password is being using in tests/dev mode only
 				sPropertyValue = emaasProp.getProperty("SSO_PASSWORD");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-					.commonUITestLog("The SSO_PASSWORD property value is null ... set it to a different value -- 'Welcome1!'.");
+							.commonUITestLog("The SSO_PASSWORD property value is null ... set it to a different value -- 'Welcome1!'.");
 					//below hard coded password is being using in tests/dev mode only
 					sPropertyValue = "Welcome1!";
 				}
 			}
-			else if (sProperty.equals("COMMON_UI_URL_SUFFIX")) {
+			else if (("COMMON_UI_URL_SUFFIX").equals(sProperty)) {
 				sPropertyValue = emaasProp.getProperty("COMMON_UI_URL_SUFFIX");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-					.commonUITestLog("The COMMON_UI_URL_SUFFIX property value is null ... set it to a different value -- '/emsaasui/uifwk/datetimePickerIndex.html'.");
+							.commonUITestLog("The COMMON_UI_URL_SUFFIX property value is null ... set it to a different value -- '/emsaasui/uifwk/datetimePickerIndex.html'.");
 					sPropertyValue = "/emsaasui/uifwk/datetimePickerIndex.html";
 				}
 			}
-			else if (sProperty.equals("SAAS_AUTH_TOKEN")) {
+			else if (("SAAS_AUTH_TOKEN").equals(sProperty)) {
 				sPropertyValue = emaasProp.getProperty("SAAS_AUTH_TOKEN");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-							.commonUITestLog("The DASHBOARD_API_ENDPOINT property value is null ... set it to a different value -- 'welcome1'.");
+					.commonUITestLog("The DASHBOARD_API_ENDPOINT property value is null ... set it to a different value -- 'welcome1'.");
 					sPropertyValue = "Basic d2VibG9naWM6d2VsY29tZTE=";
 
 				}
-				else if (sProperty.equals("DASHBOARD_API_ENDPOINT")) {
+				else if (("DASHBOARD_API_ENDPOINT").equals(sProperty)) {
 					sPropertyValue = emaasProp.getProperty("DASHBOARD_API_ENDPOINT");
 					if (sPropertyValue == null) {
 						CommonUIUtils
-								.commonUITestLog("The SAAS_AUTH_TOKEN property value is null ... set it to a different value .");
+						.commonUITestLog("The SAAS_AUTH_TOKEN property value is null ... set it to a different value .");
 						sPropertyValue = sOhsUrl + "/emcpdf/api/v1/";
 					}
 				}
@@ -161,7 +159,7 @@ public class CommonUIUtils
 
 	}
 
-	public static void InitValue()
+	public static void initValue()
 	{
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = sAPIUrl;
@@ -180,7 +178,7 @@ public class CommonUIUtils
 		for (int i = 0; i < ls_appname.length; i++) {
 			CommonUIUtils.commonUITestLog(i + " : " + ls_appname[i]);
 			if (ls_appname[i].contains("APM")) {
-				if (sAppName.equals("")) {
+				if (("").equals(sAppName)) {
 					sAppName = "Application Performance Monitoring";
 				}
 				else {
@@ -188,7 +186,7 @@ public class CommonUIUtils
 				}
 			}
 			else if (ls_appname[i].contains("LogAnalytics")) {
-				if (sAppName.equals("")) {
+				if (("").equals(sAppName)) {
 					sAppName = "Log Analytics";
 				}
 				else {
@@ -196,7 +194,7 @@ public class CommonUIUtils
 				}
 			}
 			else if (ls_appname[i].contains("ITAnalytics")) {
-				if (sAppName.equals("")) {
+				if (("").equals(sAppName)) {
 					sAppName = "IT Analytics";
 				}
 				else {
@@ -256,5 +254,5 @@ public class CommonUIUtils
 			LoginUtils.doLogout(driver);
 			driver.shutdownBrowser(true);
 		}
-	}	
+	}
 }

@@ -53,24 +53,24 @@ else
 {
     tselVersion =  getDependentSdkVersion('com.oracle.emaas.emctas.tgtsel', 'emcs-targetselector', '1.9.+')
 }
-
 dependencies {
-	compile configurations.testNG
-	compile configurations.webdriver
-	compile configurations.restAssured
-        compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '2.0.1-24669', ext: 'war'){ transitive = false }	
-        compile(group: 'files', name: 'canvg', version: '1.3', ext: 'zip'){ transitive = false }
-        compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
+    compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '2.0.2-26417', ext: 'war'){ transitive = false }	
+    compile(group: 'files', name: 'canvg', version: '1.3', ext: 'zip'){ transitive = false }
+    compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
+compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = 
+false }
+        compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ 
+transitive = false }
 	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
-        compile(group: 'com.oracle.emaas.emctas.tgtsel', name:'emcs-targetselector', version:tselVersion, ext:'zip'){ transitive = false }
+    compile(group: 'com.oracle.emaas.emctas.tgtsel', name:'emcs-targetselector', version:tselVersion, ext:'zip'){ transitive = false }
 	providedCompile project(':dashboards-ui-test-common-api')  { transitive = false }
-        compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')	
+    compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')	
 	jscover (group:'com.github.tntim96', name:'JSCover-all', version:'1.0.19')
 }
 
 task cleanJs(type:Delete) {
 	delete fileTree(dir: stagingDir)
-        delete fileTree(dir: compiledDir)	
+    delete fileTree(dir: compiledDir)	
 }
 
 project.task("cleanCompassCss")<<{
@@ -131,6 +131,7 @@ javascript.source {
                 srcDir 'public_html/js'
                 include "**/*.js"
 		exclude "**/*.orig.js"
+                exclude "**/uifwk-partition.js"
             }
         }
 	cachedjs {
@@ -139,6 +140,7 @@ javascript.source {
 		//scrDir stagingDir+"/@version@/js"
 		include "**/*.js"
 		exclude "**/*.orig.js"
+                exclude "**/uifwk-impl-partition.js"
 	    }
 	}
     jshint {
@@ -407,8 +409,6 @@ task jsCodeCoverage(type:JavaExec, dependsOn:[cleanJs, copyJsSource]) {
 }
 jsCodeCoverage.onlyIf{jscc}
 
-task individualMinify(dependsOn: [copyJsSource, jsCodeCoverage, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
-
 compass {
     // We package the gems into the .jar file (see compass dependencies)
     // so that http proxy issues do not affect us.  To enable this, 
@@ -640,6 +640,91 @@ project.task("cleanTargetSelector") << {
 
 clean.dependsOn cleanJet,cleanFont,cleanTargetSelector
 
+//Combine start
+/**
+ * combine -> minify -> fingerprint JavaScript
+ */
+task copyStagedJs(type:Copy, dependsOn:[copyJsSource]) {
+    from (stagingDir) {
+	include "**/*"	
+    }
+    into compiledDir
+}
+
+task prepareRequireJsConfig(type:Copy) {
+    from ('.') {
+        include "uifwk.build.js"
+            //replace @version@ with versionPathElement
+            filter(ReplaceTokens, tokens: [version: versionPathElement])
+    }
+    into buildDir
+}
+
+task individualMinify(dependsOn: [copyStagedJs, jsCodeCoverage, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
+
+task combineAppJs(dependsOn: [individualMinify,prepareRequireJsConfig], type: com.eriwen.gradle.js.tasks.RequireJsTask) {
+    source = javascript.source.staticjs.js.files   //point to your source files
+    requirejs.buildprofile = file(buildDir.absolutePath+"/uifwk.build.js")
+    outputs.upToDateWhen { false }           //requireJs task does not know how to accurately determine if it is UP-TO-DATE so this line says the task is never up to date.
+}
+
+task minifyUIFwkPartitionJs(dependsOn: [combineAppJs],type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+    doFirst {
+        //copy the original source which will be used in a source map
+        Files.copy(Paths.get(compiledDir+"/js/uifwk-partition.js"), Paths.get(compiledDir+"/js/uifwk-partition.orig.js"))
+    }
+    source = file(compiledDir+"/js/uifwk-partition.js")
+    dest = file(compiledDir+"/js/uifwk-partition.js")
+    sourceMap = file(compiledDir+"/js/uifwk-partition.map")
+
+    closure {
+        warningLevel = 'QUIET'
+    }
+
+    doLast {
+        //update the compiled JS to point to the source map
+        File compiledFile = new File(compiledDir+"/js/uifwk-partition.js")
+        logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
+        compiledFile.append("\n//# sourceMappingURL=uifwk-partition.map", 'UTF-8')
+
+        //fix file path in source map file
+        File mapFile = new File(compiledDir+"/js/uifwk-partition.map")
+        String contents = mapFile.getText("UTF-8")
+        String absPath = compiledFile;
+        contents = contents.replaceAll(Pattern.quote(absPath), "uifwk-partition.orig.js")
+        mapFile.write(contents, "UTF-8")
+    }
+}
+
+task minifyUIFwkImplPartitionJs(dependsOn: [minifyUIFwkPartitionJs],type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+    doFirst {
+        //copy the original source which will be used in a source map
+        Files.copy(Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.js"), Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.orig.js"))
+    }
+    source = file(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.js")
+    dest = file(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.js")
+    sourceMap = file(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.map")
+
+    closure {
+        warningLevel = 'QUIET'
+    }
+
+    doLast {
+        //update the compiled JS to point to the source map
+        File compiledFile = new File(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.js")
+        logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
+        compiledFile.append("\n//# sourceMappingURL=uifwk-impl-partition.map", 'UTF-8')
+
+        //fix file path in source map file
+        File mapFile = new File(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.map")
+        String contents = mapFile.getText("UTF-8")
+        String absPath = compiledFile;
+        contents = contents.replaceAll(Pattern.quote(absPath), "uifwk-impl-partition.orig.js")
+        mapFile.write(contents, "UTF-8")
+    }
+}
+//Combine end
+
 war.archiveName "omc-ui-framework-web.war"
 
 copyJsSource.dependsOn unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory, unpackTargetSelectorFromArtifactory
@@ -661,7 +746,7 @@ if(project.hasProperty("devMode")){
 }
 else
 {
-	war.dependsOn individualMinify
+	war.dependsOn minifyUIFwkImplPartitionJs
 
 }
 
@@ -680,7 +765,7 @@ war {
     }
     else
     {
-	from(stagingDir) {
+	from(compiledDir) {
 	    include '**/*'
 	    exclude '**/*.orig.js','**/*.map','**/scss'
 	    into('/')
@@ -702,12 +787,12 @@ war {
 //	into 'uifwk'
 //}
 
-check.dependsOn integTestJar
+
 
 publishing.publications {
     integTest(MavenPublication) {
 	setArtifactId(project.name + '-' + integTestJar.appendix)
-	setGroupId('com.oracle.emaas.emcpdf.test')
+	setGroupId("${publishGroup}")
         artifact integTestJar.archivePath
     }
 }
@@ -716,11 +801,3 @@ artifactoryPublish {
 	publications ('integTest')
 }
 
-sourceSets {
-        test{
-                java {
-                        srcDirs = ['src/integTest/java']
-                }
-                resources.srcDirs = ['src/integTest/java']
-        }
-}

@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html id="global-html"  lang="en" data-testapiversion="1.9.0">
+<html id="global-html"  lang="en" data-testapiversion="1.10.0">
     <head>
         <title data-bind="text:builderTitle"></title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/png" href="/emsaasui/uifwk/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
-        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v2.0.1/alta/oj-alta-min.css" type="text/css"/>
+        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v2.0.2/alta/oj-alta-min.css" type="text/css"/>
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/dashboards-home-alta.css" type="text/css"/>
-
+       
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -27,9 +27,9 @@
                     }">
                 </div>
             </header>
-
+             
             <div id="dbd-set-tabs" data-bind="visible: isDashboardSet" class="no-print">
-                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',truncation:'none',removable:dashboardsetConfig.isCreator,reorderable:dashboardsetConfig.isCreator}">
+                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',truncation:'none',removable:dashboardsetConfig.isCreator && notZdtStatus,reorderable:dashboardsetConfig.isCreator}">
                     <div id="dbd-set-name" class="oj-tabs-facet">
                             <span data-bind="text:dashboardsetName()"></span>
                             <button id="tabs-caret"
@@ -43,7 +43,7 @@
                     <ul class="dbd-tabs-nav">
                     </ul>
 
-                    <div class="oj-tabs-facet demo-tabs-facet-flex" data-bind="visible:dashboardsetConfig.isCreator() && noDashboardHome()">
+                    <div class="oj-tabs-facet demo-tabs-facet-flex" data-bind="visible:dashboardsetConfig.isCreator() && noDashboardHome() && notZdtStatus">
                          <span id="add-nav" data-bind="click:addNewDashboard,attr: {title: getNlsString('DBSSET_BUILDER_ADD_DASHBOARD_TOSET')">
                              <i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i>
                          </span>
@@ -158,28 +158,6 @@
                                 </button>
                                  /ko -->
                             </div>
-                            <div class="builder-dbd-name-edit-area dbd-edit-area">
-                                <input class="builder-dbd-name-input"
-                                       data-bind="event: {keypress: handleDashboardNameInputKeyPressed},valueUpdate: 'afterkeydown',
-                                       		   ojComponent: {component: 'ojInputText', 
-                                               value: dashboardNameEditing, required: true, rootAttributes: {
-                                               style:'max-width:55em; padding-top: 1px;'}, validators: [noSameNameValidator]}, 
-                                               attr: {placeholder: getNlsString('DBS_BUILDER_REQUIRE_NAME')}" maxlength="64">
-                                <button class="builder-dbd-name-ok oj-button oj-default oj-button-half-chrome"
-                                          data-bind="click:okChangeDashboardName,ojComponent: {
-                                                component:'ojButton', chroming: 'half'
-                                    }, attr: {title: getNlsString('COMMON_BTN_OK')}" tabindex="0">
-                                    <span role="img"
-                                        class="oj-fwk-icon-status-confirmation oj-fwk-icon"></span>
-                                  </button>
-                                  <button class="builder-dbd-name-cancel oj-button oj-default oj-button-half-chrome"
-                                          data-bind="click:cancelChangeDashboardName, ojComponent: {
-                                                component:'ojButton', chroming: 'half'
-                                    }, attr: {title: getNlsString('COMMON_BTN_CANCEL')}" tabindex="0">
-                                    <span role="img"
-                                        class="oj-fwk-icon-status-error oj-fwk-icon"></span>
-                                  </button>
-                              </div>
                         </div>                      
                     </div>
                 </div>                
@@ -235,7 +213,7 @@
                 </div>-->
 <!--                <div style="display: none;" class="text-widget-dialog" title="Add Text Widget" data-bind="ojComponent: {component: 'ojDialog', initialVisibility: 'hide'}, attr: {title: getNlsString('DBS_BUILDER_BTN_ADD_TEXT_TITLE')}">
                     <div class="oj-dialog-body">
-                        <input class="text-widget-content" type="text" data-bind="ojComponent: 'ojInputText', placeholder: getNlsString('ADD_TEXT_WIDGET_PLACEHOLDER')"/>
+                        <input class="text-widget-content" id="text-widget-content" type="text" data-bind="ojComponent: 'ojInputText', placeholder: getNlsString('ADD_TEXT_WIDGET_PLACEHOLDER')"/>
                         <button class="text-widget-ok-button" data-bind="ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_OK')}, click: handleAddTextWidgetOKClicked"></button>
                     </div>
                 </div>-->
@@ -291,7 +269,7 @@
                         </div>                        
                     </div>
                     <div class="oj-dialog-footer">
-                        <button class="okSettingsButton" data-bind="click: handleSettingsDialogOKClose,
+                        <button class="okSettingsButton" id="okSettingsButton" data-bind="click: handleSettingsDialogOKClose
                                 ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_OK')}"> 
                         </button>
                     </div>
@@ -310,21 +288,22 @@
                             <!-- ko with:toolbarModel -->
                             <div class="builder-dbd-description" data-bind="visible: dashboardDescriptionEnabled()==='TRUE'">
                                 <div class="builder-dbd-description-display-area dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
-                                    <span data-bind="text: dashboardDescription,
+                                    <span data-bind="text: dashboardDescription()?dashboardDescription:'No description',
+                                                     css:{'font-style-italic':!dashboardDescription()},
                                                      attr: {title: dashboardDescription}" 
                                           class="dbd-display-area-text single-dbd-description"></span>          
                                 </div>
                             </div>  
-                            <button class='dashboardOptsBtn dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print'
+                            <button class='dashboardOptsBtn dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print' id ="dashboardOptsBtn"
                                     data-bind="visible: true, ojComponent: { component: 'ojButton', chroming: 'half', icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
                                     menu: '#dashboardOptsMenu'+toolBarGuid},
-                                    attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
+                                    attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS'),id:'dashboardOptsBtn_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))}">
                             </button>
-                            <button class="dashboardSaveBtn dashboardOptsBtn oj-button oj-default oj-button-half-chrome no-print"
+                            <button class="dashboardSaveBtn dashboardOptsBtn oj-button oj-default oj-button-half-chrome no-print" id ="dashboardSaveBtn"
                                     data-bind="click: handleDashboardSave, ojComponent: {
                                         component:'ojButton', chroming: 'half', disabled: disableSave,
                                         icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
-                                        }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.isMobileDevice !== 'true'&& !zdtStatus">
+                                        }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD'),id:'dashboardSaveBtn_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))}, visible: editDisabled() !== true && $root.isMobileDevice !== 'true' && notZdtStatus">
                             </button>
                             <ul class="no-print dropdown-menu" data-bind="ojComponent: {component: 'ojMenu',select: optionMenuItemSelect},attr:{id:'dashboardOptsMenu'+toolBarGuid}" style="display: none;">
                                 <!-- ko template: {name: 'dsbOptsMenuItemTemplate', foreach: dashboardOptsMenuItems, as: 'item'} -->
@@ -335,19 +314,20 @@
                             <div class="df-targte-selector" data-bind="visible: dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE'">
                                 <emcta-target-selector data-bind="attr: {id: 'tsel_'+dashboard.id()}"
                                                        params="returnFunction: returnFromTsel,
-                                                           config:{
-                                                               selectionMode: selectionMode(),
-                                                               returnMode: returnMode,
-                                                               inputCriteria: getInputCriteria(),
-                                                               ui: {
-                                                                   showLaunchButton: true,
-                                                                   dropdownInitialLabel: dropdownInitialLabel(),
-                                                                   dropdownResultLabel: dropdownResultLabel()
-                                                               }
-                                                           }"></emcta-target-selector>
+                                                            initializeCallback: initializedCallback,
+                                                            config:{
+                                                                selectionMode: selectionMode(),
+                                                                returnMode: returnMode,
+                                                                inputCriteria: getInputCriteria(),
+                                                                ui: {
+                                                                    showLaunchButton: true,
+                                                                    dropdownInitialLabel: dropdownInitialLabel(),
+                                                                    dropdownResultLabel: dropdownResultLabel()
+                                                                }
+                                                            }"></emcta-target-selector>
                             </div>
 
-                            <div class="df-date-time-picker" data-bind="attr: {id: 'dtpicker_'+dashboard.id()}, component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>
+                            <div tabindex="0" class="df-date-time-picker" data-bind="attr: {id: 'dtpicker_'+dashboard.id()}, component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>
                         </div>
                     </div>
 
@@ -370,7 +350,7 @@
                                 <!-- ko if: type() === 'DEFAULT' -->
                                 <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice,'data-tile-name':WIDGET_NAME}, css: tileDisplayClass(), 
                                                                     event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}}">
-                                    <div class="dbd-tile-container">
+                                    <div class="dbd-tile-container" tabindex="0" data-bind="event: {focus: function(data, event) {$root.focusOnTile(clientGuid, data, event)}}">
                                         <div class="dbd-tile-header tile-drag-handle" style="display: flex">
                                           <!-- ko if: $root.dashboard.systemDashboard() && linkedDashboard && linkedDashboard() !== '#'-->
                                             <h2 class="dbd-tile-title"><a data-bind="text:hideTitle() === 'true' ? '': title, attr: {href: linkedDashboard, 'data-tile-title': title}"></a></h2>
@@ -382,7 +362,7 @@
                                               <div class="dbd-btn-editor">                 
                                                   <button class="oj-button-half-chrome dbd-data-explore" tabindex="0"
                                                           data-bind="
-                                                             visible: $root.isMobileDevice !== 'true' && isItaAdmin,                                                        
+                                                             visible: $root.isMobileDevice !== 'true',                                                        
                                                              attr:{'id': 'editButton' + clientGuid,title: getNlsString('DBS_BUILDER_TILE_EDIT')},
                                                              click:$root.openInDataExplorer,
                                                              ojComponent: {
@@ -403,7 +383,7 @@
                                                         }"></button>
                                               </div>
                                                 <div class="dbd-btn-group">
-                                                    <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
+                                                    <button class="oj-button-half-chrome dbd-tile-action" id="dbd-tile-action" tabindex="0"
                                                             data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
                                                                        visible: ($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')&&(!$root.toolbarModel.zdtStatus),
                                                                        ojComponent: {component: 'ojButton', 
@@ -415,7 +395,7 @@
                                                     <ul style="display:none"
                                                         data-bind="attr: {'id': 'tileMenu' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
                                                         event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}},
-                                                        ojComponent: {component: 'ojMenu', select: $root.menuItemSelect}">
+                                                        ojComponent: {component: 'ojMenu', select: $root.menuItemSelect, open: $root.widgetMenuOpen, openOptions: {position: {'my': 'left center', 'at': 'right center'} } }">
                                                         <li data-option="showhide-title">
                                                             <a href="#" data-bind="attr: {'data-show-hide-title': hideTitle() === 'true' ? 'show' : 'hide'}">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
@@ -471,7 +451,44 @@
                                                             </ul>
                                                         </li>
                                                         -->
-                                                        <li></li> 
+                                                        <li data-option="divider"></li>
+                                                                <li data-option="up" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': (!upEnabled() || !maximizeEnabled() || editDisabled())}">
+                                                                    <a href="#">
+                                                                        <span class="oj-menu-item-icon demo-icon-font">
+                                                                            <img src="@version@/images/func_window_up_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_UP')}, css: { 'dbd-icon-disabled': (!upEnabled() || !maximizeEnabled() || editDisabled())}"/>
+                                                                        </span>
+                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_UP')"></span>
+                                                                    </a>
+                                                                </li>
+                                                                <li data-option="down" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !maximizeEnabled() || editDisabled()}">
+                                                                    <a href="#">
+                                                                        <span class="oj-menu-item-icon demo-icon-font">
+                                                                            <img src="@version@/images/func_window_down_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_DOWN')}, css: { 'dbd-icon-disabled': !maximizeEnabled() || editDisabled()}"/>
+                                                                        </span>
+                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_DOWN')"></span>
+                                                                    </a>
+                                                                </li>
+                                                                <li data-option="left" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !leftEnabled() || !maximizeEnabled() || editDisabled()}">
+                                                                    <a href="#">
+                                                                        <span class="oj-menu-item-icon demo-icon-font">
+                                                                            <img src="@version@/images/func_window_left_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_LEFT')}, css: {'dbd-icon-disabled': !leftEnabled() || !maximizeEnabled() || editDisabled()}"/>
+                                                                        </span>
+                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_LEFT')"></span>
+                                                                    </a>
+                                                                </li>
+                                                                <li data-option="right" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !rightEnabled() || !maximizeEnabled() || editDisabled()}">
+                                                                    <a href="#">
+                                                                        <span class="oj-menu-item-icon demo-icon-font">
+                                                                            <img src="@version@/images/func_window_right_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RIGHT')}, css: {'dbd-icon-disabled': !rightEnabled() || !maximizeEnabled() || editDisabled()}"/>
+                                                                        </span>
+                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_RIGHT')"></span>
+                                                                    </a>
+                                                                </li>
+                                                            <!--
+                                                            </ul>
+                                                        </li>
+                                                        -->
+                                                        <li></li>
                                                         <li data-option="remove" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
@@ -605,7 +622,7 @@
                     </div>
                 </div>
                 <!-- delete dilog end -->
-                 <!-- share dilog start -->
+                <!-- share dilog start -->
                 <div style="display:none" id="share-dashboard"
                      data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
                                         cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
@@ -711,61 +728,61 @@
                 <!--/ko-->
             </div>
 
-            <div class="df-right-panel no-print" data-bind="style:{top:isDashboardSet() ?'100px':'91px'},visible:!completelyHidden()">
+            <div class="df-right-panel no-print" data-bind="style:{top:isDashboardSet() ?'100px':'91px'},visible:!rightPanelControl.completelyHidden()">
                 <div class="right-panel-toggler no-print fit-size" data-bind="
-                        visible:showRightPanelToggler,
+                        visible:rightPanelControl.showRightPanelToggler,
                         style: {
-                                 right: showRightPanel() ?
-                                (323 + $root.scrollbarWidth) + 'px' :
-                                $root.scrollbarWidth+ 3 + 'px'
+                                 right: rightPanelControl.showRightPanel() ?
+                                (323 + rightPanelControl.scrollbarWidth) + 'px' :
+                                rightPanelControl.scrollbarWidth+ 3 + 'px'
                         }">
-                    <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn rightpanel-wrench" style="display: block;"
-                            data-bind="ojComponent: {
+                    <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn rightpanel-wrench" style="display: block;" id="rightpanel-wrench"
+                            data-bind="attr:{id:'rightpanel-wrench_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},ojComponent: {
                                     component:'ojButton',
                                     display: 'icons',
                                     icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 dbd-wrench'},
                                     label:getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_TITLE')
                             },
-                            click: toggleRightPanel,
-                            visible:!dashboardEditDisabled(),
+                            click: rightPanelControl.toggleRightPanel,
+                            visible:!rightPanelControl.dashboardEditDisabled(),
                             css:{
-                               'df-selected':rightPanelIcon()=='wrench'
+                               'df-selected':rightPanelControl.rightPanelIcon()=='wrench'
                             }"/>
                     </button>
-                    <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn oj-buttonset-first rightpanel-pencil" style="display: block;"
-                            data-bind="ojComponent: {
+                    <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn oj-buttonset-first rightpanel-pencil" style="display: block;" id="rightpanel-pencil"
+                            data-bind="attr:{id:'rightpanel-pencil_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},ojComponent: {
                                     component:'ojButton',
                                     display: 'icons',
                                     icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-pencil'},
                                     label: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_SETTINGS_TITLE')
                                 },
-                                visible:!dashboardEditDisabled() || isDashboardSet(),
-                                click: toggleRightPanel,
+                                visible:!rightPanelControl.dashboardEditDisabled() || isDashboardSet(),
+                                click: rightPanelControl.toggleRightPanel,
                                 style:{
-                                    borderTop:dashboardEditDisabled() ? '1px solid #e4e8ea' : '0'
+                                    borderTop:rightPanelControl.dashboardEditDisabled() ? '1px solid #e4e8ea' : '0'
                                 },
                                 css: {
-                                    'df-selected': rightPanelIcon()=='pencil'
+                                    'df-selected': rightPanelControl.rightPanelIcon()=='pencil'
                                 }"/>
                     </button>
                     <!-- EMCPDF-1513:Help Tab on right drawer disabled -->
-                    <button class="right-panel-help-btn drawer-icon-btn" style="display: none;" data-bind="ojComponent: {
+                    <button class="right-panel-help-btn drawer-icon-btn" id="rightpanel-help" style="display: none;" data-bind="ojComponent: {
                                             component:'ojButton',
                                             display: 'icons',
                                             icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-question-circle'},
-                                            label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')}">
+                                            label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')},attr:{id:'rightpanel-help_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))}">
 
                     </button>
             </div>
 
                 <div class="dbd-left-panel no-print fit-size"
-                        data-bind="css: {'dbd-left-panel-show' : showRightPanel(), 'dbd-left-panel-hide' : !showRightPanel()},
-                                   style: {right: $root.scrollbarWidth + 'px'}">
+                        data-bind="css: {'dbd-left-panel-show' : rightPanelControl.showRightPanel(), 'dbd-left-panel-hide' : !rightPanelControl.showRightPanel()},
+                                   style: {right: rightPanelControl.scrollbarWidth + 'px'}">
                     <div class="dbd-right-panel-contents">
                         <!-- ko if: $data.isDashboardSet -->
-                        <div class="dbd-right-panel-editdashboardset" data-bind="visible:rightPanelIcon()=='pencil'&&$data.editPanelContent()=='editset'">
+                        <div class="dbd-right-panel-editdashboardset" data-bind="visible:rightPanelControl.rightPanelIcon()=='pencil'&&$data.rightPanelControl.editPanelContent()=='editset'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" >
-                                <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: switchEditPanelContent"style="color:#0572ce;margin-left: -5px;"></a>
+                                <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: rightPanelControl.switchEditPanelContent"style="color:#0572ce;margin-left: -5px;"></a>
                                 <span data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_DSBSET_TITLE')"></span>
                             </div>
                             <div class="dbd-right-panel-editdashboard-container fit-size" style="overflow-y: scroll">
@@ -777,8 +794,7 @@
                                                 <div class="oj-flex-item">
                                                     <label for="dbsSetHNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
                                                     <input id="dbsSetHNameIn" maxlength="64" required
-                                                           data-bind="ojComponent: { component: 'ojInputText', value: dashboardsetName, rawValue: dashboardsetNameInputed,
-                                                disabled: $data.zdtStatus,
+                                                           data-bind="ojComponent: { component: 'ojInputText', value: rightPanelEdit.dashboardsetName, rawValue: rightPanelEdit.dashboardsetNameInputed,
                                                validators : [{
                                                        type: 'regExp', options : {
                                                        pattern: '.{1,64}',
@@ -798,7 +814,7 @@
                                                 <div class="oj-flex-item">
                                                     <label for="editDbdSetDscp" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
                                                     <textarea id="editDbdSetDscp" maxlength="256" rows="3" style="resize: vertical"
-                                                              data-bind="ojComponent: {component: 'ojTextArea', value: dashboardsetDescription, rawValue: dashboardsetDescriptionInputed, disabled: $data.zdtStatus,rootAttributes: {style:'max-width:420px;'},
+                                                              data-bind="ojComponent: {component: 'ojTextArea', value: rightPanelEdit.dashboardsetDescription, rawValue: rightPanelEdit.dashboardsetDescriptionInputed,rootAttributes: {style:'max-width:420px;'},
                                                                 validators : [{type: 'regExp', options : {
                                                                        pattern: '(.|\\b|\\s){0,256}',
                                                                        messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
@@ -821,7 +837,7 @@
                                             </div>
                                             <div class="oj-flex">
                                                 <div class="oj-flex-item" style="margin-top: 10px">
-                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: dashboardsetShare,disabled:dashboardsetShareDisabled && zdtStatus,}" >
+                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: rightPanelEdit.dashboardsetShare,disabled:rightPanelEdit.dashboardsetShareDisabled}" >
                                                         <span class="oj-choice-row">
                                                             <input id="dashboardSetSharingNotShared" type="radio" name="dashboardSetSharing" value="off">
                                                             <label for="dashboardSetSharingNotShared" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING_NOT_SHARED')"></label>
@@ -857,16 +873,16 @@
                                 </div>
                                 <hr/>
                                 <div>
-                                    <button class="dbd-delete-dashboardset" data-bind="click: deleteDashboardSetClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_DELETE_SET_TITLE'),disabled: $data.zdtStatus}"></button>
+                                    <button class="dbd-delete-dashboardset" data-bind="click: rightPanelEdit.deleteDashboardSetClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_DELETE_SET_TITLE')}"></button>
                                 </div>
                             </div>
                         </div>
                         <!-- /ko -->
 
                         <!-- ko if: $data.editDashboardDialogModel -->
-                        <div class="dbd-right-panel-editdashboard" data-bind="visible:rightPanelIcon()=='pencil' && $data.editPanelContent()=='edit'">
+                        <div class="dbd-right-panel-editdashboard" data-bind="visible:rightPanelControl.rightPanelIcon()=='pencil' && $data.rightPanelControl.editPanelContent()=='edit'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" >
-                                <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: switchEditPanelContent"style="color:#0572ce"></a>
+                                <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: rightPanelControl.switchEditPanelContent"style="color:#0572ce"></a>
                                 <span data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_DSB_TITLE')"></span>
                             </div>
                             <div class="dbd-right-panel-editdashboard-container fit-size" style="padding-left:0; padding-right:0;overflow-y: scroll">
@@ -945,7 +961,7 @@
                                             </div>
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
-                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: enableTimeRangeFilter}" >
+                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: rightPanelFilter.enableTimeRangeFilter}" >
                                                         <span class="oj-choice-row">
                                                             <input id="enableTimeRange" type="radio" name="enableTimeRange" value="ON">
                                                             <label for="enableTimeRange" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENABLE_TIME_RANGE')"></label>
@@ -963,14 +979,14 @@
                                                 </div>
                                             </div>
                                             <div class="oj-flex" >
-                                                <div class="oj-flex-item">                                                  
-                                                    <span class="oj-choice-row" style="margin: 8px 0 20px 0;">      
-                                                        <input id="entitySupport" class="oj-checkbox" type="checkbox" data-bind="checked: entitySupport">
+                                                <div class="oj-flex-item">
+                                                    <span class="oj-choice-row" style="margin: 8px 0 20px 0;">
+                                                        <input id="entitySupport" class="oj-checkbox" type="checkbox" data-bind="checked: rightPanelFilter.entitySupport">
                                                         <label for="entitySupport" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENTITY_SUPPORT_MULTIPLE')"></label>
                                                     </span>   
                                                 </div>
                                                 <div class="oj-flex-item">
-                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: enableEntityFilter}" >
+                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: rightPanelFilter.enableEntityFilter}" >
                                                         <span class="oj-choice-row">
                                                             <input id="enableEntityFilter" type="radio" name="enableEntityFilter" value="ON">
                                                             <label for="enableEntityFilter" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENABLE_ENTITIES')"></label>
@@ -998,7 +1014,7 @@
                                             </div>
                                             <div class="oj-flex">
                                                 <div class="oj-flex-item" style="margin-top:0px">
-                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: dashboardSharing}" >
+                                                    <div data-bind="ojComponent: {component: 'ojRadioset', value: rightPanelEdit.dashboardSharing}" >
                                                         <span class="oj-choice-row">
                                                             <input id="dashboardSharingNotShared" type="radio" name="dashboardSharing" value="notShared">
                                                             <label for="dashboardSharingNotShared" data-bind="text: getNlsString('DBS_BUILDER_DSB_SHARING_NOT_SHARED')"></label>
@@ -1010,19 +1026,19 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="oj-flex" data-bind="visible: dashboardSharing() === 'shared'">
+                                            <div class="oj-flex" data-bind="visible: rightPanelEdit.dashboardSharing() === 'shared'">
                                                 <div class="oj-flex-item" style="margin-left: 25px;">
                                                     <div class="share-default-settings" style="margin-top: 5px;">
                                                         <div data-bind="text: getNlsString('DBS_BUILDER_DSB_DEFAULT_REFRESH')"></div>
-                                                        <div id="defaultAutoRefresh" class="share-default-value" data-bind="text: defaultAutoRefreshValueText"></div>
+                                                        <div id="defaultAutoRefresh" class="share-default-value" data-bind="text: rightPanelFilter.defaultAutoRefreshValueText"></div>
                                                     </div>
                                                     <div class="share-default-settings" data-bind="visible: dashboard.enableEntityFilter()==='TRUE'">
                                                         <div data-bind="text: getNlsString('DSB_BUILDER_EDIT_DEFAULT_ENTITY_LABEL')"></div>
-                                                        <div id="defaultEntityValue" class="share-default-value" data-bind="text: defaultEntityValueText"></div>
+                                                        <div id="defaultEntityValue" class="share-default-value" data-bind="text: rightPanelFilter.defaultEntityValueText"></div>
                                                     </div>
                                                     <div class="share-default-settings" data-bind="visible: dashboard.enableTimeRange()==='TRUE'">
                                                         <div data-bind="text: getNlsString('DSB_BUILDER_EDIT_DEFAULT_TIME_RANGE_LABEL')"></div>
-                                                        <div id="defaultTimeRangeValue" class="share-default-value" data-bind="text: defaultTimeRangeValueText"></div>
+                                                        <div id="defaultTimeRangeValue" class="share-default-value" data-bind="text: rightPanelFilter.defaultTimeRangeValueText"></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1050,20 +1066,20 @@
                                 <hr/>
                                 <!-- /ko -->
                                 <div>
-                                    <button class="dbd-delete-single-dashboard" data-bind="click: deleteDashboardClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_DELETE_TITLE')}"></button>
+                                    <button class="dbd-delete-single-dashboard" data-bind="click: rightPanelEdit.deleteDashboardClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_DELETE_TITLE') }"></button>
                                 </div>
                             </div>
                         </div>
                         <!-- /ko -->
-                        <div id="dbd-right-panel-editsettings"  class="dbd-right-panel-editsettings"  data-bind="visible:rightPanelIcon()=='pencil'&&$data.editPanelContent()=='settings'">
+                        <div id="dbd-right-panel-editsettings"  class="dbd-right-panel-editsettings"  data-bind="visible:rightPanelControl.rightPanelIcon()=='pencil'&&$data.rightPanelControl.editPanelContent()=='settings'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_SETTINGS_TITLE')"></div>
                             <div id="dbd-edit-settings-container" class="dbd-edit-settings-container">
                                 <!-- ko if:isDashboardSet -->
                                     <span class="edit-setting-head" data-bind="text: getNlsString('DBSSET_BUILDER_DASHBOARDSET')"></span>
-                                    <span class="edit-setting-link edit-dsbset-link" data-bind="text:$data.dashboardsetToolBarModel.dashboardsetName, click: switchEditPanelContent"></span>
-                                    <!--ko if: !dashboardEditDisabled() && dashboardsetToolBarModel.dashboardsetItems.length>0-->
+                                    <span class="edit-setting-link edit-dsbset-link" data-bind="text:rightPanelEdit.dashboardsetName, click: rightPanelControl.switchEditPanelContent"></span>
+                                    <!--ko if: !rightPanelControl.dashboardEditDisabled() && dashboardsetToolBarModel.dashboardsetItems.length>0-->
                                         <span class="edit-setting-head" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_SELECTED_DSB')"></span>
-                                        <span class="edit-setting-link edit-dsb-link" data-bind="text:$data.dashboardsetToolBarModel.selectedDashboardItem().name, click: switchEditPanelContent"></span>
+                                        <span class="edit-setting-link edit-dsb-link" data-bind="text:$data.dashboardsetToolBarModel.selectedDashboardItem().name, click: rightPanelControl.switchEditPanelContent"></span>
                                         <!-- ko if:sortedTiles().length > 0 -->
                                             <span class="edit-setting-head">Widgets</span>
                                             <!--ko foreach:sortedTiles-->
@@ -1072,9 +1088,9 @@
                                         <!--/ko-->
                                     <!-- /ko -->
                                 <!--/ko-->
-                                <!--ko if: isDashboardSet() === false && !dashboardEditDisabled()-->
+                                <!--ko if: isDashboardSet() === false && !rightPanelControl.dashboardEditDisabled()-->
                                 <span class="edit-setting-head">Dashboard</span>
-                                    <span class="edit-setting-link edit-dsb-link" data-bind="text: dashboard.name, click: switchEditPanelContent"></span>
+                                    <span class="edit-setting-link edit-dsb-link" data-bind="text: dashboard.name, click: rightPanelControl.switchEditPanelContent"></span>
                                     <!--ko if: $data.dashboard.tiles().length>0-->
                                     <span class="edit-setting-head">Widgets</span>
                                         <!--ko foreach: sortedTiles -->
@@ -1084,46 +1100,37 @@
                                 <!--/ko-->
                             </div>
                         </div>
-                        <div class="dbd-right-panel-wrench" data-bind="visible:rightPanelIcon()=='wrench'">
+                        <div class="dbd-right-panel-wrench" data-bind="visible:rightPanelControl.rightPanelIcon()=='wrench'">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_TITLE')"></div>
                             <div class="dbd-right-panel-build-container" style="padding:0">
                                 <div class="dbd-left-panel-header fit-size-vertical-sibling">
                                     <div class="dbd-left-panel-header-search">
                                         <div  class="dbd-left-panel-header-search-input">
-                                            <input class="widget-search-input" type="text" name="searchInput"
-                                                   data-bind="event: { keypress: searchWidgetsInputKeypressed }, ojComponent:{component:'ojInputText', value: keyword,
+                                            <input class="widget-search-input" type="text" name="searchInput" id="widget-search-input"
+                                                   data-bind="event: { keypress: rightPanelWidget.searchWidgetsInputKeypressed }, ojComponent:{component:'ojInputText', value: rightPanelWidget.keyword,
                                               placeholder: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODER_CONTENT'), rootAttributes: {'class': 'dbs-search-box-input'}}
-                                              ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL') }"/>
+                                              ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL'),id:'widget-search-input_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1))) }"/>
                                         </div>
                                         <div>
-                                            <!--                                <button class="oj-button-half-chrome" data-bind="click: clearWidgetSearchInputClicked, visible: keyword,
-                                                                                    ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons',
-                                                                                    icons: {start:'left-panel-dbd-clear-icon'}, rootAttributes: {'style': 'width: 30px;'}}" style="margin: 0px;
-                                                                                    height: 30px;
-                                                                                    line-height: 30px;
-                                                                                    vertical-align: middle;
-                                                                                    text-align: center;
-                                                                                    float: left;">
-                                                                            </button>-->
-                                            <button class="dbd-left-panel-header-search-btn oj-button-half-chrome" data-bind="click: searchWidgetsClicked,
+                                            <button class="dbd-left-panel-header-search-btn oj-button-half-chrome" id="dbd-left-panel-header-search-btn" data-bind="attr:{id:'dbd-left-panel-header-search-btn_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click:rightPanelWidget.searchWidgetsClicked,
                                         ojComponent: {component: 'ojButton',chroming: 'half', label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons',
                                         icons: {start:'left-panel-dbd-search-icon'}}" style="float:right">
                                             </button>
-                                            <button class="oj-button-half-chrome" data-bind="click: clearWidgetSearchInputClicked, visible: clearRightPanelSearch,
+                                            <button class="oj-button-half-chrome" id="clear-widget-search-input" data-bind="attr:{id:'clear-widget-search-input_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: rightPanelWidget.clearWidgetSearchInputClicked, visible: rightPanelWidget.clearRightPanelSearch,
                                                     ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons',
                                                     icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 31px;'}}" style="float:right;margin-bottom:0">
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dbd-left-panel-widgets fit-size" data-bind="event:{scroll: widgetListScroll}" style="overflow-y: scroll">
-                                    <div class="oj-col stretch-width" data-bind="foreach: widgets">
+                                <div class="dbd-left-panel-widgets fit-size" data-bind="event:{scroll: rightPanelWidget.widgetListScroll}" style="overflow-y: scroll">
+                                    <div class="oj-col stretch-width" data-bind="foreach: rightPanelWidget.widgets">
                                         <div class="dbd-left-panel-widget" data-bind="css: 'widget-item-'+WIDGET_UNIQUE_ID()">
-                                            <div data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
+                                            <div data-bind="event: {mouseover: $root.rightPanelWidget.widgetMouseOverHandler, mouseout: $root.rightPanelWidget.widgetMouseOutHandler}">
                                                 <div class="dbd-left-panel-widget-text">
-                                                    <span tabindex="0" data-bind="text:WIDGET_NAME, click: $root.resetFocus, event: {keypress: $root.widgetKeyPress, focus: $root.widgetShowPlusIcon},attr:{'data-rightpanel-items':WIDGET_NAME,'aria-label':WIDGET_NAME}"></span>
+                                                    <span tabindex="0" data-bind="text:WIDGET_NAME, click: $root.rightPanelWidget.resetFocus, event: {keypress: $root.rightPanelWidget.widgetKeyPress, focus: $root.rightPanelWidget.widgetShowPlusIcon},attr:{'data-rightpanel-items':WIDGET_NAME,'aria-label':WIDGET_NAME}"></span>
                                                 </div>
-                                                <i class="dbd-toolbar-fa-icon fa-plus" aria-hidden="false" tabindex="0" data-bind="click: $root.widgetPlusClicked, event: {keypress: $root.widgetKeyPress, blur: $root.widgetHidePlusIcon},attr:{'data-rightpanel-items':WIDGET_NAME,'aria-label':WIDGET_NAME,'title': getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_BUTTON_PLUS')}"></i>
+                                                <i class="dbd-toolbar-fa-icon fa-plus" aria-hidden="false" tabindex="0" data-bind="click: $root.rightPanelWidget.widgetPlusClicked, event: {keypress: $root.rightPanelWidget.widgetKeyPress, blur: $root.rightPanelWidget.widgetHidePlusIcon},attr:{'data-rightpanel-items':WIDGET_NAME,'aria-label':WIDGET_NAME,'title': getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_BUTTON_PLUS')}"></i>
                                             </div>
                                             <div data-bind="css:'widget-'+WIDGET_UNIQUE_ID(),
                                                 ojComponent:{component: 'ojPopup',tail: 'simple'}" class="dbd-left-panel-img-pop">

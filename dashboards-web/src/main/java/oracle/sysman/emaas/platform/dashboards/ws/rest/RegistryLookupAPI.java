@@ -39,7 +39,7 @@ import org.apache.logging.log4j.Logger;
 @Path("/v1/registry")
 public class RegistryLookupAPI extends APIBase
 {
-	private static Logger logger = LogManager.getLogger(RegistryLookupAPI.class);
+	private static Logger LOGGER = LogManager.getLogger(RegistryLookupAPI.class);
 
 	@Path("/lookup/endpoint")
 	@GET
@@ -77,12 +77,12 @@ public class RegistryLookupAPI extends APIBase
 			}
 		}
 		catch (DashboardException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity ee = new ErrorEntity(e);
 			return Response.status(ee.getStatusCode()).entity(JsonUtil.buildNormalMapper().toJson(ee)).build();
 		}
 		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(DashboardErrorConstants.UNKNOWN_ERROR_CODE, MessageUtils.getDefaultBundleString(
 					"UNKNOWN_ERROR", e.getLocalizedMessage()));
 			return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
@@ -120,12 +120,12 @@ public class RegistryLookupAPI extends APIBase
 			}
 		}
 		catch (DashboardException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity ee = new ErrorEntity(e);
 			return Response.status(ee.getStatusCode()).entity(JsonUtil.buildNormalMapper().toJson(ee)).build();
 		}
 		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(DashboardErrorConstants.UNKNOWN_ERROR_CODE, MessageUtils.getDefaultBundleString(
 					"UNKNOWN_ERROR", e.getLocalizedMessage()));
 			return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
@@ -165,12 +165,12 @@ public class RegistryLookupAPI extends APIBase
 			}
 		}
 		catch (DashboardException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity ee = new ErrorEntity(e);
 			return Response.status(ee.getStatusCode()).entity(JsonUtil.buildNormalMapper().toJson(ee)).build();
 		}
 		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(DashboardErrorConstants.UNKNOWN_ERROR_CODE, MessageUtils.getDefaultBundleString(
 					"UNKNOWN_ERROR", e.getLocalizedMessage()));
 			return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(error)).build();

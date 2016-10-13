@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -40,7 +40,7 @@ define({
       "COMMON_DELETE_USED_DASHBOARD_MSG_TAILE": "Are you sure you want to delete <b>{0}</b>? This action cannot be undone.",
       "COMMON_UNSHAER_USED_DASHBOARD_MSG_HEAD": "When you stop sharing this dashboard. It will no longer be visible to others. It will also be removed from the following dashboard sets:",
       "COMMON_UNSHAER_USED_DASHBOARD_MSG_TAILE": "Are you sure you want to stop sharing <b>{0}</b>? This action cannot be undone.",
-      "COMMON_TEXT_SHARE": "Share",
+      "COMMON_TEXT_SHARE": "Share Settings",
       "COMMON_TEXT_SHARE_TITLE": "Share to public",
       "COMMON_TEXT_UNSHARE": "Stop Sharing",
       "COMMON_TEXT_UNSHARE_TITLE": "Stop sharing to public",
@@ -122,7 +122,7 @@ define({
       "DBS_HOME_DSB_PANEL_WIDGETS": "Widgets",
       "DBS_HOME_DSB_PAGE_SCREEN_SHOT": "Snapshot",
       "DBS_HOME_DSB_PAGE_DESCRIPTION": "Description",
-      "DBS_HOME_DSB_PAGE_WIDGETS": "Widgets",    
+      "DBS_HOME_DSB_PAGE_WIDGETS": "Widgets",
       "DBS_HOME_DSB_PAGE_INFO_DESC": "Description: ",
       "DBS_HOME_DSB_PAGE_INFO_CREATE": "Created By: ",
       "DBS_HOME_DSB_PAGE_INFO_CDATE": "Creation Date: ",
@@ -151,16 +151,16 @@ define({
       "DBS_BUILDER_EDIT_DSB_NAME": "Dashboard Name",
       "DBS_BUILDER_EDIT_SHOW_DSB_DESC": "Show dashboard description",
       //right drawer->filters
-      "DSB_BUILDER_EDIT_DASHBOARD_FILTERS": "Filters",
+      "DSB_BUILDER_EDIT_DASHBOARD_FILTERS": "Dashboard Filters",
       "DSB_BUILDER_EDIT_TIME_RANGE": "Time Range",
       "DSB_BUILDER_EDIT_ENABLE_TIME_RANGE": "Use dashboard time range",
-      "DSB_BUILDER_EDIT_DISABLE_TIME_RANGE": "Use time range defined in the widgets",
-      
-      "DSB_BUILDER_EDIT_ENTITIES": "Entities", 
+      "DSB_BUILDER_EDIT_DISABLE_TIME_RANGE": "Use time ranges defined within content items",
+
+      "DSB_BUILDER_EDIT_ENTITIES": "Entities",
       "DSB_BUILDER_EDIT_ENTITY_SUPPORT_MULTIPLE": "Dashboard supports multiple entities",
       "DSB_BUILDER_EDIT_ENABLE_ENTITIES": "Use dashboard entities",
-      "DSB_BUILDER_EDIT_DISABLE_ENTITIES": "Use entities defined in the widgets",
-      
+      "DSB_BUILDER_EDIT_DISABLE_ENTITIES": "Use entities defined within content items",
+
       "DBS_BUILDER_EDIT_ENTITY_FILTER": "Entity Filter",
       "DBS_BUILDER_EDIT_SHOW_ENTITY_FILTER": "Show Entity filter",
       "DBS_BUILDER_EDIT_ENTITY_SUPPORT": "Entity Support",
@@ -170,7 +170,7 @@ define({
       "DSB_BUILDER_EDIT_SELECT_AN_ENTITY": "Select an entity...",
       "DSB_BUILDER_EDIT_ENTITY_SELECTED_0": "Entity Selected (0)",
       "DSB_BUILDER_EDIT_ENTITY_SELECTED_1": "Entity Selected (1)",
-      "DSB_BUILDER_EDIT_ENTITY_SELECTED_N": "Entities Selected (N)",      
+      "DSB_BUILDER_EDIT_ENTITY_SELECTED_N": "Entities Selected (N)",
       "DBS_BUILDER_EDIT_TIME_FILTER": "Time Range Filter",
       "DBS_BUILDER_EDIT_SHOW_TIME_FILTER": "Show Time Range filter",
       "DSB_BUILDER_EDIT_DEFAULT_TIME_RANGE_LABEL": "Default Time Range Value",
@@ -230,8 +230,8 @@ define({
       "DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL": "Help",
       "DBS_BUILDER_LEFT_PANEL_CONTENT_LABEL": "Content",
       "DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODE": "Search",
-      "DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODER_CONTENT": "Search for widgets",
-      "DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL": "Search for a widget",
+      "DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODER_CONTENT": "Search for content...",
+      "DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL": "Search for a widget or a saved search",
       "DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL": "Search",
       "DBS_BUILDER_LEFT_PANEL_CONTAINER_LABEL": "Container",
       "DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_VALUE1": "219",
@@ -249,7 +249,7 @@ define({
       "DBS_BUILDER_LEFT_PANEL_WIDGET_PAGES": "Pages",
 //      "DBS_BUILDER_LEFT_PANEL_SHOW_TIME_SELECTOR": "Show Time Selector",
 //      "DBS_BUILDER_LEFT_PANEL_SHOW_REFRESH": "Show Refresh Control",
-      "DBS_BUILDER_LEFT_PANEL_BUILD_TITLE": "Build Dashboard",
+      "DBS_BUILDER_LEFT_PANEL_BUILD_TITLE": "Add Content",
       "DBS_BUILDER_LEFT_PANEL_BUILD_BUTTON_PLUS": "add to dashboard",
       "DBS_BUILDER_LEFT_PANEL_SELECTED_DSB": "Selected Dashboard",
       "DBS_BUILDER_LEFT_PANEL_EDIT_DSBSET_TITLE": "Edit Dashboard Set",
@@ -293,7 +293,7 @@ define({
       "DBS_BUILDER_CREATE_WIDGET_ICN_URL": "ICON URL",
       "DBS_BUILDER_CREATE_WIDGET_HISGRM_URL": "Histogram URL",
       "DBS_BUILDER_CHANGE_URL_TITLE": "Change URL",
-      "DBS_BUILDER_TILE_ACTIONS": "Configure widget",
+      "DBS_BUILDER_TILE_ACTIONS": "Content Settings",
       "DBS_BUILDER_TILE_EDIT":"Open in Data Explorer",
       "DBS_BUILDER_TILE_REFRESH": "Refresh",
       "DBS_BUILDER_TILE_REMOVE": "Remove",
@@ -302,6 +302,10 @@ define({
       "DBS_BUILDER_TILE_NARROWER": "Narrower",
       "DBS_BUILDER_TILE_TALLER": "Taller",
       "DBS_BUILDER_TILE_SHORTER": "Shorter",
+      "DBS_BUILDER_TILE_UP": "Up",
+      "DBS_BUILDER_TILE_DOWN": "Down",
+      "DBS_BUILDER_TILE_LEFT": "Left",
+      "DBS_BUILDER_TILE_RIGHT": "Right",
       "DBS_BUILDER_TILE_MAXIMIZE": "Maximize",
       "DBS_BUILDER_TILE_RESTORE": "Restore",
       "DBS_BUILDER_TILE_SHOW":"Show title",
@@ -333,14 +337,14 @@ define({
       "DBS_BUILDER_MSG_ERROR_NAME_DUPLICATED_DETAIL": "Provide a unique name.",
       "DBS_BUILDER_MSG_AUTO_REFRESH_ON": "Auto-refresh enabled.",
       "DBS_BUILDER_MSG_AUTO_REFRESH_OFF": "Auto-refresh disabled.",
-      
+
       "TEXT_WIDGET_IFRAME_HINT":"Please change the URL and click \"Change\" to apply: ",
       "TEXT_WIDGET_IFRAME_CONFIGURATION":"Configuration",
       "TEXT_WIDGET_SUBSCRIBER_HINT":"You will see received message and what I will respond",
       "LABEL_WIDGET_IFRAME_CHANGE":"Change",
       "TEXT_WIDGET_PUBLISHER_HINT":"Please write your message and click \"Publish\" to send",
       "LABEL_WIDGET_PUBLISHER_PUBLISH":"Publish",
-      
+
       "DBS_ERROR_PAGE_TITLE":"Error",
       "DBS_ERROR_PAGE_NOT_FOUND_MSG":"Sorry, the page you have requested either doesn't exist or you do not have access to it.",
       "DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG":"Sorry, you must specify a valid dashboard id to open a dashboard.",
@@ -352,7 +356,8 @@ define({
       "DBS_ERROR_TEXT_GO_HOME_PAGE": "to go to the default Home page",
       "DBS_ERROR_URL": "Requested URL is: ",
       "DBS_ERROR_BTN_SIGN_OUT": "Sign Out",
-      
+      "DBS_ERROR_INTERNAL_ERROR": "Oracle Management Cloud service received a bad request and had an internal error. Try to access your service later.",
+
       "SERVICE_NAME_APM":"Application Performance Monitoring",
       "SERVICE_NAME_ITAnalytics":"IT Analytics",
       "SERVICE_NAME_LogAnalytics":"Log Analytics",
@@ -390,22 +395,26 @@ define({
       "LANDING_HOME_INFRA_MONITORING_DESC": "Monitor your entire IT infrastructure - on-premise or on the cloud - from one unified platform",
 
       "LANDING_HOME_DASHBOARDS": "Dashboards",
+      
+      "LANDING_HOME_COMPLIANCE": "Compliance",
+      "LANDING_HOME_COMPLIANCE_DESC": "Automate application and infrastructure configuration assessments",
+      
       "LANDING_HOME_SECURITY_ANALYTICS": "Security Monitoring and Analytics",
       "LANDING_HOME_SECURITY_ANALYTICS_DESC": "Detect, investigate and mitigate security threats",
-      
+
       "LANDING_HOME_ORCHESTRATION": "Orchestration",
       "LANDING_HOME_ORCHESTRATION_DESC": "Schedule, execute and report on tasks at scale",
-      
+
       "LANDING_HOME_DASHBOARDS_DESC": "Build custom dashboards using out-of-the-box widgets or your own visualization of data",
       "LANDING_HOME_DATA_EXPLORERS": "Data Explorers",
       "LANDING_HOME_DATA_EXPLORERS_DESC": "Search, analyze, and visualize data",
       "LANDING_HOME_DATA_EXPLORER": "Data Explorer",
-      
+
       "LANDING_HOME_LEARN_MORE": "Learn More",
       "LANDING_HOME_GET_STARTED_LINK": "How to get started",
       "LANDING_HOME_VIDEOS_LINK": "Videos",
       "LANDING_HOME_COMMUNITY_LINK": "Service Offerings",
-      
+
       "DBS_BUILDER_EDIT_WIDGET_LINK": "Link",
       "DBS_BUILDER_EDIT_WIDGET_LINK_DESC": "Link to other dashboard",
       "DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_TITLE": "Edit widget link",
@@ -416,7 +425,7 @@ define({
       "DBS_BUILDER_EDIT_WIDGET_LINK_NAME_VALIDATE_ERROR": "Enter a non-empty name and its length should be less than 4000 characters.",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_LENGTH_VALIDATE_ERROR": "Enter a non-empty URL and its length should be less than 4000 characters.",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_VALIDATE_ERROR": "The format of URL is incorrect.",
-      
+
       //dashoard set message
       "DBSSET_BUILDER_DASHBOARDSET":"Dashboard Set",
       "DBSSET_BUILDER_ADD_DASHBOARD_TOSET":"Add a dashboard",
@@ -436,6 +445,8 @@ define({
       "DBSSET_BUILDER_REFRESH_TIPS":"Specify whether this dashboard refreshes automatically by default for other users.User changes to this setting are saved",
       "DBSSET_BUILDER_Delete_TIPS_UNSAVED":"You have unsaved changes in this dashboard.",
       "DBSSET_BUILDER_Delete_TIPS_SAVEREMOVE":"Select <b>Save and Remove </b> to save this dashboard before removing it from the dashboard set.",
-      "DBSSET_BUILDER_Delete_TIPS_REMOVE":"Select <b> Remove </b> to remove the dashboard from the set and discard all changes"
+      "DBSSET_BUILDER_Delete_TIPS_REMOVE":"Select <b> Remove </b> to remove the dashboard from the set and discard all changes",
+      
+      //planned down time message
+      "DBS_BUILDER_ZDT_CANNOT_CHOOSE_DBD":"It's in planned down time right now,you can not pick the dashboard"
 });
-

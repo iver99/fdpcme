@@ -17,6 +17,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class GlobalStatus
 {
+	private GlobalStatus() {
+	  }
+
 	public static final String STATUS_DOWN = "DOWN";
 	public static final String STATUS_UP = "UP";
 	public static final String STATUS_OUT_OF_SERVICE = "OUT_OF_SERVICE";

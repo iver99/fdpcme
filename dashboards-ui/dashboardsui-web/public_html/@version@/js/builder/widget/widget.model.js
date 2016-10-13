@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -10,7 +10,7 @@ define(['jquery',
         'builder/builder.core'], function($, oj, dfu) {
     function WidgetDataSource() {
         var self = this;
-        
+
         self.loadWidgetData = function(keyword, successCallback) {
             initialize();
             loadWidgets(keyword);
@@ -38,13 +38,17 @@ define(['jquery',
                 async: false
             });
         };
-        
+
         function sortWidgetsData(widgets) {
             if (widgets && widgets.length > 0) {
                 widgets.sort(function(a, b) {
                     var na = a.WIDGET_NAME.toLowerCase(), nb = b.WIDGET_NAME.toLowerCase();
-                    if (na < nb) return -1;
-                    if (na > nb) return 1;
+                    if (na < nb) {
+                        return -1;
+                    }
+                    if (na > nb) {
+                        return 1;
+                    }
                     return 0;
                 });
             }
@@ -54,26 +58,16 @@ define(['jquery',
             var lcKeyword = $.trim(keyword) ? $.trim(keyword).toLowerCase() : null;
             for (var i = 0; i < data.length; i++) {
                 var widget = null;
-                lcKeyword && (data[i].WIDGET_NAME.toLowerCase().indexOf(lcKeyword) !== -1 || data[i].WIDGET_DESCRIPTION && data[i].WIDGET_DESCRIPTION.toLowerCase().indexOf(lcKeyword) !== -1||data[i].WIDGET_OWNER.toLowerCase().indexOf(lcKeyword) !== -1) && (widget = data[i]);
-                !lcKeyword && (widget = data[i]);
+                if(lcKeyword && (data[i].WIDGET_NAME.toLowerCase().indexOf(lcKeyword) !== -1 || data[i].WIDGET_DESCRIPTION && data[i].WIDGET_DESCRIPTION.toLowerCase().indexOf(lcKeyword) !== -1||data[i].WIDGET_OWNER.toLowerCase().indexOf(lcKeyword) !== -1)){
+                    widget = data[i];
+                }
+                if(!lcKeyword){
+                    widget = data[i];
+                }
                 widget && self.widget.push(widget);
             }
         }
     }
     Builder.registerModule(WidgetDataSource, "WidgetDataSource");
-        
-    /*function createTextWidget(width) {
-        var widget = {};
-        widget.WIDGET_KOC_NAME = "DF_V1_WIDGET_TEXT";
-        widget.WIDGET_TEMPLATE = "./widgets/textwidget/textwidget.html";
-        widget.WIDGET_VIEWMODEL = "./widgets/textwidget/js/textwidget";
-        widget.type = "TEXT_WIDGET";
-        widget.width = width;
-        widget.height = 1;
-        widget.column = null;
-        widget.row = null;
-        widget.content = null;
-        return widget;
-    }
-    Builder.registerFunction(createTextWidget, 'createTextWidget');*/
+
 });

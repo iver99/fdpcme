@@ -15,6 +15,9 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.util;
  */
 public class Validator
 {
+	private Validator() {
+	  }
+
 	public static void equalOrLargerThan(String name, int value, int lowest)
 	{
 		if (value < lowest) {

@@ -12,17 +12,22 @@ package oracle.sysman.emaas.platform.dashboards.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * @author wenjzhu
  */
 public class DashboardsFilter
 {
+	private static final Logger LOGGER = LogManager.getLogger(DashboardsFilter.class);
 	// reserved actual strings for used in query
 	private static final List<String> typeFilterStrings = Arrays.asList(new String[] { Dashboard.DASHBOARD_TYPE_NORMAL,
 			Dashboard.DASHBOARD_TYPE_SET, Dashboard.DASHBOARD_TYPE_SINGLEPAGE });
@@ -39,8 +44,8 @@ public class DashboardsFilter
 	public static final String APM_PROVIDER_APMUI = "ApmUI";
 	public static final String ITA_PROVIDER_EMCI = "emcitas-ui-apps";
 	public static final String ITA_PROVIDER_TA = "TargetAnalytics";
-	public static final String LA_PROVIDER_LS = "LoganService";
-	public static final String OCS_PROVIDER_OCS = "Orchestration";
+	public static final String LA_PROVIDER_LS = "LogAnalyticsUI";
+	public static final String OCS_PROVIDER_OCS = "CosUIService";
 
 	private List<String> includedTypes;
 	private List<String> includedApps;
@@ -84,7 +89,7 @@ public class DashboardsFilter
 	public List<DashboardApplicationType> getIncludedApplicationTypes()
 	{
 		if (includedApps == null || includedApps.isEmpty()) {
-			return null;
+			return Collections.emptyList();
 		}
 		List<DashboardApplicationType> types = new ArrayList<DashboardApplicationType>();
 		try {
@@ -93,6 +98,7 @@ public class DashboardsFilter
 			}
 		}
 		catch (IllegalArgumentException iae) {
+			LOGGER.info("context", iae);
 		}
 		return types;
 	}
@@ -124,7 +130,7 @@ public class DashboardsFilter
 	public List<Integer> getIncludedTypeIntegers()
 	{
 		if (includedTypes == null || includedTypes.isEmpty()) {
-			return null;
+			return Collections.emptyList();
 		}
 		List<Integer> types = new ArrayList<Integer>();
 		try {
@@ -133,6 +139,7 @@ public class DashboardsFilter
 			}
 		}
 		catch (Exception e) {
+			LOGGER.info("context", e);
 		}
 		return types;
 	}
@@ -148,7 +155,7 @@ public class DashboardsFilter
 	public List<String> getIncludedWidgetProviders()
 	{
 		if (includedApps == null || includedApps.isEmpty()) {
-			return null;
+			return Collections.emptyList();
 		}
 		List<String> sb = new ArrayList<String>();
 		for (String app : includedApps) {
@@ -274,13 +281,13 @@ public class DashboardsFilter
 	{
 		if (filter != null) {
 			String filterUpcase = filter.trim().toUpperCase();
-			if (favoriteFilterString.toUpperCase().equals(filterUpcase)) {
+			if (favoriteFilterString.equalsIgnoreCase(filterUpcase)) {
 				setIncludedFavorites(true);
 				return;
 			}
 
 			for (String s : typeFilterStrings) {
-				if (s.toUpperCase().equals(filterUpcase)) {
+				if (s.equalsIgnoreCase(filterUpcase)) {
 					addIncludedType(s);
 					return;
 				}
@@ -288,7 +295,7 @@ public class DashboardsFilter
 
 			for (int i = 0; i < appFilterStrings_input.size(); i++) {
 				String s = appFilterStrings_input.get(i);
-				if (s.toUpperCase().equals(filterUpcase)) {
+				if (s.equalsIgnoreCase(filterUpcase)) {
 					addIncludedApplication(appFilterStrings.get(i));
 					return;
 				}
@@ -302,7 +309,7 @@ public class DashboardsFilter
 			//			}
 
 			for (String s : ownerFilterStrings) {
-				if (s.toUpperCase().equals(filterUpcase)) {
+				if (s.equalsIgnoreCase(filterUpcase)) {
 					addIncludedOwner(s);
 					return;
 				}

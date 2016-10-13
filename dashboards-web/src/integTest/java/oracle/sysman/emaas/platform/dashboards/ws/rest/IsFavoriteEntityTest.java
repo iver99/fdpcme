@@ -12,13 +12,9 @@ import static org.testng.Assert.*;
 public class IsFavoriteEntityTest {
     private IsFavoriteEntity isFavoriteEntity = new IsFavoriteEntity();
     @Test
-    public void testGetIsFavorite() throws Exception {
+    public void testGetIsFavorite() {
         isFavoriteEntity.setIsFavorite(true);
         assertEquals(isFavoriteEntity.getIsFavorite(), Boolean.TRUE);
     }
 
-    @Test
-    public void testSetIsFavorite() throws Exception {
-
-    }
 }

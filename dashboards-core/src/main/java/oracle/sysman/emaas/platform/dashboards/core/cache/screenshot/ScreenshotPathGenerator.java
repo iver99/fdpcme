@@ -27,7 +27,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class ScreenshotPathGenerator
 {
-	private static final Logger logger = LogManager.getLogger(ScreenshotPathGenerator.class);
+	private static final Logger LOGGER = LogManager.getLogger(ScreenshotPathGenerator.class);
 	private static String DEFAULT_SCREENSHOT_EXT = ".png";
 	private static String SERVICE_VERSION_PROPERTY = "serviceVersion";
 
@@ -48,7 +48,7 @@ public class ScreenshotPathGenerator
 	public String generateFileName(BigInteger dashboardId, Date creation, Date modification)
 	{
 		if (dashboardId == null) {
-			logger.error(
+			LOGGER.error(
 					"Unexpected null dashboard id to generate screenshot file name: dashboard id={}, creation={}, modification={}",
 					dashboardId, creation, modification);
 			return null;
@@ -61,7 +61,7 @@ public class ScreenshotPathGenerator
 			sb.append(creation.getTime());
 		}
 		else {
-			logger.error("Unexpected dashboard with null values for both creation and modification date");
+			LOGGER.error("Unexpected dashboard with null values for both creation and modification date");
 			return null;
 		}
 		sb.append("_");
@@ -73,11 +73,11 @@ public class ScreenshotPathGenerator
 	public String generateScreenshotUrl(String baseUrl, BigInteger dashboardId, Date creation, Date modification)
 	{
 		if (StringUtil.isEmpty(baseUrl)) {
-			logger.error("Unexpected null/empty base url to generate screenshot URL");
+			LOGGER.error("Unexpected null/empty base url to generate screenshot URL");
 			return null;
 		}
 		if (StringUtil.isEmpty(versionString)) {
-			logger.error("Unexpected null/empty versionString to generate screenshot URL");
+			LOGGER.error("Unexpected null/empty versionString to generate screenshot URL");
 			return null;
 		}
 		String fileName = generateFileName(dashboardId, creation, modification);
@@ -91,16 +91,16 @@ public class ScreenshotPathGenerator
 	public boolean validFileName(BigInteger dashboardId, String fileNameToValid, String fileNameFromCache)
 	{
 		if (StringUtil.isEmpty(fileNameToValid)) {
-			logger.debug("Invalid file name as it is empty");
+			LOGGER.debug("Invalid file name as it is empty");
 			return false;
 		}
 		String[] newStrs = StringUtils.split(fileNameToValid, '_');
 		if (newStrs == null || newStrs.length != 2) {
-			logger.debug("Invalid file name not in proper format with only one char '_' inside");
+			LOGGER.debug("Invalid file name not in proper format with only one char '_' inside");
 			return false;
 		}
 		if (!newStrs[1].equals(String.valueOf(dashboardId) + DEFAULT_SCREENSHOT_EXT)) {
-			logger.debug("Invalid file name as dashboard id or image type does not match");
+			LOGGER.debug("Invalid file name as dashboard id or image type does not match");
 			return false;
 		}
 		Long newTime = null;
@@ -112,13 +112,13 @@ public class ScreenshotPathGenerator
 				return newTime >= cachedTime;
 			}
 			else {
-				logger.debug("Invalid file name as cached file name is invalid: cached file name={}, splitted cached strings",
+				LOGGER.debug("Invalid file name as cached file name is invalid: cached file name={}, splitted cached strings",
 						fileNameFromCache, StringUtil.arrayToCommaDelimitedString(cachedStrs));
 				return false;
 			}
 		}
 		catch (NumberFormatException e) {
-			logger.debug(e);
+			LOGGER.debug(e);
 			return false;
 		}
 	}
@@ -131,10 +131,10 @@ public class ScreenshotPathGenerator
 			is = ScreenshotPathGenerator.class.getResourceAsStream("/dashboard-api.properties");
 			properties.load(is);
 			versionString = (String) properties.get(SERVICE_VERSION_PROPERTY);
-			logger.debug("Initialize the screenshot path version string to {}", versionString);
+			LOGGER.debug("Initialize the screenshot path version string to {}", versionString);
 		}
 		catch (IOException e) {
-			logger.error(e);
+			LOGGER.error(e);
 		}
 		finally {
 			if (is != null) {
@@ -142,7 +142,7 @@ public class ScreenshotPathGenerator
 					is.close();
 				}
 				catch (IOException e) {
-					logger.error(e);
+					LOGGER.error(e);
 				}
 			}
 		}

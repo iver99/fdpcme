@@ -37,7 +37,7 @@ import weblogic.application.ApplicationLifecycleEvent;
  */
 public class LoggingServiceManager implements ApplicationServiceManager
 {
-	private final Logger logger = LogManager.getLogger(LoggingServiceManager.class);
+	private static final Logger LOGGER = LogManager.getLogger(LoggingServiceManager.class);
 	public static final String MBEAN_NAME = "oracle.sysman.emaas.platform.omcuiframeworkservice.logging.beans:type=AppLoggingManageMXBean";
 	public static final String MBEAN_NAME_TMP = "oracle.sysman.emaas.platform.omcuiframeworkservice.logging.beans:type=AppLoggingManageMXBean"
 			+ System.currentTimeMillis();
@@ -56,24 +56,25 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.uifwk.ui.webutils.wls.lifecycle.ApplicationServiceManager#postStart(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void postStart(ApplicationLifecycleEvent evt) throws Exception
+	public void postStart(ApplicationLifecycleEvent evt) 
 	{
+		// do nothing
 	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.uifwk.ui.webutils.wls.lifecycle.ApplicationServiceManager#postStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void postStop(ApplicationLifecycleEvent evt) throws Exception
+	public void postStop(ApplicationLifecycleEvent evt) 
 	{
-
+		// do nothing
 	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.uifwk.ui.webutils.wls.lifecycle.ApplicationServiceManager#preStart(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void preStart(ApplicationLifecycleEvent evt) throws Exception
+	public void preStart(ApplicationLifecycleEvent evt) throws Exception 
 	{
 		URL url = LoggingServiceManager.class.getResource("/log4j2_omcuifwk.xml");
 		Configurator.initialize("root", LoggingServiceManager.class.getClassLoader(), url.toURI());
@@ -82,12 +83,12 @@ public class LoggingServiceManager implements ApplicationServiceManager
 			registerMBean(MBEAN_NAME);
 		}
 		catch (InstanceAlreadyExistsException e) {
-			logger.error("MBean '" + MBEAN_NAME + "' exists already when trying to register. Unregister it first.", e);
+			LOGGER.error("MBean '" + MBEAN_NAME + "' exists already when trying to register. Unregister it first.", e);
 			try {
 				unregisterMBean(MBEAN_NAME);
 			}
 			catch (Exception ex) {
-				logger.error(ex);
+				LOGGER.error(ex);
 				// failed to unregister with name 'MBEAN_NAME', register with a temporary name
 				registerMBean(MBEAN_NAME_TMP);
 				tempMBeanExists = true;
@@ -101,9 +102,9 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.uifwk.ui.webutils.wls.lifecycle.ApplicationServiceManager#preStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void preStop(ApplicationLifecycleEvent evt) throws Exception
+	public void preStop(ApplicationLifecycleEvent evt) 
 	{
-		logger.info("Pre-stopping logging service");
+		LOGGER.info("Pre-stopping logging service");
 		try {
 			if (tempMBeanExists) {
 				tempMBeanExists = false;
@@ -112,7 +113,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 			unregisterMBean(MBEAN_NAME);
 		}
 		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -121,7 +122,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	{
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 		mbs.registerMBean(new AppLoggingManageMXBean(), new ObjectName(name));
-		logger.info("MBean '" + name + "' has been registered");
+		LOGGER.info("MBean '" + name + "' has been registered");
 	}
 
 	private void unregisterMBean(String name) throws MBeanRegistrationException, InstanceNotFoundException,
@@ -129,7 +130,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	{
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 		mbs.unregisterMBean(new ObjectName(name));
-		logger.info("MBean '" + name + "' has been un-registered");
+		LOGGER.info("MBean '" + name + "' has been un-registered");
 	}
 
 }

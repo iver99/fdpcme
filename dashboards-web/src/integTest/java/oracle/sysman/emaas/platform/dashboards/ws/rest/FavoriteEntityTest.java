@@ -5,10 +5,7 @@ import java.math.BigInteger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Troy
- * @since 2016/1/21.
- */
+
 @Test(groups = { "s1" })
 public class FavoriteEntityTest
 {
@@ -37,21 +34,4 @@ public class FavoriteEntityTest
 
 	}
 
-	@Test
-	public void testSetHref() throws Exception
-	{
-
-	}
-
-	@Test
-	public void testSetId() throws Exception
-	{
-
-	}
-
-	@Test
-	public void testSetName() throws Exception
-	{
-
-	}
 }

@@ -10,6 +10,9 @@
 
 package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
 
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
@@ -22,6 +25,7 @@ import org.testng.annotations.Test;
  */
 public class TestAnalyzerPage extends CommonUIUtils
 {
+	private static final Logger LOGGER = LogManager.getLogger(TestAnalyzerPage.class);
 	@BeforeClass
 	public static void initValue()
 	{
@@ -30,7 +34,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 	}
 
 	@Test
-	public void testLogAnalyzerPage() throws Exception
+	public void testLogAnalyzerPage() 
 	{
 		try {
 			CommonUIUtils.commonUITestLog("This is to test Log Analyzer Page");
@@ -50,16 +54,16 @@ public class TestAnalyzerPage extends CommonUIUtils
 
 			//click the compass icon
 			webdriver.getLogger().info("Click the Application navigator icon");
-			webdriver.waitForElementPresent(UIControls.sCompassIcon);
-			webdriver.click(UIControls.sCompassIcon);
+			webdriver.waitForElementPresent(UIControls.SCOMPASSICON);
+			webdriver.click(UIControls.SCOMPASSICON);
 			webdriver.takeScreenShot();
 
 			CommonUIUtils.verifyMenu(webdriver, isLAAdmin);
 
 			//click the compass icon again
 			webdriver.getLogger().info("Click the Application navigator icon again");
-			webdriver.waitForElementPresent(UIControls.sCompassIcon);
-			webdriver.click(UIControls.sCompassIcon);
+			webdriver.waitForElementPresent(UIControls.SCOMPASSICON);
+			webdriver.click(UIControls.SCOMPASSICON);
 			webdriver.takeScreenShot();
 
 			webdriver.getLogger().info("Verify the Links menu disappeared");
@@ -74,12 +78,13 @@ public class TestAnalyzerPage extends CommonUIUtils
 
 		}
 		catch (Exception ex) {
+			LOGGER.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}
 
 	@Test
-	public void testTargetAnalyzerPage() throws Exception
+	public void testTargetAnalyzerPage() 
 	{
 		try {
 			CommonUIUtils.commonUITestLog("This is to test Target Analyzer Page");
@@ -99,16 +104,16 @@ public class TestAnalyzerPage extends CommonUIUtils
 
 			//click the compass icon
 			webdriver.getLogger().info("Click the Application navigator icon");
-			webdriver.waitForElementPresent(UIControls.sCompassIcon);
-			webdriver.click(UIControls.sCompassIcon);
+			webdriver.waitForElementPresent(UIControls.SCOMPASSICON);
+			webdriver.click(UIControls.SCOMPASSICON);
 			webdriver.takeScreenShot();
 
 			CommonUIUtils.verifyMenu(webdriver, isITAAdmin);
 
 			//click the compass icon again
 			webdriver.getLogger().info("Click the Application navigator icon again");
-			webdriver.waitForElementPresent(UIControls.sCompassIcon);
-			webdriver.click(UIControls.sCompassIcon);
+			webdriver.waitForElementPresent(UIControls.SCOMPASSICON);
+			webdriver.click(UIControls.SCOMPASSICON);
 			webdriver.takeScreenShot();
 
 			webdriver.getLogger().info("Verify the Links menu disappeared");
@@ -123,6 +128,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 
 		}
 		catch (Exception ex) {
+			LOGGER.info("context",ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}

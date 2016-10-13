@@ -1,27 +1,28 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
-define(['knockout', 
-        'jquery', 
+define(['knockout',
+        'jquery',
         'ojs/ojcore',
         'dfutil',
+//        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
         'builder/dashboard.tile.model',
         'builder/editor/editor.tiles'
-    ], 
-    function(ko, $, oj, dfu) {
+    ],
+    function(ko, $, oj, dfu/*, TargetSelectorUtils*/) {
         function Cell(row, column) {
             var self = this;
-            
+
             self.row = row;
             self.column = column;
         }
         Builder.registerModule(Cell, 'Cell');
-        
+
         /**
-         * 
+         *
          * @param {Date} startTime: start time of new time range
          * @param {Date} endTime: end time of new time range
          * @returns {DashboardTimeRangeChange} instance
@@ -37,16 +38,9 @@ define(['knockout',
         }
         Builder.registerModule(DashboardTimeRangeChange, 'DashboardTimeRangeChange');
 
-//        function DashboardTargetContext(target, type, emsite) {
-//            var self = this;
-//            self.target = target;
-//            self.type = type;
-//            self.emsite = emsite;
-//        }
-//        Builder.registerModule(DashboardTargetContext, 'DashboardTargetContext');
 
         /**
-         * 
+         *
          * @param {String} name: name of custome item
          * @param {Object} value: new value of custome item
          * @returns {undefined}
@@ -61,7 +55,7 @@ define(['knockout',
         Builder.registerModule(DashboardCustomChange, 'DashboardCustomChange');
 
         /**
-         * 
+         *
          * @param {String} status: name of status
          * Event NAME:
          * PRE_REFRESH: Before refresh starts
@@ -92,19 +86,9 @@ define(['knockout',
 
             self.timeRangeEnabled = null;
             self.targetSelectorEnabled = null;
-//            if(enableTimeRange === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
-//                self.timeRangeChange = null;
-//            }else{
-//                if (timeRangeChange instanceof DashboardTimeRangeChange){
-//                    self.timeRangeChange = timeRangeChange;
-//                }
-//            }
             if (timeRangeChange instanceof DashboardTimeRangeChange){
                 self.timeRangeChange = timeRangeChange;
             }
-//            if(targetContext instanceof DashboardTargetContext) {
-//                self.targetContext = targetContext;
-//            }
 
             if (customChanges instanceof Array){
                 for(var i=0;i<customChanges.length;i++){
@@ -135,31 +119,10 @@ define(['knockout',
             }
         }
         Builder.registerModule(DashboardItemChangeEvent, 'DashboardItemChangeEvent');
-        
-        /*function DashboardTextTile(mode, $b, widget, funcShow, deleteTextCallback) {
-            var self = this;
-            self.dashboard = $b.dashboard;
-            self.title = ko.observable("text widget title"); //to do 
-            self.description = ko.observable();
-            self.isMaximized = ko.observable(false);
-
-            var kowidget;
-            if(widget.type === "TEXT_WIDGET") {
-                kowidget = new Builder.TextTileItem(widget);
-            }else {
-                kowidget = new Builder.TileItem(widget);
-            }
-
-            for (var p in kowidget)
-                self[p] = kowidget[p];
-
-            Builder.initializeTextTileAfterLoad(mode, $b, self, funcShow, deleteTextCallback, Builder.isContentLengthValid);            
-        }
-        Builder.registerModule(DashboardTextTile, 'DashboardTextTile');*/
 
         /**
          *  Object used to represents a dashboard tile created by clicking adding widget
-         *  
+         *
          *  @param dashboard which dashboard the tile is inside
          *  @param type type of the dashboard
          *  @param title title for the tile
@@ -172,21 +135,23 @@ define(['knockout',
             self.dashboard = dashboard;
             self.title = ko.observable(title);
             self.description = ko.observable(description);
-            self.isMaximized = ko.observable(false);            
+            self.isMaximized = ko.observable(false);
 
             var kowidget;
-//            if(widget.type === "TEXT_WIDGET") {
-//                kowidget = new Builder.TextTileItem(widget);
-//            }else {
                 kowidget = new Builder.TileItem(widget);
-//            }
-            for (var p in kowidget)
+            for (var p in kowidget){
+                if(kowidget[p] === undefined){
+                    continue;
+                }
                 self[p] = kowidget[p];
+            }
             if(self['WIDGET_SUPPORT_TIME_CONTROL']) {
-                if (self['WIDGET_SUPPORT_TIME_CONTROL']() === '0')
+                if (self['WIDGET_SUPPORT_TIME_CONTROL']() === '0'){
                     self['WIDGET_SUPPORT_TIME_CONTROL'](false);
-                else
+                }
+                else{
                     self['WIDGET_SUPPORT_TIME_CONTROL'](true);
+                }
                 window.DEV_MODE && console.debug("self['WIDGET_SUPPORT_TIME_CONTROL'] is set to " + self['WIDGET_SUPPORT_TIME_CONTROL']());
             }
 
@@ -195,50 +160,21 @@ define(['knockout',
         }
         Builder.registerModule(DashboardTile, 'DashboardTile');
 
-        /*function initializeTextTileAfterLoad(mode, $b, tile, funcShow, deleteTextCallback) {
-            if(!tile) {
+        function initializeTileAfterLoad(mode, dashboard, tile, timeSelectorModel, targets, loadImmediately, dashboardInst) {
+            if (!tile){
                 return;
             }
-            var dashboard = $b.dashboard;
-            Builder.registerComponent(tile.WIDGET_KOC_NAME(), tile.WIDGET_VIEWMODEL(), tile.WIDGET_TEMPLATE());
-            tile.shouldHide = ko.observable(false);            
-            tile.toBeOccupied = ko.observable(false);
-            var _currentUser = dfu.getUserName();
-            tile.editDisabled = ko.computed(function() { //to do
-                return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard() || _currentUser !== dashboard.owner();
-            });
-            tile.params = {
-                show: funcShow,
-                deleteTextCallback: deleteTextCallback,
-    //                reorder: funcReorder,
-                tiles: dashboard.tiles,
-                tile: tile,
-                validator: Builder.isContentLengthValid,
-                builder: $b
-            };
 
-            tile.tileDisplayClass = ko.computed(function() {
-                var display = tile.shouldHide()?"none":"block";
-                var tileBorder = tile.toBeOccupied() ? "border: 1px dashed black;": "";
-                return tile.cssStyle() + "display:" + display + "; left: 10px;"+tileBorder;
-            });
-        }
-        Builder.registerFunction(initializeTextTileAfterLoad, 'initializeTextTileAfterLoad');*/
-
-        function initializeTileAfterLoad(mode, dashboard, tile, timeSelectorModel, targets, loadImmediately, dashboardInst) {
-            if (!tile)
-                return;
-
-            tile.shouldHide = ko.observable(false);            
+            tile.shouldHide = ko.observable(false);
             tile.toBeOccupied = ko.observable(false);
 
             var _currentUser = dfu.getUserName();
             tile.editDisabled = ko.computed(function() { //to do
                 return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard() || _currentUser !== dashboard.owner();
-            }); 
-            
+            });
+
             tile.isItaAdmin = ko.observable(false);
-            
+
             tile.widerEnabled = ko.computed(function() {
                 return mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS;
             });
@@ -248,6 +184,10 @@ define(['knockout',
             tile.shorterEnabled = ko.computed(function() {
                 return mode.getModeHeight(tile) > 1;
             });
+            tile.upEnabled = ko.observable(true);
+            tile.leftEnabled = ko.observable(true);
+            tile.rightEnabled = ko.observable(true);
+
             tile.maximizeEnabled = ko.computed(function() {
                 return !tile.isMaximized();
             });
@@ -259,20 +199,22 @@ define(['knockout',
                 return typeof(tile.configure)==="function";
             });
             tile.tileDisplayClass = ko.computed(function() {
-                var css = 'oj-md-'+(mode.getModeWidth(tile)*3) + ' oj-sm-'+(mode.getModeWidth(tile)*3) + ' oj-lg-'+(mode.getModeWidth(tile)*3);
+                var css = 'oj-md-'+(mode.getModeWidth(tile)) + ' oj-sm-'+(mode.getModeWidth(tile)*6) + ' oj-lg-'+(mode.getModeWidth(tile));
                 css += tile.isMaximized() ? ' dbd-tile-maximized ' : '';
                 css += tile.shouldHide() ? ' dbd-tile-no-display' : '';
                 css += tile.editDisabled() ? ' dbd-tile-edit-disabled' : '';
                 css += tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD() ? ' dbd-tile-linked-dashboard' : '';
-//                css += tile.toBeOccupied() ? ' dbd-tile-to-be-occupuied' : '';
                 return css;
             });
             tile.linkedDashboard = ko.computed(function() {
                 if (tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()) {
                     var link = '/emsaasui/emcpdfui/builder.html?dashboardId=' + tile.WIDGET_LINKED_DASHBOARD();
-//                    targetContext && targetContext.target && (link += '&target='+targetContext.target+'&type='+targetContext.type+'&emsite='+targetContext.emsite);
-                    (dashboard.enableTimeRange()==="TRUE" || Builder.isTimeRangeAvailInUrl()===true)&& timeSelectorModel && timeSelectorModel.viewStart() && (link += '&startTime='+timeSelectorModel.viewStart().getTime()+'&endTime='+timeSelectorModel.viewEnd().getTime());
-                    targets && targets() && (link += "&targets="+encodeURI(JSON.stringify(targets())));
+                    if((dashboard.enableTimeRange()==="TRUE" || Builder.isTimeRangeAvailInUrl()===true)&& timeSelectorModel && timeSelectorModel.viewStart()){
+                        link += '&startTime='+timeSelectorModel.viewStart().getTime()+'&endTime='+timeSelectorModel.viewEnd().getTime();
+                    }
+                    if(targets && targets()){
+                        link += "&targets="+encodeURI(JSON.stringify(targets()));
+                    }
                     return link;
                 } else
                     return "#";
@@ -293,7 +235,7 @@ define(['knockout',
              * Tile parameter has two types:
              * 1. System Parameter: internal parameter used by DF
              * 2. Custom Parameter: user defined parameter.
-             * System parameters and custom parameters are stored in different pool, 
+             * System parameters and custom parameters are stored in different pool,
              * so it is possible that one System parameter has the same name as another customer parameter
              * @param {String} name
              * @returns {object} value of parameter. null if not found
@@ -313,11 +255,6 @@ define(['knockout',
                 }
                 return null;
 
-    //                if (name in self.customParameters) {
-    //                    return self.customParameters[name];
-    //                } else {
-    //                    return null;
-    //                }
             };
 
             /**
@@ -339,7 +276,7 @@ define(['knockout',
                                 tp.value = value;
                                 found =true;
                             }
-                        } 
+                        }
                         if (!found){
                             tile.tileParameters.push({"name":name,"type":"STRING","value":value,"systemParameter":false});
                         }
@@ -347,8 +284,7 @@ define(['knockout',
                         tile.tileParameters=[];
                         tile.tileParameters.push({"name":name,"type":"STRING","value":value,"systemParameter":false});
                     }
-    //                    
-    //                    tile.customParameters[name] = value;
+    //
                 }
             };
 
@@ -357,23 +293,29 @@ define(['knockout',
             };
 
             if (loadImmediately) {
-//                var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION(), tile.PROVIDER_ASSET_ROOT(), true);
                 var assetRoot = Builder.getWidgetAssetRoot(tile.PROVIDER_NAME(),tile.PROVIDER_VERSION(),tile.PROVIDER_ASSET_ROOT());
                 var kocVM = tile.WIDGET_VIEWMODEL();
-                if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
+                if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                     kocVM = assetRoot + kocVM;
+                }
                 var kocTemplate = tile.WIDGET_TEMPLATE();
-                if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
+                if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                     kocTemplate = assetRoot + kocTemplate;
-                Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);         
+                }
+                Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
             }
         }
         Builder.registerFunction(initializeTileAfterLoad, 'initializeTileAfterLoad');
-        
-        function getTileConfigure(dashboard, tile, timeSelectorModel, targets, dashboardInst) {
+
+        function getTileConfigure(mode, dashboard, tile, timeSelectorModel, targets, dashboardInst) {
             if(!tile) {
                 return;
             }
+
+            tile.upEnabled(mode.getModeRow(tile) > 0);
+            tile.leftEnabled(mode.getModeColumn(tile) > 0);
+            tile.rightEnabled(mode.getModeColumn(tile)+mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS);
+
             judgeAdmin();
                 function judgeAdmin() {
                     if (!$('.links-content-container')[0]) {
@@ -409,7 +351,7 @@ define(['knockout',
                     }
 
                 };
-            
+
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                 var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');
                 var url = Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), versionPlus);
@@ -424,27 +366,24 @@ define(['knockout',
                             var end = timeSelectorModel.viewEnd().getTime();
                             widgetUrl += "&startTime="+start+"&endTime="+end;
                         }
-                            
-//                        targets && targets() && (widgetUrl += "&targets="+encodeURI(JSON.stringify(targets())));
-//                        window.open(widgetUrl);
-                            
-                        require(["emsaasui/uifwk/libs/emcstgtsel/js/tgtsel/api/TargetSelectorUtils"], function(TargetSelectorUtils){
-                            if(targets && targets()) {
-                                var compressedTargets = encodeURI(JSON.stringify(targets()));
-                                var targetUrlParam = "targets";
-                                if(TargetSelectorUtils.compress) {
-                                    compressedTargets = TargetSelectorUtils.compress(targets());
-                                    targetUrlParam = "targetsz";
-                                }
-                                widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
+
+                    require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils){
+                        if(targets && targets()) {
+                             var compressedTargets = encodeURI(JSON.stringify(targets()));
+                            var targetUrlParam = "targets";
+                            if(TargetSelectorUtils.compress) {
+                                compressedTargets = TargetSelectorUtils.compress(targets());
+                                targetUrlParam = "targetsz";
                             }
-                            window.location = widgetUrl;
-                        });
+                            widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
+                        }
+                        window.location = widgetUrl;
+                    });
                     };
                 }
             }
         }
         Builder.registerFunction(getTileConfigure, 'getTileConfigure');
-        
+
     }
 );

@@ -10,7 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.webutils.services;
 
-
 /**
  * @author vinjoshi
  */
@@ -21,7 +20,7 @@ package oracle.sysman.emaas.platform.dashboards.webutils.services;
 public class EMTargetMXBeanImpl implements EMTargetMXBean
 {
 
-	private static final String m_target_type = EMTargetConstants.m_target_type;
+	private static final String M_TARGET_TYPE = EMTargetConstants.M_TARGET_TYPE;
 	private String m_name = null;
 
 	public EMTargetMXBeanImpl(String name)
@@ -30,13 +29,13 @@ public class EMTargetMXBeanImpl implements EMTargetMXBean
 	}
 
 	@Override
-	public String getEMTargetType() throws Exception
+	public String getEMTargetType() 
 	{
-		return m_target_type;
+		return M_TARGET_TYPE;
 	}
 
 	@Override
-	public String getName() throws Exception
+	public String getName() 
 	{
 		return m_name;
 	}
