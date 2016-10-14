@@ -525,8 +525,6 @@ define(['knockout',
                     if(tile.isMaximized()) {
                         self.maximize(tile);
                         return;
-                    }else{
-                        self.editor.updateTilePosition(tile, tile.row(), self.editor.mode.getModeColumn(tile));//set column according to modeColumn for resizing from left edge
                     }
                 }
                 for (var i = 0; i < self.editor.tiles().length; i++) {
