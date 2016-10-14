@@ -231,6 +231,7 @@ define({
       "DBS_BUILDER_MSG_ERROR_NAME_DUPLICATED_DETAIL": "Provide a unique name.",
       "DBS_BUILDER_MSG_AUTO_REFRESH_ON": "Auto-refresh enabled.",
       "DBS_BUILDER_MSG_AUTO_REFRESH_OFF": "Auto-refresh disabled.",
+      "DBS_BUILDER_WIDGET_NO_DESCRIPTION": "No description.",
 
       // DO NOT DELETE since error page will use it as a parameter in URL
       // -----start
