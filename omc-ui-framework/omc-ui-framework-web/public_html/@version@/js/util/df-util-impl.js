@@ -1,10 +1,10 @@
-define([
+define(['knockout',
     'jquery',
     'ojs/ojcore',
     'uifwk/@version@/js/util/ajax-util-impl',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg'
 ],
-    function($, oj, ajaxUtilModel, nls)
+    function(ko, $, oj, ajaxUtilModel, nls)
     {
         function DashboardFrameworkUtility(userName, tenantName) {
             var self = this;
@@ -809,6 +809,54 @@ define([
                 //Open sessin timeout warning dialog
                 $('#'+warningDialogId).ojDialog('open');
             }
+            
+            self.getRegistrations = function(successCallback, toSendAsync, errorCallback){
+                if(window.omcUifwkCachedData && window.omcUifwkCachedData.registrations && window.omcUifwkCachedData.registrations()){
+                    successCallback(window.omcUifwkCachedData.registrations());
+                }else{
+                    if(!window.omcUifwkCachedData){
+                        window.omcUifwkCachedData = {};
+                    }
+                    if(!window.omcUifwkCachedData.isFetchingRegistrations){
+                        window.omcUifwkCachedData.isFetchingRegistrations = true;
+                        if(!window.omcUifwkCachedData.registrations){
+                            window.omcUifwkCachedData.registrations = ko.observable();
+                        }
+                        ajaxUtil.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationUrl(),
+                            dataType: 'json',
+                            headers: this.getDefaultHeader(),
+                            async: toSendAsync === false? false:true,
+                            success: function(data, textStatus){
+                                window.omcUifwkCachedData.registrations(data);
+                                window.omcUifwkCachedData.isFetchingRegistrations = false;
+                                successCallback(data);
+                            },
+                            error: function(data, textStatus){
+                                console.log('Failed to get registion info!');
+                                window.omcUifwkCachedData.isFetchingRegistrations = false;
+                                if(errorCallback){
+                                    errorCallback(data, textStatus);
+                                }
+                            }
+                        });
+                    }else{
+                        window.omcUifwkCachedData.registrations.subscribe(function(data){
+                            if(data){
+                                successCallback(data);
+                            }
+                        });
+                    }
+                }
+            };
+            
+            self.getRegistrationUrl=function(){
+                //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
+                if (self.isDevMode()){
+                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"configurations/registration");
+                }else{
+                    return '/sso.static/dashboards.configurations/registration';
+                }
+            };
 
         }
 
