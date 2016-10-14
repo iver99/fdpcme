@@ -327,6 +327,14 @@ define(['knockout',
             self.getScreenshotSizePerRatio = function(pWidth, pHeight, scrshotHref, callback) {
                 dfu.getScreenshotSizePerRatio(pWidth, pHeight, scrshotHref, callback);
             };
+            
+            self.getRegistrations = function(successCallback, toSendAsync, errorCallback){
+                return dfu.getRegistrations(successCallback, toSendAsync, errorCallback);
+            };
+            
+            self.getRegistrationUrl=function(){
+                return dfu.getRegistrationUrl();
+            };
 
         }
         return new InternalDashboardFrameworkUtility();
