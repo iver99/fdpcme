@@ -434,7 +434,7 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Verfiy if the OOB dashboard can be deleted");
 		DashboardHomeUtil.search(webd, "Application Performance Monitoring");
 		webd.click(DashBoardPageId.INFOBTNID);
-		WebElement removeButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.RMBTNID));
+		WebElement removeButton = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RMBTNID));
 		Assert.assertFalse(removeButton.isEnabled(), "delete is enabled for OOB dashboard");
 	}
 
