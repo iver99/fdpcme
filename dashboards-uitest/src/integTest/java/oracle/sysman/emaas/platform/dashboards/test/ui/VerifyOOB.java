@@ -1619,10 +1619,12 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		webd.getLogger().info("Verify the save icon is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DASHBOARDSAVECSS), "Save icon is displayed in OOB Dashboard");
-		webd.waitForElementPresent("css=" + PageId.DASHBOARDOPTIONS_CSS);
+
 		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(PageId.DASHBOARDOPTIONS_CSS)));
 		webd.click("css=" + PageId.DASHBOARDOPTIONS_CSS);
+		webd.takeScreenShot();
+
 		webd.getLogger().info("Verify the edit menu is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css" + DashBoardPageId.BUILDEROPTIONSEDITLOCATORCSS),
 				"Edit menu is displayed in OOB Dashboard");
@@ -1634,10 +1636,11 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verify the save icon is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DASHBOARDSAVECSS), "Save icon is displayed in OOB");
 
-		webd.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
 		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(PageId.DASHBOARDSETOPTIONS_CSS)));
 		webd.click("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
+		webd.takeScreenShot();
+
 		webd.getLogger().info("Verify the edit menu is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css" + PageId.DASHBOARDSETOPTIONSEDIT_CSS), "Edit menu is displayed in OOB");
 	}
@@ -1649,7 +1652,6 @@ public class VerifyOOB extends LoginAndLogout
 		driver.takeScreenShot();
 
 		String titleTitlesLocator = String.format(DashBoardPageId.BUILDERTILETITLELOCATOR, widgetname);
-		//driver.click(titleTitlesLocator);
 		WebElement tileTitle = driver.getWebDriver().findElement(By.xpath(titleTitlesLocator));
 
 		tileTitle.click();
@@ -1657,6 +1659,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		Actions builder = new Actions(driver.getWebDriver());
 		builder.moveToElement(tileTitle).perform();
+		driver.takeScreenShot();
 
 		//verify the config icon not exist
 		Assert.assertFalse(driver.isDisplayed(DashBoardPageId.BUILDERTILECONFIGLOCATOR),
