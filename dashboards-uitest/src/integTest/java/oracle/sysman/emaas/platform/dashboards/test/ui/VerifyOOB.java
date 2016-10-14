@@ -299,6 +299,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify Database Operations
 		verifyDatabaseOperations();
+		verifyDatabaseOperations_Details();
 	}
 
 	@Test
@@ -391,6 +392,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify Enterprise Health
 		verifyEnterpriseHealth();
+		verifyEnterpriseHealth_Details();
 	}
 
 	@Test
@@ -483,6 +485,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify Exadata Health
 		verifyExadataHealth();
+		verifyExadataHealth_Details();
 	}
 
 	@Test
@@ -575,6 +578,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify Host Operations
 		verifyHostOperations();
+		verifyHostOperations_Details();
 	}
 
 	@Test
@@ -667,6 +671,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify Middleware Operations
 		verifyMiddlewareOperations();
+		verifyMiddlewareOperations_Details();
 	}
 
 	@Test
@@ -1179,6 +1184,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify UI Gallery
 		verifyUIGallery();
+		verifyUIGallery_Details();
 	}
 
 	@Test
@@ -1389,8 +1395,13 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verify the dashboard titile...");
 		DashboardBuilderUtil.verifyDashboard(webd, "Database Operations", "", true);
 
+		webd.getLogger().info("Verify the OOB Dashboard - Database Operations opened finished");
+	}
+
+	private void verifyDatabaseOperations_Details()
+	{
 		//verify all the widgets displayed
-		webd.getLogger().info("Verify all the widgets in dashboard");
+		webd.getLogger().info("Verify all the widgets in dashboard -- <Database Operations>");
 		DashboardBuilderUtil.verifyWidget(webd, "Database Log Trends");
 		DashboardBuilderUtil.verifyWidget(webd, "Database Critical Incidents by Target Type");
 		DashboardBuilderUtil.verifyWidget(webd, "Top Database Targets with Log Errors");
@@ -1456,8 +1467,11 @@ public class VerifyOOB extends LoginAndLogout
 
 		webd.getLogger().info("Verify the dashboard set titile...");
 		DashboardBuilderUtil.verifyDashboardSet(webd, "Enterprise Health");
+	}
 
-		webd.getLogger().info("Verify the icon in dashboard set");
+	private void verifyEnterpriseHealth_Details()
+	{
+		webd.getLogger().info("Verify the icon in dashboard set -- <Enterprise Health>");
 		verifyIconInOobDashboardSet();
 
 		//verify the dashboards in set
@@ -1524,8 +1538,11 @@ public class VerifyOOB extends LoginAndLogout
 
 		webd.getLogger().info("Verify the dashboard set titile...");
 		DashboardBuilderUtil.verifyDashboardSet(webd, "Exadata Health");
+	}
 
-		webd.getLogger().info("Verify the icon in dashboard set");
+	private void verifyExadataHealth_Details()
+	{
+		webd.getLogger().info("Verify the icon in dashboard set -- <Exadata Health>");
 		verifyIconInOobDashboardSet();
 
 		//verify the dashboards in set
@@ -1559,8 +1576,13 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verify the dashboard titile...");
 		DashboardBuilderUtil.verifyDashboard(webd, "Host Operations", "", true);
 
+		webd.getLogger().info("Verify the OOB Dashboard - Host Operations opened finished");
+	}
+
+	private void verifyHostOperations_Details()
+	{
 		//verify all the widgets displayed
-		webd.getLogger().info("Verify all the widgets in dashboard");
+		webd.getLogger().info("Verify all the widgets in dashboard -- <Host Operations>");
 		DashboardBuilderUtil.verifyWidget(webd, "Host Logs Trend");
 		DashboardBuilderUtil.verifyWidget(webd, "Top Host Log Sources");
 		DashboardBuilderUtil.verifyWidget(webd, "Top Host Log Entries by Service");
@@ -1619,10 +1641,12 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		webd.getLogger().info("Verify the save icon is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DASHBOARDSAVECSS), "Save icon is displayed in OOB Dashboard");
-		webd.waitForElementPresent("css=" + PageId.DASHBOARDOPTIONS_CSS);
+
 		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(PageId.DASHBOARDOPTIONS_CSS)));
 		webd.click("css=" + PageId.DASHBOARDOPTIONS_CSS);
+		webd.takeScreenShot();
+
 		webd.getLogger().info("Verify the edit menu is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css" + DashBoardPageId.BUILDEROPTIONSEDITLOCATORCSS),
 				"Edit menu is displayed in OOB Dashboard");
@@ -1634,10 +1658,11 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verify the save icon is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DASHBOARDSAVECSS), "Save icon is displayed in OOB");
 
-		webd.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
 		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(PageId.DASHBOARDSETOPTIONS_CSS)));
 		webd.click("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
+		webd.takeScreenShot();
+
 		webd.getLogger().info("Verify the edit menu is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css" + PageId.DASHBOARDSETOPTIONSEDIT_CSS), "Edit menu is displayed in OOB");
 	}
@@ -1649,7 +1674,6 @@ public class VerifyOOB extends LoginAndLogout
 		driver.takeScreenShot();
 
 		String titleTitlesLocator = String.format(DashBoardPageId.BUILDERTILETITLELOCATOR, widgetname);
-		//driver.click(titleTitlesLocator);
 		WebElement tileTitle = driver.getWebDriver().findElement(By.xpath(titleTitlesLocator));
 
 		tileTitle.click();
@@ -1657,6 +1681,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		Actions builder = new Actions(driver.getWebDriver());
 		builder.moveToElement(tileTitle).perform();
+		driver.takeScreenShot();
 
 		//verify the config icon not exist
 		Assert.assertFalse(driver.isDisplayed(DashBoardPageId.BUILDERTILECONFIGLOCATOR),
@@ -1676,7 +1701,12 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verify the dashboard titile...");
 		DashboardBuilderUtil.verifyDashboard(webd, "Entities", "", true);
 
-		webd.getLogger().info("Verify all the widgets in dashboard");
+		webd.getLogger().info("Verify the OOB Dashboard - Middleware Operations opened finished");
+	}
+
+	private void verifyMiddlewareOperations_Details()
+	{
+		webd.getLogger().info("Verify all the widgets in dashboard  -- <Middleware Operations>");
 		DashboardBuilderUtil.verifyWidget(webd, "Middleware Logs Trend");
 		DashboardBuilderUtil.verifyWidget(webd, "Top Middleware Error Codes");
 		DashboardBuilderUtil.verifyWidget(webd, "Top Middleware Targets with Errors");
@@ -1947,8 +1977,11 @@ public class VerifyOOB extends LoginAndLogout
 
 		webd.getLogger().info("Verify the dashboard set titile...");
 		DashboardBuilderUtil.verifyDashboardSet(webd, "UI Gallery");
+	}
 
-		webd.getLogger().info("Verify the icon in dashboard set");
+	private void verifyUIGallery_Details()
+	{
+		webd.getLogger().info("Verify the icon in dashboard set --<UIGallery>");
 		verifyIconInOobDashboardSet();
 
 		//verify the dashboards in set
