@@ -826,16 +826,16 @@ define(['knockout',
                             dataType: 'json',
                             headers: this.getDefaultHeader(),
                             async: toSendAsync === false? false:true,
-                            success: function(data, textStatus){
+                            success: function(data, textStatus, jqXHR){
                                 window.omcUifwkCachedData.registrations(data);
                                 window.omcUifwkCachedData.isFetchingRegistrations = false;
-                                successCallback(data);
+                                successCallback(data, textStatus, jqXHR);
                             },
-                            error: function(data, textStatus){
-                                console.log('Failed to get registion info!');
+                            error: function(jqXHR, textStatus, errorThrown){
+                                console.log('Failed to get registration info!');
                                 window.omcUifwkCachedData.isFetchingRegistrations = false;
                                 if(errorCallback){
-                                    errorCallback(data, textStatus);
+                                    errorCallback(jqXHR, textStatus, errorThrown);
                                 }
                             }
                         });
@@ -850,7 +850,6 @@ define(['knockout',
             };
             
             self.getRegistrationUrl=function(){
-                //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
                 if (self.isDevMode()){
                     return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"configurations/registration");
                 }else{
