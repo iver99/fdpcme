@@ -1697,11 +1697,16 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	{
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWERCSS);
 		if (isRightDrawerVisible(driver) == true) {
-			driver.click("css=" + DashBoardPageId_190.RIGHTDRAWERTOGGLEPENCILBTNCSS);
-			WaitUtil.waitForPageFullyLoaded(driver);
-			if (isRightDrawerVisible(driver) == true) {
+			if(driver.isElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWERTOGGLEPENCILBTNCSSSelected)) {
 				driver.click("css=" + DashBoardPageId_190.RIGHTDRAWERTOGGLEPENCILBTNCSS);
+			}else {
+				driver.click("css=" + DashBoardPageId_190.RIGHTDRAWERTOGGLEPENCILBTNCSS);
+				if(driver.isElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWERTOGGLEPENCILBTNCSSSelected)) {
+					driver.click("css=" + DashBoardPageId_190.RIGHTDRAWERTOGGLEPENCILBTNCSS);
+				}
 			}
+
+			driver.waitForElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWERPANELHIDECSS);
 			driver.getLogger().info("[DashboardBuilderUtil] triggered hideRightDrawer.");
 		}
 		driver.takeScreenShot();

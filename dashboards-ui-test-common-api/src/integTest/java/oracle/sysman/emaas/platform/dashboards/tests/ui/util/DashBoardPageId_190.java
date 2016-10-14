@@ -312,8 +312,10 @@ public class DashBoardPageId_190
 	//right drawer css locators
 	public static final String RIGHTDRAWERCSS = ".right-panel-toggler";
 	public static final String RIGHTDRAWERPANELCSS = ".dbd-left-panel";
+	public static final String RIGHTDRAWERPANELHIDECSS = ".dbd-left-panel.dbd-left-panel-hide";
 	public static final String RIGHTDRAWERTOGGLEWRENCHBTNCSS = ".right-panel-toggler button.toggle-right-panel-btn.rightpanel-wrench";
 	public static final String RIGHTDRAWERTOGGLEPENCILBTNCSS = ".right-panel-toggler button.toggle-right-panel-btn.rightpanel-pencil";
+	public static final String RIGHTDRAWERTOGGLEPENCILBTNCSSSelected = ".right-panel-toggler button.toggle-right-panel-btn.rightpanel-pencil.df-selected";
 	public static final String RIGHTDRAWEREDITSINGLEDBBTNCSS = ".edit-setting-link.edit-dsb-link";
 	public static final String RIGHTDRAWEREDITSINGLEDBSHARECSS = ".dbd-right-panel-editdashboard-share>span";
 	public static final String RIGHTDRAWEREDITDBFILTERCSS = ".dbd-right-panel-editdashboard-filters>span";
