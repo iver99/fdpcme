@@ -194,7 +194,7 @@ public class DashBoardPageId_190
 	public static final String BUILDERDATETIMEPICKERLOCATOR = "//div[@data-show-time-picker]";
 
 	//dashboard builder tile edit area
-	public static final String BUILDERTILESEDITAREA = "//div[contains(@class, 'tiles-wrapper')]";
+	public static final String BUILDERTILESEDITAREA = "//div[contains(@class, 'dashboard-content') and  contains(@class, 'page-break') and contains(@style, 'visibility: visible') and not(contains(@style, 'display: none'))]//div[contains(@class, 'tiles-wrapper')]";
 	public static final String BUILDERTILETITLELOCATOR = "//h2[contains(@class, 'dbd-tile-title') and @data-tile-title='%s']";
 	public static final String BUILDERTILECONFIGLOCATOR = "following-sibling::*//button[contains(@class, 'dbd-tile-action')]";
 	public static final String BUILDERTILEDATAEXPLORELOCATOR = "following-sibling::*//button[contains(@class, 'dbd-data-explore')]";

@@ -21,13 +21,17 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
         /**
          * Writes an error message.
          */
-        customLogger.error = function(args,flush)
+        customLogger.error = function(args,flush,isSynStatus)
         {
             var output = _format(args);
+            var useSynCall = false;
+            if(isSynStatus){
+                useSynCall= true;
+            }
             if (window && window.console) {
                 window.console.error(output);
             }
-            _cacheOrSend(oj.Logger.LEVEL_ERROR, output,flush);
+            _cacheOrSend(oj.Logger.LEVEL_ERROR, output,flush,useSynCall);
         };
 
         /**
@@ -44,13 +48,17 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
         /**
          * Writes a warning message.
          */
-        customLogger.warn = function(args,flush)
+        customLogger.warn = function(args,flush,isSynStatus)
         {
             var output = _format(args);
+            var useSynCall = false;
+            if(isSynStatus){
+                useSynCall= true;
+            }
             if (window && window.console) {
                 window.console.warn(output);
             }
-            _cacheOrSend(oj.Logger.LEVEL_WARN, output,flush);
+            _cacheOrSend(oj.Logger.LEVEL_WARN, output,flush,useSynCall);
         };
 
         /**
@@ -89,7 +97,7 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
         /**
          * Cache the log and send to server if cache limit is reached.
          */
-        function _cacheOrSend(level, msg, flush)
+        function _cacheOrSend(level, msg, flush,useSynCall)
         {
             // TODO: Look into guarding against too many logs in a short period
             // of time.  Use case: Something bad may have happened and now we are getting
@@ -101,7 +109,7 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
 
             // If cache is full, then send.
             if (flush || logsCache.length >= logsCacheLimit) {
-                _sendToServer();
+                _sendToServer(useSynCall);
             }
         };
 
@@ -118,10 +126,10 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
         /**
          * Send the cached logs to server
          */
-        function _sendToServer()
+        function _sendToServer(useSynCall)
         {
             // Send the logs asynchronously and clear the cache.
-            new _asyncSender()();
+            new _asyncSender(useSynCall)();
             logsCache = [];
             logsCacheLastTimeWeSent = new Date().getTime();
         };
@@ -130,7 +138,7 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
          * An asynchronous sender that clones the cache and then sends the logs from the clone.
          * A new instance of this object must be created for each use.
          */
-        function _asyncSender()
+        function _asyncSender(useSynCall)
         {
             var logsCacheCloned = [];
 
@@ -140,6 +148,10 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
                 //TODO: Why not get tenantId from cookie?
                 //TODO: Should global be false?
                 var headers;
+                var asynStatus= true;
+                if(useSynCall){
+                    asynStatus =false;
+                }
                 if (dfu.isDevMode()){
                     headers = {"Authorization":"Basic " + btoa(dfu.getDevData().wlsAuth)};
                 }
@@ -160,7 +172,7 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
                     },
                     description: "custom logger: Sending logs to server",
                     headers: headers,
-                    async:false
+                    async:asynStatus
                 });
             };
 
