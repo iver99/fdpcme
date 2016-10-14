@@ -233,6 +233,8 @@ define({
       "DBS_BUILDER_MSG_AUTO_REFRESH_OFF": "Auto-refresh disabled.",
       "DBS_BUILDER_MSG_AUTO_OPEN_IN_DATA_EXPLORER":"Open in Data Explorer",
       "DBS_BUILDER_MSG_AUTO_OPEN_IN_LOG_EXPLORER":"Open in Log Explorer",
+      "DBS_BUILDER_WIDGET_NO_DESCRIPTION": "No description.",
+
       // DO NOT DELETE since error page will use it as a parameter in URL
       // -----start
       "DBS_ERROR_PAGE_TITLE":"Error",
