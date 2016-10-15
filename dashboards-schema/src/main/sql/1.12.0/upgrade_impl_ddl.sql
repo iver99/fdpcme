@@ -46,12 +46,6 @@ BEGIN
   ELSE
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.SHOW_INHOME exists already, no change is needed');
   END IF;
-    
-  EXCEPTION
-  WHEN OTHERS THEN
-    ROLLBACK;
-    DBMS_OUTPUT.PUT_LINE('Failed to update the sql due to '||SQLERRM);
-    RAISE;
 
   --alter column EMS_DASHBOARD_TILE.TILE_ID
   SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_TILE' AND column_name='TILE_ID';
@@ -143,6 +137,12 @@ BEGIN
   ELSE
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_PREFERENCE.LAST_MODIFICATION_DATE exists already, no change is needed');
   END IF;
+  
+  EXCEPTION
+  WHEN OTHERS THEN
+    ROLLBACK;
+    DBMS_OUTPUT.PUT_LINE('Failed to update the sql due to '||SQLERRM);
+    RAISE;
 END;
 /
 
