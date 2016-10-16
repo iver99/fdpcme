@@ -425,7 +425,9 @@ public class DashboardServiceFacade
 	public void removeEmsDashboard(EmsDashboard emsDashboard)
 	{
 		emsDashboard = em.find(EmsDashboard.class, emsDashboard.getDashboardId());
-		em.remove(emsDashboard);
+		emsDashboard.setDeleted(emsDashboard.getDashboardId());
+		em.merge(emsDashboard);
+		//em.remove(emsDashboard);
 		commitTransaction();
 	}
 
