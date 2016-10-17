@@ -527,7 +527,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu,zdtUtilModel)
             var _option = data.option, _value = data.value;
             if ( _option === "checked" )
             {
-                if (self.isDashboardSet !== true)
+                if (self.isDashboardSet !== true && !self.zdtStatus())
                 {
                     self.prefUtil.setPreference(DASHBOARDS_VIEW_PREF_KEY, _value);
                 }
