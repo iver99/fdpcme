@@ -3,6 +3,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
     'jquery',
     'uifwk/@version@/js/util/df-util-impl', 
     'uifwk/@version@/js/util/message-util-impl',
+    'uifwk/@version@/js/util/context-util-impl',
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'ojs/ojknockout',
@@ -10,10 +11,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
     'ojs/ojmenu',
     'ojs/ojbutton',
     'ojs/ojdialog'],
-        function (ko, $, dfumodel,msgUtilModel, oj, nls) {
+        function (ko, $, dfumodel,msgUtilModel, contextModel, oj, nls) {
             function BrandingBarViewModel(params) {
                 var self = this;
                 var msgUtil = new msgUtilModel();
+                var cxtUtil = new contextModel();
+                cxtUtil.getOMCContext();
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var dfu = new dfumodel(self.userName, self.tenantName);
@@ -251,7 +254,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                 self.gotoHomePage = function() {
                     var welcomeUrl = dfu.discoverWelcomeUrl();
                     oj.Logger.info("Go to welcome page by URL: " + welcomeUrl, false);
-                    window.location.href = welcomeUrl;
+                    window.location.href = cxtUtil.appendOMCContext(welcomeUrl);
                 };
 
                 //Open about box
