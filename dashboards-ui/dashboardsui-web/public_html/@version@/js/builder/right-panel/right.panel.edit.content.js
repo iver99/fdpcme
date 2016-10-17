@@ -48,7 +48,8 @@ define(['dashboards/dbsmodel',
 
         self.addToTitleAbled = ko.observable(false);
         self.selectedContent = selectedContent;
-        self.hideTitle = self.selectedContent()?ko.observable(("true" === self.selectedContent().hideTitle()||true === self.selectedContent().hideTitle())? ["hideTitle"]:[]):ko.observable([]);
+//        self.hideTitle = self.selectedContent()?ko.observable(("true" === self.selectedContent().hideTitle()||true === self.selectedContent().hideTitle())? ["hideTitle"]:[]):ko.observable([]);
+        self.hideTitle = ko.observable([]);
         self.hasLinkedToTitle = ko.observable(false);
         self.selectedContent.subscribe(function(tile){
             if(!tile){
@@ -74,6 +75,9 @@ define(['dashboards/dbsmodel',
                 self.dashboardTilesViewModel.editor.showHideTitle(tile);
                 self.dashboardTilesViewModel.show();
                 self.dashboardTilesViewModel.notifyTileChange(tile, new Builder.TileChange("POST_HIDE_TITLE"));
+            }
+            if(val.indexOf("hideTitle")>-1){
+                resetAddLinkToTitle(true);
             }
         });
         self.removeContentClicked = function () {
@@ -191,14 +195,16 @@ define(['dashboards/dbsmodel',
             self.hasLinkedToTitle(false);
         };
 
-        function resetAddLinkToTitle(){
+        function resetAddLinkToTitle(holdHasLinkedToTitle){
             self.keyword(null);
             self.searchDashboardClicked();
             self.showSelectedDashboard(false);
             self.selectedDashboardId(null);
             self.addToTitleAbled(false);
             self.clearContentSearch(false);
-            self.hasLinkedToTitle(false);
+            if(!holdHasLinkedToTitle){
+                self.hasLinkedToTitle(false);
+            }
             $(".search-content-dropdown-list-container #listview li").removeClass("oj-selected");
         }
 
