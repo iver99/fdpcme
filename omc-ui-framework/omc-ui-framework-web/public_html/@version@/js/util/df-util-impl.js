@@ -811,36 +811,39 @@ define(['knockout',
             }
             
             self.getRegistrations = function(successCallback, toSendAsync, errorCallback){
-                if(window.omcUifwkCachedData && window.omcUifwkCachedData.registrations && window.omcUifwkCachedData.registrations()){
-                    successCallback(window.omcUifwkCachedData.registrations());
+                if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.registrations && window._uifwk.cachedData.registrations()){
+                    successCallback(window._uifwk.cachedData.registrations());
                 }else{
-                    if(!window.omcUifwkCachedData){
-                        window.omcUifwkCachedData = {};
+                    if(!window._uifwk){
+                        window._uifwk = {};
                     }
-                    if(!window.omcUifwkCachedData.isFetchingRegistrations){
-                        window.omcUifwkCachedData.isFetchingRegistrations = true;
-                        if(!window.omcUifwkCachedData.registrations){
-                            window.omcUifwkCachedData.registrations = ko.observable();
+                    if(!window._uifwk.cachedData){
+                        window._uifwk.cachedData = {};
+                    }
+                    if(!window._uifwk.cachedData.isFetchingRegistrations){
+                        window._uifwk.cachedData.isFetchingRegistrations = true;
+                        if(!window._uifwk.cachedData.registrations){
+                            window._uifwk.cachedData.registrations = ko.observable();
                         }
                         ajaxUtil.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationUrl(),
                             dataType: 'json',
                             headers: this.getDefaultHeader(),
                             async: toSendAsync === false? false:true,
                             success: function(data, textStatus, jqXHR){
-                                window.omcUifwkCachedData.registrations(data);
-                                window.omcUifwkCachedData.isFetchingRegistrations = false;
+                                window._uifwk.cachedData.registrations(data);
+                                window._uifwk.cachedData.isFetchingRegistrations = false;
                                 successCallback(data, textStatus, jqXHR);
                             },
                             error: function(jqXHR, textStatus, errorThrown){
                                 console.log('Failed to get registration info!');
-                                window.omcUifwkCachedData.isFetchingRegistrations = false;
+                                window._uifwk.cachedData.isFetchingRegistrations = false;
                                 if(errorCallback){
                                     errorCallback(jqXHR, textStatus, errorThrown);
                                 }
                             }
                         });
                     }else{
-                        window.omcUifwkCachedData.registrations.subscribe(function(data){
+                        window._uifwk.cachedData.registrations.subscribe(function(data){
                             if(data){
                                 successCallback(data);
                             }
