@@ -2,8 +2,9 @@
  * @preserve Copyright (c) 2015, Oracle and/or its affiliates.
  * All rights reserved.
  */
+window.gradleDevMode=true;
 requirejs.config({
-    bundles: (window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ? undefined : {
+    bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==='object') || (window.gradleDevMode !==null && typeof window.gradleDevMode ==='boolean')) ? undefined : {
         'uifwk/js/uifwk-partition':
             [
             'uifwk/js/util/ajax-util',

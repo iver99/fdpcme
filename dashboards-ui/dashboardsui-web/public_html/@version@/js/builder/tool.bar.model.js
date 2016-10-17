@@ -42,7 +42,6 @@ define(['knockout',
             zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
 //                 self.zdtStatus(true);
 //                 self.notZdtStatus(false);
-debugger;
                 self.zdtStatus(isUnderPlannedDowntime);
                 self.notZdtStatus(!isUnderPlannedDowntime);
                     if (isUnderPlannedDowntime) {
