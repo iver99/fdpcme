@@ -218,7 +218,7 @@ define(['knockout',
 
             self.tileRestoredHandler = function() {
                 self.maximized(false);
-                if(self.isMobileDevice !== 'true' && !self.isOobDashboardset()) {
+                if(self.isMobileDevice !== 'true' && !self.isOobDashboardset() && !self.zdtStatus()) {
                     self.rightPanelControl.completelyHidden(false);
                 }
 
