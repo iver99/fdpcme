@@ -1091,7 +1091,7 @@
                                                 </div>
                                             </div>
                                             <div class="oj-flex" data-bind="style:{ display: rightPanelEditContent.hasLinkedToTitle()?'none':'block'}">
-                                                <div class="oj-flex-item" style="overflow: hidden;">
+                                                <div style="margin-top: 10px;" class="oj-flex-item" style="overflow: hidden;">
                                                     <span data-bind="text: getNlsString('DBS_BUILDER_EDIT_CONTENT_ADD_LINK_TO_TITLE')"></span>
                                                     <!-- ko ifnot:rightPanelEditContent.hasLinkedToTitle() -->
                                                     <div class="dbd-left-panel-header-search">
@@ -1177,7 +1177,7 @@
                                 </div>
                                 <hr/>
                                 <div>
-                                    <button class="dbd-right-panel-editcontent-remove-content" data-bind="click: rightPanelEditContent.removeContentClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_CONTENT_REMOVE') }"></button>
+                                    <button style="margin-top:10px;" class="dbd-right-panel-editcontent-remove-content" data-bind="click: rightPanelEditContent.removeContentClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_CONTENT_REMOVE') }"></button>
                                 </div>
                             </div>
                         </div>
