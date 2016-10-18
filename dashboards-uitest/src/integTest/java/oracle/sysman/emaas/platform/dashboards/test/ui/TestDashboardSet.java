@@ -408,7 +408,7 @@ public class TestDashboardSet extends LoginAndLogout
 				"Dashboard has been duplicated and add to dashboard set");
 	}
 
-	@Test(groups = "forth run", dependsOnMethods = { "testDuplicateDashboardNotAddToSet" })
+	//@Test(groups = "forth run", dependsOnMethods = { "testDuplicateDashboardNotAddToSet" })
 	public void testDuplicateOOBAddToSet()
 	{
 		dbName_DuplicateOOB = "OOBDashboard-duplicate-" + generateTimeStamp();
@@ -463,7 +463,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	@Test(groups = "forth run", dependsOnMethods = { "testDuplicateOOBAddToSet" })
+	//@Test(groups = "forth run", dependsOnMethods = { "testDuplicateOOBAddToSet" })
 	public void testDuplicateOOBNotAddToSet()
 	{
 		dbName_DuplicateOOB = "OOBDashboard-duplicate-" + generateTimeStamp();

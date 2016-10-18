@@ -1165,7 +1165,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsMiddleware();
 	}
 
-	@Test
+	//@Test
 	public void verifyUIGallery_GridView()
 	{
 		//initTest
@@ -1187,7 +1187,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyUIGallery_Details();
 	}
 
-	@Test
+	//@Test
 	public void verifyUIGallery_ListView()
 	{
 		//initTest
@@ -1208,7 +1208,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyUIGallery();
 	}
 
-	@Test
+	//@Test
 	public void verifyUIGallery_WithFilter_GridView()
 	{
 		//initTest
@@ -1233,7 +1233,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyUIGallery();
 	}
 
-	@Test
+	//@Test
 	public void verifyUIGallery_WithFilter_ListView()
 	{
 		//initTest
