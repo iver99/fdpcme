@@ -212,18 +212,20 @@ public class DashboardManager
 			//			if (ed.getDeleted() == null || ed.getDeleted() == 0) {
 			//				removeFavoriteDashboard(dashboardId, tenantId);
 			//			}
-			if (!permanent) {
-				ed.setDeleted(dashboardId);
-				dsf.mergeEmsDashboard(ed);
-				dsf.removeEmsSubDashboardBySubId(dashboardId);
-				dsf.removeEmsSubDashboardBySetId(dashboardId);
-			}
-			else {
+
+			em.setProperty("soft.deletion.permanent", permanent);
+//			if (!permanent) {
+//				ed.setDeleted(dashboardId);
+//				dsf.mergeEmsDashboard(ed);
+//				dsf.removeEmsSubDashboardBySubId(dashboardId);
+//				dsf.removeEmsSubDashboardBySetId(dashboardId);
+//			}
+//			else {
 				dsf.removeAllEmsUserOptions(dashboardId);
 				dsf.removeEmsSubDashboardBySubId(dashboardId);
 				dsf.removeEmsSubDashboardBySetId(dashboardId);
 				dsf.removeEmsDashboard(ed);
-			}
+//			}
 		}
 		finally {
 			if (em != null) {

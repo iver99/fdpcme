@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.entity.customizer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.persistence.descriptors.ClassDescriptor;
 import org.eclipse.persistence.internal.sessions.AbstractRecord;
 import org.eclipse.persistence.internal.sessions.AbstractSession;
@@ -31,6 +33,8 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 public class EmsPreferenceRedirector implements QueryRedirector
 {
 	private static final long serialVersionUID = 8558823239804439205L;
+	
+	private static final Logger LOGGER = LogManager.getLogger(EmsPreferenceRedirector.class);
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.persistence.queries.QueryRedirector#invokeQuery(org.eclipse.persistence.queries.DatabaseQuery, org.eclipse.persistence.sessions.Record, org.eclipse.persistence.sessions.Session)
@@ -39,9 +43,12 @@ public class EmsPreferenceRedirector implements QueryRedirector
 	public Object invokeQuery(DatabaseQuery query, Record arguments, Session session)
 	{
 		ClassDescriptor cd = session.getDescriptor(query.getReferenceClass());
-		if (query.isDeleteObjectQuery()) {// soft deletion
+		Object permDelete = session.getActiveSession().getProperty("soft.deletion.permanent");
+		LOGGER.info("Redirector: permanent deletion parameter is {}", permDelete);
+		if (query.isDeleteObjectQuery() && !Boolean.TRUE.equals(permDelete)) {// soft deletion
 			DeleteObjectQuery doq = (DeleteObjectQuery) query;
 			EmsPreference pre = (EmsPreference) doq.getObject();
+			LOGGER.info("Soft deletion: instead of deleting dashboard preference with key={}, it's 'deleted' field is updated", pre.getPrefKey());
 			pre.setDeleted(true);
 			UpdateObjectQuery uoq = new UpdateObjectQuery(pre);
 			cd.addDirectQueryKey("deleted", "DELETED");
@@ -52,6 +59,7 @@ public class EmsPreferenceRedirector implements QueryRedirector
 		else if (query.isInsertObjectQuery()) {// remove the soft deleted object before insertion
 			InsertObjectQuery ioq = (InsertObjectQuery) query;
 			EmsPreference pre = (EmsPreference) ioq.getObject();
+			LOGGER.info("Soft deletion: before inserting dashboard preference with key={}, ensure previouly soft deleted object is hard deleted", pre.getPrefKey());
 
 			UnitOfWork uow = session.acquireUnitOfWork();
 			String delSql = "DELETE FROM EMS_PREFERENCE WHERE USER_NAME='" + pre.getUserName() + "' AND PREF_KEY='"

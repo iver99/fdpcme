@@ -7,8 +7,10 @@
  * $$Author: $$
  * $$Revision: $$
  */
-
+ 
 package oracle.sysman.emaas.platform.dashboards.entity.customizer;
+
+import java.math.BigInteger;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,16 +27,18 @@ import org.eclipse.persistence.sessions.Record;
 import org.eclipse.persistence.sessions.Session;
 import org.eclipse.persistence.sessions.UnitOfWork;
 
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
 
 /**
  * @author guochen
+ *
  */
-public class EmsDashboardTileParamsRedirector implements QueryRedirector
+public class EmsDashboardRedirector implements QueryRedirector
 {
-	private static final long serialVersionUID = -4080358817498970850L;
+	private static final long serialVersionUID = 7133740733527045556L;
 	
-	private static final Logger LOGGER = LogManager.getLogger(EmsDashboardTileParamsRedirector.class);
+	private static final Logger LOGGER = LogManager.getLogger(EmsDashboardRedirector.class);
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.persistence.queries.QueryRedirector#invokeQuery(org.eclipse.persistence.queries.DatabaseQuery, org.eclipse.persistence.sessions.Record, org.eclipse.persistence.sessions.Session)
@@ -47,10 +51,10 @@ public class EmsDashboardTileParamsRedirector implements QueryRedirector
 		LOGGER.info("Redirector: permanent deletion parameter is {}", permDelete);
 		if (query.isDeleteObjectQuery() && !Boolean.TRUE.equals(permDelete)) {// soft deletion
 			DeleteObjectQuery doq = (DeleteObjectQuery) query;
-			EmsDashboardTileParams edtp = (EmsDashboardTileParams) doq.getObject();
-			LOGGER.info("Soft deletion: instead of deleting dashboard tile parameter with name={} and valueStr={}, it's 'deleted' field is updated", edtp.getParamName(), edtp.getParamValueStr());
-			edtp.setDeleted(true);
-			UpdateObjectQuery uoq = new UpdateObjectQuery(edtp);
+			EmsDashboard ed = (EmsDashboard) doq.getObject();
+			LOGGER.info("Soft deletion: instead of deleting dashboard with id={} and name={}, it's 'deleted' field is updated", ed.getDashboardId(), ed.getName());
+			ed.setDeleted(BigInteger.ONE);
+			UpdateObjectQuery uoq = new UpdateObjectQuery(ed);
 			cd.addDirectQueryKey("deleted", "DELETED");
 			uoq.setDescriptor(cd);
 			doq.setDescriptor(uoq.getDescriptor());
@@ -59,17 +63,16 @@ public class EmsDashboardTileParamsRedirector implements QueryRedirector
 		}
 		else if (query.isInsertObjectQuery()) {// remove the soft deleted object before insertion
 			InsertObjectQuery ioq = (InsertObjectQuery) query;
-			EmsDashboardTileParams edtp = (EmsDashboardTileParams) ioq.getObject();
-			LOGGER.info("Soft deletion: before inserting dashboard tile parameter with name={} and valueStr={}, ensure previouly soft deleted object is hard deleted", edtp.getParamName(), edtp.getParamValueStr());
+			EmsDashboard ed = (EmsDashboard) ioq.getObject();
 
 			UnitOfWork uow = session.acquireUnitOfWork();
-			String delSql = "DELETE FROM EMS_DASHBOARD_TILE_PARAMS WHERE TILE_ID='" + edtp.getDashboardTile().getTileId()
-					+ "' AND PARAM_NAME='" + edtp.getParamName() + "' AND TENANT_ID="
-					+ session.getActiveSession().getProperty("tenant.id") + " AND DELETED=1";
+			String delSql = "DELETE FROM EMS_DASHBOARD WHERE NAME='" + ed.getName() + "' AND OWNER='" + ed.getOwner()
+					+ "' AND TENANT_ID=" + session.getActiveSession().getProperty("tenant.id") + " AND DELETED=1";
+			LOGGER.info("Soft deletion: before inserting dashboard with id={} and name={}, ensure previouly soft deleted object is hard deleted. SQL is {}", ed.getDashboardId(), ed.getName(), delSql);
 			uow.executeNonSelectingCall(new SQLCall(delSql));
 			uow.commit();
 
-			ioq = new InsertObjectQuery(edtp);
+			ioq = new InsertObjectQuery(ed);
 			ioq.setDoNotRedirect(true);
 			InsertObjectQuery old = cd.getQueryManager().getInsertQuery();
 			cd.getQueryManager().setInsertQuery(ioq);
@@ -81,4 +84,5 @@ public class EmsDashboardTileParamsRedirector implements QueryRedirector
 			return query.execute((AbstractSession) session, (AbstractRecord) arguments);
 		}
 	}
+
 }

@@ -197,6 +197,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	private Long currentTenant;
 
 	private final Map<Long, Map<Class<?>, List<?>>> storages = new HashMap<Long, Map<Class<?>, List<?>>>();
+	private final EntityManager em = new MockEntityManager();
 
 	@Mock
 	public void $init(Long tenantId)
@@ -265,7 +266,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	@Mock
 	public EntityManager getEntityManager()
 	{
-		return new MockEntityManager();
+		return em;
 		
 	}
 
@@ -363,8 +364,13 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	@Mock
 	public void removeEmsDashboard(EmsDashboard emsDashboard)
 	{
-		
-		this.localRemove(emsDashboard.getClass(), new EmsDashboardSelector(emsDashboard.getDashboardId(), null, null, null));
+		EntityManager em = this.getEntityManager();
+		if (em.getProperties() != null && Boolean.TRUE.equals(em.getProperties().get("soft.deletion.permanent"))) {
+			emsDashboard.setDeleted(BigInteger.ONE);
+			this.localMerge(emsDashboard, new EmsDashboardSelector(emsDashboard.getDashboardId(), null, null, null));
+		}
+		else
+			this.localRemove(emsDashboard.getClass(), new EmsDashboardSelector(emsDashboard.getDashboardId(), null, null, null));
 	}
 
 	@Mock
