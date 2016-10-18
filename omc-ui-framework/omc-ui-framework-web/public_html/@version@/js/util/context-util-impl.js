@@ -92,8 +92,8 @@ define([
                             //Loop through parameters for each context
                             for (var j = 0; j < contextParams.length; j++) {
                                 var paramName = contextParams[j];
-                                var paramValue = omcContext[contextName][paramName];
-                                if (paramValue) {
+                                if (omcContext[contextName] && omcContext[contextName][paramName]) {
+                                    var paramValue = omcContext[contextName][paramName];
                                     contextString = contextString ? (contextString + paramName + '=' + paramValue) : (paramName + '='+paramValue);
                                     contextString = contextString + '&';
                                 }
