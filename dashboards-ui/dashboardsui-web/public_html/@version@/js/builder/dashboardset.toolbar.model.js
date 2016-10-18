@@ -428,7 +428,8 @@ define(['knockout',
                         $.each(subDashboards, function (index, simpleDashboardInst) {
                             singleDashboardItem = new dashboardItem(simpleDashboardInst);
                             var isOobSet=self.dashboardInst.owner()==="Oracle";
-                            var sharedVisibleCondition = self.dashboardsetConfig.isCreator() || (singleDashboardItem.raw !== null && singleDashboardItem.raw.sharePublic() === true) || singleDashboardItem === "new";
+                            var isOobDbd=singleDashboardItem.raw.owner()==="Oracle";
+                            var sharedVisibleCondition = self.dashboardsetConfig.isCreator() || (singleDashboardItem.raw !== null && singleDashboardItem.raw.sharePublic() === true) || singleDashboardItem === "new" || isOobDbd;
                             if (sharedVisibleCondition || isOobSet) {
                                 self.dashboardsetItems.push(singleDashboardItem);
                                 self.reorderedDbsSetItems.push(singleDashboardItem);
@@ -444,11 +445,14 @@ define(['knockout',
                             }
                         });
 
-                        singleDashboardItem = self.dashboardsetItems[indexOfSelectedTabInUserOption];
-                        self.selectedDashboardItem(singleDashboardItem);
-                        $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + singleDashboardItem.dashboardId});
-                        $("#dbd-tabs-container").ojTabs("refresh");
-                        $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
+                            singleDashboardItem = self.dashboardsetItems[indexOfSelectedTabInUserOption];
+                            var noSubDashboard = !singleDashboardItem;
+                            if(!noSubDashboard){
+                                self.selectedDashboardItem(singleDashboardItem);
+                                $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + singleDashboardItem.dashboardId});
+                                $("#dbd-tabs-container").ojTabs("refresh");
+                                $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
+                            }
                     }
                     new Builder.DashboardDataSource().loadDashboardUserOptionsData(self.dashboardsetId,resolveLoadOptions.bind(this, "success"),resolveLoadOptions.bind(this, "error"));
                 } else {
