@@ -1,6 +1,6 @@
 
 
-define(['dfutil', 'ojs/ojcore', 'knockout', 'jquery', 'uifwk/js/util/context-util', 'ojs/ojknockout', 'ojs/ojmodel'],
+define(['dfutil', 'ojs/ojcore', 'knockout', 'jquery', 'uifwk/js/sdk/context-util', 'ojs/ojknockout', 'ojs/ojmodel'],
 function(dfu, oj, ko, $, cxtModel)
 {
 /**

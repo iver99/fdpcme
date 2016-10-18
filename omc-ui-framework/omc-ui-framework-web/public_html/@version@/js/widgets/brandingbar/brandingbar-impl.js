@@ -3,7 +3,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
     'jquery',
     'uifwk/@version@/js/util/df-util-impl', 
     'uifwk/@version@/js/util/message-util-impl',
-    'uifwk/@version@/js/util/context-util-impl',
+    'uifwk/@version@/js/sdk/context-util-impl',
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'ojs/ojknockout',
