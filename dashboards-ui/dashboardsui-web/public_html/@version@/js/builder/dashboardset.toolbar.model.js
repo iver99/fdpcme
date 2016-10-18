@@ -428,8 +428,12 @@ define(['knockout',
                         $.each(subDashboards, function (index, simpleDashboardInst) {
                             singleDashboardItem = new dashboardItem(simpleDashboardInst);
                             var isOobSet=self.dashboardInst.owner()==="Oracle";
-                            var isOobDbd=singleDashboardItem.raw.owner()==="Oracle";
-                            var sharedVisibleCondition = self.dashboardsetConfig.isCreator() || (singleDashboardItem.raw !== null && singleDashboardItem.raw.sharePublic() === true) || singleDashboardItem === "new" || isOobDbd;
+                            var isOobDbd=false;
+                            var isNewDbdHome=singleDashboardItem.type === "new";
+                            if(!isNewDbdHome){
+                               isOobDbd=singleDashboardItem.raw.owner()==="Oracle"; 
+                            }      
+                            var sharedVisibleCondition = self.dashboardsetConfig.isCreator() || (!isNewDbdHome && singleDashboardItem.raw.sharePublic() === true) || isNewDbdHome || isOobDbd;
                             if (sharedVisibleCondition || isOobSet) {
                                 self.dashboardsetItems.push(singleDashboardItem);
                                 self.reorderedDbsSetItems.push(singleDashboardItem);
@@ -442,6 +446,9 @@ define(['knockout',
                             }
                             if (self.dashboardsetItems.length === 1 && singleDashboardItem.type === 'new') {
                                 self.noDashboardHome(false);
+                            }else if(self.dashboardsetItems.length===0){
+                                //add new dashbaord
+                                self.addNewDashboard();
                             }
                         });
 
