@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html id="global-html"  lang="en" data-testapiversion="1.10.0">
+<html id="global-html"  lang="en" data-testapiversion="1.12.0">
     <head>
         <title data-bind="text:builderTitle"></title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/dashboards-home-alta.css" type="text/css"/>
-       
+
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -288,10 +288,10 @@
                             <!-- ko with:toolbarModel -->
                             <div class="builder-dbd-description" data-bind="visible: dashboardDescriptionEnabled()==='TRUE'">
                                 <div class="builder-dbd-description-display-area dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
-                                    <span data-bind="text: dashboardDescription()?dashboardDescription:'No description',
+                                               <div data-bind="text: dashboardDescription()?dashboardDescription:'No description', 
                                                      css:{'font-style-italic':!dashboardDescription()},
                                                      attr: {title: dashboardDescription}" 
-                                          class="dbd-display-area-text single-dbd-description"></span>          
+                                               class="dbd-display-area-text single-dbd-description" style="display:block; white-space: pre;"></div>          
                                 </div>
                             </div>  
                             <button class='dashboardOptsBtn dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print' id ="dashboardOptsBtn"
@@ -311,7 +311,8 @@
                             </ul>
                             <!-- /ko -->
                             <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator no-print"></span>
-                            <div class="df-targte-selector" data-bind="visible: dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE'">
+                            <!--ko if: dashboard.enableEntityFilter && dashboard.enableEntityFilter() === 'TRUE' -->
+                            <div class="df-target-selector">   
                                 <emcta-target-selector data-bind="attr: {id: 'tsel_'+dashboard.id()}"
                                                        params="returnFunction: returnFromTsel,
                                                             initializeCallback: initializedCallback,
@@ -326,8 +327,10 @@
                                                                 }
                                                             }"></emcta-target-selector>
                             </div>
-
-                            <div tabindex="0" class="df-date-time-picker" data-bind="attr: {id: 'dtpicker_'+dashboard.id()}, component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'" data-show-time-picker></div>
+                            <!-- /ko -->
+                            <!--ko if: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' -->
+                            <div tabindex="0" class="df-date-time-picker" data-bind="attr: {id: 'dtpicker_'+dashboard.id()}, component: {name: 'df-datetime-picker', params: datetimePickerParams}" data-show-time-picker></div>
+                            <!-- /ko -->
                         </div>
                     </div>
 
@@ -362,8 +365,8 @@
                                               <div class="dbd-btn-editor">                 
                                                   <button class="oj-button-half-chrome dbd-data-explore" tabindex="0"
                                                           data-bind="
-                                                             visible: $root.isMobileDevice !== 'true',                                                        
-                                                             attr:{'id': 'editButton' + clientGuid,title: getNlsString('DBS_BUILDER_TILE_EDIT')},
+                                                             visible: $root.isMobileDevice !== 'true' && isOpenInExplorerShown,                                                        
+                                                             attr:{'id': 'editButton' + clientGuid,title:$data.WIDGET_GROUP_NAME() === getNlsString('SERVICE_NAME_LogAnalytics') ? getNlsString('DBS_BUILDER_MSG_AUTO_OPEN_IN_LOG_EXPLORER'):getNlsString('DBS_BUILDER_MSG_AUTO_OPEN_IN_DATA_EXPLORER')},
                                                              click:$root.openInDataExplorer,
                                                              ojComponent: {
                                                                 component:'ojButton', chroming: 'half',
@@ -608,7 +611,7 @@
                             <p data-bind="html: getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_HEAD')"></p>
                             <ul>
                                 <!-- ko foreach:dashboardSets -->
-                                    <li style="list-style-type:none;" data-bind="text: '<'+$data.name+'>'"></li>
+                                    <li style="list-style-type:none;" data-bind="text: $data.name"></li>
                                 <!-- /ko -->
                             </ul>
                             <p data-bind="html: getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_TAILE', toolBarModel.dashboardName())"></p>
@@ -634,7 +637,7 @@
                             <p data-bind="html: getNlsString('COMMON_UNSHAER_USED_DASHBOARD_MSG_HEAD')"></p>
                             <ul>
                                 <!-- ko foreach:dashboardSets -->
-                                    <li style="list-style-type:none;" data-bind="text: '<'+$data.name+'>'"></li>
+                                    <li style="list-style-type:none;" data-bind="text: $data.name"></li>
                                 <!-- /ko -->
                             </ul>
                              <p data-bind="html: getNlsString('COMMON_UNSHAER_USED_DASHBOARD_MSG_TAILE', toolBarModel.dashboardName())"></p>
@@ -1145,7 +1148,12 @@
                                                         <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL, width: imgWidth, height: imgHeight}" style="vertical-align: middle;"/>
                                                     </div>
                                                     <div class="oj-col oj-sm-8 oj-md-8">
+                                                        <!-- ko if:WIDGET_DESCRIPTION === 'No description.' -->
+                                                        <i data-bind="html:getNlsString('DBS_BUILDER_WIDGET_NO_DESCRIPTION')" style="color: #9e9e9e; display: block;"></i>
+                                                        <!-- /ko -->
+                                                        <!-- ko if:WIDGET_DESCRIPTION !== 'No description.' -->
                                                         <div data-bind="html:WIDGET_DESCRIPTION" style="color: #9e9e9e; display: block;"></div>
+                                                        <!-- /ko -->
                                                     </div>
                                                     <div class="oj-col oj-sm-8 oj-md-8" style="position:absolute;right:0;bottom:15px">
                                                         <span style="color: #9e9e9e;">Created By:</span>

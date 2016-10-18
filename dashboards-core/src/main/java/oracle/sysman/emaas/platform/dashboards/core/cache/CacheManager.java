@@ -21,9 +21,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * @author guochen
- * ## for more information about cache,you can find it in the wiki below ##
- * https://confluence.oraclecorp.com/confluence/pages/viewpage.action?pageId=177111759
+ * @author guochen ## for more information about cache,you can find it in the wiki below ##
+ *         https://confluence.oraclecorp.com/confluence/pages/viewpage.action?pageId=177111759
  */
 public class CacheManager
 {
@@ -42,6 +41,7 @@ public class CacheManager
 	public static final String LOOKUP_CACHE_KEY_ADMIN_LINKS = "adminLinks";
 	public static final String LOOKUP_CACHE_KEY_HOME_LINKS = "homeLinks";
 	public static final String LOOKUP_CACHE_KEY_VISUAL_ANALYZER = "visualAnalyzer";
+	public static final String LOOKUP_CACHE_KEY_SSO_LOGOUT_URL = "ssoLogoutUrl";
 
 	ResourceBundle conf = ResourceBundle.getBundle("cache_config");
 	private static CacheManager instance = new CacheManager();
@@ -57,10 +57,10 @@ public class CacheManager
 	{
 		keyGen = new DefaultKeyGenerator();
 		LOGGER.info("Initialization LRU CacheManager!!");
-		CacheFactory.getCache(CACHES_LOOKUP_CACHE,Integer.valueOf(conf.getString("CACHES_LOOKUP_CACHE_EXPIRE_TIME")));
+		CacheFactory.getCache(CACHES_LOOKUP_CACHE, Integer.valueOf(conf.getString("CACHES_LOOKUP_CACHE_EXPIRE_TIME")));
 		CacheFactory.getCache(CACHES_SCREENSHOT_CACHE, Integer.valueOf(conf.getString("CACHES_SCREENSHOT_CACHE_EXPIRE_TIME")));
 		CacheFactory.getCache(CACHES_ETERNAL_CACHE, Integer.valueOf(conf.getString("CACHES_ETERNAL_CACHE_EXPIRE_TIME")));
-		CacheFactory.getCache(CACHES_SUBSCRIBE_CACHE,Integer.valueOf(conf.getString("CACHES_SUBSCRIBE_CACHE_EXPIRE_TIME")));
+		CacheFactory.getCache(CACHES_SUBSCRIBE_CACHE, Integer.valueOf(conf.getString("CACHES_SUBSCRIBE_CACHE_EXPIRE_TIME")));
 	}
 
 	public CacheUnit getCache(String cacheName)
@@ -106,7 +106,7 @@ public class CacheManager
 			LOGGER.debug("Cache not retrieved, trying to load with fetch factory");
 			value = ff.fetchCachable(key);
 			if (value != null) {
-				cache.put(key.toString(), new Element(key,value));
+				cache.put(key.toString(), new Element(key, value));
 				LOGGER.debug("Successfully fetched data, putting to cache");
 			}
 		}
@@ -136,7 +136,7 @@ public class CacheManager
 	public Object putCache(String key, Object value)
 	{
 		CacheUnit nc = CacheFactory.getCache("lookupCache");
-		nc.put(key, new Element(key,value));
+		nc.put(key, new Element(key, value));
 		return value;
 	}
 
@@ -160,7 +160,7 @@ public class CacheManager
 		if (key == null) {
 			return null;
 		}
-		cache.put(key.toString(), new Element(key,value));
+		cache.put(key.toString(), new Element(key, value));
 		LOGGER.debug("Cacheable with tenant={}, key={} and value={} is put to cache {}", tenant, key, value, cacheName);
 
 		return value;

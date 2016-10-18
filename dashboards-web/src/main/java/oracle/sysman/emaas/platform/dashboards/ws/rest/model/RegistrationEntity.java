@@ -21,9 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
@@ -33,6 +30,7 @@ import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.Applicati
 import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
 import oracle.sysman.emaas.platform.dashboards.core.cache.ICacheFetchFactory;
 import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
+import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
@@ -40,6 +38,9 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author miao
@@ -95,15 +96,20 @@ public class RegistrationEntity implements Serializable
 	public static final String SECURITY_ANALYTICS_HOME_LINK = "sso.analytics-ui";
 	// Orchestration cloud service
 	public static final String ORCHESTRATION_OPC_APPNAME = "Orchestration";
-	public static final String ORCHESTRATION_SERVICENAME = "Orchestration";
+	public static final String ORCHESTRATION_SERVICENAME = "CosUIService";
 	public static final String ORCHESTRATION_VERSION = "1.0+";
 	public static final String ORCHESTRATION_URL = "/emsaasui/emcpdfui/home.html?filter=ocs";
-	// Security Analytics service
+	// Compliance service
 	public static final String COMPLIANCE_OPC_APPNAME = "Compliance";
 	public static final String COMPLIANCE_SERVICENAME = "ComplianceUIService";
 	public static final String COMPLIANCE_VERSION = null;
 
 	public static final String COMPLIANCE_HOME_LINK = "sso.home";
+
+	//Security service
+	public static final String SECURITY_SERVICE_NAME = "SecurityService";
+	public static final String SECURITY_SERVICE_VERSION = "1.0+";
+	public static final String SECURITY_SERVICE_SSO_LOGOUT_REL = "sso.logout";
 
 	private static final Logger _LOGGER = LogManager.getLogger(RegistrationEntity.class);
 	//	private String registryUrls;
@@ -154,7 +160,7 @@ public class RegistrationEntity implements Serializable
 						public Object fetchCachable(Object key) throws Exception
 						{
 							List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
-									UserContext.getCurrentUser());
+							UserContext.getCurrentUser());
 							if (!PrivilegeChecker.isAdminUser(userRoles)) {
 								return null;
 							}
@@ -253,8 +259,8 @@ public class RegistrationEntity implements Serializable
 					list.add(le);
 				}
 				else if (SECURITY_ANALYTICS_SERVICENAME.equals(app)) {
-					Link l = RegistryLookupUtil.getServiceExternalLink(SECURITY_ANALYTICS_SERVICENAME, SECURITY_ANALYTICS_VERSION,
-							SECURITY_ANALYTICS_HOME_LINK, tenantName);
+					Link l = RegistryLookupUtil.getServiceExternalLink(SECURITY_ANALYTICS_SERVICENAME,
+							SECURITY_ANALYTICS_VERSION, SECURITY_ANALYTICS_HOME_LINK, tenantName);
 					if (l == null) {
 						throw new Exception("Link for " + app + "return null");
 					}
@@ -265,11 +271,8 @@ public class RegistrationEntity implements Serializable
 					list.add(le);
 				}
 				else if (ORCHESTRATION_SERVICENAME.equals(app)) {
-					// Orchestration has no UI service, and its landing page will be
-					// the Dashboard Home page with the Orchestration filter set.
-					// So the service name here will be set to Dashboard-UI for now
-					list.add(new LinkEntity(ORCHESTRATION_OPC_APPNAME, ORCHESTRATION_URL, NAME_DASHBOARD_UI_SERVICENAME,
-							NAME_DASHBOARD_UI_VERSION));
+					list.add(new LinkEntity(ORCHESTRATION_OPC_APPNAME, ORCHESTRATION_URL, ORCHESTRATION_SERVICENAME,
+							ORCHESTRATION_VERSION));
 				}
 				else if (COMPLIANCE_SERVICENAME.equals(app)) {
 					VersionedLink l = RegistryLookupUtil.getServiceExternalLink(COMPLIANCE_SERVICENAME, COMPLIANCE_VERSION,
@@ -334,6 +337,37 @@ public class RegistrationEntity implements Serializable
 	public String getSessionExpiryTime()
 	{
 		return sessionExpirationTime;
+	}
+
+	public String getSsoLogoutUrl()
+	{
+		final String tenantName = TenantContext.getCurrentTenant();
+		Tenant cacheTenant = new Tenant(tenantName);
+		try {
+			return (String) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_SSO_LOGOUT_URL, new ICacheFetchFactory() {
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							Link lk = RegistryLookupUtil.getServiceExternalLink(SECURITY_SERVICE_NAME, SECURITY_SERVICE_VERSION,
+									SECURITY_SERVICE_SSO_LOGOUT_REL, tenantName);
+							lk = RegistryLookupUtil.replaceWithVanityUrl(lk, tenantName, SECURITY_SERVICE_NAME);
+							if (lk != null) {
+								return lk.getHref();
+							}
+							else {
+								String errorMsg = MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR",
+										SECURITY_SERVICE_NAME, SECURITY_SERVICE_VERSION, SECURITY_SERVICE_SSO_LOGOUT_REL);
+								LOGGER.error(errorMsg);
+								return null;
+							}
+						}
+					});
+		}
+		catch (Exception e) {
+			LOGGER.error(e);
+		}
+		return null;
 	}
 
 	/**
@@ -464,6 +498,10 @@ public class RegistrationEntity implements Serializable
 						&& roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_COMPLIANCE)) {
 					resultLinks.add(le);
 				}
+				else if (le.getServiceName().equals(ORCHESTRATION_SERVICENAME)
+						&& roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_ORCHESTRATION)) {
+					resultLinks.add(le);
+				}
 				else if (le.getServiceName().equals(EVENTUI_SERVICENAME) || le.getServiceName().equals(TMUI_SERVICENAME)
 						|| le.getServiceName().equals(ADMIN_CONSOLE_UI_SERVICENAME)) {
 					resultLinks.add(le);
@@ -588,8 +626,8 @@ public class RegistrationEntity implements Serializable
 			try {
 				SanitizedInstanceInfo sanitizedInstance = null;
 				if (!StringUtil.isEmpty(tenantName)) {
-					sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance,
-							tenantName);
+					sanitizedInstance = LookupManager.getInstance().getLookupClient()
+							.getSanitizedInstanceInfo(internalInstance, tenantName);
 					LOGGER.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
 							sanitizedInstance, tenantName);
 				}

@@ -36,15 +36,28 @@ define(['jquery',
                 var $elemInst = elem_id instanceof $ ? elem_id : $(elem_id);
 
                 if (isNaN(target_width) || target_width <= 0){
+                    oj.Logger.error("Invalid target screenshot width");
+                    if(error.stack){
+                        oj.Logger.error("Error: " + JSON.stringify(error.stack), true);
+                    }
                     throw new RangeError("Invalid target screenshot width");
                 }
                 if (isNaN(target_height) || target_height <= 0){
+                    oj.Logger.error("Invalid target screenshot height");
+                    if(error.stack){
+                        oj.Logger.error("Error: " + JSON.stringify(error.stack), true);
+                    }
                     throw new RangeError("Invalid target screenshot height");
                 }
                 if (isNaN(quality)){
+                    oj.Logger.error("Invalid target screenshot quality");
+                    if(error.stack){
+                        oj.Logger.error("Error: " + JSON.stringify(error.stack), true);
+                    }
                     throw new RangeError("Invalid target screenshot quality");
                 }
                 var nodesToRecover = [], nodesToRemove = [], overflowElems = [], parents = $elemInst.parents();
+                console.log("Start setting elements' overflow-x and overflow-y properties");
                 parents && parents.each(function() {
                     if ($(this).css("overflow") && $(this).css("overflow") !== "visible") {
                         overflowElems.push({element: $(this), field: "overflow", value: $(this).css("overflow")});
@@ -59,6 +72,7 @@ define(['jquery',
                         $(this).css("overflow-y", "visible");
                     }
                 });
+                console.log("Finished setting elements' overflow-x and overflow-y properties");
                 $elemInst.find('svg').each(function(idx, node) {
                     var parentNode = node.parentNode, nodeWidth = $(node).width(), nodeHeight = $(node).height();
                     if (node.innerHTML === undefined) {
@@ -91,7 +105,7 @@ define(['jquery',
                 } else {
                     optWidth = (optHeight * target_width) / target_height;
                 }
-
+                console.log("Start html2canvas...");
                 html2canvas($elemInst, {
                     background: "#fff",
                     logging: true,
@@ -131,18 +145,28 @@ define(['jquery',
                         }
                     }
                 });
+                console.log("Finished html2canvas...");
             };
 
             this.getBase64PartialScreenShot = function(elem_id, src_left, src_top, src_width, src_height, resizing_ratio, quality, callback) {
                 // if elem_id is already a jquery object, just take it as $elemInst
                 var $elemInst = elem_id instanceof $ ? elem_id : $(elem_id);
                 if (isNaN(quality) || quality <= 0 || quality > 1){
+                    oj.Logger.error("Invalid target screenshot quality");
+                    if(error.stack){
+                        oj.Logger.error("Error: " + JSON.stringify(error.stack), true);
+                    }
                     throw new RangeError("Invalid target screenshot quality");
                 }
                 if (isNaN(resizing_ratio) || resizing_ratio <= 0 || resizing_ratio > 1){
+                    oj.Logger.error("Invalid resizing ratio");
+                    if(error.stack){
+                        oj.Logger.error("Error: " + JSON.stringify(error.stack), true);
+                    }
                     throw new RangeError("Invalid resizing ratio");
                 }
                 var nodesToRecover = [], nodesToRemove = [], overflowElems = [], parents = $elemInst.parents();
+                console.log("Start setting elements' overflow-x and overflow-y properties");
                 parents && parents.each(function() {
                     if ($(this).css("overflow") && $(this).css("overflow") !== "visible") {
                         overflowElems.push({element: $(this), field: "overflow", value: $(this).css("overflow")});
@@ -157,6 +181,7 @@ define(['jquery',
                         $(this).css("overflow-y", "visible");
                     }
                 });
+                console.log("Finished setting elements' overflow-x and overflow-y properties");
                 $elemInst.find('svg').each(function(idx, node) {
                     var parentNode = node.parentNode, nodeWidth = $(node).width(), nodeHeight = $(node).height();
                     if (node.innerHTML === undefined) {
@@ -181,17 +206,34 @@ define(['jquery',
                     parentNode.appendChild(canvas);
                 });
                 if (isNaN(src_left) || src_left < 0 || src_left >= $elemInst.width()){
+                    oj.Logger.error("Invalid source left position for screenshot capturing");
+                    if(error.stack){
+                        oj.Logger.error("Error: " + JSON.stringify(error.stack), true);
+                    }
                     throw new RangeError("Invalid source left position for screenshot capturing");
                 }
                 if (isNaN(src_top) || src_top < 0 || src_top >= $elemInst.height()){
+                    oj.Logger.error("Invalid source left position for screenshot capturing");
+                     if(error.stack){
+                        oj.Logger.error("Error: " + JSON.stringify(error.stack), true);
+                     }
                     throw new RangeError("Invalid source left position for screenshot capturing");
                 }
                 if (isNaN(src_width) || src_width <= 0 || src_width >= $elemInst.width() - src_left){
+                    oj.Logger.error("Invalid source width for screenshot capturing");
+                    if(error.stack){
+                        oj.Logger.error("Error: " + JSON.stringify(error.stack), true);
+                    }
                     throw new RangeError("Invalid source width for screenshot capturing");
                 }
                 if (isNaN(src_height) || src_height <= 0 || src_height >= $elemInst.height() - src_top){
+                    oj.Logger.error("Invalid source height for screenshot capturing");
+                    if(error.stack){
+                        oj.Logger.error("Error: " + JSON.stringify(error.stack), true);
+                    }
                     throw new RangeError("Invalid source height for screenshot capturing");
                 }
+                console.log("Start html2canvas...");
                 html2canvas($elemInst, {
                     background: "#fff",
                     onrendered: function(canvas) {
@@ -219,6 +261,7 @@ define(['jquery',
                         }
                     }
                 });
+                console.log("Finished html2canvas...");
             };
         }
 

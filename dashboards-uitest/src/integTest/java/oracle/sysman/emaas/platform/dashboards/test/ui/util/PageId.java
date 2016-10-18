@@ -65,13 +65,13 @@ public class PageId
 	public static final String DASHBOARDSETADDDASHBOARDICON_CSS = ".dbd-icon-add";
 
 	public static final String DATETIMEPICK_CSS = "[id^='dateTimePicker_']";
-	public static final String TARGETSELECTOR_CSS = ".df-targte-selector.df-targte-selector";
+	public static final String TARGETSELECTOR_CSS = ".df-target-selector.df-target-selector";
 	public static final String DASHBOARDSETOPTIONS_CSS = "#tabs-caret";
 	public static final String DASHBOARDSETOPTIONSEDIT_CSS = "#dbs-edit [dashboardset-option='Edit']";
 	public static final String RIGHTDRAWEREDITSINGLEDBSHARE_CSS = ".dbd-right-panel-editdashboard-set-share .dbd-right-panel-editdashboard-innertitle.oj-collapsible-header";
 	public static final String DASHBOARDSETSHARE_CSS = "#dashboardSetSharingShared";
 	public static final String DASHBOARDSETNOTSHARE_CSS = "#dashboardSetSharingNotShared";
-	public static final String DASHBOARDOPTIONS_CSS = "button.dashboardOptsBtn";
+	public static final String DASHBOARDOPTIONS_CSS = ".dashboard-content.page-break[style='visibility: visible;'] button[id^='dashboardOptsBtn_'].dashboardOptsBtn"; //"button.dashboardOptsBtn";
 	public static final String DASHBOARDTITLE_CSS = "#pageTitle";
 
 	public static final String DATETIMEPICKER_OOB_CSS = "#dateTimePicker_APA";

@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.ssfnotification;
 
+import java.util.Date;
+
 /**
  * @author guochen
  */
@@ -17,6 +19,11 @@ public class WidgetNotifyEntity
 {
 	private Long uniqueId;
 	private String name;
+	private WidgetNotificationType type;
+	private Date notifyTime;
+	/**
+	 * Used as a 'returned value' to indicate who many objects are impacted by this widget change notification
+	 */
 	private Integer affactedObjects;
 
 	public WidgetNotifyEntity()
@@ -37,6 +44,11 @@ public class WidgetNotifyEntity
 	public String getName()
 	{
 		return name;
+	}
+	
+	public Date getNotifyTime()
+	{
+		return notifyTime;
 	}
 
 	/**
@@ -64,6 +76,11 @@ public class WidgetNotifyEntity
 	{
 		this.name = name;
 	}
+	
+	public void setNotifyTime(Date notifyTime)
+	{
+		this.notifyTime = notifyTime;
+	}
 
 	/**
 	 * @param uniqueId
@@ -72,5 +89,22 @@ public class WidgetNotifyEntity
 	public void setUniqueId(Long uniqueId)
 	{
 		this.uniqueId = uniqueId;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public WidgetNotificationType getType()
+	{
+		return type;
+	}
+
+	/**
+	 * @param type
+	 *            the type to set
+	 */
+	public void setType(WidgetNotificationType type)
+	{
+		this.type = type;
 	}
 }

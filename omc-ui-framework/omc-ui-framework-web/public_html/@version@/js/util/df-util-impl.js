@@ -1,10 +1,10 @@
-define([
+define(['knockout',
     'jquery',
     'ojs/ojcore',
     'uifwk/@version@/js/util/ajax-util-impl',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg'
 ],
-    function($, oj, ajaxUtilModel, nls)
+    function(ko, $, oj, ajaxUtilModel, nls)
     {
         function DashboardFrameworkUtility(userName, tenantName) {
             var self = this;
@@ -785,6 +785,19 @@ define([
                     }
                 };
             };
+            
+            /**
+             * Add UIFWK stylesheet to the head of the html document.
+             *
+             * @returns 
+             */
+            self.loadUifwkCss = function() {
+                //Check if uifwk css file has been loaded already or not, if not then load it
+                if (!$('#uifwkAltaCss').length) {
+                    //Append uifwk css file into document head
+                    $('head').append('<link id="uifwkAltaCss" rel="stylesheet" href="/emsaasui/uifwk/@version@/css/uifwk-alta.css" type="text/css"/>');
+                }
+            };
 
             function showSessionTimeoutWarningDialog(warningDialogId) {
                 //Clear interval for extending user session
@@ -796,6 +809,56 @@ define([
                 //Open sessin timeout warning dialog
                 $('#'+warningDialogId).ojDialog('open');
             }
+            
+            self.getRegistrations = function(successCallback, toSendAsync, errorCallback){
+                if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.registrations && window._uifwk.cachedData.registrations()){
+                    successCallback(window._uifwk.cachedData.registrations());
+                }else{
+                    if(!window._uifwk){
+                        window._uifwk = {};
+                    }
+                    if(!window._uifwk.cachedData){
+                        window._uifwk.cachedData = {};
+                    }
+                    if(!window._uifwk.cachedData.isFetchingRegistrations){
+                        window._uifwk.cachedData.isFetchingRegistrations = true;
+                        if(!window._uifwk.cachedData.registrations){
+                            window._uifwk.cachedData.registrations = ko.observable();
+                        }
+                        ajaxUtil.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationUrl(),
+                            dataType: 'json',
+                            headers: this.getDefaultHeader(),
+                            async: toSendAsync === false? false:true,
+                            success: function(data, textStatus, jqXHR){
+                                window._uifwk.cachedData.registrations(data);
+                                window._uifwk.cachedData.isFetchingRegistrations = false;
+                                successCallback(data, textStatus, jqXHR);
+                            },
+                            error: function(jqXHR, textStatus, errorThrown){
+                                console.log('Failed to get registration info!');
+                                window._uifwk.cachedData.isFetchingRegistrations = false;
+                                if(errorCallback){
+                                    errorCallback(jqXHR, textStatus, errorThrown);
+                                }
+                            }
+                        });
+                    }else{
+                        window._uifwk.cachedData.registrations.subscribe(function(data){
+                            if(data){
+                                successCallback(data);
+                            }
+                        });
+                    }
+                }
+            };
+            
+            self.getRegistrationUrl=function(){
+                if (self.isDevMode()){
+                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"configurations/registration");
+                }else{
+                    return '/sso.static/dashboards.configurations/registration';
+                }
+            };
 
         }
 

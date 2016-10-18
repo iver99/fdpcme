@@ -117,6 +117,8 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         
         self.EVENT_DASHBOARD_SHARE_CHANGED = "EVENT_DASHBOARD_SHARE_CHANGED";
         
+        self.EVENT_DASHBOARD_CLEANUP_DELETED_WIDGETS = "EVENT_DASHBOARD_CLEANUP_DELETED_WIDGETS";
+        
         self.dispatcher = new dsp.Dispatcher();
         self.addEventListener = function(event, listener) {
             self.dispatcher.registerEventHandler(event, listener);

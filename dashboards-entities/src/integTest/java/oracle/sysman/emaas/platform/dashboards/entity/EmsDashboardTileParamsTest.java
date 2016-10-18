@@ -42,7 +42,9 @@ public class EmsDashboardTileParamsTest {
             "lion",
             10,
             10,
-            10L);
+            10L,
+            0,
+		new Date());
     private EmsDashboardTileParams emsDashboardTileParams = new
             EmsDashboardTileParams(
             10,

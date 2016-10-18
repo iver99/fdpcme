@@ -179,25 +179,15 @@ define(['knockout', 'jquery', 'uifwk/@version@/js/util/df-util-impl', 'ojs/ojcor
                         if (!dfu.isDevMode()) {
                             dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, sessionTimeoutWarnDialogId);
                         }
+                        
+                        if (data.ssoLogoutUrl) {
+                            window.cachedSSOLogoutUrl = data.ssoLogoutUrl;
+                        }
                     };
-                    var serviceUrl = "/sso.static/dashboards.configurations/registration";
-                    if (dfu.isDevMode()){
-                        serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"configurations/registration");
-                    }
-                    dfu.ajaxWithRetry({
-                        url: serviceUrl,
-                        headers: dfu.getDefaultHeader(),
-                        contentType:'application/json',
-                        success: function(data, textStatus) {
-                            fetchServiceLinks(data);
-                        },
-                        error: function(xhr, textStatus, errorThrown){
-                            oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
-                            self.visualAnalyzers([]);
-                            self.adminLinks([]);
-                            self.cloudServices([]);
-                        },
-                        async: true
+                    dfu.getRegistrations(fetchServiceLinks, true, function(){
+                        self.visualAnalyzers([]);
+                        self.adminLinks([]);
+                        self.cloudServices([]);
                     });
                 }
 

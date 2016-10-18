@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <!-- Style classes used by this branding bar. -->
-        <link rel="stylesheet" href="/emsaasui/uifwk/@version@/css/widgets/uifwk-common-alta.css" type="text/css"/>
-    </head>
-    <body>
         <div class="emaas-appheader">
             <div id="emaas-appheader-bar" data-testapiversion="1.7.5" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
 
                 <!-- logo -->  
                 <div class="emaas-appheader-logo" data-bind="attr: {'aria-label': textOracle}">
                     <div class="emaas-appheader-appname-table-cell-middle">
-                        <img class="emaas-appheader-logo-img" src="/emsaasui/uifwk/@version@/images/widgets/oracle_logo_lrg.png" data-bind="attr: {alt: textOracle}, click: gotoHomePage"/> 
+                        <img class="emaas-appheader-logo-img" src="/emsaasui/uifwk/@version@/images/widgets/oracle_logo_lrg.png" width="158" height="19" data-bind="attr: {alt: textOracle}, click: gotoHomePage"/> 
                     </div>
                     <div class="emaas-appheader-appname-table-cell-middle" style="padding-left: 4px">
                         <span class="emaas-appheader-appname" data-bind="text: productName"></span>
@@ -25,19 +18,12 @@
 
                 <!-- Toolbar -->  
                 <div id='emaas-appheader-menu-and-toolbar-container' data-bind="attr: {'aria-label': toolbarLabel}">
-                    <script type="text/html" id="menuItemTemplate">
-                        <li>
-                            <a data-bind="attr:{'id':id},href: url"><span data-bind="text: label"></span></a>
-                            <!-- ko if: item.subNavItems -->
-                            <ul data-bind="template: {name: 'menuItemTemplate', foreach: item.subNavItems, as: 'item'}">
-                            </ul>
-                            <!-- /ko -->
-                        </li>
-                    </script>
-
                     <ul id="emaasAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu', select: globalNavMenuItemSelect}" style="display: none;">
-                      <!-- ko template: {name: 'menuItemTemplate', foreach: globalNavItems, as: 'item'} -->
-                      <!-- /ko -->
+                        <!-- ko foreach: globalNavItems -->
+                        <li>
+                            <a data-bind="attr:{'id':id}, href: url"><span data-bind="text: label"></span></a>
+                        </li>
+                        <!-- /ko -->
                     </ul>
 
                     <div class="emaas-appheader-toolbar-container">
@@ -139,7 +125,7 @@
                 rootAttributes: { style: 'width: 450px;'}}, attr: {id: sessionTimeoutWarnDialogId}">   
             <div class="oj-dialog-body" style="height: 50px;" >
                 <div class="emaas-warn-msg-table-cell">
-                    <img style="width: 16px;height:16px;" data-bind="attr: {alt: altTextWarn, src: sessionTimeoutWarnIcon}"/> 
+                    <img width="16" height="16" data-bind="attr: {alt: altTextWarn, src: sessionTimeoutWarnIcon}"/> 
                 </div>
                 <div class="emaas-warn-msg-table-cell" style="padding-left: 5px">
                     <span class="emaas-appheader-appname" data-bind="text: sessionTimeoutMsg"></span>
@@ -151,5 +137,3 @@
                 </button>
             </div>  
         </div>
-    </body>
-</html>

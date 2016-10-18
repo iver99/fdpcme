@@ -103,7 +103,12 @@ require(['ojs/ojcore',
         
             window.onerror = function (msg, url, lineNo, columnNo, error)
             {
-                oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg, true); 
+                var msg = "Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo;
+                if(error.stack) {
+                    msg = msg + ". Error: " + JSON.stringify(error.stack);
+                }
+                oj.Logger.error(msg, true);
+
                 return false; 
             }
 
@@ -201,19 +206,7 @@ require(['ojs/ojcore',
                 self.showOrchestration = ko.observable(false);
 
                 self.getServiceUrls = function() {
-                    var serviceUrl = dfu.getRegistrationUrl();
-                    dfu.ajaxWithRetry({
-                        url: serviceUrl,
-                        headers: dfu_model.getDefaultHeader(),
-                        contentType:'application/json',
-                        success: function(data, textStatus) {
-                            fetchServiceLinks(data);
-                        },
-                        error: function(xhr, textStatus, errorThrown){
-                            oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
-                        },
-                        async: true
-                    });
+                    dfu.getRegistrations(fetchServiceLinks);
                 };
 
                 //get urls of databases and middleware
