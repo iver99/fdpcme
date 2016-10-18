@@ -1,4 +1,4 @@
-define(['knockout', 'jquery', 'uifwk/@version@/js/util/df-util-impl', 'ojs/ojcore', 'uifwk/@version@/js/util/preference-util-impl', 'uifwk/@version@/js/util/context-util-impl'],
+define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout', 'jquery', 'uifwk/@version@/js/util/df-util-impl', 'ojs/ojcore', 'uifwk/@version@/js/util/preference-util-impl', 'uifwk/@version@/js/util/context-util-impl'],
         function (ko, $, dfumodel, oj, pfu, contextModel) {
             function NavigationLinksViewModel(params) {
                 var self = this;
