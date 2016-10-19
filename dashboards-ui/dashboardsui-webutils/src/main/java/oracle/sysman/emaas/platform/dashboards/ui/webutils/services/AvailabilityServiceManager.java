@@ -10,7 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.ui.webutils.services;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +25,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQ
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.dashboards.ui.targetmodel.services.GlobalStatus;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
@@ -37,7 +37,7 @@ import weblogic.management.timer.Timer;
  */
 public class AvailabilityServiceManager implements ApplicationServiceManager, NotificationListener
 {
-	private static final long PERIOD = Timer.ONE_MINUTE;
+	private static final long PERIOD = Timer.ONE_SECOND * 20;
 
 	private static final String DASHBOARD_API_SERVICE_NAME = "Dashboard-API";
 
@@ -98,15 +98,15 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 		if (!isSSFAvailable) {
-			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
-			InstanceInfo ii = new InstanceInfo();
-			ii.setServiceName(SAVED_SEARCH_SERVICE_NAME);
-			ii.setVersion(SAVED_SEARCH_SERVICE_VERSION);
-			services.add(ii);
-			rsm.markOutOfService(services, null, null);
-			GlobalStatus.setDashboardUIDownStatus();
-			LOGGER.error("Dashboards UI service is out of service because Saved Search API service is unavailable");
-			return;
+//			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
+//			InstanceInfo ii = new InstanceInfo();
+//			ii.setServiceName(SAVED_SEARCH_SERVICE_NAME);
+//			ii.setVersion(SAVED_SEARCH_SERVICE_VERSION);
+//			services.add(ii);
+//			rsm.markOutOfService(services, null, null);
+//			GlobalStatus.setDashboardUIDownStatus();
+			LOGGER.error("Dashboards UI service keeps running, but Saved Search API service is unavailable");
+//			return;
 		}
 
 		// check df api service avaibility
@@ -119,15 +119,18 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 		if (!isDFApiAvailable) {
-			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
-			InstanceInfo ii = new InstanceInfo();
-			ii.setServiceName(DASHBOARD_API_SERVICE_NAME);
-			ii.setVersion(DASHBOARD_API_SERVICE_VERSION);
-			services.add(ii);
-			rsm.markOutOfService(services, null, null);
-			GlobalStatus.setDashboardUIDownStatus();
-			LOGGER.error("Dashboards UI service is out of service because Dashboard API service is unavailable");
-			return;
+//			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
+//			InstanceInfo ii = new InstanceInfo();
+//			ii.setServiceName(DASHBOARD_API_SERVICE_NAME);
+//			ii.setVersion(DASHBOARD_API_SERVICE_VERSION);
+//			services.add(ii);
+//			rsm.markOutOfService(services, null, null);
+//			GlobalStatus.setDashboardUIDownStatus();
+			DependencyStatus.getInstance().setEntityNamingUp(Boolean.FALSE);
+			LOGGER.error("Dashboards UI service keeps running, although Dashboard API service is unavailable");
+//			return;
+		} else {
+			DependencyStatus.getInstance().setEntityNamingUp(Boolean.TRUE);
 		}
 
 		// check if dashboard common UI service availability
@@ -140,23 +143,22 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 		if (!isCommonUIAvailable) {
-			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
-			InstanceInfo ii = new InstanceInfo();
-			ii.setServiceName(DASHBOARD_COMMON_UI_SERVICE_NAME);
-			ii.setVersion(DASHBOARD_COMMON_UI_SERVICE_VERSION);
-			services.add(ii);
-			rsm.markOutOfService(services, null, null);
-			GlobalStatus.setDashboardUIDownStatus();
-			LOGGER.info("Dashboards UI service is out of service because OMC UI Framework service is unavailable");
-			return;
+//			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
+//			InstanceInfo ii = new InstanceInfo();
+//			ii.setServiceName(DASHBOARD_COMMON_UI_SERVICE_NAME);
+//			ii.setVersion(DASHBOARD_COMMON_UI_SERVICE_VERSION);
+//			services.add(ii);
+//			rsm.markOutOfService(services, null, null);
+//			GlobalStatus.setDashboardUIDownStatus();
+			LOGGER.error("Dashboards UI service keeps running, although OMC UI Framework service is unavailable");
+//			return;
 		}
-
+		
 		// now all checking is OK
 		try {
 			rsm.markServiceUp();
 			GlobalStatus.setDashboardUIUpStatus();
-
-			LOGGER.info("Dashboards UI service is up");
+			LOGGER.debug("Dashboards UI service is up");
 		}
 		catch (Exception e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
