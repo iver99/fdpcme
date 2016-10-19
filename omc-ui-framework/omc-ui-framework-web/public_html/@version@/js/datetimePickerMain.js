@@ -119,6 +119,8 @@ require(['ojs/ojcore',
                 self.initStart = ko.observable(start);
                 self.initEnd = ko.observable(end);
                 self.timePeriodsNotToShow = ko.observableArray([]);
+                self.timeLevelsNotToShow = ko.observable([]);
+                self.showTimeAtMillisecond = ko.observable(false);
                 self.timeDisplay = ko.observable("short");
                 self.timePeriodPre = ko.observable("Last 7 days");
                 self.changeLabel = ko.observable(true);
@@ -142,16 +144,20 @@ require(['ojs/ojcore',
                     startDateTime: /*self.initStart,*/ start,
                     endDateTime: self.initEnd, //end,
                     timePeriodsNotToShow: /*["Last 30 days", "Last 90 days"],*/ self.timePeriodsNotToShow,
+//                    timeLevelsNotToShow: self.timeLevelsNotToShow, //custom relative time levels not to show
+//                    showTimeAtMillisecond: self.showTimeAtMillisecond, //show time at minute or millisecond level in ojInputTime component
                     enableTimeFilter: true,
                     hideMainLabel: true,
                     dtpickerPosition: self.floatPosition1,
                     timePeriod: "Last 1 day", //self.timePeriodPre,
 //                    timeFilterParams: self.timeFilterParams,
-                    callbackAfterApply: function (start, end, tp, tf) {
+                    callbackAfterApply: function (start, end, tp, tf, relVal, relOpt) {
                         console.log(start);
                         console.log(end);
                         console.log(tp);
                         console.log(tf);
+                        console.log(relVal);
+                        console.log(relOpt);
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
                         if(self.isTimePeriodLessThan1day(tp) && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
@@ -206,7 +212,7 @@ require(['ojs/ojcore',
                     self.timeDisplay("long");
                     self.timePeriodPre("Last 90 days");
                 };
-
+                
                 self.lineSeriesValues = ko.observableArray();
                 self.lineGroupsValues = ko.observableArray();
 
