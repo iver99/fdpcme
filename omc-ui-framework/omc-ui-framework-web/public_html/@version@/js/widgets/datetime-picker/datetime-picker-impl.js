@@ -312,6 +312,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         var num = self.flexRelTimeVal();
                         var opt = self.flexRelTimeOpt()[0];
                         self.setFlexRelTime(num, opt);
+                    }else {
+                        self.autoFocus("inputStartDate_" + self.randomId);
+                        self.lastFocus(1);
+                        
+                        self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
+                        self.updateRange(self.startDate(), self.endDate());
                     }
                 });
 
@@ -656,12 +662,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 //show time at millisecond level or minute level in ojInputTime component
                 self.getTimeConverter = function() {
                     if(self.getParam(params.showTimeAtMillisecond) === true) {
-                        $(self.pickerPanelId + " .oj-inputdatetime-input-trigger").hide();
-                        $(self.pickerPanelId + " .chosenTime input").css("border-width", "1px 1px 1px 1px");
                         self.timeConverter(self.timeConverterMillisecond);
                     }else {
-                        $(self.pickerPanelId + " .oj-inputdatetime-input-trigger").show();
-                        $(self.pickerPanelId + " .chosenTime input").css("border-width", "1px 0px 1px 1px");
                         self.timeConverter(self.timeConverterMinute);
                     }
                     return self.timeConverter();
@@ -1238,6 +1240,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 }
 
                 self.setFocusOnInput = function (idToFocus) {
+                    if(self.lrCtrlVal()!=='timeLevelCtrl') { //do not set focus on inputs if they are diasbled
+                        return;
+                    }
                     var id;
                     var ele = $(self.pickerPanelId + " .input-focus");
                     if (ele.length > 0) {
@@ -1454,13 +1459,16 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
 
                 self.changeStartTime = function (event, data) {
+                    if(data.option === "messagesShown" && oj.Message.getMaxSeverity(data.value)>=4) { //messagesShown means input time format is incorrect
+                        self.changeTimeError(event, data, 1);
+                        return;
+                    }
                     if((data.option !== "value" && data.option !== "rawValue") || (data.option === "rawValue" && !data.previousValue)) {
                         return;
                     }
-                    try {
-                        var tmp = self.timeConverter().format(data.value);
+                    if (typeof data.value === "string") {
                         self.changeTimeCorrect(event, data, 1);
-                    }catch(e) {
+                    }else {
                         self.changeTimeError(event, data, 1);
                     }
                 };
@@ -1469,10 +1477,13 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     if((data.option !== "value" && data.option !== "rawValue") || (data.option === "rawValue" && !data.previousValue)) {
                         return;
                     }
-                    try {
-                        var tmp = self.timeConverter().format(data.value);
+                    if(data.option === "messagesShown" && oj.Message.getMaxSeverity(data.value)>=4) {
+                        self.changeTimeError(event, data, 1);
+                        return;
+                    }
+                    if (typeof data.value === "string") {
                         self.changeTimeCorrect(event, data, 2);
-                    }catch(e) {
+                    }else {
                         self.changeTimeError(event, data, 2);
                     }
                 };
@@ -1488,19 +1499,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 }
 
                 self.setErrorBorderForTime = function (target) {
-                    if(self.getParam(params.showTimeAtMillisecond) === true) {
-                        $(target).css("border-width", "2px 2px 2px 2px");
-                    }else {
-                        $(target).css("border-width", "2px 0px 2px 2px").next().css("border-width", "2px 2px 2px 0px");
-                    }
+                    $(target).css("border-width", "2px 0px 2px 2px").next().css("border-width", "2px 2px 2px 0px");
                     $(target).css("border-color", "#d66").next().css("border-color", "#d66");
                 };
                 self.restoreBorderForTime = function(target) {
-                    if(self.getParam(params.showTimeAtMillisecond) === true) {
-                        $(target).css("border-width", "1px 1px 1px 1px")
-                    }else {
-                        $(target).css("border-width", "1px 0px 1px 1px").next().css("border-width", "1px 1px 1px 0px");
-                    }
+                    $(target).css("border-width", "1px 0px 1px 1px").next().css("border-width", "1px 1px 1px 0px");
                     $(target).css("border-color", "#dfe4e7").next().css("border-color", "#dfe4e7");
                 };
 
