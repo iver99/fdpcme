@@ -257,7 +257,10 @@ define(['knockout',
                     $("#dbd-tabs-container").ojTabs("refresh");
                     $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
                 }
-                self.saveDashboardSet();
+                console.log("pick dashboard current share status "+self.dashboardsetConfig.share());
+                self.saveDashboardSet({
+                    "sharePublic": self.dashboardsetConfig.share() === "on" ? true : false
+                });
                 self.noDashboardHome(true);
             };
 
@@ -722,7 +725,10 @@ define(['knockout',
                             self.selectedDashboardItem(self.reorderedDbsSetItems()[currentShowIndex]);
                         }
                     }
-                    self.saveDashboardSet();
+                    console.log("hilight next tab, current share status is "+self.dashboardsetConfig.share());
+                    self.saveDashboardSet({
+                    "sharePublic": self.dashboardsetConfig.share() === "on" ? true : false
+                });
                 }
             }
 
