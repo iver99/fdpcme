@@ -137,7 +137,6 @@ define(['dashboards/dbsmodel',
             if(req.term.length>1){
                 self.allDashboards().forEach(function(dashboard){
                     if(dashboard.name.toLowerCase().indexOf(req.term.toLowerCase())>-1){
-                        debugger;
                         self.dashboards.push(dashboard);
                     }
                 });
