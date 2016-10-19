@@ -1092,7 +1092,7 @@
                                             </div>
                                             <div class="oj-flex" data-bind="style:{ display: rightPanelEditContent.hasLinkedToTitle()?'none':'block'}">
                                                 <div class="oj-flex-item" style="overflow: hidden;margin-top: 10px;">
-                                                    <span data-bind="text: getNlsString('DBS_BUILDER_EDIT_CONTENT_ADD_LINK_TO_TITLE')"></span>
+                                                    <span data-bind="css:{'dbd-right-panel-collapsible-disabled': rightPanelEditContent.hideTitle().indexOf('hideTitle')>-1},text: getNlsString('DBS_BUILDER_EDIT_CONTENT_ADD_LINK_TO_TITLE')"></span>
                                                     <!-- ko ifnot:rightPanelEditContent.hasLinkedToTitle() -->
                                                     <div class="dbd-left-panel-header-search">
                                                         <div  class="dbd-left-panel-header-search-input">
