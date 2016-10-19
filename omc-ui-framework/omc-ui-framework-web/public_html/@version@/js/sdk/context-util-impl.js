@@ -50,7 +50,7 @@ define([
                                     omcContext[contextName] = {};
                                 }
                                 //Set value into the OMC context JSON object
-                                omcContext[contextName][paramName] = paramValue;
+                                omcContext[contextName][paramName] = decodeURIComponent(paramValue);
                             }
                         }
                     }
@@ -88,13 +88,12 @@ define([
              * @returns {String} New URL with appended OMC global context
              */
             self.appendOMCContext = function(url) {
-                var newUrl = null;
+                var newUrl = url;
                 if (url) {
                     //Get OMC context
                     var omcContext = self.getOMCContext();
                     if (omcContext) {
-                        var contextString = null;
-                        //Construct URL parameters string for OMC context
+                        //Add or update URL parameters string for OMC context
                         for (var i = 0; i < supportedContext.length; i++) {
                             var contextDef = supportedContext[i];
                             var contextName = contextDef.contextName;
@@ -105,21 +104,11 @@ define([
                                 //Check for available context which should be appended into URL
                                 if (omcContext[contextName] && omcContext[contextName][paramName]) {
                                     var paramValue = omcContext[contextName][paramName];
-                                    contextString = contextString ? (contextString + paramName + '=' + paramValue) : (paramName + '='+paramValue);
-                                    contextString = contextString + '&';
+                                    paramValue = encodeURIComponent(paramValue);
+                                    //Add or update URL parameters
+                                    newUrl = addOrUpdateUrlParam(newUrl, paramName, paramValue);
                                 }
                             }
-                        }
-                        //Remove unnecessary '&' flag from the end of the context string
-                        if (contextString && contextString.lastIndexOf('&') !== -1) {
-                            contextString = contextString.substring(0, contextString.lastIndexOf('&'));
-                        }
-                        //Append the context string into the given URL
-                        if (url.indexOf('?') !== -1) {
-                            newUrl = url + '&' + contextString;
-                        }
-                        else {
-                            newUrl = url + '?' + contextString;
                         }
                     }
                 }
@@ -133,17 +122,11 @@ define([
             /**
              * Set OMC global context of start time.
              * 
-             * @param {String} startTime
+             * @param {String} startTime Start time
              * @returns 
              */
             self.setStartTime = function(startTime) {
-                var omcContext = self.getOMCContext();
-                if (omcContext['timeRange']) {
-                    omcContext['timeRange']['startTime'] = startTime;
-                }
-                else {
-                    omcContext['timeRange'] = {'startTime': startTime};
-                }
+                setIndividualContext('timeRange', 'startTime', startTime);
             };
             
             /**
@@ -153,27 +136,17 @@ define([
              * @returns {String} OMC global context of start time
              */
             self.getStartTime = function() {
-                var omcContext = self.getOMCContext();
-                if (omcContext['timeRange'] && omcContext['timeRange']['startTime']) {
-                    return omcContext['timeRange']['startTime'];
-                }
-                return null;
+                return getIndividualContext('timeRange', 'startTime');
             };
             
             /**
              * Set OMC global context of end time.
              * 
-             * @param {String} endTime
+             * @param {String} endTime End time
              * @returns 
              */
             self.setEndTime = function(endTime) {
-                var omcContext = self.getOMCContext();
-                if (omcContext['timeRange']) {
-                    omcContext['timeRange']['endTime'] = endTime;
-                }
-                else {
-                    omcContext['timeRange'] = {'endTime': endTime};
-                }
+                setIndividualContext('timeRange', 'endTime', endTime);
             };
             
             /**
@@ -183,27 +156,17 @@ define([
              * @returns {String} OMC global context of end time
              */
             self.getEndTime = function() {
-                var omcContext = self.getOMCContext();
-                if (omcContext['timeRange'] && omcContext['timeRange']['endTime']) {
-                    return omcContext['timeRange']['endTime'];
-                }
-                return null;
+                return getIndividualContext('timeRange', 'endTime');
             };
             
             /**
              * Set OMC global context of time period.
              * 
-             * @param {String} timePeriod
+             * @param {String} timePeriod Time period like 'Last 1 Week' etc.
              * @returns 
              */
             self.setTimePeriod = function(timePeriod) {
-                var omcContext = self.getOMCContext();
-                if (omcContext['timeRange']) {
-                    omcContext['timeRange']['timePeriod'] = timePeriod;
-                }
-                else {
-                    omcContext['timeRange'] = {'timePeriod': timePeriod};
-                }
+                setIndividualContext('timeRange', 'timePeriod', timePeriod);
             };
             
             /**
@@ -213,27 +176,17 @@ define([
              * @returns {String} OMC global context of time period
              */
             self.getTimePeriod = function() {
-                var omcContext = self.getOMCContext();
-                if (omcContext['timeRange'] && omcContext['timeRange']['timePeriod']) {
-                    return omcContext['timeRange']['timePeriod'];
-                }
-                return null;
+                return getIndividualContext('timeRange', 'timePeriod');
             };
             
             /**
              * Set OMC global context of composite guid.
              * 
-             * @param {String} compositeMEID
+             * @param {String} compositeMEID Composite GUID
              * @returns 
              */
             self.setCompositeMeId = function(compositeMEID) {
-                var omcContext = self.getOMCContext();
-                if (omcContext['composite']) {
-                    omcContext['composite']['compositeMEID'] = compositeMEID;
-                }
-                else {
-                    omcContext['composite'] = {'compositeMEID': compositeMEID};
-                }
+                setIndividualContext('composite', 'compositeMEID', compositeMEID);
             };
             
             /**
@@ -243,27 +196,17 @@ define([
              * @returns {String} OMC global context of composite guid
              */
             self.getCompositeMeId = function() {
-                var omcContext = self.getOMCContext();
-                if (omcContext['composite'] && omcContext['composite']['compositeMEID']) {
-                    return omcContext['composite']['compositeMEID'];
-                }
-                return null;
+                return getIndividualContext('composite', 'compositeMEID');
             };
             
             /**
              * Set OMC global context of composite type.
              * 
-             * @param {String} compositeType
+             * @param {String} compositeType Composite type
              * @returns 
              */
             self.setCompositeType = function(compositeType) {
-                var omcContext = self.getOMCContext();
-                if (omcContext['composite']) {
-                    omcContext['composite']['compositeType'] = compositeType;
-                }
-                else {
-                    omcContext['composite'] = {'compositeType': compositeType};
-                }
+                setIndividualContext('composite', 'compositeType', compositeType);
             };
             
             /**
@@ -273,27 +216,17 @@ define([
              * @returns {String} OMC global context of composite type
              */
             self.getCompositeType = function() {
-                var omcContext = self.getOMCContext();
-                if (omcContext['composite'] && omcContext['composite']['compositeType']) {
-                    return omcContext['composite']['compositeType'];
-                }
-                return null;
+                return getIndividualContext('composite', 'compositeType');
             };
             
             /**
              * Set OMC global context of composite name.
              * 
-             * @param {String} compositeName
+             * @param {String} compositeName Composite name
              * @returns 
              */
             self.setCompositeName = function(compositeName) {
-                var omcContext = self.getOMCContext();
-                if (omcContext['composite']) {
-                    omcContext['composite']['compositeName'] = compositeName;
-                }
-                else {
-                    omcContext['composite'] = {'compositeName': compositeName};
-                }
+                setIndividualContext('composite', 'compositeName', compositeName);
             };
             
             /**
@@ -303,11 +236,64 @@ define([
              * @returns {String} OMC global context of composite name
              */
             self.getCompositeName = function() {
-                var omcContext = self.getOMCContext();
-                if (omcContext['composite'] && omcContext['composite']['compositeName']) {
-                    return omcContext['composite']['compositeName'];
+                return getIndividualContext('composite', 'compositeName');
+            };
+            
+            /**
+             * Set individual OMC global context.
+             * 
+             * @param {String} contextName Context definition name
+             * @param {String} paramName URL parameter name for the individual context
+             * @param {String} value Context value
+             * @returns 
+             */
+            function setIndividualContext(contextName, paramName, value) {
+                if (contextName && paramName && value) {
+                    var omcContext = self.getOMCContext();
+                    if (!omcContext[contextName]) {
+                        omcContext[contextName] = {};
+                    }
+                    omcContext[contextName][paramName] = decodeURIComponent(value);
+                }
+            }
+            
+            /**
+             * Get individual OMC global context.
+             * 
+             * @param {String} contextName Context definition name
+             * @param {String} paramName URL parameter name for the individual context
+             * @returns {String} Individual OMC global context
+             */
+            function getIndividualContext(contextName, paramName) {
+                if (contextName && paramName) {
+                    var omcContext = self.getOMCContext();
+                    if (omcContext[contextName] && omcContext[contextName][paramName]) {
+                        return omcContext[contextName][paramName];
+                    }
                 }
                 return null;
+            }
+            
+            /**
+             * Add new parameter into the URL if it doesn't exist in original URL.
+             * Otherwise, update the parameter in the URL if it exists already.
+             * 
+             * @param {String} url Original URL
+             * @param {String} paramName Parameter name
+             * @param {String} paramValue Parameter value
+             * @returns {String} New URL
+             */
+            function addOrUpdateUrlParam(url, paramName, paramValue){
+                if (paramValue === null) {
+                    paramValue = '';
+                }
+                var pattern = new RegExp('\\b('+paramName+'=).*?(&|$)');
+                if (url.search(pattern)>=0) {
+                    return url.replace(pattern, '$1' + paramValue + '$2');
+                }
+                return url + (url.indexOf('?') > 0 ? 
+                    //Handle case that an URL ending with a question mark only
+                    (url.lastIndexOf('?') === url.length - 1 ? '': '&') : '?') + paramName + '=' + paramValue; 
             };
         }
 
