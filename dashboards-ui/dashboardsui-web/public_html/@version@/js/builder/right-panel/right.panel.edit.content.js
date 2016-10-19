@@ -57,7 +57,9 @@ define(['dashboards/dbsmodel',
             }
             self.dashboardTilesViewModel = ko.dataFor($(".tiles-wrapper:visible")[0]);
             resetAddLinkToTitle();
-            self.hideTitle("true" === tile.hideTitle()?["hideTitle"]:[]);
+//            self.hideTitle("true" === tile.hideTitle()?["hideTitle"]:[]);
+            self.hideTitle([]);
+            tile.hideTitle("false");
             if(tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()){
                 self.selectedDashboardId(tile.WIDGET_LINKED_DASHBOARD());
                 self.allDashboards().forEach(function(dashboard){
@@ -96,10 +98,30 @@ define(['dashboards/dbsmodel',
 
 
         self.onContentSearching = ko.observable(false);
+        self.onContentSearching.subscribe(function(val){
+            $(".search-content-dropdown-list-container ul").ojListView( "refresh" );
+        });
 
 
         self.dataSource = new oj.ArrayTableDataSource(self.dashboards, {idAttribute: "id"});
-        self.keyword = ko.observable();
+        self.keyword = ko.observable("");
+        
+        self.keywordInput = ko.observable("");
+        self.keywordInput.subscribe(function(val){
+            if(!val){
+                self.clearContentSearch(false);
+            }else{
+                self.clearContentSearch(true);
+            }
+        });
+        self.keywordInputComputed = ko.computed(function(){
+            return self.keywordInput();
+        });
+        self.keywordInputComputed.extend({ rateLimit: 700 });
+        self.keywordInputComputed.subscribe(function(val){
+            self.autoSearchDashboard(val?val:"");
+        });
+        
         self.selectedDashboardLastModifiedTime = ko.observable();
         self.selectedDashboard = ko.observable();
         self.selectedDashboard.subscribe(function(dashboard){
@@ -126,42 +148,33 @@ define(['dashboards/dbsmodel',
                         self.clearContentSearch(true);
                     }
                 });
-                $(".search-content-dropdown-list-container #listview").ojListView({"currentItem": null});
+                $(".search-content-dropdown-list-container ul").ojListView({"currentItem": null});
             }
         };
 
-        self.searchDashboardClicked = function(){};
+        self.searchDashboardClicked = function(){
+            self.autoSearchDashboard(self.keyword()?self.keyword():"");
+        };
+        
         self.clearContentSearch = ko.observable();
-        self.autoSearchDashboard = function (req) {
+        self.autoSearchDashboard = function (searchTerm) {
             self.dashboards.removeAll();
-            if(req.term.length>1){
+            if(searchTerm.length>1){
                 self.allDashboards().forEach(function(dashboard){
-                    if(dashboard.name.toLowerCase().indexOf(req.term.toLowerCase())>-1){
+                    if(dashboard.name.toLowerCase().indexOf(searchTerm.toLowerCase())>-1){
                         self.dashboards.push(dashboard);
                     }
                 });
-            }else if (req.term.length === 0) {
+            }else{
                 self.allDashboards().forEach(function(dashboard){
                     self.dashboards.push(dashboard);
                 });
-                self.clearContentSearch(false);
-            } else {
-                self.allDashboards().forEach(function(dashboard){
-                    self.dashboards.push(dashboard);
-                });
-                self.clearContentSearch(true);
             }
         };
         
-        $('.dashboard-search-input').autocomplete({
-            source: self.autoSearchDashboard,
-            delay: 700,
-            minLength: 0
-        });
-
         self.clearDashboardSearchInputClicked = function () {
             if (self.keyword()) {
-                self.keyword(null);
+                self.keyword("");
                 self.searchDashboardClicked();
                 self.showSelectedDashboard(false);
                 self.selectedDashboardId(null);
@@ -195,7 +208,7 @@ define(['dashboards/dbsmodel',
         };
 
         function resetAddLinkToTitle(holdHasLinkedToTitle){
-            self.keyword(null);
+            self.keyword("");
             self.searchDashboardClicked();
             self.showSelectedDashboard(false);
             self.selectedDashboardId(null);

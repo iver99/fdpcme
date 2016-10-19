@@ -1096,8 +1096,8 @@
                                                     <!-- ko ifnot:rightPanelEditContent.hasLinkedToTitle() -->
                                                     <div class="dbd-left-panel-header-search">
                                                         <div  class="dbd-left-panel-header-search-input">
-                                                            <input class="dashboard-search-input" type="text" name="searchInput" id="content-search-input"
-                                                                   data-bind="css:{'ui-autocomplete-loading': !rightPanelEditContent.hideTitle().indexOf('hideTitle')>-1}, disable: rightPanelEditContent.hideTitle().indexOf('hideTitle')>-1, event: {focus: function(){rightPanelEditContent.onContentSearching(true);}, blur: function(){setTimeout(function(){rightPanelEditContent.onContentSearching(false);},300)}, keypress: rightPanelEditContent.searchDashboardInputKeypressed }, ojComponent:{component:'ojInputText', value: rightPanelEditContent.keyword,
+                                                            <input class="dashboard-search-input" type="text" name="contentSearchInput" id="dashboard-content-search-input"
+                                                                   data-bind="disable: rightPanelEditContent.hideTitle().indexOf('hideTitle')>-1, event: {focus: function(){rightPanelEditContent.onContentSearching(true);}, blur: function(){setTimeout(function(){rightPanelEditContent.onContentSearching(false);},300)}, keypress: rightPanelEditContent.searchDashboardInputKeypressed }, ojComponent:{component:'ojInputText', value: rightPanelEditContent.keyword, rawValue: rightPanelEditContent.keywordInput,
                                                               placeholder: getNlsString('DBS_BUILDER_EDIT_CONTENT_ADD_LINK_TO_TITLE_SEARCH_PLACEHODER_CONTENT'), rootAttributes: {'class': 'dbs-search-box-input'}}
                                                               ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL') }"/>
                                                         </div>
@@ -1119,12 +1119,12 @@
                                                 </div>
                                                 <div>
                                                     <script type="text/html" id="search-content-li-template">
-                                                        <li data-bind="attr: {id: 'search-dashboard-id-' + $data.id}">
+                                                        <li style="display: inherit;" data-bind="attr: {id: 'search-dashboard-id-' + $data.id}">
                                                             <span data-bind="text: $data.name"></span>
                                                         </li>
                                                     </script>
                                                     <div class="search-content-dropdown-list-container" data-bind="style:{ display: rightPanelEditContent.onContentSearching()?'block':'none'}">
-                                                        <ul id="listview" aria-label="list using observable array" style="max-height: 250px"
+                                                        <ul aria-label="list using observable array" style="max-height: 250px"
                                                             data-bind="ojComponent: {
                                                                 component: 'ojListView', 
                                                                 data: rightPanelEditContent.dataSource,
