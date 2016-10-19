@@ -44,13 +44,6 @@ define(['knockout',
 //                 self.notZdtStatus(false);
                 self.zdtStatus(isUnderPlannedDowntime);
                 self.notZdtStatus(!isUnderPlannedDowntime);
-                    if (isUnderPlannedDowntime) {
-                        $('.dropdown-menu>li').each(function (index, element) {
-                            if (($(element).attr('data-singledb-option') !== 'Print')) {
-                                $(element).css({display: "none"});
-                            }
-                        });
-                    }
             });   
             
             if (self.dashboard.id && self.dashboard.id()){
@@ -116,11 +109,11 @@ define(['knockout',
             function showConfirmLeaveDialog(event) {
                 var _msg = getNlsString('DBS_BUILDER_CONFIRM_LEAVE_DIALOG_CONTENT');
 
-                if (event && $b.isDashboardUpdated() === true && self.isDeletingDbd()===false)
+                if (event && $b.isDashboardUpdated() === true && self.isDeletingDbd()===false && self.notZdtStatus())
                 {
                     event.returnValue = _msg;
                 }
-                if ($b.isDashboardUpdated() === true && self.isDeletingDbd()===false)
+                if ($b.isDashboardUpdated() === true && self.isDeletingDbd()===false && self.notZdtStatus())
                 {
                     $b.findEl('.dashboard-screenshot').focus();
                     return _msg;
@@ -738,6 +731,7 @@ define(['knockout',
                     "title": "",
                     "disabled": self.editDisabled() === true,
                     "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
+                    "showInZdt":self.notZdtStatus,
                     "endOfGroup": false
                 },
                 {
@@ -749,6 +743,7 @@ define(['knockout',
                     "disabled": self.editDisabled() === true,
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
                     "showSubMenu": false,
+                    "showInZdt":self.notZdtStatus,
                     "endOfGroup": false
                 },
                 {
@@ -760,6 +755,7 @@ define(['knockout',
                     "disabled": false,
                     "showOnMobile": true,
                     "showSubMenu": false,
+                    "showInZdt":true,
                     "endOfGroup": false
                 },
                 {
@@ -770,7 +766,8 @@ define(['knockout',
                     "title": "",
                     "disabled":false,
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
-                    "endOfGroup": true,
+                    "showInZdt":self.notZdtStatus,
+                    "endOfGroup": true && self.notZdtStatus,
                     "showSubMenu": function () {
                         if (self.currentUser !== self.dashboard.owner() && "Oracle" !== self.dashboard.owner()) {
                             return false;
@@ -790,6 +787,7 @@ define(['knockout',
                             "disabled": false,
                             "showOnMobile": true,
                             "showSubMenu": false,
+                            "showInZdt":self.notZdtStatus,
                             "endOfGroup": false
                         },
                         {
@@ -801,6 +799,7 @@ define(['knockout',
                             "disabled": false,
                             "showOnMobile": true,
                             "showSubMenu": false,
+                            "showInZdt":self.notZdtStatus,
                             "endOfGroup": false
                         }
                     ]
@@ -814,6 +813,7 @@ define(['knockout',
                     "disabled": false,
                     "showOnMobile": true,
                     "showSubMenu": false,
+                    "showInZdt":self.notZdtStatus,
                     "endOfGroup": false
                 },
                 {
@@ -825,6 +825,7 @@ define(['knockout',
                     "disabled": false,
                     "showOnMobile": true,
                     "showSubMenu": false,
+                    "showInZdt":self.notZdtStatus,
                     "endOfGroup": false
                 },
                 {
@@ -836,6 +837,7 @@ define(['knockout',
                     "disabled": false,
                     "showOnMobile": true,
                     "showSubMenu": true,
+                    "showInZdt":self.notZdtStatus,
                     "endOfGroup": false,
                     "subItems": [
                         {
@@ -849,6 +851,7 @@ define(['knockout',
                             "disabled": false,
                             "showOnMobile": true,
                             "showSubMenu": false,
+                            "showInZdt":self.notZdtStatus,
                             "endOfGroup": false
                         },
                         {
@@ -862,6 +865,7 @@ define(['knockout',
                             "disabled": false,
                             "showOnMobile": true,
                             "showSubMenu": false,
+                            "showInZdt":self.notZdtStatus,
                             "endOfGroup": false
                         }
                     ]
