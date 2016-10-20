@@ -382,7 +382,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                         var _name =  _sd.dashboard.name,_sets =  resp.dashboardSets;
                         var _message =  getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_HEAD',_name) + "<br>";
                         for(var i = 0; i < _sets.length ; i++ ){
-                            _message += "<br>"+"&lt;" + _sets[i].name +"&gt;";
+                            _message += "<br>"+ _sets[i].name;
                         }
                         _message += "<br><br>"+ getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_TAILE', _name);
                         self.confirmDialogModel.show(
