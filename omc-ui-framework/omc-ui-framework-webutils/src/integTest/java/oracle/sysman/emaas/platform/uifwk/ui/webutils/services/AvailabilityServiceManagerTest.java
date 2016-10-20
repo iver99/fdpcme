@@ -105,7 +105,7 @@ public class AvailabilityServiceManagerTest
 			}
 		};
 		asm.handleNotification(anyNoti, null);
-		Assert.assertFalse(GlobalStatus.isOmcUiUp());
+		Assert.assertTrue(GlobalStatus.isOmcUiUp());
 
 		new Expectations() {
 			{
@@ -120,7 +120,7 @@ public class AvailabilityServiceManagerTest
 			}
 		};
 		asm.handleNotification(anyNoti, null);
-		Assert.assertFalse(GlobalStatus.isOmcUiUp());
+		Assert.assertTrue(GlobalStatus.isOmcUiUp());
 
 		new Expectations() {
 			{
@@ -132,7 +132,7 @@ public class AvailabilityServiceManagerTest
 			}
 		};
 		asm.handleNotification(anyNoti, null);
-		Assert.assertFalse(GlobalStatus.isOmcUiUp());
+		Assert.assertTrue(GlobalStatus.isOmcUiUp());
 
 		new Expectations() {
 			{
@@ -147,7 +147,7 @@ public class AvailabilityServiceManagerTest
 			}
 		};
 		asm.handleNotification(anyNoti, null);
-		Assert.assertFalse(GlobalStatus.isOmcUiUp());
+		Assert.assertTrue(GlobalStatus.isOmcUiUp());
 
 		new Expectations() {
 			{
@@ -164,7 +164,7 @@ public class AvailabilityServiceManagerTest
 			}
 		};
 		asm.handleNotification(anyNoti, null);
-		Assert.assertFalse(GlobalStatus.isOmcUiUp());
+		Assert.assertTrue(GlobalStatus.isOmcUiUp());
 	}
 
 	@Test(groups = { "s2" })

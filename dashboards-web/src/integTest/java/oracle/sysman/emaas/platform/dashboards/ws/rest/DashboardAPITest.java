@@ -8,6 +8,11 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
@@ -21,12 +26,8 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
-
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 
 /**
@@ -186,10 +187,12 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testQueryDashboardById() throws Exception
+	public void testQueryDashboardById(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 				mockedDashboardManager.getDashboardById(anyLong, anyLong);
 				result = new Dashboard();
 
@@ -201,10 +204,12 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testQueryDashboardByIdWithBasicServiceMalfunctionException() throws Exception
+	public void testQueryDashboardByIdWithBasicServiceMalfunctionException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 				mockedAPIBase.getTenantId(anyString);
 				result = new BasicServiceMalfunctionException("Test BasicServiceMalfunctionException", "emaas-platform");
 			}
@@ -213,10 +218,12 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testQueryDashboardByIdWithDashboardException() throws Exception
+	public void testQueryDashboardByIdWithDashboardException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 				mockedAPIBase.getTenantId(anyString);
 				result = new CommonSecurityException("Test Security Error");
 			}

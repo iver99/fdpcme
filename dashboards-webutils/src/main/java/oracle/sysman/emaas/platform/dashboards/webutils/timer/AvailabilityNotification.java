@@ -103,7 +103,7 @@ public class AvailabilityNotification implements NotificationListener
 			DependencyStatus.getInstance().setEntityNamingUp(Boolean.FALSE);
 			LOGGER.error("Dashboards service keeps running, although entity naming service is OUT_OF_SERVICE");
 		} else {
-			DependencyStatus.getInstance().setDatabaseUp(Boolean.TRUE);
+			DependencyStatus.getInstance().setEntityNamingUp(Boolean.TRUE);
 			LOGGER.debug("Entity naming service is UP");
 		}
 		
