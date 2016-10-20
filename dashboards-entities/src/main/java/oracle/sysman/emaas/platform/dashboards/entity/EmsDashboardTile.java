@@ -123,6 +123,7 @@ public class EmsDashboardTile implements Serializable
 
 	public EmsDashboardTile()
 	{
+		widgetDeleted = 0;
 	}
 
 	public EmsDashboardTile(Date creationDate, EmsDashboard emsDashboard1, Integer type, Integer row, Integer column,
