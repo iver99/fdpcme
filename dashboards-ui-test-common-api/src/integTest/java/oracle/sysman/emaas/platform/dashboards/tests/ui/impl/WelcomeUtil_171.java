@@ -206,7 +206,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	@Override
 	public void visitCompliance(WebDriver driver)
 	{
-		// TODO Auto-generated method stub
+		driver.getLogger().warning("Visit Compliance from Welcome Page is not supported in 1.7.1");
 
 	}
 
@@ -299,7 +299,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	@Override
 	public void visitOrchestration(WebDriver driver)
 	{
-		// TODO Auto-generated method stub
+		driver.getLogger().warning("Visit Orchestration from Welcome Page is not supported in 1.7.1");
 
 	}
 
@@ -309,7 +309,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	@Override
 	public void visitSecurity(WebDriver driver)
 	{
-		// TODO Auto-generated method stub
+		driver.getLogger().warning("Visit Security from Welcome Page is not supported in 1.7.1");
 
 	}
 
