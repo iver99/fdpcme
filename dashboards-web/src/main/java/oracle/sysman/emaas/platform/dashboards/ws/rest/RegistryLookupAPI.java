@@ -22,11 +22,14 @@ import javax.ws.rs.core.Response.Status;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardErrorConstants;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.util.EndpointEntity;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 
 import org.apache.logging.log4j.LogManager;
@@ -51,6 +54,10 @@ public class RegistryLookupAPI extends APIBase
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
 				"Service call to [POST] /v1/registry/lookup/endpoint?serviceName={}&version={}", serviceName, version);
 		try {
+			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+				LOGGER.error("Error to call [POST] /v1/registry/lookup/endpoint?serviceName={}&version={}: EntityNaming service is down", serviceName, version);
+				throw new EntityNamingDependencyUnavailableException();
+			}
 			initializeUserContext(tenantIdParam, userTenant);
 			if (StringUtil.isEmpty(serviceName) /*|| StringUtil.isEmpty(version)*/) {
 				ErrorEntity error = new ErrorEntity(DashboardErrorConstants.REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR_CODE,
@@ -99,6 +106,10 @@ public class RegistryLookupAPI extends APIBase
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
 				"Service call to [GET] /v1/registry/lookup/link?serviceName={}&version={}", serviceName, version);
 		try {
+			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+				LOGGER.error("Error to call [GET] /v1/registry/lookup/link?serviceName={}&version={}: EntityNaming service is down", serviceName, version);
+				throw new EntityNamingDependencyUnavailableException();
+			}
 			initializeUserContext(tenantIdParam, userTenant);
 			if (StringUtil.isEmpty(serviceName) || StringUtil.isEmpty(version) || StringUtil.isEmpty(rel)) {
 				ErrorEntity error = new ErrorEntity(DashboardErrorConstants.REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR_CODE,
@@ -143,6 +154,10 @@ public class RegistryLookupAPI extends APIBase
 				"Service call to [GET] /v1/registry/lookup/linkWithRelPrefix?serviceName={}&version={}&rel={}", serviceName,
 				version, rel);
 		try {
+			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+				LOGGER.error("Error to call [GET] /v1/registry/lookup/linkWithRelPrefix?serviceName={}&version={}&rel={}: EntityNaming service is down", serviceName, version, rel);
+				throw new EntityNamingDependencyUnavailableException();
+			}
 			initializeUserContext(tenantIdParam, userTenant);
 			if (StringUtil.isEmpty(serviceName) || StringUtil.isEmpty(version) || StringUtil.isEmpty(rel)) {
 				ErrorEntity error = new ErrorEntity(
