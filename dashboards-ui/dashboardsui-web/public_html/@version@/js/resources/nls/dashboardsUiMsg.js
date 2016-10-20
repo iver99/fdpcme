@@ -5,6 +5,6 @@
  */
 
 define({
-  "root": true
+  "fr": true, "ko": true, "zh-Hans": true, "zh-Hant": true, root: true
 });
 
