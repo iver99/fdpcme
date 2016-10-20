@@ -25,7 +25,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQ
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.dashboards.ui.targetmodel.services.GlobalStatus;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
@@ -50,6 +49,11 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 
 	private static final String SAVED_SEARCH_SERVICE_VERSION = "1.0+";
 	private static final String SAVED_SEARCH_SERVICE_REL = "search";
+	
+	private static final String ENTITY_NAMING_SERVICE_NAME = "EntityNaming";
+	private static final String ENTITY_NAMING_SERVICE_VERSION = "1.0+";
+	private static final String ENTITY_NAMING_SERVICE_REL = "collection/domains";
+	
 	private final static Logger LOGGER = LogManager.getLogger(AvailabilityServiceManager.class);
 
 	private Timer timer;
@@ -126,11 +130,8 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 //			services.add(ii);
 //			rsm.markOutOfService(services, null, null);
 //			GlobalStatus.setDashboardUIDownStatus();
-			DependencyStatus.getInstance().setEntityNamingUp(Boolean.FALSE);
 			LOGGER.error("Dashboards UI service keeps running, although Dashboard API service is unavailable");
 //			return;
-		} else {
-			DependencyStatus.getInstance().setEntityNamingUp(Boolean.TRUE);
 		}
 
 		// check if dashboard common UI service availability
