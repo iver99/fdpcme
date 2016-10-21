@@ -17,21 +17,23 @@
 				<Route key="$${ctx:tenantId}">
 					<RollingFile name="MAIN_LOG_NO_TENANT" 
 								 filename="${dir}/${mainLog}" 
-								 filePattern="${dir}/${mainLog}.%d{yyyy-MM-dd}">
+								 filePattern="${dir}/${mainLog}-%i.log">
 						<PatternLayout pattern="${mainPatternDefault}"/>
 						<Policies>
-							<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+							<SizeBasedTriggeringPolicy size="50 MB" />
 						</Policies>
+						<DefaultRolloverStrategy max="4" />
 					</RollingFile>
 				</Route>
 				<Route>
 					<RollingFile name="MAIN_LOG_DEFAULT" 
 								 filename="${dir}/${mainLog}" 
-								 filePattern="${dir}/${mainLog}.%d{yyyy-MM-dd}">
+								 filePattern="${dir}/${mainLog}-%i.log">
 						<PatternLayout pattern="${mainPattern}"/>
 						<Policies>
-							<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+							<SizeBasedTriggeringPolicy size="50 MB" />
 						</Policies>
+						<DefaultRolloverStrategy max="4" />
 					</RollingFile>
 				</Route>
 			</Routes>
@@ -41,23 +43,25 @@
 				<Route key="$${ctx:tenantId}">
 					<RollingFile name="ERROR_LOG_NO_TENANT" 
 			   					 filename="${dir}/${errorLog}" 
-								 filePattern="${dir}/${errorLog}.%d{yyyy-MM-dd}">
+								 filePattern="${dir}/${errorLog}-%i.log">
 						<PatternLayout pattern="${mainPatternDefault}"/>
 						<ThresholdFilter level="ERROR" onMatch="ACCEPT"/>
 						<Policies>
-							<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+							<SizeBasedTriggeringPolicy size="50 MB" />
 						</Policies>
+						<DefaultRolloverStrategy max="4" />
 					</RollingFile>
 				</Route>
 				<Route>
 					<RollingFile name="ERROR_LOG_DEFAULT" 
 			   					 filename="${dir}/${errorLog}" 
-								 filePattern="${dir}/${errorLog}.%d{yyyy-MM-dd}">
+								 filePattern="${dir}/${errorLog}-%i.log">
 						<PatternLayout pattern="${mainPattern}"/>
 						<ThresholdFilter level="ERROR" onMatch="ACCEPT"/>
 						<Policies>
-							<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+							<SizeBasedTriggeringPolicy size="50 MB" />
 						</Policies>
+						<DefaultRolloverStrategy max="4" />
 					</RollingFile>
 				</Route>
 			</Routes>
@@ -68,22 +72,24 @@
     	</Async>
 		<RollingFile name="STARTUP_SHUTDOWN_LOG" 
 			   		 filename="${dir}/${startupShutdownLog}" 
-					 filePattern="${dir}/${startupShutdownLog}.%d{yyyy-MM-dd}">
+					 filePattern="${dir}/${startupShutdownLog}-%i.log">
 			<PatternLayout pattern="${startupShutdownPattern}"/>
 			<Policies>
-				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+				<SizeBasedTriggeringPolicy size="10 MB" />
 			</Policies>
+			<DefaultRolloverStrategy max="4" />
 		</RollingFile>
 		<Async name="ASYNC_STARTUP_SHUTDOWN_LOG">
     		<AppenderRef ref="STARTUP_SHUTDOWN_LOG"/>
     	</Async>
 		<RollingFile name="INTERACTION_LOG" 
 			   		 filename="${dir}/${interactionLog}" 
-					 filePattern="${dir}/${interactionLog}.%d{yyyy-MM-dd}">
+					 filePattern="${dir}/${interactionLog}-%i.log">
 			<PatternLayout pattern="${interactionPattern}"/>
 			<Policies>
-				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+				<SizeBasedTriggeringPolicy size="25 MB" />
 			</Policies>
+			<DefaultRolloverStrategy max="4" />
 		</RollingFile>
 		<Async name="ASYNC_INTERACTION_LOG">
     		<AppenderRef ref="INTERACTION_LOG"/>

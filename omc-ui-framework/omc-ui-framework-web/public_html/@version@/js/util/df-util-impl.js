@@ -785,6 +785,19 @@ define([
                     }
                 };
             };
+            
+            /**
+             * Add UIFWK stylesheet to the head of the html document.
+             *
+             * @returns 
+             */
+            self.loadUifwkCss = function() {
+                //Check if uifwk css file has been loaded already or not, if not then load it
+                if (!$('#uifwkAltaCss').length) {
+                    //Append uifwk css file into document head
+                    $('head').append('<link id="uifwkAltaCss" rel="stylesheet" href="/emsaasui/uifwk/@version@/css/uifwk-alta.css" type="text/css"/>');
+                }
+            };
 
             function showSessionTimeoutWarningDialog(warningDialogId) {
                 //Clear interval for extending user session

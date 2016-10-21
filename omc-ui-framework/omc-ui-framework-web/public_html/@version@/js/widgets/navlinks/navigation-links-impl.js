@@ -179,6 +179,10 @@ define(['knockout', 'jquery', 'uifwk/@version@/js/util/df-util-impl', 'ojs/ojcor
                         if (!dfu.isDevMode()) {
                             dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, sessionTimeoutWarnDialogId);
                         }
+                        
+                        if (data.ssoLogoutUrl) {
+                            window.cachedSSOLogoutUrl = data.ssoLogoutUrl;
+                        }
                     };
                     var serviceUrl = "/sso.static/dashboards.configurations/registration";
                     if (dfu.isDevMode()){

@@ -21,47 +21,65 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
         /**
          * Writes an error message.
          */
-        customLogger.error = function(args,flush)
+        customLogger.error = function(args,flush,isAsyncStatus)
         {
             var output = _format(args);
+            var useAsyncCall = true;
+            if(isAsyncStatus===false){
+                useAsyncCall= false;
+            }
             if (window && window.console) {
                 window.console.error(output);
             }
-            _cacheOrSend(oj.Logger.LEVEL_ERROR, output,flush);
+            _cacheOrSend(oj.Logger.LEVEL_ERROR, output,flush,useAsyncCall);
         };
 
         /**
          * Writes an informational message.
          */
-        customLogger.info = function(args,flush)
+        customLogger.info = function(args,flush,isAsyncStatus)
         {
             var output = _format(args);
+            var useAsyncCall = true;
+            if(isAsyncStatus===false){
+                useAsyncCall= false;
+            }
             if (window && window.console) {
                 window.console.info(output);
             }
+            _cacheOrSend(oj.Logger.LEVEL_INFO, output,flush,useAsyncCall);
         };
 
         /**
          * Writes a warning message.
          */
-        customLogger.warn = function(args,flush)
+        customLogger.warn = function(args,flush,isAsyncStatus)
         {
             var output = _format(args);
+            var useAsyncCall = true;
+            if(isAsyncStatus===false){
+                useAsyncCall= false;
+            }
             if (window && window.console) {
                 window.console.warn(output);
             }
-            _cacheOrSend(oj.Logger.LEVEL_WARN, output,flush);
+            _cacheOrSend(oj.Logger.LEVEL_WARN, output,flush,useAsyncCall);
         };
 
         /**
          * Writes a general message.
          */
-        customLogger.log = function(args,flush)
+        customLogger.log = function(args,flush,isAsyncStatus)
         {
             var output = _format(args);
+            var useAsyncCall = true;
+            if(isAsyncStatus===false){
+                useAsyncCall= false;
+            }
             if (window && window.console) {
                 window.console.log(output);
             }
+            _cacheOrSend(oj.Logger.LEVEL_LOG, output,flush,useAsyncCall);
         };
 
         //
@@ -89,7 +107,7 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
         /**
          * Cache the log and send to server if cache limit is reached.
          */
-        function _cacheOrSend(level, msg, flush)
+        function _cacheOrSend(level, msg, flush ,useAsyncCall)
         {
             // TODO: Look into guarding against too many logs in a short period
             // of time.  Use case: Something bad may have happened and now we are getting
@@ -101,7 +119,7 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
 
             // If cache is full, then send.
             if (flush || logsCache.length >= logsCacheLimit) {
-                _sendToServer();
+                _sendToServer(useAsyncCall);
             }
         };
 
@@ -111,17 +129,17 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
         function _sendBeforeTooLong()
         {
             if (logsCache.length > 0 && (new Date().getTime() - logsCacheLastTimeWeSent) > logsCacheMaxInterval) {
-                _sendToServer();
+                _sendToServer(true);
             }
         };
 
         /**
          * Send the cached logs to server
          */
-        function _sendToServer()
+        function _sendToServer(useAsyncCall)
         {
             // Send the logs asynchronously and clear the cache.
-            new _asyncSender()();
+            new _asyncSender(useAsyncCall)();
             logsCache = [];
             logsCacheLastTimeWeSent = new Date().getTime();
         };
@@ -130,7 +148,7 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
          * An asynchronous sender that clones the cache and then sends the logs from the clone.
          * A new instance of this object must be created for each use.
          */
-        function _asyncSender()
+        function _asyncSender(useAsyncCall)
         {
             var logsCacheCloned = [];
 
@@ -140,6 +158,7 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
                 //TODO: Why not get tenantId from cookie?
                 //TODO: Should global be false?
                 var headers;
+                
                 if (dfu.isDevMode()){
                     headers = {"Authorization":"Basic " + btoa(dfu.getDevData().wlsAuth)};
                 }
@@ -160,7 +179,7 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
                     },
                     description: "custom logger: Sending logs to server",
                     headers: headers,
-                    async:false
+                    async:useAsyncCall
                 });
             };
 

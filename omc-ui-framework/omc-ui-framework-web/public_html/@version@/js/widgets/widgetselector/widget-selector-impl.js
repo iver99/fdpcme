@@ -42,6 +42,8 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                 self.clearButtonVisible = ko.computed(function(){return self.searchText() && '' !== self.searchText() ? true : false;});
 
                 var dfu = new dfumodel(self.userName, self.tenantName);
+                //Append uifwk css file into document head
+                dfu.loadUifwkCss();
 
                 // Initialize widget group and widget data
                 var labelAll = nls.WIDGET_SELECTOR_WIDGET_GROUP_ALL;
@@ -288,11 +290,13 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                 };
 
                 function getWidgets() {
-                    var widgetsUrl = '/sso.static/savedsearch.widgets';
+                    var widgetsBaseUrl = '/sso.static/savedsearch.widgets';
+                    var widgetsUrl = widgetsBaseUrl;
                     if (dfu.isDevMode()){
-                        widgetsUrl=dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
+                        widgetsBaseUrl = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
+                        widgetsUrl = widgetsBaseUrl;
                         if (includeDashboardIneligible) {
-                            widgetsUrl = widgetsUrl + "?includeDashboardIneligible=true";
+                            widgetsUrl = widgetsBaseUrl + "?includeDashboardIneligible=true";
                         }
                     }
 
@@ -314,7 +318,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                         var loadedCnt = 0;
                         for (var i = 0; i < availableWidgetGroups.length; i++) {
                             //Get widgets by widget group id
-                            widgetsUrl = widgetsUrl + "?widgetGroupId=" + availableWidgetGroups[i].WIDGET_GROUP_ID;
+                            widgetsUrl = widgetsBaseUrl + "?widgetGroupId=" + availableWidgetGroups[i].WIDGET_GROUP_ID;
                             if (includeDashboardIneligible) {
                                 widgetsUrl = widgetsUrl + "&includeDashboardIneligible=true";
                             }
@@ -542,17 +546,20 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                     var pname = null;
                     var pversion = null;
                     var gname = null;
+                    var groupId = null;
                     targetWidgetGroupArray.push(groupAll);
                     if (data && data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
+                            groupId = data[i].WIDGET_GROUP_ID;
                             pname = data[i].PROVIDER_NAME;
                             pversion = data[i].PROVIDER_VERSION;
                             gname = data[i].WIDGET_GROUP_NAME;
-                            if ((!widgetProviderName /*&& !widgetProviderVersion */) ||
-                                    widgetProviderName === pname
+                            // Disable ITA widget group since no ITA widgets for now. (group id === 3)
+                            if ((!widgetProviderName && groupId !== 3 /*&& !widgetProviderVersion */) ||
+                                    widgetProviderName === pname || (widgetProviderName === 'TargetAnalytics' && groupId === 7)
                                 /*    && widgetProviderVersion === pversion */) {
-                                //Enable ITA widget group since ITA widgets are enabled now.
-                                    var widgetGroup = {value:pname+'|'+pversion+'|'+gname, label:gname};
+                                    var widgetGroup = {value:pname+'|'+pversion+'|'+gname, 
+                                                        label: groupId === 2 ? nls.WIDGET_SELECTOR_WIDGET_GROUP_NAME_TA : gname};
                                     targetWidgetGroupArray.push(widgetGroup);
                                     availableWidgetGroups.push(data[i]);
                             }
