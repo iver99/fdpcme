@@ -140,6 +140,7 @@ public class DashboardServiceFacadeTest
 		tile.setProviderVersion("providerVersion");
 		//tile.setTenantId("tenantId");
 		tile.setTitle("title" + System.currentTimeMillis());
+		tile.setWidgetDeleted(0);
 		tile.setWidgetCreationTime("widgetCreationTime");
 		tile.setWidgetDescription("widgetDescription");
 		tile.setWidgetGroupName("widgetGroupName");
