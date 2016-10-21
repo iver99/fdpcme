@@ -32,8 +32,16 @@
                     <a href="#" data-bind="attr: {id: 'drawer12_'+randomId}, text: timePeriodLast1year, css: last1yearCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
                     <!--<a href="#" data-bind="attr: {id: 'drawer11_'+randomId}, text: timePeriodToday, css: todayCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>-->
                     <a href="#" data-bind="attr: {id: 'drawer10_'+randomId}, text: timePeriodLatest, css: latestCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer14_'+randomId}, text: timePeriodRecent, css: recentCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
                     <a href="#" data-bind="attr: {id: 'drawer9_'+randomId}, text: timePeriodCustom, css: customCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
                 </div>
+                </div>
+                
+                <!-- popup for recently used time ranges -->
+                <div data-bind="ojComponent: {component: 'ojPopup'}, attr: {id: 'recentPanel_'+randomId}">
+                    <!-- ko foreach: recentList -->
+                        <div style="padding: 5px;" data-bind="html: $parent.getRecentDateTimeInfo($data), event: {mouseover: $parent.hoverOnDrawer, mouseout: $parent.hoverOutDrawer}, click: $parent.chooseByRecent"></div>
+                    <!-- /ko-->
                 </div>
 
                 <!-- right of panel-->

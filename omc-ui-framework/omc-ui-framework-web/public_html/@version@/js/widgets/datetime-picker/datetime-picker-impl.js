@@ -129,6 +129,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.timePeriodToday = nls.DATETIME_PICKER_SHOW_TODAY;
                 self.timePeriodCustom = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM;
                 self.timePeriodLatest = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LATEST;
+                self.timePeriodRecent = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_RECENT;
                 self.today = nls.DATETIME_PICKER_SHOW_TODAY;
                 self.yesterday = nls.DATETIME_PICKER_SHOW_YESTERDAY;
                 self.tfHoursExcludedMsg = nls.DATETIME_PICKER_TIME_FILTER_INFO_HOURS_EXCLUDED;
@@ -140,6 +141,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.maxFlexRelTimeVal = ko.observable(null);
                 self.flexRelTimeOpt = ko.observable(["day"]);
 //                self.timeLevelOpt = ko.observable(["minute"]);
+
+                self.recentList = ko.observableArray([]);
 
                 self.timePeriodsNlsObject = {
                     "Last 15 minutes" : self.timePeriodLast15mins,
@@ -188,7 +191,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.customChosen = ko.observable(false);
 
                 //initialize class assuming that dtpicker is on the left of page
-                self.drawerChosen = ko.observable("letDrawerChosen");
+                self.drawerChosen = ko.observable("leftDrawerChosen");
                 self.timeFilterIconCss = ko.observable("float-right");
                 self.pickerPanelCss = ko.observable("picker-panel-padding-right");
 
@@ -270,6 +273,15 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var css = "drawer";
                     css += self.latestNotToShow() ? " drawerNotToShow" : "";
                     css += self.latestChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
+                    return css;
+                }, self);
+                self.recentCss = ko.computed(function() {
+                    var css = "drawer";
+                    if(self.recentList().length>0) {
+                        css += "";
+                    }else {
+                        css += " drawerNotToShow";
+                    }
                     return css;
                 }, self);
                 self.customCss = ko.computed(function() {
@@ -1080,6 +1092,30 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                     return dateTimeInfo;
                 };
+                
+                self.getRecentDateTimeInfo = function(data) {
+                    var recent = data;
+                    var start;
+                    var end;
+                    var tmp;
+                    var info;
+                    if(!recent.timePeriod) {
+                        console.log("getRecentDateTimeInfo: timePeriod is invalid in " + JSON.stringify(recent));
+                        return;
+                    }
+                    
+                    if(recent.timePeriod === "Custom") {                        
+                        if(recent.flexRelTimeVal && recent.flexRelTimeOpt) { //for flexible relative time range
+                            return self.getFlexTimePeriod(recent.flexRelTimeVal, recent.flexRelTimeOpt);
+                        }else { //for custom time range
+                            start = oj.IntlConverterUtils.dateToLocalIso(recent.start);
+                            end = oj.IntlConverterUtils.dateToLocalIso(recent.end);
+                            return self.getDateTimeInfo(start.slice(0, 10), end.slice(0, 10), start.slice(10, 16), end.slice(10, 16));
+                        }
+                    }else { //for relative time range in quick picks
+                        return self.timePeriodsNlsObject[recent.timePeriod];
+                    }
+                }
 
                 var curDate;
                 self.init = true;
@@ -1293,7 +1329,13 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.setFocusOnInput(id);
                 };
                 
-                self.setFlexRelTime = function(num, opt) {
+                /**
+                 * 
+                 * @param {type} num - flexible relative time value
+                 * @param {type} opt - flexible relative time option
+                 * @returns start and end time in ISO format
+                 */
+                self.getTimeRangeForFlexRelTime = function(num, opt) {
                     var end = new Date();
                     switch(opt) {
                         case "second":
@@ -1323,6 +1365,17 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     
                     start = oj.IntlConverterUtils.dateToLocalIso(start);
                     end = oj.IntlConverterUtils.dateToLocalIso(end);
+                    
+                    return {
+                        start: start,
+                        end: end
+                    }
+                }
+                
+                self.setFlexRelTime = function(num, opt) {
+                    var timeRange = self.getTimeRangeForFlexRelTime(num, opt);
+                    var start = timeRange.start;
+                    var end = timeRange.end;
                     
                     self.startDate(self.dateConverter2.format(start));
                     self.endDate(self.dateConverter2.format(end));
@@ -1684,51 +1737,115 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.hoverOutDrawer = function(data, event) {
                     $(event.target).removeClass(self.drawerHover);
                 };
+                
+                self.chooseByRecent = function(data, event) {
+                    console.log(data);
+                    var tmp;
+                    var start;
+                    var end;
+                    var tpNls = self.timePeriodsNlsObject[data.timePeriod];
+                    if(tpNls === self.timePeriodCustom) {
+                        if(data.flexRelTimeVal && data.flexRelTimeOpt) {
+                            tmp = self.getTimeRangeForFlexRelTime(data.flexRelTimeVal, data.flexRelTimeOpt);
+                            start = tmp.start;
+                            end = tmp.end;
+                            
+                            self.lrCtrlVal("flexRelTimeCtrl");
+                            self.flexRelTimeVal(data.flexRelTimeVal);
+                            self.flexRelTimeOpt([data.flexRelTimeOpt]);
+                        }else {
+                            start = oj.IntlConverterUtils.dateToLocalIso(data.start);
+                            end = oj.IntlConverterUtils.dateToLocalIso(data.end);
+                        }
+                    }else {
+                        tmp = self.getTimeRangeForQuickPick(tpNls);
+                        start = tmp.start;
+                        end = tmp.end;                       
+                        
+                        self.selectByDrawer(true);
+                        self.setTimePeriodChosen(self.timePeriod());
+                    }
+                    
+                    self.startDate(self.dateConverter2.format(start));
+                    self.endDate(self.dateConverter2.format(end));
+
+                    self.startTime(start.slice(10, 16));
+                    self.endTime(end.slice(10, 16));
+                            
+                    self.timePeriod(tpNls);
+                    self.recentList.remove(data);
+                    setTimeout(function() {self.applyClick();}, 0);
+                };
+                
+                /**
+                 * 
+                 * @param {type} timePeriod - should be nls string
+                 * @returns ISO format start and end time for specific quick pick
+                 */
+                self.getTimeRangeForQuickPick = function(timePeriod) {
+                    var curDate;
+                    var start;
+                    var end;
+//                    curDate = new Date(2016, 2, 13, 3, 0, 0);
+                    curDate = new Date();
+                    if (timePeriod === self.timePeriodLatest) {
+                        start = curDate;
+                        end = curDate;
+                    } else if (timePeriod === self.timePeriodToday) { //set time range from mid-night to current point
+                        start = new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate());
+                        end = curDate;
+                    } else if (timePeriod === self.timePeriodLast1year) {
+                        start = new Date(curDate.getFullYear() - 1, curDate.getMonth(), curDate.getDate(), curDate.getHours(), curDate.getMinutes());
+                        end = curDate;
+                    } else if (self.isTimePeriodLessThan1day(timePeriod)) {  //if timerange is less than 1 day, do not adjust start and end during daylight saving time
+                        start = new Date(curDate - self.timePeriodObject()[timePeriod][1]);
+                        end = curDate;
+                        if (self.adjustLastX) {
+                            var adjustedTime = self.adjustLastX(start, end);
+                            start = adjustedTime.start;
+                            end = adjustedTime.end;
+                        }
+                    } else {
+                        start = new Date(curDate - self.timePeriodObject()[timePeriod][1]);
+                        //calculate timezone difference to solve issues caused by daylight saving.
+                        var timezoneDiffInMillis = (curDate.getTimezoneOffset() - start.getTimezoneOffset()) * 60 * 1000;
+                        start = new Date(start.getTime() - timezoneDiffInMillis);
+                        end = curDate;
+                        if (self.adjustLastX) {
+                            var adjustedTime = self.adjustLastX(start, end);
+                            start = adjustedTime.start;
+                            end = adjustedTime.end;
+                        }
+                    }
+
+                    start = oj.IntlConverterUtils.dateToLocalIso(start);
+                    end = oj.IntlConverterUtils.dateToLocalIso(end);
+                    
+                    return {
+                        start: start,
+                        end: end
+                    }
+                }
 
                 //select time period
                 self.chooseTimePeriod = function (data, event) {
                     self.setFocusOnInput("inputStartDate_" + self.randomId);
                     self.lastFocus(1);
+                    
+                    if($(event.target).text() === self.timePeriodRecent) {
+                        if(self.recentList().length>0) {
+                            $("#recentPanel_"+self.randomId).ojPopup("open", "#drawer14_"+self.randomId, {"my": "start top", "at": "end top"});
+                        }
+                        return;
+                    }
 
                     if ($(event.target).text() !== self.timePeriodCustom) {
                         //just show window limit error in custom mode
                         self.beyondWindowLimitError(false);
                         self.setMinMaxDate(null, null);
                         self.lrCtrlVal("timeLevelCtrl");
-//                        curDate = new Date(2016, 2, 13, 3, 0, 0);
-                        curDate = new Date();
-                        if($(event.target).text() === self.timePeriodLatest) {
-                           start = curDate;
-                           end = curDate;
-                        }else if($(event.target).text() === self.timePeriodToday) { //set time range from mid-night to current point
-                            start = new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate());
-                            end = curDate;
-                        }else if($(event.target).text() === self.timePeriodLast1year) {
-                            start = new Date(curDate.getFullYear() - 1, curDate.getMonth(), curDate.getDate(), curDate.getHours(), curDate.getMinutes());
-                            end = curDate;
-                        }else if(self.isTimePeriodLessThan1day($(event.target).text())) {  //if timerange is less than 1 day, do not adjust start and end during daylight saving time
-                            start = new Date(curDate - self.timePeriodObject()[$(event.target).text()][1]);
-                            end = curDate;
-                            if(self.adjustLastX) {
-                                var adjustedTime = self.adjustLastX(start, end);
-                                start = adjustedTime.start;
-                                end = adjustedTime.end;
-                            }
-                        }else {
-                            start = new Date(curDate - self.timePeriodObject()[$(event.target).text()][1]);
-                            //calculate timezone difference to solve issues caused by daylight saving.
-                            var timezoneDiffInMillis = (curDate.getTimezoneOffset() - start.getTimezoneOffset()) * 60 * 1000;
-                            start = new Date(start.getTime() - timezoneDiffInMillis);
-                            end = curDate;
-                            if(self.adjustLastX) {
-                                var adjustedTime = self.adjustLastX(start, end);
-                                start = adjustedTime.start;
-                                end = adjustedTime.end;
-                            }
-                        }
 
-                        start = oj.IntlConverterUtils.dateToLocalIso(start);
-                        end = oj.IntlConverterUtils.dateToLocalIso(end);
+                        self.getTimeRangeForQuickPick($(event.target).text());
 
                         self.startDate(self.dateConverter2.format(start));
                         self.endDate(self.dateConverter2.format(end));
@@ -1823,11 +1940,22 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         });
                         self.timeFilterInfo(self.generateTfTooltip(hourOfDay, self.tfInstance.daysChecked(), self.tfInstance.monthsChecked()));
                     }
+                    
+                    var tmpList = self.recentList();
+                    tmpList.unshift({start: new Date(start), end: new Date(end), timePeriod: timePeriod, 
+                                    timeFilter: self.timeFilter(), flexRelTimeVal: flexRelTimeVal, flexRelTimeOpt: flexRelTimeOpt});
+                    self.recentList(tmpList.slice(0, 5));
 
                     if (self.callbackAfterApply) {
                         $.ajax({
                             url: "/emsaasui/uifwk/empty.html",
                             success: function () {
+                                console.log("Returned values from date/time picker are: ");
+                                console.log("start: "+new Date(start));
+                                console.log("end: "+new Date(end));
+                                console.log("time period: "+timePeriod);
+                                console.log("time filter: "+JSON.stringify(self.timeFilter()));
+                                console.log("flexible relative time value: "+flexRelTimeVal+", option: "+flexRelTimeOpt);
                                 self.callbackAfterApply(new Date(start), new Date(end), timePeriod, self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
                             },
                             error: function () {
