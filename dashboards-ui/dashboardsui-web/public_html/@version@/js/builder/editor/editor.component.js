@@ -9,11 +9,12 @@ define(['knockout',
         'ojs/ojcore',
         'dfutil',
         'uifwk/js/util/usertenant-util',
+        'uifwk/js/sdk/context-util',
 //        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
         'builder/dashboard.tile.model',
         'builder/editor/editor.tiles'
     ],
-    function(ko, $, oj, dfu,userTenantUtilModel/*, TargetSelectorUtils*/) {
+    function(ko, $, oj, dfu,userTenantUtilModel, cxtModel/*, TargetSelectorUtils*/) {
         function Cell(row, column) {
             var self = this;
 
@@ -328,6 +329,7 @@ define(['knockout',
                 }
             }   
             
+            var cxtUtil = new cxtModel();
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                 var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');
                 var url = Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), versionPlus);
@@ -354,7 +356,7 @@ define(['knockout',
                             }
                             widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
                         }
-                        window.location = widgetUrl;
+                        window.location = cxtUtil.appendOMCContext(widgetUrl);
                     });
                     };
                 }

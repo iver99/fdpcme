@@ -7,8 +7,9 @@ define([
         function UIFWKContextUtil() {
             var self = this;
             var dfu = new dfuModel();
-            var supportedContext = [{'contextName': 'timeRange','paramNames': ['startTime', 'endTime', 'timePeriod']}, 
-                                    {'contextName': 'composite','paramNames': ['compositeType', 'compositeName', 'compositeMEID']}
+            var supportedContext = [{'contextName': 'time','paramNames': ['startTime', 'endTime', 'timePeriod']}, 
+                                    {'contextName': 'composite','paramNames': ['compositeType', 'compositeName', 'compositeMEID']},
+                                    {'contextName': 'entity','paramNames': ['entityType', 'entityName', 'entityMEID']}
                                    ];
             
             //Initialize window _uifwk object
@@ -126,7 +127,7 @@ define([
              * @returns 
              */
             self.setStartTime = function(startTime) {
-                setIndividualContext('timeRange', 'startTime', startTime);
+                setIndividualContext('time', 'startTime', startTime);
             };
             
             /**
@@ -136,7 +137,7 @@ define([
              * @returns {String} OMC global context of start time
              */
             self.getStartTime = function() {
-                return getIndividualContext('timeRange', 'startTime');
+                return getIndividualContext('time', 'startTime');
             };
             
             /**
@@ -146,7 +147,7 @@ define([
              * @returns 
              */
             self.setEndTime = function(endTime) {
-                setIndividualContext('timeRange', 'endTime', endTime);
+                setIndividualContext('time', 'endTime', endTime);
             };
             
             /**
@@ -156,7 +157,7 @@ define([
              * @returns {String} OMC global context of end time
              */
             self.getEndTime = function() {
-                return getIndividualContext('timeRange', 'endTime');
+                return getIndividualContext('time', 'endTime');
             };
             
             /**
@@ -166,7 +167,7 @@ define([
              * @returns 
              */
             self.setTimePeriod = function(timePeriod) {
-                setIndividualContext('timeRange', 'timePeriod', timePeriod);
+                setIndividualContext('time', 'timePeriod', timePeriod);
             };
             
             /**
@@ -176,7 +177,7 @@ define([
              * @returns {String} OMC global context of time period
              */
             self.getTimePeriod = function() {
-                return getIndividualContext('timeRange', 'timePeriod');
+                return getIndividualContext('time', 'timePeriod');
             };
             
             /**
@@ -240,6 +241,111 @@ define([
             };
             
             /**
+             * Set OMC global context of entity guid.
+             * 
+             * @param {String} entityMEID Entity GUID
+             * @returns 
+             */
+            self.setEntityMeId = function(entityMEID) {
+                setIndividualContext('entity', 'entityMEID', entityMEID);
+            };
+            
+            /**
+             * Get OMC global context of entity guid.
+             * 
+             * @param 
+             * @returns {String} OMC global context of entity guid
+             */
+            self.getEntityMeId = function() {
+                return getIndividualContext('entity', 'entityMEID');
+            };
+            
+            /**
+             * Set OMC global context of entity type.
+             * 
+             * @param {String} entityType Entity type
+             * @returns 
+             */
+            self.setEntityType = function(entityType) {
+                setIndividualContext('entity', 'entityType', entityType);
+            };
+            
+            /**
+             * Get OMC global context of entity type.
+             * 
+             * @param 
+             * @returns {String} OMC global context of entity type
+             */
+            self.getEntityType = function() {
+                return getIndividualContext('entity', 'entityType');
+            };
+            
+            /**
+             * Set OMC global context of entity name.
+             * 
+             * @param {String} entityName Entity name
+             * @returns 
+             */
+            self.setEntityName = function(entityName) {
+                setIndividualContext('entity', 'entityName', entityName);
+            };
+            
+            /**
+             * Get OMC global context of entity name.
+             * 
+             * @param 
+             * @returns {String} OMC global context of entity name
+             */
+            self.getEntityName = function() {
+                return getIndividualContext('entity', 'entityName');
+            };
+            
+            /**
+             * Clear OMC global composite context.
+             * 
+             * @param 
+             * @returns 
+             */
+            self.clearCompositeContext = function() {
+                clearIndividualContext('composite');
+            };
+            
+            /**
+             * Clear OMC global time context.
+             * 
+             * @param 
+             * @returns 
+             */
+            self.clearTimeContext = function() {
+                clearIndividualContext('time');
+            };
+            
+            /**
+             * Clear OMC global entity context.
+             * 
+             * @param 
+             * @returns 
+             */
+            self.clearEntityContext = function() {
+                clearIndividualContext('entity');
+            };
+            
+            /**
+             * Clear individual OMC global context.
+             * 
+             * @param {String} contextName Context definition name
+             * @returns 
+             */
+            function clearIndividualContext(contextName) {
+                if (contextName) {
+                    var omcContext = self.getOMCContext();
+                    if (omcContext[contextName]) {
+                        delete omcContext[contextName];
+                    }
+                }
+            }
+            
+            /**
              * Set individual OMC global context.
              * 
              * @param {String} contextName Context definition name
@@ -248,12 +354,19 @@ define([
              * @returns 
              */
             function setIndividualContext(contextName, paramName, value) {
-                if (contextName && paramName && value) {
+                if (contextName && paramName) {
                     var omcContext = self.getOMCContext();
-                    if (!omcContext[contextName]) {
-                        omcContext[contextName] = {};
+                    //If value is not null and not empty
+                    if (value) {
+                        if (!omcContext[contextName]) {
+                            omcContext[contextName] = {};
+                        }
+                        omcContext[contextName][paramName] = decodeURIComponent(value);
                     }
-                    omcContext[contextName][paramName] = decodeURIComponent(value);
+                    //Otherwise, if value is null or empty then clear the context
+                    else if (omcContext[contextName] && omcContext[contextName][paramName]) {
+                        delete omcContext[contextName][paramName];
+                    }
                 }
             }
             

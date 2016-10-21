@@ -77,10 +77,11 @@ require(['knockout',
     'jquery',
     'dfutil',
     'ojs/ojcore',
+    'uifwk/js/sdk/context-util',
     'ojs/ojknockout',
     'ojs/ojbutton'
 ],
-function(ko, $, dfu, oj)
+function(ko, $, dfu, oj, cxtModel)
 {
     if (!ko.components.isRegistered('df-oracle-branding-bar')) {
         ko.components.register("df-oracle-branding-bar",{
@@ -126,7 +127,7 @@ function(ko, $, dfu, oj)
 
     function ErrorPageModel() {
         var self = this;
-
+        var cxtUtil = new cxtModel();
         self.errorPageTitle = oj.Translations.getTranslatedString("DBS_ERROR_PAGE_TITLE");
 
         var msgKey = dfu.getUrlParam("msg");
@@ -138,7 +139,7 @@ function(ko, $, dfu, oj)
                     self.errorPageMessage = oj.Translations.getTranslatedString('DBS_ERROR_SENSITIVE_WORD');
                 }
                 self.defaultHomeLinkVisible = msgKey === 'DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG' ? true : false;
-                var params = {"style" : "dbd-error-url", "url" : "/emsaasui/emcpdfui/welcome.html"};
+                var params = {"style" : "dbd-error-url", "url" : cxtUtil.appendOMCContext("/emsaasui/emcpdfui/welcome.html")};
                 self.goHomePageText = oj.Translations.getTranslatedString("DBS_ERROR_TEXT_GO_HOME_PAGE", params);
                 self.invalidUrl = dfu.getUrlParam("invalidUrl");
                 if (self.invalidUrl) {
@@ -165,7 +166,7 @@ function(ko, $, dfu, oj)
                     self.errorPageMessage = oj.Translations.getTranslatedString('DBS_ERROR_PAGE_NOT_FOUND_MSG');
                 }
                 self.defaultHomeLinkVisible = msgKey === 'DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG' ? true : false;
-                var params = {"style" : "dbd-error-url", "url" : "/emsaasui/emcpdfui/welcome.html"};
+                var params = {"style" : "dbd-error-url", "url" : cxtUtil.appendOMCContext("/emsaasui/emcpdfui/welcome.html")};
                 self.goHomePageText = oj.Translations.getTranslatedString("DBS_ERROR_TEXT_GO_HOME_PAGE", params);
                 self.invalidUrl = dfu.getUrlParam("invalidUrl");
                 if (self.invalidUrl) {
