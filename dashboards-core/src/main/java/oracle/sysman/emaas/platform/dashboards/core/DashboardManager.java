@@ -698,9 +698,9 @@ public class DashboardManager
 			//			concatIncludedApplicationTypes(filter, sb1);
 			index = concatIncludedOwners(filter, sb1, index, paramList);
 		}
-		if(!apps.isEmpty()){
+		/*if(!apps.isEmpty()){
 			sb1.append(" and p.application_type in (" + sbApps.toString() + ") ");
-		}
+		}*/
 
 		if (queryString != null && !"".equals(queryString)) {
 			Locale locale = AppContext.getInstance().getLocale();
