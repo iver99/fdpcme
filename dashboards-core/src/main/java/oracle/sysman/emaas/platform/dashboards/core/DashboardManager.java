@@ -698,9 +698,9 @@ public class DashboardManager
 			//			concatIncludedApplicationTypes(filter, sb1);
 			index = concatIncludedOwners(filter, sb1, index, paramList);
 		}
-		/*if(!apps.isEmpty()){
-			sb1.append(" and p.application_type in (" + sbApps.toString() + ") ");
-		}*/
+		if(!apps.isEmpty()){
+			sb1.append(" and (p.application_type in (" + sbApps.toString() + ") or p.application_type is null) ");
+		}
 
 		if (queryString != null && !"".equals(queryString)) {
 			Locale locale = AppContext.getInstance().getLocale();
@@ -713,12 +713,14 @@ public class DashboardManager
 			sb1.append(" AND (p.DASHBOARD_ID IN (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN "
 					+ "(SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE t.PROVIDER_NAME IN ("
 					+ filter.getIncludedWidgetProvidersString()
-					+ " )) AND p2.DASHBOARD_SET_ID >1000)) AND p.APPLICATION_TYPE IS NULL");
+					+ " )) )) ");
 		}
 		if (sb1.length() > 0) {
 			sb.append(") OR ( 1=1");
 			sb.append(sb1);
 		}
+			sb.append("and (p.share_public = 1 or p.owner = ?"+ index++ +" or p.is_system=1)");
+			paramList.add(UserContext.getCurrentUser());
 			sb.append("))");
 
 		//query
