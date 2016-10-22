@@ -663,6 +663,7 @@ public class DashboardManager
 			sb.append(" and p.show_inhome = 1 ");
 		}
 
+		StringBuilder sbApps = new StringBuilder();
 		if (apps.isEmpty()) {
 			sb.append(" and p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
 					+ ") ");
@@ -670,7 +671,6 @@ public class DashboardManager
 			paramList.add(currentUser);
 		}
 		else {
-			StringBuilder sbApps = new StringBuilder();
 			for (int i = 0; i < apps.size(); i++) {
 				DashboardApplicationType app = apps.get(i);
 				if (i != 0) {
@@ -697,6 +697,9 @@ public class DashboardManager
 			//			concatIncludedApplicationTypes(filter, sb1);
 			index = concatIncludedOwners(filter, sb1, index, paramList);
 		}
+		/*if(!apps.isEmpty()){
+			sb1.append(" and p.application_type in (" + sbApps.toString() + ") ");
+		}*/
 
 		if (queryString != null && !"".equals(queryString)) {
 			Locale locale = AppContext.getInstance().getLocale();
