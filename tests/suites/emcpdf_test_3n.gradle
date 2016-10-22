@@ -117,7 +117,7 @@ dependencies{
 	restAssured.exclude module:'groovy'
     }
 }
-
+project.ext.omctf_omcCloudSetup_additionalParam = "-skipagents -skipomr"
 //Task added from "emcpdf_qa_test_3n"
 task QATest(type:EMTest,dependsOn:omcSetup ) {
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
@@ -144,6 +144,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB')
             }
         }
     }

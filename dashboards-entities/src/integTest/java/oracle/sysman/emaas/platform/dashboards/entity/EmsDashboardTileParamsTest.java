@@ -1,17 +1,17 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
-import static org.testng.Assert.assertEquals;
+import org.testng.annotations.Test;
 
 import java.util.Date;
 
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
 
 
 @Test(groups = {"s1"})
 public class EmsDashboardTileParamsTest { 
     Date now = new Date();
     private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10,10,10, now,
-            "elephant","elephant","elephant","elephant",10,10, "{}");
+            "elephant","elephant","elephant","elephant",10,10,1, "{}");
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
             now,
             emsDashboard,
@@ -42,7 +42,9 @@ public class EmsDashboardTileParamsTest {
             "lion",
             10,
             10,
-            10L);
+            10L,
+            0,
+		new Date());
     private EmsDashboardTileParams emsDashboardTileParams = new
             EmsDashboardTileParams(
             10,

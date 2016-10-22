@@ -547,6 +547,115 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory,unpackFo
     
     doLast {
         delete 'public_html/@version@/css'
+	
+	//add setting to homeMain.js
+	File homeMainFile = new File(compiledDir+'/@version@/js/homeMain.js')
+	File newFile1 = new File(compiledDir+'/@version@/js/homeMain-output.js')
+	newFile1.withPrintWriter { out ->
+	    def linenumber = 1
+	    homeMainFile.eachLine { line ->
+		if (linenumber == 10){
+		    out.print(line)
+		    out.println("\nwindow.gradleDevMode=true; \n")
+		} else {
+		    out.println(line)
+		}
+		linenumber += 1
+	    }
+	}
+
+	//add setting to builderMain.js
+	File builderMainFile = new File(compiledDir+'/@version@/js/builderMain.js')
+	File newFile2 = new File(compiledDir+'/@version@/js/builderMain-output.js')
+	newFile2.withPrintWriter { out ->
+	    def linenumber = 1
+	    builderMainFile.eachLine { line ->
+		if (linenumber == 10){
+		    out.print(line)
+		    out.println("\nwindow.gradleDevMode=true; \n")
+		} else {
+		    out.println(line)
+		}
+		linenumber += 1
+	    }
+	}
+	
+	//add setting to welcomeMain.js
+	File welcomeMainFile = new File(compiledDir+'/@version@/js/welcomeMain.js')
+	File newFile3 = new File(compiledDir+'/@version@/js/welcomeMain-output.js')
+	newFile3.withPrintWriter { out ->
+	    def linenumber = 1
+	    welcomeMainFile.eachLine { line ->
+		if (linenumber == 3){
+		    out.print(line)
+		    out.println("\nwindow.gradleDevMode=true; \n")
+		} else {
+		    out.println(line)
+		}
+		linenumber += 1
+	    }
+	}
+
+	//add setting to error.js
+	File errorFile = new File(compiledDir+'/@version@/js/error.js')
+	File newFile4 = new File(compiledDir+'/@version@/js/error-output.js')
+	newFile4.withPrintWriter { out ->
+	    def linenumber = 1
+	    errorFile.eachLine { line ->
+		if (linenumber == 4){
+		    out.print(line)
+		    out.println("\nwindow.gradleDevMode=true; \n")
+		} else {
+		    out.println(line)
+		}
+		linenumber += 1
+	    }
+	}
+	
+	homeMainFile.renameTo(compiledDir+'/@version@/js/homeMain_bak.js')
+	newFile1.renameTo(compiledDir+'/@version@/js/homeMain.js')
+	
+	builderMainFile.renameTo(compiledDir+'/@version@/js/builderMain_bak.js')
+	newFile2.renameTo(compiledDir+'/@version@/js/builderMain.js')
+
+	welcomeMainFile.renameTo(compiledDir+'/@version@/js/welcomeMain_bak.js')
+	newFile3.renameTo(compiledDir+'/@version@/js/welcomeMain.js')
+	
+
+	errorFile.renameTo(compiledDir+'/@version@/js/error_bak.js')
+	newFile4.renameTo(compiledDir+'/@version@/js/error.js')
+
+	String originalCode = "bundles: (window.DEV_MODE !==null && typeof window.DEV_MODE ===\"object\")"
+	String replacedCode = "bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ===\"object\") || (window.gradleDevMode !==null && typeof window.gradleDevMode===\"boolean\"))"
+
+ 	File mapFile = new File(compiledDir+'/@version@/js/homeMain.js')
+        String contents = mapFile.getText('UTF-8')        
+        contents = contents.replaceAll(Pattern.quote(originalCode), replacedCode)
+        mapFile.write(contents, 'UTF-8')
+
+	mapFile = new File(compiledDir+'/@version@/js/builderMain.js')
+        contents = mapFile.getText('UTF-8')        
+        contents = contents.replaceAll(Pattern.quote(originalCode), replacedCode)
+        mapFile.write(contents, 'UTF-8')
+
+	mapFile = new File(compiledDir+'/@version@/js/welcomeMain.js')
+        contents = mapFile.getText('UTF-8')        
+        contents = contents.replaceAll(Pattern.quote(originalCode), replacedCode)
+        mapFile.write(contents, 'UTF-8')
+
+	mapFile = new File(compiledDir+'/@version@/js/error.js')
+        contents = mapFile.getText('UTF-8')        
+        contents = contents.replaceAll(Pattern.quote(originalCode), replacedCode)
+        mapFile.write(contents, 'UTF-8')
+		
+	delete compiledDir+'/@version@/js/homeMain-output.js'
+	delete compiledDir+'/@version@/js/homeMain_bak.js'
+	delete compiledDir+'/@version@/js/builderMain-output.js'
+	delete compiledDir+'/@version@/js/builderMain_bak.js'
+	delete compiledDir+'/@version@/js/welcomeMain-output.js'
+	delete compiledDir+'/@version@/js/welcomeMain_bak.js'
+	delete compiledDir+'/@version@/js/error-output.js'
+	delete compiledDir+'/@version@/js/error_bak.js'
     }    
 }
 test {

@@ -39,7 +39,6 @@ define(['knockout',
 
             var self = this;
             $b.registerObject(self, 'DashboardTilesViewModel');
-            self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.scrollbarWidth = uiutil.getScrollbarWidth();
 
             widgetAreaContainer = $b.findEl('.widget-area');
@@ -49,6 +48,7 @@ define(['knockout',
 
             self.editor = new Builder.TilesEditor($b, Builder.isSmallMediaQuery() ? self.tabletMode : self.normalMode);
             self.editor.tiles = $b.dashboard.tiles;
+            self.isMobileDevice = self.editor.mode.editable === true ? 'false' : 'true';
             widgetAreaWidth = widgetAreaContainer.width();
 
             self.previousDragCell = null;
@@ -160,6 +160,7 @@ define(['knockout',
                 $b.addEventListener($b.EVENT_TILE_RESTORED, self.dashboardRestoredHandler);
                 $b.addEventListener($b.EVENT_AUTO_REFRESH_CHANGED, self.autoRefreshChanged);
                 $b.addEventListener($b.EVENT_AUTO_REFRESHING_PAGE, self.autoRefreshingPage);
+                $b.addEventListener($b.EVENT_DASHBOARD_CLEANUP_DELETED_WIDGETS, self.removeTilesForDeletedWidgets);
                 self.initializeTiles();
             };
 
@@ -374,7 +375,7 @@ define(['knockout',
                 if (change instanceof Builder.TileChange){
                     tChange = change;
                 }
-                var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()), self.targets, null,tChange, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
+                var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd(), self.timeSelectorModel.viewTimePeriod()), self.targets, null,tChange, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
                 Builder.fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent);
             };
 
@@ -417,7 +418,7 @@ define(['knockout',
                         self.beforeResizeWidth = self.resizingTile().cssWidth();
                         self.beforeResizeHeight = self.resizingTile().cssHeight();
                         self.currentWigedtWidth(self.resizingTile().cssWidth());
-                        self.currentWigedtHeight(self.resizingTile().cssHeight());
+                        self.currentWigedtHeight(self.resizingTile().cssHeight());                  
                     }
                     self.tilesView.disableDraggable();
                 });
@@ -451,8 +452,8 @@ define(['knockout',
                     self.resizingTile(null);
                     self.resizingOptions(null);
                     $(this).css('cursor', 'default');
-                    $('#globalBody').removeClass('none-user-select');
-                    self.tilesView.enableDraggable();
+                    $('#globalBody').removeClass('none-user-select');       
+                    self.tilesView.enableDraggable();                 
                 });
 
                 //close widget menu if the page is moved up/down by scroll bar
@@ -524,6 +525,8 @@ define(['knockout',
                     if(tile.isMaximized()) {
                         self.maximize(tile);
                         return;
+                    }else{
+                        self.editor.updateTilePosition(tile, tile.row(), self.editor.mode.getModeColumn(tile));//set column according to modeColumn for resizing from left edge
                     }
                 }
                 for (var i = 0; i < self.editor.tiles().length; i++) {
@@ -838,13 +841,13 @@ define(['knockout',
 
             var globalTimer = null;
             self.postDocumentShow = function() {
-                $b.triggerBuilderResizeEvent('resize builder after document show');
                 self.initializeMaximization();
                 $b.triggerEvent($b.EVENT_TILE_EXISTS_CHANGED, null, self.editor.tiles().length > 0);
                 self.triggerTileTimeControlSupportEvent();
                 //avoid brandingbar disappear when set font-size of text
                 $("#globalBody").addClass("globalBody");
                 self.editor.initializeMode();
+                $b.triggerBuilderResizeEvent('resize builder after document show');
             };
 
             self.notifyWindowResize = function() {
@@ -853,6 +856,27 @@ define(['knockout',
                     if(tile.type() === "DEFAULT") {
                         self.notifyTileChange(tile, new Builder.TileChange("POST_WINDOWRESIZE"));
                     }
+                }
+            };
+            
+            self.removeTilesForDeletedWidgets = function() {
+                // find deleted tiles
+                var deletedTiles = [];
+                for (var i = 0; i < self.editor.tiles().length; i++) {
+                    if (self.editor.tiles()[i].widgetDeleted && self.editor.tiles()[i].widgetDeleted())
+                        deletedTiles.push(self.editor.tiles()[i]);
+                }
+
+                deletedTiles.sort(function(tile1, tile2) {
+                    if (!tile1.widgetDeletionTime || !tile1.widgetDeletionTime() || tile2.widgetDeletionTime || !tile2.widgetDeletionTime()) return 0;
+                    return new Date(tile1.widgetDeletionTime()) - new Date(tile2.widgetDeletionTime());
+                });
+
+                for (var i = 0; i < deletedTiles.length; i++) {
+                    var tile = deletedTiles[i];
+                    self.editor.deleteTile(tile);
+                    console.info("Dashboard page handle the deleted widgets: widget ID is: " + tile.WIDGET_UNIQUE_ID() + ", widget name is: " + tile.WIDGET_NAME());
+                    self.notifyTileChange(tile, new Builder.TileChange("POST_DELETE"));
                 }
             };
 
@@ -902,7 +926,7 @@ define(['knockout',
 
             self.returnFromPageTsel = function(targets) {
                 self.targets(targets);
-                var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()), self.targets, null, null, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
+                var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd(), self.timeSelectorModel.viewTimePeriod()), self.targets, null, null, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
                 Builder.fireDashboardItemChangeEvent(self.dashboard.tiles(), dashboardItemChangeEvent);
 
                 if(!self.userExtendedOptions.tsel) {
@@ -958,7 +982,7 @@ define(['knockout',
 
             timeSelectorChangelistener.subscribe(function (value) {
                 if (value.timeRangeChange){
-                    var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),self.targets, null, null, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
+                    var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd(), self.timeSelectorModel.viewTimePeriod()),self.targets, null, null, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
                     Builder.fireDashboardItemChangeEvent(self.dashboard.tiles(), dashboardItemChangeEvent);
                     self.timeSelectorModel.timeRangeChange(false);
                 }
@@ -992,6 +1016,7 @@ define(['knockout',
             self.initEnd = ko.observable(initEnd);
             self.timeSelectorModel.viewStart(initStart);
             self.timeSelectorModel.viewEnd(initEnd);
+            self.timeSelectorModel.viewTimePeriod(self.timePeriod());
             self.datetimePickerParams = {
                 startDateTime: self.initStart,
                 endDateTime: self.initEnd,
@@ -1000,6 +1025,7 @@ define(['knockout',
                 callbackAfterApply: function(start, end, tp) {
                         self.timeSelectorModel.viewStart(start);
                         self.timeSelectorModel.viewEnd(end);
+                        self.timeSelectorModel.viewTimePeriod(tp);
                         if(tp === "Custom") {
                             self.initStart(start);
                             self.initEnd(end);

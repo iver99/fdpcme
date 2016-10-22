@@ -1,0 +1,86 @@
+/* Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.*/
+
+/*
+ * DESCRIPTION
+ *   top level gradle file to run emcpdf_dashboard_uitest, this lrg is for dashboard ui tests under dashboards-ui/dashboardsui-web
+ *
+ * PRIVATE CLASSES
+ *     NONE
+ *
+ * NOTES
+ *    <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ * Caleb       09/20/2016
+ */
+/* *************************************************************************************************
+ *                   BEGIN TEST-INFRA-BLOCK
+ ***************************************************************************************************
+ * DO NOT EDIT THE LINES BELOW. PLEASE ADD YOUR LRG SPECIFIC CODE AFTER 
+ * THE LINE "END OF TEST-INFRA-BLOCK 
+ */
+
+/**
+ * Run the buildscript{} configuration to pull the em-test-infraplugin.
+ */
+buildscript {
+    apply from: 'test-buildscript-apply.gradle' 
+}
+apply from: 'test-project-apply.gradle'
+apply plugin: 'groovy'
+
+/***************** OMCTF Plugin **********************/
+configurations { omctfPluginConfig }
+dependencies {
+    omctfPluginConfig group: "com.oracle.omc.omctf.testsdk", name: "OMCTFPlugin", version: "${omctfPluginVersion}"
+}
+apply from: getAbsoluteFilePath(project.configurations.omctfPluginConfig,"OMCTFPlugin")
+/************** End of OMCTFPlugin *******************/
+
+import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
+
+/* *************************************************************************************************
+ *                   END OF TEST-INFRA-BLOCK
+ ***************************************************************************************************/
+
+
+def emcpdfCommonAPIVer = getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.0.0+')
+
+//Update the lrgConfig configuration to specify where the test jar is.
+dependencies{
+    testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-uitest-integ-tests', version: "${REPO_BID}")
+    {
+	exclude('module':'groovy')
+    }
+
+     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
+	
+     
+    configurations{
+	restAssured.exclude module:'groovy'
+    }
+}
+
+
+//Task is for dashboard UI Test
+task e2e (type: EMTest, dependsOn:omcSetup ){
+options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
+        test('name': 'DashboardUITest') {
+            classes([:]) {
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestHomePage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestBrandingBar')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB')
+            }
+        }
+    }
+    useWebdriver = true
+    useRestAssured = true
+
+}
+
+task emcpdf_allsrg_3n (dependsOn:[e2e, omcTeardown]) {
+    omcTeardown.mustRunAfter(e2e)
+    apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")
+}

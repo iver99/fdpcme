@@ -20,10 +20,7 @@ import com.google.common.base.Predicate;
  */
 public class WaitUtil
 {
-	private WaitUtil() {
-	  }
-
-	public static final long WAIT_TIMEOUT = 900; //unit sec
+	public static final long WAIT_TIMEOUT = 30; //unit sec
 
 	public static void waitForPageFullyLoaded(final oracle.sysman.qatool.uifwk.webdriver.WebDriver webd)
 	{

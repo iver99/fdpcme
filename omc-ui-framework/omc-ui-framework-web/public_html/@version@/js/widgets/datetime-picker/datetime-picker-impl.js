@@ -1,5 +1,5 @@
-define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knockout", "jquery", "uifwk/@version@/js/util/message-util-impl", "ojs/ojcore", "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg", "ojs/ojdatetimepicker"],
-        function (ko, $, msgUtilModel, oj, nls) {
+define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knockout", "jquery", "uifwk/@version@/js/util/message-util-impl", "uifwk/@version@/js/util/df-util-impl", "ojs/ojcore", "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg", "ojs/ojdatetimepicker"],
+        function (ko, $, msgUtilModel, dfuModel, oj, nls) {
 
             //Firefox ignores milliseconds when converting a date to Date object, while it doesn't when converting a number.
             //The funciton is used to keep the milliseconds no matter it is a Date Object or number so that when calculating time periods, it is precise.
@@ -43,6 +43,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
              * @returns {undefined}
              */
             function dateTimePickerViewModel(params) {
+                //Append uifwk css file into document head
+                var dfu = new dfuModel();
+                dfu.loadUifwkCss();
+                
                 var self = this;
                 var msgUtil = new msgUtilModel();
                 console.log("Initialize date time picker! The params are: ");
@@ -54,8 +58,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 var start, end;
                 var timeDiff, dateTimeDiff;
+                
+                var daysArray = ["1", "2", "3", "4", "5", "6", "7"];
+                var monthsArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
 
-                self.tfInstance = {"showTimeFilterError": ko.observable(false), "timeFilterValue": ko.observable("0-23"), "daysChecked": ko.observableArray(["1", "2", "3", "4", "5", "6", "7"]), "monthsChecked": ko.observableArray(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"])};
+                self.tfInstance = {"showTimeFilterError": ko.observable(false), "timeFilterValue": ko.observable("0-23"), "daysChecked": ko.observableArray(daysArray), "monthsChecked": ko.observableArray(monthsArray)};
                 self.showTimeFilterError = ko.observable(self.tfInstance.showTimeFilterError());
 
                 if(params.appId) {
@@ -1108,7 +1115,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.endTime(end.slice(10, 16));
 
                     self.dateTimeInfo(self.getDateTimeInfo(start.slice(0, 10), end.slice(0, 10), self.startTime(), self.endTime()));
-
+                    
                     self.lastStartDate(self.startDate());
                     self.lastEndDate(self.endDate());
                     self.lastStartTime(self.startTime());
@@ -1595,20 +1602,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                     //if time filter is enabled, pass time info in JSON format.
                     if(self.enableTimeFilter()) {
-                        var hourOfDay = [];
-                        var hourRangesOfDay = self.tfInstance.timeFilterValue().split(",");
-                        for(var i=0; i<hourRangesOfDay.length; i++) {
-                            var hourRange = hourRangesOfDay[i].split("-");
-                            if(hourRange.length !== 2) {
-                                console.error("wrong input for time filter!");
-                                return;
-                            }
-                            var hourRangeStart = parseInt(hourRange[0].trim());
-                            var hourRangeEnd = parseInt(hourRange[1].trim());
-                            for(var j=hourRangeStart; j<=hourRangeEnd; j++) {
-                                hourOfDay.push(j.toString());
-                            }
-                        }
+                        var hourOfDay = self.getHourOfDayInArray(self.tfInstance.timeFilterValue());
+                        
                         self.timeFilter({
                             "STARTTIME": new Date(start),
                             "ENDTIME": new Date(end),
@@ -1757,6 +1752,24 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                 };
 
+                self.getHourOfDayInArray = function(timeFilterValue) {
+                    var hourOfDay = [];
+                    var hourRangesOfDay = timeFilterValue.split(",");
+                    for (var i = 0; i < hourRangesOfDay.length; i++) {
+                        var hourRange = hourRangesOfDay[i].split("-");
+                        if (hourRange.length !== 2) {
+                            console.error("wrong input for time filter!");
+                            return;
+                        }
+                        var hourRangeStart = parseInt(hourRange[0].trim());
+                        var hourRangeEnd = parseInt(hourRange[1].trim());
+                        for (var j = hourRangeStart; j <= hourRangeEnd; j++) {
+                            hourOfDay.push(j.toString());
+                        }
+                    }
+                    return hourOfDay;
+                }
+
                 self.generateTfTooltip = function(hoursOfDay, daysOfWeek, monthsOfYear) {
                     var i;
                     var tfTooltip = "";
@@ -1764,7 +1777,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.tfInfoIndicatorVisible(false);
                         return null;
                     }else {
-                        $("#dateTimePicker_"+self.randomId+" .oj-select-chosen").css("padding-right", "44px");
+//                        $("#dateTimePicker_"+self.randomId+" .oj-select-chosen").css("padding-right", "44px");
+                        $(".oj-select-chosen").css("padding-right", "44px");
                         self.tfInfoIndicatorVisible(true);
                         //get hours excluded
                         var hoursExcludedInfo = "";
@@ -1860,11 +1874,27 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         return tfTooltip;
                     }
                 };
-
-
+                                    
+                if(params.timeFilterParams) {
+                    self.timeFilterParams = params.timeFilterParams;
+                    if(self.enableTimeFilter()) {
+                        var timeFilterValue = self.timeFilterParams.hoursIncluded ? self.timeFilterParams.hoursIncluded : "0-23";
+                        var hourOfDay = self.getHourOfDayInArray(timeFilterValue);
+                        var daysChecked = self.timeFilterParams.daysIncluded ? self.timeFilterParams.daysIncluded : daysArray;
+                        var monthsChecked = self.timeFilterParams.monthsIncluded ? self.timeFilterParams.monthsIncluded : monthsArray;
+                        self.timeFilterInfo(self.generateTfTooltip(hourOfDay, daysChecked, monthsChecked));
+                        self.tfInstance.timeFilterValue(timeFilterValue);
+                        self.tfInstance.daysChecked(daysChecked);
+                        self.tfInstance.monthsChecked(monthsChecked);
+                    }
+                }else {
+                    self.timeFilterParams = null;
+                }
+                    
                 self.tfParams = {
                     postbox: self.postbox,
                     randomId: self.randomId,
+                    timeFilterParams: self.timeFilterParams,
                     tfChangedCallback: self.updateRange
                 };
                 self.initialize();

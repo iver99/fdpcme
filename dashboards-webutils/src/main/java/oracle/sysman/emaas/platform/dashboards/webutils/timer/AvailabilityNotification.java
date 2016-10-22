@@ -106,7 +106,7 @@ public class AvailabilityNotification implements NotificationListener
 		try {
 			rsm.markServiceUp();
 			GlobalStatus.setDashboardUpStatus();
-			LOGGER.debug("Dashboards service is up");
+			LOGGER.info("Dashboards service is up");
 		}
 		catch (Exception e) {
 			LOGGER.error(e.getLocalizedMessage(), e);

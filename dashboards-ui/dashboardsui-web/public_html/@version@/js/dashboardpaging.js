@@ -81,6 +81,9 @@ DashboardPaging.prototype.IterativeAt = function (start, end) {
                                 {
                                     var __dname = $("<div/>").html(model.get('name')).text();
                                     model.set('name', __dname, {silent: true});
+                                    model.set('enableDescription','',{silent:true});
+                                    model.set('enableEntityFilter','',{silent:true});
+                                    model.set('lastModifiedBy','',{silent:true});
                                     if (model.get('description') && model.get('description') !== null)
                                     {
                                         var __ddesc =  $("<div/>").html(model.get('description')).text();

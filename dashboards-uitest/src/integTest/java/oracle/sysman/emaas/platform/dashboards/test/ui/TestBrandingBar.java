@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 
 /**
  * @version
- * @author charles.c.chen
+ * @author
  * @since release specific (what release of product did this appear in)
  */
 
@@ -57,7 +57,7 @@ public class TestBrandingBar extends LoginAndLogout
 	public void testAdminLinkAPMAdmin()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_apm_admin1");
-		webd.getLogger().info("start to test in testAdminLink");
+		webd.getLogger().info("start to test in testAdminLinkAPMAdmin");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		// navigate to APM page
@@ -65,12 +65,12 @@ public class TestBrandingBar extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(trimUrlParameters(url.substring(url.indexOf("emsaasui") + 9)), "apmUi/index.html");
+		Assert.assertEquals(DashBoardUtils.trimUrlParameters(url.substring(url.indexOf("emsaasui") + 9)), "apmUi/index.html");
 		Assert.assertTrue(BrandingBarUtil.isAdmin(webd));
 
 		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT));
-		/*	Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT));
-			BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);*/
+		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT));
+		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);
 		WaitUtil.waitForPageFullyLoaded(webd);
 		// Agents link
 		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT);
@@ -81,7 +81,7 @@ public class TestBrandingBar extends LoginAndLogout
 		Assert.assertTrue(BrandingBarUtil.isAdmin(webd));
 
 		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT));
-		/*Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT));
+		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT));
 
 		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);
 		WaitUtil.waitForPageFullyLoaded(webd);
@@ -94,7 +94,7 @@ public class TestBrandingBar extends LoginAndLogout
 		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT));
 		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT));
 		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);
-		WaitUtil.waitForPageFullyLoaded(webd);*/
+		WaitUtil.waitForPageFullyLoaded(webd);
 
 		// Test From Home Page
 		BrandingBarUtil.visitDashboardHome(webd);
@@ -102,22 +102,22 @@ public class TestBrandingBar extends LoginAndLogout
 		Assert.assertTrue(BrandingBarUtil.isAdmin(webd));
 
 		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT));
-		/*Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT));
-		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);*/
+		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT));
+		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);
 	}
 
 	@Test
 	public void testAdminLinkAPMUser()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_apm_user1");
-		webd.getLogger().info("start to test in testAdminLink");
+		webd.getLogger().info("start to test in testAdminLinkAPMUser");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_APM);
 		WaitUtil.waitForPageFullyLoaded(webd);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(trimUrlParameters(url.substring(url.indexOf("emsaasui") + 9)), "apmUi/index.html");
+		Assert.assertEquals(DashBoardUtils.trimUrlParameters(url.substring(url.indexOf("emsaasui") + 9)), "apmUi/index.html");
 		Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
 		BrandingBarUtil.visitDashboardHome(webd);
 		WaitUtil.waitForPageFullyLoaded(webd);
@@ -128,7 +128,7 @@ public class TestBrandingBar extends LoginAndLogout
 	public void testAdminLinkITAAdmin()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_admin1");
-		webd.getLogger().info("start to test in testAdminLink");
+		webd.getLogger().info("start to test in testAdminLinkITAAdmin");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		// Navigate to one of the subscribed applications firstly (e.g. APM),
@@ -182,7 +182,7 @@ public class TestBrandingBar extends LoginAndLogout
 	public void testAdminLinkITAUser()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_user1");
-		webd.getLogger().info("start to test in testAdminLink");
+		webd.getLogger().info("start to test in testAdminLinkITAUser");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		// Navigate to one of the subscribed applications firstly (e.g. APM),
@@ -205,7 +205,7 @@ public class TestBrandingBar extends LoginAndLogout
 	public void testAdminLinkLAAdmin()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_admin1");
-		webd.getLogger().info("start to test in testAdminLink");
+		webd.getLogger().info("start to test in testAdminLinkLAAdmin");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_LA);
@@ -227,24 +227,24 @@ public class TestBrandingBar extends LoginAndLogout
 		Assert.assertTrue(BrandingBarUtil.isAdmin(webd));
 
 		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT));
-		/*Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT));
-		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);*/
+		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT));
+		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);
 		WaitUtil.waitForPageFullyLoaded(webd);
-		/*// Alert link
+		// Alert link
 		url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "eventUi/rules/html/rules-dashboard.html");
 		Assert.assertTrue(BrandingBarUtil.isAdmin(webd));
 
 		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT));
-		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT));*/
+		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT));
 		// Test From Home Page
 		BrandingBarUtil.visitDashboardHome(webd);
 		WaitUtil.waitForPageFullyLoaded(webd);
 		Assert.assertTrue(BrandingBarUtil.isAdmin(webd));
 
 		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT));
-		/*Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT));*/
+		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT));
 	}
 
 	@Test
@@ -252,7 +252,7 @@ public class TestBrandingBar extends LoginAndLogout
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_user1");
 		WaitUtil.waitForPageFullyLoaded(webd);
-		webd.getLogger().info("start to test in testAdminLink");
+		webd.getLogger().info("start to test in testAdminLinkLAUser");
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_LA);
 		WaitUtil.waitForPageFullyLoaded(webd);
 		String url = webd.getWebDriver().getCurrentUrl();
@@ -291,7 +291,7 @@ public class TestBrandingBar extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(trimUrlParameters(url.substring(url.indexOf("emsaasui") + 9)), "apmUi/index.html");
+		Assert.assertEquals(DashBoardUtils.trimUrlParameters(url.substring(url.indexOf("emsaasui") + 9)), "apmUi/index.html");
 	}
 
 	@Test
@@ -383,16 +383,5 @@ public class TestBrandingBar extends LoginAndLogout
 		webd.getLogger().info("url = " + url);
 		String sub_str = url.substring(url.indexOf("emsaasui") + 9);
 		Assert.assertEquals(sub_str.substring(0, 23), "emcta/ta/analytics.html");
-	}
-
-	private String trimUrlParameters(String url)
-	{
-		String baseUrl = null;
-		if (url != null) {
-			String[] urlComponents = url.split("\\#|\\?");
-			baseUrl = urlComponents[0];
-		}
-
-		return baseUrl;
 	}
 }

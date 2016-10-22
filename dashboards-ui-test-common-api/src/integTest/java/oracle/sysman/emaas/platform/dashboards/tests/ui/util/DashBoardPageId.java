@@ -75,6 +75,7 @@ public class DashBoardPageId
 
 	public static final String FILTERITALOCATOR = "//*[@id='itaopt']";
 	public static final String FILTERLALOCATOR = "//*[@id='laopt']";
+	public static final String FILTERORCHESTRATIONLOCATOR = "//*[@id='ocsopt']";
 	public static final String FILTERORACLELOCATOR = "//*[@id='oracleopt']";
 	public static final String FILTERSHARELOCATOR = "//*[@id='shareopt']";
 	public static final String FILTERMELOCATOR = "//*[@id='otheropt']";
@@ -171,7 +172,7 @@ public class DashBoardPageId
 	//Note: below xpath is used to identify this 1st dashboard only
 	public static final String INFOBTNID = "//button[@title='Dashboard Information']";//"/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";//"/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";///html/body/div[*]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button";
 
-	public static final String RMBTNID = "/html/body/div[1]/div/div/div[1]/div/div/div[2]/button";//"/html/body/div/div/div/div/div/div/div[2]/button";
+	public static final String RMBTNID = ".dbs-summary-page-info-pop button[name=dsbinfopop_delete]";
 	//Explore Data
 	public static final String EXPLOREDATABTNID = "exploreDataBtn";
 
@@ -371,9 +372,11 @@ public class DashBoardPageId
 
 	public static final String EXTERNALTARGETLINKID = "/html/body/div[4]/div[3]/div/div/div[7]/div/div[2]/div[2]/div[1]/div/div[1]/span";
 	//grid view and list view id
+	public static final String OOBDASHBOARDNAMELOCATORLISTVIEW = "//div[not(contains(@style, 'display:none'))]//*[contains(@class, 'dbs-summaries-container')]";
 	public static final String GRIDVIEWID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[1]/label";
 
 	public static final String LISTVIEWID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[2]/label";
+	public static final String OOBDASHBOARD_LIST_LINK = "//a[contains(text(), '_name_') and contains(@class, 'dbs-dsbsystem')]";
 	public static final String DASHBOARDLISTVIEWDASHBOARDID = "/html/body/div[2]/div/div[1]/div/div/div[2]/div[2]/table/tbody/tr/td[2]/a";
 
 	public static final String DASHBOARDINFOID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/table/tbody/tr/td[5]/button";
