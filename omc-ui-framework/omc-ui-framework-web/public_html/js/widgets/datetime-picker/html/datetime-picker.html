@@ -39,9 +39,9 @@
                 
                 <!-- popup for recently used time ranges -->
                 <div data-bind="ojComponent: {component: 'ojPopup'}, attr: {id: 'recentPanel_'+randomId}">
-                    <!-- ko foreach: recentList -->
+                    <div data-bind="foreach: recentList()">
                         <div style="padding: 5px;" data-bind="html: $parent.getRecentDateTimeInfo($data), event: {mouseover: $parent.hoverOnDrawer, mouseout: $parent.hoverOutDrawer}, click: $parent.chooseByRecent"></div>
-                    <!-- /ko-->
+                    </div>
                 </div>
 
                 <!-- right of panel-->
@@ -51,7 +51,7 @@
                     <div class="lrControlRadios">
                         <span>
                             <input type="radio" name="lrCtrl" value="flexRelTimeCtrl" data-bind="checked: lrCtrlVal">
-                            <label>Last</label>
+                            <label data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_LAST"></label>
                         </span>
                         <input data-bind="ojComponent: {component: 'ojInputNumber', value: flexRelTimeVal, min: 1, max: maxFlexRelTimeVal, 
                                 rootAttributes: {style: 'max-width: 54px; padding-left: 10px;'},
@@ -60,25 +60,60 @@
                             rootAttributes: {style: 'max-width: 108px; padding-left: 10px;'}, 
                             optionChange: flexRelTimeOptChanged, disabled: lrCtrlVal()!=='flexRelTimeCtrl'}">
                             <!-- ko if: shouldShowTimeLevel("second") -->
-                            <option value="second">Second</option>
+                                <!-- ko if: flexRelTimeVal() === 1 -->
+                                    <option value="second" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECOND"></option>
+                                <!-- /ko -->
+                                <!-- ko if: flexRelTimeVal() > 1 -->
+                                    <option value="second" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECONDS"></option>
+                                <!-- /ko -->
                             <!-- /ko -->
                             <!-- ko if: shouldShowTimeLevel("minute") -->
-                            <option value="minute">Minute</option>
+                                <!-- ko if: flexRelTimeVal() === 1 -->
+                                    <option value="minute" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTE"></option>
+                                <!-- /ko -->
+                                <!-- ko if: flexRelTimeVal() > 1 -->
+                                    <option value="minute" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTES"></option>
+                                <!-- /ko -->
                             <!-- /ko -->
                             <!-- ko if: shouldShowTimeLevel("hour") -->
-                            <option value="hour">Hour</option>
+                                <!-- ko if: flexRelTimeVal() === 1 -->
+                                    <option value="hour" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOUR"></option>
+                                <!-- /ko -->
+                                <!-- ko if: flexRelTimeVal() > 1 -->
+                                    <option value="hour" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOURS"></option>
+                                <!-- /ko -->
                             <!-- /ko -->
                             <!-- ko if: shouldShowTimeLevel("day") -->
-                            <option value="day">Day</option>
+                                <!-- ko if: flexRelTimeVal() === 1 -->
+                                    <option value="day" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAY"></option>
+                                <!-- /ko -->
+                                <!-- ko if: flexRelTimeVal() > 1 -->
+                                    <option value="day" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAYS"></option>
+                                <!-- /ko -->
                             <!-- /ko -->
                             <!-- ko if: shouldShowTimeLevel("week") -->
-                            <option value="week">Week</option>
+                                <!-- ko if: flexRelTimeVal() === 1 -->
+                                    <option value="week" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEK"></option>
+                                <!-- /ko -->
+                                <!-- ko if: flexRelTimeVal() > 1 -->
+                                    <option value="week" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEKS"></option>
+                                <!-- /ko -->
                             <!-- /ko -->
                             <!-- ko if: shouldShowTimeLevel("month") -->
-                            <option value="month">Month</option>
+                                <!-- ko if: flexRelTimeVal() === 1 -->
+                                    <option value="month" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTH"></option>
+                                <!-- /ko -->
+                                <!-- ko if: flexRelTimeVal() > 1 -->
+                                    <option value="month" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTHS"></option>
+                                <!-- /ko -->
                             <!-- /ko -->
                             <!-- ko if: shouldShowTimeLevel("year") -->
-                            <option value="year">Year</option>
+                                <!-- ko if: flexRelTimeVal() === 1 -->
+                                    <option value="year" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEAR"></option>
+                                <!-- /ko -->
+                                <!-- ko if: flexRelTimeVal() > 1 -->
+                                    <option value="year" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEARS"></option>
+                                <!-- /ko -->
                             <!-- /ko -->
                         </select>
                         
@@ -87,7 +122,7 @@
                         <span style="display: inline-block; padding-top: 10px;">
                             <span>
                                 <input type="radio" name="lrCtrl" value="timeLevelCtrl" data-bind="checked: lrCtrlVal">
-                                <label>Range</label>
+                                <label data-bind="text: nls.DATETIME_PICKER_RADIO_RANGE"></label>
                             </span>
 <!--                            <select data-bind="ojComponent: {component: 'ojSelect', value: timeLevelOpt, 
                                 rootAttributes: {style: 'max-width: 108px; padding-left: 10px;'},
@@ -185,7 +220,7 @@
                     <!-- /ko -->
                     
                     <!-- pop up for time filter-->
-                    <div style="display: none; width: 560px; height: 412px; margin: auto; border: 1px solid #f0f0f0; background: #FFFFFF;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'timeFilter_'+randomId}">
+                    <div style="display: none; width: 560px; height: 499px; margin: auto; border: 1px solid #f0f0f0; background: #FFFFFF;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'timeFilter_'+randomId}">
                         <!-- ko if: enableTimeFilter -->
                         <div style="padding-top: 15px;" data-bind="component: {name: 'time-filter', params: tfParams}"></div>
                         <!-- /ko -->

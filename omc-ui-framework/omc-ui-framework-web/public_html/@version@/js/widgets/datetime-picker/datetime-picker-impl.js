@@ -48,6 +48,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 dfu.loadUifwkCss();
                 
                 var self = this;
+                self.nls = nls;
                 var msgUtil = new msgUtilModel();
                 console.log("Initialize date time picker! The params are: ");
                 if(ko.mapping && ko.mapping.toJS) {
@@ -654,7 +655,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             var tp = self.timePeriod();
                             if($.inArray(tp, value) >= 0) {
                                 customClick(0);
-                                self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO().slice(0, 10), self.endDateISO().slice(0, 10), self.startTime(), self.endTime()));
+                                self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO().slice(0, 10), self.endDateISO().slice(0, 10), self.startTime(), self.endTime(), self.timePeriod()));
                             }
                         });
                     }
@@ -707,7 +708,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             return params.timeDisplay();
                         }, self);
                         self.timeDisplay.subscribe(function(value) {
-                            self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO().slice(0, 10), self.endDateISO().slice(0, 10), self.startTime(), self.endTime()));
+                            self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO().slice(0, 10), self.endDateISO().slice(0, 10), self.startTime(), self.endTime(), self.timePeriod()));
                         });
                     }else {
                         self.timeDisplay = params.timeDisplay;
@@ -992,35 +993,63 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     return timezoneOffset;
                 };
                 
-                self.getFlexTimePeriod = function() {
+                self.getFlexTimePeriod = function(num, opt) {
                     var optLabel;
-                    switch(self.flexRelTimeOpt()[0]) {
+                    switch(opt) {
                         case "second":
-                            optLabel = "sec";
+                            if(num === 1) {
+                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECOND;
+                            }else {
+                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECONDS;
+                            }                            
                             break;
                         case "minute":
-                            optLabel = "min";
+                            if(num === 1) {
+                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTE;
+                            }else {
+                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTES;
+                            }                            
                             break;
                         case "hour":
-                            optLabel = "hour";
+                            if(num === 1) {
+                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOUR;
+                            }else {
+                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOURS;
+                            }                            
                             break;
                         case "day":
-                            optLabel = "day";
+                            if(num === 1) {
+                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAY;
+                            }else {
+                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAYS;
+                            }                            
                             break;
                         case "week":
-                            optLabel = "week";
+                            if(num === 1) {
+                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEK;
+                            }else {
+                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEKS;
+                            }                            
                             break;
                         case "month":
-                            optLabel = "month";
+                            if(num === 1) {
+                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTH;
+                            }else {
+                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTHS;
+                            }                            
                             break;
                         case "year":
-                            optLabel = "year";
+                            if(num === 1) {
+                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEAR;
+                            }else {
+                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEARS;
+                            }                            
                             break;
                         default:
-                            throw new Error("error in getting flexible relative time period: flexible relative time option-" + self.flexRelTimeOpt()[0] + " is invalid.");
+                            throw new Error("error in getting flexible relative time period: flexible relative time option-" + opt + " is invalid.");
                     }
                     
-                    return "Last " + self.flexRelTimeVal() + " " + optLabel;
+                    return nls.DATETIME_PICKER_FLEX_REL_TIME_LAST + " " + num + " " + optLabel;
                 }
 
                 /**
@@ -1031,7 +1060,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                  * @param {type} endTime
                  * @returns {String} return the dateTime info format
                  */
-                self.getDateTimeInfo = function(startDate, endDate, startTime, endTime) {
+                self.getDateTimeInfo = function(startDate, endDate, startTime, endTime, timePeriod) {
                     var dateTimeInfo;
                     var hyphenDisplay = "display: inline;";
                     var start = self.adjustDateMoreFriendly(startDate);
@@ -1048,7 +1077,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         //add timezone for time ranges less than 1 day if the start&end time are in different timezone due to daylight saving time.
                         var tmpStart = oj.IntlConverterUtils.isoToLocalDate(startDate+startTime);
                         var tmpEnd = oj.IntlConverterUtils.isoToLocalDate(endDate+endTime);
-                        if(tmpStart.getTimezoneOffset() !== tmpEnd.getTimezoneOffset() && self.isTimePeriodLessThan1day(self.timePeriod())) {
+                        if(tmpStart.getTimezoneOffset() !== tmpEnd.getTimezoneOffset() && self.isTimePeriodLessThan1day(timePeriod)) {
                             start += " (" + self.getGMTTimezone(tmpStart) + ")";
                             end += " (" + self.getGMTTimezone(tmpEnd) + ")";
                         }
@@ -1057,17 +1086,17 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         hyphenDisplay = end ? hyphenDisplay : "display: none;";
                     }
 
-                    if(self.timePeriod() === self.timePeriodLatest) {
-                        dateTimeInfo = "<span style='font-weight: bold; padding-right: 5px; display: inline-block;'>" + self.timePeriod() + "</span>";
+                    if(timePeriod === self.timePeriodLatest) {
+                        dateTimeInfo = "<span style='font-weight: bold; padding-right: 5px; display: inline-block;'>" + timePeriod + "</span>";
                         return dateTimeInfo;
                     }
 
-                    if(self.timePeriod() === self.timePeriodCustom) {
+                    if(timePeriod === self.timePeriodCustom) {
                         if(self.lrCtrlVal() === "flexRelTimeCtrl") {
                             if(self.getParam(self.timeDisplay) === "short") {
-                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display: inline-block;'>" + self.getFlexTimePeriod()  + "</span>";
+                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display: inline-block;'>" + self.getFlexTimePeriod(self.flexRelTimeVal(), self.flexRelTimeOpt()[0])  + "</span>";
                             }else {
-                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + self.getFlexTimePeriod() + ": </span>";
+                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + self.getFlexTimePeriod(self.flexRelTimeVal(), self.flexRelTimeOpt()[0]) + ": </span>";
                                 dateTimeInfo += start + "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" + end;
                             }
                         }else {
@@ -1075,7 +1104,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             if(self.getParam(self.timeDisplay) === "short") {
                                 dateTimeInfo = start + "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" + end;
                             }else {
-                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + self.timePeriod() + ": </span>" +
+                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + timePeriod + ": </span>" +
                                     start +
                                     "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" +
                                     end;
@@ -1083,11 +1112,17 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         }
                         return dateTimeInfo;
                     }
+                    
+                    //generate dateTimeInfo for "Recent" List
+                    if(!timePeriod) {
+                        dateTimeInfo = dateTimeInfo = start + "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" + end;
+                        return dateTimeInfo;
+                    }
 
                     if(self.getParam(self.timeDisplay) === "short") {
-                        dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display: inline-block;'>" + self.timePeriod() + "</span>";
+                        dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display: inline-block;'>" + timePeriod + "</span>";
                     }else {
-                        dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + self.timePeriod() + ": </span>";
+                        dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + timePeriod + ": </span>";
                         dateTimeInfo += start + "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" + end;
                     }
                     return dateTimeInfo;
@@ -1239,7 +1274,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.startTime(start.slice(10, 16));
                     self.endTime(end.slice(10, 16));
 
-                    self.dateTimeInfo(self.getDateTimeInfo(start.slice(0, 10), end.slice(0, 10), self.startTime(), self.endTime()));
+                    self.dateTimeInfo(self.getDateTimeInfo(start.slice(0, 10), end.slice(0, 10), self.startTime(), self.endTime(), self.timePeriod()));
                     
                     self.lastStartDate(self.startDate());
                     self.lastEndDate(self.endDate());
@@ -1390,7 +1425,64 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                     var num = data.value;
                     var opt = self.flexRelTimeOpt()[0];
-                    console.log("felxRelTimeValChanged: num: " + num + ", opt: " + opt);
+                    
+                    //show sigular/plural time level options
+                    switch(opt) {
+                        case "second":
+                            if(num === 1) {
+                                $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECOND);
+                            }else {
+                                $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECONDS);
+                            }
+                            break;
+                        case "minute":
+                            if(num === 1) {
+                                $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTE);
+                            }else {
+                                $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTES);
+                            }
+                            break;
+                        case "hour":
+                            if(num === 1) {
+                                $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOUR);
+                            }else {
+                                $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOURS);
+                            }
+                            break;
+                        case "day":
+                            if(num === 1) {
+                                $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAY);
+                            }else {
+                                $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAYS);
+                            }
+                            break;
+                        case "week":
+                            if(num === 1) {
+                                $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEK);
+                            }else {
+                                $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEKS);
+                            }
+                            break;
+                        case "month":
+                            if(num === 1) {
+                                $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTH);
+                            }else {
+                                $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTHS);
+                            }
+                            break;
+                        case "year":
+                            if(num === 1) {
+                                $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEAR);
+                            }else {
+                                $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEARS);
+                            }
+                            break;
+                        default:
+                            throw new Error("error in flexRelTimeValChanged. Flexible relative time option-"+opt+" is invalid");
+                            
+                    }
+                    
+                    console.log("flexRelTimeValChanged: num: " + num + ", opt: " + opt);
                     self.setFlexRelTime(num, opt);
                                         
                 };
@@ -1917,7 +2009,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
 
                     if(self.getParam(self.changeLabel)) {
-                        self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO().slice(0, 10), self.endDateISO().slice(0, 10), self.startTime(), self.endTime()));
+                        self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO().slice(0, 10), self.endDateISO().slice(0, 10), self.startTime(), self.endTime(), self.timePeriod()));
                     }
                     self.closeAllPopups();
                     var timePeriod = self.getTimePeriodString(self.timePeriod());
