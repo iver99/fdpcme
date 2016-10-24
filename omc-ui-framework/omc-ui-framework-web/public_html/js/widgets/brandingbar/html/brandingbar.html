@@ -8,7 +8,7 @@
                     </div>
                     <div class="emaas-appheader-appname-table-cell-middle" style="padding-left: 4px">
                         <span class="emaas-appheader-appname" data-bind="text: productName"></span>
-                        <!--<span role="separator" class="oj-toolbar-separator emaas-appheader-seperator"></span>-->
+                        <span role="separator" class="oj-toolbar-separator emaas-appheader-seperator" data-bind="visible: appName"></span>
                         <span class="emaas-appheader-appname emaas-appheader-appname-oneline" data-bind="text: appName"></span>
                     </div>
                     <div class="emaas-appheader-appname emaas-appheader-appname-twoline">
@@ -79,6 +79,28 @@
             </div>
             <!-- /ko -->
         </div>  
+        <div style="display:none;" 
+            data-bind="ojComponent:{component: 'ojDialog', 
+                initialVisibility: 'hide', title: sessionTimeoutWarnDialogTitle, resizeBehavior: 'none', cancelBehavior: 'none',
+                rootAttributes: { style: 'width: 450px;'}}, attr: {id: sessionTimeoutWarnDialogId}">   
+            <div class="oj-dialog-body" style="height: 50px;" >
+                <div class="emaas-warn-msg-table-cell">
+                    <img width="16" height="16" data-bind="attr: {alt: altTextWarn, src: sessionTimeoutWarnIcon}"/> 
+                </div>
+                <div class="emaas-warn-msg-table-cell" style="padding-left: 5px">
+                    <span class="emaas-appheader-appname" data-bind="text: sessionTimeoutMsg"></span>
+                </div>
+            </div>     
+            <div class="oj-dialog-footer" style="padding-right: 18px" > 
+                <button id="session-continue-btn" data-bind="click: sessionTimeoutConfirmed, 
+                    ojComponent: {component: 'ojButton', label: sessionTimeoutBtnOK}" >  
+                </button>
+            </div>  
+        </div>
+        <div id="emaas-appheader-globalcxt" class="emaas-appheader-global-context">
+            <div id="emaas-appheader-compositecxt" class="emaas-appheader-composite-context" data-bind="text:compositeCxtText"></div>
+            <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="text:timeCxtText">Oct 12th. 2:30 PM - 4:30 PM</div>
+        </div>
         <!-- ko if: hasMessages -->
         <div>
             <!-- ko foreach: messageList -->
@@ -119,21 +141,3 @@
             <!-- /ko -->
         </div>
         <!-- /ko -->
-        <div style="display:none;" 
-            data-bind="ojComponent:{component: 'ojDialog', 
-                initialVisibility: 'hide', title: sessionTimeoutWarnDialogTitle, resizeBehavior: 'none', cancelBehavior: 'none',
-                rootAttributes: { style: 'width: 450px;'}}, attr: {id: sessionTimeoutWarnDialogId}">   
-            <div class="oj-dialog-body" style="height: 50px;" >
-                <div class="emaas-warn-msg-table-cell">
-                    <img width="16" height="16" data-bind="attr: {alt: altTextWarn, src: sessionTimeoutWarnIcon}"/> 
-                </div>
-                <div class="emaas-warn-msg-table-cell" style="padding-left: 5px">
-                    <span class="emaas-appheader-appname" data-bind="text: sessionTimeoutMsg"></span>
-                </div>
-            </div>     
-            <div class="oj-dialog-footer" style="padding-right: 18px" > 
-                <button id="session-continue-btn" data-bind="click: sessionTimeoutConfirmed, 
-                    ojComponent: {component: 'ojButton', label: sessionTimeoutBtnOK}" >  
-                </button>
-            </div>  
-        </div>

@@ -16,7 +16,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                 var self = this;
                 var msgUtil = new msgUtilModel();
                 var cxtUtil = new contextModel();
-                cxtUtil.getOMCContext();
+                self.compositeCxtText = ko.observable();
+                self.timeCxtText = ko.observable();
+                fetchOMCContext();
+                
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var dfu = new dfumodel(self.userName, self.tenantName);
@@ -660,6 +663,38 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                         }
                     }
                     self.appName(subscribedServices);
+                }
+                
+                function fetchOMCContext() {
+                    self.cxtCompositeMeId = cxtUtil.getCompositeMeId();
+                    self.cxtCompositeType = cxtUtil.getCompositeType();
+                    self.cxtCompositeName = cxtUtil.getCompositeName();
+                    self.cxtStartTime = cxtUtil.getStartTime();
+                    self.cxtEndTime = cxtUtil.getEndTime();
+                    self.cxtEntityMeId = cxtUtil.getEntityMeId();
+                    self.cxtEntityType = cxtUtil.getEntityType();
+                    self.cxtEntityName = cxtUtil.getEntityName();
+                    self.cxtTimePeriod = cxtUtil.getTimePeriod();
+                    if (!self.cxtCompositeName && self.cxtCompositeMeId) {
+                        //TODO: fetch composite name from WS API by compositeMeId
+                    }
+                    if (!self.cxtEntityName && self.cxtEntityMeId) {
+                        //TODO: fetch entity name from WS API by entityMeId
+                    }
+                    self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_ENTITY, 
+                                                            self.cxtCompositeName ? self.cxtCompositeName : '', 
+                                                            self.cxtEntityName ? self.cxtEntityName : ''));
+                    if (self.cxtTimePeriod) {
+                        self.timeCxtText(self.cxtTimePeriod);
+                    }
+                    else {
+                        var dateStartTime = self.cxtStartTime ? new Date(parseInt(self.cxtStartTime)) : null;
+                        var dateEndTime = self.cxtEndTime ? new Date(parseInt(self.cxtEndTime)) : null;
+                        var dateStartTimeText = dateStartTime ? dateStartTime.toLocaleString('en-US') : "";
+                        var dateEndTimeText = dateEndTime ? dateEndTime.toLocaleString('en-US') : "";
+                        self.timeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_TIME,
+                                                                dateStartTimeText, dateEndTimeText));
+                    }
                 }
             }
 

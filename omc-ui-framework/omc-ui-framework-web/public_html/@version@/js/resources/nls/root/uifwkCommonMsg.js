@@ -52,6 +52,8 @@ define({
       "BRANDING_BAR_SESSION_TIMEOUT_DIALOG_TILE": "Session Expired",
       "BRANDING_BAR_SESSION_TIMEOUT_MSG": "Your current session has expired. Click \'OK\' and sign in again.",
       "BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK": "OK",
+      "BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_ENTITY":"{0} > {1}",
+      "BRANDING_BAR_GLOBAL_CONTEXT_TIME":"{0} - {1}",
       "WIDGET_SELECTOR_DEFAULT_DIALOG_TITLE": "Open",
       "WIDGET_SELECTOR_WIDGET_GROUP_LABEL": "Widget Group",
       "WIDGET_SELECTOR_SEARCH_BOX_PLACEHOLDER": " Search widgets.",

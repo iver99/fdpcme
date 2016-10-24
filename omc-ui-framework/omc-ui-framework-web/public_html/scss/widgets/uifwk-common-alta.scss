@@ -273,25 +273,26 @@ a:hover {
 }
 
 .emaas-appheader-lite .emaas-appheader-seperator {
-    display: none;
+    display: inline-block;
+    height: 14px;
 }
 .emaas-appheader-lite .emaas-appheader-appname-oneline {
-    display: none;
+    display: inline-block;
 }
 .emaas-appheader-lite .emaas-appheader-appname-twoline {
-    display: block;
+    display: none; //block;
     padding-top: 2px;
 }
 .emaas-appheader-toolbar{
-    height:44px;
+    height:27px; //44px;
 }
 .emaas-appheader-toolbar-button {
-    height:44px;
-    line-height: 44px;
+    height:27px; //44px;
+    line-height: 27px; //44px;
 }
 .emaas-appheader-toolbar-button-icon {
-    width:32px;
-    height:32px;
+    width:16px; //32px;
+    height:16px; //32px;
     vertical-align: middle;
 }
 .fa-notification:before {
@@ -385,4 +386,23 @@ a:hover {
 .em-about-box .oj-dialog-close-icon
 {
     color: #FFFFFF;
+}
+
+.emaas-appheader-global-context {
+    font-size: 15px;
+    background-color:#EDEDED;
+    height: 30px;
+    padding-left: 30px;
+    padding-right: 20px;
+}
+.emaas-appheader-composite-context, .emaas-appheader-time-context {
+    line-height:30px;
+    vertical-align: middle;
+    text-align: center;
+}
+.emaas-appheader-composite-context {
+    float:left;
+}
+.emaas-appheader-time-context {
+    float:right;
 }
