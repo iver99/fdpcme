@@ -26,17 +26,27 @@ artifactoryPublish {
  
 dependencies { 
 	
-        compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
-        compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
-        compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0'){ transitive = false }
-        compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.+')
-        compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.+')
-        compile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){transitive=false }
-        compile(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
-        compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.12'){ transitive = false }
-        compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12'){ transitive = false }
-        compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){ transitive = false }
-
+        compile getProjectArtifact('log4j-core')   
+        compile getProjectArtifact('log4j-api')   
+        compile getProjectArtifact('wls-api')   
+	    compile getProjectArtifact('registry-lookup-client')   
+	    compile getProjectArtifact('registry-client')   
+	    compile getProjectArtifact('emaas-platform-tenant-sdk')   
+   		compile getProjectArtifact('wlfullclient')   
+        
+        compile getProjectArtifact('jackson-core-asl')   
+        compile getProjectArtifact('jackson-mapper-asl')   
+        compile getProjectArtifact('jackson-xc')   
+        compile getProjectArtifact('jmockit')
+        compile getProjectArtifact('jettison')  
+        compile getProjectArtifact('jersey-core')  
+      	compile getProjectArtifact('jersey-client') 
+      	
+      	
+      	
+      	
+      	
+     
 } 
 test {
         useTestNG()
