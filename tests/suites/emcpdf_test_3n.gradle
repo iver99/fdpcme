@@ -71,7 +71,7 @@ dependencies{
       	exclude('module':'groovy')
     }
 
-     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.1.0')
+     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.0.0+')
 
      
      testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
@@ -165,7 +165,7 @@ task QATest1(type:EMTest,dependsOn:e2e ){
 
 //Task is added from "emcpdf_dev_test_3n"
 
-task DEVTest(type:EMTest,dependsOn: QATest1){
+task DEVTest(type:EMTest,dependsOn: omcSetup){
 
   	include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest.class"
