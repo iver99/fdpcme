@@ -46,10 +46,13 @@ public class DashboardAPITest
 	DashboardAPI dashboardAPI = new DashboardAPI();
 
 	@Test
-	public void testCreateDashboard() throws Exception
+	public void testCreateDashboard(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				
 				mockedAPIBase.initializeUserContext(anyString, anyString);
 				result = null;
 
@@ -64,10 +67,13 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testCreateDashboardWithBasicServiceMalfunctionException() throws Exception
+	public void testCreateDashboardWithBasicServiceMalfunctionException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				
 				mockedAPIBase.getTenantId(anyString);
 				result = new BasicServiceMalfunctionException("Test BasicServiceMalfunctionException", "emaas-platform");
 			}
@@ -76,11 +82,14 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testCreateDashboardWithDashboardException(@SuppressWarnings("unused") @Mocked final JsonUtil jsonUtil)
+	public void testCreateDashboardWithDashboardException(@SuppressWarnings("unused") @Mocked final JsonUtil jsonUtil,@Mocked final DependencyStatus anyDependencyStatus)
 			throws IOException, DashboardException
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				
 				mockedDashboardManager.saveNewDashboard(withAny(new Dashboard()), anyLong);
 				result = new CommonSecurityException("Test Security Error");
 			}
@@ -89,10 +98,13 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testCreateDashboardWithIOException(@Mocked final JsonUtil jsonUtil) throws IOException
+	public void testCreateDashboardWithIOException(@Mocked final JsonUtil jsonUtil,@Mocked final DependencyStatus anyDependencyStatus) throws IOException
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				
 				jsonUtil.fromJson(anyString, Dashboard.class);
 				result = new IOException();
 			}
@@ -101,10 +113,12 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testDeleteDashboard() throws Exception
+	public void testDeleteDashboard(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 				mockedDashboardManager.deleteDashboard(anyLong, anyLong);
 			}
 		};
@@ -112,10 +126,12 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testDeleteDashboardBasicServiceMalfunctionException() throws Exception
+	public void testDeleteDashboardBasicServiceMalfunctionException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 				mockedAPIBase.getTenantId(anyString);
 				result = new BasicServiceMalfunctionException("Test BasicServiceMalfunctionException", "emaas-platform");
 			}
@@ -124,10 +140,12 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testDeleteDashboardWithDashboardException() throws Exception
+	public void testDeleteDashboardWithDashboardException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 				mockedDashboardManager.deleteDashboard(anyLong, anyLong);
 				result = new CommonSecurityException("Test Security Error");
 			}
@@ -136,10 +154,12 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testDeleteDashboardWithDeleteSystemDashboardException() throws Exception
+	public void testDeleteDashboardWithDeleteSystemDashboardException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 				mockedDashboardManager.getDashboardById(anyLong, anyLong);
 				Dashboard mockDashboardResult = new Dashboard();
 				mockDashboardResult.setIsSystem(true);
@@ -232,10 +252,12 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testQueryDashboards() throws Exception
+	public void testQueryDashboards(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 				mockedDashboardManager.listDashboards(anyString, anyInt, anyInt, anyLong, anyBoolean, anyString,
 						withAny(new DashboardsFilter()));
 				PaginatedDashboards dashboardsResult = new PaginatedDashboards();
@@ -253,10 +275,12 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testQueryDashboardsWithBasicServiceMalfunctionException() throws Exception
+	public void testQueryDashboardsWithBasicServiceMalfunctionException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 				mockedAPIBase.getTenantId(anyString);
 				result = new BasicServiceMalfunctionException("Test BasicServiceMalfunctionException", "emaas-platform");
 			}
@@ -265,10 +289,12 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testQueryDashboardsWithDashboardException() throws Exception
+	public void testQueryDashboardsWithDashboardException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 				mockedAPIBase.getTenantId(anyString);
 				result = new CommonSecurityException("Test Security Error");
 			}
@@ -277,11 +303,13 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testQueryDashboardsWithUnsupportedEncodingException(@SuppressWarnings("unused") @Mocked URLDecoder urlDecoder)
+	public void testQueryDashboardsWithUnsupportedEncodingException(@SuppressWarnings("unused") @Mocked URLDecoder urlDecoder,@Mocked final DependencyStatus anyDependencyStatus)
 			throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 				URLDecoder.decode(anyString, anyString);
 				result = new UnsupportedEncodingException("Test Encoding");
 			}
@@ -296,10 +324,12 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testQuickUpdateDashboardCommonSecurityException() throws Exception
+	public void testQuickUpdateDashboardCommonSecurityException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 				mockedDashboardManager.getDashboardById(anyLong, anyLong);
 				Dashboard dashboardResult = new Dashboard();
 				dashboardResult.setIsSystem(true);
@@ -310,10 +340,12 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testQuickUpdateDashboardWithBasicServiceMalfunctionException() throws Exception
+	public void testQuickUpdateDashboardWithBasicServiceMalfunctionException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 				mockedAPIBase.getTenantId(anyString);
 				result = new BasicServiceMalfunctionException("Test BasicServiceMalfunctionException", "emaas-platform");
 			}
@@ -322,10 +354,12 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testQuickUpdateDashboardWithDashboardException() throws Exception
+	public void testQuickUpdateDashboardWithDashboardException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 				mockedAPIBase.getTenantId(anyString);
 				result = new CommonSecurityException("Test Security Error");
 			}
@@ -334,7 +368,7 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testQuickUpdateDashboardWithJSONException(@Mocked final JSONObject mockedJsonObject) throws Exception
+	public void testQuickUpdateDashboardWithJSONException(@Mocked final JSONObject mockedJsonObject,@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
@@ -355,10 +389,12 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testUpdateDashboardWithBasicServiceMalfunctionException() throws Exception
+	public void testUpdateDashboardWithBasicServiceMalfunctionException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 				mockedAPIBase.getTenantId(anyString);
 				result = new BasicServiceMalfunctionException("Test BasicServiceMalfunctionException", "emaas-platform");
 			}
@@ -381,10 +417,12 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testUpdateDashboardWithDashboardException() throws Exception
+	public void testUpdateDashboardWithDashboardException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 				mockedAPIBase.getTenantId(anyString);
 				result = new CommonSecurityException("Test Security Error");
 			}
@@ -393,11 +431,13 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testUpdateDashboardWithExternalBase(@SuppressWarnings("unused") @Mocked DashboardAPIUtil dashboardAPIUtil)
+	public void testUpdateDashboardWithExternalBase(@SuppressWarnings("unused") @Mocked DashboardAPIUtil dashboardAPIUtil,@Mocked final DependencyStatus anyDependencyStatus)
 			throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 				DashboardAPIUtil.getExternalDashboardAPIBase(anyString);
 				result = "http://external/";
 			}
@@ -418,9 +458,11 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testSaveUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager) throws Exception {
+	public void testSaveUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager,@Mocked final DependencyStatus anyDependencyStatus) throws Exception {
         new Expectations() {
             {
+            	anyDependencyStatus.isDatabaseUp();
+				result = true;
                 mockedAPIBase.initializeUserContext(anyString, anyString);
                 result = null;
 
@@ -433,9 +475,11 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testUpdateUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager) throws Exception {
+	public void testUpdateUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager,@Mocked final DependencyStatus anyDependencyStatus) throws Exception {
         new Expectations() {
             {
+            	anyDependencyStatus.isDatabaseUp();
+				result = true;
                 mockedAPIBase.initializeUserContext(anyString, anyString);
                 result = null;
 
@@ -448,9 +492,13 @@ public class DashboardAPITest
 	}
 
     @Test
-    public void testGetUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager) throws Exception {
+    public void testGetUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager,@Mocked final DependencyStatus anyDependencyStatus) throws Exception {
         new Expectations() {
             {
+            	anyDependencyStatus.isDatabaseUp();
+				result = true;
+            	anyDependencyStatus.isDatabaseUp();
+				result = true;
                 mockedAPIBase.initializeUserContext(anyString, anyString);
                 result = null;
 

@@ -1,12 +1,23 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
-import mockit.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.core.Response;
+
+import mockit.Expectations;
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.Mocked;
+import mockit.NonStrictExpectations;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
 import oracle.sysman.emaas.platform.dashboards.core.PreferenceManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Preference;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 
@@ -14,12 +25,6 @@ import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.ws.rs.core.Response;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author jishshi
@@ -51,7 +56,11 @@ public class PreferenceAPITest {
     }
 
     @Test
-    public void testDeleteAllPreferenceByKey() {
+    public void testDeleteAllPreferenceByKey(@Mocked final DependencyStatus anyDependencyStatus) {
+    	new Expectations() {{
+    		anyDependencyStatus.isDatabaseUp();
+			result = true;
+        }};
         //Test 403, with invalid tenantIdParam DashboardException exception;
         Assert.assertEquals(preferenceAPI.deleteAllPreferenceByKey("", "userTenant", "referer").getStatus(), 403);
         //Test 403, with invalid userTanant BasicServiceMalfunctionException exception;
@@ -59,8 +68,11 @@ public class PreferenceAPITest {
     }
 
     @Test
-    public void testDeleteAllPreferenceByKey1(@Mocked final PreferenceManager preferenceManager, @Mocked final TenantIdProcessor tenantIdProcessor) throws BasicServiceMalfunctionException {
+    public void testDeleteAllPreferenceByKey1(@Mocked final DependencyStatus anyDependencyStatus,@Mocked final PreferenceManager preferenceManager, @Mocked final TenantIdProcessor tenantIdProcessor) throws BasicServiceMalfunctionException {
         new Expectations() {{
+        	anyDependencyStatus.isDatabaseUp();
+			result = true;
+        	
             TenantIdProcessor.getInternalTenantIdFromOpcTenantId(anyString);
             result = anyLong;
 
@@ -73,7 +85,11 @@ public class PreferenceAPITest {
     }
 
     @Test
-    public void testDeletePreferenceByKey() {
+    public void testDeletePreferenceByKey(@Mocked final DependencyStatus anyDependencyStatus) {
+    	new Expectations() {{
+    		anyDependencyStatus.isDatabaseUp();
+			result = true;
+		}};
         //Test 403, with invalid tenantIdParam DashboardException exception;
         Assert.assertEquals(preferenceAPI.deletePreferenceByKey("", "userTenant", "referer", "key").getStatus(), 403);
         //Test 403, with invalid userTanant BasicServiceMalfunctionException exception;
@@ -81,9 +97,12 @@ public class PreferenceAPITest {
     }
 
     @Test
-    public void testDeletePreferenceByKey1(@Mocked final PreferenceManager preferenceManager,@SuppressWarnings("unused") @Mocked final TenantIdProcessor tenantIdProcessor)  {
+    public void testDeletePreferenceByKey1(@Mocked final DependencyStatus anyDependencyStatus,@Mocked final PreferenceManager preferenceManager,@SuppressWarnings("unused") @Mocked final TenantIdProcessor tenantIdProcessor)  {
         try {
 			new Expectations() {{
+				
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
 			    preferenceManager.removePreference(anyString, anyLong);
 			    result = null;
 			}};
@@ -98,7 +117,11 @@ public class PreferenceAPITest {
     }
 
     @Test
-    public void testQueryPreferenceByKey() {
+    public void testQueryPreferenceByKey(@Mocked final DependencyStatus anyDependencyStatus) {
+    	 new Expectations() {{
+    		 anyDependencyStatus.isDatabaseUp();
+				result = true;
+         }};
         //Test 403, with invalid tenantIdParam DashboardException exception;
         Assert.assertEquals(preferenceAPI.queryPreferenceByKey("", "userTenant", "referer", "key").getStatus(), 403);
         //Test 403, with invalid userTanant BasicServiceMalfunctionException exception;
@@ -106,8 +129,10 @@ public class PreferenceAPITest {
     }
 
     @Test
-    public void testQueryPreferenceByKey1(@Mocked final PreferenceManager preferenceManager,@SuppressWarnings("unused") @Mocked final TenantIdProcessor tenantIdProcessor) throws DashboardException {
+    public void testQueryPreferenceByKey1(@Mocked final DependencyStatus anyDependencyStatus,@Mocked final PreferenceManager preferenceManager,@SuppressWarnings("unused") @Mocked final TenantIdProcessor tenantIdProcessor) throws DashboardException {
         new Expectations() {{
+        	 anyDependencyStatus.isDatabaseUp();
+				result = true;
             preferenceManager.getPreferenceByKey(anyString, anyLong);
             result = null;
         }};
@@ -117,7 +142,11 @@ public class PreferenceAPITest {
     }
 
     @Test
-    public void testQueryPreferences() {
+    public void testQueryPreferences(@Mocked final DependencyStatus anyDependencyStatus) {
+    	 new Expectations() {{
+    		 anyDependencyStatus.isDatabaseUp();
+			 result = true;
+        }};
         //Test 403, with invalid tenantIdParam DashboardException exception;
         Assert.assertEquals(preferenceAPI.queryPreferences("", "userTenant", "referer").getStatus(), 403);
         //Test 403, with invalid userTanant BasicServiceMalfunctionException exception;
@@ -125,8 +154,10 @@ public class PreferenceAPITest {
     }
 
     @Test
-    public void testQueryPreferences1(@Mocked final PreferenceManager preferenceManager,@SuppressWarnings("unused") @Mocked final TenantIdProcessor tenantIdProcessor) {
+    public void testQueryPreferences1(@Mocked final DependencyStatus anyDependencyStatus,@Mocked final PreferenceManager preferenceManager,@SuppressWarnings("unused") @Mocked final TenantIdProcessor tenantIdProcessor) {
         new Expectations() {{
+        	anyDependencyStatus.isDatabaseUp();
+			result = true;
             List<Preference> ps = new ArrayList<>();
             ps.add(new Preference());
             preferenceManager.listPreferences(anyLong);
@@ -138,7 +169,11 @@ public class PreferenceAPITest {
     }
 
     @Test
-    public void testUpdatePreference() {
+    public void testUpdatePreference(@Mocked final DependencyStatus anyDependencyStatus) {
+    	 new Expectations() {{
+    		 anyDependencyStatus.isDatabaseUp();
+			 result = true;
+        }};
         //Test 403, with invalid tenantIdParam DashboardException exception;
         Assert.assertEquals(preferenceAPI.updatePreference("", "userTenant", "referer", "key", jsonObject).getStatus(), 403);
         //Test 403, with invalid userTanant BasicServiceMalfunctionException exception;
@@ -146,8 +181,10 @@ public class PreferenceAPITest {
     }
 
     @Test
-    public void testUpdatePreference1(@Mocked final Preference preference, @Mocked final APIBase apiBase,@SuppressWarnings("unused") @Mocked final PreferenceManager preferenceManager, @Mocked final TenantIdProcessor tenantIdProcessor) throws IOException {
+    public void testUpdatePreference1(@Mocked final DependencyStatus anyDependencyStatus,@Mocked final Preference preference, @Mocked final APIBase apiBase,@SuppressWarnings("unused") @Mocked final PreferenceManager preferenceManager, @Mocked final TenantIdProcessor tenantIdProcessor) throws IOException {
         new Expectations() {{
+        	anyDependencyStatus.isDatabaseUp();
+			 result = true;
             apiBase.getJsonUtil().fromJson(anyString, Preference.class);
             result = preference;
 
