@@ -165,7 +165,7 @@ task QATest1(type:EMTest,dependsOn:e2e ){
 
 //Task is added from "emcpdf_dev_test_3n"
 
-task DEVTest(type:EMTest,dependsOn: omcSetup){
+task DEVTest(type:EMTest,dependsOn: QATest){
 
   	include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest.class"
