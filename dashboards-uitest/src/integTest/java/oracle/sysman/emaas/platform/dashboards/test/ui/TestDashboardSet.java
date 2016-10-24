@@ -46,7 +46,7 @@ public class TestDashboardSet extends LoginAndLogout
 	private String dbsetName_ITA = "";
 	private String dbsetName_LA = "";
 
-	private static String OOBAddToSet = "Others";
+	private static String OOBAddToSet = "Database Operations";
 
 	@BeforeClass
 	public void createTestData()
@@ -91,11 +91,6 @@ public class TestDashboardSet extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
-
-		//reset the home page
-		webd.getLogger().info("Reset all filter options in the home page");
-		DashboardHomeUtil.resetFilterOptions(webd);
-
 	}
 
 	@AfterClass

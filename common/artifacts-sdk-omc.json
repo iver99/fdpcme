@@ -1,0 +1,58 @@
+{
+	"deploy_application-emclas": {
+		"method": "artifactFilterSdkVersion",
+		"group": "com.oracle.emaas.emclas",
+		"name": "deploy_application",
+		"version": "1.+",
+		"ext": "xml",
+		"transitive": false
+	},
+	"deploy_application-emcpa": {
+		"method": "artifactFilterSdkVersion",
+		"group": "com.oracle.emaas.emcpa",
+		"name": "deploy_application",
+		"version": "1.+",
+		"ext": "xml",
+		"transitive": false
+	},
+	"registry-client": {
+		"method": "artifactFilterSdkVersion",
+		"group": "com.oracle.emaas.emcpsm",
+		"name": "registry-client",
+		"version": "1.+",
+		"transitive": false
+	},
+	"registry-lookup-client": {
+		"method": "artifactFilterSdkVersion",
+		"group": "com.oracle.emaas.emcpsm",
+		"name": "registry-lookup-client",
+		"version": "1.+",
+		"transitive": false
+	},
+	"emaas-platform-tenant-sdk": {
+		"method": "artifactFilterSdkVersion",
+		"group": "com.oracle.emaas",
+		"name": "emaas-platform-tenant-sdk",
+		"version": "0.2+",
+		"transitive": false
+	},
+	"security-client": {
+		"method": "artifactFilterSdkVersion",
+		"group": "com.oracle.emaas.emcpsf.sdk",
+		"name": "security-client",
+		"version": "1.1+",
+		"transitive": false
+	},
+	
+
+
+	"emcs-targetselector": {
+		"method": "artifactFilterSdkVersion",
+		"group": "com.oracle.emaas.emctas.tgtsel",
+		"name": "emcs-targetselector",
+		"version": "1.9.0+",
+		"ext": "zip",
+		"transitive": false
+	},
+
+}
