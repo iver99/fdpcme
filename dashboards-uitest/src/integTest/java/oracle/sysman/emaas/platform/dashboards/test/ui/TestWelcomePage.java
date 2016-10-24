@@ -239,7 +239,8 @@ public class TestWelcomePage extends LoginAndLogout
 
 		String tmpUrl = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("Open ITA by url: " + tmpUrl);
-		Assert.assertEquals(tmpUrl.substring(tmpUrl.indexOf("emsaasui") + 9), "emcpdfui/home.html?filter=ita");
+		Assert.assertTrue(tmpUrl.substring(tmpUrl.indexOf("emsaasui") + 9).contains("emcpdfui/home.html?filter=ita"));
+		//Assert.assertEquals(tmpUrl.substring(tmpUrl.indexOf("emsaasui") + 9), "emcpdfui/home.html?filter=ita");
 		//		urlVerification(tmpUrl, "emcpdfui/home.html?filter=ita");
 
 		WebElement el = webd.getWebDriver().findElement(By.id(PageId.ITA_BOXID));

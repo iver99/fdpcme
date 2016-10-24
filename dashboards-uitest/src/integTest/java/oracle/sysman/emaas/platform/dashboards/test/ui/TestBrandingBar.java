@@ -367,7 +367,8 @@ public class TestBrandingBar extends LoginAndLogout
 
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcpdfui/home.html?filter=ita");
+		//Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcpdfui/home.html?filter=ita");
+		Assert.assertTrue(url.substring(url.indexOf("emsaasui") + 9).contains("emcpdfui/home.html?filter=ita"));
 	}
 
 	@Test
