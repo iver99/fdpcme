@@ -710,7 +710,7 @@ public class DashboardManager
 		}
 		if (filter != null && filter.getIncludedWidgetProvidersString() != null) {
 			LOGGER.debug("provider name is not null!");
-			sb1.append(" AND (p.DASHBOARD_ID IN (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN "
+			sb1.append(" AND (p.is_system =0 and p.DASHBOARD_ID IN (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN "
 					+ "(SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE t.PROVIDER_NAME IN ("
 					+ filter.getIncludedWidgetProvidersString()
 					+ " )) )) ");
