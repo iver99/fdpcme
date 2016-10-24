@@ -257,6 +257,10 @@ public class DashboardAPI extends APIBase
 		}
 		//try to get from persist layer
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [GET] /v1/dashboards/{}/screenshot/{}/images/{}: database is down", dashboardId, serviceVersion, fileName);
+				throw new DatabaseDependencyUnavailableException();
+			}
 			final ScreenshotData ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
 			if (ss == null || ss.getScreenshot() == null) {
 				LOGGER.error("Does not retrieved base64 screenshot data");
@@ -301,6 +305,10 @@ public class DashboardAPI extends APIBase
 				}
 
 			}).cacheControl(cc).build();
+		}
+		catch(DatabaseDependencyUnavailableException e){
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return Response.status(Status.NOT_FOUND).build();
 		}
 		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
