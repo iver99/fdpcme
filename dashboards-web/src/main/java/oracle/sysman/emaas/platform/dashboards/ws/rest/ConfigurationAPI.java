@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -20,16 +21,18 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author miao
@@ -74,6 +77,10 @@ public class ConfigurationAPI extends APIBase
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/configurations/roles");
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
+			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+				_LOGGER.error("Error to call [GET] /v1/configurations/roles: EntityNaming service is down");
+				throw new EntityNamingDependencyUnavailableException();
+			}
             List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
                     UserContext.getCurrentUser());
 			Response resp = Response.status(Status.OK)

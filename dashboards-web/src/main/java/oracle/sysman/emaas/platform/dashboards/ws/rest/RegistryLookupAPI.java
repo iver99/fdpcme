@@ -52,10 +52,10 @@ public class RegistryLookupAPI extends APIBase
 			@QueryParam("serviceName") String serviceName, @QueryParam("version") String version)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
-				"Service call to [POST] /v1/registry/lookup/endpoint?serviceName={}&version={}", serviceName, version);
+				"Service call to [GET] /v1/registry/lookup/endpoint?serviceName={}&version={}", serviceName, version);
 		try {
 			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
-				LOGGER.error("Error to call [POST] /v1/registry/lookup/endpoint?serviceName={}&version={}: EntityNaming service is down", serviceName, version);
+				LOGGER.error("Error to call [GET] /v1/registry/lookup/endpoint?serviceName={}&version={}: EntityNaming service is down", serviceName, version);
 				throw new EntityNamingDependencyUnavailableException();
 			}
 			initializeUserContext(tenantIdParam, userTenant);

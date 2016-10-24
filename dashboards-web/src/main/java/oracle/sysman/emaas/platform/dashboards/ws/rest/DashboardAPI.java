@@ -107,6 +107,7 @@ public class DashboardAPI extends APIBase
 			return buildErrorResponse(error);
 		}
 		catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
@@ -143,6 +144,7 @@ public class DashboardAPI extends APIBase
 			return Response.status(Status.NO_CONTENT).build();
 		}
 		catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
@@ -554,7 +556,7 @@ public class DashboardAPI extends APIBase
 		UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp())  {
-				LOGGER.error("Error to call [GET] /v1/dashboards/{}: database is down", dashboardId);
+				LOGGER.error("Error to call [POST] /v1/dashboards/{}/options/: database is down", dashboardId);
 				throw new DatabaseDependencyUnavailableException();
 			}
 			Long tenantId = getTenantId(tenantIdParam);
