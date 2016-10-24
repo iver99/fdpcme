@@ -172,11 +172,18 @@ public class DashBoardPageId
 	//Note: below xpath is used to identify this 1st dashboard only
 	public static final String INFOBTNID = "//button[@title='Dashboard Information']";//"/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";//"/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";///html/body/div[*]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button";
 
-	public static final String RMBTNID = "/html/body/div[1]/div/div/div[1]/div/div/div[2]/button";//"/html/body/div/div/div/div/div/div/div[2]/button";
+	public static final String RMBTNID = ".dbs-summary-page-info-pop button[name=dsbinfopop_delete]";
 	//Explore Data
 	public static final String EXPLOREDATABTNID = "exploreDataBtn";
 
 	public static final String EXPLOREDATAMENU = "exploreDataMenu";
+        
+          //Log Visual Analyzer button
+         public static final String EXPLORE_LOG = "//a[text()='Log Visual Analyzer']";
+   
+         //Search button in explore menu
+          public static final String EXPLORE_Search = "//a[text()='Search' and @role='menuitem']";
+         
 	//help id and about id
 	public static final String MENUBTNID = "menubutton";
 

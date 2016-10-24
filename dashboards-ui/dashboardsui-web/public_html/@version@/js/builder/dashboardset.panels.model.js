@@ -299,7 +299,7 @@ define([
                     $b.triggerEvent($b.EVENT_POST_DOCUMENT_SHOW);
                     tilesView.enableMovingTransition();
                     idfbcutil.hookupBrowserCloseEvent(function () {
-                        oj.Logger.info("Dashboard: [id=" + dashboard.id() + ", name=" + dashboard.name() + "] is closed", true);
+                        oj.Logger.warn("Dashboard: [id=" + dashboard.id() + ", name=" + dashboard.name() + "] is closed", true, false);          
                     });
 
                     $("#loading").hide();

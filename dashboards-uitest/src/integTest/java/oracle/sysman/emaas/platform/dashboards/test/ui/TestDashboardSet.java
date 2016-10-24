@@ -46,7 +46,7 @@ public class TestDashboardSet extends LoginAndLogout
 	private String dbsetName_ITA = "";
 	private String dbsetName_LA = "";
 
-	private static String OOBAddToSet = "Others";
+	private static String OOBAddToSet = "Database Operations";
 
 	@BeforeClass
 	public void createTestData()
@@ -91,11 +91,6 @@ public class TestDashboardSet extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
-
-		//reset the home page
-		webd.getLogger().info("Reset all filter options in the home page");
-		DashboardHomeUtil.resetFilterOptions(webd);
-
 	}
 
 	@AfterClass
@@ -922,7 +917,7 @@ public class TestDashboardSet extends LoginAndLogout
 		String InfoBtn_xpath = "//div[contains(@aria-label, 'DashboardInSet')]//button";
 		webd.getLogger().info("Verfiy the current dashboard can not be deleted");
 		webd.click(InfoBtn_xpath);
-		WebElement removeButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.RMBTNID));
+		WebElement removeButton = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RMBTNID));
 		Assert.assertFalse(removeButton.isEnabled(), "delete is enabled for current dashboard");
 
 	}

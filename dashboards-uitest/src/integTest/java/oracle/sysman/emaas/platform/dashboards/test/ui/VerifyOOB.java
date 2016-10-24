@@ -197,136 +197,6 @@ public class VerifyOOB extends LoginAndLogout
 	}
 
 	@Test
-	public void verifyApplicationServers_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyApplicationServers_GridView");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Application Servers
-		webd.getLogger().info("Open the OOB dashboard---Application Servers");
-		DashboardHomeUtil.selectDashboard(webd, "Application Servers");
-
-		//verify Application Servers
-		verifyApplicationServers();
-	}
-
-	@Test
-	public void verifyApplicationServers_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyApplicationServers_ListView");
-
-		//click on Grid View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Application Servers
-		webd.getLogger().info("Open the OOB dashboard---Application Servers");
-		DashboardHomeUtil.selectDashboard(webd, "Application Servers");
-
-		//verify Application Servers
-		verifyApplicationServers();
-	}
-
-	@Test
-	public void verifyApplicationServers_withFilter_ITA_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyApplicationServers_withFilter_ITA_GridView");
-
-		//click Filter-Application Servers
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Application Servers
-		webd.getLogger().info("Open the OOB dashboard---Application Servers");
-		DashboardHomeUtil.selectDashboard(webd, "Application Servers");
-
-		//verify Application Servers
-		verifyApplicationServers();
-	}
-
-	@Test
-	public void verifyApplicationServers_withFilter_ITA_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyApplicationServers_withFilter_ITA_ListView");
-
-		//click Filter-Application Servers
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Application Servers
-		webd.getLogger().info("Open the OOB dashboard---Application Servers");
-		DashboardHomeUtil.selectDashboard(webd, "Application Servers");
-
-		//verify Application Servers
-		verifyApplicationServers();
-	}
-
-	@Test
-	public void verifyApplicationServers_withFilter_LA_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyApplicationServers_withFilter_LA_GridView");
-
-		//click Filter-Application Servers
-		webd.getLogger().info("Click Cloud Services - Log Analytics");
-		DashboardHomeUtil.filterOptions(webd, "la");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Application Servers
-		webd.getLogger().info("Open the OOB dashboard---Application Servers");
-		DashboardHomeUtil.selectDashboard(webd, "Application Servers");
-
-		//verify Application Servers
-		verifyApplicationServers();
-	}
-
-	@Test
-	public void verifyApplicationServers_withFilter_LA_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyApplicationServers_withFilter_LA_ListView");
-
-		//click Filter-Application Servers
-		webd.getLogger().info("Click Cloud Services - Log Analytics");
-		DashboardHomeUtil.filterOptions(webd, "la");
-
-		//click on Grid View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Application Servers
-		webd.getLogger().info("Open the OOB dashboard---Application Servers");
-		DashboardHomeUtil.selectDashboard(webd, "Application Servers");
-
-		//verify Application Servers
-		verifyApplicationServers();
-	}
-
-	@Test
 	public void verifyAvailabilityAnalytics_GridView()
 	{
 		//initTest
@@ -406,100 +276,8 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard");
 		DashboardHomeUtil.selectDashboard(webd, "Availability Analytics");
 
-		//verify Availability nalytics
+		//verify Availability Analytics
 		verifyAvailabilityAnalytics();
-	}
-
-	@Test
-	public void verifyCategorical_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyCategorical_GridView");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Categorical
-		webd.getLogger().info("Open the OOB dashboard---Categorical");
-		DashboardHomeUtil.selectDashboard(webd, "Categorical");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Categorical
-		verifyCategorical();
-	}
-
-	@Test
-	public void verifyCategorical_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyCategorical_ListView");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Categorical
-		webd.getLogger().info("Open the OOB dashboard---Categorical");
-		DashboardHomeUtil.selectDashboard(webd, "Categorical");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Categorical
-		verifyCategorical();
-	}
-
-	@Test
-	public void verifyCategorical_WithFilter_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyCategorical_WithFilter_GridView");
-
-		//click Filter-Application Servers
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Categorical
-		webd.getLogger().info("Open the OOB dashboard---Categorical");
-		DashboardHomeUtil.selectDashboard(webd, "Categorical");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Categorical
-		verifyCategorical();
-	}
-
-	@Test
-	public void verifyCategorical_WithFilter_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyCategorical_WithFilter_ListView");
-
-		//click Filter-Application Servers
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Categorical
-		webd.getLogger().info("Open the OOB dashboard---Categorical");
-		DashboardHomeUtil.selectDashboard(webd, "Categorical");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Categorical
-		verifyCategorical();
 	}
 
 	@Test
@@ -521,6 +299,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify Database Operations
 		verifyDatabaseOperations();
+		verifyDatabaseOperations_Details();
 	}
 
 	@Test
@@ -595,154 +374,6 @@ public class VerifyOOB extends LoginAndLogout
 	}
 
 	@Test
-	public void verifyDatabases_GridView()
-	{
-
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyDatabases_GridView");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Databases
-		webd.getLogger().info("Open the OOB dashboard---Databases");
-		DashboardHomeUtil.selectDashboard(webd, "Databases");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Databases
-		verifyDatabases();
-	}
-
-	@Test
-	public void verifyDatabases_ListView()
-	{
-
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyDatabases_ListView");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Databases
-		webd.getLogger().info("Open the OOB dashboard---Databases");
-		DashboardHomeUtil.selectDashboard(webd, "Databases");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Databases
-		verifyDatabases();
-	}
-
-	@Test
-	public void verifyDatabases_WithFilter_ITA_GridView()
-	{
-
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyDatabases_WithFilter_ITA_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Databases
-		webd.getLogger().info("Open the OOB dashboard---Databases");
-		DashboardHomeUtil.selectDashboard(webd, "Databases");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Databases
-		verifyDatabases();
-	}
-
-	@Test
-	public void verifyDatabases_WithFilter_ITA_ListView()
-	{
-
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyDatabases_WithFilter_ITA_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Databases
-		webd.getLogger().info("Open the OOB dashboard---Databases");
-		DashboardHomeUtil.selectDashboard(webd, "Databases");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Databases
-		verifyDatabases();
-	}
-
-	@Test
-	public void verifyDatabases_WithFilter_LA_GridView()
-	{
-
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyDatabases_WithFilter_LA_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - Log Analytics");
-		DashboardHomeUtil.filterOptions(webd, "la");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Databases
-		webd.getLogger().info("Open the OOB dashboard---Databases");
-		DashboardHomeUtil.selectDashboard(webd, "Databases");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Databases
-		verifyDatabases();
-	}
-
-	@Test
-	public void verifyDatabases_WithFilter_LA_ListView()
-	{
-
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyDatabases_WithFilter_LA_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - Log Analytics");
-		DashboardHomeUtil.filterOptions(webd, "la");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Databases
-		webd.getLogger().info("Open the OOB dashboard---Databases");
-		DashboardHomeUtil.selectDashboard(webd, "Databases");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Databases
-		verifyDatabases();
-	}
-
-	@Test
 	public void verifyEnterpriseHealth_GridView()
 	{
 		//initTest
@@ -761,6 +392,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify Enterprise Health
 		verifyEnterpriseHealth();
+		verifyEnterpriseHealth_Details();
 	}
 
 	@Test
@@ -835,98 +467,6 @@ public class VerifyOOB extends LoginAndLogout
 	}
 
 	@Test
-	public void verifyEntities_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyEntities_GridView");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Entities
-		webd.getLogger().info("Open the OOB dashboard---Entities");
-		DashboardHomeUtil.selectDashboard(webd, "Entities");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Entities
-		verifyEntities();
-	}
-
-	@Test
-	public void verifyEntities_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyEntities_ListView");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Entities
-		webd.getLogger().info("Open the OOB dashboard---Entities");
-		DashboardHomeUtil.selectDashboard(webd, "Entities");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Entities
-		verifyEntities();
-	}
-
-	@Test
-	public void verifyEntities_WithFilter_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyEntities_WithFilter_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Entities
-		webd.getLogger().info("Open the OOB dashboard---Entities");
-		DashboardHomeUtil.selectDashboard(webd, "Entities");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Entities
-		verifyEntities();
-	}
-
-	@Test
-	public void verifyEntities_WithFilter_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyEntities_WithFilter_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Entities
-		webd.getLogger().info("Open the OOB dashboard---Entities");
-		DashboardHomeUtil.selectDashboard(webd, "Entities");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Entities
-		verifyEntities();
-	}
-
-	@Test
 	public void verifyExadataHealth_GridView()
 	{
 		//initTest
@@ -945,6 +485,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify Exadata Health
 		verifyExadataHealth();
+		verifyExadataHealth_Details();
 	}
 
 	@Test
@@ -1037,6 +578,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify Host Operations
 		verifyHostOperations();
+		verifyHostOperations_Details();
 	}
 
 	@Test
@@ -1111,148 +653,6 @@ public class VerifyOOB extends LoginAndLogout
 	}
 
 	@Test
-	public void verifyHosts_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyHosts_GridView");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Hosts
-		webd.getLogger().info("Open the OOB dashboard---Hosts");
-		DashboardHomeUtil.selectDashboard(webd, "Hosts");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Hosts
-		verifyHosts();
-	}
-
-	@Test
-	public void verifyHosts_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyHosts_ListView");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Hosts
-		webd.getLogger().info("Open the OOB dashboard---Hosts");
-		DashboardHomeUtil.selectDashboard(webd, "Hosts");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Hosts
-		verifyHosts();
-	}
-
-	@Test
-	public void verifyHosts_WithFilter_ITA_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyHosts_WithFilter_ITA_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Hosts
-		webd.getLogger().info("Open the OOB dashboard---Hosts");
-		DashboardHomeUtil.selectDashboard(webd, "Hosts");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Hosts
-		verifyHosts();
-	}
-
-	@Test
-	public void verifyHosts_WithFilter_ITA_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyHosts_WithFilter_ITA_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Hosts
-		webd.getLogger().info("Open the OOB dashboard---Hosts");
-		DashboardHomeUtil.selectDashboard(webd, "Hosts");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Hosts
-		verifyHosts();
-	}
-
-	@Test
-	public void verifyHosts_WithFilter_LA_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyHosts_WithFilter_LA_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - Log Analytics");
-		DashboardHomeUtil.filterOptions(webd, "la");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Hosts
-		webd.getLogger().info("Open the OOB dashboard---Hosts");
-		DashboardHomeUtil.selectDashboard(webd, "Hosts");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Hosts
-		verifyHosts();
-	}
-
-	@Test
-	public void verifyHosts_WithFilter_LA_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyHosts_WithFilter_LA_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - Log Analytics");
-		DashboardHomeUtil.filterOptions(webd, "la");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Hosts
-		webd.getLogger().info("Open the OOB dashboard---Hosts");
-		DashboardHomeUtil.selectDashboard(webd, "Hosts");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Hosts
-		verifyHosts();
-	}
-
-	@Test
 	public void verifyMiddlewareOperations_GridView()
 	{
 		//initTest
@@ -1271,6 +671,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify Middleware Operations
 		verifyMiddlewareOperations();
+		verifyMiddlewareOperations_Details();
 	}
 
 	@Test
@@ -1342,190 +743,6 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify Middleware Operations
 		verifyMiddlewareOperations();
-	}
-
-	@Test
-	public void verifyOthers_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOthers_GridView");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Others
-		webd.getLogger().info("Open the OOB dashboard---Others");
-		DashboardHomeUtil.selectDashboard(webd, "Others");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Others
-		verifyOthers();
-	}
-
-	@Test
-	public void verifyOthers_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOthers_ListView");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Others
-		webd.getLogger().info("Open the OOB dashboard---Others");
-		DashboardHomeUtil.selectDashboard(webd, "Others");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Others
-		verifyOthers();
-	}
-
-	@Test
-	public void verifyOthers_WithFilter_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOthers_WithFilter_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Others
-		webd.getLogger().info("Open the OOB dashboard---Others");
-		DashboardHomeUtil.selectDashboard(webd, "Others");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Others
-		verifyOthers();
-	}
-
-	@Test
-	public void verifyOthers_WithFilter_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOthers_WithFilter_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Others
-		webd.getLogger().info("Open the OOB dashboard---Others");
-		DashboardHomeUtil.selectDashboard(webd, "Others");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Others
-		verifyOthers();
-	}
-
-	@Test
-	public void verifyOverview_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOverview_GridView");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Overview
-		webd.getLogger().info("Open the OOB dashboard---Overview");
-		DashboardHomeUtil.selectDashboard(webd, "Overview");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Overview
-		verifyOverview();
-	}
-
-	@Test
-	public void verifyOverview_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOverview_ListView");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Overview
-		webd.getLogger().info("Open the OOB dashboard---Overview");
-		DashboardHomeUtil.selectDashboard(webd, "Overview");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Overview
-		verifyOverview();
-	}
-
-	@Test
-	public void verifyOverview_WithFilter_idView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOverview_WithFilter_idView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Overview
-		webd.getLogger().info("Open the OOB dashboard---Overview");
-		DashboardHomeUtil.selectDashboard(webd, "Overview");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Overview
-		verifyOverview();
-	}
-
-	@Test
-	public void verifyOverview_WithFilter_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOverview_WithFilter_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Overview
-		webd.getLogger().info("Open the OOB dashboard---Overview");
-		DashboardHomeUtil.selectDashboard(webd, "Overview");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Overview
-		verifyOverview();
 	}
 
 	@Test
@@ -1694,98 +911,6 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify Perf Analytics Database
 		verifyPerfAnalyticsDatabase();
-	}
-
-	@Test
-	public void verifyPerformance_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyPerformance_GridView");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Performance
-		webd.getLogger().info("Open the OOB dashboard---Performance");
-		DashboardHomeUtil.selectDashboard(webd, "Performance");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Performance
-		verifyPerformance();
-	}
-
-	@Test
-	public void verifyPerformance_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyPerformance_ListView");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Performance
-		webd.getLogger().info("Open the OOB dashboard---Performance");
-		DashboardHomeUtil.selectDashboard(webd, "Performance");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Performance
-		verifyPerformance();
-	}
-
-	@Test
-	public void verifyPerformance_WithFilter_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyPerformance_WithFilter_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Performance
-		webd.getLogger().info("Open the OOB dashboard---Performance");
-		DashboardHomeUtil.selectDashboard(webd, "Performance");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Performance
-		verifyPerformance();
-	}
-
-	@Test
-	public void verifyPerformance_WithFilter_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyPerformance_WithFilter_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Performance
-		webd.getLogger().info("Open the OOB dashboard---Performance");
-		DashboardHomeUtil.selectDashboard(webd, "Performance");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Performance
-		verifyPerformance();
 	}
 
 	@Test
@@ -2041,190 +1166,6 @@ public class VerifyOOB extends LoginAndLogout
 	}
 
 	@Test
-	public void verifySummary_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifySummary_GridView()");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Summary
-		webd.getLogger().info("Open the OOB dashboard---Summary");
-		DashboardHomeUtil.selectDashboard(webd, "Summary");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify ummary
-		verifySummary();
-	}
-
-	@Test
-	public void verifySummary_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifySummary_ListView");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Summary
-		webd.getLogger().info("Open the OOB dashboard---Summary");
-		DashboardHomeUtil.selectDashboard(webd, "Summary");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify ummary
-		verifySummary();
-	}
-
-	@Test
-	public void verifySummary_WithFilter_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifySummary_WithFilter_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Summary
-		webd.getLogger().info("Open the OOB dashboard---Summary");
-		DashboardHomeUtil.selectDashboard(webd, "Summary");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify ummary
-		verifySummary();
-	}
-
-	@Test
-	public void verifySummary_WithFilter_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifySummary_WithFilter_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Summary
-		webd.getLogger().info("Open the OOB dashboard---Summary");
-		DashboardHomeUtil.selectDashboard(webd, "Summary");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify ummary
-		verifySummary();
-	}
-
-	@Test
-	public void verifyTimeseries_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyTimeseries_GridView");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Timeseries
-		webd.getLogger().info("Open the OOB dashboard---Timeseries");
-		DashboardHomeUtil.selectDashboard(webd, "Timeseries");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Timeseries
-		verifyTimeseries();
-	}
-
-	@Test
-	public void verifyTimeseries_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyTimeseries_ListView");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Timeseries
-		webd.getLogger().info("Open the OOB dashboard---Timeseries");
-		DashboardHomeUtil.selectDashboard(webd, "Timeseries");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Timeseries
-		verifyTimeseries();
-	}
-
-	@Test
-	public void verifyTimeseries_WithFilter_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyTimeseries_WithFilter_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Timeseries
-		webd.getLogger().info("Open the OOB dashboard---Timeseries");
-		DashboardHomeUtil.selectDashboard(webd, "Timeseries");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Timeseries
-		verifyTimeseries();
-	}
-
-	@Test
-	public void verifyTimeseries_WithFilter_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyTimeseries_WithFilter_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Timeseries
-		webd.getLogger().info("Open the OOB dashboard---Timeseries");
-		DashboardHomeUtil.selectDashboard(webd, "Timeseries");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Timeseries
-		verifyTimeseries();
-	}
-
-	@Test
 	public void verifyUIGallery_GridView()
 	{
 		//initTest
@@ -2243,6 +1184,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify UI Gallery
 		verifyUIGallery();
+		verifyUIGallery_Details();
 	}
 
 	@Test
@@ -2353,15 +1295,9 @@ public class VerifyOOB extends LoginAndLogout
 	private void verifyApplicationServers()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
-		//verify the current url
-		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=35");
 
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Application Servers opened correctly");
-
-		webd.getLogger().info("Verify the dashboard titile...");
-		DashboardBuilderUtil.verifyDashboard(webd, "Application Servers", "", true);
 
 		//verify all the widgets displayed
 		webd.getLogger().info("Verify all the widgets in dashboard");
@@ -2411,15 +1347,9 @@ public class VerifyOOB extends LoginAndLogout
 	private void verifyCategorical()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
-		//verify the current url
-		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=26");
 
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Categorical opened correctly");
-
-		webd.getLogger().info("Verify the dashboard titile...");
-		DashboardBuilderUtil.verifyDashboard(webd, "Categorical", "", true);
 
 		//verify all the widgets displayed
 		webd.getLogger().info("Verify all the widgets in dashboard");
@@ -2465,8 +1395,13 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verify the dashboard titile...");
 		DashboardBuilderUtil.verifyDashboard(webd, "Database Operations", "", true);
 
+		webd.getLogger().info("Verify the OOB Dashboard - Database Operations opened finished");
+	}
+
+	private void verifyDatabaseOperations_Details()
+	{
 		//verify all the widgets displayed
-		webd.getLogger().info("Verify all the widgets in dashboard");
+		webd.getLogger().info("Verify all the widgets in dashboard -- <Database Operations>");
 		DashboardBuilderUtil.verifyWidget(webd, "Database Log Trends");
 		DashboardBuilderUtil.verifyWidget(webd, "Database Critical Incidents by Target Type");
 		DashboardBuilderUtil.verifyWidget(webd, "Top Database Targets with Log Errors");
@@ -2487,15 +1422,9 @@ public class VerifyOOB extends LoginAndLogout
 	private void verifyDatabases()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
-		//verify the current url
-		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=34");
 
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Databases opened correctly");
-
-		webd.getLogger().info("Verify the dashboard titile...");
-		DashboardBuilderUtil.verifyDashboard(webd, "Databases", "", true);
 
 		//verify all the widgets displayed
 		webd.getLogger().info("Verify all the widgets in dashboard");
@@ -2538,8 +1467,11 @@ public class VerifyOOB extends LoginAndLogout
 
 		webd.getLogger().info("Verify the dashboard set titile...");
 		DashboardBuilderUtil.verifyDashboardSet(webd, "Enterprise Health");
+	}
 
-		webd.getLogger().info("Verify the icon in dashboard set");
+	private void verifyEnterpriseHealth_Details()
+	{
+		webd.getLogger().info("Verify the icon in dashboard set -- <Enterprise Health>");
 		verifyIconInOobDashboardSet();
 
 		//verify the dashboards in set
@@ -2550,6 +1482,27 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Application Servers");
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Entities");
 
+		//verify each dashboard
+		webd.getLogger().info("Verify Dashboard <Summary> in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Summary");
+		verifySummary();
+
+		webd.getLogger().info("Verify Dashboard <Hosts> in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Hosts");
+		verifyHosts();
+
+		webd.getLogger().info("Verify Dashboard <Databases> in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Databases");
+		verifyDatabases();
+
+		webd.getLogger().info("Verify Dashboard <Application Servers> in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Application Servers");
+		verifyApplicationServers();
+
+		webd.getLogger().info("Verify Dashboard <Entities> in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Entities");
+		verifyEntities();
+
 		webd.getLogger().info("Verification end...");
 	}
 
@@ -2557,15 +1510,8 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
-		//verify the current url
-		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=36");
-
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Entities opened correctly");
-
-		webd.getLogger().info("Verify the dashboard titile...");
-		DashboardBuilderUtil.verifyDashboard(webd, "Entities", "", true);
 
 		webd.getLogger().info("Verify all the widgets in dashboard");
 		DashboardBuilderUtil.verifyWidget(webd, "Entities");
@@ -2592,14 +1538,26 @@ public class VerifyOOB extends LoginAndLogout
 
 		webd.getLogger().info("Verify the dashboard set titile...");
 		DashboardBuilderUtil.verifyDashboardSet(webd, "Exadata Health");
+	}
 
-		webd.getLogger().info("Verify the icon in dashboard set");
+	private void verifyExadataHealth_Details()
+	{
+		webd.getLogger().info("Verify the icon in dashboard set -- <Exadata Health>");
 		verifyIconInOobDashboardSet();
 
 		//verify the dashboards in set
 		webd.getLogger().info("Verify the dashboards in set");
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Overview");
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Performance");
+
+		//verify each dashboard
+		webd.getLogger().info("Verify Dashboard <Overview> in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Overview");
+		verifyOverview();
+
+		webd.getLogger().info("Verify Dashboard <Performance> in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Performance");
+		verifyPerformance();
 
 		webd.getLogger().info("Verification end...");
 	}
@@ -2618,8 +1576,13 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verify the dashboard titile...");
 		DashboardBuilderUtil.verifyDashboard(webd, "Host Operations", "", true);
 
+		webd.getLogger().info("Verify the OOB Dashboard - Host Operations opened finished");
+	}
+
+	private void verifyHostOperations_Details()
+	{
 		//verify all the widgets displayed
-		webd.getLogger().info("Verify all the widgets in dashboard");
+		webd.getLogger().info("Verify all the widgets in dashboard -- <Host Operations>");
 		DashboardBuilderUtil.verifyWidget(webd, "Host Logs Trend");
 		DashboardBuilderUtil.verifyWidget(webd, "Top Host Log Sources");
 		DashboardBuilderUtil.verifyWidget(webd, "Top Host Log Entries by Service");
@@ -2641,15 +1604,8 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
-		//verify the current url
-		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=33");
-
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Hosts opened correctly");
-
-		webd.getLogger().info("Verify the dashboard titile...");
-		DashboardBuilderUtil.verifyDashboard(webd, "Hosts", "", true);
 
 		webd.getLogger().info("Verify all the widgets in dashboard");
 		DashboardBuilderUtil.verifyWidget(webd, "Host Status");
@@ -2685,10 +1641,12 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		webd.getLogger().info("Verify the save icon is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DASHBOARDSAVECSS), "Save icon is displayed in OOB Dashboard");
-		webd.waitForElementPresent("css=" + PageId.DASHBOARDOPTIONS_CSS);
+
 		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(PageId.DASHBOARDOPTIONS_CSS)));
 		webd.click("css=" + PageId.DASHBOARDOPTIONS_CSS);
+		webd.takeScreenShot();
+
 		webd.getLogger().info("Verify the edit menu is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css" + DashBoardPageId.BUILDEROPTIONSEDITLOCATORCSS),
 				"Edit menu is displayed in OOB Dashboard");
@@ -2700,10 +1658,11 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verify the save icon is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DASHBOARDSAVECSS), "Save icon is displayed in OOB");
 
-		webd.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
 		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(PageId.DASHBOARDSETOPTIONS_CSS)));
 		webd.click("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
+		webd.takeScreenShot();
+
 		webd.getLogger().info("Verify the edit menu is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css" + PageId.DASHBOARDSETOPTIONSEDIT_CSS), "Edit menu is displayed in OOB");
 	}
@@ -2715,7 +1674,6 @@ public class VerifyOOB extends LoginAndLogout
 		driver.takeScreenShot();
 
 		String titleTitlesLocator = String.format(DashBoardPageId.BUILDERTILETITLELOCATOR, widgetname);
-		//driver.click(titleTitlesLocator);
 		WebElement tileTitle = driver.getWebDriver().findElement(By.xpath(titleTitlesLocator));
 
 		tileTitle.click();
@@ -2723,6 +1681,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		Actions builder = new Actions(driver.getWebDriver());
 		builder.moveToElement(tileTitle).perform();
+		driver.takeScreenShot();
 
 		//verify the config icon not exist
 		Assert.assertFalse(driver.isDisplayed(DashBoardPageId.BUILDERTILECONFIGLOCATOR),
@@ -2742,7 +1701,12 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verify the dashboard titile...");
 		DashboardBuilderUtil.verifyDashboard(webd, "Entities", "", true);
 
-		webd.getLogger().info("Verify all the widgets in dashboard");
+		webd.getLogger().info("Verify the OOB Dashboard - Middleware Operations opened finished");
+	}
+
+	private void verifyMiddlewareOperations_Details()
+	{
+		webd.getLogger().info("Verify all the widgets in dashboard  -- <Middleware Operations>");
 		DashboardBuilderUtil.verifyWidget(webd, "Middleware Logs Trend");
 		DashboardBuilderUtil.verifyWidget(webd, "Top Middleware Error Codes");
 		DashboardBuilderUtil.verifyWidget(webd, "Top Middleware Targets with Errors");
@@ -2763,15 +1727,9 @@ public class VerifyOOB extends LoginAndLogout
 	private void verifyOthers()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
-		//verify the current url
-		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=27");
 
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Others opened correctly");
-
-		webd.getLogger().info("Verify the dashboard titile...");
-		DashboardBuilderUtil.verifyDashboard(webd, "Others", "", true);
 
 		webd.getLogger().info("Verify all the widgets in dashboard");
 		DashboardBuilderUtil.verifyWidget(webd, "Label");
@@ -2799,15 +1757,9 @@ public class VerifyOOB extends LoginAndLogout
 	private void verifyOverview()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
-		//verify the current url
-		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=29");
 
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Overview opened correctly");
-
-		webd.getLogger().info("Verify the dashboard titile...");
-		DashboardBuilderUtil.verifyDashboard(webd, "Overview", "", true);
 
 		webd.getLogger().info("Verify all the widgets in dashboard");
 		DashboardBuilderUtil.verifyWidget(webd, "Entities by Database Machine");
@@ -2859,15 +1811,8 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
-		//verify the current url
-		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=30");
-
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Performance opened correctly");
-
-		webd.getLogger().info("Verify the dashboard titile...");
-		DashboardBuilderUtil.verifyDashboard(webd, "Performance", "", true);
 
 		webd.getLogger().info("Verify all the widgets in dashboard");
 		DashboardBuilderUtil.verifyWidget(webd, "Oracle Exadata Storage Server Read Response Time");
@@ -2940,15 +1885,8 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
-		//verify the current url
-		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=32");
-
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Summary opened correctly");
-
-		webd.getLogger().info("Verify the dashboard titile...");
-		DashboardBuilderUtil.verifyDashboard(webd, "Summary", "", true);
 
 		webd.getLogger().info("Verify all the widgets in dashboard");
 		DashboardBuilderUtil.verifyWidget(webd, "Entity Status");
@@ -2990,15 +1928,8 @@ public class VerifyOOB extends LoginAndLogout
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
-		//verify the current url
-		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=25");
-
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Timeseries opened correctly");
-
-		webd.getLogger().info("Verify the dashboard titile...");
-		DashboardBuilderUtil.verifyDashboard(webd, "Timeseries", "", true);
 
 		webd.getLogger().info("Verify all the widgets in dashboard");
 		DashboardBuilderUtil.verifyWidget(webd, "Area Chart");
@@ -3046,15 +1977,31 @@ public class VerifyOOB extends LoginAndLogout
 
 		webd.getLogger().info("Verify the dashboard set titile...");
 		DashboardBuilderUtil.verifyDashboardSet(webd, "UI Gallery");
+	}
 
-		webd.getLogger().info("Verify the icon in dashboard set");
+	private void verifyUIGallery_Details()
+	{
+		webd.getLogger().info("Verify the icon in dashboard set --<UIGallery>");
 		verifyIconInOobDashboardSet();
 
 		//verify the dashboards in set
 		webd.getLogger().info("Verify the dashboards in set");
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Timeseries");
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Categorical");
-		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Others");
+//		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Others");
+
+		//verify each dashboard
+		webd.getLogger().info("Verify Dashboard <Timeseries> in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Timeseries");
+		verifyTimeseries();
+
+		webd.getLogger().info("Verify Dashboard <Categorical> in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Categorical");
+		verifyCategorical();
+
+//		webd.getLogger().info("Verify Dashboard <Others> in set");
+//		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Others");
+//		verifyOthers();
 
 		webd.getLogger().info("Verification end...");
 	}

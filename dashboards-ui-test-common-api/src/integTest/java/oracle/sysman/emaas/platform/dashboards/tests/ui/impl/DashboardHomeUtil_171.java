@@ -194,15 +194,25 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		Validator.notEmptyString("option", option);
 
 		driver.click(convertName(DashBoardPageId.EXPLOREDATABTNID));
-		WebElement menu = driver.getElement(convertName(DashBoardPageId.EXPLOREDATAMENU));
-		List<WebElement> menuList = menu.findElements(By.tagName("li"));
+		//WebElement menu = driver.getElement(convertName(DashBoardPageId.EXPLOREDATAMENU));
+                 
+                if ("Log Visual Analyzer".equals(option)) {                 
+                        driver.click(DashBoardPageId.EXPLORE_LOG);
+                 } else {
+                     	driver.click(DashBoardPageId.EXPLORE_Search);
+		 }
+ 
+               
+              }  
+               
+		/*List<WebElement> menuList = menu.findElements(By.tagName("li"));
 		for (WebElement menuItem : menuList) {
 			if (option.equals(menuItem.getText())) {
 				menuItem.click();
 				break;
 			}
 		}
-	}
+	}*/
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#gridView(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
