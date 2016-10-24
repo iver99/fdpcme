@@ -762,6 +762,7 @@ public class Dashboard
 				dbd.setName(emsDashboard.getName());
 				dbd.setSharePublic(DataFormatUtils.integer2Boolean(emsDashboard
 						.getSharePublic()));
+				dbd.setOwner(emsDashboard.getOwner());
 				subDashboards.add(dbd);
 
 			}
