@@ -9,7 +9,7 @@ ext.restDocRootDir = "${buildDir}/restdoc"
 ext.restDocOutputDir = "${restDocRootDir}"
 
 //Security client version
-ext.emaasSecurityClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.1+')
+//ext.emaasSecurityClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.1+')
 
 
 tasks.withType(JavaCompile) {
@@ -131,7 +131,7 @@ dependencies {
     providedCompile getProjectArtifact('groovy-all')   
     providedCompile getProjectArtifact('registry-lookup-client')   
     providedCompile getProjectArtifact('emaas-platform-tenant-sdk')   
-    providedCompile getProjectArtifact('security-client')   
+    compile getProjectArtifact('security-client')   
 
 
 	
