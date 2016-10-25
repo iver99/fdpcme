@@ -681,20 +681,53 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                     if (!self.cxtEntityName && self.cxtEntityMeId) {
                         //TODO: fetch entity name from WS API by entityMeId
                     }
-                    self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_ENTITY, 
-                                                            self.cxtCompositeName ? self.cxtCompositeName : '', 
-                                                            self.cxtEntityName ? self.cxtEntityName : ''));
+                    //A composite entity & no member entity
+                    if (self.cxtCompositeName && self.cxtEntityName) {
+                        self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_ENTITY, 
+                                                            self.cxtCompositeName, self.cxtEntityName));
+                    }
+                    //A composite entity & a member entity (e.g. Rideshare App & slc01.us.oracle.com)
+                    else if (self.cxtCompositeName && self.cxtEntityType) {
+                        self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_ENTITY_TYPE, 
+                                                            self.cxtCompositeName, self.cxtEntityType));
+                    }
+                    //A composite entity & no member entity
+                    else if (self.cxtCompositeName) {
+                        self.compositeCxtText(self.cxtCompositeName);
+                    }
+                    //No composite entity & no member entity
+                    else {
+                        self.compositeCxtText(nls.BRANDING_BAR_GLOBAL_CONTEXT_ALL_ENTITIES);
+                    }
+                    
                     if (self.cxtTimePeriod) {
                         self.timeCxtText(self.cxtTimePeriod);
                     }
                     else {
                         var dateStartTime = self.cxtStartTime ? new Date(parseInt(self.cxtStartTime)) : null;
                         var dateEndTime = self.cxtEndTime ? new Date(parseInt(self.cxtEndTime)) : null;
-                        var dateStartTimeText = dateStartTime ? dateStartTime.toLocaleString('en-US') : "";
-                        var dateEndTimeText = dateEndTime ? dateEndTime.toLocaleString('en-US') : "";
-                        self.timeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_TIME,
-                                                                dateStartTimeText, dateEndTimeText));
+                        var dateStartTimeText = formatDateTime(dateStartTime);
+                        var dateEndTimeText = formatDateTime(dateEndTime);
+                        if (dateStartTimeText || dateEndTimeText) {
+                            self.timeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_TIME,
+                                                                dateStartTimeText ? dateStartTimeText : '', 
+                                                                dateEndTimeText ? dateEndTimeText : ''));
+                        }
+                        else {
+                            self.timeCxtText(nls.BRANDING_BAR_GLOBAL_CONTEXT_TIME_ALL);
+                        }
                     }
+                }
+                
+                function formatDateTime(dateTime) {
+                    if (dateTime) {
+                        var dateTimeOption = {formatType: "datetime", dateFormat: "medium"};
+                        if (!self.dateTimeConverter) {
+                            self.dateTimeConverter = oj.Validation.converterFactory("dateTime").createConverter(dateTimeOption);
+                        }
+                        return self.dateTimeConverter.format(oj.IntlConverterUtils.dateToLocalIso(dateTime));
+                    }
+                    return null;
                 }
             }
 

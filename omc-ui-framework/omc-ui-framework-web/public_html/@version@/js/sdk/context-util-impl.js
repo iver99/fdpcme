@@ -11,6 +11,7 @@ define([
                                     {'contextName': 'composite','paramNames': ['compositeType', 'compositeName', 'compositeMEID']},
                                     {'contextName': 'entity','paramNames': ['entityType', 'entityName', 'entityMEID']}
                                    ];
+            var omcCtxParamName = 'omcCtx';
             
             //Initialize window _uifwk object
             if (!window._uifwk) {
@@ -35,6 +36,7 @@ define([
                 //Otherwise, retrieve the context from URL parameters
                 else {
                     omcContext = {};
+                    var omcCtxString = decodeURIComponent(dfu.getUrlParam(omcCtxParamName));
                     //Loop through supported context list
                     for (var i = 0; i < supportedContext.length; i++) {
                         var contextDef = supportedContext[i];
@@ -44,14 +46,14 @@ define([
                         for (var j = 0; j < contextParams.length; j++) {
                             var paramName = contextParams[j];
                             //Get param value form URL by name
-                            var paramValue = dfu.getUrlParam(paramName);
+                            var paramValue = retrieveParamValueFromUrl(omcCtxString, paramName);
                             if (paramValue) {
                                 //Initialize
                                 if (!omcContext[contextName]) {
                                     omcContext[contextName] = {};
                                 }
                                 //Set value into the OMC context JSON object
-                                omcContext[contextName][paramName] = decodeURIComponent(paramValue);
+                                omcContext[contextName][paramName] = paramValue;
                             }
                         }
                     }
@@ -93,6 +95,7 @@ define([
                 if (url) {
                     //Get OMC context
                     var omcContext = self.getOMCContext();
+                    var omcCtxString = "";
                     if (omcContext) {
                         //Add or update URL parameters string for OMC context
                         for (var i = 0; i < supportedContext.length; i++) {
@@ -105,12 +108,20 @@ define([
                                 //Check for available context which should be appended into URL
                                 if (omcContext[contextName] && omcContext[contextName][paramName]) {
                                     var paramValue = omcContext[contextName][paramName];
-                                    paramValue = encodeURIComponent(paramValue);
-                                    //Add or update URL parameters
-                                    newUrl = addOrUpdateUrlParam(newUrl, paramName, paramValue);
+                                    omcCtxString = omcCtxString + paramName + "=" + paramValue + '&';
                                 }
                             }
                         }
+                        if (omcCtxString && omcCtxString.lastIndexOf('&') !== -1) {
+                            omcCtxString = omcCtxString.substring(0, omcCtxString.lastIndexOf('&'));
+                        }
+                    }
+                    //Retrieve omcCtx from original URL
+                    var origOmcCtx = retrieveParamValueFromUrl(url, omcCtxParamName);
+                    //If OMC context is not empty, append it to the URL, or if original URL has omcCtx already, then update it.
+                    if (omcCtxString || origOmcCtx) {
+                        //Add or update URL parameters
+                        newUrl = addOrUpdateUrlParam(newUrl, omcCtxParamName, encodeURIComponent(omcCtxString));
                     }
                 }
                 else {
@@ -407,6 +418,24 @@ define([
                 return url + (url.indexOf('?') > 0 ? 
                     //Handle case that an URL ending with a question mark only
                     (url.lastIndexOf('?') === url.length - 1 ? '': '&') : '?') + paramName + '=' + paramValue; 
+            };
+            
+            /**
+             * Retrieve parameter value from given URL string.
+             * 
+             * @param {String} decodedUrl Decoded URL string
+             * @param {String} paramName Parameter name
+             * @returns {String} Parameter value
+             */
+            function retrieveParamValueFromUrl(decodedUrl, paramName) {
+                if (decodedUrl && paramName) {
+                    if (!decodedUrl.startsWith('?')) {
+                        decodedUrl = '?' + decodedUrl;
+                    }
+                    var regex = new RegExp("[\\?&]" + paramName + "=([^&#]*)"), results = regex.exec(decodedUrl);
+                    return results === null ? null : results[1];
+                }
+                return null;
             };
         }
 
