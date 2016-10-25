@@ -25,7 +25,42 @@ role value for that section to represent the appropriate content type.
         <!-- This is the main css file for the default Alta theme -->
         <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v2.0.2/alta/oj-alta-min.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/test-alta.css" type="text/css"/>
-        
+        <script>
+            window.DEV_MODE= {
+                "_comment_0":"===THIS IS USED FOR DEV PURPOSE ONLY===",
+                "_comment_1":"Change data/url to desired one that matches dev env",
+                "_comment_2":"do *NOT* push this file unless it is required change for dev env",
+                "_comment_9":"=======================================",
+                "tenant":"emaastesttenant1",
+                "user":"emcsadmin",
+                //"wlsAuth":"weblogic:welcome1",
+                "wlsAuth":"EM01_EMCS_GLOBAL_INTER_SERVICE_APPID:Czs0pwad3vk_uh",
+                "userRoles": {
+                     "roleNames": [
+                     "APM Administrator",
+                     "APM User",
+                     "IT Analytics Administrator",
+                     "Log Analytics Administrator",
+                     "Log Analytics User",
+                     "IT Analytics User"
+                     ]
+                 },
+                 // UDE dev mode 
+                 //default registry will provide default end points if not explicitly defined below
+                 "registryUrl": "http://slc09bek.us.oracle.com:7004/registry/servicemanager/registry/v1/instances",
+                 "dashboardFrameworkAPIEndPoint": "http://slc09bek.us.oracle.com:7001/emcpdf/api/v1/", //required by DF in the future, you can use it now
+                 "savedSearchEndPoint": "http://slc09bek.us.oracle.com:7019/savedsearch/v1/search", //required by DF in the future, you can use it now
+                 "targetClusterUrl": "http://slc09bek.us.oracle.com:7001/bdas-micro-executor/api/v0.9/services/oracle.emcs.stats/targetcluster/invoke", // required by cluster visualization    //
+                 "EntityCardSkipRestCall": {"name": "stuzx42.us.oracle.com", "type": "host","avail": "UNREACHABLE", "since": "2014-11-14T06:45:26.000Z","emsite": "slc09sfa.us.oracle.com:1830","links": [{"url": "http://slc10oof.us.oracle.com:7004/emsaasui/emcta/ta/analytics.html","text": "EntityCard.TARGET_UDE_LINK_TEXT","translationPath": "emsaasui/emcta/ta/nls/AnalyticsMsg"},{"url": "https://slc09sfb.us.oracle.com:7005/emsaasui/emlacore/html/log-analytics-search.html","text": "EntityCard.TARGET_LA_LINK_TEXT", "translationPath": "emsaasui/emcta/ta/nls/AnalyticsMsg"}],"widgets": [{"id": 3100,"WIDGET_KOC_NAME": "emcta-visualization","WIDGET_TEMPLATE": "/emsaasui/emcta/ta/js/widget/visualizationWidget/visualizationWidget.html", "WIDGET_VIEWMODEL": "/emsaasui/emcta/ta/js/widget/visualizationWidget/js/VisualizationWidget.js"},{"id": 2001,"WIDGET_KOC_NAME": "emcla-visualization", "WIDGET_TEMPLATE": "/emsaasui/emlacore/html/search/widgets/visualizationWidget.html", "WIDGET_VIEWMODEL": "/emsaasui/emlacore/js/viewmodel/search/widget/VisualizationWidget.js"}]}, //Sample data for EntityCard that can skip calling any REST Endpoint for Entitycard
+                 "EntityCardUrl": "http://slc09bel.us.oracle.com:7004/emsaasui/emcta/api/v1.1", //required by EntityCard
+                 "SubscribedAppsEndPoint": "http://slc09bek.us.oracle.com:7019/emcpdf/api/v1/subscribedapps",
+                 // end of UDE dev mode
+                "dfRestApiEndPoint": "http://slc09bek.us.oracle.com:7019/emcpdf/api/v1/",
+                "ssfRestApiEndPoint": "http://slc09bek.us.oracle.com:7019/savedsearch/v1/",
+                "_comment_100":"Please add other data as required for your dev env"
+            };
+
+        </script>
         <!-- RequireJS bootstrap file -->
         <script data-main="@version@/js/testMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 

@@ -25,6 +25,23 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                 var dfu = new dfumodel(self.userName, self.tenantName);
                 //Append uifwk css file into document head
                 dfu.loadUifwkCss();
+                
+                if (!ko.components.isRegistered('emctas-topology'))
+                {
+                    ko.components.register('emctas-topology', {
+                        viewModel: {require: '/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.js'},
+                        template: {require: 'text!/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html'}
+                    });
+                }
+                //
+                // topology params
+                //
+                self.entities = params.entities || ko.observable([]);
+                self.associations = params.associations;
+                self.layout = params.layout;
+                self.customNodeDataLoader = params.customNodeDataLoader;
+                self.customEventHandler = params.customEventHandler;
+                self.miniEntityCardActions = params.miniEntityCardActions;
 
                 //NLS strings
                 self.productName = nls.BRANDING_BAR_MANAGEMENT_CLOUD;
