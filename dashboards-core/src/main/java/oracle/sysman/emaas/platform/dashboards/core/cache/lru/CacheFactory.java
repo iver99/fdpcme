@@ -20,7 +20,7 @@ public class CacheFactory {
 	}
 
 
-	public static CacheUnit getCache(String cacheName,int expire){
+	public static CacheUnit getCache(String cacheName,int timeToLive){
 		if(cacheName ==null){
 			LOGGER.debug("CacheFactory:Cache name cannot be null!");
 			throw new IllegalArgumentException("Cache name cannot be null!");
@@ -31,17 +31,17 @@ public class CacheFactory {
 		}
 		CacheUnit cu=cacheUnitMap.get(cacheName);
 		if(cu == null){
-			return CacheFactory.createCacheUnit(cacheName, expire);
+			return CacheFactory.createCacheUnit(cacheName, timeToLive);
 		}else{
 			return cu;
 		}
 
 	}
 
-	private static CacheUnit createCacheUnit(String cacheName,int expire){
-		CacheUnit cu=new CacheUnit(cacheName,expire);
+	private static CacheUnit createCacheUnit(String cacheName,int timeToLive){
+		CacheUnit cu=new CacheUnit(cacheName,timeToLive);
 		cacheUnitMap.put(cacheName, cu);
-		LOGGER.debug("CacheFactory:Cache named: {},expire time: {} has been created.", cacheName, expire);
+		LOGGER.debug("CacheFactory:Cache named: {},timeToLive time: {} has been created.", cacheName, timeToLive);
 		return cu;
 	}
 
