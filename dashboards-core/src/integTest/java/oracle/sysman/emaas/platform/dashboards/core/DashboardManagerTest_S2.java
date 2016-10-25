@@ -12,11 +12,6 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
@@ -40,6 +35,8 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -1125,7 +1122,7 @@ public class DashboardManagerTest_S2
 			@Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber)
 	{
 		DashboardManager dm = DashboardManager.getInstance();
-		Assert.assertEquals(dm.updateDashboardTilesName(1L, null, 1L), 0);
+		Assert.assertEquals(dm.updateDashboardTilesName(1L, null, BigInteger.ONE), 0);
 		Assert.assertEquals(dm.updateDashboardTilesName(1L, "test", null), 0);
 
 		new Expectations() {
@@ -1142,7 +1139,7 @@ public class DashboardManagerTest_S2
 				andEntityTransaction.commit();
 			}
 		};
-		int rtn = dm.updateDashboardTilesName(1L, "test", 1L);
+		int rtn = dm.updateDashboardTilesName(1L, "test", BigInteger.ONE);
 		Assert.assertEquals(rtn, 1234);
 	}
 
@@ -1152,7 +1149,7 @@ public class DashboardManagerTest_S2
 			@Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber)
 	{
 		DashboardManager dm = DashboardManager.getInstance();
-		Assert.assertEquals(dm.updateWidgetDeleteForTilesByWidgetId(1L, 1L), 0);
+		Assert.assertEquals(dm.updateWidgetDeleteForTilesByWidgetId(1L, BigInteger.ONE), 0);
 		Assert.assertEquals(dm.updateWidgetDeleteForTilesByWidgetId(1L, null), 0);
 
 		new Expectations() {
@@ -1169,7 +1166,7 @@ public class DashboardManagerTest_S2
 				andEntityTransaction.commit();
 			}
 		};
-		int rtn = dm.updateWidgetDeleteForTilesByWidgetId(1L, 1L);
+		int rtn = dm.updateWidgetDeleteForTilesByWidgetId(1L, BigInteger.ONE);
 		Assert.assertEquals(rtn, 1234);
 	}
 

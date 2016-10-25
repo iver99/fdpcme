@@ -884,7 +884,7 @@ public class DashboardManagerTest
 	public void testUpdateDashboardTilesName() throws InterruptedException, DashboardException
 	{
 		Dashboard dbd = new Dashboard();
-		Long widgetId = 1001L;
+		BigInteger widgetId = BigInteger.valueOf(1001L);
 		dbd.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
 		dbd.setType(Dashboard.DASHBOARD_TYPE_NORMAL);
 		Tile t1 = createTileForDashboard(dbd);

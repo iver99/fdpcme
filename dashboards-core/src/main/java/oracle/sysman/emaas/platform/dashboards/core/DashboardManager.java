@@ -1028,13 +1028,13 @@ public class DashboardManager
 	 * @param widgetName
 	 * @param widgetId
 	 */
-	public int updateDashboardTilesName(Long tenantId, String widgetName, Long widgetId)
+	public int updateDashboardTilesName(Long tenantId, String widgetName, BigInteger widgetId)
 	{
 		if (StringUtil.isEmpty(widgetName)) {
 			LOGGER.debug("Dashboard names are not updated: null or empty widget name isn't expected");
 			return 0;
 		}
-		if (widgetId == null || widgetId < 0) {
+		if (widgetId == null || BigInteger.ZERO.compareTo(widgetId) > 0) {
 			LOGGER.debug("Dashboard names are not updated: invalid widget ID is specified");
 			return 0;
 		}
@@ -1067,9 +1067,9 @@ public class DashboardManager
 	 * @param tenantId
 	 * @param widgetId
 	 */
-	public int updateWidgetDeleteForTilesByWidgetId(Long tenantId, Long widgetId)
+	public int updateWidgetDeleteForTilesByWidgetId(Long tenantId, BigInteger widgetId)
 	{
-		if (widgetId == null || widgetId < 0) {
+		if (widgetId == null || BigInteger.ZERO.compareTo(widgetId) > 0) {
 			LOGGER.debug("Dashboard tiles 'widgetDeleted' are not updated: invalid widget ID is specified");
 			return 0;
 		}
