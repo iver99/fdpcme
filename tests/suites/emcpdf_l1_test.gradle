@@ -92,7 +92,7 @@ dependencies {
  
     
 
-	 testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
+	 testConfig(group: 'com.oracle.emaas.emcpsrvs.sdk', name:'emaas-platform-tenant-sdk', version:'1.0.+') { transitive = false }
 
 	
 
