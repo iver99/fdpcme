@@ -104,6 +104,7 @@ define({
       "DBS_HOME_DSB_PAGE_INFO_DELETE_LABEL": "Delete",
       "DBS_HOME_MSG_DELETED_HOME_DASHBOARD":"The dashboard you set as your Home page has been deleted. You may want to choose a new Home page.",
       "DBS_BUILDER_DASHBOARD_SET_DUPLICATED_DASHBOARD": "{0} is already a member of this dashboard set. Select another dashboard.",
+      "DBS_BUILDER_DASHBOARD_CANNOT_SELECT_DASHBOARD":"You are the viewer of the dashboard set,you can not select the dashboard",
       "DBS_BUILDER_DASHBOARD_SET_SHARE_SUCCESS": "The dashboard set and all of its member dashboards can now be viewed by others.",
       "DBS_BUILDER_DASHBOARD_SET_SHARE_ERROR": "The dashboard set cannot be viewed by others; individual dashboard members are still shared.",
       "DBS_BUILDER_DASHBOARD_SET_PRINT_MASK": "Loading Content",

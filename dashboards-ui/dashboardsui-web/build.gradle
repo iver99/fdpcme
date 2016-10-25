@@ -56,7 +56,7 @@ dependencies {
         providedCompile getProjectArtifact('httpmime')   
         providedCompile getProjectArtifact('servlet-api')   
         providedCompile getProjectArtifact('javax.ws.rs-api')   
-        providedCompile getProjectArtifact('oraclejet')     
+        compile getProjectArtifact('oraclejet')     
 		compile getProjectArtifact('font-awesome')   
         compile getProjectArtifact('jmockit')   
   
