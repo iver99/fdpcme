@@ -14,12 +14,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
+import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
@@ -30,8 +28,13 @@ import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author wenjzhu
@@ -71,7 +74,7 @@ public class APIBase
 		return jsonUtil;
 	}
 
-	public Long getTenantId(String tenantId) throws CommonSecurityException, BasicServiceMalfunctionException
+	public Long getTenantId(String tenantId) throws CommonSecurityException, BasicServiceMalfunctionException,DashboardException
 	{
 		if (tenantId == null || "".equals(tenantId)) {
 			throw new CommonSecurityException(
@@ -79,9 +82,17 @@ public class APIBase
 		}
 
 		try {
+			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+				LOGGER.error("Error to get tenantId: EntityNaming service is down");
+				throw new EntityNamingDependencyUnavailableException();
+			}
 			long internalTenantId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tenantId);
 			LOGGER.info("Get internal tenant id {} from opc tenant id {}", internalTenantId, tenantId);
 			return internalTenantId;
+		}
+		catch(DashboardException e){
+			LOGGER.error(e.getLocalizedMessage(), e);
+			throw e;
 		}
 		catch (BasicServiceMalfunctionException e) {
 			throw e;
