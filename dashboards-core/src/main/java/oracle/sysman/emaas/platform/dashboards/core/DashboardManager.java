@@ -377,6 +377,30 @@ public class DashboardManager
 		}
 	}
 
+	public Dashboard getDashboardByNameAndDescriptionAndOwner(String name, String description, Long tenantId){
+		if(StringUtil.isEmpty(name)){
+			LOGGER.debug("Dashboard not found for name \"{}\" is invalid", name);
+			return null;
+		}
+		String currentUser = UserContext.getCurrentUser();
+		EntityManager entityManager = null;
+		try{
+			DashboardServiceFacade dashboardServiceFacade = new DashboardServiceFacade(tenantId);
+			entityManager = dashboardServiceFacade.getEntityManager();
+			EmsDashboard emsDashboard = dashboardServiceFacade.getEmsDashboardByNameAndDescriptionAndOwner(name, currentUser,description);
+			return Dashboard.valueOf(emsDashboard);
+		}catch (NoResultException e) {
+			LOGGER.debug("Dashboard not found for name \"{}\" because NoResultException is caught", name);
+			LOGGER.info("context", e);
+			return null;
+		}
+		finally {
+			if (entityManager != null) {
+				entityManager.close();
+			}
+		}
+	}
+
 	public Dashboard getDashboardSetsBySubId(Long dashboardId, Long tenantId) throws DashboardException
 	{
 		EntityManager em = null;
@@ -843,7 +867,8 @@ public class DashboardManager
 				throw new CommonFunctionalException(
 						MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_NAME_ERROR));
 			}
-			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
+			LOGGER.debug("Get the dashboard with name: {}, desc: {}", dbd.getName(), dbd.getDescription());
+			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
 			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
 				throw new DashboardSameNameException();
 			}
@@ -944,7 +969,7 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
-			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
+			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
 			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
 				throw new DashboardSameNameException();
 			}
