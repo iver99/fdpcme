@@ -53,14 +53,13 @@ public class CacheUnit implements ICacheUnit{
 	@Override
 	public boolean put(String key,Element value){
 		if (key == null) {
-			LOGGER.debug("CacheUnit:Cannot put into CacheUnit:key cannot be null!");
+			LOGGER.error("CacheUnit:Cannot put into CacheUnit:key cannot be null!");
 			throw new IllegalArgumentException("Cannot put into CacheUnit:key cannot be null!");
 		}
 		if (value == null) {
-			LOGGER.debug("CacheUnit:Cannot put into CacheUnit:value cannot be null!");
+			LOGGER.error("CacheUnit:Cannot put into CacheUnit:value cannot be null!");
 			throw new IllegalArgumentException("Cannot put into CacheUnit:value cannot be null!");
 		}
-		value.setLastAccessTime(getCurrentTime());
 		cacheLinkedHashMap.put(key, value);
 		return true;
 		
@@ -98,8 +97,7 @@ public class CacheUnit implements ICacheUnit{
 			LOGGER.debug("CacheUnit:Element is expired,returning null...");
 			return null;
 		}
-		e.setLastAccessTime(getCurrentTime());
-		cacheLinkedHashMap.putWithoutLock(key, e);//update cache 
+		cacheLinkedHashMap.putWithoutLock(key, e);
 		LOGGER.debug("CacheUnit:Get element from cache successful,and element has been updated!");
 		return e.getValue();
 	}
