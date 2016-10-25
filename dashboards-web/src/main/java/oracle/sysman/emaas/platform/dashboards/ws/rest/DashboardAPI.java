@@ -209,7 +209,7 @@ public class DashboardAPI extends APIBase
 			tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
 		}
-		catch (CommonSecurityException e) {
+		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}

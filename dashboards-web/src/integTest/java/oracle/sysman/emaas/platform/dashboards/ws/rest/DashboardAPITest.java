@@ -195,10 +195,14 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testGetDashboardBase64ScreenShotWithDashboardException() throws Exception
+	public void testGetDashboardBase64ScreenShotWithDashboardException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
 			{
+				anyDependencyStatus.isDatabaseUp();
+            	result=true;
+				//anyDependencyStatus.isEntityNamingUp();
+            	//result=true;
 				mockedDashboardManager.getDashboardBase64ScreenShotById(anyLong, anyLong);
 				result = new CommonSecurityException("Test Security Error");
 			}
