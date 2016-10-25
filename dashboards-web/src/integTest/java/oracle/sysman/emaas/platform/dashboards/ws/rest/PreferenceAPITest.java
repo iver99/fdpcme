@@ -60,6 +60,8 @@ public class PreferenceAPITest {
     	new Expectations() {{
     		anyDependencyStatus.isDatabaseUp();
 			result = true;
+			anyDependencyStatus.isEntityNamingUp();
+			result = true;
         }};
         //Test 403, with invalid tenantIdParam DashboardException exception;
         Assert.assertEquals(preferenceAPI.deleteAllPreferenceByKey("", "userTenant", "referer").getStatus(), 403);
@@ -71,6 +73,9 @@ public class PreferenceAPITest {
     public void testDeleteAllPreferenceByKey1(@Mocked final DependencyStatus anyDependencyStatus,@Mocked final PreferenceManager preferenceManager, @Mocked final TenantIdProcessor tenantIdProcessor) throws BasicServiceMalfunctionException {
         new Expectations() {{
         	anyDependencyStatus.isDatabaseUp();
+			result = true;
+			
+			anyDependencyStatus.isEntityNamingUp();
 			result = true;
         	
             TenantIdProcessor.getInternalTenantIdFromOpcTenantId(anyString);
@@ -89,6 +94,8 @@ public class PreferenceAPITest {
     	new Expectations() {{
     		anyDependencyStatus.isDatabaseUp();
 			result = true;
+			anyDependencyStatus.isEntityNamingUp();
+			result = true;
 		}};
         //Test 403, with invalid tenantIdParam DashboardException exception;
         Assert.assertEquals(preferenceAPI.deletePreferenceByKey("", "userTenant", "referer", "key").getStatus(), 403);
@@ -102,6 +109,8 @@ public class PreferenceAPITest {
 			new Expectations() {{
 				
 				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				anyDependencyStatus.isEntityNamingUp();
 				result = true;
 			    preferenceManager.removePreference(anyString, anyLong);
 			    result = null;
@@ -121,6 +130,8 @@ public class PreferenceAPITest {
     	 new Expectations() {{
     		 anyDependencyStatus.isDatabaseUp();
 				result = true;
+				anyDependencyStatus.isEntityNamingUp();
+				result = true;
          }};
         //Test 403, with invalid tenantIdParam DashboardException exception;
         Assert.assertEquals(preferenceAPI.queryPreferenceByKey("", "userTenant", "referer", "key").getStatus(), 403);
@@ -132,6 +143,8 @@ public class PreferenceAPITest {
     public void testQueryPreferenceByKey1(@Mocked final DependencyStatus anyDependencyStatus,@Mocked final PreferenceManager preferenceManager,@SuppressWarnings("unused") @Mocked final TenantIdProcessor tenantIdProcessor) throws DashboardException {
         new Expectations() {{
         	 anyDependencyStatus.isDatabaseUp();
+				result = true;
+				anyDependencyStatus.isEntityNamingUp();
 				result = true;
             preferenceManager.getPreferenceByKey(anyString, anyLong);
             result = null;
@@ -146,6 +159,8 @@ public class PreferenceAPITest {
     	 new Expectations() {{
     		 anyDependencyStatus.isDatabaseUp();
 			 result = true;
+			 anyDependencyStatus.isEntityNamingUp();
+				result = true;
         }};
         //Test 403, with invalid tenantIdParam DashboardException exception;
         Assert.assertEquals(preferenceAPI.queryPreferences("", "userTenant", "referer").getStatus(), 403);
@@ -157,6 +172,8 @@ public class PreferenceAPITest {
     public void testQueryPreferences1(@Mocked final DependencyStatus anyDependencyStatus,@Mocked final PreferenceManager preferenceManager,@SuppressWarnings("unused") @Mocked final TenantIdProcessor tenantIdProcessor) {
         new Expectations() {{
         	anyDependencyStatus.isDatabaseUp();
+			result = true;
+			anyDependencyStatus.isEntityNamingUp();
 			result = true;
             List<Preference> ps = new ArrayList<>();
             ps.add(new Preference());
@@ -173,6 +190,8 @@ public class PreferenceAPITest {
     	 new Expectations() {{
     		 anyDependencyStatus.isDatabaseUp();
 			 result = true;
+			 anyDependencyStatus.isEntityNamingUp();
+				result = true;
         }};
         //Test 403, with invalid tenantIdParam DashboardException exception;
         Assert.assertEquals(preferenceAPI.updatePreference("", "userTenant", "referer", "key", jsonObject).getStatus(), 403);

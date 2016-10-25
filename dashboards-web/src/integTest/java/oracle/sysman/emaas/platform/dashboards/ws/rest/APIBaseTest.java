@@ -8,8 +8,10 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSec
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -65,9 +67,11 @@ public class APIBaseTest {
     }
 
     @Test
-    public void testGetTenantIdWithCorrectTenantId() throws Exception {
+    public void testGetTenantIdWithCorrectTenantId(@Mocked final DependencyStatus anyDependencyStatus) throws Exception {
         new Expectations() {
             {
+            	anyDependencyStatus.isEntityNamingUp();
+            	result=true;
                 TenantIdProcessor.getInternalTenantIdFromOpcTenantId(anyString);
                 result = 12315;
             }
@@ -76,9 +80,11 @@ public class APIBaseTest {
     }
 
     @Test(expectedExceptions = BasicServiceMalfunctionException.class)
-    public void testGetTenantIdWithBasicServiceMalfunctionExceptionThrown() throws Exception {
+    public void testGetTenantIdWithBasicServiceMalfunctionExceptionThrown(@Mocked final DependencyStatus anyDependencyStatus) throws Exception {
         new Expectations() {
             {
+            	anyDependencyStatus.isEntityNamingUp();
+            	result=true;
                 TenantIdProcessor.getInternalTenantIdFromOpcTenantId(anyString);
                 result = new BasicServiceMalfunctionException("Mockup exception for testing exception handling in APIBase#getTenantId", "emaas-platform");
             }
@@ -87,9 +93,11 @@ public class APIBaseTest {
     }
 
     @Test(expectedExceptions = CommonSecurityException.class)
-    public void testGetTenantIdWithOtherExceptionThrown() throws Exception {
+    public void testGetTenantIdWithOtherExceptionThrown(@Mocked final DependencyStatus anyDependencyStatus) throws Exception {
         new Expectations() {
             {
+            	anyDependencyStatus.isEntityNamingUp();
+            	result=true;
                 TenantIdProcessor.getInternalTenantIdFromOpcTenantId(anyString);
                 result = new NullPointerException("Mockup exception for testing exception handling in APIBase#getTenantId");
             }
