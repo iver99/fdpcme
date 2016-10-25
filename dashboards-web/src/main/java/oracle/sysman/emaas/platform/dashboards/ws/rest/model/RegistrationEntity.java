@@ -356,15 +356,15 @@ public class RegistrationEntity implements Serializable
 		final String tenantName = TenantContext.getCurrentTenant();
 		Tenant cacheTenant = new Tenant(tenantName);
 		try {
-			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
-				LOGGER.error("Error to get SSO logout url: EntityNaming service is down");
-				throw new EntityNamingDependencyUnavailableException();
-			}
 			return (String) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_SSO_LOGOUT_URL, new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
 						{
+							if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+								LOGGER.error("Error to get SSO logout url: EntityNaming service is down");
+								throw new EntityNamingDependencyUnavailableException();
+							}
 							Link lk = RegistryLookupUtil.getServiceExternalLink(SECURITY_SERVICE_NAME, SECURITY_SERVICE_VERSION,
 									SECURITY_SERVICE_SSO_LOGOUT_REL, tenantName);
 							lk = RegistryLookupUtil.replaceWithVanityUrl(lk, tenantName, SECURITY_SERVICE_NAME);
@@ -457,15 +457,16 @@ public class RegistrationEntity implements Serializable
 	{
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
-				LOGGER.error("Error to get Visual Analyzers link: EntityNaming service is down");
-				throw new EntityNamingDependencyUnavailableException();
-			}
+
 			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_VISUAL_ANALYZER, new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
 						{
+							if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+								LOGGER.error("Error to get Visual Analyzers link: EntityNaming service is down");
+								throw new EntityNamingDependencyUnavailableException();
+							}
 							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
 						}
 					});
