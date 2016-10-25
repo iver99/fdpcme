@@ -34,7 +34,7 @@ dependencies
 
     
     earlib getProjectArtifact('log4j-core')   
-	
+	earlib getProjectArtifact('log4j-api')	
 	earlib getProjectArtifact('jackson-core')   
 	earlib getProjectArtifact('jackson-databind')   
 	earlib getProjectArtifact('jackson-annotations')   

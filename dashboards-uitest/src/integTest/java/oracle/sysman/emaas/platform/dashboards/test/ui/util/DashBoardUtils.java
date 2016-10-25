@@ -187,17 +187,6 @@ public class DashBoardUtils
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Health Summary"));
 	}
 
-	public static String trimUrlParameters(String url)
-	{
-		String baseUrl = null;
-		if (url != null) {
-			String[] urlComponents = url.split("\\#|\\?");
-			baseUrl = urlComponents[0];
-		}
-
-		return baseUrl;
-	}
-
 	public static boolean verfiyShareOptionDisabled()
 	{
 		driver.getLogger().info("Click the option icon of Dashboard Set");
@@ -231,8 +220,25 @@ public class DashBoardUtils
 	public static void verifyURL(WebDriver webdriver, String url)
 	{
 		String currurl = webdriver.getWebDriver().getCurrentUrl();
-		webdriver.getLogger().info("url = " + currurl);
-		Assert.assertEquals(currurl.substring(currurl.indexOf("emsaasui") + 9), url);
+		webdriver.getLogger().info("the origin url = " + currurl);
+
+		String tmpurl = DashBoardUtils.trimUrlParameters(currurl.substring(currurl.indexOf("emsaasui") + 9));
+
+		webdriver.getLogger().info("the url without para = " + tmpurl);
+
+		Assert.assertEquals(tmpurl, url);
 
 	}
+
+	private static String trimUrlParameters(String url)
+	{
+		String baseUrl = null;
+		if (url != null) {
+			String[] urlComponents = url.split("\\#|\\?");
+			baseUrl = urlComponents[0];
+		}
+
+		return baseUrl;
+	}
+
 }

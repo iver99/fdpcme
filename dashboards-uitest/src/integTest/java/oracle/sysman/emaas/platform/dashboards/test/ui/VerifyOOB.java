@@ -1263,10 +1263,9 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(DashBoardUtils.trimUrlParameters(url.substring(url.indexOf("emsaasui") + 9)), "apmUi/index.html");
 
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "apmUi/index.html");
 		//verify the APM open correctly
 		//TODO
 
@@ -1856,10 +1855,9 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(DashBoardUtils.trimUrlParameters(url.substring(url.indexOf("emsaasui") + 9)),
-				"emcitas/resource-analytics/html/server-resource-analytics.html");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcitas/resource-analytics/html/server-resource-analytics.html");
 
 		//verify all the widgets displayed
 		//TODO
@@ -1988,7 +1986,7 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verify the dashboards in set");
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Timeseries");
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Categorical");
-//		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Others");
+		//		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Others");
 
 		//verify each dashboard
 		webd.getLogger().info("Verify Dashboard <Timeseries> in set");
@@ -1999,9 +1997,9 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Categorical");
 		verifyCategorical();
 
-//		webd.getLogger().info("Verify Dashboard <Others> in set");
-//		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Others");
-//		verifyOthers();
+		//		webd.getLogger().info("Verify Dashboard <Others> in set");
+		//		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Others");
+		//		verifyOthers();
 
 		webd.getLogger().info("Verification end...");
 	}
