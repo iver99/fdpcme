@@ -59,6 +59,10 @@ define(['knockout',
             };
 
             self.registrationInfo = null;
+            dfu.getRegistrations(function(data){
+                self.registrationInfo = data;
+            },false);
+            
             self.getRegistrationInfo=function(){
                 if (self.registrationInfo===null){
                     dfu.getRegistrations(function(data){
