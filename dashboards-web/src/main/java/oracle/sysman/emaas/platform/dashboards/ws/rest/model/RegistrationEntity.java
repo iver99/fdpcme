@@ -158,7 +158,7 @@ public class RegistrationEntity implements Serializable
 	{
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_ADMIN_LINK_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_ADMIN_LINKS, new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
@@ -214,7 +214,7 @@ public class RegistrationEntity implements Serializable
 		Tenant cacheTenant = new Tenant(tenantName);
 		List<LinkEntity> list = null;
 		try {
-			list = (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			list = (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_CLOUD_SERVICE_LINK_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS);
 			if (list != null) {
 				return list;
@@ -303,7 +303,7 @@ public class RegistrationEntity implements Serializable
 			}
 		}
 		list = sortServiceLinks(list);
-		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_CLOUD_SERVICE_LINK_CACHE,
 				CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS, list);
 		return list;
 	}
@@ -331,7 +331,7 @@ public class RegistrationEntity implements Serializable
 	{
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_HOME_LINK_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS, new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
@@ -356,7 +356,7 @@ public class RegistrationEntity implements Serializable
 		final String tenantName = TenantContext.getCurrentTenant();
 		Tenant cacheTenant = new Tenant(tenantName);
 		try {
-			return (String) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			return (String) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_SSO_LOGOUT_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_SSO_LOGOUT_URL, new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
@@ -458,7 +458,7 @@ public class RegistrationEntity implements Serializable
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
 
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_VISUAL_ANALYZER_LINK_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_VISUAL_ANALYZER, new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception

@@ -28,10 +28,20 @@ public class CacheManager
 {
 	private static final Logger LOGGER = LogManager.getLogger(CacheManager.class);
 
-	public static final String CACHES_LOOKUP_CACHE = "lookupCache";
 	public static final String CACHES_SCREENSHOT_CACHE = "screenshotCache";
 	public static final String CACHES_ETERNAL_CACHE = "eternalCache";
-	public static final String CACHES_SUBSCRIBE_CACHE = "subscribeCache";
+	public static final String CACHES_ADMIN_LINK_CACHE = "adminLinkCache";
+	public static final String CACHES_CLOUD_SERVICE_LINK_CACHE = "cloudServiceLinkCache";
+	public static final String CACHES_HOME_LINK_CACHE = "homeLinkCache";
+	public static final String CACHES_VISUAL_ANALYZER_LINK_CACHE = "visualAnalyzerLinkCache";
+	public static final String CACHES_SERVICE_EXTERNAL_LINK_CACHE = "externalLinkCache";
+	public static final String CACHES_SERVICE_INTERNAL_LINK_CACHE = "internalLinkCache";
+	public static final String CACHES_VANITY_BASE_URL_CACHE = "vanityBaseUrlCache";
+	public static final String CACHES_DOMAINS_DATA_CACHE = "domainsDataCache";
+	public static final String CACHES_TENANT_APP_MAPPING_CACHE = "tenantAppMappingCache";
+	public static final String CACHES_SSO_LOGOUT_CACHE = "tenantAppMappingCache";
+	public static final String CACHES_SUBSCRIBED_SERVICE_CACHE = "subscribeCache";
+
 
 	public static final String LOOKUP_CACHE_KEY_SUBSCRIBED_APPS = "subscribedApps";
 	public static final String LOOKUP_CACHE_KEY_EXTERNAL_LINK = "externalLink";
@@ -57,10 +67,19 @@ public class CacheManager
 	{
 		keyGen = new DefaultKeyGenerator();
 		LOGGER.info("Initialization LRU CacheManager!!");
-		CacheFactory.getCache(CACHES_LOOKUP_CACHE,Integer.valueOf(conf.getString("DEFAULT_CACHE_UNIT_CAPACITY")), Integer.valueOf(conf.getString("CACHES_LOOKUP_CACHE_EXPIRE_TIME")));
-		CacheFactory.getCache(CACHES_SCREENSHOT_CACHE,Integer.valueOf(conf.getString("SCREENSHOT_CACHE_UNIT_CAPACITY")), Integer.valueOf(conf.getString("CACHES_SCREENSHOT_CACHE_EXPIRE_TIME")));
-		CacheFactory.getCache(CACHES_ETERNAL_CACHE, Integer.valueOf(conf.getString("DEFAULT_CACHE_UNIT_CAPACITY")), Integer.valueOf(conf.getString("CACHES_ETERNAL_CACHE_EXPIRE_TIME")));
-		CacheFactory.getCache(CACHES_SUBSCRIBE_CACHE, Integer.valueOf(conf.getString("DEFAULT_CACHE_UNIT_CAPACITY")), Integer.valueOf(conf.getString("CACHES_SUBSCRIBE_CACHE_EXPIRE_TIME")));
+		CacheFactory.getCache(CACHES_SCREENSHOT_CACHE, CacheConfig.SCREENSHOT_CAPACITY, CacheConfig.SCREENSHOT_EXPIRE_TIME);
+		CacheFactory.getCache(CACHES_ETERNAL_CACHE,CacheConfig.ETERNAL_CAPACITY, CacheConfig.ETERNAL_EXPIRE_TIME);
+		CacheFactory.getCache(CACHES_ADMIN_LINK_CACHE, CacheConfig.ADMIN_LINK_CACHE_CAPACITY, CacheConfig.ADMIN_LINK_CACHE_EXPIRE_TIME);
+		CacheFactory.getCache(CACHES_CLOUD_SERVICE_LINK_CACHE, CacheConfig.CLOUD_SERVICE_LINK_CAPACITY, CacheConfig.CLOUD_SERVICE_LINK_EXPIRE_TIME);
+		CacheFactory.getCache(CACHES_HOME_LINK_CACHE, CacheConfig.HOME_LINK_EXPIRE_CAPACITY, CacheConfig.HOME_LINK_EXPIRE_TIME);
+		CacheFactory.getCache(CACHES_VISUAL_ANALYZER_LINK_CACHE, CacheConfig.VISUAL_ANALYZER_LINK_CAPACITY, CacheConfig.VISUAL_ANALYZER_LINK_EXPIRE_TIME);
+		CacheFactory.getCache(CACHES_SERVICE_EXTERNAL_LINK_CACHE, CacheConfig.SERVICE_EXTERNAL_LINK_CAPACITY, CacheConfig.SERVICE_EXTERNAL_LINK_EXPIRE_TIME);
+		CacheFactory.getCache(CACHES_SERVICE_INTERNAL_LINK_CACHE, CacheConfig.SERVICE_INTERNAL_LINK_CAPACITY, CacheConfig.SERVICE_INTERNAL_LINK_EXPIRE_TIME);
+		CacheFactory.getCache(CACHES_VANITY_BASE_URL_CACHE, CacheConfig.VANITY_BASE_URL_CAPACITY, CacheConfig.VANITY_BASE_URL_EXPIRE_TIME);
+		CacheFactory.getCache(CACHES_DOMAINS_DATA_CACHE, CacheConfig.DOMAINS_DATA_CAPACITY, CacheConfig.DOMAINS_DATA_EXPIRE_TIME);
+		CacheFactory.getCache(CACHES_TENANT_APP_MAPPING_CACHE, CacheConfig.TENANT_APP_MAPPING_CAPACITY, CacheConfig.TENANT_APP_MAPPING_EXPIRE_TIME);
+		CacheFactory.getCache(CACHES_SUBSCRIBED_SERVICE_CACHE, CacheConfig.TENANT_SUBSCRIBED_SERVICES_CAPACITY, CacheConfig.TENANT_SUBSCRIBED_SERVICES_EXPIRE_TIME);
+
 	}
 
 	public CacheUnit getCache(String cacheName)
