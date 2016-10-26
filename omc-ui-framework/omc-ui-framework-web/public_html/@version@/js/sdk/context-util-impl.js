@@ -51,6 +51,11 @@ define([
                     omcContext = JSON.parse(window.localStorage._uifwk_omcContext);
                     self.setOMCContext(omcContext);
                 }*/
+
+                if (!omcContext) {
+                    omcContext = {};
+                    storeContext(omcContext);
+                }
                 
                 oj.Logger.info("OMC gloable context is fetched as: " + JSON.stringify(omcContext));
                 return omcContext;
