@@ -63,6 +63,7 @@ define([
 
             function getContextFromUrl() {
                 var omcContext = {};
+                var omcCtxString = decodeURIComponent(dfu.getUrlParam(omcCtxParamName));
                 //Loop through supported context list
                 for (var i = 0; i < supportedContext.length; i++) {
                     var contextDef = supportedContext[i];
@@ -72,14 +73,14 @@ define([
                     for (var j = 0; j < contextParams.length; j++) {
                         var paramName = contextParams[j];
                         //Get param value form URL by name
-                        var paramValue = dfu.getUrlParam(paramName);
+                        var paramValue = retrieveParamValueFromUrl(omcCtxString, paramName);
                         if (paramValue) {
                             //Initialize
                             if (!omcContext[contextName]) {
                                 omcContext[contextName] = {};
                             }
                             //Set value into the OMC context JSON object
-                            omcContext[contextName][paramName] = decodeURIComponent(paramValue);
+                            omcContext[contextName][paramName] = paramValue;
                         }
                     }
                 }
@@ -482,3 +483,4 @@ define([
         return UIFWKContextUtil;
     }
 );
+
