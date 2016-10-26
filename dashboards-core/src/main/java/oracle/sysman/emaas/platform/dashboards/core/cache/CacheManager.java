@@ -127,14 +127,14 @@ public class CacheManager
 			value = ff.fetchCachable(key);
 			if (value != null) {
 				cache.put(key.toString(), new Element(key, value));
-				LOGGER.debug("Successfully fetched data, putting to cache");
+				LOGGER.debug("Successfully fetched data, putting to cache group {}",cacheName);
 			}
 		}
 		if (value == null) {
-			LOGGER.debug("Not retrieved cache with cache name {} and key {} for tenant {}", cacheName, key, tenant);
+			LOGGER.debug("Not retrieved cache with cache name {} and key {} for tenant {} from cache group {}", cacheName, key, tenant,cacheName);
 			return null;
 		}
-		LOGGER.debug("Retrieved cacheable with key={} and value={} for tenant={}", key, value, tenant);
+		LOGGER.debug("Retrieved cacheable with key={} and value={} for tenant={} from cache group {}", key, value, tenant,cacheName);
 		return value;
 	}
 
@@ -181,7 +181,7 @@ public class CacheManager
 			return null;
 		}
 		cache.put(key.toString(), new Element(key, value));
-		LOGGER.debug("Cacheable with tenant={}, key={} and value={} is put to cache {}", tenant, key, value, cacheName);
+		LOGGER.debug("Cacheable with tenant={}, key={} and value={} is put to cache group {}", tenant, key, value, cacheName);
 
 		return value;
 	}
@@ -208,7 +208,7 @@ public class CacheManager
 		}
 		Object obj = cache.get(key.toString());
 		cache.remove(key.toString());
-		LOGGER.debug("Cacheable with key={} and value={} is removed from cache {}", key, obj, cacheName);
+		LOGGER.debug("Remove Cacheable with key={} and value={} from cache group {}", key, obj, cacheName);
 		return obj;
 	}
 
