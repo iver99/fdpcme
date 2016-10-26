@@ -54,6 +54,7 @@ public class EmsDashboardTileParamsRedirector implements QueryRedirector
 			cd.addDirectQueryKey("deleted", "DELETED");
 			uoq.setDescriptor(cd);
 			doq.setDescriptor(uoq.getDescriptor());
+			uoq.setDoNotRedirect(true);
 			Object rtn = uoq.execute((AbstractSession) session, (AbstractRecord) arguments);
 			return rtn;
 		}
@@ -78,6 +79,7 @@ public class EmsDashboardTileParamsRedirector implements QueryRedirector
 			return rtn;
 		}
 		else {
+			query.setDoNotRedirect(true);
 			return query.execute((AbstractSession) session, (AbstractRecord) arguments);
 		}
 	}
