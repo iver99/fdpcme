@@ -91,9 +91,10 @@ public class TestBrandingBar extends LoginAndLogout
 		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);
 		WaitUtil.waitForPageFullyLoaded(webd);
 		// Alert link
-		url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "eventUi/rules/html/rules-dashboard.html");
+		DashBoardUtils.verifyURL(webd, "eventUi/rules/html/rules-dashboard.html");
+		//		url = webd.getWebDriver().getCurrentUrl();
+		//		webd.getLogger().info("url = " + url);
+		//		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "eventUi/rules/html/rules-dashboard.html");
 		Assert.assertTrue(BrandingBarUtil.isAdmin(webd));
 
 		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT));
@@ -249,9 +250,10 @@ public class TestBrandingBar extends LoginAndLogout
 		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);
 		WaitUtil.waitForPageFullyLoaded(webd);
 		// Alert link
-		url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "eventUi/rules/html/rules-dashboard.html");
+		DashBoardUtils.verifyURL(webd, "eventUi/rules/html/rules-dashboard.html");
+		//		url = webd.getWebDriver().getCurrentUrl();
+		//		webd.getLogger().info("url = " + url);
+		//		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "eventUi/rules/html/rules-dashboard.html");
 		Assert.assertTrue(BrandingBarUtil.isAdmin(webd));
 
 		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT));
@@ -311,7 +313,6 @@ public class TestBrandingBar extends LoginAndLogout
 		// APM link
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_APM);
 		WaitUtil.waitForPageFullyLoaded(webd);
-
 
 		DashBoardUtils.verifyURL(webd, "apmUi/index.html");
 
