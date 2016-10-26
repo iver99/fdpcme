@@ -168,6 +168,7 @@ public class DashboardsFilter
 		return includedTypes;
 	}
 
+        /*
 	public List<String> getIncludedWidgetProviders()
 	{
 		if (includedApps == null || includedApps.isEmpty()) {
@@ -209,6 +210,7 @@ public class DashboardsFilter
 		}
 		return sb.toString();
 	}
+        */
 
 	//	/**
 	//	 * @param includedApps
