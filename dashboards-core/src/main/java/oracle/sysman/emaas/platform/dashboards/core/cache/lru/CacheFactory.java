@@ -49,4 +49,8 @@ public class CacheFactory {
 
 	private CacheFactory() {
 	}
+
+	public static ConcurrentHashMap<String, CacheUnit> getCacheUnitMap() {
+		return cacheUnitMap;
+	}
 }
