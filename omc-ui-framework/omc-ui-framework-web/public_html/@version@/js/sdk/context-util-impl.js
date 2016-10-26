@@ -1,8 +1,9 @@
 define([
     'ojs/ojcore',
+    'jquery',
     'uifwk/@version@/js/util/df-util-impl'
 ],
-    function(oj, dfuModel)
+    function (oj, $, dfuModel)
     {
         function UIFWKContextUtil() {
             var self = this;
@@ -34,39 +35,56 @@ define([
                     omcContext = window._uifwk.omcContext;
                 }
                 //Otherwise, retrieve the context from URL parameters
-                else {
-                    omcContext = {};
-                    var omcCtxString = decodeURIComponent(dfu.getUrlParam(omcCtxParamName));
-                    //Loop through supported context list
-                    for (var i = 0; i < supportedContext.length; i++) {
-                        var contextDef = supportedContext[i];
-                        var contextName = contextDef.contextName;
-                        var contextParams = contextDef.paramNames;
-                        //Loop through parameters for each context
-                        for (var j = 0; j < contextParams.length; j++) {
-                            var paramName = contextParams[j];
-                            //Get param value form URL by name
-                            var paramValue = retrieveParamValueFromUrl(omcCtxString, paramName);
-                            if (paramValue) {
-                                //Initialize
-                                if (!omcContext[contextName]) {
-                                    omcContext[contextName] = {};
-                                }
-                                //Set value into the OMC context JSON object
-                                omcContext[contextName][paramName] = paramValue;
-                            }
-                        }
-                    }
-                    //For now, we use window local variable to store the omc context once it's fetched from URL.
-                    //So even page owner rewrites the URL using oj_Router etc., the omc context will not be lost.
-                    //But need to make sure the omc context is initialized before page owner start to rewrites 
-                    //the URL by oj_Router etc..
-                    window._uifwk.omcContext = omcContext;
+                if (!omcContext) {
+                    omcContext = getContextFromUrl();
+                }
+                //If omcCOntext is missed from URL try to retrive it from sessionStorage
+                if (!omcContext &&
+                    window.sessionStorage._uifwk_omcContext) {
+                    omcContext = JSON.parse(window.sessionStorage._uifwk_omcContext);
+                    self.setOMCContext(omcContext);
+                }
+                //If omcContext not defined, use localStorage as last resource. This is for situation
+                //like when opening a new tab.
+                if (!omcContext &&
+                    window.localStorage._uifwk_omcContext) {
+                    omcContext = JSON.parse(window.localStorage._uifwk_omcContext);
+                    self.setOMCContext(omcContext);
+
                 }
                 
                 oj.Logger.info("OMC gloable context is fetched as: " + JSON.stringify(omcContext));
                 return omcContext;
             };
+
+            function getContextFromUrl() {
+                var omcContext = {};
+                //Loop through supported context list
+                for (var i = 0; i < supportedContext.length; i++) {
+                    var contextDef = supportedContext[i];
+                    var contextName = contextDef.contextName;
+                    var contextParams = contextDef.paramNames;
+                    //Loop through parameters for each context
+                    for (var j = 0; j < contextParams.length; j++) {
+                        var paramName = contextParams[j];
+                        //Get param value form URL by name
+                        var paramValue = dfu.getUrlParam(paramName);
+                        if (paramValue) {
+                            //Initialize
+                            if (!omcContext[contextName]) {
+                                omcContext[contextName] = {};
+                            }
+                            //Set value into the OMC context JSON object
+                            omcContext[contextName][paramName] = decodeURIComponent(paramValue);
+                        }
+                    }
+                }
+                if (!$.isEmptyObject(omcContext)) {
+                    storeContext(omcContext);
+                    return omcContext;
+                }
+                return null;
+            }
             
             /**
              * Update the OMC global context. This function is used any the 
@@ -77,9 +95,27 @@ define([
              * @returns 
              */
             self.setOMCContext = function(context) {
-                window._uifwk.omcContext = context;
-                //TODO: update current URL
+                storeContext(context);
+                //update current URL
+                var url = window.location.href.split('/').pop();
+                url = self.appendOMCContext(url);
+                window.history.replaceState(window.history.state, document.title, url);
             };
+
+            function storeContext(context) {
+                //For now, we use window local variable to store the omc context once it's fetched from URL.
+                //So even page owner rewrites the URL using oj_Router etc., the omc context will not be lost.
+                //But need to make sure the omc context is initialized before page owner start to rewrites
+                //the URL by oj_Router etc..
+                window._uifwk.omcContext = context;
+                //We use SessionStorage to help preserve the omc context during navigation, when
+                //URL does not contains the omc context
+                window.sessionStorage._uifwk_omcContext = JSON.stringify(context);
+                //We use localStorage as last resource to retrive the omc context. For cases
+                //when user just have open the browser, or when opening a new tab to restore the
+                //last used context,
+                window.localStorage._uifwk_omcContext = JSON.stringify(context);
+            }
             
             /**
              * Get the current OMC global context and append it into the given 
