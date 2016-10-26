@@ -39,7 +39,7 @@ public class CacheManager
 	public static final String CACHES_VANITY_BASE_URL_CACHE = "vanityBaseUrlCache";
 	public static final String CACHES_DOMAINS_DATA_CACHE = "domainsDataCache";
 	public static final String CACHES_TENANT_APP_MAPPING_CACHE = "tenantAppMappingCache";
-	public static final String CACHES_SSO_LOGOUT_CACHE = "tenantAppMappingCache";
+	public static final String CACHES_SSO_LOGOUT_CACHE = "SsoLogoutCache";
 	public static final String CACHES_SUBSCRIBED_SERVICE_CACHE = "subscribeCache";
 
 
@@ -79,6 +79,7 @@ public class CacheManager
 		CacheFactory.getCache(CACHES_DOMAINS_DATA_CACHE, CacheConfig.DOMAINS_DATA_CAPACITY, CacheConfig.DOMAINS_DATA_EXPIRE_TIME);
 		CacheFactory.getCache(CACHES_TENANT_APP_MAPPING_CACHE, CacheConfig.TENANT_APP_MAPPING_CAPACITY, CacheConfig.TENANT_APP_MAPPING_EXPIRE_TIME);
 		CacheFactory.getCache(CACHES_SUBSCRIBED_SERVICE_CACHE, CacheConfig.TENANT_SUBSCRIBED_SERVICES_CAPACITY, CacheConfig.TENANT_SUBSCRIBED_SERVICES_EXPIRE_TIME);
+		CacheFactory.getCache(CACHES_SSO_LOGOUT_CACHE, CacheConfig.SSO_LOGOUT_CAPACITY, CacheConfig.SSO_LOGOUT_EXPIRE_TIME);
 
 	}
 
