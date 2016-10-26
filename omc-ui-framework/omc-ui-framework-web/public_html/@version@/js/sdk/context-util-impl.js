@@ -46,12 +46,11 @@ define([
                 }
                 //If omcContext not defined, use localStorage as last resource. This is for situation
                 //like when opening a new tab.
-                if (!omcContext &&
+                /*if (!omcContext &&
                     window.localStorage._uifwk_omcContext) {
                     omcContext = JSON.parse(window.localStorage._uifwk_omcContext);
                     self.setOMCContext(omcContext);
-
-                }
+                }*/
                 
                 oj.Logger.info("OMC gloable context is fetched as: " + JSON.stringify(omcContext));
                 return omcContext;
@@ -114,7 +113,7 @@ define([
                 //We use localStorage as last resource to retrive the omc context. For cases
                 //when user just have open the browser, or when opening a new tab to restore the
                 //last used context,
-                window.localStorage._uifwk_omcContext = JSON.stringify(context);
+                //window.localStorage._uifwk_omcContext = JSON.stringify(context);
             }
             
             /**
