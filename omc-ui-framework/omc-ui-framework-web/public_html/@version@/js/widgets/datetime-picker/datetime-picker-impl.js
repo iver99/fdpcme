@@ -1,5 +1,5 @@
-define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knockout", "jquery", "uifwk/@version@/js/util/message-util-impl", "uifwk/@version@/js/util/df-util-impl", "ojs/ojcore", "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg", "ojs/ojdatetimepicker"],
-        function (ko, $, msgUtilModel, dfuModel, oj, nls) {
+define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knockout", "jquery", "uifwk/@version@/js/util/message-util-impl", "uifwk/@version@/js/util/df-util-impl", 'uifwk/@version@/js/sdk/context-util-impl', "ojs/ojcore", "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg", "ojs/ojdatetimepicker"],
+        function (ko, $, msgUtilModel, dfuModel, contextModel, oj, nls) {
 
             //Firefox ignores milliseconds when converting a date to Date object, while it doesn't when converting a number.
             //The funciton is used to keep the milliseconds no matter it is a Date Object or number so that when calculating time periods, it is precise.
@@ -49,6 +49,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 
                 var self = this;
                 var msgUtil = new msgUtilModel();
+                var ctxUtil = new contextModel();
+                var omcContext = ctxUtil.getOMCContext();
                 console.log("Initialize date time picker! The params are: ");
                 if(ko.mapping && ko.mapping.toJS) {
                     console.log(ko.mapping.toJS(params));
@@ -550,7 +552,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     return p;
                 };
 
-                if(params.timePeriod) {
+                if(self.getParam(params.timePeriod)) {
                     if(ko.isObservable(params.timePeriod)) {
                         self.timePeriodPresetInNls = ko.computed(function() {
                             return self.timePeriodsNlsObject[params.timePeriod()];
@@ -999,11 +1001,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     start = newDateWithMilliseconds(curDate - 15 * 60 * 1000);
                     end = new Date();
                     var tpNotToShow = self.getParam(self.timePeriodsNotToShow);
-                    var sdt, edt, range;
+                    var sdt, edt, range, tp;
 
                     if(self.isTimePeriodPreset) {
                         if(self.timePeriodPresetInNls) {
-                            var tp = self.getParam(self.timePeriodPresetInNls);
+                            tp = self.getParam(self.timePeriodPresetInNls);
                             if(tp === self.timePeriodToday) {
                                 start = new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate());
                                 end = curDate;
@@ -1079,7 +1081,66 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             sdt = self.getParam(self.startDateTime);
                             start = newDateWithMilliseconds(sdt);
                             end = new Date();
-                        } else {
+                        } else if(omcContext.time && omcContext.time.timePeriod) {
+                            tp = self.timePeriodsNlsObject[omcContext.time.timePeriod];
+                            if(tp === self.timePeriodToday) {
+                                start = new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate());
+                                end = curDate;
+                                self.setTimePeriodChosen(tp);
+                                self.setTimePeriodToLastX(tp, start, end, 1);
+                            }else if(tp === self.timePeriodLatest) {
+                                start = curDate;
+                                end = curDate;
+                                self.setTimePeriodChosen(tp);
+                                self.setTimePeriodToLastX(tp, start, end, 1);
+                            }else if(tp === self.timePeriodCustom) {
+                                if(self.startDateTime && self.endDateTime) {
+                                    sdt = self.getParam(self.startDateTime);
+                                    edt = self.getParam(self.endDateTime);
+                                    start = newDateWithMilliseconds(sdt);
+                                    end = newDateWithMilliseconds(edt);
+                                    customClick(0);
+                                }else {
+                                    console.error('Error: set timePeriod to "Custom" without time range specified!');
+                                    return;
+                                }
+                            }else {
+                                start = newDateWithMilliseconds(new Date() - self.timePeriodObject()[tp][1]);
+                                end = new Date();
+                                if($.inArray(tp, tpNotToShow) === -1) {
+                                    self.setTimePeriodChosen(tp);
+                                    range = self.setTimePeriodToLastX(tp, start, end, 1);
+                                    start = range.start;
+                                    end = range.end;
+                                }else {
+                                    customClick(0);
+                                }
+                            }
+                        } else if(omcContext.time && omcContext.time.startTime && omcContext.time.endTime) {
+                            curDate = new Date();
+                            //users input start date and end date
+                            sdt = new Date(parseInt(omcContext.time.startTime));
+                            edt = new Date(parseInt(omcContext.time.endTime));
+                            start = newDateWithMilliseconds(sdt);
+                            end = newDateWithMilliseconds(edt);
+                            console.log("startTime from global context is " + start + ", endDateTime from gloal context is " + end);
+                            console.log("Initializing time is " + curDate);
+                            if(Math.abs(end.getTime()-curDate.getTime())>60*1000 || end.getMinutes() !== curDate.getMinutes()) {
+                                var t_timePeriod = self.timePeriodCustom;
+                                customClick(0);
+                            }else {
+                                dateTimeDiff = end - start;
+                                var t_timePeriod = in_array(dateTimeDiff, self.timePeriodObject());
+                                if (t_timePeriod && $.inArray(t_timePeriod, tpNotToShow)<0) {
+                                    self.setTimePeriodChosen(t_timePeriod);
+                                    range = self.setTimePeriodToLastX(t_timePeriod, start, end, 0);
+                                    start = range.start;
+                                    end = range.end;
+                                } else {
+                                    customClick(0);
+                                }
+                            }
+                        }else {
                             //users input nothing
                             if($.inArray(self.timePeriodLast15mins, tpNotToShow)<0) {
                                 self.setTimePeriodChosen(self.timePeriodLast15mins);
