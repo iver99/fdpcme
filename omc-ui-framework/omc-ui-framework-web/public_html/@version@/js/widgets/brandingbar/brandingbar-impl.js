@@ -62,62 +62,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.showTopology = function () {
                 $("#bbtopology").slideToggle("fast");
             };
-            /*self.customNodeDataLoader = function (data, callback) {
-             var jsonFileName = "mockdata.json";
-             var _ajaxUtil = new ajaxUtil();
-             _ajaxUtil.ajaxWithRetry({
-             url: jsonFileName,
-             dataType: 'json',
-             async: true
-             })
-             .done(
-             function (jsondata)
-             {
-             if (callback) {
-             callback.call(null, jsondata);
-             }
-             console.log("JSON loaded correctly");
-             }
-             ).fail(
-             function ()
-             {
-             console.log("JSON loaded failed");
-             }
-             );
-             };*/
-            /*self.entities = [
-             "83B97B1FB1E71DD0CE1DBEDF23A29EEE"
-             ];
-             
-             self.associations = [
-             "app_composite_contains"
-             ];*/
-            /*
-             self.layout = "TIERED";
-             
-             self.customNodeDataLoader = function (data, callback) {
-             var jsonFileName = "mockdata.json";
-             var _ajaxUtil = new ajaxUtil();
-             _ajaxUtil.ajaxWithRetry({
-             url: jsonFileName,
-             dataType: 'json',
-             async: true
-             })
-             .done(
-             function (jsondata)
-             {
-             if (callback) {
-             callback.call(null, jsondata);
-             }
-             console.log("JSON loaded correctly");
-             }
-             ).fail(
-             function ()
-             {
-             console.log("JSON loaded failed");
-             }
-             );
-             };*/
 
             //NLS strings
             self.productName = nls.BRANDING_BAR_MANAGEMENT_CLOUD;
