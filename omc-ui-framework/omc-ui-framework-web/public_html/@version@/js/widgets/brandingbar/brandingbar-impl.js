@@ -59,8 +59,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 return queryVars;
             };
             self.queryVars = getQueryVars();
-
-            self.showTopology = true;
             self.showTopology = function () {
                 $("#bbtopology").slideToggle("fast");
             };
