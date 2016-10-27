@@ -839,7 +839,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                 }
                 
                 function getTargetModelMetypeUrl() {
-                    var tmUrl = '/serviceapi/tm-metadata/metypes';
+                    var tmUrl = '/sso.static/datamodel-metadata/metypes';
                     if (dfu.isDevMode()){
                         tmUrl = dfu.buildFullUrl(dfu.getDevData().tmRestApiEndPoint,"metadata/metypes");
                     }
