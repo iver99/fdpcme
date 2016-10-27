@@ -802,7 +802,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                     oj.Logger.info("Start to get ODS entity by entity ID by URL:" + odsQueryUrl, false);
                     dfu.ajaxWithRetry(odsQueryUrl,{
                         type: 'POST',
-                        data: jsonOdsQuery,
+                        data: JSON.stringify(jsonOdsQuery),
                         contentType: 'application/json',
                         headers: dfu.getDefaultHeader(),
                         success:function(data, textStatus,jqXHR) {
