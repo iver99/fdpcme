@@ -10,8 +10,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojs/ojtoolbar',
     'ojs/ojmenu',
     'ojs/ojbutton',
-    'ojs/ojdialog'],
-    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls) {
+    'ojs/ojdialog',
+    'uifwk/js/sdk/context-util'
+],
+    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, cxtUtil) {
         function BrandingBarViewModel(params) {
             var self = this;
             var msgUtil = new msgUtilModel();
@@ -36,32 +38,26 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //
             // topology params
             //
-            var entityID = window._uifwk.getEntityMeId();
-            debugger;
-            self.entities = ko.observable(["B1EB94DD59ED96D4DD57C7F25A64F5B1"]);  //params.entities || ko.observable([]);
+            self.entities = ko.observable([]);
+            self.queryVars = {};
+            if (cxtUtil.getEntityMeId()) {
+                self.entities.push(cxtUtil.getEntityMeId());
+            } else {
+                self.queryVars.entityName = cxtUtil.getEntityName();
+                self.queryVars.entityType = cxtUtil.getEntityType();
+                if (!self.queryVars.entityName || !self.queryVars.entityType) {
+                    self.entities = ko.observable(["B1EB94DD59ED96D4DD57C7F25A64F5B1"]);
+                }
+            }
+
+            //self.entities = ko.observable(["B1EB94DD59ED96D4DD57C7F25A64F5B1"]);  //params.entities || ko.observable([]);
             self.associations = params.associations;
             self.layout = params.layout;
             self.customNodeDataLoader = params.customNodeDataLoader;
             self.customEventHandler = params.customEventHandler;
-            self.miniEntityCardActions = params.miniEntityCardActions;
-
-            var getQueryVars = function ()
-            {
-                var queryVars = {}, hash;
-                var queryString = window.location.search;
-                queryString = decodeURIComponent(queryString);
-                if (queryString) {
-                    var hashes = queryString.slice(queryString.indexOf('?') + 1).split('&');
-                    for (var i = 0; i < hashes.length; i++)
-                    {
-                        hash = hashes[i].split('=');
-                        queryVars[hash[0]] = hash[1];
-                    }
-                }
-                return queryVars;
-            };
-            self.queryVars = getQueryVars();
-            self.showTopology = function () {
+            self.miniEntityCardActions = params.miniEntityCardActions; 
+             
+            self.showTopology = function () { // listener to the button
                 $("#bbtopology").slideToggle("fast");
             };
 
