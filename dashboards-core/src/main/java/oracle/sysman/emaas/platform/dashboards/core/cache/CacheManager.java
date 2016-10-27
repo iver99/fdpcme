@@ -241,13 +241,11 @@ public class CacheManager
 			for(Map.Entry<String,CacheUnit> e: CacheFactory.getCacheUnitMap().entrySet()){
 				CacheUnit cu=e.getValue();
 				LOGGER.info("[Cache Status] Cache name is [{}], Cache capacity is [{}], Cache usage is [{}], Cache usage rate is [{}], " +
-						"Cache total request count is [{}], Cache hit count is [{}], Cache hit rate is [{}]" ,cu.getName(),cu.getCacheUnitStatus().getUsage(),cu.getCacheUnitStatus().getUsageRate(),
-						cu.getCacheUnitStatus().getRequestCount(),cu.getCacheUnitStatus().getHitCount(),cu.getCacheUnitStatus().getHitRate());
+						"Cache total request count is [{}], Cache hit count is [{}], Cache hit rate is [{}], Eviction Count is [{}]" ,cu.getName(),cu.getCacheUnitStatus().getUsage(),cu.getCacheUnitStatus().getUsageRate(),
+						cu.getCacheUnitStatus().getRequestCount(),cu.getCacheUnitStatus().getHitCount(),cu.getCacheUnitStatus().getHitRate(),cu.getCacheUnitStatus().getEvictionCount());
 			}
 			this.lastLogTime=now;
 		}
-		return;
 
-		//TODO
 	}
 }
