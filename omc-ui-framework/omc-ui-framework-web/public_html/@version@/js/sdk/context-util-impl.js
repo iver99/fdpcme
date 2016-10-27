@@ -10,7 +10,7 @@ define([
             var dfu = new dfuModel();
             var supportedContext = [{'contextName': 'time','paramNames': ['startTime', 'endTime', 'timePeriod']}, 
                                     {'contextName': 'composite','paramNames': ['compositeType', 'compositeName', 'compositeMEID']},
-                                    {'contextName': 'entity','paramNames': ['entityType', 'entityName', 'entityMEID']}
+                                    {'contextName': 'entity','paramNames': ['entityType', 'entityName', 'entityMEID', 'entityMEIDs']}
                                    ];
             var omcCtxParamName = 'omcCtx';
             
@@ -310,6 +310,26 @@ define([
              */
             self.getEntityMeId = function() {
                 return getIndividualContext('entity', 'entityMEID');
+            };
+            
+            /**
+             * Set OMC global context of multiple entity GUIDs.
+             * 
+             * @param {String} entityMEIDs Entity GUIDs separated by comma
+             * @returns 
+             */
+            self.setEntityMeIds = function(entityMEIDs) {
+                setIndividualContext('entity', 'entityMEIDs', entityMEIDs);
+            };
+            
+            /**
+             * Get OMC global context of entity guid.
+             * 
+             * @param 
+             * @returns {String} OMC global context of entity guid
+             */
+            self.getEntityMeIds = function() {
+                return getIndividualContext('entity', 'entityMEIDs');
             };
             
             /**
