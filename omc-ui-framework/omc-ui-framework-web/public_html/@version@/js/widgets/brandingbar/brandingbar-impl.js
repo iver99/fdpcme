@@ -45,6 +45,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                 var warnMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_warn_16.png";
                 var confirmMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_confirm_16.png";
                 var infoMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_info_16.png";
+                var messageIconSprite = "/emsaasui/uifwk/@version@/images/uifwkSprite.png";
                 var hiddenMessages = [];
 
                 self.navLinksNeedRefresh = ko.observable(false);
@@ -170,7 +171,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                 self.sessionTimeoutMsg = nls.BRANDING_BAR_SESSION_TIMEOUT_MSG;
                 self.sessionTimeoutBtnOK = nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK;
                 self.sessionTimeoutWarnDialogId = 'sessionTimeoutWarnDialog';
-                self.sessionTimeoutWarnIcon = warnMessageIcon;
+                self.sessionTimeoutWarnIcon = messageIconSprite;    //warnMessageIcon
+                self.sessionTimeoutWarnIconStyle = "object-fit:none;object-position:0px -1259px;height:16px;";
 
                 self.clearMessage = function(data, event) {
                     removeMessage(data);
@@ -477,19 +479,23 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                         message.category = data.category;
                         if (data.type && data.type.toUpperCase() === 'ERROR') {
                             message.iconAltText = self.altTextError;
-                            message.icon = errorMessageIcon;
+                            message.icon = messageIconSprite;
+                            message.imgCssStyle = "object-fit:none;object-position:0px -1227px;height:16px;";
                         }
                         else if (data.type && data.type.toUpperCase() === 'WARN') {
                             message.iconAltText = self.altTextWarn;
-                            message.icon = warnMessageIcon;
+                            message.icon = messageIconSprite;
+                            message.imgCssStyle = "object-fit:none;object-position:0px -1259px;height:16px;";
                         }
                         else if (data.type && data.type.toUpperCase() === 'CONFIRM') {
                             message.iconAltText = self.altTextConfirm;
-                            message.icon = confirmMessageIcon;
+                            message.icon = messageIconSprite;
+                            message.imgCssStyle = "object-fit:none;object-position:0px -1211px;height:16px;";
                         }
                         else if (data.type && data.type.toUpperCase() === 'INFO') {
                             message.iconAltText = self.altTextInfo;
-                            message.icon = infoMessageIcon;
+                            message.icon = messageIconSprite;
+                            message.imgCssStyle = "object-fit:none;object-position:0px -1243px;height:16px;";
                         }
 
                         if (message.category === catRetryInProgress) {

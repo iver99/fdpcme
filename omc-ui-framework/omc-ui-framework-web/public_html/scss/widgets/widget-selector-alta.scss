@@ -136,10 +136,11 @@
     float: right;
 }
 
-.widget-selector-clear-icon:before {
+.widget-selector-clear-icon:before {//clearEntry_ena
     height:16px;
     width:16px;
-    content:url("../../images/widgets/clearEntry_ena.png");
+    content:" ";
+    background:url(../images/uifwkSprite.png) no-repeat 0px -500px;height:16px;padding-left:18px;
 }
 
 .widget-selector-screenshot {
@@ -201,10 +202,11 @@
     border-width: 1px;
 }
 
-.widget-selector-search-icon:before {
+.widget-selector-search-icon:before {//func_search_16_ena
     height:16px;
     width:16px;
-    content:url("../../images/widgets/func_search_16_ena.png");
+    content:" ";
+    background:url(../images/uifwkSprite.png) no-repeat 0px -612px;height:16px;padding-left:18px;
 }
 
 .widget-selector-icon-button {
