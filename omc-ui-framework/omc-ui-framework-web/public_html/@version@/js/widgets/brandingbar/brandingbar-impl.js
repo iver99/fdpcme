@@ -681,11 +681,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                     self.cxtEntityTypeDisplayName = self.cxtEntityType;
                     if (!self.cxtCompositeName && self.cxtCompositeMeId) {
                         //fetch composite name from WS API by compositeMeId
-                        queryODSEntityByMeId(self.cxtCompositeMeId, queryOdsEntityCallback, 'composite');
+                        queryODSEntityByMeId(self.cxtCompositeMeId, 'composite', queryOdsEntityCallback);
                     }
                     if (!self.cxtEntityName && self.cxtEntityMeId) {
                         //fetch entity name from WS API by entityMeId
-                        queryODSEntityByMeId(self.cxtEntityMeId, queryOdsEntityCallback, 'entity');
+                        queryODSEntityByMeId(self.cxtEntityMeId, 'entity', queryOdsEntityCallback);
                     }
                     else if (!self.cxtEntityName && self.cxtEntityType) {
                         //fetch entity type display name
