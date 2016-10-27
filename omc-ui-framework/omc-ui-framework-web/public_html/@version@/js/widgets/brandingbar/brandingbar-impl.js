@@ -705,7 +705,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                     //A composite entity & a member entity (e.g. Rideshare App & slc01.us.oracle.com)
                     else if (self.cxtCompositeName && self.cxtEntityType) {
                         self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_ENTITY_TYPE, 
-                                                            self.cxtCompositeName, self.cxtEntityType));
+                                                            self.cxtCompositeName, self.cxtEntityTypeDisplayName));
                     }
                     else if (self.cxtCompositeName) {
                         var entityMeIds = self.cxtEntityMeIds ? self.cxtEntityMeIds.split(',') : null;
