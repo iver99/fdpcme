@@ -732,12 +732,12 @@ public class DashboardManager
 
 			concatQueryString(queryString, ic, sb1, index, paramList, locale);
 		}
-		if (filter != null && filter.getIncludedWidgetProvidersString() != null) {
+		if (filter != null && filter.getIncludedWidgetGroupsString() != null) {
 			LOGGER.debug("provider name is not null!");
-			sb1.append(" AND (p.is_system =0 and p.DASHBOARD_ID IN (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN "
-					+ "(SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE t.PROVIDER_NAME IN ("
-					+ filter.getIncludedWidgetProvidersString()
-					+ " )) )) ");
+			sb1.append(
+					" AND (p.is_system =0 and p.DASHBOARD_ID IN (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN "
+							+ "(SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE t.WIDGET_GROUP_NAME IN ("
+							+ filter.getIncludedWidgetGroupsString() + " )) )) ");
 		}
 		if (sb1.length() > 0) {
 			sb.append(") OR ( 1=1");
@@ -1170,8 +1170,8 @@ public class DashboardManager
 				}
 				sb.append(" p.application_type = " + filter.getIncludedApplicationTypes().get(i).getValue() + " ");
 			}
-			sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.PROVIDER_NAME in ("
-					+ filter.getIncludedWidgetProvidersString() + " )) ");
+			sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.WIDGET_GROUP_NAME in ("
+					+ filter.getIncludedWidgetGroupsString() + " )) ");
 			sb.append(" ) ");
 
 		}
