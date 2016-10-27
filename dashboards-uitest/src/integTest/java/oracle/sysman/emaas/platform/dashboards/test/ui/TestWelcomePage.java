@@ -213,9 +213,9 @@ public class TestWelcomePage extends LoginAndLogout
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "default");
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open ITA by url: " + tmpUrl);
-		Assert.assertTrue(tmpUrl.substring(tmpUrl.indexOf("emsaasui") + 9).contains("emcpdfui/home.html?filter=ita"));
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ita");
 
 		WebElement el = webd.getWebDriver().findElement(By.id(PageId.ITA_BOXID));
 		Assert.assertTrue(el.isSelected());
