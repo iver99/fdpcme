@@ -221,13 +221,18 @@ public class DashBoardUtils
 	{
 		String currurl = webdriver.getWebDriver().getCurrentUrl();
 		webdriver.getLogger().info("the origin url = " + currurl);
-
 		String tmpurl = DashBoardUtils.trimUrlParameters(currurl.substring(currurl.indexOf("emsaasui") + 9));
-
 		webdriver.getLogger().info("the url without para = " + tmpurl);
-
 		Assert.assertEquals(tmpurl, url);
+	}
 
+	public static void verifyURL_WithPara(WebDriver webdriver, String url)
+	{
+		String currurl = webdriver.getWebDriver().getCurrentUrl();
+		webdriver.getLogger().info("the origin url = " + currurl);
+		String tmpurl = currurl.substring(currurl.indexOf("emsaasui") + 9);
+		webdriver.getLogger().info("the url want to compare = " + tmpurl);
+		Assert.assertEquals(tmpurl, url);
 	}
 
 	private static String trimUrlParameters(String url)
