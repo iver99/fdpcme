@@ -71,7 +71,7 @@ public class CacheUnit implements ICacheUnit{
 	@Override
 	public boolean remove(String key){
 		this.cacheUnitStatus.setUsage(this.cacheUnitStatus.getUsage()-1);
-		this.cacheUnitStatus.setEliminateTimes(this.cacheUnitStatus.getEliminateTimes()+1);
+		this.cacheUnitStatus.setEvictionCount(this.cacheUnitStatus.getEvictionCount()+1);
 		return cacheLinkedHashMap.remove(key) == null?false:true;
 		
 	}
@@ -99,7 +99,7 @@ public class CacheUnit implements ICacheUnit{
 			LOGGER.debug("CacheUnit:The Element is expired,removing it from cache unit..");
 			cacheLinkedHashMap.remove(key);
 			this.cacheUnitStatus.setUsage(this.cacheUnitStatus.getUsage()-1);
-			this.cacheUnitStatus.setEliminateTimes(this.cacheUnitStatus.getEliminateTimes()+1);
+			this.cacheUnitStatus.setEvictionCount(this.cacheUnitStatus.getEvictionCount()+1);
 			return null;
 		}
 		this.cacheUnitStatus.setHitCount(this.cacheUnitStatus.getHitCount()+1);

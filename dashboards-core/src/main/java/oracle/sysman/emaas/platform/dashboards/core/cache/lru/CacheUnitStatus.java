@@ -16,7 +16,7 @@ public class CacheUnitStatus {
     private Integer capacity;
     private Integer usage=0;
 
-    private Long eliminateTimes=0L;
+    private Long evictionCount =0L;
 //    private Long eliminateExpirationCount=0L;
 //    private Long eliminateCapacityCount=0L;
 
@@ -27,12 +27,12 @@ public class CacheUnitStatus {
     public CacheUnitStatus() {
     }
 
-    public Long getEliminateTimes() {
-        return eliminateTimes;
+    public Long getEvictionCount() {
+        return evictionCount;
     }
 
-    public void setEliminateTimes(Long eliminateTimes) {
-        this.eliminateTimes = eliminateTimes;
+    public void setEvictionCount(Long evictionCount) {
+        this.evictionCount = evictionCount;
     }
 
     public Long getRequestCount() {
