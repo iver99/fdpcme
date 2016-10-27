@@ -56,10 +56,10 @@ define(['knockout',
                 self.showdbDescription.subscribe(function (val) {
                     if (val.indexOf("showdbDescription") >= 0) {
                         self.descriptionValue("ON");
-                        self.tbModel && self.tbModel.dashboardDescriptionEnabled("TRUE");
+                        self.tbModel && self.tbModel.dashboardDescriptionEnabled("TRUE") && self.dashboard.enableDescription("TRUE");
                     } else {
                         self.descriptionValue("OFF");
-                        self.tbModel && self.tbModel.dashboardDescriptionEnabled("FALSE");
+                        self.tbModel && self.tbModel.dashboardDescriptionEnabled("FALSE") && self.dashboard.enableDescription("FALSE");
                     }
                 });
 
