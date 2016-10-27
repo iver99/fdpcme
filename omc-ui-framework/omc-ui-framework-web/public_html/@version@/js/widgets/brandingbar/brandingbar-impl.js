@@ -769,12 +769,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                             var entity = dataRows[0];
                             if (entity.length === 4) {
                                 if (ctxType === 'composite') {
-                                    self.cxtCompositeName(entity[2]);
-                                    self.cxtCompositeType(entity[3]);
+                                    self.cxtCompositeName = entity[2];
+                                    self.cxtCompositeType = entity[3];
                                 }
                                 else if (ctxType === 'entity') {
-                                    self.cxtEntityName(entity[2]);
-                                    self.cxtEntityType(entity[3]);
+                                    self.cxtEntityName = entity[2];
+                                    self.cxtEntityType = entity[3];
                                 }
                             }
                         }
