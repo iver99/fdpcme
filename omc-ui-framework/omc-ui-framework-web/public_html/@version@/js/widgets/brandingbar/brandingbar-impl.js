@@ -12,7 +12,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojs/ojbutton',
     'ojs/ojdialog'
 ],
-    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, contextModel) {
+    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls) {
         function BrandingBarViewModel(params) {
             var self = this;
             var msgUtil = new msgUtilModel();
