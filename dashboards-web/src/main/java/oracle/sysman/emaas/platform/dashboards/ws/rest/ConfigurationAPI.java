@@ -24,13 +24,10 @@ import javax.ws.rs.core.Response.Status;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
-import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
-
+import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -67,7 +64,7 @@ public class ConfigurationAPI extends APIBase
 		}
 	}
 
-	@Path("/roles")
+	@Path("/userInfo")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRolesAndPriviledges(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
@@ -81,10 +78,9 @@ public class ConfigurationAPI extends APIBase
 				_LOGGER.error("Error to call [GET] /v1/configurations/roles: EntityNaming service is down");
 				throw new EntityNamingDependencyUnavailableException();
 			}
-            List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
-                    UserContext.getCurrentUser());
+            String userInfoEntity = JsonUtil.buildNormalMapper().toJson(new UserInfoEntity());
 			Response resp = Response.status(Status.OK)
-					.entity(JsonUtil.buildNormalMapper().toJson(userRoles)).build();
+					.entity(JsonUtil.buildNormalMapper().toJson(userInfoEntity)).build();
 			return resp;
 
 		}
