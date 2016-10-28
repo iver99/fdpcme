@@ -488,7 +488,7 @@ public class Tile
 		if (tp == null) {
 			return null;
 		}
-		parameters.remove(name);
+		parameters.remove(tp);
 		return tp;
 	}
 
