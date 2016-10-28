@@ -18,13 +18,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                 var cxtUtil = new contextModel();
                 self.compositeCxtText = ko.observable();
                 self.timeCxtText = ko.observable();
-                fetchOMCContext();
                 
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var dfu = new dfumodel(self.userName, self.tenantName);
                 //Append uifwk css file into document head
                 dfu.loadUifwkCss();
+                
+                //Show omc context on UI
+                fetchOMCContext();
 
                 //NLS strings
                 self.productName = nls.BRANDING_BAR_MANAGEMENT_CLOUD;
@@ -675,12 +677,26 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                     self.cxtEntityType = cxtUtil.getEntityType();
                     self.cxtEntityName = cxtUtil.getEntityName();
                     self.cxtTimePeriod = cxtUtil.getTimePeriod();
+                    self.cxtEntityMeIds = cxtUtil.getEntityMeIds();
+                    self.cxtEntityTypeDisplayName = self.cxtEntityType;
                     if (!self.cxtCompositeName && self.cxtCompositeMeId) {
-                        //TODO: fetch composite name from WS API by compositeMeId
+                        //fetch composite name from WS API by compositeMeId
+                        queryODSEntityByMeId(self.cxtCompositeMeId, 'composite', queryOdsEntityCallback);
                     }
                     if (!self.cxtEntityName && self.cxtEntityMeId) {
-                        //TODO: fetch entity name from WS API by entityMeId
+                        //fetch entity name from WS API by entityMeId
+                        queryODSEntityByMeId(self.cxtEntityMeId, 'entity', queryOdsEntityCallback);
                     }
+                    else if (!self.cxtEntityName && self.cxtEntityType) {
+                        //fetch entity type display name
+                        queryTargetModelMetaType(self.cxtEntityType, queryTmMetypeCallback);
+                    }
+                    
+                    refreshCompositeEntityCtxText();
+                    refreshTimeCtxText();
+                }
+                
+                function refreshCompositeEntityCtxText() {
                     //A composite entity & no member entity
                     if (self.cxtCompositeName && self.cxtEntityName) {
                         self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_ENTITY, 
@@ -689,17 +705,33 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                     //A composite entity & a member entity (e.g. Rideshare App & slc01.us.oracle.com)
                     else if (self.cxtCompositeName && self.cxtEntityType) {
                         self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_ENTITY_TYPE, 
-                                                            self.cxtCompositeName, self.cxtEntityType));
+                                                            self.cxtCompositeName, self.cxtEntityTypeDisplayName));
                     }
-                    //A composite entity & no member entity
                     else if (self.cxtCompositeName) {
-                        self.compositeCxtText(self.cxtCompositeName);
+                        var entityMeIds = self.cxtEntityMeIds ? self.cxtEntityMeIds.split(',') : null;
+                        //A composite entity & multiple entities
+                        if (entityMeIds && entityMeIds.length > 0) {
+                            if (entityMeIds.length === 1) {
+                                self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_SINGLE_ENTITY, 
+                                                            self.cxtCompositeName));
+                            }
+                            else {
+                                self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_ENTITIES, 
+                                                            self.cxtCompositeName, entityMeIds.length));
+                            }
+                        }
+                        //A composite entity & no member entity
+                        else {
+                            self.compositeCxtText(self.cxtCompositeName);
+                        }
                     }
                     //No composite entity & no member entity
                     else {
                         self.compositeCxtText(nls.BRANDING_BAR_GLOBAL_CONTEXT_ALL_ENTITIES);
                     }
-                    
+                }
+                
+                function refreshTimeCtxText() {
                     if (self.cxtTimePeriod) {
                         self.timeCxtText(self.cxtTimePeriod);
                     }
@@ -728,6 +760,90 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                         return self.dateTimeConverter.format(oj.IntlConverterUtils.dateToLocalIso(dateTime));
                     }
                     return null;
+                }
+                
+                function queryOdsEntityCallback(data, ctxType) {
+                    if (data && data['rows']) {
+                        var dataRows = data['rows'];
+                        if (dataRows.length > 0) {
+                            var entity = dataRows[0];
+                            if (entity.length === 4) {
+                                if (ctxType === 'composite') {
+                                    self.cxtCompositeName = entity[2];
+                                    self.cxtCompositeType = entity[3];
+                                }
+                                else if (ctxType === 'entity') {
+                                    self.cxtEntityName = entity[2];
+                                    self.cxtEntityType = entity[3];
+                                }
+                            }
+                        }
+                    }
+                    refreshCompositeEntityCtxText();
+                }
+                
+                function queryTmMetypeCallback(data) {
+                    if (data && data['typeDisplayName']) {
+                        self.cxtEntityTypeDisplayName = data['typeDisplayName'];
+                    }
+                    refreshCompositeEntityCtxText();
+                }
+                
+                function queryODSEntityByMeId(meId, ctxType, callback) {
+                    var jsonOdsQuery = {"ast":{"query":"simple","distinct":false,"select":[{"item":{"expr":"column","table":"me","column":"meId"}},
+                            {"item":{"expr":"column","table":"me","column":"entityName"}},
+                            {"item":{"expr":"column","table":"me","column":"displayName"}},
+                            {"item":{"expr":"column","table":"me","column":"entityType"}}],
+                        "from":[{"table":"virtual","name":"ManageableEntity","alias":"me"}],
+                        "where":{"cond":"inExpr","lhs":{"expr":"column","table":"me","column":"meId"},
+                        "rhs":[{"expr":"str","val":""}]}}};
+                    var odsQueryUrl = getODSEntityQueryUrl();
+                    jsonOdsQuery['ast']['where']['rhs'][0]['val'] = meId; 
+                    oj.Logger.info("Start to get ODS entity by entity ID by URL:" + odsQueryUrl, false);
+                    dfu.ajaxWithRetry(odsQueryUrl,{
+                        type: 'POST',
+                        data: JSON.stringify(jsonOdsQuery),
+                        contentType: 'application/json',
+                        headers: dfu.getDefaultHeader(),
+                        success:function(data, textStatus,jqXHR) {
+                            callback(data, ctxType);
+                        },
+                        error:function(xhr, textStatus, errorThrown){
+                            oj.Logger.error("Error: Failed to fetch ODS entity by ID due to error: " + textStatus);
+                        }
+                    });
+                }
+                
+                function queryTargetModelMetaType(metype, callback) {
+                    var tmQueryUrl = dfu.buildFullUrl(getTargetModelMetypeUrl(), metype);
+                    oj.Logger.info("Start to get ODS entity by entity ID by URL:" + tmQueryUrl, false);
+                    dfu.ajaxWithRetry(tmQueryUrl,{
+                        type: 'GET',
+                        contentType: 'application/json',
+                        headers: dfu.getDefaultHeader(),
+                        success:function(data, textStatus,jqXHR) {
+                            callback(data);
+                        },
+                        error:function(xhr, textStatus, errorThrown){
+                            oj.Logger.error("Error: Failed to fetch Target Model meta type by ID due to error: " + textStatus);
+                        }
+                    });
+                }
+                
+                function getODSEntityQueryUrl() {
+                    var odsUrl = '/sso.static/datamodel-query';
+                    if (dfu.isDevMode()){
+                        odsUrl = dfu.buildFullUrl(dfu.getDevData().odsRestApiEndPoint,"query");
+                    }
+                    return odsUrl;
+                }
+                
+                function getTargetModelMetypeUrl() {
+                    var tmUrl = '/sso.static/datamodel-metadata/metypes';
+                    if (dfu.isDevMode()){
+                        tmUrl = dfu.buildFullUrl(dfu.getDevData().tmRestApiEndPoint,"metadata/metypes");
+                    }
+                    return tmUrl;
                 }
             }
 
