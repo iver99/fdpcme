@@ -35,6 +35,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     template: {require: 'text!/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html'}
                 });
             }
+            if (!ko.components.isRegistered('emctas-globalbar'))
+            {
+                ko.components.register('emctas-globalbar', {
+                    viewModel: function () {},
+                    template: {require: 'text!/emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html'}
+                });
+            }
             //
             // topology params
             //
