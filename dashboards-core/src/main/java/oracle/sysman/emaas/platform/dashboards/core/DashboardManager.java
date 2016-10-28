@@ -713,6 +713,18 @@ public class DashboardManager
 		StringBuilder sb1 = new StringBuilder();
 		if (filter != null) {
 			concatIncludedFavoritesSQL(filter, sb);
+			if (filter.getIncludedTypeIntegers() != null && !filter.getIncludedTypeIntegers().isEmpty()) {
+				sb.append(" and ( ");
+				for (int i = 0; i < filter.getIncludedTypeIntegers().size(); i++) {
+					if (i != 0) {
+						sb.append(" or ");
+					}
+					sb.append(" p.type = ?" + index++);
+					paramList.add(filter.getIncludedTypeIntegers().get(i));
+				}
+				sb.append(" ) ");
+
+			}
 			index = concatIncludedOwners(filter, sb, index, paramList);
 			sb.append(" and ((p.is_system=0 ");
 			if (filter.getIncludedWidgetGroupsString() != null && !filter.getIncludedWidgetGroupsString().isEmpty()) {
@@ -742,6 +754,18 @@ public class DashboardManager
 			//dashboard Set begin
 			sb1.append(" p.type=2 ");
 			concatIncludedFavoritesSQL(filter, sb1);
+			if (filter.getIncludedTypeIntegers() != null && !filter.getIncludedTypeIntegers().isEmpty()) {
+				sb1.append(" and ( ");
+				for (int i = 0; i < filter.getIncludedTypeIntegers().size(); i++) {
+					if (i != 0) {
+						sb1.append(" or ");
+					}
+					sb1.append(" p.type = ?" + index++);
+					paramList.add(filter.getIncludedTypeIntegers().get(i));
+				}
+				sb1.append(" ) ");
+
+			} 
 			index = concatIncludedOwners(filter, sb1, index, paramList);
 			sb1.append(" and ( (p.is_system=0 ");
 			if (filter.getIncludedWidgetGroupsString() != null && !filter.getIncludedWidgetGroupsString().isEmpty()) {
