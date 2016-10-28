@@ -99,17 +99,25 @@
         </div>
         <div id="emaas-appheader-globalcxt" class="emaas-appheader-global-context">
             
-            <button id= "button"
-                data-bind="click: showTopology, 
-                           ojComponent: { component: 'ojButton', label: 'T' }">
-            </button>
+            <span style="float: left;">
+            <label for="buttonShowTopology"></label>
+            <input type="checkbox" id="buttonShowTopology" 
+               data-bind=" click: showTopology,
+                ojComponent: {
+                    component:'ojButton', checked: isTopologyDisplayed,
+                        chroming: 'half',
+                    display: 'icons', 
+                    icons: {start:'emctas-icon-font-24 emctas-topology-icon'}, 
+                    label: 'Topology'
+               }"/>
+            </span>
             
             <div id="emaas-appheader-compositecxt" class="emaas-appheader-composite-context" data-bind="text:compositeCxtText"></div>
             <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="text:timeCxtText">Oct 12th. 2:30 PM - 4:30 PM</div>
         </div>
         <!-- topology --->
         <div>
-        <div style ="background-color:white; padding-bottom: 10px; padding-top: 10px;" id="bbtopology" class="ude-topology" data-bind="component:{name:'emctas-topology', 
+        <div style ="background-color:white; padding-bottom: 10px; padding-top: 10px; display: none;" id="bbtopology" class="ude-topology" data-bind="component:{name:'emctas-topology', 
             params:{
                    entityQueryVars: queryVars,
                    entities: entities(),   
