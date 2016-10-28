@@ -960,14 +960,15 @@ define(['knockout',
             
             self.initializedCallback = function() {
                 require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
-                    var inputCriteria = TargetSelectorUtils.getCriteriaFromOmcContext();
-                    if(inputCriteria) {
-                        var selectionContext = {criteria: inputCriteria};
-                        self.targets(selectionContext);
-                    }
-                    TargetSelectorUtils.setTargetSelectionContext("tsel_"+self.dashboard.id(), self.targets());
+                    $.when(TargetSelectorUtils.getCriteriaFromOmcContext().done(function (inputCriteria) {
+                        if (inputCriteria) {
+                            var selectionContext = {criteria: inputCriteria};
+                            self.targets(selectionContext);
+                        }
+                        TargetSelectorUtils.setTargetSelectionContext("tsel_" + self.dashboard.id(), self.targets());
+                    }));
                 });
-            }
+            };
             
             var compressedTargets;
             //set initial targets selector options. priority: user extendedOptions > dashboard extendedOptions
