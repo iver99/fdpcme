@@ -960,6 +960,11 @@ define(['knockout',
             
             self.initializedCallback = function() {
                 require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
+                    var inputCriteria = TargetSelectorUtils.getCriteriaFromOmcContext();
+                    if(inputCriteria) {
+                        var selectionContext = {criteria: inputCriteria};
+                        self.targets(selectionContext);
+                    }
                     TargetSelectorUtils.setTargetSelectionContext("tsel_"+self.dashboard.id(), self.targets());
                 });
             }
@@ -974,7 +979,7 @@ define(['knockout',
             }else if(self.dashboardExtendedOptions && !$.isEmptyObject(self.dashboardExtendedOptions.tsel)) {
                 compressedTargets = self.dashboardExtendedOptions.tsel.entityContext;
                 self.userExtendedOptions.tsel = {};
-            }
+            }            
             compressedTargets && self.targets(compressedTargets);
 
             var timeSelectorChangelistener = ko.computed(function(){
@@ -1038,8 +1043,16 @@ define(['knockout',
                             self.initStart(start);
                             self.initEnd(end);
                             self.timePeriod(tp);
+                            //reset time params in global context
+                            ctxUtil.setStartTime(start.getTime());
+                            ctxUtil.setEndTime(end.getTime());
+                            ctxUtil.setTimePeriod(null);
                         }else {
                             self.timePeriod(tp);
+                            //reset time params in global context
+                            ctxUtil.setStartTime(null);
+                            ctxUtil.setEndTime(null);
+                            ctxUtil.setTimePeriod(tp);
                         }
                         self.timeSelectorModel.timeRangeChange(true);
                         
