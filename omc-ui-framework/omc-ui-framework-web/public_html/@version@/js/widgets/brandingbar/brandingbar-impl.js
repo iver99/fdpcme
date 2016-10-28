@@ -10,10 +10,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojs/ojtoolbar',
     'ojs/ojmenu',
     'ojs/ojbutton',
-    'ojs/ojdialog',
-    'uifwk/js/sdk/context-util'
+    'ojs/ojdialog'
 ],
-    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, cxtUtil) {
+    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, contextModel) {
         function BrandingBarViewModel(params) {
             var self = this;
             var msgUtil = new msgUtilModel();
