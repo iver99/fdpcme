@@ -231,6 +231,19 @@ public class DashBoardUtils
 
 	}
 
+	public static void verifyURL_WithPara(WebDriver webdriver, String url)
+	{
+		String currurl = webdriver.getWebDriver().getCurrentUrl();
+
+		webdriver.getLogger().info("the origin url = " + currurl);
+
+		String tmpurl = currurl.substring(currurl.indexOf("emsaasui") + 9);
+
+		webdriver.getLogger().info("the url want to compare = " + tmpurl);
+
+		Assert.assertTrue(tmpurl.contains(url));
+	}
+
 	private static String trimUrlParameters(String url)
 	{
 		String baseUrl = null;

@@ -1388,7 +1388,7 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=15");
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/builder.html?dashboardId=15");
 
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Database Operations opened correctly");
@@ -1461,7 +1461,7 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=31");
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/builder.html?dashboardId=31");
 
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Enterprise Health opened correctly");
@@ -1532,7 +1532,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=28");
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/builder.html?dashboardId=28");
 
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Exadata Health opened correctly");
@@ -1569,7 +1569,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=16");
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/builder.html?dashboardId=16");
 
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Host Operations opened correctly");
@@ -1694,7 +1694,7 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=17");
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/builder.html?dashboardId=17");
 
 		//verify the Middleware Operations open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Middleware Operations opened correctly");
@@ -1972,7 +1972,7 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=24");
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/builder.html?dashboardId=24");
 
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - UI Gallery opened correctly");
