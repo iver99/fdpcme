@@ -241,7 +241,7 @@ public class DashBoardUtils
 
 		webdriver.getLogger().info("the url want to compare = " + tmpurl);
 
-		Assert.assertEquals(tmpurl, url);
+		Assert.assertTrue(tmpurl.contains(url));
 	}
 
 	private static String trimUrlParameters(String url)
