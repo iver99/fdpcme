@@ -71,7 +71,7 @@ public class ConfigurationAPI extends APIBase
 											   @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
 											   @HeaderParam(value = "SESSION_EXP") String sessionExpiryTime)
 	{
-		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/configurations/roles");
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/configurations/userInfo");
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
 			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
