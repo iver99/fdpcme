@@ -56,9 +56,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.customNodeDataLoader = params.customNodeDataLoader;
             self.customEventHandler = params.customEventHandler;
             self.miniEntityCardActions = params.miniEntityCardActions; 
-             
+
+            self.isTopologyDisplayed = ko.observable(false);
             self.showTopology = function () { // listener to the button
                 $("#bbtopology").slideToggle("fast");
+                self.isTopologyDisplayed(!self.isTopologyDisplayed());
             };
 
             //NLS strings
