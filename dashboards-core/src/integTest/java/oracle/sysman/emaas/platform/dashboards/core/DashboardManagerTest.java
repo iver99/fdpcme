@@ -1,29 +1,25 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
-import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.*;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
-import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
-import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
-import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
-import oracle.sysman.emaas.platform.dashboards.core.model.TileParam;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 /**
  * @author guobaochen
@@ -856,6 +852,79 @@ public class DashboardManagerTest
 		dm.deleteDashboard(dbd11.getDashboardId(), true, tenant1);
 		dm.deleteDashboard(dbd12.getDashboardId(), true, tenant2);
 		dm.deleteDashboard(dbd13.getDashboardId(), true, tenant1);
+
+
+	}
+	@Test
+	public void testListDashboardSet() throws DashboardException{
+		//below are dashboard set related scenario
+		DashboardManager dm = DashboardManager.getInstance();
+		Long tenant1 = 11L;
+		Long tenant2 = 12L;
+
+		//prepare data
+		Dashboard ladbd = new Dashboard();
+		ladbd.setName("la" + System.currentTimeMillis());
+		ladbd.setIsSystem(true);
+		ladbd.setAppicationType(DashboardApplicationType.LogAnalytics);
+		ladbd = dm.saveNewDashboard(ladbd, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		Dashboard itadbd = new Dashboard();
+		ladbd.setName("la" + System.currentTimeMillis());
+		ladbd.setIsSystem(true);
+		ladbd.setAppicationType(DashboardApplicationType.ITAnalytics);
+		ladbd = dm.saveNewDashboard(ladbd, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		PaginatedDashboards pd = dm.listDashboards(null, null, tenant1, false);
+		Assert.assertNotNull(pd);
+		Assert.assertEquals(0, pd.getOffset());
+		Assert.assertEquals(Integer.valueOf(DashboardConstants.DASHBOARD_QUERY_DEFAULT_LIMIT), pd.getLimit());
+		long originSize = pd.getTotalResults();
+//		pd = dm.listDashboards("key", null, null, tenant1, false);
+		Dashboard dbdset1 = new Dashboard();
+		dbdset1.setType(Dashboard.DASHBOARD_TYPE_SET);
+		List<Dashboard> list1=new ArrayList<Dashboard>();
+		list1.add(ladbd);
+		dbdset1.setSubDashboards(list1);
+		dbdset1 = dm.saveNewDashboard(dbdset1, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		Dashboard dbdset2 = new Dashboard();
+		dbdset2.setType(Dashboard.DASHBOARD_TYPE_SET);
+		List<Dashboard> list2=new ArrayList<Dashboard>();
+		list2.add(itadbd);
+		dbdset2.setSubDashboards(list2);
+		dbdset2 = dm.saveNewDashboard(dbdset2, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		Dashboard dbdset3 = new Dashboard();
+		dbdset3.setType(Dashboard.DASHBOARD_TYPE_SET);
+		List<Dashboard> list3=new ArrayList<Dashboard>();
+		list2.add(itadbd);
+		list1.add(ladbd);
+		dbdset3.setSubDashboards(list3);
+		dbdset3 = dm.saveNewDashboard(dbdset3, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		// query by key word, case in-sensitive
+		DashboardsFilter filter1 = new DashboardsFilter();
+		filter1.setIncludedAppsFromString("ITAnalytics");
+		pd = dm.listDashboards(null, null, null, tenant1, true,"default",filter1);
+		long result1 = pd.getTotalResults();
+		Assert.assertEquals(result1, originSize + 2);//dbdset1 will not listed, because it belongs to LA
+
+		DashboardsFilter filter2 = new DashboardsFilter();
+		filter2.setIncludedAppsFromString("LogAnalytics");
+		pd = dm.listDashboards(null, null, null, tenant1, true,"default",filter2);
+		long result2 = pd.getTotalResults();
+		Assert.assertEquals(result2, originSize + 2);//dbdset2 will not listed, because it belongs to ITA
+
+		/*dm.deleteDashboard(dbd.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(dbd2.getDashboardId(), true, tenant1);*/
+
+
 	}
 
 	@Test
