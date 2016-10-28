@@ -172,7 +172,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                 self.sessionTimeoutBtnOK = nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK;
                 self.sessionTimeoutWarnDialogId = 'sessionTimeoutWarnDialog';
                 self.sessionTimeoutWarnIcon = messageIconSprite;    //warnMessageIcon
-                self.sessionTimeoutWarnIconStyle = "object-fit:none;object-position:0px -1259px;height:16px;";
+                self.sessionTimeoutWarnIconStyle = "object-fit:none;object-position:0px -46px;height:16px;";
 
                 self.clearMessage = function(data, event) {
                     removeMessage(data);
@@ -480,22 +480,22 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                         if (data.type && data.type.toUpperCase() === 'ERROR') {
                             message.iconAltText = self.altTextError;
                             message.icon = messageIconSprite;
-                            message.imgCssStyle = "object-fit:none;object-position:0px -1227px;height:16px;";
+                            message.imgCssStyle = "object-fit:none;object-position:0px -78px;height:16px;";
                         }
                         else if (data.type && data.type.toUpperCase() === 'WARN') {
                             message.iconAltText = self.altTextWarn;
                             message.icon = messageIconSprite;
-                            message.imgCssStyle = "object-fit:none;object-position:0px -1259px;height:16px;";
+                            message.imgCssStyle = "object-fit:none;object-position:0px -46px;height:16px;";
                         }
                         else if (data.type && data.type.toUpperCase() === 'CONFIRM') {
                             message.iconAltText = self.altTextConfirm;
                             message.icon = messageIconSprite;
-                            message.imgCssStyle = "object-fit:none;object-position:0px -1211px;height:16px;";
+                            message.imgCssStyle = "object-fit:none;object-position:0px -30px;height:16px;";
                         }
                         else if (data.type && data.type.toUpperCase() === 'INFO') {
                             message.iconAltText = self.altTextInfo;
                             message.icon = messageIconSprite;
-                            message.imgCssStyle = "object-fit:none;object-position:0px -1243px;height:16px;";
+                            message.imgCssStyle = "object-fit:none;object-position:0px -62px;height:16px;";
                         }
 
                         if (message.category === catRetryInProgress) {
