@@ -49,10 +49,10 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                             if(!window._uifwk.cachedData){
                                 window._uifwk.cachedData = {};
                             }
-                            if(data["userRoles"]){
+                            if(data && data["userRoles"]){
                                 window._uifwk.cachedData.roles = data["userRoles"];
                             }
-                            if(data["currentUser"]){
+                            if(data && data["currentUser"]){
                                 window._uifwk.cachedData.loggedInUser = {"currentUser":data["currentUser"]};
                                 var tenantIdDotUsername = data.currentUser;
                                 var indexOfDot = tenantIdDotUsername.indexOf(".");
@@ -139,10 +139,10 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                             if(!window._uifwk.cachedData){
                                 window._uifwk.cachedData = {};
                             }
-                            if(data["currentUser"]){
+                            if(data && data["currentUser"]){
                                 window._uifwk.cachedData.loggedInUser = {"currentUser":data["currentUser"]};
                             }
-                            if(data["userRoles"]){
+                            if(data && data["userRoles"]){
                                 window._uifwk.cachedData.roles = data["userRoles"];
                                 callback(data["userRoles"]);
                             }

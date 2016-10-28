@@ -27,12 +27,23 @@ public class UserContext
 
 	public static String getCurrentUser()
 	{
+		String tenantAndUser = userThreadLocal.get();
+		String currentUser = tenantAndUser.substring(tenantAndUser.indexOf(".")+1);
+		return currentUser;
+	}
+
+	public static String getUserTenant()
+	{
 		return userThreadLocal.get();
 	}
 
 	public static void setCurrentUser(String user)
 	{
 		userThreadLocal.set(user);
+	}
+
+	public static void setUserTenant(String tenant){
+		userThreadLocal.set(tenant);
 	}
 
 	private UserContext()

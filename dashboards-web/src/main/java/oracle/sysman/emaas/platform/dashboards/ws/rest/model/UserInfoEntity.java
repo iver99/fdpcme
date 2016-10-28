@@ -12,14 +12,12 @@ import java.util.List;
  */
 public class UserInfoEntity implements Serializable {
     private static final long serialVersionUID = 7643686542659781331L;
-    private String currentUser = UserContext.getCurrentUser();
-    private List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(), currentUser);
 
     public String getCurrentUser(){
-        return currentUser;
+        return UserContext.getUserTenant();
     }
 
     public List<String> getUserRoles(){
-        return userRoles;
+        return PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(), UserContext.getCurrentUser());
     }
 }

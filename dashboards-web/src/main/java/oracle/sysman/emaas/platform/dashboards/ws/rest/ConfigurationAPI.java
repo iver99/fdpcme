@@ -75,12 +75,12 @@ public class ConfigurationAPI extends APIBase
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
 			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
-				_LOGGER.error("Error to call [GET] /v1/configurations/roles: EntityNaming service is down");
+				_LOGGER.error("Error to call [GET] /v1/configurations/userInfo: EntityNaming service is down");
 				throw new EntityNamingDependencyUnavailableException();
 			}
             String userInfoEntity = JsonUtil.buildNormalMapper().toJson(new UserInfoEntity());
 			Response resp = Response.status(Status.OK)
-					.entity(JsonUtil.buildNormalMapper().toJson(userInfoEntity)).build();
+					.entity(userInfoEntity).build();
 			return resp;
 
 		}
