@@ -159,7 +159,7 @@ public class RegistrationEntity implements Serializable
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
 			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_ADMIN_LINKS+"-"+UserContext.getCurrentUser()), new ICacheFetchFactory() {
+					CacheManager.LOOKUP_CACHE_KEY_ADMIN_LINKS+"-"+UserContext.getCurrentUser(), new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
 						{
