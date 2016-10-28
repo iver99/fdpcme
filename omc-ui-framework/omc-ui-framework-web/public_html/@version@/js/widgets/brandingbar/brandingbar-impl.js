@@ -26,7 +26,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var dfu = new dfumodel(self.userName, self.tenantName);
             //Append uifwk css file into document head
             dfu.loadUifwkCss();
-            fetchOMCContext();
+            //Load OMC context
+            refreshOMCContext();
             if (!ko.components.isRegistered('emctas-topology'))
             {
                 ko.components.register('emctas-topology', {
@@ -523,6 +524,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         showMessage(data);
                     }
                 }
+                else if (data && data.tag && data.tag === 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED') {
+                    refreshOMCContext();
+                }
             }
 
             function showMessage(data) {
@@ -717,7 +721,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.appName(subscribedServices);
             }
 
-            function fetchOMCContext() {
+            function refreshOMCContext() {
                 self.cxtCompositeMeId = cxtUtil.getCompositeMeId();
                 self.cxtCompositeType = cxtUtil.getCompositeType();
                 self.cxtCompositeName = cxtUtil.getCompositeName();
@@ -733,47 +737,54 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     //fetch composite name from WS API by compositeMeId
                     queryODSEntityByMeId(self.cxtCompositeMeId, 'composite', queryOdsEntityCallback);
                 }
-                if (!self.cxtEntityName && self.cxtEntityMeId) {
-                    //fetch entity name from WS API by entityMeId
-                    queryODSEntityByMeId(self.cxtEntityMeId, 'entity', queryOdsEntityCallback);
+                else {
+                    refreshCompositeEntityCtxText();
                 }
-                else if (!self.cxtEntityName && self.cxtEntityType) {
-                    //fetch entity type display name
-                    queryTargetModelMetaType(self.cxtEntityType, queryTmMetypeCallback);
-                }
+//                if (!self.cxtEntityName && self.cxtEntityMeId) {
+//                    //fetch entity name from WS API by entityMeId
+//                    queryODSEntityByMeId(self.cxtEntityMeId, 'entity', queryOdsEntityCallback);
+//                }
+//                else if (!self.cxtEntityName && self.cxtEntityType) {
+//                    //fetch entity type display name
+//                    queryTargetModelMetaType(self.cxtEntityType, queryTmMetypeCallback);
+//                }
 
-                refreshCompositeEntityCtxText();
+//                refreshCompositeEntityCtxText();
                 refreshTimeCtxText();
             }
 
             function refreshCompositeEntityCtxText() {
-                //A composite entity & no member entity
-                if (self.cxtCompositeName && self.cxtEntityName) {
-                    self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_ENTITY, 
-                                                        self.cxtCompositeName, self.cxtEntityName));
-                }
-                //A composite entity & a member entity (e.g. Rideshare App & slc01.us.oracle.com)
-                else if (self.cxtCompositeName && self.cxtEntityType) {
-                    self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_ENTITY_TYPE, 
-                                                        self.cxtCompositeName, self.cxtEntityTypeDisplayName));
-                }
-                else if (self.cxtCompositeName) {
-                    var entityMeIds = self.cxtEntityMeIds ? self.cxtEntityMeIds.split(',') : null;
-                    //A composite entity & multiple entities
-                    if (entityMeIds && entityMeIds.length > 0) {
-                        if (entityMeIds.length === 1) {
-                            self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_SINGLE_ENTITY, 
-                                                        self.cxtCompositeName));
-                        }
-                        else {
-                            self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_ENTITIES, 
-                                                        self.cxtCompositeName, entityMeIds.length));
-                        }
-                    }
-                    //A composite entity & no member entity
-                    else {
-                        self.compositeCxtText(self.cxtCompositeName);
-                    }
+//                //A composite entity & no member entity
+//                if (self.cxtCompositeName && self.cxtEntityName) {
+//                    self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_ENTITY, 
+//                                                        self.cxtCompositeName, self.cxtEntityName));
+//                }
+//                //A composite entity & a member entity (e.g. Rideshare App & slc01.us.oracle.com)
+//                else if (self.cxtCompositeName && self.cxtEntityType) {
+//                    self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_ENTITY_TYPE, 
+//                                                        self.cxtCompositeName, self.cxtEntityTypeDisplayName));
+//                }
+//                else if (self.cxtCompositeName) {
+//                    var entityMeIds = self.cxtEntityMeIds ? self.cxtEntityMeIds.split(',') : null;
+//                    //A composite entity & multiple entities
+//                    if (entityMeIds && entityMeIds.length > 0) {
+//                        if (entityMeIds.length === 1) {
+//                            self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_SINGLE_ENTITY, 
+//                                                        self.cxtCompositeName));
+//                        }
+//                        else {
+//                            self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_ENTITIES, 
+//                                                        self.cxtCompositeName, entityMeIds.length));
+//                        }
+//                    }
+//                    //A composite entity & no member entity
+//                    else {
+//                        self.compositeCxtText(self.cxtCompositeName);
+//                    }
+//                }
+                //For now, only show composite context text on banner UI, do not show entities
+                if (self.cxtCompositeName) {
+                    self.compositeCxtText(self.cxtCompositeName);
                 }
                 //No composite entity & no member entity
                 else {

@@ -101,11 +101,16 @@ define([
              */
             self.setOMCContext = function(context) {
                 storeContext(context);
+                updateCurrentURL();
+                fireOMCContextChangeEvent();
+            };
+            
+            function updateCurrentURL() {
                 //update current URL
                 var url = window.location.href.split('/').pop();
                 url = self.appendOMCContext(url);
                 window.history.replaceState(window.history.state, document.title, url);
-            };
+            }
 
             function storeContext(context) {
                 //For now, we use window local variable to store the omc context once it's fetched from URL.
@@ -403,6 +408,17 @@ define([
             };
             
             /**
+             * Fire OMC change event when omc context is updated.
+             * 
+             * @param {Object} currentCtx Current OMC context
+             * @returns 
+             */            
+            function fireOMCContextChangeEvent(currentCtx) {
+                var message = {'tag': 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED', 'currentCtx': currentCtx};
+                window.postMessage(message, window.location.href);
+            }
+            
+            /**
              * Clear individual OMC global context.
              * 
              * @param {String} contextName Context definition name
@@ -413,6 +429,9 @@ define([
                     var omcContext = self.getOMCContext();
                     if (omcContext[contextName]) {
                         delete omcContext[contextName];
+                        storeContext(omcContext);
+                        updateCurrentURL();
+                        fireOMCContextChangeEvent();
                     }
                 }
             }
@@ -439,6 +458,9 @@ define([
                     else if (omcContext[contextName] && omcContext[contextName][paramName]) {
                         delete omcContext[contextName][paramName];
                     }
+                    storeContext(omcContext);
+                    updateCurrentURL();
+                    fireOMCContextChangeEvent();
                 }
             }
             
