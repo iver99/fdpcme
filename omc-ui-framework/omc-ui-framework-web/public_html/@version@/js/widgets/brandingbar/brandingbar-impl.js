@@ -40,13 +40,29 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //
             self.entities = ko.observable([]);
             self.queryVars = {};
-            if (cxtUtil.getEntityMeId()) {
-                self.entities.push(cxtUtil.getEntityMeId());
+            if (cxtUtil.getCompositeMeId()) {
+                var compositeId = [];
+                compositeId.push(cxtUtil.getCompositeMeId());
+                self.entities = ko.observable(compositeId);
             } else {
-                self.queryVars.entityName = cxtUtil.getEntityName();
-                self.queryVars.entityType = cxtUtil.getEntityType();
-                if (!self.queryVars.entityName || !self.queryVars.entityType) {
-                    self.entities = ko.observable(["B1EB94DD59ED96D4DD57C7F25A64F5B1"]);
+                if (cxtUtil.getCompositeName() && cxtUtil.getCompositeType()) {
+                    self.queryVars.entityName = cxtUtil.getCompositeName();
+                    self.queryVars.entityType = cxtUtil.getCompositeType();
+                }
+                else{
+                    if (cxtUtil.getEntityMeId()) {
+                        var entityId = [];
+                        entityId.push(cxtUtil.getEntityMeId());
+                        self.entities = ko.observable(entityId);
+                    } else {
+                        if (cxtUtil.getEntityName() && cxtUtil.getEntityType()) {
+                            self.queryVars.entityName = cxtUtil.getEntityName();
+                            self.queryVars.entityType = cxtUtil.getEntityType();
+                        } 
+                        else {
+                            self.entities = ko.observable(["B1EB94DD59ED96D4DD57C7F25A64F5B1"]);
+                        }
+                    } 
                 }
             }
 
