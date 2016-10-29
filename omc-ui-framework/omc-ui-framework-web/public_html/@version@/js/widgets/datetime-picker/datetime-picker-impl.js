@@ -13,8 +13,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var seconds = date.getSeconds();
                     var milliseconds = date.getMilliseconds();
                     return new Date(year, month, day, hours, minutes, seconds, milliseconds);
+                }else if(!isNaN(parseInt(date))){
+                    return new Date(parseInt(date));
                 }else {
-                    return new Date(date);
+                    return new Date();
                 }
             }
 
@@ -35,6 +37,25 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
             function isArray(obj) {
                 return Object.prototype.toString.call(obj) === "[object Array]";
+            }
+            
+            function formalizeTimePeriod(timePeriod) {
+                if(!timePeriod) {
+                    return null;
+                }
+                var tp = timePeriod.toLowerCase();
+                tp = (tp.slice(0, 1)).toUpperCase() + tp.slice(1);
+                return tp;
+            }
+            
+            function isValidDateInput(date) {
+                if(date instanceof Date) {
+                    return true;
+                }else if(!isNaN(parseInt(date))){
+                    return true;
+                }else {
+                    return false;
+                }
             }
 
             /**
@@ -555,15 +576,19 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 if(self.getParam(params.timePeriod)) {
                     if(ko.isObservable(params.timePeriod)) {
                         self.timePeriodPresetInNls = ko.computed(function() {
-                            return self.timePeriodsNlsObject[params.timePeriod()];
+                            return self.timePeriodsNlsObject[formalizeTimePeriod(params.timePeriod())];
                         }, self);
                         self.timePeriodPresetInNls.subscribe(function(value) {
                             self.initialize && self.initialize();
                         });
                     }else {
-                        self.timePeriodPresetInNls = self.timePeriodsNlsObject[params.timePeriod];
+                        self.timePeriodPresetInNls = self.timePeriodsNlsObject[formalizeTimePeriod(params.timePeriod)];
                     }
-                    self.isTimePeriodPreset = true;
+                    if(self.getParam(self.timePeriodPresetInNls)) {
+                        self.isTimePeriodPreset = true;
+                    }else {
+                        self.isTimePeriodPreset = false;
+                    }                 
                 }
 
                 if(params.startDateTime) {
@@ -1041,7 +1066,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             }
                         }
                     }else {
-                        if(self.startDateTime && self.endDateTime) {
+                        if(isValidDateInput(self.startDateTime) && isValidDateInput(self.endDateTime)) {
                             curDate = new Date();
                             //users input start date and end date
                             sdt = self.getParam(self.startDateTime);
@@ -1065,7 +1090,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     customClick(0);
                                 }
                             }
-                        } else if (!self.startDateTime && self.endDateTime) {
+                        } else if (!isValidDateInput(self.startDateTime) && isValidDateInput(self.endDateTime)) {
                             if($.inArray(self.timePeriodLast15mins, tpNotToShow)<0) {
                                 self.setTimePeriodChosen(self.timePeriodLast15mins);
                                 range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end, 0);
@@ -1076,13 +1101,13 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             }
                             //print warning...
                             oj.Logger.warn("The user just input end time");
-                        } else if (self.startDateTime && !self.endDateTime) {
+                        } else if (isValidDateInput(self.startDateTime) && !isValidDateInput(self.endDateTime)) {
                             customClick(0);
                             sdt = self.getParam(self.startDateTime);
                             start = newDateWithMilliseconds(sdt);
                             end = new Date();
-                        } else if(omcContext.time && omcContext.time.timePeriod) {
-                            tp = self.timePeriodsNlsObject[omcContext.time.timePeriod];
+                        } else if(omcContext.time && omcContext.time.timePeriod && 
+                                (tp = self.timePeriodsNlsObject[formalizeTimePeriod(omcContext.time.timePeriod)])) {
                             if(tp === self.timePeriodToday) {
                                 start = new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate());
                                 end = curDate;
@@ -1116,7 +1141,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     customClick(0);
                                 }
                             }
-                        } else if(omcContext.time && omcContext.time.startTime && omcContext.time.endTime) {
+                        } else if(omcContext.time && omcContext.time.startTime && omcContext.time.endTime && 
+                                !isNaN(parseInt(omcContext.time.startTime)) && isNaN(parseInt(omcContext.time.endTime))) {
                             curDate = new Date();
                             //users input start date and end date
                             sdt = new Date(parseInt(omcContext.time.startTime));
