@@ -163,4 +163,9 @@ public class RegistrationEntityTest
 	{
 		Assert.assertNotNull(registrationEntity.getVisualAnalyzers());
 	}
+
+	@Test
+	public void testGetAssetRoots() {
+		Assert.assertNotNull(registrationEntity.getAssetRoots());
+	}
 }

@@ -54,7 +54,7 @@ public class ConfigurationAPI extends APIBase
 
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
-			String regEntity = JsonUtil.buildNormalMapper().toJson(new RegistrationEntity(sessionExpiryTime));
+			String regEntity = JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime));
 			_LOGGER.info("Response for [GET] /v1/configurations/registration is \"{}\"", regEntity);
 			Response resp = Response.status(Status.OK).entity(regEntity).build();
 			return resp;
