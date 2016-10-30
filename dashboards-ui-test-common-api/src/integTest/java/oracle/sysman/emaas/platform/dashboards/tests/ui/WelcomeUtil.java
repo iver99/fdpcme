@@ -6,6 +6,7 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class WelcomeUtil
 {
+        public static final String SERVICE_NAME_DASHBOARDS = "dashboards";
 	private WelcomeUtil() {
 	  }
 
