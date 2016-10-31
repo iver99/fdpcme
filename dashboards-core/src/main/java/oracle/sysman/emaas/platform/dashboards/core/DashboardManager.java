@@ -732,7 +732,7 @@ public class DashboardManager
 
 		if (queryString != null && !"".equals(queryString)) {
 			Locale locale = AppContext.getInstance().getLocale();
-			concatQueryString(queryString, ic, sb, index, paramList, locale);
+			index=concatQueryString(queryString, ic, sb, index, paramList, locale);
 		}
 		sb.append(")");
 
@@ -760,7 +760,7 @@ public class DashboardManager
 		if (queryString != null && !"".equals(queryString)) {
 			Locale locale = AppContext.getInstance().getLocale();
 
-			concatQueryString(queryString, ic, sb1, index, paramList, locale);
+			index=concatQueryString(queryString, ic, sb1, index, paramList, locale);
 		}
 		sb1.append("))");
 		if (sb1.length() > 0) {
@@ -1277,7 +1277,7 @@ public class DashboardManager
 	 * @param paramList
 	 * @param locale
 	 */
-	private void concatQueryString(String queryString, boolean ic, StringBuilder sb, int index, List<Object> paramList,
+	private int concatQueryString(String queryString, boolean ic, StringBuilder sb, int index, List<Object> paramList,
 			Locale locale)
 	{
 		if (!ic) {
@@ -1317,6 +1317,7 @@ public class DashboardManager
 					+ index++ + " )) ");
 			paramList.add("%" + queryString.toLowerCase(locale) + "%");
 		}
+		return index;
 	}
 
 	private String getListDashboardsOrderBy(String orderBy, boolean isUnion)
