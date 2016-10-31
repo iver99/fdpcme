@@ -49,8 +49,9 @@ public class ConfigurationAPI extends APIBase
 
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
-			Response resp = Response.status(Status.OK)
-					.entity(JsonUtil.buildNormalMapper().toJson(new RegistrationEntity(sessionExpiryTime))).build();
+			String regString = JsonUtil.buildNormalMapper().toJson(new RegistrationEntity(sessionExpiryTime));
+                        _LOGGER.info("/v1/configurations/registration returns:\n"+regString);
+                        Response resp = Response.status(Status.OK).entity(regString).build();
 			return resp;
 
 		}
