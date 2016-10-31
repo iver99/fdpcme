@@ -123,12 +123,11 @@
             </div>
         </div>
         <!-- topology --->
-        <div>
-        <div style ="background-color:white; padding-bottom: 10px; padding-top: 10px; display: none;" id="bbtopology" class="ude-topology" data-bind="component:{name:'emctas-topology', 
+        <div id="bbtopology" style="overflow:scroll; height:200px; background-color:white;">
+        <div style =" padding-bottom: 10px; padding-top: 10px;"  class="ude-topology" data-bind="component:{name:'emctas-topology', 
             params:{
                    entityQueryVars: queryVars,
-                   entities: entities(),   
-                   maximumHeight: 200
+                   entities: entities()  
                 }
             },
             style: {width: '100%', height: '100%'}">

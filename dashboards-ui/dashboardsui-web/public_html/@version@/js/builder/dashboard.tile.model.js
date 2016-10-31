@@ -1044,16 +1044,8 @@ define(['knockout',
                             self.initStart(start);
                             self.initEnd(end);
                             self.timePeriod(tp);
-                            //reset time params in global context
-                            ctxUtil.setStartTime(start.getTime());
-                            ctxUtil.setEndTime(end.getTime());
-                            ctxUtil.setTimePeriod(null);
                         }else {
                             self.timePeriod(tp);
-                            //reset time params in global context
-                            ctxUtil.setStartTime(null);
-                            ctxUtil.setEndTime(null);
-                            ctxUtil.setTimePeriod(tp);
                         }
                         self.timeSelectorModel.timeRangeChange(true);
                         

@@ -1706,6 +1706,17 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.timeFilterInfo(self.generateTfTooltip(hourOfDay, self.tfInstance.daysChecked(), self.tfInstance.monthsChecked()));
                     }
 
+                    //reset time params in global context
+                    if(timePeriod === "Custom") {                        
+                        ctxUtil.setStartTime(new Date(start).getTime());
+                        ctxUtil.setEndTime(new Date(end).getTime());
+                        ctxUtil.setTimePeriod(null);
+                    }else {
+                        ctxUtil.setStartTime(null);
+                        ctxUtil.setEndTime(null);
+                        ctxUtil.setTimePeriod(timePeriod);
+                    }
+
                     if (self.callbackAfterApply) {
                         $.ajax({
                             url: "/emsaasui/uifwk/empty.html",
