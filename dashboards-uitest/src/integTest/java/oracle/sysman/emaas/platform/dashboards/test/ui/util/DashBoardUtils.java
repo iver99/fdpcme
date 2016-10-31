@@ -232,7 +232,7 @@ public class DashBoardUtils
 		webdriver.getLogger().info("the origin url = " + currurl);
 		String tmpurl = currurl.substring(currurl.indexOf("emsaasui") + 9);
 		webdriver.getLogger().info("the url want to compare = " + tmpurl);
-		Assert.assertEquals(tmpurl, url);
+		Assert.assertTrue(tmpurl.contains(url));
 	}
 
 	private static String trimUrlParameters(String url)
