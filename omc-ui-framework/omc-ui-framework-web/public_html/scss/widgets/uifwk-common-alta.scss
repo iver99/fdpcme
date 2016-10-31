@@ -406,3 +406,7 @@ a:hover {
 .emaas-appheader-time-context {
     float:right;
 }
+
+.emaas-appheader-toolbar-button:disabled .emctas-topology-icon:before {
+  color: #9e9e9e;
+}

@@ -45,21 +45,28 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //
             // topology params
             //
+            self.topologyDisabled = ko.observable(false);
             self.entities = ko.observable([]);
             self.queryVars = {};
             if (cxtUtil.getCompositeMeId()) {
                 var compositeId = [];
                 compositeId.push(cxtUtil.getCompositeMeId());
                 self.entities = ko.observable(compositeId);
+                self.topologyDisabled(false);
             } else {
+                self.topologyDisabled(true);
                 if (cxtUtil.getCompositeName() && cxtUtil.getCompositeType()) {
                     self.queryVars.entityName = cxtUtil.getCompositeName();
                     self.queryVars.entityType = cxtUtil.getCompositeType();
                 }
-                else{
-                    if (cxtUtil.getEntityMeId()) {
+                else {
+                    var entityMeIds = cxtUtil.getEntityMeIds();
+                    if (entityMeIds) {
                         var entityId = [];
-                        entityId.push(cxtUtil.getEntityMeId());
+                        var entityArray = entityMeIds.split(',');
+                        for (var i = 0; i < entityArray.length; i++) {
+                            entityId.push($.trim(entityArray[i]));
+                        }
                         self.entities = ko.observable(entityId);
                     } else {
                         if (cxtUtil.getEntityName() && cxtUtil.getEntityType()) {
@@ -80,10 +87,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.customEventHandler = params.customEventHandler;
             self.miniEntityCardActions = params.miniEntityCardActions; 
 
-            self.isTopologyDisplayed = ko.observable(false);
+//            self.isTopologyDisplayed = ko.observable(false);      
             self.showTopology = function () { // listener to the button
                 $("#bbtopology").slideToggle("fast");
-                self.isTopologyDisplayed(!self.isTopologyDisplayed());
+//                self.isTopologyDisplayed(!self.isTopologyDisplayed());
             };
 
             //NLS strings
@@ -102,6 +109,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.altTextConfirm = nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CONFIRM;
             self.altTextInfo = nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_INFO;
             self.altTextClear = nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CLEAR;
+            self.topologyBtnLabel = nls.BRANDING_BAR_GLOBAL_CONTEXT_TOPOLOGY;
             self.appName = ko.observable();
 
             self.hasMessages = ko.observable(true);
@@ -734,7 +742,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.cxtCompositeName = cxtUtil.getCompositeName();
                 self.cxtStartTime = cxtUtil.getStartTime();
                 self.cxtEndTime = cxtUtil.getEndTime();
-                self.cxtEntityMeId = cxtUtil.getEntityMeId();
+                //self.cxtEntityMeId = cxtUtil.getEntityMeId();
                 self.cxtEntityType = cxtUtil.getEntityType();
                 self.cxtEntityName = cxtUtil.getEntityName();
                 self.cxtTimePeriod = cxtUtil.getTimePeriod();
