@@ -114,7 +114,7 @@ public class DashboardServiceFacadeTest
 		d.setEnableTimeRange(1);
 		d.setEnableRefresh(1);
 		d.setIsSystem(1);
-		//d.setShowInHome(1);
+		d.setShowInHome(1);
 		d.setLastModificationDate(DateUtil.getCurrentUTCTime());
 		d.setOwner("test");
 		d.setLastModifiedBy("test");
@@ -154,6 +154,7 @@ public class DashboardServiceFacadeTest
 		tile.setWidgetHistogram("widgetHistogram");
 		tile.setWidgetSupportTimeControl(1);
 		tile.setWidgetLinkedDashboard(1L);
+		tile.setWidgetDeleted(0);
 		return tile;
 	}
 
