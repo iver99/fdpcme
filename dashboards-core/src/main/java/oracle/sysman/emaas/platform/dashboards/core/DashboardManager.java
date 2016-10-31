@@ -737,7 +737,7 @@ public class DashboardManager
 		sb.append(")");
 
 		//dashboard Set begin
-		sb1.append(" p.type=2 ");
+		sb1.append(" (p.type=2 ");
 		if (filter != null) {
 			concatIncludedFavoritesSQL(filter, sb1);
 			index = concatIncludedTypeInteger(filter, sb1, index, paramList);
@@ -762,7 +762,7 @@ public class DashboardManager
 
 			concatQueryString(queryString, ic, sb1, index, paramList, locale);
 		}
-		sb1.append(")");
+		sb1.append("))");
 		if (sb1.length() > 0) {
 			sb.append(" OR ( ");
 			sb.append(sb1);
