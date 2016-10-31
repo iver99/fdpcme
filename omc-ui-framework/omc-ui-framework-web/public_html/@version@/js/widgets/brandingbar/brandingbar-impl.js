@@ -23,6 +23,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
             self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
             self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
+            self.isTopologyDisplayed = ko.observable(false);  
+            self.topologyDisabled = ko.observable(false);
             var dfu = new dfumodel(self.userName, self.tenantName);
             //Append uifwk css file into document head
             dfu.loadUifwkCss();
@@ -45,7 +47,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //
             // topology params
             //
-            self.topologyDisabled = ko.observable(false);
             self.entities = ko.observable([]);
             self.queryVars = {};
             if (cxtUtil.getCompositeMeId()) {
@@ -86,11 +87,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.customNodeDataLoader = params.customNodeDataLoader;
             self.customEventHandler = params.customEventHandler;
             self.miniEntityCardActions = params.miniEntityCardActions; 
-
-//            self.isTopologyDisplayed = ko.observable(false);      
+            
             self.showTopology = function () { // listener to the button
                 $("#bbtopology").slideToggle("fast");
-//                self.isTopologyDisplayed(!self.isTopologyDisplayed());
+                self.isTopologyDisplayed(!self.isTopologyDisplayed());
             };
 
             //NLS strings
@@ -748,6 +748,19 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.cxtTimePeriod = cxtUtil.getTimePeriod();
                 self.cxtEntityMeIds = cxtUtil.getEntityMeIds();
                 self.cxtEntityTypeDisplayName = self.cxtEntityType;
+                //Refresh topology button status
+                if (self.cxtCompositeMeId) {
+                    self.topologyDisabled(false);
+                }
+                //When no compositeMEID exists, disable topology button
+                else {
+                    //Hide topology
+                    if (self.isTopologyDisplayed()) {
+                        self.showTopology();
+                    }; 
+                    self.topologyDisabled(true);
+                };
+                
                 if (!self.cxtCompositeName && self.cxtCompositeMeId) {
                     //fetch composite name from WS API by compositeMeId
                     queryODSEntityByMeId(self.cxtCompositeMeId, 'composite', queryOdsEntityCallback);
