@@ -763,13 +763,10 @@ public class DashboardManager
 			concatQueryString(queryString, ic, sb1, index, paramList, locale);
 		}
 		sb1.append(")");
-
-
 		if (sb1.length() > 0) {
 			sb.append(" OR ( ");
 			sb.append(sb1);
 		}
-
 		//query
 		StringBuilder sbQuery = new StringBuilder(sb);
 		//order by
@@ -816,6 +813,31 @@ public class DashboardManager
 					em.close();
 			}
 		}
+	}
+
+
+	/**
+	 * @param filter
+	 * @param sb
+	 * @param index
+	 * @param paramList
+	 * @return
+	 */
+	private int concatIncludedTypeInteger(DashboardsFilter filter, StringBuilder sb, int index, List<Object> paramList)
+	{
+		if (filter.getIncludedTypeIntegers() != null && !filter.getIncludedTypeIntegers().isEmpty()) {
+			sb.append(" and ( ");
+			for (int i = 0; i < filter.getIncludedTypeIntegers().size(); i++) {
+				if (i != 0) {
+					sb.append(" or ");
+				}
+				sb.append(" p.type = ?" + index++);
+				paramList.add(filter.getIncludedTypeIntegers().get(i));
+			}
+			sb.append(" ) ");
+
+		}
+		return index;
 	}
 
 	/**
@@ -1240,30 +1262,6 @@ public class DashboardManager
 					sb.append(" p.owner != ?" + index++ + " and p.share_public > 0");
 					paramList.add(UserContext.getCurrentUser());
 				}
-			}
-			sb.append(" ) ");
-
-		}
-		return index;
-	}
-
-	/**
-	 * @param filter
-	 * @param sb
-	 * @param index
-	 * @param paramList
-	 * @return
-	 */
-	private int concatIncludedTypeInteger(DashboardsFilter filter, StringBuilder sb, int index, List<Object> paramList)
-	{
-		if (filter.getIncludedTypeIntegers() != null && !filter.getIncludedTypeIntegers().isEmpty()) {
-			sb.append(" and ( ");
-			for (int i = 0; i < filter.getIncludedTypeIntegers().size(); i++) {
-				if (i != 0) {
-					sb.append(" or ");
-				}
-				sb.append(" p.type = ?" + index++);
-				paramList.add(filter.getIncludedTypeIntegers().get(i));
 			}
 			sb.append(" ) ");
 
