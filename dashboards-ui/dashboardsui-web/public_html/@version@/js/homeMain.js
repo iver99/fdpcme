@@ -61,7 +61,9 @@ requirejs.config({
         'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
         'dashboards': '.',
         'dfutil':'internaldfcommon/js/util/internal-df-util',
-        'uifwk': '/emsaasui/uifwk'
+        'uifwk': '/emsaasui/uifwk',
+        'emsaasui':'/emsaasui',
+        'emcta':'/emsaasui/emcta/ta/js'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {

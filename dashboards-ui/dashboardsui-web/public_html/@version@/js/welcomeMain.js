@@ -44,11 +44,14 @@ requirejs.config({
         'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/min',
         'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/ojL10n',
         'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/resources',
+        'ojdnd': '../../libs/@version@/js/oraclejet/js/libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'dfutil': 'internaldfcommon/js/util/internal-df-util',
-        'uifwk': '/emsaasui/uifwk'
+        'uifwk': '/emsaasui/uifwk',
+        'emsaasui':'/emsaasui',
+        'emcta':'/emsaasui/emcta/ta/js'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
