@@ -106,16 +106,17 @@
             </div>  
             
             <span style="float: left;">
+            <div id="topologyButtonWrapper" data-bind="ojComponent: {component: 'ojButtonset', checked: isTopologyButtonChecked}">
             <label for="buttonShowTopology"></label>
-            <button id="buttonShowTopology" class="oj-button-half-chrome emaas-appheader-toolbar-button" role="button"
+            <input type="checkbox" id="buttonShowTopology" value="buttonShowTopology" class="oj-button-half-chrome emaas-appheader-toolbar-button" role="button"
                data-bind=" click: showTopology, attr: {title: topologyBtnLabel},
                 ojComponent: {
                     component:'ojButton', 
                     chroming: 'half', disabled: topologyDisabled,
                     display: 'icons', label: topologyBtnLabel,
                     icons: {start:'emctas-icon-font-24 emctas-topology-icon'}
-               }">
-           </button>
+               }"/>
+            </div>
             </span>
             
             <div id="emaas-appheader-compositecxt" class="emaas-appheader-composite-context" data-bind="text:compositeCxtText"></div>
