@@ -1066,7 +1066,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             }
                         }
                     }else {
-                        if(isValidDateInput(self.startDateTime) && isValidDateInput(self.endDateTime)) {
+                        if(isValidDateInput(self.getParam(self.startDateTime)) && isValidDateInput(self.getParam(self.endDateTime))) {
                             curDate = new Date();
                             //users input start date and end date
                             sdt = self.getParam(self.startDateTime);
@@ -1090,7 +1090,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     customClick(0);
                                 }
                             }
-                        } else if (!isValidDateInput(self.startDateTime) && isValidDateInput(self.endDateTime)) {
+                        } else if (!isValidDateInput(self.getParam(self.startDateTime)) && isValidDateInput(self.getParam(self.endDateTime))) {
                             if($.inArray(self.timePeriodLast15mins, tpNotToShow)<0) {
                                 self.setTimePeriodChosen(self.timePeriodLast15mins);
                                 range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end, 0);
@@ -1101,7 +1101,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             }
                             //print warning...
                             oj.Logger.warn("The user just input end time");
-                        } else if (isValidDateInput(self.startDateTime) && !isValidDateInput(self.endDateTime)) {
+                        } else if (isValidDateInput(self.getParam(self.startDateTime)) && !isValidDateInput(getParam(self.endDateTime))) {
                             customClick(0);
                             sdt = self.getParam(self.startDateTime);
                             start = newDateWithMilliseconds(sdt);

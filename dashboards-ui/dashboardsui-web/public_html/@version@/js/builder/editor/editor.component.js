@@ -340,10 +340,15 @@ define(['knockout',
                         if(dashboard.enableTimeRange() === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
                             widgetUrl += "";
                         }else {
-                            var start = timeSelectorModel.viewStart().getTime();
-                            var end = timeSelectorModel.viewEnd().getTime();
+                            var start = timeSelectorModel.viewStart();
+                            var end = timeSelectorModel.viewEnd();
+                            if(start && (start instanceof Date) && end && (end instanceof Date)) {
+                                widgetUrl += "&startTime="+start.getTime()+"&endTime="+end.getTime();
+                            }
                             var timePeriod = timeSelectorModel.viewTimePeriod();
-                            widgetUrl += "&startTime="+start+"&endTime="+end+"&timePeriod="+timePeriod;
+                            if(timePeriod) {
+                                widgetUrl += "&timePeriod="+timePeriod;
+                            }
                         }
 
                     require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils){

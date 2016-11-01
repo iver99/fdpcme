@@ -998,9 +998,6 @@ define(['knockout',
             });
 
             var current = new Date();
-            var initStart = dfu_model.getUrlParam("startTime") ? new Date(parseInt(dfu_model.getUrlParam("startTime"))) : null;
-            var initEnd = dfu_model.getUrlParam("endTime") ? new Date(parseInt(dfu_model.getUrlParam("endTime"))) : null;
-            self.timePeriod = ko.observable("Custom");
             
             var initStart = (omcContext.time && omcContext.time.startTime) ? new Date(parseInt(omcContext.time.startTime)) : null;
             var initEnd = (omcContext.time && omcContext.time.endTime) ? new Date(parseInt(omcContext.time.endTime)) : null;
