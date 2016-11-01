@@ -97,6 +97,7 @@
                 </button>
             </div>  
         </div>
+        <!-- ko if: showGlobalContextBanner === true -->
         <div id="emaas-appheader-globalcxt" class="emaas-appheader-global-context">
             
             <div id="emctas-globalbar" data-bind="component:{name:'emctas-globalbar', 
@@ -122,6 +123,7 @@
             <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="text:timeCxtText">Oct 12th. 2:30 PM - 4:30 PM</div>
             </div>
         </div>
+        <!-- /ko -->
         <!-- topology --->
         <div id="#ude-topology-div" style="overflow-y:scroll; height:200px; background-color:white;"
              data-bind="visible: isTopologyDisplayed">

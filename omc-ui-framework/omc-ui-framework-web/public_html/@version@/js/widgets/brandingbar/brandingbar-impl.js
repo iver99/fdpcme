@@ -25,6 +25,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
             self.isTopologyDisplayed = ko.observable(false);
             self.topologyDisabled = ko.observable(false);
+            self.showGlobalContextBanner = ko.unwrap(params.showGlobalContextBanner);
             var dfu = new dfumodel(self.userName, self.tenantName);
             //Append uifwk css file into document head
             dfu.loadUifwkCss();
