@@ -103,7 +103,8 @@ function(ko, $, dfu, oj, cxtModel)
             userName: self.userName,
             tenantName: self.tenantName,
             appId: self.appId,
-            isAdmin: false
+            isAdmin: false,
+            showGlobalContextBanner: true
         };
         }
         function checkParams(msgKey, serviceid, serviceName) {

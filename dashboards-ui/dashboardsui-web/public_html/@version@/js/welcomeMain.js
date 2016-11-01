@@ -134,7 +134,8 @@ require(['ojs/ojcore',
                     userName: self.userName,
                     tenantName: self.tenantName,
                     appId: self.appId,
-                    isAdmin: true
+                    isAdmin: true,
+                    showGlobalContextBanner: true
                 };
             }
 
