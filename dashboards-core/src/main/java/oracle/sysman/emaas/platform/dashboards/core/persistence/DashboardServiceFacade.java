@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
+
 import java.util.Collections;
 import java.util.List;
 
@@ -400,6 +401,7 @@ public class DashboardServiceFacade
 				em.merge(dashboard);
 			}
 		}
+		getEntityManager().getTransaction().commit();
 	}
 
 	public List<EmsDashboard> getEmsDashboardsBySubId(long subDashboardId)

@@ -43,6 +43,7 @@ requirejs.config({
         'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/ojL10n',
         'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/resources',
         'ojdnd': '../../libs/@version@/js/oraclejet/js/libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
+        'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'uifwk': '/emsaasui/uifwk',
         'emsaasui':'/emsaasui',

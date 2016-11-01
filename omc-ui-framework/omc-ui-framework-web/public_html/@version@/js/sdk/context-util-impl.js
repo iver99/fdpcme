@@ -10,7 +10,7 @@ define([
             var dfu = new dfuModel();
             var supportedContext = [{'contextName': 'time','paramNames': ['startTime', 'endTime', 'timePeriod']}, 
                                     {'contextName': 'composite','paramNames': ['compositeType', 'compositeName', 'compositeMEID']},
-                                    {'contextName': 'entity','paramNames': ['entityType', 'entityName', 'entityMEID', 'entityMEIDs']}
+                                    {'contextName': 'entity','paramNames': ['entityType', 'entityName', 'entityMEIDs']}
                                    ];
             var omcCtxParamName = 'omcCtx';
             
@@ -81,6 +81,15 @@ define([
                             }
                             //Set value into the OMC context JSON object
                             omcContext[contextName][paramName] = paramValue;
+                            
+                            //Fetch composite/entity type/name by MEID
+                            if (paramName === 'compositeMEID') {
+                                queryODSEntityByMeId(paramValue, 'composite', queryOdsEntityCallback);
+                            }
+                            //Only fetch entity name/type when there is a single entity
+                            else if (paramName === 'entityMEIDs' && paramValue.indexOf(',') < 0 ) {
+                                queryODSEntityByMeId(paramValue, 'entity', queryOdsEntityCallback);
+                            }
                         }
                     }
                 }
@@ -180,41 +189,41 @@ define([
             /**
              * Set OMC global context of start time.
              * 
-             * @param {String} startTime Start time
+             * @param {Number} startTime Start time
              * @returns 
              */
             self.setStartTime = function(startTime) {
-                setIndividualContext('time', 'startTime', startTime);
+                setIndividualContext('time', 'startTime', parseInt(startTime));
             };
             
             /**
              * Get OMC global context of start time.
              * 
              * @param 
-             * @returns {String} OMC global context of start time
+             * @returns {Number} OMC global context of start time
              */
             self.getStartTime = function() {
-                return getIndividualContext('time', 'startTime');
+                return parseInt(getIndividualContext('time', 'startTime'));
             };
             
             /**
              * Set OMC global context of end time.
              * 
-             * @param {String} endTime End time
+             * @param {Number} endTime End time
              * @returns 
              */
             self.setEndTime = function(endTime) {
-                setIndividualContext('time', 'endTime', endTime);
+                setIndividualContext('time', 'endTime', parseInt(endTime));
             };
             
             /**
              * Get OMC global context of end time.
              * 
              * @param 
-             * @returns {String} OMC global context of end time
+             * @returns {Number} OMC global context of end time
              */
             self.getEndTime = function() {
-                return getIndividualContext('time', 'endTime');
+                return parseInt(getIndividualContext('time', 'endTime'));
             };
             
             /**
@@ -245,6 +254,7 @@ define([
              */
             self.setCompositeMeId = function(compositeMEID) {
                 setIndividualContext('composite', 'compositeMEID', compositeMEID);
+                queryODSEntityByMeId(compositeMEID, 'composite', queryOdsEntityCallback);
             };
             
             /**
@@ -257,15 +267,15 @@ define([
                 return getIndividualContext('composite', 'compositeMEID');
             };
             
-            /**
-             * Set OMC global context of composite type.
-             * 
-             * @param {String} compositeType Composite type
-             * @returns 
-             */
-            self.setCompositeType = function(compositeType) {
-                setIndividualContext('composite', 'compositeType', compositeType);
-            };
+//            /**
+//             * Set OMC global context of composite type.
+//             * 
+//             * @param {String} compositeType Composite type
+//             * @returns 
+//             */
+//            self.setCompositeType = function(compositeType) {
+//                setIndividualContext('composite', 'compositeType', compositeType);
+//            };
             
             /**
              * Get OMC global context of composite type.
@@ -277,15 +287,15 @@ define([
                 return getIndividualContext('composite', 'compositeType');
             };
             
-            /**
-             * Set OMC global context of composite name.
-             * 
-             * @param {String} compositeName Composite name
-             * @returns 
-             */
-            self.setCompositeName = function(compositeName) {
-                setIndividualContext('composite', 'compositeName', compositeName);
-            };
+//            /**
+//             * Set OMC global context of composite name.
+//             * 
+//             * @param {String} compositeName Composite name
+//             * @returns 
+//             */
+//            self.setCompositeName = function(compositeName) {
+//                setIndividualContext('composite', 'compositeName', compositeName);
+//            };
             
             /**
              * Get OMC global context of composite name.
@@ -297,25 +307,25 @@ define([
                 return getIndividualContext('composite', 'compositeName');
             };
             
-            /**
-             * Set OMC global context of entity guid.
-             * 
-             * @param {String} entityMEID Entity GUID
-             * @returns 
-             */
-            self.setEntityMeId = function(entityMEID) {
-                setIndividualContext('entity', 'entityMEID', entityMEID);
-            };
-            
-            /**
-             * Get OMC global context of entity guid.
-             * 
-             * @param 
-             * @returns {String} OMC global context of entity guid
-             */
-            self.getEntityMeId = function() {
-                return getIndividualContext('entity', 'entityMEID');
-            };
+//            /**
+//             * Set OMC global context of entity guid.
+//             * 
+//             * @param {String} entityMEID Entity GUID
+//             * @returns 
+//             */
+//            self.setEntityMeId = function(entityMEID) {
+//                setIndividualContext('entity', 'entityMEID', entityMEID);
+//            };
+//            
+//            /**
+//             * Get OMC global context of entity guid.
+//             * 
+//             * @param 
+//             * @returns {String} OMC global context of entity guid
+//             */
+//            self.getEntityMeId = function() {
+//                return getIndividualContext('entity', 'entityMEID');
+//            };
             
             /**
              * Set OMC global context of multiple entity GUIDs.
@@ -325,6 +335,10 @@ define([
              */
             self.setEntityMeIds = function(entityMEIDs) {
                 setIndividualContext('entity', 'entityMEIDs', entityMEIDs);
+                //Only fetch entity name/type when there is a single entity
+                if (entityMEIDs && entityMEIDs.indexOf(',') < 0 ) {
+                    queryODSEntityByMeId(entityMEIDs, 'entity', queryOdsEntityCallback);
+                }
             };
             
             /**
@@ -357,15 +371,15 @@ define([
                 return getIndividualContext('entity', 'entityType');
             };
             
-            /**
-             * Set OMC global context of entity name.
-             * 
-             * @param {String} entityName Entity name
-             * @returns 
-             */
-            self.setEntityName = function(entityName) {
-                setIndividualContext('entity', 'entityName', entityName);
-            };
+//            /**
+//             * Set OMC global context of entity name.
+//             * 
+//             * @param {String} entityName Entity name
+//             * @returns 
+//             */
+//            self.setEntityName = function(entityName) {
+//                setIndividualContext('entity', 'entityName', entityName);
+//            };
             
             /**
              * Get OMC global context of entity name.
@@ -520,6 +534,58 @@ define([
                 }
                 return null;
             };
+            
+            function queryOdsEntityCallback(data, ctxType) {
+                if (data && data['rows']) {
+                    var dataRows = data['rows'];
+                    if (dataRows.length > 0) {
+                        var entity = dataRows[0];
+                        if (entity.length === 4) {
+                            if (ctxType === 'composite') {
+                                setIndividualContext('composite', 'compositeName', entity[2]);
+                                setIndividualContext('composite', 'compositeType', entity[3]);
+                            }
+                            else if (ctxType === 'entity') {
+                                setIndividualContext('entity', 'entityName', entity[2]);
+                                setIndividualContext('entity', 'entityType', entity[3]);
+                            }
+                        }
+                    }
+                }
+            }
+
+            function queryODSEntityByMeId(meId, ctxType, callback) {
+                var jsonOdsQuery = {"ast":{"query":"simple","distinct":false,"select":[{"item":{"expr":"column","table":"me","column":"meId"}},
+                        {"item":{"expr":"column","table":"me","column":"entityName"}},
+                        {"item":{"expr":"column","table":"me","column":"displayName"}},
+                        {"item":{"expr":"column","table":"me","column":"entityType"}}],
+                    "from":[{"table":"virtual","name":"ManageableEntity","alias":"me"}],
+                    "where":{"cond":"inExpr","lhs":{"expr":"column","table":"me","column":"meId"},
+                    "rhs":[{"expr":"str","val":""}]}}};
+                var odsQueryUrl = getODSEntityQueryUrl();
+                jsonOdsQuery['ast']['where']['rhs'][0]['val'] = meId; 
+                oj.Logger.info("Start to get ODS entity by entity ID by URL:" + odsQueryUrl, false);
+                dfu.ajaxWithRetry(odsQueryUrl,{
+                    type: 'POST',
+                    data: JSON.stringify(jsonOdsQuery),
+                    contentType: 'application/json',
+                    headers: dfu.getDefaultHeader(),
+                    success:function(data, textStatus,jqXHR) {
+                        callback(data, ctxType);
+                    },
+                    error:function(xhr, textStatus, errorThrown){
+                        oj.Logger.error("Error: Failed to fetch ODS entity by ID due to error: " + textStatus);
+                    }
+                });
+            }
+
+            function getODSEntityQueryUrl() {
+                var odsUrl = '/sso.static/datamodel-query';
+                if (dfu.isDevMode()){
+                    odsUrl = dfu.buildFullUrl(dfu.getDevData().odsRestApiEndPoint,"query");
+                }
+                return odsUrl;
+            }
         }
 
         return UIFWKContextUtil;
