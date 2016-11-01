@@ -23,7 +23,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
             self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
             self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
-            self.isTopologyDisplayed = ko.observable(false);  
+            self.isTopologyDisplayed = ko.observable(false);
             self.topologyDisabled = ko.observable(false);
             var dfu = new dfumodel(self.userName, self.tenantName);
             //Append uifwk css file into document head
@@ -86,12 +86,22 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.layout = params.layout;
             self.customNodeDataLoader = params.customNodeDataLoader;
             self.customEventHandler = params.customEventHandler;
-            self.miniEntityCardActions = params.miniEntityCardActions; 
-            
+            self.miniEntityCardActions = params.miniEntityCardActions;
+
             self.showTopology = function () { // listener to the button
                 $("#bbtopology").slideToggle("fast");
                 self.isTopologyDisplayed(!self.isTopologyDisplayed());
+                //set brandingbar_cache information for Topology expanded state
+                var brandingBarCache = {isTopologyDisplayed: self.isTopologyDisplayed()};
+                window.sessionStorage._uifwk_brandingbar_cache = JSON.stringify(brandingBarCache);
             };
+
+            if (window.sessionStorage._uifwk_brandingbar_cache) {
+                var brandingBarCache = JSON.parse(window.sessionStorage._uifwk_brandingbar_cache);
+                if (brandingBarCache && brandingBarCache.isTopologyDisplayed) {
+                    self.isTopologyDisplayed(true);
+                }
+            }
 
             //NLS strings
             self.productName = nls.BRANDING_BAR_MANAGEMENT_CLOUD;
