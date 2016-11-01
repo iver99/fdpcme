@@ -89,7 +89,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.miniEntityCardActions = params.miniEntityCardActions; 
             
             self.showTopology = function () { // listener to the button
-                $("#bbtopology").slideToggle("fast");
+                $("#ude-topology-div").slideToggle("fast");
                 self.isTopologyDisplayed(!self.isTopologyDisplayed());
             };
 
