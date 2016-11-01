@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
 import java.util.List;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
@@ -64,7 +65,7 @@ public abstract class DashboardBuilderUtil_175 extends DashboardBuilderUtil_171
 			throw new NoSuchElementException("Widget with title=" + widgetName + ", index=" + index + " is not found");
 		}
 		driver.getLogger().info("Found widget with name=" + widgetName + ", index =" + index + " before opening widget link");
-		WebElement widgetMaxMin = widgetTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILEMAXMINLOCATOR));
+		WebElement widgetMaxMin = widgetTitle.findElement(By.xpath(DashBoardPageId.BUILDERTILEMAXMINLOCATOR));
 		if (widgetMaxMin == null) {
 			throw new NoSuchElementException("Widget maxize link for title=" + widgetName + ", index=" + index + " is not found");
 		}
@@ -76,7 +77,7 @@ public abstract class DashboardBuilderUtil_175 extends DashboardBuilderUtil_171
 
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		String widgetAttribute = widgetTitle.getAttribute("title");
-		if (widgetAttribute == "Restore") {
+		if ("Restore".equalsIgnoreCase(widgetAttribute)) {
 			driver.getLogger().info("The widget is maximized already");
 		}
 		else {
@@ -100,7 +101,7 @@ public abstract class DashboardBuilderUtil_175 extends DashboardBuilderUtil_171
 			throw new NoSuchElementException("Widget with title=" + widgetName + ", index=" + index + " is not found");
 		}
 		driver.getLogger().info("Found widget with name=" + widgetName + ", index =" + index + " before opening widget link");
-		WebElement widgetMaxMin = widgetTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILEMAXMINLOCATOR));
+		WebElement widgetMaxMin = widgetTitle.findElement(By.xpath(DashBoardPageId.BUILDERTILEMAXMINLOCATOR));
 		if (widgetMaxMin == null) {
 			throw new NoSuchElementException("Widget restore link for title=" + widgetName + ", index=" + index + " is not found");
 		}
@@ -112,7 +113,7 @@ public abstract class DashboardBuilderUtil_175 extends DashboardBuilderUtil_171
 
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		String widgetAttribute = widgetTitle.getAttribute("title");
-		if (widgetAttribute == "Maximize") {
+		if ("Maximize".equalsIgnoreCase(widgetAttribute)) {
 			driver.getLogger().info("The widget is restored already");
 		}
 		else {

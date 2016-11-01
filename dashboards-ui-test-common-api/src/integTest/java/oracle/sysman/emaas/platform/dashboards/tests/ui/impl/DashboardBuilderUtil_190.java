@@ -647,18 +647,6 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
-	public void maximizeWidget(WebDriver driver, String widgetName, int index)
-	{
-		driver.getLogger().info("DashboardBuilderUtil.maximizeWidget started for widgetName=" + widgetName + ", index=" + index);
-
-		Validator.notEmptyString("widgetName", widgetName);
-		Validator.equalOrLargerThan0("index", index);
-		clickTileMaximizeButton(driver, widgetName, index);
-
-		driver.getLogger().info("DashboardBuilderUtil.maxizeWidget completed");
-	}
-
-	@Override
 	public void openWidget(WebDriver driver, String widgetName)
 	{
 		openWidget(driver, widgetName, 0);
@@ -839,7 +827,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
 		driver.getLogger().info(
 				"DashboardBuilderUtil.removeDashboardFromSet has found and removed the dashboard named with \"" + dashboardName
-						+ "\"");
+				+ "\"");
 
 		String closeBtnLocator = DashBoardPageId_190.DASHBOARDSETTABNAMECSS.replace("_name_", dashboardName);
 		driver.waitForElementPresent("css=" + closeBtnLocator);
@@ -1095,7 +1083,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.showWidgetTitle started for widgetName=" + widgetName + ", index=" + index
-						+ ", visibility=" + visibility);
+				+ ", visibility=" + visibility);
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
 
@@ -1289,7 +1277,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.verifyDashboard started for name=\"" + dashboardName + "\", description=\"" + description
-						+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
+				+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
@@ -1458,36 +1446,6 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	 * @param widgetName
 	 * @param index
 	 */
-	private void clickTileMaximizeButton(WebDriver driver, String widgetName, int index)
-	{
-		driver.getLogger().info("Start to find widget with widgetName=" + widgetName + ", index=" + index);
-		WebElement widgetTitle = getTileTitleElement(driver, widgetName, index);
-		if (widgetTitle == null) {
-			throw new NoSuchElementException("Widget with title=" + widgetName + ", index=" + index + " is not found");
-		}
-		driver.getLogger().info("Found widget with name=" + widgetName + ", index =" + index + " before opening widget link");
-		WebElement widgetMaxMin = widgetTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILEMAXMINLOCATOR));
-		if (widgetMaxMin == null) {
-			throw new NoSuchElementException("Widget maxize link for title=" + widgetName + ", index=" + index + " is not found");
-		}
-		driver.getLogger().info("Found widget max button");
-		Actions builder = new Actions(driver.getWebDriver());
-		driver.getLogger().info("Now moving to the widget title bar");
-		builder.moveToElement(widgetTitle).perform();
-		driver.takeScreenShot();
-
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		String widgetAttribute = widgetTitle.getAttribute("title");
-		if (widgetAttribute == "Restore") {
-			driver.getLogger().info("The widget is maximized already");
-		}
-		else {
-			wait.until(ExpectedConditions.elementToBeClickable(widgetMaxMin));
-			widgetMaxMin.click();
-			driver.takeScreenShot();
-		}
-
-	}
 
 	private void clickTileOpenInDataExplorerButton(WebDriver driver, String widgetName, int index)
 	{
@@ -1513,42 +1471,6 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		wait.until(ExpectedConditions.elementToBeClickable(widgetDataExplore));
 		widgetDataExplore.click();
 		driver.takeScreenShot();
-	}
-
-	/**
-	 * @param driver
-	 * @param widgetName
-	 * @param index
-	 */
-	private void clickTileRestoreButton(WebDriver driver, String widgetName, int index)
-	{
-		driver.getLogger().info("Start to find widget with widgetName=" + widgetName + ", index=" + index);
-		WebElement widgetTitle = getTileTitleElement(driver, widgetName, index);
-		if (widgetTitle == null) {
-			throw new NoSuchElementException("Widget with title=" + widgetName + ", index=" + index + " is not found");
-		}
-		driver.getLogger().info("Found widget with name=" + widgetName + ", index =" + index + " before opening widget link");
-		WebElement widgetMaxMin = widgetTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILEMAXMINLOCATOR));
-		if (widgetMaxMin == null) {
-			throw new NoSuchElementException("Widget restore link for title=" + widgetName + ", index=" + index + " is not found");
-		}
-		driver.getLogger().info("Found widget restore button");
-		Actions builder = new Actions(driver.getWebDriver());
-		driver.getLogger().info("Now moving to the widget title bar");
-		builder.moveToElement(widgetTitle).perform();
-		driver.takeScreenShot();
-
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		String widgetAttribute = widgetTitle.getAttribute("title");
-		if (widgetAttribute == "Maximize") {
-			driver.getLogger().info("The widget is restored already");
-		}
-		else {
-			wait.until(ExpectedConditions.elementToBeClickable(widgetMaxMin));
-			widgetMaxMin.click();
-			driver.takeScreenShot();
-		}
-
 	}
 
 	private void duplicateDashboardCommonUse(WebDriver driver, String name, String descriptions, String operationName)
