@@ -60,7 +60,7 @@ define({
       "DBS_HOME_SELECT_SORT_LAST_OWNER_DSC": "Created By Descending",
       "DBS_HOME_SELECT_SORT_DEFAULT": "Default",
       "DBS_HOME_CREATE_BTN_TT_CONTENT": " Click to create a dashboard and add widgets of your choice.",
-      "DBS_HOME_EXPLORE_BTN_LABEL": "Explore Data",
+      "DBS_HOME_EXPLORE_BTN_LABEL": "Explore",
       "DBS_HOME_EXPLORE_BTN_TT": "Click to select a Visual Analyzer which allows you to explore data.",
       "DBS_HOME_CREATE_DLG_TITLE": "Create Dashboard",
       "DBS_HOME_CREATE_DLG_NAME": "Name",
@@ -292,7 +292,7 @@ define({
       "LANDING_HOME_ORCHESTRATION_DESC": "Schedule, execute and report on tasks at scale",
 
       "LANDING_HOME_DASHBOARDS_DESC": "Build custom dashboards using out-of-the-box widgets or your own visualization of data",
-      "LANDING_HOME_DATA_EXPLORERS": "Data Explorers",
+      "LANDING_HOME_DATA_EXPLORERS": "Explorers",
       "LANDING_HOME_DATA_EXPLORERS_DESC": "Search, analyze, and visualize data",
       "LANDING_HOME_DATA_EXPLORER": "Data Explorer",
 

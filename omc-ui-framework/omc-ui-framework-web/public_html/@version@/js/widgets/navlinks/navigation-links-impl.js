@@ -160,9 +160,17 @@ define(['knockout', 'jquery', 'uifwk/@version@/js/util/df-util-impl', 'ojs/ojcor
                             var analyzerList = [];
                             for (var subindex = 0; subindex < analyzers.length; subindex++) {
                                 var aurl = analyzers[subindex].href;
+                                if(analyzers[subindex].serviceName === "LogAnalyticsUI"){
+                                    analyzers[subindex].name = "Log Explorer";
+                                }else if(analyzers[subindex].serviceName === "TargetAnalytics"){
+                                    analyzers[subindex].name = "Data Explorer";
+                                }
                                 analyzerList.push({name: analyzers[subindex].name.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, ''),
                                     href: aurl});
                             }
+                            analyzerList.sort(function(left,right){
+                                return left.name<=right.name?-1:1;
+                            });
                             self.visualAnalyzers(analyzerList);
                         }
                         //Check whether to show admin links, if discovered admin links is not null, then means user has admin privilege

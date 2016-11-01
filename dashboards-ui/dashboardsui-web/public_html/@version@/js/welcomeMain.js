@@ -257,7 +257,15 @@ require(['ojs/ojcore',
                         for(i=0; i<dataExplorersNum; i++) {
                             var originalName = dataExplorers[i].name;
                             dataExplorers[i].name = originalName.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, '');
+                            if(dataExplorers[i].serviceName === "LogAnalyticsUI"){
+                                dataExplorers[i].name = "Log Explorer";
+                            }else if(dataExplorers[i].serviceName === "TargetAnalytics"){
+                                dataExplorers[i].name = "Data Explorer";
+                            }
                             self.exploreDataLinkList.push(dataExplorers[i]);
+                            self.exploreDataLinkList.sort(function(left,right){
+                                return left.name<=right.name?-1:1;
+                            });
                             landingHomeUrls[dataExplorers[i].name] = dataExplorers[i].href;
                             //change name of data explorer in ITA to "Data Explorer - Analyze" & "Data Explorer"
 

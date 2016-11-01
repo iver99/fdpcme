@@ -176,6 +176,15 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             return null;
         };
         self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
+        self.exploreDataLinkList().forEach(function(ele){
+        if(ele.serviceName === "LogAnalyticsUI"){
+            ele.name = "Log Explorer";
+        }else if(ele.serviceName === "TargetAnalytics"){
+            ele.name = "Data Explorer";
+        }});
+        self.exploreDataLinkList.sort(function(left,right){
+            return left.name<=right.name?-1:1;
+        });
 
         //welcome
         self.prefUtil = new pfu(PREFERENCES_REST_URL, dfu.getDashboardsRequestHeader());

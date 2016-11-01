@@ -20,7 +20,7 @@ define({
       "BRANDING_BAR_NAV_HOME_LABEL": "Home",
       "BRANDING_BAR_NAV_FAVORITES_LABEL": "My Favorites",
       "BRANDING_BAR_NAV_WELCOME_LABEL": "Welcome",
-      "BRANDING_BAR_NAV_VISUAL_ANALYZER_LABEL": "Visual Analyzers",
+      "BRANDING_BAR_NAV_VISUAL_ANALYZER_LABEL": "Explorers",
       "BRANDING_BAR_NAV_ADMIN_LABEL": "Administration",
       "BRANDING_BAR_ABOUT_DIALOG_TITLE": "About Cloud Service",
       "BRANDING_BAR_ABOUT_DIALOG_SUB_TITLE": "Oracle Management Cloud",
