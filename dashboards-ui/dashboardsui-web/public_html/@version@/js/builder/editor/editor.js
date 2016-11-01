@@ -726,7 +726,6 @@ define(['knockout',
                         if (widget_source===1){
                              if (!ko.components.isRegistered(koc_name)) {
                                 var assetRoot = dfu.getAssetRootUrl(provider_name);
-//                                var assetRoot = Builder.getWidgetAssetRoot(provider_name,provider_version,provider_asset_root);
                                 if (assetRoot===null){
                                     oj.Logger.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
                                 }
