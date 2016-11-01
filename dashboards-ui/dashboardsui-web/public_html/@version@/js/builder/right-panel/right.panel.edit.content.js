@@ -26,6 +26,7 @@ define(['dashboards/dbsmodel',
 //        var predataModel = new dbsmodel.PredataModel();
 //        var dashboardsViewModel = new dbsmodel.ViewModel(predataModel, "mainContent");
         self.dashboards = ko.observableArray();
+        self.selectedDashboardId = ko.observable();
         self.allDashboards = ko.observableArray();
         var serviceUrl = "/sso.static/dashboards.service?offset=0&limit=120&orderBy=default";
         if (dfu.isDevMode()) {
@@ -138,7 +139,6 @@ define(['dashboards/dbsmodel',
                 self.selectedDashboardLastModifiedTime(month + '/' + date + '/' + time.getFullYear());
             }
         });
-        self.selectedDashboardId = ko.observable();
         self.showSelectedDashboard = ko.observable(false);
         self.logSelected = function(event, ui)
         {
@@ -202,7 +202,7 @@ define(['dashboards/dbsmodel',
             if(!self.selectedContent().WIDGET_LINKED_DASHBOARD){
                 self.selectedContent().WIDGET_LINKED_DASHBOARD = ko.observable();
             }
-            self.selectedContent().WIDGET_LINKED_DASHBOARD(self.selectedDashboardId()?self.selectedDashboardId():null);
+            self.selectedContent().WIDGET_LINKED_DASHBOARD(self.selectedDashboard()?self.selectedDashboard().id:null);
             self.hasLinkedToTitle(true);
         };
 

@@ -34,7 +34,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
             self.completelyHidden(false);
             var panelTarget;
             if (target === "singleDashboard-edit") {
-                panelTarget = "edit";
+                panelTarget = "editdashboard";
             } else if (target === "dashboardset-edit") {
                 panelTarget = "editset";
             }
