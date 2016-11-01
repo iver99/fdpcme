@@ -96,6 +96,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 //set brandingbar_cache information for Topology expanded state
                 var brandingBarCache = {isTopologyDisplayed: self.isTopologyDisplayed()};
                 window.sessionStorage._uifwk_brandingbar_cache = JSON.stringify(brandingBarCache);
+                var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                $b && $b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
             };
             self.isTopologyButtonChecked = ko.observableArray([]);
             self.isTopologyDisplayed.subscribe(function () {
