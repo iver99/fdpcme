@@ -179,10 +179,10 @@ public class DashBoardPageId
 	public static final String EXPLOREDATAMENU = "exploreDataMenu";
         
           //Log Visual Analyzer button
-         public static final String EXPLORE_LOG = "//a[text()='Log Visual Analyzer']";
+         public static final String EXPLORE_LOG = "//a[text()='Log Explorer']";
    
          //Search button in explore menu
-          public static final String EXPLORE_Search = "//a[text()='Search' and @role='menuitem']";
+          public static final String EXPLORE_Search = "//a[text()='Data Explorer' and @role='menuitem']";
          
 	//help id and about id
 	public static final String MENUBTNID = "menubutton";

@@ -91,7 +91,7 @@ public class WelcomeUtil
 				expectedName = "Dashboards";
 				break;
 			case SERVICE_NAME_DATA_EXPLORERS:
-				expectedName = "Data Explorers";
+				expectedName = "Explorers";
 				break;
 			case LEARN_MORE_GET_STARTED:
 				expectedName = "How to get started";

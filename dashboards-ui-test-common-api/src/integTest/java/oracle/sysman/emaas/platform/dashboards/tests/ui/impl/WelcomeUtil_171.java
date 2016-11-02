@@ -307,7 +307,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				expectedName = "Dashboards";
 				break;
 			case SERVICE_NAME_DATA_EXPLORERS:
-				expectedName = "Data Explorers";
+				expectedName = "Explorers";
 				break;
 			case LEARN_MORE_GET_STARTED:
 				expectedName = "How to get started";
