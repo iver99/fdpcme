@@ -90,8 +90,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.miniEntityCardActions = params.miniEntityCardActions;
 
             self.showTopology = function () { // listener to the button
-                $("#ude-topology-div").slideToggle("fast");
+                $("ude-topology-div").slideToggle("fast");
                 self.isTopologyDisplayed(!self.isTopologyDisplayed());
+                $(".oj-diagram").ojDiagram("refresh"); // refresh the diagram since the size of the div has been changed
                 //set brandingbar_cache information for Topology expanded state
                 var brandingBarCache = {isTopologyDisplayed: self.isTopologyDisplayed()};
                 window.sessionStorage._uifwk_brandingbar_cache = JSON.stringify(brandingBarCache);
