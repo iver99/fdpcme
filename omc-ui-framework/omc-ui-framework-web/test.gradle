@@ -17,11 +17,11 @@ task integTestJar (type:Jar) {
 }
 
 dependencies {
-         testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
-    testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
+    testConfig getProjectArtifact('log4j-core')   
+	testConfig getProjectArtifact('log4j-api')   
 	testCompile configurations.testNG
 	testCompile configurations.webdriver
 	testCompile configurations.restAssured
-    testConfig project(':dashboards-ui-test-common-api') { transitive = false }
+    testConfig project(':dashboards-ui-test-common-api')  
 }
 build.dependsOn integTestJar

@@ -27,7 +27,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceI
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.Builder;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.NonServiceResource;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
@@ -110,7 +109,7 @@ public class AvailabilityServiceManagerTest
 			}
 		};
 		asm.handleNotification(anyNoti, null);
-		Assert.assertFalse(GlobalStatus.isDashboardUIUp());
+		Assert.assertTrue(GlobalStatus.isDashboardUIUp());
 
 		//		new Expectations() {
 		//			{
@@ -142,13 +141,13 @@ public class AvailabilityServiceManagerTest
 				result = anyInstanceInfo;
 				LookupManager.getInstance().getLookupClient().lookup((InstanceQuery) any);
 				result = null;
-				anyRsm.markOutOfService((List<InstanceInfo>) any, (List<NonServiceResource>) any, (List<String>) any);
+//				anyRsm.markOutOfService((List<InstanceInfo>) any, (List<NonServiceResource>) any, (List<String>) any);
 				//				RegistrationManager.getInstance().getRegistrationClient().outOfServiceCausedBy((List<InstanceInfo>) any,
 				//						(List<NonServiceResource>) any, (List<String>) any);
 			}
 		};
 		asm.handleNotification(anyNoti, null);
-		Assert.assertFalse(GlobalStatus.isDashboardUIUp());
+		Assert.assertTrue(GlobalStatus.isDashboardUIUp());
 
 		new Expectations() {
 			{
@@ -160,7 +159,7 @@ public class AvailabilityServiceManagerTest
 			}
 		};
 		asm.handleNotification(anyNoti, null);
-		Assert.assertFalse(GlobalStatus.isDashboardUIUp());
+		Assert.assertTrue(GlobalStatus.isDashboardUIUp());
 
 		new Expectations() {
 			{
@@ -175,7 +174,7 @@ public class AvailabilityServiceManagerTest
 			}
 		};
 		asm.handleNotification(anyNoti, null);
-		Assert.assertFalse(GlobalStatus.isDashboardUIUp());
+		Assert.assertTrue(GlobalStatus.isDashboardUIUp());
 
 		new Expectations() {
 			{
@@ -193,7 +192,7 @@ public class AvailabilityServiceManagerTest
 			}
 		};
 		asm.handleNotification(anyNoti, null);
-		Assert.assertFalse(GlobalStatus.isDashboardUIUp());
+		Assert.assertTrue(GlobalStatus.isDashboardUIUp());
 
 		new Expectations() {
 			{
@@ -214,7 +213,7 @@ public class AvailabilityServiceManagerTest
 			}
 		};
 		asm.handleNotification(anyNoti, null);
-		Assert.assertFalse(GlobalStatus.isDashboardUIUp());
+		Assert.assertTrue(GlobalStatus.isDashboardUIUp());
 	}
 
 	@Test(groups = { "s2" })

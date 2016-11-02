@@ -307,13 +307,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //Check notifications
             checkNotifications();
 
-            //TODO:need to find a way to get exact idleTimeout settings in OAM and improve the idleTimeout handling
-            //For now, set interval to extend current user session automatically every 10 mins
-            if (!dfu.isDevMode()) {
-                window.intervalToExtendCurrentUserSession = setInterval(function() {
-                    dfu.ajaxWithRetry("/emsaasui/emcpdfui/widgetLoading.html", {showMessages: "none"});
-                }, 10*60*1000);
-            }
+                //TODO:need to find a way to get exact idleTimeout settings in OAM and improve the idleTimeout handling
+                //For now, set interval to extend current user session automatically every 10 mins
+                if (!dfu.isDevMode()) {
+                    window.intervalToExtendCurrentUserSession = setInterval(function() {
+                        dfu.ajaxWithRetry("/emsaasui/uifwk/empty.html", {showMessages: "none"});
+                    }, 10*60*1000);
+                }
 
 //                //Discover logout url, which will be cached and used for session timeout handling
 //                dfu.discoverLogoutUrlAsync(function(logoutUrl){window.cachedSSOLogoutUrl = logoutUrl;});

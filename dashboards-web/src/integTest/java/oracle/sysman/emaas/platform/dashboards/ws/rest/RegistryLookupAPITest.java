@@ -1,9 +1,5 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
@@ -11,6 +7,11 @@ import mockit.Mocked;
 import oracle.sysman.emaas.platform.dashboards.core.util.EndpointEntity;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
+
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * @author jishshi
@@ -30,8 +31,14 @@ public class RegistryLookupAPITest
 	}
 
 	@Test
-	public void testGetRegistryLink()
+	public void testGetRegistryLink(@Mocked final DependencyStatus anyDependencyStatus)
 	{
+		new Expectations() {
+			{
+				anyDependencyStatus.isEntityNamingUp();
+				result = true;
+			}
+		};
 		// Test 403 Exception;
 		Assert.assertEquals(
 				registryLookupAPI.getRegistryLink("tenantIdParam", "userTenant", "refer", "serviceName", "version").getStatus(),
@@ -55,12 +62,14 @@ public class RegistryLookupAPITest
 	}
 
 	@Test
-	public void testGetRegistryLink1(@Mocked final RegistryLookupUtil registryLookupUtil)
+	public void testGetRegistryLink1(@Mocked final RegistryLookupUtil registryLookupUtil,@Mocked final DependencyStatus anyDependencyStatus)
 	{
 		//Test 200 valid endpoint
 		String validUserTenant = "userTenant.userName";
 		new Expectations() {
 			{
+				anyDependencyStatus.isEntityNamingUp();
+				result = true;
 				RegistryLookupUtil.getServiceExternalEndPointEntity(anyString, anyString, anyString);
 				result = withAny(new EndpointEntity(anyString, anyString, anyString));
 			}
@@ -70,8 +79,14 @@ public class RegistryLookupAPITest
 	}
 
 	@Test
-	public void testGetRegistryLink2()
+	public void testGetRegistryLink2(@Mocked final DependencyStatus anyDependencyStatus)
 	{
+		new Expectations() {
+			{
+				anyDependencyStatus.isEntityNamingUp();
+				result = true;
+			}
+		};
 		// Test 403 Exception;
 		Assert.assertEquals(registryLookupAPI
 				.getRegistryLink("tenantIdParam", "userTenant", "refer", "serviceName", "version", "rel").getStatus(), 403);
@@ -100,12 +115,14 @@ public class RegistryLookupAPITest
 	}
 
 	@Test
-	public void testGetRegistryLink3(@Mocked final RegistryLookupUtil registryLookupUtil)
+	public void testGetRegistryLink3(@Mocked final DependencyStatus anyDependencyStatus,@Mocked final RegistryLookupUtil registryLookupUtil)
 	{
 		//Test 200 valid endpoint
 		String validUserTenant = "userTenant.userName";
 		new Expectations() {
 			{
+				anyDependencyStatus.isEntityNamingUp();
+				result = true;
 				RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString);
 				result = withAny(new VersionedLink());
 			}
@@ -116,8 +133,14 @@ public class RegistryLookupAPITest
 	}
 
 	@Test
-	public void testGetRegistryLinkWithRelPrefix4()
+	public void testGetRegistryLinkWithRelPrefix4(@Mocked final DependencyStatus anyDependencyStatus)
 	{
+		new Expectations() {
+			{
+				anyDependencyStatus.isEntityNamingUp();
+				result = true;
+			}
+		};
 		String validUserTenant = "userTenant.userName";
 		new MockUp<RegistryLookupUtil>() {
 			@Mock
@@ -142,8 +165,14 @@ public class RegistryLookupAPITest
 	}
 
 	@Test
-	public void testGetRegistryLinkWithRelPrefix()
+	public void testGetRegistryLinkWithRelPrefix(@Mocked final DependencyStatus anyDependencyStatus)
 	{
+		new Expectations() {
+			{
+				anyDependencyStatus.isEntityNamingUp();
+				result = true;
+			}
+		};
 		// Test 403 Exception;
 		Assert.assertEquals(registryLookupAPI
 				.getRegistryLinkWithRelPrefix("tenantIdParam", "userTenant", "refer", "serviceName", "version", "rel")
@@ -177,12 +206,15 @@ public class RegistryLookupAPITest
 	}
 
 	@Test
-	public void testGetRegistryLinkWithRelPrefix1(@Mocked final RegistryLookupUtil registryLookupUtil)
+	public void testGetRegistryLinkWithRelPrefix1(@Mocked final RegistryLookupUtil registryLookupUtil,@Mocked final DependencyStatus anyDependencyStatus)
 	{
+		
 		//Test 200 valid endpoint
 		String validUserTenant = "userTenant.userName";
 		new Expectations() {
 			{
+				anyDependencyStatus.isEntityNamingUp();
+				result = true;
 				RegistryLookupUtil.getServiceExternalLinkWithRelPrefix(anyString, anyString, anyString, anyString);
 				result = withAny(new VersionedLink());
 			}
@@ -194,8 +226,14 @@ public class RegistryLookupAPITest
 	}
 
 	@Test
-	public void testGetRegistryLinkWithRelPrefix2()
+	public void testGetRegistryLinkWithRelPrefix2(@Mocked final DependencyStatus anyDependencyStatus)
 	{
+		new Expectations() {
+			{
+				anyDependencyStatus.isEntityNamingUp();
+				result = true;
+			}
+		};
 		String validUserTenant = "userTenant.userName";
 		new MockUp<RegistryLookupUtil>() {
 			@Mock
