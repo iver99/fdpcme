@@ -582,5 +582,18 @@ public class DashboardAPITest
                         "{ \"dashboardId\": 1127, \"autoRefreshInterval\": 600000, \"extendedOptions\":\"2000\" }")));
     }
 
+	@Test
+	public void testQueyDashboardSetsBySubId(@Mocked final DependencyStatus anyDependencyStatus){
+		new Expectations(){
+			{
+				DashboardManager.getInstance();
+				result = mockedDashboardManager;
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+			}
+		};
+		dashboardAPI.queryDashboardSetsBySubId("", "", "", 1L);
+	}
+
 }
 
