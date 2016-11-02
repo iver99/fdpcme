@@ -118,7 +118,9 @@ define([
                 //update current URL
                 var url = window.location.href.split('/').pop();
                 url = self.appendOMCContext(url);
-                window.history.replaceState(window.history.state, document.title, url);
+                var newurl=window.location.pathname.substring(0,window.location.pathname.lastIndexOf('/'));
+                newurl=newurl+'/'+url;
+                window.history.replaceState(window.history.state, document.title, newurl);
             }
 
             function storeContext(context) {
