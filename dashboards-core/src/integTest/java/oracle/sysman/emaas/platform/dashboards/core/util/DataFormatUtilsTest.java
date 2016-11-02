@@ -113,4 +113,21 @@ public class DataFormatUtilsTest
 		Date date = DataFormatUtils.timestamp2Date(tsp);
 		Assert.assertEquals(date.getTime(), current);
 	}
+
+	@Test(groups = { "s1" })
+	public void testBigDecimal2Integer() throws CommonFunctionalException {
+		DataFormatUtils.bigDecimal2Integer(new BigDecimal(1));
+		DataFormatUtils.bigDecimal2Integer(null);
+		DataFormatUtils.bigDecimal2Long(new BigDecimal(1));
+		DataFormatUtils.integer2Boolean(1);
+		DataFormatUtils.integer2Boolean(null);
+		DataFormatUtils.boolean2Integer(true);
+		DataFormatUtils.boolean2Integer(null);
+		DataFormatUtils.integer2BigDecimal(1);
+		DataFormatUtils.integer2BigDecimal(null);
+		DataFormatUtils.tileTypeInteger2String(1);
+		DataFormatUtils.tileTypeString2Integer("DEFAULT");
+		DataFormatUtils.tileTypeString2Integer(null);
+		DataFormatUtils.dashboardTypeInteger2String(1);
+	}
 }
