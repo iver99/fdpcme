@@ -82,7 +82,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }
 
-            //self.entities = ko.observable(["B1EB94DD59ED96D4DD57C7F25A64F5B1"]);  //params.entities || ko.observable([]);
             self.associations = params.associations;
             self.layout = params.layout;
             self.customNodeDataLoader = params.customNodeDataLoader;
