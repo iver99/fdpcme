@@ -48,45 +48,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //
             // topology params
             //
-            self.entities = ko.observable([]);
-            self.queryVars = {};
-            if (cxtUtil.getCompositeMeId()) {
-                var compositeId = [];
-                compositeId.push(cxtUtil.getCompositeMeId());
-                self.entities = ko.observable(compositeId);
-                self.topologyDisabled(false);
-            } else {
-                self.topologyDisabled(true);
-                if (cxtUtil.getCompositeName() && cxtUtil.getCompositeType()) {
-                    self.queryVars.entityName = cxtUtil.getCompositeName();
-                    self.queryVars.entityType = cxtUtil.getCompositeType();
-                }
-                else {
-                    var entityMeIds = cxtUtil.getEntityMeIds();
-                    if (entityMeIds) {
-                        var entityId = [];
-                        var entityArray = entityMeIds.split(',');
-                        for (var i = 0; i < entityArray.length; i++) {
-                            entityId.push($.trim(entityArray[i]));
-                        }
-                        self.entities = ko.observable(entityId);
-                    } else {
-                        if (cxtUtil.getEntityName() && cxtUtil.getEntityType()) {
-                            self.queryVars.entityName = cxtUtil.getEntityName();
-                            self.queryVars.entityType = cxtUtil.getEntityType();
-                        } 
-                        else {
-                            self.entities = ko.observable(["B1EB94DD59ED96D4DD57C7F25A64F5B1"]);
-                        }
-                    } 
-                }
-            }
-
-            self.associations = params.associations;
-            self.layout = params.layout;
-            self.customNodeDataLoader = params.customNodeDataLoader;
-            self.customEventHandler = params.customEventHandler;
-            self.miniEntityCardActions = params.miniEntityCardActions;
+            
+            
 
             self.showTopology = function () { // listener to the button
                 $("ude-topology-div").slideToggle("fast");
@@ -755,7 +718,49 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
                 self.appName(subscribedServices);
             }
+            function refreshTopologyParams() {
+                self.entities = ko.observable([]);
+                self.queryVars = {};
+                if (cxtUtil.getCompositeMeId()) {
+                    var compositeId = [];
+                    compositeId.push(cxtUtil.getCompositeMeId());
+                    self.entities = ko.observable(compositeId);
+                    self.topologyDisabled(false);
+                } else {
+                    self.topologyDisabled(true);
+                    if (cxtUtil.getCompositeName() && cxtUtil.getCompositeType()) {
+                        self.queryVars.entityName = cxtUtil.getCompositeName();
+                        self.queryVars.entityType = cxtUtil.getCompositeType();
+                    }
+                    else {
+                        var entityMeIds = cxtUtil.getEntityMeIds();
+                        if (entityMeIds) {
+                            var entityId = [];
+                            var entityArray = entityMeIds.split(',');
+                            for (var i = 0; i < entityArray.length; i++) {
+                                entityId.push($.trim(entityArray[i]));
+                            }
+                            self.entities = ko.observable(entityId);
+                        } else {
+                            if (cxtUtil.getEntityName() && cxtUtil.getEntityType()) {
+                                self.queryVars.entityName = cxtUtil.getEntityName();
+                                self.queryVars.entityType = cxtUtil.getEntityType();
+                            } 
+                            else {
+                                self.entities = ko.observable(["B1EB94DD59ED96D4DD57C7F25A64F5B1"]);
+                            }
+                        } 
+                    }
+                }
 
+                /*self.associations = params.associations;
+                self.layout = params.layout;
+                self.customNodeDataLoader = params.customNodeDataLoader;
+                self.customEventHandler = params.customEventHandler;
+                self.miniEntityCardActions = params.miniEntityCardActions;*/
+                
+                $(".oj-diagram").ojDiagram("refresh");
+            }
             function refreshOMCContext() {
                 self.cxtCompositeMeId = cxtUtil.getCompositeMeId();
                 self.cxtCompositeType = cxtUtil.getCompositeType();
@@ -799,6 +804,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
 //                refreshCompositeEntityCtxText();
                 refreshTimeCtxText();
+                
+                // update parameters for topology 
+                refreshTopologyParams();
             }
 
             function refreshCompositeEntityCtxText() {
