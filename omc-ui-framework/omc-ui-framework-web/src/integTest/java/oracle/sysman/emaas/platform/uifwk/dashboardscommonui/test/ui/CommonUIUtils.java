@@ -468,16 +468,16 @@ public class CommonUIUtils
 		Assert.assertTrue(driver.isElementPresent(UIControls.SORACLEIMAGE));
 		Assert.assertEquals(driver.getAttribute(UIControls.SORACLEIMAGE + "@alt"), "Oracle");
 		//Product title
-		Assert.assertTrue(driver.isElementPresent(UIControls.SPRODUCTTEXT));
+		Assert.assertTrue(driver.isElementPresent("css=" + UIControls.SPRODUCTTEXT_CSS));
 		String productTitle = "Management Cloud";
-		driver.waitForText(UIControls.SPRODUCTTEXT, productTitle);
-		driver.getLogger().info("The Product is:  " + driver.getText(UIControls.SPRODUCTTEXT));
-		Assert.assertEquals(driver.getText(UIControls.SPRODUCTTEXT), productTitle);
+		driver.waitForText("css=" + UIControls.SPRODUCTTEXT_CSS, productTitle);
+		driver.getLogger().info("The Product is:  " + driver.getText("css=" + UIControls.SPRODUCTTEXT_CSS));
+		Assert.assertEquals(driver.getText("css=" + UIControls.SPRODUCTTEXT_CSS), productTitle);
 		//Application names
-		Assert.assertTrue(driver.isElementPresent(UIControls.SAPPTEXT));
-		driver.waitForText(UIControls.SAPPTEXT, sAppName);
+		Assert.assertTrue(driver.isElementPresent("css=" + UIControls.SAPPTEXT_CSS));
+		driver.waitForText("css=" + UIControls.SAPPTEXT_CSS, sAppName);
 		driver.getLogger().info("The App is:  " + sAppName);
-		Assert.assertEquals(driver.getText(UIControls.SAPPTEXT), sAppName);
+		Assert.assertEquals(driver.getText("css=" + UIControls.SAPPTEXT_CSS), sAppName);
 		//Page title
 		Assert.assertTrue(driver.isElementPresent(UIControls.SPAGETEXT));
 		String pageTitle = "Sample page for OMC UI Framework components testing only";
