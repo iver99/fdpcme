@@ -96,7 +96,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 var brandingBarCache = {isTopologyDisplayed: self.isTopologyDisplayed()};
                 window.sessionStorage._uifwk_brandingbar_cache = JSON.stringify(brandingBarCache);
             };
-
+            self.isTopologyButtonChecked = ko.observableArray([]);
+            self.isTopologyDisplayed.subscribe(function () {
+                if (self.isTopologyDisplayed()) {
+                    self.isTopologyButtonChecked(['buttonShowTopology']);
+                } else {
+                    self.isTopologyButtonChecked([]);
+                }
+            });
             if (window.sessionStorage._uifwk_brandingbar_cache) {
                 var brandingBarCache = JSON.parse(window.sessionStorage._uifwk_brandingbar_cache);
                 if (brandingBarCache && brandingBarCache.isTopologyDisplayed) {

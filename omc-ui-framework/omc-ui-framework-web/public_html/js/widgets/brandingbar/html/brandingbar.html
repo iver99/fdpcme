@@ -106,16 +106,17 @@
             </div>  
             
             <span style="float: left;padding-top:3px;margin-right:6px;">
+            <div id="topologyButtonWrapper" data-bind="ojComponent: {component: 'ojButtonset', checked: isTopologyButtonChecked}">
             <label for="buttonShowTopology"></label>
-            <button id="buttonShowTopology" class="oj-button-half-chrome emaas-appheader-toolbar-button" role="button"
+            <input type="checkbox" id="buttonShowTopology" value="buttonShowTopology" class="oj-button-half-chrome emaas-appheader-toolbar-button" role="button"
                data-bind=" click: showTopology, attr: {title: topologyBtnLabel},
                 ojComponent: {
                     component:'ojButton', 
                     chroming: 'half', disabled: topologyDisabled,
                     display: 'icons', label: topologyBtnLabel,
                     icons: {start:'emctas-icon-font-24 emctas-topology-icon'}
-               }" style="height:32px; margin-bottom:0px">
-           </button>
+               }" style="height:32px; margin-bottom:0px"/>
+            </div>
             </span>
             <div class="ude-sdk inlineFlexBox flexBoxAuto animated_transitions" style="padding-bottom: 10px; padding-top: 3px; height: 32px; display: inline-flex;">
             <div class="ude-sdk panel_border flexBoxNoShrink flexBoxColumn flexBoxAuto animated_transitions" id="globalBar_wrapper"
@@ -133,7 +134,7 @@
             <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="text:timeCxtText">Oct 12th. 2:30 PM - 4:30 PM</div>
             </div>
         </div>
-        <!-- /ko -->
+
         <!-- topology --->
         <div id="#ude-topology-div" style="overflow-y:scroll; height:200px; background-color:white;"
              data-bind="visible: isTopologyDisplayed" class="ude-sdk panel_border">
@@ -147,6 +148,9 @@
         </div>      
         </div>
         <!-- End of topology -->
+
+        <!-- /ko -->  <!-- End of Global Context Banner -->
+
         <!-- ko if: hasMessages -->
         <div>
             <!-- ko foreach: messageList -->
