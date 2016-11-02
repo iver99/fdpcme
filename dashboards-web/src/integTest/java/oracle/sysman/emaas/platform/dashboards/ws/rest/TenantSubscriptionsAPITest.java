@@ -1,11 +1,20 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
-import mockit.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import mockit.Expectations;
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.Mocked;
+import mockit.NonStrictExpectations;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.ServiceEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.TenantDetailEntity;
@@ -13,10 +22,6 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.TenantDetai
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author jishshi
@@ -46,9 +51,11 @@ public class TenantSubscriptionsAPITest {
     }
 
     @Test
-    public void testGetSubscribedApplications1(@Mocked final APIBase apiBase, @Mocked final TenantSubscriptionUtil tenantSubscriptionUtil) {
+    public void testGetSubscribedApplications1(@Mocked final DependencyStatus anyDependencyStatus,@Mocked final APIBase apiBase, @Mocked final TenantSubscriptionUtil tenantSubscriptionUtil) {
         new Expectations() {
             {
+            	anyDependencyStatus.isEntityNamingUp();
+            	result=true;
                 List<String> apps = new ArrayList<>();
                 apps.add("DBD");
                 TenantSubscriptionUtil.getTenantSubscribedServices(anyString);

@@ -201,6 +201,16 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	}
 
 	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitCompliance(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public void visitCompliance(WebDriver driver)
+	{
+		driver.getLogger().warning("Visit Compliance from Welcome Page is not supported in 1.7.1");
+
+	}
+
+	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitDashboards(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
@@ -281,6 +291,26 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_LALINKCSS);
 		driver.click("id=" + DashBoardPageId.WELCOME_LALINKCSS);
 		driver.takeScreenShot();
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitOrchestration(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public void visitOrchestration(WebDriver driver)
+	{
+		driver.getLogger().warning("Visit Orchestration from Welcome Page is not supported in 1.7.1");
+
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitSecurity(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public void visitSecurity(WebDriver driver)
+	{
+		driver.getLogger().warning("Visit Security from Welcome Page is not supported in 1.7.1");
+
 	}
 
 	/**

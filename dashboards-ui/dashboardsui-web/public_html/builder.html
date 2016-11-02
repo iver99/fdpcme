@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html id="global-html"  lang="en" data-testapiversion="1.12.0">
+<html id="global-html" data-testapiversion="1.12.0">
     <head>
         <title data-bind="text:builderTitle"></title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/dashboards-home-alta.css" type="text/css"/>
-       
+
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -1149,7 +1149,12 @@
                                                         <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL, width: imgWidth, height: imgHeight}" style="vertical-align: middle;"/>
                                                     </div>
                                                     <div class="oj-col oj-sm-8 oj-md-8">
+                                                        <!-- ko if:WIDGET_DESCRIPTION === 'No description.' -->
+                                                        <i data-bind="html:getNlsString('DBS_BUILDER_WIDGET_NO_DESCRIPTION')" style="color: #9e9e9e; display: block;"></i>
+                                                        <!-- /ko -->
+                                                        <!-- ko if:WIDGET_DESCRIPTION !== 'No description.' -->
                                                         <div data-bind="html:WIDGET_DESCRIPTION" style="color: #9e9e9e; display: block;"></div>
+                                                        <!-- /ko -->
                                                     </div>
                                                     <div class="oj-col oj-sm-8 oj-md-8" style="position:absolute;right:0;bottom:15px">
                                                         <span style="color: #9e9e9e;">Created By:</span>

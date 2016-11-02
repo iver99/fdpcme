@@ -30,6 +30,8 @@ import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.Applicati
 import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
 import oracle.sysman.emaas.platform.dashboards.core.cache.ICacheFetchFactory;
 import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
+import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
@@ -37,6 +39,8 @@ import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
+import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
 
 import org.apache.logging.log4j.LogManager;
@@ -154,8 +158,8 @@ public class RegistrationEntity implements Serializable
 	{
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_ADMIN_LINKS, new ICacheFetchFactory() {
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_ADMIN_LINK_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_ADMIN_LINKS+"-"+UserContext.getCurrentUser(), new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
 						{
@@ -210,11 +214,19 @@ public class RegistrationEntity implements Serializable
 		Tenant cacheTenant = new Tenant(tenantName);
 		List<LinkEntity> list = null;
 		try {
-			list = (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			list = (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_CLOUD_SERVICE_LINK_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS);
 			if (list != null) {
 				return list;
 			}
+			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+				LOGGER.error("Error to get Cloud Services link: EntityNaming service is down");
+				throw new EntityNamingDependencyUnavailableException();
+			}
+		}
+		catch(DashboardException e){
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return Collections.emptyList();
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
@@ -291,7 +303,7 @@ public class RegistrationEntity implements Serializable
 			}
 		}
 		list = sortServiceLinks(list);
-		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_CLOUD_SERVICE_LINK_CACHE,
 				CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS, list);
 		return list;
 	}
@@ -319,7 +331,7 @@ public class RegistrationEntity implements Serializable
 	{
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_HOME_LINK_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS, new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
@@ -344,11 +356,15 @@ public class RegistrationEntity implements Serializable
 		final String tenantName = TenantContext.getCurrentTenant();
 		Tenant cacheTenant = new Tenant(tenantName);
 		try {
-			return (String) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			return (String) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_SSO_LOGOUT_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_SSO_LOGOUT_URL, new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
 						{
+							if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+								LOGGER.error("Error to get SSO logout url: EntityNaming service is down");
+								throw new EntityNamingDependencyUnavailableException();
+							}
 							Link lk = RegistryLookupUtil.getServiceExternalLink(SECURITY_SERVICE_NAME, SECURITY_SERVICE_VERSION,
 									SECURITY_SERVICE_SSO_LOGOUT_REL, tenantName);
 							lk = RegistryLookupUtil.replaceWithVanityUrl(lk, tenantName, SECURITY_SERVICE_NAME);
@@ -363,6 +379,10 @@ public class RegistrationEntity implements Serializable
 							}
 						}
 					});
+		}
+		catch(DashboardException e){
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return "";
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
@@ -437,14 +457,23 @@ public class RegistrationEntity implements Serializable
 	{
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_VISUAL_ANALYZER_LINK_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_VISUAL_ANALYZER, new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
 						{
+							if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+								LOGGER.error("Error to get Visual Analyzers link: EntityNaming service is down");
+								throw new EntityNamingDependencyUnavailableException();
+							}
 							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
 						}
 					});
+		}
+		catch(DashboardException e){
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return Collections.emptyList();
 		}
 		catch (Exception e) {
 			LOGGER.error(e);

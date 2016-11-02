@@ -23,12 +23,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.TenantWithoutSubscriptionException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.ServiceEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.TenantDetailEntity;
@@ -83,6 +86,10 @@ public class TenantSubscriptionsAPI extends APIBase
 
 		// handling normal requests without edition
 		try {
+			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+				LOGGER.error("Error to call [GET] /v1/subscribedapps?withEdition={}: EntityNaming service is down", withEdition);
+				throw new EntityNamingDependencyUnavailableException();
+			}
 			initializeUserContext(tenantIdParam, userTenant);
 			String tenantName = TenantContext.getCurrentTenant();
 			List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenantName);
@@ -97,6 +104,10 @@ public class TenantSubscriptionsAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (TenantWithoutSubscriptionException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch(DashboardException e){
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
