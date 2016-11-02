@@ -257,5 +257,7 @@ public class DashBoardUtils
 
 	private DashBoardUtils()
 	{
+
 	}
+
 }

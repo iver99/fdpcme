@@ -31,7 +31,8 @@ public class AvailabilityServiceManager implements ApplicationServiceManager
 {
 	private final static Logger LOGGER = LogManager.getLogger(AvailabilityServiceManager.class);
 
-	private static final long PERIOD = Timer.ONE_MINUTE;
+	// now the dependencies are checked every 20 seconds for 'soft-dependency'
+	private static final long PERIOD = Timer.ONE_SECOND * 20;
 
 	private Timer timer;
 	private Integer notificationId;

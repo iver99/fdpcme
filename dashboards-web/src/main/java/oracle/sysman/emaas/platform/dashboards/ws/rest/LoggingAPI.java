@@ -10,6 +10,17 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
+import oracle.sysman.emaas.platform.dashboards.core.wls.management.AppLoggingManageMXBean;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -17,15 +28,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-
-import oracle.sysman.emaas.platform.dashboards.core.wls.management.AppLoggingManageMXBean;
-
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
 @Path("/v1/logging")
 public class LoggingAPI
@@ -43,6 +45,10 @@ public class LoggingAPI
 	public JSONObject logMsg(JSONObject jsonReceived)
 	{
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				mLogger.error("Error to call [POST] /v1/logging: database is down");
+				throw new DatabaseDependencyUnavailableException();
+			}
 			String tenantId = jsonReceived.getString("tenantId");
 			String remoteIpAddress = request.getRemoteAddr();
 			String remoteAgent = request.getHeader("User-Agent");
@@ -84,6 +90,17 @@ public class LoggingAPI
 				mLogger.log(logLevel, "tenantId::: = " + tenantId + " - " + log + System.getProperty("line.separator")
 						+ remoteInfo);
 			}
+		}
+		catch(DashboardException e){
+			mLogger.error(e.getLocalizedMessage(), e);
+			JSONObject errorJson=new JSONObject();
+			try {
+				errorJson.put("errorCode",e.getErrorCode());
+				errorJson.put("message",e.getMessage());
+			} catch (JSONException e1) {
+				mLogger.log(Level.ERROR, "Exception thrown when returning error information: ", e1);
+			}
+			return errorJson;
 		}
 		catch (JSONException e1) {
 			mLogger.log(Level.ERROR, "Exception thrown when receiving logs: ", e1);

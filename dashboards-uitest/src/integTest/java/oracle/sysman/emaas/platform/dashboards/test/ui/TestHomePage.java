@@ -8,6 +8,7 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -63,11 +64,10 @@ public class TestHomePage extends LoginAndLogout
 		webd.getLogger().info("start to test in testExploreData_LALink");
 
 		DashboardHomeUtil.gotoDataExplorer(webd, DashboardHomeUtil.EXPLOREDATA_MENU_LOG);
+		WaitUtil.waitForPageFullyLoaded(webd);
 
+		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "emlacore/html/log-analytics-search.html");
-		//		String url = webd.getWebDriver().getCurrentUrl();
-		//		webd.getLogger().info("url = " + url);
-		//		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emlacore/html/log-analytics-search.html");
 	}
 
 	@Test
@@ -77,12 +77,10 @@ public class TestHomePage extends LoginAndLogout
 		webd.getLogger().info("start to test in testExploreData_SearchLink");
 
 		DashboardHomeUtil.gotoDataExplorer(webd, DashboardHomeUtil.EXPLOREDATA_MENU_SEARCH);
+		WaitUtil.waitForPageFullyLoaded(webd);
 
+		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "emcta/ta/analytics.html");
-		//		String url = webd.getWebDriver().getCurrentUrl();
-		//		webd.getLogger().info("url = " + url);
-		//		String sub_str = url.substring(url.indexOf("emsaasui") + 9);
-		//		Assert.assertEquals(sub_str.substring(0, 23), "emcta/ta/analytics.html");
 	}
 
 	@Test
@@ -188,11 +186,11 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_ASC);
 
 		//verify the result
-		//		webd.getLogger().info("Verify the sort result");
-		//		DashboardHomeUtil.waitForDashboardPresent(webd, "Enterprise Overview");
-		//		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
-		//		Assert.assertEquals(names.get(0), "Enterprise Overview");
-		//		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(0));
+		webd.getLogger().info("Verify the sort result");
+		DashboardHomeUtil.waitForDashboardPresent(webd, "Performance Analytics: Database");
+		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(0), "Performance Analytics: Database");
+		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(0));
 	}
 
 	@Test
@@ -206,11 +204,11 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_DSC);
 
 		//verify the result
-		//		webd.getLogger().info("Verify the sort result");
-		//		DashboardHomeUtil.waitForDashboardPresent(webd, "Enterprise Overview");
-		//		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
-		//		Assert.assertEquals(names.get(names.size() - 1), "Enterprise Overview");
-		//		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(names.size() - 1));
+		webd.getLogger().info("Verify the sort result");
+		DashboardHomeUtil.waitForDashboardPresent(webd, "Performance Analytics: Database");
+		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(names.size() - 1), "Performance Analytics: Database");
+		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(names.size() - 1));
 
 	}
 

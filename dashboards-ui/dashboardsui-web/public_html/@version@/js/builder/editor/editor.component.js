@@ -202,7 +202,7 @@ define(['knockout',
                 return typeof(tile.configure)==="function";
             });
             tile.tileDisplayClass = ko.computed(function() {
-                var css = 'oj-md-'+(mode.getModeWidth(tile)) + ' oj-sm-'+(mode.getModeWidth(tile)*6) + ' oj-lg-'+(mode.getModeWidth(tile));
+                var css = 'oj-md-'+(mode.getModeWidth(tile)) + ' oj-sm-'+(mode.getModeWidth(tile)*12) + ' oj-lg-'+(mode.getModeWidth(tile));
                 css += tile.isMaximized() ? ' dbd-tile-maximized ' : '';
                 css += tile.shouldHide() ? ' dbd-tile-no-display' : '';
                 css += tile.editDisabled() ? ' dbd-tile-edit-disabled' : '';
@@ -319,15 +319,21 @@ define(['knockout',
             tile.leftEnabled(mode.getModeColumn(tile) > 0);
             tile.rightEnabled(mode.getModeColumn(tile)+mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS);
 
-            judgeAdmin();
+            hideOpenInExplorer();
 
-            function judgeAdmin(data) {
-                var userTenantUtil = new userTenantUtilModel();
-                var itaAdmin = userTenantUtil.userHasRole("IT Analytics Administrator") || userTenantUtil.userHasRole("IT Analytics User");
-                if ((tile.WIDGET_GROUP_NAME() === 'Data Explorer' || tile.WIDGET_GROUP_NAME() === 'IT Analytics') && !itaAdmin) {
+            function hideOpenInExplorer(data) {
+                if (tile.PROVIDER_NAME() !== 'TargetAnalytics' && tile.PROVIDER_NAME() !== 'LogAnalyticsUI') {
                     tile.isOpenInExplorerShown(false);
+                    return;
                 }
-            }   
+                if (tile.PROVIDER_NAME() === 'TargetAnalytics') {
+                    var userTenantUtil = new userTenantUtilModel();
+                    var itaAdmin = userTenantUtil.userHasRole("IT Analytics Administrator") || userTenantUtil.userHasRole("IT Analytics User");
+                    if (!itaAdmin) {
+                        tile.isOpenInExplorerShown(false);
+                    }
+                }
+            }
             
             var cxtUtil = new cxtModel();
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
