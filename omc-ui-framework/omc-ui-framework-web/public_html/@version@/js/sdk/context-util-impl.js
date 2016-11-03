@@ -10,7 +10,7 @@ define([
             var dfu = new dfuModel();
             var supportedContext = [{'contextName': 'time','paramNames': ['startTime', 'endTime', 'timePeriod']}, 
                                     {'contextName': 'composite','paramNames': ['compositeType', 'compositeName', 'compositeMEID']},
-                                    {'contextName': 'entity','paramNames': ['entityType', 'entityName', 'entityMEIDs']}
+                                    {'contextName': 'entity','paramNames': ['entitiesType', /*'entityName',*/ 'entityMEIDs']}
                                    ];
             var omcCtxParamName = 'omcCtx';
             
@@ -81,15 +81,6 @@ define([
                             }
                             //Set value into the OMC context JSON object
                             omcContext[contextName][paramName] = paramValue;
-                            
-                            //Fetch composite/entity type/name by MEID
-                            if (paramName === 'compositeMEID') {
-                                queryODSEntityByMeId(paramValue, 'composite', queryOdsEntityCallback);
-                            }
-                            //Only fetch entity name/type when there is a single entity
-                            else if (paramName === 'entityMEIDs' && paramValue.indexOf(',') < 0 ) {
-                                queryODSEntityByMeId(paramValue, 'entity', queryOdsEntityCallback);
-                            }
                         }
                     }
                 }
@@ -165,7 +156,7 @@ define([
                                 //Check for available context which should be appended into URL
                                 if (omcContext[contextName] && omcContext[contextName][paramName]) {
                                     var paramValue = omcContext[contextName][paramName];
-                                    omcCtxString = omcCtxString + paramName + "=" + paramValue + '&';
+                                    omcCtxString = omcCtxString + encodeURIComponent(paramName) + "=" + encodeURIComponent(paramValue) + '&';
                                 }
                             }
                         }
@@ -256,7 +247,10 @@ define([
              */
             self.setCompositeMeId = function(compositeMEID) {
                 setIndividualContext('composite', 'compositeMEID', compositeMEID);
-                queryODSEntityByMeId(compositeMEID, 'composite', queryOdsEntityCallback);
+                //Set composite meId will reset composite type/name, 
+                //next time you get the composite type/name will return the new type/name
+                setIndividualContext('composite', 'compositeType', null);
+                setIndividualContext('composite', 'compositeName', null);
             };
             
             /**
@@ -286,6 +280,14 @@ define([
              * @returns {String} OMC global context of composite type
              */
             self.getCompositeType = function() {
+                var compositeType = getIndividualContext('composite', 'compositeType');
+                if (compositeType) {
+                    return compositeType;
+                }
+                else if (self.getCompositeMeId()) {
+                    //Fetch composite name/type
+                    queryODSEntityByMeId(self.getCompositeMeId(), fetchCompositeCallback);
+                }
                 return getIndividualContext('composite', 'compositeType');
             };
             
@@ -306,6 +308,14 @@ define([
              * @returns {String} OMC global context of composite name
              */
             self.getCompositeName = function() {
+                var compositeName = getIndividualContext('composite', 'compositeName');
+                if (compositeName) {
+                    return compositeName;
+                }
+                else if (self.getCompositeMeId()) {
+                    //Fetch composite name/type
+                    queryODSEntityByMeId(self.getCompositeMeId(), fetchCompositeCallback);
+                }
                 return getIndividualContext('composite', 'compositeName');
             };
             
@@ -337,10 +347,9 @@ define([
              */
             self.setEntityMeIds = function(entityMEIDs) {
                 setIndividualContext('entity', 'entityMEIDs', entityMEIDs);
-                //Only fetch entity name/type when there is a single entity
-                if (entityMEIDs && entityMEIDs.indexOf(',') < 0 ) {
-                    queryODSEntityByMeId(entityMEIDs, 'entity', queryOdsEntityCallback);
-                }
+                //Set entity meIds will reset the cached entity objects, 
+                //next time you get the entities will return the new ones
+                setIndividualContext('entity', 'entities', null);
             };
             
             /**
@@ -354,23 +363,23 @@ define([
             };
             
             /**
-             * Set OMC global context of entity type.
+             * Set OMC global context of entities type.
              * 
-             * @param {String} entityType Entity type
+             * @param {String} entitiesType Entities type
              * @returns 
              */
-            self.setEntityType = function(entityType) {
-                setIndividualContext('entity', 'entityType', entityType);
+            self.setEntitiesType = function(entitiesType) {
+                setIndividualContext('entity', 'entitiesType', entitiesType);
             };
             
             /**
-             * Get OMC global context of entity type.
+             * Get OMC global context of entities type.
              * 
              * @param 
-             * @returns {String} OMC global context of entity type
+             * @returns {String} OMC global context of entities type
              */
-            self.getEntityType = function() {
-                return getIndividualContext('entity', 'entityType');
+            self.getEntitiesType = function() {
+                return getIndividualContext('entity', 'entitiesType');
             };
             
 //            /**
@@ -383,15 +392,15 @@ define([
 //                setIndividualContext('entity', 'entityName', entityName);
 //            };
             
-            /**
-             * Get OMC global context of entity name.
-             * 
-             * @param 
-             * @returns {String} OMC global context of entity name
-             */
-            self.getEntityName = function() {
-                return getIndividualContext('entity', 'entityName');
-            };
+//            /**
+//             * Get OMC global context of entity name.
+//             * 
+//             * @param 
+//             * @returns {String} OMC global context of entity name
+//             */
+//            self.getEntityName = function() {
+//                return getIndividualContext('entity', 'entityName');
+//            };
             
             /**
              * Clear OMC global composite context.
@@ -421,6 +430,57 @@ define([
              */
             self.clearEntityContext = function() {
                 clearIndividualContext('entity');
+            };
+            
+            /**
+             * Get a list of entity objects by entity MEIDs.
+             * 
+             * @param 
+             * @returns {Object} a list of entity objects
+             */
+            self.getEntities = function() {
+                var entities = getIndividualContext('entity', 'entities');
+                if (entities) {
+                    return entities;
+                }
+                else {
+                    var entityMeIds = self.getEntityMeIds();
+                    var entitiesType = self.getEntitiesType();
+                    entities = [];
+                    if (entityMeIds && entityMeIds.length > 0 && entitiesType) {
+                        //Query entities by meIds and filter by entites type
+                        queryODSEntitiesByMeIds(entityMeIds, loadEntities);
+                        for (var i = 0; i < entitiesFetched.length; i ++) {
+                            var entity = entitiesFetched[i];
+                            if (entity['entityType'] === entitiesType) {
+                                entities.push(entity);
+                            }
+                        }
+                    }
+                    else if (entityMeIds && entityMeIds.length > 0) {
+                        //Query entities by meIds
+                        queryODSEntitiesByMeIds(entityMeIds, loadEntities);
+                        for (var i = 0; i < entitiesFetched.length; i ++) {
+                            entities.push(entitiesFetched[i]);
+                        }
+                    }
+                    else if (entitiesType) {
+                        //Query by entities type
+                        queryODSEntitiesByEntityType(entitiesType, loadEntities);
+                        for (var i = 0; i < entitiesFetched.length; i ++) {
+                            entities.push(entitiesFetched[i]);
+                        }
+                    }
+                    
+                    //Cache the entities data
+                    var omcCtx = self.getOMCContext();
+                    if (!omcCtx['entity']) {
+                        omcCtx['entity'] = {};
+                    }
+                    omcCtx['entity']['entities'] = entities;
+                    storeContext(omcCtx);
+                    return entities;
+                }
             };
             
             /**
@@ -531,32 +591,138 @@ define([
                     if (!decodedUrl.startsWith('?')) {
                         decodedUrl = '?' + decodedUrl;
                     }
-                    var regex = new RegExp("[\\?&]" + paramName + "=([^&#]*)"), results = regex.exec(decodedUrl);
-                    return results === null ? null : results[1];
+                    var regex = new RegExp("[\\?&]" + encodeURIComponent(paramName) + "=([^&#]*)"), results = regex.exec(decodedUrl);
+                    return results === null ? null : decodeURIComponent(results[1]);
                 }
                 return null;
             };
             
-            function queryOdsEntityCallback(data, ctxType) {
+            var entitiesFetched = [];
+            function loadEntities(data) {
+                entitiesFetched = [];
+                if (data && data['rows']) {
+                    var dataRows = data['rows'];
+                    for (var i = 0; i < dataRows.length; i++) {
+                        var entity = {};
+                        entity['meId'] = dataRows[0];
+                        entity['displayName'] = dataRows[1];
+                        entity['entityName'] = dataRows[2];
+                        entity['entityType'] = dataRows[3];
+                        entity['meClass'] = dataRows[4];
+                        entitiesFetched.push();
+                    }
+                }
+            }
+            
+            function queryODSEntitiesByMeIds(meIds, callback) {
+                if (meIds && meIds.length > 0) {
+                    var jsonOdsQuery = {
+                        "ast": {"query": "simple",
+                            "select": [{"item": {"expr": "column","table": "me","column": "meId"},"alias": "s1"}, 
+                                {"item": {"expr": "column","table": "me","column": "displayName"},"alias": "s2"}, 
+                                {"item": {"expr": "column","table": "me","column": "entityName"},"alias": "s3"}, 
+                                {"item": {"expr": "function","name": "NVL","args": [{"expr": "column","table": "tp1","column": "typeDisplayName"}, 
+                                            {"expr": "column","table": "me","column": "entityType"}]}, "alias": "s4"}, 
+                                {"item": {"expr": "column","table": "me","column": "entityType"},"alias": "s5"},
+                                {"item": {"expr": "column","table": "tp1","column": "meClass"},"alias": "s6"}],
+                            "distinct": true,
+                            "from": [{
+                                "table": "innerJoin",
+                                "lhs": {"table": "virtual","name": "Target","alias": "me"},
+                                "rhs": {"table": "virtual","name": "ManageableEntityType","alias": "tp1"},
+                                "on": {
+                                    "cond": "compare",
+                                    "comparator": "EQ",
+                                    "lhs": {"expr": "column","table": "me","column": "entityType"},
+                                    "rhs": {"expr": "column","table": "tp1","column": "entityType"}
+                                }
+                            }],
+                            "where": {
+                                "cond": "inExpr",
+                                "not": false,
+                                "lhs": {"expr": "column","table": "me","column": "meId"},
+                                "rhs": []
+                            },
+                            "orderBy": {
+                                "entries": [{
+                                    "entry": "expr",
+                                    "item": {"expr": "function","name": "UPPER","args": [{"expr": "column","table": "me","column": "entityName"}]},
+                                    "direction": "DESC",
+                                    "nulls": "LAST"
+                                }]
+                            },
+                            "groupBy": null
+                        }
+                    };
+                    
+                    for (var i = 0; i < meIds.length; i++) {
+                        jsonOdsQuery['ast']['where']['rhs'][i] = {};
+                        jsonOdsQuery['ast']['where']['rhs'][i]['expr'] = 'str'; 
+                        jsonOdsQuery['ast']['where']['rhs'][i]['val'] = meIds[i]; 
+                    }
+                    oj.Logger.info("Start to get ODS entities by entity MEIDs.", false);
+                    executeODSQuery(jsonOdsQuery, callback);
+                }
+            }
+            
+            function queryODSEntitiesByEntityType(entityType, callback) {
+                if (entityType) {
+                    var jsonOdsQuery = {
+                        "ast": {"query": "simple",
+                            "select": [{"item": {"expr": "column","table": "me","column": "meId"},"alias": "s1"}, 
+                                {"item": {"expr": "column","table": "me","column": "displayName"},"alias": "s2"}, 
+                                {"item": {"expr": "column","table": "me","column": "entityName"},"alias": "s3"}, 
+                                {"item": {"expr": "function","name": "NVL","args": [{"expr": "column","table": "tp1","column": "typeDisplayName"}, 
+                                            {"expr": "column","table": "me","column": "entityType"}]}, "alias": "s4"}, 
+                                {"item": {"expr": "column","table": "me","column": "entityType"},"alias": "s5"},
+                                {"item": {"expr": "column","table": "tp1","column": "meClass"},"alias": "s6"}],
+                            "distinct": true,
+                            "from": [{
+                                "table": "innerJoin",
+                                "lhs": {"table": "virtual","name": "Target","alias": "me"},
+                                "rhs": {"table": "virtual","name": "ManageableEntityType","alias": "tp1"},
+                                "on": {
+                                    "cond": "compare",
+                                    "comparator": "EQ",
+                                    "lhs": {"expr": "column","table": "me","column": "entityType"},
+                                    "rhs": {"expr": "column","table": "tp1","column": "entityType"}
+                                }
+                            }],
+                            "where": {"cond": "compare","comparator": "EQ",
+                                "lhs": {"expr": "column","table": "me","column": "entityType"},
+                                "rhs": {'expr': 'str', 'val': entityType}
+                            },
+                            "orderBy": {
+                                "entries": [{
+                                    "entry": "expr",
+                                    "item": {"expr": "function","name": "UPPER","args": [{"expr": "column","table": "me","column": "entityName"}]},
+                                    "direction": "DESC",
+                                    "nulls": "LAST"
+                                }]
+                            },
+                            "groupBy": null
+                        }
+                    };
+                    
+                    oj.Logger.info("Start to get ODS entities by entity type.", false);
+                    executeODSQuery(jsonOdsQuery, callback);
+                }
+            }
+            
+            function fetchCompositeCallback(data) {
                 if (data && data['rows']) {
                     var dataRows = data['rows'];
                     if (dataRows.length > 0) {
                         var entity = dataRows[0];
                         if (entity.length === 4) {
-                            if (ctxType === 'composite') {
-                                setIndividualContext('composite', 'compositeName', entity[2]);
-                                setIndividualContext('composite', 'compositeType', entity[3]);
-                            }
-                            else if (ctxType === 'entity') {
-                                setIndividualContext('entity', 'entityName', entity[2]);
-                                setIndividualContext('entity', 'entityType', entity[3]);
-                            }
+                            setIndividualContext('composite', 'compositeName', entity[2]);
+                            setIndividualContext('composite', 'compositeType', entity[3]);
                         }
                     }
                 }
             }
 
-            function queryODSEntityByMeId(meId, ctxType, callback) {
+            function queryODSEntityByMeId(meId, callback) {
                 var jsonOdsQuery = {"ast":{"query":"simple","distinct":false,"select":[{"item":{"expr":"column","table":"me","column":"meId"}},
                         {"item":{"expr":"column","table":"me","column":"entityName"}},
                         {"item":{"expr":"column","table":"me","column":"displayName"}},
@@ -564,19 +730,26 @@ define([
                     "from":[{"table":"virtual","name":"ManageableEntity","alias":"me"}],
                     "where":{"cond":"inExpr","lhs":{"expr":"column","table":"me","column":"meId"},
                     "rhs":[{"expr":"str","val":""}]}}};
-                var odsQueryUrl = getODSEntityQueryUrl();
                 jsonOdsQuery['ast']['where']['rhs'][0]['val'] = meId; 
-                oj.Logger.info("Start to get ODS entity by entity ID by URL:" + odsQueryUrl, false);
+                oj.Logger.info("Start to get ODS entity by entity MEID.", false);
+                executeODSQuery(jsonOdsQuery, callback);
+            }
+            
+            function executeODSQuery(jsonOdsQuery, callback) {
+                var odsQueryUrl = getODSEntityQueryUrl();
+                oj.Logger.info("Start to execute ODS query by URL:" + odsQueryUrl, false);
                 dfu.ajaxWithRetry(odsQueryUrl,{
                     type: 'POST',
+                    async: false,
                     data: JSON.stringify(jsonOdsQuery),
                     contentType: 'application/json',
                     headers: dfu.getDefaultHeader(),
                     success:function(data, textStatus,jqXHR) {
-                        callback(data, ctxType);
+                        callback(data);
                     },
                     error:function(xhr, textStatus, errorThrown){
-                        oj.Logger.error("Error: Failed to fetch ODS entity by ID due to error: " + textStatus);
+                        oj.Logger.error("ODS query failed due to error: " + textStatus);
+                        callback(null);
                     }
                 });
             }
