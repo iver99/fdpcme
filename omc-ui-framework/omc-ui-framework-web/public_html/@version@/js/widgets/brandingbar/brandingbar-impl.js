@@ -64,12 +64,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 else {
                     var entityMeIds = cxtUtil.getEntityMeIds();
                     if (entityMeIds) {
-                        var entityId = [];
-                        var entityArray = entityMeIds.split(',');
-                        for (var i = 0; i < entityArray.length; i++) {
-                            entityId.push($.trim(entityArray[i]));
-                        }
-                        self.entities = ko.observable(entityId);
+                        self.entities = ko.observable(entityMeIds);
                     } else {
 //                        if (cxtUtil.getEntityName() && cxtUtil.getEntityType()) {
 //                            self.queryVars.entityName = cxtUtil.getEntityName();

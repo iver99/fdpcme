@@ -342,24 +342,44 @@ define([
             /**
              * Set OMC global context of multiple entity GUIDs.
              * 
-             * @param {String} entityMEIDs Entity GUIDs separated by comma
+             * @param {Array} entityMEIDs A list of Entity GUIDs
              * @returns 
              */
             self.setEntityMeIds = function(entityMEIDs) {
-                setIndividualContext('entity', 'entityMEIDs', entityMEIDs);
+                var meIds = '';
+                //If it's a array, convert it to a comma seperated string
+                if ($.isArray(entityMEIDs)) {
+                    for (var i = 0; i < entityMEIDs.length; i++) {
+                        if (i === entityMEIDs.length - 1) {
+                            meIds = meIds + entityMEIDs[i];
+                        }
+                        else {
+                            meIds = meIds + entityMEIDs[i] + ',';
+                        }
+                    }
+                }
+                else {
+                    meIds = entityMEIDs;
+                }
+                setIndividualContext('entity', 'entityMEIDs', meIds);
                 //Set entity meIds will reset the cached entity objects, 
                 //next time you get the entities will return the new ones
                 setIndividualContext('entity', 'entities', null);
             };
             
             /**
-             * Get OMC global context of entity guid.
+             * Get OMC global context of entity MEIDs.
              * 
              * @param 
-             * @returns {String} OMC global context of entity guid
+             * @returns {Array} OMC global context of entity MEIDs
              */
             self.getEntityMeIds = function() {
-                return getIndividualContext('entity', 'entityMEIDs');
+                var strMeIds = getIndividualContext('entity', 'entityMEIDs');
+                if (strMeIds) {
+                    //Convert to a array
+                    return strMeIds.split(',');
+                }
+                return null;
             };
             
             /**
@@ -440,7 +460,7 @@ define([
              */
             self.getEntities = function() {
                 var entities = getIndividualContext('entity', 'entities');
-                if (entities) {
+                if (entities && $.isArray(entities) && entities.length > 0) {
                     return entities;
                 }
                 else {
