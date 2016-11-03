@@ -624,11 +624,11 @@ define([
                     var dataRows = data['rows'];
                     for (var i = 0; i < dataRows.length; i++) {
                         var entity = {};
-                        entity['meId'] = dataRows[0];
-                        entity['displayName'] = dataRows[1];
-                        entity['entityName'] = dataRows[2];
-                        entity['entityType'] = dataRows[3];
-                        entity['meClass'] = dataRows[4];
+                        entity['meId'] = dataRows[i][0];
+                        entity['displayName'] = dataRows[i][1];
+                        entity['entityName'] = dataRows[i][2];
+                        entity['entityType'] = dataRows[i][3];
+                        entity['meClass'] = dataRows[i][4];
                         entitiesFetched.push(entity);
                     }
                 }
