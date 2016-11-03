@@ -1101,7 +1101,7 @@ public class DashboardManagerTest
 	 * @throws DashboardException
 	 */
 //	@Test
-	public void testDashboardFilter() throws DashboardException{
+	public void testOOBDashboardSetFilter() throws DashboardException{
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenant1 = 11L;
 
@@ -1121,7 +1121,7 @@ public class DashboardManagerTest
 		itadbd = dm.saveNewDashboard(itadbd, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
 		
-		Dashboard apmdbd = new Dashboard();
+		/*Dashboard apmdbd = new Dashboard();
 		apmdbd.setName("apm" + System.currentTimeMillis());
 		apmdbd.setIsSystem(true);
 		apmdbd.setAppicationType(DashboardApplicationType.APM);
@@ -1130,24 +1130,26 @@ public class DashboardManagerTest
 		
 		Dashboard orchestrationdbd = new Dashboard();
 		orchestrationdbd.setName("orchestration" + System.currentTimeMillis());
-		orchestrationdbd.setIsSystem(true);
+		orchestrationdbd.setIsSystem(false);
 		orchestrationdbd.setAppicationType(DashboardApplicationType.Orchestration);
 		orchestrationdbd = dm.saveNewDashboard(orchestrationdbd, tenant1);
-		UserContext.setCurrentUser("SYSMAN");
+		UserContext.setCurrentUser("SYSMAN");*/
 		
-		//this set contains la dbd
+		//this set contains oob la dbd
 		Dashboard laset = new Dashboard();
 		laset.setName("la set"+System.currentTimeMillis());
 		laset.setType(Dashboard.DASHBOARD_TYPE_SET);
+		laset.setIsSystem(true);
 		List<Dashboard> list1=new ArrayList<Dashboard>();
 		list1.add(ladbd);
 		laset.setSubDashboards(list1);
 		laset = dm.saveNewDashboard(laset, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
-		//this set contains ita dbd
+		//this set contains oob ita dbd
 		Dashboard itaset = new Dashboard();
 		itaset.setName("ita set"+System.currentTimeMillis());
 		itaset.setType(Dashboard.DASHBOARD_TYPE_SET);
+		itaset.setIsSystem(true);
 		List<Dashboard> list2=new ArrayList<Dashboard>();
 		list2.add(itadbd);
 		itaset.setSubDashboards(list2);
@@ -1155,25 +1157,27 @@ public class DashboardManagerTest
 		UserContext.setCurrentUser("SYSMAN");
 		
 		//this set contains orchestration dbd
-		Dashboard orcheset = new Dashboard();
+		/*Dashboard orcheset = new Dashboard();
 		orcheset.setName("orche set" + System.currentTimeMillis());
 		orcheset.setType(Dashboard.DASHBOARD_TYPE_SET);
 		List<Dashboard> list3 = new ArrayList<Dashboard>();
 		list3.add(orchestrationdbd);
 		orcheset.setSubDashboards(list3);
 		orcheset = dm.saveNewDashboard(orcheset, tenant1);
-		UserContext.setCurrentUser("SYSMAN");
+		UserContext.setCurrentUser("SYSMAN");*/
 		
-		//this set contains orchestration and la
-		/*Dashboard mixedSet1 = new Dashboard();
+		//this set contains oob ita and oob la
+		Dashboard mixedSet1 = new Dashboard();
 		mixedSet1.setName("mixed set1" + System.currentTimeMillis());
 		mixedSet1.setType(Dashboard.DASHBOARD_TYPE_SET);
+		mixedSet1.setIsSystem(true);
 		List<Dashboard> list4 = new ArrayList<Dashboard>();
-		list4.add(orchestrationdbd);
+		list4.add(ladbd);
+		list4.add(itadbd);
 		mixedSet1.setSubDashboards(list4);
 		mixedSet1 = dm.saveNewDashboard(mixedSet1, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
-
+		/*
 		//this set contains orchestration and ita
 		Dashboard mixedSet2 = new Dashboard();
 		mixedSet2.setName("mixed set2" + System.currentTimeMillis());
@@ -1185,14 +1189,13 @@ public class DashboardManagerTest
 		UserContext.setCurrentUser("SYSMAN");*/
 		try{
 			DashboardsFilter filter1 = new DashboardsFilter();
-			TenantContext.setCurrentTenant("emaastesttenant1");
 			filter1.setIncludedAppsFromString("LogAnalytics");
 			pd = dm.listDashboards(null, null, null, tenant1, true,null,filter1);
 			long result1 = pd.getTotalResults();
-			Assert.assertEquals(result1, 2);//ladbd,laset will be listed
+			Assert.assertEquals(result1, 3);//ladbd,laset mixedset1 will be listed
 			for (Dashboard dbd : pd.getDashboards()) {
 				if (dbd.getName().equals(itadbd.getName())) {
-					AssertJUnit.fail("Failed: unexpected ITA dashboard get filtered");//TODO
+					AssertJUnit.fail("Failed: unexpected ITA dashboard get filtered");
 				}
 				if (dbd.getName().equals(itaset.getName())) {
 					AssertJUnit.fail("Failed: unexpected ITA dashboard set get filtered");
@@ -1204,10 +1207,10 @@ public class DashboardManagerTest
 			filter1.setIncludedAppsFromString("ITAnalytics");
 			pd = dm.listDashboards(null, null, null, tenant1, true,null,filter2);
 			long result2 = pd.getTotalResults();
-			Assert.assertEquals(result2, 2);//itadbd,itaset will be listed
+			Assert.assertEquals(result2, 3);//itadbd,itaset,mixedset1 will be listed
 			for (Dashboard dbd : pd.getDashboards()) {
 				if (dbd.getName().equals(ladbd.getName())) {
-					AssertJUnit.fail("Failed: unexpected LA dashboard get filtered");//TODO
+					AssertJUnit.fail("Failed: unexpected LA dashboard get filtered");
 				}
 				if (dbd.getName().equals(laset.getName())) {
 					AssertJUnit.fail("Failed: unexpected LA dashboard set get filtered");
@@ -1217,11 +1220,11 @@ public class DashboardManagerTest
 			//post action
 			dm.deleteDashboard(ladbd.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(itadbd.getDashboardId(), true, tenant1);
-			dm.deleteDashboard(apmdbd.getDashboardId(), true, tenant1);
-			dm.deleteDashboard(orchestrationdbd.getDashboardId(), true, tenant1);
+//			dm.deleteDashboard(apmdbd.getDashboardId(), true, tenant1);
+//			dm.deleteDashboard(orchestrationdbd.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(laset.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(itaset.getDashboardId(), true, tenant1);
-			dm.deleteDashboard(orcheset.getDashboardId(), true, tenant1);
+//			dm.deleteDashboard(orcheset.getDashboardId(), true, tenant1);
 		}
 		
 	}
