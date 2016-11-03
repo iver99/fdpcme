@@ -176,7 +176,16 @@ public class DashboardServiceFacade
 		Query query = em.createQuery(hql);
 		return query.getResultList();
 	}
-	
+
+	/**
+	 * This method is for retriving dashboards by giving a list of dashboard ids,
+	 * ***************************************************************************************
+	 * And this method will return the dashboards with the same order with given dashboard Ids
+	 * ***************************************************************************************
+	 * @param dashboardIds
+	 * @param tenantId
+     * @return
+     */
 	public List<EmsDashboard> getEmsDashboardByIds(List<Long> dashboardIds, Long tenantId)
 	{
 		if (dashboardIds != null && !dashboardIds.isEmpty()) {
