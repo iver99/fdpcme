@@ -92,7 +92,8 @@ require(['ojs/ojcore',
     'jquery',
 //    'uifwk/js/widgets/timeFilter/js/timeFilter',
     'ojs/ojknockout',
-    'ojs/ojchart'
+    'ojs/ojchart',
+    'ojs/ojbutton'
 ],
         function (oj, ko, $/*, timeFilter*/) // this callback gets executed when all required modules are loaded
         {
@@ -119,7 +120,7 @@ require(['ojs/ojcore',
                 self.initStart = ko.observable(start);
                 self.initEnd = ko.observable(end);
                 self.timePeriodsNotToShow = ko.observableArray([]);
-                self.timeLevelsNotToShow = ko.observable([]);
+                self.timeLevelsNotToShow = ko.observable(["second"]);
                 self.showTimeAtMillisecond = ko.observable(false);
                 self.timeDisplay = ko.observable("short");
                 self.timePeriodPre = ko.observable("Last 7 days");
@@ -139,25 +140,29 @@ require(['ojs/ojcore',
                     timezoneOffset = timezoneOffset>0 ? ("GMT-"+timezoneOffset) : ("GMT+"+Math.abs(timezoneOffset));
                     return timezoneOffset;
                 };
+                
+                self.adjustTime = function(start, end) {
+                    var adjustedStart, adjustedEnd;
+                    adjustedStart =start - 60*60*1000;
+                    adjustedEnd = end.getTime()+ 60*60*1000;
+                    return {
+                        start: new Date(adjustedStart),
+                        end: new Date(adjustedEnd)
+                    };
+                };
 
                 self.timeParams1 = {
                     startDateTime: /*self.initStart,*/ start,
                     endDateTime: self.initEnd, //end,
                     timePeriodsNotToShow: /*["Last 30 days", "Last 90 days"],*/ self.timePeriodsNotToShow,
-//                    timeLevelsNotToShow: self.timeLevelsNotToShow, //custom relative time levels not to show
-//                    showTimeAtMillisecond: self.showTimeAtMillisecond, //show time at minute or millisecond level in ojInputTime component
+                    timeLevelsNotToShow: self.timeLevelsNotToShow, //custom relative time levels not to show
+                    showTimeAtMillisecond: self.showTimeAtMillisecond, //show time at minute or millisecond level in ojInputTime component
                     enableTimeFilter: true,
                     hideMainLabel: true,
                     dtpickerPosition: self.floatPosition1,
                     timePeriod: "Last 1 day", //self.timePeriodPre,
 //                    timeFilterParams: self.timeFilterParams,
                     callbackAfterApply: function (start, end, tp, tf, relVal, relOpt) {
-                        console.log(start);
-                        console.log(end);
-                        console.log(tp);
-                        console.log(tf);
-                        console.log(relVal);
-                        console.log(relOpt);
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
                         if(self.isTimePeriodLessThan1day(tp) && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
@@ -205,6 +210,9 @@ require(['ojs/ojcore',
                 };
 
                 self.changeOption = function() {
+                    self.showTimeAtMillisecond(true);
+                    self.timeLevelsNotToShow([]);
+                    return;
                     self.changeLabel(false);
                     self.initStart(new Date(new Date() - 48*60*60*1000));
                     self.initEnd(new Date(new Date() - 3*60*60*1000));
@@ -213,6 +221,11 @@ require(['ojs/ojcore',
                     self.timePeriodPre("Last 90 days");
                 };
                 
+                self.changeOption1 = function() {
+                    self.showTimeAtMillisecond(false);
+                    self.timeLevelsNotToShow(["second"]);
+                }
+
                 self.lineSeriesValues = ko.observableArray();
                 self.lineGroupsValues = ko.observableArray();
 
@@ -298,15 +311,6 @@ require(['ojs/ojcore',
 
                 self.generateData(self.timeParams1.startDateTime, self.timeParams1.endDateTime);
 
-                self.adjustTime = function(start, end) {
-                    var adjustedStart, adjustedEnd;
-                    adjustedStart =start - 60*60*1000;
-                    adjustedEnd = end.getTime()+ 60*60*1000;
-                    return {
-                        start: new Date(adjustedStart),
-                        end: new Date(adjustedEnd)
-                    };
-                };
                 self.timeParams2 = {
 //                    startDateTime: "2015-05-17T00:00:00",
 //                    endDateTime: "2015-05-16T13:00:00"
