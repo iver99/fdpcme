@@ -199,7 +199,6 @@ function(ko, $, dfu, dfumodel, oj)
 
     $(document).ready(function() {
         var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
-        dfu_model.setHtmlLang();
         ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
         ko.applyBindings(new ErrorPageModel(), $('#errorMain')[0]);
         $('#global-body').show();

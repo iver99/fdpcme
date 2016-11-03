@@ -798,11 +798,6 @@ define(['knockout',
                     $('head').append('<link id="uifwkAltaCss" rel="stylesheet" href="/emsaasui/uifwk/@version@/css/uifwk-alta.css" type="text/css"/>');
                 }
             };
-            
-            self.setHtmlLang = function() {
-                var language = window.navigator.userLanguage || window.navigator.language;
-                $('html').attr("lang", language);
-            }
 
             function showSessionTimeoutWarningDialog(warningDialogId) {
                 //Clear interval for extending user session
