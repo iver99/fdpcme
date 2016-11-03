@@ -629,7 +629,7 @@ define([
                         entity['entityName'] = dataRows[2];
                         entity['entityType'] = dataRows[3];
                         entity['meClass'] = dataRows[4];
-                        entitiesFetched.push();
+                        entitiesFetched.push(entity);
                     }
                 }
             }
