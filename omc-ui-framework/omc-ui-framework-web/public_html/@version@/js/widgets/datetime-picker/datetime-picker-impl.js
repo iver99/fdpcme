@@ -1382,6 +1382,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                  * @returns start and end time in ISO format
                  */
                 self.getTimeRangeForFlexRelTime = function(num, opt) {
+//                    var end = new Date(2016, 1, 29, 3, 0, 0, 0);
                     var end = new Date();
                     var timeRange;
                     switch(opt) {
@@ -1396,7 +1397,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             break;
                         case "day":
                             start = new Date(end.getFullYear(), end.getMonth(), end.getDate()-num, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
-                            start = new Date(end - num*24*60*60*1000);
                             break;
                         case "week":
                             start = new Date(end.getFullYear(), end.getMonth(), end.getDate()-7*num, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
@@ -1406,6 +1406,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             break;
                         case "year":
                             start = new Date(end.getFullYear()-num, end.getMonth(), end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
+                            break;
                         default:
                             throw new Error("error in flexible relative time value change: flexible relative time option-" + opt + " is invalid");
                     }
