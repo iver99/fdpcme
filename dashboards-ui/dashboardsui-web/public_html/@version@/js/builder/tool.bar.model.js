@@ -649,7 +649,8 @@ define(['knockout',
                     error: errorCallback
                 };
                 if(!self.isUnderSet){
-                    prefUtil.getAllPreferences(options);
+                	new Builder.DashboardDataSource().getHomeDashboardPreference(self.dashboard.id(), options.success, options.error);
+//                    prefUtil.getAllPreferences(options);
                 }
             }
 

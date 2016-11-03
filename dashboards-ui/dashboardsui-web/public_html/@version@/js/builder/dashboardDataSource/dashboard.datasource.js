@@ -24,17 +24,11 @@ define(['knockout',
             if (!self.dataSource[dashboardId]) {
                 self.dataSource[dashboardId] = {};
             }
-            if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].userOptions) {
-                Builder.fetchDashboardOptions(dashboardId,
-                        function (data) {
-                            self.dataSource[dashboardId].userOptions = data;
-                            self.dataSource[dashboardId].hasUserOptionInDB = true;
-                            successCallback && successCallback(data);
-                        },
-                        function (jqXHR, textStatus, errorThrown) {
-                            self[dashboardId].hasUserOptionInDB = false;
-                            errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
-                        });
+            if (isEmptyObject(self.dataSource[dashboardId])) {
+            	// emcpdf-2527
+            	self.loadDashboardData(dashboardId, function() {
+            		successCallback && successCallback(self.dataSource[dashboardId].userOptions);
+            	}, errorCallback);
             } else {
                 successCallback && successCallback(self.dataSource[dashboardId].userOptions);
             }
@@ -69,6 +63,41 @@ define(['knockout',
             }
         };
         
+    	function initializeDashboardAfterLoad(dsb) {
+    		if (!self.dataSource[dashboardId]) {
+                self.dataSource[dashboardId] = {};
+            }
+            self.dataSource[dsb.dashboardId].dashboard = dsb;
+            // ensure preference&isFavorite could always be available
+            if (dsb && dsb.userOptions) {
+            	self.dataSource[dsb.dashboardId].userOptions = dsb.userOptions;
+            	self.dataSource[dsb.dashboardId].hasUserOptionInDB = true;
+            } else {
+            	self.dataSource[dsb.dashboardId].userOptions = undefined;
+            	self.dataSource[dsb.dashboardId].hasUserOptionInDB = false;
+            }
+            
+            if (dsb && dsb.isFavorite) {
+            	self.dataSource[dsb.dashboardId].isFavorite = {"isFavorite": true};
+            } else {
+            	self.dataSource[dsb.dashboardId].isFavorite = {"isFavorite": false};
+            }
+            
+            if (dsb && dsb.preference) {
+            	self.dataSource[dsb.dashboardId].preference = dsb.preference;
+            } else {
+            	self.dataSource[dsb.dashboardId].preference = undefined;
+            }
+            if (dsb.selected) {
+                initializeDashboardAfterLoad(dsb.selected);
+            }
+            // data copied to dataSource object, so remove original data form dashboard object
+        	self.dataSource[dsb.dashboardId].dashboard.userOptions = undefined;
+        	self.dataSource[dsb.dashboardId].dashboard.isFavorite = undefined;
+        	self.dataSource[dsb.dashboardId].dashboard.preference = undefined;
+        	self.dataSource[dsb.dashboardId].dashboard.selected = undefined;
+    	}
+        
         self.loadDashboardData = function (dashboardId, successCallback, errorCallback) {
             if (!self.dataSource[dashboardId]) {
                 self.dataSource[dashboardId] = {};
@@ -77,7 +106,7 @@ define(['knockout',
                 Builder.loadDashboard(dashboardId,
                         function (data) {
                             var dsb = getKODashboardForUI(data);
-                            self.dataSource[dashboardId].dashboard = dsb;
+                            initializeDashboardAfterLoad(dsb);
                             successCallback && successCallback(dsb);
                         },
                         errorCallback);
@@ -85,6 +114,8 @@ define(['knockout',
                 successCallback && successCallback(self.dataSource[dashboardId].dashboard);
             }
         };
+        
+        
         
         self.updateDashboardData = function(dashboardId,dashboard,successCallback,errorCallback){
              if(!self.dataSource[dashboardId]){
@@ -141,18 +172,14 @@ define(['knockout',
             if (!self.dataSource[dashboardId]) {
                 self.dataSource[dashboardId] = {};
             }
-            if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].isFavorite) {
-                Builder.checkDashboardFavorites(dashboardId,
-                        function (data) {
-                            self.dataSource[dashboardId].isFavorite = data;
-                            successCallback && successCallback(data);
-                        },
-                        function (jqXHR, textStatus, errorThrown) {
-                            errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
-                        });
+            if (isEmptyObject(self.dataSource[dashboardId])) {
+            	// emcpdf-2527
+            	self.loadDashboardData(dashboardId, function() {
+                    successCallback && successCallback(self.dataSource[dashboardId].isFavorite);
+            	}, errorCallback);
             } else {
                 successCallback && successCallback(self.dataSource[dashboardId].isFavorite);
-            } 
+            }
         };
         
         self.addDashboardToFavorites = function(dashboardId, successCallback, errorCallback) {
@@ -183,6 +210,20 @@ define(['knockout',
                     function(jqXHR, textStatus, errorThrown) {
                         errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
                     });
+        };
+
+        self.getHomeDashboardPreference = function(dashboardId, successCallback, errorCallback) {
+            if (!self.dataSource[dashboardId]) {
+                self.dataSource[dashboardId] = {};
+            }
+            if (isEmptyObject(self.dataSource[dashboardId])) {
+            	// emcpdf-2527
+            	self.loadDashboardData(dashboardId, function() {
+                	successCallback && successCallback(self.dataSource[dashboardId].preference);
+            	}, errorCallback);
+            } else {
+            	successCallback && successCallback(self.dataSource[dashboardId].preference);
+            }
         };
                       
         function isEmptyObject(obj) {

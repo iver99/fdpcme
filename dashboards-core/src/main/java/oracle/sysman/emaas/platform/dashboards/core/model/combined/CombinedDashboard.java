@@ -8,8 +8,12 @@
  * $$Revision: $$
  */
  
-package oracle.sysman.emaas.platform.dashboards.core.model;
+package oracle.sysman.emaas.platform.dashboards.core.model.combined;
 
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.Preference;
+import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
+import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
@@ -21,7 +25,10 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 public class CombinedDashboard extends Dashboard
 {
 	private Preference preference;
-	private UserOptions options;
+	private UserOptions userOptions;
+	private Boolean isFavorite;
+
+	// used for dashbaord set to indicate the selected dashbaord/tab for that set
 	private CombinedDashboard selected;
 	
 	public static CombinedDashboard valueOf(EmsDashboard d, EmsPreference ep, EmsUserOptions euo) {
@@ -29,7 +36,8 @@ public class CombinedDashboard extends Dashboard
 		Preference p = Preference.valueOf(ep);
 		UserOptions uo = UserOptions.valueOf(euo);
 		cb.setPreference(p);
-		cb.setOptions(uo);
+		cb.setUserOptions(uo);
+		cb.isFavorite = DataFormatUtils.integer2Boolean(euo.getIsFavorite());
 		return cb;
 	}
 	
@@ -53,16 +61,17 @@ public class CombinedDashboard extends Dashboard
 	/**
 	 * @return the options
 	 */
-	public UserOptions getOptions()
+	public UserOptions getUserOptions()
 	{
-		return options;
+		return userOptions;
 	}
+
 	/**
 	 * @param options the options to set
 	 */
-	public void setOptions(UserOptions options)
+	public void setUserOptions(UserOptions options)
 	{
-		this.options = options;
+		this.userOptions = options;
 	}
 
 	/**
@@ -79,5 +88,21 @@ public class CombinedDashboard extends Dashboard
 	public void setSelected(CombinedDashboard selected)
 	{
 		this.selected = selected;
+	}
+
+	/**
+	 * @return the isFavorite
+	 */
+	public Boolean getIsFavorite()
+	{
+		return isFavorite;
+	}
+
+	/**
+	 * @param isFavorite the isFavorite to set
+	 */
+	public void setIsFavorite(Boolean isFavorite)
+	{
+		this.isFavorite = isFavorite;
 	}
 }
