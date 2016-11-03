@@ -176,7 +176,7 @@ require(['dashboards/dbsmodel',
                     tenantName: self.tenantName,
                     appId: self.appId,
                     isAdmin:true,
-                    showGlobalContextBanner: true
+                    showGlobalContextBanner: false
                 };
             }
 

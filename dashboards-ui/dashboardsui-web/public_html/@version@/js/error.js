@@ -105,7 +105,7 @@ function(ko, $, dfu, dfumodel, oj, cxtModel)
             tenantName: self.tenantName,
             appId: self.appId,
             isAdmin: false,
-            showGlobalContextBanner: true
+            showGlobalContextBanner: false
         };
         }
         function checkParams(msgKey, serviceid, serviceName) {
