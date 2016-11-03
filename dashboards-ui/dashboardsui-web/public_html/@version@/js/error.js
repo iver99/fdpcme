@@ -104,8 +104,7 @@ function(ko, $, dfu, dfumodel, oj, cxtModel)
             userName: self.userName,
             tenantName: self.tenantName,
             appId: self.appId,
-            isAdmin: false,
-            showGlobalContextBanner: true
+            isAdmin: false
         };
         }
         function checkParams(msgKey, serviceid, serviceName) {

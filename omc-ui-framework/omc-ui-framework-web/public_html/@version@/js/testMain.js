@@ -157,8 +157,7 @@ require(['knockout',
 //                    relNotificationCheck: "existActiveWarning",
 //                    relNotificationShow: "warnings",
                     isAdmin: isAdmin,
-                    entities: entities,
-                    showGlobalContextBanner: true
+                    entities: entities
                 };
             }
 
