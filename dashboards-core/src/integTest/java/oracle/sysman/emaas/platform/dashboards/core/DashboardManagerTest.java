@@ -1097,7 +1097,7 @@ public class DashboardManagerTest
 	}
 
 	/**
-	 * this test case is for home page filter function [Cloud Services] and for un-oob and oob dashboard or dashboard set
+	 * this test case is for home page filter function [Cloud Services] and for oob  dashboard set
 	 * @throws DashboardException
 	 */
 //	@Test
@@ -1120,20 +1120,6 @@ public class DashboardManagerTest
 		itadbd.setAppicationType(DashboardApplicationType.ITAnalytics);
 		itadbd = dm.saveNewDashboard(itadbd, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
-		
-		/*Dashboard apmdbd = new Dashboard();
-		apmdbd.setName("apm" + System.currentTimeMillis());
-		apmdbd.setIsSystem(true);
-		apmdbd.setAppicationType(DashboardApplicationType.APM);
-		apmdbd = dm.saveNewDashboard(apmdbd, tenant1);
-		UserContext.setCurrentUser("SYSMAN");
-		
-		Dashboard orchestrationdbd = new Dashboard();
-		orchestrationdbd.setName("orchestration" + System.currentTimeMillis());
-		orchestrationdbd.setIsSystem(false);
-		orchestrationdbd.setAppicationType(DashboardApplicationType.Orchestration);
-		orchestrationdbd = dm.saveNewDashboard(orchestrationdbd, tenant1);
-		UserContext.setCurrentUser("SYSMAN");*/
 		
 		//this set contains oob la dbd
 		Dashboard laset = new Dashboard();
@@ -1220,14 +1206,89 @@ public class DashboardManagerTest
 			//post action
 			dm.deleteDashboard(ladbd.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(itadbd.getDashboardId(), true, tenant1);
-//			dm.deleteDashboard(apmdbd.getDashboardId(), true, tenant1);
-//			dm.deleteDashboard(orchestrationdbd.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(laset.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(itaset.getDashboardId(), true, tenant1);
-//			dm.deleteDashboard(orcheset.getDashboardId(), true, tenant1);
 		}
 		
 	}
+	/**
+	 * this test case is for home page filter function [Cloud Services] and for un-oob  dashboard set
+	 * @throws DashboardException
+	 */
+//	@Test
+	public void testUnOOBDashboardSetFilter() throws DashboardException, InterruptedException {
+		DashboardManager dm = DashboardManager.getInstance();
+		Long tenant1 = 11L;
+
+		PaginatedDashboards pd =null;
+		//oob dashboard
+		Dashboard ladbd = new Dashboard();
+		ladbd.setName("oob la dbd" + System.currentTimeMillis());
+		ladbd.setIsSystem(true);
+		ladbd.setAppicationType(DashboardApplicationType.LogAnalytics);
+		ladbd = dm.saveNewDashboard(ladbd, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+		//un-oob dashboard contains la tile
+		Dashboard unOOBladbd = new Dashboard();
+		unOOBladbd.setName("un-oob dbd" + System.currentTimeMillis());
+		unOOBladbd.setIsSystem(false);
+		UserContext.setCurrentUser("SYSMAN");
+		Tile tile1 = createTileForDashboardWithWidgetGroupName(unOOBladbd,"LogAnalytics");
+		tile1.setRow(0);
+		tile1.setColumn(0);
+		tile1.setWidth(4);
+		tile1.setHeight(12);
+		tile1.setIsMaximized(true);
+		TileParam t1p3 = createParameterForTile(tile1);
+		t1p3.setStringValue("tile 3 param 3");
+		unOOBladbd = dm.saveNewDashboard(unOOBladbd, tenant1);
+
+		//this set contains oob dashboard;
+		Dashboard set1=new Dashboard();
+		set1.setIsSystem(false);
+		set1.setName("set1"+System.currentTimeMillis());
+		List<Dashboard> list1=new ArrayList<Dashboard>();
+		list1.add(ladbd);
+		set1.setSubDashboards(list1);
+		set1 = dm.saveNewDashboard(set1, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		//this set contains un oob dashboard
+		Dashboard set2=new Dashboard();
+		set2.setIsSystem(false);
+		set2.setName("set2"+System.currentTimeMillis());
+		List<Dashboard> list2=new ArrayList<Dashboard>();
+		list2.add(unOOBladbd);
+		set2.setSubDashboards(list2);
+		set2 = dm.saveNewDashboard(set2, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		//this set contains both oob/un-oob dashboards
+		Dashboard set3=new Dashboard();
+		set3.setIsSystem(false);
+		set3.setName("set3"+System.currentTimeMillis());
+		List<Dashboard> list3=new ArrayList<Dashboard>();
+		list3.add(unOOBladbd);
+		list3.add(ladbd);
+		set3.setSubDashboards(list3);
+		set3 = dm.saveNewDashboard(set3, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		try{
+			DashboardsFilter filter1 = new DashboardsFilter();
+			filter1.setIncludedAppsFromString("LogAnalytics");
+			pd = dm.listDashboards(null, null, null, tenant1, true,null,filter1);
+			long result1 = pd.getTotalResults();
+			Assert.assertEquals(result1, 5);//all dashboard/dashboard set will be listed
+		}finally{
+			dm.deleteDashboard(ladbd.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(unOOBladbd.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(set1.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(set2.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(set3.getDashboardId(), true, tenant1);
+		}
+	}
+
 	@Test
 	public void testSetDashboardIncludeTimeControl() throws DashboardException
 	{
