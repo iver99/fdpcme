@@ -35,11 +35,9 @@ public class TestWelcomePage extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitAPM(webd);
 
+		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "apmUi/index.html");
-		//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		//		webd.getLogger().info("Open APM by url: " + tmpUrl);
-		//		String noParamUrl = trimUrlParameters(tmpUrl);
-		//		urlVerification(noParamUrl, "apmUi/index.html");
+
 		webd.getLogger().info("Test open APM in welcome page finished!!!");
 	}
 
@@ -52,11 +50,9 @@ public class TestWelcomePage extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitDashboards(webd);
 
+		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "emcpdfui/home.html");
 
-		//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		//		webd.getLogger().info("Open Dashboards by url: " + tmpUrl);
-		//		urlVerification(tmpUrl, "emcpdfui/home.html");
 		webd.getLogger().info("Test open dashboards in welcome page finished!!!");
 	}
 
@@ -69,11 +65,9 @@ public class TestWelcomePage extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.dataExplorers(webd, "log");
 
+		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "emlacore/html/log-analytics-search.html");
 
-		//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		//		webd.getLogger().info("Open Data Explorers-Log by url: " + tmpUrl);
-		//		urlVerification(tmpUrl, "emlacore/html/log-analytics-search.html");
 		webd.getLogger().info("Test opening Data Explorers-Log in welcome page finished!!!");
 	}
 
@@ -86,12 +80,9 @@ public class TestWelcomePage extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.dataExplorers(webd, "search");
 
+		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "emcta/ta/analytics.html");
 
-		//		String url = "emcta/ta/analytics.html";
-		//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		//		webd.getLogger().info("Open Data Explorers-Search by url: " + tmpUrl);
-		//		Assert.assertTrue(tmpUrl.contains(url));
 		webd.getLogger().info("Test opening Data Explorers-Search in welcome page finished!!!");
 	}
 
@@ -133,12 +124,9 @@ public class TestWelcomePage extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "dataExplorer");
 
+		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "emcta/ta/analytics.html");
 
-		//		String url = "emcta/ta/analytics.html";
-		//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		//		webd.getLogger().info("Open ITA: Data Explorer by url: " + tmpUrl);
-		//		Assert.assertTrue(tmpUrl.contains(url));
 		webd.getLogger().info("Test opening ITA: Data Explorer in welcome page finished!!!");
 	}
 
@@ -151,11 +139,9 @@ public class TestWelcomePage extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "performanceAnalyticsDatabase");
 
+		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "emcitas/db-analytics-war/html/db-performance-analytics.html");
 
-		//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		//		webd.getLogger().info("Open ITA: Performance Analytics-Database by url: " + tmpUrl);
-		//		urlVerification(tmpUrl, "emcitas/db-analytics-war/html/db-performance-analytics.html");
 		webd.getLogger().info("Test opening ITA: Performance Analytics-Database in welcome page finished!!!");
 	}
 
@@ -168,11 +154,9 @@ public class TestWelcomePage extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "performanceAnalyticsMiddleware");
 
+		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "emcitas/mw-analytics-war/html/mw-perf-analytics.html");
 
-		//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		//		webd.getLogger().info("Open ITA: Performance Analytics-Middleware by url: " + tmpUrl);
-		//		urlVerification(tmpUrl, "emcitas/mw-analytics-war/html/mw-perf-analytics.html");
 		webd.getLogger().info("Test opening ITA: Performance Analytics-Middleware in welcome page finished!!!");
 	}
 
@@ -185,11 +169,9 @@ public class TestWelcomePage extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "resourceAnalyticsDatabase");
 
+		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "emcitas/db-analytics-war/html/db-analytics-resource-planner.html");
 
-		//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		//		webd.getLogger().info("Open ITA: Resource Analytics-Database by url: " + tmpUrl);
-		//		urlVerification(tmpUrl, "emcitas/db-analytics-war/html/db-analytics-resource-planner.html");
 		webd.getLogger().info("Test opening ITA: Resource Analytics-Database in welcome page finished!!!");
 	}
 
@@ -202,12 +184,9 @@ public class TestWelcomePage extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "resourceAnalyticsHost");
 
+		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "emcitas/resource-analytics/html/server-resource-analytics.html");
 
-		//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		//		webd.getLogger().info("Open ITA: Resource Analytics-Host by url: " + tmpUrl);
-		//		String noParamUrl = trimUrlParameters(tmpUrl);
-		//		urlVerification(noParamUrl, "emcitas/resource-analytics/html/server-resource-analytics.html");
 		webd.getLogger().info("Test opening ITA: Resource Analytics-Host in welcome page finished!!!");
 	}
 
@@ -220,11 +199,9 @@ public class TestWelcomePage extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "resourceAnalyticsMiddleware");
 
+		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "emcitas/mw-analytics-war/html/mw-analytics-resource-planner.html");
 
-		//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		//		webd.getLogger().info("Open ITA: Resource Analytics-Middleware by url: " + tmpUrl);
-		//		urlVerification(tmpUrl, "emcitas/mw-analytics-war/html/mw-analytics-resource-planner.html");
 		webd.getLogger().info("Test opening ITA: Resource Analytics-Middleware in welcome page finished!!!");
 	}
 
@@ -237,6 +214,7 @@ public class TestWelcomePage extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "default");
 
+		//verify the url of opened page
 		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ita");
 
 		WebElement el = webd.getWebDriver().findElement(By.id(PageId.ITA_BOXID));
@@ -257,11 +235,9 @@ public class TestWelcomePage extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitLA(webd);
 
+		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "emlacore/html/log-analytics-search.html");
 
-		//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		//		webd.getLogger().info("Open LA by url: " + tmpUrl);
-		//		urlVerification(tmpUrl, "emlacore/html/log-analytics-search.html");
 		webd.getLogger().info("Test open LA in welcome page finished!!!");
 	}
 
@@ -313,10 +289,4 @@ public class TestWelcomePage extends LoginAndLogout
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "videos"));
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "serviceOfferings"));
 	}
-
-	private void urlVerification(String pageUrl, String expectedUrl)
-	{
-		Assert.assertEquals(pageUrl.substring(pageUrl.indexOf("emsaasui") + 9), expectedUrl);
-	}
-
 }

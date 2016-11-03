@@ -11,7 +11,7 @@ define(['jquery',
     function($, oj, dfu) {
         function fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent) {
             var deferred = $.Deferred();
-            dfu.ajaxWithRetry({url: 'widgetLoading.html',
+            dfu.ajaxWithRetry({url: '@version@/html/widgetLoading.html',
                 tile: tile,
                 success: function () {
                     /**

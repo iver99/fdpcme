@@ -169,13 +169,13 @@ a:hover {
     color: white;
 }
 
-.emaas-appheader-appname-table-cell-middle{
+.emaas-appheader-appname-table-cell-baseline{
     display:table-cell;
-    vertical-align: middle;
+    vertical-align: baseline;
 }
 
 .emaas-appheader-lite .emaas-appheader-logo {
-    margin-top: 9px; 
+    margin-top: 14px; 
     margin-bottom: 5px; 
     float:left;
     outline:none;
@@ -284,15 +284,15 @@ a:hover {
     padding-top: 2px;
 }
 .emaas-appheader-toolbar{
-    height:27px; //44px;
+    height: 44px;
 }
 .emaas-appheader-toolbar-button {
-    height:27px; //44px;
-    line-height: 27px; //44px;
+    height: 44px;
+    line-height: 44px;
 }
 .emaas-appheader-toolbar-button-icon {
-    width:16px; //32px;
-    height:16px; //32px;
+    width: 32px;
+    height: 32px;
     vertical-align: middle;
 }
 .fa-notification:before {

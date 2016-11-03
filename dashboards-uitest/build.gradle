@@ -31,16 +31,15 @@ publishing.publications {
 }
 
 dependencies {
-    testConfig project(':dashboards-ui-test-common-api') { transitive = false }
-    testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
-    
+    testConfig project(':dashboards-ui-test-common-api')  
+    testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19')  
+    testConfig getProjectArtifact('jmockit')   	
     testCompile configurations.testConfig
     testCompile configurations.webdriver
     testCompile configurations.testNG
-
-     compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1')  { transitive = false }
-        compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1')  { transitive = false }
-        compile(group: 'org.apache.logging.log4j', name:'log4j-slf4j-impl', version:'2.0.1')  { transitive = false }
+	testConfig getProjectArtifact('log4j-api')   	
+	testConfig getProjectArtifact('log4j-core')   	
+	testConfig getProjectArtifact('log4j-slf4j-impl')   
 }
 
 artifactoryPublish {

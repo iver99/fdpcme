@@ -113,10 +113,19 @@ define([
                     self.dashboardsetShare(result.sharePublic === true ? "on" : "off");
                     self.notifyDashboardsetToolBarChange("dashboardsetName",result.name);
                     self.notifyDashboardsetToolBarChange("dashboardsetDes",result.description);
-                },
-                        function (jqXHR, textStatus, errorThrown) {
-                            dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
-                        });
+                }, 
+                function (jqXHR, textStatus, errorThrown) {
+            		if (jqXHR.errorCode() === 10001)
+            		{
+            			_m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
+            			_mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
+            			dfu.showMessage({type: 'error', summary: _m, detail: _mdetail, removeDelayTime: 5000});
+            		} else {
+            			 dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', 
+removeDelayTime: 5000});                             
+            		}
+                         }
+                );
             });
         }
 

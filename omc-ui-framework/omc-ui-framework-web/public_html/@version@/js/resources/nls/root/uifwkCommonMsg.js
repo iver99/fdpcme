@@ -9,7 +9,7 @@ define({
       "BRANDING_BAR_TEXT_ORACLE": "Oracle",
       "BRANDING_BAR_TEXT_APP_NAVIGATOR": "Application navigator",
       "BRANDING_BAR_TEXT_NOTIFICATIONS": "Notifications",
-      "BRANDING_BAR_MANAGEMENT_CLOUD": "Management Cloud",
+      "BRANDING_BAR_MANAGEMENT_CLOUD": "MANAGEMENT CLOUD",
       "BRANDING_BAR_MENU_PREFERENCES": "Preferences",
       "BRANDING_BAR_MENU_HELP": "Help",
       "BRANDING_BAR_MENU_ABOUT": "About",

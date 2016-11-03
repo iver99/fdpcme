@@ -101,6 +101,7 @@ require(['ojs/ojcore',
         {
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             var cxtUtil = new cxtModel();
+            dfu_model.setHtmlLang();
             var logger = new _emJETCustomLogger();
             var logReceiver = dfu.getLogUrl();
 
@@ -212,19 +213,7 @@ require(['ojs/ojcore',
                 self.showOrchestration = ko.observable(false);
 
                 self.getServiceUrls = function() {
-                    var serviceUrl = dfu.getRegistrationUrl();
-                    dfu.ajaxWithRetry({
-                        url: serviceUrl,
-                        headers: dfu_model.getDefaultHeader(),
-                        contentType:'application/json',
-                        success: function(data, textStatus) {
-                            fetchServiceLinks(data);
-                        },
-                        error: function(xhr, textStatus, errorThrown){
-                            oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
-                        },
-                        async: true
-                    });
+                    dfu.getRegistrations(fetchServiceLinks);
                 };
 
                 //get urls of databases and middleware

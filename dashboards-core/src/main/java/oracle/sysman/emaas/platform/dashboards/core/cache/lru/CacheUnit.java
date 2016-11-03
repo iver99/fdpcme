@@ -1,8 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.core.cache.lru;
 
 
-import java.util.ResourceBundle;
 
+import oracle.sysman.emaas.platform.dashboards.core.cache.CacheConfig;
 import oracle.sysman.emaas.platform.dashboards.core.cache.lru.inter.ICacheUnit;
 
 import org.apache.logging.log4j.LogManager;
@@ -18,9 +18,9 @@ public class CacheUnit implements ICacheUnit{
 	private String name;
 	
 	//constant
-	private final static int DEFAULT_TIME_TO_LIVE=0;// means live forever
+	private final static int DEFAULT_TIME_TO_LIVE= CacheConfig.DEFAULT_EXPIRE_TIME;// means live forever
 	private final static String DEFAULT_CACHE_UNIT_NAME="default_cache_unit";
-	public static final int DEFAULT_CACHE_CAPACITY=Integer.valueOf(ResourceBundle.getBundle("cache_config").getString("DEFAULT_CACHE_UNIT_CAPACITY"));//default capacity is 500
+	public static final int DEFAULT_CACHE_CAPACITY= CacheConfig.DEFAULT_CAPACITY;
 	//constructor
 	public CacheUnit(){
 		this(DEFAULT_CACHE_UNIT_NAME,DEFAULT_CACHE_CAPACITY,DEFAULT_TIME_TO_LIVE);
@@ -53,14 +53,13 @@ public class CacheUnit implements ICacheUnit{
 	@Override
 	public boolean put(String key,Element value){
 		if (key == null) {
-			LOGGER.debug("CacheUnit:Cannot put into CacheUnit:key cannot be null!");
+			LOGGER.error("CacheUnit:Cannot put into CacheUnit:key cannot be null!");
 			throw new IllegalArgumentException("Cannot put into CacheUnit:key cannot be null!");
 		}
 		if (value == null) {
-			LOGGER.debug("CacheUnit:Cannot put into CacheUnit:value cannot be null!");
+			LOGGER.error("CacheUnit:Cannot put into CacheUnit:value cannot be null!");
 			throw new IllegalArgumentException("Cannot put into CacheUnit:value cannot be null!");
 		}
-		value.setLastAccessTime(getCurrentTime());
 		cacheLinkedHashMap.put(key, value);
 		return true;
 		
@@ -98,8 +97,7 @@ public class CacheUnit implements ICacheUnit{
 			LOGGER.debug("CacheUnit:Element is expired,returning null...");
 			return null;
 		}
-		e.setLastAccessTime(getCurrentTime());
-		cacheLinkedHashMap.putWithoutLock(key, e);//update cache 
+		cacheLinkedHashMap.putWithoutLock(key, e);
 		LOGGER.debug("CacheUnit:Get element from cache successful,and element has been updated!");
 		return e.getValue();
 	}

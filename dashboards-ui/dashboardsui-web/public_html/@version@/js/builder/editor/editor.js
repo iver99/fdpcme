@@ -294,6 +294,7 @@ define(['knockout',
                             self.narrowTile(tile, Math.abs(offsetXValue));
                             return true;
                         }
+                        self.updateTilePosition(tile, tile.row(), self.mode.getModeColumn(tile));
                         break;
                     case self.RESIZE_OPTIONS.SOUTH:
                         var topOfContainer = widgetArea.offset().top;

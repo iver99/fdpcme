@@ -118,7 +118,9 @@ define([
                 //update current URL
                 var url = window.location.href.split('/').pop();
                 url = self.appendOMCContext(url);
-                window.history.replaceState(window.history.state, document.title, url);
+                var newurl=window.location.pathname.substring(0,window.location.pathname.lastIndexOf('/'));
+                newurl=newurl+'/'+url;
+                window.history.replaceState(window.history.state, document.title, newurl);
             }
 
             function storeContext(context) {
@@ -508,9 +510,9 @@ define([
                 if (paramValue === null) {
                     paramValue = '';
                 }
-                var pattern = new RegExp('\\b('+paramName+'=).*?(&|$)');
-                if (url.search(pattern)>=0) {
-                    return url.replace(pattern, '$1' + paramValue + '$2');
+                var pattern = new RegExp('([?&])' + paramName + '=.*?(&|$)', 'i');
+                if (url.match(pattern)) {
+                  return url.replace(pattern, '$1' + paramName + "=" + paramValue + '$2');
                 }
                 return url + (url.indexOf('?') > 0 ? 
                     //Handle case that an URL ending with a question mark only
