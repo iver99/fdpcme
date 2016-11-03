@@ -763,7 +763,7 @@ define([
                     async: false,
                     data: JSON.stringify(jsonOdsQuery),
                     contentType: 'application/json',
-                    headers: dfu.getDefaultHeader(),
+                    headers: dfu.getHeadersForService(),
                     success:function(data, textStatus,jqXHR) {
                         callback(data);
                     },
@@ -777,7 +777,8 @@ define([
             function getODSEntityQueryUrl() {
                 var odsUrl = '/sso.static/datamodel-query';
                 if (dfu.isDevMode()){
-                    odsUrl = dfu.buildFullUrl(dfu.getDevData().odsRestApiEndPoint,"query");
+                    odsUrl = dfu.getTargetModelServiceInDEVMode();
+                    odsUrl = dfu.buildFullUrl(odsUrl, "query");
                 }
                 return odsUrl;
             }
