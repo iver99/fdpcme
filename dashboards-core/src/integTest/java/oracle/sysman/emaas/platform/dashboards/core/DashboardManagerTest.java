@@ -1,14 +1,20 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.TenantWithoutSubscriptionException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
@@ -16,11 +22,16 @@ import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationTy
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.model.TileParam;
+import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
+import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
@@ -1000,7 +1011,7 @@ public class DashboardManagerTest
 		ladbd.setName("la" + System.currentTimeMillis());
 		ladbd.setAppicationType(DashboardApplicationType.LogAnalytics);
 		UserContext.setCurrentUser("SYSMAN");
-		Tile tile1 = createTileForDashboardWithWidgetGroupName(ladbd,"LogAnalytics");
+		Tile tile1 = createTileForDashboardWithWidgetGroupName(ladbd,DashboardsFilter.LA_WIGDETGROUP);
 		tile1.setRow(0);
 		tile1.setColumn(0);
 		tile1.setWidth(4);
@@ -1015,7 +1026,7 @@ public class DashboardManagerTest
 		itadbd.setName("ita" + System.currentTimeMillis());
 		itadbd.setAppicationType(DashboardApplicationType.ITAnalytics);
 		UserContext.setCurrentUser("SYSMAN");
-		Tile tile2 = createTileForDashboardWithWidgetGroupName(itadbd,"ITAnalytics");
+		Tile tile2 = createTileForDashboardWithWidgetGroupName(itadbd,DashboardsFilter.ITA_WIGDETGROUP);
 		tile2.setRow(0);
 		tile2.setColumn(0);
 		tile2.setWidth(4);
@@ -1029,7 +1040,7 @@ public class DashboardManagerTest
 		apmdbd.setName("apm" + System.currentTimeMillis());
 		apmdbd.setAppicationType(DashboardApplicationType.APM);
 		UserContext.setCurrentUser("SYSMAN");
-		Tile tile3 = createTileForDashboardWithWidgetGroupName(apmdbd,"APM");
+		Tile tile3 = createTileForDashboardWithWidgetGroupName(apmdbd,DashboardsFilter.APM_WIGDETGROUP);
 		tile3.setRow(0);
 		tile3.setColumn(0);
 		tile3.setWidth(4);
@@ -1043,7 +1054,7 @@ public class DashboardManagerTest
 		orchestrationdbd.setName("orchestration" + System.currentTimeMillis());
 		orchestrationdbd.setAppicationType(DashboardApplicationType.Orchestration);
 		UserContext.setCurrentUser("SYSMAN");
-		Tile tile4 = createTileForDashboardWithWidgetGroupName(orchestrationdbd,"Orchestration");
+		Tile tile4 = createTileForDashboardWithWidgetGroupName(orchestrationdbd,DashboardsFilter.OCS_WIGDETGROUP);
 		tile4.setRow(0);
 		tile4.setColumn(0);
 		tile4.setWidth(4);
@@ -1060,7 +1071,7 @@ public class DashboardManagerTest
 			Assert.assertEquals(result1, 1);//LogAnalytics,Orchestration will be listed
 			for (Dashboard dbd : pd.getDashboards()) {
 				if (dbd.getName().equals(ladbd.getName())) {
-					AssertJUnit.fail("Failed: unexpected LA dashboard get filtered");//TODO
+					AssertJUnit.fail("Failed: unexpected LA dashboard get filtered");
 				}
 				if (dbd.getName().equals(apmdbd.getName())) {
 					AssertJUnit.fail("Failed: unexpected APM dashboard get filtered");
