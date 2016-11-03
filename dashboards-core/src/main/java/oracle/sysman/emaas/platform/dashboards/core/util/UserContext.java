@@ -28,8 +28,12 @@ public class UserContext
 	public static String getCurrentUser()
 	{
 		String tenantAndUser = userThreadLocal.get();
-		String currentUser = tenantAndUser.substring(tenantAndUser.indexOf(".")+1);
-		return currentUser;
+		if(tenantAndUser != null){
+			String currentUser = tenantAndUser.substring(tenantAndUser.indexOf(".")+1);
+			return currentUser;
+		}else{
+			return tenantAndUser;
+		}
 	}
 
 	public static String getUserTenant()
