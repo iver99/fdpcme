@@ -963,6 +963,10 @@ define(['knockout',
                             var selectionContext = {criteria: inputCriteria};
                             self.targets(selectionContext);
                         }
+                        for(var i=0; i<self.dashboard.tiles().length; i++) {
+                            var tile = self.dashboard.tiles()[i]; 
+                            tile.dashboardItemChangeEvent.targets = self.targets();
+                        }
                         TargetSelectorUtils.setTargetSelectionContext("tsel_" + self.dashboard.id(), self.targets());
                     }));
                 });
