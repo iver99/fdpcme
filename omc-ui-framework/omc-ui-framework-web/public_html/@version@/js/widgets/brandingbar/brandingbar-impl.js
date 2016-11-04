@@ -10,7 +10,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojs/ojtoolbar',
     'ojs/ojmenu',
     'ojs/ojbutton',
-    'ojs/ojdialog'
+    'ojs/ojdialog',
+    'ojs/ojdiagram'
 ],
     function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls) {
         function BrandingBarViewModel(params) {
@@ -26,12 +27,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.isTopologyDisplayed = ko.observable(false);
             self.topologyDisabled = ko.observable(false);
             self.showGlobalContextBanner = ko.unwrap(params.showGlobalContextBanner);
+            self.showGlobalContextBanner = ko.unwrap(params.showGlobalContextBanner) === false ? false : true;
             self.showTimeSelector = ko.unwrap(params.showTimeSelector);
+            self.entities = ko.observable([]);
+            self.queryVars = ko.observable();
+            
             var dfu = new dfumodel(self.userName, self.tenantName);
             //Append uifwk css file into document head
             dfu.loadUifwkCss();
             //Load OMC context
-            refreshOMCContext();
+            
             if (!ko.components.isRegistered('emctas-topology'))
             {
                 ko.components.register('emctas-topology', {
@@ -46,49 +51,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     template: {require: 'text!/emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html'}
                 });
             }
+            
+            refreshOMCContext();
             //
             // topology params
             //
-            self.entities = ko.observable([]);
-            self.queryVars = {};
-            if (cxtUtil.getCompositeMeId()) {
-                var compositeId = [];
-                compositeId.push(cxtUtil.getCompositeMeId());
-                self.entities = ko.observable(compositeId);
-                self.topologyDisabled(false);
-            } else {
-                self.topologyDisabled(true);
-                if (cxtUtil.getCompositeName() && cxtUtil.getCompositeType()) {
-                    self.queryVars.entityName = cxtUtil.getCompositeName();
-                    self.queryVars.entityType = cxtUtil.getCompositeType();
-                }
-                else {
-                    var entityMeIds = cxtUtil.getEntityMeIds();
-                    if (entityMeIds) {
-                        var entityId = [];
-                        var entityArray = entityMeIds.split(',');
-                        for (var i = 0; i < entityArray.length; i++) {
-                            entityId.push($.trim(entityArray[i]));
-                        }
-                        self.entities = ko.observable(entityId);
-                    } else {
-                        if (cxtUtil.getEntityName() && cxtUtil.getEntityType()) {
-                            self.queryVars.entityName = cxtUtil.getEntityName();
-                            self.queryVars.entityType = cxtUtil.getEntityType();
-                        } 
-                        else {
-                            self.entities = ko.observable(["B1EB94DD59ED96D4DD57C7F25A64F5B1"]);
-                        }
-                    } 
-                }
-            }
-
-            //self.entities = ko.observable(["B1EB94DD59ED96D4DD57C7F25A64F5B1"]);  //params.entities || ko.observable([]);
-            self.associations = params.associations;
-            self.layout = params.layout;
-            self.customNodeDataLoader = params.customNodeDataLoader;
-            self.customEventHandler = params.customEventHandler;
-            self.miniEntityCardActions = params.miniEntityCardActions;
+            
+            
 
             self.showTopology = function () { // listener to the button
                 $("ude-topology-div").slideToggle("fast");
@@ -784,7 +753,36 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
                 self.appName(subscribedServices);
             }
+            function refreshTopologyParams() {
+                if (cxtUtil.getCompositeMeId()) {
+                    var compositeId = [];
+                    compositeId.push(cxtUtil.getCompositeMeId());
+                    self.entities(compositeId);
+                    self.topologyDisabled(false);
+                } else {
+                    self.topologyDisabled(true);
+                    if (cxtUtil.getCompositeName() && cxtUtil.getCompositeType()) {
+                        self.queryVars({entityName : cxtUtil.getCompositeName(), entityType : cxtUtil.getCompositeType()});
+                    }
+                    else {
+                        var entityMeIds = cxtUtil.getEntityMeIds();
+                        if (entityMeIds) {
+                            //cxtUtil.getEntityMeIds() will return a list of meIds
+                            self.entities(entityMeIds);
+                        } else {
+                            self.entities([]);
+                        } 
+                    }
+                }
 
+                /*self.associations = params.associations;
+                self.layout = params.layout;
+                self.customNodeDataLoader = params.customNodeDataLoader;
+                self.customEventHandler = params.customEventHandler;
+                self.miniEntityCardActions = params.miniEntityCardActions;*/
+                
+                $(".oj-diagram").ojDiagram("refresh");
+            }
             function refreshOMCContext() {
                 self.cxtCompositeMeId = cxtUtil.getCompositeMeId();
                 self.cxtCompositeType = cxtUtil.getCompositeType();
@@ -792,8 +790,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.cxtStartTime = cxtUtil.getStartTime();
                 self.cxtEndTime = cxtUtil.getEndTime();
                 //self.cxtEntityMeId = cxtUtil.getEntityMeId();
-                self.cxtEntityType = cxtUtil.getEntityType();
-                self.cxtEntityName = cxtUtil.getEntityName();
+//                self.cxtEntityType = cxtUtil.getEntityType();
+//                self.cxtEntityName = cxtUtil.getEntityName();
                 self.cxtTimePeriod = cxtUtil.getTimePeriod();
                 self.cxtEntityMeIds = cxtUtil.getEntityMeIds();
                 self.cxtEntityTypeDisplayName = self.cxtEntityType;
@@ -810,13 +808,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     self.topologyDisabled(true);
                 };
                 
-                if (!self.cxtCompositeName && self.cxtCompositeMeId) {
-                    //fetch composite name from WS API by compositeMeId
-                    queryODSEntityByMeId(self.cxtCompositeMeId, 'composite', queryOdsEntityCallback);
-                }
-                else {
-                    refreshCompositeEntityCtxText();
-                }
+//                if (!self.cxtCompositeName && self.cxtCompositeMeId) {
+//                    //fetch composite name from WS API by compositeMeId
+//                    queryODSEntityByMeId(self.cxtCompositeMeId, 'composite', queryOdsEntityCallback);
+//                }
+//                else {
+//                    refreshCompositeEntityCtxText();
+//                }
 //                if (!self.cxtEntityName && self.cxtEntityMeId) {
 //                    //fetch entity name from WS API by entityMeId
 //                    queryODSEntityByMeId(self.cxtEntityMeId, 'entity', queryOdsEntityCallback);
@@ -826,8 +824,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                    queryTargetModelMetaType(self.cxtEntityType, queryTmMetypeCallback);
 //                }
 
-//                refreshCompositeEntityCtxText();
+                refreshCompositeEntityCtxText();
                 refreshTimeCtxText();
+                
+                // update parameters for topology 
+                refreshTopologyParams();
             }
 
             function refreshCompositeEntityCtxText() {
@@ -900,89 +901,89 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 return null;
             }
 
-            function queryOdsEntityCallback(data, ctxType) {
-                if (data && data['rows']) {
-                    var dataRows = data['rows'];
-                    if (dataRows.length > 0) {
-                        var entity = dataRows[0];
-                        if (entity.length === 4) {
-                            if (ctxType === 'composite') {
-                                self.cxtCompositeName = entity[2];
-                                self.cxtCompositeType = entity[3];
-                            }
-                            else if (ctxType === 'entity') {
-                                self.cxtEntityName = entity[2];
-                                self.cxtEntityType = entity[3];
-                            }
-                        }
-                    }
-                }
-                refreshCompositeEntityCtxText();
-            }
+//            function queryOdsEntityCallback(data, ctxType) {
+//                if (data && data['rows']) {
+//                    var dataRows = data['rows'];
+//                    if (dataRows.length > 0) {
+//                        var entity = dataRows[0];
+//                        if (entity.length === 4) {
+//                            if (ctxType === 'composite') {
+//                                self.cxtCompositeName = entity[2];
+//                                self.cxtCompositeType = entity[3];
+//                            }
+//                            else if (ctxType === 'entity') {
+//                                self.cxtEntityName = entity[2];
+//                                self.cxtEntityType = entity[3];
+//                            }
+//                        }
+//                    }
+//                }
+//                refreshCompositeEntityCtxText();
+//            }
+//
+//            function queryTmMetypeCallback(data) {
+//                if (data && data['typeDisplayName']) {
+//                    self.cxtEntityTypeDisplayName = data['typeDisplayName'];
+//                }
+//                refreshCompositeEntityCtxText();
+//            }
+//
+//            function queryODSEntityByMeId(meId, ctxType, callback) {
+//                var jsonOdsQuery = {"ast":{"query":"simple","distinct":false,"select":[{"item":{"expr":"column","table":"me","column":"meId"}},
+//                        {"item":{"expr":"column","table":"me","column":"entityName"}},
+//                        {"item":{"expr":"column","table":"me","column":"displayName"}},
+//                        {"item":{"expr":"column","table":"me","column":"entityType"}}],
+//                    "from":[{"table":"virtual","name":"ManageableEntity","alias":"me"}],
+//                    "where":{"cond":"inExpr","lhs":{"expr":"column","table":"me","column":"meId"},
+//                    "rhs":[{"expr":"str","val":""}]}}};
+//                var odsQueryUrl = getODSEntityQueryUrl();
+//                jsonOdsQuery['ast']['where']['rhs'][0]['val'] = meId; 
+//                oj.Logger.info("Start to get ODS entity by entity ID by URL:" + odsQueryUrl, false);
+//                dfu.ajaxWithRetry(odsQueryUrl,{
+//                    type: 'POST',
+//                    data: JSON.stringify(jsonOdsQuery),
+//                    contentType: 'application/json',
+//                    headers: dfu.getDefaultHeader(),
+//                    success:function(data, textStatus,jqXHR) {
+//                        callback(data, ctxType);
+//                    },
+//                    error:function(xhr, textStatus, errorThrown){
+//                        oj.Logger.error("Error: Failed to fetch ODS entity by ID due to error: " + textStatus);
+//                    }
+//                });
+//            }
+//
+//            function queryTargetModelMetaType(metype, callback) {
+//                var tmQueryUrl = dfu.buildFullUrl(getTargetModelMetypeUrl(), metype);
+//                oj.Logger.info("Start to get ODS entity by entity ID by URL:" + tmQueryUrl, false);
+//                dfu.ajaxWithRetry(tmQueryUrl,{
+//                    type: 'GET',
+//                    contentType: 'application/json',
+//                    headers: dfu.getDefaultHeader(),
+//                    success:function(data, textStatus,jqXHR) {
+//                        callback(data);
+//                    },
+//                    error:function(xhr, textStatus, errorThrown){
+//                        oj.Logger.error("Error: Failed to fetch Target Model meta type by ID due to error: " + textStatus);
+//                    }
+//                });
+//            }
 
-            function queryTmMetypeCallback(data) {
-                if (data && data['typeDisplayName']) {
-                    self.cxtEntityTypeDisplayName = data['typeDisplayName'];
-                }
-                refreshCompositeEntityCtxText();
-            }
-
-            function queryODSEntityByMeId(meId, ctxType, callback) {
-                var jsonOdsQuery = {"ast":{"query":"simple","distinct":false,"select":[{"item":{"expr":"column","table":"me","column":"meId"}},
-                        {"item":{"expr":"column","table":"me","column":"entityName"}},
-                        {"item":{"expr":"column","table":"me","column":"displayName"}},
-                        {"item":{"expr":"column","table":"me","column":"entityType"}}],
-                    "from":[{"table":"virtual","name":"ManageableEntity","alias":"me"}],
-                    "where":{"cond":"inExpr","lhs":{"expr":"column","table":"me","column":"meId"},
-                    "rhs":[{"expr":"str","val":""}]}}};
-                var odsQueryUrl = getODSEntityQueryUrl();
-                jsonOdsQuery['ast']['where']['rhs'][0]['val'] = meId; 
-                oj.Logger.info("Start to get ODS entity by entity ID by URL:" + odsQueryUrl, false);
-                dfu.ajaxWithRetry(odsQueryUrl,{
-                    type: 'POST',
-                    data: JSON.stringify(jsonOdsQuery),
-                    contentType: 'application/json',
-                    headers: dfu.getDefaultHeader(),
-                    success:function(data, textStatus,jqXHR) {
-                        callback(data, ctxType);
-                    },
-                    error:function(xhr, textStatus, errorThrown){
-                        oj.Logger.error("Error: Failed to fetch ODS entity by ID due to error: " + textStatus);
-                    }
-                });
-            }
-
-            function queryTargetModelMetaType(metype, callback) {
-                var tmQueryUrl = dfu.buildFullUrl(getTargetModelMetypeUrl(), metype);
-                oj.Logger.info("Start to get ODS entity by entity ID by URL:" + tmQueryUrl, false);
-                dfu.ajaxWithRetry(tmQueryUrl,{
-                    type: 'GET',
-                    contentType: 'application/json',
-                    headers: dfu.getDefaultHeader(),
-                    success:function(data, textStatus,jqXHR) {
-                        callback(data);
-                    },
-                    error:function(xhr, textStatus, errorThrown){
-                        oj.Logger.error("Error: Failed to fetch Target Model meta type by ID due to error: " + textStatus);
-                    }
-                });
-            }
-
-            function getODSEntityQueryUrl() {
-                var odsUrl = '/sso.static/datamodel-query';
-                if (dfu.isDevMode()){
-                    odsUrl = dfu.buildFullUrl(dfu.getDevData().odsRestApiEndPoint,"query");
-                }
-                return odsUrl;
-            }
-
-            function getTargetModelMetypeUrl() {
-                var tmUrl = '/sso.static/datamodel-metadata/metypes';
-                if (dfu.isDevMode()){
-                    tmUrl = dfu.buildFullUrl(dfu.getDevData().tmRestApiEndPoint,"metadata/metypes");
-                }
-                return tmUrl;
-            }
+//            function getODSEntityQueryUrl() {
+//                var odsUrl = '/sso.static/datamodel-query';
+//                if (dfu.isDevMode()){
+//                    odsUrl = dfu.buildFullUrl(dfu.getDevData().odsRestApiEndPoint,"query");
+//                }
+//                return odsUrl;
+//            }
+//
+//            function getTargetModelMetypeUrl() {
+//                var tmUrl = '/sso.static/datamodel-metadata/metypes';
+//                if (dfu.isDevMode()){
+//                    tmUrl = dfu.buildFullUrl(dfu.getDevData().tmRestApiEndPoint,"metadata/metypes");
+//                }
+//                return tmUrl;
+//            }
         }
 
         return BrandingBarViewModel;

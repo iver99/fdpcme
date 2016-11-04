@@ -185,7 +185,7 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("SAAS_AUTH_TOKEN");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-							.commonUITestLog("The DASHBOARD_API_ENDPOINT property value is null ... set it to a different value -- 'welcome1'.");
+					.commonUITestLog("The DASHBOARD_API_ENDPOINT property value is null ... set it to a different value -- 'welcome1'.");
 					sPropertyValue = "Basic d2VibG9naWM6d2VsY29tZTE=";
 
 				}
@@ -193,7 +193,7 @@ public class CommonUIUtils
 					sPropertyValue = emaasProp.getProperty("DASHBOARD_API_ENDPOINT");
 					if (sPropertyValue == null) {
 						CommonUIUtils
-								.commonUITestLog("The SAAS_AUTH_TOKEN property value is null ... set it to a different value .");
+						.commonUITestLog("The SAAS_AUTH_TOKEN property value is null ... set it to a different value .");
 						sPropertyValue = sOhsUrl + "/emcpdf/api/v1/";
 					}
 				}
@@ -469,7 +469,7 @@ public class CommonUIUtils
 		Assert.assertEquals(driver.getAttribute(UIControls.SORACLEIMAGE + "@alt"), "Oracle");
 		//Product title
 		Assert.assertTrue(driver.isElementPresent("css=" + UIControls.SPRODUCTTEXT_CSS));
-		String productTitle = "Management Cloud";
+		String productTitle = "MANAGEMENT CLOUD";
 		driver.waitForText("css=" + UIControls.SPRODUCTTEXT_CSS, productTitle);
 		driver.getLogger().info("The Product is:  " + driver.getText("css=" + UIControls.SPRODUCTTEXT_CSS));
 		Assert.assertEquals(driver.getText("css=" + UIControls.SPRODUCTTEXT_CSS), productTitle);
