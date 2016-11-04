@@ -28,7 +28,11 @@ define(['knockout',
             	// emcpdf-2527
             	self.loadDashboardData(dashboardId, function() {
             		successCallback && successCallback(self.dataSource[dashboardId].userOptions);
-            	}, errorCallback);
+            	}, 
+                function (jqXHR, textStatus, errorThrown) {
+            		self[dashboardId].hasUserOptionInDB = false;
+            		errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
+            	});
             } else {
                 successCallback && successCallback(self.dataSource[dashboardId].userOptions);
             }
@@ -63,39 +67,42 @@ define(['knockout',
             }
         };
         
-    	function initializeDashboardAfterLoad(dsb) {
+    	function initializeDashboardAfterLoad(dashboardId, kodsb, dsb) {
+    		if (!dashboardId || !dsb || !kodsb) {
+    			return;
+    		}
     		if (!self.dataSource[dashboardId]) {
                 self.dataSource[dashboardId] = {};
             }
-            self.dataSource[dsb.dashboardId].dashboard = dsb;
+            self.dataSource[dashboardId].dashboard = kodsb;
             // ensure preference&isFavorite could always be available
             if (dsb && dsb.userOptions) {
-            	self.dataSource[dsb.dashboardId].userOptions = dsb.userOptions;
-            	self.dataSource[dsb.dashboardId].hasUserOptionInDB = true;
+            	self.dataSource[dashboardId].userOptions = dsb.userOptions;
+            	self.dataSource[dashboardId].hasUserOptionInDB = true;
             } else {
-            	self.dataSource[dsb.dashboardId].userOptions = undefined;
-            	self.dataSource[dsb.dashboardId].hasUserOptionInDB = false;
+            	self.dataSource[dashboardId].userOptions = undefined;
+            	self.dataSource[dashboardId].hasUserOptionInDB = false;
             }
             
             if (dsb && dsb.isFavorite) {
-            	self.dataSource[dsb.dashboardId].isFavorite = {"isFavorite": true};
+            	self.dataSource[dashboardId].isFavorite = {"isFavorite": true};
             } else {
-            	self.dataSource[dsb.dashboardId].isFavorite = {"isFavorite": false};
+            	self.dataSource[dashboardId].isFavorite = {"isFavorite": false};
             }
             
             if (dsb && dsb.preference) {
-            	self.dataSource[dsb.dashboardId].preference = dsb.preference;
+            	self.dataSource[dashboardId].preference = dsb.preference;
             } else {
-            	self.dataSource[dsb.dashboardId].preference = undefined;
+            	self.dataSource[dashboardId].preference = undefined;
             }
             if (dsb.selected) {
-                initializeDashboardAfterLoad(dsb.selected);
+                initializeDashboardAfterLoad(dsb.selected.id, kodsb.selected, dsb.selected);
             }
             // data copied to dataSource object, so remove original data form dashboard object
-        	self.dataSource[dsb.dashboardId].dashboard.userOptions = undefined;
-        	self.dataSource[dsb.dashboardId].dashboard.isFavorite = undefined;
-        	self.dataSource[dsb.dashboardId].dashboard.preference = undefined;
-        	self.dataSource[dsb.dashboardId].dashboard.selected = undefined;
+        	self.dataSource[dashboardId].dashboard.userOptions = undefined;
+        	self.dataSource[dashboardId].dashboard.isFavorite = undefined;
+        	self.dataSource[dashboardId].dashboard.preference = undefined;
+        	self.dataSource[dashboardId].dashboard.selected = undefined;
     	}
         
         self.loadDashboardData = function (dashboardId, successCallback, errorCallback) {
@@ -104,10 +111,10 @@ define(['knockout',
             }
             if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].dashboard) {
                 Builder.loadDashboard(dashboardId,
-                        function (data) {
-                            var dsb = getKODashboardForUI(data);
-                            initializeDashboardAfterLoad(dsb);
-                            successCallback && successCallback(dsb);
+                        function (dsb) {
+                            var kodsb = getKODashboardForUI(dsb);
+                            initializeDashboardAfterLoad(dashboardId, kodsb, dsb);
+                            successCallback && successCallback(kodsb);
                         },
                         errorCallback);
             } else {
