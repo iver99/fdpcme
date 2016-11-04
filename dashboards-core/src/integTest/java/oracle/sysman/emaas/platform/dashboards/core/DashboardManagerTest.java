@@ -1,20 +1,14 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
+import groovy.lang.DelegatesTo;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.TenantWithoutSubscriptionException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
@@ -22,16 +16,11 @@ import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationTy
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.model.TileParam;
-import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
-import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
-import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
@@ -1313,12 +1302,274 @@ public class DashboardManagerTest
 			long result1 = pd.getTotalResults();
 			Assert.assertEquals(result1, 5);//all dashboard/dashboard set will be listed
 		}finally{
+			dm.deleteDashboard(ladbd.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(unOOBladbd.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(set1.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(set2.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(set3.getDashboardId(), true, tenant1);
 		}
-		dm.deleteDashboard(ladbd.getDashboardId(), true, tenant1);
-		dm.deleteDashboard(unOOBladbd.getDashboardId(), true, tenant1);
+	}
+
+	/**
+	 * this test case is for testing searching dashboard Set.
+	 * @throws DashboardException
+     */
+	@Test
+	public void testDashboardSetSearch() throws DashboardException {
+		DashboardManager dm = DashboardManager.getInstance();
+		Long tenant1 = 11L;
+		Long tenant2 = 12L;
+		PaginatedDashboards pd = dm.listDashboards(null, null, tenant1, false);
+		Assert.assertNotNull(pd);
+		Assert.assertEquals(0, pd.getOffset());
+		Assert.assertEquals(Integer.valueOf(DashboardConstants.DASHBOARD_QUERY_DEFAULT_LIMIT), pd.getLimit());
+		long originSize = pd.getTotalResults();
+		pd = dm.listDashboards("key", null, null, tenant1, false);
+		long queryOriginalSize = pd.getTotalResults();
+
+		Dashboard set1 = new Dashboard();
+		set1.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set1.setName("key1" + System.currentTimeMillis());
+		set1 = dm.saveNewDashboard(set1, tenant1);
+
+		Dashboard set2 = new Dashboard();
+		set2.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set2.setName("name" + System.currentTimeMillis());
+		set2.setDescription("key2");
+		set2 = dm.saveNewDashboard(set2, tenant1);
+
+		Dashboard set3 = new Dashboard();
+		set3.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set3.setName("name" + System.currentTimeMillis());
+		set3.setDescription("key2");
+		set3 = dm.saveNewDashboard(set3, tenant1);
+		pd = dm.listDashboards(null, null, tenant1, false);
+		long allSize = pd.getTotalResults();
+		Assert.assertEquals(allSize, originSize + 3);
+
+		// query by key word, case sensitive
+		pd = dm.listDashboards("key", null, null, tenant1, false);
+		long querySize = pd.getTotalResults();
+		Assert.assertEquals(querySize, queryOriginalSize + 3);
+
+		Dashboard set4 = new Dashboard();
+		set4.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set4.setName("KEY1" + System.currentTimeMillis());
+		set4 = dm.saveNewDashboard(set4, tenant1);
+
+		Dashboard set5 = new Dashboard();
+		set5.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set5.setName("name" + System.currentTimeMillis());
+		set5.setDescription("KEY2");
+		set5 = dm.saveNewDashboard(set5, tenant1);
+
+		// owned by others, shouldn't be queried
+		Dashboard set6 = new Dashboard();
+		set6.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set6.setName("name" + System.currentTimeMillis());
+		set6 = dm.saveNewDashboard(set6, tenant1);
+		set6.setOwner("KEY");
+		set6 = dm.updateDashboard(set6, tenant1);
+
+		// a dashboard in different tenant. shouldn't be queried
+		Dashboard set7 = new Dashboard();
+		set7.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set7.setName("key9" + System.currentTimeMillis());
+		set7 = dm.saveNewDashboard(set7, tenant2);
+
+		// test deleted dashboards shouldn't be queried
+		Dashboard set8 = new Dashboard();
+		set8.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set8.setName("name " + System.currentTimeMillis());
+		set8.setType(Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
+		set8 = dm.saveNewDashboard(set8, tenant1);
+		dm.deleteDashboard(set8.getDashboardId(), tenant1);
+
+		// owned by others, but is system dashboard. should be queried
+		UserContext.setCurrentUser("OTHER");
+		Dashboard set9 = new Dashboard();
+		set9.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set9.setName("name " + System.currentTimeMillis());
+		set9 = dm.saveNewDashboard(set9, tenant1);
+		dm.deleteDashboard(set9.getDashboardId(), tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		// owned by others, system dashboard, but from different tenant. should not be queried
+		UserContext.setCurrentUser("OTHER USER");
+		Dashboard set10 = new Dashboard();
+		set10.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set10.setName("name " + System.currentTimeMillis());
+		set10 = dm.saveNewDashboard(set10, tenant2);
+		dm.deleteDashboard(set10.getDashboardId(), tenant2);
+		UserContext.setCurrentUser("SYSMAN");
+
+		// system dashboard not owned, and from service not subscribed. should not be queried
+		UserContext.setCurrentUser("OTHER USER");
+		Dashboard set11 = new Dashboard();
+		set11.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set11.setAppicationType(DashboardApplicationType.LogAnalytics);
+		set11.setIsSystem(true);
+		set11.setName("name " + System.currentTimeMillis());
+		set11 = dm.saveNewDashboard(set11, tenant2);
+		dm.deleteDashboard(set11.getDashboardId(), tenant2);
+		UserContext.setCurrentUser("SYSMAN");
+
+		// query by key word, case in-sensitive
+		pd = dm.listDashboards("key", null, null, tenant1, true);
+		long icSize = pd.getTotalResults();
+		Assert.assertEquals(icSize, originSize + 8); //6,7,8,10,11 will not be listed
+		for (Dashboard dbd : pd.getDashboards()) {
+			if (dbd.getName().equals(set6.getName())) {
+				AssertJUnit.fail("Failed: unexpected dashboard returned: owned by others");
+			}
+			if (dbd.getName().equals(set7.getName())) {
+				AssertJUnit.fail("Failed: unexpected dashboard returned from other tenant different from current tenant");
+			}
+			if (dbd.getName().equals(set8.getName())) {
+				AssertJUnit.fail("Failed: unexpected dashboard returned: deleted");
+			}
+			if (dbd.getName().equals(set10.getName())) {
+				AssertJUnit.fail("Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
+			}
+			if (dbd.getName().equals(set11.getName())) {
+				AssertJUnit.fail("Failed: unexpected dashboard returned: system dashboard from unsubscribed service");
+			}
+		}
+
+		//post action
 		dm.deleteDashboard(set1.getDashboardId(), true, tenant1);
 		dm.deleteDashboard(set2.getDashboardId(), true, tenant1);
 		dm.deleteDashboard(set3.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(set4.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(set5.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(set6.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(set7.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(set8.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(set9.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(set10.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(set11.getDashboardId(), true, tenant1);
+
+
+
+	}
+
+	/**
+	 * this method is for testing shared dashboard or dashboard set
+	 */
+	@Test
+	public void testSharedDashboard() throws InterruptedException, DashboardException {
+		DashboardManager dm = DashboardManager.getInstance();
+		Long tenant1 = 11L;
+		Long tenant2 = 12L;
+		Long id=1L;
+
+		PaginatedDashboards pd =null;
+		//oob dashboard contains a Orchestration tile, shared
+		Dashboard dbd1 = new Dashboard();
+		dbd1.setSharePublic(true);
+		dbd1.setDashboardId(10000L+id++);
+		dbd1.setName("oob la dbd" + System.currentTimeMillis());
+		dbd1.setIsSystem(true);
+		dbd1.setAppicationType(DashboardApplicationType.Orchestration);
+		Tile tile1 = createTileForDashboardWithWidgetGroupName(dbd1,DashboardsFilter.OCS_WIGDETGROUP);
+		tile1.setRow(0);
+		tile1.setColumn(0);
+		tile1.setWidth(4);
+		tile1.setHeight(12);
+		tile1.setIsMaximized(false);
+		TileParam t1p1 = createParameterForTile(tile1);
+		t1p1.setStringValue("tile 1 param 1");
+		dbd1 = dm.saveNewDashboard(dbd1, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		//this dashboard is not shared, will not be listed
+		Dashboard dbd2 = new Dashboard();
+		dbd2.setSharePublic(false);
+		dbd2.setDashboardId(10000L+id++);
+		dbd2.setName("oob la dbd" + System.currentTimeMillis());
+		dbd2.setIsSystem(true);
+		dbd2.setAppicationType(DashboardApplicationType.Orchestration);
+		dbd2 = dm.saveNewDashboard(dbd2, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		//this is dashboard owned by others, same tenant, shared
+		UserContext.setCurrentUser("OTHERS");
+		Dashboard dbd3 = new Dashboard();
+		dbd3.setSharePublic(true);
+		dbd3.setDashboardId(10000L+id++);
+		dbd3.setName("oob la dbd" + System.currentTimeMillis());
+		dbd3.setIsSystem(true);
+		dbd3.setAppicationType(DashboardApplicationType.APM);
+		dbd3 = dm.saveNewDashboard(dbd3, tenant1);
+
+		//this is dashboard owned by others, un-shared,different tenant, should not be listed.
+		Dashboard dbd4 = new Dashboard();
+		dbd4.setSharePublic(false);
+		dbd4.setDashboardId(10000L+id++);
+		dbd4.setName("oob la dbd" + System.currentTimeMillis());
+		dbd4.setIsSystem(false);
+		dbd4.setAppicationType(DashboardApplicationType.ITAnalytics);
+		dbd4 = dm.saveNewDashboard(dbd4, tenant2);
+		UserContext.setCurrentUser("SYSMAN");
+
+		//this set is shared, differenct tenant,should not be listed
+		UserContext.setCurrentUser("DIFFER USER");
+		Dashboard set1=new Dashboard();
+		set1.setSharePublic(true);
+		set1.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set1.setDashboardId(10000L+id++);
+		set1.setIsSystem(false);
+		set1.setName("set1"+System.currentTimeMillis());
+		List<Dashboard> list1=new ArrayList<Dashboard>();
+		list1.add(dbd4);
+		set1.setSubDashboards(list1);
+		set1 = dm.saveNewDashboard(set1, tenant2);
+		UserContext.setCurrentUser("SYSMAN");
+
+		//this set is un-shared, same tenant,different user,should not be listed
+		UserContext.setCurrentUser("DIFFER USER");
+		Dashboard set2=new Dashboard();
+		set2.setSharePublic(false);
+		set2.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set2.setDashboardId(10000L+id++);
+		set2.setIsSystem(false);
+		set2.setName("set1"+System.currentTimeMillis());
+		List<Dashboard> list2=new ArrayList<Dashboard>();
+		list2.add(dbd4);
+		set2.setSubDashboards(list2);
+		set2 = dm.saveNewDashboard(set2, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		//this set is shared, same tenant
+		UserContext.setCurrentUser("DIFFER USER");
+		Dashboard set3=new Dashboard();
+		set3.setSharePublic(true);
+		set3.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set3.setDashboardId(10000L+id++);
+		set3.setIsSystem(true);
+		set3.setName("set1"+System.currentTimeMillis());
+		List<Dashboard> list3=new ArrayList<Dashboard>();
+		list3.add(dbd4);
+		set3.setSubDashboards(list3);
+		set3 = dm.saveNewDashboard(set3, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		try{
+			DashboardsFilter filter1 = new DashboardsFilter();
+			filter1.setIncludedOwnersFromString("Share");
+			pd = dm.listDashboards(null, null, null, tenant1, true,null,filter1);
+			long result1 = pd.getTotalResults();
+			Assert.assertEquals(result1,3);//dbd2,dbd4,set1,set2 will not be listed
+		}finally{
+		}
+		dm.deleteDashboard(dbd1.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(dbd2.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(dbd3.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(dbd4.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(set1.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(set2.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(set3.getDashboardId(), true, tenant1);
+
 	}
 
 	@Test
