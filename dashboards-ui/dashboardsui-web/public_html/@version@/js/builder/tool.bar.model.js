@@ -299,7 +299,7 @@ define(['knockout',
             };
 
             self.handleSaveUpdateToServer = function(succCallback, errorCallback) {
-                if(self.isUnderSet()){
+                if(self.isUnderSet){
                    console.log("This is a dashboard in set, send its parent set id...");
                    self.tilesViewModel.dashboard.dupDashboardId=selectedDashboardInst().dashboardsetToolBar.dashboardInst.id()
                 }                
