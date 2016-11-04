@@ -676,7 +676,7 @@ public class DashboardManagerTest
 		Assert.assertNull(lastAccess);
 	}
 
-	//@Test
+	@Test
 	public void testListDashboard() throws DashboardException, InterruptedException
 	{
 		DashboardManager dm = DashboardManager.getInstance();
@@ -1229,67 +1229,81 @@ public class DashboardManagerTest
 	 * this test case is for home page filter function [Cloud Services] and for un-oob  dashboard set
 	 * @throws DashboardException
 	 */
-//	@Test
+	@Test
 	public void testUnOOBDashboardSetFilter() throws DashboardException, InterruptedException {
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenant1 = 11L;
+		Long id=1L;
 
 		PaginatedDashboards pd =null;
-		//oob dashboard
+		//oob dashboard contains a la tile
 		Dashboard ladbd = new Dashboard();
+		ladbd.setDashboardId(10000L+id++);
 		ladbd.setName("oob la dbd" + System.currentTimeMillis());
 		ladbd.setIsSystem(true);
 		ladbd.setAppicationType(DashboardApplicationType.LogAnalytics);
-		ladbd = dm.saveNewDashboard(ladbd, tenant1);
-		UserContext.setCurrentUser("SYSMAN");
-		
-		//un-oob dashboard contains la tile
-		Dashboard unOOBladbd = new Dashboard();
-		unOOBladbd.setName("un-oob dbd" + System.currentTimeMillis());
-		unOOBladbd.setIsSystem(false);
-		UserContext.setCurrentUser("SYSMAN");
-		Tile tile1 = createTileForDashboardWithWidgetGroupName(unOOBladbd,DashboardsFilter.LA_WIGDETGROUP);
+		Tile tile1 = createTileForDashboardWithWidgetGroupName(ladbd,DashboardsFilter.LA_WIGDETGROUP);
 		tile1.setRow(0);
 		tile1.setColumn(0);
 		tile1.setWidth(4);
 		tile1.setHeight(12);
 		tile1.setIsMaximized(true);
-		TileParam t1p3 = createParameterForTile(tile1);
-		t1p3.setStringValue("tile 3 param 3");
+		TileParam t1p1 = createParameterForTile(tile1);
+		t1p1.setStringValue("tile 1 param 1");
+		ladbd = dm.saveNewDashboard(ladbd, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+		
+		//un-oob dashboard contains la tile
+		Dashboard unOOBladbd = new Dashboard();
+		unOOBladbd.setDashboardId(10000L+id++);
+		unOOBladbd.setName("un-oob dbd" + System.currentTimeMillis());
+		unOOBladbd.setIsSystem(false);
+		UserContext.setCurrentUser("SYSMAN");
+		Tile tile2 = createTileForDashboardWithWidgetGroupName(unOOBladbd,DashboardsFilter.LA_WIGDETGROUP);
+		tile2.setRow(0);
+		tile2.setColumn(0);
+		tile2.setWidth(4);
+		tile2.setHeight(12);
+		tile2.setIsMaximized(true);
+		TileParam t1p2 = createParameterForTile(tile2);
+		t1p2.setStringValue("tile 2 param 2");
 		unOOBladbd = dm.saveNewDashboard(unOOBladbd, tenant1);
 
 		//this set contains oob dashboard;
 		Dashboard set1=new Dashboard();
+		set1.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set1.setDashboardId(10000L+id++);
 		set1.setIsSystem(false);
 		set1.setName("set1"+System.currentTimeMillis());
-		set1 = dm.saveNewDashboard(set1, tenant1);
 		List<Dashboard> list1=new ArrayList<Dashboard>();
 		list1.add(ladbd);
 		set1.setSubDashboards(list1);
-		set1 = dm.updateDashboard(set1, tenant1);
+		set1 = dm.saveNewDashboard(set1, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
 
 		//this set contains un oob dashboard
 		Dashboard set2=new Dashboard();
+		set2.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set2.setDashboardId(10000L+id++);
 		set2.setIsSystem(false);
 		set2.setName("set2"+System.currentTimeMillis());
-		set2 = dm.saveNewDashboard(set2, tenant1);
 		List<Dashboard> list2=new ArrayList<Dashboard>();
 		list2.add(unOOBladbd);
 		set2.setSubDashboards(list2);
-		set2 = dm.updateDashboard(set2, tenant1);
+		set2 = dm.saveNewDashboard(set2, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
 
 		//this set contains both oob/un-oob dashboards
 		Dashboard set3=new Dashboard();
+		set3.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set3.setDashboardId(10000L+id++);
 		set3.setIsSystem(false);
 		set3.setName("set3"+System.currentTimeMillis());
-		set3 = dm.saveNewDashboard(set3, tenant1);
 		List<Dashboard> list3=new ArrayList<Dashboard>();
 		list3.add(unOOBladbd);
 		list3.add(ladbd);
 		set3.setSubDashboards(list3);
-		set3 = dm.updateDashboard(set3, tenant1);
+		set3 = dm.saveNewDashboard(set3, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
 
 		try{
