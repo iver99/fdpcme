@@ -3,15 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@/js/util/df-util-impl', 'uifwk/@version@/js/sdk/context-util-impl'],
-    function($, oj, ajaxUtilModel, dfumodel, cxtModel)
+define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@/js/util/df-util-impl'],
+    function ($, oj, ajaxUtilModel, dfumodel)
     {
         function DashboardFrameworkUserTenantUtility() {
             var self = this;
             var dfu = new dfumodel();
             self.devMode=dfu.isDevMode();
             var ajaxUtil = new ajaxUtilModel();
-            var cxtUtil = new cxtModel();
 
             /**
              * Get logged in user and tenant name from web service
@@ -60,7 +59,11 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                 }
 
                   if ((!tenantName || !userName) && location.href && location.href.indexOf("error.html") === -1) {
-                        location.href = cxtUtil.appendOMCContext("/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl="+ encodeURIComponent(location.href));
+                        //To avoid circular dependency use require call
+                        require(['uifwk/@version@/js/sdk/context-util-impl'], function (cxtModel) {
+                            var cxtUtil = new cxtModel();
+                            location.href = cxtUtil.appendOMCContext("/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl=" + encodeURIComponent(location.href));
+                        });
                         return null;
                   }
                   else{
