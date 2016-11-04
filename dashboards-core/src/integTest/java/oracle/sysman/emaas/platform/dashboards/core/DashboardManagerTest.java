@@ -1111,14 +1111,15 @@ public class DashboardManagerTest
 	 * this test case is for home page filter function [Cloud Services] and for oob  dashboard set
 	 * @throws DashboardException
 	 */
-//	@Test
+	@Test
 	public void testOOBDashboardSetFilter() throws DashboardException{
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenant1 = 11L;
-
+		Long id=1L;
 		PaginatedDashboards pd =null;
 		//prepare data
 		Dashboard ladbd = new Dashboard();
+		ladbd.setDashboardId(10000L+id++);
 		ladbd.setName("la" + System.currentTimeMillis());
 		ladbd.setIsSystem(true);
 		ladbd.setAppicationType(DashboardApplicationType.LogAnalytics);
@@ -1126,6 +1127,7 @@ public class DashboardManagerTest
 		UserContext.setCurrentUser("SYSMAN");
 
 		Dashboard itadbd = new Dashboard();
+		itadbd.setDashboardId(10000L+id++);
 		itadbd.setName("ita" + System.currentTimeMillis());
 		itadbd.setIsSystem(true);
 		itadbd.setAppicationType(DashboardApplicationType.ITAnalytics);
@@ -1134,39 +1136,35 @@ public class DashboardManagerTest
 		
 		//this set contains oob la dbd
 		Dashboard laset = new Dashboard();
+		laset.setDashboardId(10000L+id++);
 		laset.setName("la set"+System.currentTimeMillis());
+		laset.setAppicationType(DashboardApplicationType.LogAnalytics);
 		laset.setType(Dashboard.DASHBOARD_TYPE_SET);
-		laset.setIsSystem(true);
 		List<Dashboard> list1=new ArrayList<Dashboard>();
 		list1.add(ladbd);
 		laset.setSubDashboards(list1);
+		laset.setIsSystem(true);
 		laset = dm.saveNewDashboard(laset, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
 		//this set contains oob ita dbd
 		Dashboard itaset = new Dashboard();
+		itaset.setDashboardId(10000L+id++);
 		itaset.setName("ita set"+System.currentTimeMillis());
+		itaset.setAppicationType(DashboardApplicationType.ITAnalytics);
 		itaset.setType(Dashboard.DASHBOARD_TYPE_SET);
-		itaset.setIsSystem(true);
 		List<Dashboard> list2=new ArrayList<Dashboard>();
 		list2.add(itadbd);
 		itaset.setSubDashboards(list2);
+		itaset.setIsSystem(true);
 		itaset = dm.saveNewDashboard(itaset, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
 		
-		//this set contains orchestration dbd
-		/*Dashboard orcheset = new Dashboard();
-		orcheset.setName("orche set" + System.currentTimeMillis());
-		orcheset.setType(Dashboard.DASHBOARD_TYPE_SET);
-		List<Dashboard> list3 = new ArrayList<Dashboard>();
-		list3.add(orchestrationdbd);
-		orcheset.setSubDashboards(list3);
-		orcheset = dm.saveNewDashboard(orcheset, tenant1);
-		UserContext.setCurrentUser("SYSMAN");*/
-		
-		//this set contains oob ita and oob la
+		//this set contains oob ita and oob la,belong to LA
 		Dashboard mixedSet1 = new Dashboard();
+		mixedSet1.setDashboardId(10000L+id++);
 		mixedSet1.setName("mixed set1" + System.currentTimeMillis());
 		mixedSet1.setType(Dashboard.DASHBOARD_TYPE_SET);
+		mixedSet1.setAppicationType(DashboardApplicationType.LogAnalytics);
 		mixedSet1.setIsSystem(true);
 		List<Dashboard> list4 = new ArrayList<Dashboard>();
 		list4.add(ladbd);
@@ -1174,16 +1172,20 @@ public class DashboardManagerTest
 		mixedSet1.setSubDashboards(list4);
 		mixedSet1 = dm.saveNewDashboard(mixedSet1, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
-		/*
-		//this set contains orchestration and ita
+		
+		//this set contains oob la and oob ita, belong to ITA
 		Dashboard mixedSet2 = new Dashboard();
+		mixedSet2.setDashboardId(10000L+id++);
 		mixedSet2.setName("mixed set2" + System.currentTimeMillis());
 		mixedSet2.setType(Dashboard.DASHBOARD_TYPE_SET);
+		mixedSet2.setIsSystem(true);
+		mixedSet2.setAppicationType(DashboardApplicationType.ITAnalytics);
 		List<Dashboard> list5 = new ArrayList<Dashboard>();
-		list5.add(orchestrationdbd);
+		list5.add(ladbd);
+		list5.add(itadbd);
 		mixedSet2.setSubDashboards(list5);
 		mixedSet2 = dm.saveNewDashboard(mixedSet2, tenant1);
-		UserContext.setCurrentUser("SYSMAN");*/
+		UserContext.setCurrentUser("SYSMAN");
 		try{
 			DashboardsFilter filter1 = new DashboardsFilter();
 			filter1.setIncludedAppsFromString("LogAnalytics");
@@ -1200,11 +1202,10 @@ public class DashboardManagerTest
 			}
 			
 			DashboardsFilter filter2 = new DashboardsFilter();
-			TenantContext.setCurrentTenant("emaastesttenant1");
-			filter1.setIncludedAppsFromString("ITAnalytics");
+			filter2.setIncludedAppsFromString("ITAnalytics");
 			pd = dm.listDashboards(null, null, null, tenant1, true,null,filter2);
 			long result2 = pd.getTotalResults();
-			Assert.assertEquals(result2, 3);//itadbd,itaset,mixedset1 will be listed
+			Assert.assertEquals(result2, 3);//itadbd,itaset,mixedset2 will be listed
 			for (Dashboard dbd : pd.getDashboards()) {
 				if (dbd.getName().equals(ladbd.getName())) {
 					AssertJUnit.fail("Failed: unexpected LA dashboard get filtered");
@@ -1219,6 +1220,8 @@ public class DashboardManagerTest
 			dm.deleteDashboard(itadbd.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(laset.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(itaset.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(mixedSet1.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(mixedSet2.getDashboardId(), true, tenant1);
 		}
 		
 	}
@@ -1239,12 +1242,13 @@ public class DashboardManagerTest
 		ladbd.setAppicationType(DashboardApplicationType.LogAnalytics);
 		ladbd = dm.saveNewDashboard(ladbd, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
+		
 		//un-oob dashboard contains la tile
 		Dashboard unOOBladbd = new Dashboard();
 		unOOBladbd.setName("un-oob dbd" + System.currentTimeMillis());
 		unOOBladbd.setIsSystem(false);
 		UserContext.setCurrentUser("SYSMAN");
-		Tile tile1 = createTileForDashboardWithWidgetGroupName(unOOBladbd,"LogAnalytics");
+		Tile tile1 = createTileForDashboardWithWidgetGroupName(unOOBladbd,DashboardsFilter.LA_WIGDETGROUP);
 		tile1.setRow(0);
 		tile1.setColumn(0);
 		tile1.setWidth(4);
@@ -1258,31 +1262,34 @@ public class DashboardManagerTest
 		Dashboard set1=new Dashboard();
 		set1.setIsSystem(false);
 		set1.setName("set1"+System.currentTimeMillis());
+		set1 = dm.saveNewDashboard(set1, tenant1);
 		List<Dashboard> list1=new ArrayList<Dashboard>();
 		list1.add(ladbd);
 		set1.setSubDashboards(list1);
-		set1 = dm.saveNewDashboard(set1, tenant1);
+		set1 = dm.updateDashboard(set1, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
 
 		//this set contains un oob dashboard
 		Dashboard set2=new Dashboard();
 		set2.setIsSystem(false);
 		set2.setName("set2"+System.currentTimeMillis());
+		set2 = dm.saveNewDashboard(set2, tenant1);
 		List<Dashboard> list2=new ArrayList<Dashboard>();
 		list2.add(unOOBladbd);
 		set2.setSubDashboards(list2);
-		set2 = dm.saveNewDashboard(set2, tenant1);
+		set2 = dm.updateDashboard(set2, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
 
 		//this set contains both oob/un-oob dashboards
 		Dashboard set3=new Dashboard();
 		set3.setIsSystem(false);
 		set3.setName("set3"+System.currentTimeMillis());
+		set3 = dm.saveNewDashboard(set3, tenant1);
 		List<Dashboard> list3=new ArrayList<Dashboard>();
 		list3.add(unOOBladbd);
 		list3.add(ladbd);
 		set3.setSubDashboards(list3);
-		set3 = dm.saveNewDashboard(set3, tenant1);
+		set3 = dm.updateDashboard(set3, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
 
 		try{
@@ -1292,12 +1299,12 @@ public class DashboardManagerTest
 			long result1 = pd.getTotalResults();
 			Assert.assertEquals(result1, 5);//all dashboard/dashboard set will be listed
 		}finally{
-			dm.deleteDashboard(ladbd.getDashboardId(), true, tenant1);
-			dm.deleteDashboard(unOOBladbd.getDashboardId(), true, tenant1);
-			dm.deleteDashboard(set1.getDashboardId(), true, tenant1);
-			dm.deleteDashboard(set2.getDashboardId(), true, tenant1);
-			dm.deleteDashboard(set3.getDashboardId(), true, tenant1);
 		}
+		dm.deleteDashboard(ladbd.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(unOOBladbd.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(set1.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(set2.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(set3.getDashboardId(), true, tenant1);
 	}
 
 	@Test
