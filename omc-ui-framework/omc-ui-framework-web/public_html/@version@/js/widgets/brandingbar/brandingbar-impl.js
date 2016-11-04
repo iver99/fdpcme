@@ -10,7 +10,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojs/ojtoolbar',
     'ojs/ojmenu',
     'ojs/ojbutton',
-    'ojs/ojdialog'
+    'ojs/ojdialog',
+    'ojs/ojdiagram'
 ],
     function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls) {
         function BrandingBarViewModel(params) {
@@ -724,8 +725,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.appName(subscribedServices);
             }
             function refreshTopologyParams() {
-                
-                
                 if (cxtUtil.getCompositeMeId()) {
                     var compositeId = [];
                     compositeId.push(cxtUtil.getCompositeMeId());
@@ -739,21 +738,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     else {
                         var entityMeIds = cxtUtil.getEntityMeIds();
                         if (entityMeIds) {
-                            var entityId = [];
-                            var entityArray = entityMeIds.split(',');
-                            for (var i = 0; i < entityArray.length; i++) {
-                                entityId.push($.trim(entityArray[i]));
-                            }
-                            self.entities(entityId);
+                            //cxtUtil.getEntityMeIds() will return a list of meIds
+                            self.entities(entityMeIds);
                         } else {
-                            if (cxtUtil.getEntityName() && cxtUtil.getEntityType()) {
-                              //  self.queryVars.entityName = cxtUtil.getEntityName();
-                               // self.queryVars.entityType = cxtUtil.getEntityType();
-                                self.queryVars({entityName : cxtUtil.getCompositeName(), entityType : cxtUtil.getCompositeType()});
-                            } 
-                            else {
-                                self.entities(["B1EB94DD59ED96D4DD57C7F25A64F5B1"]);
-                            }
+                            self.entities([]);
                         } 
                     }
                 }
