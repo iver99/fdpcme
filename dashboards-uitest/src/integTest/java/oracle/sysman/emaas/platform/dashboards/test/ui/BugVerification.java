@@ -56,6 +56,8 @@ public class BugVerification extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF2040");
 
 		webd.getLogger().info("All test data have been removed");
+
+		LoginAndLogout.logoutMethod();
 	}
 
 	@Test
@@ -87,7 +89,7 @@ public class BugVerification extends LoginAndLogout
 
 	}
 
-	//	@Test
+	@Test
 	public void testEMCPDF_2425()
 	{
 		//login the dashboard with user emaastesttenant1_la_admin1
@@ -112,7 +114,7 @@ public class BugVerification extends LoginAndLogout
 		DashboardBuilderUtil.toggleShareDashboardset(webd);
 	}
 
-	//	@Test(dependsOnMethods = { "testEMCPDF_2425" })
+	@Test(dependsOnMethods = { "testEMCPDF_2425" })
 	public void testEMCPDF_2425_1()
 	{
 		//login the dashboard with user emaastesttenant1_la_admin1
