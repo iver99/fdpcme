@@ -13,8 +13,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var seconds = date.getSeconds();
                     var milliseconds = date.getMilliseconds();
                     return new Date(year, month, day, hours, minutes, seconds, milliseconds);
+                }else if(!isNaN(parseInt(date))) {
+                    return new Date(parseInt(date));
                 }else {
-                    return new Date(date);
+                    return new Date();
                 }
             }
 
@@ -656,18 +658,23 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     return p;
                 };
 
-                if(params.timePeriod) {
+                if(self.getParam(params.timePeriod)) {
                     if(ko.isObservable(params.timePeriod)) {
                         self.timePeriodPresetInNls = ko.computed(function() {
-                            return self.timePeriodsNlsObject[params.timePeriod()];
+                            return self.timePeriodsNlsObject[formalizeTimePeriod(params.timePeriod())];
                         }, self);
                         self.timePeriodPresetInNls.subscribe(function(value) {
                             self.initialize && self.initialize();
                         });
                     }else {
-                        self.timePeriodPresetInNls = self.timePeriodsNlsObject[params.timePeriod];
+                        self.timePeriodPresetInNls = self.timePeriodsNlsObject[formalizeTimePeriod(params.timePeriod)];
                     }
-                    self.isTimePeriodPreset = true;
+
+                    if(self.getParam(self.timePeriodPresetInNls)) {
+                        self.isTimePeriodPreset = true;
+                    }else {
+                        self.isTimePeriodPreset = false;
+                    }
                 }
 
                 if(params.startDateTime) {
@@ -1272,7 +1279,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             }
                         }
                     }else {
-                        if(self.startDateTime && self.endDateTime) {
+                        if(isValidDateInput(self.getParam(self.startDateTime)) && isValidDateInput(self.getParam(self.endDateTime))) {
                             curDate = new Date();
                             //users input start date and end date
                             sdt = self.getParam(self.startDateTime);
@@ -1296,7 +1303,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     customClick(0);
                                 }
                             }
-                        } else if (!self.startDateTime && self.endDateTime) {
+                        } else if (!isValidDateInput(self.getParam(self.startDateTime)) && isValidDateInput(self.getParam(self.endDateTime))) {
                             if($.inArray(self.timePeriodLast15mins, tpNotToShow)<0) {
                                 self.setTimePeriodChosen(self.timePeriodLast15mins);
                                 range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end, 0);
@@ -1307,7 +1314,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             }
                             //print warning...
                             oj.Logger.warn("The user just input end time");
-                        } else if (self.startDateTime && !self.endDateTime) {
+                        } else if (isValidDateInput(self.getParam(self.startDateTime)) && !isValidDateInput(self.getParam(self.endDateTime))) {
                             customClick(0);
                             sdt = self.getParam(self.startDateTime);
                             start = newDateWithMilliseconds(sdt);
@@ -2124,11 +2131,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     
                     //get time period value and unit
                     var arr = timePeriod.split("_");
-                    var relTimeVal = null;
-                    var relTimeUnit = null;
                     if(arr.length>1) {
-                        relTimeVal = arr[1];
-                        relTimeUnit = arr[2];
+                        flexRelTimeVal = arr[1];
+                        flexRelTimeOpt = arr[2];
                     }
 
                     //if time filter is enabled, pass time info in JSON format.
