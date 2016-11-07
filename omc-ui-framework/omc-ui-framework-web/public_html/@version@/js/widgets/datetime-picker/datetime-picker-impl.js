@@ -190,8 +190,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.lrCtrlVal = ko.observable("timeLevelCtrl");
                 self.flexRelTimeVal = ko.observable(1);
                 self.maxFlexRelTimeVal = ko.observable(null);
-                self.flexRelTimeOpt = ko.observable(["day"]);
-//                self.timeLevelOpt = ko.observable(["minute"]);
+                self.flexRelTimeOpt = ko.observable(["DAY"]);
+//                self.timeLevelOpt = ko.observable(["MINUTE"]);
 
                 self.recentList = ko.observableArray([]);
 
@@ -1072,49 +1072,49 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.getFlexTimePeriod = function(num, opt) {
                     var optLabel;
                     switch(opt) {
-                        case "second":
+                        case "SECOND":
                             if(num === 1) {
                                 optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECOND;
                             }else {
                                 optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECONDS;
                             }                            
                             break;
-                        case "minute":
+                        case "MINUTE":
                             if(num === 1) {
                                 optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTE;
                             }else {
                                 optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTES;
                             }                            
                             break;
-                        case "hour":
+                        case "HOUR":
                             if(num === 1) {
                                 optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOUR;
                             }else {
                                 optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOURS;
                             }                            
                             break;
-                        case "day":
+                        case "DAY":
                             if(num === 1) {
                                 optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAY;
                             }else {
                                 optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAYS;
                             }                            
                             break;
-                        case "week":
+                        case "WEEK":
                             if(num === 1) {
                                 optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEK;
                             }else {
                                 optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEKS;
                             }                            
                             break;
-                        case "month":
+                        case "MONTH":
                             if(num === 1) {
                                 optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTH;
                             }else {
                                 optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTHS;
                             }                            
                             break;
-                        case "year":
+                        case "YEAR":
                             if(num === 1) {
                                 optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEAR;
                             }else {
@@ -1215,7 +1215,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         return;
                     }
                     
-                    if(recent.timePeriod === "Custom") {                        
+                    if(recent.timePeriod === "CUSTOM") {                        
                         if(recent.flexRelTimeVal && recent.flexRelTimeOpt) { //for flexible relative time range
                             return self.getFlexTimePeriod(recent.flexRelTimeVal, recent.flexRelTimeOpt);
                         }else { //for custom time range
@@ -1460,25 +1460,25 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var end = new Date();
                     var timeRange;
                     switch(opt) {
-                        case "second":
+                        case "SECOND":
                             start = new Date(end - num*1000);
                             break;
-                        case "minute":
+                        case "MINUTE":
                             start = new Date(end - num*60*1000);
                             break;
-                        case "hour":
+                        case "HOUR":
                             start = new Date(end - num*60*60*1000);
                             break;
-                        case "day":
+                        case "DAY":
                             start = new Date(end.getFullYear(), end.getMonth(), end.getDate()-num, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
                             break;
-                        case "week":
+                        case "WEEK":
                             start = new Date(end.getFullYear(), end.getMonth(), end.getDate()-7*num, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
                             break;
-                        case "month":
+                        case "MONTH":
                             start = new Date(end.getFullYear(), end.getMonth()-num, end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
                             break;
-                        case "year":
+                        case "YEAR":
                             start = new Date(end.getFullYear()-num, end.getMonth(), end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
                             break;
                         default:
@@ -1526,49 +1526,49 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     
                     //show sigular/plural time level options
                     switch(opt) {
-                        case "second":
+                        case "SECOND":
                             if(num === 1) {
                                 $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECOND);
                             }else {
                                 $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECONDS);
                             }
                             break;
-                        case "minute":
+                        case "MINUTE":
                             if(num === 1) {
                                 $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTE);
                             }else {
                                 $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTES);
                             }
                             break;
-                        case "hour":
+                        case "HOUR":
                             if(num === 1) {
                                 $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOUR);
                             }else {
                                 $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOURS);
                             }
                             break;
-                        case "day":
+                        case "DAY":
                             if(num === 1) {
                                 $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAY);
                             }else {
                                 $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAYS);
                             }
                             break;
-                        case "week":
+                        case "WEEK":
                             if(num === 1) {
                                 $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEK);
                             }else {
                                 $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEKS);
                             }
                             break;
-                        case "month":
+                        case "MONTH":
                             if(num === 1) {
                                 $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTH);
                             }else {
                                 $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTHS);
                             }
                             break;
-                        case "year":
+                        case "YEAR":
                             if(num === 1) {
                                 $(self.pickerPanelId+" .oj-select-chosen").text(nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEAR);
                             }else {
