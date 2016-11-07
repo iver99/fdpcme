@@ -185,9 +185,7 @@ public class TestBrandingBar extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//verify the url of opened page
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		Assert.assertTrue(url.substring(url.indexOf("emsaasui") + 9).contains("emcpdfui/home.html?filter=ita"));
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ita");
 
 		Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
 		BrandingBarUtil.visitDashboardHome(webd);
@@ -334,9 +332,7 @@ public class TestBrandingBar extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//verify the url of opened page
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		Assert.assertTrue(url.substring(url.indexOf("emsaasui") + 9).contains("emcpdfui/home.html?filter=ita"));
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ita");
 	}
 
 	@Test
