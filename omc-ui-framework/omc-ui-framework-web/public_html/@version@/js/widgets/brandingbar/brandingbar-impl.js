@@ -26,8 +26,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
             self.isTopologyDisplayed = ko.observable(false);
             self.topologyDisabled = ko.observable(false);
-            self.showGlobalContextBanner = ko.unwrap(params.showGlobalContextBanner);
-            self.showGlobalContextBanner = ko.unwrap(params.showGlobalContextBanner) === false ? false : true;
+            if(ko.isObservable(params.showGlobalContextBanner)) {
+                self.showGlobalContextBanner = params.showGlobalContextBanner;
+            }else {
+                self.showGlobalContextBanner = ko.observable(ko.unwrap(params.showGlobalContextBanner) === false ? false : true);
+            }
             self.showTimeSelector = ko.unwrap(params.showTimeSelector);
             self.entities = ko.observable([]);
             self.queryVars = ko.observable();
@@ -202,7 +205,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     "serviceDisplayName": "BRANDING_BAR_APP_NAME_COMPLIANCE",
                     "serviceName": "ComplianceUIService",
                     "version": self.COMPLIANCE_SERVICE_VERSION,
-                    "helpTopicId": "em_comcs"
+                    "helpTopicId": "em_compl"
                 };
             appMap[appIdOcs] = {
                 "appId": appIdOcs,

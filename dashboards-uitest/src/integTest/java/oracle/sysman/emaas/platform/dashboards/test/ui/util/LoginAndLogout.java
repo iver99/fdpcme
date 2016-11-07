@@ -99,7 +99,7 @@ public class LoginAndLogout
 				&& !webd.getWebDriver().getCurrentUrl().contains("omcCtx=")) {
 			//Append omc context into login url
 			if (!url.contains("omcCtx=")) {
-				url = url + (url.indexOf("?") > 0 ? "&" : "?") + "omcCtx=timePeriod%3DLast%201%20day&compositeName%3DRideshare%20Application&compositeMEID%3DEE380645A9711FFF881A146A00C98324";
+				url = url + (url.indexOf("?") > 0 ? "&" : "?") + "omcCtx=startTime%3D1478045700000%26endTime%3D1478240100000%26compositeMEID%3DEE380645A9711FFF881A146A00C98324";
 				webd.getLogger().info("New url with OMC global context appended is: " + url);
 			}
 			LoginUtils.doLogin(webd, username, password, tenantId, url);
@@ -153,7 +153,7 @@ public class LoginAndLogout
 				&& !webd.getWebDriver().getCurrentUrl().contains("omcCtx=")) {
 			//Append omc context into login url
 			if (!url.contains("omcCtx=")) {
-				url = url + (url.indexOf("?") > 0 ? "&" : "?") + "omcCtx=timePeriod%3DLast%201%20day&compositeName%3DRideshare%20Application&compositeMEID%3DEE380645A9711FFF881A146A00C98324";
+				url = url + (url.indexOf("?") > 0 ? "&" : "?") + "omcCtx=startTime%3D1478045700000%26endTime%3D1478240100000%26compositeMEID%3DEE380645A9711FFF881A146A00C98324";
 				webd.getLogger().info("New url with OMC global context appended is: " + url);
 			}
 			LoginUtils.doLogin(webd, username, password, tenantID, url);
