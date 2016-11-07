@@ -97,7 +97,7 @@
                 </button>
             </div>  
         </div>
-        <!-- ko if: showGlobalContextBanner === true -->
+        <!-- ko if: showGlobalContextBanner() !== false -->
         <div id="emaas-appheader-globalcxt" class="emaas-appheader-global-context">
             
             <div id="emctas-globalbar" data-bind="component:{name:'emctas-globalbar', 

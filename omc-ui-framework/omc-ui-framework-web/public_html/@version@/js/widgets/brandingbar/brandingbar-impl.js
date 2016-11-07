@@ -26,7 +26,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
             self.isTopologyDisplayed = ko.observable(false);
             self.topologyDisabled = ko.observable(false);
-            self.showGlobalContextBanner = ko.unwrap(params.showGlobalContextBanner) === false ? false : true;
+            if(ko.isObservable(params.showGlobalContextBanner)) {
+                self.showGlobalContextBanner = params.showGlobalContextBanner;
+            }else {
+                self.showGlobalContextBanner = ko.observable(ko.unwrap(params.showGlobalContextBanner) === false ? false : true);
+            }            
             self.entities = ko.observable([]);
             self.queryVars = ko.observable();
             
