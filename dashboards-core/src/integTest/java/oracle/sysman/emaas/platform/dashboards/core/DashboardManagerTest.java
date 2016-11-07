@@ -1454,7 +1454,7 @@ public class DashboardManagerTest
 	}
 
 	/**
-	 * this method is for testing shared dashboard or dashboard set
+	 * this method is for testing shared dashboard or dashboard set,(home page, option shared)
 	 */
 	@Test
 	public void testSharedDashboard() throws InterruptedException, DashboardException {
@@ -1560,15 +1560,173 @@ public class DashboardManagerTest
 			pd = dm.listDashboards(null, null, null, tenant1, true,null,filter1);
 			long result1 = pd.getTotalResults();
 			Assert.assertEquals(result1,3);//dbd2,dbd4,set1,set2 will not be listed
+			for (Dashboard dbd : pd.getDashboards()) {
+				if (dbd.getName().equals(dbd2.getName())) {
+					AssertJUnit.fail("Failed: unexpected dashboard returned: unshared");
+				}
+				if (dbd.getName().equals(dbd4.getName())) {
+					AssertJUnit.fail("Failed: unexpected dashboard returned from other tenant different from current tenant");
+				}
+				if (dbd.getName().equals(set1.getName())) {
+					AssertJUnit.fail("Failed: unexpected dashboard set returned: differeant tenant");
+				}
+				if (dbd.getName().equals(set2.getName())) {
+					AssertJUnit.fail("Failed: unexpected dashboard set returned: unshared");
+				}
+			}
 		}finally{
+			dm.deleteDashboard(dbd1.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(dbd2.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(dbd3.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(dbd4.getDashboardId(), true, tenant2);
+			dm.deleteDashboard(set1.getDashboardId(), true, tenant2);
+			dm.deleteDashboard(set2.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(set3.getDashboardId(), true, tenant1);
 		}
-		dm.deleteDashboard(dbd1.getDashboardId(), true, tenant1);
-		dm.deleteDashboard(dbd2.getDashboardId(), true, tenant1);
-		dm.deleteDashboard(dbd3.getDashboardId(), true, tenant1);
-		dm.deleteDashboard(dbd4.getDashboardId(), true, tenant1);
-		dm.deleteDashboard(set1.getDashboardId(), true, tenant1);
-		dm.deleteDashboard(set2.getDashboardId(), true, tenant1);
-		dm.deleteDashboard(set3.getDashboardId(), true, tenant1);
+
+	}
+
+	/**
+	 * this test case is for testing home page filter "Other"
+	 */
+//	@Test
+	public void testOtherDashboardFilter() throws DashboardException {
+		DashboardManager dm = DashboardManager.getInstance();
+		Long tenant1 = 11L;
+		Long tenant2 = 12L;
+		Long id=1L;
+
+		PaginatedDashboards pd =null;
+		//SYSMAN's dashboard,should not be listed
+		Dashboard dbd1 = new Dashboard();
+		dbd1.setDashboardId(10000L+id++);
+		dbd1.setName("dbd1-" + System.currentTimeMillis());
+		dbd1.setIsSystem(true);
+		dbd1.setAppicationType(DashboardApplicationType.Orchestration);
+		UserContext.setCurrentUser("SYSMAN");
+		dbd1 = dm.saveNewDashboard(dbd1, tenant1);
+
+		//same tenant, other user, un-shared,should be listed
+		UserContext.setCurrentUser("OTHER USER");
+		Dashboard dbd2 = new Dashboard();
+		dbd2.setSharePublic(false);
+		dbd2.setDashboardId(10000L+id++);
+		dbd2.setName("dbd2-" + System.currentTimeMillis());
+		dbd2.setIsSystem(true);
+		dbd2.setAppicationType(DashboardApplicationType.APM);
+		dbd2 = dm.saveNewDashboard(dbd2, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		//different tenant, shared, but should not be listed
+		UserContext.setCurrentUser("DIFFER TENANT");
+		Dashboard dbd3 = new Dashboard();
+		dbd3.setSharePublic(true);
+		dbd3.setDashboardId(10000L+id++);
+		dbd3.setName("dbd3-" + System.currentTimeMillis());
+		dbd3.setIsSystem(true);
+		dbd3.setAppicationType(DashboardApplicationType.APM);
+		dbd3 = dm.saveNewDashboard(dbd3, tenant2);
+		UserContext.setCurrentUser("SYSMAN");
+
+		UserContext.setCurrentUser("SAME TENANT,DIFFER USER");
+		Dashboard dbd4 = new Dashboard();
+		dbd4.setSharePublic(true);
+		dbd4.setDashboardId(10000L+id++);
+		dbd4.setName("dbd4-" + System.currentTimeMillis());
+		dbd4.setIsSystem(true);
+		dbd4.setAppicationType(DashboardApplicationType.APM);
+		dbd4 = dm.saveNewDashboard(dbd4, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		//SYSMAN's set, should not be listed
+		Dashboard set1 = new Dashboard();
+		set1.setSharePublic(false);
+		set1.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set1.setDashboardId(10000L+id++);
+		set1.setName("set1-" + System.currentTimeMillis());
+		set1.setIsSystem(true);
+		set1.setAppicationType(DashboardApplicationType.ITAnalytics);
+		set1 = dm.saveNewDashboard(set1, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		//same tenant,different user, unshared, should not be listed.
+		UserContext.setCurrentUser("OTHER USER");
+		Dashboard set2 = new Dashboard();
+		set2.setSharePublic(false);
+		set2.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set2.setDashboardId(10000L+id++);
+		set2.setName("set2-" + System.currentTimeMillis());
+		set2.setIsSystem(true);
+		set2.setAppicationType(DashboardApplicationType.ITAnalytics);
+		set2 = dm.saveNewDashboard(set2, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		//different tenant,shared, should not be listed.
+		UserContext.setCurrentUser("DIFFER TENANT");
+		Dashboard set3 = new Dashboard();
+		set3.setSharePublic(true);
+		set3.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set3.setDashboardId(10000L+id++);
+		set3.setName("set3-" + System.currentTimeMillis());
+		set3.setIsSystem(true);
+		set3.setAppicationType(DashboardApplicationType.ITAnalytics);
+		set3 = dm.saveNewDashboard(set3, tenant2);
+		UserContext.setCurrentUser("SYSMAN");
+
+		UserContext.setCurrentUser("SAME TENANT,DIFFER USER");
+		Dashboard set4 = new Dashboard();
+		set4.setSharePublic(true);
+		set4.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set4.setDashboardId(10000L+id++);
+		set4.setName("set4-" + System.currentTimeMillis());
+		set4.setIsSystem(true);
+		set4.setAppicationType(DashboardApplicationType.ITAnalytics);
+		set4 = dm.saveNewDashboard(set4, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+
+		try{
+			DashboardsFilter filter1 = new DashboardsFilter();
+			filter1.setIncludedOwnersFromString("Others");
+			pd = dm.listDashboards(null, null, null, tenant1, true,null,filter1);
+			long result1 = pd.getTotalResults();
+			Assert.assertEquals(result1,2);//dbd1,dbd2,dbd3,set1,set2,set3 will not be listed
+			for (Dashboard dbd : pd.getDashboards()) {
+				if (dbd.getName().equals(dbd1.getName())) {
+					AssertJUnit.fail("Failed: unexpected dashboard returned: self's dashboard");
+				}
+				if (dbd.getName().equals(dbd2.getName())) {
+					AssertJUnit.fail("Failed: unexpected dashboard returned: same tenant, unshared");
+				}
+				if (dbd.getName().equals(dbd3.getName())) {
+					AssertJUnit.fail("Failed: unexpected dashboard returned: differeant tenant");
+				}
+				if (dbd.getName().equals(set1.getName())) {
+					AssertJUnit.fail("Failed: unexpected dashboard set returned: self's dashboard set");
+				}
+				if (dbd.getName().equals(set2.getName())) {
+					AssertJUnit.fail("Failed: unexpected dashboard set returned: unshared");
+				}
+				if (dbd.getName().equals(set3.getName())) {
+					AssertJUnit.fail("Failed: unexpected dashboard set returned: different tenant");
+				}
+			}
+		}finally{
+			dm.deleteDashboard(dbd1.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(dbd2.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(dbd3.getDashboardId(), true, tenant2);
+			dm.deleteDashboard(dbd4.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(set1.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(set2.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(set3.getDashboardId(), true, tenant2);
+			dm.deleteDashboard(set4.getDashboardId(), true, tenant1);
+		}
+	}
+
+	/**
+	 * this test case is for testing home page filter "Me"
+	 */
+//	@Test
+	public void testMeDashboardFilter(){
 
 	}
 
