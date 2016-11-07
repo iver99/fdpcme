@@ -119,6 +119,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.timePeriodLast15mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS;
                 self.timePeriodLast30mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS;
                 self.timePeriodLast60mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS;
+                self.timePeriodLast2hours = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_2_HOURS;
                 self.timePeriodLast4hours = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_4_HOURS;
                 self.timePeriodLast6hours = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_6_HOURS;
                 self.timePeriodLast1day = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_DAY;
@@ -149,6 +150,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     "Last 15 minutes" : self.timePeriodLast15mins,
                     "Last 30 minutes" : self.timePeriodLast30mins,
                     "Last 60 minutes" : self.timePeriodLast60mins,
+                    "Last 2 hours": self.timePeriodLast2hours,
                     "Last 4 hours" : self.timePeriodLast4hours,
                     "Last 6 hours" : self.timePeriodLast6hours,
                     "Last 1 day" : self.timePeriodLast1day,
@@ -165,6 +167,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.last15minsNotToShow = ko.observable(false);
                 self.last30minsNotToShow = ko.observable(false);
                 self.last60minsNotToShow = ko.observable(false);
+                self.last2hoursNotToShow = ko.observable(false);
                 self.last4hoursNotToShow = ko.observable(false);
                 self.last6hoursNotToShow = ko.observable(false);
                 self.last1dayNotToShow = ko.observable(false);
@@ -179,6 +182,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.last15minsChosen = ko.observable(false);
                 self.last30minsChosen = ko.observable(false);
                 self.last60minsChosen = ko.observable(false);
+                self.last2hoursChosen = ko.observable(false);
                 self.last4hoursChosen = ko.observable(false);
                 self.last6hoursChosen = ko.observable(false);
                 self.last1dayChosen = ko.observable(false);
@@ -215,6 +219,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var css = "drawer";
                     css += self.last60minsNotToShow() ? " drawerNotToShow": "";
                     css += self.last60minsChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
+                    return css;
+                }, self);
+                self.last2hoursCss = ko.computed(function() {
+                    var css = "drawer";
+                    css += self.last2hoursNotToShow() ? " drawerNotToShow": "";
+                    css += self.last2hoursChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.last4hoursCss = ko.computed(function() {
@@ -460,6 +470,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.last15minsChosen(false);
                     self.last30minsChosen(false);
                     self.last60minsChosen(false);
+                    self.last2hoursChosen(false);
                     self.last4hoursChosen(false);
                     self.last6hoursChosen(false);
                     self.last1dayChosen(false);
@@ -486,6 +497,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             break;
                         case self.timePeriodLast60mins:
                             self.last60minsChosen(true);
+                            break;
+                        case self.timePeriodLast2hours:
+                            self.last2hoursChosen(true);
                             break;
                         case self.timePeriodLast4hours:
                             self.last4hoursChosen(true);
@@ -529,6 +543,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.last15minsNotToShow(false);
                     self.last30minsNotToShow(false);
                     self.last60minsNotToShow(false);
+                    self.last2hoursNotToShow(false);
                     self.last4hoursNotToShow(false);
                     self.last6hoursNotToShow(false);
                     self.last1dayNotToShow(false);
@@ -551,6 +566,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             break;
                         case self.timePeriodLast60mins:
                             self.last60minsNotToShow(true);
+                            break;
+                        case self.timePeriodLast2hours:
+                            self.last2hoursNotToShow(true);
                             break;
                         case self.timePeriodLast4hours:
                             self.last4hoursNotToShow(true);
@@ -780,6 +798,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.last15minsNotToShow(true);
                     self.last30minsNotToShow(true);
                     self.last60minsNotToShow(true);
+                    self.last2hoursNotToShow(true);
                     self.last4hoursNotToShow(true);
                     self.last6hoursNotToShow(true);
                     self.hideTimeSelection(true);
@@ -809,14 +828,15 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     tmp[self.timePeriodLast15mins] = [0, 15 * 60 * 1000];
                     tmp[self.timePeriodLast30mins] = [1, 30 * 60 * 1000];
                     tmp[self.timePeriodLast60mins] = [2, 60 * 60 * 1000];
-                    tmp[self.timePeriodLast4hours] = [3, 4 * 60 * 60 * 1000];
-                    tmp[self.timePeriodLast6hours] = [4, 6 * 60 * 60 * 1000];
-                    tmp[self.timePeriodLast1day] = [5, 24 * 60 * 60 * 1000];
-                    tmp[self.timePeriodLast7days] = [6, 7 * 24 * 60 * 60 * 1000];
-                    tmp[self.timePeriodLast14days] = [7, 14 * 24 * 60 * 60 * 1000];
-                    tmp[self.timePeriodLast30days] = [8, 30 * 24 * 60 * 60 * 1000];
-                    tmp[self.timePeriodLast90days] = [9, 90 * 24 * 60 * 60 * 1000];
-                    tmp[self.timePeriodLast1year] = [10, 365 * 24 * 60 * 60 * 1000]; //do not use this to calculate last a year
+                    tmp[self.timePeriodLast2hours] = [3, 2 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast4hours] = [4, 4 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast6hours] = [5, 6 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast1day] = [6, 24 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast7days] = [7, 7 * 24 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast14days] = [8, 14 * 24 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast30days] = [9, 30 * 24 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast90days] = [10, 90 * 24 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast1year] = [11, 365 * 24 * 60 * 60 * 1000]; //do not use this to calculate last a year
                     return tmp;
                 }, self);
 
@@ -978,7 +998,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.isTimePeriodLessThan1day = function(timePeriod) {
                     if(timePeriod===self.timePeriodLast15mins || timePeriod===self.timePeriodLast30mins || timePeriod===self.timePeriodLast60mins ||
-                                timePeriod===self.timePeriodLast4hours || timePeriod===self.timePeriodLast6hours) {
+                                timePeriod===self.timePeriodLast2hours || timePeriod===self.timePeriodLast4hours || timePeriod===self.timePeriodLast6hours) {
                         return true;
                     }
                     return false;
