@@ -31,7 +31,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             }else {
                 self.showGlobalContextBanner = ko.observable(ko.unwrap(params.showGlobalContextBanner) === false ? false : true);
             }
-            self.showTimeSelector = ko.unwrap(params.showTimeSelector);
+            
+            //Set showTimeSelector config. Default value is false. It can be set as an knockout observable and be changed after page is loaded
+            if(ko.isObservable(params.showTimeSelector)) {
+                self.showTimeSelector = params.showTimeSelector;
+            }else {
+                self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === true ? true : false);
+            }
+            
             self.entities = ko.observable([]);
             self.queryVars = ko.observable();
             
