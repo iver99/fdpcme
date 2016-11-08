@@ -46,8 +46,8 @@ requirejs.config({
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'uifwk': '/emsaasui/uifwk',
         'emsaasui': '/emsaasui',
-        //'emcta': '/emsaasui/emcta/ta/js',
-        'emcta': '/emsaasui/emcta/ta/@version@/js' //for DEV_MODE
+        'emcta': '/emsaasui/emcta/ta/js'
+//        'emcta': '/emsaasui/emcta/ta/@version@/js' //for DEV_MODE
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
