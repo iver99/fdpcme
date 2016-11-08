@@ -888,9 +888,9 @@ public class DashboardManager
 				throw new CommonFunctionalException(
 						MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_NAME_ERROR));
 			}
-			LOGGER.debug("Get the dashboard with name: {}, desc: {}", dbd.getName(), dbd.getDescription());
-			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
-			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
+
+			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
+                        if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
 				throw new DashboardSameNameException();
 			}
 			// init creation date, owner to prevent null insertion
@@ -990,7 +990,7 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
-			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
+                        Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
 			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
 				throw new DashboardSameNameException();
 			}
