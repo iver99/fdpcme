@@ -794,7 +794,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                }
 
                 refreshCompositeEntityCtxText();
-                refreshTimeCtxText();
+//                refreshTimeCtxText();
                 
                 // update parameters for topology 
                 refreshTopologyParams();
