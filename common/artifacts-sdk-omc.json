@@ -33,7 +33,7 @@
 		"method": "artifactFilterSdkVersion",
 		"group": "com.oracle.emaas",
 		"name": "emaas-platform-tenant-sdk",
-		"version": "0.2+",
+		"version": "0.2",
 		"transitive": false
 	},
 	"security-client": {

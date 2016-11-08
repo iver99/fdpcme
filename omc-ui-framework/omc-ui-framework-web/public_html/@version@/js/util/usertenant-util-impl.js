@@ -154,7 +154,7 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                 self.getUserRoles(function(data){
                     self.userRoles = data; 
                 },false);
-                if(self.userRoles.indexOf(role)<0){
+                if(!self.userRoles || self.userRoles.indexOf(role)<0){
                     return false;
                 }else{
                     return true;

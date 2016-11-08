@@ -10,8 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.webutils.timer;
 
-import java.util.List;
-
 import javax.management.Notification;
 
 import org.testng.Assert;
@@ -19,12 +17,11 @@ import org.testng.annotations.Test;
 
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.NonServiceResource;
 import oracle.sysman.emaas.platform.dashboards.core.DBConnectionManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.targetmodel.services.GlobalStatus;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager;
 
 /**
@@ -69,6 +66,7 @@ public class AvailabilityNotificationTest
 		};
 		an.handleNotification(anyNoti, null);
 		Assert.assertTrue(GlobalStatus.isDashboardUp());
+		Assert.assertTrue(DependencyStatus.getInstance().isDatabaseUp());
 
 		new Expectations() {
 			{
@@ -79,7 +77,8 @@ public class AvailabilityNotificationTest
 			}
 		};
 		an.handleNotification(anyNoti, null);
-		Assert.assertFalse(GlobalStatus.isDashboardUp());
+		Assert.assertTrue(GlobalStatus.isDashboardUp());
+		Assert.assertFalse(DependencyStatus.getInstance().isDatabaseUp());
 
 		new Expectations() {
 			{
@@ -89,11 +88,13 @@ public class AvailabilityNotificationTest
 				result = true;
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, null);
 				result = null;
-				anyRsm.markOutOfService((List<InstanceInfo>) any, (List<NonServiceResource>) any, (List<String>) any);
+//				anyRsm.markOutOfService((List<InstanceInfo>) any, (List<NonServiceResource>) any, (List<String>) any);
 			}
 		};
 		an.handleNotification(anyNoti, null);
-		Assert.assertFalse(GlobalStatus.isDashboardUp());
+		Assert.assertTrue(GlobalStatus.isDashboardUp());
+		Assert.assertTrue(DependencyStatus.getInstance().isDatabaseUp());
+		Assert.assertFalse(DependencyStatus.getInstance().isEntityNamingUp());
 
 		new Expectations() {
 			{
@@ -104,7 +105,8 @@ public class AvailabilityNotificationTest
 			}
 		};
 		an.handleNotification(anyNoti, null);
-		Assert.assertFalse(GlobalStatus.isDashboardUp());
+		Assert.assertTrue(GlobalStatus.isDashboardUp());
+		Assert.assertFalse(DependencyStatus.getInstance().isDatabaseUp());
 
 		new Expectations() {
 			{
@@ -114,10 +116,12 @@ public class AvailabilityNotificationTest
 				result = true;
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, null);
 				result = new Exception();
-				anyRsm.markOutOfService((List<InstanceInfo>) any, (List<NonServiceResource>) any, (List<String>) any);
+//				anyRsm.markOutOfService((List<InstanceInfo>) any, (List<NonServiceResource>) any, (List<String>) any);
 			}
 		};
 		an.handleNotification(anyNoti, null);
-		Assert.assertFalse(GlobalStatus.isDashboardUp());
+		Assert.assertTrue(GlobalStatus.isDashboardUp());
+		Assert.assertTrue(DependencyStatus.getInstance().isDatabaseUp());
+		Assert.assertFalse(DependencyStatus.getInstance().isEntityNamingUp());
 	}
 }

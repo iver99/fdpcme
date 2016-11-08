@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.core;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
@@ -912,7 +913,7 @@ public class DashboardManagerTest
 	private TileParam createParameterForTile(Tile tile) throws InterruptedException
 	{
 		TileParam tp = new TileParam();
-		tp.setName("param " + System.currentTimeMillis());
+		tp.setName("param " + System.currentTimeMillis() + new Random().nextInt());
 		tp.setStringValue("value for " + tp.getName());
 		tp.setIsSystem(false);
 		tile.addParameter(tp);

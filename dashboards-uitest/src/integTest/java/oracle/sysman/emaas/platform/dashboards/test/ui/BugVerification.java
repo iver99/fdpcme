@@ -7,6 +7,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -25,6 +26,13 @@ public class BugVerification extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
+	}
+
+	public void initTestCustom(String testName, String Username)
+	{
+		customlogin(this.getClass().getName() + "." + testName, Username);
+		DashBoardUtils.loadWebDriver(webd);
+
 	}
 
 	@AfterClass
@@ -48,6 +56,8 @@ public class BugVerification extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF2040");
 
 		webd.getLogger().info("All test data have been removed");
+
+		LoginAndLogout.logoutMethod();
 	}
 
 	@Test
@@ -76,6 +86,50 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("Set the custom date time");
 		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, "04/14/2016 12:00 AM", "04/14/2016 12:30 PM"),
 				"The restun date time is null");
+
+	}
+
+	@Test
+	public void testEMCPDF_2425()
+	{
+		//login the dashboard with user emaastesttenant1_la_admin1
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_admin1");
+		webd.getLogger().info("start to test in testEMCPDF_2425");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//create a dashboard set
+		webd.getLogger().info("Create a dashboard set");
+		DashboardHomeUtil.createDashboardSet(webd, "DashboardSet_2425", "test for sharing");
+
+		//add a OOB dashboard to the set
+		webd.getLogger().info("Add an OOB dashboard to the set");
+		DashboardBuilderUtil.addNewDashboardToSet(webd, "Databases");
+
+		//share the dashboard set
+		webd.getLogger().info("Share the dashboard set");
+		DashboardBuilderUtil.toggleShareDashboardset(webd);
+	}
+
+	@Test(dependsOnMethods = { "testEMCPDF_2425" })
+	public void testEMCPDF_2425_1()
+	{
+		//login the dashboard with user emaastesttenant1_la_admin1
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_admin1");
+		webd.getLogger().info("start to test in testEMCPDF_2425_1");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//open the shared dashboard set
+		webd.getLogger().info("Open the shared dashboard set");
+		DashboardHomeUtil.selectDashboard(webd, "DashboardSet_2425");
+
+		//verify the set
+		webd.getLogger().info("Verify the dashboard set");
+		DashboardBuilderUtil.verifyDashboardSet(webd, "DashboardSet_2425");
+		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Databases");
 
 	}
 
@@ -125,7 +179,7 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("current url = " + url);
 
 		webd.getWebDriver().navigate()
-				.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
+		.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
 		webd.waitForElementPresent("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
 		webd.takeScreenShot();
 
