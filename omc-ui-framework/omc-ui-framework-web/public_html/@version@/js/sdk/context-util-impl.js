@@ -670,7 +670,7 @@ define([
              */
             function retrieveParamValueFromUrl(decodedUrl, paramName) {
                 if (decodedUrl && paramName) {
-                    if (!decodedUrl.startsWith('?')) {
+                    if (decodedUrl.indexOf('?') !== 0) {
                         decodedUrl = '?' + decodedUrl;
                     }
                     var regex = new RegExp("[\\?&]" + encodeURIComponent(paramName) + "=([^&#]*)"), results = regex.exec(decodedUrl);
