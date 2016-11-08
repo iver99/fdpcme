@@ -14,6 +14,7 @@ import oracle.sysman.emaas.platform.dashboards.core.cache.lru.CacheFactory;
 import oracle.sysman.emaas.platform.dashboards.core.cache.lru.CacheUnit;
 import oracle.sysman.emaas.platform.dashboards.core.cache.lru.Element;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -236,13 +237,26 @@ public class CacheManager
 	 */
 	public void logCacheStatus(){
 		long now=System.currentTimeMillis();
-		//log every 5 mins
-		if(now-this.lastLogTime>= 5*60*1000L){
+		//log every 1 mins
+		if(now-lastLogTime>= 1*60*1000L){
 			for(Map.Entry<String,CacheUnit> e: CacheFactory.getCacheUnitMap().entrySet()){
 				CacheUnit cu=e.getValue();
-				LOGGER.info("[Cache Status] Cache name is [{}], Cache capacity is [{}], Cache usage is [{}], Cache usage rate is [{}], " +
-						"Cache total request count is [{}], Cache hit count is [{}], Cache hit rate is [{}], Eviction Count is [{}]" ,cu.getName(),cu.getCacheUnitStatus().getUsage(),cu.getCacheUnitStatus().getUsageRate(),
-						cu.getCacheUnitStatus().getRequestCount(),cu.getCacheUnitStatus().getHitCount(),cu.getCacheUnitStatus().getHitRate(),cu.getCacheUnitStatus().getEvictionCount());
+				LOGGER.info("[Cache Status] Cache name is [{}], "
+						+ "Cache capacity is [{}], "
+						+ "Cache usage is [{}], "
+						+ "Cache usage rate is [{}], " +
+						"Cache total request count is [{}], "
+						+ "Cache hit count is [{}], "
+						+ "Cache hit rate is [{}], "
+						+ "Eviction Count is [{}]" ,
+								cu.getName(),
+								cu.getCacheCapacity(),
+								cu.getCacheUnitStatus().getUsage(),
+								cu.getCacheUnitStatus().getUsageRate(),
+								cu.getCacheUnitStatus().getRequestCount(),
+								cu.getCacheUnitStatus().getHitCount(),
+								cu.getCacheUnitStatus().getHitRate(),
+								cu.getCacheUnitStatus().getEvictionCount());
 			}
 			this.lastLogTime=now;
 		}
