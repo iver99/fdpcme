@@ -7,8 +7,8 @@
 define(['knockout',
     'jquery',
     'ojs/ojcore',
-    'builder/builder.core',
-    'dfutil'
+    'dfutil',
+    'builder/builder.core'
 ], function(ko, $, oj, dfu) {
     
     function DashboardDataSource() {

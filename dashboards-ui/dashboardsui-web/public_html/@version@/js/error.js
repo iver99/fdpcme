@@ -75,11 +75,12 @@ requirejs.config({
 require(['knockout',
     'jquery',
     'dfutil',
+    'uifwk/js/util/df-util',
     'ojs/ojcore',
     'ojs/ojknockout',
     'ojs/ojbutton'
 ],
-function(ko, $, dfu, oj)
+function(ko, $, dfu, dfumodel, oj)
 {
     if (!ko.components.isRegistered('df-oracle-branding-bar')) {
         ko.components.register("df-oracle-branding-bar",{
@@ -197,6 +198,7 @@ function(ko, $, dfu, oj)
     }
 
     $(document).ready(function() {
+        var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
         ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
         ko.applyBindings(new ErrorPageModel(), $('#errorMain')[0]);
         $('#global-body').show();
