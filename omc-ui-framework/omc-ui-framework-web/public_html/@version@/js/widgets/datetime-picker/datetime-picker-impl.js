@@ -1215,20 +1215,19 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         return;
                     }
                     
-                    if(recent.timePeriod === "CUSTOM") {                        
-                        if(recent.flexRelTimeVal && recent.flexRelTimeOpt) { //for flexible relative time range
-                            return self.getFlexTimePeriod(recent.flexRelTimeVal, recent.flexRelTimeOpt);
-                        }else { //for custom time range
-                            start = oj.IntlConverterUtils.dateToLocalIso(recent.start);
-                            end = oj.IntlConverterUtils.dateToLocalIso(recent.end);
-                            if(self.timeConverter() === self.timeConverterMillisecond) {
-                                return self.getDateTimeInfo(start.slice(0, 10), end.slice(0, 10), start.slice(10), end.slice(10));
-                            }else {
-                                return self.getDateTimeInfo(start.slice(0, 10), end.slice(0, 10), start.slice(10, 16), end.slice(10, 16));
-                            }
+                    if(recent.timePeriod === "CUSTOM") { // for custom time range
+                        start = oj.IntlConverterUtils.dateToLocalIso(recent.start);
+                        end = oj.IntlConverterUtils.dateToLocalIso(recent.end);
+                        if (self.timeConverter() === self.timeConverterMillisecond) {
+                            return self.getDateTimeInfo(start.slice(0, 10), end.slice(0, 10), start.slice(10), end.slice(10));
+                        } else {
+                            return self.getDateTimeInfo(start.slice(0, 10), end.slice(0, 10), start.slice(10, 16), end.slice(10, 16));
                         }
-                    }else { //for relative time range in quick picks
+                    }else if(self.timePeriodsNlsObject[recent.timePeriod]) { //for quick picks
                         return self.timePeriodsNlsObject[recent.timePeriod];
+                    }else { // for flexible relative time range
+                        var arr = recent.timePeriod.split("_");
+                        return self.getFlexTimePeriod(arr[1], arr[2]);
                     }
                 }
 
@@ -1932,28 +1931,30 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var start;
                     var end;
                     var tpNls = self.timePeriodsNlsObject[data.timePeriod];
-                    if(tpNls === self.timePeriodCustom) {
-                        if(data.flexRelTimeVal && data.flexRelTimeOpt) {
-                            tmp = self.getTimeRangeForFlexRelTime(data.flexRelTimeVal, data.flexRelTimeOpt);
-                            start = tmp.start;
-                            end = tmp.end;
-                            
-                            self.lrCtrlVal("flexRelTimeCtrl");
-                            self.flexRelTimeVal(data.flexRelTimeVal);
-                            self.flexRelTimeOpt([data.flexRelTimeOpt]);
-                        }else {
-                            self.lrCtrlVal("timeLevelCtrl");
-                            start = oj.IntlConverterUtils.dateToLocalIso(data.start);
-                            end = oj.IntlConverterUtils.dateToLocalIso(data.end);
-                        }
-                    }else {
+                    if(data.timePeriod === "CUSTOM") { // for custom time range
+                        self.lrCtrlVal("timeLevelCtrl");
+                        start = oj.IntlConverterUtils.dateToLocalIso(data.start);
+                        end = oj.IntlConverterUtils.dateToLocalIso(data.end);
+                        self.timePeriod(tpNls);
+                    }else if(tpNls) { // for quick picks
                         self.lrCtrlVal("timeLevelCtrl");
                         tmp = self.getTimeRangeForQuickPick(tpNls);
                         start = tmp.start;
                         end = tmp.end;                       
                         
                         self.selectByDrawer(true);
+                        self.timePeriod(tpNls);
                         self.setTimePeriodChosen(self.timePeriod());
+                    }else {
+                        var arr = data.timePeriod.split("_");
+                        tmp = self.getTimeRangeForFlexRelTime(arr[1], arr[2]);
+                        start = tmp.start;
+                        end = tmp.end;
+
+                        self.lrCtrlVal("flexRelTimeCtrl");
+                        self.flexRelTimeVal(arr[1]);
+                        self.flexRelTimeOpt([arr[2]]);
+                        self.timePeriod(self.timePeriodCustom);
                     }
                     
                     self.startDate(self.dateConverter2.format(start));
@@ -1966,8 +1967,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.startTime(start.slice(10, 16));
                         self.endTime(end.slice(10, 16));
                     }
-                            
-                    self.timePeriod(tpNls);
+                    
                     self.recentList.remove(data);
                     setTimeout(function() {self.applyClick();}, 0);
                 };
@@ -2093,6 +2093,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.applyClick = function () {
                     var flexRelTimeVal = null;
                     var flexRelTimeOpt = null;
+                    var recentTimePeriodId = null;
                     self.timeFilter = ko.observable(null);
 
                     self.lastStartDate(self.startDate());
@@ -2156,8 +2157,15 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                     
                     var tmpList = self.recentList();
-                    tmpList.unshift({start: new Date(start), end: new Date(end), timePeriod: timePeriod, 
-                                    timeFilter: self.timeFilter(), flexRelTimeVal: flexRelTimeVal, flexRelTimeOpt: flexRelTimeOpt});
+//                    tmpList.unshift({start: new Date(start), end: new Date(end), timePeriod: timePeriod, 
+//                                    timeFilter: self.timeFilter(), flexRelTimeVal: flexRelTimeVal, flexRelTimeOpt: flexRelTimeOpt});
+                    if(timePeriod === "CUSTOM" && flexRelTimeVal && flexRelTimeOpt) {
+                        recentTimePeriodId = "LAST_"+flexRelTimeVal+"_"+flexRelTimeOpt;
+                    }else {
+                        recentTimePeriodId = timePeriod;
+                    }
+                    tmpList.unshift({start: new Date(start), end: new Date(end), timePeriod: recentTimePeriodId, 
+                                    timeFilter: self.timeFilter()});
                     self.recentList(tmpList.slice(0, 5));
 
                     //recover after merged to globalcontext
