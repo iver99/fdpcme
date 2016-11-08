@@ -664,7 +664,7 @@ public class DashboardManagerTest
 		Assert.assertNull(lastAccess);
 	}
 
-//	@Test
+	@Test
 	public void testListDashboard() throws DashboardException, InterruptedException
 	{
 		DashboardManager dm = DashboardManager.getInstance();
@@ -867,7 +867,7 @@ public class DashboardManagerTest
 	 * this test case is for home page filter function [Cloud Services] and for un-oob dashboard
 	 * @throws DashboardException
 	 */
-//	@Test
+	@Test
 	public void testListOOBDashboardFilter() throws DashboardException{
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenant1 = 11L;
@@ -875,8 +875,9 @@ public class DashboardManagerTest
 		PaginatedDashboards pd = null;
 		pd = dm.listDashboards(null, null, null, tenant1, true,null,null);
 		long initRequsult=pd.getTotalResults();
-//		Assert.assertEquals(initRequsult, 0);//initial status, should be 0;
+		
 		//prepare data
+		UserContext.setCurrentUser("SYSMAN");
 		Dashboard ladbd = new Dashboard();
 		ladbd.setName("la" + System.currentTimeMillis());
 		ladbd.setIsSystem(true);
@@ -982,6 +983,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(itadbd.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(apmdbd.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(orchestrationdbd.getDashboardId(), true, tenant1);
+			UserContext.setCurrentUser("SYSMAN");
 		}
 
 	}
@@ -991,7 +993,7 @@ public class DashboardManagerTest
 	 * @throws BasicServiceMalfunctionException 
 	 * @throws InterruptedException 
 	 */
-//	@Test
+	@Test
 	public void testListUnOOBDashboardFilter() throws DashboardException, BasicServiceMalfunctionException, InterruptedException{
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenant1 = 11L;
@@ -999,8 +1001,9 @@ public class DashboardManagerTest
 		PaginatedDashboards pd =null;
 		pd = dm.listDashboards(null, null, null, tenant1, true,null,null);
 		long initRequsult=pd.getTotalResults();
-//		Assert.assertEquals(initRequsult, 0);//initial status, should be 0;
+		
 		//prepare data
+		UserContext.setCurrentUser("SYSMAN");
 		Dashboard ladbd = new Dashboard();
 		ladbd.setName("la" + System.currentTimeMillis());
 		ladbd.setAppicationType(DashboardApplicationType.LogAnalytics);
@@ -1092,11 +1095,12 @@ public class DashboardManagerTest
 			}
 		}finally{
 			//post action
+			dm.deleteDashboard(ladbd.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(itadbd.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(apmdbd.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(orchestrationdbd.getDashboardId(), true, tenant1);
+			UserContext.setCurrentUser("SYSMAN");
 		}
-		dm.deleteDashboard(ladbd.getDashboardId(), true, tenant1);
-		dm.deleteDashboard(itadbd.getDashboardId(), true, tenant1);
-		dm.deleteDashboard(apmdbd.getDashboardId(), true, tenant1);
-		dm.deleteDashboard(orchestrationdbd.getDashboardId(), true, tenant1);
 		
 		
 		
@@ -1106,7 +1110,7 @@ public class DashboardManagerTest
 	 * this test case is for home page filter function [Cloud Services] and for oob  dashboard set
 	 * @throws DashboardException
 	 */
-//	@Test
+	@Test
 	public void testOOBDashboardSetFilter() throws DashboardException{
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenant1 = 11L;
@@ -1114,8 +1118,9 @@ public class DashboardManagerTest
 		PaginatedDashboards pd =null;
 		pd = dm.listDashboards(null, null, null, tenant1, true,null,null);
 		long initRequsult=pd.getTotalResults();
-//		Assert.assertEquals(initRequsult, 0);//initial status, should be 0;
+		
 		//prepare data
+		UserContext.setCurrentUser("SYSMAN");
 		Dashboard ladbd = new Dashboard();
 		ladbd.setDashboardId(10000L+id++);
 		ladbd.setName("la" + System.currentTimeMillis());
@@ -1220,6 +1225,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(itaset.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(mixedSet1.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(mixedSet2.getDashboardId(), true, tenant1);
+			UserContext.setCurrentUser("SYSMAN");
 		}
 		
 	}
@@ -1227,7 +1233,7 @@ public class DashboardManagerTest
 	 * this test case is for home page filter function [Cloud Services] and for un-oob  dashboard set
 	 * @throws DashboardException
 	 */
-//	@Test
+	@Test
 	public void testUnOOBDashboardSetFilter() throws DashboardException, InterruptedException {
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenant1 = 11L;
@@ -1236,8 +1242,9 @@ public class DashboardManagerTest
 		PaginatedDashboards pd =null;
 		pd = dm.listDashboards(null, null, null, tenant1, true,null,null);
 		long initRequsult=pd.getTotalResults();
-//		Assert.assertEquals(initRequsult, 0);//initial status, should be 0;
+		
 		//oob dashboard contains a la tile
+		UserContext.setCurrentUser("SYSMAN");
 		Dashboard ladbd = new Dashboard();
 		ladbd.setDashboardId(11000L+id++);
 		ladbd.setName("oob la dbd" + System.currentTimeMillis());
@@ -1270,7 +1277,7 @@ public class DashboardManagerTest
 		t1p2.setStringValue("tile 2 param 2");
 		unOOBladbd = dm.saveNewDashboard(unOOBladbd, tenant1);
 
-		//this set contains oob dashboard;
+		//this un oob set contains oob dashboard;
 		Dashboard set1=new Dashboard();
 		set1.setType(Dashboard.DASHBOARD_TYPE_SET);
 		set1.setDashboardId(11000L+id++);
@@ -1282,7 +1289,7 @@ public class DashboardManagerTest
 		set1 = dm.saveNewDashboard(set1, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
 
-		//this set contains un oob dashboard
+		//this un oob set contains un oob dashboard
 		Dashboard set2=new Dashboard();
 		set2.setType(Dashboard.DASHBOARD_TYPE_SET);
 		set2.setDashboardId(11000L+id++);
@@ -1294,7 +1301,7 @@ public class DashboardManagerTest
 		set2 = dm.saveNewDashboard(set2, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
 
-		//this set contains both oob/un-oob dashboards
+		//this un oob set contains both oob/un-oob dashboards
 		Dashboard set3=new Dashboard();
 		set3.setType(Dashboard.DASHBOARD_TYPE_SET);
 		set3.setDashboardId(11000L+id++);
@@ -1306,19 +1313,34 @@ public class DashboardManagerTest
 		set3.setSubDashboards(list3);
 		set3 = dm.saveNewDashboard(set3, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
+		
+		//this oob set contains oob dashboard
+		Dashboard set4=new Dashboard();
+		set4.setType(Dashboard.DASHBOARD_TYPE_SET);
+		set4.setAppicationType(DashboardApplicationType.LogAnalytics);
+		set4.setDashboardId(11000L+id++);
+		set4.setIsSystem(true);
+		set4.setName("set3"+System.currentTimeMillis());
+		List<Dashboard> list4=new ArrayList<Dashboard>();
+		list4.add(ladbd);
+		set4.setSubDashboards(list4);
+		set4 = dm.saveNewDashboard(set4, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
 
 		try{
 			DashboardsFilter filter1 = new DashboardsFilter();
 			filter1.setIncludedAppsFromString("LogAnalytics");
 			pd = dm.listDashboards(null, null, null, tenant1, true,null,filter1);
 			long result1 = pd.getTotalResults();
-			Assert.assertEquals(result1, initRequsult+5);//all dashboard/dashboard set will be listed
+			Assert.assertEquals(result1, initRequsult+6);//all dashboard/dashboard set will be listed
 		}finally{
 			dm.deleteDashboard(ladbd.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(unOOBladbd.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(set1.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(set2.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(set3.getDashboardId(), true, tenant1);
+			dm.deleteDashboard(set4.getDashboardId(), true, tenant1);
+			UserContext.setCurrentUser("SYSMAN");
 		}
 	}
 
@@ -1326,15 +1348,12 @@ public class DashboardManagerTest
 	 * this test case is for testing searching dashboard Set.
 	 * @throws DashboardException
      */
-//	@Test
+	@Test
 	public void testDashboardSetSearch() throws DashboardException {
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenant1 = 11L;
 		Long tenant2 = 12L;
 		PaginatedDashboards pd = null;
-//		Assert.assertNotNull(pd);
-//		long originSize = pd.getTotalResults();
-//		Assert.assertEquals(0, originSize);//FIXME
 		pd = dm.listDashboards("set", null, null, tenant1, false);
 		long queryOriginalSize = pd==null?0L:pd.getTotalResults();
 
@@ -1355,14 +1374,6 @@ public class DashboardManagerTest
 		set3.setName("name-" + System.currentTimeMillis());
 		set3.setDescription("set2");
 		set3 = dm.saveNewDashboard(set3, tenant1);
-//		pd = dm.listDashboards(null, null, tenant1, false);
-//		long allSize = pd.getTotalResults();
-//		Assert.assertEquals(allSize, originSize + 3);
-
-		// query by key word, case sensitive
-		/*pd = dm.listDashboards("set", null, null, tenant1, false);
-		long querySize = pd.getTotalResults();
-		Assert.assertEquals(querySize, queryOriginalSize + 3);*/
 
 		Dashboard set4 = new Dashboard();
 		set4.setType(Dashboard.DASHBOARD_TYPE_SET);
@@ -1459,6 +1470,7 @@ public class DashboardManagerTest
 			UserContext.setCurrentUser("OTHER USER");
 			dm.deleteDashboard(set10.getDashboardId(), true, tenant2);
 			dm.deleteDashboard(set11.getDashboardId(), true, tenant2);
+			UserContext.setCurrentUser("SYSMAN");
 		}
 
 	}
@@ -1473,6 +1485,7 @@ public class DashboardManagerTest
 		Long tenant2 = 12L;
 		Long id=1L;
 
+		UserContext.setCurrentUser("SYSMAN");
 		PaginatedDashboards pd =null;
 		pd = dm.listDashboards(null, null, null, tenant1, true,null,null);
 		long originSize = pd.getTotalResults();
@@ -1598,6 +1611,7 @@ public class DashboardManagerTest
 			dm.deleteDashboard(set1.getDashboardId(), true, tenant2);
 			dm.deleteDashboard(set2.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(set3.getDashboardId(), true, tenant1);
+			UserContext.setCurrentUser("SYSMAN");
 		}
 
 	}
