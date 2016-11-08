@@ -110,7 +110,7 @@ dependencies{
           
              testConfig(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2') { transitive = false }
      	
-	testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2')  { transitive = false }
+	testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
      
      
     configurations{
@@ -137,14 +137,14 @@ task e2e (type: EMTest, dependsOn:QATest ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'DashboardUITest') {
             classes([:]) {
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestHomePage')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage')
+		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestHomePage')
+		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage')
                 'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestBrandingBar')
+		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestBrandingBar')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB')
+		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
+		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB')
             }
         }
     }

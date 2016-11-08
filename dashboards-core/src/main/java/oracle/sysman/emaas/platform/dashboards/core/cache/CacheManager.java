@@ -57,10 +57,10 @@ public class CacheManager
 	{
 		keyGen = new DefaultKeyGenerator();
 		LOGGER.info("Initialization LRU CacheManager!!");
-		CacheFactory.getCache(CACHES_LOOKUP_CACHE, Integer.valueOf(conf.getString("CACHES_LOOKUP_CACHE_EXPIRE_TIME")));
-		CacheFactory.getCache(CACHES_SCREENSHOT_CACHE, Integer.valueOf(conf.getString("CACHES_SCREENSHOT_CACHE_EXPIRE_TIME")));
-		CacheFactory.getCache(CACHES_ETERNAL_CACHE, Integer.valueOf(conf.getString("CACHES_ETERNAL_CACHE_EXPIRE_TIME")));
-		CacheFactory.getCache(CACHES_SUBSCRIBE_CACHE, Integer.valueOf(conf.getString("CACHES_SUBSCRIBE_CACHE_EXPIRE_TIME")));
+		CacheFactory.getCache(CACHES_LOOKUP_CACHE,Integer.valueOf(conf.getString("DEFAULT_CACHE_UNIT_CAPACITY")), Integer.valueOf(conf.getString("CACHES_LOOKUP_CACHE_EXPIRE_TIME")));
+		CacheFactory.getCache(CACHES_SCREENSHOT_CACHE,Integer.valueOf(conf.getString("SCREENSHOT_CACHE_UNIT_CAPACITY")), Integer.valueOf(conf.getString("CACHES_SCREENSHOT_CACHE_EXPIRE_TIME")));
+		CacheFactory.getCache(CACHES_ETERNAL_CACHE, Integer.valueOf(conf.getString("DEFAULT_CACHE_UNIT_CAPACITY")), Integer.valueOf(conf.getString("CACHES_ETERNAL_CACHE_EXPIRE_TIME")));
+		CacheFactory.getCache(CACHES_SUBSCRIBE_CACHE, Integer.valueOf(conf.getString("DEFAULT_CACHE_UNIT_CAPACITY")), Integer.valueOf(conf.getString("CACHES_SUBSCRIBE_CACHE_EXPIRE_TIME")));
 	}
 
 	public CacheUnit getCache(String cacheName)

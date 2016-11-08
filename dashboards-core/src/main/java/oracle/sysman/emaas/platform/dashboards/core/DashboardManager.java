@@ -377,6 +377,30 @@ public class DashboardManager
 		}
 	}
 
+	public Dashboard getDashboardByNameAndDescriptionAndOwner(String name, String description, Long tenantId){
+		if(StringUtil.isEmpty(name)){
+			LOGGER.debug("Dashboard not found for name \"{}\" is invalid", name);
+			return null;
+		}
+		String currentUser = UserContext.getCurrentUser();
+		EntityManager entityManager = null;
+		try{
+			DashboardServiceFacade dashboardServiceFacade = new DashboardServiceFacade(tenantId);
+			entityManager = dashboardServiceFacade.getEntityManager();
+			EmsDashboard emsDashboard = dashboardServiceFacade.getEmsDashboardByNameAndDescriptionAndOwner(name, currentUser,description);
+			return Dashboard.valueOf(emsDashboard);
+		}catch (NoResultException e) {
+			LOGGER.debug("Dashboard not found for name \"{}\" because NoResultException is caught", name);
+			LOGGER.info("context", e);
+			return null;
+		}
+		finally {
+			if (entityManager != null) {
+				entityManager.close();
+			}
+		}
+	}
+
 	public Dashboard getDashboardSetsBySubId(Long dashboardId, Long tenantId) throws DashboardException
 	{
 		EntityManager em = null;
@@ -665,6 +689,7 @@ public class DashboardManager
 		}
 
 		StringBuilder sbApps = new StringBuilder();
+		//this if branch is useless
 		if (apps.isEmpty()) {
 			sb.append(" and p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
 					+ ") ");
@@ -680,8 +705,7 @@ public class DashboardManager
 				sbApps.append(String.valueOf(app.getValue()));
 			}
 
-			sb.append(" and p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (((p.share_public = 1 or p.owner = ?" + index++
-					+ " or (p.is_system = 1 and p.application_type in (" + sbApps.toString() + "))) ");
+			sb.append(" and p.deleted = 0 and p.tenant_Id = ?" + index++ + " and ((p.type<>2 and (p.share_public = 1 or p.owner = ?"+index+++" or p.application_type in (" + sbApps.toString() + "))" );
 			paramList.add(tenantId);
 			paramList.add(currentUser);
 		}
@@ -689,38 +713,60 @@ public class DashboardManager
 		StringBuilder sb1 = new StringBuilder();
 		if (filter != null) {
 			concatIncludedFavoritesSQL(filter, sb);
-			index = concatIncludedTypeIntegers(filter, sb, index, paramList);
-			concatIncludedApplicationTypes(filter, sb);
+			index = concatIncludedTypeInteger(filter, sb, index, paramList);
 			index = concatIncludedOwners(filter, sb, index, paramList);
-
-			concatIncludedFavoritesSQL(filter, sb1);
-			index = concatIncludedTypeIntegers(filter, sb1, index, paramList);
-			//			concatIncludedApplicationTypes(filter, sb1);
-			index = concatIncludedOwners(filter, sb1, index, paramList);
 		}
-		/*if(!apps.isEmpty()){
-			sb1.append(" and p.application_type in (" + sbApps.toString() + ") ");
-		}*/
+		sb.append(" and ((p.is_system=0 ");
+		if (filter != null) {
+			if (filter.getIncludedWidgetGroupsString() != null && !filter.getIncludedWidgetGroupsString().isEmpty()) {
+				sb.append(" and (p.dashboard_id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.WIDGET_GROUP_NAME in ("
+						+ filter.getIncludedWidgetGroupsString() + " ))) ");
+
+			}
+		}
+		sb.append(") or (p.is_system=1 ");
+		if (filter != null) {
+			concatIncludedApplicationTypes(filter, sb);
+		}
+		sb.append("))");
 
 		if (queryString != null && !"".equals(queryString)) {
 			Locale locale = AppContext.getInstance().getLocale();
-			concatQueryString(queryString, ic, sb, index, paramList, locale);
+			index=concatQueryString(queryString, ic, sb, index, paramList, locale);
+		}
+		sb.append(")");
 
-			concatQueryString(queryString, ic, sb1, index, paramList, locale);
+		//dashboard Set begin
+		sb1.append(" (p.type=2 ");
+		if (filter != null) {
+			concatIncludedFavoritesSQL(filter, sb1);
+			index = concatIncludedTypeInteger(filter, sb1, index, paramList);
+			index = concatIncludedOwners(filter, sb1, index, paramList);
 		}
-		if (filter != null && filter.getIncludedWidgetProvidersString() != null) {
-			LOGGER.debug("provider name is not null!");
-			sb1.append(" AND (p.DASHBOARD_ID IN (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN "
-					+ "(SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE t.PROVIDER_NAME IN ("
-					+ filter.getIncludedWidgetProvidersString()
-					+ " )) AND p2.DASHBOARD_SET_ID >1000)) AND p.APPLICATION_TYPE IS NULL");
+		sb1.append(" and ( (p.is_system=0 ");
+		if (filter != null) {
+			if (filter.getIncludedWidgetGroupsString() != null && !filter.getIncludedWidgetGroupsString().isEmpty()) {
+				sb1.append(" and p.DASHBOARD_ID in (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN (SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE t.WIDGET_GROUP_NAME IN ("
+						+ filter.getIncludedWidgetGroupsString()+ ")))");
+			}
 		}
+		sb1.append(") or (p.is_system=1 ");
+		if (filter != null) {
+			concatIncludedApplicationTypes(filter, sb1);
+		}
+		sb1.append("))");
+		sb1.append(" and (p.share_public=1 or p.owner =?"+ index++ +"  or p.application_type  IN (" + sbApps.toString() + ")))");
+		paramList.add(UserContext.getCurrentUser());
+		if (queryString != null && !"".equals(queryString)) {
+			Locale locale = AppContext.getInstance().getLocale();
+
+			index=concatQueryString(queryString, ic, sb1, index, paramList, locale);
+		}
+		sb1.append("))");
 		if (sb1.length() > 0) {
-			sb.append(") OR ( 1=1");
+			sb.append(" OR ( ");
 			sb.append(sb1);
 		}
-			sb.append("))");
-
 		//query
 		StringBuilder sbQuery = new StringBuilder(sb);
 		//order by
@@ -767,6 +813,31 @@ public class DashboardManager
 					em.close();
 			}
 		}
+	}
+
+
+	/**
+	 * @param filter
+	 * @param sb
+	 * @param index
+	 * @param paramList
+	 * @return
+	 */
+	private int concatIncludedTypeInteger(DashboardsFilter filter, StringBuilder sb, int index, List<Object> paramList)
+	{
+		if (filter.getIncludedTypeIntegers() != null && !filter.getIncludedTypeIntegers().isEmpty()) {
+			sb.append(" and ( ");
+			for (int i = 0; i < filter.getIncludedTypeIntegers().size(); i++) {
+				if (i != 0) {
+					sb.append(" or ");
+				}
+				sb.append(" p.type = ?" + index++);
+				paramList.add(filter.getIncludedTypeIntegers().get(i));
+			}
+			sb.append(" ) ");
+
+		}
+		return index;
 	}
 
 	/**
@@ -841,7 +912,8 @@ public class DashboardManager
 				throw new CommonFunctionalException(
 						MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_NAME_ERROR));
 			}
-			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
+			LOGGER.debug("Get the dashboard with name: {}, desc: {}", dbd.getName(), dbd.getDescription());
+			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
 			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
 				throw new DashboardSameNameException();
 			}
@@ -942,7 +1014,7 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
-			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
+			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
 			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
 				throw new DashboardSameNameException();
 			}
@@ -1136,17 +1208,14 @@ public class DashboardManager
 	private void concatIncludedApplicationTypes(DashboardsFilter filter, StringBuilder sb)
 	{
 		if (filter.getIncludedApplicationTypes() != null && !filter.getIncludedApplicationTypes().isEmpty()) {
-			sb.append(" and ( ");
+			sb.append(" and (");
 			for (int i = 0; i < filter.getIncludedApplicationTypes().size(); i++) {
 				if (i != 0) {
 					sb.append(" or ");
 				}
 				sb.append(" p.application_type = " + filter.getIncludedApplicationTypes().get(i).getValue() + " ");
 			}
-			sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.PROVIDER_NAME in ("
-					+ filter.getIncludedWidgetProvidersString() + " )) ");
-			sb.append(" ) ");
-
+			sb.append(")");
 		}
 	}
 
@@ -1201,30 +1270,6 @@ public class DashboardManager
 	}
 
 	/**
-	 * @param filter
-	 * @param sb
-	 * @param index
-	 * @param paramList
-	 * @return
-	 */
-	private int concatIncludedTypeIntegers(DashboardsFilter filter, StringBuilder sb, int index, List<Object> paramList)
-	{
-		if (filter.getIncludedTypeIntegers() != null && !filter.getIncludedTypeIntegers().isEmpty()) {
-			sb.append(" and ( ");
-			for (int i = 0; i < filter.getIncludedTypeIntegers().size(); i++) {
-				if (i != 0) {
-					sb.append(" or ");
-				}
-				sb.append(" p.type = ?" + index++);
-				paramList.add(filter.getIncludedTypeIntegers().get(i));
-			}
-			sb.append(" ) ");
-
-		}
-		return index;
-	}
-
-	/**
 	 * @param queryString
 	 * @param ic
 	 * @param sb
@@ -1232,7 +1277,7 @@ public class DashboardManager
 	 * @param paramList
 	 * @param locale
 	 */
-	private void concatQueryString(String queryString, boolean ic, StringBuilder sb, int index, List<Object> paramList,
+	private int concatQueryString(String queryString, boolean ic, StringBuilder sb, int index, List<Object> paramList,
 			Locale locale)
 	{
 		if (!ic) {
@@ -1272,6 +1317,7 @@ public class DashboardManager
 					+ index++ + " )) ");
 			paramList.add("%" + queryString.toLowerCase(locale) + "%");
 		}
+		return index;
 	}
 
 	private String getListDashboardsOrderBy(String orderBy, boolean isUnion)

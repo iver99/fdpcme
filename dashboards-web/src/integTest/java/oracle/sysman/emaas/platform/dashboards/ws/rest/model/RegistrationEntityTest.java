@@ -17,6 +17,7 @@ import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -80,8 +81,14 @@ public class RegistrationEntityTest
 	}
 
 	@Test
-	public void testGetCloudServices() 
+	public void testGetCloudServices(@Mocked final DependencyStatus anyDependencyStatus) 
 	{
+		new Expectations() {
+			{
+				anyDependencyStatus.isEntityNamingUp();
+				result = true;
+			}
+		};
 		Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getCloudServices()));
 	}
 

@@ -1,14 +1,21 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
-import mockit.*;
+import javax.servlet.http.HttpServletRequest;
+
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.Mocked;
+import mockit.NonStrictExpectations;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author jishshi
@@ -42,12 +49,18 @@ public class LoggingAPITest {
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void testLogMsgWithNull() {
+    public void testLogMsgWithNull(@Mocked final DependencyStatus anyDependencyStatus) {
+    	 new Expectations() {
+    		 {
+    			 anyDependencyStatus.isDatabaseUp();
+ 				result = true;
+    		 }
+    	 };
         Assert.assertNull(loggingAPI.logMsg(null));
     }
 
     @Test
-    public void testLogMsg(@Mocked final JSONObject jsonObject) throws JSONException {
+    public void testLogMsg(@Mocked final DependencyStatus anyDependencyStatus,@Mocked final JSONObject jsonObject) throws JSONException {
         final JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < 6; i++) {
             jsonArray.put(i, new JSONObject());
@@ -55,6 +68,8 @@ public class LoggingAPITest {
 
         new Expectations() {
             {
+            	anyDependencyStatus.isDatabaseUp();
+ 				result = true;
                 jsonObject.getJSONObject("logs").getJSONArray("logArray");
                 result = jsonArray;
 

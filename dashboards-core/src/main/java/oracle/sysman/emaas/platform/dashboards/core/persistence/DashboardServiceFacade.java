@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
+
 import java.util.Collections;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreferencePK;
@@ -70,6 +72,23 @@ public class DashboardServiceFacade
 		return null;
 	}
 
+	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(String name, String owner, String description){
+		String jpql;
+		Object[] params;
+		if(StringUtil.isEmpty(description)){
+			jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.description is null and d.deleted = ?3";
+			params = new Object[]{StringEscapeUtils.escapeHtml4(name), owner, new Integer(0)};
+		}else {
+			jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.description = ?3 and d.deleted = ?4";
+			params = new Object[]{StringEscapeUtils.escapeHtml4(name), owner, description, new Integer(0)};
+
+		}
+		Query query = em.createQuery(jpql);
+		for (int i = 1; i <= params.length; i++) {
+			query.setParameter(i, params[i - 1]);
+		}
+		return (EmsDashboard) query.getSingleResult();
+	}
 	//	public EmsDashboardFavorite getEmsDashboardFavoriteByPK(Long dashboardId, String username)
 	//	{
 	//		EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(username, dashboardId);
@@ -400,6 +419,7 @@ public class DashboardServiceFacade
 				em.merge(dashboard);
 			}
 		}
+		getEntityManager().getTransaction().commit();
 	}
 
 	public List<EmsDashboard> getEmsDashboardsBySubId(long subDashboardId)
