@@ -257,8 +257,8 @@ public class CacheManager
 	 */
 	public void logCacheStatus(){
 		long now=System.currentTimeMillis();
-		//log every 1 mins
-		if(now-lastLogTime>= 1*60*1000L){
+		long logInterval=CacheConfig.LOG_INTERVAL;
+		if(now-lastLogTime>= logInterval){
 			for(Map.Entry<String,CacheUnit> e: CacheFactory.getCacheUnitMap().entrySet()){
 				CacheUnit cu=e.getValue();
 				LOGGER.info("[Cache Status] Cache name is [{}], "

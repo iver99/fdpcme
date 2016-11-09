@@ -40,4 +40,7 @@ public class CacheConfig {
 
     public static final Integer ETERNAL_CAPACITY = Integer.valueOf(conf.getString("DEFAULT_CAPACITY"));
     public static final Integer DEFAULT_CAPACITY = Integer.valueOf(conf.getString("DEFAULT_CAPACITY"));
+    
+  //log cache status time interval
+    public static final Long LOG_INTERVAL = Long.valueOf(conf.getString("LOG_INTERVAL"));
 }
