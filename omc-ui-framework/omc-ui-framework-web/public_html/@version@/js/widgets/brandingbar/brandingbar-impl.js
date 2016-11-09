@@ -46,7 +46,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 });
             }
             
-            refreshOMCContext();
+            if (self.showGlobalContextBanner() === true) {
+                refreshOMCContext();
+            }
             
             function handleShowHideTopology() {
                 $("ude-topology-div").slideToggle("fast");
