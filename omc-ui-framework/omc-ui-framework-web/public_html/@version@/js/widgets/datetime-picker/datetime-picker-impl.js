@@ -39,12 +39,41 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 return Object.prototype.toString.call(obj) === "[object Array]";
             }
             
+            //. The result is
+            /**
+             *    Make input of timeperiod backward compatible.
+             *    The result is "LAST_X_UNIT"
+             */
             function formalizeTimePeriod(timePeriod) {
                 if(!timePeriod) {
                     return null;
                 }
+                var tp = timePeriod.toUpperCase();
+                if(tp.slice(-1) === "S") {
+                    tp = tp.slice(0, -1);
+                }
+                var arr = tp.split(" ");
+                tp = arr.join("_");
+                return tp;
+            }
+            
+            /**
+             * 
+             * @param {type} timePeriod
+             * @returns {unresolved} Turn timePeriod to "Last X unit/units"
+             */
+            function informalizeTimePeriod(timePeriod) {
+                if(!timePeriod) {
+                    return null;
+                }
+                
                 var tp = timePeriod.toLowerCase();
                 tp = (tp.slice(0, 1)).toUpperCase() + tp.slice(1);
+                var arr = tp.split("_");
+                if(parseInt(arr[1]) >1) {
+                    arr[2] = arr[2] + "s";
+                }
+                tp = arr.join(" ");
                 return tp;
             }
             
@@ -152,21 +181,21 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.tfDaysExcludedMsg = nls.DATETIME_PICKER_TIME_FILTER_INFO_DAYS_EXCLUDED;
                 self.tfMonthsExcludedMsg = nls.DATETIME_PICKER_TIME_FILTER_INFO_MONTHS_EXCLUDED;
 
-                self.timePeriodsNlsObject = {
-                    "Last 15 minutes" : self.timePeriodLast15mins,
-                    "Last 30 minutes" : self.timePeriodLast30mins,
-                    "Last 60 minutes" : self.timePeriodLast60mins,
-                    "Last 4 hours" : self.timePeriodLast4hours,
-                    "Last 6 hours" : self.timePeriodLast6hours,
-                    "Last 1 day" : self.timePeriodLast1day,
-                    "Last 7 days" : self.timePeriodLast7days,
-                    "Last 14 days" : self.timePeriodLast14days,
-                    "Last 30 days" : self.timePeriodLast30days,
-                    "Last 90 days" : self.timePeriodLast90days,
-                    "Last 1 year": self.timePeriodLast1year,
-                    "Latest" : self.timePeriodLatest,
-                    "Today":self.timePeriodToday,
-                    "Custom" : self.timePeriodCustom
+                self.timePeriodsNlsObject = {                    
+                    "LAST_15_MINUTE" : self.timePeriodLast15mins,
+                    "LAST_30_MINUTE" : self.timePeriodLast30mins,
+                    "LAST_60_MINUTE" : self.timePeriodLast60mins,
+                    "LAST_4_HOUR" : self.timePeriodLast4hours,
+                    "LAST_6_HOUR" : self.timePeriodLast6hours,
+                    "LAST_1_DAY" : self.timePeriodLast1day,
+                    "LAST_7_DAY" : self.timePeriodLast7days,
+                    "LAST_14_DAY" : self.timePeriodLast14days,
+                    "LAST_30_DAY" : self.timePeriodLast30days,
+                    "LAST_90_DAY" : self.timePeriodLast90days,
+                    "LAST_1_YEAR": self.timePeriodLast1year,
+                    "LATEST" : self.timePeriodLatest,
+                    "TODAY":self.timePeriodToday,
+                    "CUSTOM" : self.timePeriodCustom
                 };
 
                 self.last15minsNotToShow = ko.observable(false);
@@ -623,7 +652,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.timePeriodsNotToShow = [];
                         var l = params.timePeriodsNotToShow.length;
                         for(var i=0; i<l; i++) {
-                            var tp = params.timePeriodsNotToShow[i];
+                            var tp = formalizeTimePeriod(params.timePeriodsNotToShow[i]);
                             self.timePeriodsNotToShow.push(self.timePeriodsNlsObject[tp]);
                             self.setTimePeriodNotToShow(self.timePeriodsNlsObject[tp]);
                         }
@@ -633,7 +662,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             self.setAllTimePeriodsToShow();
                             var l = params.timePeriodsNotToShow().length;
                             for(var i=0; i<l; i++) {
-                                var tp = params.timePeriodsNotToShow()[i];
+                                var tp = formalizeTimePeriod(params.timePeriodsNotToShow()[i]);
                                 tmp.push(self.timePeriodsNlsObject[tp]);
                                 self.setTimePeriodNotToShow(self.timePeriodsNlsObject[tp]);
                             }
@@ -1101,7 +1130,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             }
                             //print warning...
                             oj.Logger.warn("The user just input end time");
-                        } else if (isValidDateInput(self.getParam(self.startDateTime)) && !isValidDateInput(getParam(self.endDateTime))) {
+                        } else if (isValidDateInput(self.getParam(self.startDateTime)) && !isValidDateInput(self.getParam(self.endDateTime))) {
                             customClick(0);
                             sdt = self.getParam(self.startDateTime);
                             start = newDateWithMilliseconds(sdt);
@@ -1686,6 +1715,15 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                     self.closeAllPopups();
                     var timePeriod = self.getTimePeriodString(self.timePeriod());
+                    
+                    //get time period value and unit
+                    var arr = timePeriod.split("_");
+                    var relTimeVal = null;
+                    var relTimeUnit = null;
+                    if(arr.length>1) {
+                        relTimeVal = arr[1];
+                        relTimeUnit = arr[2];
+                    }
 
                     //if time filter is enabled, pass time info in JSON format.
                     if(self.enableTimeFilter()) {
@@ -1707,7 +1745,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
 
                     //reset time params in global context
-                    if(timePeriod === "Custom") {                        
+                    if(timePeriod === "CUSTOM") {                        
                         ctxUtil.setStartTime(new Date(start).getTime());
                         ctxUtil.setEndTime(new Date(end).getTime());
                         ctxUtil.setTimePeriod(null);
@@ -1721,7 +1759,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         $.ajax({
                             url: "/emsaasui/uifwk/empty.html",
                             success: function () {
-                                self.callbackAfterApply(new Date(start), new Date(end), timePeriod, self.timeFilter());
+                                self.callbackAfterApply(new Date(start), new Date(end), informalizeTimePeriod(timePeriod), self.timeFilter(), relTimeVal, relTimeUnit);
                             },
                             error: function () {
                                 console.log(self.errorMsg);
