@@ -26,6 +26,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
             self.isTopologyDisplayed = ko.observable(false);
             self.topologyDisabled = ko.observable(false);
+            self.isTopologyCompRegistered = ko.observable(false);
             if(ko.isObservable(params.showGlobalContextBanner)) {
                 self.showGlobalContextBanner = params.showGlobalContextBanner;
             }else {
@@ -38,13 +39,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //Append uifwk css file into document head
             dfu.loadUifwkCss();
             
-            if (!ko.components.isRegistered('emctas-topology'))
-            {
-                ko.components.register('emctas-topology', {
-                    viewModel: {require: '/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.js'},
-                    template: {require: 'text!/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html'}
-                });
-            }
             if (!ko.components.isRegistered('emctas-globalbar'))
             {
                 ko.components.register('emctas-globalbar', {
@@ -53,9 +47,21 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 });
             }
             
+            function registerTopologyComponent() {
+                if (!ko.components.isRegistered('emctas-topology'))
+                {
+                    ko.components.register('emctas-topology', {
+                        viewModel: {require: '/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.js'},
+                        template: {require: 'text!/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html'}
+                    });
+                }
+                self.isTopologyCompRegistered(true);
+            }
+            
             refreshOMCContext();
 
             self.showTopology = function () { // listener to the button
+                registerTopologyComponent();
                 $("ude-topology-div").slideToggle("fast");
                 self.isTopologyDisplayed(!self.isTopologyDisplayed());
                 $(".oj-diagram").ojDiagram("refresh"); // refresh the diagram since the size of the div has been changed
