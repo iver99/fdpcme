@@ -7,10 +7,12 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
+import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashboard;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
@@ -18,8 +20,6 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsPreferencePK;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptionsPK;
-
-import org.apache.commons.lang3.StringEscapeUtils;
 
 public class DashboardServiceFacade
 {
@@ -70,6 +70,13 @@ public class DashboardServiceFacade
 			return (EmsDashboard)list.get(0);
 		}
 		return null;
+	}
+
+	public CombinedDashboard getCombinedEmsDashboardById(Long dashboardId, String userName) {
+		EmsDashboard ed = getEmsDashboardById(dashboardId);
+		EmsPreference ep = this.getEmsPreference(userName, "Dashboards.homeDashboardId");
+		EmsUserOptions euo = this.getEmsUserOptions(userName, dashboardId);
+		return CombinedDashboard.valueOf(ed, ep, euo);
 	}
 
 	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(String name, String owner, String description){

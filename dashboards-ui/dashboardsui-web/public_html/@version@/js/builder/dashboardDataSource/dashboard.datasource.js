@@ -24,17 +24,15 @@ define(['knockout',
             if (!self.dataSource[dashboardId]) {
                 self.dataSource[dashboardId] = {};
             }
-            if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].userOptions) {
-                Builder.fetchDashboardOptions(dashboardId,
-                        function (data) {
-                            self.dataSource[dashboardId].userOptions = data;
-                            self.dataSource[dashboardId].hasUserOptionInDB = true;
-                            successCallback && successCallback(data);
-                        },
-                        function (jqXHR, textStatus, errorThrown) {
-                            self[dashboardId].hasUserOptionInDB = false;
-                            errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
-                        });
+            if (isEmptyObject(self.dataSource[dashboardId])) {
+            	// emcpdf-2527
+            	self.loadDashboardData(dashboardId, function() {
+            		successCallback && successCallback(self.dataSource[dashboardId].userOptions);
+            	}, 
+                function (jqXHR, textStatus, errorThrown) {
+            		self[dashboardId].hasUserOptionInDB = false;
+            		errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
+            	});
             } else {
                 successCallback && successCallback(self.dataSource[dashboardId].userOptions);
             }
@@ -69,22 +67,62 @@ define(['knockout',
             }
         };
         
+    	function initializeDashboardAfterLoad(dashboardId, kodsb, dsb) {
+    		if (!dashboardId || !dsb || !kodsb) {
+    			return;
+    		}
+    		if (!self.dataSource[dashboardId]) {
+                self.dataSource[dashboardId] = {};
+            }
+            self.dataSource[dashboardId].dashboard = kodsb;
+            // ensure preference&isFavorite could always be available
+            if (dsb && dsb.userOptions) {
+            	self.dataSource[dashboardId].userOptions = dsb.userOptions;
+            	self.dataSource[dashboardId].hasUserOptionInDB = true;
+            } else {
+            	self.dataSource[dashboardId].userOptions = undefined;
+            	self.dataSource[dashboardId].hasUserOptionInDB = false;
+            }
+            
+            if (dsb && dsb.isFavorite) {
+            	self.dataSource[dashboardId].isFavorite = {"isFavorite": true};
+            } else {
+            	self.dataSource[dashboardId].isFavorite = {"isFavorite": false};
+            }
+            
+            if (dsb && dsb.preference) {
+            	self.dataSource[dashboardId].preference = dsb.preference;
+            } else {
+            	self.dataSource[dashboardId].preference = undefined;
+            }
+            if (dsb.selected) {
+                initializeDashboardAfterLoad(dsb.selected.id, kodsb.selected, dsb.selected);
+            }
+            // data copied to dataSource object, so remove original data form dashboard object
+        	self.dataSource[dashboardId].dashboard.userOptions = undefined;
+        	self.dataSource[dashboardId].dashboard.isFavorite = undefined;
+        	self.dataSource[dashboardId].dashboard.preference = undefined;
+        	self.dataSource[dashboardId].dashboard.selected = undefined;
+    	}
+        
         self.loadDashboardData = function (dashboardId, successCallback, errorCallback) {
             if (!self.dataSource[dashboardId]) {
                 self.dataSource[dashboardId] = {};
             }
             if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].dashboard) {
                 Builder.loadDashboard(dashboardId,
-                        function (data) {
-                            var dsb = getKODashboardForUI(data);
-                            self.dataSource[dashboardId].dashboard = dsb;
-                            successCallback && successCallback(dsb);
+                        function (dsb) {
+                            var kodsb = getKODashboardForUI(dsb);
+                            initializeDashboardAfterLoad(dashboardId, kodsb, dsb);
+                            successCallback && successCallback(kodsb);
                         },
                         errorCallback);
             } else {
                 successCallback && successCallback(self.dataSource[dashboardId].dashboard);
             }
         };
+        
+        
         
         self.updateDashboardData = function(dashboardId,dashboard,successCallback,errorCallback){
              if(!self.dataSource[dashboardId]){
@@ -141,18 +179,14 @@ define(['knockout',
             if (!self.dataSource[dashboardId]) {
                 self.dataSource[dashboardId] = {};
             }
-            if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].isFavorite) {
-                Builder.checkDashboardFavorites(dashboardId,
-                        function (data) {
-                            self.dataSource[dashboardId].isFavorite = data;
-                            successCallback && successCallback(data);
-                        },
-                        function (jqXHR, textStatus, errorThrown) {
-                            errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
-                        });
+            if (isEmptyObject(self.dataSource[dashboardId])) {
+            	// emcpdf-2527
+            	self.loadDashboardData(dashboardId, function() {
+                    successCallback && successCallback(self.dataSource[dashboardId].isFavorite);
+            	}, errorCallback);
             } else {
                 successCallback && successCallback(self.dataSource[dashboardId].isFavorite);
-            } 
+            }
         };
         
         self.addDashboardToFavorites = function(dashboardId, successCallback, errorCallback) {
@@ -183,6 +217,20 @@ define(['knockout',
                     function(jqXHR, textStatus, errorThrown) {
                         errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
                     });
+        };
+
+        self.getHomeDashboardPreference = function(dashboardId, successCallback, errorCallback) {
+            if (!self.dataSource[dashboardId]) {
+                self.dataSource[dashboardId] = {};
+            }
+            if (isEmptyObject(self.dataSource[dashboardId])) {
+            	// emcpdf-2527
+            	self.loadDashboardData(dashboardId, function() {
+                	successCallback && successCallback(self.dataSource[dashboardId].preference);
+            	}, errorCallback);
+            } else {
+            	successCallback && successCallback(self.dataSource[dashboardId].preference);
+            }
         };
                       
         function isEmptyObject(obj) {
