@@ -1,10 +1,10 @@
 package oracle.sysman.emaas.platform.dashboards.core.cache.lru;
 
-import java.util.ResourceBundle;
-import java.util.concurrent.ConcurrentHashMap;
-
+import oracle.sysman.emaas.platform.dashboards.core.cache.CacheConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class CacheFactory {
@@ -12,9 +12,8 @@ public class CacheFactory {
 	private static final Logger LOGGER = LogManager.getLogger(CacheFactory.class);
 
 	//never expired
-	private static final int DEFAULT_EXPIRE_TIME=0;
-	private static final int DEFAULT_CACHE_UNIT_CAPACITY = Integer.valueOf(ResourceBundle.getBundle("cache_config").getString(
-			"DEFAULT_CACHE_UNIT_CAPACITY"));
+	private static final int DEFAULT_EXPIRE_TIME= CacheConfig.DEFAULT_EXPIRE_TIME;
+	private static final int DEFAULT_CACHE_UNIT_CAPACITY =CacheConfig.DEFAULT_CAPACITY;
 	private static ConcurrentHashMap<String,CacheUnit> cacheUnitMap=new ConcurrentHashMap<String,CacheUnit>();
 
 	public static CacheUnit getCache(String cacheName){

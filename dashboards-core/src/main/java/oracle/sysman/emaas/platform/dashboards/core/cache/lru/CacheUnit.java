@@ -1,8 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.core.cache.lru;
 
 
-import java.util.ResourceBundle;
 
+import oracle.sysman.emaas.platform.dashboards.core.cache.CacheConfig;
 import oracle.sysman.emaas.platform.dashboards.core.cache.lru.inter.ICacheUnit;
 
 import org.apache.logging.log4j.LogManager;
@@ -19,9 +19,9 @@ public class CacheUnit implements ICacheUnit{
 	private CacheUnitStatus cacheUnitStatus;
 	
 	//constant
-	private final static int DEFAULT_TIME_TO_LIVE=0;// means live forever
+	private final static int DEFAULT_TIME_TO_LIVE= CacheConfig.DEFAULT_EXPIRE_TIME;// means live forever
 	private final static String DEFAULT_CACHE_UNIT_NAME="default_cache_unit";
-	public static final int DEFAULT_CACHE_CAPACITY=Integer.valueOf(ResourceBundle.getBundle("cache_config").getString("DEFAULT_CACHE_UNIT_CAPACITY"));//default capacity is 500
+	public static final int DEFAULT_CACHE_CAPACITY= CacheConfig.DEFAULT_CAPACITY;
 	//constructor
 	public CacheUnit(){
 		this(DEFAULT_CACHE_UNIT_NAME,DEFAULT_CACHE_CAPACITY,DEFAULT_TIME_TO_LIVE);

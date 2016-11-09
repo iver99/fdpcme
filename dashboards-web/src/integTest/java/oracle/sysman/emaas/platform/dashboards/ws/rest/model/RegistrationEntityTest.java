@@ -143,7 +143,7 @@ public class RegistrationEntityTest
 
 			}
 		};
-		CacheManager.getInstance().removeCacheable(new Tenant(TenantContext.getCurrentTenant()), CacheManager.CACHES_LOOKUP_CACHE,
+		CacheManager.getInstance().removeCacheable(new Tenant(TenantContext.getCurrentTenant()), CacheManager.CACHES_HOME_LINK_CACHE,
 				CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS);
 		Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getHomeLinks()));
 
