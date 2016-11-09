@@ -10,8 +10,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojs/ojtoolbar',
     'ojs/ojmenu',
     'ojs/ojbutton',
-    'ojs/ojdialog',
-    'ojs/ojdiagram'
+    'ojs/ojdialog'
 ],
     function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls) {
         function BrandingBarViewModel(params) {
@@ -47,30 +46,39 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 });
             }
             
-            function registerTopologyComponent() {
-                if (!ko.components.isRegistered('emctas-topology'))
-                {
-                    ko.components.register('emctas-topology', {
-                        viewModel: {require: '/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.js'},
-                        template: {require: 'text!/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html'}
-                    });
-                }
-                self.isTopologyCompRegistered(true);
-            }
-            
             refreshOMCContext();
-
-            self.showTopology = function () { // listener to the button
-                registerTopologyComponent();
+            
+            function handleShowHideTopology() {
                 $("ude-topology-div").slideToggle("fast");
+                //when expanding the topology, do a refresh if needed
+                if (!self.isTopologyDisplayed() && self.topologyNeedRefresh) {
+                    refreshTopologyParams();
+                }
                 self.isTopologyDisplayed(!self.isTopologyDisplayed());
-                $(".oj-diagram").ojDiagram("refresh"); // refresh the diagram since the size of the div has been changed
                 //set brandingbar_cache information for Topology expanded state
                 var brandingBarCache = {isTopologyDisplayed: self.isTopologyDisplayed()};
                 window.sessionStorage._uifwk_brandingbar_cache = JSON.stringify(brandingBarCache);
                 var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
                 $b && $b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
+            }
+            
+            self.showTopology = function () { // listener to the button
+                if (!ko.components.isRegistered('emctas-topology'))
+                {
+                    require(['ojs/ojdiagram'], function() {
+                        ko.components.register('emctas-topology', {
+                            viewModel: {require: '/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.js'},
+                            template: {require: 'text!/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html'}
+                        });
+                        self.isTopologyCompRegistered(true);
+                        handleShowHideTopology();
+                    });
+                }
+                else {
+                    handleShowHideTopology();
+                }
             };
+            
             self.isTopologyButtonChecked = ko.observableArray([]);
             self.isTopologyDisplayed.subscribe(function () {
                 if (self.isTopologyDisplayed()) {
@@ -757,6 +765,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.miniEntityCardActions = params.miniEntityCardActions;*/
                 
                 $(".oj-diagram").ojDiagram("refresh");
+                
+                //Clear dirty flag for topology after refreshing done
+                self.topologyNeedRefresh = false;
             }
             function refreshOMCContext() {
                 self.cxtCompositeMeId = cxtUtil.getCompositeMeId();
@@ -802,8 +813,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 refreshCompositeEntityCtxText();
 //                refreshTimeCtxText();
                 
-                // update parameters for topology 
-                refreshTopologyParams();
+                //Set a dirty flag for topology to be refreshed
+                self.topologyNeedRefresh = true;
+                if (self.isTopologyDisplayed()) {
+                    // update parameters for topology 
+                    refreshTopologyParams();
+                }
             }
 
             function refreshCompositeEntityCtxText() {
@@ -836,7 +851,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                    }
 //                }
                 //For now, only show composite context text on banner UI, do not show entities
-                if (self.cxtCompositeDisplayName) {
+                if (self.cxtCompositeMeId) {
                     self.compositeCxtText(self.cxtCompositeDisplayName);
                 }
                 //No composite entity & no member entity

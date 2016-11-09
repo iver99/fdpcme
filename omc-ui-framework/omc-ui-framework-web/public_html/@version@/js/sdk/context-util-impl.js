@@ -267,11 +267,14 @@ define([
              * @returns 
              */
             self.setCompositeMeId = function(compositeMEID) {
-                setIndividualContext('composite', 'compositeMEID', compositeMEID);
+                setIndividualContext('composite', 'compositeMEID', compositeMEID, false);
                 //Set composite meId will reset composite type/name, 
                 //next time you get the composite type/name will return the new type/name
-                setIndividualContext('composite', 'compositeType', null);
-                setIndividualContext('composite', 'compositeName', null);
+                setIndividualContext('composite', 'compositeType', null, false);
+                setIndividualContext('composite', 'compositeName', null, false);
+                setIndividualContext('composite', 'compositeDisplayName', null, false);
+                setIndividualContext('composite', 'compositeNeedRefresh', true, false);
+                fireOMCContextChangeEvent();
             };
             
             /**
@@ -305,7 +308,7 @@ define([
                 if (compositeType) {
                     return compositeType;
                 }
-                else if (self.getCompositeMeId()) {
+                else if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
                     //Fetch composite name/type
                     queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
                 }
@@ -333,7 +336,7 @@ define([
                 if (compositeName) {
                     return compositeName;
                 }
-                else if (self.getCompositeMeId()) {
+                else if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
                     //Fetch composite name/type
                     queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
                 }
@@ -351,7 +354,7 @@ define([
                 if (compositeDisplayName) {
                     return compositeDisplayName;
                 }
-                else if (self.getCompositeMeId()) {
+                else if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
                     //Fetch composite name/type
                     queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
                 }
@@ -374,7 +377,7 @@ define([
                 if (compositeClass) {
                     return compositeClass;
                 }
-                else if (self.getCompositeMeId()) {
+                else if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
                     //Fetch composite name/type
                     queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
                 }
@@ -599,10 +602,11 @@ define([
              * 
              * @param {String} contextName Context definition name
              * @param {String} paramName URL parameter name for the individual context
+             * @param {Boolean} fireChangeEvent Flag to determine whether to fire change event
              * @param {String} value Context value
              * @returns 
              */
-            function setIndividualContext(contextName, paramName, value) {
+            function setIndividualContext(contextName, paramName, value, fireChangeEvent) {
                 if (contextName && paramName) {
                     var omcContext = self.getOMCContext();
                     //If value is not null and not empty
@@ -618,7 +622,9 @@ define([
                     }
                     storeContext(omcContext);
                     updateCurrentURL();
-                    fireOMCContextChangeEvent();
+                    if (fireChangeEvent !== false) {
+                        fireOMCContextChangeEvent();
+                    }
                 }
             }
             
@@ -794,17 +800,19 @@ define([
             function fetchCompositeCallback(data) {
                 if (data && data['rows'] && data['rows'].length > 0) {
                     var entity = data['rows'][0];
-                    setIndividualContext('composite', 'compositeDisplayName', entity[1]);
-                    setIndividualContext('composite', 'compositeName', entity[2]);
-                    setIndividualContext('composite', 'compositeType', entity[3]);
-                    setIndividualContext('composite', 'compositeClass', entity[4]);
+                    setIndividualContext('composite', 'compositeDisplayName', entity[1], false);
+                    setIndividualContext('composite', 'compositeName', entity[2], false);
+                    setIndividualContext('composite', 'compositeType', entity[3], false);
+                    setIndividualContext('composite', 'compositeClass', entity[4], false);
                 }
                 else {
-                    setIndividualContext('composite', 'compositeDisplayName', null);
-                    setIndividualContext('composite', 'compositeName', null);
-                    setIndividualContext('composite', 'compositeType', null);
-                    setIndividualContext('composite', 'compositeClass', null);
+                    setIndividualContext('composite', 'compositeDisplayName', null, false);
+                    setIndividualContext('composite', 'compositeName', null, false);
+                    setIndividualContext('composite', 'compositeType', null, false);
+                    setIndividualContext('composite', 'compositeClass', null, false);
                 }
+                setIndividualContext('composite', 'compositeNeedRefresh', 'false', false);
+                fireOMCContextChangeEvent();
             }
             
             function executeODSQuery(jsonOdsQuery, callback) {
