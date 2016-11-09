@@ -37,7 +37,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var dfu = new dfumodel(self.userName, self.tenantName);
             //Append uifwk css file into document head
             dfu.loadUifwkCss();
-            //Load OMC context
             
             if (!ko.components.isRegistered('emctas-topology'))
             {
@@ -55,11 +54,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             }
             
             refreshOMCContext();
-            //
-            // topology params
-            //
-            
-            
 
             self.showTopology = function () { // listener to the button
                 $("ude-topology-div").slideToggle("fast");
@@ -760,16 +754,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             }
             function refreshOMCContext() {
                 self.cxtCompositeMeId = cxtUtil.getCompositeMeId();
-                self.cxtCompositeType = cxtUtil.getCompositeType();
-                self.cxtCompositeName = cxtUtil.getCompositeName();
-                self.cxtStartTime = cxtUtil.getStartTime();
-                self.cxtEndTime = cxtUtil.getEndTime();
+//                self.cxtCompositeType = cxtUtil.getCompositeType();
+                self.cxtCompositeDisplayName = cxtUtil.getCompositeDisplayName();
+//                self.cxtStartTime = cxtUtil.getStartTime();
+//                self.cxtEndTime = cxtUtil.getEndTime();
                 //self.cxtEntityMeId = cxtUtil.getEntityMeId();
 //                self.cxtEntityType = cxtUtil.getEntityType();
 //                self.cxtEntityName = cxtUtil.getEntityName();
-                self.cxtTimePeriod = cxtUtil.getTimePeriod();
-                self.cxtEntityMeIds = cxtUtil.getEntityMeIds();
-                self.cxtEntityTypeDisplayName = self.cxtEntityType;
+//                self.cxtTimePeriod = cxtUtil.getTimePeriod();
+//                self.cxtEntityMeIds = cxtUtil.getEntityMeIds();
+//                self.cxtEntityTypeDisplayName = self.cxtEntityType;
                 //Refresh topology button status
                 if (self.cxtCompositeMeId) {
                     self.topologyDisabled(false);
@@ -800,7 +794,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                }
 
                 refreshCompositeEntityCtxText();
-                refreshTimeCtxText();
+//                refreshTimeCtxText();
                 
                 // update parameters for topology 
                 refreshTopologyParams();
@@ -836,8 +830,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                    }
 //                }
                 //For now, only show composite context text on banner UI, do not show entities
-                if (self.cxtCompositeName) {
-                    self.compositeCxtText(self.cxtCompositeName);
+                if (self.cxtCompositeDisplayName) {
+                    self.compositeCxtText(self.cxtCompositeDisplayName);
                 }
                 //No composite entity & no member entity
                 else {
@@ -845,36 +839,36 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }
 
-            function refreshTimeCtxText() {
-                if (self.cxtTimePeriod) {
-                    self.timeCxtText(self.cxtTimePeriod);
-                }
-                else {
-                    var dateStartTime = self.cxtStartTime ? new Date(parseInt(self.cxtStartTime)) : null;
-                    var dateEndTime = self.cxtEndTime ? new Date(parseInt(self.cxtEndTime)) : null;
-                    var dateStartTimeText = formatDateTime(dateStartTime);
-                    var dateEndTimeText = formatDateTime(dateEndTime);
-                    if (dateStartTimeText || dateEndTimeText) {
-                        self.timeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_TIME,
-                                                            dateStartTimeText ? dateStartTimeText : '', 
-                                                            dateEndTimeText ? dateEndTimeText : ''));
-                    }
-                    else {
-                        self.timeCxtText(nls.BRANDING_BAR_GLOBAL_CONTEXT_TIME_ALL);
-                    }
-                }
-            }
-
-            function formatDateTime(dateTime) {
-                if (dateTime) {
-                    var dateTimeOption = {formatType: "datetime", dateFormat: "medium"};
-                    if (!self.dateTimeConverter) {
-                        self.dateTimeConverter = oj.Validation.converterFactory("dateTime").createConverter(dateTimeOption);
-                    }
-                    return self.dateTimeConverter.format(oj.IntlConverterUtils.dateToLocalIso(dateTime));
-                }
-                return null;
-            }
+//            function refreshTimeCtxText() {
+//                if (self.cxtTimePeriod) {
+//                    self.timeCxtText(self.cxtTimePeriod);
+//                }
+//                else {
+//                    var dateStartTime = self.cxtStartTime ? new Date(parseInt(self.cxtStartTime)) : null;
+//                    var dateEndTime = self.cxtEndTime ? new Date(parseInt(self.cxtEndTime)) : null;
+//                    var dateStartTimeText = formatDateTime(dateStartTime);
+//                    var dateEndTimeText = formatDateTime(dateEndTime);
+//                    if (dateStartTimeText || dateEndTimeText) {
+//                        self.timeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_TIME,
+//                                                            dateStartTimeText ? dateStartTimeText : '', 
+//                                                            dateEndTimeText ? dateEndTimeText : ''));
+//                    }
+//                    else {
+//                        self.timeCxtText(nls.BRANDING_BAR_GLOBAL_CONTEXT_TIME_ALL);
+//                    }
+//                }
+//            }
+//
+//            function formatDateTime(dateTime) {
+//                if (dateTime) {
+//                    var dateTimeOption = {formatType: "datetime", dateFormat: "medium"};
+//                    if (!self.dateTimeConverter) {
+//                        self.dateTimeConverter = oj.Validation.converterFactory("dateTime").createConverter(dateTimeOption);
+//                    }
+//                    return self.dateTimeConverter.format(oj.IntlConverterUtils.dateToLocalIso(dateTime));
+//                }
+//                return null;
+//            }
 
 //            function queryOdsEntityCallback(data, ctxType) {
 //                if (data && data['rows']) {

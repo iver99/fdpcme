@@ -307,7 +307,7 @@ define([
                 }
                 else if (self.getCompositeMeId()) {
                     //Fetch composite name/type
-                    queryODSEntityByMeId(self.getCompositeMeId(), fetchCompositeCallback);
+                    queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
                 }
                 return getIndividualContext('composite', 'compositeType');
             };
@@ -323,10 +323,10 @@ define([
 //            };
             
             /**
-             * Get OMC global context of composite name.
+             * Get OMC global context of composite internal name.
              * 
              * @param 
-             * @returns {String} OMC global context of composite name
+             * @returns {String} OMC global context of composite internal name
              */
             self.getCompositeName = function() {
                 var compositeName = getIndividualContext('composite', 'compositeName');
@@ -335,9 +335,50 @@ define([
                 }
                 else if (self.getCompositeMeId()) {
                     //Fetch composite name/type
-                    queryODSEntityByMeId(self.getCompositeMeId(), fetchCompositeCallback);
+                    queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
                 }
                 return getIndividualContext('composite', 'compositeName');
+            };
+            
+            /**
+             * Get OMC global context of composite display name.
+             * 
+             * @param 
+             * @returns {String} OMC global context of composite display name
+             */
+            self.getCompositeDisplayName = function() {
+                var compositeDisplayName = getIndividualContext('composite', 'compositeDisplayName');
+                if (compositeDisplayName) {
+                    return compositeDisplayName;
+                }
+                else if (self.getCompositeMeId()) {
+                    //Fetch composite name/type
+                    queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
+                }
+                //In case composite type+name are passed in from URL, return composite name for now
+                //Need to enhance the logic to query composite by type+name in next steps
+                else if (self.getCompositeType() && self.getCompositeName()) {
+                    return self.getCompositeName();
+                }
+                return getIndividualContext('composite', 'compositeDisplayName');
+            };
+            
+            /**
+             * Get composite class.
+             * 
+             * @param 
+             * @returns {String} Composite class
+             */
+            self.getCompositeClass = function() {
+                var compositeClass = getIndividualContext('composite', 'compositeClass');
+                if (compositeClass) {
+                    return compositeClass;
+                }
+                else if (self.getCompositeMeId()) {
+                    //Fetch composite name/type
+                    queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
+                }
+                return getIndividualContext('composite', 'compositeClass');
             };
             
 //            /**
@@ -629,7 +670,7 @@ define([
              */
             function retrieveParamValueFromUrl(decodedUrl, paramName) {
                 if (decodedUrl && paramName) {
-                    if (!decodedUrl.startsWith('?')) {
+                    if (decodedUrl.indexOf('?') !== 0) {
                         decodedUrl = '?' + decodedUrl;
                     }
                     var regex = new RegExp("[\\?&]" + encodeURIComponent(paramName) + "=([^&#]*)"), results = regex.exec(decodedUrl);
@@ -751,29 +792,19 @@ define([
             }
             
             function fetchCompositeCallback(data) {
-                if (data && data['rows']) {
-                    var dataRows = data['rows'];
-                    if (dataRows.length > 0) {
-                        var entity = dataRows[0];
-                        if (entity.length === 4) {
-                            setIndividualContext('composite', 'compositeName', entity[2]);
-                            setIndividualContext('composite', 'compositeType', entity[3]);
-                        }
-                    }
+                if (data && data['rows'] && data['rows'].length > 0) {
+                    var entity = data['rows'][0];
+                    setIndividualContext('composite', 'compositeDisplayName', entity[1]);
+                    setIndividualContext('composite', 'compositeName', entity[2]);
+                    setIndividualContext('composite', 'compositeType', entity[3]);
+                    setIndividualContext('composite', 'compositeClass', entity[4]);
                 }
-            }
-
-            function queryODSEntityByMeId(meId, callback) {
-                var jsonOdsQuery = {"ast":{"query":"simple","distinct":false,"select":[{"item":{"expr":"column","table":"me","column":"meId"}},
-                        {"item":{"expr":"column","table":"me","column":"entityName"}},
-                        {"item":{"expr":"column","table":"me","column":"displayName"}},
-                        {"item":{"expr":"column","table":"me","column":"entityType"}}],
-                    "from":[{"table":"virtual","name":"ManageableEntity","alias":"me"}],
-                    "where":{"cond":"inExpr","lhs":{"expr":"column","table":"me","column":"meId"},
-                    "rhs":[{"expr":"str","val":""}]}}};
-                jsonOdsQuery['ast']['where']['rhs'][0]['val'] = meId; 
-                oj.Logger.info("Start to get ODS entity by entity MEID.", false);
-                executeODSQuery(jsonOdsQuery, callback);
+                else {
+                    setIndividualContext('composite', 'compositeDisplayName', null);
+                    setIndividualContext('composite', 'compositeName', null);
+                    setIndividualContext('composite', 'compositeType', null);
+                    setIndividualContext('composite', 'compositeClass', null);
+                }
             }
             
             function executeODSQuery(jsonOdsQuery, callback) {
