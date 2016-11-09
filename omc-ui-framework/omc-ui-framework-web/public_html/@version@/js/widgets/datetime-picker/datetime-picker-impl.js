@@ -85,6 +85,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     return false;
                 }
             }
+            
+            function isValidFlexRelTimePeriod(timePeriod) {
+                var tpPattern = new RegExp("^LAST_[1-9]{1}[0-9]*_(SECOND|MINUTE|HOUR|DAY|WEEK|MONTH|YEAR){1}$");
+                return tpPattern.test(timePeriod);
+            }
 
             /**
              *
@@ -663,14 +668,18 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.timePeriodPresetInNls = ko.computed(function() {
                             return self.timePeriodsNlsObject[formalizeTimePeriod(params.timePeriod())];
                         }, self);
-                        self.timePeriodPresetInNls.subscribe(function(value) {
-                            self.initialize && self.initialize();
+                        params.timePeriod.subscribe(function(value) {
+                            if(self.timePeriodsNlsObject[formalizeTimePeriod(value)] || isValidFlexRelTimePeriod(value)) {
+                                self.initialize && self.initialize();                                
+                            }else {
+                                throw new Error("The config param - "  + value + " for time period is invalid!");
+                            }
                         });
                     }else {
                         self.timePeriodPresetInNls = self.timePeriodsNlsObject[formalizeTimePeriod(params.timePeriod)];
                     }
 
-                    if(self.getParam(self.timePeriodPresetInNls)) {
+                    if(self.getParam(self.timePeriodPresetInNls) || isValidFlexRelTimePeriod(self.getParam(params.timePeriod))) { //check if it is valid time period
                         self.isTimePeriodPreset = true;
                     }else {
                         self.isTimePeriodPreset = false;
@@ -1241,7 +1250,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var sdt, edt, range;
 
                     if(self.isTimePeriodPreset) {
-                        if(self.timePeriodPresetInNls) {
+                        if(self.getParam(self.timePeriodPresetInNls)) {
                             var tp = self.getParam(self.timePeriodPresetInNls);
                             if(tp === self.timePeriodToday) {
                                 start = new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate());
@@ -1276,6 +1285,17 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     customClick(0);
                                 }
                             }
+                        }else {
+                            self.lrCtrlVal("flexRelTimeCtrl");
+                                                        
+                            var arr = ko.unwrap(params.timePeriod).split("_");
+                            var tmp = self.getTimeRangeForFlexRelTime(arr[1], arr[2]);
+                            start = new Date(tmp.start);
+                            end = new Date(tmp.end);
+                            
+                            self.flexRelTimeVal(arr[1]);
+                            self.flexRelTimeOpt([arr[2]]);
+                            self.timePeriod(self.timePeriodCustom);
                         }
                     }else {
                         if(isValidDateInput(self.getParam(self.startDateTime)) && isValidDateInput(self.getParam(self.endDateTime))) {
