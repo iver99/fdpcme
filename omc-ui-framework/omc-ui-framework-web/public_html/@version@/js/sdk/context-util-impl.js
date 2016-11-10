@@ -1,15 +1,13 @@
 define([
     'ojs/ojcore',
     'jquery',
-    'uifwk/@version@/js/util/df-util-impl',
-    'uifwk/@version@/js/util/usertenant-util-impl'
+    'uifwk/@version@/js/util/df-util-impl'
 ],
-    function (oj, $, dfuModel, userTenantUtilModel)
+    function (oj, $, dfuModel)
     {
         function UIFWKContextUtil() {
             var self = this;
             var dfu = new dfuModel();
-            var userTenantUtil = new userTenantUtilModel();
             var supportedContext = [{'contextName': 'time','paramNames': ['startTime', 'endTime', 'timePeriod']}, 
                                     {'contextName': 'composite','paramNames': ['compositeType', 'compositeName', 'compositeMEID']},
                                     {'contextName': 'entity','paramNames': ['entitiesType', /*'entityName',*/ 'entityMEIDs']}
@@ -40,19 +38,6 @@ define([
                 if (!omcContext) {
                     omcContext = getContextFromUrl();
                 }
-                //If omcCOntext is missed from URL try to retrive it from sessionStorage
-                if (!omcContext
-                    && window.sessionStorage._uifwk_omcContext)
-                {
-                    omcContext = getContextFromSessionStorage();
-                }
-                //If omcContext not defined, use localStorage as last resource. This is for situation
-                //like when opening a new tab.
-                /*if (!omcContext &&
-                    window.localStorage._uifwk_omcContext) {
-                    omcContext = JSON.parse(window.localStorage._uifwk_omcContext);
-                    self.setOMCContext(omcContext);
-                }*/
 
                 if (!omcContext) {
                     omcContext = {};
@@ -62,22 +47,6 @@ define([
                 oj.Logger.info("OMC gloable context is fetched as: " + JSON.stringify(omcContext));
                 return omcContext;
             };
-
-            function getContextFromSessionStorage() {
-                var currentUserAndTenant = getUserAndTenant();
-                var storedUserAndTenant = window.sessionStorage._uifwk_userAndTenant;
-                var omcContext;
-                if (currentUserAndTenant === storedUserAndTenant) {
-                    omcContext = JSON.parse(window.sessionStorage._uifwk_omcContext);
-                    self.setOMCContext(omcContext);
-                }
-                return omcContext;
-            }
-
-            function getUserAndTenant(){
-                var tenantUser = userTenantUtil.getUserTenant();
-                return tenantUser.user + '.' + tenantUser.tenant;
-            }
 
             function getContextFromUrl() {
                 var omcContext = {};
@@ -140,16 +109,6 @@ define([
                 //But need to make sure the omc context is initialized before page owner start to rewrites
                 //the URL by oj_Router etc..
                 window._uifwk.omcContext = context;
-                //We use SessionStorage to help preserve the omc context during navigation, when
-                //URL does not contains the omc context
-                window.sessionStorage._uifwk_omcContext = JSON.stringify(context);
-                var currentUserAndTenant = getUserAndTenant();
-                window.sessionStorage._uifwk_userAndTenant = currentUserAndTenant;
-                
-                //We use localStorage as last resource to retrive the omc context. For cases
-                //when user just have open the browser, or when opening a new tab to restore the
-                //last used context,
-                //window.localStorage._uifwk_omcContext = JSON.stringify(context);
             }
             
             /**

@@ -884,9 +884,14 @@ define(['knockout',
                     clearInterval(window.intervalToExtendCurrentUserSession);
                 }
                 window.currentUserSessionExpired = true;
+                self.clearSessionCache();
                 //Open sessin timeout warning dialog
                 $('#'+warningDialogId).ojDialog('open');
             }
+
+            self.clearSessionCache = function(){
+                window.sessionStorage.removeItem('_uifwk_brandingbar_cache');
+            };
             
             self.getRegistrations = function(successCallback, toSendAsync, errorCallback){
                 if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.registrations && window._uifwk.cachedData.registrations()){

@@ -102,9 +102,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 var brandingBarCache = JSON.parse(window.sessionStorage._uifwk_brandingbar_cache);
                 if (brandingBarCache && brandingBarCache.isTopologyDisplayed) {
                     if (self.showGlobalContextBanner()) {
-                        registerTopologyComponent(refreshTopologyParams);
+                        registerTopologyComponent(function(){
+                            refreshTopologyParams();
+                            if(self.topologyDisabled() === false){
+                                self.isTopologyDisplayed(true);
+                            }
+                        });
                     }
-                    self.isTopologyDisplayed(true);
                 }
             }
 
@@ -319,6 +323,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (window.intervalToExtendCurrentUserSession) {
                     clearInterval(window.intervalToExtendCurrentUserSession);
                 }
+
+                dfu.clearSessionCache();
+
                 var ssoLogoutEndUrl = encodeURI(window.location.protocol + '//' + window.location.host + dfWelcomeUrl);
                 var logoutUrlDiscovered = window.cachedSSOLogoutUrl ? window.cachedSSOLogoutUrl : dfu.discoverLogoutUrl();
                 //If session timed out, redirect to sso login page and go to home page after re-login.
