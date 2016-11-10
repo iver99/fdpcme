@@ -165,7 +165,7 @@ require(['ojs/ojcore',
                     callbackAfterApply: function (start, end, tp, tf, relTimeVal, relTimeUnit) {
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
-                        if(self.isTimePeriodLessThan1day(tp) && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
+                        if((self.isTimePeriodLessThan1day(tp) || relTimeUnit==="SECOND" || relTimeUnit==="MINUTE" || relTimeUnit === "HOUR") && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
                             self.start(self.dateTimeConverter1.format(appliedStart)+" ("+self.getGMTTimezone(start)+")");
                             self.end(self.dateTimeConverter1.format(appliedEnd)+" ("+self.getGMTTimezone(end)+")");
                         }else {
@@ -189,14 +189,10 @@ require(['ojs/ojcore',
                     timeDisplay: self.timeDisplay,
                     dtpickerPosition: self.floatPosition3,
                     timePeriod: "Last 1 day", //self.timePeriodPre,
-                    callbackAfterApply: function (start, end, tp, tf) {
-                        console.log(start);
-                        console.log(end);
-                        console.log(tp);
-                        console.log(tf);
+                    callbackAfterApply: function (start, end, tp, tf, relTimeVal, relTimeUnit) {
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
-                        if(self.isTimePeriodLessThan1day(tp) && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
+                        if((self.isTimePeriodLessThan1day(tp) || relTimeUnit==="SECOND" || relTimeUnit==="MINUTE" || relTimeUnit === "HOUR") && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
                             self.start3(self.dateTimeConverter1.format(appliedStart)+" ("+self.getGMTTimezone(start)+")");
                             self.end3(self.dateTimeConverter1.format(appliedEnd)+" ("+self.getGMTTimezone(end)+")");
                         }else {

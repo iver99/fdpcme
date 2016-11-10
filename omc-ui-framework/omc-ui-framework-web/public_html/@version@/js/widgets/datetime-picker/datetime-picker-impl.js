@@ -1162,7 +1162,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         //add timezone for time ranges less than 1 day if the start&end time are in different timezone due to daylight saving time.
                         var tmpStart = oj.IntlConverterUtils.isoToLocalDate(startDate+startTime);
                         var tmpEnd = oj.IntlConverterUtils.isoToLocalDate(endDate+endTime);
-                        if(tmpStart.getTimezoneOffset() !== tmpEnd.getTimezoneOffset() && self.isTimePeriodLessThan1day(timePeriod)) {
+                        if(tmpStart.getTimezoneOffset() !== tmpEnd.getTimezoneOffset() && (self.isTimePeriodLessThan1day(timePeriod) 
+                                || self.flexRelTimeOpt()[0] === "SECOND" || self.flexRelTimeOpt()[0] === "MINUTE" || self.flexRelTimeOpt()[0] === "HOUR")) {
                             start += " (" + self.getGMTTimezone(tmpStart) + ")";
                             end += " (" + self.getGMTTimezone(tmpEnd) + ")";
                         }
@@ -1171,13 +1172,16 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         hyphenDisplay = end ? hyphenDisplay : "display: none;";
                     }
 
+                    //For "Latest" quick pick
                     if(timePeriod === self.timePeriodLatest) {
                         dateTimeInfo = "<span style='font-weight: bold; padding-right: 5px; display: inline-block;'>" + timePeriod + "</span>";
                         return dateTimeInfo;
                     }
 
+
+                    //For "Custom" time period, including custom relative time and custom absolute time
                     if(timePeriod === self.timePeriodCustom) {
-                        if(self.lrCtrlVal() === "flexRelTimeCtrl") {
+                        if(self.lrCtrlVal() === "flexRelTimeCtrl") { //For custom relative time
                             if(self.getParam(self.timeDisplay) === "short") {
                                 dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display: inline-block;'>" + self.getFlexTimePeriod(self.flexRelTimeVal(), self.flexRelTimeOpt()[0])  + "</span>";
                             }else {
@@ -1475,7 +1479,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                  * @returns start and end time in ISO format
                  */
                 self.getTimeRangeForFlexRelTime = function(num, opt) {
-//                    var end = new Date(2016, 1, 29, 3, 0, 0, 0);
+//                    var end = new Date(2016, 2, 13, 3, 0, 0, 0);
                     var end = new Date();
                     var timeRange;
                     switch(opt) {
