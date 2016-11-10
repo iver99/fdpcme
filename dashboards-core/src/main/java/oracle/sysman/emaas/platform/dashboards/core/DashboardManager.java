@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -35,13 +37,16 @@ import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 
 public class DashboardManager
 {
@@ -360,39 +365,74 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			EmsDashboard ed = getEmsDashboardById(dsf, dashboardId, tenantId);
-			EmsPreference ep = dsf.getEmsPreference(userName, "Dashboards.homeDashboardId");
+			EmsPreference ep = dsf.getEmsPreference(userName,"Dashboards.homeDashboardId");
 			EmsUserOptions euo = dsf.getEmsUserOptions(userName, dashboardId);
-			CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo);
-			if (ed.getType().equals(Dashboard.DASHBOARD_TYPE_CODE_SET) && euo != null && !StringUtil.isEmpty(euo.getExtendedOptions())) {
+			Long selectedId = null;
+			List<EmsDashboardTile> edbdtList = null;
+			List<String> ssfIdList = new ArrayList<String>();
+
+			if (ed.getType().equals(Dashboard.DASHBOARD_TYPE_CODE_SET)
+					&& euo != null
+					&& !StringUtil.isEmpty(euo.getExtendedOptions())) {
 				String extOptions = euo.getExtendedOptions();
-				LOGGER.info("Dashboard ID={} is a dashboard set, its extendedOptions is {}", dashboardId, extOptions);
+				LOGGER.info("Dashboard ID={} is a dashboard set, its extendedOptions is {}",dashboardId, extOptions);
 				JSONObject jsonObj = null;
 				Object selected = null;
 				try {
 					jsonObj = new JSONObject(extOptions);
 					selected = jsonObj.get("selectedTab");
 				} catch (JSONException e) {
-					// failed to parse extended options json, so failed to retrieve selected tab. 
-					// This is unexpected, but if it happens, likes just go ahead w/o selected tab then...
+					// failed to parse extended options json, so failed to
+					// retrieve selected tab.
+					// This is unexpected, but if it happens, likes just go
+					// ahead w/o selected tab then...
 					LOGGER.error(e.getLocalizedMessage(), e);
 				}
 				if (selected != null) {
-					Long selectedId = null; 
 					try {
 						selectedId = Long.valueOf(selected.toString());
-						EmsDashboard sed = this.getEmsDashboardById(dsf, selectedId, tenantId);
-						EmsUserOptions seuo = dsf.getEmsUserOptions(userName, selectedId);
-						CombinedDashboard scd = CombinedDashboard.valueOf(sed, null, seuo);
-						cd.setSelected(scd);
+						EmsDashboard sed = this.getEmsDashboardById(dsf,selectedId, tenantId);
+						edbdtList = sed.getDashboardTileList();
 					} catch (NumberFormatException e) {
 						// might be a null 'selectedTab' value or invalid one
-						LOGGER.info("Failed to get selected dashboard ID: ID is invalid: {}", selected);
+						LOGGER.info(
+								"Failed to get selected dashboard ID: ID is invalid: {}",
+								selected);
 					}
 				}
+			} else {
+				edbdtList = ed.getDashboardTileList();
+			}
+
+			if (edbdtList != null) {
+				for (EmsDashboardTile edt : edbdtList) {
+					ssfIdList.add(edt.getWidgetUniqueId());
+				}
+			}
+
+			TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
+			Link tenantsLink = RegistryLookupUtil.getServiceInternalLink(
+					"SavedSearch", "1.0+", "search", null);
+			String tenantHref = tenantsLink.getHref() + "/list";
+			String tenantName = TenantContext.getCurrentTenant();
+			Map<String, Object> headers = new HashMap<String, Object>();
+			headers.put("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
+			String savedSearchResponse = null;
+			try {
+				savedSearchResponse = rc.put(tenantHref, headers,
+						ssfIdList.toString(), tenantName);
+			} catch (Exception e) {
+				LOGGER.info("savedsearch response", e);
+			}
+			CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo,savedSearchResponse);
+			if (ed.getType().equals(Dashboard.DASHBOARD_TYPE_CODE_SET)&& euo != null&& !StringUtil.isEmpty(euo.getExtendedOptions())) {
+				EmsDashboard sed = this.getEmsDashboardById(dsf, selectedId,tenantId);
+				EmsUserOptions seuo = dsf.getEmsUserOptions(userName,selectedId);
+				CombinedDashboard scd = CombinedDashboard.valueOf(sed, null,seuo, null);
+				cd.setSelected(scd);
 			}
 			return cd;
-		}
-		finally {
+		} finally {
 			if (em != null && em.isOpen()) {
 				em.close();
 			}

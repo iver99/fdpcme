@@ -66,8 +66,7 @@ dependencies {
 	compile getProjectArtifact('jersey-client')  
 	compile getProjectArtifact('jmockit')  
 	compile getProjectArtifact('em-qatool-os-webdriver')  
-
-	
+	compile getProjectArtifact('jersey-json') 
 
 }
 
