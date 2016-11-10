@@ -126,9 +126,6 @@ dependencies {
     	
        testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
         testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
-	configurations{
-		restAssured.exclude module:'groovy'
-	}
 }
 
 

@@ -59,8 +59,5 @@ artifactoryPublish {
 dependencies {
 	testConfig getProjectArtifact('jmockit')   
 	testConfig getProjectArtifact('log4j-core')   
- 	testConfig getProjectArtifact('log4j-api')   	
-	testCompile configurations.testConfig
-    testCompile configurations.webdriver
-    testCompile configurations.testNG
+	testConfig getProjectArtifact('log4j-api')   
 }

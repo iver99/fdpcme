@@ -97,7 +97,8 @@ task ftpRestDoc << {
 
 
 test {
-	useTestNG()		
+	classpath = sourceSets.test.compileClasspath + sourceSets.test.output
+	useTestNG()
 	{
 		//We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
 		//if you wish to run ALL tests within this projet - remove following.
@@ -107,7 +108,6 @@ test {
 
 
 dependencies {
-	
 	providedCompile project(':dashboards-entities')  
 	providedCompile project(':dashboards-core')  
     providedCompile project(':dashboards-webutils')   

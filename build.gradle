@@ -263,7 +263,6 @@ task preBuildCompile(type: Copy) {
    from configurations.prebuild_junit
    from configurations.prebuild_apacheHttp
    from configurations.prebuild_jaxrs
-   from configurations.testNG
    from configurations.prebuild_wlfullc
    from configurations.prebuild_tenant
    from configurations.prebuild_cache
