@@ -123,13 +123,15 @@ define([
                 fireOMCContextChangeEvent();
             };
             
-            function updateCurrentURL() {
+            function updateCurrentURL(replaceState) {
                 //update current URL
                 var url = window.location.href.split('/').pop();
                 url = self.appendOMCContext(url);
                 var newurl=window.location.pathname.substring(0,window.location.pathname.lastIndexOf('/'));
                 newurl=newurl+'/'+url;
-                window.history.replaceState(window.history.state, document.title, newurl);
+                if(replaceState !== false) { //history.replaceState will always be called unless replaceState is set to false explicitly
+                    window.history.replaceState(window.history.state, document.title, newurl);
+                }
             }
 
             function storeContext(context) {
@@ -247,8 +249,16 @@ define([
              * @returns 
              */
             self.setTimePeriod = function(timePeriod) {
-                setIndividualContext('time', 'timePeriod', timePeriod);
+                setIndividualContext('time', 'startTime', null, false, false);
+                setIndividualContext('time', 'endTime', null, false, false);
+                setIndividualContext('time', 'timePeriod', timePeriod, true, true);
             };
+            
+            self.setStartAndEndTime = function(start, end) {
+                setIndividualContext('time', 'timePeriod', null, false, false);
+                setIndividualContext('time', 'startTime', parseInt(start), false, false);
+                setIndividualContext('time', 'endTime', parseInt(end), true, true);
+            }
             
             /**
              * Get OMC global context of time period.
@@ -606,7 +616,7 @@ define([
              * @param {String} value Context value
              * @returns 
              */
-            function setIndividualContext(contextName, paramName, value, fireChangeEvent) {
+            function setIndividualContext(contextName, paramName, value, fireChangeEvent, replaceState) {
                 if (contextName && paramName) {
                     var omcContext = self.getOMCContext();
                     //If value is not null and not empty
@@ -621,13 +631,13 @@ define([
                         delete omcContext[contextName][paramName];
                     }
                     storeContext(omcContext);
-                    updateCurrentURL();
+                    updateCurrentURL(replaceState);
                     if (fireChangeEvent !== false) {
                         fireOMCContextChangeEvent();
                     }
                 }
             }
-            
+                        
             /**
              * Get individual OMC global context.
              * 
