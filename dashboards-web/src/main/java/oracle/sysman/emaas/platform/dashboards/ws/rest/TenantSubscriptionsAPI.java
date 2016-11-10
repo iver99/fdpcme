@@ -66,6 +66,7 @@ public class TenantSubscriptionsAPI extends APIBase
 	}
 
 	private static final String APPLICATION_STATUS_ONBORDED = "TENANT_ONBOARDED";
+	private static final String TENANT_SUBSCRIPTION_UPDATED = "TENANT_SUBSCRIPTION_UPDATED";
 
 	private static final Logger LOGGER = LogManager.getLogger(TenantSubscriptionsAPI.class.getName());
 
@@ -132,8 +133,8 @@ public class TenantSubscriptionsAPI extends APIBase
 						"Get one subscribed application for tenant {}: name - \"{}\", serviceType - \"{}\", edition - \"{}\", editionUUID - \"{}\", status - \"{}\", serviceId - \"{}\"",
 						tenantName, se.getServiceName(), se.getServiceType(), se.getEdition(), se.getEditionUUID(),
 						se.getStatus(), se.getServiceId());
-				// only application in state of onboarded are valid
-				if (!APPLICATION_STATUS_ONBORDED.equals(se.getStatus())) {
+				// only application in state of onboarded or subscription updated are valid
+				if (!APPLICATION_STATUS_ONBORDED.equals(se.getStatus()) && !TENANT_SUBSCRIPTION_UPDATED.equals(se.getStatus())) {
 					LOGGER.debug("This application is ignored as it's status is \"{}\"", se.getStatus());
 					continue;
 				}
