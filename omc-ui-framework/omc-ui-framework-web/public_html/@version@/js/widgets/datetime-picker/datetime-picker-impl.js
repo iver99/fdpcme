@@ -1746,12 +1746,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                     //reset time params in global context
                     if(timePeriod === "CUSTOM") {                        
-                        ctxUtil.setStartTime(new Date(start).getTime());
-                        ctxUtil.setEndTime(new Date(end).getTime());
-                        ctxUtil.setTimePeriod(null);
+                        ctxUtil.setStartAndEndTime(new Date(start).getTime(), new Date(end).getTime());
                     }else {
-                        ctxUtil.setStartTime(null);
-                        ctxUtil.setEndTime(null);
                         ctxUtil.setTimePeriod(timePeriod);
                     }
 
