@@ -10,8 +10,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojs/ojtoolbar',
     'ojs/ojmenu',
     'ojs/ojbutton',
-    'ojs/ojdialog',
-    'ojs/ojdiagram'
+    'ojs/ojdialog'
 ],
     function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls) {
         function BrandingBarViewModel(params) {
@@ -65,20 +64,30 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
                 $b && $b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
             }
-
-            self.showTopology = function () { // listener to the button
-
-                if (!ko.components.isRegistered('emctas-topology'))
-                {
-                    ko.components.register('emctas-topology', {
-                        viewModel: {require: '/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.js'},
-                        template: {require: 'text!/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html'}
+            
+            function registerTopologyComponent(callback) {
+                if (!self.isTopologyCompRegistered()) {
+                    require(['ojs/ojdiagram'], function() {
+                        if (!ko.components.isRegistered('emctas-topology')) {
+                            ko.components.register('emctas-topology', {
+                                viewModel: {require: '/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.js'},
+                                template: {require: 'text!/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html'}
+                            });
+                        }
+                        self.isTopologyCompRegistered(true);
+                        if ($.isFunction(callback)) {
+                            callback();
+                        }
                     });
                 }
-                self.isTopologyCompRegistered(true);
-                handleShowHideTopology();
+                else if ($.isFunction(callback)) {
+                    callback();
+                }
+            }
 
-
+            self.showTopology = function () { // listener to the button
+                registerTopologyComponent(handleShowHideTopology);
+                //handleShowHideTopology();
             };
 
             self.isTopologyButtonChecked = ko.observableArray([]);
@@ -92,6 +101,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             if (window.sessionStorage._uifwk_brandingbar_cache) {
                 var brandingBarCache = JSON.parse(window.sessionStorage._uifwk_brandingbar_cache);
                 if (brandingBarCache && brandingBarCache.isTopologyDisplayed) {
+                    if (self.showGlobalContextBanner()) {
+                        registerTopologyComponent(refreshTopologyParams);
+                    }
                     self.isTopologyDisplayed(true);
                 }
             }
@@ -741,37 +753,39 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.appName(subscribedServices);
             }
             function refreshTopologyParams() {
-                if (cxtUtil.getCompositeMeId()) {
-                    var compositeId = [];
-                    compositeId.push(cxtUtil.getCompositeMeId());
-                    self.entities(compositeId);
-                    self.topologyDisabled(false);
-                } else {
-                    self.topologyDisabled(true);
-                    if (cxtUtil.getCompositeName() && cxtUtil.getCompositeType()) {
-                        self.queryVars({entityName: cxtUtil.getCompositeName(), entityType: cxtUtil.getCompositeType()});
-                    }
-                    else {
-                        var entityMeIds = cxtUtil.getEntityMeIds();
-                        if (entityMeIds) {
-                            //cxtUtil.getEntityMeIds() will return a list of meIds
-                            self.entities(entityMeIds);
-                        } else {
-                            self.entities([]);
+                if (self.isTopologyCompRegistered()) {
+                    if (cxtUtil.getCompositeMeId()) {
+                        var compositeId = [];
+                        compositeId.push(cxtUtil.getCompositeMeId());
+                        self.entities(compositeId);
+                        self.topologyDisabled(false);
+                    } else {
+                        self.topologyDisabled(true);
+                        if (cxtUtil.getCompositeName() && cxtUtil.getCompositeType()) {
+                            self.queryVars({entityName: cxtUtil.getCompositeName(), entityType: cxtUtil.getCompositeType()});
+                        }
+                        else {
+                            var entityMeIds = cxtUtil.getEntityMeIds();
+                            if (entityMeIds) {
+                                //cxtUtil.getEntityMeIds() will return a list of meIds
+                                self.entities(entityMeIds);
+                            } else {
+                                self.entities([]);
+                            }
                         }
                     }
+
+                    /*self.associations = params.associations;
+                     self.layout = params.layout;
+                     self.customNodeDataLoader = params.customNodeDataLoader;
+                     self.customEventHandler = params.customEventHandler;
+                     self.miniEntityCardActions = params.miniEntityCardActions;*/
+
+                    $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
+
+                    //Clear dirty flag for topology after refreshing done
+                    self.topologyNeedRefresh = false;
                 }
-
-                /*self.associations = params.associations;
-                 self.layout = params.layout;
-                 self.customNodeDataLoader = params.customNodeDataLoader;
-                 self.customEventHandler = params.customEventHandler;
-                 self.miniEntityCardActions = params.miniEntityCardActions;*/
-
-                $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
-
-                //Clear dirty flag for topology after refreshing done
-                self.topologyNeedRefresh = false;
             }
             function refreshOMCContext() {
                 self.cxtCompositeMeId = cxtUtil.getCompositeMeId();
