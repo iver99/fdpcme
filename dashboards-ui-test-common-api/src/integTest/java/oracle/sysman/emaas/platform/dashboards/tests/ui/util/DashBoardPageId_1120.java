@@ -7,4 +7,5 @@ public class DashBoardPageId_1120 {
     private DashBoardPageId_1120(){
     }
     public static final String BUILDERDESCRIPTIONTEXTLOCATOR = "//div[contains(@class, 'builder-dbd-description')]//div[contains(@class, 'dbd-display-area-text')]";
+    public static final String WELCOME_DATAEXP_SEARCH = "dataExp_Data";
 }
