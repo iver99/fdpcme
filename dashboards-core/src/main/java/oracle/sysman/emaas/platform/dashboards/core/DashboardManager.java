@@ -367,70 +367,61 @@ public class DashboardManager
 			EmsDashboard ed = getEmsDashboardById(dsf, dashboardId, tenantId);
 			EmsPreference ep = dsf.getEmsPreference(userName,"Dashboards.homeDashboardId");
 			EmsUserOptions euo = dsf.getEmsUserOptions(userName, dashboardId);
-			Long selectedId = null;
-			List<EmsDashboardTile> edbdtList = null;
-			List<String> ssfIdList = new ArrayList<String>();
-
-			if (ed.getType().equals(Dashboard.DASHBOARD_TYPE_CODE_SET)
-					&& euo != null
-					&& !StringUtil.isEmpty(euo.getExtendedOptions())) {
-				String extOptions = euo.getExtendedOptions();
+			List<EmsDashboardTile> edbdtList = ed.getDashboardTileList();
+			CombinedDashboard cdSet = null;
+			
+			if (ed.getType().equals(Dashboard.DASHBOARD_TYPE_CODE_SET) && euo != null && !StringUtil.isEmpty(euo.getExtendedOptions())) {
+			    // combine dashboard set
+			    cdSet = CombinedDashboard.valueOf(ed, ep, euo, null);
+			    
+				// pick selected dashboard
+			    String extOptions = euo.getExtendedOptions();
 				LOGGER.info("Dashboard ID={} is a dashboard set, its extendedOptions is {}",dashboardId, extOptions);
-				JSONObject jsonObj = null;
 				Object selected = null;
 				try {
-					jsonObj = new JSONObject(extOptions);
+				    JSONObject jsonObj = new JSONObject(extOptions);
 					selected = jsonObj.get("selectedTab");
 				} catch (JSONException e) {
-					// failed to parse extended options json, so failed to
-					// retrieve selected tab.
-					// This is unexpected, but if it happens, likes just go
-					// ahead w/o selected tab then...
+					// failed to parse extended options json, so failed to retrieve selected tab.
+					// This is unexpected, but if it happens, likes just go ahead w/o selected tab then...
 					LOGGER.error(e.getLocalizedMessage(), e);
 				}
 				if (selected != null) {
 					try {
-						selectedId = Long.valueOf(selected.toString());
-						EmsDashboard sed = this.getEmsDashboardById(dsf,selectedId, tenantId);
-						edbdtList = sed.getDashboardTileList();
+						Long selectedId = Long.valueOf(selected.toString());
+						ed = this.getEmsDashboardById(dsf,selectedId, tenantId);
+						euo = dsf.getEmsUserOptions(userName,selectedId);
+						ep = null;
+						edbdtList = ed.getDashboardTileList();
 					} catch (NumberFormatException e) {
 						// might be a null 'selectedTab' value or invalid one
-						LOGGER.info(
-								"Failed to get selected dashboard ID: ID is invalid: {}",
-								selected);
+						LOGGER.info("Failed to get selected dashboard ID: ID is invalid: {}", selected);
 					}
+				} else {
+				    // empty dashboard set
+				    return cdSet;
 				}
-			} else {
-				edbdtList = ed.getDashboardTileList();
 			}
-
+			
+			// retrieve saved search list
+			List<String> ssfIdList = new ArrayList<String>();
 			if (edbdtList != null) {
 				for (EmsDashboardTile edt : edbdtList) {
 					ssfIdList.add(edt.getWidgetUniqueId());
 				}
 			}
-
-			TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
-			Link tenantsLink = RegistryLookupUtil.getServiceInternalLink(
-					"SavedSearch", "1.0+", "search", null);
-			String tenantHref = tenantsLink.getHref() + "/list";
-			String tenantName = TenantContext.getCurrentTenant();
-			Map<String, Object> headers = new HashMap<String, Object>();
-			headers.put("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
-			String savedSearchResponse = null;
-			try {
-				savedSearchResponse = rc.put(tenantHref, headers,
-						ssfIdList.toString(), tenantName);
-			} catch (Exception e) {
-				LOGGER.info("savedsearch response", e);
-			}
+			String savedSearchResponse = retrieveSavedSeasrch(ssfIdList);
+			
+			// combine single dashboard or selected dashbaord
 			CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo,savedSearchResponse);
-			if (ed.getType().equals(Dashboard.DASHBOARD_TYPE_CODE_SET)&& euo != null&& !StringUtil.isEmpty(euo.getExtendedOptions())) {
-				EmsDashboard sed = this.getEmsDashboardById(dsf, selectedId,tenantId);
-				EmsUserOptions seuo = dsf.getEmsUserOptions(userName,selectedId);
-				CombinedDashboard scd = CombinedDashboard.valueOf(sed, null,seuo, null);
-				cd.setSelected(scd);
+			
+			// return combined dashboard Set
+			if (cdSet != null) {
+				cdSet.setSelected(cd);
+				return cdSet;
 			}
+			
+			// return combined single dashboard
 			return cd;
 		} finally {
 			if (em != null && em.isOpen()) {
@@ -438,6 +429,23 @@ public class DashboardManager
 			}
 		}
 	}
+
+    private String retrieveSavedSeasrch(List<String> ssfIdList) {
+        TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
+        Link tenantsLink = RegistryLookupUtil.getServiceInternalLink(
+        		"SavedSearch", "1.0+", "search", null);
+        String tenantHref = tenantsLink.getHref() + "/list";
+        String tenantName = TenantContext.getCurrentTenant();
+        Map<String, Object> headers = new HashMap<String, Object>();
+        headers.put("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
+        String savedSearchResponse = null;
+        try {
+        	savedSearchResponse = rc.put(tenantHref, headers, ssfIdList.toString(), tenantName);
+        } catch (Exception e) {
+        	LOGGER.info("savedsearch response", e);
+        }
+        return savedSearchResponse;
+    }
 
 	/**
 	 * Returns dashboard instance specified by name for current user Please note that same user under single tenant can't have
