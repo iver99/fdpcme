@@ -695,8 +695,8 @@ define([
                         entity['meId'] = dataRows[i][0];
                         entity['displayName'] = dataRows[i][1];
                         entity['entityName'] = dataRows[i][2];
-                        entity['entityType'] = dataRows[i][3];
-                        entity['meClass'] = dataRows[i][4];
+                        entity['entityType'] = dataRows[i][4];
+                        entity['meClass'] = dataRows[i][5];
                         entitiesFetched.push(entity);
                     }
                 }
@@ -802,8 +802,8 @@ define([
                     var entity = data['rows'][0];
                     setIndividualContext('composite', 'compositeDisplayName', entity[1], false);
                     setIndividualContext('composite', 'compositeName', entity[2], false);
-                    setIndividualContext('composite', 'compositeType', entity[3], false);
-                    setIndividualContext('composite', 'compositeClass', entity[4], false);
+                    setIndividualContext('composite', 'compositeType', entity[4], false);
+                    setIndividualContext('composite', 'compositeClass', entity[5], false);
                 }
                 else {
                     setIndividualContext('composite', 'compositeDisplayName', null, false);
