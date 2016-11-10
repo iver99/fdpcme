@@ -144,3 +144,8 @@ dependencies {
 
 build.dependsOn jarMe
 
+eclipse {
+    classpath {
+        plusConfigurations += configurations.restAssured //avoid building error in Eclipse
+    }
+}

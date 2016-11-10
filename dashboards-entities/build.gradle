@@ -39,3 +39,8 @@ dependencies {
   
 }
 
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testNG //avoid building error in Eclipse
+    }
+}

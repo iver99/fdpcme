@@ -39,3 +39,10 @@ publications ('integTest')
 
     }
 
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testNG
+        plusConfigurations += configurations.webdriver
+        plusConfigurations += configurations.testConfig
+    }
+}

@@ -51,6 +51,10 @@ dependencies {
 		compile getProjectArtifact('jersey-client')   
 		compile getProjectArtifact('jmockit')
 		compile getProjectArtifact('jettison')
-} 
+}
 
-
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testNG //avoid building error in Eclipse
+    }
+}
