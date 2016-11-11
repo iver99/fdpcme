@@ -68,8 +68,7 @@ define(['knockout',
             var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
             if("SET" === dashboardInst.type()){
             	new Builder.DashboardDataSource().getHomeDashboardPreference(ko.unwrap(dashboardInst.id), function(resp) {
-                    var value = prefUtil.getPreferenceValue(resp, prefKeyHomeDashboardId);
-                    if (Number(value) === ko.unwrap(dashboardInst.id)) {
+                    if (resp && Number(resp.value) === ko.unwrap(dashboardInst.id) && resp.key === prefKeyHomeDashboardId) {
                         self.dashboardsetConfig.setHome = ko.observable(false);
                     }
             	});
