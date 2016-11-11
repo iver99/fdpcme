@@ -394,7 +394,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.autoFocus("inputStartDate_" + self.randomId);
                         self.lastFocus(1);
                         
-                        self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
+                        self.gotoCalendarMonth(self.startDateISO().slice(0, 10));
                         self.updateRange(self.startDate(), self.endDate());
                     }
                 });
@@ -947,7 +947,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 }, self);
 
                 self.valueSubscriber = ko.computed(function () {
-                    return self.value() + self.random();
+                    return self.random();
+//                    return self.value() + self.random();
                 });
                 self.iconSubscriber = ko.computed(function () {
                     return self.random1();
@@ -1436,7 +1437,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.focusOnStartDate = function (data, event) {
                     self.setMinMaxDate(null, self.endDateISO());
-                    setTimeout(function() {self.updateRange(self.startDate(), self.endDate());}, 0);
+                    self.gotoCalendarMonth(self.startDateISO().slice(0, 10));
+                    setTimeout(function() {                        
+                        self.updateRange(self.startDate(), self.endDate());
+                    }, 0);
                     self.selectByDrawer(false);
                     self.setFocusOnInput(event.target.id);
                     self.lastFocus(1);
@@ -1444,7 +1448,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.focusOnEndDate = function (data, event) {
                     self.setMinMaxDate(self.startDateISO(), null);
-                    setTimeout(function() {self.updateRange(self.startDate(), self.endDate());}, 0);
+                    self.gotoCalendarMonth(self.endDateISO().slice(0, 10));
+                    setTimeout(function() {                        
+                        self.updateRange(self.startDate(), self.endDate());
+                    }, 0);
                     self.selectByDrawer(false);
                     self.setFocusOnInput(event.target.id);
                     self.lastFocus(2);
@@ -1452,19 +1459,28 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.focusOnStartTime = function (data, event) {
                     self.selectByDrawer(false);
-                    self.setFocusOnInput(event.target.parentNode.parentNode.parentNode.id);
-                    self.lastFocus(0);
+                    self.gotoCalendarMonth(self.startDateISO().slice(0, 10));
+                    
                     //when the focus is on start time, users can set start date using calendar.
                     self.setMinMaxDate(null, self.endDateISO());
-                    setTimeout(function() {self.updateRange(self.startDate(), self.endDate());}, 0);
+                    setTimeout(function() {                        
+                        self.updateRange(self.startDate(), self.endDate());
+                        self.setFocusOnInput(event.target.parentNode.parentNode.parentNode.id);
+                        self.lastFocus(0);
+                    }, 0);
                 };
                 self.focusOnEndTime = function (data, event) {
                     self.selectByDrawer(false);
-                    self.setFocusOnInput(event.target.parentNode.parentNode.parentNode.id);
-                    self.lastFocus(0);
+                    self.gotoCalendarMonth(self.endDateISO().slice(0, 10));
+                    
                     //when the focus is on end time, users can set start date using calendar.
                     self.setMinMaxDate(null, self.endDateISO());
-                    setTimeout(function() {self.updateRange(self.startDate(), self.endDate());}, 0);
+                    setTimeout(function() {
+                        self.updateRange(self.startDate(), self.endDate());
+                        self.setFocusOnInput(event.target.parentNode.parentNode.parentNode.id);
+                        self.lastFocus(0);
+                    }, 0);
+                    
                 };
 
                 self.autoFocus = function (id) {
@@ -1667,7 +1683,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 self.setTimePeriodChosen(self.timePeriodCustom);
                                 customClick(1);
                             }
-                            self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
+                            if(value === 1) {
+                                self.gotoCalendarMonth(self.startDateISO().slice(0, 10));
+                            }else if(value === 2) {
+                                self.gotoCalendarMonth(self.endDateISO().slice(0, 10));
+                            }
                             self.updateRange(self.startDate(), self.endDate());
                         }
                         timeValidate();
@@ -1787,38 +1807,14 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.renderDateRange(startRange, endRange);
 
                 };
-
+                
                 /**
-                 * switch the calendar viwe to show start month and its next month by simulating "click" on "<" / ">"
-                 * @param {type} startYear
-                 * @param {type} startMonth
+                 * Shift calendar to start or end date month by setting calendar value
+                 * @param {type} dateISO
                  * @returns {undefined}
                  */
-                self.toStartMonth = function (startYear, startMonth) {
-                    var curYears = [];
-                    var curMonths = [];
-                    var monthDiff, clickNumber = 0;
-                    var regExp = new RegExp(/\d{4}/);
-
-                    $(self.pickerPanelId + " .oj-datepicker-year").each(function () {
-                        var year = $(this).text();
-                        curYears.push(Number(year.match(regExp)[0]));
-                    });
-                    $(self.pickerPanelId + " .oj-datepicker-month").each(function () {
-                        curMonths.push(self.monthObject()[$(this).text()]);
-                    });
-                    monthDiff = (Number(startYear) - Number(curYears[0])) * 12 + (Number(startMonth) - Number(curMonths[0]));
-                    if (monthDiff <= 0) {
-                        while (clickNumber < Math.abs(monthDiff)) {
-                            $(self.pickerPanelId + " .oj-datepicker-prev-icon").click();
-                            clickNumber++;
-                        }
-                    } else {
-                        while (clickNumber < monthDiff) {
-                            $(self.pickerPanelId + " .oj-datepicker-next-icon").click();
-                            clickNumber++;
-                        }
-                    }
+                self.gotoCalendarMonth = function(dateISO) {
+                    self.value(dateISO);
                 };
 
                 self.closeAllPopups = function() {
@@ -1860,7 +1856,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.autoFocus("inputStartDate_" + self.randomId);
                         self.lastFocus(1);
 
-                        self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
+                        self.gotoCalendarMonth(self.startDateISO().slice(0, 10));
                         self.updateRange(self.startDate(), self.endDate());
 
                         $(self.panelId).ojPopup('open', self.wrapperId + ' #dropDown_' + self.randomId, self.panelPosition);
@@ -1881,7 +1877,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.autoFocus("inputStartDate_" + self.randomId);
                     self.lastFocus(1);
 
-                    self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
+                    self.gotoCalendarMonth(self.startDateISO().slice(0, 10));
                     setTimeout(function(){self.updateRange(self.startDate(), self.endDate());}, 0);
 
                     self.showRightPanel(true);
@@ -2098,7 +2094,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.showCalendar(true);
                     }
 
-                    self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
+                    self.gotoCalendarMonth(self.startDateISO().slice(0, 10));
 
                     setTimeout(function(){self.updateRange(self.startDate(), self.endDate());}, 0);
                     $(event.target).focus();
