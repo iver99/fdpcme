@@ -380,7 +380,7 @@ public class TestBrandingBar extends LoginAndLogout
 		DashBoardUtils.verifyURL(webd, "emlacore/html/log-analytics-search.html");
 	}
 
-	@Test
+	//@Test
 	public void testOrchestrationLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
