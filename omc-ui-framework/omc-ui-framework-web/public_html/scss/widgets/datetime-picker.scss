@@ -107,7 +107,7 @@
 
 .pickerPanel {
     width: 550px; //510px;
-    height: 402px;
+    height: 489px; //402px;
     /*float: right;*/
     padding-top: 10px;
     /*padding-left: 10px;*/
@@ -120,6 +120,13 @@
     border-width: 1px;
     border-style: solid;
     border-color: #dfe4e7;
+}
+
+.lrControlRadios {
+    padding-left: 15px;
+    padding-bottom:10px;
+    display: inline-block;
+    width: 93%;
 }
 
 .picker-panel-padding-right {
@@ -148,7 +155,7 @@
     font-size: 12px;
     display: inline-block;
     height: 32px;
-    width: 100px;
+    width: 150px;
     vertical-align: middle
 }
 .buttons {
