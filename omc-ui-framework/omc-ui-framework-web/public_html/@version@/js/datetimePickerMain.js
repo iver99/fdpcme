@@ -148,11 +148,13 @@ require(['ojs/ojcore',
                     dtpickerPosition: self.floatPosition1,
                     timePeriod: "Last 1 day", //self.timePeriodPre,
 //                    timeFilterParams: self.timeFilterParams,
-                    callbackAfterApply: function (start, end, tp, tf) {
+                    callbackAfterApply: function (start, end, tp, tf, relTimeVal, relTimeUnit) {
                         console.log(start);
                         console.log(end);
                         console.log(tp);
                         console.log(tf);
+                        console.log(relTimeVal);
+                        console.log(relTimeUnit);
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
                         if(self.isTimePeriodLessThan1day(tp) && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {

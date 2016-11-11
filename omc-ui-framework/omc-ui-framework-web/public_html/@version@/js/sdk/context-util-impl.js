@@ -1,15 +1,13 @@
 define([
     'ojs/ojcore',
     'jquery',
-    'uifwk/@version@/js/util/df-util-impl',
-    'uifwk/@version@/js/util/usertenant-util-impl'
+    'uifwk/@version@/js/util/df-util-impl'
 ],
-    function (oj, $, dfuModel, userTenantUtilModel)
+    function (oj, $, dfuModel)
     {
         function UIFWKContextUtil() {
             var self = this;
             var dfu = new dfuModel();
-            var userTenantUtil = new userTenantUtilModel();
             var supportedContext = [{'contextName': 'time','paramNames': ['startTime', 'endTime', 'timePeriod']}, 
                                     {'contextName': 'composite','paramNames': ['compositeType', 'compositeName', 'compositeMEID']},
                                     {'contextName': 'entity','paramNames': ['entitiesType', /*'entityName',*/ 'entityMEIDs']}
@@ -40,19 +38,6 @@ define([
                 if (!omcContext) {
                     omcContext = getContextFromUrl();
                 }
-                //If omcCOntext is missed from URL try to retrive it from sessionStorage
-                if (!omcContext
-                    && window.sessionStorage._uifwk_omcContext)
-                {
-                    omcContext = getContextFromSessionStorage();
-                }
-                //If omcContext not defined, use localStorage as last resource. This is for situation
-                //like when opening a new tab.
-                /*if (!omcContext &&
-                    window.localStorage._uifwk_omcContext) {
-                    omcContext = JSON.parse(window.localStorage._uifwk_omcContext);
-                    self.setOMCContext(omcContext);
-                }*/
 
                 if (!omcContext) {
                     omcContext = {};
@@ -62,22 +47,6 @@ define([
                 oj.Logger.info("OMC gloable context is fetched as: " + JSON.stringify(omcContext));
                 return omcContext;
             };
-
-            function getContextFromSessionStorage() {
-                var currentUserAndTenant = getUserAndTenant();
-                var storedUserAndTenant = window.sessionStorage._uifwk_userAndTenant;
-                var omcContext;
-                if (currentUserAndTenant === storedUserAndTenant) {
-                    omcContext = JSON.parse(window.sessionStorage._uifwk_omcContext);
-                    self.setOMCContext(omcContext);
-                }
-                return omcContext;
-            }
-
-            function getUserAndTenant(){
-                var tenantUser = userTenantUtil.getUserTenant();
-                return tenantUser.user + '.' + tenantUser.tenant;
-            }
 
             function getContextFromUrl() {
                 var omcContext = {};
@@ -123,13 +92,15 @@ define([
                 fireOMCContextChangeEvent();
             };
             
-            function updateCurrentURL() {
+            function updateCurrentURL(replaceState) {
                 //update current URL
                 var url = window.location.href.split('/').pop();
                 url = self.appendOMCContext(url);
                 var newurl=window.location.pathname.substring(0,window.location.pathname.lastIndexOf('/'));
                 newurl=newurl+'/'+url;
-                window.history.replaceState(window.history.state, document.title, newurl);
+                if(replaceState !== false) { //history.replaceState will always be called unless replaceState is set to false explicitly
+                    window.history.replaceState(window.history.state, document.title, newurl);
+                }
             }
 
             function storeContext(context) {
@@ -138,16 +109,6 @@ define([
                 //But need to make sure the omc context is initialized before page owner start to rewrites
                 //the URL by oj_Router etc..
                 window._uifwk.omcContext = context;
-                //We use SessionStorage to help preserve the omc context during navigation, when
-                //URL does not contains the omc context
-                window.sessionStorage._uifwk_omcContext = JSON.stringify(context);
-                var currentUserAndTenant = getUserAndTenant();
-                window.sessionStorage._uifwk_userAndTenant = currentUserAndTenant;
-                
-                //We use localStorage as last resource to retrive the omc context. For cases
-                //when user just have open the browser, or when opening a new tab to restore the
-                //last used context,
-                //window.localStorage._uifwk_omcContext = JSON.stringify(context);
             }
             
             /**
@@ -247,8 +208,16 @@ define([
              * @returns 
              */
             self.setTimePeriod = function(timePeriod) {
-                setIndividualContext('time', 'timePeriod', timePeriod);
+                setIndividualContext('time', 'startTime', null, false, false);
+                setIndividualContext('time', 'endTime', null, false, false);
+                setIndividualContext('time', 'timePeriod', timePeriod, true, true);
             };
+            
+            self.setStartAndEndTime = function(start, end) {
+                setIndividualContext('time', 'timePeriod', null, false, false);
+                setIndividualContext('time', 'startTime', parseInt(start), false, false);
+                setIndividualContext('time', 'endTime', parseInt(end), true, true);
+            }
             
             /**
              * Get OMC global context of time period.
@@ -267,11 +236,14 @@ define([
              * @returns 
              */
             self.setCompositeMeId = function(compositeMEID) {
-                setIndividualContext('composite', 'compositeMEID', compositeMEID);
+                setIndividualContext('composite', 'compositeMEID', compositeMEID, false);
                 //Set composite meId will reset composite type/name, 
                 //next time you get the composite type/name will return the new type/name
-                setIndividualContext('composite', 'compositeType', null);
-                setIndividualContext('composite', 'compositeName', null);
+                setIndividualContext('composite', 'compositeType', null, false);
+                setIndividualContext('composite', 'compositeName', null, false);
+                setIndividualContext('composite', 'compositeDisplayName', null, false);
+                setIndividualContext('composite', 'compositeNeedRefresh', true, false);
+                fireOMCContextChangeEvent();
             };
             
             /**
@@ -305,9 +277,9 @@ define([
                 if (compositeType) {
                     return compositeType;
                 }
-                else if (self.getCompositeMeId()) {
+                else if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
                     //Fetch composite name/type
-                    queryODSEntityByMeId(self.getCompositeMeId(), fetchCompositeCallback);
+                    queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
                 }
                 return getIndividualContext('composite', 'compositeType');
             };
@@ -323,21 +295,62 @@ define([
 //            };
             
             /**
-             * Get OMC global context of composite name.
+             * Get OMC global context of composite internal name.
              * 
              * @param 
-             * @returns {String} OMC global context of composite name
+             * @returns {String} OMC global context of composite internal name
              */
             self.getCompositeName = function() {
                 var compositeName = getIndividualContext('composite', 'compositeName');
                 if (compositeName) {
                     return compositeName;
                 }
-                else if (self.getCompositeMeId()) {
+                else if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
                     //Fetch composite name/type
-                    queryODSEntityByMeId(self.getCompositeMeId(), fetchCompositeCallback);
+                    queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
                 }
                 return getIndividualContext('composite', 'compositeName');
+            };
+            
+            /**
+             * Get OMC global context of composite display name.
+             * 
+             * @param 
+             * @returns {String} OMC global context of composite display name
+             */
+            self.getCompositeDisplayName = function() {
+                var compositeDisplayName = getIndividualContext('composite', 'compositeDisplayName');
+                if (compositeDisplayName) {
+                    return compositeDisplayName;
+                }
+                else if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
+                    //Fetch composite name/type
+                    queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
+                }
+                //In case composite type+name are passed in from URL, return composite name for now
+                //Need to enhance the logic to query composite by type+name in next steps
+                else if (self.getCompositeType() && self.getCompositeName()) {
+                    return self.getCompositeName();
+                }
+                return getIndividualContext('composite', 'compositeDisplayName');
+            };
+            
+            /**
+             * Get composite class.
+             * 
+             * @param 
+             * @returns {String} Composite class
+             */
+            self.getCompositeClass = function() {
+                var compositeClass = getIndividualContext('composite', 'compositeClass');
+                if (compositeClass) {
+                    return compositeClass;
+                }
+                else if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
+                    //Fetch composite name/type
+                    queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
+                }
+                return getIndividualContext('composite', 'compositeClass');
             };
             
 //            /**
@@ -558,10 +571,11 @@ define([
              * 
              * @param {String} contextName Context definition name
              * @param {String} paramName URL parameter name for the individual context
+             * @param {Boolean} fireChangeEvent Flag to determine whether to fire change event
              * @param {String} value Context value
              * @returns 
              */
-            function setIndividualContext(contextName, paramName, value) {
+            function setIndividualContext(contextName, paramName, value, fireChangeEvent, replaceState) {
                 if (contextName && paramName) {
                     var omcContext = self.getOMCContext();
                     //If value is not null and not empty
@@ -576,11 +590,13 @@ define([
                         delete omcContext[contextName][paramName];
                     }
                     storeContext(omcContext);
-                    updateCurrentURL();
-                    fireOMCContextChangeEvent();
+                    updateCurrentURL(replaceState);
+                    if (fireChangeEvent !== false) {
+                        fireOMCContextChangeEvent();
+                    }
                 }
             }
-            
+                        
             /**
              * Get individual OMC global context.
              * 
@@ -629,7 +645,7 @@ define([
              */
             function retrieveParamValueFromUrl(decodedUrl, paramName) {
                 if (decodedUrl && paramName) {
-                    if (!decodedUrl.startsWith('?')) {
+                    if (decodedUrl.indexOf('?') !== 0) {
                         decodedUrl = '?' + decodedUrl;
                     }
                     var regex = new RegExp("[\\?&]" + encodeURIComponent(paramName) + "=([^&#]*)"), results = regex.exec(decodedUrl);
@@ -648,8 +664,8 @@ define([
                         entity['meId'] = dataRows[i][0];
                         entity['displayName'] = dataRows[i][1];
                         entity['entityName'] = dataRows[i][2];
-                        entity['entityType'] = dataRows[i][3];
-                        entity['meClass'] = dataRows[i][4];
+                        entity['entityType'] = dataRows[i][4];
+                        entity['meClass'] = dataRows[i][5];
                         entitiesFetched.push(entity);
                     }
                 }
@@ -751,29 +767,21 @@ define([
             }
             
             function fetchCompositeCallback(data) {
-                if (data && data['rows']) {
-                    var dataRows = data['rows'];
-                    if (dataRows.length > 0) {
-                        var entity = dataRows[0];
-                        if (entity.length === 4) {
-                            setIndividualContext('composite', 'compositeName', entity[2]);
-                            setIndividualContext('composite', 'compositeType', entity[3]);
-                        }
-                    }
+                if (data && data['rows'] && data['rows'].length > 0) {
+                    var entity = data['rows'][0];
+                    setIndividualContext('composite', 'compositeDisplayName', entity[1], false);
+                    setIndividualContext('composite', 'compositeName', entity[2], false);
+                    setIndividualContext('composite', 'compositeType', entity[4], false);
+                    setIndividualContext('composite', 'compositeClass', entity[5], false);
                 }
-            }
-
-            function queryODSEntityByMeId(meId, callback) {
-                var jsonOdsQuery = {"ast":{"query":"simple","distinct":false,"select":[{"item":{"expr":"column","table":"me","column":"meId"}},
-                        {"item":{"expr":"column","table":"me","column":"entityName"}},
-                        {"item":{"expr":"column","table":"me","column":"displayName"}},
-                        {"item":{"expr":"column","table":"me","column":"entityType"}}],
-                    "from":[{"table":"virtual","name":"ManageableEntity","alias":"me"}],
-                    "where":{"cond":"inExpr","lhs":{"expr":"column","table":"me","column":"meId"},
-                    "rhs":[{"expr":"str","val":""}]}}};
-                jsonOdsQuery['ast']['where']['rhs'][0]['val'] = meId; 
-                oj.Logger.info("Start to get ODS entity by entity MEID.", false);
-                executeODSQuery(jsonOdsQuery, callback);
+                else {
+                    setIndividualContext('composite', 'compositeDisplayName', null, false);
+                    setIndividualContext('composite', 'compositeName', null, false);
+                    setIndividualContext('composite', 'compositeType', null, false);
+                    setIndividualContext('composite', 'compositeClass', null, false);
+                }
+                setIndividualContext('composite', 'compositeNeedRefresh', 'false', false);
+                fireOMCContextChangeEvent();
             }
             
             function executeODSQuery(jsonOdsQuery, callback) {

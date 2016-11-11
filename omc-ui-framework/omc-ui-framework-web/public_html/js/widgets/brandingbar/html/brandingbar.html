@@ -137,9 +137,10 @@
         </div>
 
         <!-- topology --->
+        <!-- ko if: isTopologyCompRegistered() !== false -->
         <div id="ude-topology-div" style="overflow-y:scroll; height:200px; background-color:white;"
-             data-bind="visible: isTopologyDisplayed" class="ude-sdk panel_border">
-        <div class="ude-topology" data-bind="component:{name:'emctas-topology', 
+             data-bind="visible: isTopologyDisplayed" class="ude-sdk">
+        <div class="ude-topology ude-topology-in-brandingbar" data-bind="component:{name:'emctas-topology', 
             params:{
                    entityQueryVars: queryVars(),
                    entities: entities()
@@ -148,6 +149,7 @@
             style: {width: '100%', height: '100%'}">
         </div>      
         </div>
+        <!-- /ko -->
         <!-- End of topology -->
 
         <!-- /ko -->  <!-- End of Global Context Banner -->
