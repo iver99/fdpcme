@@ -51,6 +51,7 @@ public class CacheManager
 	public static final String LOOKUP_CACHE_KEY_ADMIN_LINKS = "adminLinks";
 	public static final String LOOKUP_CACHE_KEY_HOME_LINKS = "homeLinks";
 	public static final String LOOKUP_CACHE_KEY_VISUAL_ANALYZER = "visualAnalyzer";
+	public static final String LOOKUP_CACHE_KEY_ASSET_ROOTS = "assetRoots";
 	public static final String LOOKUP_CACHE_KEY_SSO_LOGOUT_URL = "ssoLogoutUrl";
 
 	ResourceBundle conf = ResourceBundle.getBundle("cache_config");
