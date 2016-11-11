@@ -214,7 +214,7 @@ define([
             };
             
             self.setStartAndEndTime = function(start, end) {
-                setIndividualContext('time', 'timePeriod', null, false, false);
+                setIndividualContext('time', 'timePeriod', 'CUSTOM', false, false);
                 setIndividualContext('time', 'startTime', parseInt(start), false, false);
                 setIndividualContext('time', 'endTime', parseInt(end), true, true);
             }
