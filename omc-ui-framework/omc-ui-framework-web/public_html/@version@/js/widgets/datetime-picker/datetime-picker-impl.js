@@ -1279,8 +1279,19 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     return;
                                 }
                             }else {
-                                start = newDateWithMilliseconds(new Date() - self.timePeriodObject()[tp][1]);
-                                end = new Date();
+                                if(tp === self.timePeriodLast1year) {                                
+                                    start = new Date(curDate.getFullYear()-1, curDate.getMonth(), curDate.getDate(), curDate.getHours(), curDate.getMinutes());
+                                    end = curDate;
+                                }else if(self.isTimePeriodLessThan1day(tp)) {
+                                    start = newDateWithMilliseconds(new Date() - self.timePeriodObject()[tp][1]);
+                                    end = new Date();
+                                }else {
+                                    start = newDateWithMilliseconds(new Date() - self.timePeriodObject()[tp][1]);
+                                    var timezoneDiffInMillis = (curDate.getTimezoneOffset() - start.getTimezoneOffset()) * 60 * 1000;
+                                    start = new Date(start.getTime() - timezoneDiffInMillis);
+                                    end = new Date();
+                                }
+                                
                                 if($.inArray(tp, tpNotToShow) === -1) {
                                     self.setTimePeriodChosen(tp);
                                     range = self.setTimePeriodToLastX(tp, start, end, 1);
