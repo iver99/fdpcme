@@ -24,13 +24,10 @@ import javax.ws.rs.core.Response.Status;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
-import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
-
+import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,7 +51,7 @@ public class ConfigurationAPI extends APIBase
 
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
-			String regEntity = JsonUtil.buildNormalMapper().toJson(new RegistrationEntity(sessionExpiryTime));
+			String regEntity = JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime));
 			_LOGGER.info("Response for [GET] /v1/configurations/registration is \"{}\"", regEntity);
 			Response resp = Response.status(Status.OK).entity(regEntity).build();
 			return resp;
@@ -67,24 +64,23 @@ public class ConfigurationAPI extends APIBase
 		}
 	}
 
-	@Path("/roles")
+	@Path("/userInfo")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRolesAndPriviledges(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 											   @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
 											   @HeaderParam(value = "SESSION_EXP") String sessionExpiryTime)
 	{
-		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/configurations/roles");
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/configurations/userInfo");
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
 			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
-				_LOGGER.error("Error to call [GET] /v1/configurations/roles: EntityNaming service is down");
+				_LOGGER.error("Error to call [GET] /v1/configurations/userInfo: EntityNaming service is down");
 				throw new EntityNamingDependencyUnavailableException();
 			}
-            List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
-                    UserContext.getCurrentUser());
+            String userInfoEntity = JsonUtil.buildNormalMapper().toJson(new UserInfoEntity());
 			Response resp = Response.status(Status.OK)
-					.entity(JsonUtil.buildNormalMapper().toJson(userRoles)).build();
+					.entity(userInfoEntity).build();
 			return resp;
 
 		}

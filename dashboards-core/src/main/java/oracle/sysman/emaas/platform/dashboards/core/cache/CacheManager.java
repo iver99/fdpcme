@@ -42,6 +42,7 @@ public class CacheManager
 	public static final String CACHES_TENANT_APP_MAPPING_CACHE = "tenantAppMappingCache";
 	public static final String CACHES_SSO_LOGOUT_CACHE = "SsoLogoutCache";
 	public static final String CACHES_SUBSCRIBED_SERVICE_CACHE = "subscribeCache";
+	public static final String CACHES_ASSET_ROOT_CACHE ="assetRootCache";
 
 
 	public static final String LOOKUP_CACHE_KEY_SUBSCRIBED_APPS = "subscribedApps";
@@ -52,6 +53,7 @@ public class CacheManager
 	public static final String LOOKUP_CACHE_KEY_ADMIN_LINKS = "adminLinks";
 	public static final String LOOKUP_CACHE_KEY_HOME_LINKS = "homeLinks";
 	public static final String LOOKUP_CACHE_KEY_VISUAL_ANALYZER = "visualAnalyzer";
+	public static final String LOOKUP_CACHE_KEY_ASSET_ROOTS = "assetRoots";
 	public static final String LOOKUP_CACHE_KEY_SSO_LOGOUT_URL = "ssoLogoutUrl";
 
 	private static transient long lastLogTime;
@@ -83,6 +85,7 @@ public class CacheManager
 		CacheFactory.getCache(CACHES_TENANT_APP_MAPPING_CACHE, CacheConfig.TENANT_APP_MAPPING_CAPACITY, CacheConfig.TENANT_APP_MAPPING_EXPIRE_TIME);
 		CacheFactory.getCache(CACHES_SUBSCRIBED_SERVICE_CACHE, CacheConfig.TENANT_SUBSCRIBED_SERVICES_CAPACITY, CacheConfig.TENANT_SUBSCRIBED_SERVICES_EXPIRE_TIME);
 		CacheFactory.getCache(CACHES_SSO_LOGOUT_CACHE, CacheConfig.SSO_LOGOUT_CAPACITY, CacheConfig.SSO_LOGOUT_EXPIRE_TIME);
+		CacheFactory.getCache(CACHES_ASSET_ROOT_CACHE, CacheConfig.ASSET_ROOT_CAPACITY, CacheConfig.ASSET_ROOT_EXPIRE_TIME);
 
 	}
 
