@@ -10,9 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil;
@@ -20,6 +17,8 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
@@ -30,9 +29,9 @@ import org.testng.Assert;
 
 public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBrandingBarUtil
 {
-	
 
-private static final Logger LOGGER = LogManager.getLogger(BrandingBarUtil_171.class);
+	private static final Logger LOGGER = LogManager.getLogger(BrandingBarUtil_171.class);
+
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isAdmin(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
@@ -70,6 +69,19 @@ private static final Logger LOGGER = LogManager.getLogger(BrandingBarUtil_171.cl
 		boolean isExisted = false;
 		isExisted = isApplicationLinkExisted(driver, "home", BrandingBarUtil.NAV_LINK_TEXT_HOME_ALERTS);
 
+		driver.getLogger().info("Existence check for 'Alert' link is completed. Result: " + isExisted);
+		return isExisted;
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isBrandingBarServiceNamePresents(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public boolean isBrandingBarServiceNamePresents(WebDriver driver, String servicename)
+	{
+		driver.getLogger().info("Start to check if 'service' link is existed in navigation bar.");
+		boolean isExisted = false;
+		isExisted = servicename.equalsIgnoreCase(driver.getText("css=" + DashBoardPageId.BRANDINGBARSERVICENAMECSS));
 		driver.getLogger().info("Existence check for 'Alert' link is completed. Result: " + isExisted);
 		return isExisted;
 	}
@@ -337,19 +349,19 @@ private static final Logger LOGGER = LogManager.getLogger(BrandingBarUtil_171.cl
 	{
 		String parentId = null;
 		switch (linkType) {
-		//Home links
+			//Home links
 			case "home":
 				parentId = DashBoardPageId.BRANDINGBARHOMELINKSID;
 				break;
-				//Cloud service links
+			//Cloud service links
 			case "cs":
 				parentId = DashBoardPageId.BRANDINGBARCLOUDSERVICELINKSID;
 				break;
-				//Visual analyzer links
+			//Visual analyzer links
 			case "va":
 				parentId = DashBoardPageId.BRANDINGBARVISUALANALYZERLINKSID;
 				break;
-				//Administration links
+			//Administration links
 			case "admin":
 				parentId = DashBoardPageId.BRANDINGBARADMINLINKSID;
 				break;
@@ -421,7 +433,7 @@ private static final Logger LOGGER = LogManager.getLogger(BrandingBarUtil_171.cl
 		}
 		catch (StaleElementReferenceException e) {
 
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 			return true;
 		}
 	}
@@ -481,7 +493,7 @@ private static final Logger LOGGER = LogManager.getLogger(BrandingBarUtil_171.cl
 			driver.click(locator);
 		}
 		catch (StaleElementReferenceException e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 			driver.getLogger().info("StaleElementReferenceException thrown, wait for element becoming not stale");
 			// wait until element is not stale
 			new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT).until(new ExpectedCondition<Boolean>() {

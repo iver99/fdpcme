@@ -43,7 +43,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            WebDriver instance
 	 * @return
 	 */
-	public boolean isAdmin(WebDriver driver) ;
+	public boolean isAdmin(WebDriver driver);
 
 	public boolean isAdminLinkExisted(WebDriver driver, String adminLinkName);
 
@@ -55,6 +55,13 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 * @return
 	 */
 	public boolean isAlertsLinkExisted(WebDriver driver);
+
+	/**
+	 * @param driver
+	 * @param servicename
+	 * @return
+	 */
+	public boolean isBrandingBarServiceNamePresents(WebDriver driver, String servicename);
 
 	/**
 	 * Check if the specified cloud service link is existed or not by given name
@@ -134,7 +141,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            Name of the option, should one of "about", "help", "signout"
 	 * @return
 	 */
-	public void userMenuOptions(WebDriver driver, String option) ;
+	public void userMenuOptions(WebDriver driver, String option);
 
 	/**
 	 * Navigate to the specified administration page by given link name
@@ -145,7 +152,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            Name of the link
 	 * @return
 	 */
-	public void visitApplicationAdministration(WebDriver driver, String adminLinkName) ;
+	public void visitApplicationAdministration(WebDriver driver, String adminLinkName);
 
 	/**
 	 * Navigate to the specified cloud service page by given link name
@@ -156,9 +163,9 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            Name of the link
 	 * @return
 	 */
-	public void visitApplicationCloudService(WebDriver driver, String cloudServiceLinkName) ;
+	public void visitApplicationCloudService(WebDriver driver, String cloudServiceLinkName);
 
-	public void visitApplicationHome(WebDriver driver, String homeLinkName) ;
+	public void visitApplicationHome(WebDriver driver, String homeLinkName);
 
 	/**
 	 * Navigate to the specified visual analyzer page by given link name
@@ -169,7 +176,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            Name of the link
 	 * @return
 	 */
-	public void visitApplicationVisualAnalyzer(WebDriver driver, String visualAnalyzerLinkName) ;
+	public void visitApplicationVisualAnalyzer(WebDriver driver, String visualAnalyzerLinkName);
 
 	/**
 	 * Navigate to the dashboard home page
@@ -178,7 +185,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            WebDriver instance
 	 * @return
 	 */
-	public void visitDashboardHome(WebDriver driver) ;
+	public void visitDashboardHome(WebDriver driver);
 
 	/**
 	 * Navigate to My Favorites page
@@ -187,7 +194,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            WebDriver instance
 	 * @return
 	 */
-	public void visitMyFavorites(WebDriver driver) ;
+	public void visitMyFavorites(WebDriver driver);
 
 	/**
 	 * Navigate to my home page
@@ -196,7 +203,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            WebDriver instance
 	 * @return
 	 */
-	public void visitMyHome(WebDriver driver) ;
+	public void visitMyHome(WebDriver driver);
 
 	/**
 	 * Navigate to the welcome page
@@ -205,6 +212,6 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 *            WebDriver instance
 	 * @return
 	 */
-	public void visitWelcome(WebDriver driver) ;
+	public void visitWelcome(WebDriver driver);
 
 }
