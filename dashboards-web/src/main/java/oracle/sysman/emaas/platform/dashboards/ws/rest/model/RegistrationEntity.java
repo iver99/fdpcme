@@ -490,7 +490,7 @@ public class RegistrationEntity implements Serializable
 	{
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_ASSET_ROOT_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_ASSET_ROOTS, new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
