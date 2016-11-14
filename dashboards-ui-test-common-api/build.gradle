@@ -2,7 +2,7 @@
 //1. remove greenchannel before merge into master
 //2. replace greenchannel with other name if you don't want to conflict with greenchannel
 //3. you also need to update emcpdf_test_3n.gradle and emcpdf_upgrade_test_3n.gradle if you do #1 or #2
-version = "2.1.0"
+version = "2.1.0-greenchannel" + "-$buildTimestamp"
 
 project.ext.intgRun = hasProperty('IFARM_RUN') && IFARM_RUN != '' ? IFARM_RUN : 0
 project.ext.buildBranch = hasProperty('BUILD_BRANCH') && BUILD_BRANCH != '' ? BUILD_BRANCH : 'master'
@@ -57,9 +57,9 @@ artifactoryPublish {
 
 
 dependencies {
-	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
- testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
-    testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }	
+	testConfig getProjectArtifact('jmockit')   
+	testConfig getProjectArtifact('log4j-core')   
+ 	testConfig getProjectArtifact('log4j-api')   	
 	testCompile configurations.testConfig
     testCompile configurations.webdriver
     testCompile configurations.testNG

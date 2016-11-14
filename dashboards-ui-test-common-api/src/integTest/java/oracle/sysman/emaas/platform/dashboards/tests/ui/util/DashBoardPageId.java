@@ -10,7 +10,7 @@ public class DashBoardPageId
 	 *
 	 * */
 	public static final String CREATEDSBUTTONID = "cbtn";
-
+	public static final String BUILDERTILEMAXMINLOCATOR = "following-sibling::*//button[contains(@class, 'dbd-tile-maxmin')]";
 	public static final String CREATEDSOFDIALOGID = "createDsb";
 	public static final String DASHBOARDNAMEBOXID = "dbsHNameIn";
 	public static final String DASHBOARDDESCBOXID = "dbsHDpIn";
@@ -177,6 +177,13 @@ public class DashBoardPageId
 	public static final String EXPLOREDATABTNID = "exploreDataBtn";
 
 	public static final String EXPLOREDATAMENU = "exploreDataMenu";
+
+	//Log Visual Analyzer button
+	public static final String EXPLORE_LOG = "//a[text()='Log Visual Analyzer']";
+
+	//Search button in explore menu
+	public static final String EXPLORE_Search = "//a[text()='Search' and @role='menuitem']";
+
 	//help id and about id
 	public static final String MENUBTNID = "menubutton";
 

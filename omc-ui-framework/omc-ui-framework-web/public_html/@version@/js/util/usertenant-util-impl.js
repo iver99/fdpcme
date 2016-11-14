@@ -27,8 +27,8 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                 var tenantName = null; //in case tenant name is not got
                 var userName = null;   //in case use name is not got
                 var tenantUser = null; //in case tenantName.userName is not got
-                if(window.omcUifwkCachedData && window.omcUifwkCachedData.loggedInUser){
-                    var tenantIdDotUsername = window.omcUifwkCachedData.loggedInUser.currentUser;
+                if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.loggedInUser){
+                    var tenantIdDotUsername = window._uifwk.cachedData.loggedInUser.currentUser;
                     var indexOfDot = tenantIdDotUsername.indexOf(".");
                     tenantName = tenantIdDotUsername.substring(0, indexOfDot);
                     userName = tenantIdDotUsername.substring(indexOfDot + 1, tenantIdDotUsername.length);
@@ -36,23 +36,30 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                 }else{
                     ajaxUtil.ajaxWithRetry({
                         type: "GET",
-                        url: "/sso.static/loggedInUser",
+                        url: "/sso.static/dashboards.configurations/userInfo",
                         async: false,
                         dataType: "json",
                         contentType: "application/json; charset=utf-8"
                     })
                     .done(
                         function (data) {
-                            if(window.omcUifwkCachedData){
-                                window.omcUifwkCachedData.loggedInUser = data;
-                            }else{
-                                window.omcUifwkCachedData = {loggedInUser : data};
+                            if(!window._uifwk){
+                                window._uifwk = {};
                             }
-                            var tenantIdDotUsername = data.currentUser;
-                            var indexOfDot = tenantIdDotUsername.indexOf(".");
-                            tenantName = tenantIdDotUsername.substring(0, indexOfDot);
-                            userName = tenantIdDotUsername.substring(indexOfDot + 1, tenantIdDotUsername.length);
-                            tenantUser = tenantIdDotUsername;
+                            if(!window._uifwk.cachedData){
+                                window._uifwk.cachedData = {};
+                            }
+                            if(data && data["userRoles"]){
+                                window._uifwk.cachedData.roles = data["userRoles"];
+                            }
+                            if(data && data["currentUser"]){
+                                window._uifwk.cachedData.loggedInUser = {"currentUser":data["currentUser"]};
+                                var tenantIdDotUsername = data.currentUser;
+                                var indexOfDot = tenantIdDotUsername.indexOf(".");
+                                tenantName = tenantIdDotUsername.substring(0, indexOfDot);
+                                userName = tenantIdDotUsername.substring(indexOfDot + 1, tenantIdDotUsername.length);
+                                tenantUser = tenantIdDotUsername;
+                            }
                         });
                 }
 
@@ -108,14 +115,14 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
             
             
             self.getUserRoles = function(callback,sendAsync) {
-                var serviceUrl = "/sso.static/dashboards.configurations/roles";
+                var serviceUrl = "/sso.static/dashboards.configurations/userInfo";
                 if (dfu.isDevMode()){
-                    callback(["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]);
+                    callback({"currentUser": "emaastesttenant1.emcsadmin","userRoles":["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]});
                     return;
                 }
-                if(window.omcUifwkCachedData && window.omcUifwkCachedData.roles){
-                    self.userRoles = window.omcUifwkCachedData.roles; 
-                    callback(window.omcUifwkCachedData.roles);
+                if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.roles){
+                    self.userRoles = window._uifwk.cachedData.roles; 
+                    callback(window._uifwk.cachedData.roles);
                 }else{
                     ajaxUtil.ajaxWithRetry({
                         url: serviceUrl,
@@ -125,13 +132,20 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                     })
                     .done(
                         function (data) {
-                            self.userRoles = data; 
-                            if(window.omcUifwkCachedData){
-                                window.omcUifwkCachedData.roles = data;
-                            }else{
-                                window.omcUifwkCachedData = {roles : data};
+                            self.userRoles = data;
+                            if(!window._uifwk){
+                                window._uifwk = {};
                             }
-                            callback(data);
+                            if(!window._uifwk.cachedData){
+                                window._uifwk.cachedData = {};
+                            }
+                            if(data && data["currentUser"]){
+                                window._uifwk.cachedData.loggedInUser = {"currentUser":data["currentUser"]};
+                            }
+                            if(data && data["userRoles"]){
+                                window._uifwk.cachedData.roles = data["userRoles"];
+                                callback(data["userRoles"]);
+                            }
                         });
                 }
             };
@@ -150,7 +164,7 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                 self.getUserRoles(function(data){
                     self.userRoles = data; 
                 },false);
-                if(self.userRoles.indexOf(role)<0){
+                if(!self.userRoles || self.userRoles.indexOf(role)<0){
                     return false;
                 }else{
                     return true;

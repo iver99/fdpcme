@@ -45,6 +45,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                 var warnMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_warn_16.png";
                 var confirmMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_confirm_16.png";
                 var infoMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_info_16.png";
+                var messageIconSprite = "/emsaasui/uifwk/@version@/images/uifwkSprite.png";
                 var hiddenMessages = [];
 
                 self.navLinksNeedRefresh = ko.observable(false);
@@ -170,7 +171,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                 self.sessionTimeoutMsg = nls.BRANDING_BAR_SESSION_TIMEOUT_MSG;
                 self.sessionTimeoutBtnOK = nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK;
                 self.sessionTimeoutWarnDialogId = 'sessionTimeoutWarnDialog';
-                self.sessionTimeoutWarnIcon = warnMessageIcon;
+                self.sessionTimeoutWarnIcon = messageIconSprite;    //warnMessageIcon
+                self.sessionTimeoutWarnIconStyle = "object-fit:none;object-position:0px -46px;height:16px;";
 
                 self.clearMessage = function(data, event) {
                     removeMessage(data);
@@ -216,7 +218,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                 //For now, set interval to extend current user session automatically every 10 mins
                 if (!dfu.isDevMode()) {
                     window.intervalToExtendCurrentUserSession = setInterval(function() {
-                        dfu.ajaxWithRetry("/emsaasui/emcpdfui/widgetLoading.html", {showMessages: "none"});
+                        dfu.ajaxWithRetry("/emsaasui/uifwk/empty.html", {showMessages: "none"});
                     }, 10*60*1000);
                 }
 
@@ -477,19 +479,23 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',[
                         message.category = data.category;
                         if (data.type && data.type.toUpperCase() === 'ERROR') {
                             message.iconAltText = self.altTextError;
-                            message.icon = errorMessageIcon;
+                            message.icon = messageIconSprite;
+                            message.imgCssStyle = "object-fit:none;object-position:0px -78px;height:16px;";
                         }
                         else if (data.type && data.type.toUpperCase() === 'WARN') {
                             message.iconAltText = self.altTextWarn;
-                            message.icon = warnMessageIcon;
+                            message.icon = messageIconSprite;
+                            message.imgCssStyle = "object-fit:none;object-position:0px -46px;height:16px;";
                         }
                         else if (data.type && data.type.toUpperCase() === 'CONFIRM') {
                             message.iconAltText = self.altTextConfirm;
-                            message.icon = confirmMessageIcon;
+                            message.icon = messageIconSprite;
+                            message.imgCssStyle = "object-fit:none;object-position:0px -30px;height:16px;";
                         }
                         else if (data.type && data.type.toUpperCase() === 'INFO') {
                             message.iconAltText = self.altTextInfo;
-                            message.icon = infoMessageIcon;
+                            message.icon = messageIconSprite;
+                            message.imgCssStyle = "object-fit:none;object-position:0px -62px;height:16px;";
                         }
 
                         if (message.category === catRetryInProgress) {

@@ -85,6 +85,8 @@ public class TestDashboardSet extends LoginAndLogout
 		//verify the dashboard
 		webd.getLogger().info("Verify if the dashboard existed in builder page");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, "", true), "Dashboard NOT found!");
+
+		LoginAndLogout.logoutMethod();
 	}
 
 	public void initTest(String testName)
@@ -118,7 +120,11 @@ public class TestDashboardSet extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_OutSet);
 		DashBoardUtils.deleteDashboard(webd, dbName_OutSet + "-duplicate");
 		DashBoardUtils.deleteDashboard(webd, dbName_DuplicateOOB);
+		DashBoardUtils.deleteDashboard(webd, dbsetName_ITA);
+		DashBoardUtils.deleteDashboard(webd, dbsetName_LA);
 		webd.getLogger().info("All test data have been removed");
+
+		LoginAndLogout.logoutMethod();
 	}
 
 	@Test(groups = "third run", dependsOnGroups = { "second run" })

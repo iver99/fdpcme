@@ -104,6 +104,7 @@ define({
       "DBS_HOME_DSB_PAGE_INFO_DELETE_LABEL": "Delete",
       "DBS_HOME_MSG_DELETED_HOME_DASHBOARD":"The dashboard you set as your Home page has been deleted. You may want to choose a new Home page.",
       "DBS_BUILDER_DASHBOARD_SET_DUPLICATED_DASHBOARD": "{0} is already a member of this dashboard set. Select another dashboard.",
+      "DBS_BUILDER_DASHBOARD_CANNOT_SELECT_DASHBOARD":"You are the viewer of the dashboard set,you can not select the dashboard",
       "DBS_BUILDER_DASHBOARD_SET_SHARE_SUCCESS": "The dashboard set and all of its member dashboards can now be viewed by others.",
       "DBS_BUILDER_DASHBOARD_SET_SHARE_ERROR": "The dashboard set cannot be viewed by others; individual dashboard members are still shared.",
       "DBS_BUILDER_DASHBOARD_SET_PRINT_MASK": "Loading Content",
@@ -233,6 +234,8 @@ define({
       "DBS_BUILDER_MSG_AUTO_REFRESH_OFF": "Auto-refresh disabled.",
       "DBS_BUILDER_MSG_AUTO_OPEN_IN_DATA_EXPLORER":"Open in Data Explorer",
       "DBS_BUILDER_MSG_AUTO_OPEN_IN_LOG_EXPLORER":"Open in Log Explorer",
+      "DBS_BUILDER_WIDGET_NO_DESCRIPTION": "No description.",
+
       // DO NOT DELETE since error page will use it as a parameter in URL
       // -----start
       "DBS_ERROR_PAGE_TITLE":"Error",
