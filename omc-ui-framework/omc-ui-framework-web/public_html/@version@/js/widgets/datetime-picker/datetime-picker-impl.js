@@ -1282,7 +1282,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 }
                             }else {
                                 if(tp === self.timePeriodLast1year) {                                
-                                    start = new Date(curDate.getFullYear()-1, curDate.getMonth(), curDate.getDate(), curDate.getHours(), curDate.getMinutes());
+                                    start = new Date(curDate.getFullYear()-1, curDate.getMonth(), curDate.getDate(), curDate.getHours(), curDate.getMinutes(), curDate.getSeconds(), curDate.getMilliseconds());
                                     end = curDate;
                                 }else if(self.isTimePeriodLessThan1day(tp)) {
                                     start = newDateWithMilliseconds(new Date() - self.timePeriodObject()[tp][1]);
@@ -1357,39 +1357,63 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             start = newDateWithMilliseconds(sdt);
                             end = new Date();
                         } else if(omcContext.time && omcContext.time.timePeriod && 
-                                (tp = self.timePeriodsNlsObject[formalizeTimePeriod(omcContext.time.timePeriod)])) {
-                            if(tp === self.timePeriodToday) {
-                                start = new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate());
-                                end = curDate;
-                                self.setTimePeriodChosen(tp);
-                                self.setTimePeriodToLastX(tp, start, end, 1);
-                            }else if(tp === self.timePeriodLatest) {
-                                start = curDate;
-                                end = curDate;
-                                self.setTimePeriodChosen(tp);
-                                self.setTimePeriodToLastX(tp, start, end, 1);
-                            }else if(tp === self.timePeriodCustom) {
-                                if(self.startDateTime && self.endDateTime) {
-                                    sdt = self.getParam(self.startDateTime);
-                                    edt = self.getParam(self.endDateTime);
-                                    start = newDateWithMilliseconds(sdt);
-                                    end = newDateWithMilliseconds(edt);
-                                    customClick(0);
+                                ((tp = self.timePeriodsNlsObject[formalizeTimePeriod(omcContext.time.timePeriod)]) || isValidFlexRelTimePeriod(omcContext.time.timePeriod))) {
+                            if(tp) {
+                                if(tp === self.timePeriodToday) {
+                                    start = new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate());
+                                    end = curDate;
+                                    self.setTimePeriodChosen(tp);
+                                    self.setTimePeriodToLastX(tp, start, end, 1);
+                                }else if(tp === self.timePeriodLatest) {
+                                    start = curDate;
+                                    end = curDate;
+                                    self.setTimePeriodChosen(tp);
+                                    self.setTimePeriodToLastX(tp, start, end, 1);
+                                }else if(tp === self.timePeriodCustom) {
+                                    if(self.startDateTime && self.endDateTime) {
+                                        sdt = self.getParam(self.startDateTime);
+                                        edt = self.getParam(self.endDateTime);
+                                        start = newDateWithMilliseconds(sdt);
+                                        end = newDateWithMilliseconds(edt);
+                                        customClick(0);
+                                    }else {
+                                        throw new Error('Error: set timePeriod to "Custom" without time range specified!');
+                                        return;
+                                    }
                                 }else {
-                                    console.error('Error: set timePeriod to "Custom" without time range specified!');
-                                    return;
+                                    if(tp === self.timePeriodLast1year) {
+                                        start = new Date(curDate.getFullYear()-1, curDate.getMonth(), curDate.getDate(), curDate.getHours(), curDate.getMinutes(), curDate.getSeconds(), curDate.getMilliseconds());
+                                        end = curDate;
+                                    }else if(self.isTimePeriodLessThan1day(tp)) {
+                                        start = newDateWithMilliseconds(new Date() - self.timePeriodObject()[tp][1]);
+                                        end = new Date();
+                                    }else {
+                                        start = newDateWithMilliseconds(new Date() - self.timePeriodObject()[tp][1]);
+                                        var timezoneDiffInMillis = (curDate.getTimezoneOffset() - start.getTimezoneOffset()) * 60 * 1000;
+                                        start = new Date(start.getTime() - timezoneDiffInMillis);
+                                        end = new Date();
+                                    }
+
+                                    if($.inArray(tp, tpNotToShow) === -1) {
+                                        self.setTimePeriodChosen(tp);
+                                        range = self.setTimePeriodToLastX(tp, start, end, 1);
+                                        start = range.start;
+                                        end = range.end;
+                                    }else {
+                                        customClick(0);
+                                    }
                                 }
                             }else {
-                                start = newDateWithMilliseconds(new Date() - self.timePeriodObject()[tp][1]);
-                                end = new Date();
-                                if($.inArray(tp, tpNotToShow) === -1) {
-                                    self.setTimePeriodChosen(tp);
-                                    range = self.setTimePeriodToLastX(tp, start, end, 1);
-                                    start = range.start;
-                                    end = range.end;
-                                }else {
-                                    customClick(0);
-                                }
+                                self.lrCtrlVal("flexRelTimeCtrl");
+                                
+                                var arr = omcContext.time.timePeriod.split("_");
+                                var tmp = self.getTimeRangeForFlexRelTime(arr[1], arr[2]);
+                                start = new Date(tmp.start);
+                                end = new Date(tmp.end);
+                                
+                                self.flexRelTimeVal(arr[1]);
+                                self.flexRelTimeOpt([arr[2]]);
+                                self.timePeriod(self.timePeriodCustom);
                             }
                         } else if(omcContext.time && omcContext.time.startTime && omcContext.time.endTime && 
                                 !isNaN(parseInt(omcContext.time.startTime)) && isNaN(parseInt(omcContext.time.endTime))) {
