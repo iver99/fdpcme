@@ -59,6 +59,18 @@ define(['knockout',
             };
 
             self.registrationInfo = null;
+            dfu.getRegistrations(function(data){
+                self.registrationInfo = data;
+            },false);
+            
+            self.getVisualAnalyzerUrl = function(serviceName) {
+                return dfu.getVisualAnalyzer(serviceName);
+            };
+            
+            self.getAssetRootUrl = function(serviceName) {
+                return dfu.getAssetRoot(serviceName);
+            };
+            
             self.getRegistrationInfo=function(){
                 if (self.registrationInfo===null){
                     dfu.getRegistrations(function(data){

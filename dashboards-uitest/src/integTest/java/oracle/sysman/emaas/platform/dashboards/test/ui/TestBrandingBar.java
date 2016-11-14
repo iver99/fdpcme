@@ -185,9 +185,7 @@ public class TestBrandingBar extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//verify the url of opened page
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		Assert.assertTrue(url.substring(url.indexOf("emsaasui") + 9).contains("emcpdfui/home.html?filter=ita"));
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ita");
 
 		Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
 		BrandingBarUtil.visitDashboardHome(webd);
@@ -323,6 +321,21 @@ public class TestBrandingBar extends LoginAndLogout
 	}
 
 	@Test
+	public void testInfrastructureMonitoringLink()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in InfrastructureMonitoringLink");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		// Monitoring link
+		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_IM);
+		WaitUtil.waitForPageFullyLoaded(webd);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = " + url);
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "monitoringservicesui/cms/index.html");
+	}
+
+	@Test
 	public void testITALink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -334,9 +347,7 @@ public class TestBrandingBar extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//verify the url of opened page
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		Assert.assertTrue(url.substring(url.indexOf("emsaasui") + 9).contains("emcpdfui/home.html?filter=ita"));
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ita");
 	}
 
 	@Test
@@ -367,6 +378,21 @@ public class TestBrandingBar extends LoginAndLogout
 
 		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "emlacore/html/log-analytics-search.html");
+	}
+
+	//@Test
+	public void testOrchestrationLink()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testOrchestrationLink");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		// Monitoring link
+		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_OCS);
+		WaitUtil.waitForPageFullyLoaded(webd);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = " + url);
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcpdfui/home.html?filter=ocs");
 	}
 
 	@Test
