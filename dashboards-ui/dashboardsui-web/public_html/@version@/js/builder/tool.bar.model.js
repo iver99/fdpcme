@@ -624,8 +624,10 @@ define(['knockout',
             function checkDashboardAsHomeSettings() {
                 function succCallback(data) {
                     var homeDashboardId;
-                    new Builder.DashboardDataSource().getHomeDashboardPreference(ko.unwrap(self.dashboard.id), function (resp) {
-                        homeDashboardId = Number(resp.value);
+                    new Builder.DashboardDataSource().getHomeDashboardPreference(self.dashboard.id(), function (resp) {
+                        if(typeof(resp) !== "undefined") {
+                            homeDashboardId = Number(resp.value);
+                        }
                     });
                     if (homeDashboardId && homeDashboardId === (self.dashboard.id())) {
                         self.dashboardAsHomeLabel(removeAsHomeLabel);
