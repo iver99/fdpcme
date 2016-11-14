@@ -2210,6 +2210,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.applyClick = function () {
                     var flexRelTimeVal = null;
                     var flexRelTimeOpt = null;
+                    var flexRelTimePeriodId = null;
                     var recentTimePeriodId = null;
                     self.timeFilter = ko.observable(null);
 
@@ -2225,6 +2226,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     if(self.lrCtrlVal() === "flexRelTimeCtrl") {
                         flexRelTimeVal = self.flexRelTimeVal();
                         flexRelTimeOpt = self.flexRelTimeOpt()[0];
+                        flexRelTimePeriodId = "LAST_"+flexRelTimeVal+"_"+flexRelTimeOpt;
                     }
 
                     if(self.enableTimeFilter()) {
@@ -2277,7 +2279,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 //                    tmpList.unshift({start: new Date(start), end: new Date(end), timePeriod: timePeriod, 
 //                                    timeFilter: self.timeFilter(), flexRelTimeVal: flexRelTimeVal, flexRelTimeOpt: flexRelTimeOpt});
                     if(timePeriod === "CUSTOM" && flexRelTimeVal && flexRelTimeOpt) {
-                        recentTimePeriodId = "LAST_"+flexRelTimeVal+"_"+flexRelTimeOpt;
+                        recentTimePeriodId =  flexRelTimePeriodId;
                     }else {
                         recentTimePeriodId = timePeriod;
                     }
@@ -2285,21 +2287,13 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     timeFilter: self.timeFilter()});
                     self.recentList(tmpList.slice(0, 5));
 
-                    //recover after merged to globalcontext
-//reset time params in global context
-//                    if(timePeriod === "CUSTOM") {                        
-//                        ctxUtil.setStartTime(new Date(start).getTime());
-//                        ctxUtil.setEndTime(new Date(end).getTime());
-//                        ctxUtil.setTimePeriod(null);
-//                    }else {
-//                        ctxUtil.setStartTime(null);
-//                        ctxUtil.setEndTime(null);
-//                        ctxUtil.setTimePeriod(timePeriod);
-//                    }
-
                     //reset time params in global context
-                    if(timePeriod === "CUSTOM") {                        
-                        ctxUtil.setStartAndEndTime(new Date(start).getTime(), new Date(end).getTime());
+                    if(timePeriod === "CUSTOM") {
+                        if(flexRelTimeVal && flexRelTimeOpt) {
+                            ctxUtil.setTimePeriod(flexRelTimePeriodId);
+                        }else {
+                            ctxUtil.setStartAndEndTime(new Date(start).getTime(), new Date(end).getTime());
+                        }
                     }else {
                         ctxUtil.setTimePeriod(timePeriod);
                     }
@@ -2311,10 +2305,18 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 console.log("Returned values from date/time picker are: ");
                                 console.log("start: "+new Date(start));
                                 console.log("end: "+new Date(end));
-                                console.log("time period: "+informalizeTimePeriod(timePeriod));
+                                if(flexRelTimePeriodId) {
+                                    console.log("time period: "+flexRelTimePeriodId);
+                                }else {
+                                    console.log("time period: "+informalizeTimePeriod(timePeriod));
+                                }
                                 console.log("time filter: "+JSON.stringify(self.timeFilter()));
                                 console.log("flexible relative time value: "+flexRelTimeVal+", option: "+flexRelTimeOpt);
-                                self.callbackAfterApply(new Date(start), new Date(end), informalizeTimePeriod(timePeriod), self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
+                                if(flexRelTimePeriodId) {
+                                    self.callbackAfterApply(new Date(start), new Date(end), flexRelTimePeriodId, self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);                                    
+                                }else {
+                                    self.callbackAfterApply(new Date(start), new Date(end), informalizeTimePeriod(timePeriod), self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
+                                }
                             },
                             error: function () {
                                 console.log(self.errorMsg);
