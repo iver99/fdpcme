@@ -21,13 +21,14 @@ public class GlobalContextUtil_Version implements IUiTestCommonAPI
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IUiTestCommonAPI#getApiVersion(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
+
 	@Override
 	public String getApiVersion(WebDriver wdriver)
 	{
-		String version = wdriver.getElement("id=global-html").getAttribute(VERSION_ATTR);
+		String version = wdriver.getElement("id=emaas-appheader-bar").getAttribute(VERSION_ATTR);
 		if (version == null || "".equals(version.trim())) {
-
-			return "1130";
+			//1.7.1 or earlier
+			return "171";
 		}
 		else {
 			version = version.replace(".", "");

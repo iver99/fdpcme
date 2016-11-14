@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
+import java.util.Date;
+
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.UtilLoader;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
@@ -27,10 +29,11 @@ public class GlobalContextUtil
 	 * @return
 	 */
 
-	public static String generateGlbalContextUrl(WebDriver driver, String baseurl, String meid)
+	public static String generateUrlWithGlobalContext(WebDriver driver, String baseurl, String compositeMeid, String timePeriod,
+			Date startTime, Date endTime)
 	{
 		IGlobalContextUtil gcu = new UtilLoader<IGlobalContextUtil>().loadUtil(driver, IGlobalContextUtil.class);
-		return gcu.generateGlbalContextUrl(driver, baseurl, meid);
+		return gcu.generateUrlWithGlobalContext(driver, baseurl, compositeMeid, timePeriod, startTime, endTime);
 	}
 
 	/**
@@ -41,10 +44,10 @@ public class GlobalContextUtil
 	 * @return
 	 */
 
-	public static String getGlbalContextMeid(WebDriver driver, String baseurl)
+	public static String getGlobalContextMeid(WebDriver driver, String baseurl)
 	{
 		IGlobalContextUtil gcu = new UtilLoader<IGlobalContextUtil>().loadUtil(driver, IGlobalContextUtil.class);
-		return gcu.getGlbalContextMeid(driver, baseurl);
+		return gcu.getGlobalContextMeid(driver, baseurl);
 	}
 
 	/**

@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
+import java.util.Date;
+
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
@@ -28,9 +30,11 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#generateGlbalContextUrl(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public String generateGlbalContextUrl(WebDriver driver, String baseurl, String meid)
+	public String generateUrlWithGlobalContext(WebDriver driver, String baseurl, String compositeMeid, String timePeriod,
+			Date startTime, Date endTime)
 	{
-		String url = baseurl + "compositeMEID%" + meid;
+		String url = baseurl + "?omcCtx=startTime" + startTime + "endTime" + endTime + "timePeriod" + timePeriod
+				+ "compositeMEID" + compositeMeid;
 
 		return url;
 	}
@@ -39,12 +43,16 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#getGlbalContextMeid(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public String getGlbalContextMeid(WebDriver driver, String baseurl)
+	public String getGlobalContextMeid(WebDriver driver, String baseurl)
 	{
 		String meid = baseurl.substring(baseurl.indexOf("MEID") + 5, baseurl.indexOf("MEID") + 39);
 		return meid;
 
 	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#getGolbalContextMeid(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
+	 */
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#getGlobalContextName(oracle.sysman.qatool.uifwk.webdriver.WebDriver)

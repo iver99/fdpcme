@@ -20,6 +20,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.util;
 
+import java.util.Date;
+
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public interface IGlobalContextUtil extends IUiTestCommonAPI
@@ -33,7 +35,8 @@ public interface IGlobalContextUtil extends IUiTestCommonAPI
 	 * @return
 	 */
 
-	public String generateGlbalContextUrl(WebDriver driver, String baseurl, String meid);
+	public String generateUrlWithGlobalContext(WebDriver driver, String baseurl, String compositeMeid, String timePeriod,
+			Date startTime, Date endTime);
 
 	/**
 	 * Get GlobalContext Meid
@@ -43,7 +46,7 @@ public interface IGlobalContextUtil extends IUiTestCommonAPI
 	 * @return
 	 */
 
-	public String getGlbalContextMeid(WebDriver driver, String baseurl);
+	public String getGlobalContextMeid(WebDriver driver, String baseurl);
 
 	/**
 	 * Get the name of global context

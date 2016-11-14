@@ -74,16 +74,13 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	}
 
 	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isBrandingBarServiceNamePresents(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isBrandingBarServiceNamePresents(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
 	public boolean isBrandingBarServiceNamePresents(WebDriver driver, String servicename)
 	{
-		driver.getLogger().info("Start to check if 'service' link is existed in navigation bar.");
-		boolean isExisted = false;
-		isExisted = servicename.equalsIgnoreCase(driver.getText("css=" + DashBoardPageId.BRANDINGBARSERVICENAMECSS));
-		driver.getLogger().info("Existence check for 'Alert' link is completed. Result: " + isExisted);
-		return isExisted;
+		driver.getLogger().info("This API is not supported in current version");
+		return false;
 	}
 
 	/* (non-Javadoc)
@@ -349,19 +346,19 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	{
 		String parentId = null;
 		switch (linkType) {
-			//Home links
+		//Home links
 			case "home":
 				parentId = DashBoardPageId.BRANDINGBARHOMELINKSID;
 				break;
-			//Cloud service links
+				//Cloud service links
 			case "cs":
 				parentId = DashBoardPageId.BRANDINGBARCLOUDSERVICELINKSID;
 				break;
-			//Visual analyzer links
+				//Visual analyzer links
 			case "va":
 				parentId = DashBoardPageId.BRANDINGBARVISUALANALYZERLINKSID;
 				break;
-			//Administration links
+				//Administration links
 			case "admin":
 				parentId = DashBoardPageId.BRANDINGBARADMINLINKSID;
 				break;
