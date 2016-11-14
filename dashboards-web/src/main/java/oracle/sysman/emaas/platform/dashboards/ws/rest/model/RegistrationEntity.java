@@ -62,6 +62,7 @@ public class RegistrationEntity implements Serializable
 	public static final String NAME_QUICK_LINK = "quickLink";
 	public static final String NAME_HOME_LINK = "homeLink";
 	public static final String NAME_VISUAL_ANALYZER = "visualAnalyzer";
+	public static final String NAME_ASSET_ROOT = "assetRoot";
 	public static final String NAME_ADMIN_LINK = "administration";
 	public static final String NAME_DASHBOARD_UI_SERVICENAME = "Dashboard-UI";
 	public static final String NAME_DASHBOARD_UI_VERSION = "1.0+";
@@ -158,7 +159,7 @@ public class RegistrationEntity implements Serializable
 	{
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_ADMIN_LINK_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_ADMIN_LINKS+"-"+UserContext.getCurrentUser(), new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
@@ -214,7 +215,7 @@ public class RegistrationEntity implements Serializable
 		Tenant cacheTenant = new Tenant(tenantName);
 		List<LinkEntity> list = null;
 		try {
-			list = (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			list = (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_CLOUD_SERVICE_LINK_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS);
 			if (list != null) {
 				return list;
@@ -303,7 +304,7 @@ public class RegistrationEntity implements Serializable
 			}
 		}
 		list = sortServiceLinks(list);
-		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_CLOUD_SERVICE_LINK_CACHE,
 				CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS, list);
 		return list;
 	}
@@ -331,7 +332,7 @@ public class RegistrationEntity implements Serializable
 	{
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_HOME_LINK_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS, new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
@@ -356,7 +357,7 @@ public class RegistrationEntity implements Serializable
 		final String tenantName = TenantContext.getCurrentTenant();
 		Tenant cacheTenant = new Tenant(tenantName);
 		try {
-			return (String) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			return (String) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_SSO_LOGOUT_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_SSO_LOGOUT_URL, new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
@@ -458,7 +459,7 @@ public class RegistrationEntity implements Serializable
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
 
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_VISUAL_ANALYZER_LINK_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_VISUAL_ANALYZER, new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
@@ -472,6 +473,43 @@ public class RegistrationEntity implements Serializable
 					});
 		}
 		catch(DashboardException e){
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return Collections.emptyList();
+		}
+		catch (Exception e) {
+			LOGGER.error(e);
+			return Collections.emptyList();
+		}
+	}
+
+	/**
+	 * @return asset root links discovered from service manager
+	 */
+	@SuppressWarnings("all")
+	public List<LinkEntity> getAssetRoots()
+	{
+		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
+		try {
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_ASSET_ROOT_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_ASSET_ROOTS, new ICacheFetchFactory() {
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+								LOGGER.error("Error to get Asset Roots link: EntityNaming service is down");
+								throw new EntityNamingDependencyUnavailableException();
+							}
+							List<LinkEntity> links = lookupLinksWithRelPrefix(NAME_ASSET_ROOT);
+							if (links != null) {
+								for (LinkEntity link: links) {
+									link.setName(null);
+								}
+							}
+							return links;
+						}
+					});
+		}
+		catch(DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return Collections.emptyList();
 		}
