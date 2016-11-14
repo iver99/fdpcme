@@ -25,6 +25,7 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	public static final String GLBCTXTBUTTON = "buttonShowTopology";
 	public static final String DSBNAME = "DASHBOARD_GLOBALTESTING";
 	public static final String DSBSETNAME = "DASHBOARDSET_GLOBALTESTING";
+	private static final String GLBCTXTPLDIV = "ude-topology-div";
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#generateGlbalContextUrl(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, java.lang.String)
@@ -69,8 +70,13 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public void hideTopology(WebDriver driver)
 	{
-		//need an identifier whether topology is hide or not
-		driver.click(GLBCTXTBUTTON);
+
+		if (driver.isDisplayed(GLBCTXTPLDIV)) {
+			driver.click(GLBCTXTBUTTON);
+		}
+		else {
+			driver.getLogger().info("the topology already got hidden");
+		}
 	}
 
 	/* (non-Javadoc)
@@ -101,8 +107,12 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public void showTopology(WebDriver driver)
 	{
-		//need an identifier whether topology is hide or not
-		driver.click(GLBCTXTBUTTON);
+		if (driver.isDisplayed(GLBCTXTPLDIV)) {
+			driver.getLogger().info("the topology already got displayed");
+		}
+		else {
+			driver.click(GLBCTXTBUTTON);
+		}
 
 	}
 

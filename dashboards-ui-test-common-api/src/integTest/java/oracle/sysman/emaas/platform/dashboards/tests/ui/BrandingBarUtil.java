@@ -74,10 +74,10 @@ public class BrandingBarUtil
 	 * @param servicename
 	 * @return
 	 */
-	public static boolean isBrandingBarServiceNamePresents(WebDriver driver, String servicename)
+	public static boolean isBrandingBarServiceNamePresent(WebDriver driver, String servicename)
 	{
 		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
-		return bu.isBrandingBarServiceNamePresents(driver, servicename);
+		return bu.isBrandingBarServiceNamePresent(driver, servicename);
 	}
 
 	/**

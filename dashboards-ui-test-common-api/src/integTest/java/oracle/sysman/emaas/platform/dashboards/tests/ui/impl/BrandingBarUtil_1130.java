@@ -22,7 +22,7 @@ public class BrandingBarUtil_1130 extends BrandingBarUtil_175
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isBrandingBarServiceNamePresents(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public boolean isBrandingBarServiceNamePresents(WebDriver driver, String servicename)
+	public boolean isBrandingBarServiceNamePresent(WebDriver driver, String servicename)
 	{
 		driver.getLogger().info("Start to check if 'service' link is existed in navigation bar.");
 		boolean isExisted = false;

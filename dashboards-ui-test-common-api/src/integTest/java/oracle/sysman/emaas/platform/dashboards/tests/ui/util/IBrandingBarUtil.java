@@ -61,7 +61,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 * @param servicename
 	 * @return
 	 */
-	public boolean isBrandingBarServiceNamePresents(WebDriver driver, String servicename);
+	public boolean isBrandingBarServiceNamePresent(WebDriver driver, String servicename);
 
 	/**
 	 * Check if the specified cloud service link is existed or not by given name

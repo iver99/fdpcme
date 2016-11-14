@@ -31,6 +31,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 {
 
 	private static final Logger LOGGER = LogManager.getLogger(BrandingBarUtil_171.class);
+	private static final String BRANDINGBARSERVICENAMEXPATH = "//div[@id='emaas-appheader-bar']/div[@class='emaas-appheader-logo']/div[@class='emaas-appheader-appname emaas-appheader-appname-twoline']/span";
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isAdmin(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
@@ -77,10 +78,13 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isBrandingBarServiceNamePresents(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public boolean isBrandingBarServiceNamePresents(WebDriver driver, String servicename)
+	public boolean isBrandingBarServiceNamePresent(WebDriver driver, String servicename)
 	{
-		driver.getLogger().info("This API is not supported in current version");
-		return false;
+		driver.getLogger().info("Start to check if 'service' link is existed in navigation bar.");
+		boolean isExisted = false;
+		isExisted = servicename.equalsIgnoreCase(driver.getText("xpath=" + BRANDINGBARSERVICENAMEXPATH));
+		driver.getLogger().info("Existence check for 'service' link is completed. Result: " + isExisted);
+		return isExisted;
 	}
 
 	/* (non-Javadoc)

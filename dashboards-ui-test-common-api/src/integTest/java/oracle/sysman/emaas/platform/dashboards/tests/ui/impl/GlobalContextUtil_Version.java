@@ -11,29 +11,14 @@
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IUiTestCommonAPI;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 /**
  * @author cawei
  */
-public class GlobalContextUtil_Version implements IUiTestCommonAPI
+public class GlobalContextUtil_Version extends BrandingBarUtil_Version implements IUiTestCommonAPI
 {
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IUiTestCommonAPI#getApiVersion(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
-
-	@Override
-	public String getApiVersion(WebDriver wdriver)
-	{
-		String version = wdriver.getElement("id=emaas-appheader-bar").getAttribute(VERSION_ATTR);
-		if (version == null || "".equals(version.trim())) {
-			//1.7.1 or earlier
-			return "171";
-		}
-		else {
-			version = version.replace(".", "");
-		}
-		return version;
-	}
 
 }
