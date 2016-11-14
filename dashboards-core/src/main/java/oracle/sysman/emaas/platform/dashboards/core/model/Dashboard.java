@@ -518,13 +518,14 @@ public class Dashboard
 
 			if (type.equals(Dashboard.DASHBOARD_TYPE_SET)) {
 				// support create subDashboards
-				//                if (subDashboards != null) {
-				//                    for (int index=0;index < subDashboards.size() ;index++ ) {
-				//                        Dashboard dbd = subDashboards.get(index);
-				//                        EmsSubDashboard esdbd = new EmsSubDashboard(dashboardId,dbd.getDashboardId(),index);
-				//                        ed.addEmsSubDashboard(esdbd);
-				//                    }
-				//                }
+				// support test cases in DashboardManagerTest
+				                if (subDashboards != null && dashboardId!=null) {
+				                    for (int index=0;index < subDashboards.size() ;index++ ) {
+				                        Dashboard dbd = subDashboards.get(index);
+				                        EmsSubDashboard esdbd = new EmsSubDashboard(dashboardId,dbd.getDashboardId(),index);
+				                        ed.addEmsSubDashboard(esdbd);
+				                    }
+				                }
 			}
 			else {
 				if (tileList != null) {

@@ -125,4 +125,11 @@ public interface IWelcomeUtil extends IUiTestCommonAPI
 	 */
 	public void visitSecurity(WebDriver driver);
 
+	/**
+	 * Visit "Infrustructure Monitoring" in welcome
+	 * 
+	 * @param driver
+	 * @
+	 */
+	public void visitInfraMonitoring(WebDriver driver); 	
 }
