@@ -14,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
 import oracle.sysman.emaas.platform.dashboards.core.cache.lru.CacheFactory;
 import oracle.sysman.emaas.platform.dashboards.core.cache.lru.CacheUnit;
 import oracle.sysman.emaas.platform.dashboards.core.exception.CacheException;
@@ -103,6 +104,22 @@ public class CacheAPI extends APIBase{
             LOGGER.error(e.getLocalizedMessage(), e);
             return buildErrorResponse(new ErrorEntity(e));
         }
+    }
+
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response cacheMechanismSwitch(String isEnable) {
+        if (isEnable==null || "".equals(isEnable)){
+            throw new IllegalArgumentException("parameter can only be TRUE or FALSE!");
+        }
+        Boolean flag=new Boolean(isEnable.toLowerCase());
+        if(flag){
+            CacheManager.getInstance().enableCacheManager();
+        }else{
+            CacheManager.getInstance().disableCacheManager();
+        }
+        Response resp = Response.status(Response.Status.OK).build();
+        return resp;
     }
 
 
