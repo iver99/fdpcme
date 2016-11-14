@@ -619,8 +619,11 @@ define(['knockout',
             }
             function checkDashboardAsHomeSettings() {
                 function succCallback(data) {
-                    var homeDashboardId = prefUtil.getPreferenceValue(data, prefKeyHomeDashboardId);
-                    if (homeDashboardId && homeDashboardId === (self.dashboard.id()+"")) {
+                    var homeDashboardId;
+                    new Builder.DashboardDataSource().getHomeDashboardPreference(ko.unwrap(self.dashboard.id), function (resp) {
+                        homeDashboardId = Number(resp.value);
+                    });
+                    if (homeDashboardId && homeDashboardId === (self.dashboard.id())) {
                         self.dashboardAsHomeLabel(removeAsHomeLabel);
                         self.dashboardsAsHomeIcon(cssRemoveDsbAsHome);
                         self.isHomeDashboard = true;
