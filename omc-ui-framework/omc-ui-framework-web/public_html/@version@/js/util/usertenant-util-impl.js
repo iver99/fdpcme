@@ -36,7 +36,7 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                 }else{
                     ajaxUtil.ajaxWithRetry({
                         type: "GET",
-                        url: "/sso.static/loggedInUser",
+                        url: "/sso.static/dashboards.configurations/userInfo",
                         async: false,
                         dataType: "json",
                         contentType: "application/json; charset=utf-8"
@@ -49,12 +49,17 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                             if(!window._uifwk.cachedData){
                                 window._uifwk.cachedData = {};
                             }
-                            window._uifwk.cachedData.loggedInUser = data;
-                            var tenantIdDotUsername = data.currentUser;
-                            var indexOfDot = tenantIdDotUsername.indexOf(".");
-                            tenantName = tenantIdDotUsername.substring(0, indexOfDot);
-                            userName = tenantIdDotUsername.substring(indexOfDot + 1, tenantIdDotUsername.length);
-                            tenantUser = tenantIdDotUsername;
+                            if(data && data["userRoles"]){
+                                window._uifwk.cachedData.roles = data["userRoles"];
+                            }
+                            if(data && data["currentUser"]){
+                                window._uifwk.cachedData.loggedInUser = {"currentUser":data["currentUser"]};
+                                var tenantIdDotUsername = data.currentUser;
+                                var indexOfDot = tenantIdDotUsername.indexOf(".");
+                                tenantName = tenantIdDotUsername.substring(0, indexOfDot);
+                                userName = tenantIdDotUsername.substring(indexOfDot + 1, tenantIdDotUsername.length);
+                                tenantUser = tenantIdDotUsername;
+                            }
                         });
                 }
 
@@ -110,9 +115,9 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
             
             
             self.getUserRoles = function(callback,sendAsync) {
-                var serviceUrl = "/sso.static/dashboards.configurations/roles";
+                var serviceUrl = "/sso.static/dashboards.configurations/userInfo";
                 if (dfu.isDevMode()){
-                    callback(["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]);
+                    callback({"currentUser": "emaastesttenant1.emcsadmin","userRoles":["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]});
                     return;
                 }
                 if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.roles){
@@ -134,8 +139,13 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                             if(!window._uifwk.cachedData){
                                 window._uifwk.cachedData = {};
                             }
-                            window._uifwk.cachedData.roles = data;
-                            callback(data);
+                            if(data && data["currentUser"]){
+                                window._uifwk.cachedData.loggedInUser = {"currentUser":data["currentUser"]};
+                            }
+                            if(data && data["userRoles"]){
+                                window._uifwk.cachedData.roles = data["userRoles"];
+                                callback(data["userRoles"]);
+                            }
                         });
                 }
             };

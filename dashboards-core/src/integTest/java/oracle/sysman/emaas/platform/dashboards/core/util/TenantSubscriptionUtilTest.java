@@ -605,11 +605,11 @@ public class TenantSubscriptionUtilTest
 
 		CacheManager cm = CacheManager.getInstance();
 		Tenant cacheTenant = new Tenant("emaastesttenant1");
-		cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+		cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE,
 				CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
-		cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+		cm.removeCacheable(cacheTenant, CacheManager.CACHES_DOMAINS_DATA_CACHE,
 				ENTITY_NAMING_DOMAINS_URL);
-		cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+		cm.removeCacheable(cacheTenant, CacheManager.CACHES_DOMAINS_DATA_CACHE,
 				TENANT_LOOKUP_URL);
 	}
 	

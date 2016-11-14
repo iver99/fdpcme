@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html id="global-html" data-testapiversion="1.12.0">
+<html id="global-html" data-testapiversion="1.12.0" lang="en-US">
     <head>
         <title data-bind="text:builderTitle"></title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -336,7 +336,8 @@
 
                         <!-- ko if:$root.isEmpty() -->
                         <div class="tooltip-add-widget" style="padding-top: 64px; text-align: center">
-                            <img src="@version@/images/add-widget-tooltip.png" style="width: 240px; height: 240px; margin-bottom: 30px;" data-bind="attr:{alt:oj.Translations.getTranslatedString('Add content to dashboard')}"/>
+                            <!--add-widget-tooltip-->
+                            <img src="@version@/images/dfSprite.png" style="object-fit:none;object-position:0px -1064px;height:220px;"  width="240px" height="240px" margin-bottom="30px" data-bind="attr:{alt:oj.Translations.getTranslatedString('Add content to dashboard')}"/>
                             <p style="font-size: 24px; font-weight: bold;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></p>
                             <p style="font-size: 16px;" data-bind="visible:($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())),text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1')"></p>
                             <!--<p style="font-size: 16px;">
@@ -421,7 +422,8 @@
                                                                 <li data-option="wider" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_window_wider_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_WIDER')}, css: { 'dbd-icon-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}"/>
+                                                                            <!--func_window_wider_16_ena-->
+                                                                            <img src="@version@/images/dfSprite.png" style="object-fit:none;object-position:0px -352px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_WIDER')}, css: { 'dbd-icon-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}"/>
                                                                         </span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_WIDER')"></span>
                                                                     </a>
@@ -429,7 +431,8 @@
                                                                 <li data-option="narrower" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !narrowerEnabled() || !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_window_narrower_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_NARROWER')}, css: { 'dbd-icon-disabled': !narrowerEnabled() || !maximizeEnabled() || editDisabled()}"/>
+                                                                            <!--func_window_narrower_16_ena-->
+                                                                            <img src="@version@/images/dfSprite.png" style="object-fit:none;object-position:0px -368px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_NARROWER')}, css: { 'dbd-icon-disabled': !narrowerEnabled() || !maximizeEnabled() || editDisabled()}"/>
                                                                         </span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_NARROWER')"></span>
                                                                     </a>
@@ -437,7 +440,8 @@
                                                                 <li data-option="taller" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_window_taller_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_TALLER')}, css: {'dbd-icon-disabled': !maximizeEnabled() || editDisabled()}"/>
+                                                                            <!--func_window_taller_16_ena-->
+                                                                            <img src="@version@/images/dfSprite.png" style="object-fit:none;object-position:0px -256px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_TALLER')}, css: {'dbd-icon-disabled': !maximizeEnabled() || editDisabled()}"/>
                                                                         </span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_TALLER')"></span>
                                                                     </a>
@@ -445,7 +449,8 @@
                                                                 <li data-option="shorter" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !shorterEnabled() || !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_window_shorter_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}, css: {'dbd-icon-disabled': !shorterEnabled() || !maximizeEnabled() || editDisabled()}"/>
+                                                                            <!--func_window_shorter_16_ena-->
+                                                                            <img src="@version@/images/dfSprite.png" style="object-fit:none;object-position:0px -272px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}, css: {'dbd-icon-disabled': !shorterEnabled() || !maximizeEnabled() || editDisabled()}"/>
                                                                         </span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_SHORTER')"></span>
                                                                     </a>
@@ -458,7 +463,8 @@
                                                                 <li data-option="up" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': (!upEnabled() || !maximizeEnabled() || editDisabled())}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_window_up_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_UP')}, css: { 'dbd-icon-disabled': (!upEnabled() || !maximizeEnabled() || editDisabled())}"/>
+                                                                            <!--func_window_up_16_ena-->
+                                                                            <img src="@version@/images/dfSprite.png" style="object-fit:none;object-position:0px -304px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_UP')}, css: { 'dbd-icon-disabled': (!upEnabled() || !maximizeEnabled() || editDisabled())}"/>
                                                                         </span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_UP')"></span>
                                                                     </a>
@@ -466,7 +472,8 @@
                                                                 <li data-option="down" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_window_down_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_DOWN')}, css: { 'dbd-icon-disabled': !maximizeEnabled() || editDisabled()}"/>
+                                                                            <!--func_window_down_16_ena-->
+                                                                            <img src="@version@/images/dfSprite.png" style="object-fit:none;object-position:0px -464px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_DOWN')}, css: { 'dbd-icon-disabled': !maximizeEnabled() || editDisabled()}"/>
                                                                         </span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_DOWN')"></span>
                                                                     </a>
@@ -474,7 +481,8 @@
                                                                 <li data-option="left" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !leftEnabled() || !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_window_left_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_LEFT')}, css: {'dbd-icon-disabled': !leftEnabled() || !maximizeEnabled() || editDisabled()}"/>
+                                                                            <!--func_window_left_16_ena-->
+                                                                            <img src="@version@/images/dfSprite.png" style="object-fit:none;object-position:0px -448px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_LEFT')}, css: {'dbd-icon-disabled': !leftEnabled() || !maximizeEnabled() || editDisabled()}"/>
                                                                         </span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_LEFT')"></span>
                                                                     </a>
@@ -482,7 +490,8 @@
                                                                 <li data-option="right" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !rightEnabled() || !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_window_right_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RIGHT')}, css: {'dbd-icon-disabled': !rightEnabled() || !maximizeEnabled() || editDisabled()}"/>
+                                                                            <!--func_window_right_16_ena-->
+                                                                            <img src="@version@/images/dfSprite.png" style="object-fit:none;object-position:0px -288px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RIGHT')}, css: {'dbd-icon-disabled': !rightEnabled() || !maximizeEnabled() || editDisabled()}"/>
                                                                         </span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_RIGHT')"></span>
                                                                     </a>
