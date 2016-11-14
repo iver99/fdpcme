@@ -2107,7 +2107,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         start = new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate());
                         end = curDate;
                     } else if (timePeriod === self.timePeriodLast1year) {
-                        start = new Date(curDate.getFullYear() - 1, curDate.getMonth(), curDate.getDate(), curDate.getHours(), curDate.getMinutes());
+                        start = new Date(curDate.getFullYear() - 1, curDate.getMonth(), curDate.getDate(), curDate.getHours(), curDate.getMinutes(), curDate.getSeconds(), curDate.getMilliseconds());
                         end = curDate;
                     } else if (self.isTimePeriodLessThan1day(timePeriod)) {  //if timerange is less than 1 day, do not adjust start and end during daylight saving time
                         start = new Date(curDate - self.timePeriodObject()[timePeriod][1]);
