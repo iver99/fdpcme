@@ -40,23 +40,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
             }
             
             /**
-             *    Make input of timeperiod backward compatible.
-             *    The result is "LAST_X_UNIT"
-             */
-            function formalizeTimePeriod(timePeriod) {
-                if(!timePeriod) {
-                    return null;
-                }
-                var tp = timePeriod.toUpperCase();
-                if(tp.slice(-1) === "S") {
-                    tp = tp.slice(0, -1);
-                }
-                var arr = tp.split(" ");
-                tp = arr.join("_");
-                return tp;
-            }
-            
-            /**
              * 
              * @param {type} timePeriod
              * @returns {unresolved} Turn timePeriod to "Last X unit/units"
@@ -84,11 +67,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 }else {
                     return false;
                 }
-            }
-            
-            function isValidFlexRelTimePeriod(timePeriod) {
-                var tpPattern = new RegExp("^LAST_[1-9]{1}[0-9]*_(SECOND|MINUTE|HOUR|DAY|WEEK|MONTH|YEAR){1}$");
-                return tpPattern.test(timePeriod);
             }
 
             /**
@@ -138,6 +116,23 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.tfInstance = newValue;
                     self.showTimeFilterError(self.tfInstance.showTimeFilterError());
                 }, null, "tfChanged");
+                                
+                /**
+                *    Make input of timeperiod backward compatible for old time period format.
+                *    The result is "LAST_X_UNIT"
+                */
+                function formalizeTimePeriod(timePeriod) {
+                    return ctxUtil.formalizeTimePeriod(timePeriod);
+                }
+                
+                /**
+                 * Check if a time period is a valid time period with format "LAST_X_UNIT"
+                 * @param {type} timePeriod
+                 * @returns {unresolved} true/false
+                 */
+                function isValidFlexRelTimePeriod(timePeriod) {
+                    return ctxUtil.isValidTimePeriod(timePeriod);
+                }
 
                 self.enableTimeFilter = ko.observable(false);
                 self.tfInfoIndicatorVisible = ko.observable(false);
@@ -1307,9 +1302,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             self.lrCtrlVal("flexRelTimeCtrl");
                                                         
                             var arr = ko.unwrap(params.timePeriod).split("_");
-                            var tmp = self.getTimeRangeForFlexRelTime(arr[1], arr[2]);
-                            start = new Date(tmp.start);
-                            end = new Date(tmp.end);
+                            var tmp = self.getTimeRangeForFlexRelTime(ko.unwrap(params.timePeriod));
+                            start = oj.IntlConverterUtils.isoToLocalDate(tmp.start);
+                            end = oj.IntlConverterUtils.isoToLocalDate(tmp.end);
                             
                             self.flexRelTimeVal(arr[1]);
                             self.flexRelTimeOpt([arr[2]]);
@@ -1407,9 +1402,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 self.lrCtrlVal("flexRelTimeCtrl");
                                 
                                 var arr = omcContext.time.timePeriod.split("_");
-                                var tmp = self.getTimeRangeForFlexRelTime(arr[1], arr[2]);
-                                start = new Date(tmp.start);
-                                end = new Date(tmp.end);
+                                var tmp = self.getTimeRangeForFlexRelTime(omcContext.time.timePeriod);
+                                start = oj.IntlConverterUtils.isoToLocalDate(tmp.start);
+                                end = oj.IntlConverterUtils.isoToLocalDate(tmp.end);
                                 
                                 self.flexRelTimeVal(arr[1]);
                                 self.flexRelTimeOpt([arr[2]]);
@@ -1584,42 +1579,19 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.selectByDrawer(false);
                     self.setFocusOnInput(id);
                 };
-                
+
                 /**
                  * 
-                 * @param {type} num - flexible relative time value
-                 * @param {type} opt - flexible relative time option
-                 * @returns start and end time in ISO format
+                 * @param {type} flexRelTime
+                 * @returns {start: <start time in ISO format>, end: <end time in ISO format>}
                  */
-                self.getTimeRangeForFlexRelTime = function(num, opt) {
-//                    var end = new Date(2016, 2, 13, 3, 0, 0, 0);
-                    var end = new Date();
+                self.getTimeRangeForFlexRelTime = function(flexRelTime) {
                     var timeRange;
-                    switch(opt) {
-                        case "SECOND":
-                            start = new Date(end - num*1000);
-                            break;
-                        case "MINUTE":
-                            start = new Date(end - num*60*1000);
-                            break;
-                        case "HOUR":
-                            start = new Date(end - num*60*60*1000);
-                            break;
-                        case "DAY":
-                            start = new Date(end.getFullYear(), end.getMonth(), end.getDate()-num, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
-                            break;
-                        case "WEEK":
-                            start = new Date(end.getFullYear(), end.getMonth(), end.getDate()-7*num, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
-                            break;
-                        case "MONTH":
-                            start = new Date(end.getFullYear(), end.getMonth()-num, end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
-                            break;
-                        case "YEAR":
-                            start = new Date(end.getFullYear()-num, end.getMonth(), end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
-                            break;
-                        default:
-                            throw new Error("error in flexible relative time value change: flexible relative time option-" + opt + " is invalid");
-                    }
+                    var start;
+                    var end;
+                    timeRange = ctxUtil.getStartEndTimeFromTimePeriod(flexRelTime);
+                    start = timeRange.start;
+                    end = timeRange.end;
                     
                     if(self.adjustLastX) {
                         timeRange = self.adjustLastX(start, end);
@@ -1637,7 +1609,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 }
                 
                 self.setFlexRelTime = function(num, opt) {
-                    var timeRange = self.getTimeRangeForFlexRelTime(num, opt);
+                    var timeRange = self.getTimeRangeForFlexRelTime("LAST_"+num+"_"+opt);
                     var start = timeRange.start;
                     var end = timeRange.end;
                     
@@ -2064,7 +2036,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.setTimePeriodChosen(self.timePeriod());
                     }else {
                         var arr = data.timePeriod.split("_");
-                        tmp = self.getTimeRangeForFlexRelTime(arr[1], arr[2]);
+                        tmp = self.getTimeRangeForFlexRelTime(data.timePeriod);
                         start = tmp.start;
                         end = tmp.end;
 
