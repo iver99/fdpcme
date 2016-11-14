@@ -91,6 +91,7 @@ public class TestBrandingBar extends LoginAndLogout
 		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);
 		WaitUtil.waitForPageFullyLoaded(webd);
 		// Alert link
+
 		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "eventUi/rules/html/rules-dashboard.html");
 		Assert.assertTrue(BrandingBarUtil.isAdmin(webd));
@@ -223,6 +224,7 @@ public class TestBrandingBar extends LoginAndLogout
 		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);
 		WaitUtil.waitForPageFullyLoaded(webd);
 		// Alert link
+
 		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "eventUi/rules/html/rules-dashboard.html");
 		Assert.assertTrue(BrandingBarUtil.isAdmin(webd));
