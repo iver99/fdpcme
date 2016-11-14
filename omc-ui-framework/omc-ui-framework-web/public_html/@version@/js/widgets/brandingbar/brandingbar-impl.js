@@ -6,13 +6,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'uifwk/@version@/js/sdk/context-util-impl',
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
+    '/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js',
     'ojs/ojknockout',
     'ojs/ojtoolbar',
     'ojs/ojmenu',
     'ojs/ojbutton',
     'ojs/ojdialog'
 ],
-    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls) {
+    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, EmctaContextSelectorUtil) {
         function BrandingBarViewModel(params) {
             var self = this;
             var msgUtil = new msgUtilModel();
@@ -46,7 +47,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     template: {require: 'text!/emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html'}
                 });
             }
-
+            
+            if (!ko.components.isRegistered('emcta-context-selector'))
+            {
+                EmctaContextSelectorUtil.registerComponents();
+            }
+            
             if (self.showGlobalContextBanner() === true) {
                 refreshOMCContext();
             }

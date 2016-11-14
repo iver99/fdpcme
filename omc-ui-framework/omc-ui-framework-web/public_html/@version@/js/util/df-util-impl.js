@@ -399,8 +399,8 @@ define(['knockout',
             self.getDefaultHeader = function() {
                 var defHeader = {};
                 if (self.isDevMode()){
-                    defHeader["X-USER-IDENTITY-DOMAIN-NAME"] = self.tenantName;
-                    defHeader["X-REMOTE-USER"] = self.tenantName+'.'+self.userName;
+                    defHeader["X-USER-IDENTITY-DOMAIN-NAME"] = (self.tenantName) ? self.tenantName: self.getDevData().tenant;
+                    //defHeader["X-REMOTE-USER"] = self.tenantName+'.'+self.userName;
                     defHeader.Authorization="Basic "+btoa(self.getDevData().wlsAuth);
                 }
                 oj.Logger.info("Sent Header: "+JSON.stringify(defHeader));
