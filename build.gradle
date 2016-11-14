@@ -273,7 +273,6 @@ task preBuildCompile(type: Copy) {
    into "$afDir"
    rename(/registry-client-1.\d+.\d+-\d+.jar/, 'registry-client-1.x.jar')
    rename(/registry-lookup-client-1.\d+.\d+-\d+.jar/, 'registry-lookup-client-1.x.jar')
-   rename(/em-qatool-os-webdriver-2.0.0-\d+.jar/, 'em-qatool-os-webdriver-2.0.0.jar')
 }
 
 compileJava.dependsOn preBuildCompile
