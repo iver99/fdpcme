@@ -95,7 +95,6 @@ require(['ojs/ojcore',
         function (oj, ko, $, dfu, dfumodel, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
         {
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
-            dfu_model.setHtmlLang();
             var logger = new _emJETCustomLogger();
             var logReceiver = dfu.getLogUrl();
 

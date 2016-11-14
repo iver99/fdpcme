@@ -1177,6 +1177,12 @@ public class DashboardManager
 				ed.setOwner(dbd.getOwner());
 			}
 			dsf.mergeEmsDashboard(ed);
+			//EMCPDF-2567,if this dashboard is created in a set, copy its screenshot to its parent dashboard Set
+			if(dbd.getDupDashboardId()!=null){
+				EmsDashboard parentDashboardSet=dsf.getEmsDashboardById(dbd.getDupDashboardId());
+				parentDashboardSet.setScreenShot(ed.getScreenShot());
+				dsf.mergeEmsDashboard(parentDashboardSet);
+			}
 			return Dashboard.valueOf(ed, dbd, true, true, true);
 		}
 		finally {

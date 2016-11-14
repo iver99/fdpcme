@@ -19,7 +19,7 @@
     <dispatcher>FORWARD</dispatcher>
     <dispatcher>REQUEST</dispatcher>
   </filter-mapping> 
-  <filter>
+  <!--<filter>
   	<filter-name>compress.filter</filter-name>
     <filter-class>oracle.sysman.emaas.platform.dashboards.ui.web.GzipFilter</filter-class>
   </filter>
@@ -34,7 +34,7 @@
   <filter-mapping>
     <filter-name>compress.filter</filter-name>
     <url-pattern>*.js</url-pattern>
-  </filter-mapping>
+  </filter-mapping>-->
   <filter>
   	<filter-name>clickjack.filter</filter-name>
     <filter-class>oracle.sysman.emaas.platform.dashboards.ui.web.ClickjackingFilter</filter-class>
@@ -48,7 +48,7 @@
     <url-pattern>/home.html</url-pattern>
     <url-pattern>/builder.html</url-pattern>
   </filter-mapping>
- <filter>
+  <filter>
     <filter-name>homepage.filter</filter-name>
     <filter-class>oracle.sysman.emaas.platform.dashboards.ui.web.HomePageFilter</filter-class>
   </filter>
@@ -57,6 +57,19 @@
     <url-pattern>/welcome.html</url-pattern>
     <url-pattern>/home.html</url-pattern>
   </filter-mapping>
+  
+  <filter>
+    <filter-name>nls.filter</filter-name>
+    <filter-class>oracle.sysman.emaas.platform.dashboards.ui.web.NLSFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>nls.filter</filter-name>
+    <url-pattern>/welcome.html</url-pattern>
+    <url-pattern>/home.html</url-pattern>
+    <url-pattern>/error.html</url-pattern>
+    <url-pattern>/builder.html</url-pattern>
+  </filter-mapping>
+  
   	<security-constraint>
 	  <web-resource-collection>
 	    <web-resource-name>secure-pages</web-resource-name>

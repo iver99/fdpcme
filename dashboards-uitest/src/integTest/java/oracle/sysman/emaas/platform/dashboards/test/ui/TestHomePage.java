@@ -27,6 +27,8 @@ public class TestHomePage extends LoginAndLogout
 		//create a dashboard
 		DashboardHomeUtil.createDashboard(webd, "ADashboard Test", "", DashboardHomeUtil.DASHBOARD);
 		DashboardBuilderUtil.verifyDashboard(webd, "ADashboard Test", "", false);
+
+		LoginAndLogout.logoutMethod();
 	}
 
 	public void initTest(String testName)
@@ -55,6 +57,7 @@ public class TestHomePage extends LoginAndLogout
 		//remove the dashboard
 		DashboardHomeUtil.deleteDashboard(webd, "ADashboard Test", DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 
+		LoginAndLogout.logoutMethod();
 	}
 
 	@Test
