@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
 import java.util.Date;
+import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.UtilLoader;
@@ -29,11 +30,11 @@ public class GlobalContextUtil
 	 * @return
 	 */
 
-	public static String generateUrlWithGlobalContext(WebDriver driver, String baseurl, String compositeMeid, String timePeriod,
-			Date startTime, Date endTime)
+	public static String generateUrlWithGlobalContext(WebDriver driver, String baseUrl, String compositeMeid, String timePeriod,
+			Date startTime, Date endTime, List<String> entityMeids)
 	{
 		IGlobalContextUtil gcu = new UtilLoader<IGlobalContextUtil>().loadUtil(driver, IGlobalContextUtil.class);
-		return gcu.generateUrlWithGlobalContext(driver, baseurl, compositeMeid, timePeriod, startTime, endTime);
+		return gcu.generateUrlWithGlobalContext(driver, baseUrl, compositeMeid, timePeriod, startTime, endTime, entityMeids);
 	}
 
 	/**
