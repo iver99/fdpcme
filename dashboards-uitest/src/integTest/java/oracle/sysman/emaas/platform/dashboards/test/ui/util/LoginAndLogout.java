@@ -94,12 +94,13 @@ public class LoginAndLogout
 		webd.getLogger().info("url is " + url + "   properties file is " + testPropertiesFile);
 		webd.getLogger().info("after::start to test in LoginAndOut");
 		// if the ui have been login, do not login ,again
-//		if (!webd.getWebDriver().getCurrentUrl().equals(url)) {
-		if (!webd.getWebDriver().getCurrentUrl().equals(url)
-				&& !webd.getWebDriver().getCurrentUrl().contains("omcCtx=")) {
+		//		if (!webd.getWebDriver().getCurrentUrl().equals(url)) {
+		if (!webd.getWebDriver().getCurrentUrl().equals(url) && !webd.getWebDriver().getCurrentUrl().contains("omcCtx=")) {
 			//Append omc context into login url
 			if (!url.contains("omcCtx=")) {
-				url = url + (url.indexOf("?") > 0 ? "&" : "?") + "omcCtx=startTime%3D1478045700000%26endTime%3D1478240100000%26compositeMEID%3DEE380645A9711FFF881A146A00C98324";
+				url = url
+						+ (url.indexOf("?") > 0 ? "&" : "?")
+						+ "omcCtx=compositeType%3Domc_group%26compositeName%3DDynamic%2520Group%2520Test%26compositeMEID%3DAB08D432613982E6A2EE6278E8C1459E";
 				webd.getLogger().info("New url with OMC global context appended is: " + url);
 			}
 			LoginUtils.doLogin(webd, username, password, tenantId, url);
@@ -148,12 +149,13 @@ public class LoginAndLogout
 		//		webd.getLogger().info("url is " + url + "   properties file is " + testPropertiesFile);
 		webd.getLogger().info("after::start to test in LoginAndOut");
 		// if the ui have been login, do not login ,again
-//		if (!webd.getWebDriver().getCurrentUrl().equals(url)) {
-		if (!webd.getWebDriver().getCurrentUrl().equals(url)
-				&& !webd.getWebDriver().getCurrentUrl().contains("omcCtx=")) {
+		//		if (!webd.getWebDriver().getCurrentUrl().equals(url)) {
+		if (!webd.getWebDriver().getCurrentUrl().equals(url) && !webd.getWebDriver().getCurrentUrl().contains("omcCtx=")) {
 			//Append omc context into login url
 			if (!url.contains("omcCtx=")) {
-				url = url + (url.indexOf("?") > 0 ? "&" : "?") + "omcCtx=startTime%3D1478045700000%26endTime%3D1478240100000%26compositeMEID%3DEE380645A9711FFF881A146A00C98324";
+				url = url
+						+ (url.indexOf("?") > 0 ? "&" : "?")
+						+ "omcCtx=startTime%3D1478045700000%26endTime%3D1478240100000%26compositeMEID%3DEE380645A9711FFF881A146A00C98324";
 				webd.getLogger().info("New url with OMC global context appended is: " + url);
 			}
 			LoginUtils.doLogin(webd, username, password, tenantID, url);
