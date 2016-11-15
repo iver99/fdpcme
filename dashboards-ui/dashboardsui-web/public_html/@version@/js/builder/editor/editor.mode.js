@@ -101,7 +101,7 @@ define(['knockout',
 
         function TabletEditorMode() {
             this.mode = "Tablet Display Mode";
-            this.MODE_MAX_COLUMNS = 2;
+            this.MODE_MAX_COLUMNS = 1;
             this.MODE_MIN_COLUMNS = 1;
             this.editable = false;
             this.POSITION_TYPE = Builder.EDITOR_POS_FIND_SUITABLE_SPACE;
@@ -112,7 +112,7 @@ define(['knockout',
             if(!tile.modeWidth){
                 tile.modeWidth = ko.observable();
             }
-            tile.modeWidth(tile.width() <= 3 ? 1 : 2);
+            tile.modeWidth(1);// EMCPDF-1781: one column for tablet mode
         };
         TabletEditorMode.prototype.setModeWidth = function(tile, width) {
             oj.Logger.error("Unsupport operation: TabletEditorMode.setModeWidth()");

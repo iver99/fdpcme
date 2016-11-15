@@ -65,6 +65,7 @@ requirejs.config({
             'uifwk/js/util/screenshot-util',
             'uifwk/js/util/typeahead-search',
             'uifwk/js/util/usertenant-util',
+            'uifwk/js/sdk/context-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
@@ -276,6 +277,7 @@ require(['knockout',
         function DashboardTitleModel(dashboard) {
             var self = this;
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
+            dfu_model.setHtmlLang();
             self.builderTitle = dfu_model.generateWindowTitle(dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
         }
 
@@ -288,7 +290,8 @@ require(['knockout',
                 userName: self.userName,
                 tenantName: self.tenantName,
                 appId: self.appId,
-                isAdmin:true
+                isAdmin:true,
+                showGlobalContextBanner: true
             };
 
             $("#headerWrapper").on("DOMSubtreeModified", function() {

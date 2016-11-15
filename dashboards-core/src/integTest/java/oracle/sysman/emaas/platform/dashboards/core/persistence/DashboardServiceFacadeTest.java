@@ -4,6 +4,7 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
@@ -433,6 +434,24 @@ public class DashboardServiceFacadeTest
 		finally {
 			if (em != null) {
 				em.close();
+			}
+		}
+	}
+
+	public void testOOBWidgetNotHiden() {
+		dashboardServiceFacade = new DashboardServiceFacade(1L);
+		List<EmsDashboard> emsDashboards = dashboardServiceFacade.getEmsDashboardFindAll();
+		for (EmsDashboard emsDashboard : emsDashboards) {
+			List<EmsDashboardTile> emsDashboardTiles = emsDashboard.getDashboardTileList();
+			for (EmsDashboardTile emsDashboardTile : emsDashboardTiles) {
+				if ("Oracle".equalsIgnoreCase(emsDashboardTile.getOwner())&& "Summary".equalsIgnoreCase(emsDashboardTile.getTitle())) {
+					List<EmsDashboardTileParams> emsDashboardTileParamses = emsDashboardTile.getDashboardTileParamsList();
+					for (EmsDashboardTileParams emsDashboardTileParams : emsDashboardTileParamses) {
+						if ("DF_HIDE_TITLE".equals(emsDashboardTileParams.getParamName()) && "true".equalsIgnoreCase(emsDashboardTileParams.getParamValueStr())) {
+							Assert.fail("Widget: id = " + emsDashboardTile.getTileId() + " is hidden");
+						}
+					}
+				}
 			}
 		}
 	}

@@ -79,6 +79,8 @@ public class TestDashBoard extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_LADashboard);
 
 		webd.getLogger().info("All test data have been removed");
+
+		LoginAndLogout.logoutMethod();
 	}
 
 	//@Test(dependsOnMethods = { "testCreateDashboard_noWidget_ListView" })

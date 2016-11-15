@@ -1,10 +1,10 @@
-define([
+define(['knockout',
     'jquery',
     'ojs/ojcore',
     'uifwk/@version@/js/util/ajax-util-impl',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg'
 ],
-    function($, oj, ajaxUtilModel, nls)
+    function(ko, $, oj, ajaxUtilModel, nls)
     {
         function DashboardFrameworkUtility(userName, tenantName) {
             var self = this;
@@ -14,6 +14,12 @@ define([
             self.userName = userName;
             self.tenantName = tenantName;
 
+            if(!userName || !tenantName){
+                if (window.DEV_MODE) {
+                    self.userName = window.DEV_MODE.user;
+                    self.tenantName  = window.DEV_MODE.tenant;
+                }
+            }
 
             /**
              * Get URL parameter value according to URL parameter name
@@ -93,6 +99,62 @@ define([
 
             self.getDevData=function(){
                 return devData;
+            };
+
+            var getHeadersForRegistry = function ()
+            {
+                var defHeader = {};
+                if (self.isDevMode()){
+                    defHeader["X-USER-IDENTITY-DOMAIN-NAME"] = self.tenantName;
+                    defHeader["X-SSO-CLIENT"]  = "true";
+                    defHeader.Authorization="Basic "+btoa(self.getDevData().wlsAuth);
+                }
+                oj.Logger.info("Sent Header: "+JSON.stringify(defHeader));
+                return defHeader;
+            };
+
+            self.getTargetModelServiceInDEVMode = function ()
+            {
+                if(window.DEV_MODE.odsRestApiEndPoint){
+                    return window.DEV_MODE.odsRestApiEndPoint;
+                }
+                var registryUrlInDevMode = self.getDevData().registryUrl;
+
+                self.ajaxWithRetry(registryUrlInDevMode,{
+                    headers: getHeadersForRegistry(),
+                    type: 'GET',
+                    data: {"serviceName": "ODSQuery"},
+                    async: false,
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    description: "Obtaining target model service in DEV mode",
+                    success:function(data, textStatus,jqXHR) {
+                        if (data.total > 0) {
+                            // Note: We need to get the canonical end points, otherwise we run into the options
+                            // issues.  Hence, we cannot use static links, since they are built from virtual end points.
+                            var endpoints = data.items[0].canonicalEndpoints;
+                            if (endpoints.length === 0) {
+                                endpoints = data.items[0].virtualEndpoints;
+                                window.console.warn("DEV mode could not obtain canonical endpoints (http) for target service.\n" +
+                                    "Falling back to virtual endpoints (https).\n" +
+                                    "You must find the OPTIONS calls, copy the url to a different tab, accept the SSL warning,\n" +
+                                    "go back to the original tab, and hit F5");
+                            }
+                            var targetModelUrl = endpoints[0];
+                            if (targetModelUrl.charAt(targetModelUrl.length - 1) !== "/") {
+                                targetModelUrl = targetModelUrl + "/";
+                            }
+                            window.DEV_MODE.odsRestApiEndPoint = targetModelUrl;
+                            oj.Logger.log("DEV mode - Obtained " + targetModelUrl);
+                        } else {
+                            oj.Logger.log("DEV mode - For registry " + registryUrlInDevMode + " Obtaining Target Model service URL in DEV mode " + textStatus + " No data was returned.");
+                        }
+                    },
+                    error:function(xhr, textStatus, errorThrown){
+                        oj.Logger.log("DEV mode - For registry " + registryUrlInDevMode + " Obtaining Target Model service URL in DEV mode" + textStatus + errorThrown);
+                    }
+                });
+                return window.DEV_MODE.odsRestApiEndPoint;
             };
 
             /**
@@ -339,6 +401,17 @@ define([
                 if (self.isDevMode()){
                     defHeader["X-USER-IDENTITY-DOMAIN-NAME"] = self.tenantName;
                     defHeader["X-REMOTE-USER"] = self.tenantName+'.'+self.userName;
+                    defHeader.Authorization="Basic "+btoa(self.getDevData().wlsAuth);
+                }
+                oj.Logger.info("Sent Header: "+JSON.stringify(defHeader));
+                return defHeader;
+            };
+
+            self.getHeadersForService = function ()
+            {
+                var defHeader = {};
+                if (self.isDevMode()){
+                    defHeader["X-USER-IDENTITY-DOMAIN-NAME"] = self.tenantName;
                     defHeader.Authorization="Basic "+btoa(self.getDevData().wlsAuth);
                 }
                 oj.Logger.info("Sent Header: "+JSON.stringify(defHeader));
@@ -798,6 +871,11 @@ define([
                     $('head').append('<link id="uifwkAltaCss" rel="stylesheet" href="/emsaasui/uifwk/@version@/css/uifwk-alta.css" type="text/css"/>');
                 }
             };
+            
+            self.setHtmlLang = function() {
+                var language = window.navigator.userLanguage || window.navigator.language;
+                $('html').attr("lang", language);
+            }
 
             function showSessionTimeoutWarningDialog(warningDialogId) {
                 //Clear interval for extending user session
@@ -806,9 +884,64 @@ define([
                     clearInterval(window.intervalToExtendCurrentUserSession);
                 }
                 window.currentUserSessionExpired = true;
+                self.clearSessionCache();
                 //Open sessin timeout warning dialog
                 $('#'+warningDialogId).ojDialog('open');
             }
+
+            self.clearSessionCache = function(){
+                window.sessionStorage.removeItem('_uifwk_brandingbar_cache');
+            };
+            
+            self.getRegistrations = function(successCallback, toSendAsync, errorCallback){
+                if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.registrations && window._uifwk.cachedData.registrations()){
+                    successCallback(window._uifwk.cachedData.registrations());
+                }else{
+                    if(!window._uifwk){
+                        window._uifwk = {};
+                    }
+                    if(!window._uifwk.cachedData){
+                        window._uifwk.cachedData = {};
+                    }
+                    if(!window._uifwk.cachedData.isFetchingRegistrations){
+                        window._uifwk.cachedData.isFetchingRegistrations = true;
+                        if(!window._uifwk.cachedData.registrations){
+                            window._uifwk.cachedData.registrations = ko.observable();
+                        }
+                        ajaxUtil.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationUrl(),
+                            dataType: 'json',
+                            headers: this.getDefaultHeader(),
+                            async: toSendAsync === false? false:true,
+                            success: function(data, textStatus, jqXHR){
+                                window._uifwk.cachedData.registrations(data);
+                                window._uifwk.cachedData.isFetchingRegistrations = false;
+                                successCallback(data, textStatus, jqXHR);
+                            },
+                            error: function(jqXHR, textStatus, errorThrown){
+                                console.log('Failed to get registration info!');
+                                window._uifwk.cachedData.isFetchingRegistrations = false;
+                                if(errorCallback){
+                                    errorCallback(jqXHR, textStatus, errorThrown);
+                                }
+                            }
+                        });
+                    }else{
+                        window._uifwk.cachedData.registrations.subscribe(function(data){
+                            if(data){
+                                successCallback(data);
+                            }
+                        });
+                    }
+                }
+            };
+            
+            self.getRegistrationUrl=function(){
+                if (self.isDevMode()){
+                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"configurations/registration");
+                }else{
+                    return '/sso.static/dashboards.configurations/registration';
+                }
+            };
 
         }
 

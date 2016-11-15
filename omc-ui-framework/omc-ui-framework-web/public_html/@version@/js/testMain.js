@@ -12,6 +12,7 @@ requirejs.config({
             'uifwk/js/util/screenshot-util',
             'uifwk/js/util/typeahead-search',
             'uifwk/js/util/usertenant-util',
+            'uifwk/js/sdk/context-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
@@ -36,13 +37,17 @@ requirejs.config({
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
         'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/debug',
         'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/ojL10n',
+        'ojdnd': '../../libs/@version@/js/oraclejet/js/libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
         'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/resources',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../../libs/@version@/js/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
-        'uifwk': '/emsaasui/uifwk'
+        'uifwk': '/emsaasui/uifwk',
+        'emsaasui': '/emsaasui',
+        'emcta': '/emsaasui/emcta/ta/js'
+//        'emcta': '/emsaasui/emcta/ta/@version@/js' //for DEV_MODE
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -144,14 +149,16 @@ require(['knockout',
 
             function HeaderViewModel() {
                 var self = this;
-
+                var entities = ko.observable(["8616FD4297516BA7974EF5AA20EE294B"]);
                 self.brandingbarParams = {
                     userName: userName,
                     tenantName: tenantName,
                     appId: appId,
 //                    relNotificationCheck: "existActiveWarning",
 //                    relNotificationShow: "warnings",
-                    isAdmin: isAdmin
+                    isAdmin: isAdmin,
+                    entities: entities,
+                    showGlobalContextBanner: false
                 };
             }
 

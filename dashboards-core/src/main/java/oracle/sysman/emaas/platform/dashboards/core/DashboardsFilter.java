@@ -168,6 +168,7 @@ public class DashboardsFilter
 		return includedTypes;
 	}
 
+        /*
 	public List<String> getIncludedWidgetProviders()
 	{
 		if (includedApps == null || includedApps.isEmpty()) {
@@ -209,6 +210,7 @@ public class DashboardsFilter
 		}
 		return sb.toString();
 	}
+        */
 
 	//	/**
 	//	 * @param includedApps
@@ -337,6 +339,7 @@ public class DashboardsFilter
 			}
 		}
 	}
+
 	List<String> getIncludedWidgetGroups()
 	{
 		if (includedApps == null || includedApps.isEmpty()) {
@@ -374,6 +377,6 @@ public class DashboardsFilter
 			sb.append("'" + ps.get(i) + "'");
 		}
 		return sb.toString();
-	}
+	}	
 
 }
