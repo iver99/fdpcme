@@ -27,6 +27,7 @@ sourceSets {
 		resources {	
 			srcDirs = ['src/main/java', 'src/resources/java']
 		}	
+		compileClasspath += configurations.testNG
 	}
  }
 
@@ -65,8 +66,7 @@ dependencies {
 	compile getProjectArtifact('coherence')  
 	compile getProjectArtifact('jersey-core')  
 	compile getProjectArtifact('jersey-client')  
-	compile getProjectArtifact('jmockit')  
-	compile getProjectArtifact('em-qatool-os-webdriver')  
+	compile getProjectArtifact('jmockit')    
 }
 
 processResources {
