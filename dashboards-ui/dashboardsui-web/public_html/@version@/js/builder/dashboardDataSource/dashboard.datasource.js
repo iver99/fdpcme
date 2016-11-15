@@ -27,14 +27,14 @@ define(['knockout',
             if (isEmptyObject(self.dataSource[dashboardId])) {
             	// emcpdf-2527
             	self.loadDashboardData(dashboardId, function() {
-            		successCallback && successCallback(self.dataSource[dashboardId].userOptions);
+            		successCallback && successCallback(self.dataSource[dashboardId].userOptions || {});
             	}, 
                 function (jqXHR, textStatus, errorThrown) {
             		self[dashboardId].hasUserOptionInDB = false;
             		errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
             	});
             } else {
-                successCallback && successCallback(self.dataSource[dashboardId].userOptions);
+                successCallback && successCallback(self.dataSource[dashboardId].userOptions || {});
             }
         };
         

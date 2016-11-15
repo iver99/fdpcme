@@ -37,7 +37,7 @@ public class CombinedDashboard extends Dashboard
 		UserOptions uo = UserOptions.valueOf(euo);
 		cb.setPreference(p);
 		cb.setUserOptions(uo);
-		cb.isFavorite = DataFormatUtils.integer2Boolean(euo.getIsFavorite());
+		cb.isFavorite = euo == null ? Boolean.FALSE : DataFormatUtils.integer2Boolean(euo.getIsFavorite());
 		return cb;
 	}
 	
