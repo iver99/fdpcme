@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -78,9 +79,17 @@ public class CacheAPI extends APIBase{
     @Produces(MediaType.APPLICATION_JSON)
     public Response clearAllCacheGroup(){
     	LOGGER.info("Service to call [PUT] /v1/cache/clearCache");
-        CacheFactory.getCacheUnitMap().clear();
-        Response resp = Response.status(Response.Status.OK).build();
-        return resp;
+    	//clear all cache group
+//        CacheFactory.getCacheUnitMap().clear();
+        CacheFactory.clearAllCacheGroup();
+        ConcurrentHashMap<String, CacheUnit> cacheUnitMap = CacheFactory.getCacheUnitMap();
+		List<CacheUnit> cacheUnitList = new ArrayList<CacheUnit>();
+		Iterator<Map.Entry<String,CacheUnit>> iterator= cacheUnitMap.entrySet().iterator();
+		while(iterator.hasNext()){
+			Map.Entry<String, CacheUnit> entry = iterator.next();
+			cacheUnitList.add(entry.getValue());
+		}
+		return Response.ok(getJsonUtil().toJson(cacheUnitList)).build();
     }
 
     @PUT
@@ -107,19 +116,23 @@ public class CacheAPI extends APIBase{
     }
 
     @PUT
+    @Path("enable")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response cacheMechanismSwitch(String isEnable) {
-        if (isEnable==null || "".equals(isEnable)){
-            throw new IllegalArgumentException("parameter can only be TRUE or FALSE!");
-        }
-        Boolean flag=new Boolean(isEnable.toLowerCase());
-        if(flag){
-            CacheManager.getInstance().enableCacheManager();
-        }else{
-            CacheManager.getInstance().disableCacheManager();
-        }
-        Response resp = Response.status(Response.Status.OK).build();
-        return resp;
+    public Response enableCache() {
+		CacheManager.getInstance().enableCacheManager();
+		LOGGER.info("Cache Manager is turing ON!");
+		Response resp = Response.status(Response.Status.OK).build();
+		return resp;
+    }
+    
+    @PUT
+    @Path("disable")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response disableCache() {
+		CacheManager.getInstance().disableCacheManager();
+		LOGGER.info("Cache Manager is turing OFF!");
+		Response resp = Response.status(Response.Status.OK).build();
+		return resp;
     }
 
 

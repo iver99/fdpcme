@@ -121,11 +121,12 @@ public class CacheManager {
         if (key == null) {
             return null;
         }
-        Object value = cache.get(key.toString());
-        if(!isCacheEnabled){
-            //if cache is disabled, we do not retrieve data from cache anymore
-            LOGGER.info("Cache Manager is disabled, will not use the data retrieved from cache");
-            value=null;
+        Object value=null;
+        if(isCacheEnabled){
+        	value = cache.get(key.toString());
+        }else{
+        	//if cache is disabled, we do not retrieve data from cache anymore
+        	LOGGER.debug("Cache Manager is disabled, will not use the data retrieved from cache");
         }
         if (value == null && ff != null) {
             LOGGER.debug("Cache not retrieved, trying to load with fetch factory");
@@ -172,7 +173,7 @@ public class CacheManager {
 
     public Object putCacheable(Tenant tenant, String cacheName, Keys keys, Object value) {
         if(!isCacheEnabled){
-            LOGGER.info("CacheManager is disabled, will not put element into cache!");
+            LOGGER.debug("CacheManager is disabled, will not put element into cache!");
             return null;
         }
         logCacheStatus();
@@ -200,7 +201,7 @@ public class CacheManager {
 
     public Object removeCacheable(Tenant tenant, String cacheName, Keys keys) {
         if(!isCacheEnabled){
-            LOGGER.info("CacheManager is disabled, will not remove element from cache!");
+            LOGGER.debug("CacheManager is disabled, will not remove element from cache!");
             return null;
         }
         CacheUnit cache = getInternalCache(cacheName);
