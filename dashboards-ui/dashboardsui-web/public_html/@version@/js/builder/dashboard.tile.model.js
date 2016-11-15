@@ -1011,12 +1011,12 @@ define(['knockout',
                     initStart = new Date(parseInt(self.userExtendedOptions.timeSel.start));
                     initEnd = new Date(parseInt(self.userExtendedOptions.timeSel.end));
                     var tp = (self.userExtendedOptions.timeSel.timePeriod === "custom1") ? "custom" : self.userExtendedOptions.timeSel.timePeriod;
-                    self.timePeriod(Builder.getTimePeriodString(tp));
+                    self.timePeriod(Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp);
                 }else if(self.dashboardExtendedOptions && !$.isEmptyObject(self.dashboardExtendedOptions.timeSel)) {
                     initStart = new Date(parseInt(self.dashboardExtendedOptions.timeSel.start));
                     initEnd = new Date(parseInt(self.dashboardExtendedOptions.timeSel.end));
                     var tp = (self.dashboardExtendedOptions.timeSel.defaultValue === "custom1") ? "custom" : self.dashboardExtendedOptions.timeSel.defaultValue;
-                    self.timePeriod(Builder.getTimePeriodString(tp));
+                    self.timePeriod(Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp);
                     self.userExtendedOptions.timeSel = {};
                 }else {
                     initStart = new Date(current - 14*24*60*60*1000);
@@ -1052,7 +1052,7 @@ define(['knockout',
                             if(!self.userExtendedOptions.timeSel) {
                                 self.userExtendedOptions.timeSel = {};
                             }
-                            self.userExtendedOptions.timeSel.timePeriod = Builder.getTimePeriodValue(tp);
+                            self.userExtendedOptions.timeSel.timePeriod = Builder.getTimePeriodValue(tp) ? Builder.getTimePeriodValue(tp) : tp;
                             self.userExtendedOptions.timeSel.start = start.getTime();
                             self.userExtendedOptions.timeSel.end = end.getTime();
                             self.saveUserFilterOptions();
