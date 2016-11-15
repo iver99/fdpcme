@@ -59,9 +59,10 @@ public class DashboardErrorConstants
 	// important: don't assign value larger than this value to dashboard security errors
 	public static final Integer DASHBOARD_SECURITY_MAX_ERROR_CODE = 39999;
 
-	public static final Integer DASHBOARD_CACHE_ERROR_CODE=40000;
-	public static final Integer DASHBOARD_CACHE_GROUP_NOT_FOUND_ERROR_CODE=40001;
-	public static final Integer DASHBOARD_CACHE_GROUP_NAME_EMPTY_ERROR_CODE=40002;
+	//keep cache code same with SSF side
+	public static final Integer DASHBOARD_CACHE_ERROR_CODE=50000;
+	public static final Integer DASHBOARD_CACHE_GROUP_NOT_FOUND_ERROR_CODE=50001;
+	public static final Integer DASHBOARD_CACHE_GROUP_NAME_EMPTY_ERROR_CODE=50002;
 	// important: don't assign value larger than this value to dashboard cache errors
-	public static final Integer DASHBOARD_CACHE_MAX_ERROR_CODE=49999;
+	public static final Integer DASHBOARD_CACHE_MAX_ERROR_CODE=59999;
 }
