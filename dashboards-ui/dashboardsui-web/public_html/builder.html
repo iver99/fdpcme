@@ -354,7 +354,7 @@
                                 <!-- ko if: type() === 'DEFAULT' -->
                                 <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice,'data-tile-name':WIDGET_NAME}, css: tileDisplayClass(), 
                                                                     event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}}">
-                                    <div class="dbd-tile-container" tabindex="0" data-bind="event: {focus: function(data, event) {$root.focusOnTile(clientGuid, data, event)}}">
+                                    <div class="dbd-tile-container" tabindex="0" data-bind="css:{'tile-border-highlight':outlineHightlight},event: {focus: function(data, event) {$root.focusOnTile(clientGuid, data, event)}}">
                                         <div class="dbd-tile-header tile-drag-handle" style="display: flex">
                                           <!-- ko if: $root.dashboard.systemDashboard() && linkedDashboard && linkedDashboard() !== '#'-->
                                             <h2 class="dbd-tile-title"><a data-bind="text:hideTitle() === 'true' ? '': title, attr: {href: linkedDashboard, 'data-tile-title': title}"></a></h2>
@@ -409,8 +409,7 @@
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_RESIZE')"></span>
                                                             </a>
                                                             <ul>
-                                                        -->
-                                                        <li data-option="divider"></li>
+                                                        -->                                    
                                                                 <li data-option="wider" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
@@ -451,6 +450,15 @@
                                                             </ul>
                                                         </li>
                                                         -->
+                                                        <li data-option="divider"></li> 
+                                                            <li data-option="edit" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !maximizeEnabled() || editDisabled()}">
+                                                                <a href="#">
+                                                                    <span class="oj-menu-item-icon demo-icon-font">
+                                                                        <img src="@version@/images/func_window_taller_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}, css: {'dbd-icon-disabled': !maximizeEnabled() || editDisabled()}"/>
+                                                                    </span>
+                                                                    <span data-bind="text: getNlsString('COMMON_BTN_EDIT')"></span>
+                                                                </a>
+                                                            </li>
                                                         <li data-option="divider"></li>
                                                                 <li data-option="up" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': (!upEnabled() || !maximizeEnabled() || editDisabled())}">
                                                                     <a href="#">
@@ -491,8 +499,7 @@
                                                             <!--
                                                             </ul>
                                                         </li>
-                                                        -->
-                                                        <li></li>
+                                                        -->       
                                                     </ul>
                                                 </div>
                                             </div>

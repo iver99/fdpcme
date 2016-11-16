@@ -20,7 +20,8 @@ function (ko, $, oj, dfu, mbu, uiutil) {
         self.completelyHidden = ko.observable(false);
         self.editPanelContent = ko.observable("settings");
         self.scrollbarWidth = uiutil.getScrollbarWidth();
-
+        self.lastHighlightWigetIndex=null;
+        
         self.expandDBEditor = function (target, isToExpand) {
             if ("singleDashboard-edit" === target) {
                 $('.dbd-right-panel-editdashboard-general').ojCollapsible("option", "expanded", isToExpand);
@@ -29,7 +30,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
             }
         };
 
-        self.editRightpanelLinkage = function (target) {
+        self.editRightpanelLinkage = function (target,param) {
             var highlightIcon = "pencil";
             self.completelyHidden(false);
             var panelTarget;
@@ -37,7 +38,10 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 panelTarget = "editdashboard";
             } else if (target === "dashboardset-edit") {
                 panelTarget = "editset";
+            } else if (target === "editcontent") {
+                panelTarget = "editcontent";
             }
+            
             self.rightPanelIcon(highlightIcon);
             if (!self.showRightPanel()) {
                 self.toggleLeftPanel();
@@ -48,6 +52,12 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 self.expandDBEditor(target, true);
                 $(".dashboard-picker-container:visible").addClass("df-collaps");
             }
+
+            if (panelTarget === "editcontent") {
+                $('.dbd-right-panel-editcontent-title').ojCollapsible("option", "expanded", true);
+                selectedContent && selectedContent(param);
+            }
+            
             self.$b().triggerBuilderResizeEvent('resize right panel');
         };
 
@@ -58,10 +68,17 @@ function (ko, $, oj, dfu, mbu, uiutil) {
             } else if ($(event.currentTarget).hasClass('rightpanel-wrench')) {
                 clickedIcon = "wrench";
             }
-
-            if (self.showRightPanel() && clickedIcon !== self.rightPanelIcon()) {
+            resetTileHighlighted();
+            
+            var _changeRightPanelTab=self.showRightPanel() && clickedIcon !== self.rightPanelIcon();
+            var _closeRightPanel=self.showRightPanel();
+            
+            if (_changeRightPanelTab) {
                 self.rightPanelIcon(clickedIcon);
-            } else if (self.showRightPanel()) {
+                if(clickedIcon === "pencil" && self.editPanelContent() === "editcontent"){
+                    setTileHightlighted(self.lastHighlightWigetIndex); 
+                } 
+            } else if (_closeRightPanel) {
                 self.rightPanelIcon("none");
                 self.toggleLeftPanel();
                 if ("NORMAL" !== self.$b().dashboard.type() || self.$b().dashboard.systemDashboard()) {
@@ -70,6 +87,9 @@ function (ko, $, oj, dfu, mbu, uiutil) {
             } else {
                 self.rightPanelIcon(clickedIcon);
                 self.toggleLeftPanel();
+                if(clickedIcon === "pencil" && self.editPanelContent() === "editcontent"){
+                    setTileHightlighted(self.lastHighlightWigetIndex); 
+                }
             }
         };
 
@@ -109,16 +129,42 @@ function (ko, $, oj, dfu, mbu, uiutil) {
             }
             self.$b().triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
         };
+        
+        self.editPanelContent.subscribe(function () {
+            if (self.editPanelContent() !== "editcontent") {
+               resetTileHighlighted();
+            }
+        });
+        
+        function resetTileHighlighted() {
+            var tilesArray = self.$b().dashboard.tiles();
+            tilesArray.forEach(function resetObject(element, index) {
+                if (element.outlineHightlight() === true) {
+                    self.lastHighlightWigetIndex = index;
+                }
+                element.outlineHightlight(false);
+            });
+        }
+        
+        function setTileHightlighted(targetIndex) {
+            var tilesArray = self.$b().dashboard.tiles();
+            tilesArray.forEach(function resetObject(element, index) {
+                if (index === targetIndex) {
+                    element.outlineHightlight(true);
+                }
+            });
+        }
+        
 
-        function rightPanelChange(status) {
+        function rightPanelChange(status,param) {
             if(status==="complete-hidden-rightpanel"){
                 self.completelyHidden(true);
                 self.$b().triggerBuilderResizeEvent('hide right panel');
             }else{
-                self.editRightpanelLinkage(status);
+                self.editRightpanelLinkage(status,param);
             }          
         }
-        
+                
         Builder.registerFunction(rightPanelChange, 'rightPanelChange');
         
         self.initDraggable = function() {

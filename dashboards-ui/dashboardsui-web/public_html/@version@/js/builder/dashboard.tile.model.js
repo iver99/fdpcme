@@ -250,6 +250,11 @@ define(['knockout',
                         self.show();
                         self.notifyTileChange(tile, new Builder.TileChange("POST_SHORTER"));
                         break;
+                    case "edit":
+                        self.editor.editTile(tile);
+                        self.show();
+                        self.notifyTileChange(tile, new Builder.TileChange("POST_EDIT"));
+                        break;
                     case "up":
                         self.editor.moveUpTile(tile);
                         self.show();

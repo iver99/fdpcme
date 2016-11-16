@@ -61,6 +61,7 @@ define(['dashboards/dbsmodel',
 //            self.hideTitle("true" === tile.hideTitle()?["hideTitle"]:[]);
             self.hideTitle([]);
             tile.hideTitle("false");
+            tile.outlineHightlight(true);
             if(tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()){
                 self.selectedDashboardId(tile.WIDGET_LINKED_DASHBOARD());
                 self.allDashboards().forEach(function(dashboard){
