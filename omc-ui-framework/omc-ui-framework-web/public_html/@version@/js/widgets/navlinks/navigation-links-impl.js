@@ -1,7 +1,13 @@
-define(['knockout', 'jquery', 'uifwk/@version@/js/util/df-util-impl', 'ojs/ojcore', 'uifwk/@version@/js/util/preference-util-impl'],
-        function (ko, $, dfumodel, oj, pfu) {
+define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout', 
+    'jquery', 
+    'uifwk/@version@/js/util/df-util-impl', 
+    'ojs/ojcore', 
+    'uifwk/@version@/js/util/preference-util-impl', 
+    'uifwk/@version@/js/sdk/context-util-impl'],
+        function (ko, $, dfumodel, oj, pfu, contextModel) {
             function NavigationLinksViewModel(params) {
                 var self = this;
+                var cxtUtil = new contextModel();
                 var dfHomeUrl = null;
                 var dfWelcomeUrl = null;
                 var dfDashboardsUrl = null;
@@ -67,37 +73,39 @@ define(['knockout', 'jquery', 'uifwk/@version@/js/util/df-util-impl', 'ojs/ojcor
 
                 self.openLink = function(data, event) {
                     if (data && data.href) {
-                        window.location.href = data.href;
+                        window.location.href = cxtUtil.appendOMCContext(data.href);
                     }
                 };
 
                 self.openHome = function() {
                     oj.Logger.info('Trying to open Home page by URL: ' + dfHomeUrl);
+                    var homeUrl = null;
                     if(dfHomeUrl) {
-                        window.location.href = dfHomeUrl;
+                        homeUrl = cxtUtil.appendOMCContext(dfHomeUrl);
                     }
                     else if (dfWelcomeUrl){
-                        window.location.href = dfWelcomeUrl;
+                        homeUrl = cxtUtil.appendOMCContext(dfWelcomeUrl);
                     }
+                    window.location.href = homeUrl;
                 };
 
                 self.openMyFavorites = function() {
                     var favoritesUrl = '/emsaasui/emcpdfui/home.html?filter=favorites';
                     oj.Logger.info('Trying to open my favorites by URL: ' + favoritesUrl);
-                    window.location.href = favoritesUrl;
+                    window.location.href = cxtUtil.appendOMCContext(favoritesUrl);
                 };
 
                 self.openWelcomePage = function() {
                     oj.Logger.info('Trying to open welcome page by URL: ' + dfWelcomeUrl);
                     if(dfWelcomeUrl) {
-                        window.location.href = dfWelcomeUrl;
+                        window.location.href = cxtUtil.appendOMCContext(dfWelcomeUrl);
                     }
                 };
 
                 self.openDashboardHome = function(data, event) {
                     oj.Logger.info('Trying to open Dashboard Home by URL: ' + dfDashboardsUrl);
                     if (dfDashboardsUrl) {
-                        window.location.href = dfDashboardsUrl;
+                        window.location.href = cxtUtil.appendOMCContext(dfDashboardsUrl);
                     }
                 };
 
@@ -192,24 +200,10 @@ define(['knockout', 'jquery', 'uifwk/@version@/js/util/df-util-impl', 'ojs/ojcor
                             window.cachedSSOLogoutUrl = data.ssoLogoutUrl;
                         }
                     };
-                    var serviceUrl = "/sso.static/dashboards.configurations/registration";
-                    if (dfu.isDevMode()){
-                        serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"configurations/registration");
-                    }
-                    dfu.ajaxWithRetry({
-                        url: serviceUrl,
-                        headers: dfu.getDefaultHeader(),
-                        contentType:'application/json',
-                        success: function(data, textStatus) {
-                            fetchServiceLinks(data);
-                        },
-                        error: function(xhr, textStatus, errorThrown){
-                            oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
-                            self.visualAnalyzers([]);
-                            self.adminLinks([]);
-                            self.cloudServices([]);
-                        },
-                        async: true
+                    dfu.getRegistrations(fetchServiceLinks, true, function(){
+                        self.visualAnalyzers([]);
+                        self.adminLinks([]);
+                        self.cloudServices([]);
                     });
                 }
 

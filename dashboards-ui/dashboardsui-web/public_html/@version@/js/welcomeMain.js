@@ -17,6 +17,7 @@ requirejs.config({
             'uifwk/js/util/screenshot-util',
             'uifwk/js/util/typeahead-search',
             'uifwk/js/util/usertenant-util',
+            'uifwk/js/sdk/context-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
@@ -43,11 +44,14 @@ requirejs.config({
         'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/min',
         'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/ojL10n',
         'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/resources',
+        'ojdnd': '../../libs/@version@/js/oraclejet/js/libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'dfutil': 'internaldfcommon/js/util/internal-df-util',
-        'uifwk': '/emsaasui/uifwk'
+        'uifwk': '/emsaasui/uifwk',
+        'emsaasui':'/emsaasui',
+        'emcta':'/emsaasui/emcta/ta/js'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -88,13 +92,16 @@ require(['ojs/ojcore',
     'dfutil',
     'uifwk/js/util/df-util',
     'uifwk/js/util/logging-util',
+    'uifwk/js/sdk/context-util',
     'ojs/ojknockout',
     'ojs/ojselectcombobox',
     'common.uifwk'
 ],
-        function (oj, ko, $, dfu, dfumodel, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
+        function (oj, ko, $, dfu, dfumodel, _emJETCustomLogger, cxtModel) // this callback gets executed when all required modules are loaded
         {
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
+            var cxtUtil = new cxtModel();
+            dfu_model.setHtmlLang();
             var logger = new _emJETCustomLogger();
             var logReceiver = dfu.getLogUrl();
 
@@ -128,7 +135,8 @@ require(['ojs/ojcore',
                     userName: self.userName,
                     tenantName: self.tenantName,
                     appId: self.appId,
-                    isAdmin: true
+                    isAdmin: true,
+                    showGlobalContextBanner: false
                 };
             }
 
@@ -206,19 +214,7 @@ require(['ojs/ojcore',
                 self.showOrchestration = ko.observable(false);
 
                 self.getServiceUrls = function() {
-                    var serviceUrl = dfu.getRegistrationUrl();
-                    dfu.ajaxWithRetry({
-                        url: serviceUrl,
-                        headers: dfu_model.getDefaultHeader(),
-                        contentType:'application/json',
-                        success: function(data, textStatus) {
-                            fetchServiceLinks(data);
-                        },
-                        error: function(xhr, textStatus, errorThrown){
-                            oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
-                        },
-                        async: true
-                    });
+                    dfu.getRegistrations(fetchServiceLinks);
                 };
 
                 //get urls of databases and middleware
@@ -297,7 +293,7 @@ require(['ojs/ojcore',
                     }
                     oj.Logger.info('Trying to open APM by URL: ' + self.landingHomeUrls.APM);
                     if(self.landingHomeUrls.APM) {
-                        window.location.href = self.landingHomeUrls.APM;
+                        window.location.href = cxtUtil.appendOMCContext(self.landingHomeUrls.APM);
                     }
                 };
                 self.openLogAnalytics = function (data, event) {
@@ -307,7 +303,7 @@ require(['ojs/ojcore',
                     }
                     oj.Logger.info('Trying to open Log Analytics by URL: ' + self.landingHomeUrls.LogAnalytics);
                     if (self.landingHomeUrls.LogAnalytics) {
-                        window.location.href = self.landingHomeUrls.LogAnalytics;
+                        window.location.href = cxtUtil.appendOMCContext(self.landingHomeUrls.LogAnalytics);
                     }
 
                 };
@@ -319,7 +315,7 @@ require(['ojs/ojcore',
                         }
                         oj.Logger.info('Trying to open IT Analytics by URL: ' + self.landingHomeUrls.ITAnalytics);
                         if(self.landingHomeUrls.ITAnalytics) {
-                            window.location.href = self.landingHomeUrls.ITAnalytics;
+                            window.location.href = cxtUtil.appendOMCContext(self.landingHomeUrls.ITAnalytics);
                         }
                     } else if (event.type === "keypress" && event.keyCode === 9) {  //keyboard handle for Firefox
                         if (event.shiftKey) {
@@ -348,19 +344,19 @@ require(['ojs/ojcore',
                     }
                     if(data.value && self.landingHomeUrls[data.value]) {
                         oj.Logger.info('Trying to open ' + data.value + ' by URL: ' + self.landingHomeUrls[data.value]);
-                        window.location.href = self.landingHomeUrls[data.value];
+                        window.location.href = cxtUtil.appendOMCContext(self.landingHomeUrls[data.value]);
                     }
                 };
                 self.openInfraMonitoring = function() {
                     if (self.landingHomeUrls && self.landingHomeUrls.Monitoring) {
                         oj.Logger.info("Trying to open Infrastructure Monitoring by URL: " + self.landingHomeUrls.Monitoring);
-                        window.location.href = self.landingHomeUrls.Monitoring;
+                        window.location.href = cxtUtil.appendOMCContext(self.landingHomeUrls.Monitoring);
                     }
                 };
                 self.openDashboards = function() {
                     oj.Logger.info('Trying to open dashboards by URL: ' + self.dashboardsUrl);
                     if(self.dashboardsUrl) {
-                        window.location.href = self.dashboardsUrl;
+                        window.location.href = cxtUtil.appendOMCContext(self.dashboardsUrl);
                     }
                 };
                 self.openCompliance = function() {
@@ -370,7 +366,7 @@ require(['ojs/ojcore',
                     }
                     oj.Logger.info('Trying to open Compliance by URL: ' + self.landingHomeUrls.Compliance);
                     if(self.landingHomeUrls.Compliance) {
-                        window.location.href = self.landingHomeUrls.Compliance;
+                        window.location.href = cxtUtil.appendOMCContext(self.landingHomeUrls.Compliance);
                     }
                 };
                 self.openSecurityAnalytics = function() {
@@ -380,7 +376,7 @@ require(['ojs/ojcore',
                     }
                     if(self.landingHomeUrls.SecurityAnalytics) {
                         oj.Logger.info('Trying to open Security Analytics by URL: ' + self.landingHomeUrls.SecurityAnalytics);
-                        window.location.href = self.landingHomeUrls.SecurityAnalytics;
+                        window.location.href = cxtUtil.appendOMCContext(self.landingHomeUrls.SecurityAnalytics);
                     }
                 };
                 self.openOrchestration = function() {
@@ -390,7 +386,7 @@ require(['ojs/ojcore',
                     }
                     oj.Logger.info('Trying to open Orchestration by URL: ' + self.landingHomeUrls.Orchestration);
                     if(self.landingHomeUrls.Orchestration) {
-                        window.location.href = self.landingHomeUrls.Orchestration;
+                        window.location.href = cxtUtil.appendOMCContext(self.landingHomeUrls.Orchestration);
                     }
                 };
                 self.dataExplorersChosen = function (event, data) {
@@ -400,7 +396,7 @@ require(['ojs/ojcore',
                     }
                     if (data.value && self.landingHomeUrls[data.value]) {
                         oj.Logger.info('Trying to open ' + data.value + ' by URL: ' + self.landingHomeUrls[data.value]);
-                        window.location.href = self.landingHomeUrls[data.value];
+                        window.location.href = cxtUtil.appendOMCContext(self.landingHomeUrls[data.value]);
                     }
                 };
                 self.openGetStarted = function() {

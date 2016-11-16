@@ -16,6 +16,7 @@ requirejs.config({
             'uifwk/js/util/screenshot-util',
             'uifwk/js/util/typeahead-search',
             'uifwk/js/util/usertenant-util',
+            'uifwk/js/sdk/context-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
@@ -41,8 +42,12 @@ requirejs.config({
         'dfutil':'internaldfcommon/js/util/internal-df-util',
         'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/ojL10n',
         'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/resources',
+        'ojdnd': '../../libs/@version@/js/oraclejet/js/libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
+        'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
-        'uifwk': '/emsaasui/uifwk'
+        'uifwk': '/emsaasui/uifwk',
+        'emsaasui':'/emsaasui',
+        'emcta':'/emsaasui/emcta/ta/js'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -75,11 +80,13 @@ requirejs.config({
 require(['knockout',
     'jquery',
     'dfutil',
+    'uifwk/js/util/df-util',
     'ojs/ojcore',
+    'uifwk/js/sdk/context-util',
     'ojs/ojknockout',
     'ojs/ojbutton'
 ],
-function(ko, $, dfu, oj)
+function(ko, $, dfu, dfumodel, oj, cxtModel)
 {
     if (!ko.components.isRegistered('df-oracle-branding-bar')) {
         ko.components.register("df-oracle-branding-bar",{
@@ -97,7 +104,8 @@ function(ko, $, dfu, oj)
             userName: self.userName,
             tenantName: self.tenantName,
             appId: self.appId,
-            isAdmin: false
+            isAdmin: false,
+            showGlobalContextBanner: false
         };
         }
         function checkParams(msgKey, serviceid, serviceName) {
@@ -125,7 +133,7 @@ function(ko, $, dfu, oj)
 
     function ErrorPageModel() {
         var self = this;
-
+        var cxtUtil = new cxtModel();
         self.errorPageTitle = oj.Translations.getTranslatedString("DBS_ERROR_PAGE_TITLE");
 
         var msgKey = dfu.getUrlParam("msg");
@@ -137,7 +145,7 @@ function(ko, $, dfu, oj)
                     self.errorPageMessage = oj.Translations.getTranslatedString('DBS_ERROR_SENSITIVE_WORD');
                 }
                 self.defaultHomeLinkVisible = msgKey === 'DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG' ? true : false;
-                var params = {"style" : "dbd-error-url", "url" : "/emsaasui/emcpdfui/welcome.html"};
+                var params = {"style" : "dbd-error-url", "url" : cxtUtil.appendOMCContext("/emsaasui/emcpdfui/welcome.html")};
                 self.goHomePageText = oj.Translations.getTranslatedString("DBS_ERROR_TEXT_GO_HOME_PAGE", params);
                 self.invalidUrl = dfu.getUrlParam("invalidUrl");
                 if (self.invalidUrl) {
@@ -164,7 +172,7 @@ function(ko, $, dfu, oj)
                     self.errorPageMessage = oj.Translations.getTranslatedString('DBS_ERROR_PAGE_NOT_FOUND_MSG');
                 }
                 self.defaultHomeLinkVisible = msgKey === 'DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG' ? true : false;
-                var params = {"style" : "dbd-error-url", "url" : "/emsaasui/emcpdfui/welcome.html"};
+                var params = {"style" : "dbd-error-url", "url" : cxtUtil.appendOMCContext("/emsaasui/emcpdfui/welcome.html")};
                 self.goHomePageText = oj.Translations.getTranslatedString("DBS_ERROR_TEXT_GO_HOME_PAGE", params);
                 self.invalidUrl = dfu.getUrlParam("invalidUrl");
                 if (self.invalidUrl) {
@@ -197,6 +205,8 @@ function(ko, $, dfu, oj)
     }
 
     $(document).ready(function() {
+        var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
+        dfu_model.setHtmlLang();
         ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
         ko.applyBindings(new ErrorPageModel(), $('#errorMain')[0]);
         $('#global-body').show();
