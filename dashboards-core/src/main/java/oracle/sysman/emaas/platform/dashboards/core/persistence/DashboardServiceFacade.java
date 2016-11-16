@@ -19,9 +19,12 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptionsPK;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DashboardServiceFacade
 {
+	private static final Logger LOGGER = LogManager.getLogger(DashboardServiceFacade.class);
 	private final EntityManager em;
 
 	public DashboardServiceFacade(Long tenantId)
@@ -155,7 +158,16 @@ public class DashboardServiceFacade
 		Query query = em.createQuery(hql);
 		return query.getResultList();
 	}
-	
+
+	/**
+	 * This method is for retriving dashboards by giving a list of dashboard ids,
+	 * ***************************************************************************************
+	 * And this method will return the dashboards with the same order with given dashboard Ids
+	 * ***************************************************************************************
+	 * @param dashboardIds
+	 * @param tenantId
+     * @return
+     */
 	public List<EmsDashboard> getEmsDashboardByIds(List<BigInteger> dashboardIds, Long tenantId)
 	{
 		if (dashboardIds != null && !dashboardIds.isEmpty()) {
@@ -167,8 +179,17 @@ public class DashboardServiceFacade
 				}
 				parameters.append(id);
 			}
+			int index=1;
+			StringBuilder sb=new StringBuilder();
+			for(int i=0;i<dashboardIds.size();i++){
+				sb.append(dashboardIds.get(i)+","+index++);
+				if(i!=dashboardIds.size()-1){
+					sb.append(",");
+				}
+			}
 			String sql = "select * from ems_dashboard p where p.tenant_id=? and p.dashboard_id in("
-					+ parameters.toString() + ")";
+					+ parameters.toString() + ") order by decode(p.dashboard_id,"+sb.toString()+")";
+			LOGGER.debug("Get sub dashboard list, execute sql is "+sql);
 			Query query = em.createNativeQuery(sql, EmsDashboard.class);
 			query.setParameter("1", tenantId);
 			@SuppressWarnings("unchecked")
@@ -410,6 +431,7 @@ public class DashboardServiceFacade
 				em.merge(dashboard);
 			}
 		}
+		getEntityManager().getTransaction().commit();
 	}
 
 	@SuppressWarnings("unchecked")

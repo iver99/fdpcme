@@ -23,6 +23,7 @@ requirejs.config({
             'uifwk/js/util/typeahead-search',
             'uifwk/js/util/usertenant-util',
             'uifwk/js/util/zdt-util',
+            'uifwk/js/sdk/context-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
@@ -61,7 +62,9 @@ requirejs.config({
         'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
         'dashboards': '.',
         'dfutil':'internaldfcommon/js/util/internal-df-util',
-        'uifwk': '/emsaasui/uifwk'
+        'uifwk': '/emsaasui/uifwk',
+        'emsaasui':'/emsaasui',
+        'emcta':'/emsaasui/emcta/ta/js'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -129,7 +132,6 @@ require(['dashboards/dbsmodel',
                 // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                 // If you comment the line below, our current log calls will not be output!
                 logger.setLogLevel(oj.Logger.LEVEL_WARN);
-        
             window.onerror = function (msg, url, lineNo, columnNo, error)
             {
                 var msg = "Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo;
@@ -173,7 +175,8 @@ require(['dashboards/dbsmodel',
                     userName: self.userName,
                     tenantName: self.tenantName,
                     appId: self.appId,
-                    isAdmin:true
+                    isAdmin:true,
+                    showGlobalContextBanner: false
                 };
             }
 

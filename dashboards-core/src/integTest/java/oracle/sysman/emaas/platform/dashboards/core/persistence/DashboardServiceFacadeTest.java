@@ -5,6 +5,7 @@ package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
@@ -118,7 +119,7 @@ public class DashboardServiceFacadeTest
 		d.setEnableTimeRange(1);
 		d.setEnableRefresh(1);
 		d.setIsSystem(1);
-		//d.setShowInHome(1);
+		d.setShowInHome(1);
 		d.setLastModificationDate(DateUtil.getCurrentUTCTime());
 		d.setOwner("test");
 		d.setLastModifiedBy("test");
@@ -159,6 +160,7 @@ public class DashboardServiceFacadeTest
 		tile.setWidgetHistogram("widgetHistogram");
 		tile.setWidgetSupportTimeControl(1);
 		tile.setWidgetLinkedDashboard(BigInteger.valueOf(1L));
+		tile.setWidgetDeleted(0);
 		return tile;
 	}
 
@@ -437,6 +439,24 @@ public class DashboardServiceFacadeTest
 		finally {
 			if (em != null) {
 				em.close();
+			}
+		}
+	}
+
+	public void testOOBWidgetNotHiden() {
+		dashboardServiceFacade = new DashboardServiceFacade(1L);
+		List<EmsDashboard> emsDashboards = dashboardServiceFacade.getEmsDashboardFindAll();
+		for (EmsDashboard emsDashboard : emsDashboards) {
+			List<EmsDashboardTile> emsDashboardTiles = emsDashboard.getDashboardTileList();
+			for (EmsDashboardTile emsDashboardTile : emsDashboardTiles) {
+				if ("Oracle".equalsIgnoreCase(emsDashboardTile.getOwner())&& "Summary".equalsIgnoreCase(emsDashboardTile.getTitle())) {
+					List<EmsDashboardTileParams> emsDashboardTileParamses = emsDashboardTile.getDashboardTileParamsList();
+					for (EmsDashboardTileParams emsDashboardTileParams : emsDashboardTileParamses) {
+						if ("DF_HIDE_TITLE".equals(emsDashboardTileParams.getParamName()) && "true".equalsIgnoreCase(emsDashboardTileParams.getParamValueStr())) {
+							Assert.fail("Widget: id = " + emsDashboardTile.getTileId() + " is hidden");
+						}
+					}
+				}
 			}
 		}
 	}

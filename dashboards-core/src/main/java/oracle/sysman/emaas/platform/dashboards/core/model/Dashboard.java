@@ -524,13 +524,14 @@ public class Dashboard
 
 			if (type.equals(Dashboard.DASHBOARD_TYPE_SET)) {
 				// support create subDashboards
-				//                if (subDashboards != null) {
-				//                    for (int index=0;index < subDashboards.size() ;index++ ) {
-				//                        Dashboard dbd = subDashboards.get(index);
-				//                        EmsSubDashboard esdbd = new EmsSubDashboard(dashboardId,dbd.getDashboardId(),index);
-				//                        ed.addEmsSubDashboard(esdbd);
-				//                    }
-				//                }
+				// support test cases in DashboardManagerTest
+				                if (subDashboards != null && dashboardId!=null) {
+				                    for (int index=0;index < subDashboards.size() ;index++ ) {
+				                        Dashboard dbd = subDashboards.get(index);
+				                        EmsSubDashboard esdbd = new EmsSubDashboard(dashboardId,dbd.getDashboardId(),index);
+				                        ed.addEmsSubDashboard(esdbd);
+				                    }
+				                }
 			}
 			else {
 				if (tileList != null) {
@@ -768,6 +769,7 @@ public class Dashboard
 				dbd.setName(emsDashboard.getName());
 				dbd.setSharePublic(DataFormatUtils.integer2Boolean(emsDashboard
 						.getSharePublic()));
+				dbd.setOwner(emsDashboard.getOwner());
 				subDashboards.add(dbd);
 
 			}

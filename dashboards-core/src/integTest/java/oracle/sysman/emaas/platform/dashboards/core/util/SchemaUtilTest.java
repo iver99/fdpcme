@@ -1,7 +1,13 @@
 package oracle.sysman.emaas.platform.dashboards.core.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.util.List;
 
+import mockit.Expectations;
+import mockit.Mock;
+import mockit.Mocked;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -67,5 +73,16 @@ public class SchemaUtilTest
 		SchemaUtil su = new SchemaUtil();
 		String user = su.getSchemaUserBySoftwareName(schemaDeployments, "emcitas-platform");
 		Assert.assertEquals(user, "SYSEMS_T_3");
+	}
+
+	@Mocked
+	HttpURLConnection httpURLConnection;
+	@Mocked
+	InputStream inputStream;
+	@Test(groups = { "s2" })
+	public void testGet() throws IOException {
+		SchemaUtil su = new SchemaUtil();
+		su.get("http:domainname.com/");
+		su.get(null);
 	}
 }

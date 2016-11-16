@@ -18,6 +18,7 @@ requirejs.config({
             'uifwk/js/util/typeahead-search',
             'uifwk/js/util/usertenant-util',
             'uifwk/js/util/zdt-util',
+            'uifwk/js/sdk/context-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
@@ -91,16 +92,50 @@ requirejs.config({
 require(['ojs/ojcore',
     'knockout',
     'jquery',
+    'uifwk/js/util/logging-util',
+    'uifwk/js/util/usertenant-util',
+    'uifwk/js/util/df-util',
 //    'uifwk/js/widgets/timeFilter/js/timeFilter',
     'ojs/ojknockout',
     'ojs/ojchart'
 ],
-        function (oj, ko, $/*, timeFilter*/) // this callback gets executed when all required modules are loaded
+        function (oj, ko, $, _emJETCustomLogger, userTenantUtilModel, dfuModel/*, timeFilter*/) // this callback gets executed when all required modules are loaded
         {
+            var userTenantUtil = new userTenantUtilModel(); 
+            var dfu = new dfuModel();
+            
             ko.components.register("date-time-picker", {
                 viewModel: {require: "uifwk/js/widgets/datetime-picker/js/datetime-picker"},
                 template: {require: "text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html"}
             });
+            
+            function getLogUrl(){
+                //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
+                if (dfu.isDevMode()){
+                    return dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"logging/logs");
+                }else{
+                    return '/sso.static/dashboards.logging/logs';
+                }
+            };           
+                       
+            var userTenant = userTenantUtil.getUserTenant();           
+            
+            var logger = new _emJETCustomLogger();
+            var logReceiver = getLogUrl();
+
+            logger.initialize(logReceiver, 60000, 20000, 8, userTenant.tenantUser);
+            logger.setLogLevel(oj.Logger.LEVEL_WARN);
+        
+            window.onerror = function (msg, url, lineNo, columnNo, error)
+            {
+                var msg = "Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo;
+                if(error.stack) {
+                    msg = msg + ". Error: " + JSON.stringify(error.stack);
+                }
+                oj.Logger.error(msg, true);
+
+                return false; 
+            }
 
             function MyViewModel() {
                 var self = this;
@@ -148,11 +183,13 @@ require(['ojs/ojcore',
                     dtpickerPosition: self.floatPosition1,
                     timePeriod: "Last 1 day", //self.timePeriodPre,
 //                    timeFilterParams: self.timeFilterParams,
-                    callbackAfterApply: function (start, end, tp, tf) {
+                    callbackAfterApply: function (start, end, tp, tf, relTimeVal, relTimeUnit) {
                         console.log(start);
                         console.log(end);
                         console.log(tp);
                         console.log(tf);
+                        console.log(relTimeVal);
+                        console.log(relTimeUnit);
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
                         if(self.isTimePeriodLessThan1day(tp) && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
