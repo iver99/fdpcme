@@ -279,3 +279,8 @@ html[dir="rtl"] .time-filter-indicator{
 .tf-errorBorder {
     border: 2px solid #d66;
 }
+
+/* remove search bar in time unit selection*/
+div[id^='pickerPanel'] .oj-listbox-search-wrapper {
+    display: none;
+}
