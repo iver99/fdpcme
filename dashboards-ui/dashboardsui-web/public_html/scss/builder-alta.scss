@@ -1212,16 +1212,6 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     cursor: default;
 }
 
-.oj-component-icon.oj-inputnumber-up-icon:before {
-    -webkit-transform: scale(-1, 1) rotate(90deg);
-    transform: scale(-1, 1) rotate(90deg);
-}
-
-.oj-component-icon.oj-inputnumber-down-icon:before {
-    -webkit-transform: rotate(-90deg);
-    transform: rotate(-90deg);
-}
-
 .dbd-left-panel-footer-btns {
     border-top: 1px solid #d6dfe6; 
     padding-top: 10px;
