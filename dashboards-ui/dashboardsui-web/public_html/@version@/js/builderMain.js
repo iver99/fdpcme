@@ -291,8 +291,7 @@ require(['knockout',
                 tenantName: self.tenantName,
                 appId: self.appId,
                 isAdmin:true,
-                showGlobalContextBanner: true,
-                showTimeSelector: true
+                showGlobalContextBanner: true
             };
 
             $("#headerWrapper").on("DOMSubtreeModified", function() {

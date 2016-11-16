@@ -33,11 +33,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             }
             
             //Set showTimeSelector config. Default value is false. It can be set as an knockout observable and be changed after page is loaded
-            if(ko.isObservable(params.showTimeSelector)) {
-                self.showTimeSelector = params.showTimeSelector;
-            }else {
-                self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === true ? true : false);
-            }
+            //Per high level plan, we don't allow consumers to config to show/hide time selector themselves. So comment out below code for now.
+//            if(ko.isObservable(params.showTimeSelector)) {
+//                self.showTimeSelector = params.showTimeSelector;
+//            }else {
+//                self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === true ? true : false);
+//            }
+            self.showTimeSelector = ko.observable(false);
             
             self.entities = ko.observable([]);
             self.queryVars = ko.observable();
