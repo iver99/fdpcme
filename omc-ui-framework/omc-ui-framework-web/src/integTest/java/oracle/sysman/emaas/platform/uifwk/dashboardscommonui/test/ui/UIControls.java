@@ -16,8 +16,8 @@ package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
 public class UIControls
 {
 	//Begin: Text
-	public static final String SPRODUCTTEXT = "/html/body/div[2]/header/div/div[1]/div[1]/div[1]/div[2]/span[1]";
-	public static final String SAPPTEXT = "/html/body/div[2]/header/div/div[1]/div[1]/div[1]/div[3]/span";
+	public static final String SPRODUCTTEXT_CSS = ".emaas-appheader-appname[data-bind=\"text: productName\"]";
+	public static final String SAPPTEXT_CSS = ".emaas-appheader-appname[data-bind=\"text: appName\"]";
 	public static final String SPAGETEXT = "//*[@id='toolbar-left']";
 	public static final String SHOMELABEL = "/html/body/div[2]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[1]";
 	public static final String SCLOUDSERVICELABEL = "/html/body/div[2]/header/div/div[1]/div[3]/div/div/div[2]/div[2]/div[1]";
@@ -48,7 +48,7 @@ public class UIControls
 	//End: Images
 
 	//Begin: Links
-	public static final String SHOMELINK = "/html/body/div[2]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[2]/a";
+	public static final String SHOMELINK = "//*[@id='obbNavDsbHome']";
 	public static final String SCLOUDSERVICELINK = "/html/body/div[2]/header/div/div[1]/div[3]/div/div/div[2]/div[2]/div[2]/a";
 	public static final String SANALYZERLINK = "/html/body/div[2]/header/div/div[1]/div[3]/div/div/div[3]/div[2]/div[2]/a";
 	public static final String SADMINLINK = "/html/body/div[2]/header/div/div[1]/div[3]/div/div/div[4]/div[2]/div[2]/a";

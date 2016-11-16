@@ -400,7 +400,8 @@ define(['knockout',
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             var start = dfu_model.getUrlParam("startTime") ? true : false;
             var end = dfu_model.getUrlParam("endTime") ? true : false;
-            return start && end;
+            var timePeriod = dfu_model.getUrlParam("timePeriod") ? true : false;
+            return (start && end) || timePeriod;
         }
 
         Builder.registerFunction(saveDashboardOptions, 'saveDashboardOptions');
