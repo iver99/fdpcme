@@ -1025,6 +1025,12 @@ define(['knockout',
                 }
             }
             
+            if(ctxUtil.formalizeTimePeriod(self.timePeriod()) !== "CUSTOM") { //get start and end time for relative time period
+                var tmp = ctxUtil.getStartEndTimeFromTimePeriod(ctxUtil.formalizeTimePeriod(self.timePeriod()));
+                initStart = tmp.start;
+                initEnd = tmp.end;
+            }
+            
             self.initStart = ko.observable(initStart);
             self.initEnd = ko.observable(initEnd);
             self.timeSelectorModel.viewStart(initStart);
