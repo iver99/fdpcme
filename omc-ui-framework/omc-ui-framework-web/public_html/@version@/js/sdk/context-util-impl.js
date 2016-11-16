@@ -627,13 +627,21 @@ define([
                 if (paramValue === null) {
                     paramValue = '';
                 }
-                var pattern = new RegExp('([?&])' + paramName + '=.*?(&|$)', 'i');
+                //Handle the case anchor section ('#') exists in the given URL 
+                var anchorIdx = url.indexOf('#');
+                var hash = '';
+                //Retrieve hash string from the URL and append to the end of the URL after appending context string
+                if (anchorIdx !== -1) {
+                    hash = url.substring(anchorIdx);
+                    url = url.substring(0, anchorIdx);
+                }
+                var pattern = new RegExp('([?&])' + paramName + '=.*?(&|$|#)', 'i');
                 if (url.match(pattern)) {
-                  return url.replace(pattern, '$1' + paramName + "=" + paramValue + '$2');
+                  return url.replace(pattern, '$1' + paramName + "=" + paramValue + '$2') + hash;
                 }
                 return url + (url.indexOf('?') > 0 ? 
                     //Handle case that an URL ending with a question mark only
-                    (url.lastIndexOf('?') === url.length - 1 ? '': '&') : '?') + paramName + '=' + paramValue; 
+                    (url.lastIndexOf('?') === url.length - 1 ? '': '&') : '?') + paramName + '=' + paramValue + hash; 
             };
             
             /**
