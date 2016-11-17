@@ -57,6 +57,7 @@ public class TestHomePage extends LoginAndLogout
 		//remove the dashboard
 		DashboardHomeUtil.deleteDashboard(webd, "ADashboard Test", DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 
+		//logout
 		LoginAndLogout.logoutMethod();
 	}
 

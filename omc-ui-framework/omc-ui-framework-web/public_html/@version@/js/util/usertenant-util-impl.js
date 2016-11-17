@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@/js/util/df-util-impl'],
-    function($, oj, ajaxUtilModel, dfumodel)
+    function ($, oj, ajaxUtilModel, dfumodel)
     {
         function DashboardFrameworkUserTenantUtility() {
             var self = this;
@@ -64,7 +64,11 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                 }
 
                   if ((!tenantName || !userName) && location.href && location.href.indexOf("error.html") === -1) {
-                        location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl="+ encodeURIComponent(location.href);
+                        //To avoid circular dependency use require call
+                        require(['uifwk/@version@/js/sdk/context-util-impl'], function (cxtModel) {
+                            var cxtUtil = new cxtModel();
+                            location.href = cxtUtil.appendOMCContext("/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl=" + encodeURIComponent(location.href));
+                        });
                         return null;
                   }
                   else{
@@ -117,7 +121,7 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
             self.getUserRoles = function(callback,sendAsync) {
                 var serviceUrl = "/sso.static/dashboards.configurations/userInfo";
                 if (dfu.isDevMode()){
-                    callback({"currentUser": "emaastesttenant1.emcsadmin","userRoles":["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]});
+                    callback(["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]);
                     return;
                 }
                 if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.roles){
