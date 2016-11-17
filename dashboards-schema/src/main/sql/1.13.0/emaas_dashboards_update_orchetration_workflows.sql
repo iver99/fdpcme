@@ -41,5 +41,4 @@ BEGIN
       DBMS_OUTPUT.PUT_LINE('Failed to update the sql due to '||SQLERRM);
       RAISE;
   END;
-  /	
-  /	
+  /
