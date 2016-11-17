@@ -43,6 +43,8 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  *                   END OF TEST-INFRA-BLOCK
  ***************************************************************************************************/
 
+//Setup gradle to onboard a new tenant
+apply from: 'onboard_tenant.gradle'
 
 //def emcpdfCommonAPIVer = getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.0.0+')
 def emcpdfCommonAPIVer = '2.1.0-greenchannel+'
@@ -53,17 +55,15 @@ dependencies{
 	exclude('module':'groovy')
     }
 
-     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
-	
-     
+    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
+	     
     configurations{
 	restAssured.exclude module:'groovy'
     }
 }
 
-
 //Task is for dashboard UI Test
-task e2e (type: EMTest, dependsOn:omcSetup ){
+task e2e (type: EMTest, dependsOn:[omcSetup, onboardTenant] ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'DashboardUITest') {
             classes([:]) {
@@ -77,7 +77,6 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
     }
     useWebdriver = true
     useRestAssured = true
-
 }
 
 task emcpdf_allsrg_3n (dependsOn:[e2e, omcTeardown]) {
