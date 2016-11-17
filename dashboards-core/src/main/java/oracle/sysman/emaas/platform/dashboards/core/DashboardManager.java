@@ -377,30 +377,6 @@ public class DashboardManager
 		}
 	}
 
-	public Dashboard getDashboardByNameAndDescriptionAndOwner(String name, String description, Long tenantId){
-		if(StringUtil.isEmpty(name)){
-			LOGGER.debug("Dashboard not found for name \"{}\" is invalid", name);
-			return null;
-		}
-		String currentUser = UserContext.getCurrentUser();
-		EntityManager entityManager = null;
-		try{
-			DashboardServiceFacade dashboardServiceFacade = new DashboardServiceFacade(tenantId);
-			entityManager = dashboardServiceFacade.getEntityManager();
-			EmsDashboard emsDashboard = dashboardServiceFacade.getEmsDashboardByNameAndDescriptionAndOwner(name, currentUser,description);
-			return Dashboard.valueOf(emsDashboard);
-		}catch (NoResultException e) {
-			LOGGER.debug("Dashboard not found for name \"{}\" because NoResultException is caught", name);
-			LOGGER.info("context", e);
-			return null;
-		}
-		finally {
-			if (entityManager != null) {
-				entityManager.close();
-			}
-		}
-	}
-
 	public Dashboard getDashboardSetsBySubId(Long dashboardId, Long tenantId) throws DashboardException
 	{
 		EntityManager em = null;
@@ -912,9 +888,9 @@ public class DashboardManager
 				throw new CommonFunctionalException(
 						MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_NAME_ERROR));
 			}
-			LOGGER.debug("Get the dashboard with name: {}, desc: {}", dbd.getName(), dbd.getDescription());
-			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
-			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
+
+			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
+                        if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
 				throw new DashboardSameNameException();
 			}
 			// init creation date, owner to prevent null insertion
@@ -1014,7 +990,7 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
-			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
+                        Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
 			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
 				throw new DashboardSameNameException();
 			}
@@ -1070,6 +1046,12 @@ public class DashboardManager
 				ed.setOwner(dbd.getOwner());
 			}
 			dsf.mergeEmsDashboard(ed);
+			//EMCPDF-2567,if this dashboard is created in a set, copy its screenshot to its parent dashboard Set
+			if(dbd.getDupDashboardId()!=null){
+				EmsDashboard parentDashboardSet=dsf.getEmsDashboardById(dbd.getDupDashboardId());
+				parentDashboardSet.setScreenShot(ed.getScreenShot());
+				dsf.mergeEmsDashboard(parentDashboardSet);
+			}
 			return Dashboard.valueOf(ed, dbd, true, true, true);
 		}
 		finally {

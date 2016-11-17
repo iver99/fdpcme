@@ -45,7 +45,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 
 
 //def emcpdfCommonAPIVer = getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.0.0+')
-def emcpdfCommonAPIVer = '2.1.0-greenchannel+'
+def emcpdfCommonAPIVer = '2.1.0-nov21+'
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies{
     testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-uitest-integ-tests', version: "${REPO_BID}")

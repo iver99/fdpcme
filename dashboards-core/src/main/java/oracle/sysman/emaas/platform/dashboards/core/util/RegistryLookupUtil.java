@@ -462,7 +462,7 @@ public class RegistryLookupUtil
 				serviceName, version, rel, tenantName);
 		Tenant cacheTenant = new Tenant(tenantName);
 		try {
-			CachedLink cl = (CachedLink) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			CachedLink cl = (CachedLink) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_SERVICE_EXTERNAL_LINK_CACHE,
 					new Keys(CacheManager.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch));
 			if (cl != null) {
 				LOGGER.debug(
@@ -550,7 +550,7 @@ public class RegistryLookupUtil
 					LOGGER.debug(
 							"[branch 1] Retrieved link: \"{}\" for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 							lk.getHref(), serviceName, version, rel, tenantName);
-					CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_SERVICE_EXTERNAL_LINK_CACHE,
 							new Keys(CacheManager.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch),
 							new CachedLink(lk));
 					return lk;
@@ -587,7 +587,7 @@ public class RegistryLookupUtil
 						LOGGER.debug(
 								"[branch 2] Retrieved link: \"{}\" for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 								lk == null ? null : lk.getHref(), serviceName, version, rel, tenantName);
-						CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+						CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_SERVICE_EXTERNAL_LINK_CACHE,
 								new Keys(CacheManager.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch),
 								new CachedLink(lk));
 						return lk;
@@ -612,7 +612,7 @@ public class RegistryLookupUtil
 				serviceName, version, rel, prefixMatch, tenantName);
 		Tenant cacheTenant = new Tenant(tenantName);
 		try {
-			CachedLink cl = (CachedLink) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			CachedLink cl = (CachedLink) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_SERVICE_INTERNAL_LINK_CACHE,
 					new Keys(CacheManager.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch));
 			if (cl != null) {
 				LOGGER.debug(
@@ -664,7 +664,7 @@ public class RegistryLookupUtil
 					if (links != null && !links.isEmpty()) {
 						lk = new VersionedLink(links.get(0), version);
 						itrLogger.debug("Retrieved link {}", lk == null ? null : lk.getHref());
-						CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+						CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_SERVICE_INTERNAL_LINK_CACHE,
 								new Keys(serviceName, version, rel, prefixMatch), new CachedLink(lk));
 						return lk;
 					}
@@ -685,7 +685,7 @@ public class RegistryLookupUtil
 		Tenant cacheTenant = new Tenant(tenantName);
 		Map<String, String> map = null;
 		try {
-			map = (Map<String, String>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			map = (Map<String, String>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_VANITY_BASE_URL_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_VANITY_BASE_URL);
 			if (map != null) {
 				return map;
@@ -812,7 +812,7 @@ public class RegistryLookupUtil
 				LOGGER.debug("service name is {}, and url is {}", service, url);
 			}
 		}
-		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_VANITY_BASE_URL_CACHE,
 				CacheManager.LOOKUP_CACHE_KEY_VANITY_BASE_URL, map);
 		return map;
 	}

@@ -400,7 +400,8 @@ define(['knockout',
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             var start = dfu_model.getUrlParam("startTime") ? true : false;
             var end = dfu_model.getUrlParam("endTime") ? true : false;
-            return start && end;
+            var timePeriod = dfu_model.getUrlParam("timePeriod") ? true : false;
+            return (start && end) || timePeriod;
         }
 
         Builder.registerFunction(saveDashboardOptions, 'saveDashboardOptions');
@@ -488,37 +489,5 @@ define(['knockout',
             }
         }
         Builder.registerFunction(getTimePeriodValue, "getTimePeriodValue");
-
-        var assetRoots = [];
-        function addWidgetAssetRoot(provider_name, provider_version, provider_asset_root, asset_root) {
-            if((provider_name!==null) && (provider_version!==null) && (provider_asset_root!==null) && (asset_root!==null) && !isWidgetAssetRootExisted(provider_name, provider_version, provider_asset_root) ) {
-                assetRoots.push({provider_name: provider_name, provider_version: provider_version, provider_asset_root: provider_asset_root, asset_root: asset_root});
-            }
-        }
-        Builder.registerFunction(addWidgetAssetRoot, "addWidgetAssetRoot");
-
-        function isWidgetAssetRootExisted(provider_name, provider_version, provider_asset_root) {
-            for(var i=0; i<assetRoots.length; i++) {
-                var art = assetRoots[i];
-                if((art.provider_name === provider_name) && (art.provider_version === provider_version) && (art.provider_asset_root === provider_asset_root)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        Builder.registerFunction(isWidgetAssetRootExisted, "isWidgetAssetRootExisted");
-
-        function getWidgetAssetRoot(provider_name, provider_version, provider_asset_root) {
-            for(var i=0; i<assetRoots.length; i++) {
-                var art = assetRoots[i];
-                if((art.provider_name === provider_name) && (art.provider_asset_root === provider_asset_root)) {
-                    return art.asset_root;
-                }
-            }
-            var asset_root = dfu.df_util_widget_lookup_assetRootUrl(provider_name, provider_version, provider_asset_root, true);
-            addWidgetAssetRoot(provider_name, provider_version, provider_asset_root, asset_root);
-            return asset_root;
-        };
-        Builder.registerFunction(getWidgetAssetRoot, "getWidgetAssetRoot");
     }
 );
