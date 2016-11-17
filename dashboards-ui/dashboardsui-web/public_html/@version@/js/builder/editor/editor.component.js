@@ -223,6 +223,7 @@ define(['knockout',
                     return "#";
             });
             tile.dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd(), timeSelectorModel.viewTimePeriod()), targets, null, null, dashboard.enableTimeRange(), dashboard.enableEntityFilter());
+            console.log("dashboardItemChangeEvent in initializeTileAfterLoad for '" + ko.unwrap(tile.WIDGET_NAME) + "' is " + JSON.stringify(tile.dashboardItemChangeEvent));
             /**
              * Integrator needs to override below FUNCTION to respond to DashboardItemChangeEvent
              * e.g.

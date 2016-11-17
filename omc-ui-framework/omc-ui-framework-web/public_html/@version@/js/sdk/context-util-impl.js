@@ -267,11 +267,6 @@ define([
                         start: end,
                         end: end
                     }
-                }else if(timePeriod === "TODAY") {
-                    return {
-                        start: new Date(end.getFullYear(), end.getMonth(), end.getDate()),
-                        end: end
-                    }
                 }else if(self.isValidTimePeriod(timePeriod)) {
                     arr = timePeriod.split("_");
                     num = arr[1];
