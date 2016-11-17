@@ -100,7 +100,7 @@ public class LoginAndLogout
 			if (!url.contains("omcCtx=")) {
 				url = url
 						+ (url.indexOf("?") > 0 ? "&" : "?")
-						+ "omcCtx=compositeType%3Domc_group%26compositeName%3DDynamic%2520Group%2520Test%26compositeMEID%3DAB08D432613982E6A2EE6278E8C1459E";
+						+ "omcCtx=compositeType%3DSystem%2520%28Generic%29%26compositeName%3D%252FSOA1213_base_domain%252Fbase_domain%252Fsoa_server1%252Fsoa-infra_System%26compositeMEID%3D8426448730BDF663A9806A69AA2C445B";
 				webd.getLogger().info("New url with OMC global context appended is: " + url);
 			}
 			LoginUtils.doLogin(webd, username, password, tenantId, url);

@@ -75,7 +75,8 @@ public class TestGlobalContext extends LoginAndLogout
 		DashboardHomeUtil.createDashboard(webd, DSBNAME, null);
 		DashboardBuilderUtil.verifyDashboard(webd, DSBNAME, null, false);
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in builder Page");
-		//	Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd), "Dynamic Group Test");
+		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),
+				"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
 	@Test
@@ -92,7 +93,8 @@ public class TestGlobalContext extends LoginAndLogout
 		DashboardHomeUtil.createDashboardSet(webd, DSBSETNAME, null);
 		DashboardBuilderUtil.verifyDashboardSet(webd, DSBSETNAME);
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in builder Page");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd), "Dynamic Group Test");
+		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),
+				"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
 	@Test
@@ -109,7 +111,7 @@ public class TestGlobalContext extends LoginAndLogout
 
 	}
 
-	@Test
+	//@Test commented out because of welcome page api version control's known issue
 	public void testGlobalContextITA()
 	{
 
@@ -120,37 +122,44 @@ public class TestGlobalContext extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "performanceAnayticsDatabase");
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in ITA Page");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd), "Dynamic Group Test");
+		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),
+				"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "performanceAnalyticsMiddleware");
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in ITA Page");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd), "Dynamic Group Test");
+		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),
+				"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "resourceAnalyticsDatabase");
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in ITA Page");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd), "Dynamic Group Test");
+		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),
+				"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "resourceAnalyticsMiddleware");
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in ITA Page");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd), "Dynamic Group Test");
+		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),
+				"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "resourceAnalyticsHost");
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in ITA Page");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd), "Dynamic Group Test");
+		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),
+				"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "dataExplorerAnalyze");
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in ITA Page");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd), "Dynamic Group Test");
+		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),
+				"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "dataExplorer");
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in ITA Page");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd), "Dynamic Group Test");
+		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),
+				"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
 	@Test
@@ -161,10 +170,11 @@ public class TestGlobalContext extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test case: testGlobalContextLA");
 
-		BrandingBarUtil.visitApplicationVisualAnalyzer(webd, "log");
+		BrandingBarUtil.visitApplicationVisualAnalyzer(webd, "Log Analytics");
 
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in LA Page");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd), "Dynamic Group Test");
+		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),
+				"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
 	@Test
@@ -180,7 +190,8 @@ public class TestGlobalContext extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		BrandingBarUtil.visitApplicationCloudService(webd, "Infrastructure Monitoring");
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context doesn't exists in Monitoring Page");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd), "Dynamic Group Test");
+		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),
+				"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
 	@Test
@@ -196,7 +207,8 @@ public class TestGlobalContext extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.selectOOB(webd, "Application Performance Monitoring");
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context doesn't exist in APM");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd), "Dynamic Group Test");
+		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),
+				"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
 	@Test
@@ -213,7 +225,8 @@ public class TestGlobalContext extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.selectOOB(webd, "Host Operations");
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context doesn't exist in OOB dashboard");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd), "Dynamic Group Test");
+		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),
+				"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
 	@Test
@@ -230,7 +243,8 @@ public class TestGlobalContext extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.selectOOB(webd, "Enterprise Health");
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in OOBDashboard Set");
-		//	Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd), "Dynamic Group Test");
+		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),
+				"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
 	@Test
@@ -244,7 +258,8 @@ public class TestGlobalContext extends LoginAndLogout
 		BrandingBarUtil.visitApplicationVisualAnalyzer(webd, "search");
 
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in UDE Page");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd), "Dynamic Group Test");
+		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),
+				"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
 	@Test
