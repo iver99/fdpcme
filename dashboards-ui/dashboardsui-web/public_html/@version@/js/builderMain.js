@@ -65,6 +65,7 @@ requirejs.config({
             'uifwk/js/util/screenshot-util',
             'uifwk/js/util/typeahead-search',
             'uifwk/js/util/usertenant-util',
+            'uifwk/js/sdk/context-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
@@ -288,7 +289,8 @@ require(['knockout',
                 userName: self.userName,
                 tenantName: self.tenantName,
                 appId: self.appId,
-                isAdmin:true
+                isAdmin:true,
+                showGlobalContextBanner: true
             };
 
             $("#headerWrapper").on("DOMSubtreeModified", function() {

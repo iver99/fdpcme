@@ -100,6 +100,7 @@ public class DashboardServiceFacade
 		}
 		return (EmsDashboard) query.getSingleResult();
 	}
+
 	//	public EmsDashboardFavorite getEmsDashboardFavoriteByPK(Long dashboardId, String username)
 	//	{
 	//		EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(username, dashboardId);
