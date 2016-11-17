@@ -255,7 +255,7 @@ public class TestGlobalContext extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test case: testGlobalContextUDE");
 
-		BrandingBarUtil.visitApplicationVisualAnalyzer(webd, "search");
+		BrandingBarUtil.visitApplicationVisualAnalyzer(webd, "Search");
 
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in UDE Page");
 		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),
