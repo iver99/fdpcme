@@ -71,6 +71,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestBrandingBar')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyWidget')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB')
             }
         }
