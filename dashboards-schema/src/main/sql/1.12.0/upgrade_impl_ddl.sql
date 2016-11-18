@@ -1,7 +1,7 @@
 Rem    DDL change during upgrade
 Rem    add column CREATION_DATE & LAST_MODIFICATION_DATE to all tables
 Rem    MODIFIED   (MM/DD/YY)
-Rem    Rex Liang    06/29/2016 - created
+Rem    Rex Liang    10/08/2016 - created
 Rem
 Rem
 
@@ -98,7 +98,7 @@ BEGIN
   ELSE
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_PREFERENCE.LAST_MODIFICATION_DATE exists already, no change is needed');
   END IF;
-  
+
   
  --add new column 'DELETED' for EMS_DASHBOARD_SET
   SELECT count(*) into v_count from user_tab_columns WHERE table_name='EMS_DASHBOARD_SET' AND column_name='DELETED';

@@ -267,6 +267,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	public EntityManager getEntityManager()
 	{
 		return em;
+		//return new MockEntityManager();
 		
 	}
 
@@ -364,6 +365,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	@Mock
 	public void removeEmsDashboard(EmsDashboard emsDashboard)
 	{
+//<<<<<<< HEAD
 		EntityManager em = this.getEntityManager();
 		if (em.getProperties() != null && Boolean.TRUE.equals(em.getProperties().get("soft.deletion.permanent"))) {
 			emsDashboard.setDeleted(BigInteger.ONE);
@@ -371,6 +373,8 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 		}
 		else
 			this.localRemove(emsDashboard.getClass(), new EmsDashboardSelector(emsDashboard.getDashboardId(), null, null, null));
+			//this.localRemove(emsDashboard.getClass(), new EmsDashboardSelector(emsDashboard.getDashboardId(), null, null, null));
+
 	}
 
 	@Mock
