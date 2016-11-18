@@ -322,6 +322,11 @@ require(['knockout',
         Builder.initializeFromCookie();
 
         $(document).ready(function () {
+            //Check if uifwk css file has been loaded already or not, if not then load it
+            if (!$('#dashboardMainCss').length) {
+                //Append uifwk css file into document head
+                $('head').append('<link id="dashboardMainCss" rel="stylesheet" href="/emsaasui/emcpdfui/@version@/css/dashboards-main.css" type="text/css"/>');
+            }
 
             var headerViewModel = new DashboardsetHeaderViewModel();
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
