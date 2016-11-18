@@ -8,7 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
+import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -27,9 +27,9 @@ import javax.servlet.http.HttpServletResponseWrapper;
 public class NLSFilter implements Filter
 {
 
-    private static final Pattern pattern = Pattern.compile("lang=\"en-US\"");
-    private static final String defaultLanguage = "en";
-    private static final String[] languages = new String[]{"en-US", "fr", "ko", "zh-Hans", "zh-Hant"};
+    private static final Pattern pattern = Pattern.compile("lang=\"en(-US)?\"");
+    private static final String defaultLocale = "en-US";
+    private static final String[] supportedLanguages = new String[]{"en", "fr", "ko", "zh-Hans", "zh-Hant", "zh"};
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException
@@ -52,7 +52,7 @@ public class NLSFilter implements Filter
         // get the accept-language header
         String alh = httpRequest.getHeader("Accept-Language");
         // calculate the UI locale
-        String locale = provideSupportedLanguage(alh);
+        String locale = getSupportedLocale(alh);
 
         // Replaces lang="en-US" by lang="xx" in response text
         final String langAttr = "lang=\"" + locale + "\"";
@@ -71,16 +71,17 @@ public class NLSFilter implements Filter
     {
     }
     
-    private String provideSupportedLanguage(String alh) {
+    private String getSupportedLocale(String alh)
+    {
         if (alh != null && !alh.isEmpty()) {
-            String[] alhArray = alh.split(",");
-            for(String lang : languages) {
-                if(lang.equalsIgnoreCase(alhArray[0])) {
-                    return lang;
+            String locale = alh.split(",")[0].split(";")[0];
+            for (String lang : supportedLanguages) {
+                if (locale.matches("^" + lang + "(-[A-Z]{2})?$")) {
+                    return locale;
                 }
             }
         }
-        return defaultLanguage;
+        return defaultLocale;
     }
 
     private static class CaptureWrapper extends HttpServletResponseWrapper
@@ -93,9 +94,18 @@ public class NLSFilter implements Filter
                 byteStream.write(b);
             }
         };
-        private final PrintWriter writer = 
-                new PrintWriter(new OutputStreamWriter(byteStream, Charset.forName("UTF-8").newEncoder()));
-
+//        private final PrintWriter writer = 
+//                new PrintWriter(new OutputStreamWriter(byteStream, Charset.forName("UTF-8").newEncoder()));
+        private PrintWriter writer = null;
+        {
+          try {
+            writer = new PrintWriter(new OutputStreamWriter(byteStream,"UTF-8"));
+          } catch(UnsupportedEncodingException e) {
+            final Logger logger = Logger.getLogger(NLSFilter.class.getSimpleName());
+            logger.log(Level.SEVERE, "Error: Encoding UTF-8 is not supported.");
+          }
+        }
+        
         public CaptureWrapper(HttpServletResponse response)
         {
             super(response);
