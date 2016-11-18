@@ -271,7 +271,7 @@ define([
                 setIndividualContext('composite', 'compositeType', null, false, false);
                 setIndividualContext('composite', 'compositeName', null, false, false);
                 setIndividualContext('composite', 'compositeDisplayName', null, false, false);
-                setIndividualContext('composite', 'compositeNeedRefresh', true, true, true);
+                setIndividualContext('composite', 'compositeNeedRefresh', true, true, false);
             };
             
             /**
