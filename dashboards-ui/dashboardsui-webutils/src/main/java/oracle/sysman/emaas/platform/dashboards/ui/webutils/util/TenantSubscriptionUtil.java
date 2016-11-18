@@ -11,9 +11,7 @@
 package oracle.sysman.emaas.platform.dashboards.ui.webutils.util;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -49,8 +47,17 @@ public class TenantSubscriptionUtil
 
 	public static class RestClient
 	{
+		private Map<String, Object> headers;
+
 		public RestClient()
 		{
+		}
+
+		public void setHeader(String header, Object value) {
+			if (headers == null) {
+				headers = new HashMap<String, Object>();
+			}
+			headers.put(header, value);
 		}
 
 		public String get(String url, String tenant)
@@ -73,6 +80,12 @@ public class TenantSubscriptionUtil
 			}
 			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+			if (headers != null && !headers.isEmpty()) {
+				for (String key : headers.keySet()) {
+					builder.header(key, headers.get(key));
+					LOGGER.info("Setting header ({}, {}) for call to {}", key, headers.get(key), url);
+				}
+			}
 			return builder.get(String.class);
 		}
 	}
@@ -101,7 +114,7 @@ public class TenantSubscriptionUtil
 			return Collections.emptyList();
 		}
 		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Subscribedapp link retrieved from dashboard-api href is " + subAppLink.getHref());
-		String subAppHref = subAppLink.getTypesStr();
+		String subAppHref = subAppLink.getHref();
 		RestClient rc = new RestClient();
 		String subAppResponse = rc.get(subAppHref, tenant);
 		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Dashboard-API subscribed app response is " + subAppResponse);

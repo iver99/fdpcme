@@ -57,7 +57,14 @@
     <url-pattern>/welcome.html</url-pattern>
     <url-pattern>/home.html</url-pattern>
   </filter-mapping>
-  
+    <filter>
+        <filter-name>add.data.filter</filter-name>
+        <filter-class>oracle.sysman.emaas.platform.dashboards.ui.web.AdditionalDataFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>add.data.filter</filter-name>
+        <url-pattern>/builder.html</url-pattern>
+    </filter-mapping>
   <filter>
     <filter-name>nls.filter</filter-name>
     <filter-class>oracle.sysman.emaas.platform.dashboards.ui.web.NLSFilter</filter-class>

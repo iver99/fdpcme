@@ -109,6 +109,10 @@ define(['knockout',
             if (!self.dataSource[dashboardId]) {
                 self.dataSource[dashboardId] = {};
             }
+            if (window._dashboardServerCache) {
+                var kodsb = getKODashboardForUI(window._dashboardServerCache);
+                initializeDashboardAfterLoad(dashboardId, kodsb, window._dashboardServerCache);
+            }
             if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].dashboard) {
                 Builder.loadDashboard(dashboardId,
                         function (dsb) {
