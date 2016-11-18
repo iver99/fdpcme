@@ -64,6 +64,13 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 
 	public void listView(WebDriver driver);
 
+	/**
+	 * @param driver
+	 * @param widgetName
+	 * @param index
+	 */
+	public void maximizeWidget(WebDriver driver, String widgetName, int index);
+
 	public void moveWidget(WebDriver driver, String widgetName, int index, String moveOption);
 
 	public void moveWidget(WebDriver driver, String widgetName, String moveOption);
@@ -89,6 +96,13 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	public void resizeWidget(WebDriver driver, String widgetName, int index, String resizeOptions);
 
 	public void resizeWidget(WebDriver driver, String widgetName, String resizeOptions);
+
+	/**
+	 * @param driver
+	 * @param widgetName
+	 * @param index
+	 */
+	public void restoreWidget(WebDriver driver, String widgetName, int index);
 
 	public void saveDashboard(WebDriver driver);
 
@@ -135,19 +149,5 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	public boolean verifyWidget(WebDriver driver, String widgetName);
 
 	public boolean verifyWidget(WebDriver driver, String widgetName, int index);
-
-	/**
-	 * @param driver
-	 * @param widgetName
-	 * @param index
-	 */
-	void maximizeWidget(WebDriver driver, String widgetName, int index);
-
-	/**
-	 * @param driver
-	 * @param widgetName
-	 * @param index
-	 */
-	void restoreWidget(WebDriver driver, String widgetName, int index);
 
 }
