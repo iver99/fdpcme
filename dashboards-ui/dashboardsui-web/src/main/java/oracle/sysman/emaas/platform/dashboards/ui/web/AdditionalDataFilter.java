@@ -128,7 +128,7 @@ public class AdditionalDataFilter implements Filter {
             LOGGER.warn("tenant {}/user {}/dashboardId {} is null or empty or invalid, so do not update dashboard page then", tenant, user, dashboardId);
             return null;
         }
-        String dashboardString = DashboardDataAccessUtil.get(tenant, user + "." + tenant, referer, dashboardId);
+        String dashboardString = DashboardDataAccessUtil.get(tenant, tenant + "." + user, referer, dashboardId);
         if (dashboardString == null || dashboardString.isEmpty()) {
             LOGGER.warn("Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then", tenant, user, dashboardId);
             return null;
