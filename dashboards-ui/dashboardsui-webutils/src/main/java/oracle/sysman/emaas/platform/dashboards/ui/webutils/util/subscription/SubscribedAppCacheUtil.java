@@ -74,7 +74,7 @@ public class SubscribedAppCacheUtil {
 
     public List<String> get(String tenant) {
         if (StringUtil.isEmpty(tenant)) {
-            LOGGER.error("Failed to get value for tenant as it is null or empty: {}", tenant);
+            LOGGER.error("Failed to getDashboardData value for tenant as it is null or empty: {}", tenant);
             return null;
         }
         CachedObj co = container.get(tenant);

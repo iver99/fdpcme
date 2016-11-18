@@ -15,9 +15,9 @@ import java.util.Collections;
 public class DashboardDataAccessUtil {
     private static final Logger LOGGER = LogManager.getLogger(DashboardDataAccessUtil.class);
 
-    public static String get(String tenantIdParam,
-                      String userTenant, String referer,
-                      long dashboardId) {
+    public static String getDashboardData(String tenantIdParam,
+                                          String userTenant, String referer,
+                                          long dashboardId) {
         Link dashboardsLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.service", null);
         if (dashboardsLink == null || StringUtils.isEmpty(dashboardsLink.getHref())) {
             LOGGER.warn("Retrieving dashboard data for tenant {}: null/empty dashboardsLink retrieved from service registry.");
@@ -31,6 +31,24 @@ public class DashboardDataAccessUtil {
         rc.setHeader("Referer", referer);
         String response = rc.get(dashboardHref, tenantIdParam);
         LOGGER.info("Retrieved dashboard data is: {}", response);
+        return response;
+    }
+
+    public static String getUserTenantInfo(String tenantIdParam,
+                                          String userTenant, String referer) {
+        Link configurationsLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/static/dashboards.configurations", null);
+        if (configurationsLink == null || StringUtils.isEmpty(configurationsLink.getHref())) {
+            LOGGER.warn("Retrieving configurations links for tenant {}: null/empty configurationsLink retrieved from service registry.");
+            return null;
+        }
+        LOGGER.info("Configurations REST API link from dashboard-api href is: " + configurationsLink.getHref());
+        String userInfoHref = configurationsLink.getHref() + "/userInfo";
+        TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
+        rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantIdParam);
+        rc.setHeader("X-REMOTE-USER", userTenant);
+        rc.setHeader("Referer", referer);
+        String response = rc.get(userInfoHref, tenantIdParam);
+        LOGGER.info("Retrieved userInfo data is: {}", response);
         return response;
     }
 }

@@ -124,16 +124,29 @@ public class AdditionalDataFilter implements Filter {
     }
 
     private String getDashboardData(String tenant, String user, long dashboardId, String referer) {
-        if (StringUtil.isEmpty(tenant) || StringUtil.isEmpty(user) || dashboardId <= 0) {
-            LOGGER.warn("tenant {}/user {}/dashboardId {} is null or empty or invalid, so do not update dashboard page then", tenant, user, dashboardId);
+        if (StringUtil.isEmpty(tenant) || StringUtil.isEmpty(user)) {
+            LOGGER.warn("tenant {}/user {} is null or empty or invalid, so do not update dashboard page then", tenant, user);
             return null;
         }
-        String dashboardString = DashboardDataAccessUtil.get(tenant, tenant + "." + user, referer, dashboardId);
-        if (dashboardString == null || dashboardString.isEmpty()) {
-            LOGGER.warn("Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then", tenant, user, dashboardId);
-            return null;
+        StringBuilder sb = new StringBuilder();
+        if (dashboardId > 0) {
+            String dashboardString = DashboardDataAccessUtil.getDashboardData(tenant, tenant + "." + user, referer, dashboardId);
+            if (StringUtil.isEmpty(dashboardString)) {
+                LOGGER.warn("Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then", tenant, user, dashboardId);
+            } else {
+                sb.append("window._dashboardServerCache=").append(dashboardString).append(";");
+            }
+        } else {
+            LOGGER.warn("dashboardId {} is invalid, so do not update dashboard page for dashboard data then", dashboardId);
         }
-        String jsData = "window._dashboardServerCache=" + dashboardString + ";";
-        return jsData;
+
+        String userInfoString = DashboardDataAccessUtil.getUserTenantInfo(tenant, tenant + "." + user, referer);
+        if (StringUtil.isEmpty(userInfoString)) {
+            LOGGER.warn("Retrieved null or empty user info for tenant {} user {}", tenant, user);
+        }
+        else {
+            sb.append("window._userInfoServerCache=").append(userInfoString).append(";");
+        }
+        return sb.toString();
     }
 }
