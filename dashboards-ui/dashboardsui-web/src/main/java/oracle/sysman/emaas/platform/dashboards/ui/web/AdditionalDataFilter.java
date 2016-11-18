@@ -15,12 +15,10 @@ import java.util.regex.Pattern;
 /**
  * Created by guochen on 11/18/16.
  */
-public class AdditionalDataFilter {
+public class AdditionalDataFilter implements Filter {
     private final static Logger LOGGER = LogManager.getLogger(AdditionalDataFilter.class);
 
     private static final Pattern pattern = Pattern.compile("////TODO////");
-
-
 
     private static class CaptureWrapper extends HttpServletResponseWrapper
     {
@@ -71,6 +69,11 @@ public class AdditionalDataFilter {
         }
     }
 
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+
+    }
+
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpReq = (HttpServletRequest) request;
@@ -89,6 +92,11 @@ public class AdditionalDataFilter {
         try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
             writer.println(newResponseText);
         }
+    }
+
+    @Override
+    public void destroy() {
+
     }
 
     private String getDashboardData(HttpServletRequest httpReq) {

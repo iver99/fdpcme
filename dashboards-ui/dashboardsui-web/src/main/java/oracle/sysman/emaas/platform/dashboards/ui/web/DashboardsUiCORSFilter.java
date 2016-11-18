@@ -29,7 +29,7 @@ import org.apache.logging.log4j.Logger;
 public class DashboardsUiCORSFilter implements Filter
 {
 	private final static Logger LOGGER = LogManager.getLogger(DashboardsUiCORSFilter.class);
-	private static final String OAM_REMOTE_USER_HEADER = "OAM_REMOTE_USER";
+	public static final String OAM_REMOTE_USER_HEADER = "OAM_REMOTE_USER";
 
 	//	private static final String DEFAULT_USER = "SYSMAN";
 	//	private static final String DEFAULT_TENANT = "TenantOPC1";
