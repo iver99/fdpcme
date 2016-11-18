@@ -116,9 +116,9 @@ public class TenantSubscriptionUtil
 		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Subscribedapp link retrieved from dashboard-api href is " + subAppLink.getHref());
 		String subAppHref = subAppLink.getHref();
 		RestClient rc = new RestClient();
-		String subAppResponse = rc.get(subAppHref, tenant);
 		rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenant);
 		rc.setHeader("X-REMOTE-USER", tenant + "." + user);
+		String subAppResponse = rc.get(subAppHref, tenant);
 		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Dashboard-API subscribed app response is " + subAppResponse);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
