@@ -122,12 +122,12 @@ boolean runOnboardTenant(String sm_url,String authToken, String emaas_properties
     {
         throw new GradleException("The TENANT_ID given to onboardTenant(..) method was empty, please check the value in emaas.properties.log")
     }
-    println "Checking if tenant " + test_tenant_name + " is already (onboarded)"
-    if(isTenantOnboarded(sm_url,authToken,test_tenant_name))
-    {
-        println test_tenant_name+" alread exists! Do not onboard it again."
-        return true
-    }
+    //println "Checking if tenant " + test_tenant_name + " is already (onboarded)"
+    //if(isTenantOnboarded(sm_url,authToken,test_tenant_name))
+    //{
+    //    println test_tenant_name+" alread exists! Do not onboard it again."
+    //    return true
+    //}
 
     // emaas.properties.log is mandatory to the script
     if(!(new File(emaas_properties_log_path)).exists())
