@@ -36,7 +36,7 @@ public class DashboardDataAccessUtil {
 
     public static String getUserTenantInfo(String tenantIdParam,
                                           String userTenant, String referer) {
-        Link configurationsLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/static/dashboards.configurations", null);
+        Link configurationsLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.configurations", null);
         if (configurationsLink == null || StringUtils.isEmpty(configurationsLink.getHref())) {
             LOGGER.warn("Retrieving configurations links for tenant {}: null/empty configurationsLink retrieved from service registry.");
             return null;
