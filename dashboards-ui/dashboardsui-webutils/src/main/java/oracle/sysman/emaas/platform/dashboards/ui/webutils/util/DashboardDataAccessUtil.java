@@ -24,7 +24,7 @@ public class DashboardDataAccessUtil {
             return null;
         }
         LOGGER.info("Dashboard REST API from dashboard-api href is: " + dashboardsLink.getHref());
-        String dashboardHref = dashboardsLink.getHref() + "dashboardId=" + dashboardId;
+        String dashboardHref = dashboardsLink.getHref() + "?dashboardId=" + dashboardId;
         TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
         rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantIdParam);
         rc.setHeader("X-REMOTE-USER", userTenant);

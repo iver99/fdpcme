@@ -93,7 +93,7 @@ public class TenantSubscriptionUtil
 	private static Logger LOGGER = LogManager.getLogger(TenantSubscriptionUtil.class);
 	private static Logger itrLogger = LogUtil.getInteractionLogger();
 
-	public static List<String> getTenantSubscribedServices(String tenant) {
+	public static List<String> getTenantSubscribedServices(String tenant, String user) {
 		if (tenant == null) {
 			return Collections.emptyList();
 		}
@@ -117,6 +117,8 @@ public class TenantSubscriptionUtil
 		String subAppHref = subAppLink.getHref();
 		RestClient rc = new RestClient();
 		String subAppResponse = rc.get(subAppHref, tenant);
+		rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenant);
+		rc.setHeader("X-REMOTE-USER", tenant + "." + user);
 		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Dashboard-API subscribed app response is " + subAppResponse);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
