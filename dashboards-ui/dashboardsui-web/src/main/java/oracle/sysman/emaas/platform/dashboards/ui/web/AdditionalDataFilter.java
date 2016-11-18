@@ -147,6 +147,14 @@ public class AdditionalDataFilter implements Filter {
         else {
             sb.append("window._userInfoServerCache=").append(userInfoString).append(";");
         }
+
+        String regString = DashboardDataAccessUtil.getRegistrationData(tenant, tenant + "." + user, referer);
+        if (StringUtil.isEmpty(regString)) {
+            LOGGER.warn("Retrieved null or empty registration for tenant {} user {}", tenant, user);
+        }
+        else {
+            sb.append("window._registrationServerCache=").append(regString).append(";");
+        }
         return sb.toString();
     }
 }

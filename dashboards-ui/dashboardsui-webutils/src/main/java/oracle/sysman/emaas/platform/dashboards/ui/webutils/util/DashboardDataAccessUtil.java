@@ -51,4 +51,22 @@ public class DashboardDataAccessUtil {
         LOGGER.info("Retrieved userInfo data is: {}", response);
         return response;
     }
+
+    public static String getRegistrationData(String tenantIdParam,
+                                           String userTenant, String referer) {
+        Link configurationsLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.configurations", null);
+        if (configurationsLink == null || StringUtils.isEmpty(configurationsLink.getHref())) {
+            LOGGER.warn("Retrieving configurations links for tenant {}: null/empty configurationsLink retrieved from service registry.");
+            return null;
+        }
+        LOGGER.info("Configurations REST API link from dashboard-api href is: " + configurationsLink.getHref());
+        String userInfoHref = configurationsLink.getHref() + "/registration";
+        TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
+        rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantIdParam);
+        rc.setHeader("X-REMOTE-USER", userTenant);
+        rc.setHeader("Referer", referer);
+        String response = rc.get(userInfoHref, tenantIdParam);
+        LOGGER.info("Retrieved registration data is: {}", response);
+        return response;
+    }
 }
