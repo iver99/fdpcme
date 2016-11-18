@@ -659,6 +659,7 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory,unpackFo
     }    
 }
 test {
+        classpath = sourceSets.test.compileClasspath + sourceSets.test.output
         useTestNG()
         {
                 //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,

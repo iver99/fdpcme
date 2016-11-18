@@ -1,9 +1,7 @@
 sourceSets {
 integTest {
         java.srcDir 'src/integTest/java'
-
-    
-        compileClasspath = configurations.testConfig + configurations.webdriver + configurations.testNG
+        compileClasspath += configurations.testConfig + configurations.webdriver + configurations.testNG
         }
     }
 
@@ -15,10 +13,6 @@ dependencies {
 	testConfig project(':dashboards-ui-test-common-api')
 	testConfig getProjectArtifact('log4j-core') 
 	testConfig getProjectArtifact('log4j-api') 
-
-	testCompile configurations.testConfig
-    testCompile configurations.webdriver
-    testCompile configurations.testNG
 }
 
 task integTestJar (type:Jar) {
@@ -46,3 +40,10 @@ publications ('integTest')
 
     }
 
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testNG
+        plusConfigurations += configurations.webdriver
+        plusConfigurations += configurations.testConfig
+    }
+}

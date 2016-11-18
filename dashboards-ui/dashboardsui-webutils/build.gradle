@@ -1,7 +1,4 @@
-
 apply from:'test.gradle'
-
-
 
 jar {
         from('src/main/java') {
@@ -9,10 +6,9 @@ jar {
         }
 }
 
-
-
 test {
-	useTestNG()		
+	classpath = sourceSets.test.compileClasspath + sourceSets.test.output
+	useTestNG()
 	{
 		//We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
 		//if you wish to run ALL tests within this projet - remove following.
@@ -55,8 +51,10 @@ dependencies {
 		compile getProjectArtifact('jersey-client')   
 		compile getProjectArtifact('jmockit')
 		compile getProjectArtifact('jettison')
-        
-    
-} 
+}
 
-
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testNG //avoid building error in Eclipse
+    }
+}
