@@ -79,6 +79,11 @@ public class AdditionalDataFilter implements Filter {
         LOGGER.info("Now enter the AdditionalDataFilter");
         HttpServletRequest httpReq = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+        // TODO: check session expiry header
+        String sesExp = httpReq.getHeader("SESSION_EXP");
+        LOGGER.info("Trying to get SESSION_EXP from builder.html file, its value is: {}", sesExp);
+
         final CaptureWrapper wrapper = new CaptureWrapper(httpResponse);
         chain.doFilter(request, wrapper);
 
