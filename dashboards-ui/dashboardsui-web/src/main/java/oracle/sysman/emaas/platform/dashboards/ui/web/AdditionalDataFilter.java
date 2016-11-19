@@ -80,10 +80,6 @@ public class AdditionalDataFilter implements Filter {
         HttpServletRequest httpReq = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        // TODO: check session expiry header
-        String sesExp = httpReq.getHeader("SESSION_EXP");
-        LOGGER.info("Trying to get SESSION_EXP from builder.html file, its value is: {}", sesExp);
-
         final CaptureWrapper wrapper = new CaptureWrapper(httpResponse);
         chain.doFilter(request, wrapper);
 
@@ -110,6 +106,9 @@ public class AdditionalDataFilter implements Filter {
 
     private String getDashboardData(HttpServletRequest httpReq) {
         String userTenant = httpReq.getHeader(DashboardsUiCORSFilter.OAM_REMOTE_USER_HEADER);
+        // TODO: check session expiry header
+        String sesExp = httpReq.getHeader("SESSION_EXP");
+        LOGGER.info("Trying to get SESSION_EXP from builder.html file, its value is: {}", sesExp);
         if (!StringUtil.isEmpty(userTenant) && userTenant.indexOf(".") > 0) {
             int pos = userTenant.indexOf(".");
             String tenant = userTenant.substring(0, pos);
@@ -123,7 +122,7 @@ public class AdditionalDataFilter implements Filter {
             final String dashboardIdStr = httpReq.getParameter("dashboardId");
             try {
                 Long dashboardId = Long.valueOf(dashboardIdStr);
-                return getDashboardData(tenant, user, dashboardId, httpReq.getHeader("referer"));
+                return getDashboardData(tenant, user, dashboardId, httpReq.getHeader("referer"), sesExp);
             } catch (NumberFormatException e) {
                 LOGGER.error("Invalid dashboard ID form URL: {}", dashboardIdStr);
                 return null;
@@ -132,7 +131,7 @@ public class AdditionalDataFilter implements Filter {
         return null;
     }
 
-    private String getDashboardData(String tenant, String user, long dashboardId, String referer) {
+    private String getDashboardData(String tenant, String user, long dashboardId, String referer, String sessionExp) {
         if (StringUtil.isEmpty(tenant) || StringUtil.isEmpty(user)) {
             LOGGER.warn("tenant {}/user {} is null or empty or invalid, so do not update dashboard page then", tenant, user);
             return null;
@@ -149,7 +148,7 @@ public class AdditionalDataFilter implements Filter {
             LOGGER.warn("dashboardId {} is invalid, so do not update dashboard page for dashboard data then", dashboardId);
         }
 
-        String userInfoString = DashboardDataAccessUtil.getUserTenantInfo(tenant, tenant + "." + user, referer);
+        String userInfoString = DashboardDataAccessUtil.getUserTenantInfo(tenant, tenant + "." + user, referer, sessionExp);
         if (StringUtil.isEmpty(userInfoString)) {
             LOGGER.warn("Retrieved null or empty user info for tenant {} user {}", tenant, user);
         }
@@ -157,7 +156,7 @@ public class AdditionalDataFilter implements Filter {
             sb.append("window._userInfoServerCache=").append(userInfoString).append(";");
         }
 
-        String regString = DashboardDataAccessUtil.getRegistrationData(tenant, tenant + "." + user, referer);
+        String regString = DashboardDataAccessUtil.getRegistrationData(tenant, tenant + "." + user, referer, sessionExp);
         if (StringUtil.isEmpty(regString)) {
             LOGGER.warn("Retrieved null or empty registration for tenant {} user {}", tenant, user);
         }

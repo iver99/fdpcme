@@ -42,7 +42,7 @@ public class DashboardDataAccessUtil {
     }
 
     public static String getUserTenantInfo(String tenantIdParam,
-                                          String userTenant, String referer) {
+                                          String userTenant, String referer, String sessionExp) {
         try {
             long start = System.currentTimeMillis();
             Link configurationsLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.configurations", null);
@@ -55,7 +55,12 @@ public class DashboardDataAccessUtil {
             TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
             rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantIdParam);
             rc.setHeader("X-REMOTE-USER", userTenant);
-            rc.setHeader("Referer", referer);
+            if (!StringUtil.isEmpty(referer)) {
+                rc.setHeader("Referer", referer);
+            }
+            if (!StringUtil.isEmpty(sessionExp)) {
+                rc.setHeader("SESSION_EXP", sessionExp);
+            }
             String response = rc.get(userInfoHref, tenantIdParam);
             LOGGER.info("Retrieved userInfo data is: {}", response);
             LOGGER.info("It takes {}ms to retrieve userInfo data from Dashboard-API", (System.currentTimeMillis() - start));
@@ -67,7 +72,7 @@ public class DashboardDataAccessUtil {
     }
 
     public static String getRegistrationData(String tenantIdParam,
-                                           String userTenant, String referer) {
+                                           String userTenant, String referer, String sessionExp) {
         try {
             long start = System.currentTimeMillis();
             Link configurationsLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.configurations", null);
@@ -80,7 +85,12 @@ public class DashboardDataAccessUtil {
             TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
             rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantIdParam);
             rc.setHeader("X-REMOTE-USER", userTenant);
-            rc.setHeader("Referer", referer);
+            if (!StringUtil.isEmpty(referer)) {
+                rc.setHeader("Referer", referer);
+            }
+            if (!StringUtil.isEmpty(sessionExp)) {
+                rc.setHeader("SESSION_EXP", sessionExp);
+            }
             String response = rc.get(userInfoHref, tenantIdParam);
             LOGGER.info("Retrieved registration data is: {}", response);
             LOGGER.info("It takes {}ms to retrieve registration data from Dashboard-API", (System.currentTimeMillis() - start));
