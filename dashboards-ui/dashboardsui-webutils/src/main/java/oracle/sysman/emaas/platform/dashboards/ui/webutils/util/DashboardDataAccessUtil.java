@@ -18,6 +18,7 @@ public class DashboardDataAccessUtil {
     public static String getDashboardData(String tenantIdParam,
                                           String userTenant, String referer,
                                           long dashboardId) {
+        long start = System.currentTimeMillis();
         Link dashboardsLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.service", null);
         if (dashboardsLink == null || StringUtils.isEmpty(dashboardsLink.getHref())) {
             LOGGER.warn("Retrieving dashboard data for tenant {}: null/empty dashboardsLink retrieved from service registry.");
@@ -31,11 +32,13 @@ public class DashboardDataAccessUtil {
         rc.setHeader("Referer", referer);
         String response = rc.get(dashboardHref, tenantIdParam);
         LOGGER.info("Retrieved dashboard data is: {}", response);
+        LOGGER.info("It takes {}ms to retrieve dashboard data from Dashboard-API", (System.currentTimeMillis() - start));
         return response;
     }
 
     public static String getUserTenantInfo(String tenantIdParam,
                                           String userTenant, String referer) {
+        long start = System.currentTimeMillis();
         Link configurationsLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.configurations", null);
         if (configurationsLink == null || StringUtils.isEmpty(configurationsLink.getHref())) {
             LOGGER.warn("Retrieving configurations links for tenant {}: null/empty configurationsLink retrieved from service registry.");
@@ -49,11 +52,13 @@ public class DashboardDataAccessUtil {
         rc.setHeader("Referer", referer);
         String response = rc.get(userInfoHref, tenantIdParam);
         LOGGER.info("Retrieved userInfo data is: {}", response);
+        LOGGER.info("It takes {}ms to retrieve userInfo data from Dashboard-API", (System.currentTimeMillis() - start));
         return response;
     }
 
     public static String getRegistrationData(String tenantIdParam,
                                            String userTenant, String referer) {
+        long start = System.currentTimeMillis();
         Link configurationsLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.configurations", null);
         if (configurationsLink == null || StringUtils.isEmpty(configurationsLink.getHref())) {
             LOGGER.warn("Retrieving configurations links for tenant {}: null/empty configurationsLink retrieved from service registry.");
@@ -67,6 +72,7 @@ public class DashboardDataAccessUtil {
         rc.setHeader("Referer", referer);
         String response = rc.get(userInfoHref, tenantIdParam);
         LOGGER.info("Retrieved registration data is: {}", response);
+        LOGGER.info("It takes {}ms to retrieve registration data from Dashboard-API", (System.currentTimeMillis() - start));
         return response;
     }
 }

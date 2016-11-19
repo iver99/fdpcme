@@ -18,6 +18,8 @@ import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.Applicati
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.json.DomainsEntity;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.TenantSubscriptionUtil.RestClient;
 
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedAppCacheUtil;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedApps;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -320,160 +322,38 @@ public class TenantSubscriptionUtilTest
 			+ "            \"values\": [" + "            ]," + "            \"hash\": -2083815310" + "        }" + "    ],"
 			+ "    \"count\": 1" + "}";
 
+	private final static String SUBSCRIBED_APPS = "{" +
+			"    \"applications\": [" +
+			"        \"APM\"," +
+			"        \"LogAnalytics\"," +
+			"        \"ITAnalytics\"" +
+			"    ]" +
+			"}";
+
 	// @formatter:off
 
 	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServicesEmptyAppMappingEntityS2(@Mocked RegistryLookupUtil anyUtil,
-			@Mocked final RestClient anyClient) throws IOException
-	{
-		final Link link = new Link();
-
-		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
-		link.withRel("");
-		new Expectations() {
-			{
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
-				result = link;
-
-				anyClient.get(anyString, anyString);
-				returns(ENTITY_NAMING_DOMAIN, TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPING_ENTITY);
-			}
-		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", null);
-		//Assert.assertNull(services);
-		Assert.assertTrue(services == null || services.isEmpty());
-	}
-
-	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServicesEmptyAppMappingJsonS2(@Mocked RegistryLookupUtil anyUtil,
-			@Mocked final RestClient anyClient) throws IOException
-	{
-		final Link link = new Link();
-
-		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
-		link.withRel("");
-		new Expectations() {
-			{
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
-				result = link;
-
-				anyClient.get(anyString, anyString);
-				returns(ENTITY_NAMING_DOMAIN, "");
-			}
-		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", null);
-		//Assert.assertNull(services);
-		Assert.assertTrue(services == null || services.isEmpty());
-	}
-
-	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServicesEmptyAppMappingsS2(@Mocked RegistryLookupUtil anyUtil,
-			@Mocked final RestClient anyClient) throws IOException
-	{
-		final Link link = new Link();
-
-		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
-		link.withRel("");
-		new Expectations() {
-			{
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
-				result = link;
-
-				anyClient.get(anyString, anyString);
-				returns(ENTITY_NAMING_DOMAIN, TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPINGS);
-			}
-		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", null);
-		//Assert.assertNull(services);
-		Assert.assertTrue(services == null || services.isEmpty());
-	}
-
-	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServicesEmptyDomainS2(@Mocked RegistryLookupUtil anyUtil,
-			@Mocked final RestClient anyClient)
-	{
-		final Link link = new Link();
-
-		link.withHref("");
-		link.withRel("");
-		new Expectations() {
-			{
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
-				result = link;
-			}
-		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", null);
-		//Assert.assertNull(services);
-		Assert.assertTrue(services == null || services.isEmpty());
-	}
-
-	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServicesEmptyDomainsEntityS2(@Mocked RegistryLookupUtil anyUtil,
-			@Mocked final RestClient anyClient, @Mocked final JsonUtil anyJsonUtil, @Mocked final DomainsEntity anyDomainsEntity)
-			throws IOException
-	{
-		final Link link = new Link();
-
-		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
-		link.withRel("");
-		new Expectations() {
-			{
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
-				result = link;
-				new RestClient();
-				anyClient.get(anyString, anyString);
-				JsonUtil.buildNormalMapper();
-				result = anyJsonUtil;
-				anyJsonUtil.fromJson(anyString, DomainsEntity.class);
-				result = anyDomainsEntity;
-				anyDomainsEntity.getItems();
-				result = null;
-			}
-		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", null);
-		//Assert.assertNull(services);
-		Assert.assertTrue(services == null || services.isEmpty());
-	}
-
-	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServicesEmptyTenantAppUrlS2(@Mocked RegistryLookupUtil anyUtil,
-			@Mocked final RestClient anyClient) throws IOException
-	{
-		final Link link = new Link();
-
-		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
-		link.withRel("");
-		new Expectations() {
-			{
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
-				result = link;
-
-				anyClient.get(anyString, anyString);
-				returns(ENTITY_NAMING_DOMAIN_EMPTY_TENANT_APP_URL, TENANT_LOOKUP_RESULT);
-			}
-		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", null);
-		//Assert.assertNull(services);
-		Assert.assertTrue(services == null || services.isEmpty());
-	}
-
-	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServicesIOExceptionS2(@Mocked RegistryLookupUtil anyUtil,
+	public void testGetTenantSubscribedServicesIOExceptionS2(@Mocked final SubscribedAppCacheUtil cacheUtil, @Mocked RegistryLookupUtil anyUtil,
 			@Mocked final RestClient anyClient, @Mocked final JsonUtil anyJsonUtil) throws IOException
 	{
 		final Link link = new Link();
 
-		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
+		link.withHref("http://slc04pgi.us.oracle.com:7019/emcpdf/api/v1/subscribedapps");
 		link.withRel("");
 		new Expectations() {
 			{
+				SubscribedAppCacheUtil.getInstance();
+				result = cacheUtil;
+				cacheUtil.get(anyString);
+				result = null;
+
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
 				result = link;
-				new RestClient();
+
 				anyClient.get(anyString, anyString);
 				JsonUtil.buildNormalMapper();
 				result = anyJsonUtil;
-				anyJsonUtil.fromJson(anyString, DomainsEntity.class);
+				anyJsonUtil.fromJson(anyString, SubscribedApps.class);
 				result = new IOException();
 			}
 		};
@@ -490,20 +370,44 @@ public class TenantSubscriptionUtilTest
 		Assert.assertTrue(rtn == null || rtn.isEmpty());
 	}
 
+	@Test(groups = {"s2"})
+	public void testGetTenantSubscribedServicesFromCache(@Mocked final SubscribedAppCacheUtil cacheUtil) {
+		String tenant = "tenant";
+		final List<String> apps = Arrays.asList("ITA", "APM");
+		SubscribedAppCacheUtil sacu = SubscribedAppCacheUtil.getInstance();
+		sacu.put(tenant, apps);
+		new Expectations() {
+			{
+				SubscribedAppCacheUtil.getInstance();
+				result = cacheUtil;
+				cacheUtil.get(anyString);
+				result = apps;
+			}
+		};
+		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", null);
+		Assert.assertEquals(services, Arrays.asList("ITA", "APM"));
+	}
+
 	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServicesS2(@Mocked RegistryLookupUtil anyUtil, @Mocked final RestClient anyClient)
+	public void testGetTenantSubscribedServicesS2(@Mocked final SubscribedAppCacheUtil cacheUtil, @Mocked RegistryLookupUtil anyUtil,
+												  @Mocked final RestClient anyClient)
 	{
 		final Link link = new Link();
 
-		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
+		link.withHref("http://slc04pgi.us.oracle.com:7019/emcpdf/api/v1/subscribedapps");
 		link.withRel("");
 		new Expectations() {
 			{
+				SubscribedAppCacheUtil.getInstance();
+				result = cacheUtil;
+				cacheUtil.get(anyString);
+				result = null;
+
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
 				result = link;
 
 				anyClient.get(anyString, anyString);
-				returns(ENTITY_NAMING_DOMAIN, TENANT_LOOKUP_RESULT);
+				result = SUBSCRIBED_APPS;
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", null);

@@ -7,7 +7,6 @@ public class SubscribedApps {
     private String[] applications;
 
     public SubscribedApps() {
-
     }
 
     public String[] getApplications() {
