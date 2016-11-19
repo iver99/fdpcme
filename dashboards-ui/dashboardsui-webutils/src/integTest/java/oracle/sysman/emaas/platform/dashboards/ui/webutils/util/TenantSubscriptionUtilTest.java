@@ -339,7 +339,7 @@ public class TenantSubscriptionUtilTest
 				returns(ENTITY_NAMING_DOMAIN, TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPING_ENTITY);
 			}
 		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", null);
 		//Assert.assertNull(services);
 		Assert.assertTrue(services == null || services.isEmpty());
 	}
@@ -361,7 +361,7 @@ public class TenantSubscriptionUtilTest
 				returns(ENTITY_NAMING_DOMAIN, "");
 			}
 		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", null);
 		//Assert.assertNull(services);
 		Assert.assertTrue(services == null || services.isEmpty());
 	}
@@ -383,7 +383,7 @@ public class TenantSubscriptionUtilTest
 				returns(ENTITY_NAMING_DOMAIN, TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPINGS);
 			}
 		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", null);
 		//Assert.assertNull(services);
 		Assert.assertTrue(services == null || services.isEmpty());
 	}
@@ -402,7 +402,7 @@ public class TenantSubscriptionUtilTest
 				result = link;
 			}
 		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", null);
 		//Assert.assertNull(services);
 		Assert.assertTrue(services == null || services.isEmpty());
 	}
@@ -430,7 +430,7 @@ public class TenantSubscriptionUtilTest
 				result = null;
 			}
 		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", null);
 		//Assert.assertNull(services);
 		Assert.assertTrue(services == null || services.isEmpty());
 	}
@@ -452,7 +452,7 @@ public class TenantSubscriptionUtilTest
 				returns(ENTITY_NAMING_DOMAIN_EMPTY_TENANT_APP_URL, TENANT_LOOKUP_RESULT);
 			}
 		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", null);
 		//Assert.assertNull(services);
 		Assert.assertTrue(services == null || services.isEmpty());
 	}
@@ -477,7 +477,7 @@ public class TenantSubscriptionUtilTest
 				result = new IOException();
 			}
 		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", null);
 		//Assert.assertNull(services);
 		Assert.assertTrue(services == null || services.isEmpty());
 	}
@@ -485,7 +485,7 @@ public class TenantSubscriptionUtilTest
 	@Test(groups = { "s2" })
 	public void testgetTenantSubscribedServicesNullTenantS2()
 	{
-		List<String> rtn = TenantSubscriptionUtil.getTenantSubscribedServices(null);
+		List<String> rtn = TenantSubscriptionUtil.getTenantSubscribedServices(null, null);
 		//Assert.assertNull(rtn);
 		Assert.assertTrue(rtn == null || rtn.isEmpty());
 	}
@@ -506,7 +506,7 @@ public class TenantSubscriptionUtilTest
 				returns(ENTITY_NAMING_DOMAIN, TENANT_LOOKUP_RESULT);
 			}
 		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", null);
 		Assert.assertEquals(services, Arrays.asList("APM", "LogAnalytics", "ITAnalytics"));
 	}
 
