@@ -76,6 +76,7 @@ public class AdditionalDataFilter implements Filter {
 
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
+        LOGGER.info("Now enter the AdditionalDataFilter");
         HttpServletRequest httpReq = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
         final CaptureWrapper wrapper = new CaptureWrapper(httpResponse);
@@ -84,10 +85,13 @@ public class AdditionalDataFilter implements Filter {
         final String responseText = wrapper.getResponseText();
         assert (responseText != null);
         String data = getDashboardData(httpReq);
-         String newResponseText = responseText;
-        if (!StringUtil.isEmpty(data)) {
+        String newResponseText = responseText;
+        LOGGER.info("Before inserting additional data, the response test is {}", newResponseText);
+        if (!StringUtil.isEmpty(data) && responseText != null) {
             newResponseText = pattern.matcher(responseText).replaceFirst(data);
+            LOGGER.info("Replacing and inserting addtional data now!");
         }
+        LOGGER.info("After inserting additional data, the response test is {}", newResponseText);
         // Writes the updated response text to the response object
         try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
             writer.println(newResponseText);
