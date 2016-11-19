@@ -140,7 +140,7 @@ public class TestWelcomePage extends LoginAndLogout
 		WelcomeUtil.visitITA(webd, "performanceAnalyticsDatabase");
 
 		//verify the url of opened page
-		DashBoardUtils.verifyURL(webd, "emcitas/db-analytics-war/html/db-performance-analytics.html");
+		DashBoardUtils.verifyURL(webd, "emcitas/db-performance-analytics/html/db-performance-analytics.html");
 
 		webd.getLogger().info("Test opening ITA: Performance Analytics-Database in welcome page finished!!!");
 	}
