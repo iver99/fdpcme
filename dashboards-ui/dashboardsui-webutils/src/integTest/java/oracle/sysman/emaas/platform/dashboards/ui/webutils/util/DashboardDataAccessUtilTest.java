@@ -60,7 +60,7 @@ public class DashboardDataAccessUtilTest {
                 result = userInfo;
             }
         };
-        String ui = DashboardDataAccessUtil.getUserTenantInfo("tenant", "tenant.user", null);
+        String ui = DashboardDataAccessUtil.getUserTenantInfo("tenant", "tenant.user", null, null);
         Assert.assertEquals(ui, userInfo);
     }
 
@@ -72,7 +72,7 @@ public class DashboardDataAccessUtilTest {
                 result = null;
             }
         };
-        String ui = DashboardDataAccessUtil.getUserTenantInfo("tenant", "tenant.user", null);
+        String ui = DashboardDataAccessUtil.getUserTenantInfo("tenant", "tenant.user", null, null);
         Assert.assertNull(ui);
     }
 
@@ -90,7 +90,7 @@ public class DashboardDataAccessUtilTest {
                 result = reg;
             }
         };
-        String res = DashboardDataAccessUtil.getRegistrationData("tenant", "tenant.user", null);
+        String res = DashboardDataAccessUtil.getRegistrationData("tenant", "tenant.user", null, null);
         Assert.assertEquals(res, reg);
     }
 
@@ -102,7 +102,7 @@ public class DashboardDataAccessUtilTest {
                 result = null;
             }
         };
-        String res = DashboardDataAccessUtil.getRegistrationData("tenant", "tenant.user", null);
+        String res = DashboardDataAccessUtil.getRegistrationData("tenant", "tenant.user", null, null);
         Assert.assertNull(res);
     }
 }
