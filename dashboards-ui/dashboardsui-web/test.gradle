@@ -1,26 +1,21 @@
 
 sourceSets {
-    integTest {
-        java.srcDir 'src/integTest/java'
-        compileClasspath = configurations.testNG+configurations.restAssured+configurations.testConfig
-    }
      test{
                 java {
                         srcDirs = ['src/integTest/java']
                 }
                 resources.srcDirs = ['src/integTest/java']
+                compileClasspath += configurations.testNG + configurations.restAssured + configurations.testConfig
         }
 }
 
 task integTestJar (type:Jar) {
-    from sourceSets.integTest.output
+    from sourceSets.test.output
     appendix = 'integ-tests'
 }
 
 dependencies {
-	testCompile configurations.testNG
 	testConfig project(':dashboards-ui:dashboardsui-webutils')    
-	testConfig project(':dashboards-ui:dashboardsui-web')    
 	testConfig getProjectArtifact('log4j-core')   
 	testConfig getProjectArtifact('log4j-api')   
 	testConfig getProjectArtifact('ojdbc6')   
@@ -30,7 +25,6 @@ dependencies {
 	testConfig getProjectArtifact('jackson-core-asl')   
 	testConfig getProjectArtifact('jackson-mapper-asl')   
 	testConfig getProjectArtifact('jackson-xc')   
-	
 	testConfig getProjectArtifact('jmockit')   
 	testConfig getProjectArtifact('registry-lookup-client')   
 	testConfig getProjectArtifact('registry-client')   
@@ -42,11 +36,5 @@ dependencies {
 	testConfig getProjectArtifact('httpmime')   
 	testConfig getProjectArtifact('servlet-api')   
 	testConfig getProjectArtifact('javax.ws.rs-api')   
-	
-        
-        
-        
-        
-    
 }
 build.dependsOn integTestJar
