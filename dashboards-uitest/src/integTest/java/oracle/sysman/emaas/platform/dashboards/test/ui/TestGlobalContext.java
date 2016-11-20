@@ -161,8 +161,7 @@ public class TestGlobalContext extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test case: testGlobalContextLA");
 
-		BrandingBarUtil.visitApplicationVisualAnalyzer(webd, "Log Analytics");
-
+		BrandingBarUtil.visitApplicationCloudService(webd, "Log Analytics");
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in LA Page");
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
