@@ -3,6 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.ui.webutils.util;
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.registration.StringCacheUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedAppCacheUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedApps;
 import org.apache.commons.lang.StringUtils;
@@ -35,9 +36,13 @@ public class DashboardDataAccessUtilTest {
     }
 
     @Test(groups = { "s2" })
-    public void testGetDashboardDataNullLink(@Mocked final RegistryLookupUtil anyRegistryLookupUtil) {
+    public void testGetDashboardDataNullLink(@Mocked final StringCacheUtil anyStringCacheUtil, @Mocked final RegistryLookupUtil anyRegistryLookupUtil) {
         new Expectations() {
             {
+                StringCacheUtil.getRegistrationCacheInstance();
+                result = anyStringCacheUtil;
+                anyStringCacheUtil.get(anyString);
+                result = null;
                 RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
                 result = null;
             }
@@ -47,11 +52,15 @@ public class DashboardDataAccessUtilTest {
     }
 
     @Test(groups = { "s2" })
-    public void testGetUserTenantInfo(@Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final Link anyLink,
-                                     @Mocked final TenantSubscriptionUtil.RestClient anyRestClient) {
+    public void testGetUserTenantInfo(@Mocked final StringCacheUtil anyStringCacheUtil, @Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final Link anyLink,
+                                      @Mocked final TenantSubscriptionUtil.RestClient anyRestClient) {
         final String userInfo = "{\"currentUser\":\"emaastesttenant1.emcsadmin\",\"userRoles\":[\"APM Administrator\",\"APM User\",\"IT Analytics Administrator\",\"Log Analytics Administrator\",\"Log Analytics User\",\"IT Analytics User\"]}";
         new Expectations() {
             {
+                StringCacheUtil.getUserInfoCacheInstance();
+                result = anyStringCacheUtil;
+                anyStringCacheUtil.get(anyString);
+                result = null;
                 RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
                 result = anyLink;
                 anyLink.getHref();
