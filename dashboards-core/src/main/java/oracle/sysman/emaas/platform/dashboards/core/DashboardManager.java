@@ -371,23 +371,39 @@ public class DashboardManager
 				try {
 					jsonObj = new JSONObject(extOptions);
 					selected = jsonObj.get("selectedTab");
+					LOGGER.info("Retrieved selected tab from dashboard table for dashboard {} is {}", dashboardId, selected);
+					// get selectedTab from user options
+					jsonObj = new JSONObject(euo.getExtendedOptions());
+					if (jsonObj.get("selectedTab") != null) {
+						selected = jsonObj.get("selectedTab");
+						LOGGER.info("Retrieved selected tab from user option table for dashboard {} and user {} is {}", dashboardId, userName, selected);
+					}
 				} catch (JSONException e) {
 					// failed to parse extended options json, so failed to retrieve selected tab. 
 					// This is unexpected, but if it happens, likes just go ahead w/o selected tab then...
 					LOGGER.error(e.getLocalizedMessage(), e);
 				}
+				Long selectedId = null;
 				if (selected != null) {
-					Long selectedId = null; 
 					try {
 						selectedId = Long.valueOf(selected.toString());
-						EmsDashboard sed = this.getEmsDashboardById(dsf, selectedId, tenantId);
-						EmsUserOptions seuo = dsf.getEmsUserOptions(userName, selectedId);
-						CombinedDashboard scd = CombinedDashboard.valueOf(sed, null, seuo);
-						cd.setSelected(scd);
 					} catch (NumberFormatException e) {
 						// might be a null 'selectedTab' value or invalid one
 						LOGGER.info("Failed to get selected dashboard ID: ID is invalid: {}", selected);
 					}
+				}
+				else {
+					// use the 1st dashboard id
+					if (cd.getSubDashboards() != null && !cd.getSubDashboards().isEmpty()) {
+						selectedId = cd.getSubDashboards().get(0).getDashboardId();
+						LOGGER.info("Retrieved default (1st) tab for dashboard set {}, 1st dashboard id is {}", dashboardId, selected);
+					}
+				}
+				if (selectedId != null) {
+					EmsDashboard sed = this.getEmsDashboardById(dsf, selectedId, tenantId);
+					EmsUserOptions seuo = dsf.getEmsUserOptions(userName, selectedId);
+					CombinedDashboard scd = CombinedDashboard.valueOf(sed, null, seuo);
+					cd.setSelected(scd);
 				}
 			}
 			return cd;
