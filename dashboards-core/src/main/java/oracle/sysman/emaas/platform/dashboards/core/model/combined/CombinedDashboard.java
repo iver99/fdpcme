@@ -42,6 +42,7 @@ public class CombinedDashboard extends Dashboard
 	}
 	
 	public CombinedDashboard() {
+		super();
 	}
 	
 	/**
