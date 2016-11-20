@@ -76,7 +76,7 @@ public class AdditionalDataFilter implements Filter {
 
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
-        LOGGER.info("Now enter the AdditionalDataFilter");
+        LOGGER.debug("Now enter the AdditionalDataFilter");
         HttpServletRequest httpReq = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
 
@@ -87,12 +87,12 @@ public class AdditionalDataFilter implements Filter {
         assert (responseText != null);
         String data = getDashboardData(httpReq);
         String newResponseText = responseText;
-        LOGGER.info("Before inserting additional data, the response test is {}", newResponseText);
+        LOGGER.debug("Before inserting additional data, the response test is {}", newResponseText);
         if (!StringUtil.isEmpty(data) && responseText != null) {
             newResponseText = pattern.matcher(responseText).replaceFirst(data);
-            LOGGER.info("Replacing and inserting addtional data now!");
+            LOGGER.debug("Replacing and inserting addtional data now!");
         }
-        LOGGER.info("After inserting additional data, the response test is {}", newResponseText);
+        LOGGER.debug("After inserting additional data, the response test is {}", newResponseText);
         // Writes the updated response text to the response object
         try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
             writer.println(newResponseText);
@@ -108,7 +108,7 @@ public class AdditionalDataFilter implements Filter {
         String userTenant = httpReq.getHeader(DashboardsUiCORSFilter.OAM_REMOTE_USER_HEADER);
         // TODO: check session expiry header
         String sesExp = httpReq.getHeader("SESSION_EXP");
-        LOGGER.info("Trying to get SESSION_EXP from builder.html file, its value is: {}", sesExp);
+        LOGGER.debug("Trying to get SESSION_EXP from builder.html file, its value is: {}", sesExp);
         if (!StringUtil.isEmpty(userTenant) && userTenant.indexOf(".") > 0) {
             int pos = userTenant.indexOf(".");
             String tenant = userTenant.substring(0, pos);
