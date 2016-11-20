@@ -263,32 +263,19 @@ task preBuildCompile(type: Copy) {
    from configurations.prebuild_junit
    from configurations.prebuild_apacheHttp
    from configurations.prebuild_jaxrs
-   from configurations.testNG
    from configurations.prebuild_wlfullc
    from configurations.prebuild_tenant
    from configurations.prebuild_cache
    from configurations.prebuild_groovy
    from configurations.prebuild_integtest
-   from configurations.webdriver
    from configurations.testConfig
    into "$afDir"
    rename(/registry-client-1.\d+.\d+-\d+.jar/, 'registry-client-1.x.jar')
    rename(/registry-lookup-client-1.\d+.\d+-\d+.jar/, 'registry-lookup-client-1.x.jar')
-   rename(/em-qatool-os-webdriver-2.0.0-\d+.jar/, 'em-qatool-os-webdriver-2.0.0.jar')
 }
 
 compileJava.dependsOn preBuildCompile
 
-buildscript { 
-	dependencies {  
-		classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.2.5'  
-
-	        classpath group: 'com.oracle.emaas.emdi', name: 'JSPlugin', version:'1.0+'
-		classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'
-
-		classpath 'org.gradle.plugins:gradle-compass:1.0.10.1'
-	}  
-}
 project.publishing.publications {
     if (project.tasks.findByName('lrgMetadataZip')) {
         // Publication for publishing lrg metadata

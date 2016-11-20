@@ -24,7 +24,7 @@ define(['knockout',
             if (!self.dataSource[dashboardId]) {
                 self.dataSource[dashboardId] = {};
             }
-            if (isEmptyObject(self.dataSource[dashboardId])) {
+            if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].userOptions) {
             	// emcpdf-2527
             	self.loadDashboardData(dashboardId, function() {
             		successCallback && successCallback(self.dataSource[dashboardId].userOptions || {});
