@@ -227,7 +227,7 @@ public class TestGlobalContext extends LoginAndLogout
 
 		BrandingBarUtil.visitDashboardHome(webd);
 		DashboardHomeUtil.gridView(webd);
-		DashboardHomeUtil.selectOOB(webd, "Enterprise Health");
+		DashboardHomeUtil.selectDashboard(webd, "Enterprise Health");
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in OOBDashboard Set");
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
