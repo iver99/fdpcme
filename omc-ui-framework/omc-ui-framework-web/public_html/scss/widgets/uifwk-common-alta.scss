@@ -396,6 +396,7 @@ a:hover {
     padding-right: 10px;
 }
 .emaas-appheader-composite-context, .emaas-appheader-time-context {
+    height: 30px;
     line-height:30px;
     vertical-align: middle;
     text-align: center;
@@ -404,5 +405,6 @@ a:hover {
     float:left;
 }
 .emaas-appheader-time-context {
+    padding-top: 1px;
     float:right;
 }

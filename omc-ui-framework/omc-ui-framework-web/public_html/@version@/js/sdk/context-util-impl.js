@@ -249,6 +249,93 @@ define([
             };
             
             /**
+             * 
+             * @param {type} timePeriod
+             * @returns {unresolved} The result is "LAST_X_UNIT".
+             */
+            self.formalizeTimePeriod = function(timePeriod) {
+                if(!timePeriod) {
+                    return null;
+                }
+                var tp = timePeriod.toUpperCase();
+                if(tp.slice(-1) === "S") {
+                    tp = tp.slice(0, -1);
+                }
+                var arr = tp.split(" ");
+                tp = arr.join("_");
+                return tp;
+            };
+            
+            self.isValidTimePeriod = function(timePeriod) {
+                var tpPattern = new RegExp("^LAST_[1-9]{1}[0-9]*_(SECOND|MINUTE|HOUR|DAY|WEEK|MONTH|YEAR){1}$");
+                return tpPattern.test(timePeriod);
+            };
+            
+            /**
+             * 
+             * @param {type} timePeriod
+             * @returns {start: <start time>, end: <end time>}
+             */
+            self.getStartEndTimeFromTimePeriod = function(timePeriod) {
+                console.log("Calling getStartEndTimeFromTimePeriod to get start and end time. The timePeriod is " + timePeriod);
+                timePeriod = self.formalizeTimePeriod(timePeriod);
+                console.log("The fomalized time period is " + timePeriod);
+                
+                if(!timePeriod) {
+                    return null;
+                }
+                
+                var start = null;
+//                var end = new Date(2016, 2, 13, 3, 0, 0, 0); //For DST testing
+                var end = new Date();
+                var arr = null;
+                var num = null;
+                var opt = null;
+                if(timePeriod === "LATEST") {
+                    return {
+                        start: end,
+                        end: end
+                    }
+                }else if(self.isValidTimePeriod(timePeriod)) {
+                    arr = timePeriod.split("_");
+                    num = arr[1];
+                    opt = arr[2];
+                    switch(opt) {
+                        case "SECOND":
+                            start = new Date(end - num*1000);
+                            break;
+                        case "MINUTE":
+                            start = new Date(end - num*60*1000);
+                            break;
+                        case "HOUR":
+                            start = new Date(end - num*60*60*1000);
+                            break;
+                        case "DAY":
+                            start = new Date(end.getFullYear(), end.getMonth(), end.getDate()-num, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
+                            break;
+                        case "WEEK":
+                            start = new Date(end.getFullYear(), end.getMonth(), end.getDate()-7*num, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
+                            break;
+                        case "MONTH":
+                            start = new Date(end.getFullYear(), end.getMonth()-num, end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
+                            break;
+                        case "YEAR":
+                            start = new Date(end.getFullYear()-num, end.getMonth(), end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
+                            break;
+                        default:
+                            throw new Error("Error in getStartEndTimeFromTimePeriod function: timePeriod - " + opt + " is invalid");
+                    }
+                    console.log("Start and end time for '"+timePeriod+"' are start: "+start+", end: "+end);
+                    return {
+                        start: start,
+                        end: end
+                    }
+                }else {
+                    return null;
+                }
+            };
+            
+            /**
              * Get OMC global context of time period.
              * 
              * @param 
