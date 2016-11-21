@@ -142,6 +142,8 @@ public class AdditionalDataFilter implements Filter {
             if (StringUtil.isEmpty(dashboardString)) {
                 LOGGER.warn("Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then", tenant, user, dashboardId);
             } else {
+                dashboardString = dashboardString.replace("\"", "\\\"");
+                LOGGER.info("Escaping retrieved data before inserting to html. Vlaue now is: {}", dashboardString);
                 sb.append("window._dashboardServerCache=").append(dashboardString).append(";");
             }
         } else {
