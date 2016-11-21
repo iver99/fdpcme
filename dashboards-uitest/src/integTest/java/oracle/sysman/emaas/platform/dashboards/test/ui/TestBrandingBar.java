@@ -91,6 +91,7 @@ public class TestBrandingBar extends LoginAndLogout
 		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);
 		WaitUtil.waitForPageFullyLoaded(webd);
 		// Alert link
+
 		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "eventUi/rules/html/rules-dashboard.html");
 		Assert.assertTrue(BrandingBarUtil.isAdmin(webd));
@@ -223,6 +224,7 @@ public class TestBrandingBar extends LoginAndLogout
 		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);
 		WaitUtil.waitForPageFullyLoaded(webd);
 		// Alert link
+
 		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "eventUi/rules/html/rules-dashboard.html");
 		Assert.assertTrue(BrandingBarUtil.isAdmin(webd));
@@ -330,9 +332,9 @@ public class TestBrandingBar extends LoginAndLogout
 		// Monitoring link
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_IM);
 		WaitUtil.waitForPageFullyLoaded(webd);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "monitoringservicesui/cms/index.html");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "monitoringservicesui/cms/index.html");
 	}
 
 	@Test
@@ -390,9 +392,9 @@ public class TestBrandingBar extends LoginAndLogout
 		// Monitoring link
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_OCS);
 		WaitUtil.waitForPageFullyLoaded(webd);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcpdfui/home.html?filter=ocs");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ocs");
 	}
 
 	@Test

@@ -1,7 +1,7 @@
 
 
-define(['dfutil', 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmodel'],
-function(dfu, oj, ko, $)
+define(['dfutil', 'ojs/ojcore', 'knockout', 'jquery', 'uifwk/js/sdk/context-util', 'ojs/ojknockout', 'ojs/ojmodel'],
+function(dfu, oj, ko, $, cxtModel)
 {
 /**
  * @preserve Copyright (c) 2015, Oracle and/or its affiliates.
@@ -12,7 +12,6 @@ function(dfu, oj, ko, $)
     var DashboardModel = function(attrs, options) {
         var self = this, _attrs = attrs, _options = options || {};
         this.screenShot = undefined;
-
 
         var _customURL = function(_operation, _col, _opt) {
             var __url =  self.get('href');
@@ -46,9 +45,10 @@ function(dfu, oj, ko, $)
     DashboardModel.prototype.openDashboardPage = function()
     {
         var self = this;
+        var cxtUtil = new cxtModel();
         var url = self.getNavLink();
         if (typeof url==="string"){
-            window.location = self.getNavLink();
+            window.location = cxtUtil.appendOMCContext(self.getNavLink());
         }
     };
 
