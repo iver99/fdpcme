@@ -137,7 +137,7 @@
 
         <!-- topology --->
         <!-- ko if: isTopologyCompRegistered() !== false -->
-        <div id="ude-topology-div" style="overflow-y:scroll; height:200px; background-color:white;"
+        <div id="ude-topology-div" style="overflow-y:auto; max-height:200px; height:auto; background-color:white;"
              data-bind="visible: isTopologyDisplayed" class="ude-sdk">
         <div class="ude-topology ude-topology-in-brandingbar" data-bind="component:{name:'emctas-topology', 
             params:{
