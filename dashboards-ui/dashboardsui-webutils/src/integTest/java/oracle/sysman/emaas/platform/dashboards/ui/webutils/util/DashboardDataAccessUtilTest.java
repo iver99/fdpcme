@@ -36,13 +36,9 @@ public class DashboardDataAccessUtilTest {
     }
 
     @Test(groups = { "s2" })
-    public void testGetDashboardDataNullLink(@Mocked final StringCacheUtil anyStringCacheUtil, @Mocked final RegistryLookupUtil anyRegistryLookupUtil) {
+    public void testGetDashboardDataNullLink(@Mocked final RegistryLookupUtil anyRegistryLookupUtil) {
         new Expectations() {
             {
-                StringCacheUtil.getRegistrationCacheInstance();
-                result = anyStringCacheUtil;
-                anyStringCacheUtil.get(anyString);
-                result = null;
                 RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
                 result = null;
             }
@@ -104,9 +100,13 @@ public class DashboardDataAccessUtilTest {
     }
 
     @Test(groups = { "s2" })
-    public void testGetRegistrationDataNullLink(@Mocked final RegistryLookupUtil anyRegistryLookupUtil) {
+    public void testGetRegistrationDataNullLink(@Mocked final StringCacheUtil anyStringCacheUtil, @Mocked final RegistryLookupUtil anyRegistryLookupUtil) {
         new Expectations() {
             {
+                StringCacheUtil.getRegistrationCacheInstance();
+                result = anyStringCacheUtil;
+                anyStringCacheUtil.get(anyString);
+                result = null;
                 RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
                 result = null;
             }
