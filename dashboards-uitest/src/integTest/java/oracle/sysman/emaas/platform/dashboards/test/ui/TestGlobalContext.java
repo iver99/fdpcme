@@ -166,7 +166,7 @@ public class TestGlobalContext extends LoginAndLogout
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
-	@Test
+	//@Test
 	public void testGlobalContextMonitoring()
 	{
 
