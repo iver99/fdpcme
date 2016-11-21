@@ -60,6 +60,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             if (self.showGlobalContextBanner() === true) {
                 refreshOMCContext();
             }
+            self.showGlobalContextBanner.subscribe(function (newValue) {
+                if (newValue === true) {
+                    refreshOMCContext();
+                } 
+            });
 
             function handleShowHideTopology() {
                 $("ude-topology-div").slideToggle("fast");
