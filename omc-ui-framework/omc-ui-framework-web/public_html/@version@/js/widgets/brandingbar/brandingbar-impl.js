@@ -31,6 +31,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             } else {
                 self.showGlobalContextBanner = ko.observable(ko.unwrap(params.showGlobalContextBanner) === false ? false : true);
             }
+            
+            //Set showTimeSelector config. Default value is false. It can be set as an knockout observable and be changed after page is loaded
+            //Per high level plan, we don't allow consumers to config to show/hide time selector themselves. So comment out below code for now.
+//            if(ko.isObservable(params.showTimeSelector)) {
+//                self.showTimeSelector = params.showTimeSelector;
+//            }else {
+//                self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === true ? true : false);
+//            }
+            self.showTimeSelector = ko.observable(false);
+            
             self.entities = ko.observable([]);
             self.queryVars = ko.observable();
 
@@ -442,6 +452,33 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 ko.components.register("df-oracle-about-box", {
                     viewModel: {require: aboutVmPath},
                     template: {require: 'text!' + aboutTemplatePath}
+                });
+            }
+            
+            //Parameters for time selector
+            if(params.timeSelectorParams) {
+                self.timeSelectorParams = params.timeSelectorParams;
+            }else {
+                var start = cxtUtil.getStartTime() ? new Date(parseInt(cxtUtil.getStartTime())) : null;
+                var end = cxtUtil.getEndTime() ? new Date(parseInt(cxtUtil.getEndTime())) : null;
+                var timePeriod = cxtUtil.getTimePeriod() ? cxtUtil.getTimePeriod() : null;
+                
+                self.timeSelectorParams = {
+                    startDateTime: ko.observable(start),
+                    endDateTime: ko.observable(end),
+                    timePeriod: ko.observable(timePeriod),
+                    hideMainLabel: true,
+                    dtpickerPosition: 'right'
+                };
+            }
+            
+            var timeSelectorVmPath = 'uifwk/js/widgets/datetime-picker/js/datetime-picker';
+            var timeSelectorTemplatePath = 'uifwk/js/widgets/datetime-picker/html/datetime-picker.html';
+            //Register a knockout component for time selector
+            if(!ko.components.isRegistered('df-datetime-picker') && self.showTimeSelector === true) {
+                ko.components.register("df-datetime-picker",{
+                    viewModel: {require: timeSelectorVmPath},
+                    template: {require: 'text!'+timeSelectorTemplatePath}
                 });
             }
 
