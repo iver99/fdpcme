@@ -55,11 +55,7 @@ dependencies{
 	exclude('module':'groovy')
     }
 
-    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
-	     
-    configurations{
-	restAssured.exclude module:'groovy'
-    }
+     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
 }
 
 //Task is for dashboard UI Test

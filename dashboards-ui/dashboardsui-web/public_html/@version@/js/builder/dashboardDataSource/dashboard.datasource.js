@@ -32,7 +32,7 @@ define(['knockout',
                             successCallback && successCallback(data);
                         },
                         function (jqXHR, textStatus, errorThrown) {
-                            self[dashboardId].hasUserOptionInDB = false;
+                            self.dataSource[dashboardId].hasUserOptionInDB = false;
                             errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
                         });
             } else {

@@ -112,11 +112,7 @@ dependencies{
           
     testConfig(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2') { transitive = false }
      	
-    testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }     
-     
-    configurations{
-	restAssured.exclude module:'groovy'
-    }
+    testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
 }
 
 project.ext.omctf_omcCloudSetup_additionalParam = "-skipagents -skipomr"
