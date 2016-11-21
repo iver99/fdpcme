@@ -67,7 +67,13 @@ define([
                                 omcContext[contextName] = {};
                             }
                             //Set value into the OMC context JSON object
-                            omcContext[contextName][paramName] = paramValue;
+                            if (paramName === 'entityMEIDs') {
+                                //Convert string value to array, separated by comma
+                                omcContext[contextName][paramName] = paramValue.split(',');
+                            }
+                            else {
+                                omcContext[contextName][paramName] = paramValue;
+                            }
                         }
                     }
                 }
@@ -138,7 +144,23 @@ define([
                                 //Check for available context which should be appended into URL
                                 if (omcContext[contextName] && omcContext[contextName][paramName]) {
                                     var paramValue = omcContext[contextName][paramName];
-                                    omcCtxString = omcCtxString + encodeURIComponent(paramName) + "=" + encodeURIComponent(paramValue) + '&';
+                                    var paramValueStr = '';
+                                    //If it's an array, convert it to a comma seperated string
+                                    if ($.isArray(paramValue)) {
+                                        for (var i = 0; i < paramValue.length; i++) {
+                                            if (i === paramValue.length - 1) {
+                                                paramValueStr = paramValueStr + paramValue[i];
+                                            }
+                                            else {
+                                                paramValueStr = paramValueStr + paramValue[i] + ',';
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        paramValueStr = paramValue;
+                                    }
+                                    
+                                    omcCtxString = omcCtxString + encodeURIComponent(paramName) + "=" + encodeURIComponent(paramValueStr) + '&';
                                 }
                             }
                         }
@@ -213,11 +235,18 @@ define([
                 setIndividualContext('time', 'timePeriod', timePeriod, true, true);
             };
             
+            /**
+             * Set OMC global context of start and end time.
+             * 
+             * @param {Number} start Start time.
+             * @param {Number} end End time.
+             * @returns 
+             */
             self.setStartAndEndTime = function(start, end) {
                 setIndividualContext('time', 'timePeriod', 'CUSTOM', false, false);
                 setIndividualContext('time', 'startTime', parseInt(start), false, false);
                 setIndividualContext('time', 'endTime', parseInt(end), true, true);
-            }
+            };
             
             /**
              * Get OMC global context of time period.
@@ -236,14 +265,13 @@ define([
              * @returns 
              */
             self.setCompositeMeId = function(compositeMEID) {
-                setIndividualContext('composite', 'compositeMEID', compositeMEID, false);
+                setIndividualContext('composite', 'compositeMEID', compositeMEID, false, false);
                 //Set composite meId will reset composite type/name, 
                 //next time you get the composite type/name will return the new type/name
-                setIndividualContext('composite', 'compositeType', null, false);
-                setIndividualContext('composite', 'compositeName', null, false);
-                setIndividualContext('composite', 'compositeDisplayName', null, false);
-                setIndividualContext('composite', 'compositeNeedRefresh', true, false);
-                fireOMCContextChangeEvent();
+                setIndividualContext('composite', 'compositeType', null, false, false);
+                setIndividualContext('composite', 'compositeName', null, false, false);
+                setIndividualContext('composite', 'compositeDisplayName', null, false, false);
+                setIndividualContext('composite', 'compositeNeedRefresh', true, true, false);
             };
             
             /**
@@ -380,25 +408,20 @@ define([
              * @returns 
              */
             self.setEntityMeIds = function(entityMEIDs) {
-                var meIds = '';
-                //If it's a array, convert it to a comma seperated string
+                var meIds = null;
+                
+                //If it's an array
                 if ($.isArray(entityMEIDs)) {
-                    for (var i = 0; i < entityMEIDs.length; i++) {
-                        if (i === entityMEIDs.length - 1) {
-                            meIds = meIds + entityMEIDs[i];
-                        }
-                        else {
-                            meIds = meIds + entityMEIDs[i] + ',';
-                        }
-                    }
-                }
-                else {
                     meIds = entityMEIDs;
                 }
-                setIndividualContext('entity', 'entityMEIDs', meIds);
+                //If it's a string with entity ids separeated by comma, convert to an array
+                else if (entityMEIDs) {
+                    meIds = entityMEIDs.split(',');
+                }
+                setIndividualContext('entity', 'entityMEIDs', meIds, true, true);
                 //Set entity meIds will reset the cached entity objects, 
                 //next time you get the entities will return the new ones
-                setIndividualContext('entity', 'entities', null);
+                setIndividualContext('entity', 'entities', null, false, false);
             };
             
             /**
@@ -408,10 +431,13 @@ define([
              * @returns {Array} OMC global context of entity MEIDs
              */
             self.getEntityMeIds = function() {
-                var strMeIds = getIndividualContext('entity', 'entityMEIDs');
-                if (strMeIds) {
+                var entityMEIDs = getIndividualContext('entity', 'entityMEIDs');
+                if ($.isArray(entityMEIDs)) {
+                    return entityMEIDs;
+                }
+                else if (entityMEIDs) {
                     //Convert to a array
-                    return strMeIds.split(',');
+                    return entityMEIDs.split(',');
                 }
                 return null;
             };
@@ -571,8 +597,9 @@ define([
              * 
              * @param {String} contextName Context definition name
              * @param {String} paramName URL parameter name for the individual context
-             * @param {Boolean} fireChangeEvent Flag to determine whether to fire change event
              * @param {String} value Context value
+             * @param {Boolean} fireChangeEvent Flag to determine whether to fire change event
+             * @param {Boolean} replaceState Flag to determine whether to replace history state
              * @returns 
              */
             function setIndividualContext(contextName, paramName, value, fireChangeEvent, replaceState) {
@@ -583,7 +610,7 @@ define([
                         if (!omcContext[contextName]) {
                             omcContext[contextName] = {};
                         }
-                        omcContext[contextName][paramName] = decodeURIComponent(value);
+                        omcContext[contextName][paramName] = $.isArray(value) ? value : decodeURIComponent(value);
                     }
                     //Otherwise, if value is null or empty then clear the context
                     else if (omcContext[contextName] && omcContext[contextName][paramName]) {
@@ -627,13 +654,21 @@ define([
                 if (paramValue === null) {
                     paramValue = '';
                 }
-                var pattern = new RegExp('([?&])' + paramName + '=.*?(&|$)', 'i');
+                //Handle the case anchor section ('#') exists in the given URL 
+                var anchorIdx = url.indexOf('#');
+                var hash = '';
+                //Retrieve hash string from the URL and append to the end of the URL after appending context string
+                if (anchorIdx !== -1) {
+                    hash = url.substring(anchorIdx);
+                    url = url.substring(0, anchorIdx);
+                }
+                var pattern = new RegExp('([?&])' + paramName + '=.*?(&|$|#)', 'i');
                 if (url.match(pattern)) {
-                  return url.replace(pattern, '$1' + paramName + "=" + paramValue + '$2');
+                  return url.replace(pattern, '$1' + paramName + "=" + paramValue + '$2') + hash;
                 }
                 return url + (url.indexOf('?') > 0 ? 
                     //Handle case that an URL ending with a question mark only
-                    (url.lastIndexOf('?') === url.length - 1 ? '': '&') : '?') + paramName + '=' + paramValue; 
+                    (url.lastIndexOf('?') === url.length - 1 ? '': '&') : '?') + paramName + '=' + paramValue + hash; 
             };
             
             /**
@@ -769,19 +804,18 @@ define([
             function fetchCompositeCallback(data) {
                 if (data && data['rows'] && data['rows'].length > 0) {
                     var entity = data['rows'][0];
-                    setIndividualContext('composite', 'compositeDisplayName', entity[1], false);
-                    setIndividualContext('composite', 'compositeName', entity[2], false);
-                    setIndividualContext('composite', 'compositeType', entity[4], false);
-                    setIndividualContext('composite', 'compositeClass', entity[5], false);
+                    setIndividualContext('composite', 'compositeDisplayName', entity[1], false, false);
+                    setIndividualContext('composite', 'compositeName', entity[2], false, false);
+                    setIndividualContext('composite', 'compositeType', entity[4], false, false);
+                    setIndividualContext('composite', 'compositeClass', entity[5], false, false);
                 }
                 else {
-                    setIndividualContext('composite', 'compositeDisplayName', null, false);
-                    setIndividualContext('composite', 'compositeName', null, false);
-                    setIndividualContext('composite', 'compositeType', null, false);
-                    setIndividualContext('composite', 'compositeClass', null, false);
+                    setIndividualContext('composite', 'compositeDisplayName', null, false, false);
+                    setIndividualContext('composite', 'compositeName', null, false, false);
+                    setIndividualContext('composite', 'compositeType', null, false, false);
+                    setIndividualContext('composite', 'compositeClass', null, false, false);
                 }
-                setIndividualContext('composite', 'compositeNeedRefresh', 'false', false);
-                fireOMCContextChangeEvent();
+                setIndividualContext('composite', 'compositeNeedRefresh', 'false', true, true);
             }
             
             function executeODSQuery(jsonOdsQuery, callback) {
