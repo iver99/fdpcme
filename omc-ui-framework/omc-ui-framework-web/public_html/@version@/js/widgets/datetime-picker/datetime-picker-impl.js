@@ -476,7 +476,16 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.timeRangeMsg = nls.DATETIME_PICKER_TIME_RANGE;
                 self.applyButton = nls.DATETIME_PICKER_BUTTONS_APPLY_BUTTON;
                 self.cancelButton = nls.DATETIME_PICKER_BUTTONS_CANCEL_BUTTON;
+                self.timeZone = ko.observable(null);
 
+                var timezone = new Date().getTimezoneOffset() / 60;
+                if (timezone > 0) {
+                    timezone = nls.DATETIME_PICKER_BUTTONS_REPORTING_TIMEZONE + "UTC-" + timezone;
+                } else {
+                    timezone = nls.DATETIME_PICKER_BUTTONS_REPORTING_TIMEZONE + "UTC+" + Math.abs(timezone);
+                }
+                self.timeZone(timezone);
+                
                 //calculate dtpicker position automatically
                 self.calDtpickerPosition = function() {
                     var eleOffset = $(self.wrapperId).offset(); //get element position(top & left) relative to the document
