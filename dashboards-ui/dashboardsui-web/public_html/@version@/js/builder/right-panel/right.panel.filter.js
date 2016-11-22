@@ -23,10 +23,12 @@ define([
                         {defaultValue: 300000}
             };
             self.extendedOptions = self.dashboard.extendedOptions ? JSON.parse(self.dashboard.extendedOptions()) : defaultSettings;
+            self.extendedOptions.tsel = self.extendedOptions.tsel ? self.extendedOptions.tsel : defaultSettings.tsel;
+            self.extendedOptions.timeSel = self.extendedOptions.timeSel ? self.extendedOptions.timeSel : defaultSettings.timeSel;
 
             //set entity support/selectionMode
-            self.extendedOptions.tsel.entitySupport && $b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel().selectionMode(self.extendedOptions.tsel.entitySupport);
-
+            self.extendedOptions.tsel && self.extendedOptions.tsel.entitySupport && $b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel().selectionMode(self.extendedOptions.tsel.entitySupport);
+            
             self.defaultEntityContext = ko.observable(self.extendedOptions.tsel.entityContext);
             self.defaultTimeRangeValue = ko.observable([self.extendedOptions.timeSel.defaultValue]);
             var endTimeNow = new Date().getTime();
