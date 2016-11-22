@@ -79,7 +79,7 @@ public class WelcomeUtil
 				expectedName = "Infrastructure Monitoring";
 				break;
 			case SERVICE_NAME_COMPLIANCE:
-				expectedName = "Compliance";
+				expectedName = "Configuration and Compliance";
 				break;
 			case SERVICE_NAME_SECURITY_ANALYTICS:
 				expectedName = "Security Monitoring and Analytics";
