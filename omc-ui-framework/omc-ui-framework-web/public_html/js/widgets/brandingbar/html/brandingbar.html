@@ -145,7 +145,13 @@
         <div class="ude-topology ude-topology-in-brandingbar" data-bind="component:{name:'emctas-topology', 
             params:{
                    entityQueryVars: queryVars(),
-                   entities: entities()
+                   entities: entities(),
+                   associations: associations(),
+                   layout:layout(),
+                   customNodeDataLoader: customNodeDataLoader(),
+                   customEventHandler: customEventHandler(),
+                   miniEntityCardActions: miniEntityCardActions(),
+                   enableCache: true
                 }
             },
             style: {width: '100%', height: '100%'}">

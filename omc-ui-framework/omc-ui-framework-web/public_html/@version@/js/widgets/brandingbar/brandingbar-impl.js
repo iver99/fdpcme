@@ -17,6 +17,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var self = this;
             var msgUtil = new msgUtilModel();
             var cxtUtil = new contextModel();
+            // clear topologyParams first from global context
+            cxtUtil.clearTopologyParams();
+
             self.compositeCxtText = ko.observable();
             self.timeCxtText = ko.observable();
 
@@ -31,7 +34,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             } else {
                 self.showGlobalContextBanner = ko.observable(ko.unwrap(params.showGlobalContextBanner) === false ? false : true);
             }
-            
+
             //Set showTimeSelector config. Default value is false. It can be set as an knockout observable and be changed after page is loaded
             //Per high level plan, we don't allow consumers to config to show/hide time selector themselves. So comment out below code for now.
 //            if(ko.isObservable(params.showTimeSelector)) {
@@ -40,9 +43,23 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === true ? true : false);
 //            }
             self.showTimeSelector = ko.observable(false);
-            
+            //
+            // topology paramters
+            //
             self.entities = ko.observable([]);
             self.queryVars = ko.observable();
+            self.associations = ko.observable();
+            self.layout = ko.observable();
+            self.customNodeDataLoader = ko.observable();
+            self.customEventHandler = ko.observable();
+            self.miniEntityCardActions = ko.observable();
+            if (params) {
+                self.associations(params.associations);
+                self.layout(params.layout);
+                self.customNodeDataLoader(params.customNodeDataLoader);
+                self.customEventHandler(params.customEventHandler);
+                self.miniEntityCardActions(params.miniEntityCardActions);
+            }
 
             var dfu = new dfumodel(self.userName, self.tenantName);
             //Append uifwk css file into document head
@@ -63,7 +80,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.showGlobalContextBanner.subscribe(function (newValue) {
                 if (newValue === true) {
                     refreshOMCContext();
-                } 
+                }
             });
 
             function handleShowHideTopology() {
@@ -79,10 +96,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
                 $b && $b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
             }
-            
+
             function registerTopologyComponent(callback) {
                 if (!self.isTopologyCompRegistered()) {
-                    require(['ojs/ojdiagram'], function() {
+                    require(['ojs/ojdiagram'], function () {
                         if (!ko.components.isRegistered('emctas-topology')) {
                             ko.components.register('emctas-topology', {
                                 viewModel: {require: '/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.js'},
@@ -117,9 +134,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 var brandingBarCache = JSON.parse(window.sessionStorage._uifwk_brandingbar_cache);
                 if (brandingBarCache && brandingBarCache.isTopologyDisplayed) {
                     if (self.showGlobalContextBanner()) {
-                        registerTopologyComponent(function(){
+                        registerTopologyComponent(function () {
                             refreshTopologyParams();
-                            if(self.topologyDisabled() === false){
+                            if (self.topologyDisabled() === false) {
                                 self.isTopologyDisplayed(true);
                             }
                         });
@@ -459,15 +476,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     template: {require: 'text!' + aboutTemplatePath}
                 });
             }
-            
+
             //Parameters for time selector
-            if(params.timeSelectorParams) {
+            if (params.timeSelectorParams) {
                 self.timeSelectorParams = params.timeSelectorParams;
-            }else {
+            } else {
                 var start = cxtUtil.getStartTime() ? new Date(parseInt(cxtUtil.getStartTime())) : null;
                 var end = cxtUtil.getEndTime() ? new Date(parseInt(cxtUtil.getEndTime())) : null;
                 var timePeriod = cxtUtil.getTimePeriod() ? cxtUtil.getTimePeriod() : null;
-                
+
                 self.timeSelectorParams = {
                     startDateTime: ko.observable(start),
                     endDateTime: ko.observable(end),
@@ -476,14 +493,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     dtpickerPosition: 'right'
                 };
             }
-            
+
             var timeSelectorVmPath = 'uifwk/js/widgets/datetime-picker/js/datetime-picker';
             var timeSelectorTemplatePath = 'uifwk/js/widgets/datetime-picker/html/datetime-picker.html';
             //Register a knockout component for time selector
-            if(!ko.components.isRegistered('df-datetime-picker') && self.showTimeSelector === true) {
-                ko.components.register("df-datetime-picker",{
+            if (!ko.components.isRegistered('df-datetime-picker') && self.showTimeSelector === true) {
+                ko.components.register("df-datetime-picker", {
                     viewModel: {require: timeSelectorVmPath},
-                    template: {require: 'text!'+timeSelectorTemplatePath}
+                    template: {require: 'text!' + timeSelectorTemplatePath}
                 });
             }
 
@@ -828,12 +845,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             }
                         }
                     }
-
-                    /*self.associations = params.associations;
-                     self.layout = params.layout;
-                     self.customNodeDataLoader = params.customNodeDataLoader;
-                     self.customEventHandler = params.customEventHandler;
-                     self.miniEntityCardActions = params.miniEntityCardActions;*/
+                    var topologyParams = cxtUtil.getTopologyParams();
+                    if (topologyParams) {
+                        self.associations(topologyParams.associations);
+                        self.layout(topologyParams.layout);
+                        self.customNodeDataLoader(topologyParams.customNodeDataLoader);
+                        self.customEventHandler(topologyParams.customEventHandler);
+                        self.miniEntityCardActions(topologyParams.miniEntityCardActions);
+                    }
 
                     $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
 
@@ -1048,6 +1067,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                }
 //                return tmUrl;
 //            }
+            //
+            // send message when brandingbar is instantiated
+            //
+            var message = {'tag': 'EMAAS_BRANDINGBAR_INSTANTIATED'};
+            window.postMessage(message, window.location.href);
         }
 
         return BrandingBarViewModel;
