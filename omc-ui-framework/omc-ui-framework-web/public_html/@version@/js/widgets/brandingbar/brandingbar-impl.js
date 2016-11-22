@@ -892,7 +892,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                    queryODSEntityByMeId(self.cxtCompositeMeId, 'composite', queryOdsEntityCallback);
 //                }
 //                else {
-//                    refreshCompositeEntityCtxText();
+//                    refreshEntityContextText();
 //                }
 //                if (!self.cxtEntityName && self.cxtEntityMeId) {
 //                    //fetch entity name from WS API by entityMeId
@@ -903,7 +903,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                    queryTargetModelMetaType(self.cxtEntityType, queryTmMetypeCallback);
 //                }
 
-                refreshCompositeEntityCtxText();
+                refreshEntityContextText();
 //                refreshTimeCtxText();
 
                 //Set a dirty flag for topology to be refreshed
@@ -914,7 +914,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }
 
-            function refreshCompositeEntityCtxText() {
+            function refreshEntityContextText() {
 //                //A composite entity & no member entity
 //                if (self.cxtCompositeName && self.cxtEntityName) {
 //                    self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_ENTITY, 
@@ -943,9 +943,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                        self.compositeCxtText(self.cxtCompositeName);
 //                    }
 //                }
-                //For now, only show composite context text on banner UI, do not show entities
+                //For now, only show composite context text on banner UI, and single entity
                 if (self.cxtCompositeMeId) {
                     self.compositeCxtText(self.cxtCompositeDisplayName);
+                }
+                else if(cxtUtil.getEntityMeIds() 
+                    && cxtUtil.getEntityMeIds().length === 1) {
+                    var singleEntityDisplayName = cxtUtil.getEntities()[0].displayName;
+                    self.compositeCxtText(singleEntityDisplayName);
                 }
                 //No composite entity & no member entity
                 else {
@@ -1001,14 +1006,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                        }
 //                    }
 //                }
-//                refreshCompositeEntityCtxText();
+//                refreshEntityContextText();
 //            }
 //
 //            function queryTmMetypeCallback(data) {
 //                if (data && data['typeDisplayName']) {
 //                    self.cxtEntityTypeDisplayName = data['typeDisplayName'];
 //                }
-//                refreshCompositeEntityCtxText();
+//                refreshEntityContextText();
 //            }
 //
 //            function queryODSEntityByMeId(meId, ctxType, callback) {
