@@ -60,8 +60,8 @@ define(['knockout',
             self.loginUser = ko.observable(dfu.getUserName());
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             
-            //hide globalcontext banner for Orchestration service
-            if(!(self.dashboard.id() === 22 || self.dashboard.id() === 23 || self.dashboard.id() === 37)) {                
+            //show globalcontext banner for dashboards except Orchestration OOB dashboards
+            if(!(self.dashboard.applicationType() === 6)) {                
                 var headerWrapper = $("#headerWrapper")[0];
                 if(headerWrapper) {
                     var headerViewModel = ko.dataFor(headerWrapper);
