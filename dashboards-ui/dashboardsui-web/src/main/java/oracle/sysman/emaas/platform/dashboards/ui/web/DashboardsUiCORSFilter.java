@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emaas.platform.dashboards.ui.web.context.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.TenantSubscriptionUtil;
@@ -130,7 +131,8 @@ public class DashboardsUiCORSFilter implements Filter
 					if (apps == null || apps.isEmpty()) {
 						LOGGER.error("Tenant (" + opcTenantId
 								+ ") does not subscribe to any service. Redirect dashboard home to error page");
-						hRes.sendRedirect("./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG");
+						hRes.sendRedirect(GlobalContextUtil.generateUrlWithGlobalContext(
+								"./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG", hReq));
 						return;
 					}
 					else if (TenantSubscriptionUtil.isAPMServiceOnly(apps)) {
@@ -144,7 +146,7 @@ public class DashboardsUiCORSFilter implements Filter
 							LOGGER.info(
 									"The APM link is replaced with vanity URL from original url: \"{}\" to final url: \"{}\"",
 									apmLink.getHref(), targetUrl);
-							hRes.sendRedirect(targetUrl);
+							hRes.sendRedirect(GlobalContextUtil.generateUrlWithGlobalContext(targetUrl, hReq));
 							return;
 						}
 						else {
@@ -163,7 +165,7 @@ public class DashboardsUiCORSFilter implements Filter
 							LOGGER.info(
 									"The Monitoring service link is replaced with vanity URL from original url: \"{}\" to final url: \"{}\"",
 									monitoringLink.getHref(), targetUrl);
-							hRes.sendRedirect(targetUrl);
+							hRes.sendRedirect(GlobalContextUtil.generateUrlWithGlobalContext(targetUrl, hReq));
 							return;
 						}
 						else {
@@ -176,7 +178,8 @@ public class DashboardsUiCORSFilter implements Filter
 					if (apps == null || apps.isEmpty()) {
 						LOGGER.error("Tenant (" + opcTenantId
 								+ ") does not subscribe to any service. Redirect dashboard builder page to error page");
-						hRes.sendRedirect("./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG");
+						hRes.sendRedirect(GlobalContextUtil.generateUrlWithGlobalContext(
+								"./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG", hReq));
 						return;
 					}
 				}

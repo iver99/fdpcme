@@ -71,7 +71,7 @@ dependencies{
       	exclude('module':'groovy')
     }
 
-     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.0.0+')
+     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.1.0-nov21+')
 
      
      testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
@@ -111,11 +111,6 @@ dependencies{
              testConfig(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2') { transitive = false }
      	
 	testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
-     
-     
-    configurations{
-	restAssured.exclude module:'groovy'
-    }
 }
 project.ext.omctf_omcCloudSetup_additionalParam = "-skipagents -skipomr"
 //Task added from "emcpdf_qa_test_3n"

@@ -27,6 +27,7 @@ sourceSets {
 		resources {	
 			srcDirs = ['src/main/java', 'src/resources/java']
 		}	
+		compileClasspath += configurations.testNG
 	}
  }
 
@@ -36,6 +37,7 @@ artifactoryPublish {
 }
 
 test {
+	classpath = sourceSets.test.compileClasspath + sourceSets.test.output
 	useTestNG()		
 	{
 		//We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
@@ -64,11 +66,7 @@ dependencies {
 	compile getProjectArtifact('coherence')  
 	compile getProjectArtifact('jersey-core')  
 	compile getProjectArtifact('jersey-client')  
-	compile getProjectArtifact('jmockit')  
-	compile getProjectArtifact('em-qatool-os-webdriver')  
-
-	
-
+	compile getProjectArtifact('jmockit')    
 }
 
 processResources {
@@ -77,11 +75,3 @@ processResources {
         filter(ReplaceTokens, tokens: [version : versionPathElement])
     }
 }
-
-
-
-
-
-
-
-

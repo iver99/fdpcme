@@ -1,4 +1,4 @@
- apply from:'test.gradle'
+apply from:'test.gradle'
 
 jar {
         from('src/main/java') {
@@ -25,7 +25,6 @@ artifactoryPublish {
 }
  
 dependencies { 
-	
         compile getProjectArtifact('log4j-core')   
         compile getProjectArtifact('log4j-api')   
         compile getProjectArtifact('wls-api')   
@@ -41,14 +40,9 @@ dependencies {
         compile getProjectArtifact('jettison')  
         compile getProjectArtifact('jersey-core')  
       	compile getProjectArtifact('jersey-client') 
-      	
-      	
-      	
-      	
-      	
-     
 } 
 test {
+        classpath = sourceSets.test.compileClasspath + sourceSets.test.output
         useTestNG()
         {
                 //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
@@ -57,4 +51,8 @@ test {
         }
 }
 
-
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testNG //avoid building error in Eclipse
+    }
+}

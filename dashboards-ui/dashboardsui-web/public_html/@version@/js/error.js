@@ -81,13 +81,31 @@ require(['knockout',
     'jquery',
     'dfutil',
     'uifwk/js/util/df-util',
+    'uifwk/js/util/logging-util',    
     'ojs/ojcore',
     'uifwk/js/sdk/context-util',
     'ojs/ojknockout',
     'ojs/ojbutton'
 ],
-function(ko, $, dfu, dfumodel, oj, cxtModel)
+function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, cxtModel)
 {
+    var logger = new _emJETCustomLogger();
+    var logReceiver = dfu.getLogUrl();
+    logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
+    // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
+    // If you comment the line below, our current log calls will not be output!
+    logger.setLogLevel(oj.Logger.LEVEL_WARN);
+    window.onerror = function (msg, url, lineNo, columnNo, error)
+    {
+        var msg = "Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo;
+        if(error.stack) {
+            msg = msg + ". Error: " + JSON.stringify(error.stack);
+        }
+        oj.Logger.error(msg, true);
+
+        return false; 
+    }
+    
     if (!ko.components.isRegistered('df-oracle-branding-bar')) {
         ko.components.register("df-oracle-branding-bar",{
             viewModel:{require:'uifwk/js/widgets/brandingbar/js/brandingbar'},
@@ -206,7 +224,6 @@ function(ko, $, dfu, dfumodel, oj, cxtModel)
 
     $(document).ready(function() {
         var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
-        dfu_model.setHtmlLang();
         ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
         ko.applyBindings(new ErrorPageModel(), $('#errorMain')[0]);
         $('#global-body').show();

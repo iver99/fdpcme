@@ -3,11 +3,6 @@
  * All rights reserved.
  */
 
-/**
- * @preserve Copyright 2013 jQuery Foundation and other contributors
- * Released under the MIT license.
- * http://jquery.org/license
- */
 requirejs.config({
     bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
                 (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
@@ -164,7 +159,6 @@ require(['dashboards/dbsmodel',
             ko.virtualElements.allowedBindings.stopBinding = true;
 
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
-            dfu_model.setHtmlLang();
 
             function HeaderViewModel() {
                 var self = this;

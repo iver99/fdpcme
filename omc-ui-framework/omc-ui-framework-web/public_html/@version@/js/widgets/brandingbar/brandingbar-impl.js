@@ -31,6 +31,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             } else {
                 self.showGlobalContextBanner = ko.observable(ko.unwrap(params.showGlobalContextBanner) === false ? false : true);
             }
+            
+            //Set showTimeSelector config. Default value is false. It can be set as an knockout observable and be changed after page is loaded
+            //Per high level plan, we don't allow consumers to config to show/hide time selector themselves. So comment out below code for now.
+//            if(ko.isObservable(params.showTimeSelector)) {
+//                self.showTimeSelector = params.showTimeSelector;
+//            }else {
+//                self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === true ? true : false);
+//            }
+            self.showTimeSelector = ko.observable(false);
+            
             self.entities = ko.observable([]);
             self.queryVars = ko.observable();
 
@@ -50,6 +60,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             if (self.showGlobalContextBanner() === true) {
                 refreshOMCContext();
             }
+            self.showGlobalContextBanner.subscribe(function (newValue) {
+                if (newValue === true) {
+                    refreshOMCContext();
+                } 
+            });
 
             function handleShowHideTopology() {
                 $("ude-topology-div").slideToggle("fast");
@@ -138,6 +153,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var warnMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_warn_16.png";
             var confirmMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_confirm_16.png";
             var infoMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_info_16.png";
+            var messageIconSprite = "/emsaasui/uifwk/@version@/images/uifwkSprite.png";
             var hiddenMessages = [];
 
             self.navLinksNeedRefresh = ko.observable(false);
@@ -443,6 +459,33 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     template: {require: 'text!' + aboutTemplatePath}
                 });
             }
+            
+            //Parameters for time selector
+            if(params.timeSelectorParams) {
+                self.timeSelectorParams = params.timeSelectorParams;
+            }else {
+                var start = cxtUtil.getStartTime() ? new Date(parseInt(cxtUtil.getStartTime())) : null;
+                var end = cxtUtil.getEndTime() ? new Date(parseInt(cxtUtil.getEndTime())) : null;
+                var timePeriod = cxtUtil.getTimePeriod() ? cxtUtil.getTimePeriod() : null;
+                
+                self.timeSelectorParams = {
+                    startDateTime: ko.observable(start),
+                    endDateTime: ko.observable(end),
+                    timePeriod: ko.observable(timePeriod),
+                    hideMainLabel: true,
+                    dtpickerPosition: 'right'
+                };
+            }
+            
+            var timeSelectorVmPath = 'uifwk/js/widgets/datetime-picker/js/datetime-picker';
+            var timeSelectorTemplatePath = 'uifwk/js/widgets/datetime-picker/html/datetime-picker.html';
+            //Register a knockout component for time selector
+            if(!ko.components.isRegistered('df-datetime-picker') && self.showTimeSelector === true) {
+                ko.components.register("df-datetime-picker",{
+                    viewModel: {require: timeSelectorVmPath},
+                    template: {require: 'text!'+timeSelectorTemplatePath}
+                });
+            }
 
             /**
              * Navigation links button click handler
@@ -576,19 +619,23 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     message.category = data.category;
                     if (data.type && data.type.toUpperCase() === 'ERROR') {
                         message.iconAltText = self.altTextError;
-                        message.icon = errorMessageIcon;
+                        message.icon = messageIconSprite;
+                        message.imgCssStyle = "object-fit:none;object-position:0px -78px;height:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'WARN') {
                         message.iconAltText = self.altTextWarn;
-                        message.icon = warnMessageIcon;
+                        message.icon = messageIconSprite;
+                        message.imgCssStyle = "object-fit:none;object-position:0px -46px;height:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'CONFIRM') {
                         message.iconAltText = self.altTextConfirm;
-                        message.icon = confirmMessageIcon;
+                        message.icon = messageIconSprite;
+                        message.imgCssStyle = "object-fit:none;object-position:0px -30px;height:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'INFO') {
                         message.iconAltText = self.altTextInfo;
-                        message.icon = infoMessageIcon;
+                        message.icon = messageIconSprite;
+                        message.imgCssStyle = "object-fit:none;object-position:0px -62px;height:16px;";
                     }
 
                     if (message.category === catRetryInProgress) {
@@ -1005,5 +1052,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
         return BrandingBarViewModel;
     });
+
 
 

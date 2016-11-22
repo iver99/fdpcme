@@ -871,11 +871,6 @@ define(['knockout',
                     $('head').append('<link id="uifwkAltaCss" rel="stylesheet" href="/emsaasui/uifwk/@version@/css/uifwk-alta.css" type="text/css"/>');
                 }
             };
-            
-            self.setHtmlLang = function() {
-                var language = window.navigator.userLanguage || window.navigator.language;
-                $('html').attr("lang", language);
-            }
 
             function showSessionTimeoutWarningDialog(warningDialogId) {
                 //Clear interval for extending user session
@@ -892,6 +887,37 @@ define(['knockout',
             self.clearSessionCache = function(){
                 window.sessionStorage.removeItem('_uifwk_brandingbar_cache');
             };
+            
+            self.getVisualAnalyzer = function(serviceName) {
+                var visualAnalyzer = null;
+                self.getRegistrations(function(registrations) {
+                    if (registrations && registrations.visualAnalyzers) {
+                        for (var i = 0; i < registrations.visualAnalyzers.length; i++) {
+                            if (registrations.visualAnalyzers[i].serviceName === serviceName) {
+                                visualAnalyzer = registrations.visualAnalyzers[i].href;
+                                console.debug("Retrieved visualAnalyzer link for service " + serviceName + " from configuration/registration, link is " + visualAnalyzer);
+                                break;
+                            }
+                        }
+                    }
+                }, false);
+                return visualAnalyzer;
+            }
+            self.getAssetRoot = function(serviceName) {
+                var assetRoot = null;
+                self.getRegistrations(function(registrations) {
+                    if (registrations && registrations.assetRoots) {
+                        for (var i = 0; i < registrations.assetRoots.length; i++) {
+                            if (registrations.assetRoots[i].serviceName === serviceName) {
+                                assetRoot = registrations.assetRoots[i].href;
+                                console.debug("Retrieved visualAnalyzer link for service " + serviceName + " from configuration/registration, link is " + assetRoot);
+                                break;
+                            }
+                        }
+                    }
+                }, false);
+                return assetRoot;
+            }
             
             self.getRegistrations = function(successCallback, toSendAsync, errorCallback){
                 if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.registrations && window._uifwk.cachedData.registrations()){

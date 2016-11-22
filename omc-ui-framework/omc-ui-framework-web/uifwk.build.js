@@ -9,7 +9,7 @@
             name: "uifwk/@version@/js/uifwk-impl-partition",
             exclude: ["knockout", 
                 "jquery",
-                //"jqueryui",
+                "jqueryui",
                 "ojs/ojcore",
                 "ojs/ojdialog", 
                 "ojs/ojbutton",

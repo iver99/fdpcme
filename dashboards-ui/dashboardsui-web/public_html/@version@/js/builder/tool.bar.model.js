@@ -299,12 +299,16 @@ define(['knockout',
             };
 
             self.handleSaveUpdateToServer = function(succCallback, errorCallback) {
+                if(self.isUnderSet){
+                   console.log("This is a dashboard in set, send its parent set id...");
+                   self.tilesViewModel.dashboard.dupDashboardId=selectedDashboardInst().dashboardsetToolBar.dashboardInst.id()
+                }                
                 var dbdJs = ko.mapping.toJS(self.tilesViewModel.dashboard, {
                     'include': ['screenShot', 'description', 'height',
                         'isMaximized', 'title', 'type', 'width',
                         'tileParameters', 'name', 'systemParameter',
                         'tileId', 'value', 'content', 'linkText',
-                        'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
+                        'WIDGET_LINKED_DASHBOARD', 'linkUrl','dupDashboardId'],
                     'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight",
                         "modeColumn", "modeRow", "screenShotHref", "systemDashboard",
                         "customParameters", "clientGuid", "dashboard",

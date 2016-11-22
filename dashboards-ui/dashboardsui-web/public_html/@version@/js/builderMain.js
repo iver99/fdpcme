@@ -3,11 +3,6 @@
  * All rights reserved.
  */
 
-/**
- * @preserve Copyright 2013 jQuery Foundation and other contributors
- * Released under the MIT license.
- * http://jquery.org/license
- */
 requirejs.config({
     // Setup module id mapping
     map: {
@@ -277,7 +272,6 @@ require(['knockout',
         function DashboardTitleModel(dashboard) {
             var self = this;
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
-            dfu_model.setHtmlLang();
             self.builderTitle = dfu_model.generateWindowTitle(dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
         }
 

@@ -20,6 +20,7 @@ public class CacheConfig {
     public static final Integer TENANT_SUBSCRIBED_SERVICES_EXPIRE_TIME = Integer.valueOf(conf.getString("TENANT_SUBSCRIBED_SERVICES_EXPIRE_TIME"));
     public static final Integer SCREENSHOT_EXPIRE_TIME = Integer.valueOf(conf.getString("SCREENSHOT_EXPIRE_TIME"));
     public static final Integer SSO_LOGOUT_EXPIRE_TIME = Integer.valueOf(conf.getString("SSO_LOGOUT_URL_EXPIRE_TIME"));
+    public static final Integer ASSET_ROOT_EXPIRE_TIME = Integer.valueOf(conf.getString("ASSET_ROOT_EXPIRE_TIME"));
 
     public static final Integer ETERNAL_EXPIRE_TIME = Integer.valueOf(conf.getString("DEFAULT_EXPIRE_TIME"));
     public static final Integer DEFAULT_EXPIRE_TIME = Integer.valueOf(conf.getString("DEFAULT_EXPIRE_TIME"));
@@ -37,7 +38,11 @@ public class CacheConfig {
     public static final Integer TENANT_SUBSCRIBED_SERVICES_CAPACITY = Integer.valueOf(conf.getString("TENANT_SUBSCRIBED_SERVICES_CAPACITY"));
     public static final Integer SCREENSHOT_CAPACITY = Integer.valueOf(conf.getString("SCREENSHOT_CAPACITY"));
     public static final Integer SSO_LOGOUT_CAPACITY = Integer.valueOf(conf.getString("SSO_LOGOUT_CAPACITY"));
+    public static final Integer ASSET_ROOT_CAPACITY = Integer.valueOf(conf.getString("ASSET_ROOT_CAPACITY"));
 
     public static final Integer ETERNAL_CAPACITY = Integer.valueOf(conf.getString("DEFAULT_CAPACITY"));
     public static final Integer DEFAULT_CAPACITY = Integer.valueOf(conf.getString("DEFAULT_CAPACITY"));
+    
+  //log cache status time interval
+    public static final Long LOG_INTERVAL = Long.valueOf(conf.getString("LOG_INTERVAL"));
 }
