@@ -147,12 +147,12 @@ define([
                                     var paramValueStr = '';
                                     //If it's an array, convert it to a comma seperated string
                                     if ($.isArray(paramValue)) {
-                                        for (var i = 0; i < paramValue.length; i++) {
-                                            if (i === paramValue.length - 1) {
-                                                paramValueStr = paramValueStr + paramValue[i];
+                                        for (var k = 0; k < paramValue.length; k++) {
+                                            if (k === paramValue.length - 1) {
+                                                paramValueStr = paramValueStr + paramValue[k];
                                             }
                                             else {
-                                                paramValueStr = paramValueStr + paramValue[i] + ',';
+                                                paramValueStr = paramValueStr + paramValue[k] + ',';
                                             }
                                         }
                                     }

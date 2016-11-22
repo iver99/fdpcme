@@ -90,7 +90,7 @@ END;
 
 @&EMSAAS_SQL_ROOT/1.13.0/emaas_dashboards_widget_param_update.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.13.0/emaas_dashboards_update_orchetration_workflows.sql &TENANT_ID
-
+@&EMSAAS_SQL_ROOT/1.13.0/emaas_dashboards_seed_data_ta.sql &TENANT_ID
 COMMIT;
 /
 BEGIN
