@@ -245,6 +245,7 @@ public class Dashboard
 		//		to.setScreenShot(from.getScreenShot());
 		to.setType(DataFormatUtils.dashboardTypeInteger2String(from.getType()));
 		to.setExtendedOptions(from.getExtendedOptions());
+		to.setApplicationType(from.getApplicationType());
 		if (from.getType().equals(DASHBOARD_TYPE_CODE_SET)) {
 			to.setEnableTimeRange(null);
 			to.setIsSystem(null);
@@ -352,6 +353,9 @@ public class Dashboard
 	
 	@JsonProperty("dupDashboardId")
 	private Long dupDashboardId;
+	
+	@JsonProperty("applicationType")
+	private Integer applicationType;
 
 	public Dashboard()
 	{		
@@ -485,6 +489,22 @@ public class Dashboard
 	public void setDupDashboardId(Long dupDashboardId)
 	{
 		this.dupDashboardId = dupDashboardId;
+	}
+
+	/**
+	 * @return the applicationType
+	 */
+	public Integer getApplicationType()
+	{
+		return applicationType;
+	}
+
+	/**
+	 * @param applicationType the applicationType to set
+	 */
+	public void setApplicationType(Integer applicationType)
+	{
+		this.applicationType = applicationType;
 	}
 
 	public EmsDashboard getPersistenceEntity(EmsDashboard ed) throws DashboardException

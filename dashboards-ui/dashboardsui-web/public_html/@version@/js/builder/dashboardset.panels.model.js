@@ -173,6 +173,16 @@ define([
                 $("#loading").show();
                 var dashboardItem = dashboardsetToolBarModel.selectedDashboardItem(),
                     dashboardId = dashboardItem.dashboardId;
+            
+                //show globalcontext banner for dashboards except Orchestration OOB dashboards
+                if(!(dashboardsetToolBarModel.dashboardExtendedOptions && dashboardsetToolBarModel.dashboardExtendedOptions.showGlobalContextBanner === false)) {                
+                    var headerWrapper = $("#headerWrapper")[0];
+                    if(headerWrapper) {
+                        var headerViewModel = ko.dataFor(headerWrapper);
+                        headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                    }
+                }
+            
                 new Builder.DashboardDataSource().loadDashboardData(dashboardId, function (dashboard) {
                     initializeSingleDashboard(dashboard, dashboardId);
                 }, function (e) {
