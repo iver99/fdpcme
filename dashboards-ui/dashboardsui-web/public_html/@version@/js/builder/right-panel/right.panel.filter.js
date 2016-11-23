@@ -182,7 +182,7 @@ define([
                         "onDashboardItemChangeEvent", "restoreEnabled",
                         "setParameter", "shouldHide", "systemParameters",
                         "tileDisplayClass", "widerEnabled", "widget",
-                        "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
+                        "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH","sharePublic"]
                 });
 
                 $.extend(newDashboardJs, fieldsToUpdate);
