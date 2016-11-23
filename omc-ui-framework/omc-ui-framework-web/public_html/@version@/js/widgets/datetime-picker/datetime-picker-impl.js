@@ -477,12 +477,22 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.applyButton = nls.DATETIME_PICKER_BUTTONS_APPLY_BUTTON;
                 self.cancelButton = nls.DATETIME_PICKER_BUTTONS_CANCEL_BUTTON;
                 self.timeZone = ko.observable(null);
-
-                var timezone = new Date().getTimezoneOffset() / 60;
-                if (timezone > 0) {
-                    timezone = nls.DATETIME_PICKER_BUTTONS_REPORTING_TIMEZONE + "UTC-" + timezone;
-                } else {
-                    timezone = nls.DATETIME_PICKER_BUTTONS_REPORTING_TIMEZONE + "UTC+" + Math.abs(timezone);
+                              
+                var timezone;
+                var timezoneOffset = new Date().getTimezoneOffset();
+                var hoursOffset = parseInt(Math.abs(timezoneOffset) / 60);
+                if(hoursOffset < 10) {
+                    hoursOffset = "0" + hoursOffset;
+                }
+                var minuteOffset = parseInt(Math.abs(timezoneOffset) % 60);
+                if(minuteOffset < 10) {
+                    minuteOffset = "0" + minuteOffset;
+                }
+                
+                if(timezoneOffset > 0) {
+                    timezone = msgUtil.formatMessage(nls.DATETIME_PICKER_BUTTONS_REPORTING_TIMEZONE, "-", hoursOffset, minuteOffset);
+                }else {
+                    timezone = msgUtil.formatMessage(nls.DATETIME_PICKER_BUTTONS_REPORTING_TIMEZONE, "+", hoursOffset, minuteOffset);
                 }
                 self.timeZone(timezone);
                 

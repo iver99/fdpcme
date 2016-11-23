@@ -129,7 +129,7 @@ define({
       "DATETIME_PICKER_RADIO_RANGE": "Range",
       "DATETIME_PICKER_BUTTONS_APPLY_BUTTON": "Apply",
       "DATETIME_PICKER_BUTTONS_CANCEL_BUTTON": "Cancel",
-      "DATETIME_PICKER_BUTTONS_REPORTING_TIMEZONE": "Reporting time in ",
+      "DATETIME_PICKER_BUTTONS_REPORTING_TIMEZONE": "Reporting time in UTC{0}{1}:{2}",
       "DATETIME_PICKER_TIME_RANGE": "Time Range",
       "DATETIME_PICKER_ERROR": "Error!",
       "DATETIME_PICKER_FORMAT_ERROR_MSG": "Please enter valid \"mm/dd/yyyy\" for date or \"hh:mm AM/PM\" for time.",
