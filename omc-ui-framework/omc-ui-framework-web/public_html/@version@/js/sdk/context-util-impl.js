@@ -96,6 +96,10 @@ define([
                 storeContext(context);
                 updateCurrentURL();
                 fireOMCContextChangeEvent();
+
+                var omcContext = self.getOMCContext();
+                var id = self.getCompositeMeId();
+                omcContext.previousCompositeMeId = id;
             };
 
             function updateCurrentURL(replaceState) {
