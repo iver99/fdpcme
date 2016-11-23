@@ -827,7 +827,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     var omcContext = cxtUtil.getOMCContext();
                     var currentCompositeId = cxtUtil.getCompositeMeId();
                     if (currentCompositeId) {
-                        if ((!omcContext.previousCompositeMeId && self.topologyInitialized === true) || currentCompositeId === omcContext.previousCompositeMeId) {
+                        if (self.topologyInitialized === true && (!omcContext.previousCompositeMeId || currentCompositeId === omcContext.previousCompositeMeId)) {
                             refreshTopology = false;
                         }
                         else {
