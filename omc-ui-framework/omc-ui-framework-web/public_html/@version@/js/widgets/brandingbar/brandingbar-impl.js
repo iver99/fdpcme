@@ -944,7 +944,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                    }
 //                }
                 //For now, only show composite context text on banner UI, do not show entities
-                if (self.cxtCompositeMeId) {
+                if (self.cxtCompositeMeId
+                    && self.cxtCompositeDisplayName) {
                     self.compositeCxtText(self.cxtCompositeDisplayName);
                 }
                 //No composite entity & no member entity
