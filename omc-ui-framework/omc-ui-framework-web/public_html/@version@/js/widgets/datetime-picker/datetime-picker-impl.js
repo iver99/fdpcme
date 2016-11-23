@@ -476,7 +476,26 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.timeRangeMsg = nls.DATETIME_PICKER_TIME_RANGE;
                 self.applyButton = nls.DATETIME_PICKER_BUTTONS_APPLY_BUTTON;
                 self.cancelButton = nls.DATETIME_PICKER_BUTTONS_CANCEL_BUTTON;
-
+                self.timeZone = ko.observable(null);
+                              
+                var timezone;
+                var timezoneOffset = new Date().getTimezoneOffset();
+                var hoursOffset = parseInt(Math.abs(timezoneOffset) / 60);
+                if(hoursOffset < 10) {
+                    hoursOffset = "0" + hoursOffset;
+                }
+                var minuteOffset = parseInt(Math.abs(timezoneOffset) % 60);
+                if(minuteOffset < 10) {
+                    minuteOffset = "0" + minuteOffset;
+                }
+                
+                if(timezoneOffset > 0) {
+                    timezone = msgUtil.formatMessage(nls.DATETIME_PICKER_BUTTONS_REPORTING_TIMEZONE, "-", hoursOffset, minuteOffset);
+                }else {
+                    timezone = msgUtil.formatMessage(nls.DATETIME_PICKER_BUTTONS_REPORTING_TIMEZONE, "+", hoursOffset, minuteOffset);
+                }
+                self.timeZone(timezone);
+                
                 //calculate dtpicker position automatically
                 self.calDtpickerPosition = function() {
                     var eleOffset = $(self.wrapperId).offset(); //get element position(top & left) relative to the document
