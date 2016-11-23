@@ -93,13 +93,16 @@ define([
              * @returns 
              */
             self.setOMCContext = function (context) {
+                //In case the input context object refers to the same object with window._uifwk.omcContext, 
+                //and the context is updated directly by modifying context object rather than call our set methods, 
+                //we will never get the previous value by getCompositeMeId. In order to solve this issue, we
+                //always get the previous value from the backed up one
+                var previousCompositeMeId = getIndividualContext('composite', 'backupCompositeMEID');
+                var omcCtx = self.getOMCContext();
+                omcCtx.previousCompositeMeId = previousCompositeMeId;
                 storeContext(context);
                 updateCurrentURL();
                 fireOMCContextChangeEvent();
-
-                var omcContext = self.getOMCContext();
-                var id = self.getCompositeMeId();
-                omcContext.previousCompositeMeId = id;
             };
 
             function updateCurrentURL(replaceState) {
@@ -114,6 +117,11 @@ define([
             }
 
             function storeContext(context) {
+                //Remember the composite id as previous value, so that we can compare the current/previous value
+                //to determine whether topology needs refresh when setOMCContext is called
+                if (context['composite'] && context['composite']['compositeMEID']) {
+                    context['composite']['backupCompositeMEID'] = context['composite']['compositeMEID'];
+                }
                 //For now, we use window local variable to store the omc context once it's fetched from URL.
                 //So even page owner rewrites the URL using oj_Router etc., the omc context will not be lost.
                 //But need to make sure the omc context is initialized before page owner start to rewrites
@@ -356,17 +364,18 @@ define([
              * @returns 
              */
             self.setCompositeMeId = function (compositeMEID) {
-                var omcContext = self.getOMCContext();
-                var id = self.getCompositeMeId();
-                omcContext.previousCompositeMeId = id;
+                if (compositeMEID !== self.getCompositeMeId()) {
+                    var omcContext = self.getOMCContext();
+                    omcContext.previousCompositeMeId = self.getCompositeMeId();
 
-                setIndividualContext('composite', 'compositeMEID', compositeMEID, false, false);
-                //Set composite meId will reset composite type/name, 
-                //next time you get the composite type/name will return the new type/name
-                setIndividualContext('composite', 'compositeType', null, false, false);
-                setIndividualContext('composite', 'compositeName', null, false, false);
-                setIndividualContext('composite', 'compositeDisplayName', null, false, false);
-                setIndividualContext('composite', 'compositeNeedRefresh', true, true, false);
+                    setIndividualContext('composite', 'compositeMEID', compositeMEID, false, false);
+                    //Set composite meId will reset composite type/name, 
+                    //next time you get the composite type/name will return the new type/name
+                    setIndividualContext('composite', 'compositeType', null, false, false);
+                    setIndividualContext('composite', 'compositeName', null, false, false);
+                    setIndividualContext('composite', 'compositeDisplayName', null, false, false);
+                    setIndividualContext('composite', 'compositeNeedRefresh', true, true, false);
+                }
             };
 
             /**
@@ -503,9 +512,9 @@ define([
              * @returns 
              */
             self.setEntityMeIds = function (entityMEIDs) {
-                var omcContext = self.getOMCContext();
-                var ids = self.getEntityMeIds();
-                omcContext.previousEntityMeIds = ids ? ids : [];
+//                var omcContext = self.getOMCContext();
+//                var ids = self.getEntityMeIds();
+//                omcContext.previousEntityMeIds = ids ? ids : [];
 
                 var meIds = null;
 

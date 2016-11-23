@@ -825,36 +825,40 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (self.isTopologyCompRegistered()) {
                     var refreshTopology = true;
                     var omcContext = cxtUtil.getOMCContext();
-                    if (cxtUtil.getCompositeMeId()) {
-                        var compositeId = [];
-                        compositeId.push(cxtUtil.getCompositeMeId());
-                        self.entities(compositeId);
-                        self.topologyDisabled(false);
-                        if (compositeId[0] === omcContext.previousCompositeMeId) {
+                    var currentCompositeId = cxtUtil.getCompositeMeId();
+                    if (currentCompositeId) {
+                        if (currentCompositeId === omcContext.previousCompositeMeId) {
                             refreshTopology = false;
                         }
-                    } else {
-                        self.topologyDisabled(true);
-                        if (cxtUtil.getCompositeName() && cxtUtil.getCompositeType()) {
-                            self.queryVars({entityName: cxtUtil.getCompositeName(), entityType: cxtUtil.getCompositeType()});
-                        }
                         else {
-                            var entityMeIds = cxtUtil.getEntityMeIds();
-                            if (entityMeIds) {
-                                //cxtUtil.getEntityMeIds() will return a list of meIds
-                                self.entities(entityMeIds);
-                            } else {
-                                entityMeIds = [];
-                                self.entities(entityMeIds);
-                            }
-                            if (omcContext.previousEntityMeIds) {
-                                if (omcContext.previousEntityMeIds.sort().join() === entityMeIds.sort().join()) {
-                                    refreshTopology = false;
-                                }
-
-                            }
+                            var compositeId = [];
+                            compositeId.push(currentCompositeId);
+                            self.entities(compositeId);
                         }
-                    }
+                        self.topologyDisabled(false);
+                    } 
+//                    else {
+//                        self.topologyDisabled(true);
+//                        if (cxtUtil.getCompositeName() && cxtUtil.getCompositeType()) {
+//                            self.queryVars({entityName: cxtUtil.getCompositeName(), entityType: cxtUtil.getCompositeType()});
+//                        }
+//                        else {
+//                            var entityMeIds = cxtUtil.getEntityMeIds();
+//                            if (entityMeIds) {
+//                                //cxtUtil.getEntityMeIds() will return a list of meIds
+//                                self.entities(entityMeIds);
+//                            } else {
+//                                entityMeIds = [];
+//                                self.entities(entityMeIds);
+//                            }
+//                            if (omcContext.previousEntityMeIds) {
+//                                if (omcContext.previousEntityMeIds.sort().join() === entityMeIds.sort().join()) {
+//                                    refreshTopology = false;
+//                                }
+//
+//                            }
+//                        }
+//                    }
                     var topologyParams = cxtUtil.getTopologyParams();
                     if (topologyParams) {
                         self.associations(topologyParams.associations);
