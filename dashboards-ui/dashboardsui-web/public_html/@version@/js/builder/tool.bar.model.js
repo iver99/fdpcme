@@ -64,7 +64,7 @@ define(['knockout',
             self.disableSave = ko.observable(false);
             
             if(self.isUnderSet && dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)){
-                self.autoRefreshInterval = ko.observable(dashboardSetOptions.autoRefreshInterval);
+                self.autoRefreshInterval = ko.observable(ko.unwrap(dashboardSetOptions.autoRefreshInterval));
             }else {                
                 new Builder.DashboardDataSource().loadDashboardUserOptionsData(self.dashboard.id(),
                     function(data) {
@@ -80,6 +80,8 @@ define(['knockout',
                         self.autoRefreshInterval = ko.observable(DEFAULT_AUTO_REFRESH_INTERVAL);
                     });
             }
+            
+            setAutoRefreshInterval(self.autoRefreshInterval());
                        
             self.autoRefreshInterval.subscribe(function (value) {
                 //save user options if it is in single dashboard mode

@@ -398,10 +398,10 @@ define(['knockout',
                             self.extendedOptions ={};
                             if(typeof(resp.extendedOptions)!=="undefined"){
                                 self.extendedOptions = JSON.parse(resp.extendedOptions);
-                                if(self.extendedOptions.autoRefresh && self.extendedOptions.autoRefresh.defaultValue) {
+                                if(self.extendedOptions.autoRefresh && $.isNumeric(self.extendedOptions.autoRefresh.defaultValue)) {
                                     self.autoRefreshInterval(parseInt(self.extendedOptions.autoRefresh.defaultValue));
                                 }else {
-                                    if(self.dashboardExtendedOptions.autoRefresh && self.dashboardExtendedOptions.autoRefresh.defaultValue) {
+                                    if(self.dashboardExtendedOptions.autoRefresh && $.isNumeric(self.dashboardExtendedOptions.autoRefresh.defaultValue)) {
                                         self.autoRefreshInterval(parseInt(self.dashboardExtendedOptions.autoRefresh.defaultValue));
                                     }else {
                                        self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
