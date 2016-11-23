@@ -352,6 +352,10 @@ define([
              * @returns 
              */
             self.setCompositeMeId = function (compositeMEID) {
+                var omcContext = self.getOMCContext();
+                var id = self.getCompositeMeId();
+                omcContext.previousCompositeMeId = id;
+
                 setIndividualContext('composite', 'compositeMEID', compositeMEID, false, false);
                 //Set composite meId will reset composite type/name, 
                 //next time you get the composite type/name will return the new type/name
@@ -495,6 +499,10 @@ define([
              * @returns 
              */
             self.setEntityMeIds = function (entityMEIDs) {
+                var omcContext = self.getOMCContext();
+                var ids = self.getEntityMeIds();
+                omcContext.previousEntityMeIds = ids ? ids : [];
+
                 var meIds = null;
 
                 //If it's an array

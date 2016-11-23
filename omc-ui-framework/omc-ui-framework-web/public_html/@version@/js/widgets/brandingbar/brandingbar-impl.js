@@ -825,11 +825,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             }
             function refreshTopologyParams() {
                 if (self.isTopologyCompRegistered()) {
+                    var refreshTopology = true;
+                    var omcContext = cxtUtil.getOMCContext();
                     if (cxtUtil.getCompositeMeId()) {
                         var compositeId = [];
                         compositeId.push(cxtUtil.getCompositeMeId());
                         self.entities(compositeId);
                         self.topologyDisabled(false);
+                        if (compositeId[0] === omcContext.previousCompositeMeId) {
+                            refreshTopology = false;
+                        }
                     } else {
                         self.topologyDisabled(true);
                         if (cxtUtil.getCompositeName() && cxtUtil.getCompositeType()) {
@@ -841,7 +846,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                 //cxtUtil.getEntityMeIds() will return a list of meIds
                                 self.entities(entityMeIds);
                             } else {
-                                self.entities([]);
+                                entityMeIds = [];
+                                self.entities(entityMeIds);
+                            }
+                            if (omcContext.previousEntityMeIds) {
+                                if (omcContext.previousEntityMeIds.sort().join() === entityMeIds.sort().join()) {
+                                    refreshTopology = false;
+                                }
+
                             }
                         }
                     }
@@ -853,9 +865,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         self.customEventHandler(topologyParams.customEventHandler);
                         self.miniEntityCardActions(topologyParams.miniEntityCardActions);
                     }
-
-                    $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
-
+                    if (refreshTopology) {
+                        $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
+                    }
                     //Clear dirty flag for topology after refreshing done
                     self.topologyNeedRefresh = false;
                 }
