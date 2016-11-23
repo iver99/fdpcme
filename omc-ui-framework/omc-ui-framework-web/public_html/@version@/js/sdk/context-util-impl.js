@@ -78,6 +78,10 @@ define([
                     }
                 }
                 if (!$.isEmptyObject(omcContext)) {
+                    //Set previous composite id
+                    if (omcContext['composite'] && omcContext['composite']['compositeMEID']) {
+                        omcContext.previousCompositeMeId = omcContext['composite']['compositeMEID'];
+                    }
                     storeContext(omcContext);
                     return omcContext;
                 }
