@@ -638,19 +638,19 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     message.icon = imgBackground;
                     if (data.type && data.type.toUpperCase() === 'ERROR') {
                         message.iconAltText = self.altTextError;
-                        message.imgCssStyle = "background:url('"+messageIconSprite+"') no-repeat 0px -78px;height:16px;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -78px;height:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'WARN') {
                         message.iconAltText = self.altTextWarn;
-                        message.imgCssStyle = "background:url('"+messageIconSprite+"') no-repeat 0px -46px;height:16px;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -46px;height:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'CONFIRM') {
                         message.iconAltText = self.altTextConfirm;
-                        message.imgCssStyle = "background:url('"+messageIconSprite+"') no-repeat 0px -30px; height:16px;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -30px; height:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'INFO') {
                         message.iconAltText = self.altTextInfo;
-                        message.imgCssStyle = "background:url('"+messageIconSprite+"') no-repeat 0px -62px;height:16px;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -62px;height:16px;";
                     }
 
                     if (message.category === catRetryInProgress) {
@@ -827,16 +827,17 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     var omcContext = cxtUtil.getOMCContext();
                     var currentCompositeId = cxtUtil.getCompositeMeId();
                     if (currentCompositeId) {
-                        if (self.topologyInitialized === true && (!omcContext.previousCompositeMeId || currentCompositeId === omcContext.previousCompositeMeId)) {
+                        if (self.topologyInitialized === true && currentCompositeId === omcContext.previousCompositeMeId) {
                             refreshTopology = false;
                         }
                         else {
                             var compositeId = [];
                             compositeId.push(currentCompositeId);
                             self.entities(compositeId);
+                            omcContext.previousCompositeMeId = currentCompositeId;
                         }
                         self.topologyDisabled(false);
-                    } 
+                    }
 //                    else {
 //                        self.topologyDisabled(true);
 //                        if (cxtUtil.getCompositeName() && cxtUtil.getCompositeType()) {
