@@ -159,7 +159,6 @@ require(['dashboards/dbsmodel',
             ko.virtualElements.allowedBindings.stopBinding = true;
 
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
-            dfu_model.setHtmlLang();
 
             function HeaderViewModel() {
                 var self = this;
