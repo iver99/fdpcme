@@ -42,7 +42,7 @@ public class CacheManager
 	public static final String CACHES_TENANT_APP_MAPPING_CACHE = "tenantAppMappingCache";
 	public static final String CACHES_SSO_LOGOUT_CACHE = "SsoLogoutCache";
 	public static final String CACHES_SUBSCRIBED_SERVICE_CACHE = "subscribeCache";
-	public static final String CACHES_ASSET_ROOT_CACHE ="assetRootCache";
+	public static final String CACHES_ASSET_ROOT_CACHE = "assetRootCache";
 
 
 	public static final String LOOKUP_CACHE_KEY_SUBSCRIBED_APPS = "subscribedApps";

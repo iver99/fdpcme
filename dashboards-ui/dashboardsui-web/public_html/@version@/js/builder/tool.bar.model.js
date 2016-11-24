@@ -578,8 +578,13 @@ define(['knockout',
             }
             function checkDashboardAsHomeSettings() {
                 function succCallback(data) {
-                    var homeDashboardId = prefUtil.getPreferenceValue(data, prefKeyHomeDashboardId);
-                    if (homeDashboardId && homeDashboardId === (self.dashboard.id()+"")) {
+                    var homeDashboardId;
+                    new Builder.DashboardDataSource().getHomeDashboardPreference(self.dashboard.id(), function (resp) {
+                        if(typeof(resp) !== "undefined") {
+                            homeDashboardId = Number(resp.value);
+                        }
+                    });
+                    if (homeDashboardId && homeDashboardId === (self.dashboard.id())) {
                         self.dashboardAsHomeLabel(removeAsHomeLabel);
                         self.dashboardAsHomeName(removeAsHomeName);
                         self.dashboardsAsHomeIcon(cssRemoveDsbAsHome);
@@ -612,7 +617,8 @@ define(['knockout',
                     error: errorCallback
                 };
                 if(!self.isUnderSet){
-                    prefUtil.getAllPreferences(options);
+                	new Builder.DashboardDataSource().getHomeDashboardPreference(self.dashboard.id(), options.success, options.error);
+//                    prefUtil.getAllPreferences(options);
                 }
             }
 
