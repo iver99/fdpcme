@@ -44,7 +44,7 @@ define([
                     storeContext(omcContext);
                 }
 
-                oj.Logger.info("OMC gloable context is fetched as: " + JSON.stringify(omcContext));
+                oj.Logger.info("OMC global context is fetched as: " + JSON.stringify(omcContext));
                 return omcContext;
             };
 
@@ -93,6 +93,13 @@ define([
              * @returns 
              */
             self.setOMCContext = function (context) {
+                //In case the input context object refers to the same object with window._uifwk.omcContext, 
+                //and the context is updated directly by modifying context object rather than call our set methods, 
+                //we will never get the previous value by getCompositeMeId. In order to solve this issue, we
+                //always get the previous value from the backed up one
+                var previousCompositeMeId = getIndividualContext('composite', 'backupCompositeMEID');
+                var omcCtx = self.getOMCContext();
+                omcCtx.previousCompositeMeId = previousCompositeMeId;
                 storeContext(context);
                 updateCurrentURL();
                 fireOMCContextChangeEvent();
@@ -110,6 +117,11 @@ define([
             }
 
             function storeContext(context) {
+                //Remember the composite id as previous value, so that we can compare the current/previous value
+                //to determine whether topology needs refresh when setOMCContext is called
+                if (context['composite'] && context['composite']['compositeMEID']) {
+                    context['composite']['backupCompositeMEID'] = context['composite']['compositeMEID'];
+                }
                 //For now, we use window local variable to store the omc context once it's fetched from URL.
                 //So even page owner rewrites the URL using oj_Router etc., the omc context will not be lost.
                 //But need to make sure the omc context is initialized before page owner start to rewrites
@@ -352,13 +364,18 @@ define([
              * @returns 
              */
             self.setCompositeMeId = function (compositeMEID) {
-                setIndividualContext('composite', 'compositeMEID', compositeMEID, false, false);
-                //Set composite meId will reset composite type/name, 
-                //next time you get the composite type/name will return the new type/name
-                setIndividualContext('composite', 'compositeType', null, false, false);
-                setIndividualContext('composite', 'compositeName', null, false, false);
-                setIndividualContext('composite', 'compositeDisplayName', null, false, false);
-                setIndividualContext('composite', 'compositeNeedRefresh', true, true, false);
+                if (compositeMEID !== self.getCompositeMeId()) {
+                    var omcContext = self.getOMCContext();
+                    omcContext.previousCompositeMeId = self.getCompositeMeId();
+
+                    setIndividualContext('composite', 'compositeMEID', compositeMEID, false, false);
+                    //Set composite meId will reset composite type/name, 
+                    //next time you get the composite type/name will return the new type/name
+                    setIndividualContext('composite', 'compositeType', null, false, false);
+                    setIndividualContext('composite', 'compositeName', null, false, false);
+                    setIndividualContext('composite', 'compositeDisplayName', null, false, false);
+                    setIndividualContext('composite', 'compositeNeedRefresh', true, true, false);
+                }
             };
 
             /**
@@ -495,6 +512,10 @@ define([
              * @returns 
              */
             self.setEntityMeIds = function (entityMEIDs) {
+//                var omcContext = self.getOMCContext();
+//                var ids = self.getEntityMeIds();
+//                omcContext.previousEntityMeIds = ids ? ids : [];
+
                 var meIds = null;
 
                 //If it's an array
@@ -803,15 +824,27 @@ define([
                     hash = url.substring(anchorIdx);
                     url = url.substring(0, anchorIdx);
                 }
-                var pattern = new RegExp('([?&])' + paramName + '=.*?(&|$|#)', 'i');
+                var pattern = new RegExp('([?&])' + paramName + '=.*?(&|$|#)(.*)', 'i');
                 if (url.match(pattern)) {
-                    return url.replace(pattern, '$1' + paramName + "=" + paramValue + '$2') + hash;
+                    //If parameter value is not empty, update URL parameter
+                    if (paramValue) {
+                        return url.replace(pattern, '$1' + paramName + "=" + paramValue + '$2$3') + hash;
+                    }
+                    //Otherwise, remove the parameter from URL
+                    else {
+                        return url.replace(pattern, '$1$3').replace(/(&|\?)$/, '') + hash;
+                    }
                 }
-                return url + (url.indexOf('?') > 0 ?
+                
+                //If value is not empty, append it to the URL
+                if (paramValue) {
+                    return url + (url.indexOf('?') > 0 ? 
                     //Handle case that an URL ending with a question mark only
-                        (url.lastIndexOf('?') === url.length - 1 ? '' : '&') : '?') + paramName + '=' + paramValue + hash;
+                    (url.lastIndexOf('?') === url.length - 1 ? '': '&') : '?') + paramName + '=' + paramValue + hash; 
+                }
+                //If value is empty, return original URL
+                return url;
             }
-            ;
 
             /**
              * Retrieve parameter value from given URL string.
@@ -826,11 +859,16 @@ define([
                         decodedUrl = '?' + decodedUrl;
                     }
                     var regex = new RegExp("[\\?&]" + encodeURIComponent(paramName) + "=([^&#]*)"), results = regex.exec(decodedUrl);
-                    return results === null ? null : decodeURIComponent(results[1]);
+                    try {
+                        return results === null ? null : decodeURIComponent(results[1]);
+                    }
+                    catch (err) {
+                        oj.Logger.info("Failed to retrieve value for parameter [" + paramName + "] from URL: " + decodedUrl, false);
+                        return null;
+                    }
                 }
                 return null;
             }
-            ;
 
             var entitiesFetched = [];
             function loadEntities(data) {

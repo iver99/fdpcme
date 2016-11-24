@@ -171,6 +171,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var confirmMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_confirm_16.png";
             var infoMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_info_16.png";
             var messageIconSprite = "/emsaasui/uifwk/@version@/images/uifwkSprite.png";
+            var imgBackground = "/emsaasui/uifwk/@version@/images/imgbackground.png";
             var hiddenMessages = [];
 
             self.navLinksNeedRefresh = ko.observable(false);
@@ -634,25 +635,22 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     message.summary = data.summary;
                     message.detail = data.detail;
                     message.category = data.category;
+                    message.icon = imgBackground;
                     if (data.type && data.type.toUpperCase() === 'ERROR') {
                         message.iconAltText = self.altTextError;
-                        message.icon = messageIconSprite;
-                        message.imgCssStyle = "object-fit:none;object-position:0px -78px;height:16px;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -78px;height:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'WARN') {
                         message.iconAltText = self.altTextWarn;
-                        message.icon = messageIconSprite;
-                        message.imgCssStyle = "object-fit:none;object-position:0px -46px;height:16px;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -46px;height:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'CONFIRM') {
                         message.iconAltText = self.altTextConfirm;
-                        message.icon = messageIconSprite;
-                        message.imgCssStyle = "object-fit:none;object-position:0px -30px;height:16px;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -30px; height:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'INFO') {
                         message.iconAltText = self.altTextInfo;
-                        message.icon = messageIconSprite;
-                        message.imgCssStyle = "object-fit:none;object-position:0px -62px;height:16px;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -62px;height:16px;";
                     }
 
                     if (message.category === catRetryInProgress) {
@@ -825,37 +823,55 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             }
             function refreshTopologyParams() {
                 if (self.isTopologyCompRegistered()) {
-                    if (cxtUtil.getCompositeMeId()) {
-                        var compositeId = [];
-                        compositeId.push(cxtUtil.getCompositeMeId());
-                        self.entities(compositeId);
-                        self.topologyDisabled(false);
-                    } else {
-                        self.topologyDisabled(true);
-                        if (cxtUtil.getCompositeName() && cxtUtil.getCompositeType()) {
-                            self.queryVars({entityName: cxtUtil.getCompositeName(), entityType: cxtUtil.getCompositeType()});
+                    var refreshTopology = true;
+                    var omcContext = cxtUtil.getOMCContext();
+                    var currentCompositeId = cxtUtil.getCompositeMeId();
+                    if (currentCompositeId) {
+                        if (self.topologyInitialized === true && currentCompositeId === omcContext.previousCompositeMeId) {
+                            refreshTopology = false;
                         }
                         else {
-                            var entityMeIds = cxtUtil.getEntityMeIds();
-                            if (entityMeIds) {
-                                //cxtUtil.getEntityMeIds() will return a list of meIds
-                                self.entities(entityMeIds);
-                            } else {
-                                self.entities([]);
-                            }
+                            var compositeId = [];
+                            compositeId.push(currentCompositeId);
+                            self.entities(compositeId);
+                            omcContext.previousCompositeMeId = currentCompositeId;
                         }
+                        self.topologyDisabled(false);
                     }
-                    var topologyParams = cxtUtil.getTopologyParams();
-                    if (topologyParams) {
-                        self.associations(topologyParams.associations);
-                        self.layout(topologyParams.layout);
-                        self.customNodeDataLoader(topologyParams.customNodeDataLoader);
-                        self.customEventHandler(topologyParams.customEventHandler);
-                        self.miniEntityCardActions(topologyParams.miniEntityCardActions);
+//                    else {
+//                        self.topologyDisabled(true);
+//                        if (cxtUtil.getCompositeName() && cxtUtil.getCompositeType()) {
+//                            self.queryVars({entityName: cxtUtil.getCompositeName(), entityType: cxtUtil.getCompositeType()});
+//                        }
+//                        else {
+//                            var entityMeIds = cxtUtil.getEntityMeIds();
+//                            if (entityMeIds) {
+//                                //cxtUtil.getEntityMeIds() will return a list of meIds
+//                                self.entities(entityMeIds);
+//                            } else {
+//                                entityMeIds = [];
+//                                self.entities(entityMeIds);
+//                            }
+//                            if (omcContext.previousEntityMeIds) {
+//                                if (omcContext.previousEntityMeIds.sort().join() === entityMeIds.sort().join()) {
+//                                    refreshTopology = false;
+//                                }
+//
+//                            }
+//                        }
+//                    }
+                    if (refreshTopology) {
+                        var topologyParams = cxtUtil.getTopologyParams();
+                        if (topologyParams) {
+                            self.associations(topologyParams.associations);
+                            self.layout(topologyParams.layout);
+                            self.customNodeDataLoader(topologyParams.customNodeDataLoader);
+                            self.customEventHandler(topologyParams.customEventHandler);
+                            self.miniEntityCardActions(topologyParams.miniEntityCardActions);
+                        }
+                        $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
+                        self.topologyInitialized = true;
                     }
-
-                    $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
-
                     //Clear dirty flag for topology after refreshing done
                     self.topologyNeedRefresh = false;
                 }
@@ -944,7 +960,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                    }
 //                }
                 //For now, only show composite context text on banner UI, and single entity
-                if (self.cxtCompositeMeId) {
+                if (self.cxtCompositeMeId
+                    && self.cxtCompositeDisplayName) {
                     self.compositeCxtText(self.cxtCompositeDisplayName);
                 }
                 else if(cxtUtil.getEntityMeIds() 

@@ -24,11 +24,11 @@ BEGIN
      END IF;
 	   SELECT COUNT(*) INTO v_count FROM EMS_DASHBOARD where DASHBOARD_ID=V_DASHBOARD_ID and TENANT_ID = V_TENANT_ID;
 	   IF v_count > 0 THEN
-       V_EXTENDED_OPTIONS:='{"tsel":{}, "timeSel":{"defaultValue":"last1day","start":1479272760000,"end":1479359160000}}';
+       V_EXTENDED_OPTIONS:='{"showGlobalContextBanner": false, "timeSel":{"defaultValue":"last1day"}}';
        UPDATE EMS_DASHBOARD SET EXTENDED_OPTIONS =  V_EXTENDED_OPTIONS
        WHERE DASHBOARD_ID = V_DASHBOARD_ID AND TENANT_ID = V_TENANT_ID;
 
-       DBMS_OUTPUT.PUT_LINE('OOB DASHBOARD Orchestration Workflows default time is updated to last1day succssfully for tenant:'||V_TENANT_ID);
+       DBMS_OUTPUT.PUT_LINE('OOB DASHBOARD Orchestration Workflows default time is updated to last1day and showGlobalContextBanner is updated to false succssfully for tenant:'||V_TENANT_ID);
      ELSE
        DBMS_OUTPUT.PUT_LINE('OOB DASHBOARD Orchestration Workflows is not existed for tenant:'||V_TENANT_ID);
      END IF;

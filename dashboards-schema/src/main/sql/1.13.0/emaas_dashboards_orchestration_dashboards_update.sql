@@ -24,14 +24,14 @@ BEGIN
        EXIT WHEN TENANT_CURSOR%NOTFOUND;     
      END IF;
 	 
-	 SELECT COUNT(*) INTO v_count FROM EMS_DASHBOARD where DASHBOARD_ID in (23, 37) and TENANT_ID = V_TENANT_ID;
+	 SELECT COUNT(*) INTO v_count FROM EMS_DASHBOARD where DASHBOARD_ID = 23 and TENANT_ID = V_TENANT_ID;
 	 IF v_count > 0 THEN
        V_EXTENDED_OPTIONS:='{"showGlobalContextBanner": false}';
        UPDATE EMS_DASHBOARD SET EXTENDED_OPTIONS =  V_EXTENDED_OPTIONS
-       WHERE DASHBOARD_ID in (23, 37) AND TENANT_ID = V_TENANT_ID;
-       DBMS_OUTPUT.PUT_LINE('OOB DASHBOARD Orchestration and Orchestration Workflows have been set not to show global context banner succssfully for tenant:'||V_TENANT_ID);
+       WHERE DASHBOARD_ID = 23 AND TENANT_ID = V_TENANT_ID;
+       DBMS_OUTPUT.PUT_LINE('OOB DASHBOARD Orchestration has been set not to show global context banner succssfully for tenant:'||V_TENANT_ID);
      ELSE
-       DBMS_OUTPUT.PUT_LINE('OOB DASHBOARD Orchestration and Orchestration WOrkflows are not existed for tenant:'||V_TENANT_ID);
+       DBMS_OUTPUT.PUT_LINE('OOB DASHBOARD Orchestration is not existed for tenant:'||V_TENANT_ID);
      END IF;	 
 	 
 	 V_SHOW_INHOME:=1;

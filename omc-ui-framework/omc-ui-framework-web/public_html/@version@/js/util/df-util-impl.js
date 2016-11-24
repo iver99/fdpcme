@@ -941,26 +941,35 @@ define(['knockout',
                         if (!window._uifwk.cachedData.registrations) {
                             window._uifwk.cachedData.registrations = ko.observable();
                         }
-                        ajaxUtil.ajaxWithRetry({type: 'GET', contentType: 'application/json', url: self.getRegistrationUrl(),
-                            dataType: 'json',
-                            headers: this.getDefaultHeader(),
-                            async: toSendAsync === false ? false : true,
-                            success: function (data, textStatus, jqXHR) {
-                                window._uifwk.cachedData.registrations(data);
-                                window._uifwk.cachedData.isFetchingRegistrations = false;
-                                successCallback(data, textStatus, jqXHR);
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                console.log('Failed to get registration info!');
-                                window._uifwk.cachedData.isFetchingRegistrations = false;
-                                if (errorCallback) {
-                                    errorCallback(jqXHR, textStatus, errorThrown);
+
+                        function doneCallback(data, textStatus, jqXHR) {
+                            window._uifwk.cachedData.registrations(data);
+                            window._uifwk.cachedData.isFetchingRegistrations = false;
+                            successCallback(data, textStatus, jqXHR);
+                        }
+                        if (window._registrationServerCache) {
+                            doneCallback(window._registrationServerCache);
+                        }
+                        else {
+                            ajaxUtil.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationUrl(),
+                                dataType: 'json',
+                                headers: this.getDefaultHeader(),
+                                async: toSendAsync === false? false:true,
+                                success: function(data, textStatus, jqXHR){
+                                    doneCallback(data, textStatus, jqXHR);
+                                },
+                                error: function(jqXHR, textStatus, errorThrown){
+                                    console.log('Failed to get registration info!');
+                                    window._uifwk.cachedData.isFetchingRegistrations = false;
+                                    if(errorCallback){
+                                        errorCallback(jqXHR, textStatus, errorThrown);
+                                    }
                                 }
-                            }
-                        });
-                    } else {
-                        window._uifwk.cachedData.registrations.subscribe(function (data) {
-                            if (data) {
+                            });
+                        }
+                    }else{
+                        window._uifwk.cachedData.registrations.subscribe(function(data){
+                            if(data){
                                 successCallback(data);
                             }
                         });

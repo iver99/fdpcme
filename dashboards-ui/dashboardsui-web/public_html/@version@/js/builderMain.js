@@ -21,7 +21,7 @@ requirejs.config({
         'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.4.0',
         'knockout.mapping': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout.mapping-latest',
         'jquery': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-2.1.3.min',
-        'jqueryui': '../../libs/@version@/js/jquery/jquery-ui-1.11.4.custom.min',
+        'jqueryui': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
         'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/min',
@@ -66,11 +66,9 @@ requirejs.config({
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
             'uifwk/js/widgets/navlinks/js/navigation-links',
             'uifwk/js/widgets/timeFilter/js/timeFilter',
-            'uifwk/js/widgets/widgetselector/js/widget-selector',
             'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
             'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
             'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
-            'text!uifwk/js/widgets/widgetselector/html/widget-selector.html',
             'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
             'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
             ],
@@ -225,7 +223,7 @@ require(['knockout',
         var logReceiver = dfu.getLogUrl();
         require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
         TargetSelectorUtils.registerComponents();
-        logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
+        logger.initialize(logReceiver, 300000, 20000, 80, dfu.getUserTenant().tenantUser);
         // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
         // If you comment the line below, our current log calls will not be output!
         logger.setLogLevel(oj.Logger.LEVEL_WARN);
@@ -246,13 +244,7 @@ require(['knockout',
                 viewModel:{require:'uifwk/js/widgets/brandingbar/js/brandingbar'},
                 template:{require:'text!uifwk/js/widgets/brandingbar/html/brandingbar.html'}
             });
-        }
-        if (!ko.components.isRegistered('df-widget-selector')) {
-            ko.components.register("df-widget-selector",{
-                viewModel:{require:'uifwk/js/widgets/widgetselector/js/widget-selector'},
-                template:{require:'text!uifwk/js/widgets/widgetselector/html/widget-selector.html'}
-            });
-        }
+        }   
         ko.components.register("df-datetime-picker",{
             viewModel: {require: 'uifwk/js/widgets/datetime-picker/js/datetime-picker'},
             template: {require: 'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
@@ -317,6 +309,11 @@ require(['knockout',
         Builder.initializeFromCookie();
 
         $(document).ready(function () {
+            //Check if uifwk css file has been loaded already or not, if not then load it
+            if (!$('#dashboardMainCss').length) {
+                //Append uifwk css file into document head
+                $('head').append('<link id="dashboardMainCss" rel="stylesheet" href="/emsaasui/emcpdfui/@version@/css/dashboards-main.css" type="text/css"/>');
+            }
 
             var headerViewModel = new DashboardsetHeaderViewModel();
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
