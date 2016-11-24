@@ -54,7 +54,7 @@
                     data-bind="ojComponent: {component: 'ojMenu',select:$root.dashboardsetConfigMenu}">
                     <!--ko foreach:dashboardsetMenu-->
                     <li data-bind="attr:{'id':id},visible: visibility">
-                        <a href="#" data-bind="attr:{'dashboardset-option':label}">
+                        <a href="#" data-bind="attr:{'dashboardset-option':name}">
                             <span class="fa-icon-font fa-icon-font-14 oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
                             <span data-bind="text:label"></span>
                         </a>
@@ -579,7 +579,7 @@
 
             <script type="text/html" id="dsbOptsMenuItemTemplate">
                 <!-- ko if: !disabled  -->
-                <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile,attr:{'data-singledb-option':label}">
+                <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile,attr:{'data-singledb-option':name}">
                         <a data-bind="attr:{'id':id, 'title': title}, href: url, click: onclick">
                             <span class="oj-menu-item-icon oj-fwk-icon dbd-toolbar-fa-icon" data-bind="css: icon"></span>
                             <span data-bind="text: label"></span>

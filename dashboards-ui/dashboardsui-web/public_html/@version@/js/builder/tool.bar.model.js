@@ -330,9 +330,13 @@ define(['knockout',
                   
             var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
             var addFavoriteLabel = getNlsString('DBS_BUILDER_BTN_FAVORITES_ADD');
+            var addFavoriteName = "Add Favorite";
             var removeFavoriteLabel = getNlsString('DBS_BUILDER_BTN_FAVORITES_REMOVE');
+            var removeFavoriteName = "Remove Favorite";
             var setAsHomeLabel = getNlsString('DBS_BUILDER_BTN_HOME_SET');
             var removeAsHomeLabel = getNlsString('DBS_BUILDER_BTN_HOME_REMOVE');
+            var setAsHomeName = "Set as Home";
+            var removeAsHomeName = "Remove as Home";
             var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
             var cssSetDsbAsHome = "dbd-toolbar-icon-home";
             var cssRemoveDsbAsHome = "dbd-toolbar-icon-home";
@@ -351,7 +355,9 @@ define(['knockout',
             self.favoritesIcon = ko.observable(cssAddFavorite);
             self.isSystemDashboard = self.dashboard.systemDashboard();
             self.favoriteLabel = ko.observable(addFavoriteLabel);
+            self.favoriteName = ko.observable(addFavoriteName);
             self.dashboardAsHomeLabel = ko.observable(setAsHomeLabel);
+            self.dashboardAsHomeName= ko.observable(setAsHomeName);
             self.isFavoriteDashboard = false;
             self.isHomeDashboard = false;
             self.hasAnotherDashboardSetAsHome = false;
@@ -429,6 +435,7 @@ define(['knockout',
                     });
                     self.favoriteLabel(removeFavoriteLabel);
                     self.favoritesIcon(cssRemoveFavorite);
+                    self.favoriteName(removeFavoriteName);
                     self.isFavoriteDashboard = true;
                 }
                 function errorCallback(jqXHR, textStatus, errorThrown) {
@@ -450,6 +457,7 @@ define(['knockout',
                     });
                     self.favoriteLabel(addFavoriteLabel);
                     self.favoritesIcon(cssAddFavorite);
+                    self.favoriteName(addFavoriteName);
                     self.isFavoriteDashboard = false;
                 }
                 function errorCallback(jqXHR, textStatus, errorThrown) {
@@ -485,6 +493,7 @@ define(['knockout',
                             removeDelayTime: 5000
                     });
                     self.dashboardAsHomeLabel(removeAsHomeLabel);
+                    self.dashboardAsHomeName(removeAsHomeName);
                     self.dashboardsAsHomeIcon(cssRemoveDsbAsHome);
                     self.isHomeDashboard = true;
                     self.hasAnotherDashboardSetAsHome = false;
@@ -511,6 +520,7 @@ define(['knockout',
                             removeDelayTime: 5000
                     });
                     self.dashboardAsHomeLabel(setAsHomeLabel);
+                    self.dashboardAsHomeName(setAsHomeName);
                     self.dashboardsAsHomeIcon(cssSetDsbAsHome);
                     self.isHomeDashboard = false;
                     self.hasAnotherDashboardSetAsHome = false;
@@ -548,17 +558,20 @@ define(['knockout',
                     if (data && data.isFavorite === true) {
                         self.favoriteLabel(removeFavoriteLabel);
                         self.favoritesIcon(cssRemoveFavorite);
+                        self.favoriteName(removeFavoriteName);
                         self.isFavoriteDashboard = true;
                     }
                     else {
                         self.favoriteLabel(addFavoriteLabel);
                         self.favoritesIcon(cssAddFavorite);
+                        self.favoriteName(addFavoriteName);
                         self.isFavoriteDashboard = false;
                     }
                 }
                 function errorCallback(jqXHR, textStatus, errorThrown) {
                     self.favoriteLabel(addFavoriteLabel);
                     self.favoritesIcon(cssAddFavorite);
+                    self.favoriteName(addFavoriteName);
                     self.isFavoriteDashboard = false;
                 }
                 new Builder.DashboardDataSource().checkDashboardFavorites(self.dashboard.id(), succCallback, errorCallback);
@@ -568,17 +581,20 @@ define(['knockout',
                     var homeDashboardId = prefUtil.getPreferenceValue(data, prefKeyHomeDashboardId);
                     if (homeDashboardId && homeDashboardId === (self.dashboard.id()+"")) {
                         self.dashboardAsHomeLabel(removeAsHomeLabel);
+                        self.dashboardAsHomeName(removeAsHomeName);
                         self.dashboardsAsHomeIcon(cssRemoveDsbAsHome);
                         self.isHomeDashboard = true;
                     }
                     else if (homeDashboardId){
                         self.dashboardAsHomeLabel(setAsHomeLabel);
+                        self.dashboardAsHomeName(setAsHomeName);
                         self.dashboardsAsHomeIcon(cssSetDsbAsHome);
                         self.isHomeDashboard = false;
                         self.hasAnotherDashboardSetAsHome = true;
                     }
                     else {
                         self.dashboardAsHomeLabel(setAsHomeLabel);
+                        self.dashboardAsHomeName(setAsHomeName);
                         self.dashboardsAsHomeIcon(cssSetDsbAsHome);
                         self.isHomeDashboard = false;
                         self.hasAnotherDashboardSetAsHome = false;
@@ -586,6 +602,7 @@ define(['knockout',
                 }
                 function errorCallback(jqXHR, textStatus, errorThrown) {
                     self.dashboardAsHomeLabel(setAsHomeLabel);
+                    self.dashboardAsHomeName(setAsHomeName);
                     self.dashboardsAsHomeIcon(cssSetDsbAsHome);
                     self.isHomeDashboard = false;
                     self.hasAnotherDashboardSetAsHome = false;
@@ -665,6 +682,7 @@ define(['knockout',
                     "label": getNlsString('COMMON_BTN_EDIT'),
                     "url": "#",
                     "id": "emcpdf_dsbopts_edit" + self.toolBarGuid,
+                    "name":"Edit",
                     "icon": "dbd-toolbar-icon-edit",
                     "title": "",
                     "disabled": self.editDisabled() === true,
@@ -676,6 +694,7 @@ define(['knockout',
                     "label": getNlsString('COMMON_BTN_PRINT'),
                     "url": "#",
                     "id": "emcpdf_dsbopts_print" + self.toolBarGuid,
+                    "name":"Print",
                     "icon": "dbd-toolbar-icon-print",
                     "title": "",
                     "disabled": false,
@@ -687,6 +706,7 @@ define(['knockout',
                     "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
                     "url": "#",
                     "id": "emcpdf_dsbopts_duplicate" + self.toolBarGuid,
+                    "name":"Duplicate",
                     "icon": "dbd-toolbar-icon-duplicate",
                     "title": "",
                     "disabled": false,
@@ -706,6 +726,7 @@ define(['knockout',
                             "label": getNlsString('DBS_BUILDER_ADDTOSET'),
                             "url": "#",
                             "id": "emcpdf_dsbopts_addToSet" + self.toolBarGuid,
+                            "name":"Add to set",
                             "icon": "",
                             "title": "",
                             "disabled": false,
@@ -717,6 +738,7 @@ define(['knockout',
                             "label": getNlsString('DBS_BUILDER_NOT_ADDTOSET'),
                             "url": "#",
                             "id": "emcpdf_dsbopts_notAddToSet" + self.toolBarGuid,
+                            "name":"Do not add to set",
                             "icon": "",
                             "title": "",
                             "disabled": false,
@@ -730,6 +752,7 @@ define(['knockout',
                     "label": self.favoriteLabel,
                     "url": "#",
                     "id": "emcpdf_dsbopts_favorites" + self.toolBarGuid,
+                    "name":self.favoriteName,
                     "icon": self.favoritesIcon, //"dbd-toolbar-icon-favorites",
                     "title": "", //self.favoriteLabel,
                     "disabled": false,
@@ -741,6 +764,7 @@ define(['knockout',
                     "label": self.dashboardAsHomeLabel,
                     "url": "#",
                     "id": "emcpdf_dsbopts_home" + self.toolBarGuid,
+                    "name":self.dashboardAsHomeName,
                     "icon": self.dashboardsAsHomeIcon,
                     "title": "", //self.setAsHomeLabel,
                     "disabled": false,
@@ -752,6 +776,7 @@ define(['knockout',
                     "label": getNlsString('DBS_BUILDER_AUTOREFRESH_REFRESH'),
                     "url": "#",
                     "id": "emcpdf_dsbopts_refresh" + self.toolBarGuid,
+                    "name":"Auto-refresh",
                     "icon": "dbd-toolbar-icon-refresh",
                     "title": "",
                     "disabled": false,
@@ -763,6 +788,7 @@ define(['knockout',
                             "label": getNlsString('DBS_BUILDER_AUTOREFRESH_OFF'),
                             "url": "#",
                             "id": "emcpdf_dsbopts_refresh_off" + self.toolBarGuid,
+                            "name":"Off",
                             "icon": ko.computed(function () {
                                 return self.autoRefreshInterval() === 0 ? "fa-check" : "";
                             }),
@@ -776,6 +802,7 @@ define(['knockout',
                             "label": getNlsString('DBS_BUILDER_AUTOREFRESH_ON'),
                             "url": "#",
                             "id": "emcpdf_dsbopts_refresh_on" + self.toolBarGuid,
+                            "name":"On (Every 5 Minutes)",
                             "icon": ko.computed(function () {
                                 return self.autoRefreshInterval() ? "fa-check" : "";
                             }),

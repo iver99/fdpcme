@@ -84,6 +84,11 @@ define(['knockout',
                         "DBS_BUILDER_BTN_HOME_SET" :
                         "DBS_BUILDER_BTN_HOME_REMOVE");
             });
+            self.dashboardsetConfig.homeName = ko.pureComputed(function () {
+                return self.dashboardsetConfig.setHome() ?
+                        "Set as Home" :
+                        "Remove as Home";
+            });
 
             self.dashboardsetConfig.addFavorite = ko.observable(true);
             if("SET" === dashboardInst.type()){
@@ -98,6 +103,12 @@ define(['knockout',
                 return getNlsString(self.dashboardsetConfig.addFavorite() ?
                         "DBS_BUILDER_BTN_FAVORITES_ADD" :
                         "DBS_BUILDER_BTN_FAVORITES_REMOVE");
+            });
+            
+            self.dashboardsetConfig.favoriteName = ko.pureComputed(function () {
+                return  self.dashboardsetConfig.addFavorite() ?
+                        "Add Favorite" :
+                        "Remove Favorite";
             });
 
             var dashboardsetEditDisabled = function () {
@@ -299,6 +310,7 @@ define(['knockout',
                     "id": "dbs-edit",
                     "icon": "fa-pencil-df",
                     "title": "",
+                    "name":"Edit",
                     "disabled": "",
                     "endOfGroup": false,
                     "showOnMobile": false,
@@ -310,6 +322,7 @@ define(['knockout',
                     "label": getNlsString("COMMON_BTN_PRINT"),
                     "url": "#",
                     "id": "dbs-print",
+                    "name":"Print",
                     "icon": "fa-print",
                     "title": "",
                     "disabled": "",
@@ -323,6 +336,7 @@ define(['knockout',
                     "label": self.dashboardsetConfig.favoriteLabel,
                     "url": "#",
                     "id": "dbs-favorite",
+                    "name":self.dashboardsetConfig.favoriteName,
                     "icon": self.dashboardsetConfig.favoriteIcon,
                     "title": "",
                     "disabled": "",
@@ -336,6 +350,7 @@ define(['knockout',
                     "label": self.dashboardsetConfig.homeLabel,
                     "url": "#",
                     "id": "dbs-home",
+                    "name":self.dashboardsetConfig.homeName,
                     "icon": self.dashboardsetConfig.homeIcon,
                     "title": "",
                     "disabled": "",
@@ -349,6 +364,7 @@ define(['knockout',
                     "label":  getNlsString("DBS_BUILDER_AUTOREFRESH_REFRESH"),
                     "url": "#",
                     "id": "dbs-refresh",
+                    "name":"Auto-refresh",
                     "icon": "dbd-icon-refresh",
                     "title": "",
                     "disabled": "",
@@ -360,6 +376,7 @@ define(['knockout',
                             "label": getNlsString("DBS_BUILDER_AUTOREFRESH_OFF"),
                             "url": "#",
                             "id": "refresh-off",
+                            "name":"Off",
                             "icon": self.dashboardsetConfig.refreshOffIcon,
                             "title": "",
                             "disabled": "",
@@ -372,6 +389,7 @@ define(['knockout',
                             "label": getNlsString("DBS_BUILDER_AUTOREFRESH_ON"),
                             "url": "#",
                             "id": "refresh-time",
+                            "name":"On (Every 5 Minutes)",
                             "icon": self.dashboardsetConfig.refreshOnIcon,
                             "title": "",
                             "disabled": "",
