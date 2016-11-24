@@ -120,6 +120,8 @@
                }" style="height:29px; margin-bottom:0px"/>
             </div>
             </span>
+
+            <!-- ko if: compositeCxtText() -->
             <div class="ude-sdk inlineFlexBox flexBoxAuto animated_transitions" style="padding-bottom: 10px; padding-top: 3px; height: 32px; display: inline-flex;">
             <div class="ude-sdk emcta_panel_border flexBoxNoShrink flexBoxColumn flexBoxAuto animated_transitions" id="globalBar_wrapper"
                  style="padding:2px;">      
@@ -127,10 +129,24 @@
                      padding-left: 8px; padding-right:8px; font-size: 14px; padding-top: 3px;padding-bottom: 1px;margin-left:0px; font-weight: normal; cursor: default;"
                      id="globalBar_pillWrapper">     
                      <span style="white-space: pre-wrap;"
-                           data-bind="text:compositeCxtText, attr:{title:compositeCxtText}" class="ude-sdk"></span>        
+                           data-bind="text:compositeCxtText, attr:{title:cxtCompositeName}" class="ude-sdk"></span>
                 </div>
             </div>
             </div>
+            <!-- /ko -->
+            <!-- ko foreach: entitiesDisplayNames() -->
+            <div class="ude-sdk inlineFlexBox flexBoxAuto animated_transitions" style="padding-bottom: 10px; padding-top: 3px; height: 32px; display: inline-flex;">
+            <div class="ude-sdk emcta_panel_border flexBoxNoShrink flexBoxColumn flexBoxAuto animated_transitions" id="globalBar_wrapper"
+                 style="padding:2px;">
+                <div class="ude-sdk pill filterpill_value filterpill_with_value" style="margin-bottom: auto; margin-top: auto;height: 20px;
+                     padding-left: 8px; padding-right:8px; font-size: 14px; padding-top: 3px;padding-bottom: 1px;margin-left:0px; font-weight: normal; cursor: default;"
+                     id="globalBar_pillWrapper">
+                     <span style="white-space: pre-wrap;"
+                           data-bind="text:$data.displayName, attr:{title:$data.entityName}" class="ude-sdk"></span>
+                </div>
+            </div>
+            </div>
+            <!-- /ko -->
 
             <!-- ko if: showTimeSelector() === true -->
                 <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="component: {name: 'df-datetime-picker', params: timeSelectorParams}">

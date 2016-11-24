@@ -21,6 +21,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             cxtUtil.clearTopologyParams();
 
             self.compositeCxtText = ko.observable();
+            self.entitiesDisplayNames = ko.observableArray();
             self.timeCxtText = ko.observable();
 
 
@@ -880,6 +881,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.cxtCompositeMeId = cxtUtil.getCompositeMeId();
 //                self.cxtCompositeType = cxtUtil.getCompositeType();
                 self.cxtCompositeDisplayName = cxtUtil.getCompositeDisplayName();
+                self.cxtCompositeName = cxtUtil.getCompositeName();
 //                self.cxtStartTime = cxtUtil.getStartTime();
 //                self.cxtEndTime = cxtUtil.getEndTime();
                 //self.cxtEntityMeId = cxtUtil.getEntityMeId();
@@ -960,17 +962,29 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                    }
 //                }
                 //For now, only show composite context text on banner UI, and single entity
-                if (self.cxtCompositeMeId
-                    && self.cxtCompositeDisplayName) {
+                self.compositeCxtText('');
+                self.entitiesDisplayNames.removeAll();
+
+                var displayCompositeName = self.cxtCompositeMeId
+                    && self.cxtCompositeDisplayName;
+
+                var displayEntitiesName = cxtUtil.getEntityMeIds()
+                    && !cxtUtil.getEntitiesType()
+                    && cxtUtil.getEntityMeIds().length === 1;
+
+                if (displayCompositeName) {
                     self.compositeCxtText(self.cxtCompositeDisplayName);
                 }
-                else if(cxtUtil.getEntityMeIds() 
-                    && cxtUtil.getEntityMeIds().length === 1) {
-                    var singleEntityDisplayName = cxtUtil.getEntities()[0].displayName;
-                    self.compositeCxtText(singleEntityDisplayName);
+                if (displayEntitiesName)
+                {
+                    cxtUtil.getEntities().forEach(function (entity, index) {
+                        var entityName = {displayName: entity.displayName, entityName: entity.entityName};
+                        self.entitiesDisplayNames.push(entityName);
+                    });
                 }
-                //No composite entity & no member entity
-                else {
+                if (!displayCompositeName && !displayEntitiesName)
+                {
+                    //No composite entity & no entities
                     self.compositeCxtText(nls.BRANDING_BAR_GLOBAL_CONTEXT_ALL_ENTITIES);
                 }
             }
