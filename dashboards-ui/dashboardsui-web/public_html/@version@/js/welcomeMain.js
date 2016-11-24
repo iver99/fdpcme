@@ -101,7 +101,6 @@ require(['ojs/ojcore',
         {
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             var cxtUtil = new cxtModel();
-            dfu_model.setHtmlLang();
             var logger = new _emJETCustomLogger();
             var logReceiver = dfu.getLogUrl();
 
