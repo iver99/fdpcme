@@ -844,7 +844,7 @@ define([
                 }
                 //If value is empty, return original URL
                 return url;
-            };
+            }
 
             /**
              * Retrieve parameter value from given URL string.
@@ -859,11 +859,16 @@ define([
                         decodedUrl = '?' + decodedUrl;
                     }
                     var regex = new RegExp("[\\?&]" + encodeURIComponent(paramName) + "=([^&#]*)"), results = regex.exec(decodedUrl);
-                    return results === null ? null : decodeURIComponent(results[1]);
+                    try {
+                        return results === null ? null : decodeURIComponent(results[1]);
+                    }
+                    catch (err) {
+                        oj.Logger.info("Failed to retrieve value for parameter [" + paramName + "] from URL: " + decodedUrl, false);
+                        return null;
+                    }
                 }
                 return null;
             }
-            ;
 
             var entitiesFetched = [];
             function loadEntities(data) {
