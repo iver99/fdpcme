@@ -824,15 +824,27 @@ define([
                     hash = url.substring(anchorIdx);
                     url = url.substring(0, anchorIdx);
                 }
-                var pattern = new RegExp('([?&])' + paramName + '=.*?(&|$|#)', 'i');
+                var pattern = new RegExp('([?&])' + paramName + '=.*?(&|$|#)(.*)', 'i');
                 if (url.match(pattern)) {
-                    return url.replace(pattern, '$1' + paramName + "=" + paramValue + '$2') + hash;
+                    //If parameter value is not empty, update URL parameter
+                    if (paramValue) {
+                        return url.replace(pattern, '$1' + paramName + "=" + paramValue + '$2$3') + hash;
+                    }
+                    //Otherwise, remove the parameter from URL
+                    else {
+                        return url.replace(pattern, '$1$3').replace(/(&|\?)$/, '') + hash;
+                    }
                 }
-                return url + (url.indexOf('?') > 0 ?
+                
+                //If value is not empty, append it to the URL
+                if (paramValue) {
+                    return url + (url.indexOf('?') > 0 ? 
                     //Handle case that an URL ending with a question mark only
-                        (url.lastIndexOf('?') === url.length - 1 ? '' : '&') : '?') + paramName + '=' + paramValue + hash;
-            }
-            ;
+                    (url.lastIndexOf('?') === url.length - 1 ? '': '&') : '?') + paramName + '=' + paramValue + hash; 
+                }
+                //If value is empty, return original URL
+                return url;
+            };
 
             /**
              * Retrieve parameter value from given URL string.
