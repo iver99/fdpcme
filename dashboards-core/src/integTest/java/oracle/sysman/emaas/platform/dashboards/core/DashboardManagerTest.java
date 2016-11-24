@@ -578,13 +578,13 @@ public class DashboardManagerTest
 		}
 	}
 	
-	@Test
+	/*@Test
 	public void testGetCombinedDashboardById() throws DashboardException {
 		DashboardManager dm = DashboardManager.getInstance();
 		UserContext.setCurrentUser("emcsadmin");
 		CombinedDashboard cd = dm.getCombinedDashboardById(2158L, 1663659699L, "emcsadmin");
 		Assert.assertNotNull(cd);
-	}
+	}*/
 
 	@Test
 	public void testGetDashboardId() throws DashboardException
