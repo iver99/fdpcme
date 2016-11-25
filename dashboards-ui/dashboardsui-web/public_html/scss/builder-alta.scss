@@ -285,6 +285,11 @@ body, html {
   margin-top: 1px;
 }
 
+.absolute-Center {  
+  margin: auto;  
+  position: absolute;  
+  top: 0; left: 0; bottom: 0; right: 0;  
+} 
 
 /*.builder-dbd-description .dbd-display-hover-area:hover .dbd-display-area-text {
   padding-right: 40px;
