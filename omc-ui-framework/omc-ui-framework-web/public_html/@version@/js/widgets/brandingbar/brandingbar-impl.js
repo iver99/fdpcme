@@ -79,6 +79,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             }
             self.showGlobalContextBanner.subscribe(function (newValue) {
                 if (newValue === true) {
+                    //In case showGlobalContextBanner is initialized to false, and updated to true during page loading,
+                    //we need to restore topology display status from window session storage
+                    if (!self.isTopologyDisplayed()) {
+                        restoreTopologyDisplayStatus();
+                    }
                     refreshOMCContext();
                 }
             });
@@ -135,16 +140,22 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     self.isTopologyButtonChecked([]);
                 }
             });
-            if (window.sessionStorage._uifwk_brandingbar_cache) {
-                var brandingBarCache = JSON.parse(window.sessionStorage._uifwk_brandingbar_cache);
-                if (brandingBarCache && brandingBarCache.isTopologyDisplayed) {
-                    if (self.showGlobalContextBanner()) {
-                        registerTopologyComponent(function () {
-                            refreshTopologyParams();
-                            if (self.topologyDisabled() === false) {
-                                self.isTopologyDisplayed(true);
-                            }
-                        });
+            
+            //Restore topology display status from window session storage
+            restoreTopologyDisplayStatus();
+            
+            function restoreTopologyDisplayStatus() {
+                if (window.sessionStorage._uifwk_brandingbar_cache) {
+                    var brandingBarCache = JSON.parse(window.sessionStorage._uifwk_brandingbar_cache);
+                    if (brandingBarCache && brandingBarCache.isTopologyDisplayed) {
+                        if (self.showGlobalContextBanner()) {
+                            registerTopologyComponent(function () {
+                                refreshTopologyParams();
+                                if (self.topologyDisabled() === false) {
+                                    self.isTopologyDisplayed(true);
+                                }
+                            });
+                        }
                     }
                 }
             }
