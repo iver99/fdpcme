@@ -7,10 +7,13 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
+import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashboard;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreferencePK;
@@ -18,7 +21,6 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptionsPK;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -72,6 +74,31 @@ public class DashboardServiceFacade
 			return (EmsDashboard)list.get(0);
 		}
 		return null;
+	}
+
+	public CombinedDashboard getCombinedEmsDashboardById(Long dashboardId, String userName) {
+		EmsDashboard ed = getEmsDashboardById(dashboardId);
+		EmsPreference ep = this.getEmsPreference(userName, "Dashboards.homeDashboardId");
+		EmsUserOptions euo = this.getEmsUserOptions(userName, dashboardId);
+		return CombinedDashboard.valueOf(ed, ep, euo);
+	}
+
+	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(String name, String owner, String description){
+		String jpql;
+		Object[] params;
+		if(StringUtil.isEmpty(description)){
+			jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.description is null and d.deleted = ?3";
+			params = new Object[]{StringEscapeUtils.escapeHtml4(name), owner, new Integer(0)};
+		}else {
+			jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.description = ?3 and d.deleted = ?4";
+			params = new Object[]{StringEscapeUtils.escapeHtml4(name), owner, description, new Integer(0)};
+
+		}
+		Query query = em.createQuery(jpql);
+		for (int i = 1; i <= params.length; i++) {
+			query.setParameter(i, params[i - 1]);
+		}
+		return (EmsDashboard) query.getSingleResult();
 	}
 
 	//	public EmsDashboardFavorite getEmsDashboardFavoriteByPK(Long dashboardId, String username)

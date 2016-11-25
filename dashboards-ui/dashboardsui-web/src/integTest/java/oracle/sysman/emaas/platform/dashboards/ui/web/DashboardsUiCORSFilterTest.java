@@ -64,7 +64,7 @@ public class DashboardsUiCORSFilterTest
 						homePath, homePath, //4
 						homePath, homePath); //5
 
-				TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
+				TenantSubscriptionUtil.getTenantSubscribedServices(anyString, anyString);
 				returns(new ArrayList<String>(), //2
 						new ArrayList<String>(), //3
 						serviceList, //4
