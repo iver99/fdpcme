@@ -30,6 +30,7 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements ITimeSelectorUtil
 {
@@ -256,6 +257,10 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 				webd.click("css=" + TimeSelectorUIControls.sTimeRange_60Min);
 				webd.takeScreenShot();
 				break;
+			case Last2Hours:
+				Assert.assertTrue(false, "'Last 2 hours' is not supported in current verion");
+				webd.getLogger().info("'Last 2 hours' is not available in the current version");
+				break;
 			case Last4Hours:
 				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_4Hour);
 				webd.click("css=" + TimeSelectorUIControls.sTimeRange_4Hour);
@@ -350,7 +355,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		return setTimeRange(webd, 1, rangeoption);
 	}
 
-	private void clickApplyButton(WebDriver webd) 
+	protected void clickApplyButton(WebDriver webd) 
 	{
 		//click Apply button
 		webd.getLogger().info("Click Apply button");
@@ -364,6 +369,18 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 			WaitUtil.waitForPageFullyLoaded(webd);
 			webd.takeScreenShot();
 		}
+	}
+	
+	@Override
+	public String setFlexibleRelativeTimeRange(WebDriver webd, int index, int relTimeVal, TimeUnit relTimeUnit) {
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
+	}
+	
+	@Override
+	public String setFlexibleRelativeTimeRange(WebDriver webd, int relTimeVal, TimeUnit relTimeUnit) {
+		return setFlexibleRelativeTimeRange(webd, 1, relTimeVal, relTimeUnit);
 	}
 
 	private void clickCancleButton(WebDriver webd) 
@@ -395,7 +412,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.getLogger().info("Click time filter icon finished!");
 	}
 
-	private void clickTimePicker(WebDriver webd) 
+	protected void clickTimePicker(WebDriver webd) 
 	{
 		//click the datetimepicker component
 		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRangeBtn);
@@ -403,7 +420,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.takeScreenShot();
 	}
 
-	private void clickTimePicker(WebDriver webd, int Index) 
+	protected void clickTimePicker(WebDriver webd, int Index) 
 	{
 		//click the datetimepicker component
 		webd.waitForElementPresent("css=" + TimeSelectorUIControls.sTimeRangeBtn);
@@ -412,7 +429,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.takeScreenShot();
 	}
 
-	private String dateConvert(WebDriver driver, String convertDate, TimeRange timerange) 
+	protected String dateConvert(WebDriver driver, String convertDate, TimeRange timerange) 
 	{
 		String timeRange = timerange.getRangeOption();
 		String tmpDate = "";
@@ -422,9 +439,15 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		if (convertDate.startsWith(timeRange)) {
 			tmpDate = convertDate.substring(timeRange.length() + 1);
 		}
+		else if(convertDate.startsWith("Last"))
+		{
+			int timeRangeIndex = convertDate.indexOf(":");
+			tmpDate = convertDate.substring(timeRangeIndex + 1);
+		}
 		else {
 			tmpDate = convertDate;
 		}
+		
 		String[] date = tmpDate.split("-");
 		String StartDate = date[0].trim();
 		String EndDate = date[1].trim();
@@ -741,8 +764,8 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.takeScreenShot();
 	}
 
-	private String timeFormatChange(WebDriver driver, String testTime, String inputDateFormat, String outputDateFormat)
-			
+	protected String timeFormatChange(WebDriver driver, String testTime, String inputDateFormat, String outputDateFormat)
+
 	{
 		SimpleDateFormat inputFormat = new SimpleDateFormat(inputDateFormat);
 		SimpleDateFormat outputFormat = new SimpleDateFormat(outputDateFormat);
