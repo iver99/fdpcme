@@ -80,17 +80,27 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             }
             self.showGlobalContextBanner.subscribe(function (newValue) {
                 if (newValue === true) {
+                    //In case showGlobalContextBanner is initialized to false, and updated to true during page loading,
+                    //we need to restore topology display status from window session storage
+                    if (!self.isTopologyDisplayed()) {
+                        restoreTopologyDisplayStatus();
+                    }
                     refreshOMCContext();
                 }
             });
 
             function handleShowHideTopology() {
-                $("ude-topology-div").slideToggle("fast");
-                //when expanding the topology, do a refresh if needed
-                if (!self.isTopologyDisplayed() && self.topologyNeedRefresh) {
-                    refreshTopologyParams();
+                $("#ude-topology-div").slideToggle("fast", function () {
+                    self.isTopologyDisplayed(!self.isTopologyDisplayed());
+                });
+
+                if (!self.isTopologyDisplayed()) {
+                    //when expanding the topology, do a refresh if needed
+                    if (self.topologyNeedRefresh) {
+                        refreshTopologyParams();
+                    }
+                    $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
                 }
-                self.isTopologyDisplayed(!self.isTopologyDisplayed());
                 //set brandingbar_cache information for Topology expanded state
                 var brandingBarCache = {isTopologyDisplayed: self.isTopologyDisplayed()};
                 window.sessionStorage._uifwk_brandingbar_cache = JSON.stringify(brandingBarCache);
@@ -131,16 +141,22 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     self.isTopologyButtonChecked([]);
                 }
             });
-            if (window.sessionStorage._uifwk_brandingbar_cache) {
-                var brandingBarCache = JSON.parse(window.sessionStorage._uifwk_brandingbar_cache);
-                if (brandingBarCache && brandingBarCache.isTopologyDisplayed) {
-                    if (self.showGlobalContextBanner()) {
-                        registerTopologyComponent(function () {
-                            refreshTopologyParams();
-                            if (self.topologyDisabled() === false) {
-                                self.isTopologyDisplayed(true);
-                            }
-                        });
+            
+            //Restore topology display status from window session storage
+            restoreTopologyDisplayStatus();
+            
+            function restoreTopologyDisplayStatus() {
+                if (window.sessionStorage._uifwk_brandingbar_cache) {
+                    var brandingBarCache = JSON.parse(window.sessionStorage._uifwk_brandingbar_cache);
+                    if (brandingBarCache && brandingBarCache.isTopologyDisplayed) {
+                        if (self.showGlobalContextBanner()) {
+                            registerTopologyComponent(function () {
+                                refreshTopologyParams();
+                                if (self.topologyDisabled() === false) {
+                                    self.isTopologyDisplayed(true);
+                                }
+                            });
+                        }
                     }
                 }
             }
