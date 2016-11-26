@@ -196,7 +196,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.click(convertName(DashBoardPageId.EXPLOREDATABTNID));
 		//WebElement menu = driver.getElement(convertName(DashBoardPageId.EXPLOREDATAMENU));
                  
-                if ("Log".equals(option)) {                 
+                if (IDashboardHomeUtil.EXPLOREDATA_MENU_LOG.equals(option)) {                 
                         driver.click(DashBoardPageId.EXPLORE_LOG);
                  } else {
                      	driver.click(DashBoardPageId.EXPLORE_Search);
@@ -586,7 +586,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		return "id=" + id;
 	}
 
-	private String convertName(String name)
+	protected String convertName(String name)
 	{
 		return "name=" + name;
 	}
