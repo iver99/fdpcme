@@ -48,47 +48,7 @@ BEGIN
   ELSE
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.SHOW_INHOME exists already, no change is needed');
   END IF;
-
-  --add new column 'DELETED' for EMS_DASHBOARD_SET
-  SELECT count(*) into v_count from user_tab_columns WHERE table_name='EMS_DASHBOARD_SET' AND column_name='DELETED';
-  IF v_count=0 THEN
-    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_SET ADD "DELETED" NUMBER(*, 0) DEFAULT(0) NOT NULL';
-  ELSE
-    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_SET.DELETED exists already, no change is needed');
-  END IF;
-
- --add new column 'DELETED' for EMS_DASHBOARD_TILE
-  SELECT count(*) into v_count from user_tab_columns WHERE table_name='EMS_DASHBOARD_TILE' AND column_name='DELETED';
-  IF v_count=0 THEN
-    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_TILE ADD "DELETED" NUMBER(1, 0) DEFAULT(0) NOT NULL';
-  ELSE
-    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.DELETED exists already, no change is needed');
-  END IF;
-
- --add new column 'DELETED' for EMS_DASHBOARD_TILE_PARAMS
-  SELECT count(*) into v_count from user_tab_columns WHERE table_name='EMS_DASHBOARD_TILE_PARAMS' AND column_name='DELETED';
-  IF v_count=0 THEN
-    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_TILE_PARAMS ADD "DELETED" NUMBER(1, 0) DEFAULT(0) NOT NULL';
-  ELSE
-    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE_PARAMS.DELETED exists already, no change is needed');
-  END IF;
-
- --add new column 'DELETED' for EMS_PREFERENCE
-  SELECT count(*) into v_count from user_tab_columns WHERE table_name='EMS_PREFERENCE' AND column_name='DELETED';
-  IF v_count=0 THEN
-    EXECUTE IMMEDIATE 'ALTER TABLE EMS_PREFERENCE ADD "DELETED" NUMBER(1, 0) DEFAULT(0) NOT NULL';
-  ELSE
-    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_PREFERENCE.DELETED exists already, no change is needed');
-  END IF;
-  
-  --add new column 'DELETED' for EMS_DASHBOARD_USER_OPTIONS
-  SELECT count(*) into v_count from user_tab_columns WHERE table_name='EMS_DASHBOARD_USER_OPTIONS' AND column_name='DELETED';
-  IF v_count=0 THEN
-    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_USER_OPTIONS ADD "DELETED" NUMBER(1, 0) DEFAULT(0) NOT NULL';
-  ELSE
-    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_USER_OPTIONS.DELETED exists already, no change is needed');
-  END IF;
-  
+ 
   EXCEPTION
   WHEN OTHERS THEN
     ROLLBACK;
@@ -97,15 +57,6 @@ BEGIN
 END;
 /
 
-BEGIN
-  EXECUTE IMMEDIATE 'ALTER TRIGGER EMS_DASHBOARD_TR DISABLE';
-  EXCEPTION
-   WHEN OTHERS THEN
-      IF SQLCODE != -4080 THEN
-         RAISE;
-      END IF;
-END;
-/
 
 
 
