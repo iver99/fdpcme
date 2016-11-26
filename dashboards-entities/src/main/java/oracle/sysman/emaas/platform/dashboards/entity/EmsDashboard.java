@@ -21,6 +21,7 @@ import javax.persistence.Table;
 
 import oracle.sysman.emaas.platform.dashboards.entity.customizer.EmsDashboardRedirector;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.MultitenantType;
 import org.eclipse.persistence.annotations.QueryRedirectors;
@@ -34,7 +35,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 //@SequenceGenerator(name = "EmsDashboard_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_SEQ", allocationSize = 1)
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
-//@AdditionalCriteria("this.deleted = '0'")
+@AdditionalCriteria("this.deleted = '0'")
 @QueryRedirectors(delete = EmsDashboardRedirector.class)
 public class EmsDashboard extends EmBaseEntity implements Serializable
 {

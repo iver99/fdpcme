@@ -531,7 +531,7 @@ public class DashboardManager
 				LOGGER.debug("Last access is not found for dashboard with id {} is not found", dashboardId);
 				return null;
 			}
-			if (ed.getDeleted() != null && ed.getDeleted().equals(1)) {
+			if (ed.getDeleted() != null && ed.getDeleted().compareTo(BigInteger.ZERO) > 0) {
 				LOGGER.debug("Last access is not found for dashboard with id {} is deleted", dashboardId);
 				return null;
 			}
