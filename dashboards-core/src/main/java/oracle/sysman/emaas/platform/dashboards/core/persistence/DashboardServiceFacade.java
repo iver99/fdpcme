@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -11,9 +12,7 @@ import javax.persistence.Query;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
-
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
-
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
@@ -23,8 +22,16 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptionsPK;
 
+<<<<<<< HEAD
+=======
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+>>>>>>> greenchannel_landing_oct17_zdt
 public class DashboardServiceFacade
 {
+	private static final Logger LOGGER = LogManager.getLogger(DashboardServiceFacade.class);
 	private final EntityManager em;
 
 	/**
@@ -70,7 +77,7 @@ public class DashboardServiceFacade
 	//	{
 	//		return em.createNamedQuery("EmsDashboardFavorite.findAll", EmsDashboardFavorite.class).getResultList();
 	//	}
-
+	@SuppressWarnings("unchecked")
 	public EmsDashboard getEmsDashboardByName(String name, String owner)
 	{
 		String jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.deleted = ?3";
@@ -79,7 +86,12 @@ public class DashboardServiceFacade
 		for (int i = 1; i <= params.length; i++) {
 			query.setParameter(i, params[i - 1]);
 		}
-		return (EmsDashboard) query.getSingleResult();
+		//EMCPDF-2396
+		List <Object> list=query.getResultList();
+		if(!list.isEmpty()){
+			return (EmsDashboard)list.get(0);
+		}
+		return null;
 	}
 
 	//	public EmsDashboardFavorite getEmsDashboardFavoriteByPK(Long dashboardId, String username)
@@ -112,6 +124,18 @@ public class DashboardServiceFacade
 	//		return em.createNamedQuery("EmsDashboardLastAccess.findAll", EmsDashboardLastAccess.class).getResultList();
 	//	}
 
+	public void removePreferenceByKey(String userName, String key, long tenantId)
+	{
+		String sql = "select * from ems_preference p where p.user_Name ='"+userName+"' and p.pref_key = '"+key+"' and p.tenant_id="+tenantId;		
+		Query query = em.createNativeQuery(sql, EmsPreference.class);
+		@SuppressWarnings("unchecked")
+		List<EmsPreference> emsPreferenceList = query.getResultList();
+		if (emsPreferenceList != null && !emsPreferenceList.isEmpty()) {
+			em.remove(emsPreferenceList.get(0));
+			commitTransaction();
+		}
+	}
+	
 	public EmsPreference getEmsPreference(String username, String prefKey)
 	{
 		return em.find(EmsPreference.class, new EmsPreferencePK(prefKey, username));
@@ -154,6 +178,49 @@ public class DashboardServiceFacade
 		Query query = em.createQuery(hql);
 		return query.getResultList();
 	}
+
+	/**
+	 * This method is for retriving dashboards by giving a list of dashboard ids,
+	 * ***************************************************************************************
+	 * And this method will return the dashboards with the same order with given dashboard Ids
+	 * ***************************************************************************************
+	 * @param dashboardIds
+	 * @param tenantId
+     * @return
+     */
+	public List<EmsDashboard> getEmsDashboardByIds(List<BigInteger> dashboardIds, Long tenantId)
+	{
+		if (dashboardIds != null && !dashboardIds.isEmpty()) {
+			StringBuilder parameters = new StringBuilder();
+			int flag = 0;
+			for (BigInteger id : dashboardIds) {
+				if (flag++ > 0) {
+					parameters.append(",");
+				}
+				parameters.append(id);
+			}
+			int index=1;
+			StringBuilder sb=new StringBuilder();
+			for(int i=0;i<dashboardIds.size();i++){
+				sb.append(dashboardIds.get(i)+","+index++);
+				if(i!=dashboardIds.size()-1){
+					sb.append(",");
+				}
+			}
+			String sql = "select * from ems_dashboard p where p.tenant_id=? and p.dashboard_id in("
+					+ parameters.toString() + ") order by decode(p.dashboard_id,"+sb.toString()+")";
+			LOGGER.debug("Get sub dashboard list, execute sql is "+sql);
+			Query query = em.createNativeQuery(sql, EmsDashboard.class);
+			query.setParameter("1", tenantId);
+			@SuppressWarnings("unchecked")
+			List<EmsDashboard> subDashboards = query.getResultList();
+			return subDashboards;
+		}
+		return Collections.emptyList();
+
+	}
+ 
+
 
 	public EmsDashboard mergeEmsDashboard(EmsDashboard emsDashboard)
 	{
@@ -489,7 +556,22 @@ public class DashboardServiceFacade
 		return deleteCout;
 	}
 
-	public List<EmsDashboard> getEmsDashboardsBySubId(BigInteger subDashboardId)
+	public void updateSubDashboardShowInHome(BigInteger dashboardId)
+	{
+		getEntityManager().getTransaction().begin();
+		List<EmsSubDashboard> emsSubDashboards = getEmsDashboardById(dashboardId).getSubDashboardList();
+		if (emsSubDashboards != null) {
+			for (EmsSubDashboard emsSubDashboard : emsSubDashboards) {
+				EmsDashboard dashboard = getEmsDashboardById(emsSubDashboard.getSubDashboardId());
+				dashboard.setShowInHome(1);
+				em.merge(dashboard);
+			}
+		}
+		getEntityManager().getTransaction().commit();
+	}
+
+	@SuppressWarnings("unchecked")
+    public List<EmsDashboard> getEmsDashboardsBySubId(BigInteger subDashboardId)
 	{
 		getEntityManager().getTransaction().begin();
 		List<EmsDashboard> dashboards = em.createNamedQuery("EmsDashboard.queryBySubDashboardID").setParameter("p", subDashboardId)

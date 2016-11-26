@@ -174,14 +174,17 @@ define(['knockout',
                     headers: dfu.getDashboardsRequestHeader(),
                     success: function (result) {
                         if (selectedDashboardInst().toolBarModel.isUnderSet) {
-                            var removeId=selectedDashboardInst().toolBarModel.dashboardId;
-                            var selectedTab = $('#dashboardTab-'+removeId);
-                            $('#delete-dashboard').ojDialog( "close" );
-                            selectedDashboardInst().dashboardsetToolBar.removeDashboardInSet(removeId,selectedTab,true);
+                            var removeId = selectedDashboardInst().toolBarModel.dashboardId;
+                            var selectedTab = $('#dashboardTab-' + removeId);
+                            $('#delete-dashboard').ojDialog("close");
+                            selectedDashboardInst().dashboardsetToolBar.removeDashboardInSet(removeId, selectedTab, true);
                             $("#dbd-tabs-container").ojTabs("refresh");
                         } else {
+                            if (self.isHomeDashboard) {                                
+                                localStorage.deleteHomeDbd=true;
+                            }
                             window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
-                        }
+                        }     
                     },
                     error: function(jqXHR, textStatus, errorThrown) {}
                 });
@@ -296,12 +299,16 @@ define(['knockout',
             };
 
             self.handleSaveUpdateToServer = function(succCallback, errorCallback) {
+                if(self.isUnderSet){
+                   console.log("This is a dashboard in set, send its parent set id...");
+                   self.tilesViewModel.dashboard.dupDashboardId=selectedDashboardInst().dashboardsetToolBar.dashboardInst.id()
+                }                
                 var dbdJs = ko.mapping.toJS(self.tilesViewModel.dashboard, {
                     'include': ['screenShot', 'description', 'height',
                         'isMaximized', 'title', 'type', 'width',
                         'tileParameters', 'name', 'systemParameter',
                         'tileId', 'value', 'content', 'linkText',
-                        'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
+                        'WIDGET_LINKED_DASHBOARD', 'linkUrl','dupDashboardId'],
                     'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight",
                         "modeColumn", "modeRow", "screenShotHref", "systemDashboard",
                         "customParameters", "clientGuid", "dashboard",

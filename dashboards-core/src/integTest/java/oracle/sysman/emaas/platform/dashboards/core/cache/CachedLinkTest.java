@@ -5,17 +5,18 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 
 public class CachedLinkTest
 {
-	private Link link;
 	private final static String testHref = "test href";
 	private final static String testRel = "test rel";
+	private VersionedLink link;
 
 	@BeforeMethod
 	public void beforeMethod()
 	{
-		link = new Link();
+		link = new VersionedLink();
 		link.withHref(testHref);
 		link.withRel(testRel);
 	}

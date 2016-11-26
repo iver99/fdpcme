@@ -106,13 +106,14 @@ define([
 
 
                 function init() {
-                    var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share'], dashboardsetToolBarModel.reorderedDbsSetItems, true);
+                    var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share','ShowAll'], dashboardsetToolBarModel.reorderedDbsSetItems, true);
 
                     dashboardsViewModle.showExploreDataBtn(false);
 
                     dashboardsViewModle.handleDashboardClicked = function(event, data) {
 
                         var hasDuplicatedDashboard = false;
+                        var isCreator=dashboardsetToolBarModel.dashboardsetConfig.isCreator();
                         var dataId;
                         var dataName;
                             if(typeof(data.dashboard)!=='undefined'){
@@ -122,6 +123,15 @@ define([
                                dataId= data.id;
                                dataName=data.name;
                             }
+                            
+                            if (!isCreator) {
+                                dfu.showMessage({
+                                    type: 'warn',
+                                    summary: oj.Translations.getTranslatedString("DBS_BUILDER_DASHBOARD_CANNOT_SELECT_DASHBOARD"),
+                                    detail: '',
+                                    removeDelayTime: 5000});
+                            }
+                            
                         dashboardsetToolBarModel.dashboardsetItems.forEach(function(dashboardItem) {
                             if (dashboardItem.dashboardId === dataId) {
                                 hasDuplicatedDashboard = true;
@@ -132,8 +142,8 @@ define([
                                         removeDelayTime: 5000});
                                 }
                         });
-
-                        if (!hasDuplicatedDashboard) {
+                        
+                        if (!hasDuplicatedDashboard && isCreator) {
                             dashboardsetToolBarModel.pickDashboard(selectedDashboardInst().guid, {
                                 id: ko.observable(dataId),
                                 name: ko.observable(dataName)
@@ -299,7 +309,7 @@ define([
                     $b.triggerEvent($b.EVENT_POST_DOCUMENT_SHOW);
                     tilesView.enableMovingTransition();
                     idfbcutil.hookupBrowserCloseEvent(function () {
-                        oj.Logger.info("Dashboard: [id=" + dashboard.id() + ", name=" + dashboard.name() + "] is closed", true);
+                        oj.Logger.warn("Dashboard: [id=" + dashboard.id() + ", name=" + dashboard.name() + "] is closed", true, false);          
                     });
 
                     $("#loading").hide();

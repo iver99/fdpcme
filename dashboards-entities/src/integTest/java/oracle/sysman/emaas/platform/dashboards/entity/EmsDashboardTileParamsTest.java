@@ -6,6 +6,7 @@ import java.util.Date;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+
 /**
  * Created by Troy on 2016/1/20.
  */
@@ -13,7 +14,7 @@ import org.testng.annotations.Test;
 public class EmsDashboardTileParamsTest { 
     Date now = new Date();
     private EmsDashboard emsDashboard = new EmsDashboard(now,BigInteger.valueOf(10L),BigInteger.valueOf(10L),"elephant",10,10,10,10,10,10, now,
-            "elephant","elephant","elephant","elephant",10,10, "{}");
+            "elephant","elephant","elephant","elephant",10,10,1,"{}");
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
             now,
             emsDashboard,
@@ -44,7 +45,9 @@ public class EmsDashboardTileParamsTest {
             "lion",
             10,
             10,
-            BigInteger.valueOf(10L));
+            BigInteger.valueOf(10L),
+            0,
+            new Date());
     private EmsDashboardTileParams emsDashboardTileParams = new
             EmsDashboardTileParams(
             10,

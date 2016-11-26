@@ -76,7 +76,7 @@ public class EmsPreferenceRedirector implements QueryRedirector
 			Object rtn = ioq.execute((AbstractSession) session, (AbstractRecord) arguments);
 			cd.getQueryManager().setInsertQuery(old);
 			return rtn;
-		}
+		} 
 		else {
 			query.setDoNotRedirect(true);
 			return query.execute((AbstractSession) session, (AbstractRecord) arguments);

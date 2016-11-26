@@ -18,6 +18,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
@@ -102,6 +104,14 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 	private BigInteger widgetLinkedDashboard;
 	@Column(name = "DELETED", nullable = false, length = 1)
 	private Boolean deleted;
+
+	@Column(name = "WIDGET_DELETED", nullable = false)
+	private Integer widgetDeleted;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "WIDGET_DELETION_DATE")
+	private Date widgetDeletionDate;
+
 	@ManyToOne
 	@JoinColumns(value = { @JoinColumn(name = "DASHBOARD_ID", referencedColumnName = "DASHBOARD_ID"),
 			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
@@ -113,6 +123,7 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 	public EmsDashboardTile()
 	{
 		deleted = Boolean.FALSE;
+		//widgetDeleted = 0;
 	}
 
 	public EmsDashboardTile(Date creationDate, EmsDashboard emsDashboard1, Integer type, Integer row, Integer column,
@@ -121,7 +132,7 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 			String widgetCreationTime, String widgetDescription, String widgetGroupName, String widgetHistogram,
 			String widgetIcon, String widgetKocName, String widgetName, String widgetOwner, Integer widgetSource,
 			String widgetTemplate, String widgetUniqueId, String widgetViewmode, Integer widgetSupportTimeControl, Integer width,
-			BigInteger widgetLinkedDashboard)
+			BigInteger widgetLinkedDashboard, Integer widgetDeleted, Date widgetDeletionDate)
 	{
 		this();
 		this.setCreationDate(creationDate);
@@ -155,6 +166,8 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 		this.widgetSupportTimeControl = widgetSupportTimeControl;
 		this.widgetLinkedDashboard = widgetLinkedDashboard;
 		this.width = width;
+		this.widgetDeleted = widgetDeleted;
+		this.widgetDeletionDate = widgetDeletionDate;
 	}
 
 	public EmsDashboardTileParams addEmsDashboardTileParams(EmsDashboardTileParams emsDashboardTileParams)
@@ -262,6 +275,22 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 	public String getWidgetCreationTime()
 	{
 		return widgetCreationTime;
+	}
+
+	/**
+	 * @return the widgetDeleted
+	 */
+	public Integer getWidgetDeleted()
+	{
+		return widgetDeleted;
+	}
+
+	/**
+	 * @return the widgetDeletionDate
+	 */
+	public Date getWidgetDeletionDate()
+	{
+		return widgetDeletionDate;
 	}
 
 	public String getWidgetDescription()
@@ -441,6 +470,24 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 	public void setWidgetCreationTime(String widgetCreationTime)
 	{
 		this.widgetCreationTime = widgetCreationTime;
+	}
+
+	/**
+	 * @param widgetDeleted
+	 *            the widgetDeleted to set
+	 */
+	public void setWidgetDeleted(Integer widgetDeleted)
+	{
+		this.widgetDeleted = widgetDeleted;
+	}
+
+	/**
+	 * @param widgetDeletionDate
+	 *            the widgetDeletionDate to set
+	 */
+	public void setWidgetDeletionDate(Date widgetDeletionDate)
+	{
+		this.widgetDeletionDate = widgetDeletionDate;
 	}
 
 	public void setWidgetDescription(String widgetDescription)

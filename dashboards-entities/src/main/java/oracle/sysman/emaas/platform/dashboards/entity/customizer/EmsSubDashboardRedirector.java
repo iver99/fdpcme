@@ -57,7 +57,7 @@ public class EmsSubDashboardRedirector implements QueryRedirector
 			uoq.setDoNotRedirect(true);
 			return uoq.execute((AbstractSession) session, (AbstractRecord) arguments);
 		}
-		else if (query.isInsertObjectQuery()) {// remove the soft deleted object before insertion
+	/*	else if (query.isInsertObjectQuery()) {// remove the soft deleted object before insertion
 			InsertObjectQuery ioq = (InsertObjectQuery) query;
 			EmsSubDashboard esd = (EmsSubDashboard) ioq.getObject();
 			LOGGER.info("Soft deletion: before inserting sub dashboard with ID={}, ensure previouly soft deleted object is hard deleted", esd.getDashboardSetId());
@@ -76,7 +76,7 @@ public class EmsSubDashboardRedirector implements QueryRedirector
 			Object rtn = ioq.execute((AbstractSession) session, (AbstractRecord) arguments);
 			cd.getQueryManager().setInsertQuery(old);
 			return rtn;
-		}
+		} */
 		else {
 			query.setDoNotRedirect(true);
 			return query.execute((AbstractSession) session, (AbstractRecord) arguments);

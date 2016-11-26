@@ -59,30 +59,25 @@ define(['knockout',
             };
 
             self.registrationInfo = null;
+            dfu.getRegistrations(function(data){
+                self.registrationInfo = data;
+            },false);
+            
+            self.getVisualAnalyzerUrl = function(serviceName) {
+                return dfu.getVisualAnalyzer(serviceName);
+            };
+            
+            self.getAssetRootUrl = function(serviceName) {
+                return dfu.getAssetRoot(serviceName);
+            };
+            
             self.getRegistrationInfo=function(){
                 if (self.registrationInfo===null){
-                    ajaxUtil.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationUrl(),
-                        dataType: 'json',
-                        headers: dfu.getDefaultHeader(),
-                        async: false,
-                        success: function(data, textStatus){
-                            self.registrationInfo = data;
-                        },
-                        error: function(data, textStatus){
-                            console.log('Failed to get registion info!');
-                        }
-                    });
+                    dfu.getRegistrations(function(data){
+                        self.registrationInfo = data;
+                    },false);
                 }
                 return self.registrationInfo;
-            };
-
-            self.getRegistrationUrl=function(){
-                //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
-                if (self.isDevMode()){
-                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"configurations/registration");
-                }else{
-                    return '/sso.static/dashboards.configurations/registration';
-                }
             };
 
             self.getLogUrl=function(){
@@ -343,6 +338,14 @@ define(['knockout',
              */
             self.getScreenshotSizePerRatio = function(pWidth, pHeight, scrshotHref, callback) {
                 dfu.getScreenshotSizePerRatio(pWidth, pHeight, scrshotHref, callback);
+            };
+            
+            self.getRegistrations = function(successCallback, toSendAsync, errorCallback){
+                return dfu.getRegistrations(successCallback, toSendAsync, errorCallback);
+            };
+            
+            self.getRegistrationUrl=function(){
+                return dfu.getRegistrationUrl();
             };
 
         }

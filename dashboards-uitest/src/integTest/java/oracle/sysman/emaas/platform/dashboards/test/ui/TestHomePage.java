@@ -8,6 +8,7 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -18,7 +19,7 @@ public class TestHomePage extends LoginAndLogout
 {
 
 	@BeforeClass
-	public void createDashboard() 
+	public void createDashboard()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to create a dashboard for test");
@@ -26,9 +27,11 @@ public class TestHomePage extends LoginAndLogout
 		//create a dashboard
 		DashboardHomeUtil.createDashboard(webd, "ADashboard Test", "", DashboardHomeUtil.DASHBOARD);
 		DashboardBuilderUtil.verifyDashboard(webd, "ADashboard Test", "", false);
+
+		LoginAndLogout.logoutMethod();
 	}
 
-	public void initTest(String testName) 
+	public void initTest(String testName)
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
@@ -38,7 +41,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@AfterClass
-	public void removeDashboard() 
+	public void removeDashboard()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to create a dashboard for test");
@@ -54,35 +57,38 @@ public class TestHomePage extends LoginAndLogout
 		//remove the dashboard
 		DashboardHomeUtil.deleteDashboard(webd, "ADashboard Test", DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 
+		//logout
+		LoginAndLogout.logoutMethod();
 	}
 
 	@Test
-	public void testExploreData_LALink() 
+	public void testExploreData_LALink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testExploreData_LALink");
 
 		DashboardHomeUtil.gotoDataExplorer(webd, DashboardHomeUtil.EXPLOREDATA_MENU_LOG);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emlacore/html/log-analytics-search.html");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emlacore/html/log-analytics-search.html");
 	}
 
 	@Test
-	public void testExploreData_SearchLink() 
+	public void testExploreData_SearchLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testExploreData_SearchLink");
 
 		DashboardHomeUtil.gotoDataExplorer(webd, DashboardHomeUtil.EXPLOREDATA_MENU_SEARCH);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		String sub_str = url.substring(url.indexOf("emsaasui") + 9);
-		Assert.assertEquals(sub_str.substring(0, 23), "emcta/ta/analytics.html");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcta/ta/analytics.html");
 	}
 
 	@Test
-	public void TestSortBy_createdBy_ListView() 
+	public void TestSortBy_createdBy_ListView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with created by in list view");
@@ -126,7 +132,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testSortBy_createdByAscending() 
+	public void testSortBy_createdByAscending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with created by ascendingt");
@@ -148,7 +154,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testSortBy_createdByDecending() 
+	public void testSortBy_createdByDecending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with created by decending");
@@ -170,7 +176,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testSortBy_creationDateAscending() 
+	public void testSortBy_creationDateAscending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with creation date by ascendingt");
@@ -184,15 +190,15 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_ASC);
 
 		//verify the result
-		//		webd.getLogger().info("Verify the sort result");
-		//		DashboardHomeUtil.waitForDashboardPresent(webd, "Enterprise Overview");
-		//		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
-		//		Assert.assertEquals(names.get(0), "Enterprise Overview");
-		//		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(0));
+		webd.getLogger().info("Verify the sort result");
+		DashboardHomeUtil.waitForDashboardPresent(webd, "Performance Analytics: Database");
+		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(0), "Performance Analytics: Database");
+		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(0));
 	}
 
 	@Test
-	public void testSortBy_creationDateDecending() 
+	public void testSortBy_creationDateDecending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with creation date by decending");
@@ -202,16 +208,16 @@ public class TestHomePage extends LoginAndLogout
 		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_DSC);
 
 		//verify the result
-		//		webd.getLogger().info("Verify the sort result");
-		//		DashboardHomeUtil.waitForDashboardPresent(webd, "Enterprise Overview");
-		//		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
-		//		Assert.assertEquals(names.get(names.size() - 1), "Enterprise Overview");
-		//		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(names.size() - 1));
+		webd.getLogger().info("Verify the sort result");
+		DashboardHomeUtil.waitForDashboardPresent(webd, "Performance Analytics: Database");
+		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(names.size() - 1), "Performance Analytics: Database");
+		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(names.size() - 1));
 
 	}
 
 	@Test
-	public void testSortBy_lastAccessedAscending() 
+	public void testSortBy_lastAccessedAscending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with created by ascendingt");
@@ -247,7 +253,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testSortBy_lastAccessedDecending() 
+	public void testSortBy_lastAccessedDecending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with created by ascendingt");
@@ -283,7 +289,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void TestSortBy_LastModified_ListView() 
+	public void TestSortBy_LastModified_ListView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with last modified in list view");
@@ -339,7 +345,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testSortBy_lastModifiedAscending() 
+	public void testSortBy_lastModifiedAscending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with created by ascendingt");
@@ -381,7 +387,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testSortBy_lastModifiedDecending() 
+	public void testSortBy_lastModifiedDecending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with created by ascendingt");
@@ -423,7 +429,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void TestSortBy_Name_ListView() 
+	public void TestSortBy_Name_ListView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with name in list view");
@@ -463,7 +469,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testSortBy_nameAscending() 
+	public void testSortBy_nameAscending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with name ascending");
@@ -485,7 +491,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testSortBy_nameDecending() 
+	public void testSortBy_nameDecending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with name decending");
@@ -507,7 +513,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testUserMenu() 
+	public void testUserMenu()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testUserMenu");
@@ -517,7 +523,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void verify_allOOB_GridView() 
+	public void verify_allOOB_GridView()
 	{
 		//login the dashboard
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -535,7 +541,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void verify_allOOB_ListView() 
+	public void verify_allOOB_ListView()
 	{
 		//login the dashboard
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -553,7 +559,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void verify_APMOOB_GridView() 
+	public void verify_APMOOB_GridView()
 	{
 		//login the dashboard
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -577,7 +583,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void verify_CreatedBy_Me_GridView() 
+	public void verify_CreatedBy_Me_GridView()
 	{
 		//login the dashboard
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -599,7 +605,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void verify_CreatedBy_Me_ListView() 
+	public void verify_CreatedBy_Me_ListView()
 	{
 		//login the dashboard
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -621,7 +627,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void verify_CreatedBy_Oracle_GridView() 
+	public void verify_CreatedBy_Oracle_GridView()
 	{
 		//login the dashboard
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -646,7 +652,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void verify_CreatedBy_Oracle_ListView() 
+	public void verify_CreatedBy_Oracle_ListView()
 	{
 		//login the dashboard
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -671,7 +677,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void verify_ITAOOB_GridView() 
+	public void verify_ITAOOB_GridView()
 	{
 		//login the dashboard
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -696,7 +702,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void verify_ITAOOB_ListView() 
+	public void verify_ITAOOB_ListView()
 	{
 		//login the dashboard
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -721,7 +727,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void verify_LAOOB_GridView() 
+	public void verify_LAOOB_GridView()
 	{
 		//login the dashboard
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -746,7 +752,7 @@ public class TestHomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void verify_LAOOB_ListView() 
+	public void verify_LAOOB_ListView()
 	{
 		//login the dashboard
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());

@@ -30,11 +30,17 @@ import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.Applicati
 import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
 import oracle.sysman.emaas.platform.dashboards.core.cache.ICacheFetchFactory;
 import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
+import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
+import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
+import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
 
 import org.apache.logging.log4j.LogManager;
@@ -48,7 +54,6 @@ public class RegistrationEntity implements Serializable
 	private static final long serialVersionUID = 7632586542760891331L;
 
 	private static final Logger LOGGER = LogManager.getLogger(RegistrationEntity.class);
-
 	public static final String NAME_REGISTRYUTILS = "registryUrls";
 	public static final String NAME_SSF_SERVICENAME = "SavedSearch";
 	public static final String NAME_SSF_VERSION = "1.0+";
@@ -57,13 +62,14 @@ public class RegistrationEntity implements Serializable
 	public static final String NAME_QUICK_LINK = "quickLink";
 	public static final String NAME_HOME_LINK = "homeLink";
 	public static final String NAME_VISUAL_ANALYZER = "visualAnalyzer";
+	public static final String NAME_ASSET_ROOT = "assetRoot";
 	public static final String NAME_ADMIN_LINK = "administration";
 	public static final String NAME_DASHBOARD_UI_SERVICENAME = "Dashboard-UI";
 	public static final String NAME_DASHBOARD_UI_VERSION = "1.0+";
 	public static final String NAME_REGISTRY_SERVICENAME = "RegistryService";
 	public static final String NAME_REGISTRY_VERSION = "1.0+";
-	public static final String NAME_REGISTRY_REL_SSO = "sso.endpoint/virtual";
 
+	public static final String NAME_REGISTRY_REL_SSO = "sso.endpoint/virtual";
 	public static final String APM_SERVICENAME = "ApmUI";
 	public static final String APM_VERSION = "1.0+";
 	public static final String APM_HOME_LINK = "sso.home";
@@ -80,14 +86,14 @@ public class RegistrationEntity implements Serializable
 	//	public static final String TA_URL = "/emsaasui/emcta/ta/analytics.html";
 	public static final String TMUI_SERVICENAME = "TenantManagementUI";
 	public static final String EVENTUI_SERVICENAME = "EventUI";
-	public static final String ADMIN_CONSOLE_UI_SERVICENAME = "AdminConsoleSaaSUi";
 
+	public static final String ADMIN_CONSOLE_UI_SERVICENAME = "AdminConsoleSaaSUi";
 	// Infrastructure Monitoring service
 	public static final String MONITORING_OPC_APPNAME = "Monitoring";
 	public static final String MONITORING_SERVICENAME = "MonitoringServiceUI";
 	public static final String MONITORING_VERSION = "1.5+";
-	public static final String MONITORING_HOME_LINK = "sso.home";
 
+	public static final String MONITORING_HOME_LINK = "sso.home";
 	// Security Analytics service
 	public static final String SECURITY_ANALYTICS_OPC_APPNAME = "SecurityAnalytics";
 	public static final String SECURITY_ANALYTICS_SERVICENAME = "SecurityAnalyticsUI";
@@ -98,11 +104,17 @@ public class RegistrationEntity implements Serializable
 	public static final String ORCHESTRATION_SERVICENAME = "CosUIService";
 	public static final String ORCHESTRATION_VERSION = "1.0+";
 	public static final String ORCHESTRATION_URL = "/emsaasui/emcpdfui/home.html?filter=ocs";
-	// Security Analytics service
+	// Compliance service
 	public static final String COMPLIANCE_OPC_APPNAME = "Compliance";
 	public static final String COMPLIANCE_SERVICENAME = "ComplianceUIService";
-	public static final String COMPLIANCE_VERSION = "0.1+";
+	public static final String COMPLIANCE_VERSION = null;
+
 	public static final String COMPLIANCE_HOME_LINK = "sso.home";
+
+	//Security service
+	public static final String SECURITY_SERVICE_NAME = "SecurityService";
+	public static final String SECURITY_SERVICE_VERSION = "1.0+";
+	public static final String SECURITY_SERVICE_SSO_LOGOUT_REL = "sso.logout";
 
 	private static final Logger _LOGGER = LogManager.getLogger(RegistrationEntity.class);
 	//	private String registryUrls;
@@ -147,8 +159,8 @@ public class RegistrationEntity implements Serializable
 	{
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_ADMIN_LINKS, new ICacheFetchFactory() {
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_ADMIN_LINK_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_ADMIN_LINKS+"-"+UserContext.getCurrentUser(), new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
 						{
@@ -203,11 +215,19 @@ public class RegistrationEntity implements Serializable
 		Tenant cacheTenant = new Tenant(tenantName);
 		List<LinkEntity> list = null;
 		try {
-			list = (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			list = (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_CLOUD_SERVICE_LINK_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS);
 			if (list != null) {
 				return list;
 			}
+			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+				LOGGER.error("Error to get Cloud Services link: EntityNaming service is down");
+				throw new EntityNamingDependencyUnavailableException();
+			}
+		}
+		catch(DashboardException e){
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return Collections.emptyList();
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
@@ -268,14 +288,13 @@ public class RegistrationEntity implements Serializable
 							ORCHESTRATION_VERSION));
 				}
 				else if (COMPLIANCE_SERVICENAME.equals(app)) {
-					Link l = RegistryLookupUtil.getServiceExternalLink(COMPLIANCE_SERVICENAME, COMPLIANCE_VERSION,
+					VersionedLink l = RegistryLookupUtil.getServiceExternalLink(COMPLIANCE_SERVICENAME, COMPLIANCE_VERSION,
 							COMPLIANCE_HOME_LINK, tenantName);
 					if (l == null) {
 						throw new Exception("Link for " + app + "return null");
 					}
 					//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
-					LinkEntity le = new LinkEntity(COMPLIANCE_OPC_APPNAME, l.getHref(), COMPLIANCE_SERVICENAME,
-							COMPLIANCE_VERSION);
+					LinkEntity le = new LinkEntity(COMPLIANCE_OPC_APPNAME, l.getHref(), COMPLIANCE_SERVICENAME, l.getVersion());
 					le = replaceWithVanityUrl(le, tenantName, COMPLIANCE_SERVICENAME);
 					list.add(le);
 				}
@@ -285,7 +304,7 @@ public class RegistrationEntity implements Serializable
 			}
 		}
 		list = sortServiceLinks(list);
-		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_CLOUD_SERVICE_LINK_CACHE,
 				CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS, list);
 		return list;
 	}
@@ -313,7 +332,7 @@ public class RegistrationEntity implements Serializable
 	{
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_HOME_LINK_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS, new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
@@ -331,6 +350,45 @@ public class RegistrationEntity implements Serializable
 	public String getSessionExpiryTime()
 	{
 		return sessionExpirationTime;
+	}
+
+	public String getSsoLogoutUrl()
+	{
+		final String tenantName = TenantContext.getCurrentTenant();
+		Tenant cacheTenant = new Tenant(tenantName);
+		try {
+			return (String) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_SSO_LOGOUT_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_SSO_LOGOUT_URL, new ICacheFetchFactory() {
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+								LOGGER.error("Error to get SSO logout url: EntityNaming service is down");
+								throw new EntityNamingDependencyUnavailableException();
+							}
+							Link lk = RegistryLookupUtil.getServiceExternalLink(SECURITY_SERVICE_NAME, SECURITY_SERVICE_VERSION,
+									SECURITY_SERVICE_SSO_LOGOUT_REL, tenantName);
+							lk = RegistryLookupUtil.replaceWithVanityUrl(lk, tenantName, SECURITY_SERVICE_NAME);
+							if (lk != null) {
+								return lk.getHref();
+							}
+							else {
+								String errorMsg = MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR",
+										SECURITY_SERVICE_NAME, SECURITY_SERVICE_VERSION, SECURITY_SERVICE_SSO_LOGOUT_REL);
+								LOGGER.error(errorMsg);
+								return null;
+							}
+						}
+					});
+		}
+		catch(DashboardException e){
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return "";
+		}
+		catch (Exception e) {
+			LOGGER.error(e);
+		}
+		return null;
 	}
 
 	/**
@@ -400,14 +458,60 @@ public class RegistrationEntity implements Serializable
 	{
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_VISUAL_ANALYZER_LINK_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_VISUAL_ANALYZER, new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
 						{
+							if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+								LOGGER.error("Error to get Visual Analyzers link: EntityNaming service is down");
+								throw new EntityNamingDependencyUnavailableException();
+							}
 							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
 						}
 					});
+		}
+		catch(DashboardException e){
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return Collections.emptyList();
+		}
+		catch (Exception e) {
+			LOGGER.error(e);
+			return Collections.emptyList();
+		}
+	}
+
+	/**
+	 * @return asset root links discovered from service manager
+	 */
+	@SuppressWarnings("all")
+	public List<LinkEntity> getAssetRoots()
+	{
+		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
+		try {
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_ASSET_ROOT_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_ASSET_ROOTS, new ICacheFetchFactory() {
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+								LOGGER.error("Error to get Asset Roots link: EntityNaming service is down");
+								throw new EntityNamingDependencyUnavailableException();
+							}
+							List<LinkEntity> links = lookupLinksWithRelPrefix(NAME_ASSET_ROOT);
+							if (links != null) {
+								for (LinkEntity link: links) {
+									link.setName(null);
+								}
+							}
+							return links;
+						}
+					});
+		}
+		catch(DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return Collections.emptyList();
 		}
 		catch (Exception e) {
 			LOGGER.error(e);

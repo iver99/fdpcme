@@ -23,7 +23,10 @@ function (ko, $, oj, dfu) {
                                 if (!widgets[i].WIDGET_DESCRIPTION) {
                                     widgets[i].WIDGET_DESCRIPTION = null;
                                 }
-                                var wgt = ko.mapping.fromJS(widgets[i]);
+                                var wgt = ko.mapping.fromJS(widgets[i]); 
+                                if(widgets[i].WIDGET_DESCRIPTION){
+                                    wgt.WIDGET_DESCRIPTION = widgets[i].WIDGET_DESCRIPTION.toString().replace(/\n/g,"<br>");
+                                }
                                 if (wgt && !wgt.WIDGET_VISUAL) {
                                     wgt.WIDGET_VISUAL = ko.observable('');
                                 }

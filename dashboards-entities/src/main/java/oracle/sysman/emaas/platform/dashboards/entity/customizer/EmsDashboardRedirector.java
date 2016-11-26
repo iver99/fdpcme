@@ -62,7 +62,7 @@ public class EmsDashboardRedirector implements QueryRedirector
 			Object rtn = uoq.execute((AbstractSession) session, (AbstractRecord) arguments);
 			return rtn;
 		}
-		else if (query.isInsertObjectQuery()) {// remove the soft deleted object before insertion
+	/*	else if (query.isInsertObjectQuery()) {// remove the soft deleted object before insertion
 			InsertObjectQuery ioq = (InsertObjectQuery) query;
 			EmsDashboard ed = (EmsDashboard) ioq.getObject();
 
@@ -80,7 +80,7 @@ public class EmsDashboardRedirector implements QueryRedirector
 			Object rtn = ioq.execute((AbstractSession) session, (AbstractRecord) arguments);
 			cd.getQueryManager().setInsertQuery(old);
 			return rtn;
-		}
+		} */
 		else {
 			query.setDoNotRedirect(true);
 			return query.execute((AbstractSession) session, (AbstractRecord) arguments);

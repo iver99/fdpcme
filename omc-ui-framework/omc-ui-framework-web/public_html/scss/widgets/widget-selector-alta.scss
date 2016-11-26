@@ -2,12 +2,12 @@
     Created on : 2015-3-19, 10:30:08
     Author     : aduan
 */
-.fa-icon-font {
+/*.fa-icon-font {
   font-family: FaFont;
   font-size: 1.34rem;
-  /* display: inline-block; */
+   display: inline-block; 
   font-weight: normal;
-  /* speak: none; */
+   speak: none; 
   font-style: normal;
   font-variant: normal;
   text-transform: none;
@@ -20,7 +20,7 @@
 
 .fa-icon-font:before{
     display: inline-block;
-}
+}*/
 
 .fa-chevron-left:before {
   content: "\f053";
@@ -136,10 +136,11 @@
     float: right;
 }
 
-.widget-selector-clear-icon:before {
+.widget-selector-clear-icon:before {//clearEntry_ena
     height:16px;
     width:16px;
-    content:url("../../images/widgets/clearEntry_ena.png");
+    content:" ";
+    background:url(../../images/uifwkSprite.png) no-repeat 0px -142px;height:16px;padding-left:18px;
 }
 
 .widget-selector-screenshot {
@@ -201,10 +202,11 @@
     border-width: 1px;
 }
 
-.widget-selector-search-icon:before {
+.widget-selector-search-icon:before {//func_search_16_ena
     height:16px;
     width:16px;
-    content:url("../../images/widgets/func_search_16_ena.png");
+    content:" ";
+    background:url(../../images/uifwkSprite.png) no-repeat 0px -94px;height:16px;padding-left:18px;
 }
 
 .widget-selector-icon-button {

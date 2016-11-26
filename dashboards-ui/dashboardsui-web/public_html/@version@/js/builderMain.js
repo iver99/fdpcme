@@ -52,7 +52,8 @@ requirejs.config({
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
         'uifwk': '/emsaasui/uifwk'
     },
-    bundles: (window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ? undefined : {
+    bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
+                (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
         'uifwk/js/uifwk-partition':
             [
             'uifwk/js/util/ajax-util',
@@ -65,6 +66,7 @@ requirejs.config({
             'uifwk/js/util/typeahead-search',
             'uifwk/js/util/usertenant-util',
             'uifwk/js/util/zdt-util',
+            'uifwk/js/sdk/context-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
@@ -211,7 +213,6 @@ require(['knockout',
     'uifwk/js/util/df-util',
     'uifwk/js/util/logging-util',
     'ojs/ojcore',
-    'dashboards/widgets/autorefresh/js/auto-refresh',
 //    'dashboards/widgets/textwidget/js/textwidget',
     'dashboards/dashboardhome-impl',
 //    'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
@@ -224,7 +225,7 @@ require(['knockout',
     'builder/dashboardset.panels.model',
     'builder/dashboardDataSource/dashboard.datasource'
 ],
-    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, /*textwidget, */dashboardhome_impl/*, TargetSelectorUtils*/) // this callback gets executed when all required modules are loaded
+    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, /*textwidget, */dashboardhome_impl/*, TargetSelectorUtils*/) // this callback gets executed when all required modules are loaded
     {
         var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
@@ -237,11 +238,13 @@ require(['knockout',
         
         window.onerror = function (msg, url, lineNo, columnNo, error)
         {
-            oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo, true);
+            var msg = "Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo;
             if(error.stack) {
-                oj.Logger.error("Error: " + JSON.stringify(error.stack), true);
+                msg = msg + ". Error: " + JSON.stringify(error.stack);
             }
-            return false; 
+            oj.Logger.error(msg, true);
+            
+            return false;
         }
 
         if (!ko.components.isRegistered('df-oracle-branding-bar')) {
@@ -259,10 +262,6 @@ require(['knockout',
         ko.components.register("df-datetime-picker",{
             viewModel: {require: 'uifwk/js/widgets/datetime-picker/js/datetime-picker'},
             template: {require: 'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
-        });
-        ko.components.register("df-auto-refresh",{
-            viewModel:auto_refresh,
-            template:{require:'text!./widgets/autorefresh/auto-refresh.html'}
         });
         /*ko.components.register("DF_V1_WIDGET_TEXT", {
             viewModel: textwidget,
@@ -291,7 +290,8 @@ require(['knockout',
                 userName: self.userName,
                 tenantName: self.tenantName,
                 appId: self.appId,
-                isAdmin:true
+                isAdmin:true,
+                showGlobalContextBanner: true
             };
 
             $("#headerWrapper").on("DOMSubtreeModified", function() {

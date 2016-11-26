@@ -222,6 +222,13 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 		List<EmsDashboard> ps = this.localFind(EmsDashboard.class, new EmsDashboardSelector(dashboardId, null, null, null));
 		return ps.isEmpty() ? null : ps.get(0);
 	}
+	
+	@Mock
+	public void removePreferenceByKey(String userName, String key, long tenantId)
+	{
+		this.localRemove(EmsPreference.class, new EmsPreferenceSelector(userName,key));
+	}
+
 
 	@Mock
 	public EmsDashboard getEmsDashboardByName(String name, String owner)
@@ -408,6 +415,11 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	public int removeUnsharedEmsSubDashboard(BigInteger subDashboardId, String owner)
 	{
 		return 1;
+	}
+
+	@Mock
+	public void updateSubDashboardShowInHome(BigInteger dashboardId){
+
 	}
 
 	@SuppressWarnings("unchecked")
