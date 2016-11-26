@@ -35,7 +35,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
 //@AdditionalCriteria("this.deleted = '0'")
-@QueryRedirectors(insert = EmsDashboardRedirector.class, delete = EmsDashboardRedirector.class)
+@QueryRedirectors(delete = EmsDashboardRedirector.class)
 public class EmsDashboard extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1219062974568988740L;

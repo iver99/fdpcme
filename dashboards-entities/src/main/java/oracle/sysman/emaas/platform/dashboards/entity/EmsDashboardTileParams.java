@@ -27,8 +27,8 @@ import oracle.sysman.emaas.platform.dashboards.entity.customizer.EmsDashboardTil
 @Table(name = "EMS_DASHBOARD_TILE_PARAMS")
 @IdClass(EmsDashboardTileParamsPK.class)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
-@AdditionalCriteria("this.deleted = '0'")
-@QueryRedirectors(insert = EmsDashboardTileParamsRedirector.class, delete = EmsDashboardTileParamsRedirector.class)
+//@AdditionalCriteria("this.deleted = '0'")
+//@QueryRedirectors(insert = EmsDashboardTileParamsRedirector.class, delete = EmsDashboardTileParamsRedirector.class)
 public class EmsDashboardTileParams extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 4988046039963971713L;

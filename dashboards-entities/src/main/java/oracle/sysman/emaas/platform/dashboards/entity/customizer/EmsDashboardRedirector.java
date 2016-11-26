@@ -53,7 +53,7 @@ public class EmsDashboardRedirector implements QueryRedirector
 			DeleteObjectQuery doq = (DeleteObjectQuery) query;
 			EmsDashboard ed = (EmsDashboard) doq.getObject();
 			LOGGER.info("Soft deletion: instead of deleting dashboard with id={} and name={}, it's 'deleted' field is updated", ed.getDashboardId(), ed.getName());
-			ed.setDeleted(BigInteger.ONE);
+			ed.setDeleted(ed.getDashboardId());
 			UpdateObjectQuery uoq = new UpdateObjectQuery(ed);
 			cd.addDirectQueryKey("deleted", "DELETED");
 			uoq.setDescriptor(cd);
