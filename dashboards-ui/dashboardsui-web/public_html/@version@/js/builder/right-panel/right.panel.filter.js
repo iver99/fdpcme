@@ -199,8 +199,8 @@ define([
                 self.dashboard = dashboard;
                 var extendedOptions = JSON.parse(dashboard.extendedOptions());
                 self.extendedOptions = extendedOptions ? extendedOptions : self.extendedOptions;
-                var tsel = extendedOptions ? extendedOptions.tsel : {};
-                var timeSel = extendedOptions ? extendedOptions.timeSel : {};
+                var tsel = extendedOptions && extendedOptions.tsel ? extendedOptions.tsel : {};
+                var timeSel = extendedOptions && extendedOptions.timeSel ? extendedOptions.timeSel : {};
                 //1. reset tsel in right drawer
                 self.enableEntityFilter((dashboard.enableEntityFilter() === 'TRUE')?'ON':'OFF');
                 self.entitySupport(tsel.entitySupport?(tsel.entitySupport==="byCriteria"?true:false):true);
