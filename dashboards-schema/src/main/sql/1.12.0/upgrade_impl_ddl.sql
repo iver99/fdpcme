@@ -88,6 +88,12 @@ BEGIN
   ELSE
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_USER_OPTIONS.DELETED exists already, no change is needed');
   END IF;
+  
+  EXCEPTION
+  WHEN OTHERS THEN
+    ROLLBACK;
+    DBMS_OUTPUT.PUT_LINE('Failed to update the sql due to '||SQLERRM);
+    RAISE;
 END;
 /
 
@@ -101,12 +107,8 @@ BEGIN
 END;
 /
 
-BEGIN
-  EXCEPTION
-  WHEN OTHERS THEN
-    ROLLBACK;
-    DBMS_OUTPUT.PUT_LINE('Failed to update the sql due to '||SQLERRM);
-    RAISE;
-END;
-/
+
+
+
+
 
