@@ -21,14 +21,9 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsPreferencePK;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptionsPK;
-
-<<<<<<< HEAD
-=======
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
->>>>>>> greenchannel_landing_oct17_zdt
 public class DashboardServiceFacade
 {
 	private static final Logger LOGGER = LogManager.getLogger(DashboardServiceFacade.class);
