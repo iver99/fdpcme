@@ -196,7 +196,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.click(convertName(DashBoardPageId.EXPLOREDATABTNID));
 		//WebElement menu = driver.getElement(convertName(DashBoardPageId.EXPLOREDATAMENU));
                  
-                if ("Log Visual Analyzer".equals(option)) {                 
+                if ("Log".equals(option)) {                 
                         driver.click(DashBoardPageId.EXPLORE_LOG);
                  } else {
                      	driver.click(DashBoardPageId.EXPLORE_Search);
