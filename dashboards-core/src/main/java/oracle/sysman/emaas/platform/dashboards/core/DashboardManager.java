@@ -1217,7 +1217,7 @@ public class DashboardManager
 		}
 		//EntityManager em = null;
 		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-		if (ed == null || ed.getDeleted() != null && ed.getDeleted().equals(1)) {
+		if (ed == null || ed.getDeleted() != null && ed.getDeleted().compareTo(BigInteger.ZERO) > 0) {
 			return;
 		}
 		//em = dsf.getEntityManager();
