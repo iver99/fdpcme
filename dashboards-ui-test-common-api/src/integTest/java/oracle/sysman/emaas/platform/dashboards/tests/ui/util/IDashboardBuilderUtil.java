@@ -25,11 +25,11 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	public static final String TILE_LEFT = "left";
 	public static final String TILE_RIGHT = "right";
 
-	public void addNewDashboardToSet(WebDriver driver, String dashboardName) ;
+	public void addNewDashboardToSet(WebDriver driver, String dashboardName);
 
-	public void addWidgetToDashboard(WebDriver driver, String searchString) ;
+	public void addWidgetToDashboard(WebDriver driver, String searchString);
 
-    public void createDashboardInsideSet(WebDriver driver, String name, String descriptions) ;
+	public void createDashboardInsideSet(WebDriver driver, String name, String descriptions);
 
 	public void deleteDashboard(WebDriver driver);
 
@@ -37,70 +37,90 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 
 	public void deleteDashboardSet(WebDriver driver);
 
-	public void duplicateDashboard(WebDriver driver, String name, String descriptions) ;
+	public void duplicateDashboard(WebDriver driver, String name, String descriptions);
 
-    public void duplicateDashboardInsideSet(WebDriver driver, String name, String descriptions, boolean addToSet) ;
+	public void duplicateDashboardInsideSet(WebDriver driver, String name, String descriptions, boolean addToSet);
 
-    public void editDashboard(WebDriver driver, String name, String descriptions) ;
+	public void editDashboard(WebDriver driver, String name, String descriptions);
 
-	public void editDashboard(WebDriver driver, String name, String descriptions, Boolean toShowDscptn) ;
+	public void editDashboard(WebDriver driver, String name, String descriptions, Boolean toShowDscptn);
 
-    public void editDashboardSet(WebDriver driver, String name, String descriptions) ;
+	public void editDashboardSet(WebDriver driver, String name, String descriptions);
 
-	public Boolean favoriteOption(WebDriver driver) ;
+	public Boolean favoriteOption(WebDriver driver);
 
-	public Boolean favoriteOptionDashboardSet(WebDriver driver) ;
+	public Boolean favoriteOptionDashboardSet(WebDriver driver);
 
-	public void gridView(WebDriver driver) ;
+	public void gridView(WebDriver driver);
 
-	public boolean isRefreshSettingChecked(WebDriver driver, String refreshSettings) ;
+	public boolean isRefreshSettingChecked(WebDriver driver, String refreshSettings);
 
 	public boolean isRefreshSettingCheckedForDashbaordSet(WebDriver driver, String refreshSettings);
 
-	//	public void loadWebDriverOnly(WebDriver webDriver) 
+	//	public void loadWebDriverOnly(WebDriver webDriver)
 	//	{
 	//		driver = webDriver;
 	//	}
 
-	public void listView(WebDriver driver) ;
-	
-	public void moveWidget(WebDriver driver, String widgetName, int index, String moveOption) ;
+	public void listView(WebDriver driver);
 
-	public void moveWidget(WebDriver driver, String widgetName, String moveOption) ;
-	
-	public void openWidget(WebDriver driver, String widgetName) ;
+	/**
+	 * @param driver
+	 * @param widgetName
+	 * @param index
+	 */
+	public void maximizeWidget(WebDriver driver, String widgetName, int index);
 
-	public void openWidget(WebDriver driver, String widgetName, int index) ;
+	public void moveWidget(WebDriver driver, String widgetName, int index, String moveOption);
 
-	public void printDashboard(WebDriver driver) ;
+	public void moveWidget(WebDriver driver, String widgetName, String moveOption);
 
-	public void printDashboardSet(WebDriver driver) ;
+	public void openWidget(WebDriver driver, String widgetName);
+
+	public void openWidget(WebDriver driver, String widgetName, int index);
+
+	public void printDashboard(WebDriver driver);
+
+	public void printDashboardSet(WebDriver driver);
 
 	public void refreshDashboard(WebDriver driver, String refreshSettings);
 
 	public void refreshDashboardSet(WebDriver driver, String refreshSettings);
 
-	public void removeWidget(WebDriver driver, String widgetName) ;
+	public void removeDashboardFromSet(WebDriver driver, String dashboardName);
 
-	public void removeWidget(WebDriver driver, String widgetName, int index) ;
+	public void removeWidget(WebDriver driver, String widgetName);
 
-    public void removeDashboardFromSet(WebDriver driver, String dashboardName) ;
+	public void removeWidget(WebDriver driver, String widgetName, int index);
 
-    public void resizeWidget(WebDriver driver, String widgetName, int index, String resizeOptions) ;
+	public void resizeWidget(WebDriver driver, String widgetName, int index, String resizeOptions);
 
-	public void resizeWidget(WebDriver driver, String widgetName, String resizeOptions) ;
+	public void resizeWidget(WebDriver driver, String widgetName, String resizeOptions);
 
-	public void saveDashboard(WebDriver driver) ;
+	/**
+	 * @param driver
+	 * @param widgetName
+	 * @param index
+	 */
+	public void restoreWidget(WebDriver driver, String widgetName, int index);
 
-	public void search(WebDriver driver, String searchString) ;
+	public void saveDashboard(WebDriver driver);
 
-	public void selectDashboard(WebDriver driver, String dashboardName) ;
+	public void search(WebDriver driver, String searchString);
 
-    public void selectDashboardInsideSet(WebDriver driver,String dashboardName) ;
+	public void selectDashboard(WebDriver driver, String dashboardName);
 
-    public void showWidgetTitle(WebDriver driver, String widgetName, boolean visibility) ;
+	public void selectDashboardInsideSet(WebDriver driver, String dashboardName);
 
-	public void showWidgetTitle(WebDriver driver, String widgetName, int index, boolean visibility) ;
+	public void setEntitySupport(WebDriver driver, String mode);
+
+	public boolean showEntityFilter(WebDriver driver, boolean showEntityFilter);
+
+	public boolean showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter);
+
+	public void showWidgetTitle(WebDriver driver, String widgetName, boolean visibility);
+
+	public void showWidgetTitle(WebDriver driver, String widgetName, int index, boolean visibility);
 
 	/**
 	 * sort dashboards
@@ -108,18 +128,17 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	 * @param driver
 	 * @param option
 	 *            sort by - default, access_date_asc, access_date_dsc, name_asc, name_dsc, creation_date_asc, creation_date_dsc,
-	 *            last_modification_date_asc, last_modification_date_dsc, owner_asc, owner_dsc
-	 * @
+	 *            last_modification_date_asc, last_modification_date_dsc, owner_asc, owner_dsc @
 	 */
-	public void sortBy(WebDriver driver, String option) ;
+	public void sortBy(WebDriver driver, String option);
 
-	public Boolean toggleHome(WebDriver driver) ;
+	public Boolean toggleHome(WebDriver driver);
 
-	public Boolean toggleHomeDashboardSet(WebDriver driver) ;
+	public Boolean toggleHomeDashboardSet(WebDriver driver);
 
-	public Boolean toggleShareDashboard(WebDriver driver) ;
+	public Boolean toggleShareDashboard(WebDriver driver);
 
-	public Boolean toggleShareDashboardset(WebDriver driver) ;
+	public Boolean toggleShareDashboardset(WebDriver driver);
 
 	public boolean verifyDashboard(WebDriver driver, String dashboardName, String description, boolean showTimeSelector);
 
@@ -130,12 +149,5 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	public boolean verifyWidget(WebDriver driver, String widgetName);
 
 	public boolean verifyWidget(WebDriver driver, String widgetName, int index);
-	
-	public void setEntitySupport(WebDriver driver, String mode) ;
-
-	public boolean showEntityFilter(WebDriver driver, boolean showEntityFilter) ;
-	
-	public boolean showTimeRangeFilter(WebDriver driver, boolean showTimeRangeFilter) ;
-	
 
 }

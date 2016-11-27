@@ -10,8 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
@@ -22,6 +20,8 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -87,7 +87,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 			e.printStackTrace();
 		}
 		driver.getLogger().info("removeDashboardInSet has selected the dashboard named with \"" + dashboardName + "\"");
@@ -482,7 +482,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			DashboardHomeUtil.gridView(driver);
 		}
 		catch (Exception e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -577,29 +577,39 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			DashboardHomeUtil.listView(driver);
 		}
 		catch (Exception e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#maximizeWidget(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, int)
+	 */
+	@Override
+	public void maximizeWidget(WebDriver driver, String widgetName, int index)
+	{
+		driver.getLogger().info("Method not available in 1.7.1 version");
+
+	}
+
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#moveWidget(WebDriver driver, String widgetName, int index, String moveOption)
 	 */
 	@Override
 	public void moveWidget(WebDriver driver, String widgetName, int index, String moveOption)
 	{
-    	Assert.assertTrue(false,"This method is not available in 1.7.1 version");
+		Assert.assertTrue(false, "This method is not available in 1.7.1 version");
 		driver.getLogger().info("Method not available in 1.7.1 version");
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#moveWidget(WebDriver driver, String widgetName, String moveOption)
 	 */
 	@Override
 	public void moveWidget(WebDriver driver, String widgetName, String moveOption)
 	{
-    	moveWidget(driver, widgetName, 0, moveOption);
+		moveWidget(driver, widgetName, 0, moveOption);
 	}
 
 	/* (non-Javadoc)
@@ -643,10 +653,6 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.getLogger().info("DashboardBuilderUtil print completed");
 	}
 
-	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#printDashboardSet(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
-	 */
-
 	@Override
 	public void printDashboardSet(WebDriver driver)
 	{
@@ -684,7 +690,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			Thread.sleep(waitTime);
 		}
 		catch (InterruptedException e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -801,7 +807,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			widgetEl = getWidgetByName(driver, widgetName, index);
 		}
 		catch (InterruptedException e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -831,7 +837,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			widgetEl = getWidgetByName(driver, widgetName, index);
 		}
 		catch (InterruptedException e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -877,6 +883,16 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	}
 
 	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#restoreWidget(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, int)
+	 */
+	@Override
+	public void restoreWidget(WebDriver driver, String widgetName, int index)
+	{
+		driver.getLogger().info("Method not available in 1.7.1 version");
+
+	}
+
+	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#saveDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
@@ -899,7 +915,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			DashboardHomeUtil.search(driver, searchString);
 		}
 		catch (Exception e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -915,7 +931,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			DashboardHomeUtil.selectDashboard(driver, dashboardName);
 		}
 		catch (Exception e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -1009,7 +1025,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			DashboardHomeUtil.sortBy(driver, option);
 		}
 		catch (Exception e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -1164,7 +1180,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	{
 		driver.getLogger().info(
 				"verifyDashboard started for name=\"" + dashboardName + "\", description=\"" + description
-						+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
+				+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
 
 		driver.waitForElementPresent(DashBoardPageId.BUILDERNAMETEXTLOCATOR);
@@ -1179,17 +1195,17 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		if (!dashboardName.equals(realName)) {
 			driver.getLogger().info(
 					"verifyDashboard compelted and returns false. Expected dashboard name is " + dashboardName
-							+ ", actual dashboard name is " + realName);
+					+ ", actual dashboard name is " + realName);
 			return false;
 		}
 
 		driver.waitForElementPresent(DashBoardPageId.BUILDERDESCRIPTIONTEXTLOCATOR);
 		String realDesc = driver.getElement(DashBoardPageId.BUILDERDESCRIPTIONTEXTLOCATOR).getAttribute("title");
-		if (description == null || ("").equals(description)) {
-			if (realDesc != null && !("").equals(realDesc.trim())) {
+		if (description == null || "".equals(description)) {
+			if (realDesc != null && !"".equals(realDesc.trim())) {
 				driver.getLogger().info(
 						"verifyDashboard compelted and returns false. Expected description is " + description
-								+ ", actual dashboard description is " + realDesc);
+						+ ", actual dashboard description is " + realDesc);
 				return false;
 			}
 		}
@@ -1197,7 +1213,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			if (!description.equals(realDesc)) {
 				driver.getLogger().info(
 						"verifyDashboard compelted and returns false. Expected description is " + description
-								+ ", actual dashboard description is " + realDesc);
+						+ ", actual dashboard description is " + realDesc);
 				return false;
 			}
 		}
@@ -1206,7 +1222,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		if (actualTimeSelectorShown != showTimeSelector) {
 			driver.getLogger().info(
 					"verifyDashboard compelted and returns false. Expected showTimeSelector is " + showTimeSelector
-							+ ", actual dashboard showTimeSelector is " + actualTimeSelectorShown);
+					+ ", actual dashboard showTimeSelector is " + actualTimeSelectorShown);
 			return false;
 		}
 
@@ -1279,7 +1295,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		if (!dashboardSetName.equals(realName)) {
 			driver.getLogger().info(
 					"verifyDashboardSet compelted and returns false. Expected dashboard set name is " + dashboardSetName
-							+ ", actual dashboard set name is " + realName);
+					+ ", actual dashboard set name is " + realName);
 			return false;
 		}
 
@@ -1311,7 +1327,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			we = getTileTitleElement(driver, widgetName, index);
 		}
 		catch (NoSuchElementException e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 			driver.getLogger().info("verifyWidget compelted and returns false");
 			return false;
 		}
@@ -1421,10 +1437,10 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	private boolean isRightDrawerVisible(WebDriver driver)
 	{
 		WebElement rightDrawerPanel = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RIGHTDRAWERPANELCSS));
-		boolean isDisplayed = ("none").equals(rightDrawerPanel.getCssValue("display")) != true;
+		boolean isDisplayed = "none".equals(rightDrawerPanel.getCssValue("display")) != true;
 		driver.getLogger().info("isRightDrawerVisible,the isDisplayed value is " + isDisplayed);
 
-		boolean isWidthValid = ("0px").equals(rightDrawerPanel.getCssValue("width")) != true;
+		boolean isWidthValid = "0px".equals(rightDrawerPanel.getCssValue("width")) != true;
 		driver.getLogger().info("isRightDrawerVisible,the isWidthValid value is " + isWidthValid);
 
 		return isDisplayed && isWidthValid;
