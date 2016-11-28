@@ -45,8 +45,8 @@ public class TenantSubscriptionUtil
 {
 	public static class RestClient
 	{
-		public static final String HTTP_HEADER_OAM_REMOTE_USER = "OAM_REMOTE_USER";
-		public static final String HTTP_HEADER_X_IDENTITY_DOMAIN_NAME = "X-IDENTITY-DOMAIN-NAME";
+		private static final String HTTP_HEADER_OAM_REMOTE_USER = "OAM_REMOTE_USER";
+		private static final String HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
 
 		public RestClient()
 		{
@@ -72,7 +72,8 @@ public class TenantSubscriptionUtil
 			}
 			try {
 				Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-						.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+						.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON);
 				return builder.get(String.class);
 			}
 			catch (Exception e) {
@@ -104,7 +105,7 @@ public class TenantSubscriptionUtil
 			try {
 				Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 						.header(HTTP_HEADER_OAM_REMOTE_USER, tenantName + "." + userName)
-						.header(HTTP_HEADER_X_IDENTITY_DOMAIN_NAME, tenantName);
+						.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenantName);
 				return builder.get(String.class);
 			}
 			catch (Exception e) {

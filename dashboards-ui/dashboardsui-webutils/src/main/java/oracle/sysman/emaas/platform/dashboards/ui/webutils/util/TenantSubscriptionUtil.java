@@ -42,11 +42,10 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
  */
 public class TenantSubscriptionUtil
 {
-	private TenantSubscriptionUtil() {
-	  }
-
 	public static class RestClient
 	{
+		private static final String HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
+
 		public RestClient()
 		{
 		}
@@ -67,15 +66,17 @@ public class TenantSubscriptionUtil
 			else {
 				LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
 				itrLogger
-				.info("RestClient is connecting to get response after getting authorization token from registration manager.");
+						.info("RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
 			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+					.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(MediaType.APPLICATION_JSON)
+					.accept(MediaType.APPLICATION_JSON);
 			return builder.get(String.class);
 		}
 	}
 
 	private static Logger LOGGER = LogManager.getLogger(TenantSubscriptionUtil.class);
+
 	private static Logger itrLogger = LogUtil.getInteractionLogger();
 
 	public static List<String> getTenantSubscribedServices(String tenant)
@@ -191,10 +192,14 @@ public class TenantSubscriptionUtil
 			return false;
 		}
 		//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
-		if (("Monitoring").equals(svc)) {
+		if ("Monitoring".equals(svc)) {
 			return true;
 		}
 		return false;
+	}
+
+	private TenantSubscriptionUtil()
+	{
 	}
 
 }
