@@ -1,14 +1,10 @@
-
 sourceSets {
-    integTest {
-        java.srcDir 'src/integTest/java'
-        compileClasspath = configurations.testNG+configurations.restAssured + configurations.testConfig
-    }
     test{
                 java {
                         srcDirs = ['src/integTest/java']
                 }
                 resources.srcDirs = ['src/integTest/java']
+                compileClasspath += configurations.testNG + configurations.restAssured + configurations.testConfig
         }
 }
 
@@ -20,13 +16,11 @@ jar {
 }
 
 task integTestJar (type:Jar) {
-    from sourceSets.integTest.output
+    from sourceSets.test.output
     appendix = 'integ-tests'
 }
 dependencies {
-		testCompile configurations.testNG
 		testConfig project(':dashboards-core')
-		testConfig project(':dashboards-webutils')
 		testConfig getProjectArtifact('log4j-core')  
 		testConfig getProjectArtifact('log4j-api')  
 		testConfig getProjectArtifact('wls-api')  
@@ -46,6 +40,5 @@ dependencies {
 		testConfig getProjectArtifact('jackson-core-asl')  
 		testConfig getProjectArtifact('jackson-mapper-asl') 
 		testConfig getProjectArtifact('commons-logging') 
-
 }
 build.dependsOn integTestJar
