@@ -101,6 +101,14 @@ define(['knockout',
             } else {
             	self.dataSource[dashboardId].preference = undefined;
             }
+            
+            if (dsb && dsb.selectedSsData) {
+                var ssDataFormat = JSON.parse(dsb.selectedSsData);
+                self.dataSource[dashboardId].savedSearchData = ssDataFormat;
+            } else {
+                self.dataSource[dashboardId].savedSearchData = undefined;
+            }
+            
             if (dsb.selected) {
                 initializeDashboardAfterLoad(dsb.selected.id, kodsb.selected, dsb.selected);
             }
@@ -109,6 +117,7 @@ define(['knockout',
         	self.dataSource[dashboardId].dashboard.isFavorite = undefined;
         	self.dataSource[dashboardId].dashboard.preference = undefined;
         	self.dataSource[dashboardId].dashboard.selected = undefined;
+                self.dataSource[dashboardId].dashboard.savedSearchData = undefined;
     	}
         
         self.loadDashboardData = function (dashboardId, successCallback, errorCallback) {
@@ -132,7 +141,34 @@ define(['knockout',
                 successCallback && successCallback(self.dataSource[dashboardId].dashboard);
             }
         };
-        
+
+        self.fetchSelDbdSsData = function (dashboardId, widgetId, successCallback, errorCallback) {
+            if (!self.dataSource[dashboardId]) {
+                self.dataSource[dashboardId] = {};
+            }
+            var widgetData = null;
+            if (isEmptyObject(self.dataSource[dashboardId])) {
+                // emcpdf-2530
+                self.loadDashboardData(dashboardId, function () {
+                    if (!self.dataSource[dashboardId].savedSearchData) {
+                        widgetData = self.dataSource[dashboardId].savedSearchData.filter(function isMatched(element) {
+                            return element.id == widgetId;
+                        });
+                    }
+                    successCallback && successCallback(widgetData);
+                },
+                function (jqXHR, textStatus, errorThrown) {
+                    errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
+                });
+            } else {
+                if (!self.dataSource[dashboardId].savedSearchData) {
+                    widgetData = self.dataSource[dashboardId].savedSearchData.filter(function isMatched(element) {
+                        return element.id == widgetId;
+                    });
+                }
+                successCallback && successCallback(widgetData);
+            }
+        };
         
         
         self.updateDashboardData = function(dashboardId,dashboard,successCallback,errorCallback){
@@ -250,7 +286,7 @@ define(['knockout',
                 return !1;
             return !0;
         };
-        
+                
         //convert dashboard returned from datebase to knockout obaservable for UI use
         function getKODashboardForUI(data) {
             // If dashboad is single page app, success callback will be ignored

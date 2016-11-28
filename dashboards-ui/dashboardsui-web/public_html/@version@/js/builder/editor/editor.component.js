@@ -295,6 +295,17 @@ define(['knockout',
             tile.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
                 tile.dashboard.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
             };
+            
+            tile.getWigetDataFromCache = function (wigetId) {
+                var dsbId = window.selectedDashboardInst().dashboardsetToolBar.selectedDashboardItem().dashboardId;
+                var retrunedWigetData;
+                new Builder.DashboardDataSource().fetchSelDbdSsData(dsbId,wigetId,function (dashboardData) {
+                    retrunedWigetData = dashboardData;
+                }, function (e) {
+                    console.log(e.errorMessage());
+                });
+                return retrunedWigetData;
+            };
 
             if (loadImmediately) {
                 var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME());
