@@ -1798,7 +1798,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcitas/db-analytics-war/html/db-performance-analytics.html");
+		DashBoardUtils.verifyURL(webd, "emcitas/db-performance-analytics/html/db-performance-analytics.html");
 
 		//verify all the widgets displayed
 		//TODO

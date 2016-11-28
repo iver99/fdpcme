@@ -366,6 +366,7 @@ define(['knockout',
                     return ;
                 }
                 var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
+                self.dashboard.sharePublic(isToShare);               
                 dfu.ajaxWithRetry(_url + self.dashboard.id() + "/quickUpdate", {
                         type: 'PUT',
                         dataType: "json",
@@ -373,7 +374,6 @@ define(['knockout',
                         data: JSON.stringify({sharePublic: isToShare}),
                         headers: dfu.getDashboardsRequestHeader(),
                         success: function (result) {
-                            self.dashboard.sharePublic(isToShare);
                             if (self.dashboard.sharePublic() === true)
                             {
                                 self.sharePublicLabel(unshareDashboardLabel);
@@ -390,6 +390,7 @@ define(['knockout',
                             }
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
+                            self.dashboard.sharePublic(!isToShare); 
                             dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
                         }
                     });
