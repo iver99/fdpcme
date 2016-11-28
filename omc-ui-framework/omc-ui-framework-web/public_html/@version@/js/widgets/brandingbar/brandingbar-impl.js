@@ -986,7 +986,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
                 var displayEntitiesName = cxtUtil.getEntityMeIds()
                     && !cxtUtil.getEntitiesType()
-                    && cxtUtil.getEntityMeIds().length === 1;
+                    && cxtUtil.getEntityMeIds().length === 1
+                    && cxtUtil.getEntities().length === 1;
 
                 if (displayCompositeName) {
                     self.compositeCxtText(self.cxtCompositeDisplayName);
