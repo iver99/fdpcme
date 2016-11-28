@@ -121,7 +121,7 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
             self.getUserRoles = function(callback,sendAsync) {
                 var serviceUrl = "/sso.static/dashboards.configurations/userInfo";
                 if (dfu.isDevMode()){
-                    callback({"currentUser": "emaastesttenant1.emcsadmin","userRoles":["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]});
+                    callback(["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]);
                     return;
                 }
                 if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.roles){
