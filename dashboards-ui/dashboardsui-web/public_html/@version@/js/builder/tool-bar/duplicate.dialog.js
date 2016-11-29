@@ -105,8 +105,8 @@ define(['knockout',
                     } else {
                         selectedDashboardInst().toolBarModel.duplicateInSet(false);
                         $('#duplicateDsbDialog').ojDialog('close');
-                        if (data && data.id) {
-                            window.location.href = "/emsaasui/emcpdfui/builder.html?dashboardId=" + data.id;
+                        if (data && data.id()) {
+                            window.location.href = "/emsaasui/emcpdfui/builder.html?dashboardId=" + data.id();
                         }
                     }
                 };
