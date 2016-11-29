@@ -92,20 +92,19 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             function handleShowHideTopology() {
                 $("#ude-topology-div").slideToggle("fast", function () {
                     self.isTopologyDisplayed(!self.isTopologyDisplayed());
-                });
-
-                if (!self.isTopologyDisplayed()) {
-                    //when expanding the topology, do a refresh if needed
-                    if (self.topologyNeedRefresh) {
-                        refreshTopologyParams();
+                    if (self.isTopologyDisplayed()) {
+                        //when expanding the topology, do a refresh if needed
+                        if (self.topologyNeedRefresh) {
+                            refreshTopologyParams();
+                        }
+                        $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
                     }
-                    $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
-                }
-                //set brandingbar_cache information for Topology expanded state
-                var brandingBarCache = {isTopologyDisplayed: self.isTopologyDisplayed()};
-                window.sessionStorage._uifwk_brandingbar_cache = JSON.stringify(brandingBarCache);
-                var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
-                $b && $b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
+                    //set brandingbar_cache information for Topology expanded state
+                    var brandingBarCache = {isTopologyDisplayed: self.isTopologyDisplayed()};
+                    window.sessionStorage._uifwk_brandingbar_cache = JSON.stringify(brandingBarCache);
+                    var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                    $b && $b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
+                });
             }
 
             function registerTopologyComponent(callback) {
@@ -141,10 +140,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     self.isTopologyButtonChecked([]);
                 }
             });
-            
+
             //Restore topology display status from window session storage
             restoreTopologyDisplayStatus();
-            
+
             function restoreTopologyDisplayStatus() {
                 if (window.sessionStorage._uifwk_brandingbar_cache) {
                     var brandingBarCache = JSON.parse(window.sessionStorage._uifwk_brandingbar_cache);
@@ -537,7 +536,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.notificationMenuHandler = function (event, item) {
                 if (self.notificationPageUrl !== null && self.notificationPageUrl !== "") {
                     oj.Logger.info("Open notifications page: " + self.notificationPageUrl);
-                    window.open(self.notificationPageUrl);
+                    window.open(cxtUtil.appendOMCContext(self.notificationPageUrl));
                 }
             };
 
