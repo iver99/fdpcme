@@ -1,22 +1,13 @@
 package oracle.sysman.emaas.platform.dashboards.ui.web;
 
 import mockit.*;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.DashboardDataAccessUtil;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.logging.log4j.core.util.Charsets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.PrintWriter;
 
 /**
  * Created by guochen on 11/29/16.
