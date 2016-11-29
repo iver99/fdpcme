@@ -987,6 +987,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     && !cxtUtil.getEntitiesType()
                     && cxtUtil.getEntityMeIds().length === 1
                     && cxtUtil.getEntities().length === 1;
+                displayEntitiesName = false; // disable emctas-5151/emcpdf-2773 for 1.13
 
                 if (displayCompositeName) {
                     self.compositeCxtText(self.cxtCompositeDisplayName);
