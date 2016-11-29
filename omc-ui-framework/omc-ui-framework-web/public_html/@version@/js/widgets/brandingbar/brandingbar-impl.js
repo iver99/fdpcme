@@ -535,7 +535,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.notificationMenuHandler = function (event, item) {
                 if (self.notificationPageUrl !== null && self.notificationPageUrl !== "") {
                     oj.Logger.info("Open notifications page: " + self.notificationPageUrl);
-                    window.open(self.notificationPageUrl);
+                    window.open(cxtUtil.appendOMCContext(self.notificationPageUrl));
                 }
             };
 
