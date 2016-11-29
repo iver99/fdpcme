@@ -489,7 +489,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		driver.click("css=" + DashBoardPageId_190.DASHBOARDSETOPTIONSEDITDESCRIPTIONCSS);
 		driver.sendKeys("css=" + DashBoardPageId_190.DASHBOARDSETOPTIONSEDITDESCRIPTIONCSS, descriptions);
 		driver.takeScreenShot();
-		
+
 		WaitUtil.waitForPageFullyLoaded(driver);
 
 		//hide settings panel
@@ -1441,6 +1441,12 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		return tileConfig;
 	}
 
+	/**
+	 * @param driver
+	 * @param widgetName
+	 * @param index
+	 */
+
 	private void clickTileOpenInDataExplorerButton(WebDriver driver, String widgetName, int index)
 	{
 		driver.getLogger().info("Start to find widget with widgetName=" + widgetName + ", index=" + index);
@@ -1697,11 +1703,12 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	{
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWERCSS);
 		if (isRightDrawerVisible(driver) == true) {
-			if(driver.isElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWERTOGGLEPENCILBTNCSSSelected)) {
+			if (driver.isElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWERTOGGLEPENCILBTNCSSSelected)) {
 				driver.click("css=" + DashBoardPageId_190.RIGHTDRAWERTOGGLEPENCILBTNCSS);
-			}else {
+			}
+			else {
 				driver.click("css=" + DashBoardPageId_190.RIGHTDRAWERTOGGLEPENCILBTNCSS);
-				if(driver.isElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWERTOGGLEPENCILBTNCSSSelected)) {
+				if (driver.isElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWERTOGGLEPENCILBTNCSSSelected)) {
 					driver.click("css=" + DashBoardPageId_190.RIGHTDRAWERTOGGLEPENCILBTNCSS);
 				}
 			}

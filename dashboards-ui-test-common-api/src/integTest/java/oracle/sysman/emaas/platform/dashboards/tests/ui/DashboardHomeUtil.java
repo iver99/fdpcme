@@ -116,7 +116,7 @@ public class DashboardHomeUtil
 	 * goto the link in Data Explorer by displayed name
 	 *
 	 * @param option
-	 *            Analyze | Log Visual Analyzer | Search
+	 *            Analyze | Log  | Search
 	 * @
 	 */
 	public static void gotoDataExplorer(WebDriver driver, String option) 
