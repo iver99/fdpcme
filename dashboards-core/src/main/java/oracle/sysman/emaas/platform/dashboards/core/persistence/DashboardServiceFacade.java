@@ -478,5 +478,19 @@ public class DashboardServiceFacade
 		em.remove(emsUserOptions);
 		commitTransaction();
 	}
+	
+	/*public boolean isDashboardDeleted(long dashboardId){
+		String sql = "select * from ems_dashboard p where p.dashboard_id="	+dashboardId;	
+		Query query = em.createNativeQuery(sql, EmsDashboard.class);
+		@SuppressWarnings("unchecked")
+		List<EmsDashboard> emsDashboardList = query.getResultList();
+		if (emsDashboardList != null && !emsDashboardList.isEmpty()) {
+			if(emsDashboardList.get(0).getDeleted()==0){
+				return false;
+			}
+		}
+		return true;
+		
+	}*/
 
 }

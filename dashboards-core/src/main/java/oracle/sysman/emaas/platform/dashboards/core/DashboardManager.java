@@ -211,11 +211,15 @@ public class DashboardManager
 
 			dsf.updateSubDashboardShowInHome(dashboardId);
 
+			//emcpdf2801 delete dashboard's user option
+			LOGGER.info("Deleting user options for id "+dashboardId);
+			dsf.removeAllEmsUserOptions(dashboardId);
 			if (!permanent) {
 				ed.setDeleted(dashboardId);
 				dsf.mergeEmsDashboard(ed);
 				dsf.removeEmsSubDashboardBySubId(dashboardId);
 				dsf.removeEmsSubDashboardBySetId(dashboardId);
+				
 			}
 			else {
 				dsf.removeAllEmsUserOptions(dashboardId);
@@ -402,10 +406,19 @@ public class DashboardManager
             }
          }
          if (selectedId != null) {
-            EmsDashboard sed = this.getEmsDashboardById(dsf, selectedId, tenantId);
-            EmsUserOptions seuo = dsf.getEmsUserOptions(userName, selectedId);
-            CombinedDashboard scd = CombinedDashboard.valueOf(sed, null, seuo);
-            cd.setSelected(scd);
+        	//check if selected dashboard is deleted
+        	/*if(dsf.isDashboardDeleted(selectedId)){
+        		return cd;
+        	}*/
+        	try{
+        		EmsDashboard sed = this.getEmsDashboardById(dsf, selectedId, tenantId);
+        		EmsUserOptions seuo = dsf.getEmsUserOptions(userName, selectedId);
+        		CombinedDashboard scd = CombinedDashboard.valueOf(sed, null, seuo);
+        		cd.setSelected(scd);
+        	}catch(DashboardException e){
+        		LOGGER.error(e.getStackTrace());
+        		return cd;
+        	}
          }
       }
       return cd;
@@ -416,6 +429,7 @@ public class DashboardManager
       }
    }
 	}
+	
 
 	/**
 	 * Returns dashboard instance specified by name for current user Please note that same user under single tenant can't have
