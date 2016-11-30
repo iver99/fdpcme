@@ -265,7 +265,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	@Test(groups = "forth run", dependsOnMethods = { "testSearchDashboardInSet" })
+	@Test(groups = "forth run", dependsOnMethods = { "testModifyDashboardInSet" })
 	public void testDeleteDashboardInSet()
 	{
 		//init the test
@@ -676,6 +676,40 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Reset filter options");
 	}
 
+	@Test(groups = "forth run", dependsOnMethods = { "testSearchDashboardInSet" })
+	public void testModifyDashboardInSet()
+	{
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testModifyDashboardInSet");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//open the dashboardset
+		webd.getLogger().info("Open the dashboard in the builder page");
+		DashboardHomeUtil.selectDashboard(webd, dbsetName_Test1);
+
+		webd.getLogger().info("Set the refresh setting to OFF");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
+
+		webd.getLogger().info("Select the created dashboard in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, dbName_InSet);
+
+		dbName_InSet = dbName_InSet + "-Modify";
+		webd.getLogger().info("Modify the created dashboard in set");
+		DashboardBuilderUtil.editDashboard(webd, dbName_InSet, "Modify the dasbboard in set", true);
+
+		webd.getLogger().info("Verify the modified dashboard in set");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet), "Modified dashboard not in set");
+
+	}
+
 	@Test(groups = "first run", dependsOnMethods = { "testCreateDashboardSet" })
 	public void testModifyDashboardSet()
 	{
@@ -889,6 +923,29 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "forth run", dependsOnMethods = { "testCreateDashboardInSet" })
+	public void testSearchDashboardCreatedInSetFromHome()
+	{
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testSearchDashboardCreatedInSetFromHome");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//search the dashboard which created in dashboard set in home page
+		webd.getLogger().info("Search the dashboard which created in dashboard set in home page");
+		DashboardHomeUtil.search(webd, dbName_InSet);
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_InSet), "Expected dashboard '" + dbName_InSet
+				+ "' has been found");
+
+	}
+
+	@Test(groups = "forth run", dependsOnMethods = { "testSearchDashboardCreatedInSetFromHome" })
 	public void testSearchDashboardInSet()
 	{
 		//init the test
