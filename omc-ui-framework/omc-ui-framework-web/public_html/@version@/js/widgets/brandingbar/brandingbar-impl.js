@@ -76,9 +76,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 });
             }
             
+            self.readOnlyContext = ko.observable(true);
             if (!ko.components.isRegistered('emcta-context-selector'))
             {
                 EmctaContextSelectorUtil.registerComponents();
+                self.readOnlyContext(false);
             }
             
             if (self.showGlobalContextBanner() === true) {
