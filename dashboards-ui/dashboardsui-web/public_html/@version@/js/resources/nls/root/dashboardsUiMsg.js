@@ -295,7 +295,7 @@ define({
 
       "LANDING_HOME_DASHBOARDS": "Dashboards",
       
-      "LANDING_HOME_COMPLIANCE": "Compliance",
+      "LANDING_HOME_COMPLIANCE": "Configuration and Compliance",
       "LANDING_HOME_COMPLIANCE_DESC": "Automate application and infrastructure configuration assessments",
       
       "LANDING_HOME_SECURITY_ANALYTICS": "Security Monitoring and Analytics",

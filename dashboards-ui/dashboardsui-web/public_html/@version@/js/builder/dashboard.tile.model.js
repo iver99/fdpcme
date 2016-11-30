@@ -10,6 +10,7 @@ define(['knockout',
         'uiutil',
         'uifwk/js/util/df-util',
         'uifwk/js/util/mobile-util',
+        'uifwk/js/sdk/context-util',
         'jquery',
 //        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
         'builder/builder.core',
@@ -24,7 +25,7 @@ define(['knockout',
 //        'ckeditor'
     ],
 
-    function(ko, oj, km, dfu, uiutil, dfumodel, mbu, $/*, TargetSelectorUtils*/)
+    function(ko, oj, km, dfu, uiutil, dfumodel, mbu, contextModel, $/*, TargetSelectorUtils*/)
     {
         ko.mapping = km;
         var draggingTileClass = 'dbd-tile-in-dragging';
@@ -34,6 +35,8 @@ define(['knockout',
             var widgetAreaWidth = 0;
             var widgetAreaContainer = null;
             var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
+            var ctxUtil = new contextModel();
+            var omcContext = ctxUtil.getOMCContext();
 
             var dragStartRow = null;
 
@@ -127,11 +130,7 @@ define(['knockout',
                 }
                 return false;
             };
-
-            self.openAddWidgetDialog = function() {
-                $('#dashboardBuilderAddWidgetDialog').ojDialog('open');
-            };
-
+          
 
             self.appendNewTile = function(name, description, width, height, widget) {
                 if (widget) {
@@ -947,9 +946,19 @@ define(['knockout',
             
             self.initializedCallback = function() {
                 require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
-                    TargetSelectorUtils.setTargetSelectionContext("tsel_"+self.dashboard.id(), self.targets());
+                    $.when(TargetSelectorUtils.getCriteriaFromOmcContext().done(function (inputCriteria) {
+                        if (inputCriteria) {
+                            var selectionContext = {criteria: inputCriteria};
+                            self.targets(selectionContext);
+                        }
+                        for(var i=0; i<self.dashboard.tiles().length; i++) {
+                            var tile = self.dashboard.tiles()[i]; 
+                            tile.dashboardItemChangeEvent.targets = self.targets();
+                        }
+                        TargetSelectorUtils.setTargetSelectionContext("tsel_" + self.dashboard.id(), self.targets());
+                    }));
                 });
-            }
+            };
             
             var compressedTargets;
             //set initial targets selector options. priority: user extendedOptions > dashboard extendedOptions
@@ -961,7 +970,7 @@ define(['knockout',
             }else if(self.dashboardExtendedOptions && !$.isEmptyObject(self.dashboardExtendedOptions.tsel)) {
                 compressedTargets = self.dashboardExtendedOptions.tsel.entityContext;
                 self.userExtendedOptions.tsel = {};
-            }
+            }            
             compressedTargets && self.targets(compressedTargets);
 
             var timeSelectorChangelistener = ko.computed(function(){
@@ -979,11 +988,13 @@ define(['knockout',
             });
 
             var current = new Date();
-            var initStart = dfu_model.getUrlParam("startTime") ? new Date(parseInt(dfu_model.getUrlParam("startTime"))) : null;
-            var initEnd = dfu_model.getUrlParam("endTime") ? new Date(parseInt(dfu_model.getUrlParam("endTime"))) : null;
-            self.timePeriod = ko.observable("Custom");
+            
+            var initStart = (omcContext.time && omcContext.time.startTime) ? new Date(parseInt(omcContext.time.startTime)) : null;
+            var initEnd = (omcContext.time && omcContext.time.endTime) ? new Date(parseInt(omcContext.time.endTime)) : null;
+            self.timePeriod = ko.observable((omcContext.time && omcContext.time.timePeriod) ? omcContext.time.timePeriod : null);
+            
             //initialize time selector. priority: time in url > time in user extendedOptions > time in dashboard extendedOptions > default time
-            if(initStart === null || initEnd === null) {
+            if(self.timePeriod() === null && (initStart === null || initEnd === null)) {
                 if(self.userTimeSel && self.userExtendedOptions && !$.isEmptyObject(self.userExtendedOptions.timeSel)) {
                     initStart = new Date(parseInt(self.userExtendedOptions.timeSel.start));
                     initEnd = new Date(parseInt(self.userExtendedOptions.timeSel.end));
@@ -1001,7 +1012,7 @@ define(['knockout',
                     self.timePeriod("Last 14 days");
                 }
             }
-
+            
             self.initStart = ko.observable(initStart);
             self.initEnd = ko.observable(initEnd);
             self.timeSelectorModel.viewStart(initStart);

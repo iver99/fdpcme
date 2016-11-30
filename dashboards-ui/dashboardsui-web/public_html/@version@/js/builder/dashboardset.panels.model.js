@@ -305,7 +305,6 @@ define([
                     tilesView.enableDraggable();
                     tilesViewModel.show();
 
-                    toolBarModel.handleAddWidgetTooltip();
                     $b.triggerEvent($b.EVENT_POST_DOCUMENT_SHOW);
                     tilesView.enableMovingTransition();
                     idfbcutil.hookupBrowserCloseEvent(function () {
