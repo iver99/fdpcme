@@ -3,11 +3,6 @@
  * All rights reserved.
  */
 
-/**
- * @preserve Copyright 2013 jQuery Foundation and other contributors
- * Released under the MIT license.
- * http://jquery.org/license
- */
 requirejs.config({
     bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
                 (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
@@ -28,11 +23,9 @@ requirejs.config({
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
             'uifwk/js/widgets/navlinks/js/navigation-links',
             'uifwk/js/widgets/timeFilter/js/timeFilter',
-            'uifwk/js/widgets/widgetselector/js/widget-selector',
             'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
             'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
             'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
-            'text!uifwk/js/widgets/widgetselector/html/widget-selector.html',
             'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
             'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
             ]
