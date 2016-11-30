@@ -129,13 +129,18 @@ define(['knockout',
                                 }, function () {
                             console.log("update dashboard name && description  failed !");
                         });
-                        if($b.getDashboardTilesViewModel().timePeriod()!=="Custom") {
-                            $b.getDashboardTilesViewModel().initEnd(new Date());
+
+                        var headerWrapper = $("#headerWrapper")[0];
+                        if(headerWrapper) {
+                            var headerViewModel = ko.dataFor(headerWrapper);
+                            if(headerViewModel.brandingbarParams.timeSelectorParams.timePeriod() !== "Custom") {
+                                headerViewModel.brandingbarParams.timeSelectorParams.endDateTime(new Date());
+                            }
                         }
-                        if($("#dtpicker_"+self.dashboardId).children().get(0)) {
+                        if($("#emaas-appheader-timecxt").children().get(0)) {
                             $b.triggerEvent($b.EVENT_AUTO_REFRESHING_PAGE, "auto-refreshing page");
-                            ko.contextFor($("#dtpicker_"+self.dashboardId).children().get(0)).$component.applyClick();
-                        }
+                            ko.contextFor($("#emaas-appheader-timecxt").children().get(0)).$component.applyClick();
+                        }                        
                     }, interval);
                 }
             };
