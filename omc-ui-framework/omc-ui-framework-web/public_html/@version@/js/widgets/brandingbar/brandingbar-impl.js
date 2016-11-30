@@ -21,6 +21,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             cxtUtil.clearTopologyParams();
 
             self.compositeCxtText = ko.observable();
+            self.entitiesDisplayNames = ko.observableArray();
             self.timeCxtText = ko.observable();
 
 
@@ -91,20 +92,19 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             function handleShowHideTopology() {
                 $("#ude-topology-div").slideToggle("fast", function () {
                     self.isTopologyDisplayed(!self.isTopologyDisplayed());
-                });
-
-                if (!self.isTopologyDisplayed()) {
-                    //when expanding the topology, do a refresh if needed
-                    if (self.topologyNeedRefresh) {
-                        refreshTopologyParams();
+                    if (self.isTopologyDisplayed()) {
+                        //when expanding the topology, do a refresh if needed
+                        if (self.topologyNeedRefresh) {
+                            refreshTopologyParams();
+                        }
+                        $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
                     }
-                    $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
-                }
-                //set brandingbar_cache information for Topology expanded state
-                var brandingBarCache = {isTopologyDisplayed: self.isTopologyDisplayed()};
-                window.sessionStorage._uifwk_brandingbar_cache = JSON.stringify(brandingBarCache);
-                var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
-                $b && $b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
+                    //set brandingbar_cache information for Topology expanded state
+                    var brandingBarCache = {isTopologyDisplayed: self.isTopologyDisplayed()};
+                    window.sessionStorage._uifwk_brandingbar_cache = JSON.stringify(brandingBarCache);
+                    var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                    $b && $b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
+                });
             }
 
             function registerTopologyComponent(callback) {
@@ -140,10 +140,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     self.isTopologyButtonChecked([]);
                 }
             });
-            
+
             //Restore topology display status from window session storage
             restoreTopologyDisplayStatus();
-            
+
             function restoreTopologyDisplayStatus() {
                 if (window.sessionStorage._uifwk_brandingbar_cache) {
                     var brandingBarCache = JSON.parse(window.sessionStorage._uifwk_brandingbar_cache);
@@ -536,7 +536,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.notificationMenuHandler = function (event, item) {
                 if (self.notificationPageUrl !== null && self.notificationPageUrl !== "") {
                     oj.Logger.info("Open notifications page: " + self.notificationPageUrl);
-                    window.open(self.notificationPageUrl);
+                    window.open(cxtUtil.appendOMCContext(self.notificationPageUrl));
                 }
             };
 
@@ -896,6 +896,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.cxtCompositeMeId = cxtUtil.getCompositeMeId();
 //                self.cxtCompositeType = cxtUtil.getCompositeType();
                 self.cxtCompositeDisplayName = cxtUtil.getCompositeDisplayName();
+                self.cxtCompositeName = cxtUtil.getCompositeName();
 //                self.cxtStartTime = cxtUtil.getStartTime();
 //                self.cxtEndTime = cxtUtil.getEndTime();
                 //self.cxtEntityMeId = cxtUtil.getEntityMeId();
@@ -924,7 +925,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                    queryODSEntityByMeId(self.cxtCompositeMeId, 'composite', queryOdsEntityCallback);
 //                }
 //                else {
-//                    refreshCompositeEntityCtxText();
+//                    refreshEntityContextText();
 //                }
 //                if (!self.cxtEntityName && self.cxtEntityMeId) {
 //                    //fetch entity name from WS API by entityMeId
@@ -935,7 +936,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                    queryTargetModelMetaType(self.cxtEntityType, queryTmMetypeCallback);
 //                }
 
-                refreshCompositeEntityCtxText();
+                refreshEntityContextText();
 //                refreshTimeCtxText();
 
                 //Set a dirty flag for topology to be refreshed
@@ -946,7 +947,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }
 
-            function refreshCompositeEntityCtxText() {
+            function refreshEntityContextText() {
 //                //A composite entity & no member entity
 //                if (self.cxtCompositeName && self.cxtEntityName) {
 //                    self.compositeCxtText(msgUtil.formatMessage(nls.BRANDING_BAR_GLOBAL_CONTEXT_COMPOSITE_ENTITY, 
@@ -975,13 +976,32 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                        self.compositeCxtText(self.cxtCompositeName);
 //                    }
 //                }
-                //For now, only show composite context text on banner UI, do not show entities
-                if (self.cxtCompositeMeId
-                    && self.cxtCompositeDisplayName) {
+                //For now, only show composite context text on banner UI, and single entity
+                self.compositeCxtText('');
+                self.entitiesDisplayNames.removeAll();
+
+                var displayCompositeName = self.cxtCompositeMeId
+                    && self.cxtCompositeDisplayName;
+
+                var displayEntitiesName = cxtUtil.getEntityMeIds()
+                    && !cxtUtil.getEntitiesType()
+                    && cxtUtil.getEntityMeIds().length === 1
+                    && cxtUtil.getEntities().length === 1;
+                displayEntitiesName = false; // disable emctas-5151/emcpdf-2773 for 1.13
+
+                if (displayCompositeName) {
                     self.compositeCxtText(self.cxtCompositeDisplayName);
                 }
-                //No composite entity & no member entity
-                else {
+                if (displayEntitiesName)
+                {
+                    cxtUtil.getEntities().forEach(function (entity, index) {
+                        var entityName = {displayName: entity.displayName, entityName: entity.entityName};
+                        self.entitiesDisplayNames.push(entityName);
+                    });
+                }
+                if (!displayCompositeName && !displayEntitiesName)
+                {
+                    //No composite entity & no entities
                     self.compositeCxtText(nls.BRANDING_BAR_GLOBAL_CONTEXT_ALL_ENTITIES);
                 }
             }
@@ -1034,14 +1054,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                        }
 //                    }
 //                }
-//                refreshCompositeEntityCtxText();
+//                refreshEntityContextText();
 //            }
 //
 //            function queryTmMetypeCallback(data) {
 //                if (data && data['typeDisplayName']) {
 //                    self.cxtEntityTypeDisplayName = data['typeDisplayName'];
 //                }
-//                refreshCompositeEntityCtxText();
+//                refreshEntityContextText();
 //            }
 //
 //            function queryODSEntityByMeId(meId, ctxType, callback) {

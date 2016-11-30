@@ -211,11 +211,15 @@ public class DashboardManager
 
 			dsf.updateSubDashboardShowInHome(dashboardId);
 
+			//emcpdf2801 delete dashboard's user option
+			LOGGER.info("Deleting user options for id "+dashboardId);
+			dsf.removeAllEmsUserOptions(dashboardId);
 			if (!permanent) {
 				ed.setDeleted(dashboardId);
 				dsf.mergeEmsDashboard(ed);
 				dsf.removeEmsSubDashboardBySubId(dashboardId);
 				dsf.removeEmsSubDashboardBySetId(dashboardId);
+				
 			}
 			else {
 				dsf.removeAllEmsUserOptions(dashboardId);
@@ -402,10 +406,19 @@ public class DashboardManager
             }
          }
          if (selectedId != null) {
-            EmsDashboard sed = this.getEmsDashboardById(dsf, selectedId, tenantId);
-            EmsUserOptions seuo = dsf.getEmsUserOptions(userName, selectedId);
-            CombinedDashboard scd = CombinedDashboard.valueOf(sed, null, seuo);
-            cd.setSelected(scd);
+        	//check if selected dashboard is deleted
+        	/*if(dsf.isDashboardDeleted(selectedId)){
+        		return cd;
+        	}*/
+        	try{
+        		EmsDashboard sed = this.getEmsDashboardById(dsf, selectedId, tenantId);
+        		EmsUserOptions seuo = dsf.getEmsUserOptions(userName, selectedId);
+        		CombinedDashboard scd = CombinedDashboard.valueOf(sed, null, seuo);
+        		cd.setSelected(scd);
+        	}catch(DashboardException e){
+        		LOGGER.error(e.getStackTrace());
+        		return cd;
+        	}
          }
       }
       return cd;
@@ -416,6 +429,7 @@ public class DashboardManager
       }
    }
 	}
+	
 
 	/**
 	 * Returns dashboard instance specified by name for current user Please note that same user under single tenant can't have
@@ -450,6 +464,30 @@ public class DashboardManager
 		finally {
 			if (em != null) {
 				em.close();
+			}
+		}
+	}
+
+	public Dashboard getDashboardByNameAndDescriptionAndOwner(String name, String description, Long tenantId){
+		if(StringUtil.isEmpty(name)){
+			LOGGER.debug("Dashboard not found for name \"{}\" is invalid", name);
+			return null;
+		}
+		String currentUser = UserContext.getCurrentUser();
+		EntityManager entityManager = null;
+		try{
+			DashboardServiceFacade dashboardServiceFacade = new DashboardServiceFacade(tenantId);
+			entityManager = dashboardServiceFacade.getEntityManager();
+			EmsDashboard emsDashboard = dashboardServiceFacade.getEmsDashboardByNameAndDescriptionAndOwner(name, currentUser,description);
+			return Dashboard.valueOf(emsDashboard);
+		}catch (NoResultException e) {
+			LOGGER.debug("Dashboard not found for name \"{}\" because NoResultException is caught", name);
+			LOGGER.info("context", e);
+			return null;
+		}
+		finally {
+			if (entityManager != null) {
+				entityManager.close();
 			}
 		}
 	}
@@ -965,9 +1003,9 @@ public class DashboardManager
 				throw new CommonFunctionalException(
 						MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_NAME_ERROR));
 			}
-
-			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
-                        if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
+			LOGGER.debug("Get the dashboard with name: {}, desc: {}", dbd.getName(), dbd.getDescription());
+			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
+			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
 				throw new DashboardSameNameException();
 			}
 			// init creation date, owner to prevent null insertion
@@ -1067,7 +1105,7 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
-                        Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
+			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
 			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
 				throw new DashboardSameNameException();
 			}
