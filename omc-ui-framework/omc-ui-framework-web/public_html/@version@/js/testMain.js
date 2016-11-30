@@ -118,10 +118,21 @@ require(['knockout',
             if (dfu.isDevMode()){
                 logReceiver = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"logging/logs");
             }
-            logger.initialize(logReceiver, 60000, 20000, 8, tenantDotUser);
+            logger.initialize(logReceiver, 60000, 20000, 8, userTenantUtil.getUserTenant().tenantUser);
             // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
             // If you comment the line below, our current log calls will not be output!
-            logger.setLogLevel(oj.Logger.LEVEL_LOG);
+            logger.setLogLevel(oj.Logger.LEVEL_WARN);
+            
+            window.onerror = function (msg, url, lineNo, columnNo, error)
+            {
+                var msg = "Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo;
+                if(error.stack) {
+                    msg = msg + ". Error: " + JSON.stringify(error.stack);
+                }
+                oj.Logger.error(msg, true);
+
+                return false; 
+            }
 
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{

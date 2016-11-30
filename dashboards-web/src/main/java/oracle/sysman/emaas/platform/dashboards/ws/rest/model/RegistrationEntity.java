@@ -62,6 +62,7 @@ public class RegistrationEntity implements Serializable
 	public static final String NAME_QUICK_LINK = "quickLink";
 	public static final String NAME_HOME_LINK = "homeLink";
 	public static final String NAME_VISUAL_ANALYZER = "visualAnalyzer";
+	public static final String NAME_ASSET_ROOT = "assetRoot";
 	public static final String NAME_ADMIN_LINK = "administration";
 	public static final String NAME_DASHBOARD_UI_SERVICENAME = "Dashboard-UI";
 	public static final String NAME_DASHBOARD_UI_VERSION = "1.0+";
@@ -169,7 +170,7 @@ public class RegistrationEntity implements Serializable
 								return null;
 							}
 
-							List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
+							List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true, true);
 							List<LinkEntity> filteredAdminLinks = filterAdminLinksByUserRoles(registeredAdminLinks, userRoles);
 							// Try to find Administration Console link
 							LinkEntity adminConsoleLink = null;
@@ -336,7 +337,7 @@ public class RegistrationEntity implements Serializable
 						@Override
 						public Object fetchCachable(Object key) throws Exception
 						{
-							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_HOME_LINK));
+							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_HOME_LINK, true));
 						}
 					});
 		}
@@ -467,11 +468,48 @@ public class RegistrationEntity implements Serializable
 								LOGGER.error("Error to get Visual Analyzers link: EntityNaming service is down");
 								throw new EntityNamingDependencyUnavailableException();
 							}
-							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
+							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER, true));
 						}
 					});
 		}
 		catch(DashboardException e){
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return Collections.emptyList();
+		}
+		catch (Exception e) {
+			LOGGER.error(e);
+			return Collections.emptyList();
+		}
+	}
+
+	/**
+	 * @return asset root links discovered from service manager
+	 */
+	@SuppressWarnings("all")
+	public List<LinkEntity> getAssetRoots()
+	{
+		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
+		try {
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_ASSET_ROOT_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_ASSET_ROOTS, new ICacheFetchFactory() {
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+								LOGGER.error("Error to get Asset Roots link: EntityNaming service is down");
+								throw new EntityNamingDependencyUnavailableException();
+							}
+							List<LinkEntity> links = lookupLinksWithRelPrefix(NAME_ASSET_ROOT, false);
+							if (links != null) {
+								for (LinkEntity link: links) {
+									link.setName(null);
+								}
+							}
+							return links;
+						}
+					});
+		}
+		catch(DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return Collections.emptyList();
 		}
@@ -632,12 +670,12 @@ public class RegistrationEntity implements Serializable
 		return appSet;
 	}
 
-	private List<LinkEntity> lookupLinksWithRelPrefix(String linkPrefix)
+	private List<LinkEntity> lookupLinksWithRelPrefix(String linkPrefix, boolean checkSubscribedApps)
 	{
-		return lookupLinksWithRelPrefix(linkPrefix, false);
+		return lookupLinksWithRelPrefix(linkPrefix, false, checkSubscribedApps);
 	}
 
-	private List<LinkEntity> lookupLinksWithRelPrefix(String linkPrefix, boolean isAdminLink)
+	private List<LinkEntity> lookupLinksWithRelPrefix(String linkPrefix, boolean isAdminLink, boolean checkSubscribedApps)
 	{
 		_LOGGER.info("lookupLinksWithRelPrefix(" + linkPrefix + "," + isAdminLink + ")");
 		List<LinkEntity> linkList = new ArrayList<LinkEntity>();
@@ -645,8 +683,11 @@ public class RegistrationEntity implements Serializable
 		LookupClient lookUpClient = LookupManager.getInstance().getLookupClient();
 		List<InstanceInfo> instanceList = lookUpClient.getInstancesWithLinkRelPrefix(linkPrefix);
 
-		Set<String> subscribedApps = getTenantSubscribedApplicationSet(isAdminLink);
-		_LOGGER.info("Got Subscribed applications:", subscribedApps != null ? subscribedApps.toString() : "null");
+		Set<String> subscribedApps = null;
+		if (checkSubscribedApps) {
+			subscribedApps = getTenantSubscribedApplicationSet(isAdminLink);
+			_LOGGER.info("Got Subscribed applications:", subscribedApps != null ? subscribedApps.toString() : "null");
+		}
 		Map<String, LinkEntity> linksMap = new HashMap<String, LinkEntity>();
 		Map<String, LinkEntity> dashboardLinksMap = new HashMap<String, LinkEntity>();
 		String tenantName = TenantContext.getCurrentTenant();
@@ -674,7 +715,7 @@ public class RegistrationEntity implements Serializable
 					&& NAME_DASHBOARD_UI_VERSION.equals(internalInstance.getVersion())) {
 				addToLinksMap(dashboardLinksMap, links, internalInstance.getServiceName(), internalInstance.getVersion());
 			}
-			else if (subscribedApps != null && subscribedApps.contains(internalInstance.getServiceName())) {
+			else if (!checkSubscribedApps || (subscribedApps != null && subscribedApps.contains(internalInstance.getServiceName()))) {
 				addToLinksMap(linksMap, links, internalInstance.getServiceName(), internalInstance.getVersion());
 			}
 

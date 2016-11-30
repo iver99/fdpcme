@@ -6,21 +6,21 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class BrandingBarUtil
 {
-	private BrandingBarUtil() {
-	  }
-
 	// values for 'option' for user menu
 	public static final String USERMENU_OPTION_HELP = IBrandingBarUtil.USERMENU_OPTION_HELP;
+
 	public static final String USERMENU_OPTION_ABOUT = IBrandingBarUtil.USERMENU_OPTION_ABOUT;
 	public static final String USERMENU_OPTION_SIGNOUT = IBrandingBarUtil.USERMENU_OPTION_SIGNOUT;
-
 	//Branding bar link text
 	//home
 	public static final String NAV_LINK_TEXT_HOME_ALERTS = IBrandingBarUtil.NAV_LINK_TEXT_HOME_ALERTS;
+
 	//Cloud Services
 	public static final String NAV_LINK_TEXT_CS_ITA = IBrandingBarUtil.NAV_LINK_TEXT_CS_ITA;
 	public static final String NAV_LINK_TEXT_CS_APM = IBrandingBarUtil.NAV_LINK_TEXT_CS_APM;
 	public static final String NAV_LINK_TEXT_CS_LA = IBrandingBarUtil.NAV_LINK_TEXT_CS_LA;
+	public static final String NAV_LINK_TEXT_CS_IM = IBrandingBarUtil.NAV_LINK_TEXT_CS_IM;
+	public static final String NAV_LINK_TEXT_CS_OCS = IBrandingBarUtil.NAV_LINK_TEXT_CS_OCS;
 	//Visual Analyzers
 	public static final String NAV_LINK_TEXT_VA_ITA = IBrandingBarUtil.NAV_LINK_TEXT_VA_ITA;
 	public static final String NAV_LINK_TEXT_VA_TA = IBrandingBarUtil.NAV_LINK_TEXT_VA_TA;
@@ -37,7 +37,7 @@ public class BrandingBarUtil
 	 *            WebDriver instance
 	 * @return
 	 */
-	public static boolean isAdmin(WebDriver driver) 
+	public static boolean isAdmin(WebDriver driver)
 	{
 		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
 		return bu.isAdmin(driver);
@@ -69,6 +69,17 @@ public class BrandingBarUtil
 	{
 		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
 		return bu.isAlertsLinkExisted(driver);
+	}
+
+	/**
+	 * @param driver
+	 * @param servicename
+	 * @return
+	 */
+	public static boolean isBrandingBarServiceNamePresent(WebDriver driver, String servicename)
+	{
+		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
+		return bu.isBrandingBarServiceNamePresent(driver, servicename);
 	}
 
 	/**
@@ -177,7 +188,7 @@ public class BrandingBarUtil
 	 *            Name of the option, should one of "about", "help", "signout"
 	 * @return
 	 */
-	public static void userMenuOptions(WebDriver driver, String option) 
+	public static void userMenuOptions(WebDriver driver, String option)
 	{
 		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
 		bu.userMenuOptions(driver, option);
@@ -192,7 +203,7 @@ public class BrandingBarUtil
 	 *            Name of the link
 	 * @return
 	 */
-	public static void visitApplicationAdministration(WebDriver driver, String adminLinkName) 
+	public static void visitApplicationAdministration(WebDriver driver, String adminLinkName)
 	{
 		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
 		bu.visitApplicationAdministration(driver, adminLinkName);
@@ -207,13 +218,13 @@ public class BrandingBarUtil
 	 *            Name of the link
 	 * @return
 	 */
-	public static void visitApplicationCloudService(WebDriver driver, String cloudServiceLinkName) 
+	public static void visitApplicationCloudService(WebDriver driver, String cloudServiceLinkName)
 	{
 		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
 		bu.visitApplicationCloudService(driver, cloudServiceLinkName);
 	}
 
-	public static void visitApplicationHome(WebDriver driver, String homeLinkName) 
+	public static void visitApplicationHome(WebDriver driver, String homeLinkName)
 	{
 		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
 		bu.visitApplicationHome(driver, homeLinkName);
@@ -228,7 +239,7 @@ public class BrandingBarUtil
 	 *            Name of the link
 	 * @return
 	 */
-	public static void visitApplicationVisualAnalyzer(WebDriver driver, String visualAnalyzerLinkName) 
+	public static void visitApplicationVisualAnalyzer(WebDriver driver, String visualAnalyzerLinkName)
 	{
 		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
 		bu.visitApplicationVisualAnalyzer(driver, visualAnalyzerLinkName);
@@ -241,7 +252,7 @@ public class BrandingBarUtil
 	 *            WebDriver instance
 	 * @return
 	 */
-	public static void visitDashboardHome(WebDriver driver) 
+	public static void visitDashboardHome(WebDriver driver)
 	{
 		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
 		bu.visitDashboardHome(driver);
@@ -254,7 +265,7 @@ public class BrandingBarUtil
 	 *            WebDriver instance
 	 * @return
 	 */
-	public static void visitMyFavorites(WebDriver driver) 
+	public static void visitMyFavorites(WebDriver driver)
 	{
 		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
 		bu.visitMyFavorites(driver);
@@ -267,7 +278,7 @@ public class BrandingBarUtil
 	 *            WebDriver instance
 	 * @return
 	 */
-	public static void visitMyHome(WebDriver driver) 
+	public static void visitMyHome(WebDriver driver)
 	{
 		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
 		bu.visitMyHome(driver);
@@ -280,10 +291,13 @@ public class BrandingBarUtil
 	 *            WebDriver instance
 	 * @return
 	 */
-	public static void visitWelcome(WebDriver driver) 
+	public static void visitWelcome(WebDriver driver)
 	{
 		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
 		bu.visitWelcome(driver);
 	}
 
+	private BrandingBarUtil()
+	{
+	}
 }
