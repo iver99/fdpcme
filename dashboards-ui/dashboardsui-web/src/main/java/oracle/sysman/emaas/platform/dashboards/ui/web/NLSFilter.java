@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 public class NLSFilter implements Filter
 {
 
@@ -50,7 +52,7 @@ public class NLSFilter implements Filter
         chain.doFilter(request, wrapper);
 
         // get the accept-language header
-        String alh = httpRequest.getHeader("Accept-Language");
+        String alh = StringEscapeUtils.escapeHtml4(httpRequest.getHeader("Accept-Language"));
         // calculate the UI locale
         String locale = getSupportedLocale(alh);
 

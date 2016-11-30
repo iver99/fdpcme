@@ -554,7 +554,7 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory,unpackFo
 	newFile1.withPrintWriter { out ->
 	    def linenumber = 1
 	    homeMainFile.eachLine { line ->
-		if (linenumber == 10){
+		if (linenumber == 5){
 		    out.print(line)
 		    out.println("\nwindow.gradleDevMode=true; \n")
 		} else {
@@ -570,7 +570,7 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory,unpackFo
 	newFile2.withPrintWriter { out ->
 	    def linenumber = 1
 	    builderMainFile.eachLine { line ->
-		if (linenumber == 10){
+		if (linenumber == 5){
 		    out.print(line)
 		    out.println("\nwindow.gradleDevMode=true; \n")
 		} else {
@@ -586,7 +586,7 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory,unpackFo
 	newFile3.withPrintWriter { out ->
 	    def linenumber = 1
 	    welcomeMainFile.eachLine { line ->
-		if (linenumber == 3){
+		if (linenumber == 4){
 		    out.print(line)
 		    out.println("\nwindow.gradleDevMode=true; \n")
 		} else {
@@ -659,6 +659,7 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory,unpackFo
     }    
 }
 test {
+        classpath = sourceSets.test.compileClasspath + sourceSets.test.output
         useTestNG()
         {
                 //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
