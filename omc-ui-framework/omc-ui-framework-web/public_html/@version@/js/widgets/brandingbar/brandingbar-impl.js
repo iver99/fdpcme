@@ -44,7 +44,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //            }else {
 //                self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === true ? true : false);
 //            }
-            self.showTimeSelector = ko.observable(false);
+            self.showTimeSelector = ko.observable(true);
             //
             // topology paramters
             //
@@ -520,7 +520,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var timeSelectorVmPath = 'uifwk/js/widgets/datetime-picker/js/datetime-picker';
             var timeSelectorTemplatePath = 'uifwk/js/widgets/datetime-picker/html/datetime-picker.html';
             //Register a knockout component for time selector
-            if (!ko.components.isRegistered('df-datetime-picker') && self.showTimeSelector === true) {
+            if (!ko.components.isRegistered('df-datetime-picker') && ko.unwrap(self.showTimeSelector) === true) {
                 ko.components.register("df-datetime-picker", {
                     viewModel: {require: timeSelectorVmPath},
                     template: {require: 'text!' + timeSelectorTemplatePath}
