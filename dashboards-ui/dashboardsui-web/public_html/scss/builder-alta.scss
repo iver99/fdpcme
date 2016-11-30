@@ -747,23 +747,27 @@ body, html {
         height:100%;
         right:-5px;
         top:0px;
-        cursor:ew-resize;
     }
-    
+  
      .dbd-resize-handler-left {
         width:6px;
         height:100%;
         left:-5px;
         top:0px;
+    }
+        
+    .cursor-resize-ew{
         cursor:ew-resize;
+    }
+    .cursor-resize-ns{
+        cursor:ns-resize;  
     }
     
     .dbd-resize-handler-bottom{
         height: 6px;
         width:100%;
         left:0px;
-        bottom: -5px;
-        cursor:ns-resize;
+        bottom: -5px;  
     }
     
     .dbd-resize-handler-right-bottom {
