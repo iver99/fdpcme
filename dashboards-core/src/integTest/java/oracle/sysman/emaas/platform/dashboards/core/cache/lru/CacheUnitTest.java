@@ -22,35 +22,47 @@ public class CacheUnitTest {
 	 * test put action begins
 	 */
 
-	@Test(groups = { "s2" },dataProvider="default_cache_unit",dataProviderClass=DataProviderClass.class)
-	public void testPutCache(CacheUnit cacheUnit){
+	@Test(groups = { "s2" })
+	public void testPutCache(){
+		CacheUnit cacheUnit=new CacheUnit();
 		cacheUnit.put("1", new Element("1","one"));
 		Assert.assertNotNull(cacheUnit.get("1"));
 	}
 	
-	@Test(groups = { "s2" },dataProvider="default_cache_unit",dataProviderClass=DataProviderClass.class)
-	public void testPutWhenEmpty(CacheUnit cacheUnit){
+	@Test(groups = { "s2" })
+	public void testPutWhenEmpty(){
+		CacheUnit cacheUnit=new CacheUnit();
 		cacheUnit.put("1", new Element("1","One"));
 	}
 	
-	@Test(groups = { "s2" },dataProvider="default_cache_unit_three_elements",dataProviderClass=DataProviderClass.class)
-	public void testPutWhenNotEmpty(CacheUnit cacheUnit){
+	@Test(groups = { "s2" })
+	public void testPutWhenNotEmpty(){
+		CacheUnit cacheUnit=new CacheUnit();
+		cacheUnit.put("1", new Element("1","one"));
+		cacheUnit.put("2", new Element("2", "two"));
+		cacheUnit.put("3", new Element("3", "three"));
 		cacheUnit.put("1", new Element("1","second one"));
 	}
 	
-	@Test(groups = { "s2" },dataProvider="default_cache_unit_three_elements",dataProviderClass=DataProviderClass.class)
-	public void testPutIfAbsent(CacheUnit cacheUnit){
-		cacheUnit.put("4", new Element("4","four"));
+	@Test(groups = { "s2" })
+	public void testPutIfAbsent(){
+		CacheUnit cu=new CacheUnit();
+		cu.put("1", new Element("1","one"));
+		cu.put("2", new Element("2", "two"));
+		cu.put("3", new Element("3", "three"));
+		cu.put("4", new Element("4","four"));
 	}
 	
-	@Test(groups = { "s2" },dataProvider="default_cache_unit",dataProviderClass=DataProviderClass.class)
+	@Test(groups = { "s2" })
 	@ExpectedExceptions(value = { IllegalArgumentException.class })
-	public void testPutNullKey(CacheUnit cacheUnit){
+	public void testPutNullKey(){
+		CacheUnit cacheUnit=new CacheUnit();
 		cacheUnit.put(null, new Element("1","one"));
 	}
 	@ExpectedExceptions(value = { IllegalArgumentException.class })
-	@Test(groups = { "s2" },dataProvider="default_cache_unit",dataProviderClass=DataProviderClass.class)
-	public void testPutNullValue(CacheUnit cacheUnit){
+	@Test(groups = { "s2" })
+	public void testPutNullValue(){
+		CacheUnit cacheUnit=new CacheUnit();
 		cacheUnit.put("1", null);
 	}
 	
@@ -69,8 +81,9 @@ public class CacheUnitTest {
 		Assert.assertEquals(cacheUnit.get("3"), "three");
 		Assert.assertEquals(cacheUnit.get("4"), null);
 	}
-	@Test(groups = { "s2" },dataProvider="default_cache_unit",dataProviderClass=DataProviderClass.class)
-	public void testGetWhenEmpty(CacheUnit cacheUnit){
+	@Test(groups = { "s2" })
+	public void testGetWhenEmpty(){
+		CacheUnit cacheUnit=new CacheUnit();
 		Assert.assertEquals(cacheUnit.isEmpty(), true);
 		Assert.assertEquals(cacheUnit.get("1"), null);
 	}
@@ -99,8 +112,9 @@ public class CacheUnitTest {
 		Assert.assertEquals(cu.get("2"), null);
 		Assert.assertNotEquals(cu.get("1"), null);
 	}
-	@Test(groups = { "s2" },dataProvider="default_cache_unit",dataProviderClass=DataProviderClass.class)
-	public void testRemoveWhenEmpty(CacheUnit cacheUnit){
+	@Test(groups = { "s2" })
+	public void testRemoveWhenEmpty(){
+		CacheUnit cacheUnit=new CacheUnit();
 		Assert.assertEquals(cacheUnit.isEmpty(), true);
 		Assert.assertEquals(cacheUnit.remove("1"), false);
 	}
@@ -121,37 +135,53 @@ public class CacheUnitTest {
 		cu.put("3", new Element("3", "three"));
 		Assert.assertEquals(cu.remove("1"), true);
 	}
-	@Test(groups = { "s2" },dataProvider="default_cache_unit_three_elements",dataProviderClass=DataProviderClass.class)
-	public void testRemoveWhenNotExists(CacheUnit cacheUnit){
-		Assert.assertEquals(cacheUnit.remove("4"), false);
+	@Test(groups = { "s2" })
+	public void testRemoveWhenNotExists(){
+		
+		CacheUnit cu=new CacheUnit();
+		cu.put("1", new Element("1","one"));
+		cu.put("2", new Element("2", "two"));
+		cu.put("3", new Element("3", "three"));
+		Assert.assertEquals(cu.remove("4"), false);
 	}
 	/**
 	 * 	test clear action begins 
 	 */
-	@Test(groups = { "s2" },dataProvider="default_cache_unit",dataProviderClass=DataProviderClass.class)
-	public void testClearWhenEmpty(CacheUnit cacheUnit){
+	@Test(groups = { "s2" })
+	public void testClearWhenEmpty(){
+		CacheUnit cacheUnit=new CacheUnit();
 		cacheUnit.clearCache();
 	}
-	@Test(groups = { "s2" },dataProvider="default_cache_unit_three_elements",dataProviderClass=DataProviderClass.class)
-	public void testClearWhenNotEmpty(CacheUnit cacheUnit){
-		cacheUnit.clearCache();
+	@Test(groups = { "s2" })
+	public void testClearWhenNotEmpty(){
+		CacheUnit cu=new CacheUnit();
+		cu.put("1", new Element("1","one"));
+		cu.put("2", new Element("2", "two"));
+		cu.put("3", new Element("3", "three"));
+		cu.clearCache();
 	}
 	
 	/**
 	 *	test get capacity actions begins 
 	 */
 	
-	@Test(groups = { "s2" },dataProvider="default_cache_unit",dataProviderClass=DataProviderClass.class)
-	public void testCacheUnitCapacity(CacheUnit cacheUnit){
+	@Test(groups = { "s2" })
+	public void testCacheUnitCapacity(){
+		CacheUnit cacheUnit =new CacheUnit();
 		Assert.assertEquals(cacheUnit.getCacheCapacity(), CacheUnit.DEFAULT_CACHE_CAPACITY);
 	}
-	@Test(groups = { "s2" },dataProvider="default_cache_unit",dataProviderClass=DataProviderClass.class)
-	public void testCapacityWhenEmpty(CacheUnit cacheUnit){
+	@Test(groups = { "s2" })
+	public void testCapacityWhenEmpty(){
+		CacheUnit cacheUnit =new CacheUnit();
 		cacheUnit.getCacheCapacity();
 	}
-	@Test(groups = { "s2" },dataProvider="default_cache_unit_three_elements",dataProviderClass=DataProviderClass.class)
-	public void testCapacityWhenNotEmpty(CacheUnit cacheUnit){
-		cacheUnit.getCacheCapacity();
+	@Test(groups = { "s2" })
+	public void testCapacityWhenNotEmpty(){
+		CacheUnit cu=new CacheUnit();
+		cu.put("1", new Element("1","one"));
+		cu.put("2", new Element("2", "two"));
+		cu.put("3", new Element("3", "three"));
+		cu.getCacheCapacity();
 	}
 	
 	@Test(groups = { "s2" })
@@ -162,8 +192,12 @@ public class CacheUnitTest {
 		cu.put("3", new Element("3", "three"));
 		Assert.assertNotNull(cu.get("1"));
 	}
-	@Test(groups = { "s2" },dataProvider="cache_unit_2_elements_2sec",dataProviderClass=DataProviderClass.class)
-	public void testGetAfterExpiration(CacheUnit cacheUnit) {
+	@Test(groups = { "s2" })
+	public void testGetAfterExpiration() {
+		CacheUnit cu=new CacheUnit(2);
+		cu.put("1", new Element("1","one"));
+		cu.put("2", new Element("2", "two"));
+		cu.put("3", new Element("3", "three"));
 		try {
 			Thread.currentThread().sleep(2100);
 		} catch (InterruptedException e) {
@@ -171,9 +205,13 @@ public class CacheUnitTest {
 			e.printStackTrace();
 		}
 	}
-	@Test(groups = { "s2" },dataProvider="cache_unit_2_elements_2sec",dataProviderClass=DataProviderClass.class)
-	public void testPutBeforeExpiration(CacheUnit cacheUnit) {
-		cacheUnit.put("4", new Element("4","four"));
+	@Test(groups = { "s2" })
+	public void testPutBeforeExpiration() {
+		CacheUnit cu=new CacheUnit(2);
+		cu.put("1", new Element("1","one"));
+		cu.put("2", new Element("2", "two"));
+		cu.put("3", new Element("3", "three"));
+		cu.put("4", new Element("4","four"));
 	}
 	@Test(groups = { "s2" })
 	public void testPutAfterExpiration() {
@@ -190,23 +228,35 @@ public class CacheUnitTest {
 		}
 		Assert.assertNull(cu.get("1"));
 	}
-	@Test(groups = { "s2" },dataProvider="cache_unit_2_elements_2sec",dataProviderClass=DataProviderClass.class)
-	public void testRemoveBeforeExpiration(CacheUnit cacheUnit) {
-		cacheUnit.remove("1");
+	@Test(groups = { "s2" })
+	public void testRemoveBeforeExpiration() {
+		CacheUnit cu=new CacheUnit(2);
+		cu.put("1", new Element("1","one"));
+		cu.put("2", new Element("2", "two"));
+		cu.put("3", new Element("3", "three"));
+		cu.remove("1");
 	}
-	@Test(groups = { "s2" },dataProvider="cache_unit_2_elements_2sec",dataProviderClass=DataProviderClass.class)
-	public void testClearBeforeExpiration(CacheUnit cacheUnit) {
-		cacheUnit.clearCache();
+	@Test(groups = { "s2" })
+	public void testClearBeforeExpiration() {
+		CacheUnit cu=new CacheUnit(2);
+		cu.put("1", new Element("1","one"));
+		cu.put("2", new Element("2", "two"));
+		cu.put("3", new Element("3", "three"));
+		cu.clearCache();
 	}
-	@Test(groups = { "s2" },dataProvider="cache_unit_2_elements_2sec",dataProviderClass=DataProviderClass.class)
-	public void testClearAfterExpiration(CacheUnit cacheUnit) {
+	@Test(groups = { "s2" })
+	public void testClearAfterExpiration() {
+		CacheUnit cu=new CacheUnit(2);
+		cu.put("1", new Element("1","one"));
+		cu.put("2", new Element("2", "two"));
+		cu.put("3", new Element("3", "three"));
 		try {
 			Thread.currentThread().sleep(2100);
 		} catch (InterruptedException e) {
 			
 			e.printStackTrace();
 		}
-		cacheUnit.clearCache();
+		cu.clearCache();
 	}
 	
 	
