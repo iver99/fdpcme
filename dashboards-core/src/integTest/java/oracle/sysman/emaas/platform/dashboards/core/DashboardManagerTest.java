@@ -660,7 +660,7 @@ public class DashboardManagerTest
 		// delete dashboard/soft deletion
 		dm.deleteDashboard(dbd1.getDashboardId(), tenantId1);
 		Date lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNotNull(lastAccess);
+		Assert.assertNull(lastAccess);
 
 		// delete dashboard/hard deletion
 		try {
