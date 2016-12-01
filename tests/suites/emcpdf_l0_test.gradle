@@ -227,6 +227,11 @@ task DEVWebTest(type:EMTest,dependsOn: DEVUiTest){
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/HomePageFilterTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/gzip/GzipServletOutputStreamTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/gzip/GzipServletResponseWrapperTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/context/GlobalContextUtilTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/AdditionalDataFilterTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/MockCloseableHttpResponse.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/NLSFilterTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/DashboardDataAccessUtilTest.class"
 
 }
 
@@ -245,7 +250,10 @@ task DEVUIWebUtilTest(type:EMTest,dependsOn: DEVWebTest){
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/RegistryLookupUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/StringUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/TenantSubscriptionUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/AppLoggingManageMXBeanTest_S2.class"	
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/AppLoggingManageMXBeanTest_S2.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/StringCacheUtilTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/SubscribedAppCacheUtilTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest_S2.class"
 }
 
 task DEVUiFWKTest(type:EMTest,dependsOn: DEVUIWebUtilTest){ 
