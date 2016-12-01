@@ -259,7 +259,7 @@ task DEVUIWebUtilTest(type:EMTest,dependsOn: DEVWebTest){
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/StringCacheUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/SubscribedAppCacheUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest_S2.class"
-
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/json/AppMappingEntityTest.class"
 }
 
 task DEVUiFWKTest(type:EMTest,dependsOn: DEVUIWebUtilTest){ 
