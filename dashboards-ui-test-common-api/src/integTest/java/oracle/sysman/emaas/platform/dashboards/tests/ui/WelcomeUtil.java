@@ -6,7 +6,32 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class WelcomeUtil
 {
+        public static final String DATA_EXPLORERS_LOG = "log";
+        public static final String DATA_EXPLORERS_ANALYZE = "analyze";
+        public static final String DATA_EXPLORERS_SEARCH = "search";
+
+        public static final String ITA_DEFAULT = "default";
+        public static final String ITA_PERFORMANCE_ANALYTICS_DATABASE = "performanceAnalyticsDatabase";
+        public static final String ITA_PERFORMANCE_ANALYTICS_MIDDLEWARE = "performanceAnalyticsMiddleware";
+        public static final String ITA_RESOURCE_ANALYTICS_DATABASE = "resourceAnalyticsDatabase";
+        public static final String ITA_RESOURCE_ANALYTICS_MIDDLEWARE = "resourceAnalyticsMiddleware";
+        public static final String ITA_RESOURCE_ANALYTICS_HOST = "resourceAnalyticsHost";
+        public static final String ITA_DATA_EXPLORER_ANALYZE = "dataExplorerAnalyze";
+        public static final String ITA_DATA_EXPLORER = "dataExplorer";
+
+        public static final String LEARN_MORE_GET_STARTED = "getStarted";
+        public static final String LEARN_MORE_VIDEOS = "videos";
+        public static final String LEARN_MORE_SERVICE_OFFERINGS = "serviceOfferings";
+
+        public static final String SERVICE_NAME_APM = "APM";
+        public static final String SERVICE_NAME_LA = "LA";
+        public static final String SERVICE_NAME_ITA = "ITA";
+        public static final String SERVICE_NAME_INFRA_MONITORING = "infraMonitoring";
+        public static final String SERVICE_NAME_COMPLIANCE = "compliance";
+        public static final String SERVICE_NAME_SECURITY_ANALYTICS = "securityAnalytics";
+        public static final String SERVICE_NAME_ORCHESTRATION = "orchestration";
         public static final String SERVICE_NAME_DASHBOARDS = "dashboards";
+        public static final String SERVICE_NAME_DATA_EXPLORERS = "dataExplorers";
 	private WelcomeUtil() {
 	  }
 
