@@ -16,11 +16,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.eclipse.persistence.annotations.AdditionalCriteria;
-import org.eclipse.persistence.annotations.QueryRedirectors;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
-
-import oracle.sysman.emaas.platform.dashboards.entity.customizer.EmsDashboardTileParamsRedirector;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = "EmsDashboardTileParams.findAll", query = "select o from EmsDashboardTileParams o") })
