@@ -213,6 +213,8 @@ define([
                             if(value.dashboardId===currentDashboardId){
                                 value.name(dashboardName);
                                 $('#dashboardTab-'+currentDashboardId).find('.tabs-name').text(dashboardName);
+                                $('#dashboardTab-'+currentDashboardId).attr("data-tabs-name",dashboardName);
+                                $('#dashboardTab-'+currentDashboardId).attr("data-dashboard-name-in-set",dashboardName);
                             }
                         });
                         dashboardsetToolBarModel.reorderedDbsSetItems().filter(function(value) {
