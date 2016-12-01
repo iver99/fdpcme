@@ -411,3 +411,13 @@ a:hover {
     padding-top: 1px;
     float:right;
 }
+.emaas-appheader-inline-flexbox {
+  display: -webkit-inline-flex;
+  display: inline-flex; 
+}
+.emaas-appheader-flexbox-auto {
+  -webkit-flex: auto;
+  flex: auto;
+  min-width: 0px;
+  min-height: 0px; 
+}

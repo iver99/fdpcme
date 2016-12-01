@@ -67,13 +67,13 @@ define([
                                 omcContext[contextName] = {};
                             }
                             //Set value into the OMC context JSON object
-                            if (paramName === 'entityMEIDs') {
-                                //Convert string value to array, separated by comma
-                                omcContext[contextName][paramName] = paramValue.split(',');
-                            }
-                            else {
+//                            if (paramName === 'entityMEIDs') {
+//                                //Convert string value to array, separated by comma
+//                                omcContext[contextName][paramName] = paramValue.split(',');
+//                            }
+//                            else {
                                 omcContext[contextName][paramName] = paramValue;
-                            }
+//                            }
                         }
                     }
                 }
@@ -341,7 +341,7 @@ define([
                     return {
                         start: start,
                         end: end
-                    }
+                    };
                 } else {
                     return null;
                 }
@@ -518,13 +518,13 @@ define([
 
                 var meIds = null;
 
-                //If it's an array
+                //If it's an array, convert to a comma separated string
                 if ($.isArray(entityMEIDs)) {
-                    meIds = entityMEIDs;
+                    meIds = entityMEIDs.join();
                 }
-                //If it's a string with entity ids separeated by comma, convert to an array
+//                //If it's a string
                 else if (entityMEIDs) {
-                    meIds = entityMEIDs.split(',');
+                    meIds = entityMEIDs;
                 }
                 setIndividualContext('entity', 'entityMEIDs', meIds, true, true);
                 //Set entity meIds will reset the cached entity objects, 
