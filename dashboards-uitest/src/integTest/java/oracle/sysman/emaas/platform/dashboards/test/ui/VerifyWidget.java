@@ -126,11 +126,8 @@ public class VerifyWidget extends LoginAndLogout
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='save_widget_btn']")));
 
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		if (!url.substring(url.indexOf("emsaasui") + 9).contains("emsaasui/emcta/ta/analytics.html?oj_Router=")) {
-			Assert.fail("NOT open the correct widget");
-		}
+		//verify the open url
+		DashBoardUtils.verifyURL_WithPara(webd, "emsaasui/emcta/ta/analytics.html??widgetId=");
 	}
 
 	//open a LA widget in dashboard builder page
@@ -162,12 +159,8 @@ public class VerifyWidget extends LoginAndLogout
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
 
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		if (!url.substring(url.indexOf("emsaasui") + 9).contains(
-				"emlacore/html/log-analytics-search.html?widgetId=2013&dashboardId")) {
-			Assert.fail("NOT open the correct widget");
-		}
+		//verify the open url
+		DashBoardUtils.verifyURL_WithPara(webd, "emlacore/html/log-analytics-search.html?widgetId=2013&dashboardId");
 	}
 
 	private String generateTimeStamp()
