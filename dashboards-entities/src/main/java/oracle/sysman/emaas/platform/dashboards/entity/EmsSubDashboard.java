@@ -38,8 +38,6 @@ import oracle.sysman.emaas.platform.dashboards.entity.customizer.EmsSubDashboard
 @IdClass(EmsDashboardSetPK.class)
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
-//@AdditionalCriteria("this.deleted = '0'")
-//@QueryRedirectors(insert = EmsSubDashboardRedirector.class, delete = EmsSubDashboardRedirector.class)
 public class EmsSubDashboard extends EmBaseEntity implements Serializable
 {
 

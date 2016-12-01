@@ -212,7 +212,7 @@ public class DashboardManager
 			//				removeFavoriteDashboard(dashboardId, tenantId);
 			//			}
 
-			em.setProperty("soft.deletion.permanent", permanent);
+			//em.setProperty("soft.deletion.permanent", permanent);
 			dsf.updateSubDashboardShowInHome(dashboardId);
 
 			if (!permanent) {
