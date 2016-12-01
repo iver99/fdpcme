@@ -57,7 +57,6 @@ public class CacheManager {
 
     private static transient long lastLogTime;
     private static boolean isCacheEnabled;
-    ResourceBundle conf = ResourceBundle.getBundle("cache_config");
     private static CacheManager instance = new CacheManager();
 
     public static CacheManager getInstance() {
@@ -156,12 +155,6 @@ public class CacheManager {
         return keyGen.generate(tenant, keys);
     }
 
-	/*public Object putCache(String key, Object value)
-    {
-		CacheUnit nc = CacheFactory.getCache("lookupCache");
-		nc.put(key, new Element(key, value));
-		return value;
-	}*/
 
     public Object putCacheable(String cacheName, Keys keys, Object value) {
         return putCacheable(null, cacheName, keys, value);

@@ -510,6 +510,31 @@ public class VerifyOOB extends LoginAndLogout
 	}
 
 	@Test
+	public void verifyExadataHealth_WithFilter_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyExadataHealth_WithFilter_GridView");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - IT Analytics");
+		DashboardHomeUtil.filterOptions(webd, "ita");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//Open the OOB dashboard---Exadata Health
+		webd.getLogger().info("Open the OOB dashboard---Exadata Health");
+		DashboardHomeUtil.selectDashboard(webd, "Exadata Health");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Exadata Health
+		verifyExadataHealth();
+	}
+
+	@Test
 	public void verifyExadataHealth_WithFilter_ListView()
 	{
 		//initTest
@@ -523,31 +548,6 @@ public class VerifyOOB extends LoginAndLogout
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
 		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Exadata Health
-		webd.getLogger().info("Open the OOB dashboard---Exadata Health");
-		DashboardHomeUtil.selectDashboard(webd, "Exadata Health");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Exadata Health
-		verifyExadataHealth();
-	}
-
-	@Test
-	public void verifyExadataHealth_WithFilter_ridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyExadataHealth_WithFilter_ridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
 
 		//Open the OOB dashboard---Exadata Health
 		webd.getLogger().info("Open the OOB dashboard---Exadata Health");
@@ -1798,7 +1798,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify the current url
 		webd.getLogger().info("Verify the current url");
-		DashBoardUtils.verifyURL(webd, "emcitas/db-analytics-war/html/db-performance-analytics.html");
+		DashBoardUtils.verifyURL(webd, "emcitas/db-performance-analytics/html/db-performance-analytics.html");
 
 		//verify all the widgets displayed
 		//TODO

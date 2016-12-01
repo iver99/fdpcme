@@ -65,6 +65,7 @@ public class CacheUnit implements ICacheUnit{
 			throw new IllegalArgumentException("Cannot put into CacheUnit:value cannot be null!");
 		}
 		cacheLinkedHashMap.put(key, value);
+		LOGGER.info("CacheUnit: key = {}, value = {} has been put into {} cache group successfully!",key,value,name);
 		this.cacheUnitStatus.setUsage(this.cacheUnitStatus.getUsage()+1);
 		return true;
 		
@@ -100,6 +101,8 @@ public class CacheUnit implements ICacheUnit{
 			//remove action
 			LOGGER.debug("CacheUnit:The Element is expired,removing it from cache unit..");
 			cacheLinkedHashMap.remove(key);
+			LOGGER.debug("CacheUnit:Element is expired,returning null...");
+			LOGGER.info("CacheUnit: key = {}, value = {} is expired, remove it from {} cache group successfully!",key,e,name);
 			this.cacheUnitStatus.setUsage(this.cacheUnitStatus.getUsage()-1);
 			this.cacheUnitStatus.setEvictionCount(this.cacheUnitStatus.getEvictionCount()+1);
 			return null;

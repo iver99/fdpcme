@@ -169,13 +169,13 @@ a:hover {
     color: white;
 }
 
-.emaas-appheader-appname-table-cell-middle{
+.emaas-appheader-appname-table-cell-baseline{
     display:table-cell;
-    vertical-align: middle;
+    vertical-align: baseline;
 }
 
 .emaas-appheader-lite .emaas-appheader-logo {
-    margin-top: 9px; 
+    margin-top: 14px; 
     margin-bottom: 5px; 
     float:left;
     outline:none;
@@ -273,25 +273,26 @@ a:hover {
 }
 
 .emaas-appheader-lite .emaas-appheader-seperator {
-    display: none;
+    display: inline-block;
+    height: 14px;
 }
 .emaas-appheader-lite .emaas-appheader-appname-oneline {
-    display: none;
+    display: inline-block;
 }
 .emaas-appheader-lite .emaas-appheader-appname-twoline {
-    display: block;
+    display: none; //block;
     padding-top: 2px;
 }
 .emaas-appheader-toolbar{
-    height:44px;
+    height: 44px;
 }
 .emaas-appheader-toolbar-button {
-    height:44px;
+    height: 44px;
     line-height: 44px;
 }
 .emaas-appheader-toolbar-button-icon {
-    width:32px;
-    height:32px;
+    width: 32px;
+    height: 32px;
     vertical-align: middle;
 }
 .fa-notification:before {
@@ -385,4 +386,38 @@ a:hover {
 .em-about-box .oj-dialog-close-icon
 {
     color: #FFFFFF;
+}
+
+.emaas-appheader-global-context {
+    font-size: 14px;
+    background-color:#EDEDED;
+    height: 36px;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+.emaas-appheader-composite-context, .emaas-appheader-time-context {
+    height: 30px;
+    line-height:30px;
+    vertical-align: middle;
+    text-align: center;
+}
+.emaas-appheader-composite-context {
+    float:left;
+}
+.emaas-appheader-time-context {
+    padding-top: 1px;
+    float:right;
+}
+.emaas-appheader-inline-flexbox {
+  display: -webkit-inline-flex;
+  display: inline-flex; 
+}
+.emaas-appheader-flexbox-auto {
+  -webkit-flex: auto;
+  flex: auto;
+  min-width: 0px;
+  min-height: 0px; 
 }

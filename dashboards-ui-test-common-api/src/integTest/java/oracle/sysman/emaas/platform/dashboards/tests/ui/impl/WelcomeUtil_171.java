@@ -109,13 +109,13 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		Validator.fromValidValues("learMoreItem", itemName, LEARN_MORE_GET_STARTED, LEARN_MORE_VIDEOS,
 				LEARN_MORE_SERVICE_OFFERINGS);
 
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
 		boolean isExisted = false;
 		String itemId = getLearnMoreItemId(itemName);
 		String nameExpected = getExpectedText(itemName);
-		driver.waitForElementPresent("id=" + itemId);
-		driver.waitForText("id=" + itemId, nameExpected);
-		String nameDisplayed = driver.getWebDriver().findElement(By.id(itemId)).getText();
-		if (nameDisplayed.equals(nameExpected)) {
+		
+		if(driver.isDisplayed("id="+itemId) && driver.isTextPresent(nameExpected, "id="+itemId)) {
 			isExisted = true;
 		}
 		driver.getLogger().info("Check of learn more item: " + itemName + " existence is finished! Result: " + isExisted);
@@ -133,6 +133,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		Validator.fromValidValues("serviceName", serviceName, SERVICE_NAME_APM, SERVICE_NAME_LA, SERVICE_NAME_ITA,
 				SERVICE_NAME_INFRA_MONITORING, SERVICE_NAME_COMPLIANCE, SERVICE_NAME_SECURITY_ANALYTICS, SERVICE_NAME_ORCHESTRATION, SERVICE_NAME_DASHBOARDS, SERVICE_NAME_DATA_EXPLORERS);
 
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
 		boolean isExisted = false;
 		String serviceWrapperId = getServiceWrapperId(serviceName);
 		String xpath = "//*[@id='"
@@ -140,10 +142,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				+ "']/div[@class='service-box-wrapper']/div[@class='landing-home-box-content']/div[@class='landing-home-box-content-head']";
 
 		String nameExpected = getExpectedText(serviceName);
-		driver.waitForElementPresent(xpath);
-		driver.waitForText(xpath, nameExpected);
-		String nameDisplayed = driver.getWebDriver().findElement(By.xpath(xpath)).getText();
-		if (nameDisplayed.equals(nameExpected)) {
+		
+		if(driver.isDisplayed(xpath) && driver.isTextPresent(nameExpected, xpath)) {
 			isExisted = true;
 		}
 		driver.getLogger().info(

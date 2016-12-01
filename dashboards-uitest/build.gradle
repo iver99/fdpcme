@@ -1,13 +1,9 @@
-
-
 sourceSets {
 integTest {
         java.srcDir 'src/integTest/java'
-
-    
-        compileClasspath = configurations.testConfig + configurations.webdriver + configurations.testNG
+        compileClasspath += configurations.testConfig + configurations.webdriver + configurations.testNG
         }
-    }
+}
 
 clean{
   delete 'build'
@@ -32,11 +28,7 @@ publishing.publications {
 
 dependencies {
     testConfig project(':dashboards-ui-test-common-api')  
-    testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19')  
     testConfig getProjectArtifact('jmockit')   	
-    testCompile configurations.testConfig
-    testCompile configurations.webdriver
-    testCompile configurations.testNG
 	testConfig getProjectArtifact('log4j-api')   	
 	testConfig getProjectArtifact('log4j-core')   	
 	testConfig getProjectArtifact('log4j-slf4j-impl')   
@@ -47,3 +39,10 @@ publications ('integTest')
 
     }
 
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testNG
+        plusConfigurations += configurations.webdriver
+        plusConfigurations += configurations.testConfig
+    }
+}

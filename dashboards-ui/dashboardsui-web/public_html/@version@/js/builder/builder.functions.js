@@ -239,25 +239,25 @@ define(['knockout',
         }
         Builder.registerFunction(fetchDashboardScreenshot, 'fetchDashboardScreenshot');
 
-        function checkDashboardFavorites(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
-            dfu.ajaxWithRetry(url, {
-                type: 'get',
-                dataType: "json",
-                headers: getDefaultHeaders(),
-                success: function(data) {
-                    if (succCallBack){
-                        succCallBack(data);
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    if (errorCallBack){
-                        errorCallBack(jqXHR, textStatus, errorThrown);
-                    }
-                }
-            });
-        }
-        Builder.registerFunction(checkDashboardFavorites, 'checkDashboardFavorites');
+//        function checkDashboardFavorites(dashboardId, succCallBack, errorCallBack) {
+//            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
+//            dfu.ajaxWithRetry(url, {
+//                type: 'get',
+//                dataType: "json",
+//                headers: getDefaultHeaders(),
+//                success: function(data) {
+//                    if (succCallBack){
+//                        succCallBack(data);
+//                    }
+//                },
+//                error: function(jqXHR, textStatus, errorThrown) {
+//                    if (errorCallBack){
+//                        errorCallBack(jqXHR, textStatus, errorThrown);
+//                    }
+//                }
+//            });
+//        }
+//        Builder.registerFunction(checkDashboardFavorites, 'checkDashboardFavorites');
 
         function addDashboardToFavorites(dashboardId, succCallBack, errorCallBack) {
             var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
@@ -333,27 +333,27 @@ define(['knockout',
         }
         Builder.registerFunction(isSmallMediaQuery, 'isSmallMediaQuery');
 
-        function fetchDashboardOptions(dashboardId, succCallBack, errorCallBack){
-            var url = dfu.buildFullUrl(getBaseUrl(),dashboardId+"/options" );
-            dfu.ajaxWithRetry(url, {
-                type: 'get',
-                dataType: "json",
-                headers: getDefaultHeaders(),
-                success: function(data) {
-                    if (succCallBack){
-                        succCallBack(data);
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    if (errorCallBack){
-                        errorCallBack(jqXHR, textStatus, errorThrown);
-                    }
-                },
-                async: false
-            });
-        }
-
-        Builder.registerFunction(fetchDashboardOptions, 'fetchDashboardOptions');
+//        function fetchDashboardOptions(dashboardId, succCallBack, errorCallBack){
+//            var url = dfu.buildFullUrl(getBaseUrl(),dashboardId+"/options" );
+//            dfu.ajaxWithRetry(url, {
+//                type: 'get',
+//                dataType: "json",
+//                headers: getDefaultHeaders(),
+//                success: function(data) {
+//                    if (succCallBack){
+//                        succCallBack(data);
+//                    }
+//                },
+//                error: function(jqXHR, textStatus, errorThrown) {
+//                    if (errorCallBack){
+//                        errorCallBack(jqXHR, textStatus, errorThrown);
+//                    }
+//                },
+//                async: false
+//            });
+//        }
+//
+//        Builder.registerFunction(fetchDashboardOptions, 'fetchDashboardOptions');
 
         function updateDashboardOptions(optionsJson, succCallBack, errorCallBack){
             var url = dfu.buildFullUrl(getBaseUrl(),optionsJson["dashboardId"]+"/options" );
@@ -400,7 +400,8 @@ define(['knockout',
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             var start = dfu_model.getUrlParam("startTime") ? true : false;
             var end = dfu_model.getUrlParam("endTime") ? true : false;
-            return start && end;
+            var timePeriod = dfu_model.getUrlParam("timePeriod") ? true : false;
+            return (start && end) || timePeriod;
         }
 
         Builder.registerFunction(saveDashboardOptions, 'saveDashboardOptions');

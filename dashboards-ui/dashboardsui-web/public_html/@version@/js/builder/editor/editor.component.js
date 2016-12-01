@@ -9,11 +9,12 @@ define(['knockout',
         'ojs/ojcore',
         'dfutil',
         'uifwk/js/util/usertenant-util',
+        'uifwk/js/sdk/context-util',
 //        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
         'builder/dashboard.tile.model',
         'builder/editor/editor.tiles'
     ],
-    function(ko, $, oj, dfu,userTenantUtilModel/*, TargetSelectorUtils*/) {
+    function(ko, $, oj, dfu,userTenantUtilModel, cxtModel/*, TargetSelectorUtils*/) {
         function Cell(row, column) {
             var self = this;
 
@@ -222,6 +223,7 @@ define(['knockout',
                     return "#";
             });
             tile.dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd(), timeSelectorModel.viewTimePeriod()), targets, null, null, dashboard.enableTimeRange(), dashboard.enableEntityFilter());
+            console.log("dashboardItemChangeEvent in initializeTileAfterLoad for '" + ko.unwrap(tile.WIDGET_NAME) + "' is " + JSON.stringify(tile.dashboardItemChangeEvent));
             /**
              * Integrator needs to override below FUNCTION to respond to DashboardItemChangeEvent
              * e.g.
@@ -334,6 +336,7 @@ define(['knockout',
                 }
             }
             
+            var cxtUtil = new cxtModel();
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
 //                var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');
                 var url = dfu.getVisualAnalyzerUrl(tile.PROVIDER_NAME());//Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), versionPlus);
@@ -344,10 +347,15 @@ define(['knockout',
                         if(dashboard.enableTimeRange() === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
                             widgetUrl += "";
                         }else {
-                            var start = timeSelectorModel.viewStart().getTime();
-                            var end = timeSelectorModel.viewEnd().getTime();
+                            var start = timeSelectorModel.viewStart();
+                            var end = timeSelectorModel.viewEnd();
+                            if(start && (start instanceof Date) && end && (end instanceof Date)) {
+                                widgetUrl += "&startTime="+start.getTime()+"&endTime="+end.getTime();
+                            }
                             var timePeriod = timeSelectorModel.viewTimePeriod();
-                            widgetUrl += "&startTime="+start+"&endTime="+end+"&timePeriod="+timePeriod;
+                            if(timePeriod) {
+                                widgetUrl += "&timePeriod="+timePeriod;
+                            }
                         }
 
                     require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils){
@@ -360,7 +368,7 @@ define(['knockout',
                             }
                             widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
                         }
-                        window.location = widgetUrl;
+                        window.location = cxtUtil.appendOMCContext(widgetUrl);
                     });
                     };
                 }

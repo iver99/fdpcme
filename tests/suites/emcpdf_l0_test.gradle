@@ -38,8 +38,6 @@ def emcpsmRegClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'regi
 def emcpsmRegLookupClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
 
 dependencies {
-
-	testConfig configurations.webdriver
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities-integ-tests', version: "${REPO_BID}") {
@@ -90,7 +88,6 @@ dependencies {
 	testConfig(group: 'com.sun.jersey', name: 'jersey-core', version: '1.17.1') {transitive=false}
         testConfig(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17.1') {transitive=false}
  
-        testConfig configurations.webdriver
 	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-web', version: "${REPO_BID}")
 	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils', version: "${REPO_BID}")
  
@@ -130,20 +127,7 @@ dependencies {
     	
        testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
         testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
-	configurations{
-		restAssured.exclude module:'groovy'
-	}
 }
-
-
-
-configurations {
-restAssured.exclude module: 'groovy'
-}
-
-
-
-
 
 task DEVTest_ws(type:EMTest){ 
 	include "oracle/sysman/emaas/platform/dashboards/ws/ErrorEntityTest.class"

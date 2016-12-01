@@ -3,12 +3,6 @@
  * All rights reserved.
  */
 
-/**
- * @preserve Copyright 2013 jQuery Foundation and other contributors
- * Released under the MIT license.
- * http://jquery.org/license
- */
-
 define([
     'dashboards/datasourcefactory',
     'dashboards/dbstablesource',
@@ -19,11 +13,12 @@ define([
     'dfutil',
     'uifwk/js/util/preference-util',
     'uifwk/js/util/mobile-util',
+    'uifwk/js/sdk/context-util',
     'ojs/ojknockout',
     'ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'
 ],
-function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
+function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, cxtModel)
 {
     var SHOW_WELCOME_PREF_KEY = "Dashboards.showWelcomeDialog",
             DASHBOARDS_FILTER_PREF_KEY = "Dashboards.dashboardsFilter",
@@ -31,6 +26,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             DASHBOARDS_REST_URL = dfu.getDashboardsUrl(),
             PREFERENCES_REST_URL = dfu.getPreferencesUrl(),
             SUBSCIBED_APPS_REST_URL = dfu.getSubscribedappsUrl();
+    var cxtUtil = new cxtModel();
 
     function createDashboardDialogModel() {
         var self = this;
@@ -435,9 +431,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             if (ui.item.children("a")[0] && ui.item.children("a")[0].value)
             {
                 if (dfu.isDevMode()){
-                    window.location = dfu.getRelUrlFromFullUrl(ui.item.children("a")[0].value);
+                    window.location = cxtUtil.appendOMCContext(dfu.getRelUrlFromFullUrl(ui.item.children("a")[0].value));
                 }else{
-                    window.location = ui.item.children("a")[0].value;
+                    window.location = cxtUtil.appendOMCContext(ui.item.children("a")[0].value);
                 }
             }
         };

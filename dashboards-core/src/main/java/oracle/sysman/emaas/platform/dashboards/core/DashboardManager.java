@@ -1,18 +1,22 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotData;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
@@ -25,6 +29,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
+import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashboard;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
@@ -35,13 +40,8 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.eclipse.persistence.config.QueryHints;
-import org.eclipse.persistence.config.ResultType;
 
 public class DashboardManager
 {
@@ -211,11 +211,15 @@ public class DashboardManager
 
 			dsf.updateSubDashboardShowInHome(dashboardId);
 
+			//emcpdf2801 delete dashboard's user option
+			LOGGER.info("Deleting user options for id "+dashboardId);
+			dsf.removeAllEmsUserOptions(dashboardId);
 			if (!permanent) {
 				ed.setDeleted(dashboardId);
 				dsf.mergeEmsDashboard(ed);
 				dsf.removeEmsSubDashboardBySubId(dashboardId);
 				dsf.removeEmsSubDashboardBySetId(dashboardId);
+				
 			}
 			else {
 				dsf.removeAllEmsUserOptions(dashboardId);
@@ -288,6 +292,38 @@ public class DashboardManager
 			}
 		}
 	}
+	
+	public EmsDashboard getEmsDashboardById(DashboardServiceFacade dsf, Long dashboardId, Long tenantId) throws DashboardException {
+		if (dashboardId == null || dashboardId <= 0) {
+			LOGGER.debug("Dashboard not found for id {} is invalid", dashboardId);
+			throw new DashboardNotFoundException();
+		}
+		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+		if (ed == null) {
+			LOGGER.debug("Dashboard not found with the specified id {}", dashboardId);
+			throw new DashboardNotFoundException();
+		}
+		Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
+		if (isDeleted != null && isDeleted.booleanValue()) {
+			LOGGER.debug("Dashboard with id {} is not found for it's deleted already", dashboardId);
+			throw new DashboardNotFoundException();
+		}
+		String currentUser = UserContext.getCurrentUser();
+		// user can access owned or system dashboard
+		if (ed.getSharePublic().intValue() == 0) {
+			if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
+				LOGGER.debug(
+						"Dashboard with id {} is not found for it's a non-OOB dashboard and not owned by current user {}",
+						dashboardId, currentUser);
+				throw new DashboardNotFoundException();
+			}
+		}
+		if (!isDashboardAccessbyCurrentTenant(ed)) {
+			LOGGER.debug("Dashboard with id {} is not found for it can't be accessed by current tenant", dashboardId);
+			throw new DashboardNotFoundException();
+		}
+		return ed;
+	}
 
 	/**
 	 * Returns dashboard instance by specifying the id
@@ -300,36 +336,9 @@ public class DashboardManager
 	{
 		EntityManager em = null;
 		try {
-			if (dashboardId == null || dashboardId <= 0) {
-				LOGGER.debug("Dashboard not found for id {} is invalid", dashboardId);
-				throw new DashboardNotFoundException();
-			}
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
-			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-			if (ed == null) {
-				LOGGER.debug("Dashboard not found with the specified id {}", dashboardId);
-				throw new DashboardNotFoundException();
-			}
-			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
-			if (isDeleted != null && isDeleted.booleanValue()) {
-				LOGGER.debug("Dashboard with id {} is not found for it's deleted already", dashboardId);
-				throw new DashboardNotFoundException();
-			}
-			String currentUser = UserContext.getCurrentUser();
-			// user can access owned or system dashboard
-			if (ed.getSharePublic().intValue() == 0) {
-				if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
-					LOGGER.debug(
-							"Dashboard with id {} is not found for it's a non-OOB dashboard and not owned by current user {}",
-							dashboardId, currentUser);
-					throw new DashboardNotFoundException();
-				}
-			}
-			if (!isDashboardAccessbyCurrentTenant(ed)) {
-				LOGGER.debug("Dashboard with id {} is not found for it can't be accessed by current tenant", dashboardId);
-				throw new DashboardNotFoundException();
-			}
+			EmsDashboard ed = getEmsDashboardById(dsf, dashboardId, tenantId);
 			updateLastAccessDate(dashboardId, tenantId, dsf);
 			return Dashboard.valueOf(ed, null, true, true, true);
 		}
@@ -339,6 +348,88 @@ public class DashboardManager
 			}
 		}
 	}
+
+	/**
+	 * Returns combined dashboard instance by specifying the id
+	 *
+	 * @param dashboardId
+	 * @return
+	 * @throws DashboardException
+	 * @throws JSONException 
+	 */
+	public CombinedDashboard getCombinedDashboardById(Long dashboardId, Long tenantId, String userName) throws DashboardException
+	{
+   EntityManager em = null;
+   try {
+      DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+      em = dsf.getEntityManager();
+      EmsDashboard ed = getEmsDashboardById(dsf, dashboardId, tenantId);
+      EmsPreference ep = dsf.getEmsPreference(userName, "Dashboards.homeDashboardId");
+      EmsUserOptions euo = dsf.getEmsUserOptions(userName, dashboardId);
+      CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo);
+      if (Dashboard.DASHBOARD_TYPE_CODE_SET.equals(ed.getType())) {
+         Object selected = null;
+         try {
+            JSONObject jsonObj = null;
+            if (cd.getExtendedOptions() != null) {
+               jsonObj = new JSONObject(cd.getExtendedOptions());
+               selected = jsonObj.get("selectedTab");
+               LOGGER.info("Retrieved selected tab from dashboard table for dashboard {} is {}", dashboardId, selected);
+            }
+            // get selectedTab from user options
+            String extOptions = euo == null? null: euo.getExtendedOptions();
+            LOGGER.info("Dashboard ID={} is a dashboard set, its extendedOptions from user option is {}, user is {}", dashboardId, extOptions, userName);
+            if (extOptions != null) {
+               jsonObj = new JSONObject(extOptions);
+               selected = jsonObj.get("selectedTab");
+               LOGGER.info("Retrieved selected tab from user option table for dashboard {} and user {} is {}", dashboardId, userName, selected);
+            }
+         } catch (JSONException e) {
+            // failed to parse extended options json, so failed to retrieve selected tab. 
+            // This is unexpected, but if it happens, likes just go ahead w/o selected tab then...
+            LOGGER.error(e.getLocalizedMessage(), e);
+         }
+         Long selectedId = null;
+         if (selected != null) {
+            try {
+               selectedId = Long.valueOf(selected.toString());
+            } catch (NumberFormatException e) {
+               // might be a null 'selectedTab' value or invalid one
+               LOGGER.info("Failed to get selected dashboard ID: ID is invalid: {}", selected);
+            }
+         }
+         else {
+            // use the 1st dashboard id
+            if (cd.getSubDashboards() != null && !cd.getSubDashboards().isEmpty()) {
+               selectedId = cd.getSubDashboards().get(0).getDashboardId();
+               LOGGER.info("Retrieved default (1st) tab for dashboard set {}, 1st dashboard id is {}", dashboardId, selected);
+            }
+         }
+         if (selectedId != null) {
+        	//check if selected dashboard is deleted
+        	/*if(dsf.isDashboardDeleted(selectedId)){
+        		return cd;
+        	}*/
+        	try{
+        		EmsDashboard sed = this.getEmsDashboardById(dsf, selectedId, tenantId);
+        		EmsUserOptions seuo = dsf.getEmsUserOptions(userName, selectedId);
+        		CombinedDashboard scd = CombinedDashboard.valueOf(sed, null, seuo);
+        		cd.setSelected(scd);
+        	}catch(DashboardException e){
+        		LOGGER.error(e.getStackTrace());
+        		return cd;
+        	}
+         }
+      }
+      return cd;
+   }
+   finally {
+      if (em != null && em.isOpen()) {
+         em.close();
+      }
+   }
+	}
+	
 
 	/**
 	 * Returns dashboard instance specified by name for current user Please note that same user under single tenant can't have
@@ -774,7 +865,7 @@ public class DashboardManager
 		//			sbQuery.append(sb);
 		sbQuery.insert(0,
 				"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.SHOW_INHOME,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
-						+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE ");
+						+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE,p.APPLICATION_TYPE ");
 		String jpqlQuery = sbQuery.toString();
 
 		LOGGER.debug("Executing SQL is: " + jpqlQuery);
