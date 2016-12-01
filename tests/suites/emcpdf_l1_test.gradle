@@ -231,7 +231,7 @@ task DEVWebTest(type:EMTest,dependsOn: DEVUiTest){
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/AdditionalDataFilterTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/MockCloseableHttpResponse.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/NLSFilterTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/DashboardDataAccessUtilTest.class
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/DashboardDataAccessUtilTest.class"
 
 }
 
