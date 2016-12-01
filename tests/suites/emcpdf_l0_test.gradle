@@ -274,8 +274,9 @@ task DEVUiFWKTest(type:EMTest,dependsOn: DEVUIWebUtilTest){
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/LoggingServiceManagerTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/OmcUiFrameworkLifecycleServiceTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/PropertyReaderTest.class"
-	//include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/RegistryServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/wls/management/AppLoggingManageMXBeanTest_S2.class"	
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/RegistryServiceManagerTest.class"
+        include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest_S2.class"
+
 	
 	useRestAssured=true
 	ext.set("testType", "unit")
