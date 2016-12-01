@@ -72,6 +72,17 @@ public class BrandingBarUtil
 	}
 
 	/**
+	 * @param driver
+	 * @param servicename
+	 * @return
+	 */
+	public static boolean isBrandingBarServiceNamePresent(WebDriver driver, String servicename)
+	{
+		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
+		return bu.isBrandingBarServiceNamePresent(driver, servicename);
+	}
+
+	/**
 	 * Check if the specified cloud service link is existed or not by given name
 	 *
 	 * @param driver
@@ -289,5 +300,4 @@ public class BrandingBarUtil
 	private BrandingBarUtil()
 	{
 	}
-
 }
