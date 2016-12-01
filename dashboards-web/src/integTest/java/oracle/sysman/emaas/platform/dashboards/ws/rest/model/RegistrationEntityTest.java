@@ -3,6 +3,12 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import org.testng.collections.CollectionUtils;
+
+import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
@@ -18,11 +24,6 @@ import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
-
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import org.testng.collections.CollectionUtils;
 
 /**
  * @author jishshi
@@ -62,11 +63,17 @@ public class RegistrationEntityTest
 				final String LA_SERVICENAME = "LogAnalytics";
 				final String ITA_SERVICENAME = "ITAnalytics";
 				final String MONITORING_SERVICENAME = "Monitoring";
+				final String ORCHESTRATION_SERVICENAME = "Orchestration";
+				final String COMPLIANCE_SERVICENAME = "Compliance";
+				final String SECURITY_SERVICE_NAME = "SecurityAnalytics";
 				List<String> apps = new ArrayList<>();
 				apps.add(APM_SERVICENAME);
 				apps.add(LA_SERVICENAME);
 				apps.add(ITA_SERVICENAME);
 				apps.add(MONITORING_SERVICENAME);
+				apps.add(ORCHESTRATION_SERVICENAME);
+				apps.add(COMPLIANCE_SERVICENAME);
+				apps.add(SECURITY_SERVICE_NAME);
 
 				TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
 				result = apps;
@@ -165,7 +172,21 @@ public class RegistrationEntityTest
 	}
 
 	@Test
-	public void testGetAssetRoots() {
+	public void testGetAssetRoots(@Mocked final DependencyStatus anyDependencyStatus, @Mocked final RegistryLookupUtil anyRegistryLookupUtil) {
 		Assert.assertNotNull(registrationEntity.getAssetRoots());
+		
+		final List<LinkEntity> links = new ArrayList<LinkEntity>();
+		LinkEntity le = new LinkEntity("LoganService", "http://den00yqk.us.oracle.com:7004/emaas/emlacore", "LoganService", "1.0");
+		links.add(le);
+		
+		new Expectations(registrationEntity) {
+			{
+				anyDependencyStatus.isEntityNamingUp();
+				result = true;
+				Deencapsulation.invoke(registrationEntity, "lookupLinksWithRelPrefix", anyString, false);
+				result = links;
+			}
+		};
+		Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getAssetRoots()));
 	}
 }
