@@ -174,11 +174,11 @@ public class RegistrationEntityTest
 	@Test
 	public void testGetAssetRoots(@Mocked final DependencyStatus anyDependencyStatus, @Mocked final RegistryLookupUtil anyRegistryLookupUtil) {
 		Assert.assertNotNull(registrationEntity.getAssetRoots());
-		
+
 		final List<LinkEntity> links = new ArrayList<LinkEntity>();
 		LinkEntity le = new LinkEntity("LoganService", "http://den00yqk.us.oracle.com:7004/emaas/emlacore", "LoganService", "1.0");
 		links.add(le);
-		
+
 		new Expectations(registrationEntity) {
 			{
 				anyDependencyStatus.isEntityNamingUp();
