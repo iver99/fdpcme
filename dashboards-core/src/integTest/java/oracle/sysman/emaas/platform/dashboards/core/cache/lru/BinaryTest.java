@@ -18,7 +18,7 @@ import org.testng.annotations.Test;
  */
 public class BinaryTest
 {
-	@Test
+	@Test(groups = { "s2" })
 	public void testBinary(){
 		byte[] b=new byte[15];
 		Binary binary=new Binary(b);
