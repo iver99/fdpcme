@@ -1,9 +1,10 @@
 define([
     'ojs/ojcore',
     'jquery',
-    'uifwk/@version@/js/util/df-util-impl'
+    'uifwk/@version@/js/util/df-util-impl',
+    'uifwk/@version@/js/sdk/SessionCacheUtil'
 ],
-    function (oj, $, dfuModel)
+    function (oj, $, dfuModel, SessionCacheUtil)
     {
         function UIFWKContextUtil() {
             var self = this;
@@ -18,7 +19,21 @@ define([
             if (!window._uifwk) {
                 window._uifwk = {};
             }
-
+            //
+            // sessionStorage cache
+            //
+            var sessionCaches = [];
+            var sessionCacheNames = ['_uifwk_omccontextcache_composite', '_uifwk_omccontextcache_entity'];
+            for (var i = 0; i < sessionCacheNames.length; i++) {
+                sessionCaches.push(new SessionCacheUtil(sessionCacheNames[i], 1));
+            }
+            if (window.performance) {
+                if (window.performance.navigation.type === 1) {
+                    for (var i = 0; i < sessionCaches.length; i++) {
+                        sessionCaches[i].clearCache();
+                    }
+                }
+            }
             /**
              * Get the OMC global context. This api will only return OMC conext, 
              * any page's private context from URL will be ignored. For any page 
@@ -72,7 +87,7 @@ define([
 //                                omcContext[contextName][paramName] = paramValue.split(',');
 //                            }
 //                            else {
-                                omcContext[contextName][paramName] = paramValue;
+                            omcContext[contextName][paramName] = paramValue;
 //                            }
                         }
                     }
@@ -307,7 +322,7 @@ define([
                     return {
                         start: end,
                         end: end
-                    }
+                    };
                 } else if (self.isValidTimePeriod(timePeriod)) {
                     arr = timePeriod.split("_");
                     num = arr[1];
@@ -410,6 +425,13 @@ define([
                     return compositeType;
                 }
                 else if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
+                    //sessionStorage cache
+                    var compositeCacheKey = self.getCompositeMeId();
+                    var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
+                    compositeType = cache['compositeType'];
+                    if (compositeType) {
+                        return compositeType;
+                    }
                     //Fetch composite name/type
                     queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
                 }
@@ -438,6 +460,13 @@ define([
                     return compositeName;
                 }
                 else if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
+                    //sessionStorage cache
+                    var compositeCacheKey = self.getCompositeMeId();
+                    var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
+                    compositeName = cache['compositeName'];
+                    if (compositeName) {
+                        return compositeName;
+                    }
                     //Fetch composite name/type
                     queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
                 }
@@ -456,6 +485,13 @@ define([
                     return compositeDisplayName;
                 }
                 else if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
+                    //sessionStorage cache
+                    var compositeCacheKey = self.getCompositeMeId();
+                    var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
+                    compositeDisplayName = cache['compositeDisplayName'];
+                    if (compositeDisplayName) {
+                        return compositeDisplayName;
+                    }
                     //Fetch composite name/type
                     queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
                 }
@@ -479,6 +515,13 @@ define([
                     return compositeClass;
                 }
                 else if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
+                    //sessionStorage cache
+                    var compositeCacheKey = self.getCompositeMeId();
+                    var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
+                    compositeClass = cache['compositeClass'];
+                    if (compositeClass) {
+                        return compositeClass;
+                    }
                     //Fetch composite name/type
                     queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
                 }
@@ -597,6 +640,13 @@ define([
              * @returns 
              */
             self.clearCompositeContext = function () {
+                var compositeCacheKey = self.getCompositeMeId();
+                if (compositeCacheKey) {
+                    sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeDisplayName', null);
+                    sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeName', null);
+                    sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeType', null);
+                    sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeClass', null);
+                }
                 clearIndividualContext('composite');
             };
 
@@ -617,6 +667,10 @@ define([
              * @returns 
              */
             self.clearEntityContext = function () {
+                var entityCacheKey = getEntityCacheKey();
+                if (entityCacheKey) {
+                    sessionCaches[1].updateCacheData(entityCacheKey, 'entities', null);
+                }
                 clearIndividualContext('entity');
             };
 
@@ -634,32 +688,40 @@ define([
                 else {
                     var entityMeIds = self.getEntityMeIds();
                     var entitiesType = self.getEntitiesType();
-                    entities = [];
-                    if (entityMeIds && entityMeIds.length > 0 && entitiesType) {
-                        //Query entities by meIds and filter by entites type
-                        queryODSEntitiesByMeIds(entityMeIds, loadEntities);
-                        for (var i = 0; i < entitiesFetched.length; i++) {
-                            var entity = entitiesFetched[i];
-                            if (entity['entityType'] === entitiesType) {
-                                entities.push(entity);
+                    //sessionStorage cache
+                    var entityCacheKey = getEntityCacheKey();
+                    var cache = sessionCaches[1].retrieveDataFromCache(entityCacheKey);
+                    entities = cache['entities'];
+
+                    if (!entities) {
+                        entities = [];
+                        if (entityMeIds && entityMeIds.length > 0 && entitiesType) {
+                            //Query entities by meIds and filter by entites type
+                            queryODSEntitiesByMeIds(entityMeIds, loadEntities);
+                            for (var i = 0; i < entitiesFetched.length; i++) {
+                                var entity = entitiesFetched[i];
+                                if (entity['entityType'] === entitiesType) {
+                                    entities.push(entity);
+                                }
                             }
                         }
-                    }
-                    else if (entityMeIds && entityMeIds.length > 0) {
-                        //Query entities by meIds
-                        queryODSEntitiesByMeIds(entityMeIds, loadEntities);
-                        for (var i = 0; i < entitiesFetched.length; i++) {
-                            entities.push(entitiesFetched[i]);
+                        else if (entityMeIds && entityMeIds.length > 0) {
+                            //Query entities by meIds
+                            queryODSEntitiesByMeIds(entityMeIds, loadEntities);
+                            for (var i = 0; i < entitiesFetched.length; i++) {
+                                entities.push(entitiesFetched[i]);
+                            }
                         }
-                    }
-                    else if (entitiesType) {
-                        //Query by entities type
-                        queryODSEntitiesByEntityType(entitiesType, loadEntities);
-                        for (var i = 0; i < entitiesFetched.length; i++) {
-                            entities.push(entitiesFetched[i]);
+                        else if (entitiesType) {
+                            //Query by entities type
+                            queryODSEntitiesByEntityType(entitiesType, loadEntities);
+                            for (var i = 0; i < entitiesFetched.length; i++) {
+                                entities.push(entitiesFetched[i]);
+                            }
                         }
+                        // update sessionStorage cache
+                        sessionCaches[1].updateCacheData(entityCacheKey, 'entities', entities);
                     }
-
                     //Cache the entities data
                     var omcCtx = self.getOMCContext();
                     if (!omcCtx['entity']) {
@@ -704,6 +766,22 @@ define([
                     storeContext(omcContext);
                 }
             };
+
+            function getEntityCacheKey() {
+                var entityCacheKey = null;
+                var entityMeIds = self.getEntityMeIds();
+                var entitiesType = self.getEntitiesType();
+                if (entityMeIds && entityMeIds.length > 0 && entitiesType) {
+                    entityCacheKey = entityMeIds.sort().join() + entitiesType;
+                }
+                else if (entityMeIds && entityMeIds.length > 0) {
+                    entityCacheKey = entityMeIds.sort().join();
+                }
+                else if (entitiesType) {
+                    entityCacheKey = entitiesType;
+                }
+                return entityCacheKey;
+            }
 
             function afterBrandingBarInstantiated(callback) {
                 function receiveMessage(event) {
@@ -835,12 +913,12 @@ define([
                         return url.replace(pattern, '$1$3').replace(/(&|\?)$/, '') + hash;
                     }
                 }
-                
+
                 //If value is not empty, append it to the URL
                 if (paramValue) {
-                    return url + (url.indexOf('?') > 0 ? 
-                    //Handle case that an URL ending with a question mark only
-                    (url.lastIndexOf('?') === url.length - 1 ? '': '&') : '?') + paramName + '=' + paramValue + hash; 
+                    return url + (url.indexOf('?') > 0 ?
+                        //Handle case that an URL ending with a question mark only
+                            (url.lastIndexOf('?') === url.length - 1 ? '' : '&') : '?') + paramName + '=' + paramValue + hash;
                 }
                 //If value is empty, return original URL
                 return url;
@@ -983,19 +1061,25 @@ define([
             }
 
             function fetchCompositeCallback(data) {
+                var compositeDisplayName = null, compositeName = null, compositeType = null, compositeClass = null;
                 if (data && data['rows'] && data['rows'].length > 0) {
                     var entity = data['rows'][0];
-                    setIndividualContext('composite', 'compositeDisplayName', entity[1], false, false);
-                    setIndividualContext('composite', 'compositeName', entity[2], false, false);
-                    setIndividualContext('composite', 'compositeType', entity[4], false, false);
-                    setIndividualContext('composite', 'compositeClass', entity[5], false, false);
+                    compositeDisplayName = entity[1];
+                    compositeName = entity[2];
+                    compositeType = entity[4];
+                    compositeClass = entity[5];
                 }
-                else {
-                    setIndividualContext('composite', 'compositeDisplayName', null, false, false);
-                    setIndividualContext('composite', 'compositeName', null, false, false);
-                    setIndividualContext('composite', 'compositeType', null, false, false);
-                    setIndividualContext('composite', 'compositeClass', null, false, false);
-                }
+                setIndividualContext('composite', 'compositeDisplayName', compositeDisplayName, false, false);
+                setIndividualContext('composite', 'compositeName', compositeName, false, false);
+                setIndividualContext('composite', 'compositeType', compositeType, false, false);
+                setIndividualContext('composite', 'compositeClass', compositeClass, false, false);
+                // cache
+                var compositeCacheKey = self.getCompositeMeId();
+                sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeDisplayName', compositeDisplayName);
+                sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeName', compositeName);
+                sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeType', compositeType);
+                sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeClass', compositeClass);
+
                 setIndividualContext('composite', 'compositeNeedRefresh', 'false', true, true);
             }
 
