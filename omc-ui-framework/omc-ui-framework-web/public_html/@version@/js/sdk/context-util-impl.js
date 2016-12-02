@@ -58,7 +58,7 @@ define([
                     
                     //Check and fetch cached data from session storage
                     //composite type/name/display name/class
-                    if (omcContext['composite'] && omcContext['composite']['compositeMEID']) {
+                    if (omcContext && omcContext['composite'] && omcContext['composite']['compositeMEID']) {
                         var compositeCacheKey = omcContext['composite']['compositeMEID'];
                         var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
                         if (cache) {
@@ -77,7 +77,7 @@ define([
                         }
                     }
                     //Entities
-                    if (omcContext['entity'] && (omcContext['entity']['entitiesType'] || omcContext['entity']['entityMEIDs'])) {
+                    if (omcContext && omcContext['entity'] && (omcContext['entity']['entitiesType'] || omcContext['entity']['entityMEIDs'])) {
                         var entityCacheKey = null;
                         var entityMeIds = omcContext['entity']['entityMEIDs'] ? omcContext['entity']['entityMEIDs'].split(',') : null;
                         var entitiesType = omcContext['entity']['entitiesType'];
