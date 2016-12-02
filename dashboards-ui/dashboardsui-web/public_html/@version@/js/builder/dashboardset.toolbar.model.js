@@ -67,15 +67,20 @@ define(['knockout',
             var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
             var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
             if("SET" === dashboardInst.type()){
-                prefUtil.getAllPreferences({
-                    async: false,
-                    success: function(resp) {
-                        var value = prefUtil.getPreferenceValue(resp, prefKeyHomeDashboardId);
-                        if (value === ko.unwrap(dashboardInst.id)) {
-                            self.dashboardsetConfig.setHome = ko.observable(false);
-                        }
+            	new Builder.DashboardDataSource().getHomeDashboardPreference(ko.unwrap(dashboardInst.id), function(resp) {
+                    if (resp && Number(resp.value) === ko.unwrap(dashboardInst.id) && resp.key === prefKeyHomeDashboardId) {
+                        self.dashboardsetConfig.setHome = ko.observable(false);
                     }
-                });
+            	});
+//                prefUtil.getAllPreferences({
+//                    async: false,
+//                    success: function(resp) {
+//                        var value = prefUtil.getPreferenceValue(resp, prefKeyHomeDashboardId);
+//                        if (Number(value) === ko.unwrap(dashboardInst.id)) {
+//                            self.dashboardsetConfig.setHome = ko.observable(false);
+//                        }
+//                    }
+//                });
             }
 
             self.dashboardsetConfig.homeIcon = ko.observable("dbd-toolbar-icon-home");
@@ -83,6 +88,11 @@ define(['knockout',
                 return getNlsString(self.dashboardsetConfig.setHome() ?
                         "DBS_BUILDER_BTN_HOME_SET" :
                         "DBS_BUILDER_BTN_HOME_REMOVE");
+            });
+            self.dashboardsetConfig.homeName = ko.pureComputed(function () {
+                return self.dashboardsetConfig.setHome() ?
+                        "Set as Home" :
+                        "Remove as Home";
             });
 
             self.dashboardsetConfig.addFavorite = ko.observable(true);
@@ -98,6 +108,12 @@ define(['knockout',
                 return getNlsString(self.dashboardsetConfig.addFavorite() ?
                         "DBS_BUILDER_BTN_FAVORITES_ADD" :
                         "DBS_BUILDER_BTN_FAVORITES_REMOVE");
+            });
+            
+            self.dashboardsetConfig.favoriteName = ko.pureComputed(function () {
+                return  self.dashboardsetConfig.addFavorite() ?
+                        "Add Favorite" :
+                        "Remove Favorite";
             });
 
             var dashboardsetEditDisabled = function () {
@@ -299,6 +315,7 @@ define(['knockout',
                     "id": "dbs-edit",
                     "icon": "fa-pencil-df",
                     "title": "",
+                    "name":"Edit",
                     "disabled": "",
                     "endOfGroup": false,
                     "showOnMobile": false,
@@ -310,6 +327,7 @@ define(['knockout',
                     "label": getNlsString("COMMON_BTN_PRINT"),
                     "url": "#",
                     "id": "dbs-print",
+                    "name":"Print",
                     "icon": "fa-print",
                     "title": "",
                     "disabled": "",
@@ -323,6 +341,7 @@ define(['knockout',
                     "label": self.dashboardsetConfig.favoriteLabel,
                     "url": "#",
                     "id": "dbs-favorite",
+                    "name":self.dashboardsetConfig.favoriteName,
                     "icon": self.dashboardsetConfig.favoriteIcon,
                     "title": "",
                     "disabled": "",
@@ -336,6 +355,7 @@ define(['knockout',
                     "label": self.dashboardsetConfig.homeLabel,
                     "url": "#",
                     "id": "dbs-home",
+                    "name":self.dashboardsetConfig.homeName,
                     "icon": self.dashboardsetConfig.homeIcon,
                     "title": "",
                     "disabled": "",
@@ -349,6 +369,7 @@ define(['knockout',
                     "label":  getNlsString("DBS_BUILDER_AUTOREFRESH_REFRESH"),
                     "url": "#",
                     "id": "dbs-refresh",
+                    "name":"Auto-refresh",
                     "icon": "dbd-icon-refresh",
                     "title": "",
                     "disabled": "",
@@ -360,6 +381,7 @@ define(['knockout',
                             "label": getNlsString("DBS_BUILDER_AUTOREFRESH_OFF"),
                             "url": "#",
                             "id": "refresh-off",
+                            "name":"Off",
                             "icon": self.dashboardsetConfig.refreshOffIcon,
                             "title": "",
                             "disabled": "",
@@ -372,6 +394,7 @@ define(['knockout',
                             "label": getNlsString("DBS_BUILDER_AUTOREFRESH_ON"),
                             "url": "#",
                             "id": "refresh-time",
+                            "name":"On (Every 5 Minutes)",
                             "icon": self.dashboardsetConfig.refreshOnIcon,
                             "title": "",
                             "disabled": "",
@@ -398,10 +421,10 @@ define(['knockout',
                             self.extendedOptions ={};
                             if(typeof(resp.extendedOptions)!=="undefined"){
                                 self.extendedOptions = JSON.parse(resp.extendedOptions);
-                                if(self.extendedOptions.autoRefresh && self.extendedOptions.autoRefresh.defaultValue) {
+                                if(self.extendedOptions.autoRefresh && $.isNumeric(self.extendedOptions.autoRefresh.defaultValue)) {
                                     self.autoRefreshInterval(parseInt(self.extendedOptions.autoRefresh.defaultValue));
                                 }else {
-                                    if(self.dashboardExtendedOptions.autoRefresh && self.dashboardExtendedOptions.autoRefresh.defaultValue) {
+                                    if(self.dashboardExtendedOptions.autoRefresh && $.isNumeric(self.dashboardExtendedOptions.autoRefresh.defaultValue)) {
                                         self.autoRefreshInterval(parseInt(self.dashboardExtendedOptions.autoRefresh.defaultValue));
                                     }else {
                                        self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);

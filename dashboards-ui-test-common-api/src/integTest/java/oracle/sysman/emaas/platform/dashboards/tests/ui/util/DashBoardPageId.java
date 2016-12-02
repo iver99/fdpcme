@@ -178,8 +178,8 @@ public class DashBoardPageId
 
 	public static final String EXPLOREDATAMENU = "exploreDataMenu";
 
-	//Log Visual Analyzer button
-	public static final String EXPLORE_LOG = "//a[text()='Log Visual Analyzer']";
+	//Log button
+	public static final String EXPLORE_LOG = "//a[text()='Log Visual Analyzer' and @role='menuitem']";
 
 	//Search button in explore menu
 	public static final String EXPLORE_Search = "//a[text()='Search' and @role='menuitem']";
@@ -436,6 +436,7 @@ public class DashBoardPageId
 	public static final String BRANDINGBARCLOUDSERVICELINKSID = "obbNavCsLinks";
 	public static final String BRANDINGBARVISUALANALYZERLINKSID = "obbNavVaLinks";
 	public static final String BRANDINGBARADMINLINKSID = "obbNavAdminLinks";
+	public static final String BRANDINGBARSERVICENAMECSS = ".emaas-appheader-appname-oneline";
 	public static final String BRANDINGBARNAVLINKSID = "links_menu";
 	//Brand Bar User Menu Option
 	public static final String BRAND_BAR_USER_MENU = "//button[contains(@id,'menubutton')]";

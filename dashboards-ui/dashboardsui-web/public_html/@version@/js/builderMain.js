@@ -224,7 +224,7 @@ require(['knockout',
         var logReceiver = dfu.getLogUrl();
         require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
         TargetSelectorUtils.registerComponents();
-        logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
+        logger.initialize(logReceiver, 300000, 20000, 80, dfu.getUserTenant().tenantUser);
         // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
         // If you comment the line below, our current log calls will not be output!
         logger.setLogLevel(oj.Logger.LEVEL_WARN);
@@ -278,7 +278,7 @@ require(['knockout',
                 tenantName: self.tenantName,
                 appId: self.appId,
                 isAdmin:true,
-                showGlobalContextBanner: true
+                showGlobalContextBanner: ko.observable(false)
             };
 
             $("#headerWrapper").on("DOMSubtreeModified", function() {
@@ -310,6 +310,11 @@ require(['knockout',
         Builder.initializeFromCookie();
 
         $(document).ready(function () {
+            //Check if uifwk css file has been loaded already or not, if not then load it
+            if (!$('#dashboardMainCss').length) {
+                //Append uifwk css file into document head
+                $('head').append('<link id="dashboardMainCss" rel="stylesheet" href="/emsaasui/emcpdfui/@version@/css/dashboards-main.css" type="text/css"/>');
+            }
 
             var headerViewModel = new DashboardsetHeaderViewModel();
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
