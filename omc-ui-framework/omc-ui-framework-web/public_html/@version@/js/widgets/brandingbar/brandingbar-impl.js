@@ -6,14 +6,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'uifwk/@version@/js/sdk/context-util-impl',
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
-    '/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js',
     'ojs/ojknockout',
     'ojs/ojtoolbar',
     'ojs/ojmenu',
     'ojs/ojbutton',
     'ojs/ojdialog'
 ],
-    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, EmctaContextSelectorUtil) {
+    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls) {
         function BrandingBarViewModel(params) {
             var self = this;
             var msgUtil = new msgUtilModel();
@@ -36,6 +35,31 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             } else {
                 self.showGlobalContextBanner = ko.observable(ko.unwrap(params.showGlobalContextBanner) === false ? false : true);
             }
+
+            self.entityContextParams = ko.unwrap(params.entityContextParams);
+            if (self.entityContextParams) {
+                if (ko.isObservable(self.entityContextParams.readOnly)) {
+                    self.entityContextReadOnly = self.entityContextParams.readOnly;
+                } else {
+                    self.entityContextReadOnly = ko.observable(ko.unwrap(self.entityContextParams.readOnly) === false ? false : true);
+                }
+            }
+            if (!self.entityContextReadOnly) {
+                self.entityContextReadOnly = ko.observable(true);
+            }
+            self.showEntityContextSelector = ko.observable(false);
+            //respond to change to entityContextReadOnly
+            self.entityContextReadOnly.subscribe(function () {
+                if (!self.entityContextReadOnly()) {
+                    require(['/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js'], function (EmctaContextSelectorUtil) {
+                        EmctaContextSelectorUtil.registerComponents();
+                        self.showEntityContextSelector(true);
+                    });
+                } else {
+                    self.showEntityContextSelector(false);
+                }
+            });
+            self.entityContextReadOnly.notifySubscribers();
 
             //Set showTimeSelector config. Default value is false. It can be set as an knockout observable and be changed after page is loaded
             //Per high level plan, we don't allow consumers to config to show/hide time selector themselves. So comment out below code for now.
@@ -74,13 +98,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     },
                     template: {require: 'text!/emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html'}
                 });
-            }
-            
-            self.readOnlyContext = ko.observable(true);
-            if (!ko.components.isRegistered('emcta-context-selector'))
-            {
-                EmctaContextSelectorUtil.registerComponents();
-                self.readOnlyContext(false);
             }
             
             if (self.showGlobalContextBanner() === true) {
