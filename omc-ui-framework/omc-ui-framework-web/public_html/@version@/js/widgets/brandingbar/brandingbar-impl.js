@@ -876,14 +876,19 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                            }
 //                        }
 //                    }
+                    var topologyParams = cxtUtil.getTopologyParams();
+                    if (topologyParams && !self.topologyParamsSet) {
+                        refreshTopology = true;
+                    }
                     if (refreshTopology) {
-                        var topologyParams = cxtUtil.getTopologyParams();
+
                         if (topologyParams) {
                             self.associations(topologyParams.associations);
                             self.layout(topologyParams.layout);
                             self.customNodeDataLoader(topologyParams.customNodeDataLoader);
                             self.customEventHandler(topologyParams.customEventHandler);
                             self.miniEntityCardActions(topologyParams.miniEntityCardActions);
+                            self.topologyParamsSet = true;
                         }
                         $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
                         self.topologyInitialized = true;
