@@ -1013,7 +1013,9 @@ public class DashboardManagerTest_S2
 		// delete dashboard/soft deletion
 		dm.deleteDashboard(dbd1.getDashboardId(), tenantId1);
 		Date lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNotNull(lastAccess);
+//		Assert.assertNotNull(lastAccess);
+		//emcpdf-2801
+		Assert.assertNull(lastAccess);
 
 		// delete dashboard/hard deletion
 		try {

@@ -6,12 +6,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.testng.Assert;
+import org.testng.AssertJUnit;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
+import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
@@ -20,13 +28,6 @@ import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManag
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.testng.Assert;
-import org.testng.AssertJUnit;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 /**
  * @author guobaochen
@@ -577,6 +578,14 @@ public class DashboardManagerTest
 			LOGGER.info("context", e);
 		}
 	}
+	
+	/*@Test
+	public void testGetCombinedDashboardById() throws DashboardException {
+		DashboardManager dm = DashboardManager.getInstance();
+		UserContext.setCurrentUser("emcsadmin");
+		CombinedDashboard cd = dm.getCombinedDashboardById(2158L, 1663659699L, "emcsadmin");
+		Assert.assertNotNull(cd);
+	}*/
 
 	@Test
 	public void testGetDashboardId() throws DashboardException
@@ -652,7 +661,7 @@ public class DashboardManagerTest
 		// delete dashboard/soft deletion
 		dm.deleteDashboard(dbd1.getDashboardId(), tenantId1);
 		Date lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNotNull(lastAccess);
+		Assert.assertNull(lastAccess);
 
 		// delete dashboard/hard deletion
 		try {

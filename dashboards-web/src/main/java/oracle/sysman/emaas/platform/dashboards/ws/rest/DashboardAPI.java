@@ -33,6 +33,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONObject;
@@ -369,7 +370,8 @@ public class DashboardAPI extends APIBase
 			logkeyHeaders("queryDashboardById()", userTenant, tenantIdParam);
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
-			Dashboard dbd = dm.getDashboardById(dashboardId, tenantId);
+			String userName = UserContext.getCurrentUser();
+			Dashboard dbd = dm.getCombinedDashboardById(dashboardId, tenantId, userName);
 			updateDashboardAllHref(dbd, tenantIdParam);
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
 		}

@@ -26,6 +26,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSec
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
+import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashboard;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
@@ -218,10 +219,11 @@ public class DashboardAPITest
 			{
 				anyDependencyStatus.isDatabaseUp();
 				result = true;
-				mockedDashboardManager.getDashboardById((BigInteger) any, anyLong);
-				result = new Dashboard();
 
-				Deencapsulation.invoke(dashboardAPI, "updateDashboardAllHref", withAny(new Dashboard()), anyString);
+				mockedDashboardManager.getCombinedDashboardById((BigInteger) any, anyLong, anyString);
+				result = new CombinedDashboard();
+
+				Deencapsulation.invoke(dashboardAPI, "updateDashboardAllHref", withAny(new CombinedDashboard()), anyString);
 				result = any;
 			}
 		};

@@ -402,6 +402,11 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	}
 
 	@Mock
+	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(String name, String owner, String description){
+		List<EmsDashboard> ps = this.localFind(EmsDashboard.class, new EmsDashboardSelector(null, name, owner, true));
+		return ps.isEmpty() ? null : ps.get(0);
+	}
+	@Mock
 	public int removeUnsharedEmsSubDashboard(BigInteger subDashboardId, String owner)
 	{
 		return 1;
