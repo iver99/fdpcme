@@ -326,6 +326,7 @@ require(['knockout',
             }
 
             var headerViewModel = new DashboardsetHeaderViewModel();
+            ko.applyBindings({}, $('#loading')[0]);  //to make text binding on loading work
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
             new Builder.DashboardDataSource().loadDashboardData(dsbId, function (dashboard) {

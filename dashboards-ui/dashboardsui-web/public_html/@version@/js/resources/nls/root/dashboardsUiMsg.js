@@ -41,6 +41,7 @@ define({
       "COMMON_TEXT_SHARE_CONFIRM_DETAIL": "This dashboard can now be viewed by others.",
       "COMMON_TEXT_UNSHARE_CONFIRM_SUMMARY": "Dashboard no longer shared.",
       "COMMON_TEXT_UNSHARE_CONFIRM_DETAIL": "This dashboard cannot be viewed by others.",
+      "DBS_HOME_LOADING": "Loading...",
       "DBS_HOME_SEARCH_ARIA_LABEL": "Search for a Dashboard",
       "DBS_HOME_SEARCH_PLACE_HODE": "Search",
       "DBS_HOME_SEARCH_BTN_LABEL": "Search",

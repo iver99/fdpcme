@@ -181,6 +181,7 @@ require(['dashboards/dbsmodel',
             var titleVM = new TitleViewModel();
 
             $(document).ready(function() {
+                ko.applyBindings({}, $('#loading')[0]);  //to make text binding on loading work
                 ko.applyBindings(titleVM,$("title")[0]);
                 //Caution: need below line to enable KO binding, otherwise KOC inside headerWrapper doesn't work
                 ko.applyBindings(headerViewModel, document.getElementById('headerWrapper'));
