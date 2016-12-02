@@ -28,10 +28,13 @@ define([
                 sessionCaches.push(new SessionCacheUtil(sessionCacheNames[i], 1));
             }
             if (window.performance) {
-                if (window.performance.navigation.type === 1) {
+                //When there're multiple instance of ContextUtil, we should only clear the cache once during a page refresh, otherwise
+                //it may cause cached data lost though composite/entities already fetched
+                if (window.performance.navigation.type === 1 && !window._uifwk.isOmcContextCacheCleared) {
                     for (var i = 0; i < sessionCaches.length; i++) {
                         sessionCaches[i].clearCache();
                     }
+                    window._uifwk.isOmcContextCacheCleared = true;
                 }
             }
             /**
@@ -52,6 +55,46 @@ define([
                 //Otherwise, retrieve the context from URL parameters
                 if (!omcContext) {
                     omcContext = getContextFromUrl();
+                    
+                    //Check and fetch cached data from session storage
+                    //composite type/name/display name/class
+                    if (omcContext['composite'] && omcContext['composite']['compositeMEID']) {
+                        var compositeCacheKey = omcContext['composite']['compositeMEID'];
+                        var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
+                        if (cache) {
+                            if (cache['compositeType']) {
+                                omcContext['composite']['compositeType'] = cache['compositeType'];
+                            }
+                            if (cache['compositeName']) {
+                                omcContext['composite']['compositeName'] = cache['compositeName'];
+                            }
+                            if (cache['compositeDisplayName']) {
+                                omcContext['composite']['compositeDisplayName'] = cache['compositeDisplayName'];
+                            }
+                            if (cache['compositeClass']) {
+                                omcContext['composite']['compositeClass'] = cache['compositeClass'];
+                            }
+                        }
+                    }
+                    //Entities
+                    if (omcContext['entity'] && (omcContext['entity']['entitiesType'] || omcContext['entity']['entityMEIDs'])) {
+                        var entityCacheKey = null;
+                        var entityMeIds = omcContext['entity']['entityMEIDs'] ? omcContext['entity']['entityMEIDs'].split(',') : null;
+                        var entitiesType = omcContext['entity']['entitiesType'];
+                        if (entityMeIds && entityMeIds.length > 0 && entitiesType) {
+                            entityCacheKey = entityMeIds.sort().join() + entitiesType;
+                        }
+                        else if (entityMeIds && entityMeIds.length > 0) {
+                            entityCacheKey = entityMeIds.sort().join();
+                        }
+                        else if (entitiesType) {
+                            entityCacheKey = entitiesType;
+                        }
+                        var cache = sessionCaches[1].retrieveDataFromCache(entityCacheKey);
+                        if (cache && cache['entities']) {
+                            omcContext['entity']['entities'] = cache['entities'];
+                        }
+                    }
                 }
 
                 if (!omcContext) {
@@ -428,9 +471,8 @@ define([
                     //sessionStorage cache
                     var compositeCacheKey = self.getCompositeMeId();
                     var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
-                    compositeType = cache['compositeType'];
-                    if (compositeType) {
-                        return compositeType;
+                    if (cache && cache['compositeType']) {
+                        return cache['compositeType'];
                     }
                     //Fetch composite name/type
                     queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
@@ -463,9 +505,8 @@ define([
                     //sessionStorage cache
                     var compositeCacheKey = self.getCompositeMeId();
                     var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
-                    compositeName = cache['compositeName'];
-                    if (compositeName) {
-                        return compositeName;
+                    if (cache && cache['compositeName']) {
+                        return cache['compositeName'];
                     }
                     //Fetch composite name/type
                     queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
@@ -488,9 +529,8 @@ define([
                     //sessionStorage cache
                     var compositeCacheKey = self.getCompositeMeId();
                     var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
-                    compositeDisplayName = cache['compositeDisplayName'];
-                    if (compositeDisplayName) {
-                        return compositeDisplayName;
+                    if (cache && cache['compositeDisplayName']) {
+                        return cache['compositeDisplayName'];
                     }
                     //Fetch composite name/type
                     queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
@@ -518,9 +558,8 @@ define([
                     //sessionStorage cache
                     var compositeCacheKey = self.getCompositeMeId();
                     var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
-                    compositeClass = cache['compositeClass'];
-                    if (compositeClass) {
-                        return compositeClass;
+                    if (cache && cache['compositeClass']) {
+                        return cache['compositeClass'];
                     }
                     //Fetch composite name/type
                     queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
@@ -691,7 +730,9 @@ define([
                     //sessionStorage cache
                     var entityCacheKey = getEntityCacheKey();
                     var cache = sessionCaches[1].retrieveDataFromCache(entityCacheKey);
-                    entities = cache['entities'];
+                    if (cache) {
+                        entities = cache['entities'];
+                    }
 
                     if (!entities) {
                         entities = [];
