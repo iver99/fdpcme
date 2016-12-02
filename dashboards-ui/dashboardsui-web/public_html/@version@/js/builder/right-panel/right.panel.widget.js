@@ -8,6 +8,7 @@ function (ko, $, oj, dfu) {
         var self = this;
         self.widgets = ko.observableArray([]);
         self.keyword = ko.observable('');
+        self.keyword.extend({rateLimit: 700, method: 'notifyWhenChangesStop '});
         self.clearRightPanelSearch = ko.observable(false);
         self.tilesViewModel = ko.observable($b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel());
 
@@ -88,7 +89,16 @@ function (ko, $, oj, dfu) {
                 async: true
             });
         };
-
+        
+        self.keyword.subscribe(function () {
+            self.loadWidgets();
+            if (self.keyword().length === 0) {
+                self.clearRightPanelSearch(false);
+            } else {
+                self.clearRightPanelSearch(true);
+            }
+        });
+        
         self.searchWidgetsInputKeypressed = function (e, d) {
             if (d.keyCode === 13) {
                 self.searchWidgetsClicked();
@@ -100,20 +110,9 @@ function (ko, $, oj, dfu) {
             self.loadWidgets();
         };
 
-        self.autoSearchWidgets = function (req) {
-            self.loadWidgets(req);
-            if (req.term.length === 0) {
-                self.clearRightPanelSearch(false);
-            } else {
-                self.clearRightPanelSearch(true);
-            }
-        };
-
         self.clearWidgetSearchInputClicked = function () {
             if (self.keyword()) {
-                self.keyword(null);
-                self.searchWidgetsClicked();
-                self.clearRightPanelSearch(false);
+                self.keyword("");  
             }
         };
 
