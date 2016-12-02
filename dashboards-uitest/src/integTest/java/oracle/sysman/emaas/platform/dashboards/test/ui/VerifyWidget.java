@@ -127,7 +127,7 @@ public class VerifyWidget extends LoginAndLogout
 		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='save_widget_btn']")));
 
 		//verify the open url
-		DashBoardUtils.verifyURL_WithPara(webd, "emsaasui/emcta/ta/analytics.html??widgetId=");
+		DashBoardUtils.verifyURL_WithPara(webd, "emcta/ta/analytics.html?widgetId=");
 	}
 
 	//open a LA widget in dashboard builder page
