@@ -120,8 +120,12 @@
                }" style="height:29px; margin-bottom:0px"/>
             </div>
             </span>
-
-            
+            <!-- ko if: showEntityContextSelector() -->
+            <div id="emcta-ctxtSel" data-bind="component:{name:'emcta-context-selector',
+                params:{id: 'emcta-ctxtSel', entityContextParams: entityContextParams}}">
+            </div> 
+            <!-- /ko -->
+            <!-- ko if: !showEntityContextSelector() -->
             <div class="ude-sdk emaas-appheader-inline-flexbox emaas-appheader-flexbox-auto animated_transitions" style="padding-bottom: 10px; padding-top: 3px; height: 32px; display: flex;">
             <div class="ude-sdk emcta_panel_border flexBoxNoShrink flexBoxColumn flexBoxAuto animated_transitions" id="globalBar_wrapper"
                  style="padding:2px;">
@@ -143,7 +147,7 @@
                 <!-- /ko -->
             </div>
             </div>
-
+            <!-- /ko -->
             <!-- ko if: showTimeSelector() === true -->
                 <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="component: {name: 'df-datetime-picker', params: timeSelectorParams}">
                 </div>

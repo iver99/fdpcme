@@ -36,6 +36,31 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.showGlobalContextBanner = ko.observable(ko.unwrap(params.showGlobalContextBanner) === false ? false : true);
             }
 
+            self.entityContextParams = ko.unwrap(params.entityContextParams);
+            if (self.entityContextParams) {
+                if (ko.isObservable(self.entityContextParams.readOnly)) {
+                    self.entityContextReadOnly = self.entityContextParams.readOnly;
+                } else {
+                    self.entityContextReadOnly = ko.observable(ko.unwrap(self.entityContextParams.readOnly) === false ? false : true);
+                }
+            }
+            if (!self.entityContextReadOnly) {
+                self.entityContextReadOnly = ko.observable(true);
+            }
+            self.showEntityContextSelector = ko.observable(false);
+            //respond to change to entityContextReadOnly
+            self.entityContextReadOnly.subscribe(function () {
+                if (!self.entityContextReadOnly()) {
+                    require(['/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js'], function (EmctaContextSelectorUtil) {
+                        EmctaContextSelectorUtil.registerComponents();
+                        self.showEntityContextSelector(true);
+                    });
+                } else {
+                    self.showEntityContextSelector(false);
+                }
+            });
+            self.entityContextReadOnly.notifySubscribers();
+
             //Set showTimeSelector config. Default value is false. It can be set as an knockout observable and be changed after page is loaded
             //Per high level plan, we don't allow consumers to config to show/hide time selector themselves. So comment out below code for now.
 //            if(ko.isObservable(params.showTimeSelector)) {
@@ -74,7 +99,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     template: {require: 'text!/emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html'}
                 });
             }
-
+            
             if (self.showGlobalContextBanner() === true) {
                 refreshOMCContext();
             }
