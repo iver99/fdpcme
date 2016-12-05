@@ -152,8 +152,6 @@ public class TestDashboardSet extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 		DashboardBuilderUtil.addNewDashboardToSet(webd, dbName);
 
-		//thinkTime(8000L);
-
 		//verify the dashboard has been added to the dashboard set
 		webd.getLogger().info("Verify if the dashboard exists in the dashborad set");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName), "Dashboard is NOT in the dashboard set");
@@ -185,8 +183,6 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Switch to the list view");
 		DashboardHomeUtil.listView(webd);
 		DashboardBuilderUtil.addNewDashboardToSet(webd, dbName);
-
-		//thinkTime(8000L);
 
 		//verify the dashboard has been added to the dashboard set
 		webd.getLogger().info("Verify if the dashboard exists in the dashborad set");
@@ -229,8 +225,6 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Create a dashboard inside dashboard set");
 		DashboardBuilderUtil.createDashboardInsideSet(webd, dbName_InSet, null);
 
-		//thinkTime(8000L);
-
 		//verify the dashboard is in the dashboard set
 		webd.getLogger().info("Verify the created dashboard is in the dashboard set");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet), "Dashboard NOT found in the set");
@@ -265,7 +259,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
-	@Test(groups = "forth run", dependsOnMethods = { "testSearchDashboardInSet" })
+	@Test(groups = "forth run", dependsOnMethods = { "testModifyDashboardInSet_dbCreatedInsideSet" })
 	public void testDeleteDashboardInSet()
 	{
 		//init the test
@@ -291,12 +285,6 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Remove the dashboard from the dashboard set");
 		DashboardBuilderUtil.removeDashboardFromSet(webd, dbName_InSet);
 
-		//thinkTime(8000L);
-
-		//click Add dashboard icon
-		//webd.getLogger().info("Click Add Dashboard Icon");
-		//webd.click("css=" + PageId.DashboardSetAddDashboardIcon_Css);
-
 		//search the dashboard created in set
 		DashboardHomeUtil.search(webd, dbName_InSet);
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_InSet), "Expected dashboard '" + dbName_InSet
@@ -305,6 +293,37 @@ public class TestDashboardSet extends LoginAndLogout
 		//delete the dashboard
 		DashboardHomeUtil.deleteDashboard(webd, dbName_InSet, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 
+	}
+
+	//this case is for EMCPDF-2801, regression test
+	@Test(groups = "third run", dependsOnMethods = { "testStopSharing" })
+	public void testDeleteDashboardSelectedBySetFromHomePage()
+	{
+
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testDeleteDashboardSelectedBySetFromHomePage");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//remove the dashboard selected by dashboard set in home page
+		webd.getLogger().info("Remove the dashboard selected by dashboard set in home page");
+		DashboardHomeUtil.deleteDashboard(webd, dbName, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+
+		//open the dashboardset
+		webd.getLogger().info("Open the dashboard in the builder page");
+		DashboardHomeUtil.search(webd, dbsetName);
+		DashboardHomeUtil.selectDashboard(webd, dbsetName);
+
+		//verify the dashboard set can be opened successfully
+		webd.getLogger().info("Verify the dashboard set can be opened successfully");
+		DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName);
 	}
 
 	@Test(groups = "forth run", dependsOnMethods = { "testDeleteDashboardInSet" })
@@ -676,6 +695,102 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.getLogger().info("Reset filter options");
 	}
 
+	@Test(groups = "forth run", dependsOnMethods = { "testSearchDashboardInSet" })
+	public void testModifyDashboardInSet_dbCreatedInsideSet()
+	{
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testModifyDashboardInSet_dbCreatedInsideSet");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//open the dashboardset
+		webd.getLogger().info("Open the dashboard in the builder page");
+		DashboardHomeUtil.selectDashboard(webd, dbsetName_Test1);
+
+		webd.getLogger().info("Set the refresh setting to OFF");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
+
+		webd.getLogger().info("Select the created dashboard in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, dbName_InSet);
+
+		dbName_InSet = dbName_InSet + "-Modify";
+		webd.getLogger().info("Modify the created dashboard in set");
+		DashboardBuilderUtil.editDashboard(webd, dbName_InSet, "Modify the dasbboard in set", true);
+
+		webd.getLogger().info("Verify the modified dashboard in set");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet), "Modified dashboard " + dbName_InSet
+				+ " not in set");
+
+		//click Add dashboard icon
+		webd.getLogger().info("Click Add Dashboard Icon");
+		webd.click("css=" + PageId.DASHBOARDSETADDDASHBOARDICON_CSS);
+
+		//search the dashboard modified in set
+		DashboardHomeUtil.search(webd, dbName_InSet);
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_InSet), "Expected dashboard '" + dbName_InSet
+				+ "' NOT found");
+
+		//back to home page and verify the dashboard
+		webd.getLogger().info("Back to the dashboard home page and verify the modified dashboard");
+		BrandingBarUtil.visitDashboardHome(webd);
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_InSet), "Expected dashboard '" + dbName
+				+ "' is found in dashboard home page");
+
+	}
+
+	@Test(groups = "third run", dependsOnMethods = { "testAddDashboardInGridView" })
+	public void testModifyDashboardInSet_dbCreatedOutsideSet()
+	{
+
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testModifyDashboardInSet_dbCreatedOutsideSet");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//open the dashboardset
+		webd.getLogger().info("Open the dashboard in the builder page");
+		DashboardHomeUtil.selectDashboard(webd, dbsetName);
+
+		webd.getLogger().info("Select the created dashboard in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, dbName);
+
+		dbName = dbName + "-Modify";
+		webd.getLogger().info("Modify the created dashboard in set");
+		DashboardBuilderUtil.editDashboard(webd, dbName, "Modify the dasbboard in set", true);
+
+		webd.getLogger().info("Verify the modified dashboard in set");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName), "Modified dashboard not in set");
+
+		//click Add dashboard icon
+		webd.getLogger().info("Click Add Dashboard Icon");
+		webd.click("css=" + PageId.DASHBOARDSETADDDASHBOARDICON_CSS);
+
+		//search the dashboard modified in set
+		DashboardHomeUtil.search(webd, dbName);
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName), "Expected dashboard '" + dbName + "' NOT found");
+
+		//back to home page and verify the dashboard
+		webd.getLogger().info("Back to the dashboard home page and verify the modified dashboard");
+		BrandingBarUtil.visitDashboardHome(webd);
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName), "Expected dashboard '" + dbName
+				+ "' NOT found in dashboard home page");
+
+	}
+
 	@Test(groups = "first run", dependsOnMethods = { "testCreateDashboardSet" })
 	public void testModifyDashboardSet()
 	{
@@ -768,7 +883,7 @@ public class TestDashboardSet extends LoginAndLogout
 				DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN), "the setting is not ON(5 mins)");
 	}
 
-	@Test(groups = "third run", dependsOnMethods = { "testAddDashboardInGridView" })
+	@Test(groups = "third run", dependsOnMethods = { "testModifyDashboardInSet_dbCreatedOutsideSet" })
 	public void testRemoveDashboardFromDashboardSet()
 	{
 		//init the test
@@ -795,8 +910,6 @@ public class TestDashboardSet extends LoginAndLogout
 		//remove a dashboard from the dashboard set
 		webd.getLogger().info("Remove a dashboard from the dashborad set");
 		DashboardBuilderUtil.removeDashboardFromSet(webd, dbName);
-
-		//thinkTime(8000L);
 
 		//verify the dashboard has been added to the dashboard set
 		webd.getLogger().info("Verify if the dashboard exists in the dashborad set");
@@ -862,6 +975,29 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
+	@Test(groups = "forth run", dependsOnMethods = { "testDuplicateOOBNotAddToSet" })
+	public void testRemoveDashboardSetWithDashboardCreatedInsideSet()
+	{
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testDuplicateOOBNotAddToSet");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//open the dashboardset
+		webd.getLogger().info("Open the dashboard in the builder page");
+		DashboardHomeUtil.deleteDashboard(webd, dbsetName_Test1, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+
+		//refresh the home page
+		webd.getLogger().info("Refresh the home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_InSet), "The expected dashboard " + dbName_InSet
+				+ "NOT found in dashboard home page");
+
+	}
+
 	@Test(groups = "last run", dependsOnMethods = { "testSetHome" })
 	public void testRemoveHome()
 	{
@@ -889,6 +1025,29 @@ public class TestDashboardSet extends LoginAndLogout
 	}
 
 	@Test(groups = "forth run", dependsOnMethods = { "testCreateDashboardInSet" })
+	public void testSearchDashboardCreatedInSetFromHome()
+	{
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testSearchDashboardCreatedInSetFromHome");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//search the dashboard which created in dashboard set in home page
+		webd.getLogger().info("Search the dashboard which created in dashboard set in home page");
+		DashboardHomeUtil.search(webd, dbName_InSet);
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_InSet), "Expected dashboard '" + dbName_InSet
+				+ "' has been found");
+
+	}
+
+	@Test(groups = "forth run", dependsOnMethods = { "testSearchDashboardCreatedInSetFromHome" })
 	public void testSearchDashboardInSet()
 	{
 		//init the test
@@ -1015,7 +1174,6 @@ public class TestDashboardSet extends LoginAndLogout
 
 		//verify the share options are diabled
 		Assert.assertTrue(DashBoardUtils.verfiyShareOptionDisabled(), "The options are enabled!");
-
 	}
 
 	@Test(groups = "third run", dependsOnMethods = { "testShare" })
