@@ -219,6 +219,8 @@ public class DashBoardUtils
 
 	public static void verifyURL(WebDriver webdriver, String url)
 	{
+		webdriver.takeScreenShot();
+
 		String currurl = webdriver.getWebDriver().getCurrentUrl();
 
 		webdriver.getLogger().info("the origin url = " + currurl);
@@ -233,6 +235,8 @@ public class DashBoardUtils
 
 	public static void verifyURL_WithPara(WebDriver webdriver, String url)
 	{
+		webdriver.takeScreenShot();
+
 		String currurl = webdriver.getWebDriver().getCurrentUrl();
 
 		webdriver.getLogger().info("the origin url = " + currurl);
@@ -241,7 +245,7 @@ public class DashBoardUtils
 
 		webdriver.getLogger().info("the url want to compare = " + tmpurl);
 
-		Assert.assertTrue(tmpurl.contains(url));
+		Assert.assertTrue(tmpurl.contains(url), "Not open the expected url: " + url);
 	}
 
 	private static String trimUrlParameters(String url)

@@ -45,7 +45,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 
 
 //def emcpdfCommonAPIVer = getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.0.0+')
-def emcpdfCommonAPIVer = '2.0.0+'
+def emcpdfCommonAPIVer = '2.1.0-greenchannel+'
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies{
     testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-uitest-integ-tests', version: "${REPO_BID}")
@@ -66,6 +66,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestBrandingBar')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyWidget')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB')
             }
         }
