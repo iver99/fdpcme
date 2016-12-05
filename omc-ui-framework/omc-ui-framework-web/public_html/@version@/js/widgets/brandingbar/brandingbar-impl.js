@@ -165,22 +165,20 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.maximizeTopology = function() {
                 //calculate topology height when maximized
                 var appHeaderHeight = $($(".emaas-appheader")[0]).outerHeight();
+                var GCbarHeight = $("#emaas-appheader-globalcxt").outerHeight();
                 var topologyTitleHeight = $("#ude-topology-title").outerHeight();
-                var height = $(window).height() - appHeaderHeight - topologyTitleHeight;
+                var height = $(window).height() - appHeaderHeight - GCbarHeight - topologyTitleHeight;
                 self.topologyCssHeight(height);
                 //hide all other elements
                 var siblings = $($(".emaas-appheader")[0]).parent().parent().attr("id") === "globalBody" ? $($(".emaas-appheader")[0]).parent().siblings() : $($(".emaas-appheader")[0]).parent().parent().siblings();
-//                console.log("****");
-//                console.log(siblings);
                 self.visibleSiblings([]);
                 for(var i=0; i<siblings.length; i++) {
                     var sibling = siblings[i];
-                    if($(sibling).is(":visible")) {
+                    if($(sibling).is(":visible") || $(sibling).hasClass("df-right-panel")) {
                         self.visibleSiblings.push(sibling);
                         $(sibling).hide();
                     }
                 }
-//                console.log(self.visibleSiblings());
                 self.isMaximized(true);
             };
             self.restoreTopology = function() {
