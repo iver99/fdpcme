@@ -159,6 +159,51 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                 }
             }
+            
+            self.isMaximized = ko.observable(false);
+            self.visibleSiblings = ko.observableArray([]);
+            self.maximizeTopology = function() {
+                //calculate topology height when maximized
+                var appHeaderHeight = $($(".emaas-appheader")[0]).outerHeight();
+                var topologyTitleHeight = $("#ude-topology-title").outerHeight();
+                var height = $(window).height() - appHeaderHeight - topologyTitleHeight;
+                self.topologyCssHeight(height);
+                //hide all other elements
+                var siblings = $($(".emaas-appheader")[0]).parent().parent().attr("id") === "globalBody" ? $($(".emaas-appheader")[0]).parent().siblings() : $($(".emaas-appheader")[0]).parent().parent().siblings();
+//                console.log("****");
+//                console.log(siblings);
+                self.visibleSiblings([]);
+                for(var i=0; i<siblings.length; i++) {
+                    var sibling = siblings[i];
+                    if($(sibling).is(":visible")) {
+                        self.visibleSiblings.push(sibling);
+                        $(sibling).hide();
+                    }
+                }
+//                console.log(self.visibleSiblings());
+                self.isMaximized(true);
+            };
+            self.restoreTopology = function() {
+                //restore other elements hidden by topology
+                self.topologyCssHeight(168);
+                for(var i=0; i<self.visibleSiblings().length; i++) {
+                    var sibling = self.visibleSiblings()[i];
+                     $(sibling).show();
+                }
+                self.isMaximized(false);
+            };
+            self.maxMinTopologyToggle = function() {
+                if(!self.isMaximized()) {
+                    self.maximizeTopology();
+                }else {
+                    self.restoreTopology();
+                }
+            }
+            
+            self.topologyCssHeight = ko.observable(190);
+            self.topologyStyle = ko.computed(function() {
+                return "width: 100%; height: " + self.topologyCssHeight() + "px;";
+            });
 
             //NLS strings
             self.productName = nls.BRANDING_BAR_MANAGEMENT_CLOUD;
@@ -177,6 +222,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.altTextInfo = nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_INFO;
             self.altTextClear = nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CLEAR;
             self.topologyBtnLabel = nls.BRANDING_BAR_GLOBAL_CONTEXT_TOPOLOGY;
+            self.topologyMaximizeLabel = nls.BRANDING_BAR_TOPOLOGY_MAXIMIZE;
+            self.topologyRestoreLabel = nls.BRANDING_BAR_TOPOLOGY_RESTORE;
             self.appName = ko.observable();
 
             self.hasMessages = ko.observable(true);

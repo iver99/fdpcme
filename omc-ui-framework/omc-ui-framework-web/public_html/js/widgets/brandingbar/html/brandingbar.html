@@ -152,8 +152,23 @@
 
         <!-- topology --->
         <!-- ko if: isTopologyCompRegistered() !== false -->
-        <div id="ude-topology-div" style="overflow-y:auto; max-height:200px; height:auto; background-color:white;"
+        <div id="ude-topology-div" style="overflow-y:auto; height:auto; background-color:white;"
              data-bind="visible: isTopologyDisplayed" class="ude-sdk">
+            <div id="ude-topology-title">
+                <div style="padding-right: 10px;">
+                    <button data-bind="attr: {'id': 'maxMinTopology', title: isMaximized() ? topologyRestoreLabel : topologyMaximizeLabel}, click: maxMinTopologyToggle,
+                                    style: {float: 'right'},
+                                    ojComponent: {
+                                        component: 'ojButton', chroming: 'half',
+                                        icons: {start: isMaximized() ? 'fa-icon-font fa-icon-font-16 emaas-appheader-restore-icon' : 'fa-icon-font fa-icon-font-16 emaas-appheader-maximize-icon'},
+                                        label: ''
+                                    }" >
+                    </button>
+                </div>
+            </div>
+            
+            <!--<div data-bind="attr: {style: topologyStyle}" style="margin: 0 auto">test div</div>-->
+            
         <div class="ude-topology ude-topology-in-brandingbar" data-bind="component:{name:'emctas-topology', 
             params:{
                    entityQueryVars: queryVars(),
@@ -166,7 +181,7 @@
                    enableCache: true
                 }
             },
-            style: {width: '100%', height: '100%'}">
+            attr: {style: topologyStyle}">
         </div>      
         </div>
         <!-- /ko -->
