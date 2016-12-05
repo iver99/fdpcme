@@ -318,6 +318,7 @@ public class TestDashboardSet extends LoginAndLogout
 
 		//open the dashboardset
 		webd.getLogger().info("Open the dashboard in the builder page");
+		DashboardHomeUtil.search(webd, dbsetName);
 		DashboardHomeUtil.selectDashboard(webd, dbsetName);
 
 		//verify the dashboard set can be opened successfully
@@ -779,7 +780,7 @@ public class TestDashboardSet extends LoginAndLogout
 		webd.click("css=" + PageId.DASHBOARDSETADDDASHBOARDICON_CSS);
 
 		//search the dashboard modified in set
-		DashboardHomeUtil.search(webd, dbName_InSet);
+		DashboardHomeUtil.search(webd, dbName);
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName), "Expected dashboard '" + dbName + "' NOT found");
 
 		//back to home page and verify the dashboard
