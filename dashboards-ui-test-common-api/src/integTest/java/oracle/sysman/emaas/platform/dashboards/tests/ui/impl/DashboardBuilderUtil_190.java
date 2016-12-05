@@ -131,6 +131,8 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		Actions actions = new Actions(driver.getWebDriver());
 		actions.moveToElement(searchInput).build().perform();
 		searchInput.clear();
+		WaitUtil.waitForPageFullyLoaded(driver);
+		driver.takeScreenShot();
 		actions.moveToElement(searchInput).build().perform();
 		driver.click("css=" + DashBoardPageId_190.RIGHTDRAWERSEARCHINPUTCSS);
 		searchInput.sendKeys(searchString);
