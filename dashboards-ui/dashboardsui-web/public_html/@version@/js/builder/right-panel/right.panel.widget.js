@@ -94,14 +94,11 @@ function (ko, $, oj, dfu) {
         self.keywordInput.subscribe(function () {
             self.keyword(self.keywordInput());
             self.searchWidgetsClicked();
-            if (self.keywordInput().length === 0) {
-                self.clearRightPanelSearch(false);
-            } else {
-                self.clearRightPanelSearch(true);
-            }
+            setInputClearIcon()
         });
         
         self.searchWidgetsInputKeypressed = function (e, d) {
+            setInputClearIcon();
             if (d.keyCode === 13) {
                 self.searchWidgetsClicked();
                 return false;
@@ -260,7 +257,14 @@ function (ko, $, oj, dfu) {
                 }
             }
         };
-
+        
+        function setInputClearIcon(){
+            if (self.keywordInput().length === 0) {
+                self.clearRightPanelSearch(false);
+            } else {
+                self.clearRightPanelSearch(true);
+            }
+        }
     }
     return {"rightPanelWidget": rightPanelWidget};
 }

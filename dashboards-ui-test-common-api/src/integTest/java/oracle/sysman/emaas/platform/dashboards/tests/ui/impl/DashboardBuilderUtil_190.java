@@ -132,7 +132,6 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		actions.moveToElement(searchInput).build().perform();
 		searchInput.clear();
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.takeScreenShot();
 		actions.moveToElement(searchInput).build().perform();
 		driver.click("css=" + DashBoardPageId_190.RIGHTDRAWERSEARCHINPUTCSS);
 		searchInput.sendKeys(searchString);
@@ -197,7 +196,10 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		//        }
 
 		driver.getLogger().info("[DashboardHomeUtil] finish adding widget from right drawer");
-
+		//clear search box
+		searchInput.clear();
+		WaitUtil.waitForPageFullyLoaded(driver);
+		driver.takeScreenShot();
 		hideRightDrawer(driver);// hide drawer;
 	}
 
