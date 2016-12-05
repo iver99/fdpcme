@@ -174,7 +174,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.visibleSiblings([]);
                 for(var i=0; i<siblings.length; i++) {
                     var sibling = siblings[i];
-                    if($(sibling).is(":visible") || $(sibling).hasClass("df-right-panel")) {
+                    if($(sibling).is(":visible") || ($(sibling).hasClass("df-right-panel") && $(sibling).css('display')!=='none')) {
                         self.visibleSiblings.push(sibling);
                         $(sibling).hide();
                     }
