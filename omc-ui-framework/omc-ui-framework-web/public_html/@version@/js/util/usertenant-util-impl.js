@@ -34,33 +34,42 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                     userName = tenantIdDotUsername.substring(indexOfDot + 1, tenantIdDotUsername.length);
                     tenantUser = tenantIdDotUsername;
                 }else{
-                    ajaxUtil.ajaxWithRetry({
-                        type: "GET",
-                        url: "/sso.static/dashboards.configurations/userInfo",
-                        async: false,
-                        dataType: "json",
-                        contentType: "application/json; charset=utf-8"
-                    })
-                    .done(
-                        function (data) {
-                            if(!window._uifwk){
-                                window._uifwk = {};
-                            }
-                            if(!window._uifwk.cachedData){
-                                window._uifwk.cachedData = {};
-                            }
-                            if(data && data["userRoles"]){
-                                window._uifwk.cachedData.roles = data["userRoles"];
-                            }
-                            if(data && data["currentUser"]){
-                                window._uifwk.cachedData.loggedInUser = {"currentUser":data["currentUser"]};
-                                var tenantIdDotUsername = data.currentUser;
-                                var indexOfDot = tenantIdDotUsername.indexOf(".");
-                                tenantName = tenantIdDotUsername.substring(0, indexOfDot);
-                                userName = tenantIdDotUsername.substring(indexOfDot + 1, tenantIdDotUsername.length);
-                                tenantUser = tenantIdDotUsername;
-                            }
-                        });
+                    function doneCallback(data) {
+                        if(!window._uifwk){
+                            window._uifwk = {};
+                        }
+                        if(!window._uifwk.cachedData){
+                            window._uifwk.cachedData = {};
+                        }
+                        if(data && data["userRoles"]){
+                            window._uifwk.cachedData.roles = data["userRoles"];
+                        }
+                        if(data && data["currentUser"]){
+                            window._uifwk.cachedData.loggedInUser = {"currentUser":data["currentUser"]};
+                            var tenantIdDotUsername = data.currentUser;
+                            var indexOfDot = tenantIdDotUsername.indexOf(".");
+                            tenantName = tenantIdDotUsername.substring(0, indexOfDot);
+                            userName = tenantIdDotUsername.substring(indexOfDot + 1, tenantIdDotUsername.length);
+                            tenantUser = tenantIdDotUsername;
+                        }
+                    }
+
+                    if (window._userInfoServerCache) {
+                        doneCallback(window._userInfoServerCache);
+                    }
+                    else {
+                        ajaxUtil.ajaxWithRetry({
+                            type: "GET",
+                            url: "/sso.static/dashboards.configurations/userInfo",
+                            async: false,
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8"
+                        })
+                        .done(
+                            function (data) {
+                                doneCallback(data);
+                            });
+                    }
                 }
 
                   if ((!tenantName || !userName) && location.href && location.href.indexOf("error.html") === -1) {
@@ -128,29 +137,37 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                     self.userRoles = window._uifwk.cachedData.roles; 
                     callback(window._uifwk.cachedData.roles);
                 }else{
-                    ajaxUtil.ajaxWithRetry({
-                        url: serviceUrl,
-                        async: sendAsync === false? false:true,
-                        headers: dfu.getDefaultHeader(),
-                        contentType:'application/json'
-                    })
-                    .done(
-                        function (data) {
-                            self.userRoles = data;
-                            if(!window._uifwk){
-                                window._uifwk = {};
-                            }
-                            if(!window._uifwk.cachedData){
-                                window._uifwk.cachedData = {};
-                            }
-                            if(data && data["currentUser"]){
-                                window._uifwk.cachedData.loggedInUser = {"currentUser":data["currentUser"]};
-                            }
-                            if(data && data["userRoles"]){
-                                window._uifwk.cachedData.roles = data["userRoles"];
-                                callback(data["userRoles"]);
-                            }
-                        });
+                    function doneCallback(data) {
+                        self.userRoles = data;
+                        if(!window._uifwk){
+                            window._uifwk = {};
+                        }
+                        if(!window._uifwk.cachedData){
+                            window._uifwk.cachedData = {};
+                        }
+                        if(data && data["currentUser"]){
+                            window._uifwk.cachedData.loggedInUser = {"currentUser":data["currentUser"]};
+                        }
+                        if(data && data["userRoles"]){
+                            window._uifwk.cachedData.roles = data["userRoles"];
+                            callback(data["userRoles"]);
+                        }
+                    }
+                    if (window._userInfoServerCache) {
+                        doneCallback(window._userInfoServerCache);
+                    }
+                    else {
+                        ajaxUtil.ajaxWithRetry({
+                            url: serviceUrl,
+                            async: sendAsync === false? false:true,
+                            headers: dfu.getDefaultHeader(),
+                            contentType:'application/json'
+                        })
+                        .done(
+                            function (data) {
+                                doneCallback(data);
+                            });
+                    }
                 }
             };
             

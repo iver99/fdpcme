@@ -44,6 +44,7 @@ public class TimeSelectorUIControls
 	public static final String sTimeRange_15Min = "a[data-bind*='timePeriodLast15mins']";
 	public static final String sTimeRange_30Min = "a[data-bind*='timePeriodLast30mins']";
 	public static final String sTimeRange_60Min = "a[data-bind*='timePeriodLast60mins']";
+	public static final String sTimeRange_2Hour = "a[data-bind*='timePeriodLast2hour']";
 	public static final String sTimeRange_4Hour = "a[data-bind*='timePeriodLast4hours']";
 	public static final String sTimeRange_6Hour = "a[data-bind*='timePeriodLast6hours']";
 	public static final String sTimeRange_1Day = "a[data-bind*='timePeriodLast1day']";
@@ -95,5 +96,16 @@ public class TimeSelectorUIControls
 	public static final String sTimeFilterDaysMonthsFilterPrefix = "input[id^='";
 	public static final String sTimeFilterDaysMonthsFilterSuffix = "']";
 	// End: Time Filter
+	
+	// Begin: Flexible Relative Time Period
+	public static final String sLastRadio = "div[id^='pickerPanel'] input[value='flexRelTimeCtrl']";
+	public static final String sFlexRelTimeVal = "div[id^='pickerPanel'][id$='wrapper'] input[id^='flexRelTimeVal']";
+	public static final String sFlexRelTimeOpt = "div[id^='pickerPanel'][id$='wrapper'] div[id^='flexRelTimeOpt'] .oj-select-choice";
+	public static final String sFlexRelTimeOptList = "div[id^=pickerPanel][id$='wrapper'] div[id^='pickerPanel'] select option";
+	public static final String sFlexRelTimeOptStart = "div[id^='pickerPanel'][id$='_wrapper_layer'] div[data-oj-containerid^='flexRelTimeOpt'] ul li:nth-of-type(";
+	public static final String sFlexRelTimeOptEnd = ")";
+	
+	public static final String sRangeRadio = "div[id^='pickerPanel'] input[value='timeLevelCtrl']";
+	// End: Flexible Relative Time Period
 
 }

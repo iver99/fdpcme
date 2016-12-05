@@ -284,22 +284,22 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("save the dashboard");
 		DashboardBuilderUtil.saveDashboard(webd);
 
-		//open the widget
-		webd.getLogger().info("open the widget");
-		DashboardBuilderUtil.openWidget(webd, "Database Errors Trend");
-
-		webd.switchToWindow();
-		//WaitUtil.waitForPageFullyLoaded(webd);
-		webd.getLogger().info("Wait for the widget loading....");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
-
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		if (!url.substring(url.indexOf("emsaasui") + 9).contains(
-				"emlacore/html/log-analytics-search.html?widgetId=2013&dashboardId")) {
-			Assert.fail("NOT open the correct widget");
-		}
+		//		//open the widget
+		//		webd.getLogger().info("open the widget");
+		//		DashboardBuilderUtil.openWidget(webd, "Database Errors Trend");
+		//
+		//		webd.switchToWindow();
+		//		//WaitUtil.waitForPageFullyLoaded(webd);
+		//		webd.getLogger().info("Wait for the widget loading....");
+		//		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		//		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
+		//
+		//		String url = webd.getWebDriver().getCurrentUrl();
+		//		webd.getLogger().info("url = " + url);
+		//		if (!url.substring(url.indexOf("emsaasui") + 9).contains(
+		//				"emlacore/html/log-analytics-search.html?widgetId=2013&dashboardId")) {
+		//			Assert.fail("NOT open the correct widget");
+		//		}
 	}
 
 	@Test(groups = "Group7", dependsOnGroups = { "Group6" })

@@ -1,0 +1,177 @@
+package oracle.sysman.emaas.platform.dashboards.ui.web;
+
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.DashboardDataAccessUtil;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+import java.io.*;
+import java.util.regex.Pattern;
+
+/**
+ * Created by guochen on 11/18/16.
+ */
+public class AdditionalDataFilter implements Filter {
+    private final static Logger LOGGER = LogManager.getLogger(AdditionalDataFilter.class);
+
+    private static final Pattern pattern = Pattern.compile("////TODO////");
+
+    private static class CaptureWrapper extends HttpServletResponseWrapper
+    {
+        private final ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        private final ServletOutputStream outputStream = new ServletOutputStream() {
+            @Override
+            public void write(int b) throws IOException
+            {
+                byteStream.write(b);
+            }
+        };
+
+        private PrintWriter writer = null;
+        {
+            writer = new PrintWriter(new OutputStreamWriter(byteStream));
+        }
+
+        public CaptureWrapper(HttpServletResponse response)
+        {
+            super(response);
+        }
+
+        public String getResponseText()
+        {
+            String result;
+            try {
+                outputStream.flush();
+                outputStream.close();
+                result = byteStream.toString();
+            }
+            catch (IOException e) {
+                LOGGER.error("Failed to decode outputStream", e);
+                result = null;
+            }
+            return result;
+        }
+
+        @Override
+        public ServletOutputStream getOutputStream()
+        {
+            return outputStream;
+        }
+
+        @Override
+        public PrintWriter getWriter()
+        {
+            return writer;
+        }
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+
+    }
+
+    public void doFilter(ServletRequest request, ServletResponse response,
+                         FilterChain chain) throws IOException, ServletException {
+        LOGGER.debug("Now enter the AdditionalDataFilter");
+        HttpServletRequest httpReq = (HttpServletRequest) request;
+        final HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+        final CaptureWrapper wrapper = new CaptureWrapper(httpResponse);
+        chain.doFilter(request, wrapper);
+
+        final String responseText = wrapper.getResponseText();
+        assert (responseText != null);
+        String data = getDashboardData(httpReq);
+        String newResponseText = responseText;
+        LOGGER.debug("Before inserting additional data, the response test is {}", newResponseText);
+        if (!StringUtil.isEmpty(data) && responseText != null) {
+            newResponseText = pattern.matcher(responseText).replaceFirst(data);
+            LOGGER.debug("Replacing and inserting addtional data now!");
+        }
+        LOGGER.debug("After inserting additional data, the response test is {}", newResponseText);
+        // Writes the updated response text to the response object
+        try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
+            writer.println(newResponseText);
+        }
+    }
+
+    @Override
+    public void destroy() {
+
+    }
+
+    private String getDashboardData(HttpServletRequest httpReq) {
+        String userTenant = httpReq.getHeader(DashboardsUiCORSFilter.OAM_REMOTE_USER_HEADER);
+        // TODO: check session expiry header
+        String sesExp = httpReq.getHeader("SESSION_EXP");
+        LOGGER.debug("Trying to get SESSION_EXP from builder.html file, its value is: {}", sesExp);
+        if (!StringUtil.isEmpty(userTenant) && userTenant.indexOf(".") > 0) {
+            int pos = userTenant.indexOf(".");
+            String tenant = userTenant.substring(0, pos);
+            String user = userTenant.substring(pos + 1);
+            LOGGER.info("Retrieved tenant is {} and user is {} from userTenant {}", tenant, user, userTenant);
+            if (StringUtil.isEmpty(tenant) || StringUtil.isEmpty(user)) {
+                LOGGER.warn("Retrieved null tenant or user");
+                return null;
+            }
+
+            final String dashboardIdStr = httpReq.getParameter("dashboardId");
+            try {
+                Long dashboardId = Long.valueOf(dashboardIdStr);
+                return getDashboardData(tenant, user, dashboardId, httpReq.getHeader("referer"), sesExp);
+            } catch (NumberFormatException e) {
+                LOGGER.error("Invalid dashboard ID form URL: {}", dashboardIdStr);
+                return null;
+            }
+        }
+        return null;
+    }
+
+    String formatJsonString(String json) {
+        if (StringUtil.isEmpty(json)) {
+            return json;
+        }
+        return json.replace("\\", "\\\\").replace("\"", "\\\"");
+    }
+
+    private String getDashboardData(String tenant, String user, long dashboardId, String referer, String sessionExp) {
+        if (StringUtil.isEmpty(tenant) || StringUtil.isEmpty(user)) {
+            LOGGER.warn("tenant {}/user {} is null or empty or invalid, so do not update dashboard page then", tenant, user);
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        if (dashboardId > 0) {
+            String dashboardString = DashboardDataAccessUtil.getDashboardData(tenant, tenant + "." + user, referer, dashboardId);
+            if (StringUtil.isEmpty(dashboardString)) {
+                LOGGER.warn("Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then", tenant, user, dashboardId);
+            } else {
+                dashboardString = formatJsonString(dashboardString);
+                LOGGER.info("Escaping retrieved data before inserting to html. Vlaue now is: {}", dashboardString);
+                sb.append("window._dashboardServerCache=").append(dashboardString).append(";");
+            }
+        } else {
+            LOGGER.warn("dashboardId {} is invalid, so do not update dashboard page for dashboard data then", dashboardId);
+        }
+
+        String userInfoString = DashboardDataAccessUtil.getUserTenantInfo(tenant, tenant + "." + user, referer, sessionExp);
+        if (StringUtil.isEmpty(userInfoString)) {
+            LOGGER.warn("Retrieved null or empty user info for tenant {} user {}", tenant, user);
+        }
+        else {
+            sb.append("window._userInfoServerCache=").append(userInfoString).append(";");
+        }
+
+        String regString = DashboardDataAccessUtil.getRegistrationData(tenant, tenant + "." + user, referer, sessionExp);
+        if (StringUtil.isEmpty(regString)) {
+            LOGGER.warn("Retrieved null or empty registration for tenant {} user {}", tenant, user);
+        }
+        else {
+            sb.append("window._registrationServerCache=").append(regString).append(";");
+        }
+        return sb.toString();
+    }
+}

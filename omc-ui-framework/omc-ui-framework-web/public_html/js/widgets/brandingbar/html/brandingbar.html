@@ -1,12 +1,12 @@
         <div class="emaas-appheader">
-            <div id="emaas-appheader-bar" data-testapiversion="1.7.5" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
+            <div id="emaas-appheader-bar" data-testapiversion="1.13.0" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
 
                 <!-- logo -->  
                 <div class="emaas-appheader-logo" data-bind="attr: {'aria-label': textOracle}">
                     <div class="emaas-appheader-appname-table-cell-baseline">
                         <!--oracle_logo_lrg-->
-                        <img class="emaas-appheader-logo-img"  src="/emsaasui/uifwk/@version@/images/uifwkSprite.png"
-                         style="object-fit:none;object-position:0px -158px;height:19px;" width="158" height="19" data-bind="attr: {alt: textOracle}, click: gotoHomePage"/> 
+                        <img class="emaas-appheader-logo-img"  src="/emsaasui/uifwk/@version@/images/imgbackground.png"
+                         style="background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -158px;height:19px;" width="158" height="19" data-bind="attr: {alt: textOracle}, click: gotoHomePage"/> 
                     </div>
                     <div class="emaas-appheader-appname-table-cell-baseline" style="padding-left: 4px">
                         <span class="emaas-appheader-appname" data-bind="text: productName"></span>
@@ -108,43 +108,62 @@
             </div>  
             
             <span style="float: left;padding-top:3px;margin-right:6px;">
-            <div id="topologyButtonWrapper" data-bind="ojComponent: {component: 'ojButtonset', checked: isTopologyButtonChecked}" style="height:29px;">
+            <div id="topologyButtonWrapper" data-bind="ojComponent: {component: 'ojButtonset', checked: isTopologyButtonChecked}" style="height:32px; background-color: white; border-radius: 2px;">
             <label for="buttonShowTopology"></label>
             <input type="checkbox" id="buttonShowTopology" value="buttonShowTopology" class="oj-button-half-chrome emaas-appheader-toolbar-button" role="button"
                data-bind=" click: showTopology, attr: {title: topologyBtnLabel},
                 ojComponent: {
                     component:'ojButton', 
-                    chroming: 'half', disabled: topologyDisabled,
+                    chroming: 'outlined', disabled: topologyDisabled,
                     display: 'icons', label: topologyBtnLabel,
                     icons: {start:'emctas-icon-font-16 emctas-topology-icon'}
                }" style="height:29px; margin-bottom:0px"/>
             </div>
             </span>
-            <div class="ude-sdk inlineFlexBox flexBoxAuto animated_transitions" style="padding-bottom: 10px; padding-top: 3px; height: 32px; display: inline-flex;">
+
+            
+            <div class="ude-sdk emaas-appheader-inline-flexbox emaas-appheader-flexbox-auto animated_transitions" style="padding-bottom: 10px; padding-top: 3px; height: 32px; display: flex;">
             <div class="ude-sdk emcta_panel_border flexBoxNoShrink flexBoxColumn flexBoxAuto animated_transitions" id="globalBar_wrapper"
-                 style="padding:2px;">      
+                 style="padding:2px;">
+                <!-- ko if: compositeCxtText() -->
                 <div class="ude-sdk pill filterpill_value filterpill_with_value" style="margin-bottom: auto; margin-top: auto;height: 20px; 
                      padding-left: 8px; padding-right:8px; font-size: 14px; padding-top: 3px;padding-bottom: 1px;margin-left:0px; font-weight: normal; cursor: default;"
                      id="globalBar_pillWrapper">     
                      <span style="white-space: pre-wrap;"
-                           data-bind="text:compositeCxtText, attr:{title:compositeCxtText}" class="ude-sdk"></span>        
+                           data-bind="text:compositeCxtText, attr:{title:cxtCompositeName}" class="ude-sdk"></span>
                 </div>
+                <!-- /ko -->
+                <!-- ko foreach: entitiesDisplayNames() -->
+                <div class="ude-sdk pill filterpill_value filterpill_with_value" style="margin-bottom: auto; margin-top: auto;height: 20px;
+                     padding-left: 8px; padding-right:8px; font-size: 14px; padding-top: 3px;padding-bottom: 1px;margin-left:0px; font-weight: normal; cursor: default;"
+                     data-bind="attr: {id: 'globalBar_pillWrapper_' + $index()}">
+                     <span style="white-space: pre-wrap;"
+                           data-bind="text:$data.displayName, attr:{title:$data.entityName}" class="ude-sdk"></span>
+                </div>
+                <!-- /ko -->
             </div>
             </div>
-            
-            <div style="display: none">
-            <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="text:timeCxtText">Oct 12th. 2:30 PM - 4:30 PM</div>
-            </div>
+
+            <!-- ko if: showTimeSelector() === true -->
+                <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="component: {name: 'df-datetime-picker', params: timeSelectorParams}">
+                </div>
+            <!-- /ko -->
         </div>
 
         <!-- topology --->
         <!-- ko if: isTopologyCompRegistered() !== false -->
-        <div id="ude-topology-div" style="overflow-y:scroll; height:200px; background-color:white;"
+        <div id="ude-topology-div" style="overflow-y:auto; max-height:200px; height:auto; background-color:white;"
              data-bind="visible: isTopologyDisplayed" class="ude-sdk">
         <div class="ude-topology ude-topology-in-brandingbar" data-bind="component:{name:'emctas-topology', 
             params:{
                    entityQueryVars: queryVars(),
-                   entities: entities()
+                   entities: entities(),
+                   associations: associations(),
+                   layout:layout(),
+                   customNodeDataLoader: customNodeDataLoader(),
+                   customEventHandler: customEventHandler(),
+                   miniEntityCardActions: miniEntityCardActions(),
+                   enableCache: true
                 }
             },
             style: {width: '100%', height: '100%'}">
@@ -177,8 +196,8 @@
                 <div style="float:right;padding-right: 20px;">
                     <!--clearEntry_ena-->
                     <img class="emaas-appheader-message-icon emaas-appheader-message-icon-clear" 
-                         src="/emsaasui/uifwk/@version@/images/uifwkSprite.png"
-                         style="object-fit:none;object-position:0px -142px;height:16px;"
+                         src="/emsaasui/uifwk/@version@/images/imgbackground.png"
+                         style="background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -142px;height:16px;"
                          data-bind="attr: {alt: $parent.altTextClear}, click: $parent.clearMessage"/>
                 </div>
             </div>
