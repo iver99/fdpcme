@@ -21,7 +21,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             cxtUtil.clearTopologyParams();
 
             self.compositeCxtText = ko.observable();
-            self.entitiesDisplayNames = ko.observableArray();
+            self.entitiesList = ko.observableArray();
             self.timeCxtText = ko.observable();
 
 
@@ -922,6 +922,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                self.cxtCompositeType = cxtUtil.getCompositeType();
                 self.cxtCompositeDisplayName = cxtUtil.getCompositeDisplayName();
                 self.cxtCompositeName = cxtUtil.getCompositeName();
+                self.cxtComposite = cxtUtil.getCompositeEntity();
 //                self.cxtStartTime = cxtUtil.getStartTime();
 //                self.cxtEndTime = cxtUtil.getEndTime();
                 //self.cxtEntityMeId = cxtUtil.getEntityMeId();
@@ -1003,31 +1004,28 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                }
                 //For now, only show composite context text on banner UI, and single entity
                 self.compositeCxtText('');
-                self.entitiesDisplayNames.removeAll();
+                self.entitiesList.removeAll();
 
                 var displayCompositeName = self.cxtCompositeMeId
                     && self.cxtCompositeDisplayName;
 
                 var displayEntitiesName = cxtUtil.getEntityMeIds()
                     && !cxtUtil.getEntitiesType()
-                    && cxtUtil.getEntityMeIds().length === 1
-                    && cxtUtil.getEntities().length === 1;
-                displayEntitiesName = false; // disable emctas-5151/emcpdf-2773 for 1.13
+                    && cxtUtil.getEntityMeIds().length > 0
+                    && cxtUtil.getEntities().length > 0;
 
                 if (displayCompositeName) {
                     self.compositeCxtText(self.cxtCompositeDisplayName);
                 }
                 if (displayEntitiesName)
                 {
-                    cxtUtil.getEntities().forEach(function (entity, index) {
-                        var entityName = {displayName: entity.displayName, entityName: entity.entityName};
-                        self.entitiesDisplayNames.push(entityName);
-                    });
+                    self.entitiesList(cxtUtil.getEntities());
                 }
                 if (!displayCompositeName && !displayEntitiesName)
                 {
                     //No composite entity & no entities
                     self.compositeCxtText(nls.BRANDING_BAR_GLOBAL_CONTEXT_ALL_ENTITIES);
+                    self.cxtComposite.isEnabled(true);
                 }
             }
 
