@@ -2,10 +2,10 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.ro
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
+@Test(groups = { "s1" })
 public class PreferenceRowEntityTest
 {
-	@Test(groups = { "s1" })
+	@Test
 	public void testEquals()
 	{
 		PreferenceRowEntity pre1 = new PreferenceRowEntity();
@@ -39,7 +39,7 @@ public class PreferenceRowEntityTest
 		Assert.assertEquals(pre1, pre2);
 	}
 
-	@Test(groups = { "s1" })
+	@Test
 	public void testHashCode()
 	{
 		PreferenceRowEntity pre1 = new PreferenceRowEntity();

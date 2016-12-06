@@ -14,7 +14,7 @@ import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.row
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardUserOptionsRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.PreferenceRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.TableRowsEntity;
-
+@Test(groups = { "s1" })
 public class DashboardRowsComparatorTest
 {
 	private static final String DASHBOARD1_NAME = "D1";
@@ -101,7 +101,7 @@ public class DashboardRowsComparatorTest
 			+ "}";
 	// @formatter:on
 
-	@Test(groups = { "s1" })
+	@Test
 	public void testCompareInstancesData() throws IOException
 	{
 		DashboardRowsComparator drc = new DashboardRowsComparator();
@@ -216,7 +216,7 @@ public class DashboardRowsComparatorTest
 		Assert.assertNull(result2.getEmsPreference());// preference appear in both side won't appear here
 	}
 
-	@Test(groups = { "s1" })
+	@Test
 	public void testRetrieveRowsEntityFromJsonForSingleInstance() throws IOException
 	{
 		DashboardRowsComparator drc = new DashboardRowsComparator();

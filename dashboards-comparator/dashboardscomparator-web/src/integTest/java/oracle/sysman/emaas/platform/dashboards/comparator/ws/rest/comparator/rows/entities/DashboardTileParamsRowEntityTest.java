@@ -2,10 +2,10 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.ro
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
+@Test(groups = { "s1" })
 public class DashboardTileParamsRowEntityTest
 {
-	@Test(groups = { "s1" })
+	@Test
 	public void testEquals()
 	{
 		DashboardTileParamsRowEntity dtpre1 = new DashboardTileParamsRowEntity();
@@ -57,7 +57,7 @@ public class DashboardTileParamsRowEntityTest
 		Assert.assertEquals(dtpre1, dtpre2);
 	}
 
-	@Test(groups = { "s1" })
+	@Test
 	public void testHashCode()
 	{
 		DashboardTileParamsRowEntity dtpre1 = new DashboardTileParamsRowEntity();
