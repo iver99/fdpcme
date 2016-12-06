@@ -2291,7 +2291,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                     if (self.callbackAfterApply) {
                         $.ajax({
-                            url: "/emsaasui/uifwk/empty.html",
+                            url: "/emsaasui/uifwk/@version@/html/empty.html",
                             success: function () {
                                 console.log("Returned values from date/time picker are: ");
                                 console.log("start: "+new Date(start));
@@ -2321,7 +2321,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.closeAllPopups();
                     if(self.callbackAfterCancel) {
                         $.ajax({
-                            url: "/emsaasui/uifwk/empty.html",
+                            url: "/emsaasui/uifwk/@version@/html/empty.html",
                             success: function () {
                                 self.callbackAfterCancel();
                             },

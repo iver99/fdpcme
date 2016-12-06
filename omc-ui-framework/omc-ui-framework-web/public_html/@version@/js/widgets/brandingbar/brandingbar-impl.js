@@ -384,7 +384,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //For now, set interval to extend current user session automatically every 10 mins
             if (!dfu.isDevMode()) {
                 window.intervalToExtendCurrentUserSession = setInterval(function () {
-                    dfu.ajaxWithRetry("/emsaasui/uifwk/empty.html", {showMessages: "none"});
+                    dfu.ajaxWithRetry("/emsaasui/uifwk/@version@/html/empty.html", {showMessages: "none"});
                 }, 10 * 60 * 1000);
             }
 
