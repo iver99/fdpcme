@@ -160,7 +160,16 @@ define(['dashboards/dbsmodel',
 
         self.searchDashboardClicked = function(){
             self.autoSearchDashboard(self.keyword()?self.keyword():"");
+            event.stopPropagation();
         };
+        
+        if(!self.closeSearchListOnClickingOut){
+            self.closeSearchListOnClickingOut = document.addEventListener("click",function(_evnt){
+                if (true===self.onContentSearching()) {
+                    self.onContentSearching(false);
+                }
+            });
+        }
         
         self.clearContentSearch = ko.observable();
         self.autoSearchDashboard = function (searchTerm) {
@@ -181,7 +190,7 @@ define(['dashboards/dbsmodel',
         self.clearDashboardSearchInputClicked = function () {
             if (self.keyword()) {
                 self.keyword("");
-                self.searchDashboardClicked();
+                self.autoSearchDashboard("");
                 self.showSelectedDashboard(false);
                 self.selectedDashboardId(null);
                 self.addToTitleAbled(false);
@@ -214,7 +223,7 @@ define(['dashboards/dbsmodel',
 
         function resetAddLinkToTitle(holdHasLinkedToTitle){
             self.keyword("");
-            self.searchDashboardClicked();
+            self.autoSearchDashboard("");
             self.showSelectedDashboard(false);
             self.selectedDashboardId(null);
             self.addToTitleAbled(false);
