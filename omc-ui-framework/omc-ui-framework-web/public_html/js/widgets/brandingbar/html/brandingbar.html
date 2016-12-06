@@ -105,7 +105,7 @@
             <div id="emctas-globalbar" data-bind="component:{name:'emctas-globalbar', 
                 params:{ }
                 }">
-            </div>  
+            </div>
             
             <span style="float: left;padding-top:3px;margin-right:6px;">
             <div id="topologyButtonWrapper" data-bind="ojComponent: {component: 'ojButtonset', checked: isTopologyButtonChecked}" style="height:32px; background-color: white; border-radius: 2px;">
@@ -120,6 +120,10 @@
                }" style="height:29px; margin-bottom:0px"/>
             </div>
             </span>
+            <!-- ko if: showTimeSelector() === true -->
+                <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="component: {name: 'df-datetime-picker', params: timeSelectorParams}" style="padding-top: 3px">
+                </div>
+            <!-- /ko -->
             <!-- ko if: showEntityContextSelector() -->
             <div id="emcta-ctxtSel" data-bind="component:{name:'emcta-context-selector',
                 params:{id: 'emcta-ctxtSel', entityContextParams: entityContextParams}}">
@@ -134,7 +138,9 @@
                      padding-left: 8px; padding-right:8px; font-size: 14px; padding-top: 3px;padding-bottom: 1px;margin-left:0px; font-weight: normal; cursor: default;"
                      id="globalBar_pillWrapper">     
                      <span style="white-space: pre-wrap;"
-                           data-bind="text:compositeCxtText, attr:{title:cxtCompositeName}" class="ude-sdk"></span>
+                           data-bind="text:compositeCxtText, attr:{title:cxtCompositeName}"
+                           class="ude-sdk">
+                     </span>
                 </div>
                 <!-- /ko -->
                 <!-- ko foreach: entitiesDisplayNames() -->
@@ -148,12 +154,7 @@
             </div>
             </div>
             <!-- /ko -->
-            <!-- ko if: showTimeSelector() === true -->
-                <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="component: {name: 'df-datetime-picker', params: timeSelectorParams}">
-                </div>
-            <!-- /ko -->
         </div>
-
         <!-- topology --->
         <!-- ko if: isTopologyCompRegistered() !== false -->
         <div id="ude-topology-div" style="overflow-y:auto; max-height:200px; height:auto; background-color:white;"
@@ -185,7 +186,8 @@
                 data-bind="css: {'emaas-appheader-message-box-error' : type === 'error', 
                                    'emaas-appheader-message-box-warn' : type === 'warn',
                                    'emaas-appheader-message-box-confirm' : type === 'confirm',
-                                   'emaas-appheader-message-box-info' : type === 'info'}">
+                                   'emaas-appheader-message-box-info' : type === 'info'}"
+                style="width:99%">
                 <div style="float:left;">
                     <div class="emaas-appheader-message-table-cell" >
                         <img class="emaas-appheader-message-icon" data-bind="attr: {alt: iconAltText, src: icon, style: imgCssStyle}"/>
