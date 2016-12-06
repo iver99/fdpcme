@@ -18,6 +18,7 @@ import java.util.TimeZone;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeUnit;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
@@ -31,10 +32,11 @@ import org.testng.annotations.Test;
 public class TestDateTimePicker extends CommonUIUtils
 {
 	private static void verifyResult(WebDriver driver, String returnDate, TimeRange option, String StartLabelLocator,
-			String EndLabelLocator) throws ParseException 
+			String EndLabelLocator) throws ParseException
 	{
 
 		WaitUtil.waitForPageFullyLoaded(driver);
+		//String timeRange = option.getRangeOption();
 		String timeRange = option.getRangeOption();
 
 		String sTmpStartDateTime = driver.getText(StartLabelLocator);
@@ -47,7 +49,7 @@ public class TestDateTimePicker extends CommonUIUtils
 
 		String tmpReturnDate = "";
 
-		if (!("Latest").equals(timeRange)) {
+		if (!"Latest".equals(timeRange)) {
 			tmpReturnDate = returnDate.substring(timeRange.length() + 1);
 			driver.getLogger().info("timerange: " + timeRange);
 			driver.getLogger().info("returnDate: " + tmpReturnDate);
@@ -131,7 +133,33 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Custom() throws ParseException 
+	public void testDateTimePicker_Compact_FlexibleDate_Day() throws ParseException
+	{
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testDateTimePicker_Compact_FlexibleDate_Day";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Custom");
+
+		String returnDate = TimeSelectorUtil.setFlexibleRelativeTimeRange(webdriver, 2, 1, TimeUnit.Day);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Custom, UIControls.SSTARTTEXT_COMPACT,
+				UIControls.SENDTEXT_COMPACT);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	@Test
+	public void testDateTimePicker_Custom() throws ParseException
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -155,7 +183,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Custom_compact() throws Exception 
+	public void testDateTimePicker_Custom_compact() throws Exception
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -181,7 +209,83 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last14Days() throws ParseException 
+	public void testDateTimePicker_Custom_OnlyDate() throws ParseException
+	{
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testDateTimePicker_Custom_OnlyDate";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Custom");
+		String returnDate = TimeSelectorUtil.setCustomTimeWithDateOnly(webdriver, 3, "04/14/2016", "11/14/2016");
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Custom, UIControls.SSTARTTEXT_DATEONLY,
+				UIControls.SENDTEXT_DATEONLY);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	@Test
+	public void testDateTimePicker_DateOnly_Last14Days() throws ParseException
+	{
+
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testDateTimePicker_DateOnly_Last14Days";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Last 14 days");
+		String returnDate = TimeSelectorUtil.setTimeRangeWithDateOnly(webdriver, 3, TimeRange.Last14Days);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last14Days, UIControls.SSTARTTEXT_DATEONLY,
+				UIControls.SENDTEXT_DATEONLY);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	@Test
+	public void testDateTimePicker_FlexibleDate_Day() throws ParseException
+	{
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testDateTimePicker_FlexibleDate_Day";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Custom");
+
+		String returnDate = TimeSelectorUtil.setFlexibleRelativeTimeRange(webdriver, 1, TimeUnit.Day);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Custom, UIControls.SSTARTTEXT, UIControls.SENDTEXT);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	@Test
+	public void testDateTimePicker_Last14Days() throws ParseException
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -206,7 +310,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last14Days_compact() throws ParseException 
+	public void testDateTimePicker_Last14Days_compact() throws ParseException
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -233,7 +337,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last15Mins() throws ParseException 
+	public void testDateTimePicker_Last15Mins() throws ParseException
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -260,7 +364,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last15Mins_compact() throws ParseException 
+	public void testDateTimePicker_Last15Mins_compact() throws ParseException
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -289,7 +393,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last1Day() throws ParseException 
+	public void testDateTimePicker_Last1Day() throws ParseException
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -314,7 +418,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last1Day_compact() 
+	public void testDateTimePicker_Last1Day_compact()
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -347,7 +451,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last1Year() throws ParseException 
+	public void testDateTimePicker_Last1Year() throws ParseException
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -372,7 +476,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last1Year_compact() throws ParseException 
+	public void testDateTimePicker_Last1Year_compact() throws ParseException
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -399,7 +503,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last30Days() 
+	public void testDateTimePicker_Last30Days()
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -418,7 +522,8 @@ public class TestDateTimePicker extends CommonUIUtils
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
 		try {
-			TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last30Days, UIControls.SSTARTTEXT, UIControls.SENDTEXT);
+			TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Last30Days, UIControls.SSTARTTEXT,
+					UIControls.SENDTEXT);
 		}
 		catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -429,7 +534,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last30Days_compact() throws ParseException 
+	public void testDateTimePicker_Last30Days_compact() throws ParseException
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -455,7 +560,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last30Mins() throws ParseException 
+	public void testDateTimePicker_Last30Mins() throws ParseException
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -480,7 +585,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last30Mins_compact() throws ParseException 
+	public void testDateTimePicker_Last30Mins_compact() throws ParseException
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -507,7 +612,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last4Hours() throws ParseException 
+	public void testDateTimePicker_Last4Hours() throws ParseException
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -532,7 +637,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last4Hours_compact() throws ParseException 
+	public void testDateTimePicker_Last4Hours_compact() throws ParseException
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -559,7 +664,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last60Mins() throws ParseException 
+	public void testDateTimePicker_Last60Mins() throws ParseException
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -584,7 +689,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last60Mins_compact() throws ParseException 
+	public void testDateTimePicker_Last60Mins_compact() throws ParseException
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -611,7 +716,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last6Hours() throws ParseException 
+	public void testDateTimePicker_Last6Hours() throws ParseException
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -636,7 +741,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last6Hours_compact() throws ParseException 
+	public void testDateTimePicker_Last6Hours_compact() throws ParseException
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -663,7 +768,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last7Days() throws ParseException 
+	public void testDateTimePicker_Last7Days() throws ParseException
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -688,7 +793,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last7Days_compact() throws ParseException 
+	public void testDateTimePicker_Last7Days_compact() throws ParseException
 	{
 
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -715,7 +820,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last90Days() throws ParseException 
+	public void testDateTimePicker_Last90Days() throws ParseException
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -738,7 +843,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Last90Days_compact() throws ParseException 
+	public void testDateTimePicker_Last90Days_compact() throws ParseException
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -764,7 +869,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Latest() throws ParseException 
+	public void testDateTimePicker_Latest() throws ParseException
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -788,7 +893,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testDateTimePicker_Latest_compact() throws ParseException 
+	public void testDateTimePicker_Latest_compact() throws ParseException
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -814,7 +919,33 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testFilterDays() throws Exception 
+	public void testDateTimePicker_OnlyDate_FlexibleDate_Day() throws ParseException
+	{
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testDateTimePicker_OnlyDate_FlexibleDate_Day";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Custom");
+
+		String returnDate = TimeSelectorUtil.setFlexibleRelativeTimeRange(webdriver, 3, 1, TimeUnit.Day);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestDateTimePicker.verifyResult(webdriver, returnDate, TimeRange.Custom, UIControls.SSTARTTEXT_DATEONLY,
+				UIControls.SENDTEXT_DATEONLY);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	@Test
+	public void testFilterDays() throws Exception
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -838,7 +969,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testFilterDays_compact() throws Exception 
+	public void testFilterDays_compact() throws Exception
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -863,7 +994,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testFilterDaysMonths() throws Exception 
+	public void testFilterDaysMonths() throws Exception
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -888,7 +1019,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testFilterDaysMonths_compact() throws Exception 
+	public void testFilterDaysMonths_compact() throws Exception
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -914,7 +1045,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testFilterHours() throws Exception 
+	public void testFilterHours() throws Exception
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -937,7 +1068,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testFilterHours_compact() throws Exception 
+	public void testFilterHours_compact() throws Exception
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -961,7 +1092,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testFilterHoursDays() throws Exception 
+	public void testFilterHoursDays() throws Exception
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -986,7 +1117,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testFilterHoursDays_compact() throws Exception 
+	public void testFilterHoursDays_compact() throws Exception
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -1012,7 +1143,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testFilterHoursDaysMonths() throws Exception 
+	public void testFilterHoursDaysMonths() throws Exception
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -1037,7 +1168,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testFilterHoursDaysMonths_compact() throws Exception 
+	public void testFilterHoursDaysMonths_compact() throws Exception
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -1062,7 +1193,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testFilterHoursMonths() throws Exception 
+	public void testFilterHoursMonths() throws Exception
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -1087,7 +1218,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testFilterHoursMonths_compact() throws Exception 
+	public void testFilterHoursMonths_compact() throws Exception
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -1112,7 +1243,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testFilterMonths() throws Exception 
+	public void testFilterMonths() throws Exception
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
@@ -1136,7 +1267,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	}
 
 	@Test
-	public void testFilterMonths_compact() throws Exception 
+	public void testFilterMonths_compact() throws Exception
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
 
