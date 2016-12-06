@@ -160,6 +160,8 @@ task DEVTest_ws(type:EMTest){
 	
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/util/DashboardAPIUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/util/PrivilegeCheckerTest.class"
+	
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/TableRowsSynchronizerTest.class"
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
@@ -199,6 +201,7 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/dashboards/core/util/RegistryLookupUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/util/TenantSubscriptionUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/AppLoggingManageMXBeanTest_S2.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/zdt/DataManagerTest.class"
 	
 	useRestAssured=true
 	ext.set("testType", "unit")

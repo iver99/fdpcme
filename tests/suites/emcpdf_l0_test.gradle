@@ -47,6 +47,8 @@ dependencies {
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils-integ-tests', version: "${REPO_BID}") {
+	exclude('module':'groovy')}   
+	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-web-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')}
 	
 	
@@ -160,6 +162,15 @@ task DEVTest_ws(type:EMTest){
 	
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/util/DashboardAPIUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/util/PrivilegeCheckerTest.class"
+	
+	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/DashboardRowsComparatorTest.class"
+	
+	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/DashboardRowEntityTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/DashboardSetRowEntityTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/DashboardTileParamsRowEntityTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/DashboardTileRowEntityTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/DashboardUserOptionsRowEntityTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/PreferenceRowEntityTest.class"
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
