@@ -764,7 +764,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     if(!params.timeLevelsNotToShow) {
                         return true;
                     }
-                    if(self.getParam(params.timeLevelsNotToShow).indexOf(timeLevel) >= 0) {
+                    //timeLevelsNotToShow param support both lowercase and uppercase
+                    if(self.getParam(params.timeLevelsNotToShow).indexOf(timeLevel) >= 0 || self.getParam(params.timeLevelsNotToShow).indexOf(timeLevel.toUpperCase()) >= 0) {
                         return false;
                     }else {
                         return true;

@@ -194,7 +194,7 @@ require(['ojs/ojcore',
                     startDateTime: /*self.initStart,*/ start,
                     endDateTime: self.initEnd, //end,
                     timePeriodsNotToShow: /*["Last 30 days", "Last 90 days"],*/ self.timePeriodsNotToShow,
-                    timeLevelsNotToShow: self.timeLevelsNotToShow, //custom relative time levels not to show
+                    timeLevelsNotToShow: self.timeLevelsNotToShow, //custom relative time levels not to show. Support lower and upper case time units
                     showTimeAtMillisecond: self.showTimeAtMillisecond, //show time at minute or millisecond level in ojInputTime component
                     enableTimeFilter: true,
                     hideMainLabel: true,
