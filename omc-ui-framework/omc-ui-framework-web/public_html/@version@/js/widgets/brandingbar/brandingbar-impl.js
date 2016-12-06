@@ -164,7 +164,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.topologyHeight = ko.observable();
             self.topologySize.subscribe(function(topoHeight) {
                topoHeight && topoHeight.h && self.topologyHeight(topoHeight.h);
-                console.log("*****");
+		if(self.topologyHeight()<=201) {
+                    self.topologyCssHeight(self.topologyHeight());
+                }else {
+                    self.topologyCssHeight(200);
+                }                
+		console.log("*****");
                 console.log(self.topologyHeight());
             });
             self.isMaximized = ko.observable(false);
@@ -186,16 +191,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                        $(sibling).hide();
 //                    }
 //                }
-                self.topologyCssHeight(self.topologyHeight()+30);
+                self.topologyCssHeight(self.topologyHeight());
                 self.isMaximized(true);
             };
             self.restoreTopology = function() {
                 //restore other elements hidden by topology
                 self.topologyCssHeight(201);
-                for(var i=0; i<self.visibleSiblings().length; i++) {
+                /*for(var i=0; i<self.visibleSiblings().length; i++) {
                     var sibling = self.visibleSiblings()[i];
                      $(sibling).show();
-                }
+                }*/
                 self.isMaximized(false);
             };
             self.maxMinTopologyToggle = function() {
@@ -206,9 +211,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }
             
-            self.topologyCssHeight = ko.observable(190);
+	    self.topologyCssHeight = ko.observable();
             self.topologyStyle = ko.computed(function() {
-                return "width: 100%; height: " + self.topologyCssHeight() + "px;";
+                var height = "100%; max-height: 200px"
+                if(self.topologyCssHeight()) {
+                    height = self.topologyCssHeight() + "px";
+                }
+                return "width: 100%; height: " + height + ";";
             });
 
             //NLS strings
