@@ -160,30 +160,38 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }
             
+            self.topologySize = ko.observable();
+            self.topologyHeight = ko.observable();
+            self.topologySize.subscribe(function(topoHeight) {
+               topoHeight && topoHeight.h && self.topologyHeight(topoHeight.h);
+                console.log("*****");
+                console.log(self.topologyHeight());
+            });
             self.isMaximized = ko.observable(false);
             self.visibleSiblings = ko.observableArray([]);
             self.maximizeTopology = function() {
                 //calculate topology height when maximized
-                var appHeaderHeight = $($(".emaas-appheader")[0]).outerHeight();
-                var GCbarHeight = $("#emaas-appheader-globalcxt").outerHeight();
-                var topologyTitleHeight = $("#ude-topology-title").outerHeight();
-                var height = $(window).height() - appHeaderHeight - GCbarHeight - topologyTitleHeight;
-                self.topologyCssHeight(height);
-                //hide all other elements
-                var siblings = $($(".emaas-appheader")[0]).parent().parent().attr("id") === "globalBody" ? $($(".emaas-appheader")[0]).parent().siblings() : $($(".emaas-appheader")[0]).parent().parent().siblings();
-                self.visibleSiblings([]);
-                for(var i=0; i<siblings.length; i++) {
-                    var sibling = siblings[i];
-                    if($(sibling).is(":visible") || ($(sibling).hasClass("df-right-panel") && $(sibling).css('display')!=='none')) {
-                        self.visibleSiblings.push(sibling);
-                        $(sibling).hide();
-                    }
-                }
+//                var appHeaderHeight = $($(".emaas-appheader")[0]).outerHeight();
+//                var GCbarHeight = $("#emaas-appheader-globalcxt").outerHeight();
+//                var topologyTitleHeight = $("#ude-topology-title").outerHeight();
+//                var height = $(window).height() - appHeaderHeight - GCbarHeight - topologyTitleHeight;
+//                self.topologyCssHeight(height);
+//                //hide all other elements
+//                var siblings = $($(".emaas-appheader")[0]).parent().parent().attr("id") === "globalBody" ? $($(".emaas-appheader")[0]).parent().siblings() : $($(".emaas-appheader")[0]).parent().parent().siblings();
+//                self.visibleSiblings([]);
+//                for(var i=0; i<siblings.length; i++) {
+//                    var sibling = siblings[i];
+//                    if($(sibling).is(":visible") || ($(sibling).hasClass("df-right-panel") && $(sibling).css('display')!=='none')) {
+//                        self.visibleSiblings.push(sibling);
+//                        $(sibling).hide();
+//                    }
+//                }
+                self.topologyCssHeight(self.topologyHeight()+30);
                 self.isMaximized(true);
             };
             self.restoreTopology = function() {
                 //restore other elements hidden by topology
-                self.topologyCssHeight(168);
+                self.topologyCssHeight(201);
                 for(var i=0; i<self.visibleSiblings().length; i++) {
                     var sibling = self.visibleSiblings()[i];
                      $(sibling).show();

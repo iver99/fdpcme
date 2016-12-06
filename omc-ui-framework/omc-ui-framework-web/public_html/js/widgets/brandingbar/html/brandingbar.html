@@ -154,6 +154,7 @@
         <!-- ko if: isTopologyCompRegistered() !== false -->
         <div id="ude-topology-div" style="overflow-y:auto; height:auto; background-color:white;"
              data-bind="visible: isTopologyDisplayed" class="ude-sdk">
+            <!-- ko if: topologyHeight() >= 201 -->
             <div id="ude-topology-title">
                 <div style="padding-right: 10px;">
                     <button data-bind="attr: {'id': 'maxMinTopology', title: isMaximized() ? topologyRestoreLabel : topologyMaximizeLabel}, click: maxMinTopologyToggle,
@@ -166,6 +167,7 @@
                     </button>
                 </div>
             </div>
+            <!-- /ko -->
             
             <!--<div data-bind="attr: {style: topologyStyle}" style="margin: 0 auto">test div</div>-->
             
@@ -178,7 +180,8 @@
                    customNodeDataLoader: customNodeDataLoader(),
                    customEventHandler: customEventHandler(),
                    miniEntityCardActions: miniEntityCardActions(),
-                   enableCache: true
+                   enableCache: true,
+                   topologySize: topologySize
                 }
             },
             attr: {style: topologyStyle}">
