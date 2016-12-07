@@ -168,40 +168,28 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     self.topologyCssHeight(self.topologyHeight());
                 }else {
                     self.topologyCssHeight(200);
-                }                
-		console.log("*****");
-                console.log(self.topologyHeight());
+                }
             });
+            
             self.isMaximized = ko.observable(false);
-            self.visibleSiblings = ko.observableArray([]);
+            
+            self.showTopologyMaxIcon = function() {
+                $("#maxMinTopology").css("display", "block");
+            };
+            self.hideTopologyMaxIcon = function() {
+                $("#maxMinTopology").css("display", "none");
+            }
             self.maximizeTopology = function() {
-                //calculate topology height when maximized
-//                var appHeaderHeight = $($(".emaas-appheader")[0]).outerHeight();
-//                var GCbarHeight = $("#emaas-appheader-globalcxt").outerHeight();
-//                var topologyTitleHeight = $("#ude-topology-title").outerHeight();
-//                var height = $(window).height() - appHeaderHeight - GCbarHeight - topologyTitleHeight;
-//                self.topologyCssHeight(height);
-//                //hide all other elements
-//                var siblings = $($(".emaas-appheader")[0]).parent().parent().attr("id") === "globalBody" ? $($(".emaas-appheader")[0]).parent().siblings() : $($(".emaas-appheader")[0]).parent().parent().siblings();
-//                self.visibleSiblings([]);
-//                for(var i=0; i<siblings.length; i++) {
-//                    var sibling = siblings[i];
-//                    if($(sibling).is(":visible") || ($(sibling).hasClass("df-right-panel") && $(sibling).css('display')!=='none')) {
-//                        self.visibleSiblings.push(sibling);
-//                        $(sibling).hide();
-//                    }
-//                }
                 self.topologyCssHeight(self.topologyHeight());
                 self.isMaximized(true);
+                var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                $b && $b.triggerBuilderResizeEvent('Topology is maximized!');
             };
             self.restoreTopology = function() {
-                //restore other elements hidden by topology
                 self.topologyCssHeight(201);
-                /*for(var i=0; i<self.visibleSiblings().length; i++) {
-                    var sibling = self.visibleSiblings()[i];
-                     $(sibling).show();
-                }*/
-                self.isMaximized(false);
+                self.isMaximized(false);                
+                var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                $b && $b.triggerBuilderResizeEvent('Topology is restored!');
             };
             self.maxMinTopologyToggle = function() {
                 if(!self.isMaximized()) {
@@ -217,7 +205,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if(self.topologyCssHeight()) {
                     height = self.topologyCssHeight() + "px";
                 }
-                return "width: 100%; height: " + height + ";";
+                return "display: flex; float: left; width: 100%; height: " + height + ";";
             });
 
             //NLS strings
