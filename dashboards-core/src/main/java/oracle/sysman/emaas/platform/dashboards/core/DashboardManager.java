@@ -248,7 +248,7 @@ public class DashboardManager
 		deleteDashboard(dashboardId, false, tenantId);
 	}
 
-	public ScreenshotData getDashboardBase64ScreenShotById(Long dashboardId, Long tenantId) throws DashboardException
+	public ScreenshotData getDashboardBase64ScreenShotById(Long dashboardId, Long tenantId) throws DashboardNotFoundException,TenantWithoutSubscriptionException
 	{
 		EntityManager em = null;
 		try {
@@ -293,7 +293,7 @@ public class DashboardManager
 		}
 	}
 	
-	public EmsDashboard getEmsDashboardById(DashboardServiceFacade dsf, Long dashboardId, Long tenantId) throws DashboardException {
+	public EmsDashboard getEmsDashboardById(DashboardServiceFacade dsf, Long dashboardId, Long tenantId) throws DashboardNotFoundException,TenantWithoutSubscriptionException {
 		if (dashboardId == null || dashboardId <= 0) {
 			LOGGER.debug("Dashboard not found for id {} is invalid", dashboardId);
 			throw new DashboardNotFoundException();
@@ -332,7 +332,7 @@ public class DashboardManager
 	 * @return
 	 * @throws DashboardException
 	 */
-	public Dashboard getDashboardById(Long dashboardId, Long tenantId) throws DashboardException
+	public Dashboard getDashboardById(Long dashboardId, Long tenantId) throws  DashboardNotFoundException,TenantWithoutSubscriptionException
 	{
 		EntityManager em = null;
 		try {
@@ -357,7 +357,7 @@ public class DashboardManager
 	 * @throws DashboardException
 	 * @throws JSONException 
 	 */
-	public CombinedDashboard getCombinedDashboardById(Long dashboardId, Long tenantId, String userName) throws DashboardException
+	public CombinedDashboard getCombinedDashboardById(Long dashboardId, Long tenantId, String userName) throws DashboardNotFoundException,TenantWithoutSubscriptionException
 	{
    EntityManager em = null;
    try {
@@ -492,7 +492,7 @@ public class DashboardManager
 		}
 	}
 
-	public Dashboard getDashboardSetsBySubId(Long dashboardId, Long tenantId) throws DashboardException
+	public Dashboard getDashboardSetsBySubId(Long dashboardId, Long tenantId) throws DashboardNotFoundException,TenantWithoutSubscriptionException
 	{
 		EntityManager em = null;
 		try {
@@ -633,7 +633,7 @@ public class DashboardManager
 	 * @return
 	 * @throws DashboardException
 	 */
-	public boolean isDashboardFavorite(Long dashboardId, Long tenantId) throws DashboardException
+	public boolean isDashboardFavorite(Long dashboardId, Long tenantId) throws DashboardNotFoundException
 	{
 		if (dashboardId == null || dashboardId <= 0) {
 			throw new DashboardNotFoundException();
