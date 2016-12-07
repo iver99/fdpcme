@@ -2,11 +2,14 @@ package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
+import oracle.sysman.emaas.platform.dashboards.core.util.SessionInfoUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +24,9 @@ public class PersistenceManager
     public static final String JDBC_PARAM_USER = "javax.persistence.jdbc.user";
     public static final String JDBC_PARAM_PASSWORD = "javax.persistence.jdbc.password";
     public static final String JDBC_PARAM_DRIVER = "javax.persistence.jdbc.driver";
+    
+    private static final String MODULE_NAME = "DashboardService-API"; // application service name
+	private final String ACTION_NAME = this.getClass().getSimpleName();//current class name
     
 	private static final Logger LOGGER = LogManager.getLogger(PersistenceManager.class);
 
@@ -82,6 +88,11 @@ public class PersistenceManager
 			initialize();
 		}
 		EntityManager em = emf.createEntityManager();
+		try {
+			SessionInfoUtil.setModuleAndAction(em, MODULE_NAME, ACTION_NAME);
+		} catch (SQLException e) {
+			LOGGER.info("setModuleAndAction in PersistenceManager",e);
+		}
 		em.setProperty("tenant.id", tenantId);
 		return em;
 	}
