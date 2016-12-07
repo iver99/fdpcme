@@ -12,6 +12,7 @@ import javax.persistence.EntityTransaction;
 
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
+import oracle.sysman.emaas.platform.dashboards.core.BaseTest;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
@@ -25,7 +26,7 @@ import org.testng.annotations.Test;
 /**
  * @author wenjzhu
  */
-public class DashboardServiceFacadeTest_S2
+public class DashboardServiceFacadeTest_S2 extends BaseTest
 {
 	private static int testSeq = 1;
 
@@ -210,7 +211,6 @@ public class DashboardServiceFacadeTest_S2
 		//			}
 		//		};
 
-		PersistenceManager.setTestEnv(true);
 		// tenant id updated to number type
 		EntityManager em = null;
 		try {

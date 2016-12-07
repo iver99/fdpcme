@@ -1,10 +1,13 @@
 package oracle.sysman.emaas.platform.dashboards.core.cache.lru;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import oracle.sysman.emaas.platform.dashboards.core.cache.CacheConfig;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.concurrent.ConcurrentHashMap;
 
 
 public class CacheFactory {
@@ -51,5 +54,19 @@ public class CacheFactory {
 
 	public static ConcurrentHashMap<String, CacheUnit> getCacheUnitMap() {
 		return cacheUnitMap;
+	}
+	
+	public static void clearAllCacheGroup(){
+		if(cacheUnitMap!=null){
+			Iterator<Map.Entry<String,CacheUnit>> it =cacheUnitMap.entrySet().iterator();
+			while(it.hasNext()){
+				CacheUnit cu=it.next().getValue();
+				cu.getCacheUnitStatus().setEvictionCount(0L);
+				cu.getCacheUnitStatus().setHitCount(0L);
+				cu.getCacheUnitStatus().setRequestCount(0L);
+				cu.getCacheUnitStatus().setUsage(0);
+				cu.getCacheLinkedHashMap().clear();
+			}
+		}
 	}
 }

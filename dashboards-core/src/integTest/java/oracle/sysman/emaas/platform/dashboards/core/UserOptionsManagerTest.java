@@ -4,10 +4,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
-import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -18,14 +15,7 @@ import org.testng.annotations.Test;
  * @since 2016/3/8.
  */
 @Test
-public class UserOptionsManagerTest {
-    static {
-        PersistenceManager.setTestEnv(true);
-        UserContext.setCurrentUser("SYSMAN");
-        TenantSubscriptionUtil.setTestEnv();
-    }
-
-
+public class UserOptionsManagerTest extends BaseTest {
     @BeforeMethod
     public void beforeMethod()
     {
