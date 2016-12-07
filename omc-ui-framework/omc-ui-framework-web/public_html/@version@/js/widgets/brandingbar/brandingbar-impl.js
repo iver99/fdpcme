@@ -167,7 +167,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 		if(self.topologyHeight()<=201) {
                     self.topologyCssHeight(self.topologyHeight());
                 }else {
-                    self.topologyCssHeight(200);
+                    self.topologyCssHeight(201);
                 }
             });
             
@@ -201,9 +201,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             
 	    self.topologyCssHeight = ko.observable();
             self.topologyStyle = ko.computed(function() {
-                var height = "100%; max-height: 200px"
+                var height = "100%; max-height: 204px"
                 if(self.topologyCssHeight()) {
-                    height = self.topologyCssHeight() + "px";
+                    height = (self.topologyCssHeight() + 3) + "px";
                 }
                 return "display: flex; float: left; width: 100%; height: " + height + ";";
             });
