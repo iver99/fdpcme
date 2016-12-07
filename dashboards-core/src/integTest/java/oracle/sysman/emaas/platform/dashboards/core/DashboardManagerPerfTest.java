@@ -3,14 +3,11 @@ package oracle.sysman.emaas.platform.dashboards.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
-import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
-import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -21,16 +18,11 @@ import org.testng.annotations.Test;
  *
  * @author guobaochen
  */
-public class DashboardManagerPerfTest
+public class DashboardManagerPerfTest extends BaseTest
 {
 	private static final long NUM_DASHBOARDS_FOR_PERF_TEST = 10000L;
 	private static final Logger LOGGER = LogManager.getLogger(DashboardManagerPerfTest.class);
 
-
-	static {
-		PersistenceManager.setTestEnv(true);
-		UserContext.setCurrentUser("SYSMAN");
-	}
 	private final static Long tenantId = 11L;
 	private Long dashboard1stId;
 	private final DashboardManager dm = DashboardManager.getInstance();
