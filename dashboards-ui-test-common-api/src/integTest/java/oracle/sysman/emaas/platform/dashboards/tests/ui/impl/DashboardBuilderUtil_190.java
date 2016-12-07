@@ -933,13 +933,15 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	@Override
 	public void saveDashboard(WebDriver driver)
 	{
-		driver.getLogger().info("DashboardBuilderUtil.save started");
-		driver.waitForElementPresent("css=" + DashBoardPageId_190.DASHBOARDSAVECSS);
-		driver.click("css=" + DashBoardPageId_190.DASHBOARDSAVECSS);
-		driver.takeScreenShot();
-		driver.getLogger().info("save compelted");
+	   driver.getLogger().info("DashboardBuilderUtil.save started");
+	   driver.waitForElementPresent("css=" + DashBoardPageId_190.DASHBOARDSAVECSS);
+	   WaitUtil.waitForPageFullyLoaded(driver);
+	   WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
+	   WebElement saveButton = selectedDashboardEl.findElement(By.cssSelector(DashBoardPageId_190.DASHBOARDSAVECSS));
+	   saveButton.click();
+	   driver.takeScreenShot();
+	   driver.getLogger().info("save compelted");
 	}
-
 	@Override
 	public void search(WebDriver driver, String searchString)
 	{

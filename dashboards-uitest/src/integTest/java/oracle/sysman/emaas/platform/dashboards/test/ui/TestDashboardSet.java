@@ -45,7 +45,9 @@ public class TestDashboardSet extends LoginAndLogout
 	private String dbName_DuplicateOOB = "";
 	private String dbsetName_ITA = "";
 	private String dbsetName_LA = "";
-
+	private String dbset_testMaximizeRestore = "";
+	private String dbName_indbSet = "";
+	
 	private static String OOBAddToSet = "Database Operations";
 
 	@BeforeClass
@@ -122,6 +124,9 @@ public class TestDashboardSet extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_DuplicateOOB);
 		DashBoardUtils.deleteDashboard(webd, dbsetName_ITA);
 		DashBoardUtils.deleteDashboard(webd, dbsetName_LA);
+		DashBoardUtils.deleteDashboard(webd, dbset_testMaximizeRestore);
+		DashBoardUtils.deleteDashboard(webd,dbName_indbSet);
+		
 		webd.getLogger().info("All test data have been removed");
 
 		LoginAndLogout.logoutMethod();
@@ -1201,6 +1206,120 @@ public class TestDashboardSet extends LoginAndLogout
 
 	}
 
+	//test maxmize/restore widget in OOB Dashboard Set
+	@Test(groups = "sixth run")
+	public void testMaximizeRestoreWidget_OOB_DbSet()
+	{
+		//initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testMaximize/RestoreWidget");
+
+		//open the OOB Dashboard Set, eg: Exadata Health in the dashboard home page
+		webd.getLogger().info("open the dashboard set");
+		DashboardHomeUtil.selectDashboard(webd, "Exadata Health");
+
+		//widget operation
+		webd.getLogger().info("maximize/restore the widget");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd,"Overview");
+		DashboardBuilderUtil.maximizeWidget(webd, "Entities by Database Machine", 0);
+		DashboardBuilderUtil.restoreWidget(webd, "Entities by Database Machine", 0);
+
+		//verify the edit/add button not displayed in the page					
+		WebElement addButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Add Content']"));
+		Assert.assertFalse(addButton.isDisplayed(), "Add button be displayed in system dashboard set");  
+
+		WebElement editButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));
+		Assert.assertFalse(editButton.isDisplayed(), "Edit button be displayed in system dashboard set");
+	}
+	
+	//test maxmize/restore widget in self created dashboard set, and select a system dashboard to test edit button
+	@Test(groups = "sixth run")
+	public void testMRWidgetSelfDbSet_sysBb()
+	{
+		dbset_testMaximizeRestore = "selfDbSet-" + generateTimeStamp();
+		
+		//initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testMaximize/RestoreWidget in selt create db set");
+		
+		//Create dashboard set
+		webd.getLogger().info("Create a new dashboard set");
+		DashboardHomeUtil.createDashboard(webd, dbset_testMaximizeRestore, null, DashboardHomeUtil.DASHBOARDSET);
+		
+		//verify the dashboard set
+		webd.getLogger().info("Verify if the dashboard set existed in builder page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbset_testMaximizeRestore), "Create dashboard set failed!");
+
+		//Select a dashboard and open it
+		webd.getLogger().info("select and open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "Application Servers");
+		
+		//widget operation
+		webd.getLogger().info("maximize/restore the widget");
+		DashboardBuilderUtil.maximizeWidget(webd, "Application Server Status", 0);
+		DashboardBuilderUtil.restoreWidget(webd, "Application Server Status", 0);
+		
+		//verify the add button not displayed in the page					
+		WebElement addButton1 = webd.getWebDriver().findElement(By.xpath("//button[@title='Add Content']"));
+		Assert.assertFalse(addButton1.isDisplayed(), "Add button be displayed in system dashboard set");  
+		
+		//verify the edit button displayed in the page
+		WebElement editButton1 = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));
+		Assert.assertTrue(editButton1.isDisplayed(), "Edit button isn't displayed in self dashboard set");
+	}
+	
+	//test maxmize/restore widget in self created dashboard set, and self creating a dashboard to test add/edit button
+	@Test(groups = "sixth run", dependsOnMethods = { "testMRWidgetSelfDbSet_sysBb" })
+	public void testMRWidgetSelfDbSet_selfBb()
+	{
+		dbName_indbSet = "selfDb-" + generateTimeStamp();
+		
+		//initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testMaximize/RestoreWidget in selt create db set");
+		
+		//open the created dashboard set
+		webd.getLogger().info("select and open the dashboard set");
+		DashboardHomeUtil.selectDashboard(webd, dbset_testMaximizeRestore);
+		
+		//add self created dashboard to the dashboard set
+		webd.getLogger().info("Add another dashboard to set: create a new dashboard to this set");
+		DashboardBuilderUtil.createDashboardInsideSet(webd, dbName_indbSet, "");
+		
+		webd.getLogger().info("Verify if the dashboard existed in builder page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_indbSet), "Creat dashboard in dashboard set failed!");		
+		
+		//Add widget 
+		webd.getLogger().info("Start to add Widget into the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "Access Log Error Status Codes");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "All Logs Trend");
+		webd.getLogger().info("Add widget finished");
+
+		//verify if the widget added successfully
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, "Access Log Error Status Codes"),
+				"Widget 'Access Log Error Status Codes' not found");
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, "All Logs Trend"),
+				"Widget 'All Logs Trend' not found");
+
+		//save dashboard
+		webd.getLogger().info("save the dashboard");
+		DashboardBuilderUtil.saveDashboard(webd);	
+
+		//widget operation
+		webd.getLogger().info("maximize/restore the widget");
+		DashboardBuilderUtil.maximizeWidget(webd, "Access Log Error Status Codes", 0);
+		Assert.assertFalse(webd.isDisplayed("css="+".dbd-widget[data-tile-name=\"All Logs Trend\"]"), "Widget 'All Logs Trend' is still displayed");
+		
+		DashboardBuilderUtil.restoreWidget(webd, "Access Log Error Status Codes", 0);
+		Assert.assertTrue(webd.isDisplayed("css="+".dbd-widget[data-tile-name=\"All Logs Trend\"]"), "Widget 'All Logs Trend' is not displayed");
+		
+		//verify the edit/add button displayed in the page
+		WebElement addButton2 = webd.getWebDriver().findElement(By.xpath("//button[@title='Add Content']"));
+		Assert.assertTrue(addButton2.isDisplayed(), "Add button isn't displayed in self dashboard which in self dashboard set");
+
+		WebElement editButton2 = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));
+		Assert.assertTrue(editButton2.isDisplayed(), "Edit button isn't displayed in self dashboard which in self dashboard set");
+	}
 	private String generateTimeStamp()
 	{
 		return String.valueOf(System.currentTimeMillis());
