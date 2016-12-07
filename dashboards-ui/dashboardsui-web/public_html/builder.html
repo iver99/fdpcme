@@ -510,10 +510,10 @@
                                                 <div data-bind="component:{name:WIDGET_KOC_NAME, params:{tile:$data }}" style="width: 100%; height: 100%;"></div>
                                             </div>
                                         </div>
-                                        <div class="dbd-resize-handler dbd-resize-handler-left" data-bind="css:{'cursor-resize-ew':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}"></div>
-                                        <div class="dbd-resize-handler dbd-resize-handler-right" data-bind="css:{'cursor-resize-ew':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}"></div>
-                                        <div class="dbd-resize-handler dbd-resize-handler-bottom" data-bind="css:{'cursor-resize-ns':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}"></div>
-                                        <div class="dbd-resize-handler dbd-resize-handler-right-bottom">
+                                        <div data-bind="css:{'cursor-resize-ew dbd-resize-handler dbd-resize-handler-left':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}"></div>
+                                        <div data-bind="css:{'cursor-resize-ew dbd-resize-handler dbd-resize-handler-right':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}"></div>
+                                        <div data-bind="css:{'cursor-resize-ns dbd-resize-handler dbd-resize-handler-bottom':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}"></div>
+                                        <div data-bind="css:{'cursor-resize-right-bottom dbd-resize-handler dbd-resize-handler-right-bottom':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}">
                                             <span class="oj-fwk-icon-arrow-s-end oj-component-icon"></span>
                                         </div>
                                         <!-- <div class="dbd-tile-link-wrapper" data-bind="css: linkText()? '': 'dbd-tile-link-empty'">
