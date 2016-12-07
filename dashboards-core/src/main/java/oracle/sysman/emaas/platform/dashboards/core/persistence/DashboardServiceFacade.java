@@ -30,7 +30,7 @@ public class DashboardServiceFacade
 {
 	private static final Logger LOGGER = LogManager.getLogger(DashboardServiceFacade.class);
 	
-	private static final String MODULE_NAME = "DashboardService-API"; // application service name
+	private static final String MODULE_NAME = "DashboardService"; // application service name
 	private final String ACTION_NAME = this.getClass().getSimpleName();//current class name
 	
 	private final EntityManager em;

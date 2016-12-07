@@ -25,7 +25,7 @@ public class PersistenceManager
     public static final String JDBC_PARAM_PASSWORD = "javax.persistence.jdbc.password";
     public static final String JDBC_PARAM_DRIVER = "javax.persistence.jdbc.driver";
     
-    private static final String MODULE_NAME = "DashboardService-API"; // application service name
+    private static final String MODULE_NAME = "DashboardService"; // application service name
 	private final String ACTION_NAME = this.getClass().getSimpleName();//current class name
     
 	private static final Logger LOGGER = LogManager.getLogger(PersistenceManager.class);
