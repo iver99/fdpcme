@@ -115,12 +115,12 @@ define([
             };
 
             function updateCurrentURL(replaceState) {
-                //update current URL
-                var url = window.location.href.split('/').pop();
-                url = self.appendOMCContext(url);
-                var newurl = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
-                newurl = newurl + '/' + url;
                 if (replaceState !== false) { //history.replaceState will always be called unless replaceState is set to false explicitly
+                    //update current URL
+                    var url = window.location.href.split('/').pop();
+                    url = self.appendOMCContext(url);
+                    var newurl = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+                    newurl = newurl + '/' + url;
                     window.history.replaceState(window.history.state, document.title, newurl);
                 }
             }
@@ -139,19 +139,19 @@ define([
             }
 
             /**
-             * Get the current OMC global context and append it into the given 
-             * URL as parameters. This function is used by custom deep linking 
-             * code written by page. Where the page owner generates the destination 
-             * but want to pass on the global context.
+             * Generate URL with given global context. 
+             * The given global context will be appended into the given URL as parameters. 
+             * This function is used by custom deep linking code written by page, where the 
+             * page owner generates the destination but want to pass on the specific global 
+             * context rather than current page's global context.
              * 
              * @param {String} url Original URL
-             * @returns {String} New URL with appended OMC global context
+             * @param {Object} omcContext A json object for global context
+             * @returns {String} New URL with appended global context
              */
-            self.appendOMCContext = function (url) {
+            self.generateUrlWithContext = function (url, omcContext) {
                 var newUrl = url;
                 if (url) {
-                    //Get OMC context
-                    var omcContext = self.getOMCContext();
                     var omcCtxString = "";
                     if (omcContext) {
                         //Add or update URL parameters string for OMC context
@@ -202,6 +202,19 @@ define([
                 }
 
                 return newUrl;
+            };
+            
+            /**
+             * Get the current OMC global context and append it into the given 
+             * URL as parameters. This function is used by custom deep linking 
+             * code written by page. Where the page owner generates the destination 
+             * but want to pass on the global context.
+             * 
+             * @param {String} url Original URL
+             * @returns {String} New URL with appended OMC global context
+             */
+            self.appendOMCContext = function (url) {
+                return self.generateUrlWithContext(url, self.getOMCContext());
             };
 
             /**
