@@ -27,6 +27,7 @@ import javax.ws.rs.core.Response.Status;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 
@@ -146,6 +147,10 @@ public class FavoriteAPI extends APIBase
 			IsFavoriteEntity ife = new IsFavoriteEntity();
 			ife.setIsFavorite(isFavorite);
 			return Response.status(Status.OK).entity(getJsonUtil().toJson(ife)).build();
+		}
+		catch(DashboardNotFoundException e){
+			LOGGER.warn("Specific dashboard is not found for id {}",dashboardId);
+			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
