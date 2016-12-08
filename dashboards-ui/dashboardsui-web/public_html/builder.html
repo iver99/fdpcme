@@ -1102,9 +1102,9 @@
                                                     <span data-bind="css:{'dbd-right-panel-collapsible-disabled': rightPanelEditContent.hideTitle().indexOf('hideTitle')>-1},text: getNlsString('DBS_BUILDER_EDIT_CONTENT_ADD_LINK_TO_TITLE')"></span>
                                                     <!-- ko ifnot:rightPanelEditContent.hasLinkedToTitle() -->
                                                     <div class="dbd-left-panel-header-search" style="margin-top: 5px;">
-                                                        <div  class="dbd-left-panel-header-search-input">
+                                                        <div class="dbd-left-panel-header-search-input">
                                                             <input style="font-size:95%" class="dashboard-search-input" type="text" name="contentSearchInput" id="dashboard-content-search-input"
-                                                                   data-bind="disable: rightPanelEditContent.hideTitle().indexOf('hideTitle')>-1, event: {focus: function(){rightPanelEditContent.onContentSearching(true);}, keypress: rightPanelEditContent.searchDashboardInputKeypressed, click: function(){event.stopPropagation();} }, ojComponent:{component:'ojInputText', value: rightPanelEditContent.keyword, rawValue: rightPanelEditContent.keywordInput,
+                                                                   data-bind="disable: rightPanelEditContent.hideTitle().indexOf('hideTitle')>-1, event: {focus: function(){rightPanelEditContent.onContentSearching(true);}, keypress: rightPanelEditContent.searchDashboardInputKeypressed }, click: function(data,event){event.stopPropagation();}, ojComponent:{component:'ojInputText', value: rightPanelEditContent.keyword, rawValue: rightPanelEditContent.keywordInput,
                                                               placeholder: getNlsString('DBS_BUILDER_EDIT_CONTENT_ADD_LINK_TO_TITLE_SEARCH_PLACEHODER_CONTENT'), rootAttributes: {'class': 'dbs-search-box-input'}}
                                                               ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL') }"/>
                                                         </div>
@@ -1124,13 +1124,13 @@
                                                     </button>
                                                     <!-- /ko -->
                                                 </div>
-                                                <div>
+                                                <div style="width: 1px;">
                                                     <script type="text/html" id="search-content-li-template">
                                                         <li style="display: inherit;" data-bind="attr: {id: 'search-dashboard-id-' + $data.id}">
                                                             <span data-bind="text: $data.name"></span>
                                                         </li>
                                                     </script>
-                                                    <div class="search-content-dropdown-list-container" data-bind="style:{ display: rightPanelEditContent.onContentSearching()?'block':'none'}">
+                                                    <div class="search-content-dropdown-list-container" style="z-index: 99999;" data-bind="style:{ display: rightPanelEditContent.onContentSearching()?'block':'none'}">
                                                         <ul aria-label="list using observable array" style="max-height: 250px"
                                                             data-bind="ojComponent: {
                                                                 component: 'ojListView', 
