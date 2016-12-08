@@ -1,9 +1,11 @@
 define([
     'ojs/ojcore',
+    'knockout',
     'jquery',
-    'uifwk/@version@/js/util/df-util-impl'
+    'uifwk/@version@/js/util/df-util-impl',
+    'uifwk/@version@/js/sdk/entity-object'
 ],
-    function (oj, $, dfuModel)
+    function (oj, ko, $, dfuModel, EntityObject)
     {
         function UIFWKContextUtil() {
             var self = this;
@@ -374,6 +376,7 @@ define([
                     setIndividualContext('composite', 'compositeType', null, false, false);
                     setIndividualContext('composite', 'compositeName', null, false, false);
                     setIndividualContext('composite', 'compositeDisplayName', null, false, false);
+                    setIndividualContext('composite', 'compositeEntity', null, false, false);
                     setIndividualContext('composite', 'compositeNeedRefresh', true, true, false);
                 }
             };
@@ -386,6 +389,38 @@ define([
              */
             self.getCompositeMeId = function () {
                 return getIndividualContext('composite', 'compositeMEID');
+            };
+
+            self.getCompositeEntity = function () {
+                var compositeEntity = getIndividualContext('composite', 'compositeEntity');
+                if (compositeEntity) {
+                    return compositeEntity;
+                }
+                var compositeName = getIndividualContext('composite', 'compositeName');
+                if (!compositeName) {
+                    if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
+                        //Fetch composite name/type
+                        queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
+                    }
+
+                }
+                var entity = new EntityObject();
+                entity['meId'] = getIndividualContext('composite', 'compositeMEID');
+                entity['displayName'] = getIndividualContext('composite', 'compositeDisplayName');
+                entity['entityName'] = getIndividualContext('composite', 'compositeName');
+                entity['entityType'] = getIndividualContext('composite', 'compositeType');
+                entity['meClass'] = getIndividualContext('composite', 'compositeClass');
+                compositeEntity = entity;
+
+                //Cache the entities data
+                var omcCtx = self.getOMCContext();
+                if (!omcCtx['composite']) {
+                    omcCtx['composite'] = {};
+                }
+                omcCtx['composite']['compositeEntity'] = compositeEntity;
+                storeContext(omcCtx);
+
+                return compositeEntity;
             };
 
 //            /**
@@ -876,7 +911,7 @@ define([
                 if (data && data['rows']) {
                     var dataRows = data['rows'];
                     for (var i = 0; i < dataRows.length; i++) {
-                        var entity = {};
+                        var entity = new EntityObject();
                         entity['meId'] = dataRows[i][0];
                         entity['displayName'] = dataRows[i][1];
                         entity['entityName'] = dataRows[i][2];

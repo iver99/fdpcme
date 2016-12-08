@@ -1914,7 +1914,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
 
                 //contol whether the panel should popup or not
-                self.panelControl = function () {
+                self.panelControl = function (data,event) {
+                    event.stopPropagation();
                     if(!self.dtpickerPosition) {
                         if(params.dtpickerPosition) {
                             if(params.dtpickerPosition === "right") {
@@ -1948,6 +1949,13 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.updateRange(self.startDate(), self.endDate());
 
                         $(self.panelId).ojPopup('open', self.wrapperId + ' #dropDown_' + self.randomId, self.panelPosition);
+                        if(!self.closePanelOnClickingOut){
+                            self.closePanelOnClickingOut = document.addEventListener("click",function(_evnt){
+                                if ($(self.panelId).ojPopup('isOpen')) {
+                                    self.closeAllPopups();
+                                }
+                            });
+                        }
                     }
                 };
 
