@@ -275,7 +275,7 @@ public class DashboardManager
 				throw new DashboardNotFoundException();
 			}
 			if (ed.getScreenShot() == null) {
-				LOGGER.debug("Retrieved null screenshot base64 data from persistence layer, we use a blank screenshot then");
+				LOGGER.info("Retrieved null screenshot base64 data from persistence layer for dashboard id={}, we use a blank screenshot then", dashboardId);
 				return new ScreenshotData(BLANK_SCREENSHOT, ed.getCreationDate(), ed.getLastModificationDate());
 			}
 			else if (!ed.getScreenShot().startsWith(SCREENSHOT_BASE64_PNG_PREFIX)
