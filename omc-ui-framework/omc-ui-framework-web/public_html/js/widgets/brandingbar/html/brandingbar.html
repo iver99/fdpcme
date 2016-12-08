@@ -132,15 +132,18 @@
                 <!-- ko if: compositeCxtText() -->
                 <div class="ude-sdk pill filterpill_value filterpill_with_value" style="margin-bottom: auto; margin-top: auto;height: 20px; 
                      padding-left: 8px; padding-right:8px; font-size: 14px; padding-top: 3px;padding-bottom: 1px;margin-left:0px; font-weight: normal; cursor: default;"
-                     id="globalBar_pillWrapper">     
+                     data-bind="css: { pill_disabled: !cxtComposite.isEnabled() }"
+                     id="globalBar_pillWrapper">
                      <span style="white-space: pre-wrap;"
                            data-bind="text:compositeCxtText, attr:{title:cxtCompositeName}" class="ude-sdk"></span>
                 </div>
                 <!-- /ko -->
-                <!-- ko foreach: entitiesDisplayNames() -->
+                <!-- ko foreach: entitiesList() -->
                 <div class="ude-sdk pill filterpill_value filterpill_with_value" style="margin-bottom: auto; margin-top: auto;height: 20px;
                      padding-left: 8px; padding-right:8px; font-size: 14px; padding-top: 3px;padding-bottom: 1px;margin-left:0px; font-weight: normal; cursor: default;"
-                     data-bind="attr: {id: 'globalBar_pillWrapper_' + $index()}">
+                     data-bind="attr: {id: 'globalBar_pillWrapper_' + $index()},
+                        css: { pill_disabled: !$rawData.isEnabled() }"
+                     >
                      <span style="white-space: pre-wrap;"
                            data-bind="text:$data.displayName, attr:{title:$data.entityName}" class="ude-sdk"></span>
                 </div>
