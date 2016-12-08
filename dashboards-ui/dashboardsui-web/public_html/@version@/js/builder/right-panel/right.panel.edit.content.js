@@ -158,8 +158,8 @@ define(['dashboards/dbsmodel',
             }
         };
 
-        self.searchDashboardClicked = function(){
-            self.autoSearchDashboard(self.keyword()?self.keyword():"");
+        self.searchDashboardClicked = function(data, event){
+            self.onContentSearching(true);
             event.stopPropagation();
         };
         
@@ -202,7 +202,7 @@ define(['dashboards/dbsmodel',
 
         self.searchDashboardInputKeypressed = function (e, d) {
             if (d.keyCode === 13) {
-                self.searchDashboardClicked();
+                self.autoSearchDashboard(self.keyword()?self.keyword():"");
                 return false;
             }
             return true;
