@@ -30,7 +30,7 @@ public class DashboardServiceFacade
 {
 	private static final Logger LOGGER = LogManager.getLogger(DashboardServiceFacade.class);
 	
-	private static final String MODULE_NAME = "DashboardService"; // application service name
+	private static final String MODULE_NAME = "DashboardService-API"; // application service name
 	private final String ACTION_NAME = this.getClass().getSimpleName();//current class name
 	
 	private final EntityManager em;
@@ -40,6 +40,12 @@ public class DashboardServiceFacade
 		final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		em = emf.createEntityManager();
 		em.setProperty("tenant.id", tenantId);
+		try {
+			SessionInfoUtil.setModuleAndAction(em, MODULE_NAME, ACTION_NAME);
+		} catch (SQLException e) {
+			LOGGER.info("setModuleAndAction in DashboardServiceFacade",e);
+		}
+
 	}
 
 	/**
@@ -180,13 +186,7 @@ public class DashboardServiceFacade
 	}
 
 	public EntityManager getEntityManager()
-	{
-		try {
-			SessionInfoUtil.setModuleAndAction(em, MODULE_NAME, ACTION_NAME);
-		} catch (SQLException e) {
-			LOGGER.info("setModuleAndAction in DashboardServiceFacade",e);
-		}
-
+	{		
 		return em;
 	}
 
@@ -374,14 +374,14 @@ public class DashboardServiceFacade
 
 	public void removeAllEmsPreferences(String username)
 	{
-		getEntityManager().getTransaction().begin();
+		//getEntityManager().getTransaction().begin();
 		em.createNamedQuery("EmsPreference.removeAll").setParameter("username", username).executeUpdate();
 		commitTransaction();
 	}
 
 	public void removeAllEmsUserOptions(Long dashboardId)
 	{
-		getEntityManager().getTransaction().begin();
+		//getEntityManager().getTransaction().begin();
 		em.createNamedQuery("EmsUserOptions.removeAll").setParameter("dashboardId", dashboardId).executeUpdate();
 		commitTransaction();
 	}
@@ -435,7 +435,7 @@ public class DashboardServiceFacade
 
 	public int removeEmsSubDashboardBySetId(long dashboardSetId)
 	{
-		getEntityManager().getTransaction().begin();
+		//getEntityManager().getTransaction().begin();
 		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeByDashboardSetID").setParameter("p", dashboardSetId)
 				.executeUpdate();
 		commitTransaction();
@@ -444,7 +444,7 @@ public class DashboardServiceFacade
 
 	public int removeEmsSubDashboardBySubId(long subDashboardId)
 	{
-		getEntityManager().getTransaction().begin();
+		//getEntityManager().getTransaction().begin();
 		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeBySubDashboardID").setParameter("p", subDashboardId)
 				.executeUpdate();
 		commitTransaction();
@@ -453,7 +453,7 @@ public class DashboardServiceFacade
 
 	public void updateSubDashboardShowInHome(long dashboardId)
 	{
-		getEntityManager().getTransaction().begin();
+		//getEntityManager().getTransaction().begin();
 		List<EmsSubDashboard> emsSubDashboards = getEmsDashboardById(dashboardId).getSubDashboardList();
 		if (emsSubDashboards != null) {
 			for (EmsSubDashboard emsSubDashboard : emsSubDashboards) {
@@ -462,12 +462,12 @@ public class DashboardServiceFacade
 				em.merge(dashboard);
 			}
 		}
-		getEntityManager().getTransaction().commit();
+		commitTransaction();
 	}
 
 	public List<EmsDashboard> getEmsDashboardsBySubId(long subDashboardId)
 	{
-		getEntityManager().getTransaction().begin();
+		//getEntityManager().getTransaction().begin();
 		List<EmsDashboard> dashboards = em.createNamedQuery("EmsDashboard.queryBySubDashboardID").setParameter("p", subDashboardId)
 				.getResultList();
 		commitTransaction();
@@ -476,7 +476,7 @@ public class DashboardServiceFacade
 
     public int removeUnsharedEmsSubDashboard(long subDashboardId, String owner)
     {
-        getEntityManager().getTransaction().begin();
+       // getEntityManager().getTransaction().begin();
         int deleteCout = em.createNamedQuery("EmsSubDashboard.removeUnshared").setParameter("p1", subDashboardId).setParameter("p2", owner)
                 .executeUpdate();
         commitTransaction();

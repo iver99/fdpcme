@@ -19,7 +19,7 @@ public class SessionInfoUtil {
 		query.setParameter(1, PRODUCT_NAME + ":" + moduleName);
 		query.setParameter(2, actionName);
 		query.executeUpdate();
-		em.getTransaction().commit();    	
+		em.getTransaction().commit();		
     }
 
 }
