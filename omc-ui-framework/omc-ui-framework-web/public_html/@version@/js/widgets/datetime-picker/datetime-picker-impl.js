@@ -154,6 +154,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.timeConverterSecond = oj.Validation.converterFactory("dateTime").createConverter({pattern: 'hh:mm:ss a'});
                 self.timeConverterMillisecond = oj.Validation.converterFactory("dateTime").createConverter({pattern: 'hh:mm:ss:SSS a'});
                 self.timeConverter = ko.observable(self.timeConverterMinute);
+                self.showTimeAtMillisecond = ko.observable(false);
                 
                 self.timeIncrement = ko.observable("00:10:00:00");
 
@@ -387,6 +388,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         var num = self.flexRelTimeVal();
                         var opt = self.flexRelTimeOpt()[0];
                         self.setFlexRelTime(num, opt);
+                        self.setTimePeriodChosen(self.timePeriodCustom);
+                        customClick(1);
                     }else {
                         self.autoFocus("inputStartDate_" + self.randomId);
                         self.lastFocus(1);
@@ -775,6 +778,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 //show time at millisecond level or minute level in ojInputTime component
                 self.getTimeConverter = function() {
                     if(self.getParam(params.showTimeAtMillisecond) === true) {
+                        self.showTimeAtMillisecond(true);
                         self.timeConverter(self.timeConverterMillisecond);
                     }else {
                         self.timeConverter(self.timeConverterMinute);
