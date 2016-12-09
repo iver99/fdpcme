@@ -86,11 +86,12 @@ public class DashboardServiceFacade
 	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(String name, String owner, String description){
 		String jpql;
 		Object[] params;
+		name = name.toUpperCase();
 		if(StringUtil.isEmpty(description)){
-			jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.description is null and d.deleted = ?3";
+			jpql = "select d from EmsDashboard d where upper(d.name) = ?1 and d.owner = ?2 and d.description is null and d.deleted = ?3";
 			params = new Object[]{StringEscapeUtils.escapeHtml4(name), owner, new Integer(0)};
 		}else {
-			jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.description = ?3 and d.deleted = ?4";
+			jpql = "select d from EmsDashboard d where upper(d.name) = ?1 and d.owner = ?2 and d.description = ?3 and d.deleted = ?4";
 			params = new Object[]{StringEscapeUtils.escapeHtml4(name), owner, description, new Integer(0)};
 
 		}
@@ -477,5 +478,19 @@ public class DashboardServiceFacade
 		em.remove(emsUserOptions);
 		commitTransaction();
 	}
+	
+	/*public boolean isDashboardDeleted(long dashboardId){
+		String sql = "select * from ems_dashboard p where p.dashboard_id="	+dashboardId;	
+		Query query = em.createNativeQuery(sql, EmsDashboard.class);
+		@SuppressWarnings("unchecked")
+		List<EmsDashboard> emsDashboardList = query.getResultList();
+		if (emsDashboardList != null && !emsDashboardList.isEmpty()) {
+			if(emsDashboardList.get(0).getDeleted()==0){
+				return false;
+			}
+		}
+		return true;
+		
+	}*/
 
 }

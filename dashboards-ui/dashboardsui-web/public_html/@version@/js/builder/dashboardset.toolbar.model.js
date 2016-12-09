@@ -300,8 +300,8 @@ define(['knockout',
 
             self.toolbarDuplcateInSet = function (duplicateData) {
                 self.pickDashboard('addDuplicate', {
-                    id: ko.observable(duplicateData.id),
-                    name: ko.observable(duplicateData.name)
+                    id: ko.observable(ko.unwrap(duplicateData.id())),
+                    name: ko.observable(ko.unwrap(duplicateData.name()))
                 });
                 $('#duplicateDsbDialog').ojDialog('close');
             };

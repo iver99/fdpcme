@@ -26,8 +26,7 @@ sourceSets {
 		}	
 		resources {	
 			srcDirs = ['src/main/java', 'src/resources/java']
-		}	
-		compileClasspath += configurations.testNG
+		}
 	}
  }
 

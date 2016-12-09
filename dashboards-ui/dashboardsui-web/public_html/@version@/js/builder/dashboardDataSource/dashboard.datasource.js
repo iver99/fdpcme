@@ -33,7 +33,7 @@ define(['knockout',
             		successCallback && successCallback(self.dataSource[dashboardId].userOptions);
             	}, 
                 function (jqXHR, textStatus, errorThrown) {
-            		self[dashboardId].hasUserOptionInDB = false;
+            		self.dataSource[dashboardId].hasUserOptionInDB = false;
             		errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
             	});
             } else {
@@ -185,21 +185,22 @@ define(['knockout',
                     {
                         data['description'] = $("<div/>").html(data['description']).text();
                     }
-                    self.dataSource[dashboardId].dashboard=data;
-                    successCallback && successCallback(data);
+                    var kodsb = getKODashboardForUI(data);
+                    self.dataSource[dashboardId].dashboard=kodsb;
+                    successCallback && successCallback(self.dataSource[dashboardId].dashboard);
                }, 
                errorCallback);          
         };
         
-        self.duplicateDashboard = function(dashboard, successCallback, errorCallback) {
-            if(!self.dataSource[ko.unwrap(dashboard.id)]) {
-                self.dataSource[ko.unwrap(dashboard.id)] = {};
-            }
-            
+        self.duplicateDashboard = function(dashboard, successCallback, errorCallback) {            
             Builder.duplicateDashboard(dashboard,
                     function(data) {
-                        self.dataSource[ko.unwrap(dashboard.id)].dashboard = data;
-                        successCallback && successCallback(data);
+                        if (!self.dataSource[ko.unwrap(data.id)]) {
+                            self.dataSource[ko.unwrap(data.id)] = {};
+                        }
+                        var kodsb = getKODashboardForUI(data);
+                        self.dataSource[ko.unwrap(data.id)].dashboard = kodsb;
+                        successCallback && successCallback(self.dataSource[ko.unwrap(data.id)].dashboard);
                     },
                     function(e) {
                         errorCallback && errorCallback(e);

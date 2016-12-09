@@ -216,11 +216,15 @@ public class DashboardManager
 
 			dsf.updateSubDashboardShowInHome(dashboardId);
 
+			//emcpdf2801 delete dashboard's user option
+			LOGGER.info("Deleting user options for id "+dashboardId);
+			dsf.removeAllEmsUserOptions(dashboardId);
 			if (!permanent) {
 				ed.setDeleted(dashboardId);
 				dsf.mergeEmsDashboard(ed);
 				dsf.removeEmsSubDashboardBySubId(dashboardId);
 				dsf.removeEmsSubDashboardBySetId(dashboardId);
+				
 			}
 			else {
 				dsf.removeAllEmsUserOptions(dashboardId);
@@ -358,8 +362,8 @@ public class DashboardManager
 	 * @throws DashboardException
 	 * @throws JSONException 
 	 */
-	public CombinedDashboard getCombinedDashboardById(Long dashboardId, Long tenantId, String userName) throws DashboardException
-	{
+	public CombinedDashboard getCombinedDashboardById(Long dashboardId,
+			Long tenantId, String userName) throws DashboardException {
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
@@ -369,40 +373,76 @@ public class DashboardManager
 			EmsUserOptions euo = dsf.getEmsUserOptions(userName, dashboardId);
 			List<EmsDashboardTile> edbdtList = ed.getDashboardTileList();
 			CombinedDashboard cdSet = null;
-			
-			if (ed.getType().equals(Dashboard.DASHBOARD_TYPE_CODE_SET) && euo != null && !StringUtil.isEmpty(euo.getExtendedOptions())) {
-			    // combine dashboard set
-			    cdSet = CombinedDashboard.valueOf(ed, ep, euo, null);
-			    
+
+			if (Dashboard.DASHBOARD_TYPE_CODE_SET.equals(ed.getType())) {
+				// combine dashboard set
+				cdSet = CombinedDashboard.valueOf(ed, ep, euo, null);
+
 				// pick selected dashboard
-			    String extOptions = euo.getExtendedOptions();
-				LOGGER.info("Dashboard ID={} is a dashboard set, its extendedOptions is {}",dashboardId, extOptions);
 				Object selected = null;
 				try {
-				    JSONObject jsonObj = new JSONObject(extOptions);
-					selected = jsonObj.get("selectedTab");
+					JSONObject jsonObj = null;
+					if (ed.getExtendedOptions() != null) {
+						jsonObj = new JSONObject(ed.getExtendedOptions());
+						selected = jsonObj.get("selectedTab");
+						LOGGER.info(
+								"Retrieved selected tab from dashboard table for dashboard {} is {}",
+								dashboardId, selected);
+					}
+					// get selectedTab from user options
+					String extOptions = euo == null ? null : euo.getExtendedOptions();
+					LOGGER.info(
+							"Dashboard ID={} is a dashboard set, its extendedOptions from user option is {}, user is {}",
+							dashboardId, extOptions, userName);
+					if (extOptions != null) {
+						jsonObj = new JSONObject(extOptions);
+						selected = jsonObj.get("selectedTab");
+						LOGGER.info(
+								"Retrieved selected tab from user option table for dashboard {} and user {} is {}",
+								dashboardId, userName, selected);
+					}
 				} catch (JSONException e) {
-					// failed to parse extended options json, so failed to retrieve selected tab.
-					// This is unexpected, but if it happens, likes just go ahead w/o selected tab then...
+					// failed to parse extended options json, so failed to
+					// retrieve selected tab.
+					// This is unexpected, but if it happens, likes just go
+					// ahead w/o selected tab then...
 					LOGGER.error(e.getLocalizedMessage(), e);
 				}
+				Long selectedId = null;
+
 				if (selected != null) {
 					try {
-						Long selectedId = Long.valueOf(selected.toString());
-						ed = this.getEmsDashboardById(dsf,selectedId, tenantId);
-						euo = dsf.getEmsUserOptions(userName,selectedId);
-						ep = null;
-						edbdtList = ed.getDashboardTileList();
+						selectedId = Long.valueOf(selected.toString());
 					} catch (NumberFormatException e) {
 						// might be a null 'selectedTab' value or invalid one
-						LOGGER.info("Failed to get selected dashboard ID: ID is invalid: {}", selected);
+						LOGGER.info(
+								"Failed to get selected dashboard ID: ID is invalid: {}",
+								selected);
+						edbdtList = null;
 					}
 				} else {
-				    // empty dashboard set
-				    return cdSet;
+					// use the 1st dashboard id
+					if (cdSet.getSubDashboards() != null && !cdSet.getSubDashboards().isEmpty()) {
+						selectedId = cdSet.getSubDashboards().get(0).getDashboardId();
+						LOGGER.info(
+								"Retrieved default (1st) tab for dashboard set {}, 1st dashboard id is {}",
+								dashboardId, selected);
+					}
+				}
+
+				if (selectedId != null) {
+					try {
+						ed = this.getEmsDashboardById(dsf, selectedId, tenantId);
+						euo = dsf.getEmsUserOptions(userName, selectedId);
+						ep = null;
+						edbdtList = ed.getDashboardTileList();
+					} catch (DashboardException e) {
+						LOGGER.error(e.getStackTrace());
+						return cdSet;
+					}
 				}
 			}
-			
+
 			// retrieve saved search list
 			List<String> ssfIdList = new ArrayList<String>();
 			if (edbdtList != null) {
@@ -411,16 +451,16 @@ public class DashboardManager
 				}
 			}
 			String savedSearchResponse = retrieveSavedSeasrch(ssfIdList);
-			
+
 			// combine single dashboard or selected dashbaord
 			CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo,savedSearchResponse);
-			
+
 			// return combined dashboard Set
 			if (cdSet != null) {
 				cdSet.setSelected(cd);
 				return cdSet;
 			}
-			
+
 			// return combined single dashboard
 			return cd;
 		} finally {
@@ -429,6 +469,7 @@ public class DashboardManager
 			}
 		}
 	}
+	
 
     private String retrieveSavedSeasrch(List<String> ssfIdList) {
         TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
@@ -480,6 +521,30 @@ public class DashboardManager
 		finally {
 			if (em != null) {
 				em.close();
+			}
+		}
+	}
+
+	public Dashboard getDashboardByNameAndDescriptionAndOwner(String name, String description, Long tenantId){
+		if(StringUtil.isEmpty(name)){
+			LOGGER.debug("Dashboard not found for name \"{}\" is invalid", name);
+			return null;
+		}
+		String currentUser = UserContext.getCurrentUser();
+		EntityManager entityManager = null;
+		try{
+			DashboardServiceFacade dashboardServiceFacade = new DashboardServiceFacade(tenantId);
+			entityManager = dashboardServiceFacade.getEntityManager();
+			EmsDashboard emsDashboard = dashboardServiceFacade.getEmsDashboardByNameAndDescriptionAndOwner(name, currentUser,description);
+			return Dashboard.valueOf(emsDashboard);
+		}catch (NoResultException e) {
+			LOGGER.debug("Dashboard not found for name \"{}\" because NoResultException is caught", name);
+			LOGGER.info("context", e);
+			return null;
+		}
+		finally {
+			if (entityManager != null) {
+				entityManager.close();
 			}
 		}
 	}
@@ -995,9 +1060,9 @@ public class DashboardManager
 				throw new CommonFunctionalException(
 						MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_NAME_ERROR));
 			}
-
-			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
-                        if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
+			LOGGER.debug("Get the dashboard with name: {}, desc: {}", dbd.getName(), dbd.getDescription());
+			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
+			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
 				throw new DashboardSameNameException();
 			}
 			// init creation date, owner to prevent null insertion
@@ -1097,7 +1162,7 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
-                        Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
+			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
 			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
 				throw new DashboardSameNameException();
 			}

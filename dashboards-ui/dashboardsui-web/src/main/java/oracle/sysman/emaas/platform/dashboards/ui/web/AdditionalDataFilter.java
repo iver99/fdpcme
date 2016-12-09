@@ -74,6 +74,7 @@ public class AdditionalDataFilter implements Filter {
 
     }
 
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
         LOGGER.debug("Now enter the AdditionalDataFilter");
@@ -131,6 +132,13 @@ public class AdditionalDataFilter implements Filter {
         return null;
     }
 
+    String formatJsonString(String json) {
+        if (StringUtil.isEmpty(json)) {
+            return json;
+        }
+        return json.replace("\\", "\\\\").replace("\"", "\\\"");
+    }
+
     private String getDashboardData(String tenant, String user, long dashboardId, String referer, String sessionExp) {
         if (StringUtil.isEmpty(tenant) || StringUtil.isEmpty(user)) {
             LOGGER.warn("tenant {}/user {} is null or empty or invalid, so do not update dashboard page then", tenant, user);
@@ -142,7 +150,7 @@ public class AdditionalDataFilter implements Filter {
             if (StringUtil.isEmpty(dashboardString)) {
                 LOGGER.warn("Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then", tenant, user, dashboardId);
             } else {
-                dashboardString = dashboardString.replace("\"", "\\\"");
+                dashboardString = formatJsonString(dashboardString);
                 LOGGER.info("Escaping retrieved data before inserting to html. Vlaue now is: {}", dashboardString);
                 sb.append("window._dashboardServerCache=").append(dashboardString).append(";");
             }

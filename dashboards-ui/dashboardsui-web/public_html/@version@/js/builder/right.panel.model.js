@@ -178,13 +178,6 @@ define(['knockout',
                         self.rightPanelWidget.loadWidgets();
                     }
                     self.initDraggable();
-
-//                    $('.widget-search-input').autocomplete({
-//                        source: self.rightPanelWidget.autoSearchWidgets,
-//                        delay: 700,
-//                        minLength: 0
-//                    });
-
                     self.rightPanelWidget.tilesViewModel(self.tilesViewModel);
                     ResizableView(self.$b);
             };
