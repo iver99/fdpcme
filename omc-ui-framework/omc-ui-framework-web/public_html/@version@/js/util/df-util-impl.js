@@ -927,8 +927,10 @@ define(['knockout',
             }
 
             self.getRegistrations = function (successCallback, toSendAsync, errorCallback) {
-                if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.registrations && window._uifwk.cachedData.registrations()) {
-                    successCallback(window._uifwk.cachedData.registrations());
+                if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.registrations && 
+                        ($.isFunction(window._uifwk.cachedData.registrations) ? window._uifwk.cachedData.registrations() : true)) {
+                    successCallback($.isFunction(window._uifwk.cachedData.registrations) ? window._uifwk.cachedData.registrations() : 
+                            window._uifwk.cachedData.registrations);
                 } else {
                     if (!window._uifwk) {
                         window._uifwk = {};

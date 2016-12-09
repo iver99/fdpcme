@@ -314,6 +314,18 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.sessionTimeoutBtnOK = nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK;
             self.sessionTimeoutWarnDialogId = 'sessionTimeoutWarnDialog';
             self.sessionTimeoutWarnIcon = warnMessageIcon;
+            
+            //Fetch and set sso logout url and session expiry time
+            dfu.getRegistrations(function(data){
+                //Setup timer to handle session timeout
+                if (!dfu.isDevMode()) {
+                    dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, self.sessionTimeoutWarnDialogId);
+                }
+
+                if (data.ssoLogoutUrl) {
+                    window.cachedSSOLogoutUrl = data.ssoLogoutUrl;
+                }
+            }, true, null);
 
             self.clearMessage = function (data, event) {
                 removeMessage(data);
