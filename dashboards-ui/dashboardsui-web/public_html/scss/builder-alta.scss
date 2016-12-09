@@ -327,32 +327,43 @@ body, html {
   content: "\f0c5";
 }
 
-.dbd-toolbar-icon-delete:before {
-  content: url(../images/func_trashcan_16_ena.png);
+.demo-icon-font img{
+    height: 16px;
+    width: 16px;
 }
 
-.dbd-toolbar-icon-add-widget-disabled:before {
-  content: url(../images/func_plus_16_dis.png);
+.dbd-toolbar-icon-delete:before {//func_trashcan_16_ena
+    content:" ";
+    background:url(../images/dfSprite.png) no-repeat 0px -416px;height:16px;padding-left:18px;
 }
 
-.dbd-toolbar-icon-edit-disabled:before {
-  content: url(../images/func_edit_16_dis.png);
+.dbd-toolbar-icon-add-widget-disabled:before {//func_plus_16_dis
+    content:" ";
+    background:url(../images/dfSprite.png) no-repeat 0px -144px;height:16px;padding-left:18px;
 }
 
-.dbd-toolbar-icon-delete-disabled:before {
-  content: url(../images/func_trashcan_16_dis.png);
+.dbd-toolbar-icon-edit-disabled:before {//func_edit_16_dis
+    content:" ";
+    background:url(../images/dfSprite.png) no-repeat 0px -512px;height:16px;padding-left:18px;
 }
-.dbd-toolbar-icon-home:before {
-   content: url(../images/func_home_16_ena.png);
+
+.dbd-toolbar-icon-delete-disabled:before {//func_trashcan_16_dis
+    content:" ";
+    background:url(../images/dfSprite.png) no-repeat 0px -240px;height:16px;padding-left:18px;
+}
+.dbd-toolbar-icon-home:before {//func_home_16_ena
+    content:" ";
+    background:url(../images/dfSprite.png) no-repeat 0px -896px;height:16px;padding-left:18px;
 }
  
- .dbd-toolbar-icon-home-outline:before {
-   content: url(../images/remove_home_16.png);
+ .dbd-toolbar-icon-home-outline:before {//remove_home_16
+    content:" ";
+    background:url(../images/dfSprite.png) no-repeat 0px -160px;height:16px;padding-left:18px;
 }
  
- .dbd-toolbar-icon-favorites:before {
-   content: url(../images/func_star_16_ena.png);
- }
+ .dbd-toolbar-icon-favorites:before {//func_star_16_ena
+    content:" ";
+    background:url(../images/dfSprite.png) no-repeat 0px -192px;height:16px;padding-left:18px; }
 
 .dbd-toolbar-icon-share:before, .fa-users:before {
   content: "\f0c0";
@@ -980,16 +991,18 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
       width: 100%;
       height: 43px;
 
-      .left-panel-dbd-clear-icon:before {
+      .left-panel-dbd-clear-icon:before {//clearEntry_ena
         height:16px;
         width:16px;
-        content:url("../images/clearEntry_ena.png");
+        content:" ";
+        background:url(../images/dfSprite.png) no-repeat 0px -656px;height:16px;padding-left:18px;
       }
 
-      .left-panel-dbd-search-icon:before {
+      .left-panel-dbd-search-icon:before {//func_search_16_ena
         height:16px;
         width:16px;
-        content:url("../images/func_search_16_ena.png");
+        content:" ";
+        background:url(../images/dfSprite.png) no-repeat 0px -208px;height:16px;padding-left:18px;
       }
 
       .dbd-left-panel-header-search {
@@ -1210,16 +1223,6 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     border-color: #e0e6eb;
     color: #9e9e9e;
     cursor: default;
-}
-
-.oj-component-icon.oj-inputnumber-up-icon:before {
-    -webkit-transform: scale(-1, 1) rotate(90deg);
-    transform: scale(-1, 1) rotate(90deg);
-}
-
-.oj-component-icon.oj-inputnumber-down-icon:before {
-    -webkit-transform: rotate(-90deg);
-    transform: rotate(-90deg);
 }
 
 .dbd-left-panel-footer-btns {

@@ -59,8 +59,14 @@ artifactoryPublish {
 dependencies {
 	testConfig getProjectArtifact('jmockit')   
 	testConfig getProjectArtifact('log4j-core')   
- 	testConfig getProjectArtifact('log4j-api')   	
-	testCompile configurations.testConfig
-    testCompile configurations.webdriver
-    testCompile configurations.testNG
+	testConfig getProjectArtifact('log4j-api')   
+}
+
+//avoid building error in Eclipse
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testNG
+        plusConfigurations += configurations.webdriver
+        plusConfigurations += configurations.testConfig
+    }
 }
