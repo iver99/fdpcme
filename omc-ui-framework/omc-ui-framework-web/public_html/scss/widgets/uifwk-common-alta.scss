@@ -394,7 +394,7 @@ a:hover {
     height: 36px;
     padding-left: 10px;
     padding-right: 10px;
-    display: flex;
+    display: flex !important;
     flex-direction: row;
     align-items: stretch;
 }

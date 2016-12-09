@@ -214,7 +214,10 @@ define([
              * @returns {Number} OMC global context of start time
              */
             self.getStartTime = function () {
-                return parseInt(getIndividualContext('time', 'startTime'));
+                if(getIndividualContext('time', 'startTime')) {
+                    return parseInt(getIndividualContext('time', 'startTime'));
+                }
+                return null;
             };
 
             /**
@@ -234,7 +237,10 @@ define([
              * @returns {Number} OMC global context of end time
              */
             self.getEndTime = function () {
-                return parseInt(getIndividualContext('time', 'endTime'));
+                if(getIndividualContext('time', 'endTime')) {
+                    return parseInt(getIndividualContext('time', 'endTime'));
+                }
+                return null;
             };
 
             /**
@@ -260,6 +266,37 @@ define([
                 setIndividualContext('time', 'timePeriod', 'CUSTOM', false, false);
                 setIndividualContext('time', 'startTime', parseInt(start), false, false);
                 setIndividualContext('time', 'endTime', parseInt(end), true, true);
+            };
+            
+            /**
+             * Evaluate start and end time.
+             * If both start and end are avail in global context, return them directly.
+             * If one of start and end time is not avail in global context and non-custom time period is in global context, evaluate them from time period and return.
+             * If no time context in global context, return null.
+             * 
+             * @returns {start: <start timestamp in Number>, end: <end timestamp in Number>} or null
+             */
+            self.evaluateStartEndTime = function() {
+                var start = self.getStartTime();
+                var end = self.getEndTime();
+                var timePeriod = self.getTimePeriod();
+                if(start && end) {
+                    return {
+                        start: start,
+                        end: end
+                    }
+                }else if(timePeriod) {
+                    var timeRange = self.getStartEndTimeFromTimePeriod(timePeriod);
+                    if(timeRange) {
+                        return {
+                            start: timeRange.start.getTime(),
+                            end: timeRange.end.getTime()
+                        }
+                    }
+                    return timeRange
+                }else {
+                    return null;
+                }
             };
 
             /**
