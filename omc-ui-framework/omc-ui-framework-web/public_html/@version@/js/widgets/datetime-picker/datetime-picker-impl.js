@@ -1954,7 +1954,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 if ($(self.panelId).ojPopup('isOpen')) {
                                     self.closeAllPopups();
                                 }
-                            });
+                            },false);
                         }
                     }
                 };
