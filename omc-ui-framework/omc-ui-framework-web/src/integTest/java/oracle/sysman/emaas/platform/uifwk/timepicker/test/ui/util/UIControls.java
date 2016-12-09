@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.uifwk.timepicker.test.ui;
+package oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util;
 
 /**
  * @author shangwan
@@ -28,7 +28,8 @@ public class UIControls
 	public static final String SFILTERINFO = "//*[@id='filterInfo']";
 	public static final String SFILTERINFO_COMPACT = "//*[@id='filterInfoInCompact']";
 
-	private UIControls()
-	{
-	}
+	public static final String TIMERANGEBTN_CSS = ".oj-select-choice[id^='dropDown']";
+	public static final String RECENTUSE_CSS = "a[data-bind*=timePeriodRecent]";
+	public static final String RECENTUSECONTEXT_CSS = "[id^=\"recentPanel_\"] .oj-popup-content";
+
 }
