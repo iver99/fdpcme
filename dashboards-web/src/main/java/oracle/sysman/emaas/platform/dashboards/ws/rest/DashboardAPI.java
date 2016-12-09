@@ -33,6 +33,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -308,6 +310,10 @@ public class DashboardAPI extends APIBase
 
 			}).cacheControl(cc).build();
 		}
+		catch(DashboardNotFoundException e){
+			LOGGER.warn("Specific dashboard not found for id {}",dashboardId);
+			return Response.status(Status.NOT_FOUND).build();
+		}
 		catch(DatabaseDependencyUnavailableException e){
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return Response.status(Status.NOT_FOUND).build();
@@ -339,6 +345,14 @@ public class DashboardAPI extends APIBase
 			initializeUserContext(tenantIdParam, userTenant);
 			UserOptions options = userOptionsManager.getOptionsById(dashboardId, tenantId);
 			return Response.ok(getJsonUtil().toJson(options)).build();
+		}
+		catch (UserOptionsNotFoundException e){
+			LOGGER.warn("Specific User Option is not found for dashboard id {}", dashboardId);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (DashboardNotFoundException e){
+			LOGGER.warn("Specific dashboard is not found for dashboard id {}", dashboardId);
+			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
@@ -374,6 +388,11 @@ public class DashboardAPI extends APIBase
 			Dashboard dbd = dm.getCombinedDashboardById(dashboardId, tenantId, userName);
 			updateDashboardAllHref(dbd, tenantIdParam);
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
+		}
+		catch(DashboardNotFoundException e){
+			//suppress error information in log file
+			LOGGER.warn("Specific dashboard not found for id {}", dashboardId);
+			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
@@ -700,7 +719,12 @@ public class DashboardAPI extends APIBase
 			initializeUserContext(tenantIdParam, userTenant);
 			Dashboard dbd = dm.getDashboardSetsBySubId(dashboardId, tenantId);
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
-		} catch (DashboardException e) {
+		}
+		catch(DashboardNotFoundException e){
+			LOGGER.warn("Specific dashboard not found for id {}",dashboardId);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		} catch (BasicServiceMalfunctionException e) {

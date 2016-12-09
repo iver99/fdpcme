@@ -766,12 +766,14 @@ body, html {
     }
     
     .dbd-resize-handler-right-bottom {
-        cursor:se-resize;
         right:1px;
         bottom:0px;
         > span {
             color:#878c90;
         }
+    }
+    .cursor-resize-right-bottom{
+        cursor:se-resize;
     }
 }
 

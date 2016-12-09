@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response.Status;
 
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardErrorConstants;
+import oracle.sysman.emaas.platform.dashboards.core.exception.CacheException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 
@@ -63,6 +64,13 @@ public class ErrorEntity
 	}
 
 	public ErrorEntity(DashboardException de)
+	{
+		if (de != null) {
+			errorCode = de.getErrorCode();
+			errorMessage = de.getMessage();
+		}
+	}
+	public ErrorEntity(CacheException de)
 	{
 		if (de != null) {
 			errorCode = de.getErrorCode();

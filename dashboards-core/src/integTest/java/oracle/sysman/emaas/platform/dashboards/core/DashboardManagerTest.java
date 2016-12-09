@@ -6,6 +6,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
+import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
+import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
+import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
+import oracle.sysman.emaas.platform.dashboards.core.model.TileParam;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
@@ -13,33 +26,11 @@ import org.testng.AssertJUnit;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
-import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
-import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
-import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashboard;
-import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
-import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
-import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
-import oracle.sysman.emaas.platform.dashboards.core.model.TileParam;
-import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
-
 /**
  * @author guobaochen
  */
-public class DashboardManagerTest
+public class DashboardManagerTest extends BaseTest
 {
-	static {
-		PersistenceManager.setTestEnv(true);
-		UserContext.setCurrentUser("SYSMAN");
-		TenantSubscriptionUtil.setTestEnv();
-	}
-
 	private static final Logger LOGGER = LogManager.getLogger(DashboardManagerTest.class);
 
 	@BeforeMethod

@@ -29,7 +29,6 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.model.TileParam;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.MockDashboardServiceFacade;
-import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
@@ -43,14 +42,8 @@ import org.testng.annotations.Test;
 /**
  * @author guobaochen
  */
-public class DashboardManagerTest_S2
+public class DashboardManagerTest_S2 extends BaseTest
 {
-	static {
-		PersistenceManager.setTestEnv(true);
-		UserContext.setCurrentUser("SYSMAN");
-		TenantSubscriptionUtil.setTestEnv();
-	}
-
 	private static final Logger LOGGER = LogManager.getLogger(DashboardManagerTest_S2.class);
 
 	//@BeforeMethod
