@@ -795,6 +795,23 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJ
     }  
 }
 
+test {
+        classpath = sourceSets.test.compileClasspath + sourceSets.test.output
+        useTestNG()
+        {
+                //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
+                //if you wish to run ALL tests within this projet - remove following.
+                includeGroups 's1' ,'s2'
+        }
+}
+
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testNG
+        plusConfigurations += configurations.webdriver //avoid building error in Eclipse
+    }
+}
+
 if(project.hasProperty("devMode")){
 	war.dependsOn copyDevJs
 }
