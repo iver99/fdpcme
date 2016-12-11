@@ -121,7 +121,7 @@
             </div>
             </span>
             <!-- ko if: showEntityContextSelector() -->
-            <div id="emcta-ctxtSel" class="animated_transitions" style="flex: auto; background-color: white; display: inline-flex; border: 1px solid #d6dfe6;" data-bind="component:{name:'emcta-context-selector',
+            <div id="emcta-ctxtSel" class="animated_transitions" style="flex: auto" data-bind="component:{name:'emcta-context-selector',
                 params:{id: 'emcta-ctxtSel', entityContextParams: entityContextParams}}">
             </div>
             <!-- /ko -->
@@ -152,8 +152,7 @@
             </div>
             <!-- /ko -->
             <!-- ko if: showTimeSelector() === true -->
-                <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="component: {name: 'df-datetime-picker', params: timeSelectorParams}"
-                     style="padding-top: 3px">
+                <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="component: {name: 'df-datetime-picker', params: timeSelectorParams}" style="padding-top: 3px">
                 </div>
             <!-- /ko -->
         </div>
