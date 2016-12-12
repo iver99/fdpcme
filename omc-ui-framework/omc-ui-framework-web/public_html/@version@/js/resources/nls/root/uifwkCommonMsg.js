@@ -94,6 +94,9 @@ define({
       "BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL":"Retrying to connect to your cloud service now...",
       "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY":"Oracle Management Cloud is unreachable.",
       "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL":"Try again later.",
+      "BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING":"Session timeout. Redirecting to SSO login page now...",
+      "BRANDING_BAR_MESSAGE_PLANNED_DOWNTIME_SUMMARY": "Oracle Management Cloud is under maintenance.",
+      "BRANDING_BAR_MESSAGE_PLANNED_DOWNTIME_DETAIL": "Create and edit operations are unavailable.",
        //datetime picker
       "DATETIME_PICKER_DROP_DOWN": "Drop Down",
       "DATATIME_PICKER_TF_INDICATOR_LABEL": "Time filter indicator",

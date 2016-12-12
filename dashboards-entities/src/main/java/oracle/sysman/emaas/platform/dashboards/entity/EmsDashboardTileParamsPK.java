@@ -7,13 +7,13 @@ public class EmsDashboardTileParamsPK implements Serializable
 	private static final long serialVersionUID = 7310567904803274617L;
 
 	private String paramName;
-	private Long dashboardTile;
+	private String dashboardTile;
 
 	public EmsDashboardTileParamsPK()
 	{
 	}
 
-	public EmsDashboardTileParamsPK(String paramName, Long emsDashboardTile)
+	public EmsDashboardTileParamsPK(String paramName, String emsDashboardTile)
 	{
 		this.paramName = paramName;
 		dashboardTile = emsDashboardTile;
@@ -31,7 +31,7 @@ public class EmsDashboardTileParamsPK implements Serializable
 		return false;
 	}
 
-	public Long getDashboardTile()
+	public String getDashboardTile()
 	{
 		return dashboardTile;
 	}
@@ -47,7 +47,7 @@ public class EmsDashboardTileParamsPK implements Serializable
 		return super.hashCode();
 	}
 
-	public void setDashboardTile(Long emsDashboardTile)
+	public void setDashboardTile(String emsDashboardTile)
 	{
 		dashboardTile = emsDashboardTile;
 	}
