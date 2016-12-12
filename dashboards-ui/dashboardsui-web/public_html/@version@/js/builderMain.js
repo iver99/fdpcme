@@ -305,6 +305,12 @@ require(['knockout',
         var dsbId = dfu.getUrlParam("dashboardId");
         console.warn("TODO: validate valid dashboard id format");
 
+        ko.bindingHandlers.stopDataBinding = {
+            init: function(elem, valueAccessor) {
+                    var value = ko.unwrap(valueAccessor());
+                    return {controlsDescendantBindings: value};
+            }
+        };
 
         Builder.initializeFromCookie();
 
