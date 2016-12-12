@@ -442,6 +442,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		else if(convertDate.startsWith("Last"))
 		{
 			int timeRangeIndex = convertDate.indexOf(":");
+			timeRange = convertDate.substring(0, timeRangeIndex);
 			tmpDate = convertDate.substring(timeRangeIndex + 1);
 		}
 		else {

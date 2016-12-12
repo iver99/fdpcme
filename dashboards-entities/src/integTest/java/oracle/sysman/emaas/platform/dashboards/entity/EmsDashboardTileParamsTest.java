@@ -1,17 +1,20 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
-import org.testng.annotations.Test;
-
+import java.math.BigInteger;
 import java.util.Date;
 
-import static org.testng.Assert.assertEquals;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
+/**
+ * Created by Troy on 2016/1/20.
+ */
 @Test(groups = {"s1"})
 public class EmsDashboardTileParamsTest { 
     Date now = new Date();
-    private EmsDashboard emsDashboard = new EmsDashboard(now,10L,10L,"elephant",10,10,10,10,10,10, now,
-            "elephant","elephant","elephant","elephant",10,10,1, "{}");
+    private EmsDashboard emsDashboard = new EmsDashboard(now,BigInteger.valueOf(10L),BigInteger.valueOf(10L),"elephant",10,10,10,10,10,10, now,
+            "elephant","elephant","elephant","elephant",10,10,1,"{}");
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
             now,
             emsDashboard,
@@ -26,7 +29,7 @@ public class EmsDashboardTileParamsTest {
             "elephant",
             "elephant",
             "dolphine",
-            10L,
+            "10",
             "dolphine",
             "dolphine",
             "dolphine",
@@ -42,9 +45,9 @@ public class EmsDashboardTileParamsTest {
             "lion",
             10,
             10,
-            10L,
+            BigInteger.valueOf(10L),
             0,
-		new Date());
+            new Date());
     private EmsDashboardTileParams emsDashboardTileParams = new
             EmsDashboardTileParams(
             10,
@@ -57,46 +60,44 @@ public class EmsDashboardTileParamsTest {
     @Test
     public void testGetDashboardTile() {
         emsDashboardTileParams.setDashboardTile(emsDashboardTile);
-        assertEquals(emsDashboardTileParams.getDashboardTile(),emsDashboardTile);
+        Assert.assertEquals(emsDashboardTileParams.getDashboardTile(),emsDashboardTile);
     }
 
     @Test
     public void testGetIsSystem() {
         emsDashboardTileParams.setIsSystem(10);
-        assertEquals(emsDashboardTileParams.getIsSystem(),new Integer(10));
+        Assert.assertEquals(emsDashboardTileParams.getIsSystem(),new Integer(10));
     }
 
     @Test
     public void testGetParamName() {
         emsDashboardTileParams.setParamName("elephant");
-        assertEquals(emsDashboardTileParams.getParamName(),"elephant");
+        Assert.assertEquals(emsDashboardTileParams.getParamName(),"elephant");
     }
 
     @Test
     public void testGetParamType() {
         emsDashboardTileParams.setParamType(10);
-        assertEquals(emsDashboardTileParams.getParamType(),new Integer(10));
+        Assert.assertEquals(emsDashboardTileParams.getParamType(),new Integer(10));
     }
 
     @Test
     public void testGetParamValueNum() {
         emsDashboardTileParams.setParamValueNum(10);
-        assertEquals(emsDashboardTileParams.getParamValueNum(),new Integer(10));
+        Assert.assertEquals(emsDashboardTileParams.getParamValueNum(),new Integer(10));
 
     }
 
     @Test
     public void testGetParamValueStr() {
         emsDashboardTileParams.setParamValueStr("elephant");
-        assertEquals(emsDashboardTileParams.getParamValueStr(),"elephant");
+        Assert.assertEquals(emsDashboardTileParams.getParamValueStr(),"elephant");
     }
 
     @Test
     public void testGetParamValueTimestamp() {
         emsDashboardTileParams = new EmsDashboardTileParams();
         emsDashboardTileParams.setParamValueTimestamp(now);
-        assertEquals(emsDashboardTileParams.getParamValueTimestamp(), now);
+        Assert.assertEquals(emsDashboardTileParams.getParamValueTimestamp(), now);
     }
-
-   
 }
