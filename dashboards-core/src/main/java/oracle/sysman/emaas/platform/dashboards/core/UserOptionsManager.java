@@ -43,7 +43,7 @@ public class UserOptionsManager {
         super();
     }
 
-    public UserOptions getOptionsById(BigInteger dashboardId, Long tenantId) throws DashboardException {
+    public UserOptions getOptionsById(BigInteger dashboardId, Long tenantId) throws DashboardNotFoundException,UserOptionsNotFoundException {
         EntityManager em = null;
         try {
             String currentUser = UserContext.getCurrentUser();

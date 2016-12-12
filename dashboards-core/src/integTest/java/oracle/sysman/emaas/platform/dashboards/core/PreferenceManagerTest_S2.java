@@ -15,7 +15,6 @@ import java.util.List;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Preference;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.MockDashboardServiceFacade;
-import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 
 import org.testng.Assert;
@@ -24,17 +23,13 @@ import org.testng.annotations.Test;
 /**
  * @author wenjzhu
  */
-public class PreferenceManagerTest_S2
+public class PreferenceManagerTest_S2 extends BaseTest
 {
 	private static final long TENANT_ID = 0L;
 	private static final long TENANT_ID_1 = 1L;
 	private static final String TEST_USER = "PREF_TEST";
 
 	private static PreferenceManager pm;
-
-	static {
-		PersistenceManager.setTestEnv(true);
-	}
 
 	//@AfterMethod
 	public void afterMethod()

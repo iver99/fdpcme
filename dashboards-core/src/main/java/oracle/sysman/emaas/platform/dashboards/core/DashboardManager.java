@@ -288,7 +288,7 @@ public class DashboardManager
 		deleteDashboard(dashboardId, false, tenantId);
 	}
 
-	public ScreenshotData getDashboardBase64ScreenShotById(BigInteger dashboardId, Long tenantId) throws DashboardException
+	public ScreenshotData getDashboardBase64ScreenShotById(BigInteger dashboardId, Long tenantId) throws DashboardNotFoundException,TenantWithoutSubscriptionException
 	{
 		EntityManager em = null;
 		try {
@@ -333,8 +333,8 @@ public class DashboardManager
 		}
 	}
 	
-	public EmsDashboard getEmsDashboardById(DashboardServiceFacade dsf, BigInteger dashboardId, Long tenantId) throws DashboardException {
-		if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
+	public EmsDashboard getEmsDashboardById(DashboardServiceFacade dsf, BigInteger dashboardId, Long tenantId) throws DashboardNotFoundException,TenantWithoutSubscriptionException {
+        if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
 			LOGGER.debug("Dashboard not found for id {} is invalid", dashboardId);
 			throw new DashboardNotFoundException();
 		}
@@ -372,7 +372,7 @@ public class DashboardManager
 	 * @return
 	 * @throws DashboardException
 	 */
-	public Dashboard getDashboardById(BigInteger dashboardId, Long tenantId) throws DashboardException
+	public Dashboard getDashboardById(BigInteger dashboardId, Long tenantId) throws DashboardNotFoundException,TenantWithoutSubscriptionException
 	{
 		EntityManager em = null;
 		try {
@@ -397,7 +397,7 @@ public class DashboardManager
 	 * @throws DashboardException
 	 * @throws JSONException 
 	 */
-	public CombinedDashboard getCombinedDashboardById(BigInteger dashboardId, Long tenantId, String userName) throws DashboardException
+	public CombinedDashboard getCombinedDashboardById(BigInteger dashboardId, Long tenantId, String userName) throws DashboardNotFoundException,TenantWithoutSubscriptionException
 	{
    EntityManager em = null;
    try {
@@ -532,7 +532,7 @@ public class DashboardManager
 		}
 	}
 
-	public Dashboard getDashboardSetsBySubId(BigInteger dashboardId, Long tenantId) throws DashboardException
+	public Dashboard getDashboardSetsBySubId(BigInteger dashboardId, Long tenantId) throws DashboardNotFoundException,TenantWithoutSubscriptionException
 	{
 		EntityManager em = null;
 		try {
@@ -673,7 +673,7 @@ public class DashboardManager
 	 * @return
 	 * @throws DashboardException
 	 */
-	public boolean isDashboardFavorite(BigInteger dashboardId, Long tenantId) throws DashboardException
+	public boolean isDashboardFavorite(BigInteger dashboardId, Long tenantId) throws DashboardNotFoundException
 	{
 		if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
 			throw new DashboardNotFoundException();

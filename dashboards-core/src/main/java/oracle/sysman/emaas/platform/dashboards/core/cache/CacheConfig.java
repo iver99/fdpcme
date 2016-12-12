@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
  * Created by chehao on 2016/10/26.
  */
 public class CacheConfig {
+    //if you want to run local test, please comment this line of below code.
     static ResourceBundle conf = ResourceBundle.getBundle("cache_config");
     //all cache group's expiration time
     public static final Integer ADMIN_LINK_CACHE_EXPIRE_TIME = Integer.valueOf(conf.getString("ADMIN_LINK_CACHE_EXPIRE_TIME"));
@@ -45,4 +46,45 @@ public class CacheConfig {
     
   //log cache status time interval
     public static final Long LOG_INTERVAL = Long.valueOf(conf.getString("LOG_INTERVAL"));
+
+    /**
+     * below code are used when you want to run local test,and before you use , please comment above code.
+     */
+    /*public static final Integer ADMIN_LINK_CACHE_EXPIRE_TIME = 20;
+    public static final Integer CLOUD_SERVICE_LINK_EXPIRE_TIME =20;
+    public static final Integer HOME_LINK_EXPIRE_TIME = 20;
+    public static final Integer VISUAL_ANALYZER_LINK_EXPIRE_TIME = 20;
+    public static final Integer SERVICE_EXTERNAL_LINK_EXPIRE_TIME = 20;
+    public static final Integer SERVICE_INTERNAL_LINK_EXPIRE_TIME = 20;
+    public static final Integer VANITY_BASE_URL_EXPIRE_TIME = 20;
+    public static final Integer DOMAINS_DATA_EXPIRE_TIME = 20;
+    public static final Integer TENANT_APP_MAPPING_EXPIRE_TIME = 20;
+    public static final Integer TENANT_SUBSCRIBED_SERVICES_EXPIRE_TIME = 20;
+    public static final Integer SCREENSHOT_EXPIRE_TIME = 20;
+    public static final Integer SSO_LOGOUT_EXPIRE_TIME = 20;
+    public static final Integer ASSET_ROOT_EXPIRE_TIME = 20;
+
+    public static final Integer ETERNAL_EXPIRE_TIME = 20;
+    public static final Integer DEFAULT_EXPIRE_TIME = 20;
+
+    //all cache group's cache capacity
+    public static final Integer ADMIN_LINK_CACHE_CAPACITY = 20;
+    public static final Integer CLOUD_SERVICE_LINK_CAPACITY = 20;
+    public static final Integer HOME_LINK_EXPIRE_CAPACITY = 20;
+    public static final Integer VISUAL_ANALYZER_LINK_CAPACITY = 20;
+    public static final Integer SERVICE_EXTERNAL_LINK_CAPACITY = 20;
+    public static final Integer SERVICE_INTERNAL_LINK_CAPACITY = 20;
+    public static final Integer VANITY_BASE_URL_CAPACITY = 20;
+    public static final Integer DOMAINS_DATA_CAPACITY = 20;
+    public static final Integer TENANT_APP_MAPPING_CAPACITY = 20;
+    public static final Integer TENANT_SUBSCRIBED_SERVICES_CAPACITY = 20;
+    public static final Integer SCREENSHOT_CAPACITY = 20;
+    public static final Integer SSO_LOGOUT_CAPACITY = 20;
+    public static final Integer ASSET_ROOT_CAPACITY = 20;
+
+    public static final Integer ETERNAL_CAPACITY = 20;
+    public static final Integer DEFAULT_CAPACITY = 20;
+
+    //log cache status time interval
+    public static final Long LOG_INTERVAL = 20L;*/
 }

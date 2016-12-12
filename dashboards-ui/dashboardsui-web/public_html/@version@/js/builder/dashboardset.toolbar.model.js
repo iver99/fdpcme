@@ -68,7 +68,7 @@ define(['knockout',
             var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
             if("SET" === dashboardInst.type()){
             	new Builder.DashboardDataSource().getHomeDashboardPreference(ko.unwrap(dashboardInst.id), function(resp) {
-                    if (resp && Number(resp.value) === ko.unwrap(dashboardInst.id) && resp.key === prefKeyHomeDashboardId) {
+                    if (resp && resp.value === ko.unwrap(dashboardInst.id) && resp.key === prefKeyHomeDashboardId) {
                         self.dashboardsetConfig.setHome = ko.observable(false);
                     }
             	});
@@ -300,8 +300,8 @@ define(['knockout',
 
             self.toolbarDuplcateInSet = function (duplicateData) {
                 self.pickDashboard('addDuplicate', {
-                    id: ko.observable(duplicateData.id),
-                    name: ko.observable(duplicateData.name)
+                    id: ko.observable(ko.unwrap(duplicateData.id())),
+                    name: ko.observable(ko.unwrap(duplicateData.name()))
                 });
                 $('#duplicateDsbDialog').ojDialog('close');
             };

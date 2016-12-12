@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import oracle.sysman.emaas.platform.dashboards.core.BaseTest;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.IdGenerator;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
@@ -26,7 +27,7 @@ import org.testng.annotations.Test;
 /**
  * @author wenjzhu
  */
-public class DashboardServiceFacadeTest
+public class DashboardServiceFacadeTest extends BaseTest
 {
 
 	private static void assertEmsDashboard(EmsDashboard emsdashboard)
@@ -194,21 +195,6 @@ public class DashboardServiceFacadeTest
 
 	private EmsDashboardTileParams emDashboardTileParam;
 
-	//	/**
-	//	 * @throws java.lang.Exception
-	//	 */
-	//	@BeforeClass
-	//	public static void setUpBeforeClass() {
-	//		PersistenceManager.setTestEnv(true);
-	//	}
-	//
-	//	/**
-	//	 * @throws java.lang.Exception
-	//	 */
-	//	@AfterClass
-	//	public static void tearDownAfterClass() {
-	//	}
-
 	private static int testSeq = 1;
 	private static final long TENANT_ID = 100L;
 
@@ -218,8 +204,6 @@ public class DashboardServiceFacadeTest
 	@BeforeTest
 	public void setUp()
 	{
-		PersistenceManager.setTestEnv(true);
-		UserContext.setCurrentUser("SYSMAN");
 		// tenant id updated to number type
 		EntityManager em = null;
 		try {
