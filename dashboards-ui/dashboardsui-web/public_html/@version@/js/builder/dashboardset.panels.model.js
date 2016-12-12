@@ -64,8 +64,8 @@ define([
                     $(".dashboard-picker-container").removeClass("df-collaps");
                 }
                 
-                //show globalcontext banner for dashboards except Orchestration OOB dashboards
-                if(!(dashboardsetToolBarModel.dashboardExtendedOptions && dashboardsetToolBarModel.dashboardExtendedOptions.showGlobalContextBanner === false)) {                
+                //show globalcontext banner for dashboards except Orchestration OOB dashboards and dashboard set
+                if(!dashboardsetToolBarModel.isDashboardSet() && !(dashboardsetToolBarModel.dashboardExtendedOptions && dashboardsetToolBarModel.dashboardExtendedOptions.showGlobalContextBanner === false)) {                
                     var headerWrapper = $("#headerWrapper")[0];
                     if(headerWrapper) {
                         var headerViewModel = ko.dataFor(headerWrapper);
