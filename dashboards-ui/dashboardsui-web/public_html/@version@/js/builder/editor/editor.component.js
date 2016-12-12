@@ -358,17 +358,20 @@ define(['knockout',
                             }
                         }
 
-                    require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils){
-                        if(targets && targets()) {
-                             var compressedTargets = encodeURI(JSON.stringify(targets()));
-                            var targetUrlParam = "targets";
-                            if(TargetSelectorUtils.compress) {
-                                compressedTargets = TargetSelectorUtils.compress(targets());
-                                targetUrlParam = "targetsz";
+                    var tgtSelectorNeeded = dashboard.enableEntityFilter&&dashboard.enableEntityFilter()==="TRUE";
+                    Builder.requireTargetSelectorUtils(tgtSelectorNeeded, function(TargetSelectorUtils) {
+                        if (tgtSelectorNeeded) {
+                            if(targets && targets()) {
+                                 var compressedTargets = encodeURI(JSON.stringify(targets()));
+                                var targetUrlParam = "targets";
+                                if(TargetSelectorUtils.compress) {
+                                    compressedTargets = TargetSelectorUtils.compress(targets());
+                                    targetUrlParam = "targetsz";
+                                }
+                                widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
                             }
-                            widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
+                            window.location = cxtUtil.appendOMCContext(widgetUrl);
                         }
-                        window.location = cxtUtil.appendOMCContext(widgetUrl);
                     });
                     };
                 }

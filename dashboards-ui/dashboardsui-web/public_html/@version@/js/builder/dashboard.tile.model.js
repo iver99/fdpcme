@@ -953,18 +953,21 @@ define(['knockout',
             };
             
             self.initializedCallback = function() {
-                require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
-                    $.when(TargetSelectorUtils.getCriteriaFromOmcContext().done(function (inputCriteria) {
-                        if (inputCriteria) {
-                            var selectionContext = {criteria: inputCriteria};
-                            self.targets(selectionContext);
-                        }
-                        for(var i=0; i<self.dashboard.tiles().length; i++) {
-                            var tile = self.dashboard.tiles()[i]; 
-                            tile.dashboardItemChangeEvent.targets = self.targets();
-                        }
-                        TargetSelectorUtils.setTargetSelectionContext("tsel_" + self.dashboard.id(), self.targets());
-                    }));
+                var tgtSelectorNeeded = dashboardInst.enableEntityFilter&&dashboardInst.enableEntityFilter()==="TRUE";
+                Builder.requireTargetSelectorUtils(tgtSelectorNeeded, function(TargetSelectorUtils) {
+                    if (tgtSelectorNeeded) {
+                        $.when(TargetSelectorUtils.getCriteriaFromOmcContext().done(function (inputCriteria) {
+                            if (inputCriteria) {
+                                var selectionContext = {criteria: inputCriteria};
+                                self.targets(selectionContext);
+                            }
+                            for(var i=0; i<self.dashboard.tiles().length; i++) {
+                                var tile = self.dashboard.tiles()[i]; 
+                                tile.dashboardItemChangeEvent.targets = self.targets();
+                            }
+                            TargetSelectorUtils.setTargetSelectionContext("tsel_" + self.dashboard.id(), self.targets());
+                        }));
+                    }
                 });
             };
             
