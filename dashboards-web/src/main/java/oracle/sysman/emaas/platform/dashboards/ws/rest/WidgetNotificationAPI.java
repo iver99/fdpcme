@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
@@ -83,12 +84,12 @@ public class WidgetNotificationAPI extends APIBase
 		}
 	}
 
-	private int updateDashboardTilesName(Long tenantId, String widgetName, long widgetUniqueId)
+	private int updateDashboardTilesName(Long tenantId, String widgetName, BigInteger widgetUniqueId)
 	{
 		return DashboardManager.getInstance().updateDashboardTilesName(tenantId, widgetName, widgetUniqueId);
 	}
 
-	private int updateDashboardTilesWidgetDeleted(Long tenantId, long widgetUniqueId)
+	private int updateDashboardTilesWidgetDeleted(Long tenantId, BigInteger widgetUniqueId)
 	{
 		return DashboardManager.getInstance().updateWidgetDeleteForTilesByWidgetId(tenantId, widgetUniqueId);
 	}

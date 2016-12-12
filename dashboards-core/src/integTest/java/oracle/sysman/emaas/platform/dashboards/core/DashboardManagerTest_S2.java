@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -10,11 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import mockit.Expectations;
 import mockit.Mocked;
@@ -37,6 +33,11 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author guobaochen
@@ -101,110 +102,110 @@ public class DashboardManagerTest_S2 extends BaseTest
 		dm.updateLastAccessDate(null, 0L);
 
 		final EmsDashboard ed = new EmsDashboard();
-		ed.setDashboardId(1L);
-		ed.setDeleted(1L);
+		ed.setDashboardId(BigInteger.valueOf(1L));
+		ed.setDeleted(BigInteger.valueOf(1L));
 		new NonStrictExpectations() {
 			{
-				anyDashboardServiceFacade.getEmsDashboardById(anyLong);
+				anyDashboardServiceFacade.getEmsDashboardById(BigInteger.valueOf(anyLong));
 				result = ed;
 			}
 		};
 		dm = DashboardManager.getInstance();
 		try {
-			dm.addFavoriteDashboard(1L, 0L);
+			dm.addFavoriteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
 		}
 		try {
-			dm.deleteDashboard(1L, 0L);
+			dm.deleteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
 		}
 		try {
-			dm.getDashboardBase64ScreenShotById(1L, 0L);
+			dm.getDashboardBase64ScreenShotById(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
 		}
 		try {
-			dm.getDashboardById(1L, 0L);
+			dm.getDashboardById(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
 		}
 
-		dm.getLastAccessDate(1L, 0L);
+		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
 		try {
-			dm.isDashboardFavorite(1L, 0L);
+			dm.isDashboardFavorite(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
 		}
 		try {
-			dm.removeFavoriteDashboard(1L, 0L);
+			dm.removeFavoriteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
 		}
-		dm.setDashboardIncludeTimeControl(1L, true, 0L);
-		dm.updateLastAccessDate(1L, 0L);
+		dm.setDashboardIncludeTimeControl(BigInteger.valueOf(1L), true, 0L);
+		dm.updateLastAccessDate(BigInteger.valueOf(1L), 0L);
 
 		ed.setApplicationType(3); //LA dashboard
-		ed.setDeleted(0L);
+		ed.setDeleted(BigInteger.valueOf(0L));
 		ed.setSharePublic(0);
 		ed.setOwner("unknown");
 		ed.setIsSystem(0);
 		new NonStrictExpectations() {
 			{
-				anyDashboardServiceFacade.getEmsDashboardById(anyLong);
+				anyDashboardServiceFacade.getEmsDashboardById((BigInteger) any);
 				result = ed;
 			}
 		};
 		dm = DashboardManager.getInstance();
 		try {
-			dm.addFavoriteDashboard(1L, 0L);
+			dm.addFavoriteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
 		}
 		try {
-			dm.deleteDashboard(1L, 0L);
+			dm.deleteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
 		}
 		try {
-			dm.getDashboardBase64ScreenShotById(1L, 0L);
+			dm.getDashboardBase64ScreenShotById(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
 		}
 		try {
-			dm.getDashboardById(1L, 0L);
+			dm.getDashboardById(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
 		}
 
-		dm.getLastAccessDate(1L, 0L);
+		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
 		try {
-			dm.isDashboardFavorite(1L, 0L);
+			dm.isDashboardFavorite(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
 		}
 		try {
-			dm.removeFavoriteDashboard(1L, 0L);
+			dm.removeFavoriteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
 		}
-		dm.setDashboardIncludeTimeControl(1L, true, 0L);
-		dm.updateLastAccessDate(1L, 0L);
+		dm.setDashboardIncludeTimeControl(BigInteger.valueOf(1L), true, 0L);
+		dm.updateLastAccessDate(BigInteger.valueOf(1L), 0L);
 		Dashboard d = new Dashboard();
-		d.setDashboardId(1L);
+		d.setDashboardId(BigInteger.valueOf(1L));
 		try {
 			dm.saveNewDashboard(d, 0L);
 		}
@@ -217,12 +218,12 @@ public class DashboardManagerTest_S2 extends BaseTest
 
 		new NonStrictExpectations() {
 			{
-				anyDashboardServiceFacade.getEmsDashboardById(anyLong);
+				anyDashboardServiceFacade.getEmsDashboardById(BigInteger.valueOf(anyLong));
 				result = null;
 			}
 		};
 		try {
-			dm.deleteDashboard(1L, 0L);
+			dm.deleteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
@@ -239,7 +240,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 		ed.setIsSystem(1);
 		new NonStrictExpectations() {
 			{
-				anyDashboardServiceFacade.getEmsDashboardById(anyLong);
+				anyDashboardServiceFacade.getEmsDashboardById(BigInteger.valueOf(anyLong));
 				result = ed;
 				TenantContext.getCurrentTenant();
 				result = "opcTenantId";
@@ -249,39 +250,39 @@ public class DashboardManagerTest_S2 extends BaseTest
 		};
 		dm = DashboardManager.getInstance();
 		try {
-			dm.addFavoriteDashboard(1L, 0L);
+			dm.addFavoriteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
 		}
 		try {
-			dm.getDashboardBase64ScreenShotById(1L, 0L);
+			dm.getDashboardBase64ScreenShotById(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
 		}
 		try {
-			dm.getDashboardById(1L, 0L);
+			dm.getDashboardById(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
 		}
 
-		dm.getLastAccessDate(1L, 0L);
+		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
 		try {
-			dm.isDashboardFavorite(1L, 0L);
+			dm.isDashboardFavorite(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
 		}
 		try {
-			dm.removeFavoriteDashboard(1L, 0L);
+			dm.removeFavoriteDashboard(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardException e) {
 			LOGGER.info("context", e);
 		}
-		dm.setDashboardIncludeTimeControl(1L, true, 0L);
-		dm.updateLastAccessDate(1L, 0L);
+		dm.setDashboardIncludeTimeControl(BigInteger.valueOf(1L), true, 0L);
+		dm.updateLastAccessDate(BigInteger.valueOf(1L), 0L);
 		//dm.getDashboardByName("ss", 0L);
 		//dm.saveNewDashboard(null, 0L);
 		//dm.updateDashboard(null, 0L);
@@ -397,7 +398,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 		Dashboard dbd2 = new Dashboard();
 		dbd2.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
 		dbd2.setType(Dashboard.DASHBOARD_TYPE_NORMAL);
-		dbd2.setDashboardId(Long.MAX_VALUE); // specify id not existing in database
+		dbd2.setDashboardId(BigInteger.valueOf(Long.MAX_VALUE)); // specify id not existing in database
 		dm.saveNewDashboard(dbd2, tenantId1);
 		Dashboard queried = dm.getDashboardById(dbd2.getDashboardId(), tenantId1);
 		Assert.assertEquals(dbd2.getName(), queried.getName());
@@ -955,7 +956,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 		// not existing ones
 		boolean expectedException = false;
 		try {
-			queried = dm.getDashboardById(Long.MAX_VALUE, tenantId1);
+			queried = dm.getDashboardById(BigInteger.valueOf(Long.MAX_VALUE), tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
 			expectedException = true;
@@ -1023,7 +1024,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 	@Test(groups = "s2")
 	public void testListDashboardS2(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
 			@Mocked final EntityManager anyEntityManager, @Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber)
-					throws DashboardException, InterruptedException
+			throws DashboardException, InterruptedException
 	{
 		final List<EmsDashboard> emsDashboards = new ArrayList<EmsDashboard>();
 
@@ -1116,7 +1117,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 			@Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber)
 	{
 		DashboardManager dm = DashboardManager.getInstance();
-		Assert.assertEquals(dm.updateDashboardTilesName(1L, null, 1L), 0);
+		Assert.assertEquals(dm.updateDashboardTilesName(1L, null, BigInteger.ONE), 0);
 		Assert.assertEquals(dm.updateDashboardTilesName(1L, "test", null), 0);
 
 		new Expectations() {
@@ -1133,7 +1134,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 				andEntityTransaction.commit();
 			}
 		};
-		int rtn = dm.updateDashboardTilesName(1L, "test", 1L);
+		int rtn = dm.updateDashboardTilesName(1L, "test", BigInteger.ONE);
 		Assert.assertEquals(rtn, 1234);
 	}
 
@@ -1143,7 +1144,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 			@Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber)
 	{
 		DashboardManager dm = DashboardManager.getInstance();
-		Assert.assertEquals(dm.updateWidgetDeleteForTilesByWidgetId(1L, 1L), 0);
+		Assert.assertEquals(dm.updateWidgetDeleteForTilesByWidgetId(1L, BigInteger.ONE), 0);
 		Assert.assertEquals(dm.updateWidgetDeleteForTilesByWidgetId(1L, null), 0);
 
 		new Expectations() {
@@ -1160,7 +1161,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 				andEntityTransaction.commit();
 			}
 		};
-		int rtn = dm.updateWidgetDeleteForTilesByWidgetId(1L, 1L);
+		int rtn = dm.updateWidgetDeleteForTilesByWidgetId(1L, BigInteger.ONE);
 		Assert.assertEquals(rtn, 1234);
 	}
 

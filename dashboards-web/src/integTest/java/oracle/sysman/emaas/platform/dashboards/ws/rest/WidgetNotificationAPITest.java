@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import java.math.BigInteger;
+
 import javax.ws.rs.core.Response.Status;
 
 import org.codehaus.jettison.json.JSONException;
@@ -45,12 +47,12 @@ public class WidgetNotificationAPITest
 			{
 				TenantIdProcessor.getInternalTenantIdFromOpcTenantId(anyString);
 				result = anyLong;
-				DashboardManager.getInstance().updateDashboardTilesName(anyLong, anyString, anyLong);
+				DashboardManager.getInstance().updateDashboardTilesName(anyLong, anyString, (BigInteger) any);
 				result = 1;
 			}
 		};
 		WidgetNotifyEntity wne = new WidgetNotifyEntity();
-		wne.setUniqueId(1234L);
+		wne.setUniqueId(BigInteger.valueOf(1234L));
 		wne.setName("test");
 		JSONObject jo = new JSONObject();
 		jo.put("uniqueId", wne.getUniqueId());
@@ -63,7 +65,7 @@ public class WidgetNotificationAPITest
 			{
 				TenantIdProcessor.getInternalTenantIdFromOpcTenantId(anyString);
 				result = anyLong;
-				DashboardManager.getInstance().updateWidgetDeleteForTilesByWidgetId(anyLong, anyLong);
+				DashboardManager.getInstance().updateWidgetDeleteForTilesByWidgetId(anyLong, (BigInteger) any);
 				result = 1;
 			}
 		};

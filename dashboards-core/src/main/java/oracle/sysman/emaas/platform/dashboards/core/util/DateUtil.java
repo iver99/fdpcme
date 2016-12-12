@@ -14,6 +14,18 @@ public class DateUtil
 	private static final SimpleDateFormat DATE_FORMATTER_ISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
 
 	/**
+	 * If the time provided by gateway is not null, then return it, else return {@link getCurrentUTCTime}
+	 * @return
+	 */
+	public static Date getGatewayTime() {
+		if (ZDTContext.getRequestTime() != null) {
+			return new Date(ZDTContext.getRequestTime());
+		} else {
+			return getCurrentUTCTime();
+		}
+	}
+	
+	/**
 	 * Convert local time to UTC time and return
 	 *
 	 * @return

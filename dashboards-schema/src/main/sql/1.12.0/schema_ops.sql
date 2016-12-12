@@ -10,3 +10,4 @@ SET FEEDBACK OFF
 SET LINESIZE 2000
 
 @&EMSAAS_SQL_ROOT/1.12.0/upgrade_impl_dml.sql
+

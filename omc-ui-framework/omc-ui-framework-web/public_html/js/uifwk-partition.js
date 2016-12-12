@@ -14,7 +14,8 @@ define([
 'uifwk/js/widgets/datetime-picker/js/datetime-picker',
 'uifwk/js/widgets/navlinks/js/navigation-links',
 'uifwk/js/widgets/timeFilter/js/timeFilter',
-'uifwk/js/widgets/widgetselector/js/widget-selector'
+'uifwk/js/widgets/widgetselector/js/widget-selector',
+'uifwk/js/util/zdt-util'
 ],
     function () {
 //        function registerComponent(kocName, kocViewModel, kocTemplate)

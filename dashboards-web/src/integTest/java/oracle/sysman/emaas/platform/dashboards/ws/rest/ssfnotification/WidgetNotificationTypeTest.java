@@ -1,10 +1,9 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest.ssfnotification;
 
-import org.testng.annotations.Test;
-
+import java.math.BigInteger;
 import java.util.Date;
 
-import static org.testng.Assert.*;
+import org.testng.annotations.Test;
 
 /**
  * Created by xiadai on 2016/11/1.
@@ -26,8 +25,7 @@ public class WidgetNotificationTypeTest {
         widgetNotifyEntity.getName();
         widgetNotifyEntity.setNotifyTime(new Date());
         widgetNotifyEntity.getNotifyTime();
-        widgetNotifyEntity.setUniqueId(1L);
-        widgetNotifyEntity.setUniqueId(1L);
+        widgetNotifyEntity.setUniqueId(BigInteger.valueOf(1L));
         widgetNotifyEntity.getUniqueId();
         widgetNotifyEntity.setType(WidgetNotificationType.DELETE);
         widgetNotifyEntity.getType();
