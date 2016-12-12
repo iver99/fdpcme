@@ -6,6 +6,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'uifwk/@version@/js/sdk/context-util-impl',
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
+    'uifwk/@version@/js/util/zdt-util-impl',
     'ojs/ojknockout',
     'ojs/ojtoolbar',
     'ojs/ojmenu',
@@ -561,8 +562,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var retryingMessageIds = [];
             var currentRetryingMsgId = null;
             var currentRetryFailMsgId = null;
+            var currentPlannedDowntimeMsgId = null;
             var catRetryInProgress = "retry_in_progress";
             var catRetryFail = "retry_fail";
+            var catPlannedDowntime = "omc_planned_downtime";
             self.hasHiddenMessages = ko.observable(false);
             self.hiddenMessagesExpanded = ko.observable(false);
 
@@ -681,14 +684,25 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -62px;height:16px;";
                     }
 
-                    if (message.category === catRetryInProgress) {
-                        if (retryingMessageIds.length === 0) {
+                    if (message.category === catPlannedDowntime) {
+                        if (currentPlannedDowntimeMsgId === null) {
+                            currentPlannedDowntimeMsgId = message.id;
                             displayMessages.splice(0, 0, message);
+                        }
+                    }
+                    else if (message.category === catRetryInProgress) {
+                        if (retryingMessageIds.length === 0) {
+                        	if (currentPlannedDowntimeMsgId === null) {
+                                displayMessages.splice(0, 0, message);
+                            }
+                            else {
+                                displayMessages.splice(1, 0, message);
+                            }
                             currentRetryingMsgId = message.id;
                         }
                         retryingMessageIds.push(message.id);
                     }
-                    else if (message.category !== catRetryInProgress) {
+                    else {
                         var isMsgNeeded = true;
                         if (message.category === catRetryFail && currentRetryFailMsgId !== null) {
                             isMsgNeeded = false;
@@ -705,6 +719,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             else {
                                 hiddenMessages.push(message);
                             }
+                        }
+                        if (data.category === catPlannedDowntime) {
+                            currentPlannedDowntimeMsgId = null;
                         }
                     }
 

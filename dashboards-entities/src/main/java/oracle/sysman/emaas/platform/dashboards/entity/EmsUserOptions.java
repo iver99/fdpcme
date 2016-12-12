@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -28,13 +29,13 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @IdClass(EmsUserOptionsPK.class)
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
-public class EmsUserOptions implements Serializable
+public class EmsUserOptions extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 8723513639667559582L;
 
 	@Id
 	@Column(name = "DASHBOARD_ID", nullable = false, length = 256)
-	Long dashboardId;
+	BigInteger dashboardId;
 	@Id
 	@Column(name = "USER_NAME", nullable = false, length = 128)
 	String userName;
@@ -68,7 +69,7 @@ public class EmsUserOptions implements Serializable
 		return autoRefreshInterval;
 	}
 
-	public Long getDashboardId()
+	public BigInteger getDashboardId()
 	{
 		return dashboardId;
 	}
@@ -105,7 +106,7 @@ public class EmsUserOptions implements Serializable
 		this.autoRefreshInterval = autoRefreshInterval;
 	}
 
-	public void setDashboardId(Long dashboardId)
+	public void setDashboardId(BigInteger dashboardId)
 	{
 		this.dashboardId = dashboardId;
 	}
