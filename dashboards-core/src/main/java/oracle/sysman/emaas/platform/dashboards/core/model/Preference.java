@@ -10,8 +10,11 @@
 
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
+import java.util.Date;
+
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
+import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 
@@ -96,10 +99,15 @@ public class Preference
 
 	public EmsPreference toEntity(EmsPreference setEntity, String userName) throws DashboardException
 	{
-		EmsPreference te = setEntity;
+		EmsPreference te;
+		Date date = DateUtil.getGatewayTime();
 		if (setEntity == null) {
 			te = new EmsPreference();
+			te.setCreationDate(date);
+		} else {
+			te = setEntity;
 		}
+		te.setLastModificationDate(date);
 
 		if (key == null || !key.matches(KEY_REGEX)) {
 			throw new CommonFunctionalException(
