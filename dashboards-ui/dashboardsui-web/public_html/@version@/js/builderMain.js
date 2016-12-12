@@ -279,14 +279,7 @@ require(['knockout',
                 tenantName: self.tenantName,
                 appId: self.appId,
                 isAdmin:true,
-                showGlobalContextBanner: ko.observable(false),
-                timeSelectorParams: {
-                    startDateTime: ko.observable(null),
-                    endDateTime: ko.observable(null),
-                    timePeriod: ko.observable("LAST_14_DAY"),
-                    hideMainLabel: true,
-                    callbackAfterApply: null
-                }
+                showGlobalContextBanner: ko.observable(false)
             };
 
             $("#headerWrapper").on("DOMSubtreeModified", function() {
