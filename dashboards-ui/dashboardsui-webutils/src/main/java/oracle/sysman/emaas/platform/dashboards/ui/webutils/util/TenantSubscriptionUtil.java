@@ -66,13 +66,16 @@ public class TenantSubscriptionUtil
 			else {
 				LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
 				itrLogger
-				.info("RestClient is connecting to get response after getting authorization token from registration manager.");
+						.info("RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
 			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 					.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(MediaType.APPLICATION_JSON)
 					.accept(MediaType.APPLICATION_JSON);
 			if (headers != null && !headers.isEmpty()) {
 				for (String key : headers.keySet()) {
+					if (HttpHeaders.AUTHORIZATION.equals(key) || HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME.equals(key)) {
+						continue;
+					}
 					builder.header(key, headers.get(key));
 					LOGGER.info("Setting header ({}, {}) for call to {}", key, headers.get(key), url);
 				}
