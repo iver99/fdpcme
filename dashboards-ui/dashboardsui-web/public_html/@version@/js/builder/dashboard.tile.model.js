@@ -231,12 +231,6 @@ define(['knockout',
                 switch (ui.item.data("option")) {
                     case "showhide-title":
                         self.editor.showHideTitle(tile);
-                        tile.getWigetDataFromCache("2001",function (wgt){
-                            var tileInfo=wgt;
-                            console.log(tileInfo);
-                        },function (error){
-                            console.log(error);
-                        });
                         self.show();
                         self.notifyTileChange(tile, new Builder.TileChange("POST_HIDE_TITLE"));
                         break;

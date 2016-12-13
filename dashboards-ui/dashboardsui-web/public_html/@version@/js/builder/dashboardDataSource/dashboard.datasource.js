@@ -104,15 +104,16 @@ define(['knockout',
             
             if (dsb && dsb.selectedSsData) {
                 var ssDataFormat = JSON.parse(dsb.selectedSsData);
-                var _hasNoSsDataBefore=!self.dataSource.savedSearchData;
+                var _hasNoSsDataBefore = !self.dataSource.savedSearchData;
                 if (_hasNoSsDataBefore) {
                     self.dataSource.savedSearchData = ssDataFormat;
                 } else {
-                    ssDataFormat.forEach(function(ssItem){
-                        self.dataSource.savedSearchData=updateNewestDataToObj(self.dataSource.savedSearchData,ssItem);
+                    ssDataFormat.forEach(function (ssItem) {
+                        self.dataSource.savedSearchData = updateNewestDataToObj(self.dataSource.savedSearchData, ssItem);
                     });
                 }
             } else {
+                //when first enter the fetch the set data will enter this
                 self.dataSource.savedSearchData = undefined;
             }
             
