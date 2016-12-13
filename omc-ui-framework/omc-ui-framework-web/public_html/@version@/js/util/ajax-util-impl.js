@@ -102,8 +102,8 @@ define([
                 //Retry delay time in milliseconds, if not set, will be 2 seconds by default
                 var retryDelayTime = retryOptions.retryDelayTime !== null &&
                         typeof(retryOptions.retryDelayTime) === 'number' ? retryOptions.retryDelayTime : 500;
-//                var messageId = null;
-//                var messageObj = null;
+                var messageId = null;
+                var messageObj = null;
                 var errorCallBack = retryOptions.error;
                 retryOptions.error = null;
                 var beforeSendCallback = retryOptions.beforeSend;
@@ -125,7 +125,7 @@ define([
                 var ajaxCallDfd = $.Deferred();
                 var jqXhrObj = null;
                 var firstCalled = false;
-                var underPlannedDowntime = false;
+//                var underPlannedDowntime = false;
                 //Add ability to abort ajaxWithRetry calls
                 ajaxCallDfd.abort = function(){
                     if (jqXhrObj !== null && $.isFunction(jqXhrObj.abort)) {
@@ -160,7 +160,7 @@ define([
                                 //Check to see if OMC is under planned downtime, if yes, show a warning message to user and no need to retry
                                 else if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'].toLowerCase() === 'planned downtime') {
                                     retries = 0;
-                                    underPlannedDowntime = true;
+//                                    underPlannedDowntime = true;
                                     //show message to user when OMC is under planned downtime
                                     messageId = messageUtil.getGuid();
                                     var summaryMsg = nls.BRANDING_BAR_MESSAGE_PLANNED_DOWNTIME_SUMMARY;

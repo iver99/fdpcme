@@ -13,7 +13,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojs/ojbutton',
     'ojs/ojdialog'
 ],
-    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls) {
+    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, zdtUtilModel) {
         function BrandingBarViewModel(params) {
             var self = this;
             var msgUtil = new msgUtilModel();
@@ -708,9 +708,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                 hiddenMessages.push(message);
                             }
                         }
-                        if (data.category === catPlannedDowntime) {
-                            currentPlannedDowntimeMsgId = null;
-                        }
                     }
 
                     self.messageList(displayMessages);
@@ -753,6 +750,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                     if (data.category === catRetryFail) {
                         currentRetryFailMsgId = null;
+                    }
+                    if (data.category === catPlannedDowntime) {
+                        currentPlannedDowntimeMsgId = null;
                     }
                 }
 
@@ -1142,6 +1142,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //
             var message = {'tag': 'EMAAS_BRANDINGBAR_INSTANTIATED'};
             window.postMessage(message, window.location.href);
+            
+            //Detect planned downtime
+            var zdtUtil = new zdtUtilModel();
+            zdtUtil.detectPlannedDowntime(function(){});
         }
 
         return BrandingBarViewModel;
