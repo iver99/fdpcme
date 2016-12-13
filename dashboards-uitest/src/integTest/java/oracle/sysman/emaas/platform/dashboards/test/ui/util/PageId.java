@@ -20,6 +20,8 @@ public class PageId
 	public static final String ADASHBOARDTESTBYARIALABEL = "//*[@aria-label='ADashboard Test']";
 	public static final String ENTERPRISEOVERVIEWBYARIALABEL = "//*[@aria-label='Enterprise Overview']";
 	public static final String SORTBYID = "oj-select-choice-mainContentsortcb";
+	public static final String DASHBOARDINFO_NAME_CSS = ".dsbinfopop [data-bind=\"with: selectedDashboard\"] [data-bind=\"text: dashboard.name\"]";
+	public static final String DASHBOARDINFO_DESC_CSS = ".dsbinfopop [data-bind=\"with: selectedDashboard\"] [data-bind=\"html: dashboard.description\"]";
 	//OOB dashboards ID
 	public static final String APPLICATION_PERFORMANCE_MONITORING_ID = "//div[@aria-dashboard='14']";
 

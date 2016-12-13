@@ -3,6 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
@@ -218,6 +219,24 @@ public class DashBoardUtils
 		}
 		else {
 			driver.getLogger().info("Have the option enabled");
+			return false;
+		}
+	}
+
+	public static boolean verifyDashboardInfoInHomePage(WebDriver driver, String Name, String Description)
+	{
+		//click the info icon
+		driver.click(DashBoardPageId.INFOBTNID);
+
+		//verify the name and description displayed in the info box
+		String str_name = driver.getText("css=" + PageId.DASHBOARDINFO_NAME_CSS).trim();
+		String str_desc = driver.getText("css=" + PageId.DASHBOARDINFO_DESC_CSS).trim();
+
+		if (str_name.equals(Name) && str_desc.equals(Description)) {
+			return true;
+
+		}
+		else {
 			return false;
 		}
 	}
