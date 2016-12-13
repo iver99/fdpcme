@@ -51,7 +51,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	public final static String LEARN_MORE_SERVICE_OFFERINGS = "serviceOfferings";
 
 	public final static String SERVICE_NAME_APM = "APM";
-
+	public static final String SERVICE_NAME_DATA_EXPLORERS_EXPECTEDNAME = "Data Explorers";
 	public final static String SERVICE_NAME_LA = "LA";
 	public final static String SERVICE_NAME_ITA = "ITA";
 	public static final String SERVICE_NAME_INFRA_MONITORING = "infraMonitoring";
@@ -361,7 +361,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				expectedName = "Dashboards";
 				break;
 			case SERVICE_NAME_DATA_EXPLORERS:
-				expectedName = "Explorers";
+				expectedName = SERVICE_NAME_DATA_EXPLORERS_EXPECTEDNAME;
 				break;
 			case LEARN_MORE_GET_STARTED:
 				expectedName = "How to get started";

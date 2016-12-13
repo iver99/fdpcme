@@ -22,8 +22,8 @@ public interface IDashboardHomeUtil extends IUiTestCommonAPI
 	public static final String DASHBOARD = "dashboard";
 	public static final String DASHBOARDSET = "dashboardSet";
 	public static final String EXPLOREDATA_MENU_ANALYZE = "Analyze";
-	public static final String EXPLOREDATA_MENU_LOG = "Log Explorer";
-	public static final String EXPLOREDATA_MENU_SEARCH = "Data Explorer";
+	public static final String EXPLOREDATA_MENU_LOG = "Log Visual Analyzer";
+	public static final String EXPLOREDATA_MENU_SEARCH = "Search";
 	public static final String DASHBOARDS_GRID_VIEW = "dashboards_grid_view";
 	public static final String DASHBOARDS_LIST_VIEW = "dashboards_list_view";
 	public static final String DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC = "access_date_asc";

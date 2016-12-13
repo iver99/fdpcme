@@ -31,8 +31,8 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public static final String NAV_LINK_TEXT_CS_OCS = "Orchestration";
 	//Visual Analyzers
 	public static final String NAV_LINK_TEXT_VA_ITA = "Analyze";
-	public static final String NAV_LINK_TEXT_VA_TA = "Data Explorer";
-	public static final String NAV_LINK_TEXT_VA_LA = "Log Explorer";
+	public static final String NAV_LINK_TEXT_VA_TA = "Search";
+	public static final String NAV_LINK_TEXT_VA_LA = "Log";
 	//Administration
 	public static final String NAV_LINK_TEXT_ADMIN_AGENT = "Agents";
 	public static final String NAV_LINK_TEXT_ADMIN_ALERT = "Alert Rules";
