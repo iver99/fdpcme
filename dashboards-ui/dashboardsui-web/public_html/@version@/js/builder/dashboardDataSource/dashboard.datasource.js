@@ -104,9 +104,16 @@ define(['knockout',
             
             if (dsb && dsb.selectedSsData) {
                 var ssDataFormat = JSON.parse(dsb.selectedSsData);
-                self.dataSource[dashboardId].savedSearchData = ssDataFormat;
+                var _hasNoSsDataBefore=!self.dataSource.savedSearchData;
+                if (_hasNoSsDataBefore) {
+                    self.dataSource.savedSearchData = ssDataFormat;
+                } else {
+                    ssDataFormat.forEach(function(ssItem){
+                        self.dataSource.savedSearchData=updateNewestDataToObj(self.dataSource.savedSearchData,ssItem);
+                    });
+                }
             } else {
-                self.dataSource[dashboardId].savedSearchData = undefined;
+                self.dataSource.savedSearchData = undefined;
             }
             
             if (dsb.selected) {
@@ -117,7 +124,6 @@ define(['knockout',
         	self.dataSource[dashboardId].dashboard.isFavorite = undefined;
         	self.dataSource[dashboardId].dashboard.preference = undefined;
         	self.dataSource[dashboardId].dashboard.selected = undefined;
-                self.dataSource[dashboardId].dashboard.savedSearchData = undefined;
     	}
         
         self.loadDashboardData = function (dashboardId, successCallback, errorCallback) {
@@ -142,31 +148,39 @@ define(['knockout',
             }
         };
 
-        self.fetchSelDbdSsData = function (dashboardId, widgetId, successCallback, errorCallback) {
-            if (!self.dataSource[dashboardId]) {
-                self.dataSource[dashboardId] = {};
-            }
-            var widgetData = null;
-            if (isEmptyObject(self.dataSource[dashboardId])) {
-                // emcpdf-2530
-                self.loadDashboardData(dashboardId, function () {
-                    if (!self.dataSource[dashboardId].savedSearchData) {
-                        widgetData = self.dataSource[dashboardId].savedSearchData.filter(function isMatched(element) {
-                            return element.id == widgetId;
-                        });
-                    }
-                    successCallback && successCallback(widgetData);
-                },
-                function (jqXHR, textStatus, errorThrown) {
-                    errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
-                });
-            } else {
-                if (!self.dataSource[dashboardId].savedSearchData) {
-                    widgetData = self.dataSource[dashboardId].savedSearchData.filter(function isMatched(element) {
-                        return element.id == widgetId;
-                    });
+        self.fetchSelDbdSsData = function (widgetId, successCallback, errorCallback) {
+            var foundSsDataInCache = false;
+            self.dataSource.savedSearchData.filter(function isMatched(cachedSsData) {
+                if (cachedSsData.id == widgetId) {
+                    foundSsDataInCache = true;
+                    successCallback && successCallback(cachedSsData);
                 }
-                successCallback && successCallback(widgetData);
+            });
+            if (!self.dataSource.savedSearchData || !foundSsDataInCache) {
+                //post request to savedsearch
+                var url = '/sso.static/savedsearch.search';
+                if (dfu.isDevMode()) {
+                    url = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint, 'search');
+                }
+                url += '/' + widgetId;
+                dfu.ajaxWithRetry(url, {
+                    type: 'get',
+                    dataType: "json",
+                    contentType: 'application/json',
+                    headers: dfu.getSavedSearchRequestHeader(),
+                    success: function (data) {
+                        if (successCallback) {
+                            self.dataSource.savedSearchData.push(data);
+                            successCallback && successCallback(data);
+                        }
+                    },
+                    error: function (e) {
+                        oj.Logger.error("Error to load savedsearch Data: " + e.responseText);
+                        if (errorCallback) {
+                            errorCallback(ko.mapping.fromJSON(e.responseText));
+                        }
+                    }
+                });
             }
         };
         
@@ -287,6 +301,20 @@ define(['knockout',
                 return !1;
             return !0;
         };
+        
+        function updateNewestDataToObj(obj,newestData) {
+            var replaceData = false;
+            obj.filter(function isMatched(oldData, index) {
+                if (oldData.name === newestData.name) {
+                    obj.splice(index, 1, newestData);
+                    replaceData = true;
+                }
+            });
+            if(!replaceData){
+                obj.push(newestData);
+            }
+            return obj;
+        }
                 
         //convert dashboard returned from datebase to knockout obaservable for UI use
         function getKODashboardForUI(data) {
