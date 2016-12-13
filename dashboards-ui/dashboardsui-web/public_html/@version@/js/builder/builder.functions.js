@@ -239,25 +239,25 @@ define(['knockout',
         }
         Builder.registerFunction(fetchDashboardScreenshot, 'fetchDashboardScreenshot');
 
-        function checkDashboardFavorites(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
-            dfu.ajaxWithRetry(url, {
-                type: 'get',
-                dataType: "json",
-                headers: getDefaultHeaders(),
-                success: function(data) {
-                    if (succCallBack){
-                        succCallBack(data);
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    if (errorCallBack){
-                        errorCallBack(jqXHR, textStatus, errorThrown);
-                    }
-                }
-            });
-        }
-        Builder.registerFunction(checkDashboardFavorites, 'checkDashboardFavorites');
+//        function checkDashboardFavorites(dashboardId, succCallBack, errorCallBack) {
+//            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
+//            dfu.ajaxWithRetry(url, {
+//                type: 'get',
+//                dataType: "json",
+//                headers: getDefaultHeaders(),
+//                success: function(data) {
+//                    if (succCallBack){
+//                        succCallBack(data);
+//                    }
+//                },
+//                error: function(jqXHR, textStatus, errorThrown) {
+//                    if (errorCallBack){
+//                        errorCallBack(jqXHR, textStatus, errorThrown);
+//                    }
+//                }
+//            });
+//        }
+//        Builder.registerFunction(checkDashboardFavorites, 'checkDashboardFavorites');
 
         function addDashboardToFavorites(dashboardId, succCallBack, errorCallBack) {
             var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
@@ -333,27 +333,27 @@ define(['knockout',
         }
         Builder.registerFunction(isSmallMediaQuery, 'isSmallMediaQuery');
 
-        function fetchDashboardOptions(dashboardId, succCallBack, errorCallBack){
-            var url = dfu.buildFullUrl(getBaseUrl(),dashboardId+"/options" );
-            dfu.ajaxWithRetry(url, {
-                type: 'get',
-                dataType: "json",
-                headers: getDefaultHeaders(),
-                success: function(data) {
-                    if (succCallBack){
-                        succCallBack(data);
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    if (errorCallBack){
-                        errorCallBack(jqXHR, textStatus, errorThrown);
-                    }
-                },
-                async: false
-            });
-        }
-
-        Builder.registerFunction(fetchDashboardOptions, 'fetchDashboardOptions');
+//        function fetchDashboardOptions(dashboardId, succCallBack, errorCallBack){
+//            var url = dfu.buildFullUrl(getBaseUrl(),dashboardId+"/options" );
+//            dfu.ajaxWithRetry(url, {
+//                type: 'get',
+//                dataType: "json",
+//                headers: getDefaultHeaders(),
+//                success: function(data) {
+//                    if (succCallBack){
+//                        succCallBack(data);
+//                    }
+//                },
+//                error: function(jqXHR, textStatus, errorThrown) {
+//                    if (errorCallBack){
+//                        errorCallBack(jqXHR, textStatus, errorThrown);
+//                    }
+//                },
+//                async: false
+//            });
+//        }
+//
+//        Builder.registerFunction(fetchDashboardOptions, 'fetchDashboardOptions');
 
         function updateDashboardOptions(optionsJson, succCallBack, errorCallBack){
             var url = dfu.buildFullUrl(getBaseUrl(),optionsJson["dashboardId"]+"/options" );
@@ -489,37 +489,5 @@ define(['knockout',
             }
         }
         Builder.registerFunction(getTimePeriodValue, "getTimePeriodValue");
-
-        var assetRoots = [];
-        function addWidgetAssetRoot(provider_name, provider_version, provider_asset_root, asset_root) {
-            if((provider_name!==null) && (provider_version!==null) && (provider_asset_root!==null) && (asset_root!==null) && !isWidgetAssetRootExisted(provider_name, provider_version, provider_asset_root) ) {
-                assetRoots.push({provider_name: provider_name, provider_version: provider_version, provider_asset_root: provider_asset_root, asset_root: asset_root});
-            }
-        }
-        Builder.registerFunction(addWidgetAssetRoot, "addWidgetAssetRoot");
-
-        function isWidgetAssetRootExisted(provider_name, provider_version, provider_asset_root) {
-            for(var i=0; i<assetRoots.length; i++) {
-                var art = assetRoots[i];
-                if((art.provider_name === provider_name) && (art.provider_version === provider_version) && (art.provider_asset_root === provider_asset_root)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        Builder.registerFunction(isWidgetAssetRootExisted, "isWidgetAssetRootExisted");
-
-        function getWidgetAssetRoot(provider_name, provider_version, provider_asset_root) {
-            for(var i=0; i<assetRoots.length; i++) {
-                var art = assetRoots[i];
-                if((art.provider_name === provider_name) && (art.provider_asset_root === provider_asset_root)) {
-                    return art.asset_root;
-                }
-            }
-            var asset_root = dfu.df_util_widget_lookup_assetRootUrl(provider_name, provider_version, provider_asset_root, true);
-            addWidgetAssetRoot(provider_name, provider_version, provider_asset_root, asset_root);
-            return asset_root;
-        };
-        Builder.registerFunction(getWidgetAssetRoot, "getWidgetAssetRoot");
     }
 );

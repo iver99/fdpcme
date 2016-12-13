@@ -10,7 +10,7 @@ public class DashBoardPageId
 	 *
 	 * */
 	public static final String CREATEDSBUTTONID = "cbtn";
-
+	public static final String BUILDERTILEMAXMINLOCATOR = "following-sibling::*//button[contains(@class, 'dbd-tile-maxmin')]";
 	public static final String CREATEDSOFDIALOGID = "createDsb";
 	public static final String DASHBOARDNAMEBOXID = "dbsHNameIn";
 	public static final String DASHBOARDDESCBOXID = "dbsHDpIn";
@@ -177,13 +177,13 @@ public class DashBoardPageId
 	public static final String EXPLOREDATABTNID = "exploreDataBtn";
 
 	public static final String EXPLOREDATAMENU = "exploreDataMenu";
-        
-          //Log Visual Analyzer button
-         public static final String EXPLORE_LOG = "//a[text()='Log Explorer']";
-   
-         //Search button in explore menu
-          public static final String EXPLORE_Search = "//a[text()='Data Explorer' and @role='menuitem']";
-         
+
+	//Log button
+	public static final String EXPLORE_LOG = "//a[text()='Log Visual Analyzer' and @role='menuitem']";
+
+	//Search button in explore menu
+	public static final String EXPLORE_Search = "//a[text()='Search' and @role='menuitem']";
+
 	//help id and about id
 	public static final String MENUBTNID = "menubutton";
 
@@ -411,7 +411,7 @@ public class DashBoardPageId
 	public static final String WELCOME_ITA_DE = "ITA_Search"; //"/html/body/div[1]/div/div/ul/li[7]/div";//"oj-listbox-result-label-13";//ITA Select Item : Data Explorer
 	public static final String WELCOME_DATAEXP_LOG = "dataExp_Log"; //"/html/body/div[1]/div/div/ul/li[2]/div";//"oj-listbox-result-label-4";//Data Explorers Select Item : Log
 	public static final String WELCOME_DATAEXP_ANALYZE = "dataExp_Analyze"; //"/html/body/div[1]/div/div/ul/li[3]/div";//"oj-listbox-result-label-5";//Data Explorers Select Item : Analyze
-	public static final String WELCOME_DATAEXP_SEARCH = "dataExp_Data"; //"/html/body/div[1]/div/div/ul/li[4]/div";//"oj-listbox-result-label-6";//Data Explorers Select Item : Search
+	public static final String WELCOME_DATAEXP_SEARCH = "dataExp_Search"; //"/html/body/div[1]/div/div/ul/li[4]/div";//"oj-listbox-result-label-6";//Data Explorers Select Item : Search
 	//Sharing and stoping dashboard
 	public static final String OPTION = "dashboardOptsBtn";
 
@@ -436,6 +436,7 @@ public class DashBoardPageId
 	public static final String BRANDINGBARCLOUDSERVICELINKSID = "obbNavCsLinks";
 	public static final String BRANDINGBARVISUALANALYZERLINKSID = "obbNavVaLinks";
 	public static final String BRANDINGBARADMINLINKSID = "obbNavAdminLinks";
+	public static final String BRANDINGBARSERVICENAMECSS = ".emaas-appheader-appname-oneline";
 	public static final String BRANDINGBARNAVLINKSID = "links_menu";
 	//Brand Bar User Menu Option
 	public static final String BRAND_BAR_USER_MENU = "//button[contains(@id,'menubutton')]";

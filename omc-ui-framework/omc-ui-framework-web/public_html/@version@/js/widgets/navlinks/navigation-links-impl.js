@@ -20,6 +20,14 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                 var discoveredAdminLinks = [];
                 var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
                 var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
+                var linksNLSMap = {
+                		'homeLinks_EventUI_Alerts': nlsStrings.BRANDING_BAR_NAV_ALERTS_LABEL,
+                		'visualAnalyzers_LogAnalyticsUI_Log Visual Analyzer': nlsStrings.BRANDING_BAR_NAV_LOG_LABEL,
+                		'visualAnalyzers_TargetAnalytics_Search': nlsStrings.BRANDING_BAR_NAV_SEARCH_LABEL,
+                		'adminLinks_AdminConsoleSaaSUi_Administration': nlsStrings.BRANDING_BAR_NAV_ADMINISTRATION_LABEL,
+                		'adminLinks_TenantManagementUI_Agents': nlsStrings.BRANDING_BAR_NAV_AGENTS_LABEL,
+                		'adminLinks_EventUI_Alert Rules': nlsStrings.BRANDING_BAR_NAV_ALERT_RULES_LABEL
+                };
                 self.isAdmin = false;
                 self.isAdminLinksVisible = ko.observable(self.isAdmin);
 
@@ -114,6 +122,10 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                         var link;
                         for (var i = 0; i < discoveredAdminLinks.length; i++) {
                              link = discoveredAdminLinks[i];
+                             var key = 'adminLinks_' + link.serviceName + '_' + link.name;
+                             if (linksNLSMap[key]) {
+                            	 link.name = linksNLSMap[key];
+                             }
                             if (
                                 // let's use relative url for customer software for admin link
                                 (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName &&
@@ -136,8 +148,12 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                             var homelinks = data.homeLinks;
                             var homeLinkList = [];
                             for (var i = 0; i < homelinks.length; i++) {
-                                var hurl = homelinks[i].href;
+                                var key = 'homeLinks_' + homelinks[i].serviceName + '_' + homelinks[i].name;
+                                if (linksNLSMap[key]) {
+                                	homelinks[i].name = linksNLSMap[key];
+                                }
                                 //Since EventUI is tenant subscription agnostic, use relative path for its home links
+                                var hurl = homelinks[i].href;
                                 if (params.appEventUI && params.appEventUI.serviceName === homelinks[i].serviceName){
                                     hurl = dfu.getRelUrlFromFullUrl(hurl);
                                 }
@@ -167,18 +183,13 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                             var analyzers = data.visualAnalyzers;
                             var analyzerList = [];
                             for (var subindex = 0; subindex < analyzers.length; subindex++) {
-                                var aurl = analyzers[subindex].href;
-                                if(analyzers[subindex].serviceName === "LogAnalyticsUI"){
-                                    analyzers[subindex].name = "Log Explorer";
-                                }else if(analyzers[subindex].serviceName === "TargetAnalytics"){
-                                    analyzers[subindex].name = "Data Explorer";
+                            	var key = 'visualAnalyzers_' + analyzers[subindex].serviceName + '_' + analyzers[subindex].name;
+                                if (linksNLSMap[key]) {
+                                	analyzers[subindex].name = linksNLSMap[key];
                                 }
-                                analyzerList.push({name: analyzers[subindex].name.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, ''),
-                                    href: aurl});
+                                var aurl = analyzers[subindex].href;
+                                analyzerList.push({name: analyzers[subindex].name, href: aurl});
                             }
-                            analyzerList.sort(function(left,right){
-                                return left.name<=right.name?-1:1;
-                            });
                             self.visualAnalyzers(analyzerList);
                         }
                         //Check whether to show admin links, if discovered admin links is not null, then means user has admin privilege

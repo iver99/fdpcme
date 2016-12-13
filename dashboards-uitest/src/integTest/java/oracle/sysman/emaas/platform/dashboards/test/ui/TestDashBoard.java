@@ -1015,6 +1015,16 @@ public class TestDashBoard extends LoginAndLogout
 		//verify the time range filter displayed in the page
 		webd.getLogger().info("Verify the time range filter diplayed in the page");
 		Assert.assertTrue(webd.isDisplayed("css=" + PageId.DATETIMEPICK_CSS), "The time range filter is NOT in the page");
+
+		//add test case for EMCPDF-1412
+
+		webd.getLogger().info("change time range filter");
+		Assert.assertFalse(DashboardBuilderUtil.showTimeRangeFilter(webd, false), "Show time range filter failed");
+
+		//verify the time range filter not displayed in the page
+		webd.getLogger().info("Verify the time range filter is invisible in the page");
+		Assert.assertFalse(webd.isDisplayed("css=" + PageId.DATETIMEPICK_CSS), "The time range filter is displayed in the page");
+
 	}
 
 	@Test(groups = "Group5", dependsOnMethods = { "testShareDashboard" })

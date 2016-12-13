@@ -177,17 +177,14 @@ define(['knockout',
                     if(self.rightPanelControl.completelyHidden() === false) { //load widgets only when right panel is editable
                         self.rightPanelWidget.loadWidgets();
                     }
-                    for(var i=0; i<self.rightPanelWidget.widgets().length; i++) {
-                        var wgt = self.rightPanelWidget.widgets()[i];
-                        Builder.getWidgetAssetRoot(wgt.PROVIDER_NAME(), wgt.PROVIDER_VERSION(), wgt.PROVIDER_ASSET_ROOT());
-                    }
                     self.initDraggable();
 
-                    $('.widget-search-input').autocomplete({
-                        source: self.rightPanelWidget.autoSearchWidgets,
-                        delay: 700,
-                        minLength: 0
-                    });
+//                    $('.widget-search-input').autocomplete({
+//                        source: self.rightPanelWidget.autoSearchWidgets,
+//                        delay: 700,
+//                        minLength: 0
+//                    });
+
                     self.rightPanelWidget.tilesViewModel(self.tilesViewModel);
                     ResizableView(self.$b);
             };

@@ -102,7 +102,7 @@ public interface IDashboardHomeUtil extends IUiTestCommonAPI
 	 * goto the link in Data Explorer by displayed name
 	 *
 	 * @param option
-	 *            Analyze | Log Visual Analyzer | Search
+	 *            Analyze | Log | Search
 	 * @
 	 */
 	public void gotoDataExplorer(WebDriver driver, String option) ;

@@ -3,12 +3,6 @@
  * All rights reserved.
  */
 
-/**
- * @preserve Copyright 2013 jQuery Foundation and other contributors
- * Released under the MIT license.
- * http://jquery.org/license
- */
-
 define([
     'dashboards/datasourcefactory',
     'dashboards/dbstablesource',
