@@ -1,0 +1,7 @@
+apply plugin: 'java'
+
+dependencies {
+    compile getProjectArtifact('log4j-core')
+    compile getProjectArtifact('log4j-api')
+    compile getProjectArtifact('jackson-core-asl')
+}
