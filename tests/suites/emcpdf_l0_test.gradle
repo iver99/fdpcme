@@ -189,8 +189,13 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/dashboards/core/model/TileTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/model/UserOptionsTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/model/DashboardTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/model/combined/CombinedDashboardTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/cache/CacheManagerTest_S2.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/cache/TenantTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/core.cache/lru/CacheUnitTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/core.cache/lru/BinaryTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/core.cache/lru/ElementTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/core.cache/lru/TimeUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/restclient/AppMappingKeyTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/restclient/AppMappingCollectionTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/restclient/DomainEntityTest.class"
@@ -238,6 +243,11 @@ task DEVWebTest(type:EMTest,dependsOn: DEVUiTest){
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/HomePageFilterTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/gzip/GzipServletOutputStreamTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/gzip/GzipServletResponseWrapperTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/context/GlobalContextUtilTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/AdditionalDataFilterTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/MockCloseableHttpResponse.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/NLSFilterTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/DashboardDataAccessUtilTest.class"
 
 }
 
@@ -256,7 +266,11 @@ task DEVUIWebUtilTest(type:EMTest,dependsOn: DEVWebTest){
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/RegistryLookupUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/StringUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/TenantSubscriptionUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/AppLoggingManageMXBeanTest_S2.class"	
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/AppLoggingManageMXBeanTest_S2.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/StringCacheUtilTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/SubscribedAppCacheUtilTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest_S2.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/json/AppMappingEntityTest.class"
 }
 
 task DEVUiFWKTest(type:EMTest,dependsOn: DEVUIWebUtilTest){ 
@@ -273,8 +287,9 @@ task DEVUiFWKTest(type:EMTest,dependsOn: DEVUIWebUtilTest){
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/LoggingServiceManagerTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/OmcUiFrameworkLifecycleServiceTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/PropertyReaderTest.class"
-	//include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/RegistryServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/wls/management/AppLoggingManageMXBeanTest_S2.class"	
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/RegistryServiceManagerTest.class"
+        include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest_S2.class"
+
 	
 	useRestAssured=true
 	ext.set("testType", "unit")
