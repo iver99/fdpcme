@@ -213,7 +213,7 @@ public class DashboardManager
 			//				removeFavoriteDashboard(dashboardId, tenantId);
 			//			}
 
-			//em.setProperty("soft.deletion.permanent", permanent);
+			em.setProperty("soft.deletion.permanent", permanent);
 			dsf.updateSubDashboardShowInHome(dashboardId);
 
 			//emcpdf2801 delete dashboard's user option
