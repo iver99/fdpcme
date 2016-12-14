@@ -10,9 +10,10 @@
 
 package oracle.sysman.emaas.platform.dashboards.core.cache.screenshot;
 
+import com.oracle.platform.emaas.cache.Binary;
+
 import java.io.Serializable;
 
-import oracle.sysman.emaas.platform.dashboards.core.cache.lru.Binary;
 
 
 
