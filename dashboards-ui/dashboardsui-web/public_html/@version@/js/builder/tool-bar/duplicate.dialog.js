@@ -81,17 +81,11 @@ define(['knockout',
                 newDashboard.enableRefresh = (enableRefresh === true || enableRefresh === "TRUE" || enableRefresh === "true") ? "true" : "false";
                 newDashboard.systemDashboard = "false";
                 if (systemDashboard === true) {
-                    var succCallback = function(data) {
-                        if (data && data.screenShot) {
-                            newDashboard.screenShot = data.screenShot;
-                        }
-                        self.saveDuplicatedDashboardToServer(newDashboard);
-                    };
-                    var errorCallback = function(error) {
-                        newDashboard.screenShot = null;
-                        self.saveDuplicatedDashboardToServer(newDashboard);
-                    };
-                    new Builder.DashboardDataSource().fetchScreenshotData(origDashboard.id(), succCallback, errorCallback);
+                    newDashboard.dupDashboardId = ko.unwrap(origDashboard.id);
+                    if (!selectedDashboardInst().toolBarModel.duplicateInSet()) {
+                        newDashboard.showInHome = true;
+                    }
+                    self.saveDuplicatedDashboardToServer(newDashboard);
                 }
                 else {
                     if (newDashboard.tiles() && newDashboard.tiles().length > 0) {
@@ -114,8 +108,8 @@ define(['knockout',
                     } else {
                         selectedDashboardInst().toolBarModel.duplicateInSet(false);
                         $('#duplicateDsbDialog').ojDialog('close');
-                        if (data && data.id) {
-                            window.location.href = "/emsaasui/emcpdfui/builder.html?dashboardId=" + data.id;
+                        if (data && data.id()) {
+                            window.location.href = "/emsaasui/emcpdfui/builder.html?dashboardId=" + data.id();
                         }
                     }
                 };
@@ -142,7 +136,7 @@ define(['knockout',
                         'isMaximized', 'title', 'type', 'width',
                         'tileParameters', 'name', 'systemParameter',
                         'value', 'content', 'linkText', "systemDashboard",
-                        'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
+                        'WIDGET_LINKED_DASHBOARD', 'linkUrl','dupDashboardId'],
                     'ignore': ["createdOn", "href", "owner", "modeWidth","sharePublic", "modeHeight",
                         "lastModifiedBy", "lastModifiedOn", "tileId",
                         "modeColumn", "modeRow", "screenShotHref",

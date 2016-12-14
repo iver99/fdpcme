@@ -7,6 +7,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -14,21 +15,28 @@ import org.testng.annotations.Test;
 
 /**
  * @version
- * @author charles.c.chen
+ * @author
  * @since release specific (what release of product did this appear in)
  */
 
 public class BugVerification extends LoginAndLogout
 {
 
-	public void initTest(String testName) 
+	public void initTest(String testName)
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
+	public void initTestCustom(String testName, String Username)
+	{
+		customlogin(this.getClass().getName() + "." + testName, Username);
+		DashBoardUtils.loadWebDriver(webd);
+
+	}
+
 	@AfterClass
-	public void removeTestData() 
+	public void removeTestData()
 	{
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -48,10 +56,12 @@ public class BugVerification extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF2040");
 
 		webd.getLogger().info("All test data have been removed");
+
+		LoginAndLogout.logoutMethod();
 	}
 
 	@Test
-	public void testEMCPDF_2040() 
+	public void testEMCPDF_2040()
 	{
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -73,12 +83,58 @@ public class BugVerification extends LoginAndLogout
 				"Create dashboard failed!");
 
 		//set the timepicker as Custom
-		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, "04/14/2016 12:00 AM", "04/14/2016 12:30 PM"));
+		webd.getLogger().info("Set the custom date time");
+		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, "04/14/2016 12:00 AM", "04/14/2016 12:30 PM"),
+				"The restun date time is null");
 
 	}
 
 	@Test
-	public void testEMPCDF_812_1() 
+	public void testEMCPDF_2425()
+	{
+		//login the dashboard with user emaastesttenant1_la_admin1
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_admin1");
+		webd.getLogger().info("start to test in testEMCPDF_2425");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//create a dashboard set
+		webd.getLogger().info("Create a dashboard set");
+		DashboardHomeUtil.createDashboardSet(webd, "DashboardSet_2425", "test for sharing");
+
+		//add a OOB dashboard to the set
+		webd.getLogger().info("Add an OOB dashboard to the set");
+		DashboardBuilderUtil.addNewDashboardToSet(webd, "Databases");
+
+		//share the dashboard set
+		webd.getLogger().info("Share the dashboard set");
+		DashboardBuilderUtil.toggleShareDashboardset(webd);
+	}
+
+	@Test(dependsOnMethods = { "testEMCPDF_2425" })
+	public void testEMCPDF_2425_1()
+	{
+		//login the dashboard with user emaastesttenant1_la_admin1
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_admin1");
+		webd.getLogger().info("start to test in testEMCPDF_2425_1");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//open the shared dashboard set
+		webd.getLogger().info("Open the shared dashboard set");
+		DashboardHomeUtil.selectDashboard(webd, "DashboardSet_2425");
+
+		//verify the set
+		webd.getLogger().info("Verify the dashboard set");
+		DashboardBuilderUtil.verifyDashboardSet(webd, "DashboardSet_2425");
+		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Databases");
+
+	}
+
+	@Test
+	public void testEMPCDF_812_1()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_812");
@@ -114,7 +170,7 @@ public class BugVerification extends LoginAndLogout
 	}
 
 	@Test
-	public void testEMPCDF_832_1() 
+	public void testEMPCDF_832_1()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_832");

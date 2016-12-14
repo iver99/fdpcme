@@ -63,6 +63,15 @@ define([
                     Builder.rightPanelChange("complete-hidden-rightpanel");                 
                     $(".dashboard-picker-container").removeClass("df-collaps");
                 }
+                
+                //show globalcontext banner for dashboards except Orchestration OOB dashboards
+                if(!(dashboardsetToolBarModel.dashboardExtendedOptions && dashboardsetToolBarModel.dashboardExtendedOptions.showGlobalContextBanner === false)) {                
+                    var headerWrapper = $("#headerWrapper")[0];
+                    if(headerWrapper) {
+                        var headerViewModel = ko.dataFor(headerWrapper);
+                        headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                    }
+                }
 
                 if (alreadyLoaded) {
                     $showDashboard.show();
@@ -106,13 +115,14 @@ define([
 
 
                 function init() {
-                    var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share'], dashboardsetToolBarModel.reorderedDbsSetItems, true);
+                    var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share','ShowAll'], dashboardsetToolBarModel.reorderedDbsSetItems, true);
 
                     dashboardsViewModle.showExploreDataBtn(false);
 
                     dashboardsViewModle.handleDashboardClicked = function(event, data) {
 
                         var hasDuplicatedDashboard = false;
+                        var isCreator=dashboardsetToolBarModel.dashboardsetConfig.isCreator();
                         var dataId;
                         var dataName;
                             if(typeof(data.dashboard)!=='undefined'){
@@ -122,6 +132,15 @@ define([
                                dataId= data.id;
                                dataName=data.name;
                             }
+                            
+                            if (!isCreator) {
+                                dfu.showMessage({
+                                    type: 'warn',
+                                    summary: oj.Translations.getTranslatedString("DBS_BUILDER_DASHBOARD_CANNOT_SELECT_DASHBOARD"),
+                                    detail: '',
+                                    removeDelayTime: 5000});
+                            }
+                            
                         dashboardsetToolBarModel.dashboardsetItems.forEach(function(dashboardItem) {
                             if (dashboardItem.dashboardId === dataId) {
                                 hasDuplicatedDashboard = true;
@@ -132,8 +151,8 @@ define([
                                         removeDelayTime: 5000});
                                 }
                         });
-
-                        if (!hasDuplicatedDashboard) {
+                        
+                        if (!hasDuplicatedDashboard && isCreator) {
                             dashboardsetToolBarModel.pickDashboard(selectedDashboardInst().guid, {
                                 id: ko.observable(dataId),
                                 name: ko.observable(dataName)
@@ -163,6 +182,7 @@ define([
                 $("#loading").show();
                 var dashboardItem = dashboardsetToolBarModel.selectedDashboardItem(),
                     dashboardId = dashboardItem.dashboardId;
+            
                 new Builder.DashboardDataSource().loadDashboardData(dashboardId, function (dashboard) {
                     initializeSingleDashboard(dashboard, dashboardId);
                 }, function (e) {
@@ -203,6 +223,8 @@ define([
                             if(value.dashboardId===currentDashboardId){
                                 value.name(dashboardName);
                                 $('#dashboardTab-'+currentDashboardId).find('.tabs-name').text(dashboardName);
+                                $('#dashboardTab-'+currentDashboardId).attr("data-tabs-name",dashboardName);
+                                $('#dashboardTab-'+currentDashboardId).attr("data-dashboard-name-in-set",dashboardName);
                             }
                         });
                         dashboardsetToolBarModel.reorderedDbsSetItems().filter(function(value) {
@@ -295,11 +317,10 @@ define([
                     tilesView.enableDraggable();
                     tilesViewModel.show();
 
-                    toolBarModel.handleAddWidgetTooltip();
                     $b.triggerEvent($b.EVENT_POST_DOCUMENT_SHOW);
                     tilesView.enableMovingTransition();
                     idfbcutil.hookupBrowserCloseEvent(function () {
-                        oj.Logger.info("Dashboard: [id=" + dashboard.id() + ", name=" + dashboard.name() + "] is closed", true);
+                        oj.Logger.warn("Dashboard: [id=" + dashboard.id() + ", name=" + dashboard.name() + "] is closed", true, false);          
                     });
 
                     $("#loading").hide();

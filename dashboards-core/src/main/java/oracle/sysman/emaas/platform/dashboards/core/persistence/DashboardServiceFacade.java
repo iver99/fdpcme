@@ -1,6 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
+import java.sql.SQLException;
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -8,27 +10,48 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
-
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
-
+import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashboard;
+import oracle.sysman.emaas.platform.dashboards.core.util.SessionInfoUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreferencePK;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptionsPK;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DashboardServiceFacade
 {
+	private static final Logger LOGGER = LogManager.getLogger(DashboardServiceFacade.class);
+	
+	private static final String MODULE_NAME = "DashboardService-API"; // application service name
+	private final String ACTION_NAME = this.getClass().getSimpleName();//current class name
+	
 	private final EntityManager em;
 
 	public DashboardServiceFacade(Long tenantId)
 	{
 		final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager entityManager = emf.createEntityManager();
+		try {
+			SessionInfoUtil.setModuleAndAction(entityManager, MODULE_NAME, ACTION_NAME);
+		} catch (SQLException e) {
+			LOGGER.info("setModuleAndAction in DashboardServiceFacade",e);
+		} finally {
+			if (entityManager != null) {
+				entityManager.close();				
+			}
+		}
 		em = emf.createEntityManager();
 		em.setProperty("tenant.id", tenantId);
+		
 	}
 
 	/**
@@ -54,11 +77,42 @@ public class DashboardServiceFacade
 	//	{
 	//		return em.createNamedQuery("EmsDashboardFavorite.findAll", EmsDashboardFavorite.class).getResultList();
 	//	}
-
+	@SuppressWarnings("unchecked")
 	public EmsDashboard getEmsDashboardByName(String name, String owner)
 	{
 		String jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.deleted = ?3";
 		Object[] params = new Object[] { StringEscapeUtils.escapeHtml4(name), owner, BigInteger.ZERO };
+		Query query = em.createQuery(jpql);
+		for (int i = 1; i <= params.length; i++) {
+			query.setParameter(i, params[i - 1]);
+		}
+		//EMCPDF-2396
+		List <Object> list=query.getResultList();
+		if(!list.isEmpty()){
+			return (EmsDashboard)list.get(0);
+		}
+		return null;
+	}
+
+	public CombinedDashboard getCombinedEmsDashboardById(BigInteger dashboardId, String userName) {
+		EmsDashboard ed = getEmsDashboardById(dashboardId);
+		EmsPreference ep = this.getEmsPreference(userName, "Dashboards.homeDashboardId");
+		EmsUserOptions euo = this.getEmsUserOptions(userName, dashboardId);
+		return CombinedDashboard.valueOf(ed, ep, euo);
+	}
+
+	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(String name, String owner, String description){
+		String jpql;
+		Object[] params;
+		name = name.toUpperCase();
+		if(StringUtil.isEmpty(description)){
+			jpql = "select d from EmsDashboard d where upper(d.name) = ?1 and d.owner = ?2 and d.description is null and d.deleted = ?3";
+			params = new Object[]{StringEscapeUtils.escapeHtml4(name), owner, new Integer(0)};
+		}else {
+			jpql = "select d from EmsDashboard d where upper(d.name) = ?1 and d.owner = ?2 and d.description = ?3 and d.deleted = ?4";
+			params = new Object[]{StringEscapeUtils.escapeHtml4(name), owner, description, new Integer(0)};
+
+		}
 		Query query = em.createQuery(jpql);
 		for (int i = 1; i <= params.length; i++) {
 			query.setParameter(i, params[i - 1]);
@@ -96,6 +150,18 @@ public class DashboardServiceFacade
 	//		return em.createNamedQuery("EmsDashboardLastAccess.findAll", EmsDashboardLastAccess.class).getResultList();
 	//	}
 
+	public void removePreferenceByKey(String userName, String key, long tenantId)
+	{
+		String sql = "select * from ems_preference p where p.user_Name ='"+userName+"' and p.pref_key = '"+key+"' and p.tenant_id="+tenantId;		
+		Query query = em.createNativeQuery(sql, EmsPreference.class);
+		@SuppressWarnings("unchecked")
+		List<EmsPreference> emsPreferenceList = query.getResultList();
+		if (emsPreferenceList != null && !emsPreferenceList.isEmpty()) {
+			em.remove(emsPreferenceList.get(0));
+			commitTransaction();
+		}
+	}
+	
 	public EmsPreference getEmsPreference(String username, String prefKey)
 	{
 		return em.find(EmsPreference.class, new EmsPreferencePK(prefKey, username));
@@ -126,7 +192,7 @@ public class DashboardServiceFacade
 	}
 
 	public EntityManager getEntityManager()
-	{
+	{		
 		return em;
 	}
 
@@ -138,6 +204,49 @@ public class DashboardServiceFacade
 		Query query = em.createQuery(hql);
 		return query.getResultList();
 	}
+
+	/**
+	 * This method is for retriving dashboards by giving a list of dashboard ids,
+	 * ***************************************************************************************
+	 * And this method will return the dashboards with the same order with given dashboard Ids
+	 * ***************************************************************************************
+	 * @param dashboardIds
+	 * @param tenantId
+     * @return
+     */
+	public List<EmsDashboard> getEmsDashboardByIds(List<BigInteger> dashboardIds, Long tenantId)
+	{
+		if (dashboardIds != null && !dashboardIds.isEmpty()) {
+			StringBuilder parameters = new StringBuilder();
+			int flag = 0;
+			for (BigInteger id : dashboardIds) {
+				if (flag++ > 0) {
+					parameters.append(",");
+				}
+				parameters.append(id);
+			}
+			int index=1;
+			StringBuilder sb=new StringBuilder();
+			for(int i=0;i<dashboardIds.size();i++){
+				sb.append(dashboardIds.get(i)+","+index++);
+				if(i!=dashboardIds.size()-1){
+					sb.append(",");
+				}
+			}
+			String sql = "select * from ems_dashboard p where p.tenant_id=? and p.dashboard_id in("
+					+ parameters.toString() + ") order by decode(p.dashboard_id,"+sb.toString()+")";
+			LOGGER.debug("Get sub dashboard list, execute sql is "+sql);
+			Query query = em.createNativeQuery(sql, EmsDashboard.class);
+			query.setParameter("1", tenantId);
+			@SuppressWarnings("unchecked")
+			List<EmsDashboard> subDashboards = query.getResultList();
+			return subDashboards;
+		}
+		return Collections.emptyList();
+
+	}
+ 
+
 
 	public EmsDashboard mergeEmsDashboard(EmsDashboard emsDashboard)
 	{
@@ -357,7 +466,22 @@ public class DashboardServiceFacade
 		return deleteCout;
 	}
 
-	public List<EmsDashboard> getEmsDashboardsBySubId(BigInteger subDashboardId)
+	public void updateSubDashboardShowInHome(BigInteger dashboardId)
+	{
+		getEntityManager().getTransaction().begin();
+		List<EmsSubDashboard> emsSubDashboards = getEmsDashboardById(dashboardId).getSubDashboardList();
+		if (emsSubDashboards != null) {
+			for (EmsSubDashboard emsSubDashboard : emsSubDashboards) {
+				EmsDashboard dashboard = getEmsDashboardById(emsSubDashboard.getSubDashboardId());
+				dashboard.setShowInHome(1);
+				em.merge(dashboard);
+			}
+		}
+		commitTransaction();
+	}
+
+	@SuppressWarnings("unchecked")
+    public List<EmsDashboard> getEmsDashboardsBySubId(BigInteger subDashboardId)
 	{
 		getEntityManager().getTransaction().begin();
 		List<EmsDashboard> dashboards = em.createNamedQuery("EmsDashboard.queryBySubDashboardID").setParameter("p", subDashboardId)
@@ -373,6 +497,20 @@ public class DashboardServiceFacade
 		em.remove(emsUserOptions);
 		commitTransaction();
 	}
+	
+	/*public boolean isDashboardDeleted(long dashboardId){
+		String sql = "select * from ems_dashboard p where p.dashboard_id="	+dashboardId;	
+		Query query = em.createNativeQuery(sql, EmsDashboard.class);
+		@SuppressWarnings("unchecked")
+		List<EmsDashboard> emsDashboardList = query.getResultList();
+		if (emsDashboardList != null && !emsDashboardList.isEmpty()) {
+			if(emsDashboardList.get(0).getDeleted()==0){
+				return false;
+			}
+		}
+		return true;
+		
+	}*/
 
 	public int removeUnsharedEmsSubDashboard(BigInteger subDashboardId, String owner)
 	{

@@ -1,4 +1,3 @@
-
 apply from: 'test.gradle'
 jar {
 	from('src/main/java/META-INF')
@@ -25,6 +24,7 @@ artifactoryPublish {
 }
 
 test {
+	classpath = sourceSets.test.compileClasspath + sourceSets.test.output
 	useTestNG()
 			{
 				//We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
@@ -34,8 +34,13 @@ test {
 }
 
 dependencies {
-	compile(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
-	compile(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
-	
+	compile getProjectArtifact('eclipselink')    
+	compile getProjectArtifact('javax.persistence')  
+  
 }
 
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testNG //avoid building error in Eclipse
+    }
+}

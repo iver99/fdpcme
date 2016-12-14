@@ -36,6 +36,8 @@ define(['knockout',
                 self.resetTiles();
                 if (self.mode.POSITION_TYPE === Builder.EDITOR_POS_BASED_ON_ROW_COLUMN){
                     self.tilesReorder();
+                    // let's 'delete' tiles created from widgets already deleted
+                    $b.triggerEvent($b.EVENT_DASHBOARD_CLEANUP_DELETED_WIDGETS, "handle deleted widgets");
                 }
                 else if (self.mode.POSITION_TYPE === Builder.EDITOR_POS_FIND_SUITABLE_SPACE) {
                     self.sortTilesByRowsThenColumns();
@@ -292,6 +294,7 @@ define(['knockout',
                             self.narrowTile(tile, Math.abs(offsetXValue));
                             return true;
                         }
+                        self.updateTilePosition(tile, tile.row(), self.mode.getModeColumn(tile));
                         break;
                     case self.RESIZE_OPTIONS.SOUTH:
                         var topOfContainer = widgetArea.offset().top;
@@ -722,7 +725,7 @@ define(['knockout',
                     if (koc_name && viewmodel && template) {
                         if (widget_source===1){
                              if (!ko.components.isRegistered(koc_name)) {
-                                var assetRoot = Builder.getWidgetAssetRoot(provider_name,provider_version,provider_asset_root);
+                                var assetRoot = dfu.getAssetRootUrl(provider_name);
                                 if (assetRoot===null){
                                     oj.Logger.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
                                 }

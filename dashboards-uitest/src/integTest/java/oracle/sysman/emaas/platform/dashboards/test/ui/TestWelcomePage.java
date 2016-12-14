@@ -13,79 +13,81 @@ import org.testng.annotations.Test;
 
 /**
  * @version
- * @author charles.c.chen
+ * @author
  * @since release specific (what release of product did this appear in)
  */
 
 public class TestWelcomePage extends LoginAndLogout
 {
 
-	public void initTest(String testName) 
+	public void initTest(String testName)
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
 	@Test
-	public void testOpenAPMPage() 
+	public void testOpenAPMPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening APM in welcome page...");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitAPM(webd);
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open APM by url: " + tmpUrl);
-		String noParamUrl = trimUrlParameters(tmpUrl);
-		urlVerification(noParamUrl, "apmUi/index.html");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "apmUi/index.html");
+
 		webd.getLogger().info("Test open APM in welcome page finished!!!");
 	}
 
 	@Test
-	public void testOpenDashboardPage() 
+	public void testOpenDashboardPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening Dashboards in welcome page...");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitDashboards(webd);
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open Dashboards by url: " + tmpUrl);
-		urlVerification(tmpUrl, "emcpdfui/home.html");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcpdfui/home.html");
+
 		webd.getLogger().info("Test open dashboards in welcome page finished!!!");
 	}
 
 	@Test
-	public void testOpenDE_LAPage() 
+	public void testOpenDE_LAPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening Data Explorers-Log in welcome page...");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.dataExplorers(webd, "log");
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open Data Explorers-Log by url: " + tmpUrl);
-		urlVerification(tmpUrl, "emlacore/html/log-analytics-search.html");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emlacore/html/log-analytics-search.html");
+
 		webd.getLogger().info("Test opening Data Explorers-Log in welcome page finished!!!");
 	}
 
 	@Test
-	public void testOpenDE_SearchPage() 
+	public void testOpenDE_SearchPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening Data Explorers-Search in welcome page...");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.dataExplorers(webd, "search");
-		String url = "emcta/ta/analytics.html";
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open Data Explorers-Search by url: " + tmpUrl);
-		Assert.assertTrue(tmpUrl.contains(url));
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcta/ta/analytics.html");
+
 		webd.getLogger().info("Test opening Data Explorers-Search in welcome page finished!!!");
 	}
 
 	//	@Test
-	//	public void testOpenGetStartedPage() 
+	//	public void testOpenGetStartedPage()
 	//	{
 	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 	//		webd.getLogger().info("Start to test opening 'How to get started' in welcome page...");
@@ -100,7 +102,7 @@ public class TestWelcomePage extends LoginAndLogout
 	//	}
 
 	//	@Test
-	//	public void testOpenInfraMonitoring() 
+	//	public void testOpenInfraMonitoring()
 	//	{
 	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 	//		webd.getLogger().info("Start to test open Infrastructure Monitoring in welcome page...");
@@ -114,102 +116,106 @@ public class TestWelcomePage extends LoginAndLogout
 	//	}
 
 	@Test
-	public void testOpenITA_DEPage() 
+	public void testOpenITA_DEPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Data Explorer in welcome page...");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "dataExplorer");
-		String url = "emcta/ta/analytics.html";
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open ITA: Data Explorer by url: " + tmpUrl);
-		Assert.assertTrue(tmpUrl.contains(url));
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcta/ta/analytics.html");
+
 		webd.getLogger().info("Test opening ITA: Data Explorer in welcome page finished!!!");
 	}
 
 	@Test
-	public void testOpenITA_PADatabasePage() 
+	public void testOpenITA_PADatabasePage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Performance Analytics-Database in welcome page...");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "performanceAnalyticsDatabase");
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open ITA: Performance Analytics-Database by url: " + tmpUrl);
-		urlVerification(tmpUrl, "emcitas/db-analytics-war/html/db-performance-analytics.html");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcitas/db-performance-analytics/html/db-performance-analytics.html");
+
 		webd.getLogger().info("Test opening ITA: Performance Analytics-Database in welcome page finished!!!");
 	}
 
 	//@Test
-	public void testOpenITA_PAMiddlewarePage() 
+	public void testOpenITA_PAMiddlewarePage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Performance Analytics-Middleware in welcome page...");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "performanceAnalyticsMiddleware");
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open ITA: Performance Analytics-Middleware by url: " + tmpUrl);
-		urlVerification(tmpUrl, "emcitas/mw-analytics-war/html/mw-perf-analytics.html");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcitas/mw-analytics-war/html/mw-perf-analytics.html");
+
 		webd.getLogger().info("Test opening ITA: Performance Analytics-Middleware in welcome page finished!!!");
 	}
 
 	@Test
-	public void testOpenITA_RADatabasePage() 
+	public void testOpenITA_RADatabasePage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Resource Analytics-Database in welcome page...");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "resourceAnalyticsDatabase");
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open ITA: Resource Analytics-Database by url: " + tmpUrl);
-		urlVerification(tmpUrl, "emcitas/db-analytics-war/html/db-analytics-resource-planner.html");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcitas/db-analytics-war/html/db-analytics-resource-planner.html");
+
 		webd.getLogger().info("Test opening ITA: Resource Analytics-Database in welcome page finished!!!");
 	}
 
 	@Test
-	public void testOpenITA_RAHostPage() 
+	public void testOpenITA_RAHostPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Resource Analytics-Host in welcome page...");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "resourceAnalyticsHost");
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open ITA: Resource Analytics-Host by url: " + tmpUrl);
-		String noParamUrl = trimUrlParameters(tmpUrl);
-		urlVerification(noParamUrl, "emcitas/resource-analytics/html/server-resource-analytics.html");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcitas/resource-analytics/html/server-resource-analytics.html");
+
 		webd.getLogger().info("Test opening ITA: Resource Analytics-Host in welcome page finished!!!");
 	}
 
 	@Test
-	public void testOpenITA_RAMiddlewarePage() 
+	public void testOpenITA_RAMiddlewarePage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA: Resource Analytics-Middleware in welcome page...");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "resourceAnalyticsMiddleware");
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open ITA: Resource Analytics-Middleware by url: " + tmpUrl);
-		urlVerification(tmpUrl, "emcitas/mw-analytics-war/html/mw-analytics-resource-planner.html");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcitas/mw-analytics-war/html/mw-analytics-resource-planner.html");
+
 		webd.getLogger().info("Test opening ITA: Resource Analytics-Middleware in welcome page finished!!!");
 	}
 
 	@Test
-	public void testOpenITAPage() 
+	public void testOpenITAPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening ITA in welcome page...");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitITA(webd, "default");
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open ITA by url: " + tmpUrl);
-		urlVerification(tmpUrl, "emcpdfui/home.html?filter=ita");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ita");
 
 		WebElement el = webd.getWebDriver().findElement(By.id(PageId.ITA_BOXID));
 		Assert.assertTrue(el.isSelected());
@@ -221,21 +227,22 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
-	public void testOpenLAPage() 
+	public void testOpenLAPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test opening LA in welcome page...");
 
 		BrandingBarUtil.visitWelcome(webd);
 		WelcomeUtil.visitLA(webd);
-		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("Open LA by url: " + tmpUrl);
-		urlVerification(tmpUrl, "emlacore/html/log-analytics-search.html");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emlacore/html/log-analytics-search.html");
+
 		webd.getLogger().info("Test open LA in welcome page finished!!!");
 	}
 
 	//	@Test
-	//	public void testOpenServiceOfferingPage() 
+	//	public void testOpenServiceOfferingPage()
 	//	{
 	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 	//		webd.getLogger().info("Start to test opening 'Service Offerings' in welcome page...");
@@ -250,7 +257,7 @@ public class TestWelcomePage extends LoginAndLogout
 	//	}
 
 	//	@Test
-	//	public void testOpenVideosPage() 
+	//	public void testOpenVideosPage()
 	//	{
 	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 	//		webd.getLogger().info("Start to test opening 'Videos' in welcome page...");
@@ -265,7 +272,7 @@ public class TestWelcomePage extends LoginAndLogout
 	//	}
 
 	@Test
-	public void testWelcomepage() 
+	public void testWelcomepage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in test Welcome Page");
@@ -282,21 +289,4 @@ public class TestWelcomePage extends LoginAndLogout
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "videos"));
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "serviceOfferings"));
 	}
-
-	public void urlVerification(String pageUrl, String expectedUrl)
-	{
-		Assert.assertEquals(pageUrl.substring(pageUrl.indexOf("emsaasui") + 9), expectedUrl);
-	}
-
-	private String trimUrlParameters(String url)
-	{
-		String baseUrl = null;
-		if (url != null) {
-			String[] urlComponents = url.split("\\#|\\?");
-			baseUrl = urlComponents[0];
-		}
-
-		return baseUrl;
-	}
-
 }

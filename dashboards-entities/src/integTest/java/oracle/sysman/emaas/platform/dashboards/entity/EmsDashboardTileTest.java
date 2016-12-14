@@ -8,11 +8,13 @@ import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+
+
 @Test(groups={"s1"})
 public class EmsDashboardTileTest { 
     Date now = new Date();
     private EmsDashboard emsDashboard = new EmsDashboard(now,BigInteger.valueOf(10L),BigInteger.valueOf(10L),"elephant",10,10,10,10,10,10, now,
-            "elephant","elephant","elephant","elephant",10,10, "{}");
+            "elephant","elephant","elephant","elephant",10,10,1,"{}");
 
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
             now,
@@ -44,7 +46,9 @@ public class EmsDashboardTileTest {
             "lion",
             10,
             10,
-            BigInteger.valueOf(10L));
+            BigInteger.valueOf(10L),
+            1,
+            new Date());
 
     private EmsDashboardTileParams emsDashboardTileParams = new
             EmsDashboardTileParams(

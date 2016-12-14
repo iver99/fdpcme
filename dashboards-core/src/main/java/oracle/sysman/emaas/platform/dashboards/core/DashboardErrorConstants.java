@@ -44,7 +44,11 @@ public class DashboardErrorConstants
 	public static final Integer DASHBOARD_COMMON_RESOURCE_ERROR_CODE = 20000;
 	public static final Integer DASHBOARD_NOT_FOUND_ERROR_CODE = 20001;
 	public static final Integer TENANT_NO_SUBSCRIPTION_ERROR_CODE = 20002;
-	public static final Integer USER_OPTIONS_NOT_FOUND_ERROR_CODE = 20003 ;
+	public static final Integer USER_OPTIONS_NOT_FOUND_ERROR_CODE = 20003;
+	
+	public static final Integer DEPENDENCY_UNAVAILABLE_ERROR_CODE = 20006;
+	public static final Integer ENTITY_NAMING_DEPENDENCY_UNAVAILABLE_ERROR_CODE = DEPENDENCY_UNAVAILABLE_ERROR_CODE;
+	public static final Integer DATABASE_DEPENDENCY_UNAVAILABLE_ERROR_CODE = DEPENDENCY_UNAVAILABLE_ERROR_CODE;
 
 	// important: don't assign value larger than this value to dashboard resource errors
 	public static final Integer DASHBOARD_RESOURCE_MAX_ERROR_CODE = 29999;
@@ -54,4 +58,11 @@ public class DashboardErrorConstants
 
 	// important: don't assign value larger than this value to dashboard security errors
 	public static final Integer DASHBOARD_SECURITY_MAX_ERROR_CODE = 39999;
+
+	//keep cache code same with SSF side
+	public static final Integer DASHBOARD_CACHE_ERROR_CODE=50000;
+	public static final Integer DASHBOARD_CACHE_GROUP_NOT_FOUND_ERROR_CODE=50001;
+	public static final Integer DASHBOARD_CACHE_GROUP_NAME_EMPTY_ERROR_CODE=50002;
+	// important: don't assign value larger than this value to dashboard cache errors
+	public static final Integer DASHBOARD_CACHE_MAX_ERROR_CODE=59999;
 }

@@ -23,10 +23,12 @@ define([
                         {defaultValue: 300000}
             };
             self.extendedOptions = self.dashboard.extendedOptions ? JSON.parse(self.dashboard.extendedOptions()) : defaultSettings;
+            self.extendedOptions.tsel = self.extendedOptions.tsel ? self.extendedOptions.tsel : defaultSettings.tsel;
+            self.extendedOptions.timeSel = self.extendedOptions.timeSel ? self.extendedOptions.timeSel : defaultSettings.timeSel;
 
             //set entity support/selectionMode
-            self.extendedOptions.tsel.entitySupport && $b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel().selectionMode(self.extendedOptions.tsel.entitySupport);
-
+            self.extendedOptions.tsel && self.extendedOptions.tsel.entitySupport && $b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel().selectionMode(self.extendedOptions.tsel.entitySupport);
+            
             self.defaultEntityContext = ko.observable(self.extendedOptions.tsel.entityContext);
             self.defaultTimeRangeValue = ko.observable([self.extendedOptions.timeSel.defaultValue]);
             var endTimeNow = new Date().getTime();
@@ -105,7 +107,7 @@ define([
                     var tselId = "tsel_"+self.dashboard.id();
                     var label;
                     var labelIntervalId = setInterval(function() {
-                        if(self.labelInited) {
+                        if(self.labelInited || self.enableEntityFilter() === "OFF") {
                             clearInterval(labelIntervalId);
                         }
                        if($("#"+tselId).children().get(0) && ko.contextFor($('#' + tselId).children().get(0)).$component.cm.dropdownInitialLabel()) {
@@ -197,8 +199,8 @@ define([
                 self.dashboard = dashboard;
                 var extendedOptions = JSON.parse(dashboard.extendedOptions());
                 self.extendedOptions = extendedOptions ? extendedOptions : self.extendedOptions;
-                var tsel = extendedOptions ? extendedOptions.tsel : {};
-                var timeSel = extendedOptions ? extendedOptions.timeSel : {};
+                var tsel = extendedOptions && extendedOptions.tsel ? extendedOptions.tsel : {};
+                var timeSel = extendedOptions && extendedOptions.timeSel ? extendedOptions.timeSel : {};
                 //1. reset tsel in right drawer
                 self.enableEntityFilter((dashboard.enableEntityFilter() === 'TRUE')?'ON':'OFF');
                 self.entitySupport(tsel.entitySupport?(tsel.entitySupport==="byCriteria"?true:false):true);

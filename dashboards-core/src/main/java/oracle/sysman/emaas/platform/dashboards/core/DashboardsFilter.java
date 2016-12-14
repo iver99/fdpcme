@@ -40,6 +40,7 @@ public class DashboardsFilter
 	private static final List<String> appFilterStrings_input = Arrays.asList(new String[] { "apm", "ita", "la", "ocs" });
 
 	private static final String favoriteFilterString = "Favorites";
+	private static final String showAllDashboardsString = "ShowAll";
 
 	public static final String APM_PROVIDER_APMUI = "ApmUI";
 	public static final String ITA_PROVIDER_EMCI = "emcitas-ui-apps";
@@ -47,10 +48,17 @@ public class DashboardsFilter
 	public static final String LA_PROVIDER_LS = "LogAnalyticsUI";
 	public static final String OCS_PROVIDER_OCS = "CosUIService";
 
+	public static final String APM_WIGDETGROUP = "APMCS";
+	//	public static final String ITA_WIGDETGROUP = "IT Analytics";
+	public static final String ITA_WIGDETGROUP = "Data Explorer";
+	public static final String LA_WIGDETGROUP = "Log Analytics";
+	public static final String OCS_WIGDETGROUP = "Orchestration";
+
 	private List<String> includedTypes;
 	private List<String> includedApps;
 	private List<String> includedOwners;
 	private Boolean includedFavorites;
+	private Boolean showInHome =  true;
 
 	public DashboardsFilter()
 	{
@@ -64,6 +72,14 @@ public class DashboardsFilter
 		if (appFilterStrings.contains(app.trim())) {
 			includedApps.add(app.trim());
 		}
+	}
+	
+	public Boolean getShowInHome() {
+		return showInHome;
+	}
+
+	public void setShowInHome(Boolean showInHome) {
+		this.showInHome = showInHome;
 	}
 
 	public void addIncludedOwner(String o)
@@ -152,6 +168,7 @@ public class DashboardsFilter
 		return includedTypes;
 	}
 
+        /*
 	public List<String> getIncludedWidgetProviders()
 	{
 		if (includedApps == null || includedApps.isEmpty()) {
@@ -193,6 +210,7 @@ public class DashboardsFilter
 		}
 		return sb.toString();
 	}
+        */
 
 	//	/**
 	//	 * @param includedApps
@@ -285,6 +303,11 @@ public class DashboardsFilter
 				setIncludedFavorites(true);
 				return;
 			}
+			
+			if (showAllDashboardsString.equalsIgnoreCase(filterUpcase)) {
+				setShowInHome(false);
+				return;
+			}
 
 			for (String s : typeFilterStrings) {
 				if (s.equalsIgnoreCase(filterUpcase)) {
@@ -316,5 +339,44 @@ public class DashboardsFilter
 			}
 		}
 	}
+
+	List<String> getIncludedWidgetGroups()
+	{
+		if (includedApps == null || includedApps.isEmpty()) {
+			return Collections.emptyList();
+		}
+		List<String> sb = new ArrayList<String>();
+		for (String app : includedApps) {
+			if (DashboardApplicationType.APM_STRING.equals(app)) {
+				sb.add(APM_WIGDETGROUP);
+			}
+			else if (DashboardApplicationType.ITA_SRING.equals(app)) {
+				sb.add(ITA_WIGDETGROUP);
+			}
+			else if (DashboardApplicationType.LA_STRING.equals(app)) {
+				sb.add(LA_WIGDETGROUP);
+			}
+			else if (DashboardApplicationType.ORCHESTRATION_STRING.equals(app)) {
+				sb.add(OCS_WIGDETGROUP);
+			}
+		}
+		return sb;
+	}
+
+	String getIncludedWidgetGroupsString()
+	{
+		List<String> ps = getIncludedWidgetGroups();
+		if (ps == null || ps.isEmpty()) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < ps.size(); i++) {
+			if (i != 0) {
+				sb.append(",");
+			}
+			sb.append("'" + ps.get(i) + "'");
+		}
+		return sb.toString();
+	}	
 
 }

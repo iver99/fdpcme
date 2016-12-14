@@ -1,6 +1,9 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mocked;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -11,12 +14,12 @@ import javax.ws.rs.core.Response;
  * @author jishshi
  * @since  1/14/2016.
  */
-@Test(groups = {"s1"})
+@Test(groups = {"s2"})
 public class ConfigurationAPITest {
-
-
     ConfigurationAPI configurationAPI;
 
+    @Mocked
+    DependencyStatus dependencyStatus;
     @BeforeMethod
     public void setUp() {
         configurationAPI = new ConfigurationAPI();
@@ -24,22 +27,25 @@ public class ConfigurationAPITest {
 
     @Test
     public void testGetDiscoveryConfigurations() {
-        Response discoveryConfigurations1 = configurationAPI.getDiscoveryConfigurations("tenantIdParam", "userTenant", "referer", "sessionExpiryTime");
-        Assert.assertNotNull(discoveryConfigurations1);
-        Response discoveryConfigurations2 = configurationAPI.getDiscoveryConfigurations("tenantIdParam", null, "referer", "sessionExpiryTime");
-        Assert.assertNotNull(discoveryConfigurations2);
+        configurationAPI.getDiscoveryConfigurations("10000", "user.tenant","","");
     }
 
-    //@Test
-    //public void testGetDiscoveryConfigurations1(){
-        //Deencapsulation.setField(ConfigurationAPI.class, "responseError", null);
-        //Assert.assertNotNull(configurationAPI.getDiscoveryConfigurations("", null, null, null));
-    //}
+    @Test
+    public void testGetRolesAndPriviledgesForDashboardException(){
+        configurationAPI.getRolesAndPriviledges("10000", "user.tenant","","");
+    }
 
-    //@Test
-    //public void testGetDiscoveryConfigurations2(){
-        //Deencapsulation.setField(ConfigurationAPI.class, "responseError", null);
-        //Assert.assertNotNull(configurationAPI.getDiscoveryConfigurations("tenantIdParam", "userTenant", "referer", "sessionExpiryTime"));
-    //}
+    @Test
+    public void testGetRolesAndPriviledgesForDashboardException_ENON(){
+        new Expectations(){
+            {
+                DependencyStatus.getInstance();
+                result = dependencyStatus;
+                dependencyStatus.isEntityNamingUp();
+                result = true;
+            }
+        };
+        configurationAPI.getRolesAndPriviledges("10000", "user.tenant","","");
+    }
 
 }

@@ -30,46 +30,46 @@ def compiledDir = buildDir.absolutePath+'/public_html'
 def webRootSourceDir = 'public_html'
 
 configurations {
-    restDoc { transitive = false }
+    restDoc  
     
-    ftpAntTask { transitive = false }
+    ftpAntTask  
 
     compass
-    jscover { transitive = false }
+    jscover  
 }
 
 dependencies {
-        providedCompile project(':dashboards-ui:dashboardsui-webutils'){ transitive = false }
-        compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2'){ transitive = false }
-        compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2'){ transitive = false }
-        compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.+'){ transitive = false }
-        compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.+'){ transitive = false }
-    	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){ transitive = false }
-   
- 	providedCompile(group: 'commons-codec', name:'commons-codec', version:'1.6') { transitive = false }
-    	providedCompile(group: 'org.apache.commons', name:'commons-lang3', version:'3.1') { transitive = false }
-    	providedCompile(group: 'commons-logging', name:'commons-logging', version:'1.1.1') { transitive = false }
-    	providedCompile(group: 'org.apache.httpcomponents', name:'httpclient', version:'4.3.1') { transitive = false }
-        providedCompile(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3') { transitive = false }
-        providedCompile(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1') { transitive = false }
+        providedCompile project(':dashboards-ui:dashboardsui-webutils') 
+        compile getProjectArtifact('log4j-core')   
+        compile getProjectArtifact('log4j-api')   
+        compile getProjectArtifact('registry-lookup-client')   
+        compile getProjectArtifact('registry-client')   
+        providedCompile getProjectArtifact('groovy-all')   
+        providedCompile getProjectArtifact('commons-codec')   
+        
+        providedCompile getProjectArtifact('commons-lang3')   
+        
+        providedCompile getProjectArtifact('commons-logging')   
+        providedCompile getProjectArtifact('httpclient')   
+        providedCompile getProjectArtifact('log4j-core')   
+        providedCompile getProjectArtifact('httpcore')   
+        providedCompile getProjectArtifact('httpmime')   
+        providedCompile getProjectArtifact('servlet-api')   
+        providedCompile getProjectArtifact('javax.ws.rs-api')   
+        compile getProjectArtifact('oraclejet')     
+		compile getProjectArtifact('font-awesome')   
+        compile getProjectArtifact('jmockit')   
   
     	
-        providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
-        providedCompile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
-        
-	compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '2.0.2-26417', ext: 'war'){ transitive = false }
-	//compile(group: 'CKSource', name: 'ckeditor_full', version: '4.5.1', ext: 'zip'){transitive = false}
-	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
-        compile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
-    
+     
 	ftpAntTask('org.apache.ant:ant-commons-net:12.1.2-0-0') {
 	        module('commons-net:commons-net:1.4.1') {
 	                dependencies 'oro:oro:2.0.8:jar'
         	}
     	}
 
-	compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')
-	jscover (group:'com.github.tntim96', name:'JSCover-all', version:'1.0.19')
+	compass getProjectArtifact('jruby-complete')   
+	jscover getProjectArtifact('JSCover-all')   
 }
 
 def jscc = "1".equals(System.getenv()['ENABLE_CC_JS'])
@@ -547,9 +547,119 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory,unpackFo
     
     doLast {
         delete 'public_html/@version@/css'
+	
+	//add setting to homeMain.js
+	File homeMainFile = new File(compiledDir+'/@version@/js/homeMain.js')
+	File newFile1 = new File(compiledDir+'/@version@/js/homeMain-output.js')
+	newFile1.withPrintWriter { out ->
+	    def linenumber = 1
+	    homeMainFile.eachLine { line ->
+		if (linenumber == 5){
+		    out.print(line)
+		    out.println("\nwindow.gradleDevMode=true; \n")
+		} else {
+		    out.println(line)
+		}
+		linenumber += 1
+	    }
+	}
+
+	//add setting to builderMain.js
+	File builderMainFile = new File(compiledDir+'/@version@/js/builderMain.js')
+	File newFile2 = new File(compiledDir+'/@version@/js/builderMain-output.js')
+	newFile2.withPrintWriter { out ->
+	    def linenumber = 1
+	    builderMainFile.eachLine { line ->
+		if (linenumber == 5){
+		    out.print(line)
+		    out.println("\nwindow.gradleDevMode=true; \n")
+		} else {
+		    out.println(line)
+		}
+		linenumber += 1
+	    }
+	}
+	
+	//add setting to welcomeMain.js
+	File welcomeMainFile = new File(compiledDir+'/@version@/js/welcomeMain.js')
+	File newFile3 = new File(compiledDir+'/@version@/js/welcomeMain-output.js')
+	newFile3.withPrintWriter { out ->
+	    def linenumber = 1
+	    welcomeMainFile.eachLine { line ->
+		if (linenumber == 4){
+		    out.print(line)
+		    out.println("\nwindow.gradleDevMode=true; \n")
+		} else {
+		    out.println(line)
+		}
+		linenumber += 1
+	    }
+	}
+
+	//add setting to error.js
+	File errorFile = new File(compiledDir+'/@version@/js/error.js')
+	File newFile4 = new File(compiledDir+'/@version@/js/error-output.js')
+	newFile4.withPrintWriter { out ->
+	    def linenumber = 1
+	    errorFile.eachLine { line ->
+		if (linenumber == 4){
+		    out.print(line)
+		    out.println("\nwindow.gradleDevMode=true; \n")
+		} else {
+		    out.println(line)
+		}
+		linenumber += 1
+	    }
+	}
+	
+	homeMainFile.renameTo(compiledDir+'/@version@/js/homeMain_bak.js')
+	newFile1.renameTo(compiledDir+'/@version@/js/homeMain.js')
+	
+	builderMainFile.renameTo(compiledDir+'/@version@/js/builderMain_bak.js')
+	newFile2.renameTo(compiledDir+'/@version@/js/builderMain.js')
+
+	welcomeMainFile.renameTo(compiledDir+'/@version@/js/welcomeMain_bak.js')
+	newFile3.renameTo(compiledDir+'/@version@/js/welcomeMain.js')
+	
+
+	errorFile.renameTo(compiledDir+'/@version@/js/error_bak.js')
+	newFile4.renameTo(compiledDir+'/@version@/js/error.js')
+
+	String originalCode = "bundles: (window.DEV_MODE !==null && typeof window.DEV_MODE ===\"object\")"
+	String replacedCode = "bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ===\"object\") || (window.gradleDevMode !==null && typeof window.gradleDevMode===\"boolean\"))"
+
+ 	File mapFile = new File(compiledDir+'/@version@/js/homeMain.js')
+        String contents = mapFile.getText('UTF-8')        
+        contents = contents.replaceAll(Pattern.quote(originalCode), replacedCode)
+        mapFile.write(contents, 'UTF-8')
+
+	mapFile = new File(compiledDir+'/@version@/js/builderMain.js')
+        contents = mapFile.getText('UTF-8')        
+        contents = contents.replaceAll(Pattern.quote(originalCode), replacedCode)
+        mapFile.write(contents, 'UTF-8')
+
+	mapFile = new File(compiledDir+'/@version@/js/welcomeMain.js')
+        contents = mapFile.getText('UTF-8')        
+        contents = contents.replaceAll(Pattern.quote(originalCode), replacedCode)
+        mapFile.write(contents, 'UTF-8')
+
+	mapFile = new File(compiledDir+'/@version@/js/error.js')
+        contents = mapFile.getText('UTF-8')        
+        contents = contents.replaceAll(Pattern.quote(originalCode), replacedCode)
+        mapFile.write(contents, 'UTF-8')
+		
+	delete compiledDir+'/@version@/js/homeMain-output.js'
+	delete compiledDir+'/@version@/js/homeMain_bak.js'
+	delete compiledDir+'/@version@/js/builderMain-output.js'
+	delete compiledDir+'/@version@/js/builderMain_bak.js'
+	delete compiledDir+'/@version@/js/welcomeMain-output.js'
+	delete compiledDir+'/@version@/js/welcomeMain_bak.js'
+	delete compiledDir+'/@version@/js/error-output.js'
+	delete compiledDir+'/@version@/js/error_bak.js'
     }    
 }
 test {
+        classpath = sourceSets.test.compileClasspath + sourceSets.test.output
         useTestNG()
         {
                 //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,

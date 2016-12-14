@@ -3,12 +3,6 @@
  * All rights reserved.
  */
 
-/**
- * @preserve Copyright 2013 jQuery Foundation and other contributors
- * Released under the MIT license.
- * http://jquery.org/license
- */
-
 define([
     'dashboards/datasourcefactory',
     'dashboards/dbstablesource',
@@ -20,11 +14,12 @@ define([
     'uifwk/js/util/preference-util',
     'uifwk/js/util/mobile-util',
     'uifwk/js/util/zdt-util',
+    'uifwk/js/sdk/context-util',
     'ojs/ojknockout',
     'ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'
 ],
-function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu,zdtUtilModel)
+function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu,zdtUtilModel,cxtModel)
 {
     var SHOW_WELCOME_PREF_KEY = "Dashboards.showWelcomeDialog",
             DASHBOARDS_FILTER_PREF_KEY = "Dashboards.dashboardsFilter",
@@ -32,6 +27,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu,zdtUtilModel)
             DASHBOARDS_REST_URL = dfu.getDashboardsUrl(),
             PREFERENCES_REST_URL = dfu.getPreferencesUrl(),
             SUBSCIBED_APPS_REST_URL = dfu.getSubscribedappsUrl();
+    var cxtUtil = new cxtModel();
 
     function createDashboardDialogModel() {
         var self = this;
@@ -44,7 +40,12 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu,zdtUtilModel)
         self.showHideDescription=ko.observable(false);
         self.singleVisible = ko.observable(true);
         self.setVisible=ko.observable(false);
-
+        if(!$('#dbd-set-tabs')[0]){
+            self.underSet=false;
+        }else{
+            self.underSet=true;
+        }
+        
         self.dashboardtypeSelectFuc=function(){
             if(self.selectType()==="NORMAL"){
                 self.singleVisible(true);
@@ -180,7 +181,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu,zdtUtilModel)
         //dashboards
         self.isDashboardSet = isSet === true ? true : false;
         self.userName = dfu.getUserName();
-        self.isMobileDevice = ko.observable( (new mbu()).isMobile );
+        self.isMobileDevice = ko.observable( (new mbu()).isSmallDevice );
         self.currentDashboardSetItem=dashboardSetItem;
         self.dashboardInTabs=ko.observable(false);
 
@@ -200,7 +201,17 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu,zdtUtilModel)
         else
         {
             self.filter = null;
+        }        
+        
+        if (localStorage.deleteHomeDbd ==='true') {
+            dfu.showMessage({
+                type: 'info',
+                summary: oj.Translations.getTranslatedString("DBS_HOME_MSG_DELETED_HOME_DASHBOARD"),
+                detail: '',
+                removeDelayTime: 10000});
+            localStorage.deleteHomeDbd = false;
         }
+        
         self.showTilesMsg = ko.observable(false);
         self.tilesMsg = ko.observable("");
         self.showExploreDataBtn= ko.observable(true);
@@ -335,6 +346,10 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu,zdtUtilModel)
                     data['dashboard'] = data['dashboardModel'].attributes;
                 }
             }
+            if(data.dashboard.description)
+            {
+                data.dashboard.description = data.dashboard.description.toString().replace(/\n/g,"<br>");
+            }
             self.selectedDashboard(data);
             if (data.element)
             {
@@ -371,7 +386,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu,zdtUtilModel)
                         var _name =  _sd.dashboard.name,_sets =  resp.dashboardSets;
                         var _message =  getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_HEAD',_name) + "<br>";
                         for(var i = 0; i < _sets.length ; i++ ){
-                            _message += "<br>"+"&lt;" + _sets[i].name +"&gt;";
+                            _message += "<br>"+ _sets[i].name;
                         }
                         _message += "<br><br>"+ getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_TAILE', _name);
                         self.confirmDialogModel.show(
@@ -424,9 +439,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu,zdtUtilModel)
             if (ui.item.children("a")[0] && ui.item.children("a")[0].value)
             {
                 if (dfu.isDevMode()){
-                    window.location = dfu.getRelUrlFromFullUrl(ui.item.children("a")[0].value);
+                    window.location = cxtUtil.appendOMCContext(dfu.getRelUrlFromFullUrl(ui.item.children("a")[0].value));
                 }else{
-                    window.location = ui.item.children("a")[0].value;
+                    window.location = cxtUtil.appendOMCContext(ui.item.children("a")[0].value);
                 }
             }
         };
@@ -462,6 +477,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu,zdtUtilModel)
 
             var _addeddb = { "type":self.createDashboardModel.selectType(),
                             "name": self.createDashboardModel.name(),
+                            "showInHome":self.createDashboardModel.underSet ? false : true,
                             "description": self.createDashboardModel.description(),
                             "enableTimeRange": self.createDashboardModel.isEnableTimeRange() ? "TRUE" : "FALSE",
                             "enableRefresh": self.createDashboardModel.isEnableTimeRange()};

@@ -15,7 +15,7 @@ and open the template in the editor.
     font-weight: normal;
     font-style: normal;
 } 
-
+ 
 
 .fa-icon-font {
   font-family: FaFont;
@@ -155,7 +155,7 @@ body, html {
             margin-bottom: 1px;
         }
         
-        .df-targte-selector {
+        .df-target-selector {
             display: inline-block;
             margin-top:5px;
             margin-left:8px;
@@ -307,7 +307,7 @@ body, html {
   content: url(../images/func_gear_16_ena.png);
 }
 
-.dbd-toolbar-icon-edit:before,.fa-pencil:before {
+.dbd-toolbar-icon-edit:before,.fa-pencil-df:before {
   content: "\f040";
 }
 .dbd-wrench:before{
@@ -327,32 +327,43 @@ body, html {
   content: "\f0c5";
 }
 
-.dbd-toolbar-icon-delete:before {
-  content: url(../images/func_trashcan_16_ena.png);
+.demo-icon-font img{
+    height: 16px;
+    width: 16px;
 }
 
-.dbd-toolbar-icon-add-widget-disabled:before {
-  content: url(../images/func_plus_16_dis.png);
+.dbd-toolbar-icon-delete:before {//func_trashcan_16_ena
+    content:" ";
+    background:url(../images/dfSprite.png) no-repeat 0px -416px;height:16px;padding-left:18px;
 }
 
-.dbd-toolbar-icon-edit-disabled:before {
-  content: url(../images/func_edit_16_dis.png);
+.dbd-toolbar-icon-add-widget-disabled:before {//func_plus_16_dis
+    content:" ";
+    background:url(../images/dfSprite.png) no-repeat 0px -144px;height:16px;padding-left:18px;
 }
 
-.dbd-toolbar-icon-delete-disabled:before {
-  content: url(../images/func_trashcan_16_dis.png);
+.dbd-toolbar-icon-edit-disabled:before {//func_edit_16_dis
+    content:" ";
+    background:url(../images/dfSprite.png) no-repeat 0px -512px;height:16px;padding-left:18px;
 }
-.dbd-toolbar-icon-home:before {
-   content: url(../images/func_home_16_ena.png);
+
+.dbd-toolbar-icon-delete-disabled:before {//func_trashcan_16_dis
+    content:" ";
+    background:url(../images/dfSprite.png) no-repeat 0px -240px;height:16px;padding-left:18px;
+}
+.dbd-toolbar-icon-home:before {//func_home_16_ena
+    content:" ";
+    background:url(../images/dfSprite.png) no-repeat 0px -896px;height:16px;padding-left:18px;
 }
  
- .dbd-toolbar-icon-home-outline:before {
-   content: url(../images/remove_home_16.png);
+ .dbd-toolbar-icon-home-outline:before {//remove_home_16
+    content:" ";
+    background:url(../images/dfSprite.png) no-repeat 0px -160px;height:16px;padding-left:18px;
 }
  
- .dbd-toolbar-icon-favorites:before {
-   content: url(../images/func_star_16_ena.png);
- }
+ .dbd-toolbar-icon-favorites:before {//func_star_16_ena
+    content:" ";
+    background:url(../images/dfSprite.png) no-repeat 0px -192px;height:16px;padding-left:18px; }
 
 .dbd-toolbar-icon-share:before, .fa-users:before {
   content: "\f0c0";
@@ -622,6 +633,7 @@ body, html {
     max-width:none;
     border: 1px solid #d6dfe6; 
     border-radius: 0;
+    outline:0;
     
     .dbd-tile-header{
         color: #333;
@@ -730,32 +742,38 @@ body, html {
         height:100%;
         right:-5px;
         top:0px;
-        cursor:ew-resize;
     }
-    
+  
      .dbd-resize-handler-left {
         width:6px;
         height:100%;
         left:-5px;
         top:0px;
+    }
+        
+    .cursor-resize-ew{
         cursor:ew-resize;
+    }
+    .cursor-resize-ns{
+        cursor:ns-resize;  
     }
     
     .dbd-resize-handler-bottom{
         height: 6px;
         width:100%;
         left:0px;
-        bottom: -5px;
-        cursor:ns-resize;
+        bottom: -5px;  
     }
     
     .dbd-resize-handler-right-bottom {
-        cursor:se-resize;
         right:1px;
         bottom:0px;
         > span {
             color:#878c90;
         }
+    }
+    .cursor-resize-right-bottom{
+        cursor:se-resize;
     }
 }
 
@@ -979,16 +997,18 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
       width: 100%;
       height: 43px;
 
-      .left-panel-dbd-clear-icon:before {
+      .left-panel-dbd-clear-icon:before {//clearEntry_ena
         height:16px;
         width:16px;
-        content:url("../images/clearEntry_ena.png");
+        content:" ";
+        background:url(../images/dfSprite.png) no-repeat 0px -656px;height:16px;padding-left:18px;
       }
 
-      .left-panel-dbd-search-icon:before {
+      .left-panel-dbd-search-icon:before {//func_search_16_ena
         height:16px;
         width:16px;
-        content:url("../images/func_search_16_ena.png");
+        content:" ";
+        background:url(../images/dfSprite.png) no-repeat 0px -208px;height:16px;padding-left:18px;
       }
 
       .dbd-left-panel-header-search {
@@ -1211,16 +1231,6 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     cursor: default;
 }
 
-.oj-component-icon.oj-inputnumber-up-icon:before {
-    -webkit-transform: scale(-1, 1) rotate(90deg);
-    transform: scale(-1, 1) rotate(90deg);
-}
-
-.oj-component-icon.oj-inputnumber-down-icon:before {
-    -webkit-transform: rotate(-90deg);
-    transform: rotate(-90deg);
-}
-
 .dbd-left-panel-footer-btns {
     border-top: 1px solid #d6dfe6; 
     padding-top: 10px;
@@ -1403,6 +1413,13 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
                         text-decoration: none;
                     }
                 }  
+            }
+        }
+        .other-nav.creator-false{
+            margin-left:10px;
+            .oj-tabs-gen-a{
+                padding-left: 5px;
+                padding-right: 0;
             }
         }
         .other-nav:not(.oj-selected){

@@ -36,6 +36,7 @@ public class DashboardsApplication extends Application
 		hs.add(RegistryLookupAPI.class);
 		hs.add(OMCStatusAPI.class);
 		hs.add(WidgetNotificationAPI.class);
+		hs.add(CacheAPI.class);
 		return hs;
 	}
 }

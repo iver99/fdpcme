@@ -8,11 +8,13 @@ define(['knockout',
         'jquery',
         'ojs/ojcore',
         'dfutil',
+        'uifwk/js/util/usertenant-util',
+        'uifwk/js/sdk/context-util',
 //        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
         'builder/dashboard.tile.model',
         'builder/editor/editor.tiles'
     ],
-    function(ko, $, oj, dfu/*, TargetSelectorUtils*/) {
+    function(ko, $, oj, dfu,userTenantUtilModel, cxtModel/*, TargetSelectorUtils*/) {
         function Cell(row, column) {
             var self = this;
 
@@ -27,7 +29,7 @@ define(['knockout',
          * @param {Date} endTime: end time of new time range
          * @returns {DashboardTimeRangeChange} instance
          */
-        function DashboardTimeRangeChange(startTime, endTime){
+        function DashboardTimeRangeChange(startTime, endTime, timePeriod){
             var self = this;
             if (startTime instanceof Date){
                 self.viewStartTime = startTime;
@@ -35,6 +37,7 @@ define(['knockout',
             if (endTime instanceof Date){
                 self.viewEndTime = endTime;
             }
+            self.viewTimePeriod = timePeriod;
         }
         Builder.registerModule(DashboardTimeRangeChange, 'DashboardTimeRangeChange');
 
@@ -173,7 +176,7 @@ define(['knockout',
                 return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard() || _currentUser !== dashboard.owner();
             });
 
-            tile.isItaAdmin = ko.observable(false);
+            tile.isOpenInExplorerShown = ko.observable(true);
 
             tile.widerEnabled = ko.computed(function() {
                 return mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS;
@@ -199,7 +202,7 @@ define(['knockout',
                 return typeof(tile.configure)==="function";
             });
             tile.tileDisplayClass = ko.computed(function() {
-                var css = 'oj-md-'+(mode.getModeWidth(tile)) + ' oj-sm-'+(mode.getModeWidth(tile)*6) + ' oj-lg-'+(mode.getModeWidth(tile));
+                var css = 'oj-md-'+(mode.getModeWidth(tile)) + ' oj-sm-'+(mode.getModeWidth(tile)*12) + ' oj-lg-'+(mode.getModeWidth(tile));
                 css += tile.isMaximized() ? ' dbd-tile-maximized ' : '';
                 css += tile.shouldHide() ? ' dbd-tile-no-display' : '';
                 css += tile.editDisabled() ? ' dbd-tile-edit-disabled' : '';
@@ -219,7 +222,8 @@ define(['knockout',
                 } else
                     return "#";
             });
-            tile.dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd()), targets, null, null, dashboard.enableTimeRange(), dashboard.enableEntityFilter());
+            tile.dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd(), timeSelectorModel.viewTimePeriod()), targets, null, null, dashboard.enableTimeRange(), dashboard.enableEntityFilter());
+            console.log("dashboardItemChangeEvent in initializeTileAfterLoad for '" + ko.unwrap(tile.WIDGET_NAME) + "' is " + JSON.stringify(tile.dashboardItemChangeEvent));
             /**
              * Integrator needs to override below FUNCTION to respond to DashboardItemChangeEvent
              * e.g.
@@ -293,7 +297,7 @@ define(['knockout',
             };
 
             if (loadImmediately) {
-                var assetRoot = Builder.getWidgetAssetRoot(tile.PROVIDER_NAME(),tile.PROVIDER_VERSION(),tile.PROVIDER_ASSET_ROOT());
+                var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME());
                 var kocVM = tile.WIDGET_VIEWMODEL();
                 if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                     kocVM = assetRoot + kocVM;
@@ -316,45 +320,26 @@ define(['knockout',
             tile.leftEnabled(mode.getModeColumn(tile) > 0);
             tile.rightEnabled(mode.getModeColumn(tile)+mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS);
 
-            judgeAdmin();
-                function judgeAdmin() {
-                    if (!$('.links-content-container')[0]) {
-                        var serviceUrl = "/sso.static/dashboards.configurations/registration";
-                        if (dfu.isDevMode()) {
-                            serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "configurations/registration");
-                        }
-                        dfu.ajaxWithRetry({
-                            url: serviceUrl,
-                            headers: dfu.getDashboardsRequestHeader(),
-                            contentType: 'application/json',
-                            success: function (data, textStatus) {
-                                data.adminLinks.forEach(function (item) {
-                                    if (item.name === "IT Analytics Administration") {
-                                        tile.isItaAdmin(true);
-                                    }
-                                    ;
-                                });
-                            },
-                            error: function (xhr, textStatus, errorThrown) {
-                                oj.Logger.error('Failed to get service instances by URL: ' + serviceUrl);
-                            },
-                            async: true
-                        });
-                    } else {
-                        var brandingbarAdmin = ko.dataFor($('.links-content-container')[0]).adminLinks();
-                        brandingbarAdmin.forEach(function (item) {
-                            if (item.name === "IT Analytics Administration") {
-                                tile.isItaAdmin(true);
-                            }
-                            ;
-                        });
+            hideOpenInExplorer();
+
+            function hideOpenInExplorer(data) {
+                if (tile.PROVIDER_NAME() !== 'TargetAnalytics' && tile.PROVIDER_NAME() !== 'LogAnalyticsUI') {
+                    tile.isOpenInExplorerShown(false);
+                    return;
+                }
+                if (tile.PROVIDER_NAME() === 'TargetAnalytics') {
+                    var userTenantUtil = new userTenantUtilModel();
+                    var itaAdmin = userTenantUtil.userHasRole("IT Analytics Administrator") || userTenantUtil.userHasRole("IT Analytics User");
+                    if (!itaAdmin) {
+                        tile.isOpenInExplorerShown(false);
                     }
-
-                };
-
+                }
+            }
+            
+            var cxtUtil = new cxtModel();
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
-                var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');
-                var url = Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), versionPlus);
+//                var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');
+                var url = dfu.getVisualAnalyzerUrl(tile.PROVIDER_NAME());//Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), versionPlus);
                 if (url){
                     tile.configure = function(){
                         var widgetUrl = url;
@@ -362,9 +347,15 @@ define(['knockout',
                         if(dashboard.enableTimeRange() === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
                             widgetUrl += "";
                         }else {
-                            var start = timeSelectorModel.viewStart().getTime();
-                            var end = timeSelectorModel.viewEnd().getTime();
-                            widgetUrl += "&startTime="+start+"&endTime="+end;
+                            var start = timeSelectorModel.viewStart();
+                            var end = timeSelectorModel.viewEnd();
+                            if(start && (start instanceof Date) && end && (end instanceof Date)) {
+                                widgetUrl += "&startTime="+start.getTime()+"&endTime="+end.getTime();
+                            }
+                            var timePeriod = timeSelectorModel.viewTimePeriod();
+                            if(timePeriod) {
+                                widgetUrl += "&timePeriod="+timePeriod;
+                            }
                         }
 
                     require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils){
@@ -377,7 +368,7 @@ define(['knockout',
                             }
                             widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
                         }
-                        window.location = widgetUrl;
+                        window.location = cxtUtil.appendOMCContext(widgetUrl);
                     });
                     };
                 }

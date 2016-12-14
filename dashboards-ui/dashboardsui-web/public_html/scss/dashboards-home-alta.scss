@@ -6,40 +6,40 @@
         This is where any of your application specific styles should be included
 */
 
-.dbs-lock-icon-24:before{content:url("../images/qual_lock_16_full.png");}
+.dbs-lock-icon-24:before{content:" ";background:url(../images/dfSprite.png) no-repeat 0px -320px;height:16px;padding-left:18px;}//qual_lock_16_full
 
-.dbs-search-icon:before {content:url("../images/func_search_16_ena.png");}
+.dbs-search-icon:before {content:" ";background:url(../images/dfSprite.png) no-repeat 0px -208px;height:16px;padding-left:18px;}//func_search_16_ena
 
-.dbs-clear-icon:before {content:url("../images/clearEntry_ena.png");}
+.dbs-clear-icon:before {content:" ";background:url(../images/dfSprite.png) no-repeat 0px -656px;height:16px;padding-left:18px;}//clearEntry_ena
 
-.icon-delete-ena-16:before{content:url("../images/func_delete_16_ena.png");}
+.icon-delete-ena-16:before{content:" ";background:url(../images/dfSprite.png) no-repeat 0px -528px;height:16px;padding-left:18px;}//func_delete_16_ena
 
-.icon-trashcan-ena-16:before{content:url("../images/func_trashcan_16_ena.png");}
+.icon-trashcan-ena-16:before{content:" ";background:url(../images/dfSprite.png) no-repeat 0px -416px;height:16px;padding-left:18px;}//func_trashcan_16_ena
 .oj-button.oj-hover .icon-trashcan-ena-16:before, .oj-button.oj-hover.oj-selected .icon-trashcan-ena-16:before {
-    content: url("../images/func_trashcan_16_hov.png"); }
+    content:" ";background:url(../images/dfSprite.png) no-repeat 0px -400px;height:16px;padding-left:18px; }//unc_trashcan_16_hov
 .oj-button.oj-active .icon-trashcan-ena-16:before, .oj-button.oj-selected .icon-trashcan-ena-16:before {
-    content: url("../images/func_trashcan_16_act.png"); }
+    content:" ";background:url(../images/dfSprite.png) no-repeat 0px -64px;height:16px;padding-left:18px; }//func_trashcan_16_act
 .oj-button.oj-disabled .icon-trashcan-ena-16:before {
-    content: url("../images/func_trashcan_16_dis.png"); }
+    content:" ";background:url(../images/dfSprite.png) no-repeat 0px -240px;height:16px;padding-left:18px; }//func_trashcan_16_dis
 
-.icon-locationinfo-16:before{content:url("../images/func_locationinfo_16_ena.png");}
+.icon-locationinfo-16:before{content:" ";background:url(../images/dfSprite.png) no-repeat 0px -944px;height:16px;padding-left:18px;}//func_locationinfo_16_ena
 .oj-button.oj-hover .icon-locationinfo-16:before, .oj-button.oj-hover.oj-selected .icon-locationinfo-16:before {
-    content: url("../images/func_locationinfo_16_hov.png"); }
+    content:" ";background:url(../images/dfSprite.png) no-repeat 0px -928px;height:16px;padding-left:18px; }//func_locationinfo_16_hov
 .oj-button.oj-active .icon-locationinfo-16:before, .oj-button.oj-selected .icon-locationinfo-16:before {
-    content: url("../images/func_locationinfo_16_act.png"); }
+    content:" ";background:url(../images/dfSprite.png) no-repeat 0px -880px;height:16px;padding-left:18px; }//func_locationinfo_16_act
 .oj-button.oj-disabled .icon-locationinfo-16:before {
-    content: url("../images/func_locationinfo_16_dis.png"); }
+    content:" ";background:url(../images/dfSprite.png) no-repeat 0px -912px;height:16px;padding-left:18px; }//func_locationinfo_16_dis
 
-.icon-gridview-16:before{content:url("../images/func_ninesquareboxes_16_ena.png");}
+.icon-gridview-16:before{content:" ";background:url(../images/dfSprite.png) no-repeat 0px -848px;height:16px;padding-left:18px;}//func_ninesquareboxes_16_ena
 .oj-button.oj-hover .icon-gridview-16:before, .oj-button.oj-hover.oj-selected .icon-gridview-16:before {
-    content: url("../images/func_ninesquareboxes_16_hov.png"); }
+    content:" ";background:url(../images/dfSprite.png) no-repeat 0px -864px;height:16px;padding-left:18px; }//func_ninesquareboxes_16_hov
 .oj-button.oj-active .icon-gridview-16:before, .oj-button.oj-selected .icon-gridview-16:before {
-    content: url("../images/func_ninesquareboxes_16_onb.png"); }
-.icon-listview-16:before{content:url("../images/func_threehorizontalbars_16_ena.png");}
+    content:" ";background:url(../images/dfSprite.png) no-repeat 0px -816px;height:16px;padding-left:18px; }//func_ninesquareboxes_16_onb
+.icon-listview-16:before{content:" ";background:url(../images/dfSprite.png) no-repeat 0px -48px;height:16px;padding-left:18px;}//func_threehorizontalbars_16_ena
 .oj-button.oj-hover .icon-listview-16:before, .oj-button.oj-hover.oj-selected .icon-listview-16:before {
-    content: url("../images/func_threehorizontalbars_16_hov.png"); }
+    content:" ";background:url(../images/dfSprite.png) no-repeat 0px -96px;height:16px;padding-left:18px; }//func_threehorizontalbars_16_hov
 .oj-button.oj-active .icon-listview-16:before, .oj-button.oj-selected .icon-listview-16:before {
-    content: url("../images/func_threehorizontalbars_16_onb.png"); }
+    content:" ";background:url(../images/dfSprite.png) no-repeat 0px -80px;height:16px;padding-left:18px; }//func_threehorizontalbars_16_onb
 
 .dbs-icon-size-16 {
     width: 16px;

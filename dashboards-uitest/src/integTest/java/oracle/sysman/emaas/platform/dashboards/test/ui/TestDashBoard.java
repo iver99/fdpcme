@@ -43,11 +43,22 @@ public class TestDashBoard extends LoginAndLogout
 	private String dbName_columncheck = "";
 	private String dbName_ITADashboard = "";
 	private String dbName_LADashboard = "";
+	private String dbName_testMaximizeRestore = "";
+	private String dbName_CustomWidget = "";
+
+	private final String WidgetName_1 = "Top Hosts by Log Entries";
+	private final String WidgetName_2 = "Access Log Error Status Codes";
+	private final String customWidgetName = "Running Workflow Submission";
 
 	public void initTest(String testName)
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
 	}
 
 	@AfterClass
@@ -69,8 +80,12 @@ public class TestDashBoard extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_columncheck);
 		DashBoardUtils.deleteDashboard(webd, dbName_ITADashboard);
 		DashBoardUtils.deleteDashboard(webd, dbName_LADashboard);
+		DashBoardUtils.deleteDashboard(webd, dbName_testMaximizeRestore);
+		DashBoardUtils.deleteDashboard(webd, dbName_CustomWidget);
 
 		webd.getLogger().info("All test data have been removed");
+
+		LoginAndLogout.logoutMethod();
 	}
 
 	//@Test(dependsOnMethods = { "testCreateDashboard_noWidget_ListView" })
@@ -94,7 +109,52 @@ public class TestDashBoard extends LoginAndLogout
 	}
 	 */
 
-	@Test
+	@Test(groups = "Group8", dependsOnMethods = { "testDeleteHomeDashboard" })
+	public void testAfterHomeDashboardRemoved()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testAfterHomeDashboardRemoved");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//verify the current page is home page
+		webd.getLogger().info("Verify the error page displayed");
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("current url = " + url);
+		if (!url.substring(url.indexOf("emsaasui") + 9).contains("home.html")) {
+			Assert.fail("not open the dashboard home page");
+		}
+
+		//verify the current page is error page
+		//		webd.getLogger().info("Verify the error page displayed");
+		//		String url = webd.getWebDriver().getCurrentUrl();
+		//		webd.getLogger().info("current url = " + url);
+		//		if (!url.substring(url.indexOf("emsaasui") + 9).contains("error.html?msg=DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG")) {
+		//			Assert.fail("not open the error page");
+		//		}
+		//		else {
+		//			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
+		//			Assert.assertEquals(webd.getText("css=" + PageId.ERRORMESSAGE_CSS),
+		//					"The dashboard which you have set as Home page no longer exists or you don't have access to it.");
+		//			webd.getLogger().info(webd.getText("css=" + PageId.DEFAULTHOME_CSS));
+		//			Assert.assertEquals(webd.getText("css=" + PageId.DEFAULTHOME_CSS), "Click  here  to go to the default Home page");
+		//		}
+		//
+		//		//click "here" link to go to default home page
+		//		webd.getLogger().info("Click 'here' link to go to default home page");
+		//		webd.waitForElementEnabled("css=" + PageId.DEFAULTHOMEURL_CSS);
+		//		webd.click("css=" + PageId.DEFAULTHOMEURL_CSS);
+		//
+		//		//verify the current page is default hoem page
+		//		webd.getLogger().info("Verify the current page is default hoem page");
+		//		url = webd.getWebDriver().getCurrentUrl();
+		//		webd.getLogger().info("current url = " + url);
+		//		if (!url.substring(url.indexOf("emsaasui") + 9).contains("welcome.html")) {
+		//			Assert.fail("not open the error page");
+		//		}
+	}
+
+	@Test(groups = "Group1")
 	public void testCreateDashboad_noDesc_GridView()
 	{
 		dbName_noDesc = "NoDesc-" + generateTimeStamp();
@@ -140,7 +200,7 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardBuilderUtil.deleteDashboard(webd);
 	}
 
-	@Test
+	@Test(groups = "Group4", dependsOnGroups = { "Group3" })
 	public void testCreateDashboad_noWidget_GridView()
 	{
 		dbName_noWidgetGrid = "NoWidgetGridView-" + generateTimeStamp();
@@ -166,7 +226,7 @@ public class TestDashBoard extends LoginAndLogout
 				"Create dashboard failed!");
 	}
 
-	@Test
+	@Test(groups = "Group2", dependsOnGroups = { "Group1" })
 	public void testCreateDashboard_noWidget_ListView()
 	{
 		dbName_noWidgetList = "noWidgetListView-" + generateTimeStamp();
@@ -193,14 +253,14 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(groups = "Group3", dependsOnGroups = { "Group2" })
 	public void testCreateDashboard_withWidget_GridView()
 	{
 		dbName_withWidgetGrid = "withWidget-" + generateTimeStamp();
 		String dbDesc = "AAA_testDashBoard desc";
 
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testCreateDashBoard");
+		webd.getLogger().info("Start to test in testCreateDashboard_withWidget_GridView");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -228,26 +288,9 @@ public class TestDashBoard extends LoginAndLogout
 		//save dashboard
 		webd.getLogger().info("save the dashboard");
 		DashboardBuilderUtil.saveDashboard(webd);
-
-		//open the widget
-		webd.getLogger().info("open the widget");
-		DashboardBuilderUtil.openWidget(webd, "Database Errors Trend");
-
-		webd.switchToWindow();
-		//WaitUtil.waitForPageFullyLoaded(webd);
-		webd.getLogger().info("Wait for the widget loading....");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
-
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		if (!url.substring(url.indexOf("emsaasui") + 9).contains(
-				"emlacore/html/log-analytics-search.html?widgetId=2013&dashboardId")) {
-			Assert.fail("NOT open the correct widget");
-		}
 	}
 
-	@Test
+	@Test(groups = "Group7", dependsOnGroups = { "Group6" })
 	public void testDashboardWith12Columns()
 	{
 		dbName_columncheck = "DashboardWith12Columns-" + generateTimeStamp();
@@ -290,12 +333,85 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Finished to get wider widgets");
 	}
 
-	@Test
+	@Test(groups = "Group8", dependsOnGroups = { "Group7" })
+	public void testDeleteHomeDashboard()
+	{
+		String dbHomeDashboard = "HomeDashboard-" + generateTimeStamp();
+		String dbDesc = "Set the dashboard as home";
+
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testDeleteHomeDashboard");
+		WaitUtil.waitForPageFullyLoaded(webd);
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard & set it as home
+		webd.getLogger().info("create a dashboard: with description, time refresh");
+		DashboardHomeUtil.createDashboard(webd, dbHomeDashboard, dbDesc, DashboardHomeUtil.DASHBOARD);
+
+		//verify dashboard in builder page
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbHomeDashboard, dbDesc, true), "Create dashboard failed!");
+
+		webd.getLogger().info("Set home page");
+		Assert.assertTrue(DashboardBuilderUtil.toggleHome(webd), "Set the dasbhoard as Home failed!");
+
+		//go to the home page & verify the home page
+		webd.getLogger().info("Access to the home page");
+		BrandingBarUtil.visitMyHome(webd);
+		webd.getLogger().info("Verfiy the home page");
+		String originalUrl = webd.getWebDriver().getCurrentUrl();
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbHomeDashboard, dbDesc, true), "It is NOT the home page!");
+
+		//delete the dashboard
+		webd.getLogger().info("Delete the dashboard");
+		DashboardBuilderUtil.deleteDashboard(webd);
+
+		//go to the home page
+		webd.getLogger().info("Access to the home page");
+		BrandingBarUtil.visitMyHome(webd);
+
+		webd.getLogger().info("Verify back to the dashboard home page");
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("current url = " + url);
+		if (!url.substring(url.indexOf("emsaasui") + 9).contains("welcome.html")) {
+			Assert.fail("not open the dashboard home page");
+		}
+		else {
+			//TODO
+			//verify the warn info displayed
+			//info: The dashboard you set as your Home page has been deleted. You may want to choose a new Home page.
+		}
+
+		//		webd.getLogger().info("Verify the error page displayed");
+		//		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		//		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.ERRORMESSAGE_CSS)));
+		//		String url = webd.getWebDriver().getCurrentUrl();
+		//		webd.getLogger().info("current url = " + url);
+		//		if (!url.substring(url.indexOf("emsaasui") + 9).contains("error.html?invalidUrl=")) {
+		//			Assert.fail("not open the error page");
+		//		}
+		//		else {
+		//			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
+		//			Assert.assertEquals(webd.getText("css=" + PageId.ERRORMESSAGE_CSS),
+		//					"Sorry, the page you have requested either doesn't exist or you do not have access to it.");
+		//			webd.getLogger().info(webd.getText("css=" + PageId.ERRORURL_CSS));
+		//			Assert.assertEquals(webd.getText("css=" + PageId.ERRORURL_CSS), "Requested URL is: " + originalUrl);
+		//		}
+	}
+
+	@Test(groups = "Group7", dependsOnGroups = { "Group6" })
 	public void testDeleteOOB()
 	{
 		//initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testUserMenu");
+		webd.getLogger().info("Start to test in testDeleteOOB");
 
 		//reset all filter options
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -308,14 +424,13 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Verfiy if the OOB dashboard can be deleted");
 		DashboardHomeUtil.search(webd, "Application Performance Monitoring");
 		webd.click(DashBoardPageId.INFOBTNID);
-		WebElement removeButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.RMBTNID));
+		WebElement removeButton = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RMBTNID));
 		Assert.assertFalse(removeButton.isEnabled(), "delete is enabled for OOB dashboard");
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
+	@Test(groups = "Group5", dependsOnGroups = { "Group4" })
 	public void testDuplicateDashboard()
 	{
-
 		String dbName = "Test_Dashboard_duplicate";
 		String dbDesc = "Test_Dashboard_duplicate_desc";
 
@@ -348,26 +463,7 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
-	/*@Test
-	public void testErrorPage()
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testErrorPage");
-
-		//ErrorPage link
-		//BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_Erpge);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-	           	webd.getWebDriver().navigate()
-	                             .to(url.substring(0, url.indexOf("emsaasui")) + "emcpdfui/error.html?invalidUrl=https%3A%2F%2Fden00bve.us.oracle.com%3A4443%2Femsaasui%2Femcpdfui%2Fbuilder.html%3FdashboardId%3D80");
-
-		//Assert.assertEquals(url.substring(url.indexOf("emsaasui") + 9), "emcpdfui/builder.html?dashboardId=80");
-		WaitUtil.waitForPageFullyLoaded(webd);
-		//validating Error page
-		ErrorPageUtil.signOut(webd);
-	}*/
-
-	@Test
+	@Test(groups = "Group7", dependsOnGroups = { "Group6" })
 	public void testFavorite()
 	{
 		dbName_favorite = "favoriteDashboard-" + generateTimeStamp();
@@ -444,14 +540,14 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("the dashboard has been deleted");
 	}
 
-	@Test
+	@Test(groups = "Group7", dependsOnGroups = { "Group6" })
 	public void testFilterITADashboard()
 	{
 		dbName_ITADashboard = "ITADashboard-" + generateTimeStamp();
 		String dbDesc = "test filter ITA works for custom dashboard";
 		//initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testTimePicker");
+		webd.getLogger().info("Start to test in testFilterITADashboard");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -495,7 +591,7 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
-	@Test
+	@Test(groups = "Group7", dependsOnGroups = { "Group6" })
 	public void testFilterLADashboard()
 	{
 		dbName_LADashboard = "LADashboard-" + generateTimeStamp();
@@ -546,7 +642,7 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
+	@Test(groups = "Group5", dependsOnGroups = { "Group4" })
 	public void testHideEntityFilter()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -571,7 +667,48 @@ public class TestDashBoard extends LoginAndLogout
 		Assert.assertFalse(webd.isDisplayed("css=" + PageId.TARGETSELECTOR_CSS), "The target selector is in the page");
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
+	@Test(groups = "Group5", dependsOnGroups = { "Group4" })
+	public void testHideOpenInIconForCustomWidget()
+	{
+		dbName_CustomWidget = "DashboardWithCustomWidget-" + generateTimeStamp();
+		String dbDesc = "test hide Open In icon for custom widget";
+		//initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testHideOpenInIconForCustomWidget");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//create dashboard
+		webd.getLogger().info("Create a dashboard: with description, time refresh");
+		DashboardHomeUtil.createDashboard(webd, dbName_CustomWidget, dbDesc, DashboardHomeUtil.DASHBOARD);
+
+		//verify dashboard in builder page
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_CustomWidget, dbDesc, true),
+				"Create dashboard failed!");
+
+		//Add the widget to the dashboard
+		webd.getLogger().info("Start to add Widget into the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, customWidgetName);
+		webd.getLogger().info("Add widget finished");
+
+		//save dashboard
+		webd.getLogger().info("Save the dashboard");
+		DashboardBuilderUtil.saveDashboard(webd);
+
+		//verify the the Open In Icon is hidden
+		webd.getLogger().info("Start to verify the the Open In Icon is hidden");
+		Assert.assertFalse(DashBoardUtils.verifyOpenInIconExist(webd, customWidgetName, 0),
+				"The 'Open In' icon is displayed for the custom widget");
+	}
+
+	@Test(groups = "Group5", dependsOnGroups = { "Group4" })
 	public void testHideTimeRangeFilter()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -596,11 +733,84 @@ public class TestDashBoard extends LoginAndLogout
 		Assert.assertFalse(webd.isDisplayed("css=" + PageId.DATETIMEPICK_CSS), "The time range filter is in the page");
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView" })
+	@Test
+	public void testMaximizeRestoreWidgetOOBDb()
+	{
+		//initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testMaximize/RestoreWidget");
+
+		//open the dashboard, eg: Host Operations in the home page
+		webd.getLogger().info("open the OOB dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "Host Operations");
+
+		//widget operation
+		webd.getLogger().info("maximize/restore the widget");
+
+		DashboardBuilderUtil.maximizeWidget(webd, "Host Logs Trend", 0);
+		DashboardBuilderUtil.restoreWidget(webd, "Host Logs Trend", 0);
+
+		//verify the edit/add button not displayed in the page
+		WebElement addButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Add Content']"));
+		Assert.assertFalse(addButton.isDisplayed(), "Add button be displayed in system dashboard set");
+
+		WebElement editButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));
+		Assert.assertFalse(editButton.isDisplayed(), "Edit button be displayed in system dashboard set");
+	}
+
+	//test maxmize/restore widget in self created dashboard
+	@Test
+	public void testMaximizeRestoreWidgetSelfDashboard()
+	{
+		dbName_testMaximizeRestore = "selfDb-" + generateTimeStamp();
+
+		//initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testMaximize/RestoreWidget");
+
+		//Create dashboard
+		DashboardHomeUtil.createDashboard(webd, dbName_testMaximizeRestore, null, DashboardHomeUtil.DASHBOARD);
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_testMaximizeRestore, null, true),
+				"Create dashboard failed!");
+
+		//Add two widgets
+		webd.getLogger().info("Start to add Widget into the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "Access Log Error Status Codes");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "All Logs Trend");
+		webd.getLogger().info("Add widget finished");
+
+		//verify if the widget added successfully
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, "Access Log Error Status Codes"),
+				"Widget 'Access Log Error Status Codes' not found");
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, "All Logs Trend"), "Widget 'All Logs Trend' not found");
+
+		//save dashboard
+		webd.getLogger().info("save the dashboard");
+		DashboardBuilderUtil.saveDashboard(webd);
+
+		//widget operation
+		webd.getLogger().info("maximize/restore the widget");
+		DashboardBuilderUtil.maximizeWidget(webd, "Access Log Error Status Codes", 0);
+		Assert.assertFalse(webd.isDisplayed("css=" + ".dbd-widget[data-tile-name=\"All Logs Trend\"]"),
+				"Widget 'All Logs Trend' is still displayed");
+
+		DashboardBuilderUtil.restoreWidget(webd, "Access Log Error Status Codes", 0);
+		Assert.assertTrue(webd.isDisplayed("css=" + ".dbd-widget[data-tile-name=\"All Logs Trend\"]"),
+				"Widget 'All Logs Trend' is not displayed");
+
+		//verify the edit/add button displayed in the page
+		WebElement addButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Add Content']"));
+		Assert.assertTrue(addButton.isDisplayed(), "Add button isn't displayed in system dashboard set");
+
+		WebElement editButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));
+		Assert.assertTrue(editButton.isDisplayed(), "Edit button isn't displayed in system dashboard set");
+	}
+
+	@Test(groups = "Group4", dependsOnMethods = { "testCreateDashboad_noWidget_GridView" })
 	public void testModifyDashboard_namedesc()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testModifyDashBoard");
+		webd.getLogger().info("Start to test in testModifyDashboard_namedesc");
 
 		//edit dashboard
 		webd.getLogger().info("Start to edit dashboard in grid view");
@@ -634,12 +844,9 @@ public class TestDashBoard extends LoginAndLogout
 				"Test_Dashboard_no_Widget_GridView desc modify-not displayed", true), "Dashboard edit failed!");
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView" })
+	@Test(groups = "Group3", dependsOnMethods = { "testCreateDashboard_withWidget_GridView" })
 	public void testModifyDashboard_widget()
 	{
-		String WidgetName_1 = "Top Hosts by Log Entries";
-		//		String WidgetName_2 = "Top 10 Listeners by Load";
-
 		//initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test in testModifyDashboard_widget");
@@ -657,15 +864,15 @@ public class TestDashBoard extends LoginAndLogout
 		//add the widget into the dashboard
 		webd.getLogger().info("Start to add Widget into the dashboard");
 
-		webd.getLogger().info("Add Widget 'Top Hosts by Log Entries' into the dashboard");
+		webd.getLogger().info("Add Widget '" + WidgetName_1 + "' into the dashboard");
 		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_1);
 		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_1), "Widget '" + WidgetName_1 + "' not found");
 
-		//		webd.getLogger().info("Add Widget 'Top 10 Listeners by Load' into the dashboard");
-		//		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_2);
-		//		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_2), "Widget '" + WidgetName_2 + "' not found");
+		webd.getLogger().info("Add Widget '" + WidgetName_2 + "' into the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_2);
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_2), "Widget '" + WidgetName_2 + "' not found");
 
-		webd.getLogger().info("Add Widget 'Top Hosts by Log Entries' into the dashboard");
+		webd.getLogger().info("Add Widget '" + WidgetName_1 + "' into the dashboard again");
 		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_1);
 		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_1, 1), "The second Widget '" + WidgetName_1
 				+ "' not found");
@@ -677,8 +884,7 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardBuilderUtil.saveDashboard(webd);
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc", "testShareDashboard",
-			"testStopShareDashboard", "testDuplicateDashboard" })
+	@Test(groups = "Group6", dependsOnGroups = { "Group5" })
 	public void testRemoveDashboard_GridView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -701,7 +907,7 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboard_noWidget_ListView" })
+	@Test(groups = "Group2", dependsOnMethods = { "testCreateDashboard_noWidget_ListView" })
 	public void testRemoveDashboard_ListView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -724,7 +930,7 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView", "testModifyDashboard_widget", "testWidgetConfiguration" })
+	@Test(groups = "Group3", dependsOnMethods = { "testWidgetConfiguration" })
 	public void testRemoveDashboardInBuilderPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -752,7 +958,7 @@ public class TestDashBoard extends LoginAndLogout
 		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DASHBOARDDISPLAYPANELCSS)));
 	}
 
-	@Test
+	@Test(groups = "Group7", dependsOnGroups = { "Group6" })
 	public void testSaveConfirmation()
 	{
 		String dbName = "TestSaveConfirmation";
@@ -793,7 +999,7 @@ public class TestDashBoard extends LoginAndLogout
 		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DASHBOARDDISPLAYPANELCSS)));
 	}
 
-	@Test
+	@Test(groups = "Group8", dependsOnMethods = { "testAfterHomeDashboardRemoved" })
 	public void testSetHome()
 	{
 		dbName_setHome = "setHomeDashboard-" + generateTimeStamp();
@@ -801,7 +1007,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testCreateDashboad_noWidget_GridView");
+		webd.getLogger().info("Start to test in testSetHome");
 		WaitUtil.waitForPageFullyLoaded(webd);
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -841,11 +1047,11 @@ public class TestDashBoard extends LoginAndLogout
 				"It is NOT the home page!");
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
+	@Test(groups = "Group5", dependsOnGroups = { "Group4" })
 	public void testShareDashboard()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testshareddashboard");
+		webd.getLogger().info("start to test in testShareDashboard");
 
 		DashboardHomeUtil.gridView(webd);
 
@@ -863,7 +1069,7 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
+	@Test(groups = "Group5", dependsOnGroups = { "Group4" })
 	public void testShowEntityFilter()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -888,7 +1094,7 @@ public class TestDashBoard extends LoginAndLogout
 		Assert.assertTrue(webd.isDisplayed("css=" + PageId.TARGETSELECTOR_CSS), "The target selector is NOT in the page");
 	}
 
-	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
+	@Test(groups = "Group5", dependsOnGroups = { "Group4" })
 	public void testShowTimeRangeFilter()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -911,13 +1117,23 @@ public class TestDashBoard extends LoginAndLogout
 		//verify the time range filter displayed in the page
 		webd.getLogger().info("Verify the time range filter diplayed in the page");
 		Assert.assertTrue(webd.isDisplayed("css=" + PageId.DATETIMEPICK_CSS), "The time range filter is NOT in the page");
+
+		//add test case for EMCPDF-1412
+
+		webd.getLogger().info("change time range filter");
+		Assert.assertFalse(DashboardBuilderUtil.showTimeRangeFilter(webd, false), "Show time range filter failed");
+
+		//verify the time range filter not displayed in the page
+		webd.getLogger().info("Verify the time range filter is invisible in the page");
+		Assert.assertFalse(webd.isDisplayed("css=" + PageId.DATETIMEPICK_CSS), "The time range filter is displayed in the page");
+
 	}
 
-	@Test(dependsOnMethods = { "testShareDashboard" })
+	@Test(groups = "Group5", dependsOnMethods = { "testShareDashboard" })
 	public void testStopShareDashboard()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testshareddashboard");
+		webd.getLogger().info("start to test in testStopShareDashboard");
 
 		DashboardHomeUtil.gridView(webd);
 
@@ -934,7 +1150,7 @@ public class TestDashBoard extends LoginAndLogout
 		Assert.assertFalse(DashboardBuilderUtil.toggleShareDashboard(webd), "Stop sharing the dashboard failed!");
 	}
 
-	@Test
+	@Test(groups = "Group7", dependsOnGroups = { "Group6" })
 	public void testTimePicker()
 	{
 		dbName_timepicker = "TestDashboardTimeselector-" + generateTimeStamp();
@@ -1047,17 +1263,13 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
-	//Testcase for validating Error page
-
-	@Test(dependsOnMethods = { "testCreateDashboard_withWidget_GridView", "testModifyDashboard_widget" })
+	@Test(groups = "Group3", dependsOnMethods = { "testModifyDashboard_widget" })
 	public void testWidgetConfiguration()
 	{
-		String WidgetName_1 = "Database Errors Trend";
-		//		String WidgetName_2 = "Top 10 Listeners by Load";
-
 		//initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testWidgetConfiguration");
+
 		//search the dashboard want to modify
 		webd.getLogger().info("search dashboard");
 		DashboardHomeUtil.search(webd, dbName_withWidgetGrid);
@@ -1070,19 +1282,32 @@ public class TestDashBoard extends LoginAndLogout
 		//widget operation
 		webd.getLogger().info("hide/show the widget title");
 		DashboardBuilderUtil.showWidgetTitle(webd, WidgetName_1, false);
-		//		DashboardBuilderUtil.showWidgetTitle(webd, WidgetName_2, true);
-		webd.getLogger().info("resize the widget title");
+		DashboardBuilderUtil.showWidgetTitle(webd, WidgetName_2, true);
+
+		webd.getLogger().info("Resize the widge");
 		DashboardBuilderUtil.resizeWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_WIDER);
 		DashboardBuilderUtil.resizeWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_NARROWER);
-		//		DashboardBuilderUtil.resizeWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_TALLER);
-		//		DashboardBuilderUtil.resizeWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_SHORTER);
-		webd.getLogger().info("remove the widget title");
+		DashboardBuilderUtil.resizeWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_TALLER);
+		DashboardBuilderUtil.resizeWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_SHORTER);
+
+		webd.getLogger().info("Move the widget");
+		DashboardBuilderUtil.moveWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_RIGHT);
+		DashboardBuilderUtil.moveWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_LEFT);
+		DashboardBuilderUtil.moveWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_DOWN);
+		DashboardBuilderUtil.moveWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_UP);
+
+		webd.getLogger().info("Remove the widget");
 		DashboardBuilderUtil.removeWidget(webd, WidgetName_1);
-		//		DashboardBuilderUtil.removeWidget(webd, WidgetName_2);
+		DashboardBuilderUtil.removeWidget(webd, WidgetName_2);
 
 		//save the dashboard
-		webd.getLogger().info("save the dashboard");
+		webd.getLogger().info("Save the dashboard");
 		DashboardBuilderUtil.saveDashboard(webd);
+
+		//verify the current bashboard has one widget
+		webd.getLogger().info("Verify the dashboard");
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_1), "Widget '" + WidgetName_1 + "' not found");
+		Assert.assertFalse(DashboardBuilderUtil.verifyWidget(webd, WidgetName_2), "Widget '" + WidgetName_2 + "' found");
 	}
 
 	private String generateTimeStamp()

@@ -17,19 +17,7 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class WelcomeUtil_175 extends WelcomeUtil_171
 {
-	public final static String DATA_EXPLORERS_LOG = "log";
-
-	public final static String DATA_EXPLORERS_ANALYZE = "analyze";
-
-	public final static String DATA_EXPLORERS_SEARCH = "search";
-
-	public final static String ITA_DEFAULT = "default";
-
-	public final static String ITA_PERFORMANCE_ANALYTICS_DATABASE = "performanceAnalyticsDatabase";
-
 	public final static String ITA_PERFORMANCE_ANALYTICS_APPLICATION_SERVER = "performanceAnalyticsApplicationServer";
-
-	public final static String ITA_RESOURCE_ANALYTICS_DATABASE = "resourceAnalyticsDatabase";
 
 	public final static String ITA_RESOURCE_ANALYTICS_MIDDLEWARE = "resourceAnalyticsMiddleware";
 
@@ -38,22 +26,6 @@ public class WelcomeUtil_175 extends WelcomeUtil_171
 	public final static String ITA_APPLICATION_PERFORMANCE_ANALYTICS = "applicationPerformanceAnalytic";
 
 	public final static String ITA_AVAILABILITY_ANALYTICS = "availabilityAnalytics";
-
-	public final static String ITA_DATA_EXPLORER = "dataExplorer";
-
-	public final static String LEARN_MORE_GET_STARTED = "getStarted";
-
-	public final static String LEARN_MORE_VIDEOS = "videos";
-
-	public final static String LEARN_MORE_SERVICE_OFFERINGS = "serviceOfferings";
-
-	public final static String SERVICE_NAME_APM = "APM";
-
-	public final static String SERVICE_NAME_LA = "LA";
-	public final static String SERVICE_NAME_ITA = "ITA";
-	public final static String SERVICE_NAME_DASHBOARDS = "dashboards";
-
-	public final static String SERVICE_NAME_DATA_EXPLORERS = "dataExplorers";
 
 	@Override
 	public void visitITA(WebDriver driver, String selection)
@@ -115,4 +87,66 @@ public class WelcomeUtil_175 extends WelcomeUtil_171
 			driver.takeScreenShot();
 		}
 	}
+	
+	/**
+	 * Visit "Infrustructure Monitoring" in welcome
+	 * 
+	 * @param driver
+	 * @
+	 */
+	@Override
+	public void visitInfraMonitoring(WebDriver driver) 
+	{
+		driver.getLogger().info("Visit Infrastructure Monitoring from Welcome page..");
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_INFRAMONITORINGID);
+		driver.click("id=" + DashBoardPageId.WELCOME_INFRAMONITORINGID);
+		driver.takeScreenShot();
+	}
+	
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitCompliance(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public void visitCompliance(WebDriver driver)
+	{
+		driver.getLogger().info("Visiting Compliance from Welcome Page...");
+		WaitUtil.waitForPageFullyLoaded(driver);
+
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_COMPLIANCEID);
+		driver.click("id=" + DashBoardPageId.WELCOME_COMPLIANCEID);
+		driver.takeScreenShot();
+
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitOrchestration(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public void visitOrchestration(WebDriver driver)
+	{
+		driver.getLogger().info("Visiting Orchestration from Welcome Page...");
+		WaitUtil.waitForPageFullyLoaded(driver);
+
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_ORCHESTRATIONID);
+		driver.click("id=" + DashBoardPageId.WELCOME_ORCHESTRATIONID);
+		driver.takeScreenShot();
+
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitSecurity(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public void visitSecurity(WebDriver driver)
+	{
+		driver.getLogger().info("Visiting Security from Welcome Page...");
+		WaitUtil.waitForPageFullyLoaded(driver);
+
+		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_SECURITYANALYTICSID);
+		driver.click("id=" + DashBoardPageId.WELCOME_ORCHESTRATIONID);
+		driver.takeScreenShot();
+
+	}	
 }

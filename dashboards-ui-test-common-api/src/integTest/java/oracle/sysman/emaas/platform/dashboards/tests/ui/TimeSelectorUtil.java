@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeUnit;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.UtilLoader;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
@@ -49,5 +50,15 @@ public class TimeSelectorUtil
 	{
 		ITimeSelectorUtil tsu = new UtilLoader<ITimeSelectorUtil>().loadUtil(webd, ITimeSelectorUtil.class);
 		return tsu.setTimeRange(webd, rangeoption);
+	}
+	
+	public static String setFlexibleRelativeTimeRange(WebDriver webd, int index, int relTimeVal, TimeUnit relTimeUnit) {
+		ITimeSelectorUtil tsu = new UtilLoader<ITimeSelectorUtil>().loadUtil(webd, ITimeSelectorUtil.class);
+		return tsu.setFlexibleRelativeTimeRange(webd, index, relTimeVal, relTimeUnit);
+	}
+	
+	public static String setFlexibleRelativeTimeRange(WebDriver webd, int relTimeVal, TimeUnit relTimeUnit) {
+		ITimeSelectorUtil tsu = new UtilLoader<ITimeSelectorUtil>().loadUtil(webd, ITimeSelectorUtil.class);
+		return tsu.setFlexibleRelativeTimeRange(webd, relTimeVal, relTimeUnit);
 	}
 }

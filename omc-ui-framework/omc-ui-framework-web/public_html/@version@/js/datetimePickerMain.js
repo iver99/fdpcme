@@ -2,9 +2,10 @@
  * Example of Require.js boostrap javascript
  */
 
-window.gradleDevMode=true;
+
 requirejs.config({
-    bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==='object') || (window.gradleDevMode !==null && typeof window.gradleDevMode ==='boolean')) ? undefined : {
+    bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
+                (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
         'uifwk/js/uifwk-partition': 
             [
             'uifwk/js/util/ajax-util',
@@ -17,6 +18,7 @@ requirejs.config({
             'uifwk/js/util/typeahead-search',
             'uifwk/js/util/usertenant-util',
             'uifwk/js/util/zdt-util',
+            'uifwk/js/sdk/context-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
@@ -90,16 +92,51 @@ requirejs.config({
 require(['ojs/ojcore',
     'knockout',
     'jquery',
+    'uifwk/js/util/logging-util',
+    'uifwk/js/util/usertenant-util',
+    'uifwk/js/util/df-util',
 //    'uifwk/js/widgets/timeFilter/js/timeFilter',
     'ojs/ojknockout',
-    'ojs/ojchart'
+    'ojs/ojchart',
+    'ojs/ojbutton'
 ],
-        function (oj, ko, $/*, timeFilter*/) // this callback gets executed when all required modules are loaded
+        function (oj, ko, $, _emJETCustomLogger, userTenantUtilModel, dfuModel/*, timeFilter*/) // this callback gets executed when all required modules are loaded
         {
+            var userTenantUtil = new userTenantUtilModel(); 
+            var dfu = new dfuModel();
+            
             ko.components.register("date-time-picker", {
                 viewModel: {require: "uifwk/js/widgets/datetime-picker/js/datetime-picker"},
                 template: {require: "text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html"}
             });
+            
+            function getLogUrl(){
+                //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
+                if (dfu.isDevMode()){
+                    return dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"logging/logs");
+                }else{
+                    return '/sso.static/dashboards.logging/logs';
+                }
+            };           
+                       
+            var userTenant = userTenantUtil.getUserTenant();           
+            
+            var logger = new _emJETCustomLogger();
+            var logReceiver = getLogUrl();
+
+            logger.initialize(logReceiver, 60000, 20000, 8, userTenant.tenantUser);
+            logger.setLogLevel(oj.Logger.LEVEL_WARN);
+        
+            window.onerror = function (msg, url, lineNo, columnNo, error)
+            {
+                var msg = "Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo;
+                if(error.stack) {
+                    msg = msg + ". Error: " + JSON.stringify(error.stack);
+                }
+                oj.Logger.error(msg, true);
+
+                return false; 
+            }
 
             function MyViewModel() {
                 var self = this;
@@ -119,9 +156,12 @@ require(['ojs/ojcore',
                 self.initStart = ko.observable(start);
                 self.initEnd = ko.observable(end);
                 self.timePeriodsNotToShow = ko.observableArray([]);
+                self.timeLevelsNotToShow = ko.observable(["second"]);
+                self.showTimeAtMillisecond = ko.observable(false);
                 self.timeDisplay = ko.observable("short");
                 self.timePeriodPre = ko.observable("Last 7 days");
                 self.changeLabel = ko.observable(true);
+                self.timeFilterParams = {hoursIncluded: "8-18", daysIncluded: ["2", "3", "4", "5", "6"], monthsIncluded: ["2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]};
 
                 self.isTimePeriodLessThan1day = function(timePeriod) {
                     if(timePeriod==="Last 15 minutes" || timePeriod==="Last 30 minutes" || timePeriod==="Last 60 minutes" ||
@@ -136,23 +176,32 @@ require(['ojs/ojcore',
                     timezoneOffset = timezoneOffset>0 ? ("GMT-"+timezoneOffset) : ("GMT+"+Math.abs(timezoneOffset));
                     return timezoneOffset;
                 };
+                
+                self.adjustTime = function(start, end) {
+                    var adjustedStart, adjustedEnd;
+                    adjustedStart =start - 60*60*1000;
+                    adjustedEnd = end.getTime()+ 60*60*1000;
+                    return {
+                        start: new Date(adjustedStart),
+                        end: new Date(adjustedEnd)
+                    };
+                };
 
                 self.timeParams1 = {
                     startDateTime: /*self.initStart,*/ start,
                     endDateTime: self.initEnd, //end,
                     timePeriodsNotToShow: /*["Last 30 days", "Last 90 days"],*/ self.timePeriodsNotToShow,
+                    timeLevelsNotToShow: self.timeLevelsNotToShow, //custom relative time levels not to show
+                    showTimeAtMillisecond: self.showTimeAtMillisecond, //show time at minute or millisecond level in ojInputTime component
                     enableTimeFilter: true,
                     hideMainLabel: true,
                     dtpickerPosition: self.floatPosition1,
                     timePeriod: "Last 1 day", //self.timePeriodPre,
-                    callbackAfterApply: function (start, end, tp, tf) {
-                        console.log(start);
-                        console.log(end);
-                        console.log(tp);
-                        console.log(tf);
+//                    timeFilterParams: self.timeFilterParams,
+                    callbackAfterApply: function (start, end, tp, tf, relTimeVal, relTimeUnit) {
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
-                        if(self.isTimePeriodLessThan1day(tp) && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
+                        if((self.isTimePeriodLessThan1day(tp) || relTimeUnit==="SECOND" || relTimeUnit==="MINUTE" || relTimeUnit === "HOUR") && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
                             self.start(self.dateTimeConverter1.format(appliedStart)+" ("+self.getGMTTimezone(start)+")");
                             self.end(self.dateTimeConverter1.format(appliedEnd)+" ("+self.getGMTTimezone(end)+")");
                         }else {
@@ -176,14 +225,10 @@ require(['ojs/ojcore',
                     timeDisplay: self.timeDisplay,
                     dtpickerPosition: self.floatPosition3,
                     timePeriod: "Last 1 day", //self.timePeriodPre,
-                    callbackAfterApply: function (start, end, tp, tf) {
-                        console.log(start);
-                        console.log(end);
-                        console.log(tp);
-                        console.log(tf);
+                    callbackAfterApply: function (start, end, tp, tf, relTimeVal, relTimeUnit) {
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
-                        if(self.isTimePeriodLessThan1day(tp) && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
+                        if((self.isTimePeriodLessThan1day(tp) || relTimeUnit==="SECOND" || relTimeUnit==="MINUTE" || relTimeUnit === "HOUR") && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
                             self.start3(self.dateTimeConverter1.format(appliedStart)+" ("+self.getGMTTimezone(start)+")");
                             self.end3(self.dateTimeConverter1.format(appliedEnd)+" ("+self.getGMTTimezone(end)+")");
                         }else {
@@ -197,6 +242,9 @@ require(['ojs/ojcore',
                 };
 
                 self.changeOption = function() {
+                    self.showTimeAtMillisecond(true);
+                    self.timeLevelsNotToShow([]);
+                    return;
                     self.changeLabel(false);
                     self.initStart(new Date(new Date() - 48*60*60*1000));
                     self.initEnd(new Date(new Date() - 3*60*60*1000));
@@ -204,6 +252,11 @@ require(['ojs/ojcore',
                     self.timeDisplay("long");
                     self.timePeriodPre("Last 90 days");
                 };
+                
+                self.changeOption1 = function() {
+                    self.showTimeAtMillisecond(false);
+                    self.timeLevelsNotToShow(["second"]);
+                }
 
                 self.lineSeriesValues = ko.observableArray();
                 self.lineGroupsValues = ko.observableArray();
@@ -290,15 +343,6 @@ require(['ojs/ojcore',
 
                 self.generateData(self.timeParams1.startDateTime, self.timeParams1.endDateTime);
 
-                self.adjustTime = function(start, end) {
-                    var adjustedStart, adjustedEnd;
-                    adjustedStart =start - 60*60*1000;
-                    adjustedEnd = end.getTime()+ 60*60*1000;
-                    return {
-                        start: new Date(adjustedStart),
-                        end: new Date(adjustedEnd)
-                    };
-                };
                 self.timeParams2 = {
 //                    startDateTime: "2015-05-17T00:00:00",
 //                    endDateTime: "2015-05-16T13:00:00"

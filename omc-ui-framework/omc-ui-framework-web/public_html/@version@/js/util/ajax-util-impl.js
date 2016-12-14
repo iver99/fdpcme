@@ -97,7 +97,8 @@ define([
                 var retryLimit = retryOptions.retryLimit !== null &&
                         typeof(retryOptions.retryLimit) === 'number' ? retryOptions.retryLimit : 3;
                 retryLimit = retryLimit > 0 ? retryLimit : 0;
-                var showMessages = isValidShowMessageOption(retryOptions.showMessages) ? retryOptions.showMessages : 'all';
+                //Do not show error message on UI
+//                var showMessages = 'none'; //isValidShowMessageOption(retryOptions.showMessages) ? retryOptions.showMessages : 'none';
                 //Retry delay time in milliseconds, if not set, will be 2 seconds by default
                 var retryDelayTime = retryOptions.retryDelayTime !== null &&
                         typeof(retryOptions.retryDelayTime) === 'number' ? retryOptions.retryDelayTime : 500;
@@ -124,7 +125,7 @@ define([
                 var ajaxCallDfd = $.Deferred();
                 var jqXhrObj = null;
                 var firstCalled = false;
-                var underPlannedDowntime = false;
+//                var underPlannedDowntime = false;
                 //Add ability to abort ajaxWithRetry calls
                 ajaxCallDfd.abort = function(){
                     if (jqXhrObj !== null && $.isFunction(jqXhrObj.abort)) {
@@ -135,7 +136,7 @@ define([
                 (function ajaxCall (retries) {
                     jqXhrObj = $.ajax(retryOptions);
                     jqXhrObj.done(function (data, textStatus, jqXHR) {
-                        removeMessage(messageId);
+//                        removeMessage(messageId);
                         ajaxCallDfd.resolve(data, textStatus, jqXHR);
                     })
                     .fail(function (jqXHR, textStatus, errorThrown) {
@@ -159,7 +160,7 @@ define([
                                 //Check to see if OMC is under planned downtime, if yes, show a warning message to user and no need to retry
                                 else if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'].toLowerCase() === 'planned downtime') {
                                     retries = 0;
-                                    underPlannedDowntime = true;
+//                                    underPlannedDowntime = true;
                                     //show message to user when OMC is under planned downtime
                                     messageId = messageUtil.getGuid();
                                     var summaryMsg = nls.BRANDING_BAR_MESSAGE_PLANNED_DOWNTIME_SUMMARY;
@@ -182,26 +183,26 @@ define([
                             
                             retryCount++;
                             if (retries > 0) {
-                                //remove old retry message
-                                removeMessage(messageId);
-
-                                //Set new retry message to be shown on UI
-                                messageId = messageUtil.getGuid();
-                                var summaryMsg = nls.BRANDING_BAR_MESSAGE_AJAX_RETRYING_SUMMARY;
-                                var detailMsg = null;
-                                //Show retry message detail
-                                detailMsg = nls.BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL;
-                                detailMsg = messageUtil.formatMessage(detailMsg, retryCount);
-                                messageObj = {
-                                    id: messageId,
-                                    action: 'show',
-                                    type: 'warn',
-                                    category: 'retry_in_progress',
-                                    summary: summaryMsg,
-                                    detail: detailMsg};
-
-                                //Always show retry message summary and detail on UI
-                                messageUtil.showMessage(messageObj);
+//                                //remove old retry message
+//                                removeMessage(messageId);
+//
+//                                //Set new retry message to be shown on UI
+//                                messageId = messageUtil.getGuid();
+//                                var summaryMsg = nls.BRANDING_BAR_MESSAGE_AJAX_RETRYING_SUMMARY;
+//                                var detailMsg = null;
+//                                //Show retry message detail
+//                                detailMsg = nls.BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL;
+//                                detailMsg = messageUtil.formatMessage(detailMsg, retryCount);
+//                                messageObj = {
+//                                    id: messageId,
+//                                    action: 'show',
+//                                    type: 'warn',
+//                                    category: 'retry_in_progress',
+//                                    summary: summaryMsg,
+//                                    detail: detailMsg};
+//
+//                                //Always show retry message summary and detail on UI
+//                                messageUtil.showMessage(messageObj);
 
                                 //Do retry once again if failed
                                 setTimeout(function(){ajaxCall(retries - 1);}, retryDelayTime);
@@ -209,39 +210,38 @@ define([
                                 return false;
                             }
 
-                            //remove old retrying message after retries
-                            removeMessage(messageId);
-                            
-                            if (showMessages !== 'none' && !underPlannedDowntime) {
-                                //show new retry error message
-                                //Set failure message to be shown on UI after retries
-                                var errorSummaryMsg = nls.BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY;
-                                errorSummaryMsg = messageUtil.formatMessage(errorSummaryMsg, retryLimit);
+//                            //remove old retrying message after retries
+//                            removeMessage(messageId);
 
-                                var errorDetailMsg = null;
-                                if (showMessages === 'all') {
-                                    var responseErrorMsg = getMessageFromXhrResponse(jqXHR);
-                                    errorDetailMsg = responseErrorMsg !== null ? responseErrorMsg :
-                                            nls.BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL;
-                                    errorDetailMsg = messageUtil.formatMessage(errorDetailMsg);
-                                }
-                                messageObj = {
-                                    id: messageUtil.getGuid(),
-                                    action: 'show',
-                                    type: "error",
-                                    category: 'retry_fail',
-                                    summary: errorSummaryMsg,
-                                    detail: errorDetailMsg};
-
-                                //Show error message on UI
-                                messageUtil.showMessage(messageObj);
-
-                                //Log message
-                                var errorMsg = "Attempts to connect to your cloud service failed after {0} tries. Target URL: {1}.";
-                                errorMsg = messageUtil.formatMessage(errorMsg, retryLimit, retryOptions.url);
-                                //Output log to console if requested url is logging api to avoid endless loop, otherwise output to server side
-                                logMessage(retryOptions.url, 'error', errorMsg);
-                            }
+//                            if (showMessages !== 'none') {
+//                                //show new retry error message
+//                                //Set failure message to be shown on UI after retries
+//                                var errorSummaryMsg = nls.BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY;
+//                                errorSummaryMsg = messageUtil.formatMessage(errorSummaryMsg, retryLimit);
+//
+//                                var errorDetailMsg = null;
+//                                if (showMessages === 'all') {
+//                                    var responseErrorMsg = getMessageFromXhrResponse(jqXHR);
+//                                    errorDetailMsg = responseErrorMsg !== null ? responseErrorMsg :
+//                                            nls.BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL;
+//                                    errorDetailMsg = messageUtil.formatMessage(errorDetailMsg);
+//                                }
+//                                messageObj = {
+//                                    id: messageUtil.getGuid(),
+//                                    action: 'show',
+//                                    type: "error",
+//                                    category: 'retry_fail',
+//                                    summary: errorSummaryMsg,
+//                                    detail: errorDetailMsg};
+//
+//                                //Show error message on UI
+//                                messageUtil.showMessage(messageObj);
+//                            }
+                            //Log message
+                            var errorMsg = "Attempts to connect to your cloud service failed after {0} tries. Target URL: {1}.";
+                            errorMsg = messageUtil.formatMessage(errorMsg, retryLimit, retryOptions.url);
+                            //Output log to console if requested url is logging api to avoid endless loop, otherwise output to server side
+                            logMessage(retryOptions.url, 'error', errorMsg);
                         }
 
                         //Call error callback if the ajax call finally failed
@@ -377,10 +377,10 @@ define([
                 return headerValuesMap;
             };
 
-            function isValidShowMessageOption(messageOption) {
-                return messageOption === "none" || messageOption === "summary" ||
-                        messageOption === "all";
-            }
+//            function isValidShowMessageOption(messageOption) {
+//                return messageOption === "none" || messageOption === "summary" ||
+//                        messageOption === "all";
+//            }
 
             function logMessage(url, messageType, messageText) {
                 if (messageType){
@@ -424,26 +424,26 @@ define([
                 }
             }
 
-            function removeMessage(messageId) {
-                if (messageId) {
-                    var messageObj = {id: messageId, tag: 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE', action: 'remove', category: 'retry_in_progress'};
-                    window.postMessage(messageObj, window.location.href);
-                }
-            }
+//            function removeMessage(messageId) {
+//                if (messageId) {
+//                    var messageObj = {id: messageId, tag: 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE', action: 'remove', category: 'retry_in_progress'};
+//                    window.postMessage(messageObj, window.location.href);
+//                }
+//            }
 
-            function getMessageFromXhrResponse(xhr) {
-                var message = null;
-                var respJson = xhr.responseJSON;
-                if (typeof respJson !== "undefined" &&
-                        respJson.hasOwnProperty("errorMessage") &&
-                        typeof respJson.errorMessage !== "undefined" &&
-                        respJson.errorMessage !== "") {
-                    message = respJson.errorMessage;
-                }
-                //do not show response text for now, as it may contains information not friendly to the end user
-
-                return message;
-            }
+//            function getMessageFromXhrResponse(xhr) {
+//                var message = null;
+//                var respJson = xhr.responseJSON;
+//                if (typeof respJson !== "undefined" &&
+//                        respJson.hasOwnProperty("errorMessage") &&
+//                        typeof respJson.errorMessage !== "undefined" &&
+//                        respJson.errorMessage !== "") {
+//                    message = respJson.errorMessage;
+//                }
+//                //do not show response text for now, as it may contains information not friendly to the end user
+//
+//                return message;
+//            }
 
         }
 

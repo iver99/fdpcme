@@ -1,7 +1,13 @@
-define(['knockout', 'jquery', 'uifwk/@version@/js/util/df-util-impl', 'ojs/ojcore', 'uifwk/@version@/js/util/preference-util-impl'],
-        function (ko, $, dfumodel, oj, pfu) {
+define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout', 
+    'jquery', 
+    'uifwk/@version@/js/util/df-util-impl', 
+    'ojs/ojcore', 
+    'uifwk/@version@/js/util/preference-util-impl', 
+    'uifwk/@version@/js/sdk/context-util-impl'],
+        function (ko, $, dfumodel, oj, pfu, contextModel) {
             function NavigationLinksViewModel(params) {
                 var self = this;
+                var cxtUtil = new contextModel();
                 var dfHomeUrl = null;
                 var dfWelcomeUrl = null;
                 var dfDashboardsUrl = null;
@@ -14,6 +20,14 @@ define(['knockout', 'jquery', 'uifwk/@version@/js/util/df-util-impl', 'ojs/ojcor
                 var discoveredAdminLinks = [];
                 var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
                 var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
+                var linksNLSMap = {
+                		'homeLinks_EventUI_Alerts': nlsStrings.BRANDING_BAR_NAV_ALERTS_LABEL,
+                		'visualAnalyzers_LogAnalyticsUI_Log Visual Analyzer': nlsStrings.BRANDING_BAR_NAV_LOG_LABEL,
+                		'visualAnalyzers_TargetAnalytics_Search': nlsStrings.BRANDING_BAR_NAV_SEARCH_LABEL,
+                		'adminLinks_AdminConsoleSaaSUi_Administration': nlsStrings.BRANDING_BAR_NAV_ADMINISTRATION_LABEL,
+                		'adminLinks_TenantManagementUI_Agents': nlsStrings.BRANDING_BAR_NAV_AGENTS_LABEL,
+                		'adminLinks_EventUI_Alert Rules': nlsStrings.BRANDING_BAR_NAV_ALERT_RULES_LABEL
+                };
                 self.isAdmin = false;
                 self.isAdminLinksVisible = ko.observable(self.isAdmin);
 
@@ -67,37 +81,39 @@ define(['knockout', 'jquery', 'uifwk/@version@/js/util/df-util-impl', 'ojs/ojcor
 
                 self.openLink = function(data, event) {
                     if (data && data.href) {
-                        window.location.href = data.href;
+                        window.location.href = cxtUtil.appendOMCContext(data.href);
                     }
                 };
 
                 self.openHome = function() {
                     oj.Logger.info('Trying to open Home page by URL: ' + dfHomeUrl);
+                    var homeUrl = null;
                     if(dfHomeUrl) {
-                        window.location.href = dfHomeUrl;
+                        homeUrl = cxtUtil.appendOMCContext(dfHomeUrl);
                     }
                     else if (dfWelcomeUrl){
-                        window.location.href = dfWelcomeUrl;
+                        homeUrl = cxtUtil.appendOMCContext(dfWelcomeUrl);
                     }
+                    window.location.href = homeUrl;
                 };
 
                 self.openMyFavorites = function() {
                     var favoritesUrl = '/emsaasui/emcpdfui/home.html?filter=favorites';
                     oj.Logger.info('Trying to open my favorites by URL: ' + favoritesUrl);
-                    window.location.href = favoritesUrl;
+                    window.location.href = cxtUtil.appendOMCContext(favoritesUrl);
                 };
 
                 self.openWelcomePage = function() {
                     oj.Logger.info('Trying to open welcome page by URL: ' + dfWelcomeUrl);
                     if(dfWelcomeUrl) {
-                        window.location.href = dfWelcomeUrl;
+                        window.location.href = cxtUtil.appendOMCContext(dfWelcomeUrl);
                     }
                 };
 
                 self.openDashboardHome = function(data, event) {
                     oj.Logger.info('Trying to open Dashboard Home by URL: ' + dfDashboardsUrl);
                     if (dfDashboardsUrl) {
-                        window.location.href = dfDashboardsUrl;
+                        window.location.href = cxtUtil.appendOMCContext(dfDashboardsUrl);
                     }
                 };
 
@@ -106,6 +122,10 @@ define(['knockout', 'jquery', 'uifwk/@version@/js/util/df-util-impl', 'ojs/ojcor
                         var link;
                         for (var i = 0; i < discoveredAdminLinks.length; i++) {
                              link = discoveredAdminLinks[i];
+                             var key = 'adminLinks_' + link.serviceName + '_' + link.name;
+                             if (linksNLSMap[key]) {
+                            	 link.name = linksNLSMap[key];
+                             }
                             if (
                                 // let's use relative url for customer software for admin link
                                 (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName &&
@@ -128,8 +148,12 @@ define(['knockout', 'jquery', 'uifwk/@version@/js/util/df-util-impl', 'ojs/ojcor
                             var homelinks = data.homeLinks;
                             var homeLinkList = [];
                             for (var i = 0; i < homelinks.length; i++) {
-                                var hurl = homelinks[i].href;
+                                var key = 'homeLinks_' + homelinks[i].serviceName + '_' + homelinks[i].name;
+                                if (linksNLSMap[key]) {
+                                	homelinks[i].name = linksNLSMap[key];
+                                }
                                 //Since EventUI is tenant subscription agnostic, use relative path for its home links
+                                var hurl = homelinks[i].href;
                                 if (params.appEventUI && params.appEventUI.serviceName === homelinks[i].serviceName){
                                     hurl = dfu.getRelUrlFromFullUrl(hurl);
                                 }
@@ -159,9 +183,12 @@ define(['knockout', 'jquery', 'uifwk/@version@/js/util/df-util-impl', 'ojs/ojcor
                             var analyzers = data.visualAnalyzers;
                             var analyzerList = [];
                             for (var subindex = 0; subindex < analyzers.length; subindex++) {
+                            	var key = 'visualAnalyzers_' + analyzers[subindex].serviceName + '_' + analyzers[subindex].name;
+                                if (linksNLSMap[key]) {
+                                	analyzers[subindex].name = linksNLSMap[key];
+                                }
                                 var aurl = analyzers[subindex].href;
-                                analyzerList.push({name: analyzers[subindex].name.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, ''),
-                                    href: aurl});
+                                analyzerList.push({name: analyzers[subindex].name, href: aurl});
                             }
                             self.visualAnalyzers(analyzerList);
                         }
@@ -179,25 +206,15 @@ define(['knockout', 'jquery', 'uifwk/@version@/js/util/df-util-impl', 'ojs/ojcor
                         if (!dfu.isDevMode()) {
                             dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, sessionTimeoutWarnDialogId);
                         }
+                        
+                        if (data.ssoLogoutUrl) {
+                            window.cachedSSOLogoutUrl = data.ssoLogoutUrl;
+                        }
                     };
-                    var serviceUrl = "/sso.static/dashboards.configurations/registration";
-                    if (dfu.isDevMode()){
-                        serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"configurations/registration");
-                    }
-                    dfu.ajaxWithRetry({
-                        url: serviceUrl,
-                        headers: dfu.getDefaultHeader(),
-                        contentType:'application/json',
-                        success: function(data, textStatus) {
-                            fetchServiceLinks(data);
-                        },
-                        error: function(xhr, textStatus, errorThrown){
-                            oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
-                            self.visualAnalyzers([]);
-                            self.adminLinks([]);
-                            self.cloudServices([]);
-                        },
-                        async: true
+                    dfu.getRegistrations(fetchServiceLinks, true, function(){
+                        self.visualAnalyzers([]);
+                        self.adminLinks([]);
+                        self.cloudServices([]);
                     });
                 }
 

@@ -10,21 +10,18 @@
 
 package oracle.sysman.emaas.platform.dashboards.webutils.timer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.DBConnectionManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.targetmodel.services.GlobalStatus;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager;
 
 /**
@@ -73,12 +70,16 @@ public class AvailabilityNotification implements NotificationListener
 			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 		if (!isDBAvailable) {
-			List<String> otherReasons = new ArrayList<String>();
-			otherReasons.add("Dashboard-API service database is unavailable");
-			rsm.markOutOfService(null, null, otherReasons);
-			GlobalStatus.setDashboardDownStatus();
-			LOGGER.error("Dashboards service is out of service because database is unavailable");
-			return;
+//			List<String> otherReasons = new ArrayList<String>();
+//			otherReasons.add("Dashboard-API service database is unavailable");
+			// we don't mark OUT_OF_SERVICE on service registry on monitoring EM, instead let's keep the status internally
+//			rsm.markOutOfService(null, null, otherReasons);
+//			GlobalStatus.setDashboardDownStatus();
+			DependencyStatus.getInstance().setDatabaseUp(Boolean.FALSE);
+			LOGGER.error("Dashboards service keeps running, although database is unavailable");
+		} else {
+			DependencyStatus.getInstance().setDatabaseUp(Boolean.TRUE);
+			LOGGER.debug("DF database is UP");
 		}
 
 		// check entity naming availibility
@@ -91,22 +92,26 @@ public class AvailabilityNotification implements NotificationListener
 			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 		if (!isEntityNamingAvailable) {
-			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
-			InstanceInfo ii = new InstanceInfo();
-			ii.setServiceName(ENTITY_NAMING_SERVICE_NAME);
-			ii.setVersion(ENTITY_NAMING_SERVICE_VERSION);
-			services.add(ii);
-			rsm.markOutOfService(services, null, null);
-			GlobalStatus.setDashboardDownStatus();
-			LOGGER.error("Dashboards service is out of service because entity naming service is unavailable");
-			return;
+			// we don't mark OUT_OF_SERVICE on service registry on monitoring EM, instead let's keep the status internally
+//			List<InstanceInfo> services = new ArrayList<InstanceInfo>();
+//			InstanceInfo ii = new InstanceInfo();
+//			ii.setServiceName(ENTITY_NAMING_SERVICE_NAME);
+//			ii.setVersion(ENTITY_NAMING_SERVICE_VERSION);
+//			services.add(ii);
+//			rsm.markOutOfService(services, null, null);
+//			GlobalStatus.setDashboardDownStatus();
+			DependencyStatus.getInstance().setEntityNamingUp(Boolean.FALSE);
+			LOGGER.error("Dashboards service keeps running, although entity naming service is OUT_OF_SERVICE");
+		} else {
+			DependencyStatus.getInstance().setEntityNamingUp(Boolean.TRUE);
+			LOGGER.debug("Entity naming service is UP");
 		}
-
+		
 		// now all checking is OK
 		try {
 			rsm.markServiceUp();
 			GlobalStatus.setDashboardUpStatus();
-			LOGGER.debug("Dashboards service is up");
+			LOGGER.info("Dashboards service is up");
 		}
 		catch (Exception e) {
 			LOGGER.error(e.getLocalizedMessage(), e);

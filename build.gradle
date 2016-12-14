@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 // Enable this to be a rootProject which uses project common files.
 //
@@ -10,10 +9,19 @@ buildscript {
   if (System.env.BRANCH_TOP_DIR) {
     project.ext.commonBranchTopDir = System.env.BRANCH_TOP_DIR
   } else {
-    project.ext.commonBranchTopDir = ["sh", "-c", "cd $rootDir; git rev-parse --show-toplevel"].execute().text.trim()
-    if ( ! project.commonBranchTopDir) {
-      throw new GradleException("Error: git not found in sh search PATH\n" +
-        "=> If changing PATH to find git is not feasible, env variables BRANCH_TOP_DIR and BRANCH_NAME must be set")
+    def command = "cd '$rootDir' && git rev-parse --show-toplevel"
+    def stdout = new StringBuilder(); def stderr = new StringBuilder(); def exitCode = 1
+    try {
+      def proc = new ProcessBuilder("sh", "-c", command).start()
+      proc.waitForProcessOutput(stdout, stderr); exitCode = proc.exitValue()
+    } catch (Exception e) { stderr << e.message }
+    if (exitCode) {
+      throw new GradleException (
+        "[ERROR] sh or git command is not found or pwd=${System.properties.'user.dir'} is not a git project dir\n" +
+        "[Note] If git is not available, env variables BRANCH_TOP_DIR and BRANCH_NAME must be set\n" +
+        "[Command] sh -c \"$command\"\n" + "[Error] $stderr")
+    } else {
+      project.ext.commonBranchTopDir = "$stdout".trim()
     }
   }
   apply from: "$project.commonBranchTopDir/common/scripts/buildscript-apply-delegate.gradle"
@@ -255,32 +263,19 @@ task preBuildCompile(type: Copy) {
    from configurations.prebuild_junit
    from configurations.prebuild_apacheHttp
    from configurations.prebuild_jaxrs
-   from configurations.testNG
    from configurations.prebuild_wlfullc
    from configurations.prebuild_tenant
    from configurations.prebuild_cache
    from configurations.prebuild_groovy
    from configurations.prebuild_integtest
-   from configurations.webdriver
    from configurations.testConfig
    into "$afDir"
    rename(/registry-client-1.\d+.\d+-\d+.jar/, 'registry-client-1.x.jar')
    rename(/registry-lookup-client-1.\d+.\d+-\d+.jar/, 'registry-lookup-client-1.x.jar')
-   rename(/em-qatool-os-webdriver-2.0.0-\d+.jar/, 'em-qatool-os-webdriver-2.0.0.jar')
 }
 
 compileJava.dependsOn preBuildCompile
 
-buildscript { 
-	dependencies {  
-		classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.2.5'  
-
-	        classpath group: 'com.oracle.emaas.emdi', name: 'JSPlugin', version:'1.0+'
-		classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'
-
-		classpath 'org.gradle.plugins:gradle-compass:1.0.10.1'
-	}  
-}
 project.publishing.publications {
     if (project.tasks.findByName('lrgMetadataZip')) {
         // Publication for publishing lrg metadata
@@ -312,7 +307,7 @@ apply from: "${project.ext.source_cc}/codeCoverage.gradle"
 if(project.plugins.hasPlugin('sonar-runner')) {
   sonarRunner {
     sonarProperties {
-      property "sonar.branch", 'master'
+      property "sonar.branch", 'greenchannel'
     }
   }
 }
@@ -326,7 +321,7 @@ configurations.driver.each {File file ->
 }
 
 String CLEANUP_SQL = "cleanup_df.sql"
-String db_usr = "SYSEMS_T_3"
+String db_usr = "SYSEMS_T_1004"
 String db_pw = "welcome1"
 String db_url_pre = "jdbc:oracle:thin:@"
 String db_url_suf = ".us.oracle.com:1521:orcl12c"

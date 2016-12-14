@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emaas.platform.dashboards.ui.web.context.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.TenantSubscriptionUtil;
@@ -29,7 +30,7 @@ import org.apache.logging.log4j.Logger;
 public class DashboardsUiCORSFilter implements Filter
 {
 	private final static Logger LOGGER = LogManager.getLogger(DashboardsUiCORSFilter.class);
-	private static final String OAM_REMOTE_USER_HEADER = "OAM_REMOTE_USER";
+	public static final String OAM_REMOTE_USER_HEADER = "OAM_REMOTE_USER";
 
 	//	private static final String DEFAULT_USER = "SYSMAN";
 	//	private static final String DEFAULT_TENANT = "TenantOPC1";
@@ -123,14 +124,17 @@ public class DashboardsUiCORSFilter implements Filter
 		// redirecting check: make sure exception(s) don't have impact on the process
 		try {
 			LOGGER.info("The tenant.user is " + userTenant + ", and the request URI is " + hReq.getRequestURI());
+			int pos = userTenant.indexOf(".");
+			String opcTenantId = userTenant.substring(0, pos);
+			String user = userTenant.substring(pos + 1);
 			if (!StringUtil.isEmpty(userTenant) && userTenant.indexOf(".") > 0) {
-				String opcTenantId = userTenant.substring(0, userTenant.indexOf("."));
 				if (hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/home.html")) {
-					List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId);
+					List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId, user);
 					if (apps == null || apps.isEmpty()) {
 						LOGGER.error("Tenant (" + opcTenantId
 								+ ") does not subscribe to any service. Redirect dashboard home to error page");
-						hRes.sendRedirect("./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG");
+						hRes.sendRedirect(GlobalContextUtil.generateUrlWithGlobalContext(
+								"./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG", hReq));
 						return;
 					}
 					else if (TenantSubscriptionUtil.isAPMServiceOnly(apps)) {
@@ -144,7 +148,7 @@ public class DashboardsUiCORSFilter implements Filter
 							LOGGER.info(
 									"The APM link is replaced with vanity URL from original url: \"{}\" to final url: \"{}\"",
 									apmLink.getHref(), targetUrl);
-							hRes.sendRedirect(targetUrl);
+							hRes.sendRedirect(GlobalContextUtil.generateUrlWithGlobalContext(targetUrl, hReq));
 							return;
 						}
 						else {
@@ -163,7 +167,7 @@ public class DashboardsUiCORSFilter implements Filter
 							LOGGER.info(
 									"The Monitoring service link is replaced with vanity URL from original url: \"{}\" to final url: \"{}\"",
 									monitoringLink.getHref(), targetUrl);
-							hRes.sendRedirect(targetUrl);
+							hRes.sendRedirect(GlobalContextUtil.generateUrlWithGlobalContext(targetUrl, hReq));
 							return;
 						}
 						else {
@@ -172,11 +176,12 @@ public class DashboardsUiCORSFilter implements Filter
 					}
 				}
 				else if (hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/builder.html")) {
-					List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId);
+					List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId, user);
 					if (apps == null || apps.isEmpty()) {
 						LOGGER.error("Tenant (" + opcTenantId
 								+ ") does not subscribe to any service. Redirect dashboard builder page to error page");
-						hRes.sendRedirect("./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG");
+						hRes.sendRedirect(GlobalContextUtil.generateUrlWithGlobalContext(
+								"./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG", hReq));
 						return;
 					}
 				}

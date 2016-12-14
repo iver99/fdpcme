@@ -97,9 +97,9 @@ define([
                             "sharePublic": self.dashboardsetShare() === "on" ? true : false
                         },
                 function (result) {
-                    var sharePublic = result.sharePublic === true ? "on" : "off";
+                    var sharePublic = result.sharePublic() === true ? "on" : "off";
                     if (sharePublic !== prevSharePublic) {
-                        var shareMsgKey = result.sharePublic ? 'DBS_BUILDER_DASHBOARD_SET_SHARE_SUCCESS' : 'DBS_BUILDER_DASHBOARD_SET_SHARE_ERROR';
+                        var shareMsgKey = result.sharePublic() ? 'DBS_BUILDER_DASHBOARD_SET_SHARE_SUCCESS' : 'DBS_BUILDER_DASHBOARD_SET_SHARE_ERROR';
                         dfu.showMessage({
                             type: 'confirm',
                             summary: getNlsString(shareMsgKey),
@@ -110,13 +110,22 @@ define([
                     }
                     
 
-                    self.dashboardsetShare(result.sharePublic === true ? "on" : "off");
-                    self.notifyDashboardsetToolBarChange("dashboardsetName",result.name);
-                    self.notifyDashboardsetToolBarChange("dashboardsetDes",result.description);
-                },
-                        function (jqXHR, textStatus, errorThrown) {
-                            dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
-                        });
+                    self.dashboardsetShare(result.sharePublic() === true ? "on" : "off");
+                    self.notifyDashboardsetToolBarChange("dashboardsetName",result.name());
+                    self.notifyDashboardsetToolBarChange("dashboardsetDes",result.description());
+                }, 
+                function (jqXHR, textStatus, errorThrown) {
+            		if (jqXHR.errorCode() === 10001)
+            		{
+            			_m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
+            			_mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
+            			dfu.showMessage({type: 'error', summary: _m, detail: _mdetail, removeDelayTime: 5000});
+            		} else {
+            			 dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', 
+removeDelayTime: 5000});                             
+            		}
+                         }
+                );
             });
         }
 

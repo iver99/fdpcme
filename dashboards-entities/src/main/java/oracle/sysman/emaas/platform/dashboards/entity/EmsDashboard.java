@@ -54,6 +54,8 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	private Integer enableEntityFilter;
 	@Column(name = "IS_SYSTEM", nullable = false)
 	private Integer isSystem;
+	@Column(name = "SHOW_INHOME", nullable = false)
+	private Integer showInHome;
 	@Column(name = "SHARE_PUBLIC", nullable = false)
 	private Integer sharePublic;
 	@Column(name = "APPLICATION_TYPE")
@@ -87,10 +89,10 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	{
 	}
 
-	public EmsDashboard(Date creationDate, BigInteger dashboardId, BigInteger deleted, String description,
-			Integer enableTimeRange, Integer enableRefresh, Integer enableDescription, Integer enableEntityFilter,
-			Integer isSystem, Integer sharePublic, Date lastModificationDate, String lastModifiedBy, String name, String owner,
-			String screenShot, Integer type, Integer applicationType, String extendedOptions)
+	public EmsDashboard(Date creationDate, BigInteger dashboardId, BigInteger deleted, String description, Integer enableTimeRange,
+			Integer enableRefresh, Integer enableDescription, Integer enableEntityFilter, Integer isSystem,
+			Integer sharePublic, Date lastModificationDate, String lastModifiedBy, String name, String owner, String screenShot,
+			Integer type, Integer applicationType,Integer showInHome,String extendedOptions)
 	{
 		setCreationDate(creationDate);
 		setLastModificationDate(lastModificationDate);
@@ -109,6 +111,7 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 		this.screenShot = screenShot;
 		this.type = type;
 		this.applicationType = applicationType;
+		this.showInHome=showInHome;
 		this.extendedOptions = extendedOptions;
 	}
 
@@ -188,6 +191,11 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	public Integer getIsSystem()
 	{
 		return isSystem;
+	}
+
+	public Integer getShowInHome()
+	{
+		return showInHome;
 	}
 
 	public String getLastModifiedBy()
@@ -308,6 +316,11 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	public void setIsSystem(Integer isSystem)
 	{
 		this.isSystem = isSystem;
+	}
+
+	public void setShowInHome(Integer showInHome)
+	{
+		this.showInHome = showInHome;
 	}
 
 	public void setLastModifiedBy(String lastModifiedBy)

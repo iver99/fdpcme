@@ -3,12 +3,6 @@
  * All rights reserved.
  */
 
-/**
- * @preserve Copyright 2013 jQuery Foundation and other contributors
- * Released under the MIT license.
- * http://jquery.org/license
- */
-window.gradleDevMode=true;
 requirejs.config({
     // Setup module id mapping
     map: {
@@ -27,7 +21,7 @@ requirejs.config({
         'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.4.0',
         'knockout.mapping': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout.mapping-latest',
         'jquery': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-2.1.3.min',
-        'jqueryui': '../../libs/@version@/js/jquery/jquery-ui-1.11.4.custom.min',
+        'jqueryui': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
         'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/min',
@@ -47,13 +41,14 @@ requirejs.config({
         'idfbcutil':'internaldfcommon/js/util/internal-df-browser-close-util',
         'd3':'../../libs/@version@/js/d3/d3.min',
         'emsaasui':'/emsaasui',
-       'emcta':'/emsaasui/emcta/ta/js',
+        'emcta':'/emsaasui/emcta/ta/js',
 //        'emcta': '/emsaasui/emcta/ta/@version@/js', //for DEV_MODE
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
         'uifwk': '/emsaasui/uifwk'
     },
-    bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==='object') || (window.gradleDevMode !==null && typeof window.gradleDevMode ==='boolean')) ? undefined : {
+    bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
+                (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
         'uifwk/js/uifwk-partition':
             [
             'uifwk/js/util/ajax-util',
@@ -66,16 +61,15 @@ requirejs.config({
             'uifwk/js/util/typeahead-search',
             'uifwk/js/util/usertenant-util',
             'uifwk/js/util/zdt-util',
+            'uifwk/js/sdk/context-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
             'uifwk/js/widgets/navlinks/js/navigation-links',
             'uifwk/js/widgets/timeFilter/js/timeFilter',
-            'uifwk/js/widgets/widgetselector/js/widget-selector',
             'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
             'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
             'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
-            'text!uifwk/js/widgets/widgetselector/html/widget-selector.html',
             'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
             'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
             ],
@@ -212,7 +206,6 @@ require(['knockout',
     'uifwk/js/util/df-util',
     'uifwk/js/util/logging-util',
     'ojs/ojcore',
-    'dashboards/widgets/autorefresh/js/auto-refresh',
 //    'dashboards/widgets/textwidget/js/textwidget',
     'dashboards/dashboardhome-impl',
 //    'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
@@ -225,24 +218,26 @@ require(['knockout',
     'builder/dashboardset.panels.model',
     'builder/dashboardDataSource/dashboard.datasource'
 ],
-    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, /*textwidget, */dashboardhome_impl/*, TargetSelectorUtils*/) // this callback gets executed when all required modules are loaded
+    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, /*textwidget, */dashboardhome_impl/*, TargetSelectorUtils*/) // this callback gets executed when all required modules are loaded
     {
         var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
         require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
         TargetSelectorUtils.registerComponents();
-        logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
+        logger.initialize(logReceiver, 300000, 20000, 80, dfu.getUserTenant().tenantUser);
         // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
         // If you comment the line below, our current log calls will not be output!
         logger.setLogLevel(oj.Logger.LEVEL_WARN);
         
         window.onerror = function (msg, url, lineNo, columnNo, error)
         {
-            oj.Logger.error("Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo, true);
+            var msg = "Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo;
             if(error.stack) {
-                oj.Logger.error("Error: " + JSON.stringify(error.stack), true);
+                msg = msg + ". Error: " + JSON.stringify(error.stack);
             }
-            return false; 
+            oj.Logger.error(msg, true);
+            
+            return false;
         }
 
         if (!ko.components.isRegistered('df-oracle-branding-bar')) {
@@ -250,20 +245,10 @@ require(['knockout',
                 viewModel:{require:'uifwk/js/widgets/brandingbar/js/brandingbar'},
                 template:{require:'text!uifwk/js/widgets/brandingbar/html/brandingbar.html'}
             });
-        }
-        if (!ko.components.isRegistered('df-widget-selector')) {
-            ko.components.register("df-widget-selector",{
-                viewModel:{require:'uifwk/js/widgets/widgetselector/js/widget-selector'},
-                template:{require:'text!uifwk/js/widgets/widgetselector/html/widget-selector.html'}
-            });
-        }
+        }   
         ko.components.register("df-datetime-picker",{
             viewModel: {require: 'uifwk/js/widgets/datetime-picker/js/datetime-picker'},
             template: {require: 'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
-        });
-        ko.components.register("df-auto-refresh",{
-            viewModel:auto_refresh,
-            template:{require:'text!./widgets/autorefresh/auto-refresh.html'}
         });
         /*ko.components.register("DF_V1_WIDGET_TEXT", {
             viewModel: textwidget,
@@ -292,7 +277,8 @@ require(['knockout',
                 userName: self.userName,
                 tenantName: self.tenantName,
                 appId: self.appId,
-                isAdmin:true
+                isAdmin:true,
+                showGlobalContextBanner: ko.observable(false)
             };
 
             $("#headerWrapper").on("DOMSubtreeModified", function() {
@@ -324,6 +310,11 @@ require(['knockout',
         Builder.initializeFromCookie();
 
         $(document).ready(function () {
+            //Check if uifwk css file has been loaded already or not, if not then load it
+            if (!$('#dashboardMainCss').length) {
+                //Append uifwk css file into document head
+                $('head').append('<link id="dashboardMainCss" rel="stylesheet" href="/emsaasui/emcpdfui/@version@/css/dashboards-main.css" type="text/css"/>');
+            }
 
             var headerViewModel = new DashboardsetHeaderViewModel();
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);

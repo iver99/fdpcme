@@ -1,27 +1,21 @@
 sourceSets {
-    integTest {
-        java.srcDir 'src/integTest/java'
-        compileClasspath = compileClasspath + configurations.testConfig + configurations.testNG+configurations.webdriver + configurations.restAssured
-    }
     test{
                 java {
                         srcDirs = ['src/integTest/java']
                 }
                 resources.srcDirs = ['src/integTest/java']
+                compileClasspath += configurations.testConfig + configurations.testNG + configurations.webdriver + configurations.restAssured
         }
 }
 
 task integTestJar (type:Jar) {
-    from sourceSets.integTest.output
+    from sourceSets.test.output
     appendix = 'integ-tests'
 }
 
 dependencies {
-         testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
-    testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
-	testCompile configurations.testNG
-	testCompile configurations.webdriver
-	testCompile configurations.restAssured
-    testConfig project(':dashboards-ui-test-common-api') { transitive = false }
+    testConfig getProjectArtifact('log4j-core')   
+	testConfig getProjectArtifact('log4j-api')   
+    testConfig project(':dashboards-ui-test-common-api')  
 }
 build.dependsOn integTestJar

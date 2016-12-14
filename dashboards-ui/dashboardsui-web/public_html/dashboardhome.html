@@ -1,17 +1,17 @@
     <!-- Home toolbar start -->
-    <div aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 5px" data-testapiversion="1.7.5">
-        <button style=" margin-right: 5px;" data-bind="visible: (isMobileDevice() !== true && isDashboardSet === true), attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked,
+    <div aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 5px" data-testapiversion="1.13.0">
+        <button style=" margin-right: 5px;" data-bind="visible: (isMobileDevice() !== true && isDashboardSet === true), attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, 
                                          ojComponent: { component:'ojButton', rootAttributes: {'class': 'dbs-home-blue-button'}, label: getNlsString('DBS_HOME_CREATE_BTN_LABEL'),disabled: zdtStatus}"></button>
         <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-3 oj-xl-6">
             <input class="dbs-sinput" id="dbs-sinput" type="text" name="searchInput"
                data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
                           ,dbsTypeAhead: {response: searchResponse, acceptInput: acceptInput, selfSearchStart: typeaheadSearchStart, busyElement: '#dhometab', busyClassName: 'busy', source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
-                          ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL'),id:'searchInput_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1))) }"/>
-            <button class="oj-button-half-chrome" id="clear-search" data-bind="attr:{id:'clear-search_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: clearSearch, visible: showSeachClear,
+                          ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL'),id:'searchInput_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1))) }"/>
+            <button class="oj-button-half-chrome" id="clear-search" data-bind="attr:{id:'clear-search_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: clearSearch, visible: showSeachClear,
                     ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
                     icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 30px;'}}"> 
             </button>
-            <button class="oj-button-half-chrome" id="force-search" data-bind="attr:{id:'force-search'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: forceSearch,
+            <button class="oj-button-half-chrome" id="force-search" data-bind="attr:{id:'force-search'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: forceSearch,
                     ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_SEARCH_BTN_LABEL'), display: 'icons', 
                     icons: {start:'dbs-search-icon'}, rootAttributes: {'style': 'width: 30px;'}}"> 
             </button> 
@@ -38,7 +38,7 @@
                     data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, ojComponent: { component:'ojButton', label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button-->
             <button name="exploreDataBtn" id="explore-data-btn" data-bind="visible:showExploreDataBtn,ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_EXPLORE_BTN_LABEL'), 
                                                                              menu: '#exploreDataMenu-'+sortById, rootAttributes: {'style': 'margin-left: 8px;'}}, 
-                                                               attr: { 'title': getNlsString('DBS_HOME_EXPLORE_BTN_TT'),id:'explore-data-btn_'+(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1))) }">
+                                                               attr: { 'title': getNlsString('DBS_HOME_EXPLORE_BTN_TT'),id:'explore-data-btn_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1))) }">
             </button>
             <ul style="display:none" name="exploreDataMenu"
                 data-bind="ojComponent: {component: 'ojMenu', select: exploreDataMenuItemSelect},attr:{id:'exploreDataMenu-'+sortById}">
@@ -113,7 +113,7 @@
         <!-- ko if:  $component.isTilesView() === 'gridtview' -->
         <div data-bind="text: dashboard.name" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; text-align: center"></div>
         <!-- /ko -->
-        <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_DESC')"></span><span data-bind="text: dashboard.description"></span><br/>
+        <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_DESC')"></span><div data-bind="html: dashboard.description"></div><br/>
         <!-- ko if:  $component.isTilesView() === 'gridtview' -->
         <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CREATE')"></span><span data-bind="text: dashboard.owner"></span><br/>
         <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CDATE')"></span><span data-bind="text: getDateString(dashboard.createdOn)"></span><br/>

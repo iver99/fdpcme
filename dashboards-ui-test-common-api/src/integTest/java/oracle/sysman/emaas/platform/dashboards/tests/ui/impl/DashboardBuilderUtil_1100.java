@@ -3,10 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1100;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DelayedPressEnterThread;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.*;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.*;
@@ -114,4 +111,6 @@ public class DashboardBuilderUtil_1100 extends DashboardBuilderUtil_190
         actions.moveToElement(widgetHeader).build().perform();
         driver.getLogger().info("Focus to the widget");
     }
+
+
 }

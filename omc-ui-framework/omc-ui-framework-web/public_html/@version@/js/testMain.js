@@ -1,6 +1,6 @@
-window.gradleDevMode=true;
 requirejs.config({
-    bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==='object') || (window.gradleDevMode !==null && typeof window.gradleDevMode ==='boolean')) ? undefined : {
+    bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
+                (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
         'uifwk/js/uifwk-partition': 
             [
             'uifwk/js/util/ajax-util',
@@ -13,6 +13,7 @@ requirejs.config({
             'uifwk/js/util/typeahead-search',
             'uifwk/js/util/usertenant-util',
             'uifwk/js/util/zdt-util',
+            'uifwk/js/sdk/context-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
@@ -37,13 +38,17 @@ requirejs.config({
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
         'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/debug',
         'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/ojL10n',
+        'ojdnd': '../../libs/@version@/js/oraclejet/js/libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
         'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v2.0.2/resources',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../../libs/@version@/js/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
-        'uifwk': '/emsaasui/uifwk'
+        'uifwk': '/emsaasui/uifwk',
+        'emsaasui': '/emsaasui',
+        'emcta': '/emsaasui/emcta/ta/js'
+//        'emcta': '/emsaasui/emcta/ta/@version@/js' //for DEV_MODE
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -114,10 +119,21 @@ require(['knockout',
             if (dfu.isDevMode()){
                 logReceiver = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"logging/logs");
             }
-            logger.initialize(logReceiver, 60000, 20000, 8, tenantDotUser);
+            logger.initialize(logReceiver, 60000, 20000, 8, userTenantUtil.getUserTenant().tenantUser);
             // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
             // If you comment the line below, our current log calls will not be output!
-            logger.setLogLevel(oj.Logger.LEVEL_LOG);
+            logger.setLogLevel(oj.Logger.LEVEL_WARN);
+            
+            window.onerror = function (msg, url, lineNo, columnNo, error)
+            {
+                var msg = "Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo;
+                if(error.stack) {
+                    msg = msg + ". Error: " + JSON.stringify(error.stack);
+                }
+                oj.Logger.error(msg, true);
+
+                return false; 
+            }
 
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
@@ -145,14 +161,16 @@ require(['knockout',
 
             function HeaderViewModel() {
                 var self = this;
-
+                var entities = ko.observable(["8616FD4297516BA7974EF5AA20EE294B"]);
                 self.brandingbarParams = {
                     userName: userName,
                     tenantName: tenantName,
                     appId: appId,
 //                    relNotificationCheck: "existActiveWarning",
 //                    relNotificationShow: "warnings",
-                    isAdmin: isAdmin
+                    isAdmin: isAdmin,
+                    entities: entities,
+                    showGlobalContextBanner: false
                 };
             }
 

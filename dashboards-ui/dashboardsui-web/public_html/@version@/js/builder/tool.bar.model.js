@@ -74,7 +74,7 @@ define(['knockout',
             self.disableSave = ko.observable(false);
             
             if(self.isUnderSet && dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)){
-                self.autoRefreshInterval = ko.observable(dashboardSetOptions.autoRefreshInterval);
+                self.autoRefreshInterval = ko.observable(ko.unwrap(dashboardSetOptions.autoRefreshInterval));
             }else {                
                 new Builder.DashboardDataSource().loadDashboardUserOptionsData(self.dashboard.id(),
                     function(data) {
@@ -90,7 +90,9 @@ define(['knockout',
                         self.autoRefreshInterval = ko.observable(DEFAULT_AUTO_REFRESH_INTERVAL);
                     });
             }
-                       
+            
+            setAutoRefreshInterval(self.autoRefreshInterval());
+            
             self.autoRefreshInterval.subscribe(function (value) {
                 //save user options if it is in single dashboard mode
                 if (!self.isUnderSet) {
@@ -121,10 +123,6 @@ define(['knockout',
             };
             $(window).bind("beforeunload", showConfirmLeaveDialog);
 
-            self.initialize = function() {
-                self.initEventHandlers();
-            };
-
             self.intervalID = null;
             function setAutoRefreshInterval(interval) {
                 self.intervalID && clearInterval(self.intervalID); // clear interval if exists
@@ -150,10 +148,6 @@ define(['knockout',
                         }
                     }, interval);
                 }
-            };
-
-            self.initEventHandlers = function() {
-                $b.addEventListener($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, self.handleAddWidgetTooltip);
             };
 
             self.nameValidated = true;
@@ -184,14 +178,17 @@ define(['knockout',
                     headers: dfu.getDashboardsRequestHeader(),
                     success: function (result) {
                         if (selectedDashboardInst().toolBarModel.isUnderSet) {
-                            var removeId=selectedDashboardInst().toolBarModel.dashboardId;
-                            var selectedTab = $('#dashboardTab-'+removeId);
-                            $('#delete-dashboard').ojDialog( "close" );
-                            selectedDashboardInst().dashboardsetToolBar.removeDashboardInSet(removeId,selectedTab,true);
+                            var removeId = selectedDashboardInst().toolBarModel.dashboardId;
+                            var selectedTab = $('#dashboardTab-' + removeId);
+                            $('#delete-dashboard').ojDialog("close");
+                            selectedDashboardInst().dashboardsetToolBar.removeDashboardInSet(removeId, selectedTab, true);
                             $("#dbd-tabs-container").ojTabs("refresh");
                         } else {
+                            if (self.isHomeDashboard) {                                
+                                localStorage.deleteHomeDbd=true;
+                            }
                             window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
-                        }
+                        }     
                     },
                     error: function(jqXHR, textStatus, errorThrown) {}
                 });
@@ -306,12 +303,16 @@ define(['knockout',
             };
 
             self.handleSaveUpdateToServer = function(succCallback, errorCallback) {
+                if(self.isUnderSet){
+                   console.log("This is a dashboard in set, send its parent set id...");
+                   self.tilesViewModel.dashboard.dupDashboardId=selectedDashboardInst().dashboardsetToolBar.dashboardInst.id()
+                }                
                 var dbdJs = ko.mapping.toJS(self.tilesViewModel.dashboard, {
                     'include': ['screenShot', 'description', 'height',
                         'isMaximized', 'title', 'type', 'width',
                         'tileParameters', 'name', 'systemParameter',
                         'tileId', 'value', 'content', 'linkText',
-                        'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
+                        'WIDGET_LINKED_DASHBOARD', 'linkUrl','dupDashboardId'],
                     'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight",
                         "modeColumn", "modeRow", "screenShotHref", "systemDashboard",
                         "customParameters", "clientGuid", "dashboard",
@@ -336,65 +337,16 @@ define(['knockout',
                     errorCallback && errorCallback(error);
                 });
             };
-
-            //Add widget dialog
-            var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
-
-            self.addSelectedWidgetToDashboard = function(widget) {
-                var width = Builder.getTileDefaultWidth(widget, self.tilesViewModel.editor.mode),
-                        height = Builder.getTileDefaultHeight(widget, self.tilesViewModel.editor.mode);
-                self.tilesViewModel.appendNewTile(widget.WIDGET_NAME, "", width, height, widget);
-            };
-
-            self.addWidgetDialogParams = {
-                dialogId: addWidgetDialogId,
-                dialogTitle: getNlsString('DBS_BUILDER_ADD_WIDGET_DLG_TITLE'),
-                affirmativeButtonLabel: getNlsString('DBS_BUILDER_BTN_ADD'),
-                userName: dfu.getUserName(),
-                tenantName: dfu.getTenantName(),
-                widgetHandler: self.addSelectedWidgetToDashboard,
-                autoCloseDialog: false
-    //                ,providerName: null     //'TargetAnalytics'
-    //                ,providerVersion: null  //'1.0.5'
-    //                ,providerName: 'TargetAnalytics'
-    //                ,providerVersion: '1.0.5'
-    //                ,providerName: 'DashboardFramework'
-    //                ,providerVersion: '1.0'
-            };
-
-            self.openAddWidgetDialog = function() {
-                var maximizedTile = self.tilesViewModel.editor.getMaximizedTile();
-                if (maximizedTile){
-                    self.tilesViewModel.restore(maximizedTile);
-                }
-                $('#'+addWidgetDialogId).ojDialog('open');
-            };
-
-            self.closeAddWidgetDialog = function() {
-                $('#'+addWidgetDialogId).ojDialog('close');
-            };
-
-            self.handleAddWidgetTooltip = function(hasContent) {
-                if (hasContent === true){
-                    $b.findEl(".tooltip-add-widget").css("display", "none");
-                }
-                else if (hasContent === false){
-                    $b.findEl(".tooltip-add-widget").css("display", "block");
-                }
-                else if (self.tilesViewModel.isEmpty() && self.dashboard && self.dashboard.systemDashboard && !self.dashboard.systemDashboard()) {
-                    $b.findEl(".tooltip-add-widget").css("display", "block");
-                }else {
-                    $b.findEl(".tooltip-add-widget").css("display", "none");
-                }
-            };
-
-            self.initialize();
-
+                  
             var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
             var addFavoriteLabel = getNlsString('DBS_BUILDER_BTN_FAVORITES_ADD');
+            var addFavoriteName = "Add Favorite";
             var removeFavoriteLabel = getNlsString('DBS_BUILDER_BTN_FAVORITES_REMOVE');
+            var removeFavoriteName = "Remove Favorite";
             var setAsHomeLabel = getNlsString('DBS_BUILDER_BTN_HOME_SET');
             var removeAsHomeLabel = getNlsString('DBS_BUILDER_BTN_HOME_REMOVE');
+            var setAsHomeName = "Set as Home";
+            var removeAsHomeName = "Remove as Home";
             var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
             var cssSetDsbAsHome = "dbd-toolbar-icon-home";
             var cssRemoveDsbAsHome = "dbd-toolbar-icon-home";
@@ -413,7 +365,9 @@ define(['knockout',
             self.favoritesIcon = ko.observable(cssAddFavorite);
             self.isSystemDashboard = self.dashboard.systemDashboard();
             self.favoriteLabel = ko.observable(addFavoriteLabel);
+            self.favoriteName = ko.observable(addFavoriteName);
             self.dashboardAsHomeLabel = ko.observable(setAsHomeLabel);
+            self.dashboardAsHomeName= ko.observable(setAsHomeName);
             self.isFavoriteDashboard = false;
             self.isHomeDashboard = false;
             self.hasAnotherDashboardSetAsHome = false;
@@ -430,6 +384,7 @@ define(['knockout',
                     return ;
                 }
                 var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
+                self.dashboard.sharePublic(isToShare);               
                 dfu.ajaxWithRetry(_url + self.dashboard.id() + "/quickUpdate", {
                         type: 'PUT',
                         dataType: "json",
@@ -437,7 +392,6 @@ define(['knockout',
                         data: JSON.stringify({sharePublic: isToShare}),
                         headers: dfu.getDashboardsRequestHeader(),
                         success: function (result) {
-                            self.dashboard.sharePublic(isToShare);
                             if (self.dashboard.sharePublic() === true)
                             {
                                 self.sharePublicLabel(unshareDashboardLabel);
@@ -454,6 +408,7 @@ define(['knockout',
                             }
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
+                            self.dashboard.sharePublic(!isToShare); 
                             dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
                         }
                     });
@@ -490,6 +445,7 @@ define(['knockout',
                     });
                     self.favoriteLabel(removeFavoriteLabel);
                     self.favoritesIcon(cssRemoveFavorite);
+                    self.favoriteName(removeFavoriteName);
                     self.isFavoriteDashboard = true;
                 }
                 function errorCallback(jqXHR, textStatus, errorThrown) {
@@ -511,6 +467,7 @@ define(['knockout',
                     });
                     self.favoriteLabel(addFavoriteLabel);
                     self.favoritesIcon(cssAddFavorite);
+                    self.favoriteName(addFavoriteName);
                     self.isFavoriteDashboard = false;
                 }
                 function errorCallback(jqXHR, textStatus, errorThrown) {
@@ -546,6 +503,7 @@ define(['knockout',
                             removeDelayTime: 5000
                     });
                     self.dashboardAsHomeLabel(removeAsHomeLabel);
+                    self.dashboardAsHomeName(removeAsHomeName);
                     self.dashboardsAsHomeIcon(cssRemoveDsbAsHome);
                     self.isHomeDashboard = true;
                     self.hasAnotherDashboardSetAsHome = false;
@@ -572,6 +530,7 @@ define(['knockout',
                             removeDelayTime: 5000
                     });
                     self.dashboardAsHomeLabel(setAsHomeLabel);
+                    self.dashboardAsHomeName(setAsHomeName);
                     self.dashboardsAsHomeIcon(cssSetDsbAsHome);
                     self.isHomeDashboard = false;
                     self.hasAnotherDashboardSetAsHome = false;
@@ -609,37 +568,48 @@ define(['knockout',
                     if (data && data.isFavorite === true) {
                         self.favoriteLabel(removeFavoriteLabel);
                         self.favoritesIcon(cssRemoveFavorite);
+                        self.favoriteName(removeFavoriteName);
                         self.isFavoriteDashboard = true;
                     }
                     else {
                         self.favoriteLabel(addFavoriteLabel);
                         self.favoritesIcon(cssAddFavorite);
+                        self.favoriteName(addFavoriteName);
                         self.isFavoriteDashboard = false;
                     }
                 }
                 function errorCallback(jqXHR, textStatus, errorThrown) {
                     self.favoriteLabel(addFavoriteLabel);
                     self.favoritesIcon(cssAddFavorite);
+                    self.favoriteName(addFavoriteName);
                     self.isFavoriteDashboard = false;
                 }
                 new Builder.DashboardDataSource().checkDashboardFavorites(self.dashboard.id(), succCallback, errorCallback);
             }
             function checkDashboardAsHomeSettings() {
                 function succCallback(data) {
-                    var homeDashboardId = prefUtil.getPreferenceValue(data, prefKeyHomeDashboardId);
-                    if (homeDashboardId && homeDashboardId === (self.dashboard.id()+"")) {
+                    var homeDashboardId;
+                    new Builder.DashboardDataSource().getHomeDashboardPreference(self.dashboard.id(), function (resp) {
+                        if(typeof(resp) !== "undefined") {
+                            homeDashboardId = resp.value;
+                        }
+                    });
+                    if (homeDashboardId && homeDashboardId === (self.dashboard.id())) {
                         self.dashboardAsHomeLabel(removeAsHomeLabel);
+                        self.dashboardAsHomeName(removeAsHomeName);
                         self.dashboardsAsHomeIcon(cssRemoveDsbAsHome);
                         self.isHomeDashboard = true;
                     }
                     else if (homeDashboardId){
                         self.dashboardAsHomeLabel(setAsHomeLabel);
+                        self.dashboardAsHomeName(setAsHomeName);
                         self.dashboardsAsHomeIcon(cssSetDsbAsHome);
                         self.isHomeDashboard = false;
                         self.hasAnotherDashboardSetAsHome = true;
                     }
                     else {
                         self.dashboardAsHomeLabel(setAsHomeLabel);
+                        self.dashboardAsHomeName(setAsHomeName);
                         self.dashboardsAsHomeIcon(cssSetDsbAsHome);
                         self.isHomeDashboard = false;
                         self.hasAnotherDashboardSetAsHome = false;
@@ -647,6 +617,7 @@ define(['knockout',
                 }
                 function errorCallback(jqXHR, textStatus, errorThrown) {
                     self.dashboardAsHomeLabel(setAsHomeLabel);
+                    self.dashboardAsHomeName(setAsHomeName);
                     self.dashboardsAsHomeIcon(cssSetDsbAsHome);
                     self.isHomeDashboard = false;
                     self.hasAnotherDashboardSetAsHome = false;
@@ -656,7 +627,8 @@ define(['knockout',
                     error: errorCallback
                 };
                 if(!self.isUnderSet){
-                    prefUtil.getAllPreferences(options);
+                	new Builder.DashboardDataSource().getHomeDashboardPreference(self.dashboard.id(), options.success, options.error);
+//                    prefUtil.getAllPreferences(options);
                 }
             }
 
@@ -721,23 +693,12 @@ define(['knockout',
                 }
             };
 
-            self.dashboardOptsMenuItems = [
-                {
-                    "label": getNlsString('DBS_BUILDER_BTN_ADD'),
-                    "url": "#",
-                    "id":"emcpdf_dsbopts_add",
-                    "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
-                    "icon":"dbd-toolbar-icon-add-widget",
-                    "title": "",
-                    "disabled": self.editDisabled() === true,
-                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
-                    "showInZdt":self.notZdtStatus,
-                    "endOfGroup": false
-                },
+            self.dashboardOptsMenuItems = [         
                 {
                     "label": getNlsString('COMMON_BTN_EDIT'),
                     "url": "#",
                     "id": "emcpdf_dsbopts_edit" + self.toolBarGuid,
+                    "name":"Edit",
                     "icon": "dbd-toolbar-icon-edit",
                     "title": "",
                     "disabled": self.editDisabled() === true,
@@ -750,6 +711,7 @@ define(['knockout',
                     "label": getNlsString('COMMON_BTN_PRINT'),
                     "url": "#",
                     "id": "emcpdf_dsbopts_print" + self.toolBarGuid,
+                    "name":"Print",
                     "icon": "dbd-toolbar-icon-print",
                     "title": "",
                     "disabled": false,
@@ -762,9 +724,10 @@ define(['knockout',
                     "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
                     "url": "#",
                     "id": "emcpdf_dsbopts_duplicate" + self.toolBarGuid,
+                    "name":"Duplicate",
                     "icon": "dbd-toolbar-icon-duplicate",
                     "title": "",
-                    "disabled":false,
+                    "disabled": false,
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
                     "showInZdt":self.notZdtStatus,
                     "endOfGroup": true && self.notZdtStatus,
@@ -782,6 +745,7 @@ define(['knockout',
                             "label": getNlsString('DBS_BUILDER_ADDTOSET'),
                             "url": "#",
                             "id": "emcpdf_dsbopts_addToSet" + self.toolBarGuid,
+                            "name":"Add to set",
                             "icon": "",
                             "title": "",
                             "disabled": false,
@@ -794,6 +758,7 @@ define(['knockout',
                             "label": getNlsString('DBS_BUILDER_NOT_ADDTOSET'),
                             "url": "#",
                             "id": "emcpdf_dsbopts_notAddToSet" + self.toolBarGuid,
+                            "name":"Do not add to set",
                             "icon": "",
                             "title": "",
                             "disabled": false,
@@ -808,6 +773,7 @@ define(['knockout',
                     "label": self.favoriteLabel,
                     "url": "#",
                     "id": "emcpdf_dsbopts_favorites" + self.toolBarGuid,
+                    "name":self.favoriteName,
                     "icon": self.favoritesIcon, //"dbd-toolbar-icon-favorites",
                     "title": "", //self.favoriteLabel,
                     "disabled": false,
@@ -820,6 +786,7 @@ define(['knockout',
                     "label": self.dashboardAsHomeLabel,
                     "url": "#",
                     "id": "emcpdf_dsbopts_home" + self.toolBarGuid,
+                    "name":self.dashboardAsHomeName,
                     "icon": self.dashboardsAsHomeIcon,
                     "title": "", //self.setAsHomeLabel,
                     "disabled": false,
@@ -832,6 +799,7 @@ define(['knockout',
                     "label": getNlsString('DBS_BUILDER_AUTOREFRESH_REFRESH'),
                     "url": "#",
                     "id": "emcpdf_dsbopts_refresh" + self.toolBarGuid,
+                    "name":"Auto-refresh",
                     "icon": "dbd-toolbar-icon-refresh",
                     "title": "",
                     "disabled": false,
@@ -844,6 +812,7 @@ define(['knockout',
                             "label": getNlsString('DBS_BUILDER_AUTOREFRESH_OFF'),
                             "url": "#",
                             "id": "emcpdf_dsbopts_refresh_off" + self.toolBarGuid,
+                            "name":"Off",
                             "icon": ko.computed(function () {
                                 return self.autoRefreshInterval() === 0 ? "fa-check" : "";
                             }),
@@ -858,6 +827,7 @@ define(['knockout',
                             "label": getNlsString('DBS_BUILDER_AUTOREFRESH_ON'),
                             "url": "#",
                             "id": "emcpdf_dsbopts_refresh_on" + self.toolBarGuid,
+                            "name":"On (Every 5 Minutes)",
                             "icon": ko.computed(function () {
                                 return self.autoRefreshInterval() ? "fa-check" : "";
                             }),

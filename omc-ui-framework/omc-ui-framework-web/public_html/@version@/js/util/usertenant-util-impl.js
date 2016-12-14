@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@/js/util/df-util-impl'],
-    function($, oj, ajaxUtilModel, dfumodel)
+    function ($, oj, ajaxUtilModel, dfumodel)
     {
         function DashboardFrameworkUserTenantUtility() {
             var self = this;
@@ -27,37 +27,57 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                 var tenantName = null; //in case tenant name is not got
                 var userName = null;   //in case use name is not got
                 var tenantUser = null; //in case tenantName.userName is not got
-                if(window.omcUifwkCachedData && window.omcUifwkCachedData.loggedInUser){
-                    var tenantIdDotUsername = window.omcUifwkCachedData.loggedInUser.currentUser;
+                if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.loggedInUser){
+                    var tenantIdDotUsername = window._uifwk.cachedData.loggedInUser.currentUser;
                     var indexOfDot = tenantIdDotUsername.indexOf(".");
                     tenantName = tenantIdDotUsername.substring(0, indexOfDot);
                     userName = tenantIdDotUsername.substring(indexOfDot + 1, tenantIdDotUsername.length);
                     tenantUser = tenantIdDotUsername;
                 }else{
-                    ajaxUtil.ajaxWithRetry({
-                        type: "GET",
-                        url: "/sso.static/loggedInUser",
-                        async: false,
-                        dataType: "json",
-                        contentType: "application/json; charset=utf-8"
-                    })
-                    .done(
-                        function (data) {
-                            if(window.omcUifwkCachedData){
-                                window.omcUifwkCachedData.loggedInUser = data;
-                            }else{
-                                window.omcUifwkCachedData = {loggedInUser : data};
-                            }
+                    function doneCallback(data) {
+                        if(!window._uifwk){
+                            window._uifwk = {};
+                        }
+                        if(!window._uifwk.cachedData){
+                            window._uifwk.cachedData = {};
+                        }
+                        if(data && data["userRoles"]){
+                            window._uifwk.cachedData.roles = data["userRoles"];
+                        }
+                        if(data && data["currentUser"]){
+                            window._uifwk.cachedData.loggedInUser = {"currentUser":data["currentUser"]};
                             var tenantIdDotUsername = data.currentUser;
                             var indexOfDot = tenantIdDotUsername.indexOf(".");
                             tenantName = tenantIdDotUsername.substring(0, indexOfDot);
                             userName = tenantIdDotUsername.substring(indexOfDot + 1, tenantIdDotUsername.length);
                             tenantUser = tenantIdDotUsername;
-                        });
+                        }
+                    }
+
+                    if (window._userInfoServerCache) {
+                        doneCallback(window._userInfoServerCache);
+                    }
+                    else {
+                        ajaxUtil.ajaxWithRetry({
+                            type: "GET",
+                            url: "/sso.static/dashboards.configurations/userInfo",
+                            async: false,
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8"
+                        })
+                        .done(
+                            function (data) {
+                                doneCallback(data);
+                            });
+                    }
                 }
 
                   if ((!tenantName || !userName) && location.href && location.href.indexOf("error.html") === -1) {
-                        location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl="+ encodeURIComponent(location.href);
+                        //To avoid circular dependency use require call
+                        require(['uifwk/@version@/js/sdk/context-util-impl'], function (cxtModel) {
+                            var cxtUtil = new cxtModel();
+                            location.href = cxtUtil.appendOMCContext("/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl=" + encodeURIComponent(location.href));
+                        });
                         return null;
                   }
                   else{
@@ -101,6 +121,75 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
              */
             self.getTenantName = function() {
                 return userTenant && userTenant.tenant ? userTenant.tenant : null;
+            };
+            
+            
+            
+            
+            
+            self.getUserRoles = function(callback,sendAsync) {
+                var serviceUrl = "/sso.static/dashboards.configurations/userInfo";
+                if (dfu.isDevMode()){
+                    callback(["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]);
+                    return;
+                }
+                if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.roles){
+                    self.userRoles = window._uifwk.cachedData.roles; 
+                    callback(window._uifwk.cachedData.roles);
+                }else{
+                    function doneCallback(data) {
+                        self.userRoles = data;
+                        if(!window._uifwk){
+                            window._uifwk = {};
+                        }
+                        if(!window._uifwk.cachedData){
+                            window._uifwk.cachedData = {};
+                        }
+                        if(data && data["currentUser"]){
+                            window._uifwk.cachedData.loggedInUser = {"currentUser":data["currentUser"]};
+                        }
+                        if(data && data["userRoles"]){
+                            window._uifwk.cachedData.roles = data["userRoles"];
+                            callback(data["userRoles"]);
+                        }
+                    }
+                    if (window._userInfoServerCache) {
+                        doneCallback(window._userInfoServerCache);
+                    }
+                    else {
+                        ajaxUtil.ajaxWithRetry({
+                            url: serviceUrl,
+                            async: sendAsync === false? false:true,
+                            headers: dfu.getDefaultHeader(),
+                            contentType:'application/json'
+                        })
+                        .done(
+                            function (data) {
+                                doneCallback(data);
+                            });
+                    }
+                }
+            };
+            
+            self.ADMIN_ROLE_NAME_APM = "APM Administrator";
+            self.USER_ROLE_NAME_APM = "APM User";
+            self.ADMIN_ROLE_NAME_ITA = "IT Analytics Administrator";
+            self.USER_ROLE_NAME_ITA = "IT Analytics User";
+            self.ADMIN_ROLE_NAME_LA = "Log Analytics Administrator";
+            self.USER_ROLE_NAME_LA = "Log Analytics User";
+            self.ADMIN_ROLE_NAME_MONITORING = "Monitoring Service Administrator";
+            self.ADMIN_ROLE_NAME_SECURITY = "Security Analytics Administrator";
+            self.ADMIN_ROLE_NAME_COMPLIANCE = "Compliance Administrator";
+            self.ADMIN_ROLE_NAME_ORCHESTRATION = "Orchestration Administrator";
+            self.userHasRole = function(role){
+                self.getUserRoles(function(data){
+                    self.userRoles = data; 
+                },false);
+                if(!self.userRoles || self.userRoles.indexOf(role)<0){
+                    return false;
+                }else{
+                    return true;
+                }
             };
         }
 

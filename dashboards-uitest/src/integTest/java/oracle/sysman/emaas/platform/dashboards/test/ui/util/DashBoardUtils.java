@@ -1,12 +1,17 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 
+import java.util.List;
+
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -14,12 +19,8 @@ import org.testng.Assert;
 public class DashBoardUtils
 {
 	private static WebDriver driver;
-	
-	private DashBoardUtils() {
-	  }
 
-
-	public static void apmOobExist() 
+	public static void apmOobExist()
 	{
 		driver.getLogger().info("Wait for dashboards loading...");
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Application Performance Monitoring");
@@ -28,13 +29,13 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Monitoring"));
 	}
 
-	public static void apmOobNotExist() 
+	public static void apmOobNotExist()
 	{
 		driver.getLogger().info("Verify below APM OOB don't exist...");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Monitoring"));
 	}
 
-	public static void clickDashboardLinkInBrandingBar(WebDriver webdriver) 
+	public static void clickDashboardLinkInBrandingBar(WebDriver webdriver)
 	{
 		webdriver.getLogger().info("Click Compass icon to display menu of branding bar");
 		webdriver.getWebDriver().findElement(By.xpath(PageId.COMPASSICON)).click();
@@ -43,18 +44,19 @@ public class DashBoardUtils
 		webdriver.takeScreenShot();
 		webdriver.getLogger().info("Click Dashboard link to back to dashboard home page");
 		webdriver.getWebDriver().findElement(By.xpath(PageId.DASHBOARDLINK)).click();
-		webdriver.takeScreenShot();
+		//	webdriver.takeScreenShot();
 	}
 
-	public static void closeOverviewPage() 
+	public static void closeOverviewPage()
 	{
 		driver.getLogger().info("before clicking overview button");
 		driver.click(PageId.OVERVIEWCLOSEID);
 		driver.getLogger().info("after clicking overview button");
 	}
 
-	public static void deleteDashboard(WebDriver webdriver, String DashboardName) 
+	public static void deleteDashboard(WebDriver webdriver, String DashboardName)
 	{
+		DashboardHomeUtil.search(webdriver, DashboardName);
 		if (DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName)) {
 			webdriver.getLogger().info("Start to delete the dashboard: " + DashboardName);
 			DashboardHomeUtil.deleteDashboard(webdriver, DashboardName, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
@@ -66,7 +68,7 @@ public class DashBoardUtils
 
 	}
 
-	public static void handleAlert(WebDriver webdriver) 
+	public static void handleAlert(WebDriver webdriver)
 	{
 		WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
 		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
@@ -74,19 +76,20 @@ public class DashBoardUtils
 		//Accepting alert.
 		webdriver.getLogger().info("foucus on the alert");
 		alert = webdriver.getWebDriver().switchTo().alert();
-		webdriver.takeScreenShot();
+		//webdriver.takeScreenShot();
 		webdriver.getLogger().info("click button on the dialog, should navigate to the home page");
 		alert.accept();
-		webdriver.takeScreenShot();
+		//webdriver.takeScreenShot();
 	}
 
-	public static void itaOobExist() 
+	public static void itaOobExist()
 	{
 		driver.getLogger().info("Wait for dashboards loading...");
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Performance Analytics: Database");
 
 		driver.getLogger().info("Verify below IT Analytics OOB dashboard Set and Dashboards exist...");
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Exadata Health"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Enterprise Health"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "UI Gallery"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Analytics"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Availability Analytics"));
@@ -96,20 +99,14 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Database"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Host"));
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Middleware"));
-
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Categorical"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Others"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Overview"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Performance"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Timeseries"));
-		;
 	}
 
-	public static void itaOobNotExist() 
+	public static void itaOobNotExist()
 	{
 		driver.getLogger().info("Verify below IT Analytics OOB dashboard Set and Dashboards don't exist...");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Exadata Health"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "UI Gallery"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Enterprise Health"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Analytics"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Availability Analytics"));
 
@@ -125,9 +122,12 @@ public class DashBoardUtils
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Performance"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Timeseries"));
 
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Entities"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Summary"));
+
 	}
 
-	public static void laOobExist() 
+	public static void laOobExist()
 	{
 		driver.getLogger().info("Wait for dashboards loading...");
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Database Operations");
@@ -138,16 +138,16 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Middleware Operations"));
 	}
 
-	public static void laOobNotExist() 
+	public static void laOobNotExist()
 	{
 		driver.getLogger().info("Verify below Log Analytics OOB don't exist...");
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Host Health Summary"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Health Summary"));
 
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Operations"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Host Operations"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Middleware Operations"));
 	}
 
-	public static void loadWebDriver(WebDriver webDriver) 
+	public static void loadWebDriver(WebDriver webDriver)
 	{
 		driver = webDriver;
 
@@ -160,12 +160,12 @@ public class DashBoardUtils
 		driver.takeScreenShot();
 	}
 
-	public static void loadWebDriverOnly(WebDriver webDriver) 
+	public static void loadWebDriverOnly(WebDriver webDriver)
 	{
 		driver = webDriver;
 	}
 
-	public static void noOOBCheck() 
+	public static void noOOBCheck()
 	{
 		//verify all the oob dashboard not exsit
 		driver.getLogger().info("verify all the oob dashboard not exsit");
@@ -176,7 +176,7 @@ public class DashBoardUtils
 
 	}
 
-	public static void outDateOob() 
+	public static void outDateOob()
 	{
 		driver.getLogger().info("Verify below IT Analytics OOB don't exist...");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Configuration and Storage By Version"));
@@ -186,9 +186,13 @@ public class DashBoardUtils
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 WebLogic Servers by Heap Usage"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 WebLogic Servers by Load"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Servers by JDK Version"));
+
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Host Health Summary"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Health Summary"));
 	}
 
-	public static boolean verfiyShareOptionDisabled() 
+	public static boolean verfiyShareOptionDisabled()
 	{
 		driver.getLogger().info("Click the option icon of Dashboard Set");
 		driver.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
@@ -217,4 +221,95 @@ public class DashBoardUtils
 			return false;
 		}
 	}
+
+	public static boolean verifyOpenInIconExist(WebDriver driver, String widgetName, int index)
+	{
+		//find the widget
+		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
+		driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
+		driver.takeScreenShot();
+
+		String titleTitlesLocator = String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
+		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(titleTitlesLocator));
+		if (tileTitles == null || tileTitles.size() <= index) {
+			throw new NoSuchElementException("Tile with title=" + widgetName + ", index=" + index + " is not found");
+		}
+		tileTitles.get(index).click();
+		driver.takeScreenShot();
+
+		//move the mouse to the title of the widget
+
+		driver.getLogger().info("Start to find widget with widgetName=" + widgetName + ", index=" + index);
+		WebElement widgetTitle = tileTitles.get(index);
+		if (widgetTitle == null) {
+			throw new NoSuchElementException("Widget with title=" + widgetName + ", index=" + index + " is not found");
+		}
+		driver.getLogger().info("Found widget with name=" + widgetName + ", index =" + index + " before opening widget link");
+		WebElement widgetDataExplore = widgetTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILEDATAEXPLORELOCATOR));
+		if (widgetDataExplore == null) {
+			throw new NoSuchElementException("Widget data explorer link for title=" + widgetName + ", index=" + index
+					+ " is not found");
+		}
+		driver.getLogger().info("Found widget configure button");
+		Actions builder = new Actions(driver.getWebDriver());
+		driver.getLogger().info("Now moving to the widget title bar");
+		builder.moveToElement(widgetTitle).perform();
+		driver.takeScreenShot();
+		driver.getLogger().info("and clicks the widget config button");
+		//		builder.moveToElement(widgetDataExplore).click().perform();
+		//		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		//		wait.until(ExpectedConditions.elementToBeClickable(widgetDataExplore));
+		//		widgetDataExplore.click();
+		//		driver.takeScreenShot();
+		return widgetDataExplore.isDisplayed();
+		//check if the Open In icon displayed or not
+	}
+
+	public static void verifyURL(WebDriver webdriver, String url)
+	{
+		webdriver.takeScreenShot();
+
+		String currurl = webdriver.getWebDriver().getCurrentUrl();
+
+		webdriver.getLogger().info("the origin url = " + currurl);
+
+		String tmpurl = DashBoardUtils.trimUrlParameters(currurl.substring(currurl.indexOf("emsaasui") + 9));
+
+		webdriver.getLogger().info("the url without para = " + tmpurl);
+
+		Assert.assertEquals(tmpurl, url);
+
+	}
+
+	public static void verifyURL_WithPara(WebDriver webdriver, String url)
+	{
+		webdriver.takeScreenShot();
+
+		String currurl = webdriver.getWebDriver().getCurrentUrl();
+
+		webdriver.getLogger().info("the origin url = " + currurl);
+
+		String tmpurl = currurl.substring(currurl.indexOf("emsaasui") + 9);
+
+		webdriver.getLogger().info("the url want to compare = " + tmpurl);
+
+		Assert.assertTrue(tmpurl.contains(url), "Not open the expected url: " + url);
+	}
+
+	private static String trimUrlParameters(String url)
+	{
+		String baseUrl = null;
+		if (url != null) {
+			String[] urlComponents = url.split("\\#|\\?");
+			baseUrl = urlComponents[0];
+		}
+
+		return baseUrl;
+	}
+
+	private DashBoardUtils()
+	{
+
+	}
+
 }

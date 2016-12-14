@@ -61,6 +61,15 @@ define(['knockout',
                 self.$list = $([].concat.apply($b.findEl(".fit-size"),$(".df-right-panel .fit-size")));
             };
 
+            if(!window.DEV_MODE && !self.brandingbarCssLoaded){
+                var brandingbarOldHeight = $(".emaas-appheader").height();
+                self.brandingbarCssLoaded = setInterval(function(){
+                    if(brandingbarOldHeight !== $(".emaas-appheader").height()){
+                        $b.triggerBuilderResizeEvent('uifwk-common-alta.css loaded');
+                        clearInterval(self.brandingbarCssLoaded);
+                    }
+                });
+            }
             self.initialize();
         }
 
@@ -97,7 +106,10 @@ define(['knockout',
             self.rightPanelWidget= new rpw.rightPanelWidget(self.$b);
             self.rightPanelEdit=new rpe.rightPanelEditModel(self.$b,self.dashboardsetToolBarModel);
             self.selectedDashboard = ko.observable(self.dashboard);
-            self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
+            self.normalMode = new Builder.NormalEditorMode();
+            self.tabletMode = new Builder.TabletEditorMode();
+            self.modeType = Builder.isSmallMediaQuery() ? self.tabletMode : self.normalMode;
+            self.isMobileDevice = self.modeType.editable === true ? 'false' : 'true';
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
             self.isOobDashboardset=dashboardsetToolBarModel.isOobDashboardset; 
             self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
@@ -168,18 +180,11 @@ define(['knockout',
 
 
                     self.initEventHandlers();
-                    self.rightPanelWidget.loadWidgets();
-                    for(var i=0; i<self.rightPanelWidget.widgets().length; i++) {
-                        var wgt = self.rightPanelWidget.widgets()[i];
-                        Builder.getWidgetAssetRoot(wgt.PROVIDER_NAME(), wgt.PROVIDER_VERSION(), wgt.PROVIDER_ASSET_ROOT());
+                    
+                    if(self.rightPanelControl.completelyHidden() === false) { //load widgets only when right panel is editable
+                        self.rightPanelWidget.loadWidgets();
                     }
                     self.initDraggable();
-
-                    $('.widget-search-input').autocomplete({
-                        source: self.rightPanelWidget.autoSearchWidgets,
-                        delay: 700,
-                        minLength: 0
-                    });
                     self.rightPanelWidget.tilesViewModel(self.tilesViewModel);
                     ResizableView(self.$b);
             };

@@ -13,94 +13,84 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
  * @author jishshi
  * @since 2/2/2016.
  */
-public class UserOptions
-{
-	public static UserOptions valueOf(EmsUserOptions emsUserOptions)
-	{
-		if (emsUserOptions == null) {
-			return null;
-		}
-		UserOptions userOptions = new UserOptions();
-		userOptions.setAutoRefreshInterval(Long.valueOf(emsUserOptions.getAutoRefreshInterval()));
-		userOptions.setUserName(emsUserOptions.getUserName());
-		userOptions.setDashboardId(emsUserOptions.getDashboardId());
-		userOptions.setExtendedOptions(emsUserOptions.getExtendedOptions());
-		return userOptions;
-	}
+public class UserOptions {
+    private String userName;
+    private BigInteger dashboardId;
+    private Long autoRefreshInterval;
+    private String extendedOptions;
 
-	private String userName;
-	private BigInteger dashboardId;
-	private Long autoRefreshInterval;
+    public String getUserName() {
+        return userName;
+    }
 
-	private String extendedOptions;
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public Long getAutoRefreshInterval()
-	{
-		return autoRefreshInterval;
-	}
+    public BigInteger getDashboardId() {
+        return dashboardId;
+    }
 
-	public BigInteger getDashboardId()
-	{
-		return dashboardId;
-	}
+    public void setDashboardId(BigInteger id) {
+        this.dashboardId = id;
+    }
 
-	public String getExtendedOptions()
-	{
-		return extendedOptions;
-	}
+    public Long getAutoRefreshInterval() {
+        return autoRefreshInterval;
+    }
 
-	public String getUserName()
-	{
-		return userName;
-	}
+    public void setAutoRefreshInterval(Long autoRefreshInterval) {
+        this.autoRefreshInterval = autoRefreshInterval;
+    }
 
-	public void setAutoRefreshInterval(Long autoRefreshInterval)
-	{
-		this.autoRefreshInterval = autoRefreshInterval;
-	}
+    public String getExtendedOptions() {
+        return extendedOptions;
+    }
 
-	public void setDashboardId(BigInteger id)
-	{
-		dashboardId = id;
-	}
+    public void setExtendedOptions(String extendedOptions) {
+        this.extendedOptions = extendedOptions;
+    }
 
-	public void setExtendedOptions(String extendedOptions)
-	{
-		this.extendedOptions = extendedOptions;
-	}
+    public static UserOptions valueOf(EmsUserOptions emsUserOptions) {
+    	return UserOptions.valueOf(emsUserOptions, null);
+    }
 
-	public void setUserName(String userName)
-	{
-		this.userName = userName;
-	}
+    protected static UserOptions valueOf(EmsUserOptions emsUserOptions, UserOptions userOptions) {
+        if (emsUserOptions == null) {
+            return null;
+        }
+        if (userOptions == null) {
+        	userOptions = new UserOptions();
+        }
+        userOptions.setAutoRefreshInterval(Long.valueOf(emsUserOptions.getAutoRefreshInterval()));
+        userOptions.setUserName(emsUserOptions.getUserName());
+        userOptions.setDashboardId(emsUserOptions.getDashboardId());
+        userOptions.setExtendedOptions(emsUserOptions.getExtendedOptions());
+        return userOptions;
+    }
 
-	public EmsUserOptions toEntity(EmsUserOptions emsUserOptions, String userName) throws DashboardException
-	{
-		EmsUserOptions euo;
-		Date now = DateUtil.getGatewayTime();
-		if (emsUserOptions == null) {
-			euo = new EmsUserOptions();
-			euo.setCreationDate(now);
-		} else {
-			euo = emsUserOptions;
-		}
-		euo.setLastModificationDate(now);
+    public EmsUserOptions toEntity(EmsUserOptions emsUserOptions, String userName) throws DashboardException {
+        EmsUserOptions euo = emsUserOptions;
+        if (emsUserOptions == null) {
+            euo = new EmsUserOptions();
+        }
 
-		if (dashboardId == null) {
-			throw new CommonFunctionalException(
-					MessageUtils.getDefaultBundleString(CommonFunctionalException.USER_OPTIONS_INVALID_DASHBOARD_ID));
-		}
+        if (dashboardId == null) {
+            throw new CommonFunctionalException(
+                    MessageUtils.getDefaultBundleString(CommonFunctionalException.USER_OPTIONS_INVALID_DASHBOARD_ID));
+        }
 
-		if (autoRefreshInterval == null) {
-			throw new CommonFunctionalException(
-					MessageUtils.getDefaultBundleString(CommonFunctionalException.USER_OPTIONS_INVALID_AUTO_REFRESH_INTERVAL));
-		}
 
-		euo.setAutoRefreshInterval(autoRefreshInterval);
-		euo.setDashboardId(dashboardId);
-		euo.setUserName(userName);
-		euo.setExtendedOptions(extendedOptions);
+        if (autoRefreshInterval == null) {
+            throw new CommonFunctionalException(
+                    MessageUtils.getDefaultBundleString(CommonFunctionalException.USER_OPTIONS_INVALID_AUTO_REFRESH_INTERVAL));
+        }
 
-		return euo;
-	}
+        euo.setAutoRefreshInterval(autoRefreshInterval);
+        euo.setDashboardId(dashboardId);
+        euo.setUserName(userName);
+        euo.setExtendedOptions(extendedOptions);
+
+        return euo;
+    }
 }

@@ -33,6 +33,15 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONObject;
+
+import com.sun.jersey.core.util.Base64;
+
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
@@ -44,6 +53,7 @@ import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotD
 import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotElement;
 import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotPathGenerator;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.DeleteSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
@@ -55,14 +65,9 @@ import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
+import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONObject;
-
-import com.sun.jersey.core.util.Base64;
 
 /**
  * @author wenjzhu
@@ -87,6 +92,10 @@ public class DashboardAPI extends APIBase
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [POST] /v1/dashboards");
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [POST] /v1/dashboards: database is down");
+				throw new DatabaseDependencyUnavailableException();
+			}
 			logkeyHeaders("createDashboard()", userTenant, tenantIdParam);
 			Dashboard d = getJsonUtil().fromJson(dashboard.toString(), Dashboard.class);
 			DashboardManager manager = DashboardManager.getInstance();
@@ -102,6 +111,7 @@ public class DashboardAPI extends APIBase
 			return buildErrorResponse(error);
 		}
 		catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
@@ -123,6 +133,10 @@ public class DashboardAPI extends APIBase
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/{}", dashboardId);
 		DashboardManager manager = DashboardManager.getInstance();
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [DELETE] /v1/dashboards/{}: database is down", dashboardId);
+				throw new DatabaseDependencyUnavailableException();
+			}
 			logkeyHeaders("deleteDashboard()", userTenant, tenantIdParam);
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
@@ -134,6 +148,7 @@ public class DashboardAPI extends APIBase
 			return Response.status(Status.NO_CONTENT).build();
 		}
 		catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
@@ -198,7 +213,7 @@ public class DashboardAPI extends APIBase
 			tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
 		}
-		catch (CommonSecurityException e) {
+		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
@@ -246,6 +261,10 @@ public class DashboardAPI extends APIBase
 		}
 		//try to get from persist layer
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [GET] /v1/dashboards/{}/screenshot/{}/images/{}: database is down", dashboardId, serviceVersion, fileName);
+				throw new DatabaseDependencyUnavailableException();
+			}
 			final ScreenshotData ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
 			if (ss == null || ss.getScreenshot() == null) {
 				LOGGER.error("Does not retrieved base64 screenshot data");
@@ -291,6 +310,14 @@ public class DashboardAPI extends APIBase
 
 			}).cacheControl(cc).build();
 		}
+		catch(DashboardNotFoundException e){
+			LOGGER.warn("Specific dashboard not found for id {}",dashboardId);
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		catch(DatabaseDependencyUnavailableException e){
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return Response.status(Status.NOT_FOUND).build();
+		}
 		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
@@ -310,12 +337,25 @@ public class DashboardAPI extends APIBase
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}/options", dashboardId);
 		UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [GET] /v1/dashboards/{}/options: database is down", dashboardId);
+				throw new DatabaseDependencyUnavailableException();
+			}
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
 			UserOptions options = userOptionsManager.getOptionsById(dashboardId, tenantId);
 			return Response.ok(getJsonUtil().toJson(options)).build();
 		}
+		catch (UserOptionsNotFoundException e){
+			LOGGER.warn("Specific User Option is not found for dashboard id {}", dashboardId);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (DashboardNotFoundException e){
+			LOGGER.warn("Specific dashboard is not found for dashboard id {}", dashboardId);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
 		catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
@@ -337,12 +377,22 @@ public class DashboardAPI extends APIBase
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [GET] /v1/dashboards/{}: database is down", dashboardId);
+				throw new DatabaseDependencyUnavailableException();
+			}
 			logkeyHeaders("queryDashboardById()", userTenant, tenantIdParam);
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
-			Dashboard dbd = dm.getDashboardById(dashboardId, tenantId);
+			String userName = UserContext.getCurrentUser();
+			Dashboard dbd = dm.getCombinedDashboardById(dashboardId, tenantId, userName);
 			updateDashboardAllHref(dbd, tenantIdParam);
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
+		}
+		catch(DashboardNotFoundException e){
+			//suppress error information in log file
+			LOGGER.warn("Specific dashboard not found for id {}", dashboardId);
+			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
@@ -381,6 +431,11 @@ public class DashboardAPI extends APIBase
 		}
 
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&filter={}: database is down", queryString, limit,
+						offset, orderBy, filterString);
+				throw new DatabaseDependencyUnavailableException();
+			}
 			DashboardManager manager = DashboardManager.getInstance();
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
@@ -456,6 +511,10 @@ public class DashboardAPI extends APIBase
 
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [PUT] /v1/dashboards/{}/quickUpdate: database is down", dashboardId);
+				throw new DatabaseDependencyUnavailableException();
+			}
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
 			Dashboard input = dm.getDashboardById(dashboardId, tenantId);
@@ -526,6 +585,10 @@ public class DashboardAPI extends APIBase
 
 		UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [POST] /v1/dashboards/{}/options/: database is down", dashboardId);
+				throw new DatabaseDependencyUnavailableException();
+			}
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
 			userOption.setDashboardId(dashboardId);//override id in consumed json if exist;
@@ -533,6 +596,7 @@ public class DashboardAPI extends APIBase
 			return Response.ok(getJsonUtil().toJson(userOption)).build();
 		}
 		catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
@@ -565,6 +629,10 @@ public class DashboardAPI extends APIBase
 
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [PUT] /v1/dashboards/{}: database is down", dashboardId);
+				throw new DatabaseDependencyUnavailableException();
+			}
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
 			input.setDashboardId(dashboardId);
@@ -610,12 +678,17 @@ public class DashboardAPI extends APIBase
 
 		UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [PUT] /v1/dashboards/{}/options/: database is down", dashboardId);
+				throw new DatabaseDependencyUnavailableException();
+			}
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
 			userOptionsManager.saveOrUpdateUserOptions(userOption, tenantId);
 			return Response.ok(getJsonUtil().toJson(userOption)).build();
 		}
 		catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
@@ -637,12 +710,21 @@ public class DashboardAPI extends APIBase
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}/dashboardsets", dashboardId);
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [GET] /v1/dashboards/{}/dashboardsets: database is down", dashboardId);
+				throw new DatabaseDependencyUnavailableException();
+			}
 			logkeyHeaders("queryDashboardSetsBySubId()", userTenant, tenantIdParam);
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
 			Dashboard dbd = dm.getDashboardSetsBySubId(dashboardId, tenantId);
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
-		} catch (DashboardException e) {
+		}
+		catch(DashboardNotFoundException e){
+			LOGGER.warn("Specific dashboard not found for id {}",dashboardId);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		} catch (BasicServiceMalfunctionException e) {
