@@ -16,6 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.oracle.platform.emaas.cache.CacheManager;
+import com.oracle.platform.emaas.cache.Keys;
+import com.oracle.platform.emaas.cache.Tenant;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,10 +27,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQ
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
-import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
 import oracle.sysman.emaas.platform.dashboards.core.cache.CachedLink;
-import oracle.sysman.emaas.platform.dashboards.core.cache.Keys;
-import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 
 /**
  * @author miao
