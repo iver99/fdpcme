@@ -37,6 +37,8 @@ public class DataFetcher
 {
 	public static class RestClient
 	{
+		private static final String HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
+
 		private Map<String, Object> headers;
 
 		public RestClient()
@@ -62,9 +64,13 @@ public class DataFetcher
 						.info("RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
 			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+					.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(MediaType.APPLICATION_JSON)
+					.accept(MediaType.APPLICATION_JSON);
 			if (headers != null && !headers.isEmpty()) {
 				for (String key : headers.keySet()) {
+					if (HttpHeaders.AUTHORIZATION.equals(key) || HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME.equals(key)) {
+						continue;
+					}
 					builder.header(key, headers.get(key));
 					LOGGER.info("Setting header ({}, {}) for call to {}", key, headers.get(key), url);
 				}
