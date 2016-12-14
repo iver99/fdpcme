@@ -80,7 +80,7 @@ public class Dashboard
 
 	public static enum EnableEntityFilterState
 	{
-		FALSE("FALSE", 0), TRUE("TRUE", 1), AUTO("AUTO", 2), GC("GC", 3);
+		FALSE("FALSE", 0), TRUE("TRUE", 1),GC("GC", 2);
 	
 		@JsonCreator
 		public static EnableEntityFilterState fromName(String name)
@@ -131,7 +131,7 @@ public class Dashboard
 
 	public static enum EnableTimeRangeState
 	{
-		FALSE("FALSE", 0), TRUE("TRUE", 1), AUTO("AUTO", 2), GC("GC", 3);
+		FALSE("FALSE", 0), TRUE("TRUE", 1), GC("GC", 2);
 
 		@JsonCreator
 		public static EnableTimeRangeState fromName(String name)
