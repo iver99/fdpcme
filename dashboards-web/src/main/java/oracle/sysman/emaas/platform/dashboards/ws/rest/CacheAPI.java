@@ -15,9 +15,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
-import oracle.sysman.emaas.platform.dashboards.core.cache.lru.CacheFactory;
-import oracle.sysman.emaas.platform.dashboards.core.cache.lru.CacheUnit;
+import com.oracle.platform.emaas.cache.CacheFactory;
+import com.oracle.platform.emaas.cache.CacheManager;
+import com.oracle.platform.emaas.cache.CacheUnit;
 import oracle.sysman.emaas.platform.dashboards.core.exception.CacheException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.cache.CacheGroupNameEmptyException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.cache.CacheGroupNotFoundException;
