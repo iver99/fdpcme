@@ -57,6 +57,9 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 
 		//remove the test data
 		DashBoardUtils.deleteDashboard(webd, dbsetName_Test_NoDesc);
+		DashBoardUtils.deleteDashboard(webd, dbsetName_Simple_CRUD);
+		DashBoardUtils.deleteDashboard(webd, dbsetName_Test_NoDesc + "-Modify");
+		DashBoardUtils.deleteDashboard(webd, dbsetName_Simple_CRUD + "-Modify");
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -139,7 +142,8 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 		//verify the dashboard in home page, verify the dashboard set name and desc displayed in info
 		webd.getLogger().info("Verify the dashboard in home page, verify the dashboard set name and desc displayed in info");
 		DashboardHomeUtil.search(webd, dbsetName_Simple_CRUD);
-		Assert.assertTrue(DashBoardUtils.verifyDashboardInfoInHomePage(webd, dbsetName_Simple_CRUD, dbsetDesc_Simple_CRUD),
+		Assert.assertTrue(
+				DashBoardUtils.verifyDashboardInfoInHomePage(webd, dbsetName_Simple_CRUD, dbsetDesc_Simple_CRUD, "gridview"),
 				"The dashboard set info is not correct");
 
 		//open the dashboardset
@@ -177,7 +181,7 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 		//verify the dashboard in home page, verify the dashboard set name and desc displayed in info
 		webd.getLogger().info("Verify the dashboard in home page, verify the dashboard set name and desc displayed in info");
 		DashboardHomeUtil.search(webd, dbsetName_Test_NoDesc);
-		Assert.assertTrue(DashBoardUtils.verifyDashboardInfoInHomePage(webd, dbsetName_Test_NoDesc, dbsetDesc_Test),
+		Assert.assertTrue(DashBoardUtils.verifyDashboardInfoInHomePage(webd, dbsetName_Test_NoDesc, dbsetDesc_Test, "listview"),
 				"The dashboard set info is not correct");
 
 		//open the dashboardset
@@ -191,7 +195,7 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 
 		//verify the dashboardSet
 		webd.getLogger().info("Verify if the dashboard set has been modified in builder page");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_Simple_CRUD + "-Modify"),
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_Test_NoDesc + "-Modify"),
 				"Dashboard set NOT found!");
 
 	}
@@ -272,16 +276,16 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 
 		//search dashboard set
 		webd.getLogger().info("Start to search dashboard set with previous name");
-		DashboardHomeUtil.selectDashboard(webd, dbsetName_Simple_CRUD);
+		DashboardHomeUtil.search(webd, dbsetName_Simple_CRUD);
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbsetName_Simple_CRUD), "The dashboard set named '"
 				+ dbsetName_Simple_CRUD + "' should NOT exist!!!");
 
 		//verify the info
 		webd.getLogger().info("Verify the dashboard set info");
-		DashBoardUtils.verifyDashboardInfoInHomePage(webd, dbsetName_Simple_CRUD, dbsetDesc_Simple_CRUD);
+		DashBoardUtils.verifyDashboardInfoInHomePage(webd, dbsetName_Simple_CRUD, dbsetDesc_Simple_CRUD, "gridview");
 
 		webd.getLogger().info("Start to search dashboard set with name name");
-		DashboardHomeUtil.selectDashboard(webd, dbsetName_Simple_CRUD);
+		DashboardHomeUtil.search(webd, dbsetName_Simple_CRUD + "-Modify");
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbsetName_Simple_CRUD + "-Modify"),
 				"The dashboard set named '" + dbsetName_Simple_CRUD + "-Modify' should exist!!!");
 

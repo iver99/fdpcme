@@ -223,22 +223,37 @@ public class DashBoardUtils
 		}
 	}
 
-	public static boolean verifyDashboardInfoInHomePage(WebDriver driver, String Name, String Description)
+	public static boolean verifyDashboardInfoInHomePage(WebDriver driver, String Name, String Description, String view)
 	{
 		//click the info icon
 		driver.click(DashBoardPageId.INFOBTNID);
 
 		//verify the name and description displayed in the info box
-		String str_name = driver.getText("css=" + PageId.DASHBOARDINFO_NAME_CSS).trim();
-		String str_desc = driver.getText("css=" + PageId.DASHBOARDINFO_DESC_CSS).trim();
+		String str_name = "";
+		String str_desc = "";
 
-		if (str_name.equals(Name) && str_desc.equals(Description)) {
-			return true;
+		if (view.equals("gridview")) {
+			str_name = driver.getText("css=" + PageId.DASHBOARDINFO_NAME_CSS).trim();
+			str_desc = driver.getText("css=" + PageId.DASHBOARDINFO_DESC_CSS).trim();
+			if (str_name.equals(Name) && str_desc.equals(Description)) {
+				return true;
 
+			}
+			else {
+				return false;
+			}
 		}
-		else {
-			return false;
+		else if (view.equals("listview")) {
+			str_desc = driver.getText("css=" + PageId.DASHBOARDINFO_DESC_CSS).trim();
+			if (str_desc.equals(Description)) {
+				return true;
+
+			}
+			else {
+				return false;
+			}
 		}
+		return false;
 	}
 
 	public static boolean verifyOpenInIconExist(WebDriver driver, String widgetName, int index)
