@@ -71,7 +71,7 @@ dependencies{
       	exclude('module':'groovy')
     }
 
-     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.0.0+')
+     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.1.0-globalcontext-v2+')
 
      
      testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
@@ -132,7 +132,7 @@ task e2e (type: EMTest, dependsOn:QATest ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'DashboardUITest') {
             classes([:]) {
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestGlobalContext')
+		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestGlobalContext')
 		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage')
                 'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard')
 		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestBrandingBar')
@@ -153,7 +153,9 @@ task QATest1(type:EMTest,dependsOn:e2e ){
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestAnalyzerPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestDashboardPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestOtherPage.class"
-	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestDateTimePicker.class"
+	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FixDate.class"
+	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FlexibleDate.class"
+	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_RecentUseOption.class"
         useWebdriver = true
 	useRestAssured=true
 }

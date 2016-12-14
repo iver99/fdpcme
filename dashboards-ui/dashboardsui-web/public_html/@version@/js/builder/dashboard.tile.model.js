@@ -1041,79 +1041,38 @@ define(['knockout',
             self.timeSelectorModel.viewStart(initStart);
             self.timeSelectorModel.viewEnd(initEnd);
             self.timeSelectorModel.viewTimePeriod(self.timePeriod());
-            
-            self.initilizeTimeParams = function() {
-                var headerWrapper = $("#headerWrapper")[0];
-                if(headerWrapper) {
-                    var headerViewModel = ko.dataFor(headerWrapper);
-                    headerViewModel.brandingbarParams.timeSelectorParams.startDateTime(ko.unwrap(self.initStart));
-                    headerViewModel.brandingbarParams.timeSelectorParams.endDateTime(ko.unwrap(self.initEnd));
-                    headerViewModel.brandingbarParams.timeSelectorParams.timePeriod(ko.unwrap(self.timePeriod));
-                    headerViewModel.brandingbarParams.timeSelectorParams.callbackAfterApply = function(start, end, tp) {
+            self.datetimePickerParams = {
+                startDateTime: self.initStart,
+                endDateTime: self.initEnd,
+                timePeriod: self.timePeriod,
+                hideMainLabel: true,
+                callbackAfterApply: function(start, end, tp) {
                         self.timeSelectorModel.viewStart(start);
                         self.timeSelectorModel.viewEnd(end);
                         self.timeSelectorModel.viewTimePeriod(tp);
-                        if (tp === "Custom") {
+                        if(tp === "Custom") {
                             self.initStart(start);
                             self.initEnd(end);
                             self.timePeriod(tp);
-                        } else {
+                        }else {
                             self.timePeriod(tp);
                         }
-                        headerViewModel.brandingbarParams.timeSelectorParams.timePeriod(tp);
                         self.timeSelectorModel.timeRangeChange(true);
-
-                        if (!self.applyClickedByAutoRefresh()) {
-                            if (!self.userExtendedOptions.timeSel) {
+                        
+                        if(!self.applyClickedByAutoRefresh()) {
+                            if(!self.userExtendedOptions.timeSel) {
                                 self.userExtendedOptions.timeSel = {};
                             }
                             self.userExtendedOptions.timeSel.timePeriod = Builder.getTimePeriodValue(tp) ? Builder.getTimePeriodValue(tp) : tp;
                             self.userExtendedOptions.timeSel.start = start.getTime();
                             self.userExtendedOptions.timeSel.end = end.getTime();
                             self.saveUserFilterOptions();
+
+//                            $b.triggerEvent($b.EVENT_TIME_SELECTION_CHANGED, "time selection is changed by selecting date/time picker", Builder.getTimePeriodValue(tp), start.getTime(), end.getTime());
                         }
                         self.applyClickedByAutoRefresh(false);
-                    }
                 }
-            }
-            self.initilizeTimeParams();
-
-            self.dashboardSwitchedInSet = function() {
-                self.initilizeTimeParams();
-            }
-        
-//            self.datetimePickerParams = {
-//                startDateTime: self.initStart,
-//                endDateTime: self.initEnd,
-//                timePeriod: self.timePeriod,
-//                hideMainLabel: true,
-//                callbackAfterApply: function(start, end, tp) {
-//                        self.timeSelectorModel.viewStart(start);
-//                        self.timeSelectorModel.viewEnd(end);
-//                        self.timeSelectorModel.viewTimePeriod(tp);
-//                        if(tp === "Custom") {
-//                            self.initStart(start);
-//                            self.initEnd(end);
-//                            self.timePeriod(tp);
-//                        }else {
-//                            self.timePeriod(tp);
-//                        }
-//                        self.timeSelectorModel.timeRangeChange(true);
-//                        
-//                        if(!self.applyClickedByAutoRefresh()) {
-//                            if(!self.userExtendedOptions.timeSel) {
-//                                self.userExtendedOptions.timeSel = {};
-//                            }
-//                            self.userExtendedOptions.timeSel.timePeriod = Builder.getTimePeriodValue(tp) ? Builder.getTimePeriodValue(tp) : tp;
-//                            self.userExtendedOptions.timeSel.start = start.getTime();
-//                            self.userExtendedOptions.timeSel.end = end.getTime();
-//                            self.saveUserFilterOptions();
-//
-////                            $b.triggerEvent($b.EVENT_TIME_SELECTION_CHANGED, "time selection is changed by selecting date/time picker", Builder.getTimePeriodValue(tp), start.getTime(), end.getTime());
-//                        }
-//                        self.applyClickedByAutoRefresh(false);
-//                }
-//            };
+            };
 
             self.saveUserFilterOptions = function() {
                 var userFilterOptions = {

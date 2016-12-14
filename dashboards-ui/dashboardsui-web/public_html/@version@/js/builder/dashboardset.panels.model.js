@@ -84,7 +84,6 @@ define([
                         }, 200);
                         var _dashboard = self.selectedDashboardInst();
                         self.loadRightPanelModel(_dashboard.toolBarModel,_dashboard.tilesViewModel,_dashboard.$b);
-                        _dashboard.tilesViewModel.dashboardSwitchedInSet();
                     }else{
                         var $target =$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId);
                         homeScrollbarReset($target);

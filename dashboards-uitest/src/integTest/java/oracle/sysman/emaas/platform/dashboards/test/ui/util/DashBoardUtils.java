@@ -39,7 +39,7 @@ public class DashBoardUtils
 		webdriver.takeScreenShot();
 		webdriver.getLogger().info("Click Dashboard link to back to dashboard home page");
 		webdriver.getWebDriver().findElement(By.xpath(PageId.DASHBOARDLINK)).click();
-		webdriver.takeScreenShot();
+		//	webdriver.takeScreenShot();
 	}
 
 	public static void closeOverviewPage()
@@ -71,10 +71,10 @@ public class DashBoardUtils
 		//Accepting alert.
 		webdriver.getLogger().info("foucus on the alert");
 		alert = webdriver.getWebDriver().switchTo().alert();
-		webdriver.takeScreenShot();
+		//webdriver.takeScreenShot();
 		webdriver.getLogger().info("click button on the dialog, should navigate to the home page");
 		alert.accept();
-		webdriver.takeScreenShot();
+		//webdriver.takeScreenShot();
 	}
 
 	public static void itaOobExist()
