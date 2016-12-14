@@ -1,11 +1,12 @@
-package oracle.sysman.emaas.platform.dashboards.core.cache;
+package com.oracle.platform.emaas.cache;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
-
+/**
+ * Created by chehao on 2016/12/14.
+ */
 @Test(groups = {"s1"})
 public class TenantTest {
     private Tenant tenant;
