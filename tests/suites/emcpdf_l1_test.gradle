@@ -28,6 +28,9 @@ buildscript {
 apply from: 'test-project-apply.gradle'
 apply from: 'setup.gradle'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
+
+project.ext.omctf_omcCloudSetup_deployArgs= "-skipOpssConfig true -skipRestartServerOpss true " 
+
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
  ***************************************************************************************************/
