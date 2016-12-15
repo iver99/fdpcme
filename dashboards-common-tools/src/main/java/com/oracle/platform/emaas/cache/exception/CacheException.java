@@ -1,7 +1,7 @@
-package oracle.sysman.emaas.platform.dashboards.core.exception;
+package com.oracle.platform.emaas.cache.exception;
 
 /**
- * Created by chehao on 2016/11/14.
+ * Created by chehao on 2016/12/15.
  */
 public class CacheException extends Exception{
     private final Integer errorCode;

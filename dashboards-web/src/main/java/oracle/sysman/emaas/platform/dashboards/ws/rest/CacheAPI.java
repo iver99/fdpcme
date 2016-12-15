@@ -18,9 +18,9 @@ import javax.ws.rs.core.Response;
 import com.oracle.platform.emaas.cache.CacheFactory;
 import com.oracle.platform.emaas.cache.CacheManager;
 import com.oracle.platform.emaas.cache.CacheUnit;
-import oracle.sysman.emaas.platform.dashboards.core.exception.CacheException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.cache.CacheGroupNameEmptyException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.cache.CacheGroupNotFoundException;
+import com.oracle.platform.emaas.cache.exception.CacheException;
+import com.oracle.platform.emaas.cache.exception.CacheGroupNameEmptyException;
+import com.oracle.platform.emaas.cache.exception.CacheGroupNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 
 import org.apache.logging.log4j.LogManager;
