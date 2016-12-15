@@ -11,9 +11,9 @@ task extractCacheJar(type: Jar){
 	appendix = 'cacheJar'
 	 from sourceSets.main.output
 	
-	include('com/oracle/platform/emaas/cache/*.class')
-	include('com/oracle/platform/emaas/cache/api/*.class')
-	include('com/oracle/platform/emaas/cache/util/*.class')
+//	include('com/oracle/platform/emaas/cache/*.class')
+	include('com/oracle/platform/emaas/cache/**/*.class')
+//	include('com/oracle/platform/emaas/cache/util/*.class')
 	include('cache_config.properties')
 
 }
