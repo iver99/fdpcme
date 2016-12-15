@@ -128,7 +128,7 @@ public class DashboardsUiCORSFilter implements Filter
 			String opcTenantId = userTenant.substring(0, pos);
 			String user = userTenant.substring(pos + 1);
 			if (!StringUtil.isEmpty(userTenant) && userTenant.indexOf(".") > 0) {
-				if (hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/home.html")) {
+				if (!StringUtil.isEmpty(hReq.getRequestURI()) && hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/home.html")) {
 					List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId, user);
 					if (apps == null || apps.isEmpty()) {
 						LOGGER.error("Tenant (" + opcTenantId
@@ -175,7 +175,7 @@ public class DashboardsUiCORSFilter implements Filter
 						}
 					}
 				}
-				else if (hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/builder.html")) {
+				else if (!StringUtil.isEmpty(hReq.getRequestURI()) && hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/builder.html")) {
 					List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId, user);
 					if (apps == null || apps.isEmpty()) {
 						LOGGER.error("Tenant (" + opcTenantId
