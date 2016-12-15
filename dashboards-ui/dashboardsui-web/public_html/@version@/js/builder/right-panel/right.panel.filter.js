@@ -48,8 +48,13 @@ define([
             }
             
             self.enableEntityFilter.subscribe(function(val){
-                self.dashboard.enableEntityFilter((val==='ON') ? 'TRUE' : 'FALSE');
-                $b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel().timeSelectorModel.timeRangeChange(true);
+                Builder.requireTargetSelectorUtils(val==='ON', function(TargetSelectorUtils) {
+                    if (TargetSelectorUtils) {
+                        TargetSelectorUtils.registerComponents();
+                    }
+                    self.dashboard.enableEntityFilter((val==='ON') ? 'TRUE' : 'FALSE');
+                    $b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel().timeSelectorModel.timeRangeChange(true);
+                });
             });
             
             self.enableTimeRangeFilter.subscribe(function(val){
