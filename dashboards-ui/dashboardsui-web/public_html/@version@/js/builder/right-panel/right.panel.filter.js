@@ -9,36 +9,58 @@ define([
     'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'*/
     ], function(ko, oj, $, rpu, ssu, contextModel, dfu/*, TargetSelectorUtils*/) {
         
-        function RightPanelFilterModel($b) {
+        function RightPanelFilterModel($b, isDashboardSet) {
             var self = this;
             
             self.dashboard = $b.dashboard;
             self.rightPanelUtil = new rpu.RightPanelUtil();
             var ctxUtil = new contextModel();
             var omcContext = null;
+            self.tilesViewModel = $b.getDashboardTilesViewModel();
+            self.isDashboardSet = isDashboardSet;
             
             
             self.getFilterEnabledState = function(enableFilterValue) {
-                if(enableFilterValue === 'TRUE') {
-                    return 'ON';
-                }else if(enableFilterValue === 'FALSE') {
-                    return 'OFF';
-                }else if(enableFilterValue === 'GC') {
-                    return 'GC'
+                if(self.isDashboardSet) {
+                    if(enableFilterValue === 'TRUE' || enableFilterValue === 'GC') {
+                        return 'ON';
+                    }else if(enableFilterValue === 'FALSE') {
+                        return 'OFF';
+                    }else {
+                        return null;
+                    }
                 }else {
-                    return null;
+                    if(enableFilterValue === 'TRUE') {
+                        return 'ON';
+                    }else if(enableFilterValue === 'FALSE') {
+                        return 'OFF';
+                    }else if(enableFilterValue === 'GC') {
+                        return 'GC'
+                    }else {
+                        return null;
+                    }
                 }
             };
             
             self.getFilterEnabledValue = function(enableFilterState) {
-                if(enableFilterState === 'ON') {
-                    return 'TRUE';
-                }else if(enableFilterState === 'OFF') {
-                    return 'FALSE';
-                }else if(enableFilterState === 'GC') {
-                    return 'GC';
+                if(self.isDashboardSet) {
+                    if(enableFilterState === 'ON' || enableFilterState === 'GC') {
+                        return 'TRUE';
+                    }else if(enableFilterState === 'OFF') {
+                        return 'FALSE';
+                    }else {
+                        return null;
+                    }
                 }else {
-                    return null;
+                    if(enableFilterState === 'ON') {
+                        return 'TRUE';
+                    }else if(enableFilterState === 'OFF') {
+                        return 'FALSE';
+                    }else if(enableFilterState === 'GC') {
+                        return 'GC';
+                    }else {
+                        return null;
+                    }
                 }
             };
             
@@ -66,7 +88,7 @@ define([
 //            self.enableEntityFilter = ko.observable((self.dashboard.enableEntityFilter() === 'TRUE')?'ON':'OFF');
 //            self.enableTimeRangeFilter = ko.observable(self.dashboard.enableTimeRange && (self.dashboard.enableTimeRange() === 'TRUE'?'ON':'OFF'));
             self.enableEntityFilter = ko.observable(self.getFilterEnabledState(self.dashboard.enableEntityFilter()));
-            self.enableTimeRangeFilter = ko.observable(self.getFilterEnabledState(self.dashboard.enableTimeRange && self.dashboard.enableTimeRange()));
+            self.enableTimeRangeFilter = ko.observable(self.getFilterEnabledState(self.dashboard.enableTimeRange ? self.dashboard.enableTimeRange() : 'TRUE'));
 
             self.entitySupport = ko.observable(true);
             if($b.getDashboardTilesViewModel) {
@@ -79,7 +101,8 @@ define([
             
             self.enableEntityFilter.subscribe(function(val){
 //                self.dashboard.enableEntityFilter((val==='ON') ? 'TRUE' : 'FALSE');
-                self.dashboard.enableEntityFilter(self.getFilterEnabledValue(val));
+                val = self.getFilterEnabledValue(val);
+                self.dashboard.enableEntityFilter(val);
                 //show/hide GC bar accordingly
                 var headerWrapper = $("#headerWrapper")[0];
                 var headerViewModel =  null;
@@ -97,50 +120,19 @@ define([
                 //
                 //1. reset respectOMCGlobalContext flag
                 var entityContext = null;
-                var dashboardTilesViewModel = $b.getDashboardTilesViewModel();
-                if(val === "GC") {
-                    ctxUtil.respectOMCGlobalContext(true);
-                    omcContext = ctxUtil.getOMCContext();
-                    entityContext = (omcContext.composite && omcContext.composite.compositeMEID) ? omcContext.composite.compositeMEID : null;
-                    if(entityContext == null) {
-                        dashboardTilesViewModel.initUserFilterOptions();
-                        if(dashboardTilesViewModel.userTsel && dashboardTilesViewModel.userExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.userExtendedOptions.tsel)) {
-                            entityContext = dashboardTilesViewModel.userExtendedOptions.tsel.entityContext;
-                        }else if(self.extendedOptions && !$.isEmptyObject(self.extendedOptions.tsel)) {
-                            entityContext = self.extendedOptions.tsel.entityContext;
-                            dashboardTilesViewModel.userExtendedOptions.tsel = {};
-                        }
-                        //Set global entity context using dashboard save entity context in this case
-                        //to do.... how to convert json criteria to compositeMEID 
-                    }
-                    
-                }else if(val === "ON") {
-                    ctxUtil.respectOMCGlobalContext(false);
-                    dashboardTilesViewModel.initUserFilterOptions();
-                    if(dashboardTilesViewModel.userTsel && dashboardTilesViewModel.userExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.userExtendedOptions.tsel)) {
-                        entityContext = dashboardTilesViewModel.userExtendedOptions.tsel.entityContext;
-                    }else if(self.extendedOptions && !$.isEmptyObject(self.extendedOptions.tsel)) {
-                        entityContext = self.extendedOptions.tsel.entityContext;
-                        dashboardTilesViewModel.userExtendedOptions.tsel = {};
-                    }
-                    //set non-globalcontext
-                    //to do... how to use saved JSON criteria to set compositeMEID
-                    
-                }else if(val === "OFF") {
-                    ctxUtil.respectOMCGlobalContext(false);
-                    entityContext = null;
-                    //set non-global entity conctext to null
-                    ctxUtil.setCompositeMeId(null);
-                }
+                var dashboardTilesViewModel = self.tilesViewModel;
+                
+                entityContext = dashboardTilesViewModel.getEntityContext(dashboardTilesViewModel, val);
                 //2. update/refresh value of entity seletor accordingly
                 dashboardTilesViewModel.targets(entityContext);
                 //3. fire event to widgets
-                $b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel().timeSelectorModel.timeRangeChange(true);
+                dashboardTilesViewModel.timeSelectorModel.timeRangeChange(true);
             });
             
             self.enableTimeRangeFilter.subscribe(function(val){
 //                self.dashboard.enableTimeRange((val==='ON') ? 'TRUE' : 'FALSE');
-                self.dashboard.enableTimeRange(self.getFilterEnabledValue(val));
+                val = self.getFilterEnabledValue(val);
+                self.dashboard.enableTimeRange(val);
                 //1. reset respectOMCGlobalContext flag
                 //2. update/refresh value of entity seletor accordingly
                 //3. fire event to widgets
@@ -149,77 +141,12 @@ define([
                 var timePeriod = null;
                 var start = null;
                 var end = null;
-                var current = new Date();
-                var dashboardTilesViewModel = $b.getDashboardTilesViewModel();
-                if(val === "GC") {
-                    ctxUtil.respectOMCGlobalContext(true);
-                    omcContext = ctxUtil.getOMCContext();
-                    start = (omcContext.time && omcContext.time.startTime) ? new Date(parseInt(omcContext.time.startTime)) : null;
-                    end = (omcContext.time && omcContext.time.endTime) ? new Date(parseInt(omcContext.time.endTime)) : null;
-                    timePeriod = (omcContext.time && omcContext.time.timePeriod) ? omcContext.time.timePeriod : null;
-                    
-                    if(timePeriod === null && (start === null || end === null)) {
-                        dashboardTilesViewModel.initUserFilterOptions();
-                        if(dashboardTilesViewModel.userTimeSel && dashboardTilesViewModel.userExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.userExtendedOptions.timeSel)) {
-                            start = new Date(parseInt(dashboardTilesViewModel.userExtendedOptions.timeSel.start));
-                            end = new Date(parseInt(dashboardTilesViewModel.userExtendedOptions.timeSel.end));
-                            var tp = (dashboardTilesViewModel.userExtendedOptions.timeSel.timePeriod === "custom1") ? "custom" : dashboardTilesViewModel.userExtendedOptions.timeSel.timePeriod;
-                            timePeriod = Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp;
-                            //set global time context using dashboard saved time context
-                            if(ctxUtil.formalizeTimePeriod(timePeriod) === "CUSTOM") {
-                                ctxUtil.setStartAndEndTime(start.getTime(), end.getTime());
-                            }else {
-                                ctxUtil.setTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
-                            }
-                        }else if(self.extendedOptions && !$.isEmptyObject(self.extendedOptions.timeSel)) {
-                            start = new Date(parseInt(self.extendedOptions.timeSel.start));
-                            end = new Date(parseInt(self.extendedOptions.timeSel.end));
-                            var tp = (self.extendedOptions.timeSel.defaultValue === "custom1") ? "custom" : self.extendedOptions.timeSel.defaultValue;
-                            timePeriod = Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp;
-                            dashboardTilesViewModel.userExtendedOptions.timeSel = {};
-                            //set global time context using dashboard saved time context
-                            if(ctxUtil.formalizeTimePeriod(timePeriod) === "CUSTOM") {
-                                ctxUtil.setStartAndEndTime(start.getTime(), end.getTime());
-                            }else {
-                                ctxUtil.setTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
-                            }
-                        }else {
-                            start = new Date(current - 14*24*60*60*1000);
-                            end = current;
-                            timePeriod = "Last 14 days";
-                        }
-                    }
-                }else if(val === "ON") {
-                    ctxUtil.respectOMCGlobalContext(false);
-                    dashboardTilesViewModel.initUserFilterOptions();
-                    if(dashboardTilesViewModel.userTimeSel && dashboardTilesViewModel.userExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.userExtendedOptions.timeSel)) {
-                        start = new Date(parseInt(dashboardTilesViewModel.userExtendedOptions.timeSel.start));
-                        end = new Date(parseInt(dashboardTilesViewModel.userExtendedOptions.timeSel.end));
-                        var tp = (dashboardTilesViewModel.userExtendedOptions.timeSel.timePeriod === "custom1") ? "custom" : dashboardTilesViewModel.userExtendedOptions.timeSel.timePeriod;
-                        timePeriod = Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp;
-                    } else if (self.extendedOptions && !$.isEmptyObject(self.extendedOptions.timeSel)) {
-                        start = new Date(parseInt(self.extendedOptions.timeSel.start));
-                        end = new Date(parseInt(self.extendedOptions.timeSel.end));
-                        var tp = (self.extendedOptions.timeSel.defaultValue === "custom1") ? "custom" : self.extendedOptions.timeSel.defaultValue;
-                        timePeriod = Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp;
-                        dashboardTilesViewModel.userExtendedOptions.timeSel = {};
-                    } else {
-                        start = new Date(current - 14 * 24 * 60 * 60 * 1000);
-                        end = current;
-                        timePeriod = "Last 14 days";
-                    }
-                    if(ctxUtil.formalizeTimePeriod(timePeriod) === "CUSTOM") {
-                        ctxUtil.setStartAndEndTime(start.getTime(), end.getTime());
-                    }else {
-                        ctxUtil.setTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
-                    }
-                }else if(val === "OFF") {
-                    ctxUtil.respectOMCGlobalContext(false);
-                    start = null;
-                    end = null;
-                    timePeriod = null;
-                    ctxUtil.setTimePeriod(null);
-                }
+                var dashboardTilesViewModel = self.tilesViewModel;
+
+                var timeContext = dashboardTilesViewModel.getTimeContext(dashboardTilesViewModel, val);
+                start = timeContext.start;
+                end = timeContext.end;
+                timePeriod = timeContext.timePeriod;
                 
                 //2. update/refresh value of entity seletor accordingly
                 if(ctxUtil.formalizeTimePeriod(timePeriod) && ctxUtil.formalizeTimePeriod(timePeriod) !== "CUSTOM") {
@@ -229,7 +156,7 @@ define([
                     dashboardTilesViewModel.initEnd(end);
                 }
                 //3. fire event to widgets
-                $b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel().timeSelectorModel.timeRangeChange(true);
+                dashboardTilesViewModel.timeSelectorModel.timeRangeChange(true);
             });
             
             //reset default entity value and entity context when entity support is changed
@@ -367,6 +294,7 @@ define([
             };
             
             self.loadRightPanelFilter = function(tilesViewModel) {
+                self.tilesViewModel = tilesViewModel;
                 var dashboard = tilesViewModel.dashboard;
                 if(!dashboard.extendedOptions) {
                     dashboard.extendedOptions = ko.observable("{\"tsel\": {\"entitySupport\": \"byCriteria\", \"entityContext\": \"\"}, \"timeSel\": {\"defaultValue\": \"last14days\", \"start\": 0, \"end\": 0}}");

@@ -970,10 +970,12 @@
                                                             <input id="enableTimeRange" type="radio" name="enableTimeRange" value="ON">
                                                             <label for="enableTimeRange" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENABLE_TIME_RANGE')"></label>
                                                         </span>
+                                                        <!-- ko if: !$data.isDashboardSet() -->
                                                         <span class="oj-choice-row">
                                                             <input id="enableGCTimeRange" type="radio" name="enableTimeRange" value="GC">
                                                             <label for="enableGCTimeRange" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENABLE_GC_TIME_RANGE')"></label>
                                                         </span>
+                                                        <!-- /ko -->
                                                         <span class="oj-choice-row">
                                                             <input id="disableTimeRange" type="radio" name="enableTimeRange" value="OFF">
                                                             <label for="disableTimeRange" data-bind="text: getNlsString('DSB_BUILDER_EDIT_DISABLE_TIME_RANGE')"></label>
@@ -999,10 +1001,12 @@
                                                             <input id="enableEntityFilter" type="radio" name="enableEntityFilter" value="ON">
                                                             <label for="enableEntityFilter" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENABLE_ENTITIES')"></label>
                                                         </span>
+                                                        <!-- ko if: !$data.isDashboardSet() -->
                                                         <span class="oj-choice-row">
                                                             <input id="enableGCEntities" type="radio" name="enableEntityFilter" value="GC">
                                                             <label for="enableGCEntities" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENABLE_GC_ENTITIES')"></label>
                                                         </span>
+                                                        <!-- /ko -->
                                                         <span class="oj-choice-row">
                                                             <input id="disableEntityFilter" type="radio" name="enableEntityFilter" value="OFF">
                                                             <label for="disableEntityFilter" data-bind="text: getNlsString('DSB_BUILDER_EDIT_DISABLE_ENTITIES')"></label>
