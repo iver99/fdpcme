@@ -3,7 +3,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 apply from:'test.gradle'
 apply plugin: 'java'
-version = "0.0.1" + "-$buildTimestamp"
+version = "0.0.1"
 dfversion = project.ext.getServiceVersion('DashboardService-API')
 def versionPathElement = dfversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
 
