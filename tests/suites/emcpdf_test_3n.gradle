@@ -142,6 +142,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_SimpleCRUD')		
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DashboardRelated_CreatedInsideSet')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DashboardRelated_CreatedOutsideSet')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DuplicateDashboard')
             }
 	}
 	test('name': 'DashboardUITest_testDashboardSet', 'preserve-order':'true'){
