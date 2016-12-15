@@ -1,11 +1,40 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+import java.text.SimpleDateFormat
+import java.util.Date
 apply from:'test.gradle'
 apply plugin: 'java'
+version = "0.0.1" + "-$buildTimestamp"
+dfversion = project.ext.getServiceVersion('DashboardService-API')
+def versionPathElement = dfversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
 
-dependencies {
-    compile getProjectArtifact('log4j-core')
-    compile getProjectArtifact('log4j-api')
-    compile getProjectArtifact('jackson-core-asl')
+task extractCacheJar(type: Jar){
+	appendix = 'cacheJar'
+	 from sourceSets.main.output
+	
+	include('com/oracle/platform/emaas/cache/*.class')
+	include('com/oracle/platform/emaas/cache/api/*.class')
+	include('com/oracle/platform/emaas/cache/util/*.class')
+	include('cache_config.properties')
+
 }
+publishing.publications {
+    integTest(MavenPublication) {
+                        setArtifactId(project.name + '-' + integTestJar.appendix)
+                        setGroupId("${publishGroup}")
+                        artifact integTestJar.archivePath
+    }
+    thisJarPublication(MavenPublication) {
+                        from project.components.java
+                        setGroupId("${publishGroup}")
+    }
+    extractCache(MavenPublication) {
+                         setGroupId('com.oracle.emaas.emcpdf.testsdk.chehao.cache')
+           		 setArtifactId (project.name + '-' + extractCacheJar.appendix)
+           		 artifact extractCacheJar.archivePath
+    }
+}
+
+
 
 sourceSets {	
 	main {	
@@ -17,12 +46,31 @@ sourceSets {
 		}
 	}
  }
-test {
-	classpath = sourceSets.test.compileClasspath + sourceSets.test.output
-	useTestNG()
-			{
-				//We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
-				//if you wish to run ALL tests within this projet - remove following.
-				includeGroups 's1' ,'s2'
-			}
+
+
+artifactoryPublish {
+	 publications('integTest')
+	 publications('thisJarPublication')
+	 publications('extractCache')
+	 
 }
+
+dependencies {
+    compile getProjectArtifact('log4j-core')
+    compile getProjectArtifact('log4j-api')
+    compile getProjectArtifact('jackson-core-asl')
+}
+
+processResources {
+    from('src/main/resources') {
+        include '*.properties', '*.xml'
+        filter(ReplaceTokens, tokens: [version : versionPathElement])
+    }
+}
+
+build.dependsOn extractCacheJar
+
+clean{
+  delete 'build'
+}
+
