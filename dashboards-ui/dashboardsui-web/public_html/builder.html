@@ -265,7 +265,7 @@
                                                                 label: ''
                                                         }"></button>
                                               </div>
-                                                <div class="dbd-btn-group" data-bind="stopDataBinding: $root.dashboard.systemDashboard()==true">
+                                                <div class="dbd-btn-group" data-bind="stopDataBinding: $root.dashboard.systemDashboard && $root.dashboard.systemDashboard()==true">
                                                     <button class="oj-button-half-chrome dbd-tile-action" id="dbd-tile-action" tabindex="0"
                                                             data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
                                                                        visible: ($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true'),
@@ -667,7 +667,7 @@
             </div>
 
                 <div class="dbd-left-panel no-print fit-size"
-                        data-bind="stopDataBinding: dashboard.systemDashboard(),css: {'dbd-left-panel-show' : rightPanelControl.showRightPanel(), 'dbd-left-panel-hide' : !rightPanelControl.showRightPanel()},
+                        data-bind="stopDataBinding: dashboard.systemDashboard && dashboard.systemDashboard(),css: {'dbd-left-panel-show' : rightPanelControl.showRightPanel(), 'dbd-left-panel-hide' : !rightPanelControl.showRightPanel()},
                                    style: {right: rightPanelControl.scrollbarWidth + 'px'}">
                     <div class="dbd-right-panel-contents">
                         <!-- ko if: $data.isDashboardSet -->
