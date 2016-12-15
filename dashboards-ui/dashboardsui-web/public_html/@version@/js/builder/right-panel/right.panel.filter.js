@@ -100,7 +100,6 @@ define([
             }
             
             self.enableEntityFilter.subscribe(function(val){
-//                self.dashboard.enableEntityFilter((val==='ON') ? 'TRUE' : 'FALSE');
                 val = self.getFilterEnabledValue(val);
                 self.dashboard.enableEntityFilter(val);
                 //show/hide GC bar accordingly
@@ -114,30 +113,29 @@ define([
                 }else {
                     headerViewModel.brandingbarParams.showGlobalContextBanner(false);
                 }
-                //1. reset respectOMCGlobalContext flag
+                //1. reset respectOMCGlobalContext flag and get entity context info
                 //2. update/refresh value of entity seletor accordingly
                 //3. fire event to widgets
                 //
-                //1. reset respectOMCGlobalContext flag
+                //1. reset respectOMCGlobalContext flag and get entity context info
                 var entityContext = null;
-                var dashboardTilesViewModel = self.tilesViewModel;
-                
+                var dashboardTilesViewModel = self.tilesViewModel;                
                 entityContext = dashboardTilesViewModel.getEntityContext(dashboardTilesViewModel, val);
                 //2. update/refresh value of entity seletor accordingly
+                //to do... check if updating inputCriteria updates entity selector
                 dashboardTilesViewModel.targets(entityContext);
                 //3. fire event to widgets
                 dashboardTilesViewModel.timeSelectorModel.timeRangeChange(true);
             });
             
             self.enableTimeRangeFilter.subscribe(function(val){
-//                self.dashboard.enableTimeRange((val==='ON') ? 'TRUE' : 'FALSE');
                 val = self.getFilterEnabledValue(val);
                 self.dashboard.enableTimeRange(val);
-                //1. reset respectOMCGlobalContext flag
+                //1. reset respectOMCGlobalContext flag and get time context infp
                 //2. update/refresh value of entity seletor accordingly
                 //3. fire event to widgets
                 //
-                //1. reset respectOMCGlobalContext flag
+                //1. reset respectOMCGlobalContext flag and get time context info
                 var timePeriod = null;
                 var start = null;
                 var end = null;
