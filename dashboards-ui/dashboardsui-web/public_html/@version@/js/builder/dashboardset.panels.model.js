@@ -64,14 +64,36 @@ define([
                     $(".dashboard-picker-container").removeClass("df-collaps");
                 }
                 
-                //show globalcontext banner for dashboards except Orchestration OOB dashboards and dashboard set
-                if(!dashboardsetToolBarModel.isDashboardSet() && !(dashboardsetToolBarModel.dashboardExtendedOptions && dashboardsetToolBarModel.dashboardExtendedOptions.showGlobalContextBanner === false)) {                
-                    var headerWrapper = $("#headerWrapper")[0];
-                    if(headerWrapper) {
-                        var headerViewModel = ko.dataFor(headerWrapper);
-                        headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                var headerWrapper = $("#headerWrapper")[0];
+                if(headerWrapper) {
+                    var headerViewModel = ko.dataFor(headerWrapper);
+                }
+                if(dashboardsetToolBarModel.isDashboardSet()) { //dashboard set: hide GC bar
+                    headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                }else {
+                    if(dashboardsetToolBarModel.dashboardInst.systemDashboard()) { //OOB dashboard
+                        if(dashboardsetToolBarModel.dashboardExtendedOptions && dashboardsetToolBarModel.dashboardExtendedOptions.showGlobalContextBanner === true) {
+                            headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                        }else {
+                            headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                        }
+                    }else { //User crearted dashboard
+                        if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="GC") {
+                            headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                        }else {
+                            headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                        }
                     }
                 }
+                
+                
+//                if(!dashboardsetToolBarModel.isDashboardSet() && !(dashboardsetToolBarModel.dashboardExtendedOptions && dashboardsetToolBarModel.dashboardExtendedOptions.showGlobalContextBanner === false)) {                
+//                    var headerWrapper = $("#headerWrapper")[0];
+//                    if(headerWrapper) {
+//                        var headerViewModel = ko.dataFor(headerWrapper);
+//                        headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+//                    }
+//                }
 
                 if (alreadyLoaded) {
                     $showDashboard.show();
