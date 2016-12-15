@@ -370,8 +370,8 @@ define(['knockout',
                                 }
                                 widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
                             }
-                            window.location = cxtUtil.appendOMCContext(widgetUrl);
                         }
+                        window.location = cxtUtil.appendOMCContext(widgetUrl);
                     });
                     };
                 }
