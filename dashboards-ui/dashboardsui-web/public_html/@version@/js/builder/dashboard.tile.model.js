@@ -413,7 +413,8 @@ define(['knockout',
                     if(isResizing) {
                         $('#globalBody').addClass('none-user-select');
                         self.resizingTile(ko.dataFor(targetHandler.closest('.dbd-widget')[0]));
-                        self.resizingOptions({mode:resizeMode});
+                        var changedingTarget=targetHandler.closest('.dbd-widget');
+                        self.resizingOptions({mode:resizeMode,containerTop:changedingTarget.offset().top,containerLeft:changedingTarget.offset().left});
                         self.beforeResizeWidth = self.resizingTile().cssWidth();
                         self.beforeResizeHeight = self.resizingTile().cssHeight();
                         self.currentWigedtWidth(self.resizingTile().cssWidth());
