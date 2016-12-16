@@ -3,6 +3,18 @@ apply plugin: 'java'
 
 version = "1.0.0" + "-$buildTimestamp"
 
+publishing.publications {
+    integTest(MavenPublication) {
+        setArtifactId(project.name + '-' + integTestJar.appendix)
+        setGroupId("${publishGroup}")
+        artifact integTestJar.archivePath
+    }
+    thisJarPublication(MavenPublication) {
+        from project.components.java
+        setGroupId("${publishGroup}")
+    }
+}
+
 dependencies {
     compile getProjectArtifact('log4j-core')
     compile getProjectArtifact('log4j-api')
@@ -11,7 +23,6 @@ dependencies {
     compile getProjectArtifact('commons-lang3')
     testCompile getProjectArtifact('jmockit')
 }
-
 sourceSets {
     main {
         java {
@@ -22,6 +33,12 @@ sourceSets {
         }
     }
 }
+artifactoryPublish {
+    publications('integTest')
+    publications('thisJarPublication')
+
+}
+
 test {
     classpath = sourceSets.test.compileClasspath + sourceSets.test.output
     useTestNG()
@@ -30,6 +47,11 @@ test {
                 //if you wish to run ALL tests within this projet - remove following.
                 includeGroups 's1' ,'s2'
             }
+}
+
+
+clean{
+    delete 'build'
 }
 
 eclipse {
