@@ -15,7 +15,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.oracle.platform.emaas.cache.CacheFactory;
 import com.oracle.platform.emaas.cache.CacheManager;
 import com.oracle.platform.emaas.cache.CacheUnit;
 import com.oracle.platform.emaas.cache.exception.CacheException;
@@ -39,7 +38,7 @@ public class CacheAPI extends APIBase{
 	public Response getAllCacheGroups()
 	{
 		LOGGER.info("Service to call [GET] /v1/cache");
-		ConcurrentHashMap<String, CacheUnit> cacheUnitMap = CacheFactory.getCacheUnitMap();
+		ConcurrentHashMap<String, CacheUnit> cacheUnitMap = CacheManager.getCacheUnitMap();
 		List<CacheUnit> cacheUnitList = new ArrayList<CacheUnit>();
 		Iterator<Map.Entry<String,CacheUnit>> iterator= cacheUnitMap.entrySet().iterator();
 		while(iterator.hasNext()){
@@ -58,7 +57,7 @@ public class CacheAPI extends APIBase{
             if(cacheGroupName == null || "".equals(cacheGroupName)){
                 throw new CacheGroupNameEmptyException();
             }
-            ConcurrentHashMap<String,CacheUnit> cacheUnitMap= CacheFactory.getCacheUnitMap();
+            ConcurrentHashMap<String,CacheUnit> cacheUnitMap= CacheManager.getCacheUnitMap();
             CacheUnit cu=cacheUnitMap.get(cacheGroupName);
             if(cu == null){
                 throw new CacheGroupNotFoundException();
@@ -80,9 +79,8 @@ public class CacheAPI extends APIBase{
     public Response clearAllCacheGroup(){
     	LOGGER.info("Service to call [PUT] /v1/cache/clearCache");
     	//clear all cache group
-//        CacheFactory.getCacheUnitMap().clear();
-        CacheFactory.clearAllCacheGroup();
-        ConcurrentHashMap<String, CacheUnit> cacheUnitMap = CacheFactory.getCacheUnitMap();
+        CacheManager.clearAllCacheGroup();
+        ConcurrentHashMap<String, CacheUnit> cacheUnitMap = CacheManager.getCacheUnitMap();
 		List<CacheUnit> cacheUnitList = new ArrayList<CacheUnit>();
 		Iterator<Map.Entry<String,CacheUnit>> iterator= cacheUnitMap.entrySet().iterator();
 		while(iterator.hasNext()){
@@ -102,8 +100,8 @@ public class CacheAPI extends APIBase{
                 throw new CacheGroupNameEmptyException();
             }
             //clear specific cache group
-            CacheFactory.getCacheUnitMap().get(cacheGroupName).clearCache();
-            ConcurrentHashMap<String,CacheUnit> cacheUnitMap= CacheFactory.getCacheUnitMap();
+            CacheManager.getCacheUnitMap().get(cacheGroupName).clearCache();
+            ConcurrentHashMap<String,CacheUnit> cacheUnitMap= CacheManager.getCacheUnitMap();
             CacheUnit cu=cacheUnitMap.get(cacheGroupName);
             if(cu == null){
                 throw new CacheGroupNotFoundException();

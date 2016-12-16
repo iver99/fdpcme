@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -44,7 +45,11 @@ public class CacheManager {
 
     private static transient long lastLogTime;
     private static boolean isCacheEnabled;
+    private static ConcurrentHashMap<String,CacheUnit> cacheUnitMap=new ConcurrentHashMap<String,CacheUnit>();
+
     private static CacheManager instance = new CacheManager();
+    private static final int DEFAULT_EXPIRE_TIME= CacheConfig.DEFAULT_EXPIRE_TIME;
+    private static final int DEFAULT_CACHE_UNIT_CAPACITY =CacheConfig.DEFAULT_CAPACITY;
 
     public static CacheManager getInstance() {
         return instance;
@@ -57,20 +62,20 @@ public class CacheManager {
         this.lastLogTime = System.currentTimeMillis();
         keyGen = new DefaultKeyGenerator();
         LOGGER.info("Initialization LRU CacheManager!!");
-        CacheFactory.getCache(CACHES_SCREENSHOT_CACHE, CacheConfig.SCREENSHOT_CAPACITY, CacheConfig.SCREENSHOT_EXPIRE_TIME);
-        CacheFactory.getCache(CACHES_ETERNAL_CACHE, CacheConfig.ETERNAL_CAPACITY, CacheConfig.ETERNAL_EXPIRE_TIME);
-        CacheFactory.getCache(CACHES_ADMIN_LINK_CACHE, CacheConfig.ADMIN_LINK_CACHE_CAPACITY, CacheConfig.ADMIN_LINK_CACHE_EXPIRE_TIME);
-        CacheFactory.getCache(CACHES_CLOUD_SERVICE_LINK_CACHE, CacheConfig.CLOUD_SERVICE_LINK_CAPACITY, CacheConfig.CLOUD_SERVICE_LINK_EXPIRE_TIME);
-        CacheFactory.getCache(CACHES_HOME_LINK_CACHE, CacheConfig.HOME_LINK_EXPIRE_CAPACITY, CacheConfig.HOME_LINK_EXPIRE_TIME);
-        CacheFactory.getCache(CACHES_VISUAL_ANALYZER_LINK_CACHE, CacheConfig.VISUAL_ANALYZER_LINK_CAPACITY, CacheConfig.VISUAL_ANALYZER_LINK_EXPIRE_TIME);
-        CacheFactory.getCache(CACHES_SERVICE_EXTERNAL_LINK_CACHE, CacheConfig.SERVICE_EXTERNAL_LINK_CAPACITY, CacheConfig.SERVICE_EXTERNAL_LINK_EXPIRE_TIME);
-        CacheFactory.getCache(CACHES_SERVICE_INTERNAL_LINK_CACHE, CacheConfig.SERVICE_INTERNAL_LINK_CAPACITY, CacheConfig.SERVICE_INTERNAL_LINK_EXPIRE_TIME);
-        CacheFactory.getCache(CACHES_VANITY_BASE_URL_CACHE, CacheConfig.VANITY_BASE_URL_CAPACITY, CacheConfig.VANITY_BASE_URL_EXPIRE_TIME);
-        CacheFactory.getCache(CACHES_DOMAINS_DATA_CACHE, CacheConfig.DOMAINS_DATA_CAPACITY, CacheConfig.DOMAINS_DATA_EXPIRE_TIME);
-        CacheFactory.getCache(CACHES_TENANT_APP_MAPPING_CACHE, CacheConfig.TENANT_APP_MAPPING_CAPACITY, CacheConfig.TENANT_APP_MAPPING_EXPIRE_TIME);
-        CacheFactory.getCache(CACHES_SUBSCRIBED_SERVICE_CACHE, CacheConfig.TENANT_SUBSCRIBED_SERVICES_CAPACITY, CacheConfig.TENANT_SUBSCRIBED_SERVICES_EXPIRE_TIME);
-        CacheFactory.getCache(CACHES_SSO_LOGOUT_CACHE, CacheConfig.SSO_LOGOUT_CAPACITY, CacheConfig.SSO_LOGOUT_EXPIRE_TIME);
-        CacheFactory.getCache(CACHES_ASSET_ROOT_CACHE, CacheConfig.ASSET_ROOT_CAPACITY, CacheConfig.ASSET_ROOT_EXPIRE_TIME);
+        getCacheGroup(CACHES_SCREENSHOT_CACHE, CacheConfig.SCREENSHOT_CAPACITY, CacheConfig.SCREENSHOT_EXPIRE_TIME);
+        getCacheGroup(CACHES_ETERNAL_CACHE, CacheConfig.ETERNAL_CAPACITY, CacheConfig.ETERNAL_EXPIRE_TIME);
+        getCacheGroup(CACHES_ADMIN_LINK_CACHE, CacheConfig.ADMIN_LINK_CACHE_CAPACITY, CacheConfig.ADMIN_LINK_CACHE_EXPIRE_TIME);
+        getCacheGroup(CACHES_CLOUD_SERVICE_LINK_CACHE, CacheConfig.CLOUD_SERVICE_LINK_CAPACITY, CacheConfig.CLOUD_SERVICE_LINK_EXPIRE_TIME);
+        getCacheGroup(CACHES_HOME_LINK_CACHE, CacheConfig.HOME_LINK_EXPIRE_CAPACITY, CacheConfig.HOME_LINK_EXPIRE_TIME);
+        getCacheGroup(CACHES_VISUAL_ANALYZER_LINK_CACHE, CacheConfig.VISUAL_ANALYZER_LINK_CAPACITY, CacheConfig.VISUAL_ANALYZER_LINK_EXPIRE_TIME);
+        getCacheGroup(CACHES_SERVICE_EXTERNAL_LINK_CACHE, CacheConfig.SERVICE_EXTERNAL_LINK_CAPACITY, CacheConfig.SERVICE_EXTERNAL_LINK_EXPIRE_TIME);
+        getCacheGroup(CACHES_SERVICE_INTERNAL_LINK_CACHE, CacheConfig.SERVICE_INTERNAL_LINK_CAPACITY, CacheConfig.SERVICE_INTERNAL_LINK_EXPIRE_TIME);
+        getCacheGroup(CACHES_VANITY_BASE_URL_CACHE, CacheConfig.VANITY_BASE_URL_CAPACITY, CacheConfig.VANITY_BASE_URL_EXPIRE_TIME);
+        getCacheGroup(CACHES_DOMAINS_DATA_CACHE, CacheConfig.DOMAINS_DATA_CAPACITY, CacheConfig.DOMAINS_DATA_EXPIRE_TIME);
+        getCacheGroup(CACHES_TENANT_APP_MAPPING_CACHE, CacheConfig.TENANT_APP_MAPPING_CAPACITY, CacheConfig.TENANT_APP_MAPPING_EXPIRE_TIME);
+        getCacheGroup(CACHES_SUBSCRIBED_SERVICE_CACHE, CacheConfig.TENANT_SUBSCRIBED_SERVICES_CAPACITY, CacheConfig.TENANT_SUBSCRIBED_SERVICES_EXPIRE_TIME);
+        getCacheGroup(CACHES_SSO_LOGOUT_CACHE, CacheConfig.SSO_LOGOUT_CAPACITY, CacheConfig.SSO_LOGOUT_EXPIRE_TIME);
+        getCacheGroup(CACHES_ASSET_ROOT_CACHE, CacheConfig.ASSET_ROOT_CAPACITY, CacheConfig.ASSET_ROOT_EXPIRE_TIME);
 
     }
 
@@ -208,7 +213,6 @@ public class CacheManager {
 
     /**
      * @param cacheName
-     * @param key
      * @return
      */
     private CacheUnit getInternalCache(String cacheName) {
@@ -218,7 +222,7 @@ public class CacheManager {
         }
         CacheUnit cache = null;
         try {
-            cache = CacheFactory.getCache(cacheName);
+            cache = getCacheGroup(cacheName);
         } catch (IllegalArgumentException e) {
             LOGGER.error(e.getLocalizedMessage(), e);
         }
@@ -240,7 +244,7 @@ public class CacheManager {
         long now = System.currentTimeMillis();
         long logInterval = CacheConfig.LOG_INTERVAL;
         if (now - lastLogTime >= logInterval) {
-            for (Map.Entry<String, CacheUnit> e : CacheFactory.getCacheUnitMap().entrySet()) {
+            for (Map.Entry<String, CacheUnit> e : getCacheUnitMap().entrySet()) {
                 CacheUnit cu = e.getValue();
                 LOGGER.info("[Cache Status] Cache name is [{}], "
                                 + "Cache capacity is [{}], "
@@ -275,5 +279,54 @@ public class CacheManager {
             isCacheEnabled = Boolean.TRUE;
         }
 
+    }
+
+    public static CacheUnit getCacheGroup(String cacheName){
+        return getCacheGroup(cacheName,DEFAULT_CACHE_UNIT_CAPACITY,DEFAULT_EXPIRE_TIME);
+    }
+
+
+    public static CacheUnit getCacheGroup(String cacheName,int capacity,int timeToLive){
+        if(cacheName ==null){
+            LOGGER.debug("CacheManager:Cache name cannot be null!");
+            throw new IllegalArgumentException("Cache name cannot be null!");
+        }
+        if("".equals(cacheName)){
+            LOGGER.debug("CacheManager:Cache name cannot be empty!");
+            throw new IllegalArgumentException("Cache name cannot be empty!");
+        }
+        CacheUnit cu=cacheUnitMap.get(cacheName);
+        if(cu == null){
+            return createCacheUnit(cacheName,capacity, timeToLive);
+        }else{
+            return cu;
+        }
+
+    }
+
+    private static CacheUnit createCacheUnit(String cacheName,int capacity,int timeToLive){
+        CacheUnit cu=new CacheUnit(cacheName,capacity,timeToLive);
+        cacheUnitMap.put(cacheName, cu);
+        LOGGER.debug("CacheManager:Cache named: {},timeToLive time: {} has been created.", cacheName, timeToLive);
+        return cu;
+    }
+
+
+    public static ConcurrentHashMap<String, CacheUnit> getCacheUnitMap() {
+        return cacheUnitMap;
+    }
+
+    public static void clearAllCacheGroup(){
+        if(cacheUnitMap!=null){
+            Iterator<Map.Entry<String,CacheUnit>> it =cacheUnitMap.entrySet().iterator();
+            while(it.hasNext()){
+                CacheUnit cu=it.next().getValue();
+                cu.getCacheUnitStatus().setEvictionCount(0L);
+                cu.getCacheUnitStatus().setHitCount(0L);
+                cu.getCacheUnitStatus().setRequestCount(0L);
+                cu.getCacheUnitStatus().setUsage(0);
+                cu.getCacheLinkedHashMap().clear();
+            }
+        }
     }
 }
