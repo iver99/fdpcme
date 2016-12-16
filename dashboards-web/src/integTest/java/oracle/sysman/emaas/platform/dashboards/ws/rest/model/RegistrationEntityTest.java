@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.oracle.platform.emaas.cache.CacheManager;
 import com.oracle.platform.emaas.cache.Tenant;
+import com.oracle.platform.emaas.cache.util.CacheConstants;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -150,8 +151,8 @@ public class RegistrationEntityTest
 
 			}
 		};
-		CacheManager.getInstance().removeCacheable(new Tenant(TenantContext.getCurrentTenant()), CacheManager.CACHES_HOME_LINK_CACHE,
-				CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS);
+		CacheManager.getInstance().removeCacheable(new Tenant(TenantContext.getCurrentTenant()), CacheConstants.CACHES_HOME_LINK_CACHE,
+				CacheConstants.LOOKUP_CACHE_KEY_HOME_LINKS);
 		Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getHomeLinks()));
 
 	}

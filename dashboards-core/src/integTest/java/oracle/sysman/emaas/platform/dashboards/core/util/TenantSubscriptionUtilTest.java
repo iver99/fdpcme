@@ -10,6 +10,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import com.oracle.platform.emaas.cache.CacheManager;
 import com.oracle.platform.emaas.cache.Tenant;
+import com.oracle.platform.emaas.cache.util.CacheConstants;
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
@@ -605,11 +606,11 @@ public class TenantSubscriptionUtilTest
 
 		CacheManager cm = CacheManager.getInstance();
 		Tenant cacheTenant = new Tenant("emaastesttenant1");
-		cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE,
-				CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
-		cm.removeCacheable(cacheTenant, CacheManager.CACHES_DOMAINS_DATA_CACHE,
+		cm.removeCacheable(cacheTenant, CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE,
+				CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+		cm.removeCacheable(cacheTenant, CacheConstants.CACHES_DOMAINS_DATA_CACHE,
 				ENTITY_NAMING_DOMAINS_URL);
-		cm.removeCacheable(cacheTenant, CacheManager.CACHES_DOMAINS_DATA_CACHE,
+		cm.removeCacheable(cacheTenant, CacheConstants.CACHES_DOMAINS_DATA_CACHE,
 				TENANT_LOOKUP_URL);
 	}
 	

@@ -2,6 +2,7 @@ package com.oracle.platform.emaas.cache;
 
 import com.oracle.platform.emaas.cache.api.ICacheFetchFactory;
 import com.oracle.platform.emaas.cache.api.KeyGenerator;
+import com.oracle.platform.emaas.cache.util.CacheConstants;
 import com.oracle.platform.emaas.cache.util.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,33 +16,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class CacheManager {
     private static final Logger LOGGER = LogManager.getLogger(CacheManager.class);
-
-    public static final String CACHES_SCREENSHOT_CACHE = "screenshotCache";
-    public static final String CACHES_ETERNAL_CACHE = "eternalCache";
-    public static final String CACHES_ADMIN_LINK_CACHE = "adminLinkCache";
-    public static final String CACHES_CLOUD_SERVICE_LINK_CACHE = "cloudServiceLinkCache";
-    public static final String CACHES_HOME_LINK_CACHE = "homeLinkCache";
-    public static final String CACHES_VISUAL_ANALYZER_LINK_CACHE = "visualAnalyzerLinkCache";
-    public static final String CACHES_SERVICE_EXTERNAL_LINK_CACHE = "externalLinkCache";
-    public static final String CACHES_SERVICE_INTERNAL_LINK_CACHE = "internalLinkCache";
-    public static final String CACHES_VANITY_BASE_URL_CACHE = "vanityBaseUrlCache";
-    public static final String CACHES_DOMAINS_DATA_CACHE = "domainsDataCache";
-    public static final String CACHES_TENANT_APP_MAPPING_CACHE = "tenantAppMappingCache";
-    public static final String CACHES_SSO_LOGOUT_CACHE = "SsoLogoutCache";
-    public static final String CACHES_SUBSCRIBED_SERVICE_CACHE = "subscribeCache";
-    public static final String CACHES_ASSET_ROOT_CACHE = "assetRootCache";
-
-
-    public static final String LOOKUP_CACHE_KEY_SUBSCRIBED_APPS = "subscribedApps";
-    public static final String LOOKUP_CACHE_KEY_EXTERNAL_LINK = "externalLink";
-    public static final String LOOKUP_CACHE_KEY_INTERNAL_LINK = "internalLink";
-    public static final String LOOKUP_CACHE_KEY_VANITY_BASE_URL = "vanityBaseUrl";
-    public static final String LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS = "cloudServiceLinks";
-    public static final String LOOKUP_CACHE_KEY_ADMIN_LINKS = "adminLinks";
-    public static final String LOOKUP_CACHE_KEY_HOME_LINKS = "homeLinks";
-    public static final String LOOKUP_CACHE_KEY_VISUAL_ANALYZER = "visualAnalyzer";
-    public static final String LOOKUP_CACHE_KEY_ASSET_ROOTS = "assetRoots";
-    public static final String LOOKUP_CACHE_KEY_SSO_LOGOUT_URL = "ssoLogoutUrl";
 
     private static transient long lastLogTime;
     private static boolean isCacheEnabled;
@@ -62,20 +36,20 @@ public class CacheManager {
         this.lastLogTime = System.currentTimeMillis();
         keyGen = new DefaultKeyGenerator();
         LOGGER.info("Initialization LRU CacheManager!!");
-        getCacheGroup(CACHES_SCREENSHOT_CACHE, CacheConfig.SCREENSHOT_CAPACITY, CacheConfig.SCREENSHOT_EXPIRE_TIME);
-        getCacheGroup(CACHES_ETERNAL_CACHE, CacheConfig.ETERNAL_CAPACITY, CacheConfig.ETERNAL_EXPIRE_TIME);
-        getCacheGroup(CACHES_ADMIN_LINK_CACHE, CacheConfig.ADMIN_LINK_CACHE_CAPACITY, CacheConfig.ADMIN_LINK_CACHE_EXPIRE_TIME);
-        getCacheGroup(CACHES_CLOUD_SERVICE_LINK_CACHE, CacheConfig.CLOUD_SERVICE_LINK_CAPACITY, CacheConfig.CLOUD_SERVICE_LINK_EXPIRE_TIME);
-        getCacheGroup(CACHES_HOME_LINK_CACHE, CacheConfig.HOME_LINK_EXPIRE_CAPACITY, CacheConfig.HOME_LINK_EXPIRE_TIME);
-        getCacheGroup(CACHES_VISUAL_ANALYZER_LINK_CACHE, CacheConfig.VISUAL_ANALYZER_LINK_CAPACITY, CacheConfig.VISUAL_ANALYZER_LINK_EXPIRE_TIME);
-        getCacheGroup(CACHES_SERVICE_EXTERNAL_LINK_CACHE, CacheConfig.SERVICE_EXTERNAL_LINK_CAPACITY, CacheConfig.SERVICE_EXTERNAL_LINK_EXPIRE_TIME);
-        getCacheGroup(CACHES_SERVICE_INTERNAL_LINK_CACHE, CacheConfig.SERVICE_INTERNAL_LINK_CAPACITY, CacheConfig.SERVICE_INTERNAL_LINK_EXPIRE_TIME);
-        getCacheGroup(CACHES_VANITY_BASE_URL_CACHE, CacheConfig.VANITY_BASE_URL_CAPACITY, CacheConfig.VANITY_BASE_URL_EXPIRE_TIME);
-        getCacheGroup(CACHES_DOMAINS_DATA_CACHE, CacheConfig.DOMAINS_DATA_CAPACITY, CacheConfig.DOMAINS_DATA_EXPIRE_TIME);
-        getCacheGroup(CACHES_TENANT_APP_MAPPING_CACHE, CacheConfig.TENANT_APP_MAPPING_CAPACITY, CacheConfig.TENANT_APP_MAPPING_EXPIRE_TIME);
-        getCacheGroup(CACHES_SUBSCRIBED_SERVICE_CACHE, CacheConfig.TENANT_SUBSCRIBED_SERVICES_CAPACITY, CacheConfig.TENANT_SUBSCRIBED_SERVICES_EXPIRE_TIME);
-        getCacheGroup(CACHES_SSO_LOGOUT_CACHE, CacheConfig.SSO_LOGOUT_CAPACITY, CacheConfig.SSO_LOGOUT_EXPIRE_TIME);
-        getCacheGroup(CACHES_ASSET_ROOT_CACHE, CacheConfig.ASSET_ROOT_CAPACITY, CacheConfig.ASSET_ROOT_EXPIRE_TIME);
+        getCacheGroup(CacheConstants.CACHES_SCREENSHOT_CACHE, CacheConfig.SCREENSHOT_CAPACITY, CacheConfig.SCREENSHOT_EXPIRE_TIME);
+        getCacheGroup(CacheConstants.CACHES_ETERNAL_CACHE, CacheConfig.ETERNAL_CAPACITY, CacheConfig.ETERNAL_EXPIRE_TIME);
+        getCacheGroup(CacheConstants.CACHES_ADMIN_LINK_CACHE, CacheConfig.ADMIN_LINK_CACHE_CAPACITY, CacheConfig.ADMIN_LINK_CACHE_EXPIRE_TIME);
+        getCacheGroup(CacheConstants.CACHES_CLOUD_SERVICE_LINK_CACHE, CacheConfig.CLOUD_SERVICE_LINK_CAPACITY, CacheConfig.CLOUD_SERVICE_LINK_EXPIRE_TIME);
+        getCacheGroup(CacheConstants.CACHES_HOME_LINK_CACHE, CacheConfig.HOME_LINK_EXPIRE_CAPACITY, CacheConfig.HOME_LINK_EXPIRE_TIME);
+        getCacheGroup(CacheConstants.CACHES_VISUAL_ANALYZER_LINK_CACHE, CacheConfig.VISUAL_ANALYZER_LINK_CAPACITY, CacheConfig.VISUAL_ANALYZER_LINK_EXPIRE_TIME);
+        getCacheGroup(CacheConstants.CACHES_SERVICE_EXTERNAL_LINK_CACHE, CacheConfig.SERVICE_EXTERNAL_LINK_CAPACITY, CacheConfig.SERVICE_EXTERNAL_LINK_EXPIRE_TIME);
+        getCacheGroup(CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE, CacheConfig.SERVICE_INTERNAL_LINK_CAPACITY, CacheConfig.SERVICE_INTERNAL_LINK_EXPIRE_TIME);
+        getCacheGroup(CacheConstants.CACHES_VANITY_BASE_URL_CACHE, CacheConfig.VANITY_BASE_URL_CAPACITY, CacheConfig.VANITY_BASE_URL_EXPIRE_TIME);
+        getCacheGroup(CacheConstants.CACHES_DOMAINS_DATA_CACHE, CacheConfig.DOMAINS_DATA_CAPACITY, CacheConfig.DOMAINS_DATA_EXPIRE_TIME);
+        getCacheGroup(CacheConstants.CACHES_TENANT_APP_MAPPING_CACHE, CacheConfig.TENANT_APP_MAPPING_CAPACITY, CacheConfig.TENANT_APP_MAPPING_EXPIRE_TIME);
+        getCacheGroup(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE, CacheConfig.TENANT_SUBSCRIBED_SERVICES_CAPACITY, CacheConfig.TENANT_SUBSCRIBED_SERVICES_EXPIRE_TIME);
+        getCacheGroup(CacheConstants.CACHES_SSO_LOGOUT_CACHE, CacheConfig.SSO_LOGOUT_CAPACITY, CacheConfig.SSO_LOGOUT_EXPIRE_TIME);
+        getCacheGroup(CacheConstants.CACHES_ASSET_ROOT_CACHE, CacheConfig.ASSET_ROOT_CAPACITY, CacheConfig.ASSET_ROOT_EXPIRE_TIME);
 
     }
 

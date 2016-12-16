@@ -13,10 +13,8 @@ package oracle.sysman.emaas.platform.dashboards.core.cache.screenshot;
 import java.math.BigInteger;
 import java.util.Date;
 
-import com.oracle.platform.emaas.cache.Binary;
-import com.oracle.platform.emaas.cache.CacheManager;
-import com.oracle.platform.emaas.cache.Keys;
-import com.oracle.platform.emaas.cache.Tenant;
+import com.oracle.platform.emaas.cache.*;
+import com.oracle.platform.emaas.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 
@@ -57,7 +55,7 @@ public class ScreenshotCacheManager
 			LOGGER.info("Unexpected empty screenshot file name for tenant={}, dashboard id={}", tenant, dashboardId);
 			return null;
 		}
-		ScreenshotElement se = (ScreenshotElement) cm.getCacheable(tenant, CacheManager.CACHES_SCREENSHOT_CACHE, new Keys(
+		ScreenshotElement se = (ScreenshotElement) cm.getCacheable(tenant, CacheConstants.CACHES_SCREENSHOT_CACHE, new Keys(
 				dashboardId));
 		if (se == null) {
 			LOGGER.info("Retrieved null screenshot element from cache for tenant={}, dashboard id={}, fileName={}", tenant,
@@ -87,7 +85,7 @@ public class ScreenshotCacheManager
 		}
 		Binary bin = new Binary(decoded);
 		ScreenshotElement se = new ScreenshotElement(fileName, bin);
-		cm.putCacheable(tenant, CacheManager.CACHES_SCREENSHOT_CACHE, new Keys(dashboardId), se);
+		cm.putCacheable(tenant, CacheConstants.CACHES_SCREENSHOT_CACHE, new Keys(dashboardId), se);
 		return se;
 	}
 
