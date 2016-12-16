@@ -10,8 +10,6 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
  */
 public class DashboardHomeUtil_1140 extends DashboardHomeUtil_1130{
     private DashboardHomeUtil_1140(){}
-    public static final String EXPLOREDATA_MENU_LOG = "Log Explorer";
-    public static final String EXPLOREDATA_MENU_SEARCH = "Data Explorer";
 
     @Override
     public void gotoDataExplorer(WebDriver driver, String option)
@@ -22,11 +20,13 @@ public class DashboardHomeUtil_1140 extends DashboardHomeUtil_1130{
 
         driver.click(convertName(DashBoardPageId.EXPLOREDATABTNID));
         //WebElement menu = driver.getElement(convertName(DashBoardPageId.EXPLOREDATAMENU));
-
-        if (EXPLOREDATA_MENU_LOG.equals(option)||"Log Visual Analyzer".equals(option)) {
-            driver.click(DashBoardPageId_1140.EXPLORE_LOG);
-        } else {
-            driver.click(DashBoardPageId_1140.EXPLORE_Search);
+        //backward compatible mode
+        if (EXPLOREDATA_MENU_LOGEXPLORER.equals(option) || EXPLOREDATA_MENU_LOG.equals(option)) {
+            driver.click(DashBoardPageId_1140.XPATH_EXPLORE_LOG);
+        } else if (EXPLOREDATA_MENU_DATAEXPLORER.equals(option) || EXPLOREDATA_MENU_SEARCH.equals(option)){
+            driver.click(DashBoardPageId_1140.XPATH_EXPLORE_Search);
+        } else{
+        	throw new IllegalArgumentException("Not supported option: "+option);
         }
 
 

@@ -34,12 +34,13 @@ public class DashboardHomeUtil_1130 extends DashboardHomeUtil_175
 		driver.click(convertName(DashBoardPageId.EXPLOREDATABTNID));
 		//WebElement menu = driver.getElement(convertName(DashBoardPageId.EXPLOREDATAMENU));
                  
-                if (IDashboardHomeUtil.EXPLOREDATA_MENU_LOG.equals(option)) {                 
-                        driver.click(DashBoardPageId_1130.EXPLORE_LOG);
-                 } else {
-                     	driver.click(DashBoardPageId.EXPLORE_Search);
-		 }
- 
+		if (IDashboardHomeUtil.EXPLOREDATA_MENU_LOG.equals(option)) {
+			driver.click(DashBoardPageId_1130.EXPLORE_LOG);
+		}else if (IDashboardHomeUtil.EXPLOREDATA_MENU_SEARCH.equals(option)) {
+			driver.click(DashBoardPageId.EXPLORE_Search);
+		}else{
+			throw new IllegalArgumentException("NOT supported option: "+option);
+		}
                
      }  
 

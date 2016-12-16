@@ -332,7 +332,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * 		APM | LA | ITA | infraMonitoring | compliance | securityAnalytics | orchestration |dashboards | dataExplorers | getStarted | videos | serviceOfferings
 	 * @return
 	 */
-	private String getExpectedText(String serviceName)
+	protected String getExpectedText(String serviceName)
 	{
 		String expectedName = null;
 		switch (serviceName) {
@@ -411,7 +411,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * 		APM | LA | ITA | infraMonitoring | compliance | securityAnalytics | orchestration | dashboards | dataExplorers
 	 * @return
 	 */
-	private String getServiceWrapperId(String serviceName)
+	protected String getServiceWrapperId(String serviceName)
 	{
 		String serviceWrapperId = null;
 		switch (serviceName) {

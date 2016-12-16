@@ -9,8 +9,8 @@ public class DashBoardPageId_1140 {
     public static final String WELCOME_DATAEXP_SEARCH = "dataExp_Data";
 
     //Log Visual Analyzer button
-    public static final String EXPLORE_LOG = "//a[text()='Log Explorer' and @role='menuitem']";
+    public static final String XPATH_EXPLORE_LOG = "//a[text()='Log Explorer' and @role='menuitem']";
 
     //Search button in explore menu
-    public static final String EXPLORE_Search = "//a[text()='Data Explorer' and @role='menuitem']";
+    public static final String XPATH_EXPLORE_Search = "//a[text()='Data Explorer' and @role='menuitem']";
 }
