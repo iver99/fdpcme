@@ -1,15 +1,15 @@
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1150;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1140;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 /**
  * Created by qiqia on 2016/12/13.
  */
-public class DashboardHomeUtil_1150 extends DashboardHomeUtil_1130{
-    private DashboardHomeUtil_1150(){}
+public class DashboardHomeUtil_1140 extends DashboardHomeUtil_1130{
+    private DashboardHomeUtil_1140(){}
     public static final String EXPLOREDATA_MENU_LOG = "Log Explorer";
     public static final String EXPLOREDATA_MENU_SEARCH = "Data Explorer";
 
@@ -24,9 +24,9 @@ public class DashboardHomeUtil_1150 extends DashboardHomeUtil_1130{
         //WebElement menu = driver.getElement(convertName(DashBoardPageId.EXPLOREDATAMENU));
 
         if (EXPLOREDATA_MENU_LOG.equals(option)||"Log Visual Analyzer".equals(option)) {
-            driver.click(DashBoardPageId_1150.EXPLORE_LOG);
+            driver.click(DashBoardPageId_1140.EXPLORE_LOG);
         } else {
-            driver.click(DashBoardPageId_1150.EXPLORE_Search);
+            driver.click(DashBoardPageId_1140.EXPLORE_Search);
         }
 
 
