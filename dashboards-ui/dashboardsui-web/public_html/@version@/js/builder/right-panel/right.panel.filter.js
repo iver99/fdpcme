@@ -16,7 +16,7 @@ define([
             self.rightPanelUtil = new rpu.RightPanelUtil();
             var ctxUtil = new contextModel();
             var omcContext = null;
-            self.tilesViewModel = $b.getDashboardTilesViewModel();
+            self.tilesViewModel = $b.getDashboardTilesViewModel ? $b.getDashboardTilesViewModel() : null;
             self.isDashboardSet = isDashboardSet;
             
             
@@ -313,6 +313,10 @@ define([
             };
             
             self.loadRightPanelFilter = function(tilesViewModel) {
+                var preDashboardId = ko.unwrap(self.dashboard.id);
+                var preEnableTimeRange = ko.unwrap(self.dashboard.enableTimeRange);
+                var preEnableEntityFilter = ko.unwrap(self.dashboard.enableEntityFilter);
+                
                 self.tilesViewModel = tilesViewModel;
                 var dashboard = tilesViewModel.dashboard;
                 if(!dashboard.extendedOptions) {
@@ -336,6 +340,13 @@ define([
                 self.defaultTimeRangeValue([timeSel.defaultValue]);
                 self.defaultStartTime(parseInt(timeSel.start));
                 self.defaultEndTime(parseInt(timeSel.end));
+                //3. update global context or non-global context when switching between dashboard tabs and the enable filter is tate is unchanged
+                if(self.isDashboardSet && preDashboardId !== ko.unwrap(self.dashboard.id) && preEnableTimeRange === self.dashboard.enableTimeRange()) {
+                    self.tilesViewModel.getTimeContext(self.tilesViewModel, self.dashboard.enableTimeRange());
+                }
+                if(self.isDashboardSet && preDashboardId !== ko.unwrap(self.dashboard.id) && preEnableEntityFilter === self.dashboard.enableEntityFilter()) {
+                    self.tilesViewModel.getEntityContext(self.tilesViewModel, self.dashboard.enableEntityFilter());
+                }
             };
             
             self.setDefaultValuesWhenSharing = function (creatorExtendedOptions) {

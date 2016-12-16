@@ -336,6 +336,14 @@ define(['knockout',
                 }
             }
             
+            function getRespectOMCContextFlag(value) {
+                if(value === "GC") {
+                    return true;
+                }else if(value === "TRUE" || value === "FALSE") {
+                    return false;
+                }
+            }
+            
             var cxtUtil = new cxtModel();
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
 //                var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');
@@ -368,7 +376,7 @@ define(['knockout',
                             }
                             widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
                         }
-                        window.location = cxtUtil.appendOMCContext(widgetUrl);
+                        window.location = cxtUtil.appendOMCContext(widgetUrl, getRespectOMCContextFlag(dashboard.enableEntityFilter()), getRespectOMCContextFlag(dashboard.enableEntityFilter()), getRespectOMCContextFlag(dashboard.enableTimeRange()));
                     });
                     };
                 }

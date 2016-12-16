@@ -931,7 +931,9 @@ define(['knockout',
                 }
 
                 self.userExtendedOptions.tsel.entityContext = targets;
-                self.saveUserFilterOptions();
+                self.saveUserFilterOptions(function(data) { //update userExtendedOptions
+                    self.initUserFilterOptions();
+                });
 
             };
 
@@ -1186,7 +1188,9 @@ define(['knockout',
                             self.userExtendedOptions.timeSel.timePeriod = Builder.getTimePeriodValue(tp) ? Builder.getTimePeriodValue(tp) : tp;
                             self.userExtendedOptions.timeSel.start = start.getTime();
                             self.userExtendedOptions.timeSel.end = end.getTime();
-                            self.saveUserFilterOptions();
+                            self.saveUserFilterOptions(function(data) { //update userExtendedOptions
+                                self.initUserFilterOptions();
+                            });
 
 //                            $b.triggerEvent($b.EVENT_TIME_SELECTION_CHANGED, "time selection is changed by selecting date/time picker", Builder.getTimePeriodValue(tp), start.getTime(), end.getTime());
                         }
@@ -1194,14 +1198,14 @@ define(['knockout',
                 }
             };
 
-            self.saveUserFilterOptions = function() {
+            self.saveUserFilterOptions = function(succCallback) {
                 var userFilterOptions = {
                     dashboardId: self.dashboard.id(),
                     extendedOptions: JSON.stringify(self.userExtendedOptions),
                     autoRefreshInterval: self.userExtendedOptions.autoRefresh.defaultValue
                 };
 
-                new Builder.DashboardDataSource().saveDashboardUserOptions(userFilterOptions);
+                new Builder.DashboardDataSource().saveDashboardUserOptions(userFilterOptions, succCallback);
             };
             
             self.autoRefreshChanged = function(interval) {
