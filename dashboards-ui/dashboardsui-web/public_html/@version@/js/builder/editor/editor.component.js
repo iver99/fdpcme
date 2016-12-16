@@ -110,12 +110,12 @@ define(['knockout',
             if (tileChange instanceof TileChange){
                 self.tileChange = tileChange;
             }
-            if(timeRangeEnabled === "TRUE") {
+            if(timeRangeEnabled === "TRUE" || timeRangeEnabled === "GC") {
                 self.timeRangeEnabled = true;
             }else {
                 self.timeRangeEnabled = false;
             }
-             if(targetSelectorEnabled === "TRUE") {
+             if(targetSelectorEnabled === "TRUE" || targetSelectorEnabled === "GC") {
                 self.targetSelectorEnabled = true;
             }else {
                 self.targetSelectorEnabled = false;

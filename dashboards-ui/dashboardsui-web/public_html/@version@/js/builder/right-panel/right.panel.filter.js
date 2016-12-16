@@ -113,17 +113,17 @@ define([
                 }else {
                     headerViewModel.brandingbarParams.showGlobalContextBanner(false);
                 }
-                //1. reset respectOMCGlobalContext flag and get entity context info
+                //1. reset respectOMCApplicationContext flag and respectOMCEntityContext flag, get entity context info
                 //2. update/refresh value of entity seletor accordingly
                 //3. fire event to widgets
                 //
-                //1. reset respectOMCGlobalContext flag and get entity context info
+                //1. reset respectOMCApplicationContext flag and respectOMCEntityContext flag, get entity context info
                 var entityContext = null;
                 var dashboardTilesViewModel = self.tilesViewModel;                
                 entityContext = dashboardTilesViewModel.getEntityContext(dashboardTilesViewModel, val);
                 //2. update/refresh value of entity seletor accordingly
                 //to do... check if updating inputCriteria updates entity selector
-                dashboardTilesViewModel.targets(entityContext);
+                entityContext && dashboardTilesViewModel.targets(entityContext);
                 //3. fire event to widgets
                 dashboardTilesViewModel.timeSelectorModel.timeRangeChange(true);
             });
@@ -131,11 +131,11 @@ define([
             self.enableTimeRangeFilter.subscribe(function(val){
                 val = self.getFilterEnabledValue(val);
                 self.dashboard.enableTimeRange(val);
-                //1. reset respectOMCGlobalContext flag and get time context infp
+                //1. reset respectOMCTimeContext flag and get time context infp
                 //2. update/refresh value of entity seletor accordingly
                 //3. fire event to widgets
                 //
-                //1. reset respectOMCGlobalContext flag and get time context info
+                //1. reset respectOMCTimeContext flag and get time context info
                 var timePeriod = null;
                 var start = null;
                 var end = null;
@@ -153,7 +153,28 @@ define([
                     dashboardTilesViewModel.initStart(start);
                     dashboardTilesViewModel.initEnd(end);
                 }
-                //3. fire event to widgets
+                //3. change time context in timeSelectorModel and fire event to widgets
+                var viewStart = start;
+                var viewEnd = end;
+                var viewTimePeriod = (timePeriod === null) ? "Last 14 days" : timePeriod;
+                if(ctxUtil.formalizeTimePeriod(timePeriod)) {
+                    if(ctxUtil.formalizeTimePeriod(timePeriod) !== "CUSTOM") { //get start and end time for relative time period
+                        var tmp = ctxUtil.getStartEndTimeFromTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
+                        if(tmp) {
+                            viewStart = tmp.start;
+                            viewEnd = tmp.end;
+                        }
+                    }
+                }
+
+                if(!(viewStart instanceof Date && viewEnd instanceof Date)) {
+                    var current = new Date();
+                    viewStart = new Date(current - 14*24*60*60*1000);
+                    viewEnd = current;
+                }
+                dashboardTilesViewModel.timeSelectorModel.viewStart(viewStart);
+                dashboardTilesViewModel.timeSelectorModel.viewEnd(viewEnd);
+                dashboardTilesViewModel.timeSelectorModel.viewTimePeriod(viewTimePeriod);
                 dashboardTilesViewModel.timeSelectorModel.timeRangeChange(true);
             });
             

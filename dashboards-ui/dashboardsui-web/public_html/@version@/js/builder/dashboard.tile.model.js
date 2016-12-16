@@ -979,7 +979,9 @@ define(['knockout',
                     }
                 }                
                 if(val === "GC") { //Respect entity context in global context
-                    ctxUtil.respectOMCGlobalContext(true); //Set respectOMCGlobalContext to true
+                    //Set both of respectOMCApplicationContext and respectOMCEntityContext to true
+                    ctxUtil.respectOMCApplicationContext(true);
+                    ctxUtil.respectOMCEntityContext(true);
                     entityContext = (omcContext.composite && omcContext.composite.compositeMEID) ? omcContext.composite.compositeMEID : null;
                     //Use dashboard saved entity context if there's no entity context in URL
                     if(entityContext === null) {
@@ -994,20 +996,25 @@ define(['knockout',
                     }
                     
                 }else if(val === "TRUE") { //Use dashboard saved entity context
-                    ctxUtil.respectOMCGlobalContext(false); //Set respectOMCGlobalContext to false
-//                    dashboardTilesViewModel.initUserFilterOptions();
+                    //Set both of respectOMCApplicationContext and respectOMCEntityContext to false
+                    ctxUtil.respectOMCApplicationContext(false);
+                    ctxUtil.respectOMCEntityContext(false);
                     if(dashboardTilesViewModel.userTsel && dashboardTilesViewModel.userExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.userExtendedOptions.tsel)) {
                         entityContext = dashboardTilesViewModel.userExtendedOptions.tsel.entityContext;
                     }else if(dashboardTilesViewModel.dashboardExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.dashboardExtendedOptions.tsel)) {
                         entityContext = dashboardTilesViewModel.dashboardExtendedOptions.tsel.entityContext;
                         dashboardTilesViewModel.userExtendedOptions.tsel = {};
+                    }else {
+                        entityContext = {"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"};
                     }
                     //set non-globalcontext
                     //to do... how to use saved JSON criteria to set compositeMEID
                     
                 }else if(val === "FALSE") { //Do not use entity context either from dashboard or from global context
                     //No entity context in this case, widgets should use their own entity context
-                    ctxUtil.respectOMCGlobalContext(false);
+                    //Set both of respectOMCApplicationContext and respectOMCEntityContext to false
+                    ctxUtil.respectOMCApplicationContext(false);
+                    ctxUtil.respectOMCEntityContext(false);
                     entityContext = null;
                     //set non-global entity conctext to null
                     ctxUtil.setCompositeMeId(null);
@@ -1017,7 +1024,7 @@ define(['knockout',
             }
             
             initTargets = self.getEntityContext(self, self.dashboard.enableEntityFilter());
-            self.targets(initTargets);
+            initTargets && self.targets(initTargets);
             
 
             var timeSelectorChangelistener = ko.computed(function(){
@@ -1052,7 +1059,7 @@ define(['knockout',
                     }
                 }
                 if(val === "GC") { //Respect time context in global context
-                    ctxUtil.respectOMCGlobalContext(true); //Set respectOMCGlobalContext flag to true
+                    ctxUtil.respectOMCTimeContext(true); //Set respectOMCTimeContext flag to true
                     start = (omcContext.time && omcContext.time.startTime) ? new Date(parseInt(omcContext.time.startTime)) : null;
                     end = (omcContext.time && omcContext.time.endTime) ? new Date(parseInt(omcContext.time.endTime)) : null;
                     timePeriod = (omcContext.time && omcContext.time.timePeriod) ? omcContext.time.timePeriod : null;
@@ -1089,7 +1096,7 @@ define(['knockout',
                         }
                     }
                 }else if(val === "TRUE") { //Use time context in dashboard and ignore time context in globalcontext
-                    ctxUtil.respectOMCGlobalContext(false); //Set respectOMCGlobalContext flag to false
+                    ctxUtil.respectOMCTimeContext(false); //Set respectOMCTimeContext flag to false
                     if(dashboardTilesViewModel.userTimeSel && dashboardTilesViewModel.userExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.userExtendedOptions.timeSel)) {
                         start = new Date(parseInt(dashboardTilesViewModel.userExtendedOptions.timeSel.start));
                         end = new Date(parseInt(dashboardTilesViewModel.userExtendedOptions.timeSel.end));
@@ -1114,8 +1121,8 @@ define(['knockout',
                     }
                 }else if(val === "FALSE") { // Do not use time context either from dashboard or from global context
                     //No time context in this case, widgets should use their own time context
-                    //Set respectOMCGlobalContext flag to false
-                    ctxUtil.respectOMCGlobalContext(false);
+                    //Set respectOMCTimeContext flag to false
+                    ctxUtil.respectOMCTimeContext(false);
                     start = null;
                     end = null;
                     timePeriod = null;
