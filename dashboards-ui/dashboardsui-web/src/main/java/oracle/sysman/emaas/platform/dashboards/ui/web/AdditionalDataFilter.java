@@ -93,6 +93,8 @@ public class AdditionalDataFilter implements Filter {
             LOGGER.debug("Replacing and inserting addtional data now!");
         }
         LOGGER.debug("After inserting additional data, the response test is {}", newResponseText);
+	response.setCharacterEncoding("utf-8");
+        response.setContentType("text/html;charset=utf-8");
         // Writes the updated response text to the response object
         try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
             writer.println(newResponseText);
