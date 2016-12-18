@@ -9,7 +9,6 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
  * Created by qiqia on 2016/12/13.
  */
 public class DashboardHomeUtil_1140 extends DashboardHomeUtil_1130{
-    private DashboardHomeUtil_1140(){}
 
     @Override
     public void gotoDataExplorer(WebDriver driver, String option)

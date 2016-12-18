@@ -11,7 +11,6 @@ import org.openqa.selenium.By;
  * Created by qiqia on 2016/12/13.
  */
 public class WelcomeUtil_1140 extends WelcomeUtil_175 {
-    private WelcomeUtil_1140(){}
     public static final String SERVICE_NAME_DATA_EXPLORERS_EXPECTEDNAME = "Explorers";
     @Override
     public void dataExplorers(WebDriver driver, String selection)
