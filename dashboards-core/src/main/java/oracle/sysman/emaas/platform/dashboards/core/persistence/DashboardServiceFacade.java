@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
+import java.sql.SQLException;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashboard;
+import oracle.sysman.emaas.platform.dashboards.core.util.SessionInfoUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
@@ -28,13 +30,28 @@ import org.apache.logging.log4j.Logger;
 public class DashboardServiceFacade
 {
 	private static final Logger LOGGER = LogManager.getLogger(DashboardServiceFacade.class);
+	
+	private static final String MODULE_NAME = "DashboardService-API"; // application service name
+	private final String ACTION_NAME = this.getClass().getSimpleName();//current class name
+	
 	private final EntityManager em;
 
 	public DashboardServiceFacade(Long tenantId)
 	{
 		final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager entityManager = emf.createEntityManager();
+		try {
+			SessionInfoUtil.setModuleAndAction(entityManager, MODULE_NAME, ACTION_NAME);
+		} catch (SQLException e) {
+			LOGGER.info("setModuleAndAction in DashboardServiceFacade",e);
+		} finally {
+			if (entityManager != null) {
+				entityManager.close();				
+			}
+		}
 		em = emf.createEntityManager();
 		em.setProperty("tenant.id", tenantId);
+		
 	}
 
 	/**
@@ -175,7 +192,7 @@ public class DashboardServiceFacade
 	}
 
 	public EntityManager getEntityManager()
-	{
+	{		
 		return em;
 	}
 
@@ -460,7 +477,7 @@ public class DashboardServiceFacade
 				em.merge(dashboard);
 			}
 		}
-		getEntityManager().getTransaction().commit();
+		commitTransaction();
 	}
 
 	@SuppressWarnings("unchecked")
