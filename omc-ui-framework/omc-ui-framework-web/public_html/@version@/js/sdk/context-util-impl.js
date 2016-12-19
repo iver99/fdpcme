@@ -20,7 +20,7 @@ define([
             if (!window._uifwk) {
                 window._uifwk = {};
             }
-            
+
             /**
              * Get URL parameter name for OMC global context.
              * 
@@ -28,6 +28,10 @@ define([
              */
             self.getOMCContextUrlParamName = function() {
                 return omcCtxParamName;
+            };
+            
+            self.respectOMCGlobalContext = function(respectOmcCtx) {
+                window._uifwk.respectOMCGlobalContext = respectOmcCtx;
             };
 
             /**
@@ -37,22 +41,34 @@ define([
              * this api during page loading, this api is expected to be called 
              * before any call to oj.Router.rootInstance.store(state) is called.
              * 
+             * @param {boolean} respectOMCGlobalContext Flag for whether respect OMC global context or not
+             * 
              * @returns {Object} OMC global context in json format
              */
-            self.getOMCContext = function () {
+            self.getOMCContext = function (respectOMCGlobalContext) {
                 var omcContext = null;
-                //If context already retrieved, fetch it from window object directly
-                if (window._uifwk.omcContext) {
-                    omcContext = window._uifwk.omcContext;
+                if (respectOMCGlobalContext === null || typeof respectOMCGlobalContext === 'undefined') {
+                    respectOMCGlobalContext = window._uifwk.respectOMCGlobalContext;
                 }
-                //Otherwise, retrieve the context from URL parameters
-                if (!omcContext) {
-                    omcContext = getContextFromUrl();
+                if (respectOMCGlobalContext !== false) {
+                    //If context already retrieved, fetch it from window object directly
+                    if (window._uifwk.omcContext) {
+                        omcContext = window._uifwk.omcContext;
+                    }
+                    //Otherwise, retrieve the context from URL parameters
+                    if (!omcContext) {
+                        omcContext = getContextFromUrl();
+                    }
+                }
+                else {
+                    if (window._uifwk.nonGlobalContext) {
+                        omcContext = window._uifwk.nonGlobalContext;
+                    }
                 }
 
                 if (!omcContext) {
                     omcContext = {};
-                    storeContext(omcContext);
+                    storeContext(omcContext, respectOMCGlobalContext);
                 }
 
 //                oj.Logger.info("OMC global context is fetched as: " + JSON.stringify(omcContext));
@@ -89,7 +105,7 @@ define([
                     }
                 }
                 if (!$.isEmptyObject(omcContext)) {
-                    storeContext(omcContext);
+                    storeContext(omcContext, true);
                     return omcContext;
                 }
                 return null;
@@ -112,8 +128,10 @@ define([
                 var omcCtx = self.getOMCContext();
                 omcCtx.previousCompositeMeId = previousCompositeMeId;
                 storeContext(context);
-                updateCurrentURL();
-                fireOMCContextChangeEvent();
+                if (window._uifwk.respectOMCGlobalContext !== false) {
+                    updateCurrentURL();
+                    fireOMCContextChangeEvent();
+                }
             };
 
             function updateCurrentURL(replaceState) {
@@ -127,7 +145,7 @@ define([
                 }
             }
 
-            function storeContext(context) {
+            function storeContext(context, respectOMCGlobalContext) {
                 //Remember the composite id as previous value, so that we can compare the current/previous value
                 //to determine whether topology needs refresh when setOMCContext is called
                 if (context['composite'] && context['composite']['compositeMEID']) {
@@ -137,7 +155,15 @@ define([
                 //So even page owner rewrites the URL using oj_Router etc., the omc context will not be lost.
                 //But need to make sure the omc context is initialized before page owner start to rewrites
                 //the URL by oj_Router etc..
-                window._uifwk.omcContext = context;
+                if (respectOMCGlobalContext === null || typeof respectOMCGlobalContext === 'undefined') {
+                    respectOMCGlobalContext = window._uifwk.respectOMCGlobalContext;
+                }
+                if (respectOMCGlobalContext !== false) {
+                    window._uifwk.omcContext = context;
+                }
+                else {
+                    window._uifwk.nonGlobalContext = context;
+                }
             }
 
             /**
@@ -213,10 +239,12 @@ define([
              * but want to pass on the global context.
              * 
              * @param {String} url Original URL
+             * @param {boolean} respectOMCGlobalContext Flag for whether respect OMC global context or not
+             * 
              * @returns {String} New URL with appended OMC global context
              */
-            self.appendOMCContext = function (url) {
-                return self.generateUrlWithContext(url, self.getOMCContext());
+            self.appendOMCContext = function (url, respectOMCGlobalContext) {
+                return self.generateUrlWithContext(url, self.getOMCContext(respectOMCGlobalContext));
             };
 
             /**
@@ -841,8 +869,10 @@ define([
                     if (omcContext[contextName]) {
                         delete omcContext[contextName];
                         storeContext(omcContext);
-                        updateCurrentURL();
-                        fireOMCContextChangeEvent();
+                        if (window._uifwk.respectOMCGlobalContext !== false) {
+                            updateCurrentURL();
+                            fireOMCContextChangeEvent();
+                        }
                     }
                 }
             }
@@ -877,9 +907,11 @@ define([
                         delete omcContext[contextName][paramName];
                     }
                     storeContext(omcContext);
-                    updateCurrentURL(replaceState);
-                    if (fireChangeEvent !== false) {
-                        fireOMCContextChangeEvent();
+                    if (window._uifwk.respectOMCGlobalContext !== false) {
+                        updateCurrentURL(replaceState);
+                        if (fireChangeEvent !== false) {
+                            fireOMCContextChangeEvent();
+                        }
                     }
                 }
             }
