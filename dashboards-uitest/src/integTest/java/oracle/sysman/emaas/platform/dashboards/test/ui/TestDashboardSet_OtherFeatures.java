@@ -15,7 +15,6 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.openqa.selenium.By;
@@ -31,7 +30,6 @@ import org.testng.annotations.Test;
 public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 {
 	private String dbsetName = "";
-	private String dbsetName_setHome = "";
 	private String dbsetName_Favorite = "";
 	private String dbsetName_Share = "";
 	private String dbsetName_ITA = "";
@@ -92,7 +90,6 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 
 		//remove the test data
-		DashBoardUtils.deleteDashboard(webd, dbsetName_setHome);
 		DashBoardUtils.deleteDashboard(webd, dbsetName_Favorite);
 		DashBoardUtils.deleteDashboard(webd, dbsetName);
 		DashBoardUtils.deleteDashboard(webd, dbsetName_ITA);
@@ -427,68 +424,6 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 		webd.getLogger().info("Verify the refresh setting for the dashboard is 5 mins");
 		Assert.assertTrue(DashboardBuilderUtil.isRefreshSettingCheckedForDashbaordSet(webd,
 				DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_5MIN), "the setting is not ON(5 mins)");
-	}
-
-	@Test(groups = "last run", dependsOnMethods = { "testSetHome" })
-	public void testRemoveHome()
-	{
-		//init the test
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testRemoveHome");
-
-		//verify is in the builder page
-		webd.getLogger().info("Start the test case: testSetHome");
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("current url = " + url);
-		if (!url.substring(url.indexOf("emsaasui") + 9).contains("builder.html?dashboardId=")) {
-			Assert.fail("not open the builder page");
-		}
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_setHome), "Not the correct home page");
-
-		//remove the home page
-		DashboardBuilderUtil.toggleHomeDashboardSet(webd);
-		//verify the home page
-		webd.getLogger().info("Go to home page and verify if the dashboard set is home page");
-		BrandingBarUtil.visitMyHome(webd);
-		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS),
-				"It is NOT the home page!");
-
-	}
-
-	@Test(groups = "last run", dependsOnGroups = { "second run" })
-	public void testSetHome()
-	{
-		dbsetName_setHome = "DashboardSet_TestSetHome-" + generateTimeStamp();
-		String dbsetDesc = "Test the dashboardset set home";
-
-		//init the test
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testSetHome");
-
-		//reset the home page
-		webd.getLogger().info("Reset all filter options in the home page");
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-		//switch to grid view
-		webd.getLogger().info("Switch to the grid view");
-		DashboardHomeUtil.gridView(webd);
-
-		//create dashboardset
-		webd.getLogger().info("Create a new dashboard set");
-		DashboardHomeUtil.createDashboard(webd, dbsetName_setHome, dbsetDesc, DashboardHomeUtil.DASHBOARDSET);
-
-		//verify the dashboardset
-		webd.getLogger().info("Verify if the dashboard set existed in builder page");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_setHome), "Dashboard set NOT found!");
-
-		//set the dashboard as home
-		webd.getLogger().info("Set the created dashborad set as Home");
-		DashboardBuilderUtil.toggleHomeDashboardSet(webd);
-
-		//verify the home page
-		webd.getLogger().info("Go to home page and verify if the dashboard set is home page");
-		BrandingBarUtil.visitMyHome(webd);
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_setHome), "DashboarSet is NOT set to home page");
 	}
 
 	@Test(groups = "first run")

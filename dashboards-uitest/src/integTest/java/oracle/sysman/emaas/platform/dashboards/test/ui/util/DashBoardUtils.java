@@ -69,6 +69,11 @@ public class DashBoardUtils
 
 	}
 
+	public static String generateTimeStamp()
+	{
+		return String.valueOf(System.currentTimeMillis());
+	}
+
 	public static void handleAlert(WebDriver webdriver)
 	{
 		WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
@@ -340,10 +345,4 @@ public class DashBoardUtils
 
 		return baseUrl;
 	}
-
-	private DashBoardUtils()
-	{
-
-	}
-
 }
