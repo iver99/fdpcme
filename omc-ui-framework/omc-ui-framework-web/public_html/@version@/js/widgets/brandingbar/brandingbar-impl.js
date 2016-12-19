@@ -472,7 +472,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.gotoHomePage = function () {
                 var welcomeUrl = dfu.discoverWelcomeUrl();
                 oj.Logger.info("Go to welcome page by URL: " + welcomeUrl, false);
-                window.location.href = cxtUtil.appendOMCContext(welcomeUrl, true);
+                window.location.href = cxtUtil.appendOMCContext(welcomeUrl, true, true, true);
             };
 
             //Open about box
@@ -611,7 +611,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.notificationMenuHandler = function (event, item) {
                 if (self.notificationPageUrl !== null && self.notificationPageUrl !== "") {
                     oj.Logger.info("Open notifications page: " + self.notificationPageUrl);
-                    window.open(cxtUtil.appendOMCContext(self.notificationPageUrl, true));
+                    window.open(cxtUtil.appendOMCContext(self.notificationPageUrl, true, true, true));
                 }
             };
 
@@ -714,7 +714,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                 }
                 else if (data && data.tag && data.tag === 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED') {
-                    refreshOMCContext();
+                    if (self.showGlobalContextBanner() === true) {
+                        refreshOMCContext();
+                    }
                 }
             }
 
