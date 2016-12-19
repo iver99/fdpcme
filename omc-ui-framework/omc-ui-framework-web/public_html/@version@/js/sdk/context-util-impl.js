@@ -20,6 +20,15 @@ define([
             if (!window._uifwk) {
                 window._uifwk = {};
             }
+            
+            /**
+             * Get URL parameter name for OMC global context.
+             * 
+             * @returns {String} URL parameter name for OMC global context
+             */
+            self.getOMCContextUrlParamName = function() {
+                return omcCtxParamName;
+            };
 
             /**
              * Get the OMC global context. This api will only return OMC conext, 
