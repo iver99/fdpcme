@@ -10,10 +10,7 @@ def versionPathElement = dfversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").
 task extractCacheJar(type: Jar){
 	appendix = 'cacheJar'
 	 from sourceSets.main.output
-	
-//	include('com/oracle/platform/emaas/cache/*.class')
-	include('com/oracle/platform/emaas/cache/**/*.class')
-//	include('com/oracle/platform/emaas/cache/util/*.class')
+	include('com/oracle/platform/emaas/**/*.class')
 	include('cache_config.properties')
 
 }
@@ -34,8 +31,6 @@ publishing.publications {
     }
 }
 
-
-
 sourceSets {	
 	main {	
 		java {	
@@ -47,20 +42,45 @@ sourceSets {
 	}
  }
 
-
 artifactoryPublish {
 	 publications('integTest')
 	 publications('thisJarPublication')
 	 publications('extractCache')
-	 
 }
 
 dependencies {
     compile getProjectArtifact('log4j-core')
     compile getProjectArtifact('log4j-api')
     compile getProjectArtifact('jackson-core-asl')
+    compile getProjectArtifact('servlet-api')
+    compile getProjectArtifact('commons-lang3')
+    testCompile getProjectArtifact('jmockit')
+}
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+        resources {
+            srcDirs = ['src/main/java', 'src/main/resources']
+        }
+    }
+}
+artifactoryPublish {
+    publications('integTest')
+    publications('thisJarPublication')
+
 }
 
+test {
+    classpath = sourceSets.test.compileClasspath + sourceSets.test.output
+    useTestNG()
+            {
+                //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
+                //if you wish to run ALL tests within this projet - remove following.
+                includeGroups 's1' ,'s2'
+            }
+}
 processResources {
     from('src/main/resources') {
         include '*.properties', '*.xml'
@@ -68,9 +88,13 @@ processResources {
     }
 }
 
-build.dependsOn extractCacheJar
-
 clean{
-  delete 'build'
+    delete 'build'
 }
 
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testNG //avoid building error in Eclipse
+    }
+}
+build.dependsOn extractCacheJar

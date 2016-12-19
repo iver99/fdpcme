@@ -44,12 +44,10 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
  */
 public class TenantSubscriptionUtil
 {
-	private TenantSubscriptionUtil() {
-	  }
-
-	 public static class RestClient
+	public static class RestClient
 	{
-		public static final String HTTP_HEADER_OAM_REMOTE_USER = "OAM_REMOTE_USER";
+		private static final String HTTP_HEADER_OAM_REMOTE_USER = "OAM_REMOTE_USER";
+		private static final String HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
 
 		public RestClient()
 		{
@@ -70,16 +68,17 @@ public class TenantSubscriptionUtil
 			}
 			else {
 				LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
-				itrLogger.info(
-						"RestClient is connecting to get response after getting authorization token from registration manager.");
+				itrLogger
+						.info("RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
 			try {
 				Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-						.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+						.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON);
 				return builder.get(String.class);
 			}
 			catch (Exception e) {
-				LOGGER.info("context",e);
+				LOGGER.info("context", e);
 				itrLogger.error("Exception when RestClient trying to get response from specified service. Message:"
 						+ e.getLocalizedMessage());
 				return null;
@@ -101,16 +100,17 @@ public class TenantSubscriptionUtil
 			}
 			else {
 				LogUtil.setInteractionLogThreadContext(tenantName, url, InteractionLogDirection.OUT);
-				itrLogger.info(
-						"RestClient is connecting to get response after getting authorization token from registration manager.");
+				itrLogger
+						.info("RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
 			try {
 				Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-						.header(HTTP_HEADER_OAM_REMOTE_USER, tenantName + "." + userName);
+						.header(HTTP_HEADER_OAM_REMOTE_USER, tenantName + "." + userName)
+						.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenantName);
 				return builder.get(String.class);
 			}
 			catch (Exception e) {
-				LOGGER.info("context",e);
+				LOGGER.info("context", e);
 				itrLogger.error("Exception when RestClient trying to get response from specified service. Message:"
 						+ e.getLocalizedMessage());
 				return null;
@@ -124,6 +124,7 @@ public class TenantSubscriptionUtil
 	private static Object lock = new Object();
 
 	private static final Logger LOGGER = LogManager.getLogger(TenantSubscriptionUtil.class);
+
 	private static Logger itrLogger = LogUtil.getInteractionLogger();
 
 	@SuppressWarnings("unchecked")
@@ -131,8 +132,7 @@ public class TenantSubscriptionUtil
 	{
 		// for junit test only
 		if (Boolean.TRUE.equals(IS_TEST_ENV)) {
-			LOGGER.warn(
-					"In test environment, the subscribed applications for are tenants are specified to \"APM\" and \"ITAnalytics\"");
+			LOGGER.warn("In test environment, the subscribed applications for are tenants are specified to \"APM\" and \"ITAnalytics\"");
 			return Arrays.asList(new String[] { "APM", "ITAnalytics" });
 		}
 
@@ -149,15 +149,16 @@ public class TenantSubscriptionUtil
 					CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 		}
 		catch (Exception e) {
-			LOGGER.error("context",e);
+			LOGGER.error("context", e);
 			return Collections.emptyList();
 		}
 		if (cachedApps != null) {
-			LOGGER.debug("retrieved subscribed apps for tenant {} from cache: "
-					+ StringUtil.arrayToCommaDelimitedString(cachedApps.toArray()), tenant);
+			LOGGER.debug(
+					"retrieved subscribed apps for tenant {} from cache: "
+							+ StringUtil.arrayToCommaDelimitedString(cachedApps.toArray()), tenant);
 			return cachedApps;
 		}
-		
+
 		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "1.0+", "collection/domains", null);
 		if (domainLink == null || domainLink.getHref() == null || "".equals(domainLink.getHref())) {
 			LOGGER.warn(
@@ -253,8 +254,7 @@ public class TenantSubscriptionUtil
 
 	public static boolean isAPMServiceOnly(List<String> services)
 	{
-		LOGGER.debug("Checking if only APM is subscribed, checked services are {}",
-				services == null ? null : services.toString());
+		LOGGER.debug("Checking if only APM is subscribed, checked services are {}", services == null ? null : services.toString());
 		if (services == null || services.size() != 1) {
 			return false;
 		}
@@ -275,5 +275,9 @@ public class TenantSubscriptionUtil
 				IS_TEST_ENV = true;
 			}
 		}
+	}
+
+	private TenantSubscriptionUtil()
+	{
 	}
 }
