@@ -17,6 +17,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var self = this;
             var msgUtil = new msgUtilModel();
             var cxtUtil = new contextModel();
+            var NO_HIGHLIGHT = 'NO_HIGHLIGHT';
             // clear topologyParams first from global context
             cxtUtil.clearTopologyParams();
 
@@ -54,6 +55,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.customNodeDataLoader = ko.observable();
             self.customEventHandler = ko.observable();
             self.miniEntityCardActions = ko.observable();
+            self.highlightedEntities = ko.observableArray([NO_HIGHLIGHT]);
             if (params) {
                 self.associations(params.associations);
                 self.layout(params.layout);
@@ -880,8 +882,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     if (topologyParams && !self.topologyParamsSet) {
                         refreshTopology = true;
                     }
+                    var entityMEIds = cxtUtil.getEntityMeIds();
+                    if (entityMEIds && entityMEIds.length) {
+                        self.highlightedEntities(entityMEIds);
+                    } else {
+                        self.highlightedEntities([NO_HIGHLIGHT]);
+                    }
                     if (refreshTopology) {
-
                         if (topologyParams) {
                             self.associations(topologyParams.associations);
                             self.layout(topologyParams.layout);
