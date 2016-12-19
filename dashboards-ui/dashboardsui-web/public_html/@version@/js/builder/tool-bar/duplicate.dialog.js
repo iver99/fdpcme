@@ -80,11 +80,12 @@ define(['knockout',
                 newDashboard.enableTimeRange = (enableTimeRange === true || enableTimeRange === "TRUE" || enableTimeRange === "true") ? "true" : "false";
                 newDashboard.enableRefresh = (enableRefresh === true || enableRefresh === "TRUE" || enableRefresh === "true") ? "true" : "false";
                 newDashboard.systemDashboard = "false";
+                newDashboard.showInHome=false;
+                if (!selectedDashboardInst().toolBarModel.duplicateInSet()) {
+                    newDashboard.showInHome = true;
+                }
                 if (systemDashboard === true) {
                     newDashboard.dupDashboardId = ko.unwrap(origDashboard.id);
-                    if (!selectedDashboardInst().toolBarModel.duplicateInSet()) {
-                        newDashboard.showInHome = true;
-                    }
                     self.saveDuplicatedDashboardToServer(newDashboard);
                 }
                 else {
