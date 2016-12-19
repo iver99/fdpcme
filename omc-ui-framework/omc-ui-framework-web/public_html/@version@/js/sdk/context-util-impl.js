@@ -18,6 +18,15 @@ define([
             if (!window._uifwk) {
                 window._uifwk = {};
             }
+            
+            /**
+             * Get URL parameter name for OMC global context.
+             * 
+             * @returns {String} URL parameter name for OMC global context
+             */
+            self.getOMCContextUrlParamName = function() {
+                return omcCtxParamName;
+            };
 
             /**
              * Get the OMC global context. This api will only return OMC conext, 
@@ -44,7 +53,7 @@ define([
                     storeContext(omcContext);
                 }
 
-                oj.Logger.info("OMC global context is fetched as: " + JSON.stringify(omcContext));
+//                oj.Logger.info("OMC global context is fetched as: " + JSON.stringify(omcContext));
                 return omcContext;
             };
 
@@ -106,12 +115,12 @@ define([
             };
 
             function updateCurrentURL(replaceState) {
-                //update current URL
-                var url = window.location.href.split('/').pop();
-                url = self.appendOMCContext(url);
-                var newurl = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
-                newurl = newurl + '/' + url;
                 if (replaceState !== false) { //history.replaceState will always be called unless replaceState is set to false explicitly
+                    //update current URL
+                    var url = window.location.href.split('/').pop();
+                    url = self.appendOMCContext(url);
+                    var newurl = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+                    newurl = newurl + '/' + url;
                     window.history.replaceState(window.history.state, document.title, newurl);
                 }
             }
@@ -130,19 +139,19 @@ define([
             }
 
             /**
-             * Get the current OMC global context and append it into the given 
-             * URL as parameters. This function is used by custom deep linking 
-             * code written by page. Where the page owner generates the destination 
-             * but want to pass on the global context.
+             * Generate URL with given global context. 
+             * The given global context will be appended into the given URL as parameters. 
+             * This function is used by custom deep linking code written by page, where the 
+             * page owner generates the destination but want to pass on the specific global 
+             * context rather than current page's global context.
              * 
              * @param {String} url Original URL
-             * @returns {String} New URL with appended OMC global context
+             * @param {Object} omcContext A json object for global context
+             * @returns {String} New URL with appended global context
              */
-            self.appendOMCContext = function (url) {
+            self.generateUrlWithContext = function (url, omcContext) {
                 var newUrl = url;
                 if (url) {
-                    //Get OMC context
-                    var omcContext = self.getOMCContext();
                     var omcCtxString = "";
                     if (omcContext) {
                         //Add or update URL parameters string for OMC context
@@ -193,6 +202,19 @@ define([
                 }
 
                 return newUrl;
+            };
+            
+            /**
+             * Get the current OMC global context and append it into the given 
+             * URL as parameters. This function is used by custom deep linking 
+             * code written by page. Where the page owner generates the destination 
+             * but want to pass on the global context.
+             * 
+             * @param {String} url Original URL
+             * @returns {String} New URL with appended OMC global context
+             */
+            self.appendOMCContext = function (url) {
+                return self.generateUrlWithContext(url, self.getOMCContext());
             };
 
             /**
@@ -268,6 +290,37 @@ define([
                 setIndividualContext('time', 'timePeriod', 'CUSTOM', false, false);
                 setIndividualContext('time', 'startTime', parseInt(start), false, false);
                 setIndividualContext('time', 'endTime', parseInt(end), true, true);
+            };
+            
+            /**
+             * Evaluate start and end time.
+             * If both start and end are avail in global context, return them directly.
+             * If one of start and end time is not avail in global context and non-custom time period is in global context, evaluate them from time period and return.
+             * If no time context in global context, return null.
+             * 
+             * @returns {start: <start timestamp in Number>, end: <end timestamp in Number>} or null
+             */
+            self.evaluateStartEndTime = function() {
+                var start = self.getStartTime();
+                var end = self.getEndTime();
+                var timePeriod = self.getTimePeriod();
+                if(start && end) {
+                    return {
+                        start: start,
+                        end: end
+                    }
+                }else if(timePeriod) {
+                    var timeRange = self.getStartEndTimeFromTimePeriod(timePeriod);
+                    if(timeRange) {
+                        return {
+                            start: timeRange.start.getTime(),
+                            end: timeRange.end.getTime()
+                        }
+                    }
+                    return timeRange
+                }else {
+                    return null;
+                }
             };
 
             /**
