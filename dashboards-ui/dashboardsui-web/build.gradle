@@ -11,7 +11,8 @@ apply plugin: 'eclipse-wtp'
 apply plugin: 'compass'
 
 jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
-def versionPathElement = jsversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
+//def versionPathElement = jsversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
+def versionPathElement = jsversion + "-"+ rootProject.ext.get("appTimeStamp")
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7

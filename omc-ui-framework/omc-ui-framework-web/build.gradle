@@ -11,7 +11,8 @@ apply plugin: 'compass'
 apply from: 'test.gradle'
 
 jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
-def versionPathElement = jsversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
+//def versionPathElement = jsversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
+def versionPathElement = jsversion + "-"+ rootProject.ext.get("appTimeStamp")
 
 // source 'webapp' directory
 def File sourceWebappDir = new File(project.projectDir, 'public_html')

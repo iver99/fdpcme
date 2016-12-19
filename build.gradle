@@ -46,13 +46,12 @@ buildscript {
   }  
 }
 
-
-
-
 apply plugin: 'groovy'
 import groovy.sql.Sql
 import java.util.logging.LogManager.Cleaner;
 import org.gradle.api.artifacts.Configuration.State  
+import java.text.SimpleDateFormat
+import java.util.Date
 ext.distDir = "${rootDir}/dist"  
 ext.artifactPrefix = 'emaas-applications-' 
 ext.projectVersion = '0.1-SNAPSHOT'  
@@ -68,6 +67,9 @@ ext.registryClientResolver = 'com.oracle.emaas.emcpsm:registry-client:'+ regClie
 ext.regClientLookupVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
 ext.regClientLookupResolver = 'com.oracle.emaas.emcpsm:registry-lookup-client:' + regClientLookupVer
 ext.failedTestCount=0
+
+//def TimeStamp = new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
+ext.appTimeStamp = new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())//"${TimeStamp}"
 
 // Disable running the build tests with this env var
 def disBuildTests = System.getenv("DISABLE_BUILD_TESTS")
