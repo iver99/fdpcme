@@ -1,17 +1,12 @@
 package oracle.sysman.emaas.platform.dashboards.ui.webutils.util;
 
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.registration.StringCacheUtil;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedAppCacheUtil;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedApps;
-import org.apache.commons.lang.StringUtils;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by guochen on 11/19/16.
@@ -65,7 +60,7 @@ public class DashboardDataAccessUtilTest {
                 result = userInfo;
             }
         };
-        String ui = DashboardDataAccessUtil.getUserTenantInfo("tenant", "tenant.user", null, null);
+        String ui = DashboardDataAccessUtil.getUserTenantInfo("tenant", "tenant.user", "referer", "sessionExp");
         Assert.assertEquals(ui, userInfo);
     }
 
@@ -95,7 +90,7 @@ public class DashboardDataAccessUtilTest {
                 result = reg;
             }
         };
-        String res = DashboardDataAccessUtil.getRegistrationData("tenant", "tenant.user", null, null);
+        String res = DashboardDataAccessUtil.getRegistrationData("tenant", "tenant.user", "referrer", "sessionExp");
         Assert.assertEquals(res, reg);
     }
 

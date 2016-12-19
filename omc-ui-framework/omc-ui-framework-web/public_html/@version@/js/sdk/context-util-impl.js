@@ -270,7 +270,12 @@ define([
              * @returns {Number} OMC global context of start time
              */
             self.getStartTime = function () {
-                return parseInt(getIndividualContext('time', 'startTime'));
+                var start = getIndividualContext('time', 'startTime');
+                if(start && !isNaN(parseInt(start))) {
+                    return parseInt(start);
+                }else {
+                    return null;
+                }
             };
 
             /**
@@ -290,7 +295,12 @@ define([
              * @returns {Number} OMC global context of end time
              */
             self.getEndTime = function () {
-                return parseInt(getIndividualContext('time', 'endTime'));
+                var end = getIndividualContext('time', 'endTime');
+                if(end && !isNaN(parseInt(end))) {
+                    return parseInt(end);
+                }else {
+                    return null;
+                }
             };
 
             /**
