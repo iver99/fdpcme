@@ -184,14 +184,14 @@ task DEVTest2(type:EMTest,dependsOn: DEVUiTest){
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
-
+/*
 task DEVTest3(type:EMTest,dependsOn: DEVTest2){ 
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/DashboardDeletion.class"	
 	useRestAssured=true
 	ext.set("testType", "unit")
-}
-task emcpdf_test_3n (dependsOn:[DEVTest3, omcTeardown]) {
-    omcTeardown.mustRunAfter(DEVTest3)
+}*/
+task emcpdf_test_3n (dependsOn:[DEVTest2, omcTeardown]) {
+    omcTeardown.mustRunAfter(DEVTest2)
 
     apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")
 }
