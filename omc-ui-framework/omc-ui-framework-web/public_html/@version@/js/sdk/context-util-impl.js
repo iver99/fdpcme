@@ -44,7 +44,7 @@ define([
                     storeContext(omcContext);
                 }
 
-                oj.Logger.info("OMC global context is fetched as: " + JSON.stringify(omcContext));
+//                oj.Logger.info("OMC global context is fetched as: " + JSON.stringify(omcContext));
                 return omcContext;
             };
 
