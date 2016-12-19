@@ -487,16 +487,13 @@ public class DashboardServiceFacade
 	}
 
 	private boolean isIncludedInSet(EmsDashboard dashboard){
-		getEntityManager().getTransaction().begin();
 		String sql="select count(1) from ems_dashboard_set t where t.SUB_DASHBOARD_ID=?1";
 		Query listQuery = em.createNativeQuery(sql);
 		listQuery.setParameter(1,dashboard.getDashboardId());
 		Long count = Long.valueOf(listQuery.getResultList().get(0).toString());
-		LOGGER.info("Dashboard is included in other set:"+count);
-		if(count>0){
+		if(count>1){
 			return true;
 		}
-		commitTransaction();
 		return false;
 	}
 
