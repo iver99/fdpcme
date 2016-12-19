@@ -116,7 +116,7 @@ public class CacheAPI extends APIBase{
     @Path("enable")
     @Produces(MediaType.APPLICATION_JSON)
     public Response enableCache() {
-		CacheManager.getInstance().enableCacheManager();
+		CacheManager.getInstance().enableCache();
 		LOGGER.info("Cache Manager is turing ON!");
 		Response resp = Response.status(Response.Status.OK).build();
 		return resp;
@@ -126,10 +126,29 @@ public class CacheAPI extends APIBase{
     @Path("disable")
     @Produces(MediaType.APPLICATION_JSON)
     public Response disableCache() {
-		CacheManager.getInstance().disableCacheManager();
+		CacheManager.getInstance().disableCache();
 		LOGGER.info("Cache Manager is turing OFF!");
 		Response resp = Response.status(Response.Status.OK).build();
 		return resp;
+    }
+    @PUT
+    @Path("suspend")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response suspendCache(){
+        CacheManager.getInstance().suspendCache();
+        LOGGER.info("Cache Manager is suspended!");
+        Response resp = Response.status(Response.Status.OK).build();
+        return resp;
+    }
+
+    @PUT
+    @Path("resume")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response resumeCache(){
+        CacheManager.getInstance().resumeCache();
+        LOGGER.info("Cache Manager is resumed!");
+        Response resp = Response.status(Response.Status.OK).build();
+        return resp;
     }
 
 

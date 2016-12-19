@@ -15,10 +15,9 @@ public class DefaultKey implements Serializable
     private final int hashCode;
 
     /**
-     * Create a new {@link DefaultKey} instance.
      *
-     * @param elements
-     *            the elements of the key
+     * @param tenant
+     * @param keys
      */
     public DefaultKey(Tenant tenant, Object... keys)
     {

@@ -25,7 +25,7 @@ publishing.publications {
                         setGroupId("${publishGroup}")
     }
     extractCache(MavenPublication) {
-                 setGroupId('com.oracle.emaas.emcpdf')
+                 setGroupId('com.oracle.emaas.emcpdf.sdk')
            		 setArtifactId (project.name)
            		 artifact extractCacheJar.archivePath
     }
