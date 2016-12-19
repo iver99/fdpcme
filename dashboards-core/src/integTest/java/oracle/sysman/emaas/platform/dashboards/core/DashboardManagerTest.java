@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -144,7 +145,7 @@ public class DashboardManagerTest extends BaseTest
 		Dashboard dbd2 = new Dashboard();
 		dbd2.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
 		dbd2.setType(Dashboard.DASHBOARD_TYPE_NORMAL);
-		dbd2.setDashboardId(Long.MAX_VALUE); // specify id not existing in database
+		dbd2.setDashboardId(BigInteger.valueOf(Long.MAX_VALUE)); // specify id not existing in database
 		dm.saveNewDashboard(dbd2, tenantId1);
 		Dashboard queried = dm.getDashboardById(dbd2.getDashboardId(), tenantId1);
 		Assert.assertEquals(dbd2.getName(), queried.getName());
@@ -602,7 +603,7 @@ public class DashboardManagerTest extends BaseTest
 		// not existing ones
 		boolean expectedException = false;
 		try {
-			queried = dm.getDashboardById(Long.MAX_VALUE, tenantId1);
+			queried = dm.getDashboardById(BigInteger.valueOf(Long.MAX_VALUE), tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
 			LOGGER.info("context", e);
@@ -1122,7 +1123,7 @@ public class DashboardManagerTest extends BaseTest
 		//prepare data
 		UserContext.setCurrentUser("SYSMAN");
 		Dashboard ladbd = new Dashboard();
-		ladbd.setDashboardId(10000L+id++);
+		ladbd.setDashboardId(BigInteger.valueOf(10000L+id++));
 		ladbd.setName("la" + System.currentTimeMillis());
 		ladbd.setIsSystem(true);
 		ladbd.setAppicationType(DashboardApplicationType.LogAnalytics);
@@ -1130,7 +1131,7 @@ public class DashboardManagerTest extends BaseTest
 		UserContext.setCurrentUser("SYSMAN");
 
 		Dashboard itadbd = new Dashboard();
-		itadbd.setDashboardId(10000L+id++);
+		itadbd.setDashboardId(BigInteger.valueOf(10000L+id++));
 		itadbd.setName("ita" + System.currentTimeMillis());
 		itadbd.setIsSystem(true);
 		itadbd.setAppicationType(DashboardApplicationType.ITAnalytics);
@@ -1139,7 +1140,7 @@ public class DashboardManagerTest extends BaseTest
 		
 		//this set contains oob la dbd
 		Dashboard laset = new Dashboard();
-		laset.setDashboardId(10000L+id++);
+		laset.setDashboardId(BigInteger.valueOf(10000L+id++));
 		laset.setName("la set"+System.currentTimeMillis());
 		laset.setAppicationType(DashboardApplicationType.LogAnalytics);
 		laset.setType(Dashboard.DASHBOARD_TYPE_SET);
@@ -1151,7 +1152,7 @@ public class DashboardManagerTest extends BaseTest
 		UserContext.setCurrentUser("SYSMAN");
 		//this set contains oob ita dbd
 		Dashboard itaset = new Dashboard();
-		itaset.setDashboardId(10000L+id++);
+		itaset.setDashboardId(BigInteger.valueOf(10000L+id++));
 		itaset.setName("ita set"+System.currentTimeMillis());
 		itaset.setAppicationType(DashboardApplicationType.ITAnalytics);
 		itaset.setType(Dashboard.DASHBOARD_TYPE_SET);
@@ -1164,7 +1165,7 @@ public class DashboardManagerTest extends BaseTest
 		
 		//this set contains oob ita and oob la,belong to LA
 		Dashboard mixedSet1 = new Dashboard();
-		mixedSet1.setDashboardId(10000L+id++);
+		mixedSet1.setDashboardId(BigInteger.valueOf(10000L+id++));
 		mixedSet1.setName("mixed set1" + System.currentTimeMillis());
 		mixedSet1.setType(Dashboard.DASHBOARD_TYPE_SET);
 		mixedSet1.setAppicationType(DashboardApplicationType.LogAnalytics);
@@ -1178,7 +1179,7 @@ public class DashboardManagerTest extends BaseTest
 		
 		//this set contains oob la and oob ita, belong to ITA
 		Dashboard mixedSet2 = new Dashboard();
-		mixedSet2.setDashboardId(10000L+id++);
+		mixedSet2.setDashboardId(BigInteger.valueOf(10000L+id++));
 		mixedSet2.setName("mixed set2" + System.currentTimeMillis());
 		mixedSet2.setType(Dashboard.DASHBOARD_TYPE_SET);
 		mixedSet2.setIsSystem(true);
@@ -1246,7 +1247,7 @@ public class DashboardManagerTest extends BaseTest
 		//oob dashboard contains a la tile
 		UserContext.setCurrentUser("SYSMAN");
 		Dashboard ladbd = new Dashboard();
-		ladbd.setDashboardId(11000L+id++);
+		ladbd.setDashboardId(BigInteger.valueOf(11000L+id++));
 		ladbd.setName("oob la dbd" + System.currentTimeMillis());
 		ladbd.setIsSystem(true);
 		ladbd.setAppicationType(DashboardApplicationType.LogAnalytics);
@@ -1263,7 +1264,7 @@ public class DashboardManagerTest extends BaseTest
 		
 		//un-oob dashboard contains la tile
 		Dashboard unOOBladbd = new Dashboard();
-		unOOBladbd.setDashboardId(11000L+id++);
+		unOOBladbd.setDashboardId(BigInteger.valueOf(11000L+id++));
 		unOOBladbd.setName("un-oob dbd" + System.currentTimeMillis());
 		unOOBladbd.setIsSystem(false);
 		UserContext.setCurrentUser("SYSMAN");
@@ -1280,7 +1281,7 @@ public class DashboardManagerTest extends BaseTest
 		//this un oob set contains oob dashboard;
 		Dashboard set1=new Dashboard();
 		set1.setType(Dashboard.DASHBOARD_TYPE_SET);
-		set1.setDashboardId(11000L+id++);
+		set1.setDashboardId(BigInteger.valueOf(11000L+id++));
 		set1.setIsSystem(false);
 		set1.setName("set1"+System.currentTimeMillis());
 		List<Dashboard> list1=new ArrayList<Dashboard>();
@@ -1292,7 +1293,7 @@ public class DashboardManagerTest extends BaseTest
 		//this un oob set contains un oob dashboard
 		Dashboard set2=new Dashboard();
 		set2.setType(Dashboard.DASHBOARD_TYPE_SET);
-		set2.setDashboardId(11000L+id++);
+		set2.setDashboardId(BigInteger.valueOf(11000L+id++));
 		set2.setIsSystem(false);
 		set2.setName("set2"+System.currentTimeMillis());
 		List<Dashboard> list2=new ArrayList<Dashboard>();
@@ -1304,7 +1305,7 @@ public class DashboardManagerTest extends BaseTest
 		//this un oob set contains both oob/un-oob dashboards
 		Dashboard set3=new Dashboard();
 		set3.setType(Dashboard.DASHBOARD_TYPE_SET);
-		set3.setDashboardId(11000L+id++);
+		set3.setDashboardId(BigInteger.valueOf(11000L+id++));
 		set3.setIsSystem(false);
 		set3.setName("set3"+System.currentTimeMillis());
 		List<Dashboard> list3=new ArrayList<Dashboard>();
@@ -1318,7 +1319,7 @@ public class DashboardManagerTest extends BaseTest
 		Dashboard set4=new Dashboard();
 		set4.setType(Dashboard.DASHBOARD_TYPE_SET);
 		set4.setAppicationType(DashboardApplicationType.LogAnalytics);
-		set4.setDashboardId(11000L+id++);
+		set4.setDashboardId(BigInteger.valueOf(11000L+id++));
 		set4.setIsSystem(true);
 		set4.setName("set3"+System.currentTimeMillis());
 		List<Dashboard> list4=new ArrayList<Dashboard>();
@@ -1493,7 +1494,7 @@ public class DashboardManagerTest extends BaseTest
 		//oob dashboard contains a Orchestration tile, shared, SYSMAN's dashboard ,should not be listed
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setSharePublic(true);
-		dbd1.setDashboardId(12000L+id++);
+		dbd1.setDashboardId(BigInteger.valueOf(12000L+id++));
 		dbd1.setName("oob la dbd" + System.currentTimeMillis());
 		dbd1.setIsSystem(true);
 		dbd1.setAppicationType(DashboardApplicationType.Orchestration);
@@ -1512,7 +1513,7 @@ public class DashboardManagerTest extends BaseTest
 		UserContext.setCurrentUser("DIFF USER");
 		Dashboard dbd2 = new Dashboard();
 		dbd2.setSharePublic(false);
-		dbd2.setDashboardId(12000L+id++);
+		dbd2.setDashboardId(BigInteger.valueOf(12000L+id++));
 		dbd2.setName("oob la dbd" + System.currentTimeMillis());
 		dbd2.setIsSystem(true);
 		dbd2.setAppicationType(DashboardApplicationType.Orchestration);
@@ -1523,7 +1524,7 @@ public class DashboardManagerTest extends BaseTest
 		UserContext.setCurrentUser("OTHERS");
 		Dashboard dbd3 = new Dashboard();
 		dbd3.setSharePublic(true);
-		dbd3.setDashboardId(12000L+id++);
+		dbd3.setDashboardId(BigInteger.valueOf(12000L+id++));
 		dbd3.setName("oob la dbd" + System.currentTimeMillis());
 		dbd3.setIsSystem(true);
 		dbd3.setAppicationType(DashboardApplicationType.APM);
@@ -1532,7 +1533,7 @@ public class DashboardManagerTest extends BaseTest
 		//this is dashboard owned by others, un-shared,different tenant, should not be listed.
 		Dashboard dbd4 = new Dashboard();
 		dbd4.setSharePublic(false);
-		dbd4.setDashboardId(12000L+id++);
+		dbd4.setDashboardId(BigInteger.valueOf(12000L+id++));
 		dbd4.setName("oob la dbd" + System.currentTimeMillis());
 		dbd4.setIsSystem(false);
 		dbd4.setAppicationType(DashboardApplicationType.ITAnalytics);
@@ -1544,7 +1545,7 @@ public class DashboardManagerTest extends BaseTest
 		Dashboard set1=new Dashboard();
 		set1.setSharePublic(true);
 		set1.setType(Dashboard.DASHBOARD_TYPE_SET);
-		set1.setDashboardId(12000L+id++);
+		set1.setDashboardId(BigInteger.valueOf(12000L+id++));
 		set1.setIsSystem(false);
 		set1.setName("set1-"+System.currentTimeMillis());
 		List<Dashboard> list1=new ArrayList<Dashboard>();
@@ -1558,7 +1559,7 @@ public class DashboardManagerTest extends BaseTest
 		Dashboard set2=new Dashboard();
 		set2.setSharePublic(false);
 		set2.setType(Dashboard.DASHBOARD_TYPE_SET);
-		set2.setDashboardId(12000L+id++);
+		set2.setDashboardId(BigInteger.valueOf(12000L+id++));
 		set2.setIsSystem(false);
 		set2.setName("set2-"+System.currentTimeMillis());
 		List<Dashboard> list2=new ArrayList<Dashboard>();
@@ -1572,7 +1573,7 @@ public class DashboardManagerTest extends BaseTest
 		Dashboard set3=new Dashboard();
 		set3.setSharePublic(true);
 		set3.setType(Dashboard.DASHBOARD_TYPE_SET);
-		set3.setDashboardId(12000L+id++);
+		set3.setDashboardId(BigInteger.valueOf(12000L+id++));
 		set3.setIsSystem(true);
 		set3.setName("set3-"+System.currentTimeMillis());
 		List<Dashboard> list3=new ArrayList<Dashboard>();
@@ -1786,7 +1787,7 @@ public class DashboardManagerTest extends BaseTest
 	public void testUpdateDashboardTilesName() throws InterruptedException, DashboardException
 	{
 		Dashboard dbd = new Dashboard();
-		Long widgetId = 1001L;
+		BigInteger widgetId = BigInteger.valueOf(1001L);
 		dbd.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
 		dbd.setType(Dashboard.DASHBOARD_TYPE_NORMAL);
 		Tile t1 = createTileForDashboard(dbd);

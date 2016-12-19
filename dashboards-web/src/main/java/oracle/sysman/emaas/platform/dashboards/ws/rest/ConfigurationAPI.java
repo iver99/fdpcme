@@ -79,6 +79,7 @@ public class ConfigurationAPI extends APIBase
 				throw new EntityNamingDependencyUnavailableException();
 			}
             String userInfoEntity = JsonUtil.buildNormalMapper().toJson(new UserInfoEntity());
+			_LOGGER.info("Response for [GET] /v1/configurations/userInfo is \"{}\"", userInfoEntity);
 			Response resp = Response.status(Status.OK)
 					.entity(userInfoEntity).build();
 			return resp;

@@ -1,12 +1,17 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 
+import java.util.List;
+
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -39,7 +44,7 @@ public class DashBoardUtils
 		webdriver.takeScreenShot();
 		webdriver.getLogger().info("Click Dashboard link to back to dashboard home page");
 		webdriver.getWebDriver().findElement(By.xpath(PageId.DASHBOARDLINK)).click();
-		webdriver.takeScreenShot();
+		//	webdriver.takeScreenShot();
 	}
 
 	public static void closeOverviewPage()
@@ -71,10 +76,10 @@ public class DashBoardUtils
 		//Accepting alert.
 		webdriver.getLogger().info("foucus on the alert");
 		alert = webdriver.getWebDriver().switchTo().alert();
-		webdriver.takeScreenShot();
+		//webdriver.takeScreenShot();
 		webdriver.getLogger().info("click button on the dialog, should navigate to the home page");
 		alert.accept();
-		webdriver.takeScreenShot();
+		//webdriver.takeScreenShot();
 	}
 
 	public static void itaOobExist()
@@ -215,6 +220,49 @@ public class DashBoardUtils
 			driver.getLogger().info("Have the option enabled");
 			return false;
 		}
+	}
+
+	public static boolean verifyOpenInIconExist(WebDriver driver, String widgetName, int index)
+	{
+		//find the widget
+		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
+		driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
+		driver.takeScreenShot();
+
+		String titleTitlesLocator = String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
+		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(titleTitlesLocator));
+		if (tileTitles == null || tileTitles.size() <= index) {
+			throw new NoSuchElementException("Tile with title=" + widgetName + ", index=" + index + " is not found");
+		}
+		tileTitles.get(index).click();
+		driver.takeScreenShot();
+
+		//move the mouse to the title of the widget
+
+		driver.getLogger().info("Start to find widget with widgetName=" + widgetName + ", index=" + index);
+		WebElement widgetTitle = tileTitles.get(index);
+		if (widgetTitle == null) {
+			throw new NoSuchElementException("Widget with title=" + widgetName + ", index=" + index + " is not found");
+		}
+		driver.getLogger().info("Found widget with name=" + widgetName + ", index =" + index + " before opening widget link");
+		WebElement widgetDataExplore = widgetTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILEDATAEXPLORELOCATOR));
+		if (widgetDataExplore == null) {
+			throw new NoSuchElementException("Widget data explorer link for title=" + widgetName + ", index=" + index
+					+ " is not found");
+		}
+		driver.getLogger().info("Found widget configure button");
+		Actions builder = new Actions(driver.getWebDriver());
+		driver.getLogger().info("Now moving to the widget title bar");
+		builder.moveToElement(widgetTitle).perform();
+		driver.takeScreenShot();
+		driver.getLogger().info("and clicks the widget config button");
+		//		builder.moveToElement(widgetDataExplore).click().perform();
+		//		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		//		wait.until(ExpectedConditions.elementToBeClickable(widgetDataExplore));
+		//		widgetDataExplore.click();
+		//		driver.takeScreenShot();
+		return widgetDataExplore.isDisplayed();
+		//check if the Open In icon displayed or not
 	}
 
 	public static void verifyURL(WebDriver webdriver, String url)
