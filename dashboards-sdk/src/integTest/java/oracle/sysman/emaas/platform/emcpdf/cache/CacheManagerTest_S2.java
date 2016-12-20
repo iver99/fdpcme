@@ -2,6 +2,8 @@ package oracle.sysman.emaas.platform.emcpdf.cache;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheFetchFactory;
 import mockit.Mocked;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import org.testng.annotations.Test;
 
 import java.util.ResourceBundle;

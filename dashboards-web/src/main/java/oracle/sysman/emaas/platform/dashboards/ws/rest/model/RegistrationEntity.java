@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.CacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheFetchFactory;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;

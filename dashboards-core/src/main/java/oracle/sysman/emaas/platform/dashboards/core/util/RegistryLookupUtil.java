@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.CacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.Keys;
-import oracle.sysman.emaas.platform.emcpdf.cache.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

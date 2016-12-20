@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.CacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import mockit.Deencapsulation;
 import mockit.Expectations;

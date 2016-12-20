@@ -1,6 +1,7 @@
-package oracle.sysman.emaas.platform.emcpdf.cache;
+package oracle.sysman.emaas.platform.emcpdf.cache.tool;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheUnit;
+import oracle.sysman.emaas.platform.emcpdf.cache.config.CacheConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;

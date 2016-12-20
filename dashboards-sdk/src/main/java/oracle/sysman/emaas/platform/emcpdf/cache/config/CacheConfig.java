@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.emcpdf.cache;
+package oracle.sysman.emaas.platform.emcpdf.cache.config;
 
 import java.util.ResourceBundle;
 

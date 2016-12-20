@@ -10,7 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.core.cache.screenshot;
 
-import oracle.sysman.emaas.platform.emcpdf.cache.Binary;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Binary;
 
 import java.io.Serializable;
 

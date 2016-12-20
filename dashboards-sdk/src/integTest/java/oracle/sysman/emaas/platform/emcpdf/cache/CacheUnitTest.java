@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.emcpdf.cache;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheUnit;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Element;
 import org.testng.Assert;
 import org.testng.annotations.ExpectedExceptions;
 import org.testng.annotations.Test;

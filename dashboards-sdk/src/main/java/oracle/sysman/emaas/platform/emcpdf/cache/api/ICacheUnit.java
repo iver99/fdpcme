@@ -1,6 +1,6 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.api;
 
-import oracle.sysman.emaas.platform.emcpdf.cache.Element;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Element;
 
 /**
  * Created by chehao on 2016/12/9.

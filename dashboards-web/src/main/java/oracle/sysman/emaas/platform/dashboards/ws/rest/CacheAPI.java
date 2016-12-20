@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.CacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.CacheUnit;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheUnit;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.CacheException;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.CacheGroupNameEmptyException;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.CacheGroupNotFoundException;

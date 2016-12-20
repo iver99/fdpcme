@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.emcpdf.cache;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

@@ -1,8 +1,8 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.api;
 
 
-import oracle.sysman.emaas.platform.emcpdf.cache.Keys;
-import oracle.sysman.emaas.platform.emcpdf.cache.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheStatus;
 
 import java.io.Closeable;

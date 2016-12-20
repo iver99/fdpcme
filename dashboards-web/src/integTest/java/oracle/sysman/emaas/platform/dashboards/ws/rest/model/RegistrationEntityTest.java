@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.CacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
