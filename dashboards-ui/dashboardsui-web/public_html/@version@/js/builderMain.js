@@ -245,11 +245,13 @@ require(['knockout',
                 viewModel:{require:'uifwk/js/widgets/brandingbar/js/brandingbar'},
                 template:{require:'text!uifwk/js/widgets/brandingbar/html/brandingbar.html'}
             });
-        }   
-        ko.components.register("df-datetime-picker",{
-            viewModel: {require: 'uifwk/js/widgets/datetime-picker/js/datetime-picker'},
-            template: {require: 'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
-        });
+        }
+        if(!ko.components.isRegistered('df-datetime-picker')) {
+            ko.components.register("df-datetime-picker",{
+                viewModel: {require: 'uifwk/js/widgets/datetime-picker/js/datetime-picker'},
+                template: {require: 'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
+            });
+        }
         /*ko.components.register("DF_V1_WIDGET_TEXT", {
             viewModel: textwidget,
             template: {require: 'text!./widgets/textwidget/textwidget.html'}
