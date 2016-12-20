@@ -102,6 +102,15 @@ define([
             self.enableEntityFilter.subscribe(function(val){
                 val = self.getFilterEnabledValue(val);
                 self.dashboard.enableEntityFilter(val);
+                //1. reset respectOMCApplicationContext flag and respectOMCEntityContext flag, get entity context info
+                //2. update/refresh value of entity seletor accordingly
+                //3. fire event to widgets
+                //
+                //1. reset respectOMCApplicationContext flag and respectOMCEntityContext flag, get entity context info
+                var entityContext = null;
+                var dashboardTilesViewModel = self.tilesViewModel;                
+                entityContext = dashboardTilesViewModel.getEntityContext(dashboardTilesViewModel, val);
+                
                 //show/hide GC bar accordingly
                 var headerWrapper = $("#headerWrapper")[0];
                 var headerViewModel =  null;
@@ -113,14 +122,7 @@ define([
                 }else {
                     headerViewModel.brandingbarParams.showGlobalContextBanner(false);
                 }
-                //1. reset respectOMCApplicationContext flag and respectOMCEntityContext flag, get entity context info
-                //2. update/refresh value of entity seletor accordingly
-                //3. fire event to widgets
-                //
-                //1. reset respectOMCApplicationContext flag and respectOMCEntityContext flag, get entity context info
-                var entityContext = null;
-                var dashboardTilesViewModel = self.tilesViewModel;                
-                entityContext = dashboardTilesViewModel.getEntityContext(dashboardTilesViewModel, val);
+                
                 //2. update/refresh value of entity seletor accordingly
                 //to do... check if updating inputCriteria updates entity selector
                 entityContext && dashboardTilesViewModel.targets(entityContext);

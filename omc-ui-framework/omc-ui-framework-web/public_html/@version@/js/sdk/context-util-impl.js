@@ -223,7 +223,7 @@ define([
                 if (replaceState !== false) { //history.replaceState will always be called unless replaceState is set to false explicitly
                     //update current URL
                     var url = window.location.href.split('/').pop();
-                    url = self.appendOMCContext(url);
+                    url = self.appendOMCContext(url, true, true, true);
                     var newurl = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
                     newurl = newurl + '/' + url;
                     window.history.replaceState(window.history.state, document.title, newurl);
