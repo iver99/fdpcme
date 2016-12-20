@@ -84,8 +84,8 @@ public class Dashboard
 
 	public static enum EnableEntityFilterState
 	{
-		FALSE("FALSE", 0), TRUE("TRUE", 1), AUTO("AUTO", 2);
-
+		FALSE("FALSE", 0), TRUE("TRUE", 1),GC("GC", 2);
+	
 		@JsonCreator
 		public static EnableEntityFilterState fromName(String name)
 		{
@@ -135,7 +135,7 @@ public class Dashboard
 
 	public static enum EnableTimeRangeState
 	{
-		FALSE("FALSE", 0), TRUE("TRUE", 1), AUTO("AUTO", 2);
+		FALSE("FALSE", 0), TRUE("TRUE", 1), GC("GC", 2);
 
 		@JsonCreator
 		public static EnableTimeRangeState fromName(String name)
@@ -191,7 +191,7 @@ public class Dashboard
 	public static final String DASHBOARD_TYPE_SET = "SET";
 	public static final Integer DASHBOARD_TYPE_CODE_SET = Integer.valueOf(2);
 
-	public static final EnableTimeRangeState DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = EnableTimeRangeState.FALSE;
+	public static final EnableTimeRangeState DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = EnableTimeRangeState.TRUE;
 	public static final EnableEntityFilterState DASHBOARD_ENABLE_ENTITY_FILTER_DEFAULT = EnableEntityFilterState.FALSE;
 	public static final EnableDescriptionState DASHBOARD_ENABLE_DESCRIPTION_DEFAULT = EnableDescriptionState.FALSE;
 	public static final boolean DASHBOARD_ENABLE_REFRESH_DEFAULT = Boolean.FALSE;

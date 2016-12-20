@@ -81,7 +81,7 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
 
                 self.openLink = function(data, event) {
                     if (data && data.href) {
-                        window.location.href = cxtUtil.appendOMCContext(data.href);
+                        window.location.href = cxtUtil.appendOMCContext(data.href, true, true, true);
                     }
                 };
 
@@ -89,10 +89,10 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                     oj.Logger.info('Trying to open Home page by URL: ' + dfHomeUrl);
                     var homeUrl = null;
                     if(dfHomeUrl) {
-                        homeUrl = cxtUtil.appendOMCContext(dfHomeUrl);
+                        homeUrl = cxtUtil.appendOMCContext(dfHomeUrl, true, true, true);
                     }
                     else if (dfWelcomeUrl){
-                        homeUrl = cxtUtil.appendOMCContext(dfWelcomeUrl);
+                        homeUrl = cxtUtil.appendOMCContext(dfWelcomeUrl, true, true, true);
                     }
                     window.location.href = homeUrl;
                 };
@@ -100,20 +100,20 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                 self.openMyFavorites = function() {
                     var favoritesUrl = '/emsaasui/emcpdfui/home.html?filter=favorites';
                     oj.Logger.info('Trying to open my favorites by URL: ' + favoritesUrl);
-                    window.location.href = cxtUtil.appendOMCContext(favoritesUrl);
+                    window.location.href = cxtUtil.appendOMCContext(favoritesUrl, true, true, true);
                 };
 
                 self.openWelcomePage = function() {
                     oj.Logger.info('Trying to open welcome page by URL: ' + dfWelcomeUrl);
                     if(dfWelcomeUrl) {
-                        window.location.href = cxtUtil.appendOMCContext(dfWelcomeUrl);
+                        window.location.href = cxtUtil.appendOMCContext(dfWelcomeUrl, true, true, true);
                     }
                 };
 
                 self.openDashboardHome = function(data, event) {
                     oj.Logger.info('Trying to open Dashboard Home by URL: ' + dfDashboardsUrl);
                     if (dfDashboardsUrl) {
-                        window.location.href = cxtUtil.appendOMCContext(dfDashboardsUrl);
+                        window.location.href = cxtUtil.appendOMCContext(dfDashboardsUrl, true, true, true);
                     }
                 };
 

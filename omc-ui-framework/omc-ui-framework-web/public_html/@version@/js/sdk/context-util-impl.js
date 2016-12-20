@@ -19,8 +19,12 @@ define([
             //Initialize window _uifwk object
             if (!window._uifwk) {
                 window._uifwk = {};
+                //Respect all OMC global context by default
+                window._uifwk.respectOMCApplicationContext = true;
+                window._uifwk.respectOMCEntityContext = true;
+                window._uifwk.respectOMCTimeContext = true;
             }
-            
+
             /**
              * Get URL parameter name for OMC global context.
              * 
@@ -29,6 +33,80 @@ define([
             self.getOMCContextUrlParamName = function() {
                 return omcCtxParamName;
             };
+            
+            /**
+             * Specify whether to respect the OMC application context or not
+             * 
+             * @param {boolean} respectOmcAppCtx Flag for whether respect OMC application context or not
+             * 
+             * @returns
+             */
+            self.respectOMCApplicationContext = function(respectOmcAppCtx) {
+                window._uifwk.respectOMCApplicationContext = respectOmcAppCtx;
+            };
+            
+            /**
+             * Specify whether to respect the OMC entity context or not
+             * 
+             * @param {boolean} respectOmcEntityCtx Flag for whether respect OMC entity context or not
+             * 
+             * @returns
+             */
+            self.respectOMCEntityContext = function(respectOmcEntityCtx) {
+                window._uifwk.respectOMCEntityContext = respectOmcEntityCtx;
+            };
+            
+            /**
+             * Specify whether to respect the OMC time context or not
+             * 
+             * @param {boolean} respectOmcTimeCtx Flag for whether respect OMC time context or not
+             * 
+             * @returns
+             */
+            self.respectOMCTimeContext = function(respectOmcTimeCtx) {
+                window._uifwk.respectOMCTimeContext = respectOmcTimeCtx;
+            };
+            
+            function getGlobalContext() {
+                var globalCtx = null;
+                if (window._uifwk.omcContext) {
+                    globalCtx = window._uifwk.omcContext;
+                }
+                //Otherwise, retrieve the global context from URL parameters
+                if (!globalCtx) {
+                    globalCtx = getContextFromUrl();
+                }
+                return globalCtx;
+            }
+            
+            function getNonGlobalContext() {
+                var nonGlobalCtx = null;
+                if (window._uifwk.nonGlobalContext) {
+                    nonGlobalCtx = window._uifwk.nonGlobalContext;
+                }
+                return nonGlobalCtx;
+            }
+            
+            function fetchRespectedOmcContext(context, ctxName, respectOmcCtx) {
+                var globalCtx = getGlobalContext();
+                var nonGlobalCtx = getNonGlobalContext();
+                if (respectOmcCtx !== false) {
+                    if (globalCtx && globalCtx[ctxName]) {
+                        context[ctxName] = globalCtx[ctxName];
+                    }
+                }
+                else {
+                    if (nonGlobalCtx && nonGlobalCtx[ctxName]) {
+                        context[ctxName] = nonGlobalCtx[ctxName];
+                    }
+                }
+            }
+            
+            function isGlobalContextRespected() {
+                return window._uifwk.respectOMCApplicationContext !== false ||
+                    window._uifwk.respectOMCEntityContext !== false ||
+                    window._uifwk.respectOMCTimeContext !== false;
+            }
 
             /**
              * Get the OMC global context. This api will only return OMC conext, 
@@ -37,22 +115,44 @@ define([
              * this api during page loading, this api is expected to be called 
              * before any call to oj.Router.rootInstance.store(state) is called.
              * 
+             * @param {boolean} respectOmcAppCtx Flag for whether respect OMC application context or not
+             * @param {boolean} respectOmcEntityCtx Flag for whether respect OMC entity context or not
+             * @param {boolean} respectOmcTimeCtx Flag for whether respect OMC time context or not
+             * 
              * @returns {Object} OMC global context in json format
              */
-            self.getOMCContext = function () {
+            self.getOMCContext = function (respectOmcAppCtx, respectOmcEntityCtx, respectOmcTimeCtx) {
                 var omcContext = null;
-                //If context already retrieved, fetch it from window object directly
-                if (window._uifwk.omcContext) {
-                    omcContext = window._uifwk.omcContext;
+                if (respectOmcAppCtx === null || typeof respectOmcAppCtx === 'undefined') {
+                    respectOmcAppCtx = window._uifwk.respectOMCApplicationContext;
                 }
-                //Otherwise, retrieve the context from URL parameters
-                if (!omcContext) {
-                    omcContext = getContextFromUrl();
+                if (respectOmcEntityCtx === null || typeof respectOmcEntityCtx === 'undefined') {
+                    respectOmcEntityCtx = window._uifwk.respectOMCEntityContext;
+                }
+                if (respectOmcTimeCtx === null || typeof respectOmcTimeCtx === 'undefined') {
+                    respectOmcTimeCtx = window._uifwk.respectOMCTimeContext;
+                }
+                if (respectOmcAppCtx !== false && respectOmcEntityCtx !== false && respectOmcTimeCtx !== false) {
+                    omcContext = getGlobalContext();
+                }
+                else if (respectOmcAppCtx === false && respectOmcEntityCtx === false && respectOmcTimeCtx === false) {
+                    omcContext = getNonGlobalContext();
+                }
+                else {
+                    omcContext = {};
+                    //Get application context
+                    fetchRespectedOmcContext(omcContext, 'composite', respectOmcAppCtx);
+                    fetchRespectedOmcContext(omcContext, 'previousCompositeMeId', respectOmcAppCtx);
+                    fetchRespectedOmcContext(omcContext, 'topology', respectOmcAppCtx);
+                    //Get entity context
+                    fetchRespectedOmcContext(omcContext, 'entity', respectOmcEntityCtx);
+                    //Get time context
+                    fetchRespectedOmcContext(omcContext, 'time', respectOmcTimeCtx);
                 }
 
                 if (!omcContext) {
                     omcContext = {};
-                    storeContext(omcContext);
+                    storeContext(omcContext, respectOmcAppCtx, respectOmcEntityCtx, respectOmcTimeCtx);
                 }
 
 //                oj.Logger.info("OMC global context is fetched as: " + JSON.stringify(omcContext));
@@ -89,7 +189,7 @@ define([
                     }
                 }
                 if (!$.isEmptyObject(omcContext)) {
-                    storeContext(omcContext);
+                    storeContext(omcContext, true, true, true);
                     return omcContext;
                 }
                 return null;
@@ -109,35 +209,84 @@ define([
                 //we will never get the previous value by getCompositeMeId. In order to solve this issue, we
                 //always get the previous value from the backed up one
                 var previousCompositeMeId = getIndividualContext('composite', 'backupCompositeMEID');
-                var omcCtx = self.getOMCContext();
-                omcCtx.previousCompositeMeId = previousCompositeMeId;
+//                var omcCtx = self.getOMCContext();
+//                omcCtx.previousCompositeMeId = previousCompositeMeId;
+                context.previousCompositeMeId = previousCompositeMeId;
                 storeContext(context);
-                updateCurrentURL();
-                fireOMCContextChangeEvent();
+                if (isGlobalContextRespected()) {
+                    updateCurrentURL();
+                    fireOMCContextChangeEvent();
+                }
             };
 
             function updateCurrentURL(replaceState) {
                 if (replaceState !== false) { //history.replaceState will always be called unless replaceState is set to false explicitly
                     //update current URL
                     var url = window.location.href.split('/').pop();
-                    url = self.appendOMCContext(url);
+                    url = self.appendOMCContext(url, true, true, true);
                     var newurl = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
                     newurl = newurl + '/' + url;
                     window.history.replaceState(window.history.state, document.title, newurl);
                 }
             }
+            
+            function storeIndividualContext(context, ctxName, respectOmcCtx) {
+                if (context && context[ctxName]) {
+                    if (respectOmcCtx !== false) {
+                        if (!window._uifwk.omcContext) {
+                            window._uifwk.omcContext = {};
+                        }
+                        window._uifwk.omcContext[ctxName] = context[ctxName];
+                    }
+                    else {
+                        if (!window._uifwk.nonGlobalContext) {
+                            window._uifwk.nonGlobalContext = {};
+                        }
+                        window._uifwk.nonGlobalContext[ctxName] = context[ctxName];
+                    }
+                }
+                else {
+                    if (respectOmcCtx !== false && window._uifwk.omcContext && window._uifwk.omcContext[ctxName]) {
+                        delete window._uifwk.omcContext[ctxName];
+                    }
+                    else if (window._uifwk.nonGlobalContext && window._uifwk.nonGlobalContext[ctxName]) {
+                        delete window._uifwk.nonGlobalContext[ctxName];
+                    }
+                }
+            }
 
-            function storeContext(context) {
+            function storeContext(context, respectOmcAppCtx, respectOmcEntityCtx, respectOmcTimeCtx) {
                 //Remember the composite id as previous value, so that we can compare the current/previous value
                 //to determine whether topology needs refresh when setOMCContext is called
-                if (context['composite'] && context['composite']['compositeMEID']) {
+                if (context && context['composite'] && context['composite']['compositeMEID']) {
                     context['composite']['backupCompositeMEID'] = context['composite']['compositeMEID'];
                 }
                 //For now, we use window local variable to store the omc context once it's fetched from URL.
                 //So even page owner rewrites the URL using oj_Router etc., the omc context will not be lost.
                 //But need to make sure the omc context is initialized before page owner start to rewrites
                 //the URL by oj_Router etc..
-                window._uifwk.omcContext = context;
+                if (respectOmcAppCtx === null || typeof respectOmcAppCtx === 'undefined') {
+                    respectOmcAppCtx = window._uifwk.respectOMCApplicationContext;
+                }
+                if (respectOmcEntityCtx === null || typeof respectOmcEntityCtx === 'undefined') {
+                    respectOmcEntityCtx = window._uifwk.respectOMCEntityContext;
+                }
+                if (respectOmcTimeCtx === null || typeof respectOmcTimeCtx === 'undefined') {
+                    respectOmcTimeCtx = window._uifwk.respectOMCTimeContext;
+                }
+                if (respectOmcAppCtx !== false && respectOmcEntityCtx !== false && respectOmcTimeCtx !== false) {
+                    window._uifwk.omcContext = context;
+                }
+                else if (respectOmcAppCtx === false && respectOmcEntityCtx === false && respectOmcTimeCtx === false) {
+                    window._uifwk.nonGlobalContext = context;
+                }
+                else {
+                    storeIndividualContext(context, 'composite', respectOmcAppCtx);
+                    storeIndividualContext(context, 'previousCompositeMeId', respectOmcAppCtx);
+                    storeIndividualContext(context, 'topology', respectOmcAppCtx);
+                    storeIndividualContext(context, 'entity', respectOmcEntityCtx);
+                    storeIndividualContext(context, 'time', respectOmcTimeCtx);
+                }
             }
 
             /**
@@ -213,10 +362,14 @@ define([
              * but want to pass on the global context.
              * 
              * @param {String} url Original URL
+             * @param {boolean} respectOmcAppCtx Flag for whether respect OMC application context or not
+             * @param {boolean} respectOmcEntityCtx Flag for whether respect OMC entity context or not
+             * @param {boolean} respectOmcTimeCtx Flag for whether respect OMC time context or not
+             * 
              * @returns {String} New URL with appended OMC global context
              */
-            self.appendOMCContext = function (url) {
-                return self.generateUrlWithContext(url, self.getOMCContext());
+            self.appendOMCContext = function (url, respectOmcAppCtx, respectOmcEntityCtx, respectOmcTimeCtx) {
+                return self.generateUrlWithContext(url, self.getOMCContext(respectOmcAppCtx, respectOmcEntityCtx, respectOmcTimeCtx));
             };
 
             /**
@@ -432,6 +585,7 @@ define([
                 if (compositeMEID !== self.getCompositeMeId()) {
                     var omcContext = self.getOMCContext();
                     omcContext.previousCompositeMeId = self.getCompositeMeId();
+                    storeContext(omcContext);
 
                     setIndividualContext('composite', 'compositeMEID', compositeMEID, false, false);
                     //Set composite meId will reset composite type/name, 
@@ -841,8 +995,10 @@ define([
                     if (omcContext[contextName]) {
                         delete omcContext[contextName];
                         storeContext(omcContext);
-                        updateCurrentURL();
-                        fireOMCContextChangeEvent();
+                        if (isGlobalContextRespected()) {
+                            updateCurrentURL();
+                            fireOMCContextChangeEvent();
+                        }
                     }
                 }
             }
@@ -877,9 +1033,11 @@ define([
                         delete omcContext[contextName][paramName];
                     }
                     storeContext(omcContext);
-                    updateCurrentURL(replaceState);
-                    if (fireChangeEvent !== false) {
-                        fireOMCContextChangeEvent();
+                    if (isGlobalContextRespected()) {
+                        updateCurrentURL(replaceState);
+                        if (fireChangeEvent !== false) {
+                            fireOMCContextChangeEvent();
+                        }
                     }
                 }
             }
