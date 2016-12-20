@@ -37,7 +37,7 @@ public class CacheAPI extends APIBase{
 	public Response getAllCacheGroups()
 	{
 		LOGGER.info("Service to call [GET] /v1/cache");
-		ConcurrentHashMap<String, CacheUnit> cacheUnitMap = CacheManager.getCacheUnitMap();
+		ConcurrentHashMap<String, CacheUnit> cacheUnitMap = CacheManager.getInstance().getCacheUnitMap();
 		List<CacheUnit> cacheUnitList = new ArrayList<CacheUnit>();
 		Iterator<Map.Entry<String,CacheUnit>> iterator= cacheUnitMap.entrySet().iterator();
 		while(iterator.hasNext()){
@@ -56,7 +56,7 @@ public class CacheAPI extends APIBase{
             if(cacheGroupName == null || "".equals(cacheGroupName)){
                 throw new CacheGroupNameEmptyException();
             }
-            ConcurrentHashMap<String,CacheUnit> cacheUnitMap= CacheManager.getCacheUnitMap();
+            ConcurrentHashMap<String,CacheUnit> cacheUnitMap= CacheManager.getInstance().getCacheUnitMap();
             CacheUnit cu=cacheUnitMap.get(cacheGroupName);
             if(cu == null){
                 throw new CacheGroupNotFoundException();
@@ -72,14 +72,14 @@ public class CacheAPI extends APIBase{
      * this action will eliminate all cache groups
      * @return
      */
-    @PUT
+    /*@PUT
     @Path("clearCache")
     @Produces(MediaType.APPLICATION_JSON)
     public Response clearAllCacheGroup(){
     	LOGGER.info("Service to call [PUT] /v1/cache/clearCache");
     	//clear all cache group
         CacheManager.clearAllCacheGroup();
-        ConcurrentHashMap<String, CacheUnit> cacheUnitMap = CacheManager.getCacheUnitMap();
+        ConcurrentHashMap<String, CacheUnit> cacheUnitMap = CacheManager.getInstance().getCacheUnitMap();
 		List<CacheUnit> cacheUnitList = new ArrayList<CacheUnit>();
 		Iterator<Map.Entry<String,CacheUnit>> iterator= cacheUnitMap.entrySet().iterator();
 		while(iterator.hasNext()){
@@ -87,9 +87,9 @@ public class CacheAPI extends APIBase{
 			cacheUnitList.add(entry.getValue());
 		}
 		return Response.ok(getJsonUtil().toJson(cacheUnitList)).build();
-    }
+    }*/
 
-    @PUT
+    /*@PUT
     @Path("clearCache/{cacheGroupName}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response clearCacheGroup(@PathParam("cacheGroupName") String cacheGroupName){
@@ -100,7 +100,7 @@ public class CacheAPI extends APIBase{
             }
             //clear specific cache group
             CacheManager.getCacheUnitMap().get(cacheGroupName).clearCache();
-            ConcurrentHashMap<String,CacheUnit> cacheUnitMap= CacheManager.getCacheUnitMap();
+            ConcurrentHashMap<String,CacheUnit> cacheUnitMap= CacheManager.getInstance().getCacheUnitMap();
             CacheUnit cu=cacheUnitMap.get(cacheGroupName);
             if(cu == null){
                 throw new CacheGroupNotFoundException();
@@ -110,9 +110,9 @@ public class CacheAPI extends APIBase{
             LOGGER.error(e.getLocalizedMessage(), e);
             return buildErrorResponse(new ErrorEntity(e));
         }
-    }
+    }*/
 
-    @PUT
+    /*@PUT
     @Path("enable")
     @Produces(MediaType.APPLICATION_JSON)
     public Response enableCache() {
@@ -149,7 +149,7 @@ public class CacheAPI extends APIBase{
         LOGGER.info("Cache Manager is resumed!");
         Response resp = Response.status(Response.Status.OK).build();
         return resp;
-    }
+    }*/
 
 
 }

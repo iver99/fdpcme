@@ -4,6 +4,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheFetchFactory;
 import mockit.Mocked;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheManagerUtil;
 import org.testng.annotations.Test;
 
 import java.util.ResourceBundle;
@@ -19,8 +20,8 @@ public class CacheManagerTest_S2 {
     @Test
     public void testGetCache() throws Exception {
         cacheManager= CacheManager.getInstance();
-        cacheManager.getCache("");
-        cacheManager.getCache("name");
+        CacheManagerUtil.getCache("");
+        CacheManagerUtil.getCache("name");
     }
 
     @Test

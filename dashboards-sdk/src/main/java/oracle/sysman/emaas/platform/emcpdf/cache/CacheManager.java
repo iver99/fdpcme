@@ -2,18 +2,20 @@ package oracle.sysman.emaas.platform.emcpdf.cache;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheFetchFactory;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.api.KeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.config.CacheConfig;
-import oracle.sysman.emaas.platform.emcpdf.cache.exception.CacheGroupNotFoundException;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.*;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheUnit;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Element;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheManagerUtil;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheStatus;
-import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheStatusMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -25,13 +27,11 @@ public class CacheManager implements ICacheManager {
 
     private static transient long lastLogTime;
 
-    private static CacheStatus cacheStatus;
+    private CacheStatus cacheStatus;
 
-    private static ConcurrentHashMap<String,CacheUnit> cacheUnitMap=new ConcurrentHashMap<String,CacheUnit>();
+    private ConcurrentHashMap<String, CacheUnit> cacheUnitMap;
 
     private static CacheManager instance = new CacheManager();
-
-    private KeyGenerator keyGen;
 
     public static CacheManager getInstance() {
         return instance;
@@ -42,45 +42,104 @@ public class CacheManager implements ICacheManager {
         init();
     }
 
+    @Override
+    public synchronized void init() {
+        cacheStatus = CacheStatus.UNINITIALIZED;
+        cacheUnitMap = new ConcurrentHashMap<String, CacheUnit>();
+        this.lastLogTime = System.currentTimeMillis();
+        LOGGER.info("Initialing LRU CacheManager..");
+        CacheManagerUtil.createCacheUnit(CacheConstants.CACHES_SCREENSHOT_CACHE, CacheConfig.SCREENSHOT_CAPACITY, CacheConfig.SCREENSHOT_EXPIRE_TIME);
+        CacheManagerUtil.createCacheUnit(CacheConstants.CACHES_ETERNAL_CACHE, CacheConfig.ETERNAL_CAPACITY, CacheConfig.ETERNAL_EXPIRE_TIME);
+        CacheManagerUtil.createCacheUnit(CacheConstants.CACHES_ADMIN_LINK_CACHE, CacheConfig.ADMIN_LINK_CACHE_CAPACITY, CacheConfig.ADMIN_LINK_CACHE_EXPIRE_TIME);
+        CacheManagerUtil.createCacheUnit(CacheConstants.CACHES_CLOUD_SERVICE_LINK_CACHE, CacheConfig.CLOUD_SERVICE_LINK_CAPACITY, CacheConfig.CLOUD_SERVICE_LINK_EXPIRE_TIME);
+        CacheManagerUtil.createCacheUnit(CacheConstants.CACHES_HOME_LINK_CACHE, CacheConfig.HOME_LINK_EXPIRE_CAPACITY, CacheConfig.HOME_LINK_EXPIRE_TIME);
+        CacheManagerUtil.createCacheUnit(CacheConstants.CACHES_VISUAL_ANALYZER_LINK_CACHE, CacheConfig.VISUAL_ANALYZER_LINK_CAPACITY, CacheConfig.VISUAL_ANALYZER_LINK_EXPIRE_TIME);
+        CacheManagerUtil.createCacheUnit(CacheConstants.CACHES_SERVICE_EXTERNAL_LINK_CACHE, CacheConfig.SERVICE_EXTERNAL_LINK_CAPACITY, CacheConfig.SERVICE_EXTERNAL_LINK_EXPIRE_TIME);
+        CacheManagerUtil.createCacheUnit(CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE, CacheConfig.SERVICE_INTERNAL_LINK_CAPACITY, CacheConfig.SERVICE_INTERNAL_LINK_EXPIRE_TIME);
+        CacheManagerUtil.createCacheUnit(CacheConstants.CACHES_VANITY_BASE_URL_CACHE, CacheConfig.VANITY_BASE_URL_CAPACITY, CacheConfig.VANITY_BASE_URL_EXPIRE_TIME);
+        CacheManagerUtil.createCacheUnit(CacheConstants.CACHES_DOMAINS_DATA_CACHE, CacheConfig.DOMAINS_DATA_CAPACITY, CacheConfig.DOMAINS_DATA_EXPIRE_TIME);
+        CacheManagerUtil.createCacheUnit(CacheConstants.CACHES_TENANT_APP_MAPPING_CACHE, CacheConfig.TENANT_APP_MAPPING_CAPACITY, CacheConfig.TENANT_APP_MAPPING_EXPIRE_TIME);
+        CacheManagerUtil.createCacheUnit(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE, CacheConfig.TENANT_SUBSCRIBED_SERVICES_CAPACITY, CacheConfig.TENANT_SUBSCRIBED_SERVICES_EXPIRE_TIME);
+        CacheManagerUtil.createCacheUnit(CacheConstants.CACHES_SSO_LOGOUT_CACHE, CacheConfig.SSO_LOGOUT_CAPACITY, CacheConfig.SSO_LOGOUT_EXPIRE_TIME);
+        CacheManagerUtil.createCacheUnit(CacheConstants.CACHES_ASSET_ROOT_CACHE, CacheConfig.ASSET_ROOT_CAPACITY, CacheConfig.ASSET_ROOT_EXPIRE_TIME);
+        cacheStatus = CacheStatus.AVAILABLE;
+    }
+
     /**
      * This method will disable cache mechanism
      * Note: This method will destroy all existing cache groups and cached elements!
      */
     @Override
-    public void disableCache() {
+    public CacheStatusMessage disableCache() {
+        if(cacheStatus.equals(CacheStatus.CLOSED)){
+            return new CacheStatusMessage(cacheStatus,CacheConstants.NO_NEED_TO_CHANGE_CACHE_STATUS);
+        }
+        if(cacheStatus.equals(CacheStatus.UNINITIALIZED)){
+            return new CacheStatusMessage(cacheStatus,CacheConstants.CAN_NOT_CHANGE_CACHE_STATUS);
+        }
         synchronized (this) {
-            cacheStatus = CacheStatus.CLOSED;
-        }//TODO
+            try {
+                close();
+            } catch (IOException e) {
+                LOGGER.error(e.getLocalizedMessage());
+            }
+            return new CacheStatusMessage(cacheStatus,CacheConstants.CHANGE_CACHE_STATUS_SUCCESSFULLY);
+        }
     }
+
     /**
      * This method will enable cache mechanism
      * Note: This method will init new cache groups according to configuration file
      */
     @Override
-    public void enableCache() {
+    public CacheStatusMessage enableCache() {
+        if(cacheStatus.equals(CacheStatus.AVAILABLE)){
+            return new CacheStatusMessage(cacheStatus,CacheConstants.NO_NEED_TO_CHANGE_CACHE_STATUS);
+        }
+        if(cacheStatus.equals(CacheStatus.SUSPEND) || cacheStatus.equals(CacheStatus.UNINITIALIZED)){
+            return new CacheStatusMessage(cacheStatus,CacheConstants.CAN_NOT_CHANGE_CACHE_STATUS);
+        }
         synchronized (this) {
-            cacheStatus = CacheStatus.AVAILABLE;
-        }//TODO
+            init();
+            return new CacheStatusMessage(cacheStatus,CacheConstants.CHANGE_CACHE_STATUS_SUCCESSFULLY);
+        }
 
     }
+
     /**
      * This method will suspend cache mechanism, but will not destroy cache groups or cached elements
      */
     @Override
-    public void suspendCache() {
+    public CacheStatusMessage suspendCache() {
+        if(cacheStatus.equals(CacheStatus.SUSPEND)){
+            return new CacheStatusMessage(cacheStatus,CacheConstants.NO_NEED_TO_CHANGE_CACHE_STATUS);
+        }
+        if(cacheStatus.equals(CacheStatus.CLOSED) || cacheStatus.equals(CacheStatus.UNINITIALIZED)){
+            return new CacheStatusMessage(cacheStatus,CacheConstants.CAN_NOT_CHANGE_CACHE_STATUS);
+        }
         synchronized (this) {
             cacheStatus = CacheStatus.SUSPEND;
+            return new CacheStatusMessage(cacheStatus,CacheConstants.CHANGE_CACHE_STATUS_SUCCESSFULLY);
         }
     }
+
     /**
      * This method will resume cache mechanism.
      */
     @Override
-    public void resumeCache() {
+    public CacheStatusMessage resumeCache() {
+        if(cacheStatus.equals(CacheStatus.AVAILABLE)){
+            return new CacheStatusMessage(cacheStatus,CacheConstants.NO_NEED_TO_CHANGE_CACHE_STATUS);
+        }
+        if(cacheStatus.equals(CacheStatus.CLOSED) || cacheStatus.equals(CacheStatus.UNINITIALIZED)){
+            return new CacheStatusMessage(cacheStatus,CacheConstants.CAN_NOT_CHANGE_CACHE_STATUS);
+        }
         synchronized (this) {
             cacheStatus = CacheStatus.AVAILABLE;
+            return new CacheStatusMessage(cacheStatus,CacheConstants.CHANGE_CACHE_STATUS_SUCCESSFULLY);
         }
     }
+
     /**
      * Closes this stream and releases any system resources associated
      * with it. If the stream is already closed then invoking this
@@ -89,52 +148,51 @@ public class CacheManager implements ICacheManager {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    public void close() throws IOException {
-        //TODO
-        cacheStatus=CacheStatus.CLOSED;
+    public synchronized void close() throws IOException {
+        CacheManagerUtil.clearAllCacheGroup();
+        cacheStatus = CacheStatus.CLOSED;
     }
+
     @Override
     public CacheStatus getStatus() {
         return cacheStatus;
     }
 
-    public CacheUnit getCache(String cacheName) {
-        if (StringUtil.isEmpty(cacheName)) {
-            return null;
-        }
-        return getInternalCache(cacheName);
-    }
     @Override
     public Object getCacheable(String cacheName, Keys keys) throws Exception {
         return getCacheable(null, cacheName, keys);
     }
+
     @Override
     public Object getCacheable(String cacheName, Keys keys, ICacheFetchFactory ff) throws Exception {
         return getCacheable(null, cacheName, keys, ff);
     }
+
     @Override
     public Object getCacheable(String cacheName, String key) throws Exception {
         return getCacheable(cacheName, new Keys(key));
     }
+
     @Override
     public Object getCacheable(Tenant tenant, String cacheName, Keys keys) throws Exception {
         return getCacheable(tenant, cacheName, keys, null);
     }
+
     @Override
     public Object getCacheable(Tenant tenant, String cacheName, Keys keys, ICacheFetchFactory ff) throws Exception {
         logCacheStatus();
-        CacheUnit cache = getInternalCache(cacheName);
+        CacheUnit cache = CacheManagerUtil.getInternalCache(cacheName);
         if (cache == null) {
             return null;
         }
-        Object key = getInternalKey(tenant, keys);
+        Object key = CacheManagerUtil.getInternalKey(tenant, keys);
         if (key == null) {
             return null;
         }
-        Object value=null;
-        if(cacheStatus.equals(CacheStatus.AVAILABLE)){
+        Object value = null;
+        if (cacheStatus.equals(CacheStatus.AVAILABLE)) {
             value = cache.get(key.toString());
-        }else{
+        } else {
             //if cache is disabled, we do not retrieve data from cache anymore
             LOGGER.debug("Cache Manager is not available, will not use the data retrieved from cache");
         }
@@ -153,39 +211,39 @@ public class CacheManager implements ICacheManager {
         LOGGER.debug("Retrieved cacheable with key={} and value={} for tenant={} from cache group {}", key, value, tenant, cacheName);
         return value;
     }
+
     @Override
     public Object getCacheable(Tenant tenant, String cacheName, String key) throws Exception {
         return getCacheable(tenant, cacheName, new Keys(key));
     }
+
     @Override
     public Object getCacheable(Tenant tenant, String cacheName, String key, ICacheFetchFactory ff) throws Exception {
         return getCacheable(tenant, cacheName, new Keys(key), ff);
-    }
-
-    public Object getInternalKey(Tenant tenant, Keys keys) {
-        return keyGen.generate(tenant, keys);
     }
 
     @Override
     public Object putCacheable(String cacheName, Keys keys, Object value) {
         return putCacheable(null, cacheName, keys, value);
     }
+
     @Override
     public Object putCacheable(String cacheName, String key, Object value) {
         return putCacheable(cacheName, new Keys(key), value);
     }
+
     @Override
     public Object putCacheable(Tenant tenant, String cacheName, Keys keys, Object value) {
-        if(!cacheStatus.equals(CacheStatus.AVAILABLE)){
+        if (!cacheStatus.equals(CacheStatus.AVAILABLE)) {
             LOGGER.debug("CacheManager is not available, will not put element into cache!");
             return null;
         }
         logCacheStatus();
-        CacheUnit cache = getInternalCache(cacheName);
+        CacheUnit cache = CacheManagerUtil.getInternalCache(cacheName);
         if (cache == null) {
             return null;
         }
-        Object key = getInternalKey(tenant, keys);
+        Object key = CacheManagerUtil.getInternalKey(tenant, keys);
         if (key == null) {
             return null;
         }
@@ -194,25 +252,28 @@ public class CacheManager implements ICacheManager {
 
         return value;
     }
+
     @Override
     public Object putCacheable(Tenant tenant, String cacheName, String key, Object value) {
         return putCacheable(tenant, cacheName, new Keys(key), value);
     }
+
     @Override
     public Object removeCacheable(String cacheName, Keys keys) {
         return removeCacheable(null, cacheName, keys);
     }
+
     @Override
     public Object removeCacheable(Tenant tenant, String cacheName, Keys keys) {
-        if(!cacheStatus.equals(CacheStatus.AVAILABLE)){
+        if (!cacheStatus.equals(CacheStatus.AVAILABLE)) {
             LOGGER.debug("CacheManager is not available, will not remove element from cache!");
             return null;
         }
-        CacheUnit cache = getInternalCache(cacheName);
+        CacheUnit cache = CacheManagerUtil.getInternalCache(cacheName);
         if (cache == null) {
             return null;
         }
-        Object key = getInternalKey(tenant, keys);
+        Object key = CacheManagerUtil.getInternalKey(tenant, keys);
         if (key == null) {
             return null;
         }
@@ -221,35 +282,10 @@ public class CacheManager implements ICacheManager {
         LOGGER.debug("Remove Cacheable with key={} and value={} from cache group {}", key, obj, cacheName);
         return obj;
     }
+
     @Override
     public Object removeCacheable(Tenant tenant, String cacheName, String key) {
         return removeCacheable(tenant, cacheName, new Keys(key));
-    }
-
-    public void setKeyGenerator(KeyGenerator keyGenerator) {
-        keyGen = keyGenerator;
-    }
-
-    /**
-     * @param cacheName
-     * @return
-     */
-    private CacheUnit getInternalCache(String cacheName) {
-        if (cacheName == null) {
-            LOGGER.warn("Not retrieved from cache for null cache name");
-            return null;
-        }
-        CacheUnit cache = null;
-        try {
-            cache = getCacheGroup(cacheName);
-        } catch (IllegalArgumentException e) {
-            LOGGER.error(e.getLocalizedMessage(), e);
-            return null;
-        } catch(CacheGroupNotFoundException e){
-            LOGGER.error(e.getLocalizedMessage(), e);
-            return null;
-        }
-        return cache;
     }
 
     /**
@@ -257,7 +293,7 @@ public class CacheManager implements ICacheManager {
      */
     @Override
     public void logCacheStatus() {
-        if(!cacheStatus.equals(CacheStatus.AVAILABLE)){
+        if (!cacheStatus.equals(CacheStatus.AVAILABLE)) {
             LOGGER.warn("Cache Manager is not available, will not log cache status!");
             return;
         }
@@ -288,69 +324,11 @@ public class CacheManager implements ICacheManager {
 
     }
 
-    @Override
-    public void init() {
-        cacheStatus = CacheStatus.UNINITIALIZED;
-        this.lastLogTime = System.currentTimeMillis();
-        keyGen = new DefaultKeyGenerator();
-        LOGGER.info("Initialing LRU CacheManager..");
-        createCacheUnit(CacheConstants.CACHES_SCREENSHOT_CACHE, CacheConfig.SCREENSHOT_CAPACITY, CacheConfig.SCREENSHOT_EXPIRE_TIME);
-        createCacheUnit(CacheConstants.CACHES_ETERNAL_CACHE, CacheConfig.ETERNAL_CAPACITY, CacheConfig.ETERNAL_EXPIRE_TIME);
-        createCacheUnit(CacheConstants.CACHES_ADMIN_LINK_CACHE, CacheConfig.ADMIN_LINK_CACHE_CAPACITY, CacheConfig.ADMIN_LINK_CACHE_EXPIRE_TIME);
-        createCacheUnit(CacheConstants.CACHES_CLOUD_SERVICE_LINK_CACHE, CacheConfig.CLOUD_SERVICE_LINK_CAPACITY, CacheConfig.CLOUD_SERVICE_LINK_EXPIRE_TIME);
-        createCacheUnit(CacheConstants.CACHES_HOME_LINK_CACHE, CacheConfig.HOME_LINK_EXPIRE_CAPACITY, CacheConfig.HOME_LINK_EXPIRE_TIME);
-        createCacheUnit(CacheConstants.CACHES_VISUAL_ANALYZER_LINK_CACHE, CacheConfig.VISUAL_ANALYZER_LINK_CAPACITY, CacheConfig.VISUAL_ANALYZER_LINK_EXPIRE_TIME);
-        createCacheUnit(CacheConstants.CACHES_SERVICE_EXTERNAL_LINK_CACHE, CacheConfig.SERVICE_EXTERNAL_LINK_CAPACITY, CacheConfig.SERVICE_EXTERNAL_LINK_EXPIRE_TIME);
-        createCacheUnit(CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE, CacheConfig.SERVICE_INTERNAL_LINK_CAPACITY, CacheConfig.SERVICE_INTERNAL_LINK_EXPIRE_TIME);
-        createCacheUnit(CacheConstants.CACHES_VANITY_BASE_URL_CACHE, CacheConfig.VANITY_BASE_URL_CAPACITY, CacheConfig.VANITY_BASE_URL_EXPIRE_TIME);
-        createCacheUnit(CacheConstants.CACHES_DOMAINS_DATA_CACHE, CacheConfig.DOMAINS_DATA_CAPACITY, CacheConfig.DOMAINS_DATA_EXPIRE_TIME);
-        createCacheUnit(CacheConstants.CACHES_TENANT_APP_MAPPING_CACHE, CacheConfig.TENANT_APP_MAPPING_CAPACITY, CacheConfig.TENANT_APP_MAPPING_EXPIRE_TIME);
-        createCacheUnit(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE, CacheConfig.TENANT_SUBSCRIBED_SERVICES_CAPACITY, CacheConfig.TENANT_SUBSCRIBED_SERVICES_EXPIRE_TIME);
-        createCacheUnit(CacheConstants.CACHES_SSO_LOGOUT_CACHE, CacheConfig.SSO_LOGOUT_CAPACITY, CacheConfig.SSO_LOGOUT_EXPIRE_TIME);
-        createCacheUnit(CacheConstants.CACHES_ASSET_ROOT_CACHE, CacheConfig.ASSET_ROOT_CAPACITY, CacheConfig.ASSET_ROOT_EXPIRE_TIME);
-        cacheStatus = CacheStatus.AVAILABLE;
-    }
-
-    public static CacheUnit getCacheGroup(String cacheName) throws CacheGroupNotFoundException {
-        if(cacheName ==null ||"".equals(cacheName)){
-            LOGGER.debug("CacheManager:Cache name cannot be null or empty!");
-            throw new IllegalArgumentException("Cache name cannot be null or empty!");
-        }
-        CacheUnit cu=cacheUnitMap.get(cacheName);
-        if(cu == null){
-            LOGGER.error("CacheManager:Cache group named {} is not found!",cacheName);
-            throw new CacheGroupNotFoundException();
-        }
-        return cu;
-    }
-
-/*
-    public static CacheUnit getCacheGroup(String cacheName,int capacity,int timeToLive){
-    }*/
-
-    private static CacheUnit createCacheUnit(String cacheName,int capacity,int timeToLive){
-        CacheUnit cu=new CacheUnit(cacheName,capacity,timeToLive);
-        cacheUnitMap.put(cacheName, cu);
-        LOGGER.debug("CacheManager:Cache named: {},timeToLive time: {} has been created.", cacheName, timeToLive);
-        return cu;
-    }
-
-
-    public static ConcurrentHashMap<String, CacheUnit> getCacheUnitMap() {
+    public ConcurrentHashMap<String, CacheUnit> getCacheUnitMap() {
         return cacheUnitMap;
     }
 
-    public static void clearAllCacheGroup(){
-        if(cacheUnitMap!=null){
-            Iterator<Map.Entry<String,CacheUnit>> it =cacheUnitMap.entrySet().iterator();
-            while(it.hasNext()){
-                CacheUnit cu=it.next().getValue();
-                cu.getCacheUnitStatus().setEvictionCount(0L);
-                cu.getCacheUnitStatus().setHitCount(0L);
-                cu.getCacheUnitStatus().setRequestCount(0L);
-                cu.getCacheUnitStatus().setUsage(0);
-                cu.getCacheLinkedHashMap().clear();
-            }
-        }
+    public void setCacheUnitMap(ConcurrentHashMap<String, CacheUnit> cacheUnitMap) {
+        this.cacheUnitMap = cacheUnitMap;
     }
 }

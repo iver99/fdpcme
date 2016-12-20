@@ -31,4 +31,11 @@ public class CacheConstants {
     public static final String LOOKUP_CACHE_KEY_ASSET_ROOTS = "assetRoots";
     public static final String LOOKUP_CACHE_KEY_SSO_LOGOUT_URL = "ssoLogoutUrl";
 
+    //below are cache status related message
+    public static final String NO_NEED_TO_CHANGE_CACHE_STATUS="No need to change cache status.";
+    public static final String CAN_NOT_CHANGE_CACHE_STATUS="Can not change cache status.";
+    public static final String CHANGE_CACHE_STATUS_SUCCESSFULLY="Change cache status successfully.";
+    public static final String CHANGE_CACHE_STATUS_FAILED="Change cache status failed.";
+
+
 }

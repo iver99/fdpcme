@@ -4,6 +4,7 @@ package oracle.sysman.emaas.platform.emcpdf.cache.api;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheStatus;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheStatusMessage;
 
 import java.io.Closeable;
 
@@ -49,23 +50,23 @@ public interface ICacheManager extends Closeable {
      * This method will enable cache mechanism
      * Note: This method will init new cache groups according to configuration file
      */
-    public void enableCache();
+    public CacheStatusMessage enableCache();
 
     /**
      * This method will disable cache mechanism
      * Note: This method will destroy all existing cache groups and cached elements!
      */
-    public void disableCache();
+    public CacheStatusMessage disableCache();
 
     /**
      * This method will suspend cache mechanism, but will not destroy cache groups or cached elements
      */
-    public void suspendCache();
+    public CacheStatusMessage suspendCache();
 
     /**
      * This method will resume cache mechanism.
      */
-    public void resumeCache();
+    public CacheStatusMessage resumeCache();
 
     public void init();
 
