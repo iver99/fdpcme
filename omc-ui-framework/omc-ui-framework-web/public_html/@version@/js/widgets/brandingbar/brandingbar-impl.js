@@ -22,7 +22,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             cxtUtil.clearTopologyParams();
 
             self.compositeCxtText = ko.observable();
-            self.entitiesDisplayNames = ko.observableArray();
+            self.entitiesList = ko.observableArray();
             self.timeCxtText = ko.observable();
 
 
@@ -36,6 +36,31 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             } else {
                 self.showGlobalContextBanner = ko.observable(ko.unwrap(params.showGlobalContextBanner) === false ? false : true);
             }
+
+            self.entityContextParams = ko.unwrap(params.entityContextParams);
+            if (self.entityContextParams) {
+                if (ko.isObservable(self.entityContextParams.readOnly)) {
+                    self.entityContextReadOnly = self.entityContextParams.readOnly;
+                } else {
+                    self.entityContextReadOnly = ko.observable(ko.unwrap(self.entityContextParams.readOnly) === false ? false : true);
+                }
+            }
+            if (!self.entityContextReadOnly) {
+                self.entityContextReadOnly = ko.observable(true);
+            }
+            self.showEntityContextSelector = ko.observable(false);
+            //respond to change to entityContextReadOnly
+            self.entityContextReadOnly.subscribe(function () {
+                if (!self.entityContextReadOnly()) {
+                    require(['/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js'], function (EmctaContextSelectorUtil) {
+                        EmctaContextSelectorUtil.registerComponents();
+                        self.showEntityContextSelector(true);
+                    });
+                } else {
+                    self.showEntityContextSelector(false);
+                }
+            });
+            self.entityContextReadOnly.notifySubscribers();
 
             //Set showTimeSelector config. Default value is false. It can be set as an knockout observable and be changed after page is loaded
             //Per high level plan, we don't allow consumers to config to show/hide time selector themselves. So comment out below code for now.
@@ -75,7 +100,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     template: {require: 'text!/emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html'}
                 });
             }
-
+            
             if (self.showGlobalContextBanner() === true) {
                 refreshOMCContext();
             }
@@ -160,6 +185,54 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                 }
             }
+            
+            self.topologySize = ko.observable();
+            self.topologyHeight = ko.observable();
+            self.topologySize.subscribe(function(topoHeight) {
+               topoHeight && topoHeight.h && self.topologyHeight(topoHeight.h);
+		if(self.topologyHeight()<=201) {
+                    self.topologyCssHeight(self.topologyHeight());
+                }else {
+                    self.topologyCssHeight(201);
+                }
+            });
+            
+            self.isMaximized = ko.observable(false);
+            
+            self.showTopologyMaxIcon = function() {
+                $("#maxMinTopology").css("display", "block");
+            };
+            self.hideTopologyMaxIcon = function() {
+                $("#maxMinTopology").css("display", "none");
+            }
+            self.maximizeTopology = function() {
+                self.topologyCssHeight(self.topologyHeight());
+                self.isMaximized(true);
+                var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                $b && $b.triggerBuilderResizeEvent('Topology is maximized!');
+            };
+            self.restoreTopology = function() {
+                self.topologyCssHeight(201);
+                self.isMaximized(false);                
+                var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                $b && $b.triggerBuilderResizeEvent('Topology is restored!');
+            };
+            self.maxMinTopologyToggle = function() {
+                if(!self.isMaximized()) {
+                    self.maximizeTopology();
+                }else {
+                    self.restoreTopology();
+                }
+            }
+            
+	    self.topologyCssHeight = ko.observable();
+            self.topologyStyle = ko.computed(function() {
+                var height = "100%; max-height: 204px"
+                if(self.topologyCssHeight()) {
+                    height = (self.topologyCssHeight() + 3) + "px";
+                }
+                return "display: flex; float: left; width: 100%; height: " + height + ";";
+            });
 
             //NLS strings
             self.productName = nls.BRANDING_BAR_MANAGEMENT_CLOUD;
@@ -178,6 +251,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.altTextInfo = nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_INFO;
             self.altTextClear = nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CLEAR;
             self.topologyBtnLabel = nls.BRANDING_BAR_GLOBAL_CONTEXT_TOPOLOGY;
+            self.topologyMaximizeLabel = nls.BRANDING_BAR_TOPOLOGY_MAXIMIZE;
+            self.topologyRestoreLabel = nls.BRANDING_BAR_TOPOLOGY_RESTORE;
             self.appName = ko.observable();
 
             self.hasMessages = ko.observable(true);
@@ -360,7 +435,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //For now, set interval to extend current user session automatically every 10 mins
             if (!dfu.isDevMode()) {
                 window.intervalToExtendCurrentUserSession = setInterval(function () {
-                    dfu.ajaxWithRetry("/emsaasui/uifwk/empty.html", {showMessages: "none"});
+                    dfu.ajaxWithRetry("/emsaasui/uifwk/@version@/html/empty.html", {showMessages: "none"});
                 }, 10 * 60 * 1000);
             }
 
@@ -515,7 +590,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var timeSelectorVmPath = 'uifwk/js/widgets/datetime-picker/js/datetime-picker';
             var timeSelectorTemplatePath = 'uifwk/js/widgets/datetime-picker/html/datetime-picker.html';
             //Register a knockout component for time selector
-            if (!ko.components.isRegistered('df-datetime-picker') && self.showTimeSelector === true) {
+            if (!ko.components.isRegistered('df-datetime-picker') && ko.unwrap(self.showTimeSelector) === true) {
                 ko.components.register("df-datetime-picker", {
                     viewModel: {require: timeSelectorVmPath},
                     template: {require: 'text!' + timeSelectorTemplatePath}
@@ -893,14 +968,18 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                            }
 //                        }
 //                    }
+                    var topologyParams = cxtUtil.getTopologyParams();
+                    if (topologyParams && !self.topologyParamsSet) {
+                         refreshTopology = true;
+                    }
                     if (refreshTopology) {
-                        var topologyParams = cxtUtil.getTopologyParams();
                         if (topologyParams) {
                             self.associations(topologyParams.associations);
                             self.layout(topologyParams.layout);
                             self.customNodeDataLoader(topologyParams.customNodeDataLoader);
                             self.customEventHandler(topologyParams.customEventHandler);
                             self.miniEntityCardActions(topologyParams.miniEntityCardActions);
+                            self.topologyParamsSet = true;
                         }
                         $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
                         self.topologyInitialized = true;
@@ -914,6 +993,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                self.cxtCompositeType = cxtUtil.getCompositeType();
                 self.cxtCompositeDisplayName = cxtUtil.getCompositeDisplayName();
                 self.cxtCompositeName = cxtUtil.getCompositeName();
+                self.cxtComposite = cxtUtil.getCompositeEntity();
 //                self.cxtStartTime = cxtUtil.getStartTime();
 //                self.cxtEndTime = cxtUtil.getEndTime();
                 //self.cxtEntityMeId = cxtUtil.getEntityMeId();
@@ -995,31 +1075,29 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                }
                 //For now, only show composite context text on banner UI, and single entity
                 self.compositeCxtText('');
-                self.entitiesDisplayNames.removeAll();
+                self.entitiesList.removeAll();
 
                 var displayCompositeName = self.cxtCompositeMeId
                     && self.cxtCompositeDisplayName;
 
                 var displayEntitiesName = cxtUtil.getEntityMeIds()
                     && !cxtUtil.getEntitiesType()
-                    && cxtUtil.getEntityMeIds().length === 1
-                    && cxtUtil.getEntities().length === 1;
-                displayEntitiesName = false; // disable emctas-5151/emcpdf-2773 for 1.13
+                    && cxtUtil.getEntityMeIds().length > 0
+                    && cxtUtil.getEntities().length > 0;
+                displayEntitiesName = false; // disable emctas-5151/emcpdf-2773 for 1.14
 
                 if (displayCompositeName) {
                     self.compositeCxtText(self.cxtCompositeDisplayName);
                 }
                 if (displayEntitiesName)
                 {
-                    cxtUtil.getEntities().forEach(function (entity, index) {
-                        var entityName = {displayName: entity.displayName, entityName: entity.entityName};
-                        self.entitiesDisplayNames.push(entityName);
-                    });
+                    self.entitiesList(cxtUtil.getEntities());
                 }
                 if (!displayCompositeName && !displayEntitiesName)
                 {
                     //No composite entity & no entities
                     self.compositeCxtText(nls.BRANDING_BAR_GLOBAL_CONTEXT_ALL_ENTITIES);
+                    self.cxtComposite.isEnabled(true);
                 }
             }
 

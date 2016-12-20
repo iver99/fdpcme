@@ -252,7 +252,7 @@ public class Dashboard
 		to.setApplicationType(from.getApplicationType());
 		if (from.getType().equals(DASHBOARD_TYPE_CODE_SET)) {
 			to.setEnableTimeRange(null);
-			to.setIsSystem(null);
+			to.setIsSystem(DataFormatUtils.integer2Boolean(from.getIsSystem()));
 			if (loadSubDashboards) {
 				List<EmsSubDashboard> emsSubDashboards = from
 						.getSubDashboardList();
