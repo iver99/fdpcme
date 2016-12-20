@@ -68,22 +68,28 @@ define([
                 if(headerWrapper) {
                     var headerViewModel = ko.dataFor(headerWrapper);
                 }
-                if(dashboardsetToolBarModel.isDashboardSet()) { //dashboard set: hide GC bar
-                    headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+//                if(dashboardsetToolBarModel.isDashboardSet()) { //dashboard set: hide GC bar
+//                    headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+//                }else {
+//                    if(dashboardsetToolBarModel.dashboardInst.systemDashboard()) { //OOB dashboard
+//                        if(dashboardsetToolBarModel.dashboardExtendedOptions && dashboardsetToolBarModel.dashboardExtendedOptions.showGlobalContextBanner === true) {
+//                            headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+//                        }else {
+//                            headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+//                        }
+//                    }else { //User crearted dashboard
+//                        if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="GC") {
+//                            headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+//                        }else {
+//                            headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+//                        }
+//                    }
+//                }
+                
+                if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="GC") {
+                    headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(true);
                 }else {
-                    if(dashboardsetToolBarModel.dashboardInst.systemDashboard()) { //OOB dashboard
-                        if(dashboardsetToolBarModel.dashboardExtendedOptions && dashboardsetToolBarModel.dashboardExtendedOptions.showGlobalContextBanner === true) {
-                            headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(true);
-                        }else {
-                            headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
-                        }
-                    }else { //User crearted dashboard
-                        if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="GC") {
-                            headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(true);
-                        }else {
-                            headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
-                        }
-                    }
+                    headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
                 }
                 
                 
