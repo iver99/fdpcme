@@ -1,4 +1,4 @@
-package com.oracle.platform.emaas.cache;
+package oracle.sysman.emaas.platform.emcpdf.cache;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

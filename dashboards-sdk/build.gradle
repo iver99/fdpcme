@@ -11,7 +11,8 @@ publishing.publications {
     }
     thisJarPublication(MavenPublication) {
         from project.components.java
-        setGroupId("${publishGroup}")
+        setGroupId("com.oracle.emaas.emcpdf")
+        setArtifactId('dashboards-sdk')
     }
 }
 

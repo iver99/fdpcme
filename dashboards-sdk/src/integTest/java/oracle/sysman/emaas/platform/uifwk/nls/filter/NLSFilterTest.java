@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
  
-package com.oracle.platform.emaas.nls.filter;
+package oracle.sysman.emaas.platform.uifwk.nls.filter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
