@@ -29,7 +29,7 @@ public class CacheManager implements ICacheManager {
 
     private CacheStatus cacheStatus;
 
-    private ConcurrentHashMap<String, CacheUnit> cacheUnitMap;
+    private static ConcurrentHashMap<String, CacheUnit> cacheUnitMap = new ConcurrentHashMap<String, CacheUnit>();;
 
     private static CacheManager instance = new CacheManager();
 
@@ -45,7 +45,6 @@ public class CacheManager implements ICacheManager {
     @Override
     public synchronized void init() {
         cacheStatus = CacheStatus.UNINITIALIZED;
-        cacheUnitMap = new ConcurrentHashMap<String, CacheUnit>();
         this.lastLogTime = System.currentTimeMillis();
         LOGGER.info("Initialing LRU CacheManager..");
         CacheManagerUtil.createCacheUnit(CacheConstants.CACHES_SCREENSHOT_CACHE, CacheConfig.SCREENSHOT_CAPACITY, CacheConfig.SCREENSHOT_EXPIRE_TIME);
@@ -324,11 +323,11 @@ public class CacheManager implements ICacheManager {
 
     }
 
-    public ConcurrentHashMap<String, CacheUnit> getCacheUnitMap() {
+    public static ConcurrentHashMap<String, CacheUnit> getCacheUnitMap() {
         return cacheUnitMap;
     }
 
-    public void setCacheUnitMap(ConcurrentHashMap<String, CacheUnit> cacheUnitMap) {
+    /*public void setCacheUnitMap(ConcurrentHashMap<String, CacheUnit> cacheUnitMap) {
         this.cacheUnitMap = cacheUnitMap;
-    }
+    }*/
 }

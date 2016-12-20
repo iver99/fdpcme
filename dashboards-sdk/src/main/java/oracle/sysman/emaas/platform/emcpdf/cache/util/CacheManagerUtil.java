@@ -39,7 +39,7 @@ public class CacheManagerUtil {
                 cu.getCacheUnitStatus().setUsage(0);
                 cu.getCacheLinkedHashMap().clear();
             }
-            CacheManager.getInstance().setCacheUnitMap(null);
+//            CacheManager.getInstance().setCacheUnitMap(null);
         }
     }
 
@@ -84,8 +84,12 @@ public class CacheManagerUtil {
     }
 
     public static CacheUnit createCacheUnit(String cacheName,int capacity,int timeToLive){
-        CacheUnit cu=new CacheUnit(cacheName,capacity,timeToLive);
-        CacheManager.getInstance().getCacheUnitMap().put(cacheName, cu);
+        CacheUnit cu=CacheManager.getCacheUnitMap().get(cacheName);
+        if(cu!=null){
+            return cu;
+        }
+        cu=new CacheUnit(cacheName,capacity,timeToLive);
+        CacheManager.getCacheUnitMap().put(cacheName, cu);
         LOGGER.debug("CacheManager:Cache named: {},timeToLive time: {} has been created.", cacheName, timeToLive);
         return cu;
     }
