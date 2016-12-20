@@ -7,28 +7,28 @@ version = "1.0.0" + "-$buildTimestamp"
 dfversion = project.ext.getServiceVersion('DashboardService-API')
 def versionPathElement = dfversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
 
-task extractCacheJar(type: Jar){
-	appendix = 'cacheJar'
-	 from sourceSets.main.output
-	include('com/oracle/platform/emaas/**/*.class')
-	include('cache_config.properties')
-
-}
+//task extractCacheJar(type: Jar){
+//	appendix = 'cacheJar'
+//	 from sourceSets.main.output
+//	include('com/oracle/emaas/platform/**/*.class')
+//	include('cache_config.properties')
+//}
 publishing.publications {
-    integTest(MavenPublication) {
+    /*integTest(MavenPublication) {
                         setArtifactId(project.name + '-' + integTestJar.appendix)
                         setGroupId("${publishGroup}")
                         artifact integTestJar.archivePath
-    }
+    }*/
     thisJarPublication(MavenPublication) {
-                        from project.components.java
-                        setGroupId("${publishGroup}")
+        from project.components.java
+        setGroupId('com.oracle.emaas.emcpdf.sdk')
+        setArtifactId (project.name)
     }
-    extractCache(MavenPublication) {
+    /*extractCache(MavenPublication) {
                  setGroupId('com.oracle.emaas.emcpdf.sdk')
            		 setArtifactId (project.name)
            		 artifact extractCacheJar.archivePath
-    }
+    }*/
 }
 
 sourceSets {	
@@ -43,9 +43,9 @@ sourceSets {
  }
 
 artifactoryPublish {
-	 publications('integTest')
+	 //publications('integTest')
 	 publications('thisJarPublication')
-	 publications('extractCache')
+	 //publications('extractCache')
 }
 
 dependencies {
@@ -67,7 +67,7 @@ sourceSets {
     }
 }
 artifactoryPublish {
-    publications('integTest')
+    //publications('integTest')
     publications('thisJarPublication')
 
 }
@@ -97,4 +97,4 @@ eclipse {
         plusConfigurations += configurations.testNG //avoid building error in Eclipse
     }
 }
-build.dependsOn extractCacheJar
+//build.dependsOn extractCacheJar
