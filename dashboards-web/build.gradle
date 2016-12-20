@@ -111,7 +111,7 @@ dependencies {
 	providedCompile project(':dashboards-entities')  
 	providedCompile project(':dashboards-core')  
     providedCompile project(':dashboards-webutils')
-    providedCompile project(':dashboards-common-tools')
+    providedCompile project(':dashboards-sdk')
     providedCompile getProjectArtifact('servlet-api')   
     providedCompile getProjectArtifact('jersey-client')   
     providedCompile getProjectArtifact('jersey-core')   
