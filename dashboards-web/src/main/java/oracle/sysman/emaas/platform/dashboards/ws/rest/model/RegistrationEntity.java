@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.oracle.platform.emaas.cache.CacheManager;
-import com.oracle.platform.emaas.cache.Tenant;
-import com.oracle.platform.emaas.cache.api.ICacheFetchFactory;
-import com.oracle.platform.emaas.cache.util.CacheConstants;
+import com.oracle.emaas.platform.emcpdf.cache.CacheManager;
+import com.oracle.emaas.platform.emcpdf.cache.Tenant;
+import com.oracle.emaas.platform.emcpdf.cache.api.ICacheFetchFactory;
+import com.oracle.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
@@ -41,7 +41,6 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
-import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
 
 import org.apache.logging.log4j.LogManager;

@@ -1,7 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -15,11 +14,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.oracle.platform.emaas.cache.CacheManager;
-import com.oracle.platform.emaas.cache.CacheUnit;
-import com.oracle.platform.emaas.cache.exception.CacheException;
-import com.oracle.platform.emaas.cache.exception.CacheGroupNameEmptyException;
-import com.oracle.platform.emaas.cache.exception.CacheGroupNotFoundException;
+import com.oracle.emaas.platform.emcpdf.cache.CacheManager;
+import com.oracle.emaas.platform.emcpdf.cache.CacheUnit;
+import com.oracle.emaas.platform.emcpdf.cache.exception.CacheException;
+import com.oracle.emaas.platform.emcpdf.cache.exception.CacheGroupNameEmptyException;
+import com.oracle.emaas.platform.emcpdf.cache.exception.CacheGroupNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 
 import org.apache.logging.log4j.LogManager;

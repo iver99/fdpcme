@@ -13,8 +13,11 @@ package oracle.sysman.emaas.platform.dashboards.core.cache.screenshot;
 import java.math.BigInteger;
 import java.util.Date;
 
-import com.oracle.platform.emaas.cache.*;
-import com.oracle.platform.emaas.cache.util.CacheConstants;
+import com.oracle.emaas.platform.emcpdf.cache.Binary;
+import com.oracle.emaas.platform.emcpdf.cache.CacheManager;
+import com.oracle.emaas.platform.emcpdf.cache.Keys;
+import com.oracle.emaas.platform.emcpdf.cache.Tenant;
+import com.oracle.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 

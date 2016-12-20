@@ -19,9 +19,9 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
-import com.oracle.platform.emaas.cache.CacheManager;
-import com.oracle.platform.emaas.cache.Tenant;
-import com.oracle.platform.emaas.cache.util.CacheConstants;
+import com.oracle.emaas.platform.emcpdf.cache.CacheManager;
+import com.oracle.emaas.platform.emcpdf.cache.Tenant;
+import com.oracle.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;

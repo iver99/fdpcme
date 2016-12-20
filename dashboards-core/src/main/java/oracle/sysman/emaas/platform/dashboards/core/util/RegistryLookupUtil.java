@@ -16,10 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.oracle.platform.emaas.cache.CacheManager;
-import com.oracle.platform.emaas.cache.Keys;
-import com.oracle.platform.emaas.cache.Tenant;
-import com.oracle.platform.emaas.cache.util.CacheConstants;
+import com.oracle.emaas.platform.emcpdf.cache.CacheManager;
+import com.oracle.emaas.platform.emcpdf.cache.Keys;
+import com.oracle.emaas.platform.emcpdf.cache.Tenant;
+import com.oracle.emaas.platform.emcpdf.cache.util.CacheConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
