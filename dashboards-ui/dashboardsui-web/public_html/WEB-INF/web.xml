@@ -67,7 +67,7 @@
     </filter-mapping>
   <filter>
     <filter-name>nls.filter</filter-name>
-    <filter-class>com.oracle.platform.emaas.nls.filter.NLSFilter</filter-class>
+    <filter-class>oracle.sysman.emaas.platform.uifwk.nls.filter.NLSFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>nls.filter</filter-name>
