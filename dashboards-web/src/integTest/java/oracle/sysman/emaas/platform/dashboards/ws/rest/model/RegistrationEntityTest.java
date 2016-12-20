@@ -3,9 +3,9 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.emaas.platform.emcpdf.cache.CacheManager;
-import com.oracle.emaas.platform.emcpdf.cache.Tenant;
-import com.oracle.emaas.platform.emcpdf.cache.util.CacheConstants;
+import oracle.sysman.emaas.platform.emcpdf.cache.CacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

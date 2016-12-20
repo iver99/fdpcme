@@ -103,7 +103,7 @@
     		<AppenderRef ref="ASYNC_STARTUP_SHUTDOWN_LOG"/>
 		</Logger>
 		<Logger name="oracle.sysman.emaas.platform.dashboards" level="INFO"/>
-		<Logger name="com.oracle.platform.emaas.cache" level="INFO"/>
+		<Logger name="com.oracle.emaas.platform" level="INFO"/>
 		<Root>
     		<AppenderRef ref="ASYNC_MAIN_LOG"/>
     	</Root>

@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import javax.ws.rs.core.Response.Status;
 
-import com.oracle.emaas.platform.emcpdf.cache.exception.CacheException;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.CacheException;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardErrorConstants;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
