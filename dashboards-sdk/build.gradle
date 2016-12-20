@@ -21,7 +21,7 @@ publishing.publications {
     }*/
     thisJarPublication(MavenPublication) {
         from project.components.java
-        setGroupId('com.oracle.emaas.emcpdf.sdk')
+        setGroupId('com.oracle.emaas.emcpdf')
         setArtifactId (project.name)
     }
     /*extractCache(MavenPublication) {
