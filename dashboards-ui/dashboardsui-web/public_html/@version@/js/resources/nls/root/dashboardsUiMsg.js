@@ -45,7 +45,7 @@ define({
       "DBS_HOME_SEARCH_PLACE_HODE": "Search",
       "DBS_HOME_SEARCH_BTN_LABEL": "Search",
       "DBS_HOME_CLEAN_BTN_LABEL": "Clear",
-      "DBS_HOME_CREATE_BTN_LABEL": "Create Dashboard",
+      "DBS_HOME_CREATE_BTN_LABEL": "Create",
       "DBS_HOME_CREATE_BTN_TT_TITLE": "How do I use this page?",
       "DBS_HOME_SELECT_SORT_BY_LABEL": "Sort by",
       "DBS_HOME_SELECT_SORT_ACCESS_DATE_ASC": "Last Accessed Ascending",
