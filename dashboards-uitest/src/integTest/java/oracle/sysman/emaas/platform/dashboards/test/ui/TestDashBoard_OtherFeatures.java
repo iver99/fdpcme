@@ -43,14 +43,16 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_Test = "";
 	private String dbDesc_Test = "";
 	private String dbName_duplicate = "";
+	private String dbName_duplicateOOB = "";
 	private String dbName_saveConfirmation = "";
 
 	private final String customWidgetName = "Running Workflow Submission";
+	private final String OOBName = "Middleware Operations";
 
 	@BeforeClass
 	public void createTestDashboard()
 	{
-		dbName_Test = "Dashboard_withWidget-" + generateTimeStamp();
+		dbName_Test = "Dashboard_withWidget-" + DashBoardUtils.generateTimeStamp();
 		dbDesc_Test = "test dashboard";
 
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -102,6 +104,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_CustomWidget);
 		DashBoardUtils.deleteDashboard(webd, dbName_Test);
 		DashBoardUtils.deleteDashboard(webd, dbName_duplicate);
+		DashBoardUtils.deleteDashboard(webd, dbName_duplicateOOB);
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -111,7 +114,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	@Test
 	public void testDashboardWith12Columns()
 	{
-		dbName_columncheck = "DashboardWith12Columns-" + generateTimeStamp();
+		dbName_columncheck = "DashboardWith12Columns-" + DashBoardUtils.generateTimeStamp();
 		String desc = "Description for " + dbName_columncheck;
 
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -205,12 +208,53 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashboardBuilderUtil.duplicateDashboard(webd, dbName_duplicate, dbDesc);
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_duplicate, dbDesc, true));
 
+		//go back to home page
+		webd.getLogger().info("Go to dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//verify the duplilcated dashboard in home page
+		webd.getLogger().info("Verify the duplilcated dashboard in home page");
+		DashboardHomeUtil.isDashboardExisted(webd, dbName_duplicate);
+	}
+
+	@Test
+	public void testDuplicateOOBDashboard()
+	{
+		dbName_duplicateOOB = OOBName + "-duplicated-" + DashBoardUtils.generateTimeStamp();
+		String dbDesc = "Test_Dashboard_duplicate_oob_dashboard description";
+
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testDuplicateOOBDashboard");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//open the dashboard
+		webd.getLogger().info("open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, OOBName);
+
+		//Duplicate dashbaord
+		DashboardBuilderUtil.duplicateDashboard(webd, dbName_duplicateOOB, dbDesc);
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_duplicateOOB, dbDesc, true));
+
+		//go back to home page
+		webd.getLogger().info("Go to dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//verify the duplilcated dashboard in home page
+		webd.getLogger().info("Verify the duplilcated dashboard in home page");
+		DashboardHomeUtil.isDashboardExisted(webd, dbName_duplicateOOB);
 	}
 
 	@Test
 	public void testFavorite()
 	{
-		dbName_favorite = "favoriteDashboard-" + generateTimeStamp();
+		dbName_favorite = "favoriteDashboard-" + DashBoardUtils.generateTimeStamp();
 		String dbDesc = "favorite_testDashboard desc";
 
 		//Initialize the test
@@ -287,7 +331,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	@Test
 	public void testFilterITADashboard()
 	{
-		dbName_ITADashboard = "ITADashboard-" + generateTimeStamp();
+		dbName_ITADashboard = "ITADashboard-" + DashBoardUtils.generateTimeStamp();
 		String dbDesc = "test filter ITA works for custom dashboard";
 		//initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -338,7 +382,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	@Test
 	public void testFilterLADashboard()
 	{
-		dbName_LADashboard = "LADashboard-" + generateTimeStamp();
+		dbName_LADashboard = "LADashboard-" + DashBoardUtils.generateTimeStamp();
 		String dbDesc = "test filter LA works for custom dashboard";
 		//initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -414,7 +458,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	@Test
 	public void testHideOpenInIconForCustomWidget()
 	{
-		dbName_CustomWidget = "DashboardWithCustomWidget-" + generateTimeStamp();
+		dbName_CustomWidget = "DashboardWithCustomWidget-" + DashBoardUtils.generateTimeStamp();
 		String dbDesc = "test hide Open In icon for custom widget";
 		//initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -506,7 +550,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	@Test
 	public void testMaximizeRestoreWidgetSelfDashboard()
 	{
-		dbName_testMaximizeRestore = "selfDb-" + generateTimeStamp();
+		dbName_testMaximizeRestore = "selfDb-" + DashBoardUtils.generateTimeStamp();
 
 		//initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -553,7 +597,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	@Test
 	public void testSaveConfirmation()
 	{
-		dbName_saveConfirmation = "TestSaveConfirmation-" + generateTimeStamp();
+		dbName_saveConfirmation = "TestSaveConfirmation-" + DashBoardUtils.generateTimeStamp();
 
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -698,7 +742,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	@Test
 	public void testTimePicker()
 	{
-		dbName_timepicker = "TestDashboardTimeselector-" + generateTimeStamp();
+		dbName_timepicker = "TestDashboardTimeselector-" + DashBoardUtils.generateTimeStamp();
 		String dbDesc = "Test Dashboard timeselector description";
 
 		//initialize the test
@@ -805,12 +849,5 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 				"startTime=" + String.valueOf(StartTimeStamp) + "&endTime=" + String.valueOf(EndTimeStamp))) {
 			Assert.fail("not open the correct widget");
 		}
-
 	}
-
-	private String generateTimeStamp()
-	{
-		return String.valueOf(System.currentTimeMillis());
-	}
-
 }

@@ -36,13 +36,16 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 	private String dbName_InSet = "";
 	private String dbName_OutSet = "";
 	private String dbName_DuplicateOOB = "";
+	private String dbName_Duplicate = "";
 
 	private static String OOBAddToSet = "Database Operations";
+	private static String OOBDashboardSet = "Enterprise Health";
+	private static String OOBDashboard = "Summary";
 
 	@BeforeClass
 	public void createTestData()
 	{
-		dbsetName_Duplicate = "DashboardSet_Duplicate_Test-" + generateTimeStamp();
+		dbsetName_Duplicate = "DashboardSet_Duplicate_Test-" + DashBoardUtils.generateTimeStamp();
 		String dbsetDesc = "Test duplicated the dashboard set";
 
 		//init the test
@@ -97,6 +100,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_OutSet);
 		DashBoardUtils.deleteDashboard(webd, dbName_OutSet + "-duplicate");
 		DashBoardUtils.deleteDashboard(webd, dbName_DuplicateOOB);
+		DashBoardUtils.deleteDashboard(webd, dbName_Duplicate);
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -106,7 +110,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 	@Test
 	public void testDuplicateDashboardAddToSet()
 	{
-		dbName_InSet = "DashboardInSet-" + generateTimeStamp();
+		dbName_InSet = "DashboardInSet-" + DashBoardUtils.generateTimeStamp();
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test case: testDuplicateDashboardAddToSet");
@@ -167,10 +171,84 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 
 	}
 
+	@Test
+	public void testDuplicateDashboardInOOBDashboardSet()
+	{
+		dbName_Duplicate = OOBDashboard + "-duplicate-" + DashBoardUtils.generateTimeStamp();
+
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testDuplicateDashboardInOOBDashboardSet");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//open the dashboardset
+		webd.getLogger().info("Open the OOB dashboard set in the builder page");
+		DashboardHomeUtil.selectDashboard(webd, OOBDashboardSet);
+
+		webd.getLogger().info("Set the refresh setting to OFF");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
+
+		//select the OOB dashboard in the set
+		webd.getLogger().info("Select the OOB dashboard in the set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, OOBDashboard);
+
+		//verify the edit menu & save icon are not displayed in OOB
+		webd.getLogger().info("Verify the save icon is not displayed in OOB");
+		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DASHBOARDSAVECSS), "Save icon is displayed in OOB");
+		webd.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
+		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(PageId.DASHBOARDSETOPTIONS_CSS)));
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		webd.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
+		webd.click("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
+		webd.getLogger().info("Verify the edit menu is not displayed in OOB");
+		Assert.assertFalse(webd.isDisplayed("css" + PageId.DASHBOARDSETOPTIONSEDIT_CSS), "Edit menu is displayed in OOB");
+
+		webd.getLogger().info("Select the OOB dashboard in the set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, OOBDashboard);
+
+		//duplicate the dashboard in set
+		webd.getLogger().info("duplicate the dashboard in the dashboard set");
+		DashboardBuilderUtil.duplicateDashboardInsideSet(webd, dbName_Duplicate, null, false);
+
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_Duplicate, null, true),
+				"Duplicate OOB dashboard failed!");
+
+		//back to home page
+		webd.getLogger().info("Go to Home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+		WaitUtil.waitForPageFullyLoaded(webd);
+		//verify the duplicated dashboard in home page
+		webd.getLogger().info("Verify the duplicated dashboard in home page");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_Duplicate), "Dashboard: " + dbName_Duplicate
+				+ " should be displayed in home page!");
+
+		webd.getLogger().info("Open the dashboard set");
+		DashboardHomeUtil.selectDashboard(webd, OOBDashboardSet);
+
+		//open the dashboard set
+		webd.getLogger().info("Open the dashboard set: " + OOBDashboardSet);
+		DashboardHomeUtil.selectDashboard(webd, OOBDashboardSet);
+
+		//verify the duplicated dashboard
+		webd.getLogger().info("Verify the duplicate dashboard: " + dbName_Duplicate + " is not in the dashboard set");
+		Assert.assertFalse(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_Duplicate),
+				"Dashboard has been duplicated and add to dashboard set");
+
+	}
+
 	@Test(dependsOnMethods = { "testDuplicateDashboardAddToSet" })
 	public void testDuplicateDashboardNotAddToSet()
 	{
-		dbName_OutSet = "DashboardOutSet-" + generateTimeStamp();
+		dbName_OutSet = "DashboardOutSet-" + DashBoardUtils.generateTimeStamp();
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test case: testDuplicateDashboardNotAddToSet");
@@ -227,7 +305,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 	@Test(dependsOnMethods = { "testDuplicateDashboardNotAddToSet" })
 	public void testDuplicateOOBAddToSet()
 	{
-		dbName_DuplicateOOB = "OOBDashboard-duplicate-" + generateTimeStamp();
+		dbName_DuplicateOOB = "OOBDashboard-duplicate-" + DashBoardUtils.generateTimeStamp();
 
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -265,11 +343,11 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_DuplicateOOB),
 				"Duplicate OOB dashboard failed!");
 
-		//verify the duplicated dashboard in home page
+		//verify the duplicated dashboard not in home page
 		webd.getLogger().info("Verify the duplicated dashboard is in home page");
 		BrandingBarUtil.visitDashboardHome(webd);
 		WaitUtil.waitForPageFullyLoaded(webd);
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_DuplicateOOB), "Dashboard: " + dbName_DuplicateOOB
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_DuplicateOOB), "Dashboard: " + dbName_DuplicateOOB
 				+ " should be displayed in home page!");
 
 		webd.getLogger().info("Open the dashboard set");
@@ -292,7 +370,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 	@Test(dependsOnMethods = { "testDuplicateOOBAddToSet" })
 	public void testDuplicateOOBNotAddToSet()
 	{
-		dbName_DuplicateOOB = "OOBDashboard-duplicate-" + generateTimeStamp();
+		dbName_DuplicateOOB = "OOBDashboard-duplicate-" + DashBoardUtils.generateTimeStamp();
 
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -360,10 +438,5 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		webd.getLogger().info("Verify the duplicate dashboard: " + dbName_DuplicateOOB + " is not in the dashboard set");
 		Assert.assertFalse(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_DuplicateOOB),
 				"Dashboard has been duplicated and add to dashboard set");
-	}
-
-	private String generateTimeStamp()
-	{
-		return String.valueOf(System.currentTimeMillis());
 	}
 }
