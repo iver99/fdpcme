@@ -143,14 +143,18 @@ require(['ojs/ojcore',
                 var start = new Date(new Date() - 24 * 60 * 60 * 1000);
                 var end = new Date();
                 var dateTimeOption = {formatType: "datetime", dateFormat: "medium"};
+                var dateOption = {formatType: "date", dateFormat: "medium"};
                 self.floatPosition1 = "left";
                 self.floatPosition3 = "right";
                 self.dateTimeConverter1 = oj.Validation.converterFactory("dateTime").createConverter(dateTimeOption);
+                self.dateConverter = oj.Validation.converterFactory("dateTime").createConverter(dateOption);
 
                 self.start = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(start)));
                 self.end = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(end)));
                 self.filterInfo = ko.observable();
                 self.filterInfo3 = ko.observable();
+                self.start2 = ko.observable(self.dateConverter.format(oj.IntlConverterUtils.dateToLocalIso(start)));
+                self.end2 = ko.observable(self.dateConverter.format(oj.IntlConverterUtils.dateToLocalIso(end)));
                 self.start3 = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(start)));
                 self.end3 = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(end)));
                 self.initStart = ko.observable(start);
@@ -191,7 +195,7 @@ require(['ojs/ojcore',
                     startDateTime: /*self.initStart,*/ start,
                     endDateTime: self.initEnd, //end,
                     timePeriodsNotToShow: /*["Last 30 days", "Last 90 days"],*/ self.timePeriodsNotToShow,
-                    timeLevelsNotToShow: self.timeLevelsNotToShow, //custom relative time levels not to show
+                    timeLevelsNotToShow: self.timeLevelsNotToShow, //custom relative time levels not to show. Support lower and upper case time units
                     showTimeAtMillisecond: self.showTimeAtMillisecond, //show time at minute or millisecond level in ojInputTime component
                     enableTimeFilter: true,
                     hideMainLabel: true,
@@ -344,6 +348,20 @@ require(['ojs/ojcore',
                 self.generateData(self.timeParams1.startDateTime, self.timeParams1.endDateTime);
 
                 self.timeParams2 = {
+                    startDateTime: new Date(new Date() - 24 * 60 * 60 * 1000),
+                    endDateTime: new Date(),
+                    timePeriod: "LAST_1_DAY",
+//                      appId: "APM",
+                    hideTimeSelection: true, //hides time selection
+                    callbackAfterApply: function (start, end, tp, tf, relTimeVal, relTimeUnit) {
+                        var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
+                        var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
+                        self.start2(self.dateConverter.format(appliedStart));
+                        self.end2(self.dateConverter.format(appliedEnd));
+                    }
+                };
+
+                self.timeParams4 = {
 //                    startDateTime: "2015-05-17T00:00:00",
 //                    endDateTime: "2015-05-16T13:00:00"
                       startDateTime: new Date(new Date() - 24 * 60 * 60 * 1000),

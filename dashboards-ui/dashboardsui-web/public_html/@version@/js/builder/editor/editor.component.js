@@ -110,12 +110,12 @@ define(['knockout',
             if (tileChange instanceof TileChange){
                 self.tileChange = tileChange;
             }
-            if(timeRangeEnabled === "TRUE") {
+            if(timeRangeEnabled === "TRUE" || timeRangeEnabled === "GC") {
                 self.timeRangeEnabled = true;
             }else {
                 self.timeRangeEnabled = false;
             }
-             if(targetSelectorEnabled === "TRUE") {
+             if(targetSelectorEnabled === "TRUE" || targetSelectorEnabled === "GC") {
                 self.targetSelectorEnabled = true;
             }else {
                 self.targetSelectorEnabled = false;
@@ -340,6 +340,14 @@ define(['knockout',
                 }
             }
             
+            function getRespectOMCContextFlag(value) {
+                if(value === "GC") {
+                    return true;
+                }else if(value === "TRUE" || value === "FALSE") {
+                    return false;
+                }
+            }
+            
             var cxtUtil = new cxtModel();
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
 //                var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');
@@ -372,7 +380,7 @@ define(['knockout',
                             }
                             widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
                         }
-                        window.location = cxtUtil.appendOMCContext(widgetUrl);
+                        window.location = cxtUtil.appendOMCContext(widgetUrl, getRespectOMCContextFlag(dashboard.enableEntityFilter()), getRespectOMCContextFlag(dashboard.enableEntityFilter()), getRespectOMCContextFlag(dashboard.enableTimeRange()));
                     });
                     };
                 }

@@ -74,7 +74,7 @@ public class TestGlobalContext extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.createDashboard(webd, DSBNAME, null);
 		DashboardBuilderUtil.verifyDashboard(webd, DSBNAME, null, false);
-		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in builder Page");
+		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in builder Page");
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
@@ -91,7 +91,7 @@ public class TestGlobalContext extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.createDashboardSet(webd, DSBSETNAME, null);
 		DashboardBuilderUtil.verifyDashboardSet(webd, DSBSETNAME);
-		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in builder Page");
+		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in builder Page");
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
@@ -194,7 +194,7 @@ public class TestGlobalContext extends LoginAndLogout
 		BrandingBarUtil.visitDashboardHome(webd);
 		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.selectOOB(webd, "Application Performance Monitoring");
-		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context doesn't exist in APM");
+		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context doesn't exist in APM");
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
@@ -211,7 +211,7 @@ public class TestGlobalContext extends LoginAndLogout
 		BrandingBarUtil.visitDashboardHome(webd);
 		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.selectOOB(webd, "Host Operations");
-		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context doesn't exist in OOB dashboard");
+		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context doesn't exist in OOB dashboard");
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
@@ -228,7 +228,7 @@ public class TestGlobalContext extends LoginAndLogout
 		BrandingBarUtil.visitDashboardHome(webd);
 		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.selectDashboard(webd, "Enterprise Health");
-		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in OOBDashboard Set");
+		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in OOBDashboard Set");
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
