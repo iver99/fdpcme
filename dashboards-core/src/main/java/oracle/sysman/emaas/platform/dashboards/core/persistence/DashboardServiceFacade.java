@@ -544,10 +544,13 @@ public class DashboardServiceFacade
 		for(int i=0;i<subDashboardList.size();i++){
 			if(i==0){
 				sb.append(subDashboardList.get(i));
+			}else{
+				sb.append(","+subDashboardList.get(i));
 			}
-			sb.append(","+subDashboardList.get(i));
 		}
+		LOGGER.info(subDashboardList);
 		String sql="update ems_dashboard t set t.show_inhome=1 where t.tenant_id=?1 and t.dashboard_id in ("+sb.toString()+")";
+		LOGGER.info("update sub dashboard sql "+ sql);
 		Query query=em.createNativeQuery(sql);
 		query.setParameter(1,ed.getTenantId());
 		query.executeUpdate();

@@ -885,7 +885,9 @@ public class Dashboard
 		}
 		originSubList.removeAll(newSubList);
 		//EMCPDF-2709
-		dsf.updateSubDashboardVisibleInHome(ed,originSubList);
+		if(originSubList.size()>0){
+			dsf.updateSubDashboardVisibleInHome(ed,originSubList);
+		}
 		if (subDashboardList != null) {
 			for (int i = subDashboardList.size() - 1; i >= 0; i--) {
 				EmsSubDashboard emsSubDashboard = subDashboardList.get(i);
