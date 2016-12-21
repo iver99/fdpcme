@@ -5,7 +5,6 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
@@ -194,5 +193,20 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 
 		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "emcta/ta/analytics.html");
+	}
+
+	@Test
+	public void testSecurityLink()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testSecurityLink");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		// Monitoring link
+		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_SECU);
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL_WithPara(webd, "saui/web/index.html?L0=userBehaviors&L1=Graphical");
 	}
 }
