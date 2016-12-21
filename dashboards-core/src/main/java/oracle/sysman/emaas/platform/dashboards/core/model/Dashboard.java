@@ -874,10 +874,13 @@ public class Dashboard
 
 		Map<Dashboard, EmsSubDashboard> rows = new HashMap<Dashboard, EmsSubDashboard>();
 		List<EmsSubDashboard> subDashboardList = ed.getSubDashboardList();
+		DashboardServiceFacade dsf = new DashboardServiceFacade(ed.getTenantId());
+		//EMCPDF-2709
+		dsf.updateSubDashboardVisibleInHome(ed);
 		if (subDashboardList != null) {
 			for (int i = subDashboardList.size() - 1; i >= 0; i--) {
 				EmsSubDashboard emsSubDashboard = subDashboardList.get(i);
-				
+
 				ed.removeEmsSubDashboard(emsSubDashboard);
 			}
 		}
@@ -886,7 +889,6 @@ public class Dashboard
 			Dashboard subDashboard = dashboards.get(index);
 
 			Long tenantId = ed.getTenantId();
-			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 
 			BigInteger subDashboardId = subDashboard.getDashboardId();
 			EmsDashboard subbed = dsf.getEmsDashboardById(subDashboardId);
