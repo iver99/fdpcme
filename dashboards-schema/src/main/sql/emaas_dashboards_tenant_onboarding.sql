@@ -98,6 +98,7 @@ END;
 @&EMSAAS_SQL_ROOT/1.14.0/emaas_dashboards_update_orchetration_workflows.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.14.0/emaas_dashboards_cos_remove.sql &TENANT_ID 
 @&EMSAAS_SQL_ROOT/1.14.0/emaas_dashboards_cos_oob_widget_update.sql &TENANT_ID 
+
 COMMIT;
 /
 BEGIN
