@@ -34,7 +34,7 @@
     /*width: 630px;*/
 }
 .drawers {
-    width: 104px;
+    width: inline-block;
     /*float: left;*/
     /*border: 1px solid #F0F0F0;*/
     /*height: 396px;*/
@@ -57,9 +57,10 @@
     border-color: #FFFFFF; //#dfe4e7;*/
     padding-left: 10px;
     padding-top: 7px;
+    padding-right: 10px;
     padding-bottom: 6px;
     height: 18px; //20px;
-    width: 104px;
+    width: inline-block;
     display: block;
 }
 
