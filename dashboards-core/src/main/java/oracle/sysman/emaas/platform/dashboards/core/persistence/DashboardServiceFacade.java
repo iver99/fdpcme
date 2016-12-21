@@ -538,14 +538,18 @@ public class DashboardServiceFacade
 		return deleteCout;
 	}
 
-	public void updateSubDashboardVisibleInHome(EmsDashboard ed){
+	public void updateSubDashboardVisibleInHome(EmsDashboard ed,List<BigInteger> subDashboardList){
 		getEntityManager().getTransaction().begin();
-		String sql="update ems_dashboard t set t.show_inhome=1 where t.tenant_id=?1 and t.dashboard_id in " +
-				"(select t2.SUB_DASHBOARD_ID from ems_dashboard_set t2 where t2.DASHBOARD_SET_ID=?2 and t2.tenant_id=?3)";
+		StringBuilder sb=new StringBuilder();
+		for(int i=0;i<subDashboardList.size();i++){
+			if(i==0){
+				sb.append(subDashboardList.get(i));
+			}
+			sb.append(","+subDashboardList.get(i));
+		}
+		String sql="update ems_dashboard t set t.show_inhome=1 where t.tenant_id=?1 and t.dashboard_id in ("+sb.toString()+")";
 		Query query=em.createNativeQuery(sql);
 		query.setParameter(1,ed.getTenantId());
-		query.setParameter(2,ed.getDashboardId());
-		query.setParameter(3,ed.getTenantId());
 		query.executeUpdate();
 		commitTransaction();
 	}
