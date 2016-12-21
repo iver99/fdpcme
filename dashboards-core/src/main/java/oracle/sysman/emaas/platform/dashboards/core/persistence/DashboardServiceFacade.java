@@ -540,7 +540,6 @@ public class DashboardServiceFacade
 				sb.append(","+subDashboardList.get(i));
 			}
 		}
-		LOGGER.info(subDashboardList);
 		//check if these dashboard are included into any other set
 		Iterator<BigInteger> it=subDashboardList.iterator();
 		while(it.hasNext()){
@@ -548,10 +547,8 @@ public class DashboardServiceFacade
 				it.remove();
 			}
 		}
-		LOGGER.info(subDashboardList);
 		if(subDashboardList.size()>0){
 			String sql="update ems_dashboard t set t.show_inhome=1 where t.tenant_id=?1 and t.dashboard_id in ("+sb.toString()+")";
-			LOGGER.info("update sub dashboard sql "+ sql);
 			Query query=em.createNativeQuery(sql);
 			query.setParameter(1,ed.getTenantId());
 			query.executeUpdate();
