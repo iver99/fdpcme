@@ -6,13 +6,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'uifwk/@version@/js/sdk/context-util-impl',
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
+    'uifwk/@version@/js/util/zdt-util-impl',
     'ojs/ojknockout',
     'ojs/ojtoolbar',
     'ojs/ojmenu',
     'ojs/ojbutton',
     'ojs/ojdialog'
 ],
-    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls) {
+    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, zdtUtilModel) {
         function BrandingBarViewModel(params) {
             var self = this;
             var msgUtil = new msgUtilModel();
@@ -22,7 +23,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             cxtUtil.clearTopologyParams();
 
             self.compositeCxtText = ko.observable();
-            self.entitiesDisplayNames = ko.observableArray();
+            self.entitiesList = ko.observableArray();
             self.timeCxtText = ko.observable();
 
 
@@ -36,6 +37,31 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             } else {
                 self.showGlobalContextBanner = ko.observable(ko.unwrap(params.showGlobalContextBanner) === false ? false : true);
             }
+
+            self.entityContextParams = ko.unwrap(params.entityContextParams);
+            if (self.entityContextParams) {
+                if (ko.isObservable(self.entityContextParams.readOnly)) {
+                    self.entityContextReadOnly = self.entityContextParams.readOnly;
+                } else {
+                    self.entityContextReadOnly = ko.observable(ko.unwrap(self.entityContextParams.readOnly) === false ? false : true);
+                }
+            }
+            if (!self.entityContextReadOnly) {
+                self.entityContextReadOnly = ko.observable(true);
+            }
+            self.showEntityContextSelector = ko.observable(false);
+            //respond to change to entityContextReadOnly
+            self.entityContextReadOnly.subscribe(function () {
+                if (!self.entityContextReadOnly()) {
+                    require(['/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js'], function (EmctaContextSelectorUtil) {
+                        EmctaContextSelectorUtil.registerComponents();
+                        self.showEntityContextSelector(true);
+                    });
+                } else {
+                    self.showEntityContextSelector(false);
+                }
+            });
+            self.entityContextReadOnly.notifySubscribers();
 
             //Set showTimeSelector config. Default value is false. It can be set as an knockout observable and be changed after page is loaded
             //Per high level plan, we don't allow consumers to config to show/hide time selector themselves. So comment out below code for now.
@@ -76,7 +102,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     template: {require: 'text!/emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html'}
                 });
             }
-
+            
             if (self.showGlobalContextBanner() === true) {
                 refreshOMCContext();
             }
@@ -411,7 +437,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //For now, set interval to extend current user session automatically every 10 mins
             if (!dfu.isDevMode()) {
                 window.intervalToExtendCurrentUserSession = setInterval(function () {
-                    dfu.ajaxWithRetry("/emsaasui/uifwk/empty.html", {showMessages: "none"});
+                    dfu.ajaxWithRetry("/emsaasui/uifwk/@version@/html/empty.html", {showMessages: "none"});
                 }, 10 * 60 * 1000);
             }
 
@@ -449,7 +475,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.gotoHomePage = function () {
                 var welcomeUrl = dfu.discoverWelcomeUrl();
                 oj.Logger.info("Go to welcome page by URL: " + welcomeUrl, false);
-                window.location.href = cxtUtil.appendOMCContext(welcomeUrl);
+                window.location.href = cxtUtil.appendOMCContext(welcomeUrl, true, true, true);
             };
 
             //Open about box
@@ -566,7 +592,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var timeSelectorVmPath = 'uifwk/js/widgets/datetime-picker/js/datetime-picker';
             var timeSelectorTemplatePath = 'uifwk/js/widgets/datetime-picker/html/datetime-picker.html';
             //Register a knockout component for time selector
-            if (!ko.components.isRegistered('df-datetime-picker') && self.showTimeSelector === true) {
+            if (!ko.components.isRegistered('df-datetime-picker') && ko.unwrap(self.showTimeSelector) === true) {
                 ko.components.register("df-datetime-picker", {
                     viewModel: {require: timeSelectorVmPath},
                     template: {require: 'text!' + timeSelectorTemplatePath}
@@ -588,7 +614,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.notificationMenuHandler = function (event, item) {
                 if (self.notificationPageUrl !== null && self.notificationPageUrl !== "") {
                     oj.Logger.info("Open notifications page: " + self.notificationPageUrl);
-                    window.open(cxtUtil.appendOMCContext(self.notificationPageUrl));
+                    window.open(cxtUtil.appendOMCContext(self.notificationPageUrl, true, true, true));
                 }
             };
 
@@ -601,8 +627,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var retryingMessageIds = [];
             var currentRetryingMsgId = null;
             var currentRetryFailMsgId = null;
+            var currentPlannedDowntimeMsgId = null;
             var catRetryInProgress = "retry_in_progress";
             var catRetryFail = "retry_fail";
+            var catPlannedDowntime = "omc_planned_downtime";
             self.hasHiddenMessages = ko.observable(false);
             self.hiddenMessagesExpanded = ko.observable(false);
 
@@ -691,7 +719,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                 }
                 else if (data && data.tag && data.tag === 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED') {
-                    refreshOMCContext();
+                    if (self.showGlobalContextBanner() === true) {
+                        refreshOMCContext();
+                    }
                 }
             }
 
@@ -721,14 +751,25 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -62px;height:16px;";
                     }
 
-                    if (message.category === catRetryInProgress) {
-                        if (retryingMessageIds.length === 0) {
+                    if (message.category === catPlannedDowntime) {
+                        if (currentPlannedDowntimeMsgId === null) {
+                            currentPlannedDowntimeMsgId = message.id;
                             displayMessages.splice(0, 0, message);
+                        }
+                    }
+                    else if (message.category === catRetryInProgress) {
+                        if (retryingMessageIds.length === 0) {
+                        	if (currentPlannedDowntimeMsgId === null) {
+                                displayMessages.splice(0, 0, message);
+                            }
+                            else {
+                                displayMessages.splice(1, 0, message);
+                            }
                             currentRetryingMsgId = message.id;
                         }
                         retryingMessageIds.push(message.id);
                     }
-                    else if (message.category !== catRetryInProgress) {
+                    else {
                         var isMsgNeeded = true;
                         if (message.category === catRetryFail && currentRetryFailMsgId !== null) {
                             isMsgNeeded = false;
@@ -788,6 +829,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                     if (data.category === catRetryFail) {
                         currentRetryFailMsgId = null;
+                    }
+                    if (data.category === catPlannedDowntime) {
+                        currentPlannedDowntimeMsgId = null;
                     }
                 }
 
@@ -953,6 +997,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                self.cxtCompositeType = cxtUtil.getCompositeType();
                 self.cxtCompositeDisplayName = cxtUtil.getCompositeDisplayName();
                 self.cxtCompositeName = cxtUtil.getCompositeName();
+                self.cxtComposite = cxtUtil.getCompositeEntity();
 //                self.cxtStartTime = cxtUtil.getStartTime();
 //                self.cxtEndTime = cxtUtil.getEndTime();
                 //self.cxtEntityMeId = cxtUtil.getEntityMeId();
@@ -1034,31 +1079,29 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                }
                 //For now, only show composite context text on banner UI, and single entity
                 self.compositeCxtText('');
-                self.entitiesDisplayNames.removeAll();
+                self.entitiesList.removeAll();
 
                 var displayCompositeName = self.cxtCompositeMeId
                     && self.cxtCompositeDisplayName;
 
                 var displayEntitiesName = cxtUtil.getEntityMeIds()
                     && !cxtUtil.getEntitiesType()
-                    && cxtUtil.getEntityMeIds().length === 1
-                    && cxtUtil.getEntities().length === 1;
-                displayEntitiesName = false; // disable emctas-5151/emcpdf-2773 for 1.13
+                    && cxtUtil.getEntityMeIds().length > 0
+                    && cxtUtil.getEntities().length > 0;
+                displayEntitiesName = false; // disable emctas-5151/emcpdf-2773 for 1.14
 
                 if (displayCompositeName) {
                     self.compositeCxtText(self.cxtCompositeDisplayName);
                 }
                 if (displayEntitiesName)
                 {
-                    cxtUtil.getEntities().forEach(function (entity, index) {
-                        var entityName = {displayName: entity.displayName, entityName: entity.entityName};
-                        self.entitiesDisplayNames.push(entityName);
-                    });
+                    self.entitiesList(cxtUtil.getEntities());
                 }
                 if (!displayCompositeName && !displayEntitiesName)
                 {
                     //No composite entity & no entities
                     self.compositeCxtText(nls.BRANDING_BAR_GLOBAL_CONTEXT_ALL_ENTITIES);
+                    self.cxtComposite.isEnabled(true);
                 }
             }
 
@@ -1181,6 +1224,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //
             var message = {'tag': 'EMAAS_BRANDINGBAR_INSTANTIATED'};
             window.postMessage(message, window.location.href);
+            
+            //Detect planned downtime
+            var zdtUtil = new zdtUtilModel();
+            zdtUtil.detectPlannedDowntime(function(){});
         }
 
         return BrandingBarViewModel;
