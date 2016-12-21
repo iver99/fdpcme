@@ -131,6 +131,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		Actions actions = new Actions(driver.getWebDriver());
 		actions.moveToElement(searchInput).build().perform();
 		searchInput.clear();
+		WaitUtil.waitForPageFullyLoaded(driver);
 		actions.moveToElement(searchInput).build().perform();
 		driver.click("css=" + DashBoardPageId_190.RIGHTDRAWERSEARCHINPUTCSS);
 		searchInput.sendKeys(searchString);
@@ -195,7 +196,10 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		//        }
 
 		driver.getLogger().info("[DashboardHomeUtil] finish adding widget from right drawer");
-
+		//clear search box
+		searchInput.clear();
+		WaitUtil.waitForPageFullyLoaded(driver);
+		driver.takeScreenShot();
 		hideRightDrawer(driver);// hide drawer;
 	}
 
@@ -929,13 +933,15 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	@Override
 	public void saveDashboard(WebDriver driver)
 	{
-		driver.getLogger().info("DashboardBuilderUtil.save started");
-		driver.waitForElementPresent("css=" + DashBoardPageId_190.DASHBOARDSAVECSS);
-		driver.click("css=" + DashBoardPageId_190.DASHBOARDSAVECSS);
-		driver.takeScreenShot();
-		driver.getLogger().info("save compelted");
+	   driver.getLogger().info("DashboardBuilderUtil.save started");
+	   driver.waitForElementPresent("css=" + DashBoardPageId_190.DASHBOARDSAVECSS);
+	   WaitUtil.waitForPageFullyLoaded(driver);
+	   WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
+	   WebElement saveButton = selectedDashboardEl.findElement(By.cssSelector(DashBoardPageId_190.DASHBOARDSAVECSS));
+	   saveButton.click();
+	   driver.takeScreenShot();
+	   driver.getLogger().info("save compelted");
 	}
-
 	@Override
 	public void search(WebDriver driver, String searchString)
 	{

@@ -55,6 +55,10 @@ public interface ITimeSelectorUtil extends IUiTestCommonAPI
 	//Time hh:mm a
 	public String setCustomTime(WebDriver webd, String startDateTime, String endDateTime);
 
+	public String setCustomTimeWithDateOnly(WebDriver webd, int index, String startDate, String endDate);
+	
+	public String setCustomTimeWithDateOnly(WebDriver webd, String startDate, String endDate);
+	
 	public String setTimeFilter(WebDriver webd, int index, String hoursToExclude, int[] daysToExclude, int[] monthsToExclude)
 	throws Exception;
 
@@ -64,9 +68,16 @@ public interface ITimeSelectorUtil extends IUiTestCommonAPI
 	public String setTimeRange(WebDriver webd, int Index, TimeRange rangeoption);
 
 	public String setTimeRange(WebDriver webd, TimeRange rangeoption);
+	
+	public String setTimeRangeWithDateOnly(WebDriver webd, int index, TimeRange rangeOption);
+	
+	public String setTimeRangeWithDateOnly(WebDriver webd, TimeRange rangeOption);
 
 	public String setFlexibleRelativeTimeRange(WebDriver webd, int index, int relTimeVal, TimeUnit relTimeUnit);
 
 	public String setFlexibleRelativeTimeRange(WebDriver webd, int relTimeVal, TimeUnit relTimeUnit);
 
+	public String setFlexibleRelativeTimeRangeWithDateOnly(WebDriver webd, int index, int relTimeVal, TimeUnit relTimeUnit);
+	
+	public String setFlexibleRelativeTimeRangeWithDateOnly(WebDriver webd, int relTimeVal, TimeUnit relTimeUnit);
 }

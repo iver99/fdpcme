@@ -931,7 +931,9 @@ define(['knockout',
                 }
 
                 self.userExtendedOptions.tsel.entityContext = targets;
-                self.saveUserFilterOptions();
+                self.saveUserFilterOptions(function(data) { //update userExtendedOptions
+                    self.initUserFilterOptions();
+                });
 
             };
 
@@ -968,18 +970,64 @@ define(['knockout',
                 });
             };
             
-            var compressedTargets;
-            //set initial targets selector options. priority: user extendedOptions > dashboard extendedOptions
-            //1. set selectionMode: byCriteria/single. Default is "byCriteria"
-            //selectionMode is set in right.panel.model.js
-            //2. set selected targets/entityContext
-            if(self.userTsel && self.userExtendedOptions && !$.isEmptyObject(self.userExtendedOptions.tsel)) {
-                compressedTargets = self.userExtendedOptions.tsel.entityContext;
-            }else if(self.dashboardExtendedOptions && !$.isEmptyObject(self.dashboardExtendedOptions.tsel)) {
-                compressedTargets = self.dashboardExtendedOptions.tsel.entityContext;
-                self.userExtendedOptions.tsel = {};
-            }            
-            compressedTargets && self.targets(compressedTargets);
+            var initTargets = null;
+            
+            self.getEntityContext = function(dashboardTilesViewModel, enableEntityFilterVal) {
+                var entityContext = null;
+                var val = enableEntityFilterVal;
+                if(ko.unwrap(dashboardInst.type)  === "SET") { //Do not respect GC in dashboard set
+                    if(val === "GC") {
+                        val = "TRUE";
+                    }
+                }                
+                if(val === "GC") { //Respect entity context in global context
+                    //Set both of respectOMCApplicationContext and respectOMCEntityContext to true
+                    ctxUtil.respectOMCApplicationContext(true);
+                    ctxUtil.respectOMCEntityContext(true);
+                    entityContext = (omcContext.composite && omcContext.composite.compositeMEID) ? omcContext.composite.compositeMEID : null;
+                    //Use dashboard saved entity context if there's no entity context in URL
+                    if(entityContext === null) {
+                        if(dashboardTilesViewModel.userTsel && dashboardTilesViewModel.userExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.userExtendedOptions.tsel)) {
+                            entityContext = dashboardTilesViewModel.userExtendedOptions.tsel.entityContext;
+                        }else if(self.extendedOptions && !$.isEmptyObject(self.extendedOptions.tsel)) {
+                            entityContext = self.extendedOptions.tsel.entityContext;
+                            dashboardTilesViewModel.userExtendedOptions.tsel = {};
+                        }
+                        //Set global entity context using dashboard save entity context in this case
+                        //to do.... how to convert json criteria to compositeMEID 
+                    }
+                    
+                }else if(val === "TRUE") { //Use dashboard saved entity context
+                    //Set both of respectOMCApplicationContext and respectOMCEntityContext to false
+                    ctxUtil.respectOMCApplicationContext(false);
+                    ctxUtil.respectOMCEntityContext(false);
+                    if(dashboardTilesViewModel.userTsel && dashboardTilesViewModel.userExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.userExtendedOptions.tsel)) {
+                        entityContext = dashboardTilesViewModel.userExtendedOptions.tsel.entityContext;
+                    }else if(dashboardTilesViewModel.dashboardExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.dashboardExtendedOptions.tsel)) {
+                        entityContext = dashboardTilesViewModel.dashboardExtendedOptions.tsel.entityContext;
+                        dashboardTilesViewModel.userExtendedOptions.tsel = {};
+                    }else {
+                        entityContext = {"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"};
+                    }
+                    //set non-globalcontext
+                    //to do... how to use saved JSON criteria to set compositeMEID
+                    
+                }else if(val === "FALSE") { //Do not use entity context either from dashboard or from global context
+                    //No entity context in this case, widgets should use their own entity context
+                    //Set both of respectOMCApplicationContext and respectOMCEntityContext to false
+                    ctxUtil.respectOMCApplicationContext(false);
+                    ctxUtil.respectOMCEntityContext(false);
+                    entityContext = null;
+                    //set non-global entity conctext to null
+                    ctxUtil.setCompositeMeId(null);
+                }
+                
+                return entityContext;
+            }
+            
+            initTargets = self.getEntityContext(self, self.dashboard.enableEntityFilter());
+            initTargets && self.targets(initTargets);
+            
 
             var timeSelectorChangelistener = ko.computed(function(){
                 return {
@@ -997,29 +1045,103 @@ define(['knockout',
 
             var current = new Date();
             
-            var initStart = (omcContext.time && omcContext.time.startTime) ? new Date(parseInt(omcContext.time.startTime)) : null;
-            var initEnd = (omcContext.time && omcContext.time.endTime) ? new Date(parseInt(omcContext.time.endTime)) : null;
-            self.timePeriod = ko.observable((omcContext.time && omcContext.time.timePeriod) ? omcContext.time.timePeriod : null);
+            var initStart = null;
+            var initEnd = null;
+            self.timePeriod = ko.observable(null);
             
-            //initialize time selector. priority: time in url > time in user extendedOptions > time in dashboard extendedOptions > default time
-            if(self.timePeriod() === null && (initStart === null || initEnd === null)) {
-                if(self.userTimeSel && self.userExtendedOptions && !$.isEmptyObject(self.userExtendedOptions.timeSel)) {
-                    initStart = new Date(parseInt(self.userExtendedOptions.timeSel.start));
-                    initEnd = new Date(parseInt(self.userExtendedOptions.timeSel.end));
-                    var tp = (self.userExtendedOptions.timeSel.timePeriod === "custom1") ? "custom" : self.userExtendedOptions.timeSel.timePeriod;
-                    self.timePeriod(Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp);
-                }else if(self.dashboardExtendedOptions && !$.isEmptyObject(self.dashboardExtendedOptions.timeSel)) {
-                    initStart = new Date(parseInt(self.dashboardExtendedOptions.timeSel.start));
-                    initEnd = new Date(parseInt(self.dashboardExtendedOptions.timeSel.end));
-                    var tp = (self.dashboardExtendedOptions.timeSel.defaultValue === "custom1") ? "custom" : self.dashboardExtendedOptions.timeSel.defaultValue;
-                    self.timePeriod(Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp);
-                    self.userExtendedOptions.timeSel = {};
-                }else {
-                    initStart = new Date(current - 14*24*60*60*1000);
-                    initEnd = current;
-                    self.timePeriod("Last 14 days");
+            self.getTimeContext = function(dashboardTilesViewModel, timeFilterEnabledVal) {
+                var start = null;
+                var end = null;
+                var timePeriod = null;
+                var now = new Date();
+                var val = timeFilterEnabledVal;
+                if(ko.unwrap(dashboardInst.type)  === "SET") { //Do not respect GC in dashboard set
+                    if(val === "GC") {
+                        val = "TRUE";
+                    }
                 }
-            }
+                if(val === "GC") { //Respect time context in global context
+                    ctxUtil.respectOMCTimeContext(true); //Set respectOMCTimeContext flag to true
+                    start = (omcContext.time && omcContext.time.startTime) ? new Date(parseInt(omcContext.time.startTime)) : null;
+                    end = (omcContext.time && omcContext.time.endTime) ? new Date(parseInt(omcContext.time.endTime)) : null;
+                    timePeriod = (omcContext.time && omcContext.time.timePeriod) ? omcContext.time.timePeriod : null;
+                    
+                    //If no global context in URL, use dashboard saved context
+                    if(timePeriod === null && (start === null || end === null)) {
+                        if(dashboardTilesViewModel.userTimeSel && dashboardTilesViewModel.userExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.userExtendedOptions.timeSel)) {
+                            start = new Date(parseInt(dashboardTilesViewModel.userExtendedOptions.timeSel.start));
+                            end = new Date(parseInt(dashboardTilesViewModel.userExtendedOptions.timeSel.end));
+                            var tp = (dashboardTilesViewModel.userExtendedOptions.timeSel.timePeriod === "custom1") ? "custom" : dashboardTilesViewModel.userExtendedOptions.timeSel.timePeriod;
+                            timePeriod = Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp;
+                            //set global time context using dashboard saved time context
+                            if(ctxUtil.formalizeTimePeriod(timePeriod) === "CUSTOM") {
+                                ctxUtil.setStartAndEndTime(start.getTime(), end.getTime());
+                            }else {
+                                ctxUtil.setTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
+                            }
+                        }else if(dashboardTilesViewModel.dashboardExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.dashboardExtendedOptions.timeSel)) {
+                            start = new Date(parseInt(dashboardTilesViewModel.dashboardExtendedOptions.timeSel.start));
+                            end = new Date(parseInt(dashboardTilesViewModel.dashboardExtendedOptions.timeSel.end));
+                            var tp = (dashboardTilesViewModel.dashboardExtendedOptions.timeSel.defaultValue === "custom1") ? "custom" : dashboardTilesViewModel.dashboardExtendedOptions.timeSel.defaultValue;
+                            timePeriod = Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp;
+                            dashboardTilesViewModel.userExtendedOptions.timeSel = {};
+                            //set global time context using dashboard saved time context
+                            if(ctxUtil.formalizeTimePeriod(timePeriod) === "CUSTOM") {
+                                ctxUtil.setStartAndEndTime(start.getTime(), end.getTime());
+                            }else {
+                                ctxUtil.setTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
+                            }
+                        }else {
+                            start = new Date(now - 14*24*60*60*1000);
+                            end = now;
+                            timePeriod = "Last 14 days";
+                        }
+                    }
+                }else if(val === "TRUE") { //Use time context in dashboard and ignore time context in globalcontext
+                    ctxUtil.respectOMCTimeContext(false); //Set respectOMCTimeContext flag to false
+                    if(dashboardTilesViewModel.userTimeSel && dashboardTilesViewModel.userExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.userExtendedOptions.timeSel)) {
+                        start = new Date(parseInt(dashboardTilesViewModel.userExtendedOptions.timeSel.start));
+                        end = new Date(parseInt(dashboardTilesViewModel.userExtendedOptions.timeSel.end));
+                        var tp = (dashboardTilesViewModel.userExtendedOptions.timeSel.timePeriod === "custom1") ? "custom" : dashboardTilesViewModel.userExtendedOptions.timeSel.timePeriod;
+                        timePeriod = Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp;
+                    } else if (dashboardTilesViewModel.dashboardExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.dashboardExtendedOptions.timeSel)) {
+                        start = new Date(parseInt(dashboardTilesViewModel.dashboardExtendedOptions.timeSel.start));
+                        end = new Date(parseInt(dashboardTilesViewModel.dashboardExtendedOptions.timeSel.end));
+                        var tp = (dashboardTilesViewModel.dashboardExtendedOptions.timeSel.defaultValue === "custom1") ? "custom" : dashboardTilesViewModel.dashboardExtendedOptions.timeSel.defaultValue;
+                        timePeriod = Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp;
+                        dashboardTilesViewModel.userExtendedOptions.timeSel = {};
+                    } else {
+                        start = new Date(now - 14 * 24 * 60 * 60 * 1000);
+                        end = now;
+                        timePeriod = "Last 14 days";
+                    }
+                    //set non-global time context
+                    if(ctxUtil.formalizeTimePeriod(timePeriod) === "CUSTOM") {
+                        ctxUtil.setStartAndEndTime(start.getTime(), end.getTime());
+                    }else {
+                        ctxUtil.setTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
+                    }
+                }else if(val === "FALSE") { // Do not use time context either from dashboard or from global context
+                    //No time context in this case, widgets should use their own time context
+                    //Set respectOMCTimeContext flag to false
+                    ctxUtil.respectOMCTimeContext(false);
+                    start = null;
+                    end = null;
+                    timePeriod = null;
+                    //set non-global time context to null
+                    ctxUtil.setTimePeriod(null);
+                }
+                return {
+                    start: start,
+                    end: end,
+                    timePeriod: timePeriod
+                }
+            };
+            
+            var timeContext = self.getTimeContext(self, self.dashboard.enableTimeRange());
+            initStart = timeContext.start;
+            initEnd = timeContext.end;
+            self.timePeriod(timeContext.timePeriod);
             
             if(ctxUtil.formalizeTimePeriod(self.timePeriod())) {
                 if(ctxUtil.formalizeTimePeriod(self.timePeriod()) !== "CUSTOM") { //get start and end time for relative time period
@@ -1066,7 +1188,9 @@ define(['knockout',
                             self.userExtendedOptions.timeSel.timePeriod = Builder.getTimePeriodValue(tp) ? Builder.getTimePeriodValue(tp) : tp;
                             self.userExtendedOptions.timeSel.start = start.getTime();
                             self.userExtendedOptions.timeSel.end = end.getTime();
-                            self.saveUserFilterOptions();
+                            self.saveUserFilterOptions(function(data) { //update userExtendedOptions
+                                self.initUserFilterOptions();
+                            });
 
 //                            $b.triggerEvent($b.EVENT_TIME_SELECTION_CHANGED, "time selection is changed by selecting date/time picker", Builder.getTimePeriodValue(tp), start.getTime(), end.getTime());
                         }
@@ -1074,14 +1198,14 @@ define(['knockout',
                 }
             };
 
-            self.saveUserFilterOptions = function() {
+            self.saveUserFilterOptions = function(succCallback) {
                 var userFilterOptions = {
                     dashboardId: self.dashboard.id(),
                     extendedOptions: JSON.stringify(self.userExtendedOptions),
                     autoRefreshInterval: self.userExtendedOptions.autoRefresh.defaultValue
                 };
 
-                new Builder.DashboardDataSource().saveDashboardUserOptions(userFilterOptions);
+                new Builder.DashboardDataSource().saveDashboardUserOptions(userFilterOptions, succCallback);
             };
             
             self.autoRefreshChanged = function(interval) {

@@ -74,6 +74,7 @@ public class FacadeUtil
 		}
 		//result.setDashboardTileParamsList(dashboardTileParamsList);
 
+		result.setTileId(dt.getTileId());
 		result.setHeight(dt.getHeight());
 		result.setIsMaximized(dt.getIsMaximized());
 		result.setLastModificationDate(dt.getLastModificationDate());

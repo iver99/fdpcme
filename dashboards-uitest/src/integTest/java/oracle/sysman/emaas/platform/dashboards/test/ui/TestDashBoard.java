@@ -43,9 +43,12 @@ public class TestDashBoard extends LoginAndLogout
 	private String dbName_columncheck = "";
 	private String dbName_ITADashboard = "";
 	private String dbName_LADashboard = "";
+	private String dbName_testMaximizeRestore = "";
+	private String dbName_CustomWidget = "";
 
 	private final String WidgetName_1 = "Top Hosts by Log Entries";
 	private final String WidgetName_2 = "Access Log Error Status Codes";
+	private final String customWidgetName = "Running Workflow Submission";
 
 	public void initTest(String testName)
 	{
@@ -77,6 +80,8 @@ public class TestDashBoard extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_columncheck);
 		DashBoardUtils.deleteDashboard(webd, dbName_ITADashboard);
 		DashBoardUtils.deleteDashboard(webd, dbName_LADashboard);
+		DashBoardUtils.deleteDashboard(webd, dbName_testMaximizeRestore);
+		DashBoardUtils.deleteDashboard(webd, dbName_CustomWidget);
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -283,23 +288,6 @@ public class TestDashBoard extends LoginAndLogout
 		//save dashboard
 		webd.getLogger().info("save the dashboard");
 		DashboardBuilderUtil.saveDashboard(webd);
-
-		//open the widget
-		webd.getLogger().info("open the widget");
-		DashboardBuilderUtil.openWidget(webd, "Database Errors Trend");
-
-		webd.switchToWindow();
-		//WaitUtil.waitForPageFullyLoaded(webd);
-		webd.getLogger().info("Wait for the widget loading....");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
-
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		if (!url.substring(url.indexOf("emsaasui") + 9).contains(
-				"emlacore/html/log-analytics-search.html?widgetId=2013&dashboardId")) {
-			Assert.fail("NOT open the correct widget");
-		}
 	}
 
 	@Test(groups = "Group7", dependsOnGroups = { "Group6" })
@@ -680,6 +668,47 @@ public class TestDashBoard extends LoginAndLogout
 	}
 
 	@Test(groups = "Group5", dependsOnGroups = { "Group4" })
+	public void testHideOpenInIconForCustomWidget()
+	{
+		dbName_CustomWidget = "DashboardWithCustomWidget-" + generateTimeStamp();
+		String dbDesc = "test hide Open In icon for custom widget";
+		//initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testHideOpenInIconForCustomWidget");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//create dashboard
+		webd.getLogger().info("Create a dashboard: with description, time refresh");
+		DashboardHomeUtil.createDashboard(webd, dbName_CustomWidget, dbDesc, DashboardHomeUtil.DASHBOARD);
+
+		//verify dashboard in builder page
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_CustomWidget, dbDesc, true),
+				"Create dashboard failed!");
+
+		//Add the widget to the dashboard
+		webd.getLogger().info("Start to add Widget into the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, customWidgetName);
+		webd.getLogger().info("Add widget finished");
+
+		//save dashboard
+		webd.getLogger().info("Save the dashboard");
+		DashboardBuilderUtil.saveDashboard(webd);
+
+		//verify the the Open In Icon is hidden
+		webd.getLogger().info("Start to verify the the Open In Icon is hidden");
+		Assert.assertFalse(DashBoardUtils.verifyOpenInIconExist(webd, customWidgetName, 0),
+				"The 'Open In' icon is displayed for the custom widget");
+	}
+
+	@Test(groups = "Group5", dependsOnGroups = { "Group4" })
 	public void testHideTimeRangeFilter()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -702,6 +731,79 @@ public class TestDashBoard extends LoginAndLogout
 		//verify the time range filter not displayed in the page
 		webd.getLogger().info("Verify the time range filter not diplayed in the page");
 		Assert.assertFalse(webd.isDisplayed("css=" + PageId.DATETIMEPICK_CSS), "The time range filter is in the page");
+	}
+
+	@Test
+	public void testMaximizeRestoreWidgetOOBDb()
+	{
+		//initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testMaximize/RestoreWidget");
+
+		//open the dashboard, eg: Host Operations in the home page
+		webd.getLogger().info("open the OOB dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "Host Operations");
+
+		//widget operation
+		webd.getLogger().info("maximize/restore the widget");
+
+		DashboardBuilderUtil.maximizeWidget(webd, "Host Logs Trend", 0);
+		DashboardBuilderUtil.restoreWidget(webd, "Host Logs Trend", 0);
+
+		//verify the edit/add button not displayed in the page
+		WebElement addButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Add Content']"));
+		Assert.assertFalse(addButton.isDisplayed(), "Add button be displayed in system dashboard set");
+
+		WebElement editButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));
+		Assert.assertFalse(editButton.isDisplayed(), "Edit button be displayed in system dashboard set");
+	}
+
+	//test maxmize/restore widget in self created dashboard
+	@Test
+	public void testMaximizeRestoreWidgetSelfDashboard()
+	{
+		dbName_testMaximizeRestore = "selfDb-" + generateTimeStamp();
+
+		//initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testMaximize/RestoreWidget");
+
+		//Create dashboard
+		DashboardHomeUtil.createDashboard(webd, dbName_testMaximizeRestore, null, DashboardHomeUtil.DASHBOARD);
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_testMaximizeRestore, null, true),
+				"Create dashboard failed!");
+
+		//Add two widgets
+		webd.getLogger().info("Start to add Widget into the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "Access Log Error Status Codes");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "All Logs Trend");
+		webd.getLogger().info("Add widget finished");
+
+		//verify if the widget added successfully
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, "Access Log Error Status Codes"),
+				"Widget 'Access Log Error Status Codes' not found");
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, "All Logs Trend"), "Widget 'All Logs Trend' not found");
+
+		//save dashboard
+		webd.getLogger().info("save the dashboard");
+		DashboardBuilderUtil.saveDashboard(webd);
+
+		//widget operation
+		webd.getLogger().info("maximize/restore the widget");
+		DashboardBuilderUtil.maximizeWidget(webd, "Access Log Error Status Codes", 0);
+		Assert.assertFalse(webd.isDisplayed("css=" + ".dbd-widget[data-tile-name=\"All Logs Trend\"]"),
+				"Widget 'All Logs Trend' is still displayed");
+
+		DashboardBuilderUtil.restoreWidget(webd, "Access Log Error Status Codes", 0);
+		Assert.assertTrue(webd.isDisplayed("css=" + ".dbd-widget[data-tile-name=\"All Logs Trend\"]"),
+				"Widget 'All Logs Trend' is not displayed");
+
+		//verify the edit/add button displayed in the page
+		WebElement addButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Add Content']"));
+		Assert.assertTrue(addButton.isDisplayed(), "Add button isn't displayed in system dashboard set");
+
+		WebElement editButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));
+		Assert.assertTrue(editButton.isDisplayed(), "Edit button isn't displayed in system dashboard set");
 	}
 
 	@Test(groups = "Group4", dependsOnMethods = { "testCreateDashboad_noWidget_GridView" })
