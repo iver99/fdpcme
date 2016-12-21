@@ -61,14 +61,13 @@ define(['knockout',
                 self.$list = $([].concat.apply($b.findEl(".fit-size"),$(".df-right-panel .fit-size")));
             };
 
-            if(!window.DEV_MODE && !self.brandingbarCssLoaded){
-                var brandingbarOldHeight = $(".emaas-appheader").height();
+            if(!self.brandingbarCssLoaded){
                 self.brandingbarCssLoaded = setInterval(function(){
-                    if(brandingbarOldHeight !== $(".emaas-appheader").height()){
+                    if($(".emaas-appheader").height()===51){
                         $b.triggerBuilderResizeEvent('uifwk-common-alta.css loaded');
                         clearInterval(self.brandingbarCssLoaded);
                     }
-                });
+                },1000);
             }
             self.initialize();
         }
