@@ -26,8 +26,7 @@ BEGIN
   IF v_count>0 THEN
 	SELECT data_default into v_default FROM user_tab_columns WHERE table_name='EMS_DASHBOARD' AND column_name='ENABLE_TIME_RANGE';
 	if v_default!='(1)' THEN
-		EXECUTE IMMEDIATE 'alter table ems_dashboard modify (ENABLE_TIME_RANGE NUMBER(2,0) DEFAULT(1))';  
-		COMMIT;
+		EXECUTE IMMEDIATE 'alter table ems_dashboard modify (ENABLE_TIME_RANGE NUMBER(2,0) DEFAULT(1))';
 		DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.ENABLE_TIME_RANGE is change default value to 1!');
 	ELSE
 		DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.ENABLE_TIME_RANGE default value is alreay set to 1, no need to update!');
@@ -42,3 +41,4 @@ WHEN OTHERS THEN
   RAISE;
 END;
 /
+
