@@ -13,6 +13,7 @@ package oracle.sysman.emaas.platform.dashboards.test.ui;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
@@ -33,6 +34,9 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 	private String dbsetDesc_Test = "";
 	private String dbsetName_Simple_CRUD = "";
 	private String dbsetDesc_Simple_CRUD = "";
+	private String dbsetName_withOOB = "";
+
+	private static String OOBAddToSet = "Database Operations";
 
 	public void initTest(String testName)
 	{
@@ -71,7 +75,7 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 	@Test
 	public void testCreateDashboardSet()
 	{
-		dbsetName_Simple_CRUD = "DashboardSet-WithDesc" + generateTimeStamp();
+		dbsetName_Simple_CRUD = "DashboardSet-WithDesc" + DashBoardUtils.generateTimeStamp();
 		dbsetDesc_Simple_CRUD = "Test the dashboard set with description";
 
 		//init the test
@@ -101,7 +105,7 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 	@Test
 	public void testCreateDashboardWithoutDesc()
 	{
-		dbsetName_Test_NoDesc = "DashboardSet-NoDesc" + generateTimeStamp();
+		dbsetName_Test_NoDesc = "DashboardSet-NoDesc" + DashBoardUtils.generateTimeStamp();
 
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -122,6 +126,42 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 		//verify the dashboardset
 		webd.getLogger().info("Verify if the dashboard set existed in builder page");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_Test_NoDesc), "Dashboard set NOT found!");
+	}
+
+	@Test
+	public void testDeleteDashboardSetWithOOBDashboard()
+	{
+		dbsetName_withOOB = "DashboardSet With OOB-" + DashBoardUtils.generateTimeStamp();
+
+		//initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test testDeleteDashboardSetWithOOBDashboard");
+
+		//Create dashboard set
+		webd.getLogger().info("Create a new dashboard set");
+		DashboardHomeUtil.createDashboard(webd, dbsetName_withOOB, null, DashboardHomeUtil.DASHBOARDSET);
+
+		//verify the dashboard set
+		webd.getLogger().info("Verify if the dashboard set existed in builder page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_withOOB), "Create dashboard set failed!");
+
+		//Select a dashboard and open it
+		webd.getLogger().info("select and open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, OOBAddToSet);
+
+		//delete the dashboard set
+		webd.getLogger().info("Delete the dashboard set");
+		DashboardBuilderUtil.deleteDashboardSet(webd);
+
+		//back to dashboard home page
+		webd.getLogger().info("Back to dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//verify the OOB dashboard not in home page
+		webd.getLogger().info("Verify the OOB dashboard not in home page");
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, OOBAddToSet), "The dashboard '" + OOBAddToSet
+				+ "' should not in home page!");
+
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboardSet" })
@@ -289,10 +329,5 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbsetName_Simple_CRUD + "-Modify"),
 				"The dashboard set named '" + dbsetName_Simple_CRUD + "-Modify' should exist!!!");
 
-	}
-
-	private String generateTimeStamp()
-	{
-		return String.valueOf(System.currentTimeMillis());
 	}
 }

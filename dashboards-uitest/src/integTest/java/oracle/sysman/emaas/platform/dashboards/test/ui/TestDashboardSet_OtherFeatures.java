@@ -42,7 +42,7 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 	@BeforeClass
 	public void createTestData()
 	{
-		dbsetName = "DashboardSet_FeatureTest-" + generateTimeStamp();
+		dbsetName = "DashboardSet_FeatureTest-" + DashBoardUtils.generateTimeStamp();
 		String dbsetDesc = "Test the dashboard set";
 
 		//init the test
@@ -106,7 +106,7 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 	@Test(groups = "first run")
 	public void testFavorite()
 	{
-		dbsetName_Favorite = "DashboardSet_Favorite-" + generateTimeStamp();
+		dbsetName_Favorite = "DashboardSet_Favorite-" + DashBoardUtils.generateTimeStamp();
 		String dbsetDesc = "set the dashboard set as favorite";
 
 		//init the test
@@ -159,7 +159,7 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 	@Test(groups = "first run")
 	public void testFilterITADashboardSet()
 	{
-		dbsetName_ITA = "DashboardSet-ITA-" + generateTimeStamp();
+		dbsetName_ITA = "DashboardSet-ITA-" + DashBoardUtils.generateTimeStamp();
 
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -204,7 +204,7 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 	@Test(groups = "first run")
 	public void testFilterLADashboardSet()
 	{
-		dbsetName_LA = "DashboardSet-LA-" + generateTimeStamp();
+		dbsetName_LA = "DashboardSet-LA-" + DashBoardUtils.generateTimeStamp();
 
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -275,7 +275,7 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 	@Test(groups = "second run", dependsOnMethods = { "testMRWidgetSelfDbSet_sysBb" })
 	public void testMRWidgetSelfDbSet_selfBb()
 	{
-		dbName_indbSet = "selfDb-" + generateTimeStamp();
+		dbName_indbSet = "selfDb-" + DashBoardUtils.generateTimeStamp();
 
 		//initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -330,7 +330,7 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 	@Test(groups = "second run", dependsOnGroups = { "first run" })
 	public void testMRWidgetSelfDbSet_sysBb()
 	{
-		dbset_testMaximizeRestore = "selfDbSet-" + generateTimeStamp();
+		dbset_testMaximizeRestore = "selfDbSet-" + DashBoardUtils.generateTimeStamp();
 
 		//initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -429,7 +429,7 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 	@Test(groups = "first run")
 	public void testShare()
 	{
-		dbsetName_Share = "DashboardSet-Share-" + generateTimeStamp();
+		dbsetName_Share = "DashboardSet-Share-" + DashBoardUtils.generateTimeStamp();
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test case: testShare");
@@ -519,10 +519,5 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 		webd.getLogger().info("Share the dashboard");
 		Assert.assertFalse(DashboardBuilderUtil.toggleShareDashboardset(webd), "Stop sharing the dashboard set failed!");
 
-	}
-
-	private String generateTimeStamp()
-	{
-		return String.valueOf(System.currentTimeMillis());
 	}
 }
