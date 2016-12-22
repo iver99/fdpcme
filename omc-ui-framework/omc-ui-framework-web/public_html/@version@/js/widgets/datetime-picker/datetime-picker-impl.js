@@ -154,6 +154,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.timeConverterSecond = oj.Validation.converterFactory("dateTime").createConverter({pattern: 'hh:mm:ss a'});
                 self.timeConverterMillisecond = oj.Validation.converterFactory("dateTime").createConverter({pattern: 'hh:mm:ss:SSS a'});
                 self.timeConverter = ko.observable(self.timeConverterMinute);
+                self.showTimeAtMillisecond = ko.observable(false);
                 
                 self.timeIncrement = ko.observable("00:10:00:00");
 
@@ -387,6 +388,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         var num = self.flexRelTimeVal();
                         var opt = self.flexRelTimeOpt()[0];
                         self.setFlexRelTime(num, opt);
+                        self.setTimePeriodChosen(self.timePeriodCustom);
+                        customClick(1);
                     }else {
                         self.autoFocus("inputStartDate_" + self.randomId);
                         self.lastFocus(1);
@@ -764,7 +767,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     if(!params.timeLevelsNotToShow) {
                         return true;
                     }
-                    if(self.getParam(params.timeLevelsNotToShow).indexOf(timeLevel) >= 0) {
+                    //timeLevelsNotToShow param support both lowercase and uppercase
+                    if(self.getParam(params.timeLevelsNotToShow).indexOf(timeLevel) >= 0 || self.getParam(params.timeLevelsNotToShow).indexOf(timeLevel.toUpperCase()) >= 0) {
                         return false;
                     }else {
                         return true;
@@ -774,6 +778,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 //show time at millisecond level or minute level in ojInputTime component
                 self.getTimeConverter = function() {
                     if(self.getParam(params.showTimeAtMillisecond) === true) {
+                        self.showTimeAtMillisecond(true);
                         self.timeConverter(self.timeConverterMillisecond);
                     }else {
                         self.timeConverter(self.timeConverterMinute);
@@ -1914,7 +1919,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
 
                 //contol whether the panel should popup or not
-                self.panelControl = function () {
+                self.panelControl = function (data,event) {
+                    event.stopPropagation();
                     if(!self.dtpickerPosition) {
                         if(params.dtpickerPosition) {
                             if(params.dtpickerPosition === "right") {
@@ -1948,6 +1954,13 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.updateRange(self.startDate(), self.endDate());
 
                         $(self.panelId).ojPopup('open', self.wrapperId + ' #dropDown_' + self.randomId, self.panelPosition);
+                        if(!self.closePanelOnClickingOut){
+                            self.closePanelOnClickingOut = document.addEventListener("click",function(_evnt){
+                                if ($(self.panelId).ojPopup('isOpen')) {
+                                    self.closeAllPopups();
+                                }
+                            },false);
+                        }
                     }
                 };
 
@@ -2291,7 +2304,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                     if (self.callbackAfterApply) {
                         $.ajax({
-                            url: "/emsaasui/uifwk/empty.html",
+                            url: "/emsaasui/uifwk/@version@/html/empty.html",
                             success: function () {
                                 console.log("Returned values from date/time picker are: ");
                                 console.log("start: "+new Date(start));
@@ -2321,7 +2334,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.closeAllPopups();
                     if(self.callbackAfterCancel) {
                         $.ajax({
-                            url: "/emsaasui/uifwk/empty.html",
+                            url: "/emsaasui/uifwk/@version@/html/empty.html",
                             success: function () {
                                 self.callbackAfterCancel();
                             },
