@@ -61,7 +61,7 @@ public class DataFetcher
 			else {
 				LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
 				ITRLOGGER
-						.info("RestClient is connecting to get response after getting authorization token from registration manager.");
+				.info("RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
 			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 					.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(MediaType.APPLICATION_JSON)
@@ -112,6 +112,7 @@ public class DataFetcher
 			RestClient rc = new RestClient();
 			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantIdParam);
 			rc.setHeader("X-REMOTE-USER", userTenant);
+			rc.setHeader("OAM_REMOTE_USER", userTenant);
 			if (!StringUtil.isEmpty(referer)) {
 				rc.setHeader("Referer", referer);
 			}
