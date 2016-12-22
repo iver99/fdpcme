@@ -1121,6 +1121,10 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
         }
       }
       
+      .clear-content-search-input-btn span.dbs-clear-icon{
+          vertical-align: top;
+      }
+      
       .search-content-dropdown-list-container{
         position: absolute;
         width: 205px;

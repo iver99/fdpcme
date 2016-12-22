@@ -219,6 +219,7 @@ define(['dashboards/dbsmodel',
         self.removeLinkToTitleClicked = function(e, d){
             self.selectedContent().WIDGET_LINKED_DASHBOARD(null);
             self.hasLinkedToTitle(false);
+            resetAddLinkToTitle();
         };
 
         function resetAddLinkToTitle(holdHasLinkedToTitle){
