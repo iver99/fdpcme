@@ -561,7 +561,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, cxtModel)
 
         self.handleSortByChanged = function (context, valueParam) {
             var _preValue = valueParam.previousValue, _value = valueParam.value, _ts = self.dashboardsTS();
-            if ( valueParam.option === "value" && _value[0] !== _preValue[0] )
+            if ( valueParam.option === "value" )
             {
                 self.dsFactory.sortBy = _value[0];
                 if (valueParam.optionMetadata.writeback === 'shouldNotWrite')
