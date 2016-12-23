@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.ui.web;
 
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.DashboardDataAccessUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,6 +10,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+
 import java.io.*;
 import java.util.regex.Pattern;
 
@@ -33,7 +35,12 @@ public class AdditionalDataFilter implements Filter {
 
         private PrintWriter writer = null;
         {
-            writer = new PrintWriter(new OutputStreamWriter(byteStream));
+            try {
+				writer = new PrintWriter(new OutputStreamWriter(byteStream, "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
 
         public CaptureWrapper(HttpServletResponse response)
@@ -45,7 +52,7 @@ public class AdditionalDataFilter implements Filter {
         {
             String result;
             try {
-                outputStream.flush();
+            	outputStream.flush();
                 outputStream.close();
                 result = byteStream.toString();
             }
@@ -79,6 +86,8 @@ public class AdditionalDataFilter implements Filter {
         LOGGER.debug("Now enter the AdditionalDataFilter");
         HttpServletRequest httpReq = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
+        httpResponse.setCharacterEncoding("utf-8");
+        httpResponse.setContentType("text/html;charset=utf-8");
 
         final CaptureWrapper wrapper = new CaptureWrapper(httpResponse);
         chain.doFilter(request, wrapper);
