@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
  * Created by chehao on 2016/12/22.
  */
 public abstract class AbstractCache implements ICache{
+    Logger LOGGER=LogManager.getLogger(AbstractCache.class);
 
     @Override
     public Object get(Object key) {
@@ -20,8 +21,13 @@ public abstract class AbstractCache implements ICache{
         CachedItem value=lookup(key);
         if(value == null){
             if(factory!=null){
-                    Object valueFromFactory=factory.fetchCachable(key);
-                    CachedItem ci=new CachedItem(key,valueFromFactory);
+                Object valueFromFactory= null;
+                try {
+                    valueFromFactory = factory.fetchCachable(key);
+                } catch (Exception e) {
+                    LOGGER.error(e.getLocalizedMessage());
+                }
+                CachedItem ci=new CachedItem(key,valueFromFactory);
                     put(key,ci);
                     return valueFromFactory;
             }
