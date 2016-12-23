@@ -80,7 +80,7 @@ BEGIN
                 WHILE DASHBOARD_ID_CURSOR_NULL%FOUND LOOP
                     UPDATE EMS_DASHBOARD SET EMS_DASHBOARD.DESCRIPTION = V_DESCRIPTION WHERE EMS_DASHBOARD.DASHBOARD_ID = C_DB_ID_2 AND TENANT_ID = V_TENANT_ID;
                     V_DESCRIPTION := V_DESCRIPTION || ' ';
-                    DBMS_OUTPUT.PUT_LINE(C_DB_ID_2||' with null desc');
+                    DBMS_OUTPUT.PUT_LINE(C_DB_ID_2||' with null desc has been updated successfully!');
                 FETCH DASHBOARD_ID_CURSOR_NULL INTO C_DB_ID_2;
                 END LOOP;
                 CLOSE DASHBOARD_ID_CURSOR_NULL;
@@ -94,8 +94,10 @@ BEGIN
                 SELECT NAME INTO V_NAME FROM EMS_DASHBOARD WHERE EMS_DASHBOARD.DASHBOARD_ID = C_DB_ID;
                 V_DESCRIPTION := V_NAME || ':' || substr(C_DB.DDESC, 1, length(C_DB.DDESC)-length(V_NAME)-1);
                 UPDATE EMS_DASHBOARD SET EMS_DASHBOARD.DESCRIPTION = V_DESCRIPTION WHERE EMS_DASHBOARD.DASHBOARD_ID = C_DB_ID AND TENANT_ID = V_TENANT_ID;
+                DBMS_OUTPUT.PUT_LINE(C_DB_ID ||' has been updated successfully!');
               ELSE
                 UPDATE EMS_DASHBOARD SET EMS_DASHBOARD.DESCRIPTION = V_DESCRIPTION WHERE EMS_DASHBOARD.DASHBOARD_ID = C_DB_ID AND TENANT_ID = V_TENANT_ID;
+                DBMS_OUTPUT.PUT_LINE(C_DB_ID ||' has been updated successfully!');
                 IF length(V_DESCRIPTION) < 1279 THEN
                   V_DESCRIPTION := V_DESCRIPTION || ' ';
                 ELSE
