@@ -66,7 +66,7 @@ define(['knockout',
                         $b.triggerBuilderResizeEvent('uifwk-common-alta.css loaded');
                         clearInterval(self.brandingbarCssLoaded);
                     }
-                },1000);
+                },100);
             }
 
             self.initialize();
