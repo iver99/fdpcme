@@ -58,15 +58,18 @@ public class DashBoardUtils
 	public static void deleteDashboard(WebDriver webdriver, String DashboardName)
 	{
 		DashboardHomeUtil.search(webdriver, DashboardName);
-		if (DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName)) {
-			webdriver.getLogger().info("Start to delete the dashboard: " + DashboardName);
-			DashboardHomeUtil.deleteDashboard(webdriver, DashboardName, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
-			webdriver.getLogger().info("Verify the dashboard: " + DashboardName + " has been deleted");
-			Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName), "Delete dashboard "
-					+ DashboardName + " failed!");
-			webdriver.getLogger().info("Delete the dashboard: " + DashboardName + " finished");
+		String searchresult = webdriver.getElement("css=" + PageId.DASHBOARDDISPLAYPANELCSS).getAttribute("childElementCount");
+		int dbnumber = Integer.parseInt(searchresult);
+		for (int i = 0; i < dbnumber; i++) {
+			if (DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName)) {
+				webdriver.getLogger().info("Start to delete the dashboard: " + DashboardName);
+				DashboardHomeUtil.deleteDashboard(webdriver, DashboardName, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+			}
 		}
-
+		webdriver.getLogger().info("Verify the dashboard: " + DashboardName + " has been deleted");
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName), "Delete dashboard " + DashboardName
+				+ " failed!");
+		webdriver.getLogger().info("Delete the dashboard: " + DashboardName + " finished");
 	}
 
 	public static String generateTimeStamp()
