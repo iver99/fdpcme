@@ -140,7 +140,9 @@ BEGIN
       END IF;
 END;
 /
-  
+DECLARE
+  v_count     INTEGER;
+  v_default   varchar2(4):='(1)';
 BEGIN
   SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD' AND column_name='ENABLE_TIME_RANGE';
   IF v_count>0 THEN
