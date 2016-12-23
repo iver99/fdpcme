@@ -37,6 +37,7 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 	private String dbsetName_withOOB = "";
 
 	private static String OOBAddToSet = "Database Operations";
+	private static String OOBAddToSet_VerifyDelete = "Entities";
 
 	public void initTest(String testName)
 	{
@@ -147,7 +148,7 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 
 		//Select a dashboard and open it
 		webd.getLogger().info("select and open the dashboard");
-		DashboardHomeUtil.selectDashboard(webd, OOBAddToSet);
+		DashboardHomeUtil.selectDashboard(webd, OOBAddToSet_VerifyDelete);
 
 		//delete the dashboard set
 		webd.getLogger().info("Delete the dashboard set");
@@ -159,7 +160,7 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 
 		//verify the OOB dashboard not in home page
 		webd.getLogger().info("Verify the OOB dashboard not in home page");
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, OOBAddToSet), "The dashboard '" + OOBAddToSet
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, OOBAddToSet_VerifyDelete), "The dashboard '" + OOBAddToSet
 				+ "' should not in home page!");
 
 	}

@@ -217,7 +217,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 
 		//duplicate the dashboard in set
 		webd.getLogger().info("duplicate the dashboard in the dashboard set");
-		DashboardBuilderUtil.duplicateDashboardInsideSet(webd, dbName_Duplicate, null, false);
+		DashboardBuilderUtil.duplicateDashboard(webd, dbName_Duplicate, null);
 
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_Duplicate, null, true),
 				"Duplicate OOB dashboard failed!");
