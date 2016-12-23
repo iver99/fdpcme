@@ -46,7 +46,7 @@ test {
 }
 
 dependencies {
-	compile project(':dashboards-entities')
+	compile project(':dashboards-entities')  
 	compile project(':dashboards-sdk')
 	testRuntime getProjectArtifact('ojdbc6')  
 	compile getProjectArtifact('log4j-core')   

@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
 import java.sql.SQLException;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -473,13 +474,27 @@ public class DashboardServiceFacade
 		if (emsSubDashboards != null) {
 			for (EmsSubDashboard emsSubDashboard : emsSubDashboards) {
 				EmsDashboard dashboard = getEmsDashboardById(emsSubDashboard.getSubDashboardId());
-				if(dashboard.getIsSystem()!=1){
-					dashboard.setShowInHome(1);
-					em.merge(dashboard);
+				//EMCPDF-2929,EMCPDF-2934
+				if(dashboard.getIsSystem()!=1 && dashboard.getShowInHome() == 0){
+					if(!isIncludedInSet(dashboard)){
+						dashboard.setShowInHome(1);
+						em.merge(dashboard);
+					}
 				}
 			}
 		}
 		commitTransaction();
+	}
+
+	private boolean isIncludedInSet(EmsDashboard dashboard){
+		String sql="select count(1) from ems_dashboard_set t where t.SUB_DASHBOARD_ID=?1";
+		Query listQuery = em.createNativeQuery(sql);
+		listQuery.setParameter(1,dashboard.getDashboardId());
+		Long count = Long.valueOf(listQuery.getResultList().get(0).toString());
+		if(count>1){
+			return true;
+		}
+		return false;
 	}
 
 	@SuppressWarnings("unchecked")
