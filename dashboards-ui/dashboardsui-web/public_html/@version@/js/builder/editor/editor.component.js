@@ -351,7 +351,7 @@ define(['knockout',
                 if (url){
                     tile.configure = function(){
                         var widgetUrl = url;
-                        widgetUrl += "?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboardInst.id()+"&dashboardName="+dashboardInst.name();
+                        widgetUrl += "?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboardInst.id()+"&dashboardName="+encodeURI(dashboardInst.name()).replace(/\//g,'%2F');
                         if(dashboard.enableTimeRange() === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
                             widgetUrl += "";
                         }else {
