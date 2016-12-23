@@ -1,7 +1,8 @@
-/* ************************************************************************************************* 
-*                   BEGIN SETUP-BLOCK 
-*************************************************************************************************** *  
-*/
+/* *************************************************************************************************
+ *                   BEGIN SETUP-BLOCK
+ ***************************************************************************************************
+ * 
+ */
 apply plugin: 'java'
 apply plugin: 'groovy'
 import groovy.sql.Sql
@@ -11,11 +12,12 @@ import java.util.regex.*
 
 allprojects{
     ext.TWORK = (System.getenv('T_WORK') != null && !System.getenv('T_WORK').trim().isEmpty()) ? System.getenv('T_WORK') : buildUri(getGitRoot(),"oracle/work")
-    ext.TENANT_FOR_QUERY="emaastesttenant_noITA"
+    ext.TENANT_FOR_QUERY="emaastesttenantnoITA"	
     ext.solr_url=null
 }
 String emaasPropertiesLogPath=TWORK+"/emaas.properties.log"
 boolean isOnboardTenant = true
+
 
 if (System.getenv('DO_TENANT_ONBOARD') != null && System.getenv('DO_TENANT_ONBOARD').trim().isEmpty() == false) {
     isOnboardTenant = Boolean.valueOf(System.getenv('DO_TENANT_ONBOARD'))
@@ -36,36 +38,42 @@ task onboardTenant << {
             ldapServer=emaas.LDAP_SERVER
             ldapPort=emaas.LDAP_PORT
             ldapUser=emaas.LDAP_ADMIN_USER
-            ldapPwd=emaas.LDAP_ADMIN_PASSWORD
+            ldapPwd=emaas.LDAP_ADMIN_PASSWORD               
     }
     else
     {
         throw new GradleException(emaasPropertiesLogPath+" doesn't exist!Please put one under T_WORK.")
     }
+
     if(smUrl == null) {
         throw new GradleException("Failed to load service manager url")
     }
+
     if(!smUrl.endsWith("/")){
         smUrl=smUrl+"/"
-    }
-		    
+    }	
+	
     if(userName == null) {
         throw new GradleException("Failed to load user name")
     }
+
     if(authToken == null){
         throw new GradleException("Failed to load authToken")
     }
+
     println "user name= " + userName
     println "authToken = " + authToken
     println "Service Manager Url: " + smUrl 
+
     servicemanagerVersion = smUrl.substring(smUrl.lastIndexOf("registry/")+"registry/".length()).replace("/","")
     println "Service Manager Version = "+servicemanagerVersion
     println "Try to onboard tenant? ${isOnboardTenant}"
-
+        
     if (isOnboardTenant == false) {
         println "Nothing to do. No onboarding will be done"
         return
     }
+        
     if(runOnboardTenant(smUrl,authToken,emaasPropertiesLogPath,TENANT_FOR_QUERY))
     {
         println "Onboarded! Using test tenant: " + TENANT_FOR_QUERY
@@ -74,12 +82,14 @@ task onboardTenant << {
         println "Couln't onboard tenant + " TENANT_FOR_QUERY
         throw new GradleException("Counln't onboard tenant " + TENANT_FOR_QUERY);
     }
-
+	
     // Get the internal tenant id
     tenantIdInternal = getInternalTenantId(smUrl, authToken, TENANT_FOR_QUERY)
+
     if (tenantIdInternal == null || tenantIdInternal.equals("null")) {
         throw new GradleException("Failed to load tenant id")
     }
+
     if(!isTenantOnboarded(smUrl, authToken, TENANT_FOR_QUERY)) {
         throw new GradleException("The tenantId [" + TENANT_FOR_QUERY + "] has not been onboard yet" )
     }
@@ -87,11 +97,13 @@ task onboardTenant << {
     // Activate the tenant
     println "Activate tenant " + TENANT_FOR_QUERY
     activateTenant(smUrl, authToken, TENANT_FOR_QUERY, userName)
-    println "Tenant Id= " + TENANT_FOR_QUERY + " && Internal Tenant Id = " + tenantIdInternal
+
+    println "Tenant Id= " + TENANT_FOR_QUERY + " && Internal Tenant Id = " + tenantIdInternal		
 }
 /* *************************************************************************************************
  *                   END OF SETUP-BLOCK
  ***************************************************************************************************/
+
 
 /**
  * Get GIT root path.
@@ -101,6 +113,7 @@ String getGitRoot()
     def gitRoot=['git','rev-parse','--show-toplevel'].execute()
     return ((gitRoot.text).replace("\n",""))
 }
+
 /**
  * Run the Onboard Tenant Script.
  *
@@ -115,26 +128,29 @@ boolean runOnboardTenant(String sm_url,String authToken, String emaas_properties
     if(sm_url==null){
         throw new GradleException("Service manager url should not be null")
     }
+    
     if(authToken==null){
         throw new GradleException("authToken should not be null")
     }
+
     if(test_tenant_name.isEmpty())
     {
         throw new GradleException("The TENANT_ID given to onboardTenant(..) method was empty, please check the value in emaas.properties.log")
     }
-    //println "Checking if tenant " + test_tenant_name + " is already (onboarded)"
-    //if(isTenantOnboarded(sm_url,authToken,test_tenant_name))
-    //{
-    //    println test_tenant_name+" alread exists! Do not onboard it again."
-    //    return true
-    //}
 
+    println "Checking if tenant " + test_tenant_name + " is already (onboarded)"
+    if(isTenantOnboarded(sm_url,authToken,test_tenant_name))
+    {
+        println test_tenant_name+" alread exists! Do not onboard it again."
+        return true
+    }
+        
     // emaas.properties.log is mandatory to the script
     if(!(new File(emaas_properties_log_path)).exists())
     {
             throw new GradleException("Cannot find emaas.properties.log, " + emaas_properties_log_path + " does not exist")
     }
-
+        
     // Get the TenantService's URL
     def response=['curl','-H', "Content-Type: application/json", '-H',"Authorization:"+authToken,'-X', 'GET',sm_url+"instances?serviceName=TenantService"].execute().text
     if(response==null||!response.contains("TenantService")){
@@ -154,18 +170,20 @@ boolean runOnboardTenant(String sm_url,String authToken, String emaas_properties
     // Get the local host. Ideally the onboard script runs only on the farm so it must match Tenat Host
     String localHost=['hostname'].execute().text.trim()
     println "local host = $localHost"
+        
 
     if(tenantHost != null && tenantHost.equals(localHost))
     {
         println "On Tenant Service host, onboard tenant...."
         exec{commandLine "chmod", "755", TWORK+"/testClasses/tenant_onboard.sh"}
         println "Tenant Onboard command... " + test_tenant_name
- 
-        println ([TWORK+"/testClasses/tenant_onboard.sh","-propertiesFile", emaas_properties_log_path,"-tenantId",test_tenant_name,"-service_type","Orchestration","-service_edition","Trial"].execute().text) 
-	println ([TWORK+"/testClasses/tenant_onboard.sh","-propertiesFile", emaas_properties_log_path,"-tenantId",test_tenant_name,"-service_type","Compliance","-service_edition","Trial"].execute().text) 
-	println ([TWORK+"/testClasses/tenant_onboard.sh","-propertiesFile", emaas_properties_log_path,"-tenantId",test_tenant_name,"-service_type","SecurityAnalytics","-service_edition","Trial"].execute().text) 
+        
+println ([TWORK+"/testClasses/tenant_onboard.sh","-propertiesFile", emaas_properties_log_path,"-tenantId",test_tenant_name,"-service_type","Orchestration","-service_edition","Trial"].execute().text) 
+println ([TWORK+"/testClasses/tenant_onboard.sh","-propertiesFile", emaas_properties_log_path,"-tenantId",test_tenant_name,"-service_type","Compliance","-service_edition","Trial"].execute().text) 
+println ([TWORK+"/testClasses/tenant_onboard.sh","-propertiesFile", emaas_properties_log_path,"-tenantId",test_tenant_name,"-service_type","SecurityAnalytics","-service_edition","Trial"].execute().text)        
+       
 
-       // Wait and check for onboard completion
+        // Wait and check for onboard completion
         Thread.sleep(60000)
         if(!isTenantOnboarded(sm_url,authToken,test_tenant_name))
         {
@@ -177,6 +195,7 @@ boolean runOnboardTenant(String sm_url,String authToken, String emaas_properties
         println "Tenant onboard should be executed from Farm's NODE1 (Tenant Service Host)"
         throw new GradleException("This is not the TenantService host, cannot onboard new tenant:"+ test_tenant_name)
     }
+
     return true
 }
 
@@ -187,14 +206,14 @@ boolean runOnboardTenant(String sm_url,String authToken, String emaas_properties
  * @param authToken Token needed for authentication.
  * @param tenantId Text for new tenant to onboard.
  */
-
 boolean isTenantOnboarded(String smUrl,String authToken,String tenantId){
     if(smUrl == null){
         throw new GradleException("Service manager url should not be null")
     }
     // Get the TenantService's URL
-    def response=['curl','-H', "Content-Type: application/json", '-H', "Authorization:"+authToken,'-X', 'GET',smUrl+"instances?serviceName=TenantService"].execute().text
-
+    def response=['curl','-H', "Content-Type: application/json", '-H',
+            "Authorization:"+authToken,'-X', 'GET',smUrl+"instances?serviceName=TenantService"].execute().text
+    
     if(response==null || !response.contains("TenantService") ){
         throw new GradleException("Fail to lookup TenantService, maybe the service is out of service or the site is broken")
     }
@@ -203,15 +222,19 @@ boolean isTenantOnboarded(String smUrl,String authToken,String tenantId){
     def slurper = new JsonSlurper()
     def result = slurper.parseText(response)
     String fullUrl = result.items.canonicalEndpoints[0].get(0)
-
+    
     // Checking the webservice to get JSON of onboarded tenant
-    response=['curl','-H', "Content-Type: application/json", '-H', "Authorization:"+authToken,'-H',"X-USER-IDENTITY-DOMAIN-NAME:"+tenantId, '-X', 'GET',fullUrl+"tenants/"+tenantId].execute().text
-
+    response=['curl','-H', "Content-Type: application/json", '-H',
+	"Authorization:"+authToken,'-H',"X-USER-IDENTITY-DOMAIN-NAME:"+tenantId,
+	'-X', 'GET',fullUrl+"tenants/"+tenantId].execute().text
+    
     // Parse JSON response to Service Manager to get JSON of onboarded tenant
+   
     try{
        slurper = new JsonSlurper()
        result = slurper.parseText(response)
        return result.tenantId == tenantId
+       
     }
     catch(JsonException){
        return false
@@ -227,16 +250,19 @@ String getLookupUrl(String smUrl,String authToken)
     if(smUrl == null){
         throw new GradleException("Service manager url should not be null")
     }
+
     if(authToken == null){
         throw new GradleException("authToken should not be null")
     }
 
     // get EntityNaming service URL from SM
-    def response=['curl','-H', "Content-Type: application/json", '-H', "Authorization:"+authToken,'-X', 'GET',smUrl+"instances?serviceName=EntityNaming"].execute().text
-    def _command = ['curl','-H', "Content-Type: application/json", '-H', "Authorization:"+authToken,'-X', 'GET',smUrl+"instances?serviceName=EntityNaming"]
+    def response=['curl','-H', "Content-Type: application/json", '-H',
+            "Authorization:"+authToken,'-X', 'GET',smUrl+"instances?serviceName=EntityNaming"].execute().text
+    def _command = ['curl','-H', "Content-Type: application/json", '-H',
+            "Authorization:"+authToken,'-X', 'GET',smUrl+"instances?serviceName=EntityNaming"]
     if(response==null||!response.contains("EntityNaming")){
         throw new GradleException("Fail to lookup EntityNaming, maybe the service is out of service or the site is broken. Command used: ${_command}")
-    }
+    }	
 
     // parse response
     def slurper = new JsonSlurper()
@@ -248,17 +274,20 @@ String getLookupUrl(String smUrl,String authToken)
     }
     return url
 }
-
 /**
  * Get Internal Tenant Id.
  */
 String getInternalTenantId(String smUrl, String authToken,String tenantId)
 {
     String url=getLookupUrl(smUrl,authToken)
-    def response=['curl','-H', "Content-Type: application/json", '-H', "Authorization:"+authToken,'-X', 'GET',url+"?domainName=InternalTenantIdMap"].execute().text
+
+    def response=['curl','-H', "Content-Type: application/json", '-H',
+            "Authorization:"+authToken,'-X', 'GET',url+"?domainName=InternalTenantIdMap"].execute().text
+
     if(response == null || !response.contains("InternalTenantIdMap")){
         throw new GradleException("Fail to lookup InternalTenantIdMap, maybe the service is out of service or the site is broken")
     }
+
     if(!response.contains(tenantId))
     {
         throw new GradleException(tenantId+" does not exist")
@@ -271,6 +300,7 @@ String getInternalTenantId(String smUrl, String authToken,String tenantId)
     println("The internal id of tenant ["+tenantId+"] is:"+internal_Tenant_Id)
     return internal_Tenant_Id
 }
+
 /**
  * Activate Tenant.
  */
@@ -288,15 +318,16 @@ void activateTenant(String smUrl,String authToken, String tenantId, String userN
     if(userName==null){
         throw new GradleException("userName should not be null")
     }
-    def response=['curl','-H', "Content-Type: application/json", '-H', "Authorization:"+authToken,'-X', 'GET',smUrl+"instances?serviceName=LoganService"].execute().text
+    def response=['curl','-H', "Content-Type: application/json", '-H',
+            "Authorization:"+authToken,'-X', 'GET',smUrl+"instances?serviceName=LoganService"].execute().text
     if(response==null||!response.contains("LoganService")){
         throw new GradleException("Fail to lookup LoganService, maybe the service is out of service or the site is broken")
     }
     def slurper = new JsonSlurper()
     def result = slurper.parseText(response)
     String url= result.items.links.find{it.rel}.find{it.rel=="loganService"}.href
-    def resp=['curl','-H', "Content-Type: application/json", '-H',"Authorization:"+authToken, '-H',"OAM_REMOTE_USER:"+tenantId+"."+userName, '-H',"X-USER-IDENTITY-DOMAIN-NAME:"+tenantId,
-'-X', 'GET',buildUri(url,"/qlmetadata/properties")].execute().text
+
+    def resp=['curl','-H', "Content-Type: application/json", '-H',"Authorization:"+authToken, '-H',"OAM_REMOTE_USER:"+tenantId+"."+userName, '-H',"X-USER-IDENTITY-DOMAIN-NAME:"+tenantId, '-X', 'GET',buildUri(url,"/qlmetadata/properties")].execute().text
     if(!resp.isEmpty())
     {
         println "Activating tenant ["+tenantId+"] done."

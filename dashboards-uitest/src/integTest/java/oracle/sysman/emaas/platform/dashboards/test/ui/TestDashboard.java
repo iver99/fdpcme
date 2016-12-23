@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
  * @since release specific (what release of product did this appear in)
  */
 
-public class TestDashboardPerformance extends LoginAndLogout
+public class TestDashboard extends LoginAndLogout
 {
 	private String dbName = "";
 
