@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.support.lru;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheFetchFactory;
 import oracle.sysman.emaas.platform.emcpdf.cache.config.CacheConfig;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.AbstractCache;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CachedItem;
@@ -33,7 +34,7 @@ public class LinkedHashMapCache extends AbstractCache{
                 return size() > LinkedHashMapCache.this.capacity;
             }
         };
-        LOGGER.debug("Cache group named {} is created with capacity {} and timeToLive {}",name,capacity,timeToLive);
+        LOGGER.info("Cache group named {} is created with capacity {} and timeToLive {}",name,capacity,timeToLive);
     }
 
     public LinkedHashMapCache(String name) {
@@ -47,15 +48,26 @@ public class LinkedHashMapCache extends AbstractCache{
     }
 
     @Override
+    public Object get(Object key, ICacheFetchFactory factory) {
+
+       Object obj=super.get(key, factory);
+       if(obj!=null){
+           LOGGER.debug("CachedItem with key {} is retrieved from cache group {}",key,name);
+           return obj;
+       }
+       return null;
+    }
+
+    @Override
     public void put(Object key, Object value) {
-        LOGGER.debug("Item with key {} and value {} is cached into cache group {}",key,value,name);
         cacheMap.put(key, new CachedItem(key,value));
+        LOGGER.debug("Item with key {} and value {} is cached into cache group {}",key,value,name);
     }
 
     @Override
     public void evict(Object key) {
-        LOGGER.debug("Cached Item with key {} is evicted from cache group {}",key,name);
         cacheMap.remove(key);
+        LOGGER.debug("Cached Item with key {} is evicted from cache group {}",key,name);
     }
 
     @Override

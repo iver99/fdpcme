@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Logger;
  */
 public abstract class AbstractCache implements ICache{
 
-    Logger LOGGER = LogManager.getLogger(AbstractCache.class);
     @Override
     public Object get(Object key) {
         return get(key,null);
@@ -21,20 +20,15 @@ public abstract class AbstractCache implements ICache{
         CachedItem value=lookup(key);
         if(value == null){
             if(factory!=null){
-                try {
                     Object valueFromFactory=factory.fetchCachable(key);
                     CachedItem ci=new CachedItem(key,valueFromFactory);
                     put(key,ci);
                     return valueFromFactory;
-                } catch (Exception e) {
-                    LOGGER.error(e.getLocalizedMessage());
-                }
             }
         }else{
             if(isExpired(value)){
                 evict(key);
             }else{
-                LOGGER.debug("Cached Item with key {} are retrieved from cache group",key);
                 return value.getValue();
             }
         }

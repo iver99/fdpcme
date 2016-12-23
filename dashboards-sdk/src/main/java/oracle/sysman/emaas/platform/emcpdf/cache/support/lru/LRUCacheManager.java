@@ -4,6 +4,8 @@ import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.config.CacheConfig;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.AbstractCacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -12,6 +14,7 @@ import java.io.IOException;
  */
 public class LRUCacheManager extends AbstractCacheManager{
 
+    private static final Logger LOGGER = LogManager.getLogger(LRUCacheManager.class);
     private static LRUCacheManager instance =new LRUCacheManager();
 
     private LRUCacheManager() {
@@ -39,6 +42,7 @@ public class LRUCacheManager extends AbstractCacheManager{
     @Override
     public void init() {
         //init default cache group
+        LOGGER.info("Initialing LRU CacheManager...");
         getCache(CacheConstants.CACHES_SCREENSHOT_CACHE, CacheConfig.SCREENSHOT_CAPACITY, CacheConfig.SCREENSHOT_EXPIRE_TIME);
         getCache(CacheConstants.CACHES_ADMIN_LINK_CACHE, CacheConfig.ADMIN_LINK_CACHE_CAPACITY, CacheConfig.ADMIN_LINK_CACHE_EXPIRE_TIME);
         getCache(CacheConstants.CACHES_CLOUD_SERVICE_LINK_CACHE, CacheConfig.CLOUD_SERVICE_LINK_CAPACITY, CacheConfig.CLOUD_SERVICE_LINK_EXPIRE_TIME);
@@ -63,6 +67,7 @@ public class LRUCacheManager extends AbstractCacheManager{
      */
     @Override
     public void close() throws IOException {
+        LOGGER.info("LRU CacheManager is closed.");
         //TODO
     }
 }
