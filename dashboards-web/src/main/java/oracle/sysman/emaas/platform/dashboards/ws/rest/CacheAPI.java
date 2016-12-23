@@ -7,15 +7,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import oracle.sysman.emaas.platform.emcpdf.cache.CacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheUnit;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.CacheException;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.CacheGroupNameEmptyException;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.CacheGroupNotFoundException;
@@ -32,7 +29,7 @@ import org.apache.logging.log4j.Logger;
 public class CacheAPI extends APIBase{
     private static final Logger LOGGER = LogManager.getLogger(CacheAPI.class);
 
-    @GET
+    /*@GET
     @Produces(MediaType.APPLICATION_JSON)
 	public Response getAllCacheGroups()
 	{
@@ -66,7 +63,7 @@ public class CacheAPI extends APIBase{
             LOGGER.error(e.getLocalizedMessage(), e);
             return buildErrorResponse(new ErrorEntity(e));
         }
-    }
+    }*/
 
     /**
      * this action will eliminate all cache groups

@@ -1,11 +1,5 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.api;
 
-
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
-import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheStatus;
-import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheStatusMessage;
-
 import java.io.Closeable;
 
 /**
@@ -13,64 +7,18 @@ import java.io.Closeable;
  */
 public interface ICacheManager extends Closeable {
 
-    public Object getCacheable(String cacheName, Keys keys)throws Exception;
-
-    public Object getCacheable(String cacheName, String key)throws Exception;
-
-    public Object getCacheable(Tenant tenant, String cacheName, Keys keys)throws Exception;
-
-    public Object getCacheable(Tenant tenant, String cacheName, String key)throws Exception;
-
-    public Object getCacheable(String cacheName, Keys keys, ICacheFetchFactory ff)throws Exception;
-
-    public Object getCacheable(Tenant tenant, String cacheName, Keys keys, ICacheFetchFactory ff)throws Exception;
-
-    public Object getCacheable(Tenant tenant, String cacheName, String key, ICacheFetchFactory ff)throws Exception;
-
-    public Object putCacheable(String cacheName, Keys keys, Object value);
-
-    public Object putCacheable(String cacheName, String key, Object value);
-
-    public Object putCacheable(Tenant tenant, String cacheName, Keys keys, Object value);
-
-    public Object putCacheable(Tenant tenant, String cacheName, String key, Object value);
-
-    public Object removeCacheable(String cacheName, Keys keys);
-
-    public Object removeCacheable(Tenant tenant, String cacheName, Keys keys);
-
-    public Object removeCacheable(Tenant tenant, String cacheName, String key);
-
     /**
-     * log out cache current status, request count,hit count, hit rate...etc.
+     * Return the cache associated with the given name.
+     * @param name
+     * @return
      */
-    public void logCacheStatus();
+    public ICache getCache(String name);
 
-    /**
-     * This method will enable cache mechanism
-     * Note: This method will init new cache groups according to configuration file
-     */
-    public CacheStatusMessage enableCache();
+    public ICache getCache(String name, Integer capacity, Long timeToLive);
 
-    /**
-     * This method will disable cache mechanism
-     * Note: This method will destroy all existing cache groups and cached elements!
-     */
-    public CacheStatusMessage disableCache();
+    public ICache createNewCache(String name, Integer capacity, Long timeToLive);
 
-    /**
-     * This method will suspend cache mechanism, but will not destroy cache groups or cached elements
-     */
-    public CacheStatusMessage suspendCache();
-
-    /**
-     * This method will resume cache mechanism.
-     */
-    public CacheStatusMessage resumeCache();
+    public ICache createNewCache(String name);
 
     public void init();
-
-    CacheStatus getStatus();
-
-
 }

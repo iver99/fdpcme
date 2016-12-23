@@ -13,8 +13,10 @@ package oracle.sysman.emaas.platform.dashboards.core.cache.screenshot;
 import java.math.BigInteger;
 import java.util.Date;
 
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Binary;
-import oracle.sysman.emaas.platform.emcpdf.cache.CacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.screenshot.Binary;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
@@ -40,11 +42,11 @@ public class ScreenshotCacheManager
 		return instance;
 	}
 
-	private final CacheManager cm;
+	private final ICacheManager cm;
 
 	private ScreenshotCacheManager()
 	{
-		cm = CacheManager.getInstance();
+		cm = LRUCacheManager.getInstance();
 	}
 
 	public ScreenshotElement getScreenshotFromCache(Tenant tenant, BigInteger dashboardId, String fileName) throws Exception
@@ -58,8 +60,7 @@ public class ScreenshotCacheManager
 			LOGGER.info("Unexpected empty screenshot file name for tenant={}, dashboard id={}", tenant, dashboardId);
 			return null;
 		}
-		ScreenshotElement se = (ScreenshotElement) cm.getCacheable(tenant, CacheConstants.CACHES_SCREENSHOT_CACHE, new Keys(
-				dashboardId));
+		ScreenshotElement se = (ScreenshotElement) cm.getCache(CacheConstants.CACHES_SCREENSHOT_CACHE).get(DefaultKeyGenerator.getInstance().generate(tenant,new Keys(dashboardId)));
 		if (se == null) {
 			LOGGER.info("Retrieved null screenshot element from cache for tenant={}, dashboard id={}, fileName={}", tenant,
 					dashboardId, fileName);
@@ -88,7 +89,7 @@ public class ScreenshotCacheManager
 		}
 		Binary bin = new Binary(decoded);
 		ScreenshotElement se = new ScreenshotElement(fileName, bin);
-		cm.putCacheable(tenant, CacheConstants.CACHES_SCREENSHOT_CACHE, new Keys(dashboardId), se);
+		cm.getCache(CacheConstants.CACHES_SCREENSHOT_CACHE).put(DefaultKeyGenerator.getInstance().generate(tenant,new Keys(dashboardId)),se);
 		return se;
 	}
 

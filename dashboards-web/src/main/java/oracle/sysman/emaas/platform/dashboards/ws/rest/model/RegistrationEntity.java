@@ -21,7 +21,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import oracle.sysman.emaas.platform.emcpdf.cache.CacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheFetchFactory;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
@@ -157,10 +160,11 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getAdminLinks()
 	{
+		ICacheManager cm= LRUCacheManager.getInstance();
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheConstants.CACHES_ADMIN_LINK_CACHE,
-					CacheConstants.LOOKUP_CACHE_KEY_ADMIN_LINKS+"-"+UserContext.getCurrentUser(), new ICacheFetchFactory() {
+			return (List<LinkEntity>) cm.getCache(CacheConstants.CACHES_ADMIN_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_ADMIN_LINKS,UserContext.getCurrentUser())),
+					new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
 						{
@@ -211,12 +215,12 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getCloudServices()
 	{
+		ICacheManager cm= LRUCacheManager.getInstance();
 		String tenantName = TenantContext.getCurrentTenant();
 		Tenant cacheTenant = new Tenant(tenantName);
 		List<LinkEntity> list = null;
 		try {
-			list = (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheConstants.CACHES_CLOUD_SERVICE_LINK_CACHE,
-					CacheConstants.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS);
+			list = (List<LinkEntity>) cm.getCache(CacheConstants.CACHES_CLOUD_SERVICE_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS)));
 			if (list != null) {
 				return list;
 			}
@@ -304,8 +308,7 @@ public class RegistrationEntity implements Serializable
 			}
 		}
 		list = sortServiceLinks(list);
-		CacheManager.getInstance().putCacheable(cacheTenant, CacheConstants.CACHES_CLOUD_SERVICE_LINK_CACHE,
-				CacheConstants.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS, list);
+		cm.getCache(CacheConstants.CACHES_CLOUD_SERVICE_LINK_CACHE).put(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS)),list);
 		return list;
 	}
 
@@ -330,10 +333,11 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getHomeLinks()
 	{
+		ICacheManager cm= LRUCacheManager.getInstance();
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheConstants.CACHES_HOME_LINK_CACHE,
-					CacheConstants.LOOKUP_CACHE_KEY_HOME_LINKS, new ICacheFetchFactory() {
+			return (List<LinkEntity>) cm.getCache(CacheConstants.CACHES_HOME_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_HOME_LINKS)),
+						new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
 						{
@@ -354,11 +358,12 @@ public class RegistrationEntity implements Serializable
 
 	public String getSsoLogoutUrl()
 	{
+		ICacheManager cm= LRUCacheManager.getInstance();
 		final String tenantName = TenantContext.getCurrentTenant();
 		Tenant cacheTenant = new Tenant(tenantName);
 		try {
-			return (String) CacheManager.getInstance().getCacheable(cacheTenant, CacheConstants.CACHES_SSO_LOGOUT_CACHE,
-					CacheConstants.LOOKUP_CACHE_KEY_SSO_LOGOUT_URL, new ICacheFetchFactory() {
+			return (String) cm.getCache(CacheConstants.CACHES_SSO_LOGOUT_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SSO_LOGOUT_URL)),
+					new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
 						{
@@ -380,10 +385,6 @@ public class RegistrationEntity implements Serializable
 							}
 						}
 					});
-		}
-		catch(DashboardException e){
-			LOGGER.error(e.getLocalizedMessage(), e);
-			return "";
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
@@ -456,11 +457,11 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("all")
 	public List<LinkEntity> getVisualAnalyzers()
 	{
+		ICacheManager cm= LRUCacheManager.getInstance();
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheConstants.CACHES_VISUAL_ANALYZER_LINK_CACHE,
-					CacheConstants.LOOKUP_CACHE_KEY_VISUAL_ANALYZER, new ICacheFetchFactory() {
+			return (List<LinkEntity>) cm.getCache(CacheConstants.CACHES_VISUAL_ANALYZER_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_VISUAL_ANALYZER)),
+					 new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
 						{
@@ -471,10 +472,6 @@ public class RegistrationEntity implements Serializable
 							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER, true));
 						}
 					});
-		}
-		catch(DashboardException e){
-			LOGGER.error(e.getLocalizedMessage(), e);
-			return Collections.emptyList();
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
@@ -488,10 +485,11 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("all")
 	public List<LinkEntity> getAssetRoots()
 	{
+		ICacheManager cm= LRUCacheManager.getInstance();
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheConstants.CACHES_ASSET_ROOT_CACHE,
-					CacheConstants.LOOKUP_CACHE_KEY_ASSET_ROOTS, new ICacheFetchFactory() {
+			return (List<LinkEntity>)cm.getCache(CacheConstants.CACHES_ASSET_ROOT_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_ASSET_ROOTS)),
+					new ICacheFetchFactory() {
 						@Override
 						public Object fetchCachable(Object key) throws Exception
 						{
@@ -508,10 +506,6 @@ public class RegistrationEntity implements Serializable
 							return links;
 						}
 					});
-		}
-		catch(DashboardException e) {
-			LOGGER.error(e.getLocalizedMessage(), e);
-			return Collections.emptyList();
 		}
 		catch (Exception e) {
 			LOGGER.error(e);

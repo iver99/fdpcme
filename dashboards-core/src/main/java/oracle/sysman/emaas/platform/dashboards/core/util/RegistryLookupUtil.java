@@ -16,7 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import oracle.sysman.emaas.platform.emcpdf.cache.CacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
@@ -458,13 +460,13 @@ public class RegistryLookupUtil
 	private static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, boolean prefixMatch,
 			String tenantName)
 	{
+		ICacheManager cm= LRUCacheManager.getInstance();
 		LOGGER.debug(
 				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, tenantName);
 		Tenant cacheTenant = new Tenant(tenantName);
 		try {
-			CachedLink cl = (CachedLink) CacheManager.getInstance().getCacheable(cacheTenant, CacheConstants.CACHES_SERVICE_EXTERNAL_LINK_CACHE,
-					new Keys(CacheConstants.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch));
+			CachedLink cl=(CachedLink)cm.getCache(CacheConstants.CACHES_SERVICE_EXTERNAL_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant, new Keys(CacheConstants.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch)));
 			if (cl != null) {
 				LOGGER.debug(
 						"Retrieved exteral link {} from cache, serviceName={}, version={}, rel={}, prefixMatch={}, tenantName={}",
@@ -551,8 +553,7 @@ public class RegistryLookupUtil
 					LOGGER.debug(
 							"[branch 1] Retrieved link: \"{}\" for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 							lk.getHref(), serviceName, version, rel, tenantName);
-					CacheManager.getInstance().putCacheable(cacheTenant, CacheConstants.CACHES_SERVICE_EXTERNAL_LINK_CACHE,
-							new Keys(CacheConstants.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch),
+					cm.getCache(CacheConstants.CACHES_SERVICE_EXTERNAL_LINK_CACHE).put(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch)),
 							new CachedLink(lk));
 					return lk;
 				}
@@ -588,8 +589,7 @@ public class RegistryLookupUtil
 						LOGGER.debug(
 								"[branch 2] Retrieved link: \"{}\" for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 								lk == null ? null : lk.getHref(), serviceName, version, rel, tenantName);
-						CacheManager.getInstance().putCacheable(cacheTenant, CacheConstants.CACHES_SERVICE_EXTERNAL_LINK_CACHE,
-								new Keys(CacheConstants.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch),
+						cm.getCache(CacheConstants.CACHES_SERVICE_EXTERNAL_LINK_CACHE).put(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch)),
 								new CachedLink(lk));
 						return lk;
 					}
@@ -608,13 +608,13 @@ public class RegistryLookupUtil
 	private static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
 			String tenantName)
 	{
+		ICacheManager cm= LRUCacheManager.getInstance();
 		LOGGER.debug(
 				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, prefixMatch, tenantName);
 		Tenant cacheTenant = new Tenant(tenantName);
 		try {
-			CachedLink cl = (CachedLink) CacheManager.getInstance().getCacheable(cacheTenant, CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE,
-					new Keys(CacheConstants.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch));
+			CachedLink cl=(CachedLink)cm.getCache(CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch)));
 			if (cl != null) {
 				LOGGER.debug(
 						"Retrieved internal link {} from cache, serviceName={}, version={}, rel={}, prefixMatch={}, tenantName={}",
@@ -665,8 +665,8 @@ public class RegistryLookupUtil
 					if (links != null && !links.isEmpty()) {
 						lk = new VersionedLink(links.get(0), version);
 						itrLogger.debug("Retrieved link {}", lk == null ? null : lk.getHref());
-						CacheManager.getInstance().putCacheable(cacheTenant, CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE,
-								new Keys(serviceName, version, rel, prefixMatch), new CachedLink(lk));
+						cm.getCache(CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE).put(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(serviceName, version, rel, prefixMatch)),
+								new CachedLink(lk));
 						return lk;
 					}
 				}
@@ -682,12 +682,12 @@ public class RegistryLookupUtil
 	@SuppressWarnings("unchecked")
 	private static Map<String, String> getVanityBaseURLs(String tenantName)
 	{
+		ICacheManager cm= LRUCacheManager.getInstance();
 		LOGGER.debug("/getVanityBaseURLs/ Trying to retrieve service internal link for tenant: \"{}\"", tenantName);
 		Tenant cacheTenant = new Tenant(tenantName);
 		Map<String, String> map = null;
 		try {
-			map = (Map<String, String>) CacheManager.getInstance().getCacheable(cacheTenant, CacheConstants.CACHES_VANITY_BASE_URL_CACHE,
-					CacheConstants.LOOKUP_CACHE_KEY_VANITY_BASE_URL);
+			map = (Map<String, String>)cm.getCache(CacheConstants.CACHES_VANITY_BASE_URL_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_VANITY_BASE_URL)));
 			if (map != null) {
 				return map;
 			}
@@ -813,8 +813,8 @@ public class RegistryLookupUtil
 				LOGGER.debug("service name is {}, and url is {}", service, url);
 			}
 		}
-		CacheManager.getInstance().putCacheable(cacheTenant, CacheConstants.CACHES_VANITY_BASE_URL_CACHE,
-				CacheConstants.LOOKUP_CACHE_KEY_VANITY_BASE_URL, map);
+		cm.getCache(CacheConstants.CACHES_VANITY_BASE_URL_CACHE).put(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_VANITY_BASE_URL)),
+				map);
 		return map;
 	}
 

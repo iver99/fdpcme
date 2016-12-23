@@ -1,6 +1,6 @@
 package oracle.sysman.emaas.platform.emcpdf.cache;
 
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Binary;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.screenshot.Binary;
 import org.testng.annotations.Test;
 
 /**

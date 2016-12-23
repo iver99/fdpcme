@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.emcpdf.cache.tool;
+package oracle.sysman.emaas.platform.emcpdf.cache.support.screenshot;
 
 /**
  * Created by chehao on 2016/12/11.

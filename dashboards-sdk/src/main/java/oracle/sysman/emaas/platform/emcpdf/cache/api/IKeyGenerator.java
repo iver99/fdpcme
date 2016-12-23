@@ -6,7 +6,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 /**
  * Created by chehao on 2016/12/11.
  */
-public interface KeyGenerator
+public interface IKeyGenerator
 {
     /**
      * Generate a key for the given tenant and key list.
