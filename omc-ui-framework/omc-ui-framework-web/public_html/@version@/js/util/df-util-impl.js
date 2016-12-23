@@ -872,6 +872,12 @@ define(['knockout',
                     //Append uifwk css file into document head
                     $('head').append('<link id="uifwkAltaCss" rel="stylesheet" href="/emsaasui/uifwk/@version@/css/uifwk-alta.css" type="text/css"/>');
                 }
+                
+                document.getElementById('uifwkAltaCss').onload = function() {
+                    if (window._uifwk && window._uifwk.brandingbar_css_load_callback && $.isFunction(window._uifwk.brandingbar_css_load_callback)) {
+                        window._uifwk.brandingbar_css_load_callback();
+                    }
+                };
             };
 
             function showSessionTimeoutWarningDialog(warningDialogId) {
