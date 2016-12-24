@@ -20,7 +20,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest
 dependencies {
     testConfig group: 'com.oracle.emaas.emcpdf.test', name:'dashboards-upgrade-tests-integ-tests', version: "${REPO_BID}"
     testConfig group: 'com.oracle.emaas.emcpdf.test', name:'dashboards-uitest-integ-tests', version: "${REPO_BID}" 
-    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.1.0_qq+')
+    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.1.1+')
 }
 project.ext.omctf_omcCloudSetup_additionalParam = "-skipagents -skipomr"
 //Add data population(pre-upgrade) tests or tasks here
