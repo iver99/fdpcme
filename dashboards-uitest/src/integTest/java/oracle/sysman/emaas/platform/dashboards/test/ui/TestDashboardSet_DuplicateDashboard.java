@@ -231,9 +231,6 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_Duplicate), "Dashboard: " + dbName_Duplicate
 				+ " should be displayed in home page!");
 
-		webd.getLogger().info("Open the dashboard set");
-		DashboardHomeUtil.selectDashboard(webd, OOBDashboardSet);
-
 		//open the dashboard set
 		webd.getLogger().info("Open the dashboard set: " + OOBDashboardSet);
 		DashboardHomeUtil.selectDashboard(webd, OOBDashboardSet);
