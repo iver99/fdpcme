@@ -38,8 +38,7 @@ public class AdditionalDataFilter implements Filter {
             try {
 				writer = new PrintWriter(new OutputStreamWriter(byteStream, "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOGGER.error("Failed to encode outputStream", e);
 			}
         }
 
