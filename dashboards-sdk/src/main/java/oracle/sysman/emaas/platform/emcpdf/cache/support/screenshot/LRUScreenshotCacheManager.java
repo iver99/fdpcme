@@ -24,6 +24,7 @@ public class LRUScreenshotCacheManager extends AbstractCacheManager{
     }
 
     private LRUScreenshotCacheManager() {
+        init();
     }
 
     @Override
