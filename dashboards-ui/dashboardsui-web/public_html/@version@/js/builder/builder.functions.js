@@ -489,5 +489,19 @@ define(['knockout',
             }
         }
         Builder.registerFunction(getTimePeriodValue, "getTimePeriodValue");
+        
+        function requireTargetSelectorUtils(needLoad, callback) {
+            if (needLoad) {
+                require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
+                  if (callback) {
+                      callback(TargetSelectorUtils);
+                  }
+                });
+            }
+            else {
+                if (callback) callback();
+            }
+        }
+        Builder.registerFunction(requireTargetSelectorUtils, "requireTargetSelectorUtils");
     }
 );

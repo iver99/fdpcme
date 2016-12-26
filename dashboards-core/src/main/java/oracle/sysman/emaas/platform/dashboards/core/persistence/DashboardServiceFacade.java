@@ -19,6 +19,8 @@ import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashb
 import oracle.sysman.emaas.platform.dashboards.core.util.SessionInfoUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreferencePK;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
@@ -37,7 +39,10 @@ public class DashboardServiceFacade
 	
 	private final EntityManager em;
 
-	public DashboardServiceFacade(Long tenantId)
+	/**
+	 * constructor without specifying the tenant id
+	 */
+	public DashboardServiceFacade()
 	{
 		final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager entityManager = emf.createEntityManager();
@@ -51,6 +56,16 @@ public class DashboardServiceFacade
 			}
 		}
 		em = emf.createEntityManager();
+	}
+
+	/**
+	 * constructor with tenant id specified
+	 *
+	 * @param tenantId
+	 */
+	public DashboardServiceFacade(Long tenantId)
+	{
+		this();
 		em.setProperty("tenant.id", tenantId);
 		
 	}
@@ -362,6 +377,134 @@ public class DashboardServiceFacade
 		return emsUserOptions;
 	}
 
+	public void removeAllEmsPreferences(String username)
+	{
+		getEntityManager().getTransaction().begin();
+		em.createNamedQuery("EmsPreference.removeAll").setParameter("username", username).executeUpdate();
+		commitTransaction();
+	}
+
+	public void removeAllEmsUserOptions(BigInteger dashboardId)
+	{
+		getEntityManager().getTransaction().begin();
+		em.createNamedQuery("EmsUserOptions.removeAll").setParameter("dashboardId", dashboardId).executeUpdate();
+		commitTransaction();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void removeDashboardsByTenant(boolean permanent, Long tenantId)
+	{
+		String sql = "select * from Ems_Dashboard d where d.tenant_Id = " + tenantId;
+		Query query = em.createNativeQuery(sql,EmsDashboard.class);
+		List<EmsDashboard> dashboards = query.getResultList();
+		if (dashboards != null && dashboards.size() > 0) {
+			for (EmsDashboard dashboard : dashboards) {
+				if (permanent) {
+					em.remove(dashboard);
+				} else {
+					dashboard.setDeleted(dashboard.getDashboardId());
+					em.merge(dashboard);
+				}				
+			}
+			commitTransaction();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void removeDashboardSetsByTenant(boolean permanent, Long tenantId)
+	{
+		String sql = "select * from Ems_dashboard_set d where d.tenant_Id = " + tenantId;
+		Query query = em.createNativeQuery(sql,EmsSubDashboard.class);
+		List<EmsSubDashboard> dashboardSets = query.getResultList();
+		if (dashboardSets != null && dashboardSets.size() > 0) {
+			for (EmsSubDashboard dashboardSet : dashboardSets) {
+				if (permanent) {
+					em.remove(dashboardSet);
+				} else {
+					dashboardSet.setDeleted(true);
+					em.merge(dashboardSet);
+				}				
+			}
+			commitTransaction();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void removeDashboardTilesByTenant(boolean permanent, Long tenantId)
+	{
+		String sql = "select * from Ems_Dashboard_Tile d where d.tenant_Id = " + tenantId;
+		Query query = em.createNativeQuery(sql,EmsDashboardTile.class);
+		List<EmsDashboardTile> dashboardTiles = query.getResultList();
+		if (dashboardTiles != null && dashboardTiles.size() > 0) {
+			for (EmsDashboardTile dashboardTile : dashboardTiles) {
+				if (permanent) {
+					em.remove(dashboardTile);
+				} else {
+					dashboardTile.setDeleted(true);
+					em.merge(dashboardTile);
+				}				
+			}
+			commitTransaction();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void removeDashboardTileParamsByTenant(boolean permanent, Long tenantId)
+	{
+		String sql = "select * from Ems_Dashboard_Tile_Params d where d.tenant_Id = " + tenantId;
+		Query query = em.createNativeQuery(sql,EmsDashboardTileParams.class);
+		List<EmsDashboardTileParams> dashboardTileParams = query.getResultList();
+		if (dashboardTileParams != null && dashboardTileParams.size() > 0) {
+			for (EmsDashboardTileParams dashboardTileParam : dashboardTileParams) {
+				if (permanent) {
+					em.remove(dashboardTileParam);
+				} else {
+					dashboardTileParam.setDeleted(true);
+					em.merge(dashboardTileParam);
+				}				
+			}
+			commitTransaction();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void removeDashboardPreferenceByTenant(boolean permanent, Long tenantId)
+	{
+		String sql = "select * from Ems_Preference d where d.tenant_Id = " + tenantId;
+		Query query = em.createNativeQuery(sql,EmsPreference.class);
+		List<EmsPreference> preferences = query.getResultList();
+		if (preferences != null && preferences.size() > 0) {
+			for (EmsPreference preference : preferences) {
+				if (permanent) {
+					em.remove(preference);
+				} else {
+					preference.setDeleted(true);
+					em.merge(preference);
+				}				
+			}
+			commitTransaction();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void removeUserOptionsByTenant(boolean permanent, Long tenantId)
+	{
+		String sql = "select * from Ems_Dashboard_User_Options d where d.tenant_Id = " + tenantId;
+		Query query = em.createNativeQuery(sql,EmsUserOptions.class);
+		List<EmsUserOptions> options = query.getResultList();
+		if (options != null && options.size() > 0) {
+			for (EmsUserOptions option : options) {
+				if (permanent) {
+					em.remove(option);
+				} else {
+					option.setDeleted(true);
+					em.merge(option);
+				}				
+			}
+			commitTransaction();
+		}
+	}
+
 	//	public <T> T persistEntity(T entity)
 	//	{
 	//		em.persist(entity);
@@ -388,25 +531,30 @@ public class DashboardServiceFacade
 	//		return query.getResultList();
 	//	}
 
-	public void removeAllEmsPreferences(String username)
-	{
-		getEntityManager().getTransaction().begin();
-		em.createNamedQuery("EmsPreference.removeAll").setParameter("username", username).executeUpdate();
-		commitTransaction();
-	}
-
-	public void removeAllEmsUserOptions(BigInteger dashboardId)
-	{
-		getEntityManager().getTransaction().begin();
-		em.createNamedQuery("EmsUserOptions.removeAll").setParameter("dashboardId", dashboardId).executeUpdate();
-		commitTransaction();
-	}
-
 	public void removeEmsDashboard(EmsDashboard emsDashboard)
 	{
 		emsDashboard = em.find(EmsDashboard.class, emsDashboard.getDashboardId());
-		em.remove(emsDashboard);
+		//emsDashboard.setDeleted(emsDashboard.getDashboardId());
+		//em.merge(emsDashboard);
+		em.remove(emsDashboard);  
 		commitTransaction();
+	}
+
+	public void removeEmsPreference(EmsPreference emsPreference)
+	{
+		emsPreference = em.find(EmsPreference.class,
+				new EmsPreferencePK(emsPreference.getPrefKey(), emsPreference.getUserName()));
+		em.remove(emsPreference);
+		commitTransaction();
+	}
+
+	public int removeEmsSubDashboardBySetId(BigInteger dashboardSetId)
+	{
+		getEntityManager().getTransaction().begin();
+		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeByDashboardSetID").setParameter("p", dashboardSetId)
+				.executeUpdate();
+		commitTransaction();
+		return deleteCout;
 	}
 
 	//	public void removeEmsDashboardFavorite(EmsDashboardFavorite emsDashboardFavorite)
@@ -440,23 +588,6 @@ public class DashboardServiceFacade
 	//		em.remove(emsDashboardTileParams);
 	//		commitTransaction();
 	//	}
-
-	public void removeEmsPreference(EmsPreference emsPreference)
-	{
-		emsPreference = em
-				.find(EmsPreference.class, new EmsPreferencePK(emsPreference.getPrefKey(), emsPreference.getUserName()));
-		em.remove(emsPreference);
-		commitTransaction();
-	}
-
-	public int removeEmsSubDashboardBySetId(BigInteger dashboardSetId)
-	{
-		getEntityManager().getTransaction().begin();
-		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeByDashboardSetID").setParameter("p", dashboardSetId)
-				.executeUpdate();
-		commitTransaction();
-		return deleteCout;
-	}
 
 	public int removeEmsSubDashboardBySubId(BigInteger subDashboardId)
 	{
@@ -537,5 +668,4 @@ public class DashboardServiceFacade
 		commitTransaction();
 		return deleteCout;
 	}
-
 }

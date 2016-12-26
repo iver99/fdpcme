@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.uifwk.ui.webutils.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
@@ -25,10 +26,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class RegistryLookupUtil
 {
-	private RegistryLookupUtil() {
-	  }
-
 	private static final Logger LOGGER = LogManager.getLogger(RegistryLookupUtil.class);
+
 	private static final Logger itrLogger = LogUtil.getInteractionLogger();
 
 	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
@@ -45,34 +44,29 @@ public class RegistryLookupUtil
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
 		try {
+			List<InstanceInfo> result = null;
+			if (!StringUtil.isEmpty(tenantName)) {
+				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
+				LOGGER.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
+				if (ins == null) {
+					LOGGER.error(
+							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
+							serviceName, version, tenantName);
+				}
+				else {
+					result = new ArrayList<InstanceInfo>();
+					result.add(ins);
+				}
+
+			}
+			else {
+				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			}
 			LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
-			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", result, tenantName);
 			if (result != null && !result.isEmpty()) {
-
-				//find https link first
-				for (InstanceInfo internalInstance : result) {
-					List<Link> links = null;
-					if (prefixMatch) {
-						links = internalInstance.getLinksWithRelPrefixWithProtocol(rel, "https");
-					}
-					else {
-						links = internalInstance.getLinksWithProtocol(rel, "https");
-					}
-
-					if (links != null && !links.isEmpty()) {
-						lk = links.get(0);
-						itrLogger.debug("Retrieved link {} by using getLinks(WithRelPrefix)WithProtocol for rel={} for https",
-								lk, rel);
-						break;
-					}
-				}
-
-				if (lk != null) {
-					return lk;
-				}
-
-				//https link is not found, then find http link
+				// [EMCPDF-733] Rest client can't handle https currently, so http protocol is enough for internal use
+				// find http link only
 				for (InstanceInfo internalInstance : result) {
 					List<Link> links = null;
 					if (prefixMatch) {
@@ -95,5 +89,9 @@ public class RegistryLookupUtil
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return lk;
 		}
+	}
+
+	private RegistryLookupUtil()
+	{
 	}
 }

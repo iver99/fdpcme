@@ -152,13 +152,16 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		if (matchingWidgets == null || matchingWidgets.isEmpty()) {
 			throw new NoSuchElementException("Right drawer widget for search string =" + searchString + " is not found");
 		}
+		WaitUtil.waitForPageFullyLoaded(driver);
 
-		WebElement widget = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId_190.RIGHTDRAWERWIDGETCSS));
-		if (widget == null) {
+		Actions builder = new Actions(driver.getWebDriver());
+		try {
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(DashBoardPageId_190.RIGHTDRAWERWIDGETCSS)));
+			builder.moveToElement(driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId_190.RIGHTDRAWERWIDGETCSS))).build().perform();
+		}catch (IllegalArgumentException e){
 			throw new NoSuchElementException("Widget for " + searchString + " is not found");
 		}
-		Actions builder = new Actions(driver.getWebDriver());
-		builder.moveToElement(widget).build().perform();
+
 		driver.getLogger().info("Focus to the widget");
 		driver.takeScreenShot();
 
