@@ -991,13 +991,19 @@ define(['knockout',
                             }
                             //Set global entity context using dashboard save entity context in this case
                             //convert json criteria to compositeMEID 
-                            require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
+                            Builder.requireTargetSelectorUtils(true, function(TargetSelectorUtils) {
+                                if (TargetSelectorUtils) {
+                                    TargetSelectorUtils.registerComponents();
+                                }
                                 TargetSelectorUtils.setOMCContextFromSelectionContext(entityContext);
                                 dtd.resolve(entityContext);
                             });
                         }else {
                             //convert compositeMEID to json criteria
-                             require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
+                            Builder.requireTargetSelectorUtils(true, function(TargetSelectorUtils) {
+                                if (TargetSelectorUtils) {
+                                    TargetSelectorUtils.registerComponents();
+                                }
                                 $.when(TargetSelectorUtils.getCriteriaFromOmcContext()).done(function (criteria) {
                                     entityContext = {criteria: criteria};
                                     dtd.resolve(entityContext);
@@ -1019,11 +1025,14 @@ define(['knockout',
                         }
                         //set non-globalcontext
                         //use saved JSON criteria to set compositeMEID
-                        require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
+                        Builder.requireTargetSelectorUtils(true, function(TargetSelectorUtils) {
+                            if (TargetSelectorUtils) {
+                                TargetSelectorUtils.registerComponents();
+                            }
                             TargetSelectorUtils.setOMCContextFromSelectionContext(entityContext);
                             dtd.resolve(entityContext);
                         });
-
+                        
                     }else if(val === "FALSE") { //Do not use entity context either from dashboard or from global context
                         //No entity context in this case, widgets should use their own entity context
                         //Set both of respectOMCApplicationContext and respectOMCEntityContext to false
