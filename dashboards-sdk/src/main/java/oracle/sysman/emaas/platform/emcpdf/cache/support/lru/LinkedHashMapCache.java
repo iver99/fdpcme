@@ -52,20 +52,22 @@ public class LinkedHashMapCache extends AbstractCache{
 
        Object obj=super.get(key, factory);
        if(obj!=null){
-           LOGGER.debug("CachedItem with key {} and value {} is retrieved from cache group {}",key,name,obj);
+           LOGGER.debug("CachedItem with key {} and value {} is retrieved from cache group {}",key,obj,name);
            return obj;
        }
        return null;
-    }
+}
 
     @Override
     public void put(Object key, Object value) {
+        super.put(key,value);
         cacheMap.put(key, new CachedItem(key,value));
         LOGGER.debug("CachedItem with key {} and value {} is cached into cache group {}",key,value,name);
     }
 
     @Override
     public void evict(Object key) {
+        super.evict(key);
         cacheMap.remove(key);
         LOGGER.debug("Cached Item with key {} is evicted from cache group {}",key,name);
     }

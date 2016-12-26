@@ -2,10 +2,11 @@ package oracle.sysman.emaas.platform.emcpdf.cache.support;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.config.CacheConfig;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LinkedHashMapCache;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -15,6 +16,9 @@ import java.util.concurrent.ConcurrentMap;
 public abstract class AbstractCacheManager implements ICacheManager{
 
     private final ConcurrentMap<String, ICache> cacheMap = new ConcurrentHashMap<>(16);
+
+    private Timer timer=new Timer();
+
     /**
      * Return the cache associated with the given name.
      *
@@ -56,8 +60,23 @@ public abstract class AbstractCacheManager implements ICacheManager{
     public abstract ICache createNewCache(String name);
 
     @Override
-    public abstract void init();
+    public void init(){
+        //log cache status
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Iterator<Map.Entry<String, ICache>> it = cacheMap.entrySet().iterator();
+                while(it.hasNext()){
+                    Map.Entry<String,ICache> entry=it.next();
+                    entry.getValue().logCacheStatistics();
+                }
+            }
+        },CacheConfig.LOG_INTERVAL, CacheConfig.REFRESH_CACHE_INTERVAL);
+    }
 
     @Override
-    public abstract void close() throws IOException;
+    public void close() throws IOException{
+        this.cacheMap.clear();
+    }
+
 }

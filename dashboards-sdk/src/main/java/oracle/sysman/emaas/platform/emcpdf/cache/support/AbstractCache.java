@@ -2,14 +2,19 @@ package oracle.sysman.emaas.platform.emcpdf.cache.support;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheFetchFactory;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheStatistics;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Timer;
 
 /**
  * Created by chehao on 2016/12/22.
  */
 public abstract class AbstractCache implements ICache{
     Logger LOGGER=LogManager.getLogger(AbstractCache.class);
+
+    public CacheStatistics cacheStatistics =new CacheStatistics();
 
     @Override
     public Object get(Object key) {
@@ -18,6 +23,7 @@ public abstract class AbstractCache implements ICache{
 
     @Override
     public Object get(Object key, ICacheFetchFactory factory) {
+        cacheStatistics.setRequestCount(cacheStatistics.getRequestCount()+1);
         CachedItem value=lookup(key);
         if(value == null){
             if(factory!=null){
@@ -35,11 +41,43 @@ public abstract class AbstractCache implements ICache{
             if(isExpired(value)){
                 evict(key);
             }else{
+                cacheStatistics.setHitCount(cacheStatistics.getHitCount()+1);
                 return value.getValue();
             }
         }
         return null;
     }
 
+    @Override
+    public void put(Object key, Object value) {
+        cacheStatistics.setUsage(cacheStatistics.getUsage()+1);
+    }
+
+    @Override
+    public void evict(Object key) {
+        cacheStatistics.setEvictionCount(cacheStatistics.getEvictionCount()+1);
+        cacheStatistics.setUsage(cacheStatistics.getUsage()-1);
+    }
+
     protected abstract CachedItem lookup(Object key);
+
+    @Override
+    public void logCacheStatistics(){
+        LOGGER.info("[Cache Statistics] Cache name is [{}], "
+                        + "Cache capacity is [{}], "
+                        + "Cache usage is [{}], "
+                        + "Cache usage rate is [{}], " +
+                        "Cache total request count is [{}], "
+                        + "Cache hit count is [{}], "
+                        + "Cache hit rate is [{}], "
+                        + "Eviction Count is [{}]",
+                this.getName(),
+                this.cacheStatistics.getCapacity(),
+                this.cacheStatistics.getUsage(),
+                this.cacheStatistics.getUsageRate(),
+                this.cacheStatistics.getRequestCount(),
+                this.cacheStatistics.getHitCount(),
+                this.cacheStatistics.getHitRate(),
+                this.cacheStatistics.getEvictionCount());
+    }
 }

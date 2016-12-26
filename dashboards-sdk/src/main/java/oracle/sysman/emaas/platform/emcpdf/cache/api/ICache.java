@@ -20,4 +20,6 @@ public interface ICache<K,V> {
 
     public boolean isExpired(CachedItem cachedItem);
 
+    public void logCacheStatistics();
+
 }

@@ -45,9 +45,9 @@ public class CacheConfig {
     public static final Integer DEFAULT_CAPACITY = Integer.valueOf(conf.getString("DEFAULT_CAPACITY"));
 
     //log cache status time interval
-//    public static final Long LOG_INTERVAL = Long.valueOf(conf.getString("LOG_INTERVAL"));
+    public static final Long LOG_INTERVAL = Long.valueOf(conf.getString("LOG_INTERVAL"));
     //refresh cache interval
-//    public static final Long REFRESH_CACHE_INTERVAL = Long.valueOf(conf.getString("LOG_INTERVAL"));
+    public static final Long REFRESH_CACHE_INTERVAL = Long.valueOf(conf.getString("LOG_INTERVAL"));
     /**
      * below code are used when you want to run local test,and before you use , please comment above code.
      */

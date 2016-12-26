@@ -41,6 +41,7 @@ public class LRUCacheManager extends AbstractCacheManager{
      */
     @Override
     public void init() {
+        super.init();
         //init default cache group
         LOGGER.info("Initialing LRU CacheManager...");
         getCache(CacheConstants.CACHES_ADMIN_LINK_CACHE, CacheConfig.ADMIN_LINK_CACHE_CAPACITY, CacheConfig.ADMIN_LINK_CACHE_EXPIRE_TIME);
@@ -66,7 +67,7 @@ public class LRUCacheManager extends AbstractCacheManager{
      */
     @Override
     public void close() throws IOException {
-        LOGGER.info("LRU CacheManager is closed.");
-        //TODO
+        LOGGER.info("LRU CacheManager is closing...");
+        super.close();
     }
 }

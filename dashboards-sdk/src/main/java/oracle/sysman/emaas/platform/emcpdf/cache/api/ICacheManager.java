@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.api;
 
 import java.io.Closeable;
+import java.util.Collection;
 
 /**
  * Created by chehao on 2016/12/19.
