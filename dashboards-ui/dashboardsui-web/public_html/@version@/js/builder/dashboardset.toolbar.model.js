@@ -8,6 +8,7 @@ define(['knockout',
     'dfutil',
     'idfbcutil',
     'uifwk/js/util/screenshot-util',
+ 'uifwk/js/sdk/context-util',
     'ojs/ojcore',
     'builder/tool-bar/edit.dialog',
     'builder/tool-bar/duplicate.dialog',
@@ -15,7 +16,7 @@ define(['knockout',
     'uifwk/js/util/mobile-util',
     'builder/builder.core'
 ],
-    function (ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu,mbu) {
+    function (ko, $, dfu, idfbcutil, ssu, cxtModel, oj, ed, dd, pfu,mbu) {
         // dashboard type to keep the same with return data from REST API
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
 
@@ -67,15 +68,20 @@ define(['knockout',
             var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
             var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
             if("SET" === dashboardInst.type()){
-                prefUtil.getAllPreferences({
-                    async: false,
-                    success: function(resp) {
-                        var value = prefUtil.getPreferenceValue(resp, prefKeyHomeDashboardId);
-                        if (Number(value) === ko.unwrap(dashboardInst.id)) {
-                            self.dashboardsetConfig.setHome = ko.observable(false);
-                        }
+            	new Builder.DashboardDataSource().getHomeDashboardPreference(ko.unwrap(dashboardInst.id), function(resp) {
+                    if (resp && resp.value === ko.unwrap(dashboardInst.id) && resp.key === prefKeyHomeDashboardId) {
+                        self.dashboardsetConfig.setHome = ko.observable(false);
                     }
-                });
+            	});
+//                prefUtil.getAllPreferences({
+//                    async: false,
+//                    success: function(resp) {
+//                        var value = prefUtil.getPreferenceValue(resp, prefKeyHomeDashboardId);
+//                        if (Number(value) === ko.unwrap(dashboardInst.id)) {
+//                            self.dashboardsetConfig.setHome = ko.observable(false);
+//                        }
+//                    }
+//                });
             }
 
             self.dashboardsetConfig.homeIcon = ko.observable("dbd-toolbar-icon-home");
@@ -83,6 +89,11 @@ define(['knockout',
                 return getNlsString(self.dashboardsetConfig.setHome() ?
                         "DBS_BUILDER_BTN_HOME_SET" :
                         "DBS_BUILDER_BTN_HOME_REMOVE");
+            });
+            self.dashboardsetConfig.homeName = ko.pureComputed(function () {
+                return self.dashboardsetConfig.setHome() ?
+                        "Set as Home" :
+                        "Remove as Home";
             });
 
             self.dashboardsetConfig.addFavorite = ko.observable(true);
@@ -98,6 +109,12 @@ define(['knockout',
                 return getNlsString(self.dashboardsetConfig.addFavorite() ?
                         "DBS_BUILDER_BTN_FAVORITES_ADD" :
                         "DBS_BUILDER_BTN_FAVORITES_REMOVE");
+            });
+            
+            self.dashboardsetConfig.favoriteName = ko.pureComputed(function () {
+                return  self.dashboardsetConfig.addFavorite() ?
+                        "Add Favorite" :
+                        "Remove Favorite";
             });
 
             var dashboardsetEditDisabled = function () {
@@ -284,8 +301,8 @@ define(['knockout',
 
             self.toolbarDuplcateInSet = function (duplicateData) {
                 self.pickDashboard('addDuplicate', {
-                    id: ko.observable(duplicateData.id),
-                    name: ko.observable(duplicateData.name)
+                    id: ko.observable(ko.unwrap(duplicateData.id())),
+                    name: ko.observable(ko.unwrap(duplicateData.name()))
                 });
                 $('#duplicateDsbDialog').ojDialog('close');
             };
@@ -299,6 +316,7 @@ define(['knockout',
                     "id": "dbs-edit",
                     "icon": "fa-pencil-df",
                     "title": "",
+                    "name":"Edit",
                     "disabled": "",
                     "endOfGroup": false,
                     "showOnMobile": false,
@@ -310,6 +328,7 @@ define(['knockout',
                     "label": getNlsString("COMMON_BTN_PRINT"),
                     "url": "#",
                     "id": "dbs-print",
+                    "name":"Print",
                     "icon": "fa-print",
                     "title": "",
                     "disabled": "",
@@ -323,6 +342,7 @@ define(['knockout',
                     "label": self.dashboardsetConfig.favoriteLabel,
                     "url": "#",
                     "id": "dbs-favorite",
+                    "name":self.dashboardsetConfig.favoriteName,
                     "icon": self.dashboardsetConfig.favoriteIcon,
                     "title": "",
                     "disabled": "",
@@ -336,6 +356,7 @@ define(['knockout',
                     "label": self.dashboardsetConfig.homeLabel,
                     "url": "#",
                     "id": "dbs-home",
+                    "name":self.dashboardsetConfig.homeName,
                     "icon": self.dashboardsetConfig.homeIcon,
                     "title": "",
                     "disabled": "",
@@ -349,6 +370,7 @@ define(['knockout',
                     "label":  getNlsString("DBS_BUILDER_AUTOREFRESH_REFRESH"),
                     "url": "#",
                     "id": "dbs-refresh",
+                    "name":"Auto-refresh",
                     "icon": "dbd-icon-refresh",
                     "title": "",
                     "disabled": "",
@@ -360,6 +382,7 @@ define(['knockout',
                             "label": getNlsString("DBS_BUILDER_AUTOREFRESH_OFF"),
                             "url": "#",
                             "id": "refresh-off",
+                            "name":"Off",
                             "icon": self.dashboardsetConfig.refreshOffIcon,
                             "title": "",
                             "disabled": "",
@@ -372,6 +395,7 @@ define(['knockout',
                             "label": getNlsString("DBS_BUILDER_AUTOREFRESH_ON"),
                             "url": "#",
                             "id": "refresh-time",
+                            "name":"On (Every 5 Minutes)",
                             "icon": self.dashboardsetConfig.refreshOnIcon,
                             "title": "",
                             "disabled": "",
@@ -398,10 +422,10 @@ define(['knockout',
                             self.extendedOptions ={};
                             if(typeof(resp.extendedOptions)!=="undefined"){
                                 self.extendedOptions = JSON.parse(resp.extendedOptions);
-                                if(self.extendedOptions.autoRefresh && self.extendedOptions.autoRefresh.defaultValue) {
+                                if(self.extendedOptions.autoRefresh && $.isNumeric(self.extendedOptions.autoRefresh.defaultValue)) {
                                     self.autoRefreshInterval(parseInt(self.extendedOptions.autoRefresh.defaultValue));
                                 }else {
-                                    if(self.dashboardExtendedOptions.autoRefresh && self.dashboardExtendedOptions.autoRefresh.defaultValue) {
+                                    if(self.dashboardExtendedOptions.autoRefresh && $.isNumeric(self.dashboardExtendedOptions.autoRefresh.defaultValue)) {
                                         self.autoRefreshInterval(parseInt(self.dashboardExtendedOptions.autoRefresh.defaultValue));
                                     }else {
                                        self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
@@ -638,6 +662,7 @@ define(['knockout',
                 this.deleteDbs = function(dbsToolBar){
                     //TODO:ajax to delete
                     var _url = "/sso.static/dashboards.service/";
+			var cxtUtil = new cxtModel();
                     if (dfu.isDevMode()) {
                         _url = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/");
                     }
@@ -648,7 +673,7 @@ define(['knockout',
                             if (!self.dashboardsetConfig.setHome()) {                                
                                 localStorage.deleteHomeDbd=true;
                             }
-                            window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
+                            window.location = cxtUtil.appendOMCContext( document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html');
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                         }
@@ -756,7 +781,8 @@ define(['knockout',
             };
 
             $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
-                var removeDashboardId = Number(ui.tab.attr('id').split(/dashboardTab-/)[1]) || (ui.tab.attr('id').split(/dashboardTab-/)[1]);
+                var removeDashboardId = (ui.tab.attr('id').split(/dashboardTab-/)[1]);
+                //var removeDashboardId = Number(ui.tab.attr('id').split(/dashboardTab-/)[1]) || (ui.tab.attr('id').split(/dashboardTab-/)[1]);
                 var selectedItem = ui.tab;
                 self.removeDashboardInSet(removeDashboardId,selectedItem,false,event);
             } );
@@ -764,7 +790,7 @@ define(['knockout',
             $("#dbd-tabs-container").on("ojdeselect", function (event, ui) {
                 if (typeof (event.originalEvent) !== 'undefined') {
 
-                    var selectedDashboardId=Number(event.originalEvent.currentTarget.id.split(/dashboardTab-/)[1])||event.originalEvent.currentTarget.id.split(/dashboardTab-/)[1];
+                    var selectedDashboardId=event.originalEvent.currentTarget.id.split(/dashboardTab-/)[1];
                     ko.utils.arrayForEach(self.dashboardsetItems, function (item, index) {
                         if (item.dashboardId === selectedDashboardId) {
                             self.selectedDashboardItem(item);
@@ -783,7 +809,7 @@ define(['knockout',
                     var tempAarray = [];
 
                     $(".other-nav").each(function () {
-                        var sortedDashboardId = Number($(this).attr('id').split(/dashboardTab-/)[1]) || $(this).attr('id').split(/dashboardTab-/)[1];
+                        var sortedDashboardId = $(this).attr('id').split(/dashboardTab-/)[1];
                         ko.utils.arrayForEach(self.reorderedDbsSetItems(), function (item, index) {
                             if (item.dashboardId === sortedDashboardId) {
                                 tempAarray.push(item);

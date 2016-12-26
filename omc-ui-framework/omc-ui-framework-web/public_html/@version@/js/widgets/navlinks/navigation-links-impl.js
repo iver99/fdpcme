@@ -20,6 +20,14 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                 var discoveredAdminLinks = [];
                 var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
                 var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
+                var linksNLSMap = {
+                		'homeLinks_EventUI_Alerts': nlsStrings.BRANDING_BAR_NAV_ALERTS_LABEL,
+                		'visualAnalyzers_LogAnalyticsUI_Log Visual Analyzer': nlsStrings.BRANDING_BAR_NAV_LOG_LABEL,
+                		'visualAnalyzers_TargetAnalytics_Search': nlsStrings.BRANDING_BAR_NAV_SEARCH_LABEL,
+                		'adminLinks_AdminConsoleSaaSUi_Administration': nlsStrings.BRANDING_BAR_NAV_ADMINISTRATION_LABEL,
+                		'adminLinks_TenantManagementUI_Agents': nlsStrings.BRANDING_BAR_NAV_AGENTS_LABEL,
+                		'adminLinks_EventUI_Alert Rules': nlsStrings.BRANDING_BAR_NAV_ALERT_RULES_LABEL
+                };
                 self.isAdmin = false;
                 self.isAdminLinksVisible = ko.observable(self.isAdmin);
 
@@ -73,7 +81,7 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
 
                 self.openLink = function(data, event) {
                     if (data && data.href) {
-                        window.location.href = cxtUtil.appendOMCContext(data.href);
+                        window.location.href = cxtUtil.appendOMCContext(data.href, true, true, true);
                     }
                 };
 
@@ -81,10 +89,10 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                     oj.Logger.info('Trying to open Home page by URL: ' + dfHomeUrl);
                     var homeUrl = null;
                     if(dfHomeUrl) {
-                        homeUrl = cxtUtil.appendOMCContext(dfHomeUrl);
+                        homeUrl = cxtUtil.appendOMCContext(dfHomeUrl, true, true, true);
                     }
                     else if (dfWelcomeUrl){
-                        homeUrl = cxtUtil.appendOMCContext(dfWelcomeUrl);
+                        homeUrl = cxtUtil.appendOMCContext(dfWelcomeUrl, true, true, true);
                     }
                     window.location.href = homeUrl;
                 };
@@ -92,20 +100,20 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                 self.openMyFavorites = function() {
                     var favoritesUrl = '/emsaasui/emcpdfui/home.html?filter=favorites';
                     oj.Logger.info('Trying to open my favorites by URL: ' + favoritesUrl);
-                    window.location.href = cxtUtil.appendOMCContext(favoritesUrl);
+                    window.location.href = cxtUtil.appendOMCContext(favoritesUrl, true, true, true);
                 };
 
                 self.openWelcomePage = function() {
                     oj.Logger.info('Trying to open welcome page by URL: ' + dfWelcomeUrl);
                     if(dfWelcomeUrl) {
-                        window.location.href = cxtUtil.appendOMCContext(dfWelcomeUrl);
+                        window.location.href = cxtUtil.appendOMCContext(dfWelcomeUrl, true, true, true);
                     }
                 };
 
                 self.openDashboardHome = function(data, event) {
                     oj.Logger.info('Trying to open Dashboard Home by URL: ' + dfDashboardsUrl);
                     if (dfDashboardsUrl) {
-                        window.location.href = cxtUtil.appendOMCContext(dfDashboardsUrl);
+                        window.location.href = cxtUtil.appendOMCContext(dfDashboardsUrl, true, true, true);
                     }
                 };
 
@@ -114,6 +122,10 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                         var link;
                         for (var i = 0; i < discoveredAdminLinks.length; i++) {
                              link = discoveredAdminLinks[i];
+                             var key = 'adminLinks_' + link.serviceName + '_' + link.name;
+                             if (linksNLSMap[key]) {
+                            	 link.name = linksNLSMap[key];
+                             }
                             if (
                                 // let's use relative url for customer software for admin link
                                 (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName &&
@@ -136,8 +148,12 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                             var homelinks = data.homeLinks;
                             var homeLinkList = [];
                             for (var i = 0; i < homelinks.length; i++) {
-                                var hurl = homelinks[i].href;
+                                var key = 'homeLinks_' + homelinks[i].serviceName + '_' + homelinks[i].name;
+                                if (linksNLSMap[key]) {
+                                	homelinks[i].name = linksNLSMap[key];
+                                }
                                 //Since EventUI is tenant subscription agnostic, use relative path for its home links
+                                var hurl = homelinks[i].href;
                                 if (params.appEventUI && params.appEventUI.serviceName === homelinks[i].serviceName){
                                     hurl = dfu.getRelUrlFromFullUrl(hurl);
                                 }
@@ -167,9 +183,12 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                             var analyzers = data.visualAnalyzers;
                             var analyzerList = [];
                             for (var subindex = 0; subindex < analyzers.length; subindex++) {
+                            	var key = 'visualAnalyzers_' + analyzers[subindex].serviceName + '_' + analyzers[subindex].name;
+                                if (linksNLSMap[key]) {
+                                	analyzers[subindex].name = linksNLSMap[key];
+                                }
                                 var aurl = analyzers[subindex].href;
-                                analyzerList.push({name: analyzers[subindex].name.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, ''),
-                                    href: aurl});
+                                analyzerList.push({name: analyzers[subindex].name, href: aurl});
                             }
                             self.visualAnalyzers(analyzerList);
                         }

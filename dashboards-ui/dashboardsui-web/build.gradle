@@ -39,6 +39,8 @@ configurations {
 }
 
 dependencies {
+        //compile(group: 'com.oracle.emaas.emcpdf.common.tools', name: 'dashboards-common-tools', version: '1.0.0+')
+        compile project(':dashboards-sdk')
         providedCompile project(':dashboards-ui:dashboardsui-webutils') 
         compile getProjectArtifact('log4j-core')   
         compile getProjectArtifact('log4j-api')   
@@ -554,7 +556,7 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory,unpackFo
 	newFile1.withPrintWriter { out ->
 	    def linenumber = 1
 	    homeMainFile.eachLine { line ->
-		if (linenumber == 10){
+		if (linenumber == 5){
 		    out.print(line)
 		    out.println("\nwindow.gradleDevMode=true; \n")
 		} else {
@@ -570,7 +572,7 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory,unpackFo
 	newFile2.withPrintWriter { out ->
 	    def linenumber = 1
 	    builderMainFile.eachLine { line ->
-		if (linenumber == 10){
+		if (linenumber == 5){
 		    out.print(line)
 		    out.println("\nwindow.gradleDevMode=true; \n")
 		} else {
@@ -586,7 +588,7 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory,unpackFo
 	newFile3.withPrintWriter { out ->
 	    def linenumber = 1
 	    welcomeMainFile.eachLine { line ->
-		if (linenumber == 3){
+		if (linenumber == 4){
 		    out.print(line)
 		    out.println("\nwindow.gradleDevMode=true; \n")
 		} else {

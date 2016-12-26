@@ -1,7 +1,11 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
+import java.math.BigInteger;
+import java.util.Date;
+
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
+import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 
@@ -11,7 +15,7 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
  */
 public class UserOptions {
     private String userName;
-    private Long dashboardId;
+    private BigInteger dashboardId;
     private Long autoRefreshInterval;
     private String extendedOptions;
 
@@ -23,11 +27,11 @@ public class UserOptions {
         this.userName = userName;
     }
 
-    public Long getDashboardId() {
+    public BigInteger getDashboardId() {
         return dashboardId;
     }
 
-    public void setDashboardId(Long id) {
+    public void setDashboardId(BigInteger id) {
         this.dashboardId = id;
     }
 
@@ -48,13 +52,19 @@ public class UserOptions {
     }
 
     public static UserOptions valueOf(EmsUserOptions emsUserOptions) {
+    	return UserOptions.valueOf(emsUserOptions, null);
+    }
+
+    protected static UserOptions valueOf(EmsUserOptions emsUserOptions, UserOptions userOptions) {
         if (emsUserOptions == null) {
             return null;
         }
-        UserOptions userOptions = new UserOptions();
+        if (userOptions == null) {
+        	userOptions = new UserOptions();
+        }
         userOptions.setAutoRefreshInterval(Long.valueOf(emsUserOptions.getAutoRefreshInterval()));
         userOptions.setUserName(emsUserOptions.getUserName());
-        userOptions.setDashboardId(Long.valueOf(emsUserOptions.getDashboardId()));
+        userOptions.setDashboardId(emsUserOptions.getDashboardId());
         userOptions.setExtendedOptions(emsUserOptions.getExtendedOptions());
         return userOptions;
     }

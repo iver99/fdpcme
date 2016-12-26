@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import java.math.BigInteger;
+
 import javax.persistence.EntityManager;
 
 import org.apache.logging.log4j.LogManager;
@@ -41,14 +43,14 @@ public class UserOptionsManager {
         super();
     }
 
-    public UserOptions getOptionsById(Long dashboardId, Long tenantId) throws DashboardException {
+    public UserOptions getOptionsById(BigInteger dashboardId, Long tenantId) throws DashboardNotFoundException,UserOptionsNotFoundException {
         EntityManager em = null;
         try {
             String currentUser = UserContext.getCurrentUser();
             DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
             em = dsf.getEntityManager();
 
-            if (dashboardId == null || dashboardId <= 0) {
+            if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
                 LOGGER.debug("Dashboard not found for id {} is invalid", dashboardId);
                 throw new DashboardNotFoundException();
             }
@@ -82,8 +84,8 @@ public class UserOptionsManager {
             DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
             em = dsf.getEntityManager();
 
-            Long dashboardId = userOptions.getDashboardId();
-            if (dashboardId == null || dashboardId <= 0) {
+            BigInteger dashboardId = userOptions.getDashboardId();
+            if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
                 LOGGER.debug("Dashboard not found for id {} is invalid", dashboardId);
                 throw new DashboardNotFoundException();
             }

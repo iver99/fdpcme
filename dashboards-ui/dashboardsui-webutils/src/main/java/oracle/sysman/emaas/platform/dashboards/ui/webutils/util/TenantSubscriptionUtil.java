@@ -13,7 +13,9 @@ package oracle.sysman.emaas.platform.dashboards.ui.webutils.util;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -22,11 +24,9 @@ import javax.ws.rs.core.UriBuilder;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.json.AppMappingCollection;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.json.AppMappingEntity;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.json.DomainEntity;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.json.DomainsEntity;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.LogUtil.InteractionLogDirection;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedAppCacheUtil;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedApps;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -42,11 +42,10 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
  */
 public class TenantSubscriptionUtil
 {
-	private TenantSubscriptionUtil() {
-	  }
-
 	public static class RestClient
 	{
+		private Map<String, Object> headers;
+
 		public RestClient()
 		{
 		}
@@ -67,98 +66,81 @@ public class TenantSubscriptionUtil
 			else {
 				LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
 				itrLogger
-				.info("RestClient is connecting to get response after getting authorization token from registration manager.");
+						.info("RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
 			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+					.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(MediaType.APPLICATION_JSON)
+					.accept(MediaType.APPLICATION_JSON);
+			if (headers != null && !headers.isEmpty()) {
+				for (String key : headers.keySet()) {
+					if (HttpHeaders.AUTHORIZATION.equals(key) || HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME.equals(key)) {
+						continue;
+					}
+					builder.header(key, headers.get(key));
+					LOGGER.info("Setting header ({}, {}) for call to {}", key, headers.get(key), url);
+				}
+			}
 			return builder.get(String.class);
+		}
+
+		public void setHeader(String header, Object value)
+		{
+			if (headers == null) {
+				headers = new HashMap<String, Object>();
+			}
+			headers.put(header, value);
 		}
 	}
 
+	private static final String HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
+
 	private static Logger LOGGER = LogManager.getLogger(TenantSubscriptionUtil.class);
+
 	private static Logger itrLogger = LogUtil.getInteractionLogger();
 
-	public static List<String> getTenantSubscribedServices(String tenant)
+	public static List<String> getTenantSubscribedServices(String tenant, String user)
 	{
 		if (tenant == null) {
 			return Collections.emptyList();
 		}
-		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "1.0+", "collection/domains", tenant);
-		if (domainLink == null || StringUtils.isEmpty(domainLink.getHref())) {
+
+		long startTime = System.currentTimeMillis();
+		SubscribedAppCacheUtil cache = SubscribedAppCacheUtil.getInstance();
+		List<String> apps = cache.get(tenant);
+		if (apps != null) {
+			LOGGER.info("Retrieved subscribed app information from cache");
+			return apps;
+		}
+
+		// instead of retrieving subscribed apps from entitynaming, we get that from dashboard api
+		Link subAppLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.subscribedapps",
+				null);
+		if (subAppLink == null || StringUtils.isEmpty(subAppLink.getHref())) {
 			LOGGER.warn("Checking tenant (" + tenant
-					+ ") subscriptions: null/empty entity naming service collection/domains is retrieved.");
+					+ ") subscriptions: null/empty subscribedapp link retrieved from dashboard-api.");
 			return Collections.emptyList();
 		}
-		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
-		String domainHref = domainLink.getHref();
+		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Subscribedapp link retrieved from dashboard-api href is "
+				+ subAppLink.getHref());
+		String subAppHref = subAppLink.getHref();
 		RestClient rc = new RestClient();
-		String domainsResponse = rc.get(domainHref, tenant);
-		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
+		rc.setHeader(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant);
+		rc.setHeader("X-REMOTE-USER", tenant + "." + user);
+		String subAppResponse = rc.get(subAppHref, tenant);
+		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Dashboard-API subscribed app response is " + subAppResponse);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
-			DomainsEntity de = ju.fromJson(domainsResponse, DomainsEntity.class);
-			if (de == null || de.getItems() == null || de.getItems().isEmpty()) {
-				LOGGER.warn("Checking tenant (" + tenant
-						+ ") subscriptions: null/empty domains entity or domains item retrieved.");
+			SubscribedApps sa = ju.fromJson(subAppResponse, SubscribedApps.class);
+			if (sa == null || sa.getApplications() == null || sa.getApplications().length <= 0) {
+				LOGGER.info("Checking tenant (" + tenant
+						+ ") subscriptions. Dashboard-API subscribed app application is null or empty");
+				cache.remove(tenant);
 				return Collections.emptyList();
 			}
-			String tenantAppUrl = null;
-			for (DomainEntity domain : de.getItems()) {
-				if ("TenantApplicationMapping".equals(domain.getDomainName())) {
-					tenantAppUrl = domain.getCanonicalUrl();
-					break;
-				}
-			}
-			if (tenantAppUrl == null || "".equals(tenantAppUrl)) {
-				LOGGER.warn("Checking tenant (" + tenant + ") subscriptions. 'TenantApplicationMapping' not found");
-				return Collections.emptyList();
-			}
-			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
-			LOGGER.info("Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is "
-					+ appMappingUrl);
-			String appMappingJson = rc.get(appMappingUrl, tenant);
-			LOGGER.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
-			if (appMappingJson == null || "".equals(appMappingJson)) {
-				return Collections.emptyList();
-			}
-			AppMappingCollection amec = ju.fromJson(appMappingJson, AppMappingCollection.class);
-			if (amec == null || amec.getItems() == null || amec.getItems().isEmpty()) {
-				LOGGER.error("Checking tenant (" + tenant + ") subscriptions. Empty application mapping items are retrieved");
-				return Collections.emptyList();
-			}
-			AppMappingEntity ame = null;
-			for (AppMappingEntity entity : amec.getItems()) {
-				if (entity.getValues() == null) {
-					continue;
-				}
-				for (AppMappingEntity.AppMappingValue amv : entity.getValues()) {
-					if (tenant.equals(amv.getOpcTenantId())) {
-						ame = entity;
-						break;
-					}
-
-				}
-			}
-			if (ame == null || ame.getValues() == null || ame.getValues().isEmpty()) {
-				LOGGER.error("Checking tenant (" + tenant
-						+ ") subscriptions. Failed to get an application mapping for the specified tenant");
-				return Collections.emptyList();
-			}
-			String apps = null;
-			for (AppMappingEntity.AppMappingValue amv : ame.getValues()) {
-				if (tenant.equals(amv.getOpcTenantId())) {
-					apps = amv.getApplicationNames();
-					break;
-				}
-			}
-			LOGGER.info("Checking tenant (" + tenant + ") subscriptions. applications for the tenant are " + apps);
-			if (apps == null || "".equals(apps)) {
-				return Collections.emptyList();
-			}
-			List<String> origAppsList = Arrays.asList(apps
-					.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
-			return origAppsList;
-
+			apps = Arrays.asList(sa.getApplications());
+			cache.put(tenant, apps);
+			LOGGER.info("Getting subscribed app from dashboard-api: {} ms", System.currentTimeMillis() - startTime);
+			return apps;
 		}
 		catch (IOException e) {
 			LOGGER.error(e);
@@ -191,10 +173,14 @@ public class TenantSubscriptionUtil
 			return false;
 		}
 		//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
-		if (("Monitoring").equals(svc)) {
+		if ("Monitoring".equals(svc)) {
 			return true;
 		}
 		return false;
+	}
+
+	private TenantSubscriptionUtil()
+	{
 	}
 
 }

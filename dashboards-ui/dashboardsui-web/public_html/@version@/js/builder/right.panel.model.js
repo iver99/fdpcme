@@ -61,14 +61,13 @@ define(['knockout',
                 self.$list = $([].concat.apply($b.findEl(".fit-size"),$(".df-right-panel .fit-size")));
             };
 
-            if(!window.DEV_MODE && !self.brandingbarCssLoaded){
-                var brandingbarOldHeight = $(".emaas-appheader").height();
-                self.brandingbarCssLoaded = setInterval(function(){
-                    if(brandingbarOldHeight !== $(".emaas-appheader").height()){
-                        $b.triggerBuilderResizeEvent('uifwk-common-alta.css loaded');
-                        clearInterval(self.brandingbarCssLoaded);
-                    }
-                });
+            if(!window._uifwk){
+                window._uifwk={};
+            }
+            if (!window._uifwk.brandingbar_css_load_callback) {
+                window._uifwk.brandingbar_css_load_callback = function(){
+                    $b.triggerBuilderResizeEvent('uifwk-common-alta.css loaded');
+                };
             }
 
             self.initialize();
@@ -103,8 +102,9 @@ define(['knockout',
 
             self.$b = $b;
             self.selectedContent = ko.observable();
-            self.rightPanelControl=new rpc.rightPanelControl(self.$b,self.selectedContent);
-            self.rightPanelFilter = new rpf.RightPanelFilterModel(self.$b);
+            self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
+            self.rightPanelControl=new rpc.rightPanelControl(self.$b);
+            self.rightPanelFilter = new rpf.RightPanelFilterModel(self.$b, ko.unwrap(self.isDashboardSet));
             self.rightPanelWidget= new rpw.rightPanelWidget(self.$b);
             self.rightPanelEdit=new rpe.rightPanelEditModel(self.$b,self.dashboardsetToolBarModel);
             self.rightPanelEditContent=new rpec.rightPanelEditContentModel(self.$b,self.dashboardsetToolBarModel,self.selectedContent);
@@ -113,7 +113,6 @@ define(['knockout',
             self.tabletMode = new Builder.TabletEditorMode();
             self.modeType = Builder.isSmallMediaQuery() ? self.tabletMode : self.normalMode;
             self.isMobileDevice = self.modeType.editable === true ? 'false' : 'true';
-            self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
             self.isOobDashboardset=dashboardsetToolBarModel.isOobDashboardset; 
             self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
             self.maximized = ko.observable(false);
@@ -184,13 +183,6 @@ define(['knockout',
                         self.rightPanelWidget.loadWidgets();
                     }
                     self.initDraggable();
-
-//                    $('.widget-search-input').autocomplete({
-//                        source: self.rightPanelWidget.autoSearchWidgets,
-//                        delay: 700,
-//                        minLength: 0
-//                    });
-
                     self.rightPanelWidget.tilesViewModel(self.tilesViewModel);
                     ResizableView(self.$b);
             };

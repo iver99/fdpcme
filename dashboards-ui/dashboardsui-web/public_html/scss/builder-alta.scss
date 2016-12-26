@@ -771,12 +771,14 @@ body, html {
     }
     
     .dbd-resize-handler-right-bottom {
-        cursor:se-resize;
         right:1px;
         bottom:0px;
         > span {
             color:#878c90;
         }
+    }
+    .cursor-resize-right-bottom{
+        cursor:se-resize;
     }
 }
 .dbd-tile-container.tile-border-highlight{
@@ -1318,16 +1320,6 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     border-color: #e0e6eb;
     color: #9e9e9e;
     cursor: default;
-}
-
-.oj-component-icon.oj-inputnumber-up-icon:before {
-    -webkit-transform: scale(-1, 1) rotate(90deg);
-    transform: scale(-1, 1) rotate(90deg);
-}
-
-.oj-component-icon.oj-inputnumber-down-icon:before {
-    -webkit-transform: rotate(-90deg);
-    transform: rotate(-90deg);
 }
 
 .dbd-left-panel-footer-btns {

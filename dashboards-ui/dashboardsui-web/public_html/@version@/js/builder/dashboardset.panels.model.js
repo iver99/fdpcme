@@ -63,6 +63,17 @@ define([
                     Builder.rightPanelChange("complete-hidden-rightpanel");                 
                     $(".dashboard-picker-container").removeClass("df-collaps");
                 }
+                
+                var headerWrapper = $("#headerWrapper")[0];
+                if(headerWrapper) {
+                    var headerViewModel = ko.dataFor(headerWrapper);
+                }
+                
+                if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="GC") {
+                    headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                }else {
+                    headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                }
 
                 if (alreadyLoaded) {
                     $showDashboard.show();
@@ -173,6 +184,7 @@ define([
                 $("#loading").show();
                 var dashboardItem = dashboardsetToolBarModel.selectedDashboardItem(),
                     dashboardId = dashboardItem.dashboardId;
+            
                 new Builder.DashboardDataSource().loadDashboardData(dashboardId, function (dashboard) {
                     initializeSingleDashboard(dashboard, dashboardId);
                 }, function (e) {
@@ -213,6 +225,8 @@ define([
                             if(value.dashboardId===currentDashboardId){
                                 value.name(dashboardName);
                                 $('#dashboardTab-'+currentDashboardId).find('.tabs-name').text(dashboardName);
+                                $('#dashboardTab-'+currentDashboardId).attr("data-tabs-name",dashboardName);
+                                $('#dashboardTab-'+currentDashboardId).attr("data-dashboard-name-in-set",dashboardName);
                             }
                         });
                         dashboardsetToolBarModel.reorderedDbsSetItems().filter(function(value) {

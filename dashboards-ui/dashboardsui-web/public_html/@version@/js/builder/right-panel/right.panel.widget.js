@@ -8,6 +8,8 @@ function (ko, $, oj, dfu) {
         var self = this;
         self.widgets = ko.observableArray([]);
         self.keyword = ko.observable('');
+        self.keywordInput=ko.observable('');
+        self.keywordInput.extend({rateLimit: 700, method: 'notifyWhenChangesStop '});
         self.clearRightPanelSearch = ko.observable(false);
         self.tilesViewModel = ko.observable($b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel());
 
@@ -88,8 +90,15 @@ function (ko, $, oj, dfu) {
                 async: true
             });
         };
-
+        
+        self.keywordInput.subscribe(function () {
+            self.keyword(self.keywordInput());
+            self.searchWidgetsClicked();
+            setInputClearIcon()
+        });
+        
         self.searchWidgetsInputKeypressed = function (e, d) {
+            setInputClearIcon();
             if (d.keyCode === 13) {
                 self.searchWidgetsClicked();
                 return false;
@@ -100,21 +109,10 @@ function (ko, $, oj, dfu) {
             self.loadWidgets();
         };
 
-        self.autoSearchWidgets = function (req) {
-            self.loadWidgets(req);
-            if (req.term.length === 0) {
-                self.clearRightPanelSearch(false);
-            } else {
-                self.clearRightPanelSearch(true);
-            }
-        };
-
         self.clearWidgetSearchInputClicked = function () {
-            if (self.keyword()) {
-                self.keyword(null);
+                self.keyword("");
                 self.searchWidgetsClicked();
                 self.clearRightPanelSearch(false);
-            }
         };
 
         self.widgetMouseOverHandler = function (widget, event) {
@@ -259,7 +257,14 @@ function (ko, $, oj, dfu) {
                 }
             }
         };
-
+        
+        function setInputClearIcon(){
+            if (self.keywordInput().length === 0) {
+                self.clearRightPanelSearch(false);
+            } else {
+                self.clearRightPanelSearch(true);
+            }
+        }
     }
     return {"rightPanelWidget": rightPanelWidget};
 }

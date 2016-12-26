@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emaas.platform.dashboards.ui.web.context.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 
 import org.apache.commons.codec.EncoderException;
@@ -71,7 +72,7 @@ public class HomePageFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-	ServletException
+			ServletException
 	{
 		HttpServletRequest httpReq = (HttpServletRequest) request;
 		HttpServletResponse httpRes = (HttpServletResponse) response;
@@ -83,26 +84,27 @@ public class HomePageFilter implements Filter
 				LOGGER.info("User logged in! Start to check the user preference of Home.");
 				String userTenant = httpReq.getHeader(OAM_REMOTE_USER_HEADER);
 				LOGGER.info("Current tenant user is: \"{}\"", userTenant);
-				if (userTenant != null && !("").equals(userTenant)) {
+				if (userTenant != null && !"".equals(userTenant)) {
 					String domainName = userTenant.substring(0, userTenant.indexOf("."));
 					String authorization = new String(LookupManager.getInstance().getAuthorizationToken());
 					String preference = getPreference(domainName, authorization, userTenant);
 					LOGGER.info("Get the user preference of Home settings. Result: \"{}\"", preference);
-					if (preference != null && !("").equals(preference)) {
+					if (preference != null && !"".equals(preference)) {
 						int flag = preference.indexOf("value");
 						if (flag > 0) {
 							String value = preference.substring(flag + 8, preference.length() - 2);
 							LOGGER.info("The ID of the dashboard which has been set as Home is: \"{}\"", value);
-							if (!("").equals(value)) {
+							if (!"".equals(value)) {
 								URLCodec codec = new URLCodec();
 								String urlEscaped = "";
 								try {
 									urlEscaped = codec.encode(value);
-									LOGGER.info("The ID of the dashboard which has been set as Home has been encode as: \"{}\"", urlEscaped);
+									LOGGER.info("The ID of the dashboard which has been set as Home has been encode as: \"{}\"",
+											urlEscaped);
 								}
 								catch (EncoderException e) {
 									LOGGER.error("Failed to encode:" + value);
-									LOGGER.info("failed to encode the url",e);
+									LOGGER.info("failed to encode the url", e);
 								}
 								String redirectUrl = "./builder.html?dashboardId=" + urlEscaped;
 								if (!isHomeDashboardExists(domainName, authorization, userTenant, value)) {
@@ -116,9 +118,9 @@ public class HomePageFilter implements Filter
 									LOGGER.info("Redirecting to the dashboard page which has been set as Home. URL: \"{}\"",
 											redirectUrl);
 								}
-								
-								httpRes.sendRedirect(redirectUrl);
-								
+
+								httpRes.sendRedirect(GlobalContextUtil.generateUrlWithGlobalContext(redirectUrl, httpReq));
+
 								return;
 							}
 						}
@@ -176,10 +178,10 @@ public class HomePageFilter implements Filter
 			}
 			finally {
 				try {
-					if(instream != null) {
+					if (instream != null) {
 						instream.close();
 					}
-					if(response != null) {
+					if (response != null) {
 						response.close();
 					}
 				}
@@ -207,10 +209,12 @@ public class HomePageFilter implements Filter
 		}
 		catch (IOException e2) {
 			LOGGER.error(e2.getLocalizedMessage(), e2);
-		} catch (Exception e3) {
+		}
+		catch (Exception e3) {
 			LOGGER.error(e3.getLocalizedMessage(), e3);
-		} finally {
-			if(bf != null) {
+		}
+		finally {
+			if (bf != null) {
 				try {
 					bf.close();
 				}
@@ -219,7 +223,7 @@ public class HomePageFilter implements Filter
 				}
 			}
 		}
-		
+
 		return buffer.toString();
 	}
 

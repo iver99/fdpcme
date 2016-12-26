@@ -43,9 +43,12 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  *                   END OF TEST-INFRA-BLOCK
  ***************************************************************************************************/
 
+//Setup gradle to onboard a new tenant
+apply from: 'onboard_tenant.gradle'
 
 //def emcpdfCommonAPIVer = getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.0.0+')
-def emcpdfCommonAPIVer = '2.1.0-nov21+'
+def emcpdfCommonAPIVer = '2.1.0-greenchannel+'
+
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies{
     testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-uitest-integ-tests', version: "${REPO_BID}")
@@ -56,9 +59,8 @@ dependencies{
      testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
 }
 
-
 //Task is for dashboard UI Test
-task e2e (type: EMTest, dependsOn:omcSetup ){
+task e2e (type: EMTest, dependsOn:[omcSetup, onboardTenant] ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'DashboardUITest') {
             classes([:]) {
@@ -66,13 +68,37 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestBrandingBar')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyWidget')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB')
             }
         }
     }
     useWebdriver = true
     useRestAssured = true
+}
 
+task preProdTests(type: EMTest ){
+options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
+environment "OMC_PROXYHOST", "www-proxy.us.oracle.com"
+	environment "OMC_PROXYPORT", "80"
+	environment "OMC_PROXYUSER", "oracle"
+	environment "OMC_PROXYPWD", "welcome"
+	environment "WEBDRIVER_PROXY_ENABLE", "true"
+	environment "WEBDRIVER_PROXY_HOST", "www-proxy.us.oracle.com"
+	environment "WEBDRIVER_PROXY_PORT", "80"
+	environment "SKIP_OMCSETUP", "true"
+	environment "SKIP_OMCTEARDOWN", "1"
+	
+        test('name': 'DashboardUITest') {
+            classes([:]) {
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB')
+            }
+        }
+    }
+    useWebdriver = true
+    useRestAssured = true	
 }
 
 task emcpdf_allsrg_3n (dependsOn:[e2e, omcTeardown]) {

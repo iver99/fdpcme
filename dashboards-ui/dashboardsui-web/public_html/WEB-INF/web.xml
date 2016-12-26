@@ -19,7 +19,7 @@
     <dispatcher>FORWARD</dispatcher>
     <dispatcher>REQUEST</dispatcher>
   </filter-mapping> 
-  <filter>
+  <!--<filter>
   	<filter-name>compress.filter</filter-name>
     <filter-class>oracle.sysman.emaas.platform.dashboards.ui.web.GzipFilter</filter-class>
   </filter>
@@ -34,7 +34,7 @@
   <filter-mapping>
     <filter-name>compress.filter</filter-name>
     <url-pattern>*.js</url-pattern>
-  </filter-mapping>
+  </filter-mapping>-->
   <filter>
   	<filter-name>clickjack.filter</filter-name>
     <filter-class>oracle.sysman.emaas.platform.dashboards.ui.web.ClickjackingFilter</filter-class>
@@ -57,10 +57,17 @@
     <url-pattern>/welcome.html</url-pattern>
     <url-pattern>/home.html</url-pattern>
   </filter-mapping>
-  
+    <filter>
+        <filter-name>add.data.filter</filter-name>
+        <filter-class>oracle.sysman.emaas.platform.dashboards.ui.web.AdditionalDataFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>add.data.filter</filter-name>
+        <url-pattern>/builder.html</url-pattern>
+    </filter-mapping>
   <filter>
     <filter-name>nls.filter</filter-name>
-    <filter-class>oracle.sysman.emaas.platform.dashboards.ui.web.NLSFilter</filter-class>
+    <filter-class>oracle.sysman.emaas.platform.uifwk.nls.filter.NLSFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>nls.filter</filter-name>

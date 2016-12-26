@@ -17,8 +17,7 @@ Rem
 
 SET FEEDBACK ON
 SET SERVEROUTPUT ON
-  ---add new unique index EMS_DASHBOARD_U2 ON EMS_DASHBOARD(UPPER(NAME), DESCRIPTION, OWNER, TENANT_ID, DELETED)
-  @&EMSAAS_SQL_ROOT/1.12.0/emaas_dashboards_new_unique_index.sql -1
+
 
 
 DECLARE
@@ -56,3 +55,4 @@ BEGIN
     RAISE;
 END;
 /
+

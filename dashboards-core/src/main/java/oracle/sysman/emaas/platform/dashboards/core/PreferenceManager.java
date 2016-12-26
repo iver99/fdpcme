@@ -39,7 +39,7 @@ public class PreferenceManager
 		super();
 	}
 
-	public Preference getPreferenceByKey(String key, Long tenantId) throws DashboardException
+	public Preference getPreferenceByKey(String key, Long tenantId) throws PreferenceNotFoundException
 	{
 		EntityManager em = null;
 		try {
