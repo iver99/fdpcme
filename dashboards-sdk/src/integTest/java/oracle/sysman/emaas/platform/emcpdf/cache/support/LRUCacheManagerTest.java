@@ -30,7 +30,7 @@ public class LRUCacheManagerTest {
         Assert.assertNull(o1);
         cm.getCache("cache1").put("two",new CachedItem("two",2));
         Object o2=cm.getCache("cache1").get("two");
-        Assert.assertEquals((Integer)o2,new Integer(2));
+        Assert.assertEquals((Integer)(((CachedItem)o2).getValue()),new Integer(2));
     }
     @Test
     public void testGetCachedItem2(){

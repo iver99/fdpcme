@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.core.cache.screenshot;
+package oracle.sysman.emaas.platform.emcpdf.cache.tool;
 
 import java.util.Date;
 

@@ -37,5 +37,6 @@ public class CacheConstants {
     public static final String CHANGE_CACHE_STATUS_SUCCESSFULLY="Change cache status successfully.";
     public static final String CHANGE_CACHE_STATUS_FAILED="Change cache status failed.";
 
-
+    public static final String SCREENSHOT_BASE64_PNG_PREFIX = "data:image/png;base64,";
+    public static final String SCREENSHOT_BASE64_JPG_PREFIX = "data:image/jpeg;base64,";
 }

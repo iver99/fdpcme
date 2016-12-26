@@ -1,9 +1,10 @@
-package oracle.sysman.emaas.platform.dashboards.core.cache.screenshot;
+package oracle.sysman.emaas.platform.emcpdf.cache.screenshot;
 
-import java.math.BigInteger;
-
+import oracle.sysman.emaas.platform.emcpdf.cache.util.ScreenshotPathGenerator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.math.BigInteger;
 
 public class ScreenshotPathGeneratorTest
 {

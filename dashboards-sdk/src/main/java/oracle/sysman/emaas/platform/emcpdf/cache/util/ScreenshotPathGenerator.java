@@ -8,19 +8,17 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.core.cache.screenshot;
+package oracle.sysman.emaas.platform.emcpdf.cache.util;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.Properties;
-
-import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * @author guochen

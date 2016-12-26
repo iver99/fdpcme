@@ -1,6 +1,6 @@
-package oracle.sysman.emaas.platform.emcpdf.cache.support.lru;
+/*
+package oracle.sysman.emaas.platform.emcpdf.cache.support.screenshot;
 
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheFetchFactory;
 import oracle.sysman.emaas.platform.emcpdf.cache.config.CacheConfig;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.AbstractCache;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CachedItem;
@@ -9,11 +9,14 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.LinkedHashMap;
 
+*/
 /**
- * Created by chehao on 2016/12/9.
- */
-public class LinkedHashMapCache extends AbstractCache{
-    Logger LOGGER= LogManager.getLogger(LinkedHashMapCache.class);
+ * Created by chehao on 2016/12/26.
+ *//*
+
+public class ScreenshotCache extends AbstractCache{
+
+    Logger LOGGER= LogManager.getLogger(ScreenshotCache.class);
 
     private LinkedHashMap<Object, CachedItem> cacheMap;
     private String name;
@@ -21,7 +24,7 @@ public class LinkedHashMapCache extends AbstractCache{
     private Long timeToLive;
     private Long creationTime;
 
-    public LinkedHashMapCache(String name, Integer capacity, Long timeToLive){
+    public ScreenshotCache(String name, Integer capacity, Long timeToLive){
         this.name=name;
         this.capacity = capacity;
         this.timeToLive=timeToLive;
@@ -31,37 +34,19 @@ public class LinkedHashMapCache extends AbstractCache{
             private static final long serialVersionUID = 1L;
             @Override
             protected boolean removeEldestEntry(java.util.Map.Entry<Object,CachedItem> eldest) {
-                return size() > LinkedHashMapCache.this.capacity;
+                return size() > ScreenshotCache.this.capacity;
             }
         };
         LOGGER.info("Cache group named {} is created with capacity {} and timeToLive {}",name,capacity,timeToLive);
     }
 
-    public LinkedHashMapCache(String name) {
+    public ScreenshotCache(String name) {
         this(name, CacheConfig.DEFAULT_CAPACITY,CacheConfig.DEFAULT_EXPIRE_TIME);
-    }
-
-
-    @Override
-    public void clear() {
-        cacheMap.clear();
-    }
-
-    @Override
-    public Object get(Object key, ICacheFetchFactory factory) {
-
-       Object obj=super.get(key, factory);
-       if(obj!=null){
-           LOGGER.debug("CachedItem with key {} and value {} is retrieved from cache group {}",key,name,obj);
-           return obj;
-       }
-       return null;
     }
 
     @Override
     public void put(Object key, Object value) {
-        cacheMap.put(key, new CachedItem(key,value));
-        LOGGER.debug("CachedItem with key {} and value {} is cached into cache group {}",key,value,name);
+
     }
 
     @Override
@@ -71,8 +56,18 @@ public class LinkedHashMapCache extends AbstractCache{
     }
 
     @Override
+    public void clear() {
+        cacheMap.clear();
+    }
+
+    @Override
     public String getName() {
         return getName();
+    }
+
+    @Override
+    public boolean isExpired(CachedItem cachedItem) {
+        return false;
     }
 
     @Override
@@ -80,13 +75,5 @@ public class LinkedHashMapCache extends AbstractCache{
         return cacheMap.get(key);
     }
 
-    @Override
-    public boolean isExpired(CachedItem cachedItem) {
-        if(timeToLive<=0){
-            return false;
-        }
-        return (System.currentTimeMillis()-cachedItem.getCreationTime())>timeToLive;
-    }
-
 }
-
+*/

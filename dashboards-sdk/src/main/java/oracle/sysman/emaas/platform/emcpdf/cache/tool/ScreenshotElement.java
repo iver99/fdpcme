@@ -8,15 +8,11 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.core.cache.screenshot;
+package oracle.sysman.emaas.platform.emcpdf.cache.tool;
 
-import oracle.sysman.emaas.platform.emcpdf.cache.support.screenshot.Binary;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Binary;
 
 import java.io.Serializable;
-
-
-
-
 
 
 /**
