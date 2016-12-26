@@ -352,35 +352,7 @@ define(['knockout',
                     tile.configure = function(){
                         var widgetUrl = url;
                         widgetUrl += "?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboardInst.id()+"&dashboardName="+encodeURI(dashboardInst.name()).replace(/\//g,'%2F');
-                        if(dashboard.enableTimeRange() === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
-                            widgetUrl += "";
-                        }else {
-                            var start = timeSelectorModel.viewStart();
-                            var end = timeSelectorModel.viewEnd();
-                            if(start && (start instanceof Date) && end && (end instanceof Date)) {
-                                widgetUrl += "&startTime="+start.getTime()+"&endTime="+end.getTime();
-                            }
-                            var timePeriod = timeSelectorModel.viewTimePeriod();
-                            if(timePeriod) {
-                                widgetUrl += "&timePeriod="+timePeriod;
-                            }
-                        }
-
-                    var tgtSelectorNeeded = dashboard.enableEntityFilter&&dashboard.enableEntityFilter()==="TRUE";
-                    Builder.requireTargetSelectorUtils(tgtSelectorNeeded, function(TargetSelectorUtils) {
-                        if (tgtSelectorNeeded) {
-                            if(targets && targets()) {
-                                 var compressedTargets = encodeURI(JSON.stringify(targets()));
-                                var targetUrlParam = "targets";
-                                if(TargetSelectorUtils.compress) {
-                                    compressedTargets = TargetSelectorUtils.compress(targets());
-                                    targetUrlParam = "targetsz";
-                                }
-                                widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
-                            }
-                        }
                         window.location = cxtUtil.appendOMCContext(widgetUrl, getRespectOMCContextFlag(dashboard.enableEntityFilter()), getRespectOMCContextFlag(dashboard.enableEntityFilter()), getRespectOMCContextFlag(dashboard.enableTimeRange()));
-                    });
                     };
                 }
             }

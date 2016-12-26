@@ -1254,12 +1254,12 @@ public class TestDashBoard extends LoginAndLogout
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
 
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = " + url);
-		if (!url.substring(url.indexOf("emsaasui") + 9).contains(
-				"startTime=" + String.valueOf(StartTimeStamp) + "&endTime=" + String.valueOf(EndTimeStamp))) {
-			Assert.fail("not open the correct widget");
-		}
+//		String url = webd.getWebDriver().getCurrentUrl();
+//		webd.getLogger().info("url = " + url);
+//		if (!url.substring(url.indexOf("emsaasui") + 9).contains(
+//				"startTime=" + String.valueOf(StartTimeStamp) + "&endTime=" + String.valueOf(EndTimeStamp))) {
+//			Assert.fail("not open the correct widget");
+//		}
 
 	}
 
