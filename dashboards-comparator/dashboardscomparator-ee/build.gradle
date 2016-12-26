@@ -1,0 +1,154 @@
+apply plugin: 'ear'
+apply plugin: 'eclipse-wtp'
+
+configurations { 
+    appServer     
+}
+
+//version = '1.0.0'
+version = project.ext.getServiceVersion("DashboardService-comparator")
+group = 'emaas/applications/dashboards-framework'
+deployname=artifactPrefix+'dashboards-comparator'
+def artifactId = 'dashboardscomparator' 
+def groupId = group 
+def versionNumber = version
+
+ear 
+{
+	libDirName 'lib'
+	appDirName 'EarContent'
+	baseName = artifactPrefix+'dashboards-comparator'
+	from('ear/META-INF')
+	{ 
+		include 'ear/META-INF/*.xml'
+		into('META-INF') 
+	}
+}
+
+dependencies 
+{
+	deploy (project(path:':dashboards-comparator:dashboardscomparator-web', configuration:'archives')) {transitive = false}
+	earlib (project(':dashboards-comparator:dashboardscomparator-webutils')){transitive = false} 
+	
+	earlib(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.+') {transitive=false }
+	earlib(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.+') {transitive=false }
+	earlib (group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2') {transitive=false }
+	earlib (group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2') {transitive=false }
+    	earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.3.0'){transitive=false }
+    	earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.3.0'){transitive=false }
+    	earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.3.0'){transitive=false }
+    	earlib(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){transitive=false }
+    	earlib(group: 'com.oracle.emaas.emcpgw.sdk', name: 'gateway-client', version: '1.+')
+
+    	earlib(group: 'org.apache.httpcomponents', name:'httpclient', version:'4.3.1') { transitive = false }
+        earlib(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3') { transitive = false }
+        earlib(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1') { transitive = false }
+        earlib(group: 'org.apache.commons', name:'commons-lang3', version:'3.1') { transitive = false }
+    	earlib(group: 'commons-logging', name:'commons-logging', version:'1.1.1') { transitive = false }
+    	earlib(group: 'commons-codec', name:'commons-codec', version:'1.6') { transitive = false }
+}
+
+// All WLS Related things
+
+loadConfiguration()
+
+def loadConfiguration() {
+
+    def environment = hasProperty('env') ? env : 'dev'
+    setProperty 'environment', environment
+    
+    def configFile = file("${rootDir}/appServerConfig.config")
+    def appServerconfig = new ConfigSlurper(environment).parse(configFile.toURL())
+    setProperty 'appServerconfig', appServerconfig
+}
+
+task comparatorAppServerInit << {
+
+	println "=============== Environment is $environment ========================"
+	println " "
+	println "(Un/Re)Deployment will be performed at following server info: "
+	println "	serverName:  $appServerconfig.serverName"
+	println "	port:  $appServerconfig.port"
+  println "	adminuser:  $appServerconfig.adminUser"
+	println "	adminuserpwd: $appServerconfig.adminUserPwd"
+	println " "
+
+	dependencies 
+	{
+		appServer compile(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0')
+	} 
+	if (!project.hasProperty('serverHost')) { 
+		project.ext.serverHost = "$appServerconfig.serverName"; 
+	} 
+	if (!project.hasProperty('adminServerPost')) { 
+		project.ext.adminServerPost = "$appServerconfig.port"; 
+	}     
+	if (!project.hasProperty('adminUser')) { 
+		project.ext.adminUser = "$appServerconfig.adminUser"; 
+	}     
+	if (!project.hasProperty('adminUserPassword')) { 
+		project.ext.adminUserPassword = "$appServerconfig.adminUserPwd"; 
+	}     
+if (!project.hasProperty('appServerTargetName')) {
+                            project.ext.wlsserver_target = "Server-6";           // default to 'Server-6' if not specified on command line
+                        }   
+
+	project.ext.t3URL = "t3://${serverHost}:${adminServerPost}" 
+	
+	ant.propertyfile(file: "../dashboardscomparator-web/testenv.properties") 
+	{
+		entry( key:"hostname",  value: "${serverHost}" )
+		entry( key: "port", value: "${appServerconfig.port}")
+	}
+
+	ant.taskdef(name: 'wldeploy',classname: 'weblogic.ant.taskdefs.management.WLDeploy',classpath: configurations.appServer.asPath)  
+} 
+
+task appServerDeploy{
+	dependsOn 'ear', 'comparatorAppServerInit'
+
+	doLast 
+	{ 
+		println "Deploying ${ear.archivePath} to ${t3URL}" 
+
+		ant.wldeploy(action:'deploy',  
+		source:     ear.archivePath, 
+		name:       "DashboardService-Comparator-6",
+		targets:	wlsserver_target,
+		adminurl:   t3URL,  
+		user:       adminUser, 
+		password:   adminUserPassword, 
+		upload:     'true',  
+		verbose:    'true', 
+		debug:      'false') 
+	} 
+}
+
+
+task appServerUndeploy{
+	dependsOn 'comparatorAppServerInit' 
+
+	doLast 
+	{ 
+		println "Undeploying ${appName_ui}-${version} from ${t3URL}" 
+
+		ant.wldeploy(action:'undeploy',  
+		name:       "DashboardService-Comparator-6",
+		adminurl:   t3URL,  
+		user:       adminUser, 
+		password:   adminUserPassword, 
+		verbose:    'false', 
+		debug:      'true')
+	}
+}
+
+task appServerRedeploy{
+	dependsOn 'appServerInit' 
+	doFirst {
+		tasks.appServerUndeploy.execute()
+	}
+	doLast {
+		tasks.appServerDeploy.execute()
+	}
+}
+

@@ -1,7 +1,7 @@
 Rem ----------------------------------------------------------------
-Rem 09/11/2015	WENJZHU	Created file
-Rem Extract unique teant IDs from tables EMS_DASHBOARD & append that ID next to upgrade implementation file & run that file
-Rem ----------------------------------------------------------------
+Rem 10/11/2016	pingwu  	Created file
+Rem zdt
+Rem -------------------------------------------
 
 @&EMSAAS_SQL_ROOT/1.12.0/upgrade_impl_ddl.sql
 

@@ -16,6 +16,7 @@ import javax.persistence.Query;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+ 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -212,6 +213,7 @@ public class DashboardManager
 			//				removeFavoriteDashboard(dashboardId, tenantId);
 			//			}
 
+			em.setProperty("soft.deletion.permanent", permanent);
 			dsf.updateSubDashboardShowInHome(dashboardId);
 
 			//emcpdf2801 delete dashboard's user option
@@ -238,6 +240,41 @@ public class DashboardManager
 			}
 		}
 	}
+	
+	/**
+	 * Delete dashboards by a given tenant. Soft deletion is supported
+	 *
+	 * @param tenantId
+	 * @throws DashboardNotFoundException
+	 */
+	public void deleteDashboards(Long tenantId) throws DashboardException
+	{
+		deleteDashboards(false, tenantId);
+	}
+	
+	public void deleteDashboards(boolean permanent, Long tenantId) 
+	{
+		if (tenantId == null || tenantId <= 0) {
+			return;
+		}
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			dsf.removeDashboardsByTenant(permanent, tenantId);
+			dsf.removeDashboardSetsByTenant(permanent, tenantId);
+			dsf.removeDashboardTilesByTenant(permanent, tenantId);
+			dsf.removeDashboardTileParamsByTenant(permanent, tenantId);
+			dsf.removeDashboardPreferenceByTenant(permanent, tenantId);
+			dsf.removeUserOptionsByTenant(permanent, tenantId);			
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}		
+	}
+	
 
 	/**
 	 * Delete a dashboard specified by dashboard id for given tenant. Soft deletion is supported
@@ -610,7 +647,7 @@ public class DashboardManager
 				LOGGER.debug("Last access is not found for dashboard with id {} is not found", dashboardId);
 				return null;
 			}
-			if (ed.getDeleted() != null && ed.getDeleted().equals(1)) {
+			if (ed.getDeleted() != null && ed.getDeleted().compareTo(BigInteger.ZERO) > 0) {
 				LOGGER.debug("Last access is not found for dashboard with id {} is deleted", dashboardId);
 				return null;
 			}
@@ -1296,7 +1333,7 @@ public class DashboardManager
 		}
 		//EntityManager em = null;
 		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-		if (ed == null || ed.getDeleted() != null && ed.getDeleted().equals(1)) {
+		if (ed == null || ed.getDeleted() != null && ed.getDeleted().compareTo(BigInteger.ZERO) > 0) {
 			return;
 		}
 		//em = dsf.getEntityManager();

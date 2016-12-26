@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.MultitenantType;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
@@ -50,10 +51,13 @@ public class EmsUserOptions extends EmBaseEntity implements Serializable
 
 	@Column(name = "EXTENDED_OPTIONS", length = 128)
 	String extendedOptions;
+	
+	@Column(name = "DELETED", nullable = false, length = 1)
+	private Boolean deleted;
 
 	public EmsUserOptions()
 	{
-
+		deleted = Boolean.FALSE;
 	}
 
 	/**
@@ -62,6 +66,14 @@ public class EmsUserOptions extends EmBaseEntity implements Serializable
 	public Date getAccessDate()
 	{
 		return accessDate;
+	}
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	public Long getAutoRefreshInterval()

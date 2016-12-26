@@ -60,13 +60,13 @@ define(['knockout',
                 self.$list = $([].concat.apply($b.findEl(".fit-size"),$(".df-right-panel .fit-size")));
             };
 
-            if(!self.brandingbarCssLoaded){
-                self.brandingbarCssLoaded = setInterval(function(){
-                    if($(".emaas-appheader").height()===51){
-                        $b.triggerBuilderResizeEvent('uifwk-common-alta.css loaded');
-                        clearInterval(self.brandingbarCssLoaded);
-                    }
-                },1000);
+            if(!window._uifwk){
+                window._uifwk={};
+            }
+            if (!window._uifwk.brandingbar_css_load_callback) {
+                window._uifwk.brandingbar_css_load_callback = function(){
+                    $b.triggerBuilderResizeEvent('uifwk-common-alta.css loaded');
+                };
             }
 
             self.initialize();
