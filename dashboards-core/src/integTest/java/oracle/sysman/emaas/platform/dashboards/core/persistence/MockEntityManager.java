@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
@@ -28,6 +29,8 @@ import javax.persistence.metamodel.Metamodel;
  */
 public class MockEntityManager implements EntityManager
 {
+	private Boolean softDeletion = Boolean.FALSE;
+	
 	@Override
 	public void clear()
 	{
@@ -169,7 +172,13 @@ public class MockEntityManager implements EntityManager
 	@Override
 	public Map<String, Object> getProperties()
 	{
-		throw new UnsupportedOperationException("Unspported mock call. Please change your case.");
+		if (this.softDeletion) {
+			Map<String, Object> props = new HashMap<String, Object>();
+			props.put("soft.deletion.permanent", Boolean.TRUE);
+			return props;
+		}
+		return null;
+		//throw new UnsupportedOperationException("Unspported mock call. Please change your case.");
 	}
 
 	@Override
@@ -259,6 +268,10 @@ public class MockEntityManager implements EntityManager
 	@Override
 	public void setProperty(String arg0, Object arg1)
 	{
+		if ("soft.deletion.permanent".equals(arg0)) {
+			this.softDeletion = Boolean.TRUE;
+			return;
+		}
 		throw new UnsupportedOperationException("Unspported mock call. Please change your case.");
 	}
 
