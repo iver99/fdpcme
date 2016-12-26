@@ -61,23 +61,4 @@ public abstract class AbstractCache implements ICache{
 
     protected abstract CachedItem lookup(Object key);
 
-    @Override
-    public void logCacheStatistics(){
-        LOGGER.info("[Cache Statistics] Cache name is [{}], "
-                        + "Cache capacity is [{}], "
-                        + "Cache usage is [{}], "
-                        + "Cache usage rate is [{}], " +
-                        "Cache total request count is [{}], "
-                        + "Cache hit count is [{}], "
-                        + "Cache hit rate is [{}], "
-                        + "Eviction Count is [{}]",
-                this.getName(),
-                this.cacheStatistics.getCapacity(),
-                this.cacheStatistics.getUsage(),
-                this.cacheStatistics.getUsageRate(),
-                this.cacheStatistics.getRequestCount(),
-                this.cacheStatistics.getHitCount(),
-                this.cacheStatistics.getHitRate(),
-                this.cacheStatistics.getEvictionCount());
-    }
 }

@@ -4,6 +4,8 @@ import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.config.CacheConfig;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LinkedHashMapCache;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.*;
@@ -16,6 +18,8 @@ import java.util.concurrent.ConcurrentMap;
 public abstract class AbstractCacheManager implements ICacheManager{
 
     private final ConcurrentMap<String, ICache> cacheMap = new ConcurrentHashMap<>(16);
+
+    private final Logger LOGGER= LogManager.getLogger(AbstractCacheManager.class);
 
     private Timer timer=new Timer();
 
@@ -65,10 +69,27 @@ public abstract class AbstractCacheManager implements ICacheManager{
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                LOGGER.info("Log Cache Statistics Begin...");
                 Iterator<Map.Entry<String, ICache>> it = cacheMap.entrySet().iterator();
                 while(it.hasNext()){
                     Map.Entry<String,ICache> entry=it.next();
-                    entry.getValue().logCacheStatistics();
+                    AbstractCache ac=(AbstractCache)entry.getValue();
+                    LOGGER.info("[Cache Statistics] Cache name is [{}], "
+                                    + "Cache capacity is [{}], "
+                                    + "Cache usage is [{}], "
+                                    + "Cache usage rate is [{}], " +
+                                    "Cache total request count is [{}], "
+                                    + "Cache hit count is [{}], "
+                                    + "Cache hit rate is [{}], "
+                                    + "Eviction Count is [{}]",
+                            ac.getName(),
+                            ac.cacheStatistics.getCapacity(),
+                            ac.cacheStatistics.getUsage(),
+                            ac.cacheStatistics.getUsageRate(),
+                            ac.cacheStatistics.getRequestCount(),
+                            ac.cacheStatistics.getHitCount(),
+                            ac.cacheStatistics.getHitRate(),
+                            ac.cacheStatistics.getEvictionCount());
                 }
             }
         },CacheConfig.LOG_INTERVAL, CacheConfig.REFRESH_CACHE_INTERVAL);
