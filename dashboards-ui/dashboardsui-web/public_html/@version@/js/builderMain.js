@@ -196,6 +196,54 @@ requirejs.config({
     waitSeconds: 300
 });
 
+require(['knockout',
+    'jquery',
+    'dfutil',
+    'knockout.mapping',
+    'uifwk/js/util/df-util',
+    'uifwk/js/util/logging-util',
+    'ojs/ojcore',
+    'builder/builder.functions',
+    'builder/builder.jet.partition'
+],
+    function(ko, $, dfu,km) {
+        ko.mapping = km;
+        var dsbId = dfu.getUrlParam("dashboardId");
+        new Builder.DashboardDataSource().loadDashboardData(dsbId, function (dashboard) {
+            window.dashboardCache=dashboard;
+                if (dashboard.tiles && dashboard.tiles() &&dashboard.tiles().length > 0){
+                    for (var i=0;i<dashboard.tiles().length;i++){
+                        var tile=dashboard.tiles()[i];
+                        var tileid=tile.tileId();
+                        var clientGuid=tile.clientGuid;
+                        var el = $($("#dashboard-tile-widget-template").text());
+                        var wgtelem=$(document.createElement('div'));
+                        wgtelem.css({
+                            'z-index': -300
+                        });
+                        wgtelem.attr('id', 'wgt'+clientGuid);
+                        wgtelem.append(el);
+                        document.body.appendChild(wgtelem[0]);
+                        
+                        var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME());
+                        var kocVM = tile.WIDGET_VIEWMODEL();
+                        if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
+                            kocVM = assetRoot + kocVM;
+                        }
+                        var kocTemplate = tile.WIDGET_TEMPLATE();
+                        if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
+                            kocTemplate = assetRoot + kocTemplate;
+                        }
+                        Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
+                                ko.applyBindings(tile, wgtelem[0]);
+                        
+                        //$("#tile"+clientGuid).find(".dbd-tile-widget-wrapper")[0].append($includingEl);
+                    }
+                }
+            });
+    }
+);
+
 /**
  * A top-level require call executed by the Application.
  */
@@ -324,7 +372,37 @@ require(['knockout',
             var headerViewModel = new DashboardsetHeaderViewModel();
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
-            new Builder.DashboardDataSource().loadDashboardData(dsbId, function (dashboard) {
+            //new Builder.DashboardDataSource().loadDashboardData(dsbId, function (dashboard) {
+//                if (dashboard.tiles && dashboard.tiles() &&dashboard.tiles().length > 0){
+//                    for (var i=0;i<dashboard.tiles().length;i++){
+//                        var tile=dashboard.tiles()[i];
+//                        var tileid=tile.tileId();
+//                        var clientGuid=tile.clientGuid;
+//                        var el = $($("#dashboard-tile-widget-template").text());
+//                        var wgtelem=$(document.createElement('div'));
+//                        wgtelem.css({
+//                            'z-index': -300
+//                        });
+//                        wgtelem.attr('id', 'wgt'+clientGuid);
+//                        wgtelem.append(el);
+//                        document.body.appendChild(wgtelem[0]);
+//                        
+//                        var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME());
+//                        var kocVM = tile.WIDGET_VIEWMODEL();
+//                        if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
+//                            kocVM = assetRoot + kocVM;
+//                        }
+//                        var kocTemplate = tile.WIDGET_TEMPLATE();
+//                        if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
+//                            kocTemplate = assetRoot + kocTemplate;
+//                        }
+//                        Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
+//                                ko.applyBindings(tile, wgtelem[0]);
+//                        
+//                        //$("#tile"+clientGuid).find(".dbd-tile-widget-wrapper")[0].append($includingEl);
+//                    }
+//                }
+                dashboard=window.dashboardCache;
                 Builder.requireTargetSelectorUtils(dashboard.enableEntityFilter&&dashboard.enableEntityFilter()==="TRUE", function(TargetSelectorUtils) {
                     if (TargetSelectorUtils) {
                         TargetSelectorUtils.registerComponents();
@@ -336,16 +414,28 @@ require(['knockout',
                     ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
                     ko.applyBindings(dashboardsetPanelsModel, document.getElementById('popUp-dialog'));
                     dashboardsetToolBarModel.initializeDashboardset();
+                    
+                    
+                    for(var i=0;i<dashboard.tiles().length;i++){
+                        var tile=dashboard.tiles()[i];
+                        var tileid=tile.tileId();
+                        var clientGuid=tile.clientGuid;
+                        var wgtelem=$("#wgt"+clientGuid);
+                        wgtelem.detach().appendTo($("#tile"+clientGuid).find(".dbd-tile-widget-wrapper")[0]);
+                    }
+                        
+                        
+                        
                     $("#loading").hide();
                     $('#globalBody').show();
                 });
-            }, function(e) {
+            /*}, function(e) {
                 console.log(e.errorMessage());
                 if (e.errorCode && e.errorCode() === 20001) {
                     oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
                     location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href);
                 }
-            });
+            });*/
         });
         //});
     }
