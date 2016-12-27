@@ -60,6 +60,7 @@ requirejs.config({
             'uifwk/js/util/screenshot-util',
             'uifwk/js/util/typeahead-search',
             'uifwk/js/util/usertenant-util',
+            'uifwk/js/util/zdt-util',
             'uifwk/js/sdk/context-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
@@ -292,11 +293,13 @@ require(['knockout',
                 viewModel:{require:'uifwk/js/widgets/brandingbar/js/brandingbar'},
                 template:{require:'text!uifwk/js/widgets/brandingbar/html/brandingbar.html'}
             });
-        }   
-        ko.components.register("df-datetime-picker",{
-            viewModel: {require: 'uifwk/js/widgets/datetime-picker/js/datetime-picker'},
-            template: {require: 'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
-        });
+        }
+        if(!ko.components.isRegistered('df-datetime-picker')) {
+            ko.components.register("df-datetime-picker",{
+                viewModel: {require: 'uifwk/js/widgets/datetime-picker/js/datetime-picker'},
+                template: {require: 'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
+            });
+        }
         /*ko.components.register("DF_V1_WIDGET_TEXT", {
             viewModel: textwidget,
             template: {require: 'text!./widgets/textwidget/textwidget.html'}
@@ -373,37 +376,14 @@ require(['knockout',
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
             //new Builder.DashboardDataSource().loadDashboardData(dsbId, function (dashboard) {
-//                if (dashboard.tiles && dashboard.tiles() &&dashboard.tiles().length > 0){
-//                    for (var i=0;i<dashboard.tiles().length;i++){
-//                        var tile=dashboard.tiles()[i];
-//                        var tileid=tile.tileId();
-//                        var clientGuid=tile.clientGuid;
-//                        var el = $($("#dashboard-tile-widget-template").text());
-//                        var wgtelem=$(document.createElement('div'));
-//                        wgtelem.css({
-//                            'z-index': -300
-//                        });
-//                        wgtelem.attr('id', 'wgt'+clientGuid);
-//                        wgtelem.append(el);
-//                        document.body.appendChild(wgtelem[0]);
-//                        
-//                        var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME());
-//                        var kocVM = tile.WIDGET_VIEWMODEL();
-//                        if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
-//                            kocVM = assetRoot + kocVM;
-//                        }
-//                        var kocTemplate = tile.WIDGET_TEMPLATE();
-//                        if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
-//                            kocTemplate = assetRoot + kocTemplate;
-//                        }
-//                        Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
-//                                ko.applyBindings(tile, wgtelem[0]);
-//                        
-//                        //$("#tile"+clientGuid).find(".dbd-tile-widget-wrapper")[0].append($includingEl);
-//                    }
-//                }
                 dashboard=window.dashboardCache;
-                Builder.requireTargetSelectorUtils(dashboard.enableEntityFilter&&dashboard.enableEntityFilter()==="TRUE", function(TargetSelectorUtils) {
+                var targetSelectorNeeded;
+                if(dashboard.enableEntityFilter&&(dashboard.enableEntityFilter()==="TRUE" || dashboard.enableEntityFilter()==="GC")) {
+                    targetSelectorNeeded = true;
+                }else {
+                    targetSelectorNeeded = false;
+                }
+                Builder.requireTargetSelectorUtils(targetSelectorNeeded, function(TargetSelectorUtils) {
                     if (TargetSelectorUtils) {
                         TargetSelectorUtils.registerComponents();
                     }

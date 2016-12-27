@@ -124,6 +124,8 @@ public class LogUtil
 	public static final String INTERACTION_LOG_VALUE_NA = "N/A";
 	public static final String INTERACTION_LOG_PROP_SERVICE_INVOKED = "serviceInvoked";
 	public static final String INTERACTION_LOG_PROP_DIRECTION = "direction";
+	public static final String INTERACTION_LOG_PROP_ZDT_REQID = "gatewayQuestId";
+	public static final String INTERACTION_LOG_PROP_ZDT_REQTIME = "gatewayQuestTime";
 
 	private static final String INTERACTION_LOG_NAME = "oracle.sysman.emaas.platform.dashboards.interaction.log";
 

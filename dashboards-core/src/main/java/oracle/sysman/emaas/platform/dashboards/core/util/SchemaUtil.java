@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.core.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -367,6 +368,7 @@ public class SchemaUtil
 			return null;
 		}
 
+		InputStream is = null;
 		BufferedReader in = null;
 		InputStreamReader inReader = null;
 		StringBuffer response = new StringBuffer();
@@ -375,7 +377,8 @@ public class SchemaUtil
 			HttpURLConnection con = (HttpURLConnection) schema_dep_url.openConnection();
 			con.setRequestProperty(AUTHORIZATION, AUTH_STRING);
 			//int responseCode = con.getResponseCode();
-			inReader = new InputStreamReader(con.getInputStream(), "UTF-8");
+			is = con.getInputStream();
+			inReader = new InputStreamReader(is, "UTF-8");
 			in = new BufferedReader(inReader);
 			String inputLine;
 			while ((inputLine = in.readLine()) != null) {
@@ -386,6 +389,9 @@ public class SchemaUtil
 			LOGGER.error("an error occureed while getting details by url" + " ::" + url + "  " + e.toString());
 		} finally {
 			try {
+				if (is != null) {
+					is.close();
+				}
 				if (in != null) {
 					in.close();
 				}
