@@ -5,7 +5,6 @@ import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashb
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.SessionInfoUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
-<<<<<<< HEAD
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
@@ -15,10 +14,7 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptionsPK;
 
-=======
-import oracle.sysman.emaas.platform.dashboards.entity.*;
 import org.apache.commons.lang3.StringEscapeUtils;
->>>>>>> c6b8345d20ed7a6cb76f3df21b6c8737da39b03f
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
