@@ -996,7 +996,7 @@ define(['knockout',
                                 if (TargetSelectorUtils) {
                                     TargetSelectorUtils.registerComponents();
                                 }
-                                TargetSelectorUtils.setOMCContextFromSelectionContext(entityContext);
+                                TargetSelectorUtils.setOMCContextFromSelectionContext && TargetSelectorUtils.setOMCContextFromSelectionContext(entityContext);
                                 dtd.resolve(entityContext);
                             });
                         }else {
@@ -1030,7 +1030,7 @@ define(['knockout',
                             if (TargetSelectorUtils) {
                                 TargetSelectorUtils.registerComponents();
                             }
-                            TargetSelectorUtils.setOMCContextFromSelectionContext(entityContext);
+                            TargetSelectorUtils.setOMCContextFromSelectionContext && TargetSelectorUtils.setOMCContextFromSelectionContext(entityContext);
                             dtd.resolve(entityContext);
                         });
                         
