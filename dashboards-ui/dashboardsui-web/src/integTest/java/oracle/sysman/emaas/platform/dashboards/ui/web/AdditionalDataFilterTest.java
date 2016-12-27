@@ -1,13 +1,17 @@
 package oracle.sysman.emaas.platform.dashboards.ui.web;
 
-import mockit.*;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.DashboardDataAccessUtil;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import java.math.BigInteger;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import mockit.Expectations;
+import mockit.Mocked;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.DashboardDataAccessUtil;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * Created by guochen on 11/29/16.
@@ -24,7 +28,7 @@ public class AdditionalDataFilterTest {
                 result = "tenant.user";
                 httpReq.getParameter(anyString);
                 result = "1";
-                DashboardDataAccessUtil.getDashboardData(anyString, anyString, anyString, anyLong);
+                DashboardDataAccessUtil.getDashboardData(anyString, anyString, anyString, (BigInteger) any);
                 result = "{dashboard data}";
                 DashboardDataAccessUtil.getRegistrationData(anyString, anyString, anyString, anyString);
                 result = "{registration data}";

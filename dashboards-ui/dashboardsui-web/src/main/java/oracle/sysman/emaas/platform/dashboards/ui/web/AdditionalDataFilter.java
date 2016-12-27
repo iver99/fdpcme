@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.util.regex.Pattern;
 
 /**
@@ -131,13 +132,8 @@ public class AdditionalDataFilter implements Filter {
             }
 
             final String dashboardIdStr = httpReq.getParameter("dashboardId");
-            try {
-                Long dashboardId = Long.valueOf(dashboardIdStr);
-                return getDashboardData(tenant, user, dashboardId, httpReq.getHeader("referer"), sesExp);
-            } catch (NumberFormatException e) {
-                LOGGER.error("Invalid dashboard ID form URL: {}", dashboardIdStr);
-                return null;
-            }
+            BigInteger dashboardId = new BigInteger(dashboardIdStr);
+            return getDashboardData(tenant, user, dashboardId, httpReq.getHeader("referer"), sesExp);
         }
         return null;
     }
@@ -149,13 +145,13 @@ public class AdditionalDataFilter implements Filter {
         return json.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 
-    private String getDashboardData(String tenant, String user, long dashboardId, String referer, String sessionExp) {
+    private String getDashboardData(String tenant, String user, BigInteger dashboardId, String referer, String sessionExp) {
         if (StringUtil.isEmpty(tenant) || StringUtil.isEmpty(user)) {
             LOGGER.warn("tenant {}/user {} is null or empty or invalid, so do not update dashboard page then", tenant, user);
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        if (dashboardId > 0) {
+        if (BigInteger.ZERO.compareTo(dashboardId) < 0) {
             String dashboardString = DashboardDataAccessUtil.getDashboardData(tenant, tenant + "." + user, referer, dashboardId);
             if (StringUtil.isEmpty(dashboardString)) {
                 LOGGER.warn("Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then", tenant, user, dashboardId);

@@ -101,7 +101,6 @@ define([
             
             self.enableEntityFilter.subscribe(function(val){
                 val = self.getFilterEnabledValue(val);
-                self.dashboard.enableEntityFilter(val);
                 //1. reset respectOMCApplicationContext flag and respectOMCEntityContext flag, get entity context info
                 //2. update/refresh value of entity seletor accordingly
                 //3. fire event to widgets
@@ -109,6 +108,7 @@ define([
                 //1. reset respectOMCApplicationContext flag and respectOMCEntityContext flag, get entity context info
                 var dashboardTilesViewModel = self.tilesViewModel;                
                 $.when(dashboardTilesViewModel.getEntityContext(dashboardTilesViewModel, val)).done(function(entityContext) {
+                    self.dashboard.enableEntityFilter(val);
                     //show/hide GC bar accordingly
                     var headerWrapper = $("#headerWrapper")[0];
                     var headerViewModel =  null;
@@ -258,7 +258,7 @@ define([
                     return;
                 }
                 var fieldsToUpdate = {
-                    "enableEntityFilter": self.dashboard.enableEntityFilter(),
+                    "enableEntityFilter": self.getFilterEnabledValue(self.enableEntityFilter()),
                     "extendedOptions": JSON.stringify(self.extendedOptions),
                     "enableTimeRange": self.dashboard.enableTimeRange()
                 };
