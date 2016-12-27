@@ -1,23 +1,11 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
-import java.sql.SQLException;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
-import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashboard;
+import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.SessionInfoUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
+<<<<<<< HEAD
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
@@ -27,8 +15,22 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptionsPK;
 
+=======
+import oracle.sysman.emaas.platform.dashboards.entity.*;
+import org.apache.commons.lang3.StringEscapeUtils;
+>>>>>>> c6b8345d20ed7a6cb76f3df21b6c8737da39b03f
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
+import java.math.BigInteger;
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class DashboardServiceFacade
 {
@@ -607,7 +609,7 @@ public class DashboardServiceFacade
 				EmsDashboard dashboard = getEmsDashboardById(emsSubDashboard.getSubDashboardId());
 				//EMCPDF-2929,EMCPDF-2934
 				if(dashboard.getIsSystem()!=1 && dashboard.getShowInHome() == 0){
-					if(!isIncludedInSet(dashboard)){
+					if(!isIncludedInSet(dashboard.getDashboardId())){
 						dashboard.setShowInHome(1);
 						em.merge(dashboard);
 					}
@@ -617,10 +619,10 @@ public class DashboardServiceFacade
 		commitTransaction();
 	}
 
-	private boolean isIncludedInSet(EmsDashboard dashboard){
+	private boolean isIncludedInSet(BigInteger dashboardId){
 		String sql="select count(1) from ems_dashboard_set t where t.SUB_DASHBOARD_ID=?1";
 		Query listQuery = em.createNativeQuery(sql);
-		listQuery.setParameter(1,dashboard.getDashboardId());
+		listQuery.setParameter(1,dashboardId);
 		Long count = Long.valueOf(listQuery.getResultList().get(0).toString());
 		if(count>1){
 			return true;
@@ -668,4 +670,31 @@ public class DashboardServiceFacade
 		commitTransaction();
 		return deleteCout;
 	}
+
+	public void updateSubDashboardVisibleInHome(EmsDashboard ed,List<BigInteger> subDashboardList){
+		getEntityManager().getTransaction().begin();
+		StringBuilder sb=new StringBuilder();
+		for(int i=0;i<subDashboardList.size();i++){
+			if(i==0){
+				sb.append(subDashboardList.get(i));
+			}else{
+				sb.append(","+subDashboardList.get(i));
+			}
+		}
+		//check if these dashboard are included into any other set
+		Iterator<BigInteger> it=subDashboardList.iterator();
+		while(it.hasNext()){
+			if (isIncludedInSet(it.next())){
+				it.remove();
+			}
+		}
+		if(subDashboardList.size()>0){
+			String sql="update ems_dashboard t set t.show_inhome=1 where t.tenant_id=?1 and t.dashboard_id in ("+sb.toString()+")";
+			Query query=em.createNativeQuery(sql);
+			query.setParameter(1,ed.getTenantId());
+			query.executeUpdate();
+		}
+		commitTransaction();
+	}
+
 }
