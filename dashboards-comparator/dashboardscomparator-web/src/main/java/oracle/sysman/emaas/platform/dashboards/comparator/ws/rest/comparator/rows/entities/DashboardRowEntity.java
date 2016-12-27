@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities;
 
+import java.math.BigInteger;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
@@ -18,7 +20,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class DashboardRowEntity implements RowEntity
 {
 	@JsonProperty("DASHBOARD_ID")
-	private Long dashboardId;
+	private BigInteger dashboardId;
 
 	@JsonProperty("NAME")
 	private String name;
@@ -54,7 +56,7 @@ public class DashboardRowEntity implements RowEntity
 	private String screenShot;
 
 	@JsonProperty("DELETED")
-	private Long deleted;
+	private BigInteger deleted;
 
 	@JsonProperty("TENANT_ID")
 	private Long tenantId;
@@ -268,7 +270,7 @@ public class DashboardRowEntity implements RowEntity
 	/**
 	 * @return the dashboardId
 	 */
-	public Long getDashboardId()
+	public BigInteger getDashboardId()
 	{
 		return dashboardId;
 	}
@@ -276,7 +278,7 @@ public class DashboardRowEntity implements RowEntity
 	/**
 	 * @return the deleted
 	 */
-	public Long getDeleted()
+	public BigInteger getDeleted()
 	{
 		return deleted;
 	}
@@ -453,7 +455,7 @@ public class DashboardRowEntity implements RowEntity
 	 * @param dashboardId
 	 *            the dashboardId to set
 	 */
-	public void setDashboardId(Long dashboardId)
+	public void setDashboardId(BigInteger dashboardId)
 	{
 		this.dashboardId = dashboardId;
 	}
@@ -462,7 +464,7 @@ public class DashboardRowEntity implements RowEntity
 	 * @param deleted
 	 *            the deleted to set
 	 */
-	public void setDeleted(Long deleted)
+	public void setDeleted(BigInteger deleted)
 	{
 		this.deleted = deleted;
 	}
