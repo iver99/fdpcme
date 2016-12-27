@@ -258,7 +258,7 @@ define([
                     return;
                 }
                 var fieldsToUpdate = {
-                    "enableEntityFilter": self.dashboard.enableEntityFilter(),
+                    "enableEntityFilter": self.getFilterEnabledValue(self.enableEntityFilter()),
                     "extendedOptions": JSON.stringify(self.extendedOptions),
                     "enableTimeRange": self.dashboard.enableTimeRange()
                 };
