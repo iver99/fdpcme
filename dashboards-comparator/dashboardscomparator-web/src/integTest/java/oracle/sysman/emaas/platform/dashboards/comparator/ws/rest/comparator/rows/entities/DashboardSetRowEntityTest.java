@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities;
 
+import java.math.BigInteger;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 @Test(groups = { "s1" })
@@ -11,8 +13,8 @@ public class DashboardSetRowEntityTest
 		DashboardSetRowEntity dsre1 = new DashboardSetRowEntity();
 		DashboardSetRowEntity dsre2 = new DashboardSetRowEntity();
 		Assert.assertEquals(dsre1, dsre2);
-		dsre1.setDashboardSetId(12L);
-		dsre2.setDashboardSetId(12L);
+		dsre1.setDashboardSetId(new BigInteger("12"));
+		dsre2.setDashboardSetId(new BigInteger("12"));
 		Assert.assertEquals(dsre1, dsre2);
 		dsre1.setTenantId(1L);
 		dsre2.setTenantId(1L);
@@ -24,9 +26,9 @@ public class DashboardSetRowEntityTest
 		dsre2.setPosition(0L);
 		Assert.assertEquals(dsre1, dsre2);
 
-		dsre2.setDashboardSetId(22L);
+		dsre2.setDashboardSetId(new BigInteger("22"));
 		Assert.assertNotEquals(dsre1, dsre2);
-		dsre2.setDashboardSetId(12L);
+		dsre2.setDashboardSetId(new BigInteger("12"));
 		dsre2.setTenantId(2L);
 		Assert.assertNotEquals(dsre1, dsre2);
 		dsre2.setTenantId(1L);
@@ -45,8 +47,8 @@ public class DashboardSetRowEntityTest
 		DashboardSetRowEntity dsre1 = new DashboardSetRowEntity();
 		DashboardSetRowEntity dsre2 = new DashboardSetRowEntity();
 		Assert.assertEquals(dsre1.hashCode(), dsre2.hashCode());
-		dsre1.setDashboardSetId(12L);
-		dsre2.setDashboardSetId(12L);
+		dsre1.setDashboardSetId(new BigInteger("12"));
+		dsre2.setDashboardSetId(new BigInteger("12"));
 		Assert.assertEquals(dsre1.hashCode(), dsre2.hashCode());
 		dsre1.setTenantId(1L);
 		dsre2.setTenantId(1L);
@@ -58,9 +60,9 @@ public class DashboardSetRowEntityTest
 		dsre2.setPosition(0L);
 		Assert.assertEquals(dsre1.hashCode(), dsre2.hashCode());
 
-		dsre2.setDashboardSetId(22L);
+		dsre2.setDashboardSetId(new BigInteger("22"));
 		Assert.assertNotEquals(dsre1.hashCode(), dsre2.hashCode());
-		dsre2.setDashboardSetId(12L);
+		dsre2.setDashboardSetId(new BigInteger("12"));
 		dsre2.setTenantId(2L);
 		Assert.assertNotEquals(dsre1.hashCode(), dsre2.hashCode());
 		dsre2.setTenantId(1L);

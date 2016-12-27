@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities;
 
+import java.math.BigInteger;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 @Test(groups = { "s1" })
@@ -17,8 +19,8 @@ public class DashboardUserOptionsRowEntityTest
 		duore1.setTenantId(1L);
 		duore2.setTenantId(1L);
 		Assert.assertEquals(duore1, duore2);
-		duore1.setDashboardId(1L);
-		duore2.setDashboardId(1L);
+		duore1.setDashboardId(new BigInteger("1"));
+		duore2.setDashboardId(new BigInteger("1"));
 		Assert.assertEquals(duore1, duore2);
 		duore1.setAutoRefreshInterval(300L);
 		duore2.setAutoRefreshInterval(300L);
@@ -36,9 +38,9 @@ public class DashboardUserOptionsRowEntityTest
 		duore2.setTenantId(2L);
 		Assert.assertNotEquals(duore1, duore2);
 		duore2.setTenantId(1L);
-		duore2.setDashboardId(2L);
+		duore2.setDashboardId(new BigInteger("2"));
 		Assert.assertNotEquals(duore1, duore2);
-		duore2.setDashboardId(1L);
+		duore2.setDashboardId(new BigInteger("1"));
 		duore2.setAutoRefreshInterval(500L);
 		Assert.assertNotEquals(duore1, duore2);
 		duore2.setAutoRefreshInterval(300L);
@@ -63,8 +65,8 @@ public class DashboardUserOptionsRowEntityTest
 		duore1.setTenantId(1L);
 		duore2.setTenantId(1L);
 		Assert.assertEquals(duore1.hashCode(), duore2.hashCode());
-		duore1.setDashboardId(1L);
-		duore2.setDashboardId(1L);
+		duore1.setDashboardId(new BigInteger("1"));
+		duore2.setDashboardId(new BigInteger("1"));
 		Assert.assertEquals(duore1.hashCode(), duore2.hashCode());
 		duore1.setAutoRefreshInterval(300L);
 		duore2.setAutoRefreshInterval(300L);
@@ -82,9 +84,9 @@ public class DashboardUserOptionsRowEntityTest
 		duore2.setTenantId(2L);
 		Assert.assertNotEquals(duore1.hashCode(), duore2.hashCode());
 		duore2.setTenantId(1L);
-		duore2.setDashboardId(2L);
+		duore2.setDashboardId(new BigInteger("2"));
 		Assert.assertNotEquals(duore1.hashCode(), duore2.hashCode());
-		duore2.setDashboardId(1L);
+		duore2.setDashboardId(new BigInteger("1"));
 		duore2.setAutoRefreshInterval(500L);
 		Assert.assertNotEquals(duore1.hashCode(), duore2.hashCode());
 		duore2.setAutoRefreshInterval(300L);

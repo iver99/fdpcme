@@ -17,8 +17,6 @@ import oracle.sysman.emaas.platform.dashboards.core.zdt.DataManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardFavoriteRowEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardLastAccessRowEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardRowEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardSetRowEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardTileParamsRowEntity;

@@ -52,7 +52,7 @@ public class TableRowsSynchronizerTest {
         dashboardRowEntity.setApplicationType(1);
         dashboardRowEntity.setEnableTimeRange(1);
         dashboardRowEntity.setScreenShot("") ;
-        dashboardRowEntity.setDeleted(0L);
+        dashboardRowEntity.setDeleted(new BigInteger("0"));
         dashboardRowEntity.setTenantId(1L);
         dashboardRowEntity.setEnableRefresh(1);
         dashboardRowEntity.setSharePublic(1) ;
@@ -147,7 +147,7 @@ public class TableRowsSynchronizerTest {
                 result = dataManager;
                 dataManager.syncPreferences(anyString, anyString, anyString, anyLong, anyString, anyString);
                 result = 1;
-                dataManager.syncDashboardTableRow((BigInteger)any, anyString, anyLong, anyString, anyString,anyString, anyString, anyString, (Integer)any, (Integer)any,(Integer)any, anyString, anyLong, anyLong, (Integer)any, (Integer)any,(Integer)any, (Integer)any, anyString);
+                dataManager.syncDashboardTableRow((BigInteger)any, anyString, anyLong, anyString, anyString,anyString, anyString, anyString, (Integer)any, (Integer)any,(Integer)any, anyString, (BigInteger)any, anyLong, (Integer)any, (Integer)any,(Integer)any, (Integer)any, anyString);
                 result = 1;
                 dataManager.syncDashboardTile((BigInteger)any, (BigInteger)any, anyString, anyString, anyString, anyString, anyString, anyLong, anyLong, (Integer)any, anyLong,anyLong, anyString, anyString, anyString, anyString, anyString,anyString, anyString, anyString, anyLong,
                         anyString, anyString, anyString, anyString, anyString, anyString, anyLong, anyLong, anyLong, (Integer)any, anyLong);
