@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.ui.webutils.util;
 
+import java.math.BigInteger;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -26,7 +28,7 @@ public class DashboardDataAccessUtilTest {
                 result = dashboard;
             }
         };
-        String dsb = DashboardDataAccessUtil.getDashboardData("tenant", "tenant.user", null, 1L);
+        String dsb = DashboardDataAccessUtil.getDashboardData("tenant", "tenant.user", null, BigInteger.ONE);
         Assert.assertEquals(dsb, dashboard);
     }
 
@@ -38,7 +40,7 @@ public class DashboardDataAccessUtilTest {
                 result = null;
             }
         };
-        String dsb = DashboardDataAccessUtil.getDashboardData("tenant", "tenant.user", null, 1L);
+        String dsb = DashboardDataAccessUtil.getDashboardData("tenant", "tenant.user", null, BigInteger.ONE);
         Assert.assertNull(dsb);
     }
 

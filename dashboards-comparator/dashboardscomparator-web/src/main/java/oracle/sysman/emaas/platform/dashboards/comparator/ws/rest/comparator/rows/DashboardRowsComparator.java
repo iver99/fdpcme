@@ -23,8 +23,6 @@ import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.RowEntityComparator.CompareListPair;
-import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardFavoriteRowEntity;
-import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardLastAccessRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardSetRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardTileParamsRowEntity;
@@ -88,46 +86,6 @@ public class DashboardRowsComparator extends AbstractComparator
 		InstancesComparedData<TableRowsEntity> syncData = new InstancesComparedData<TableRowsEntity>(instance1, instance2);
 		syncForInstance(syncData.getInstance1());
 		syncForInstance(syncData.getInstance2());
-	}
-
-	/**
-	 * Compares the dashboard favorite rows data for the 2 instances, and put the compare result into <code>ComparedData</code>
-	 * object
-	 *
-	 * @param rows1
-	 * @param rows2
-	 * @param cd
-	 */
-	private void compareDashboardFavoriteRows(List<DashboardFavoriteRowEntity> rows1, List<DashboardFavoriteRowEntity> rows2,
-			InstancesComparedData<TableRowsEntity> cd)
-	{
-		if (cd == null) {
-			return;
-		}
-		RowEntityComparator<DashboardFavoriteRowEntity> rec = new RowEntityComparator<DashboardFavoriteRowEntity>();
-		CompareListPair<DashboardFavoriteRowEntity> result = rec.compare(rows1, rows2);
-		cd.getInstance1().getData().setEmsDashboardFavorite(result.getList1());
-		cd.getInstance2().getData().setEmsDashboardFavorite(result.getList2());
-	}
-
-	/**
-	 * Compares the dashboard last access rows data for the 2 instances, and put the compare result into <code>ComparedData</code>
-	 * object
-	 *
-	 * @param rows1
-	 * @param rows2
-	 * @param cd
-	 */
-	private void compareDashboardLastAccessRows(List<DashboardLastAccessRowEntity> rows1,
-			List<DashboardLastAccessRowEntity> rows2, InstancesComparedData<TableRowsEntity> cd)
-	{
-		if (cd == null) {
-			return;
-		}
-		RowEntityComparator<DashboardLastAccessRowEntity> rec = new RowEntityComparator<DashboardLastAccessRowEntity>();
-		CompareListPair<DashboardLastAccessRowEntity> result = rec.compare(rows1, rows2);
-		cd.getInstance1().getData().setEmsDashboardLastAccess(result.getList1());
-		cd.getInstance2().getData().setEmsDashboardLastAccess(result.getList2());
 	}
 
 	/**
@@ -239,10 +197,6 @@ public class DashboardRowsComparator extends AbstractComparator
 		InstanceData<TableRowsEntity> outData2 = new InstanceData<TableRowsEntity>(insData2.getInstance(), new TableRowsEntity());
 		InstancesComparedData<TableRowsEntity> cd = new InstancesComparedData<TableRowsEntity>(outData1, outData2);
 		compareDashboardRows(insData1.getData().getEmsDashboard(), insData2.getData().getEmsDashboard(), cd);
-		compareDashboardFavoriteRows(insData1.getData().getEmsDashboardFavorite(), insData2.getData().getEmsDashboardFavorite(),
-				cd);
-		compareDashboardLastAccessRows(insData1.getData().getEmsDashboardLastAccess(),
-				insData2.getData().getEmsDashboardLastAccess(), cd);
 		compareDashboardSetRows(insData1.getData().getEmsDashboardSet(), insData2.getData().getEmsDashboardSet(), cd);
 		compareDashboardTileRows(insData1.getData().getEmsDashboardTile(), insData2.getData().getEmsDashboardTile(), cd);
 		compareDashboardTileParamsRows(insData1.getData().getEmsDashboardTileParams(),

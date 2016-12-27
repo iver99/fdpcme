@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities;
 
+import java.math.BigInteger;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
@@ -18,7 +20,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class DashboardTileParamsRowEntity implements RowEntity
 {
 	@JsonProperty("TILE_ID")
-	private Long tileId;
+	private BigInteger tileId;
 
 	@JsonProperty("PARAM_NAME")
 	private String paramName;
@@ -221,7 +223,7 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	/**
 	 * @return the tileId
 	 */
-	public Long getTileId()
+	public BigInteger getTileId()
 	{
 		return tileId;
 	}
@@ -332,7 +334,7 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	 * @param tileId
 	 *            the tileId to set
 	 */
-	public void setTileId(Long tileId)
+	public void setTileId(BigInteger tileId)
 	{
 		this.tileId = tileId;
 	}
