@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
@@ -160,7 +161,7 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getAdminLinks()
 	{
-		ICacheManager cm= LRUCacheManager.getInstance();
+		ICacheManager cm= CacheManagers.getInstance().build();
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
 			return (List<LinkEntity>) cm.getCache(CacheConstants.CACHES_ADMIN_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_ADMIN_LINKS,UserContext.getCurrentUser())),
@@ -215,7 +216,7 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getCloudServices()
 	{
-		ICacheManager cm= LRUCacheManager.getInstance();
+		ICacheManager cm= CacheManagers.getInstance().build();
 		String tenantName = TenantContext.getCurrentTenant();
 		Tenant cacheTenant = new Tenant(tenantName);
 		List<LinkEntity> list = null;
@@ -333,7 +334,7 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getHomeLinks()
 	{
-		ICacheManager cm= LRUCacheManager.getInstance();
+		ICacheManager cm= CacheManagers.getInstance().build();
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
 			return (List<LinkEntity>) cm.getCache(CacheConstants.CACHES_HOME_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_HOME_LINKS)),
@@ -358,7 +359,7 @@ public class RegistrationEntity implements Serializable
 
 	public String getSsoLogoutUrl()
 	{
-		ICacheManager cm= LRUCacheManager.getInstance();
+		ICacheManager cm= CacheManagers.getInstance().build();
 		final String tenantName = TenantContext.getCurrentTenant();
 		Tenant cacheTenant = new Tenant(tenantName);
 		try {
@@ -457,7 +458,7 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("all")
 	public List<LinkEntity> getVisualAnalyzers()
 	{
-		ICacheManager cm= LRUCacheManager.getInstance();
+		ICacheManager cm= CacheManagers.getInstance().build();
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
 			return (List<LinkEntity>) cm.getCache(CacheConstants.CACHES_VISUAL_ANALYZER_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_VISUAL_ANALYZER)),
@@ -485,7 +486,7 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("all")
 	public List<LinkEntity> getAssetRoots()
 	{
-		ICacheManager cm= LRUCacheManager.getInstance();
+		ICacheManager cm= CacheManagers.getInstance().build();
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
 			return (List<LinkEntity>)cm.getCache(CacheConstants.CACHES_ASSET_ROOT_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_ASSET_ROOTS)),

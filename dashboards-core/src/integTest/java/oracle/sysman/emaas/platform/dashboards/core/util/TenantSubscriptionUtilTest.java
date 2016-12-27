@@ -9,6 +9,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
@@ -607,7 +608,7 @@ public class TenantSubscriptionUtilTest
 	
 	private void cleanCache(){
 
-		ICacheManager cm= LRUCacheManager.getInstance();
+		ICacheManager cm= CacheManagers.getInstance().build();
 		Tenant cacheTenant = new Tenant("emaastesttenant1");
 		cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));
 		cm.getCache(CacheConstants.CACHES_DOMAINS_DATA_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(ENTITY_NAMING_DOMAINS_URL)));

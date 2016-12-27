@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
@@ -460,7 +461,7 @@ public class RegistryLookupUtil
 	private static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, boolean prefixMatch,
 			String tenantName)
 	{
-		ICacheManager cm= LRUCacheManager.getInstance();
+		ICacheManager cm= CacheManagers.getInstance().build();
 		LOGGER.debug(
 				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, tenantName);
@@ -608,7 +609,7 @@ public class RegistryLookupUtil
 	private static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
 			String tenantName)
 	{
-		ICacheManager cm= LRUCacheManager.getInstance();
+		ICacheManager cm= CacheManagers.getInstance().build();
 		LOGGER.debug(
 				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, prefixMatch, tenantName);
@@ -682,7 +683,7 @@ public class RegistryLookupUtil
 	@SuppressWarnings("unchecked")
 	private static Map<String, String> getVanityBaseURLs(String tenantName)
 	{
-		ICacheManager cm= LRUCacheManager.getInstance();
+		ICacheManager cm= CacheManagers.getInstance().build();
 		LOGGER.debug("/getVanityBaseURLs/ Trying to retrieve service internal link for tenant: \"{}\"", tenantName);
 		Tenant cacheTenant = new Tenant(tenantName);
 		Map<String, String> map = null;

@@ -3,6 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
@@ -153,7 +154,7 @@ public class RegistrationEntityTest
 
 			}
 		};
-		LRUCacheManager.getInstance().getCache(CacheConstants.CACHES_HOME_LINK_CACHE).evict(DefaultKeyGenerator.getInstance().generate(new Tenant(TenantContext.getCurrentTenant()),new Keys(CacheConstants.LOOKUP_CACHE_KEY_HOME_LINKS)));
+		CacheManagers.getInstance().build().getCache(CacheConstants.CACHES_HOME_LINK_CACHE).evict(DefaultKeyGenerator.getInstance().generate(new Tenant(TenantContext.getCurrentTenant()),new Keys(CacheConstants.LOOKUP_CACHE_KEY_HOME_LINKS)));
 		Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getHomeLinks()));
 
 	}

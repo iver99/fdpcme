@@ -42,4 +42,7 @@ public class CacheConstants {
 
     public static final String ZERO_PERCENTAGE = "0.0%";
     public static final String ONE_HUNDRED_PERCENTAGE = "100%";
+
+    public static final String LRU_CACHE_MANAGER="LRUCacheManager";
+    public static final String LRU_SCREENSHOT_MANAGER="LRUScreenshotCacheManager";
 }
