@@ -34,6 +34,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
@@ -106,7 +107,11 @@ public class TenantSubscriptionUtil
 				Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 						.header(HTTP_HEADER_OAM_REMOTE_USER, tenantName + "." + userName)
 						.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenantName);
-				return builder.get(String.class);
+				ClientResponse cr = builder.get(ClientResponse.class);
+				String response = cr.getEntity(String.class);
+				itrLogger.info("Response returned from Rest Client call: " + response);
+				return response;
+				//				return builder.get(String.class);
 			}
 			catch (Exception e) {
 				LOGGER.info("context", e);

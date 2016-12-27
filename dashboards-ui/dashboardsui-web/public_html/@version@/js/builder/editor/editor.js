@@ -301,7 +301,7 @@ define(['knockout',
                         self.updateTilePosition(tile, tile.row(), self.mode.getModeColumn(tile));
                         break;
                     case self.RESIZE_OPTIONS.SOUTH:
-                        var topOfContainer = widgetArea.offset().top;
+                        var topOfContainer = options.containerTop;
                         var offsetYValue = Math.round((options.top - topOfContainer - (currentTop + currentHeight)) / columnGridHeight);
                         var isTaller = offsetYValue > 0;
                         var isShorter = offsetYValue < 0;
@@ -316,9 +316,9 @@ define(['knockout',
                         }
                         break;
                     case self.RESIZE_OPTIONS.SOUTH_EAST:
-                        var leftOfContainer = widgetArea.offset().left;
-                        var topOfContainer = widgetArea.offset().top;
-                        var offsetXValue = Math.round((options.left - leftOfContainer - (currentLeft + currentWidth)) / columnGridWidth);
+                        var leftOfContainer = options.containerLeft;
+                        var topOfContainer = options.containerTop;
+                        var offsetXValue = Math.round((options.left - (leftOfContainer + currentWidth)) / columnGridWidth);
                         var offsetYValue = Math.round((options.top - topOfContainer - (currentTop + currentHeight)) / columnGridHeight);
                         var isBroaden = offsetXValue > 0;
                         var isNarrow = offsetXValue < 0;
