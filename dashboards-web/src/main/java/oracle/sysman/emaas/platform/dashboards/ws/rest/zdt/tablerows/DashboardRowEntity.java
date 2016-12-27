@@ -56,7 +56,7 @@ public class DashboardRowEntity implements RowEntity
 	private String screenShot;
 
 	@JsonProperty("DELETED")
-	private Long deleted;
+	private BigInteger deleted;
 
 	@JsonProperty("TENANT_ID")
 	private Long tenantId;
@@ -278,7 +278,7 @@ public class DashboardRowEntity implements RowEntity
 	/**
 	 * @return the deleted
 	 */
-	public Long getDeleted()
+	public BigInteger getDeleted()
 	{
 		return deleted;
 	}
@@ -464,7 +464,7 @@ public class DashboardRowEntity implements RowEntity
 	 * @param deleted
 	 *            the deleted to set
 	 */
-	public void setDeleted(Long deleted)
+	public void setDeleted(BigInteger deleted)
 	{
 		this.deleted = deleted;
 	}

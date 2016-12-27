@@ -203,7 +203,7 @@ public class DataManager
 	}
 
 	public int syncDashboardTableRow(BigInteger dashboardId, String name, Long type, String description, String creationDate, String lastModificationDate, String lastModifiedBy, String owner,
-									 Integer isSystem, Integer applicationType, Integer enableTimeRange, String screenShot, Long deleted, Long tenantId, Integer enableRefresh, Integer sharePublic,
+									 Integer isSystem, Integer applicationType, Integer enableTimeRange, String screenShot, BigInteger deleted, Long tenantId, Integer enableRefresh, Integer sharePublic,
 									 Integer enableEntityFilter, Integer enableDescription, String extendedOptions) {
 		logger.debug("Calling the DataManager.syncDashboardTableRow");
 		if (dashboardId == null) {
@@ -529,7 +529,7 @@ public class DataManager
 	}
 
 	private int insertDashboard(EntityManager entityManager, BigInteger dashboardId, String name, Long type, String description, String creationDate, String lastModificationDate, String lastModifiedBy, String owner,
-								Integer isSystem, Integer applicationType, Integer enableTimeRange, String screenShot, Long deleted, Long tenantId, Integer enableRefresh, Integer sharePublic,
+								Integer isSystem, Integer applicationType, Integer enableTimeRange, String screenShot, BigInteger deleted, Long tenantId, Integer enableRefresh, Integer sharePublic,
 								Integer enableEntityFilter, Integer enableDescription, String extendedOptions) {
 		logger.debug("Calling the Datamanager.insertDashboard");
 		int result;
@@ -683,7 +683,7 @@ public class DataManager
 	}
 
 	private int updateDashboard(EntityManager entityManager, BigInteger dashboardId, String name, Long type, String description, String creationDate, String lastModificationDate, String lastModifiedBy, String owner,
-								Integer isSystem, Integer applicationType, Integer enableTimeRange, String screenShot, Long deleted, Long tenantId, Integer enableRefresh, Integer sharePublic,
+								Integer isSystem, Integer applicationType, Integer enableTimeRange, String screenShot, BigInteger deleted, Long tenantId, Integer enableRefresh, Integer sharePublic,
 								Integer enableEntityFilter, Integer enableDescription, String extendedOptions) {
 		logger.debug("Calling the Datamanager.updateDashboard");
 		int result;
