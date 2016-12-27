@@ -619,7 +619,7 @@
                 <!--/ko-->
             </div>
 
-            <div class="df-right-panel no-print" data-bind="stopDataBinding:rightPanelControl.completelyHidden(),style:{top:isDashboardSet() ?'100px':'91px'},visible:!rightPanelControl.completelyHidden()">
+            <div class="df-right-panel no-print" data-bind="stopDataBinding:$b.dashboard.systemDashboard&&$b.dashboard.systemDashboard(),style:{top:isDashboardSet() ?'100px':'91px'},visible:!rightPanelControl.completelyHidden()">
                 <div class="right-panel-toggler no-print fit-size" data-bind="
                         visible:rightPanelControl.showRightPanelToggler,
                         style: {
@@ -667,7 +667,7 @@
             </div>
 
                 <div class="dbd-left-panel no-print fit-size"
-                        data-bind="stopDataBinding: dashboard.systemDashboard && dashboard.systemDashboard(),css: {'dbd-left-panel-show' : rightPanelControl.showRightPanel(), 'dbd-left-panel-hide' : !rightPanelControl.showRightPanel()},
+                        data-bind="stopDataBinding: $b.dashboard.systemDashboard && $b.dashboard.systemDashboard(),css: {'dbd-left-panel-show' : rightPanelControl.showRightPanel(), 'dbd-left-panel-hide' : !rightPanelControl.showRightPanel()},
                                    style: {right: rightPanelControl.scrollbarWidth + 'px'}">
                     <div class="dbd-right-panel-contents">
                         <!-- ko if: $data.isDashboardSet -->
