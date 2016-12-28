@@ -8,7 +8,9 @@ import oracle.sysman.emaas.platform.emcpdf.cache.support.CachedItem;
 public interface ICache<K,V> {
     public V get(K key);
 
-    public V get(K key,ICacheFetchFactory factory);
+    public V get(K key,CacheLoader factory);
+
+//    public V get(K key,CacheLoader factory,boolean refresh);
 
     public void put(K key, Object value);
 
@@ -19,5 +21,7 @@ public interface ICache<K,V> {
     public String getName();
 
     public boolean isExpired(CachedItem cachedItem);
+
+    public Object refreshAfterGet(K key,CacheLoader factory);
 
 }

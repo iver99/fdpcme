@@ -1,6 +1,6 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.support.lru;
 
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheFetchFactory;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
 import oracle.sysman.emaas.platform.emcpdf.cache.config.CacheConfig;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.AbstractCache;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CachedItem;
@@ -48,7 +48,7 @@ public class LinkedHashMapCache extends AbstractCache{
     }
 
     @Override
-    public Object get(Object key, ICacheFetchFactory factory) {
+    public Object get(Object key, CacheLoader factory) {
 
        Object obj=super.get(key, factory);
        if(obj!=null){

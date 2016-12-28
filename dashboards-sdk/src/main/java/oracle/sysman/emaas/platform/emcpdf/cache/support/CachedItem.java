@@ -10,6 +10,7 @@ public class CachedItem {
     private Long creationTime;
     private Long lastAccessTime;
     private boolean available;
+    private Long lastRefreshTime;
 
 
     public CachedItem(Object key, Object value) {
@@ -57,5 +58,13 @@ public class CachedItem {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public Long getLastRefreshTime() {
+        return lastRefreshTime;
+    }
+
+    public void setLastRefreshTime(Long lastRefreshTime) {
+        this.lastRefreshTime = lastRefreshTime;
     }
 }

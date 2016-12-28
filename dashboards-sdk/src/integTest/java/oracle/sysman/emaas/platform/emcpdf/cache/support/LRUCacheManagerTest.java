@@ -1,6 +1,6 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.support;
 
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheFetchFactory;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
 import org.testng.Assert;
@@ -35,9 +35,9 @@ public class LRUCacheManagerTest {
     @Test
     public void testGetCachedItem2(){
         ICacheManager cm=LRUCacheManager.getInstance();
-        Object o1=cm.getCache("cache1").get("factoryFetch", new ICacheFetchFactory() {
+        Object o1=cm.getCache("cache1").get("factoryFetch", new CacheLoader() {
             @Override
-            public Object fetchCachable(Object key) throws Exception {
+            public Object load(Object key) throws Exception {
                 return "FromFactory";
             }
         });

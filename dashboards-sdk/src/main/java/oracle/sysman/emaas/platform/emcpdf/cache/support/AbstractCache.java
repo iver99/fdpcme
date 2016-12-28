@@ -1,12 +1,14 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.support;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheFetchFactory;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheStatistics;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheThreadPools;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.*;
 
 /**
  * Created by chehao on 2016/12/22.
@@ -22,14 +24,15 @@ public abstract class AbstractCache implements ICache{
     }
 
     @Override
-    public Object get(Object key, ICacheFetchFactory factory) {
+    public Object get(Object key, CacheLoader factory) {
+        checkNotNull(key);
         cacheStatistics.setRequestCount(cacheStatistics.getRequestCount()+1);
         CachedItem value=lookup(key);
         if(value == null){
             if(factory!=null){
                 Object valueFromFactory= null;
                 try {
-                    valueFromFactory = factory.fetchCachable(key);
+                    valueFromFactory = factory.load(key);
                 } catch (Exception e) {
                     LOGGER.error(e.getLocalizedMessage());
                 }
@@ -49,6 +52,22 @@ public abstract class AbstractCache implements ICache{
     }
 
     @Override
+    public Object refreshAfterGet(final Object key, final CacheLoader factory) {
+        ScheduledExecutorService pool= CacheThreadPools.getThreadPool();
+        LOGGER.info("Refresh after get action begin...");
+        pool.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                LOGGER.info("Refresh...");
+                Object obj=get(key,factory);
+                put(key,new CachedItem(key,obj));
+            }
+        }, 30, TimeUnit.SECONDS);
+        LOGGER.info("Refresh after get action end...");
+        return get(key,factory);
+    }
+
+    @Override
     public void put(Object key, Object value) {
         cacheStatistics.setUsage(cacheStatistics.getUsage()+1);
     }
@@ -61,4 +80,11 @@ public abstract class AbstractCache implements ICache{
 
     protected abstract CachedItem lookup(Object key);
 
+    private  <T> T checkNotNull(T reference) {
+        if (reference == null) {
+            LOGGER.error("Null Pointer Exception occurred!");
+            throw new NullPointerException();
+        }
+        return reference;
+    }
 }
