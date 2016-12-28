@@ -24,6 +24,21 @@ define([
                 window._uifwk.respectOMCEntityContext = true;
                 window._uifwk.respectOMCTimeContext = true;
             }
+            
+            self.OMCTimeConstants = {
+                'TIME_UNIT': {
+                    SECOND: 'SECOND',
+                    MINUTE: 'MINUTE',
+                    HOUR: 'HOUR',
+                    DAY: 'DAY',
+                    WEEK: 'WEEK',
+                    MONTH: 'MONTH',
+                    YEAR: 'YEAR'
+                }
+            };
+            
+            //freeze every constant object inside
+            Object.freeze(self.OMCTimeConstants.TIME_UNIT);
 
             /**
              * Get URL parameter name for OMC global context.
@@ -531,25 +546,25 @@ define([
                     num = arr[1];
                     opt = arr[2];
                     switch (opt) {
-                        case "SECOND":
+                        case self.OMCTimeConstants.TIME_UNIT.SECOND:
                             start = new Date(end - num * 1000);
                             break;
-                        case "MINUTE":
+                        case self.OMCTimeConstants.TIME_UNIT.MINUTE:
                             start = new Date(end - num * 60 * 1000);
                             break;
-                        case "HOUR":
+                        case self.OMCTimeConstants.TIME_UNIT.HOUR:
                             start = new Date(end - num * 60 * 60 * 1000);
                             break;
-                        case "DAY":
+                        case self.OMCTimeConstants.TIME_UNIT.DAY:
                             start = new Date(end.getFullYear(), end.getMonth(), end.getDate() - num, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
                             break;
-                        case "WEEK":
+                        case self.OMCTimeConstants.TIME_UNIT.WEEK:
                             start = new Date(end.getFullYear(), end.getMonth(), end.getDate() - 7 * num, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
                             break;
-                        case "MONTH":
+                        case self.OMCTimeConstants.TIME_UNIT.MONTH:
                             start = new Date(end.getFullYear(), end.getMonth() - num, end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
                             break;
-                        case "YEAR":
+                        case self.OMCTimeConstants.TIME_UNIT.YEAR:
                             start = new Date(end.getFullYear() - num, end.getMonth(), end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
                             break;
                         default:
@@ -574,7 +589,81 @@ define([
             self.getTimePeriod = function () {
                 return getIndividualContext('time', 'timePeriod');
             };
-
+            
+            /**
+             * Get OMC global context of time period duration
+             * 
+             * @returns time period duration number or null
+             */
+            self.getTimePeriodDuration = function() {
+                var duration = null;
+                var timePeriod = self.getTimePeriod();
+                if(self.isValidTimePeriod(timePeriod)) {
+                    duration = parseInt(timePeriod.split("_")[1]);
+                }
+                console.log("Result of getTimePeriodDuration is: "+duration);
+                return duration;
+            };
+            
+            /**
+             * Set OMC context of time period duration
+             * 
+             * @param {type} duration
+             * @returns {undefined}
+             */
+            self.setTimePeriodDuration = function(duration) {
+                if(duration <= 0 || isNaN(parseInt(duration))) {
+                    console.log("duration to setTimePeriodDuration should be greater than 0");
+                    return;
+                }                
+                var timePeriod = self.getTimePeriod();
+                if(self.isValidTimePeriod(timePeriod)) {
+                    console.log("Setting time period duration to " + duration);
+                    var arr = timePeriod.split("_");
+                    arr[1] = parseInt(duration);
+                    timePeriod = arr.join("_");
+                    self.setTimePeriod(timePeriod);
+                }else {
+                    console.log("Can't set time period duration to " + duration + " for current time period: " + timePeriod);
+                }
+            };
+            
+            /**
+             * Get OMC global context of time period unit
+             * 
+             * @returns time period unit or null
+             */
+            self.getTimePeriodUnit = function() {
+                var unit = null;
+                var timePeriod = self.getTimePeriod();
+                if(self.isValidTimePeriod(timePeriod)) {
+                    unit = timePeriod.split("_")[2];
+                }
+                console.log("Result of getTimePeriodUnit is:" + unit);
+                return unit;
+            };
+            
+            /**
+             * Set OMC context of time period unit
+             * 
+             * @param {type} unit
+             * @returns {undefined}
+             */
+            self.setTimePeriodUnit = function(unit) {
+                if(self.OMCTimeConstants.TIME_UNIT[unit]) {
+                    var timePeriod = self.getTimePeriod();
+                    if(self.isValidTimePeriod(timePeriod)) {
+                        console.log("Setting time period unit to " + unit);
+                        var arr = timePeriod.split("_");
+                        arr[2] = unit;
+                        timePeriod = arr.join("_");
+                        self.setTimePeriod(timePeriod);
+                    }else {
+                        console.log("can't set time period unit to " + unit + " for current time period " + timePeriod);
+                    }
+                }
+            };
+            
             /**
              * Set OMC global context of composite guid.
              * 
