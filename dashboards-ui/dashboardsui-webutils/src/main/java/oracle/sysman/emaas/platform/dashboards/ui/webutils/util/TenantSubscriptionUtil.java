@@ -70,7 +70,7 @@ public class TenantSubscriptionUtil
 			}
 			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 					.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(MediaType.APPLICATION_JSON)
-					.accept(MediaType.APPLICATION_JSON);
+					.accept(MediaType.APPLICATION_JSON).header("Content-Type","application/json; charset=UTF-8");
 			if (headers != null && !headers.isEmpty()) {
 				for (String key : headers.keySet()) {
 					if (HttpHeaders.AUTHORIZATION.equals(key) || HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME.equals(key)) {

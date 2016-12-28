@@ -25,6 +25,7 @@ import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.MultitenantType;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
+
 @Entity
 @NamedQueries({ @NamedQuery(name = "EmsDashboardTile.findAll", query = "select o from EmsDashboardTile o") })
 @Table(name = "EMS_DASHBOARD_TILE")
@@ -96,6 +97,8 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 	private Integer widgetSupportTimeControl;
 	@Column(name = "WIDGET_LINKED_DASHBOARD")
 	private BigInteger widgetLinkedDashboard;
+	@Column(name = "DELETED", nullable = false, length = 1)
+	private Boolean deleted;
 
 	@Column(name = "WIDGET_DELETED", nullable = false)
 	private Integer widgetDeleted;
@@ -114,6 +117,7 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 
 	public EmsDashboardTile()
 	{
+		deleted = Boolean.FALSE;
 		//widgetDeleted = 0;
 	}
 
@@ -125,6 +129,7 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 			String widgetTemplate, String widgetUniqueId, String widgetViewmode, Integer widgetSupportTimeControl, Integer width,
 			BigInteger widgetLinkedDashboard, Integer widgetDeleted, Date widgetDeletionDate)
 	{
+		this();
 		this.setCreationDate(creationDate);
 		this.setLastModificationDate(lastModificationDate);
 		dashboard = emsDashboard1;
@@ -186,6 +191,14 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 	public List<EmsDashboardTileParams> getDashboardTileParamsList()
 	{
 		return dashboardTileParamsList;
+	}
+
+	/**
+	 * @return the deleted
+	 */
+	public Boolean getDeleted()
+	{
+		return deleted;
 	}
 
 	public Integer getHeight()
@@ -369,6 +382,15 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 	public void setDashboardTileParamsList(List<EmsDashboardTileParams> emsDashboardTileParamsList)
 	{
 		dashboardTileParamsList = emsDashboardTileParamsList;
+	}
+
+	/**
+	 * @param deleted
+	 *            the deleted to set
+	 */
+	public void setDeleted(Boolean deleted)
+	{
+		this.deleted = deleted;
 	}
 
 	public void setHeight(Integer height)
