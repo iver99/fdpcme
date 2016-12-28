@@ -127,6 +127,7 @@ task QATest(type:EMTest,dependsOn:[omcSetup, onboardTenant]) {
 	include "oracle/sysman/emaas/platform/dashboards/test/preference/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/screenshot/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/*" 
+
 	useRestAssured=true
 	ext.set("testType", "integration")
 }
@@ -201,8 +202,14 @@ task DEVTest2(type:EMTest,dependsOn: DEVUiTest){
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
-
+/*
+task DEVTest3(type:EMTest,dependsOn: DEVTest2){ 
+	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/DashboardDeletion.class"	
+	useRestAssured=true
+	ext.set("testType", "unit")
+}*/
 task emcpdf_test_3n (dependsOn:[DEVTest2, omcTeardown]) {
     omcTeardown.mustRunAfter(DEVTest2)
+
     apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")
 }

@@ -493,10 +493,12 @@ define(['knockout',
                     self.selectedDashboardItem(singleDashboardItem);
                 }
 
-                // TODO workaround for showing the dashboarset's add button.
-                setTimeout(function() {
-                    $("#dbd-tabs-container").ojTabs("refresh");
-                }, 200);
+		if (self.isDashboardSet()) {
+                	// TODO workaround for showing the dashboarset's add button.
+                	setTimeout(function() {
+                    		$("#dbd-tabs-container").ojTabs("refresh");
+                	}, 200);
+		}
 
             };
 
