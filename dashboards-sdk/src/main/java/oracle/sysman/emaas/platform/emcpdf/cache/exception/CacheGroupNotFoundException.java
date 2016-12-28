@@ -11,6 +11,6 @@ public class CacheGroupNotFoundException extends CacheException{
 
     public CacheGroupNotFoundException()
     {
-        super(CacheErrorConstants.DASHBOARD_CACHE_GROUP_NOT_FOUND_ERROR_CODE, DASHBOARD_CACHE_GROUP_NOT_FOUND_ERROR);
+        super(CacheErrorConstants.CACHE_GROUP_NOT_FOUND_ERROR_CODE, DASHBOARD_CACHE_GROUP_NOT_FOUND_ERROR);
     }
 }

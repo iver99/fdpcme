@@ -7,10 +7,10 @@ import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheErrorConstants;
  */
 public class CacheGroupNameEmptyException extends CacheException {
 
-    private static final String DASHBOARD_CACHE_GROUP_NAME_EMPTY_ERROR = "DASHBOARD_CACHE_GROUP_NAME_EMPTY_ERROR";
+    private static final String CACHE_GROUP_NAME_EMPTY_ERROR = "CACHE_GROUP_NAME_EMPTY_ERROR";
 
     public CacheGroupNameEmptyException()
     {
-        super(CacheErrorConstants.DASHBOARD_CACHE_GROUP_NAME_EMPTY_ERROR_CODE, DASHBOARD_CACHE_GROUP_NAME_EMPTY_ERROR);
+        super(CacheErrorConstants.CACHE_EXECUTION_ERROR_CODE, CACHE_GROUP_NAME_EMPTY_ERROR);
     }
 }
