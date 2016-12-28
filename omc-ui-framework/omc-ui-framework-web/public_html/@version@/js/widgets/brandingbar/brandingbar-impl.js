@@ -734,6 +734,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                 }
             }
+            
+            function fireMessageChangeEvent(eventType, msgId) {
+                var message = {'tag': 'EMAAS_OMC_PAGE_LEVEL_MESSAGE_UPDATED', 
+                    'eventType': eventType, //Add or Remove
+                    'messageId': msgId
+                };
+                window.postMessage(message, window.location.href);
+            }
 
             function showMessage(data) {
                 if (data) {
@@ -813,6 +821,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             removeMessage(message);
                         }, data.removeDelayTime);
                     }
+                    
+                    //Fire message change event
+                    fireMessageChangeEvent('Create', message.id);
                 }
             }
 
@@ -856,6 +867,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         self.hiddenMessagesExpanded(false);
                     }
                 }
+                
+                //Fire message change event
+                fireMessageChangeEvent('Delete', data.id);
             }
 
             function removeItemByValue(obj, value)

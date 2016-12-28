@@ -985,6 +985,13 @@ define([
                 }
             };
             
+            /**
+             * Add event change listener for global context change
+             *
+             * @param {Function} callback Callback function for the listener
+             *
+             * @returns
+             */
             self.subscribeOMCContextChangeEvent = function(callback) {
                 function onCtxChange(event) {
                     if (event.origin !== window.location.protocol + '//' + window.location.host) {
