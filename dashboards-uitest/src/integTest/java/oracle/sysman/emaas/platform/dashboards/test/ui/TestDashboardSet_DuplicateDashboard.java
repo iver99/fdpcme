@@ -33,6 +33,7 @@ import org.testng.annotations.Test;
 public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 {
 	private String dbsetName_Duplicate = "";
+	private String dbsetName_DuplicateOOB = "";
 	private String dbName_InSet = "";
 	private String dbName_OutSet = "";
 	private String dbName_DuplicateOOB = "";
@@ -46,6 +47,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 	public void createTestData()
 	{
 		dbsetName_Duplicate = "DashboardSet_Duplicate_Test-" + DashBoardUtils.generateTimeStamp();
+		dbsetName_DuplicateOOB = "DashboardSet_DuplicateOOB_Test-" + DashBoardUtils.generateTimeStamp();
 		String dbsetDesc = "Test duplicated the dashboard set";
 
 		//init the test
@@ -67,6 +69,17 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		//verify the dashboardset
 		webd.getLogger().info("Verify if the dashboard set existed in builder page");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_Duplicate), "Dashboard set NOT found!");
+
+		//back to home
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//create another dashboard set
+		webd.getLogger().info("Create a new dashboard set");
+		DashboardHomeUtil.createDashboard(webd, dbsetName_DuplicateOOB, dbsetDesc, DashboardHomeUtil.DASHBOARDSET);
+
+		//verify the dashboardset
+		webd.getLogger().info("Verify if the dashboard set existed in builder page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_DuplicateOOB), "Dashboard set NOT found!");
 
 		LoginAndLogout.logoutMethod();
 	}
@@ -94,6 +107,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 
 		//remove the test data
 		DashBoardUtils.deleteDashboard(webd, dbsetName_Duplicate);
+		DashBoardUtils.deleteDashboard(webd, dbsetName_DuplicateOOB);
 		BrandingBarUtil.visitDashboardHome(webd);
 		WaitUtil.waitForPageFullyLoaded(webd);
 		DashBoardUtils.deleteDashboard(webd, dbName_InSet);
@@ -318,7 +332,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 
 		//open the dashboardset
 		webd.getLogger().info("Open the dashboard in the builder page");
-		DashboardHomeUtil.selectDashboard(webd, dbsetName_Duplicate);
+		DashboardHomeUtil.selectDashboard(webd, dbsetName_DuplicateOOB);
 
 		webd.getLogger().info("Set the refresh setting to OFF");
 		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
@@ -348,7 +362,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 				+ " should be displayed in home page!");
 
 		webd.getLogger().info("Open the dashboard set");
-		DashboardHomeUtil.selectDashboard(webd, dbsetName_Duplicate);
+		DashboardHomeUtil.selectDashboard(webd, dbsetName_DuplicateOOB);
 
 		//delete the dashboard
 		webd.getLogger().info("Delete the duplicate dashboard: " + dbName_DuplicateOOB);
@@ -383,7 +397,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 
 		//open the dashboardset
 		webd.getLogger().info("Open the dashboard in the builder page");
-		DashboardHomeUtil.selectDashboard(webd, dbsetName_Duplicate);
+		DashboardHomeUtil.selectDashboard(webd, dbsetName_DuplicateOOB);
 
 		webd.getLogger().info("Set the refresh setting to OFF");
 		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
@@ -424,12 +438,9 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_DuplicateOOB), "Dashboard: " + dbName_DuplicateOOB
 				+ " should be displayed in home page!");
 
-		webd.getLogger().info("Open the dashboard set");
-		DashboardHomeUtil.selectDashboard(webd, dbsetName_Duplicate);
-
 		//open the dashboard set
-		webd.getLogger().info("Open the dashboard set: " + dbsetName_Duplicate);
-		DashboardHomeUtil.selectDashboard(webd, dbsetName_Duplicate);
+		webd.getLogger().info("Open the dashboard set: " + dbsetName_DuplicateOOB);
+		DashboardHomeUtil.selectDashboard(webd, dbsetName_DuplicateOOB);
 
 		//verify the duplicated dashboard
 		webd.getLogger().info("Verify the duplicate dashboard: " + dbName_DuplicateOOB + " is not in the dashboard set");
