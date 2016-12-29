@@ -1269,7 +1269,9 @@ public class DashboardManager
 			String jql = "update EmsDashboardTile t set t.title = :widgetName, t.widgetName = :widgetName where t.widgetUniqueId = :widgetId";
 			Query query = em.createQuery(jql).setParameter("widgetName", widgetName)
 					.setParameter("widgetId", String.valueOf(widgetId));
-			et.begin();
+			if (!et.isActive()) {
+				et.begin();
+			}			
 			int affacted = query.executeUpdate();
 			et.commit();
 			LOGGER.info("Update dashboard tiles name: title for {} tiles have been updated to \"{}\" for specified widget ID {}",
@@ -1303,7 +1305,9 @@ public class DashboardManager
 			EntityTransaction et = em.getTransaction();
 			String jql = "update EmsDashboardTile t set t.widgetDeleted = 1 where t.widgetUniqueId = :widgetId";
 			Query query = em.createQuery(jql).setParameter("widgetId", String.valueOf(widgetId));
-			et.begin();
+			if (!et.isActive()) {
+				et.begin();
+			}
 			int affacted = query.executeUpdate();
 			et.commit();
 			LOGGER.info(

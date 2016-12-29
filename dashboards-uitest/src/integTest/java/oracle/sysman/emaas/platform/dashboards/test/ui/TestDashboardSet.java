@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.test.ui;
 
+import java.util.List;
+
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
@@ -1224,13 +1226,12 @@ public class TestDashboardSet extends LoginAndLogout
 		DashboardBuilderUtil.maximizeWidget(webd, "Entities by Database Machine", 0);
 		DashboardBuilderUtil.restoreWidget(webd, "Entities by Database Machine", 0);
 
-		//verify the edit/add button not displayed in the page					
-		// TODO: temporarily comment out, to be updated as element does not exist and raise exception here
-		/*WebElement addButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Add Content']"));
-		Assert.assertFalse(addButton.isDisplayed(), "Add button be displayed in system dashboard set");  
+		//verify the edit/add button not displayed in the page: [changed] element does not exist
+		List<WebElement> addButtons = webd.getWebDriver().findElements(By.xpath("//button[@title='Add Content']"));
+		Assert.assertFalse(addButtons != null && addButtons.size() > 0, "Unexpected: Add button be displayed in system dashboard set");  
 
-		WebElement editButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));
-		Assert.assertFalse(editButton.isDisplayed(), "Edit button be displayed in system dashboard set");*/
+		List<WebElement> editButtons = webd.getWebDriver().findElements(By.xpath("//button[@title='Edit Settings']"));
+		Assert.assertFalse(editButtons != null && editButtons.size() > 0, "Unexpected: Edit button be displayed in system dashboard set");
 	}
 	
 	//test maxmize/restore widget in self created dashboard set, and select a system dashboard to test edit button
