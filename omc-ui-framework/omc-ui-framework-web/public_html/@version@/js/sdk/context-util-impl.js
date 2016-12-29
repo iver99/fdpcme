@@ -515,6 +515,55 @@ define([
                 var tpPattern = new RegExp("^LAST_[1-9]{1}[0-9]*_(SECOND|MINUTE|HOUR|DAY|WEEK|MONTH|YEAR){1}$");
                 return tpPattern.test(timePeriod);
             };
+            
+            /**
+             * Generate "LAST_X_UNIT" from time unit and time duration
+             * 
+             * @param {type} unit - OMC context time unit CONSTANT
+             * @param {type} duration - number larger than 0
+             * @returns {String} - formalized time period like "LAST_X_UNIT"
+             */
+            self.generateTimePeriodFromUnitAndDuration = function (unit, duration) {
+                if(!self.OMCTimeConstants.TIME_UNIT[unit]) {
+                    console.log("Invalid unit: " + unit + " to generateTimePeriodFromUnitAndDuration");
+                    return null;
+                }
+                if(duration <=0 || isNaN(parseInt(duration))) {
+                    console.log("Invalid duration: " + duration + " to generateTimePeriodFromUnitAndDuration");
+                    return null;   
+                }
+                var arr = [];
+                arr[0] = "LAST";
+                arr[1] = parseInt(duration);
+                arr[2] = self.OMCTimeConstants.TIME_UNIT[unit];
+                return arr.join("_");
+            };
+            
+            /**
+             * Parse user specified time period or OMC context time period to unit and duration
+             * 
+             * @param {type} timePeriod
+             * @returns 
+             */
+            self.parseTimePeriodToUnitAndDuration = function(timePeriod) {
+                var tp = null;
+                if(!timePeriod) {
+                    tp = self.getTimePeriod();
+                }else {
+                    tp = timePeriod;
+                }
+                
+                if(!self.isValidTimePeriod(tp)) {
+                    console.log("Invalid time period: " + tp + " in parseTimePeriodToUnitAndDuration");
+                    return null;
+                }
+                
+                var arr = tp.split("_");
+                return {
+                    unit: arr[2],
+                    duration: arr[1]
+                }
+            };
 
             /**
              * 
@@ -596,13 +645,12 @@ define([
              * @returns time period duration number or null
              */
             self.getTimePeriodDuration = function() {
-                var duration = null;
-                var timePeriod = self.getTimePeriod();
-                if(self.isValidTimePeriod(timePeriod)) {
-                    duration = parseInt(timePeriod.split("_")[1]);
+                var tp = self.parseTimePeriodToUnitAndDuration();
+                if(tp) {
+                    return tp.duration;
+                }else {
+                    return null;
                 }
-                console.log("Result of getTimePeriodDuration is: "+duration);
-                return duration;
             };
             
             /**
@@ -612,20 +660,9 @@ define([
              * @returns {undefined}
              */
             self.setTimePeriodDuration = function(duration) {
-                if(duration <= 0 || isNaN(parseInt(duration))) {
-                    console.log("duration to setTimePeriodDuration should be greater than 0");
-                    return;
-                }                
-                var timePeriod = self.getTimePeriod();
-                if(self.isValidTimePeriod(timePeriod)) {
-                    console.log("Setting time period duration to " + duration);
-                    var arr = timePeriod.split("_");
-                    arr[1] = parseInt(duration);
-                    timePeriod = arr.join("_");
-                    self.setTimePeriod(timePeriod);
-                }else {
-                    console.log("Can't set time period duration to " + duration + " for current time period: " + timePeriod);
-                }
+                var tp = self.parseTimePeriodToUnitAndDuration();
+                tp && (tp = self.generateTimePeriodFromUnitAndDuration(tp.unit, parseInt(duration)));
+                tp && self.setTimePeriod(tp);
             };
             
             /**
@@ -634,13 +671,12 @@ define([
              * @returns time period unit or null
              */
             self.getTimePeriodUnit = function() {
-                var unit = null;
-                var timePeriod = self.getTimePeriod();
-                if(self.isValidTimePeriod(timePeriod)) {
-                    unit = timePeriod.split("_")[2];
+                var tp = self.parseTimePeriodToUnitAndDuration();
+                if(tp) {
+                    return tp.unit;
+                }else {
+                    return null;
                 }
-                console.log("Result of getTimePeriodUnit is:" + unit);
-                return unit;
             };
             
             /**
@@ -650,18 +686,21 @@ define([
              * @returns {undefined}
              */
             self.setTimePeriodUnit = function(unit) {
-                if(self.OMCTimeConstants.TIME_UNIT[unit]) {
-                    var timePeriod = self.getTimePeriod();
-                    if(self.isValidTimePeriod(timePeriod)) {
-                        console.log("Setting time period unit to " + unit);
-                        var arr = timePeriod.split("_");
-                        arr[2] = unit;
-                        timePeriod = arr.join("_");
-                        self.setTimePeriod(timePeriod);
-                    }else {
-                        console.log("can't set time period unit to " + unit + " for current time period " + timePeriod);
-                    }
-                }
+                var tp = self.parseTimePeriodToUnitAndDuration();
+                tp && (tp = self.generateTimePeriodFromUnitAndDuration(unit, tp.duration));
+                tp && self.setTimePeriod(tp);
+            };
+            
+            /**
+             * Set OMC context time period unit and duration at the same time
+             * 
+             * @param {type} unit
+             * @param {type} duration
+             * @returns {undefined}
+             */
+            self.setTimePeriodUnitAndDuration = function(unit, duration) {
+                var tp = self.generateTimePeriodFromUnitAndDuration(unit, duration);
+                tp && self.setTimePeriod(tp);
             };
             
             /**
