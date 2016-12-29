@@ -10,7 +10,7 @@ define(['dashboards/dbsmodel',
         self.$b = ko.observable($b);
         self.dashboardsetToolBarModel=dashboardsetToolBarModel;
         self.isDashboardSet = self.dashboardsetToolBarModel.isDashboardSet;
-        self.dashboardTilesViewModel = $b.getDashboardTilesViewModel();
+        self.dashboardTilesViewModel = $b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel();
         self.dashboard = ko.computed(function () {
             return self.$b && self.$b().dashboard;
         });
