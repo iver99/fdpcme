@@ -2,6 +2,8 @@ package oracle.sysman.emaas.platform.emcpdf.cache.support;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.*;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheStatistics;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheThreadPools;
 import org.apache.logging.log4j.LogManager;
@@ -19,12 +21,12 @@ public abstract class AbstractCache implements ICache{
     public CacheStatistics cacheStatistics =new CacheStatistics();
 
     @Override
-    public Object get(Object key) {
+    public Object get(Object key) throws ExecutionException {
         return get(key,null);
     }
 
     @Override
-    public Object get(Object key, CacheLoader factory) {
+    public Object get(Object key, CacheLoader factory)throws ExecutionException {
         checkNotNull(key);
         cacheStatistics.setRequestCount(cacheStatistics.getRequestCount()+1);
         CachedItem value=lookup(key);
@@ -35,6 +37,7 @@ public abstract class AbstractCache implements ICache{
                     valueFromFactory = factory.load(key);
                 } catch (Exception e) {
                     LOGGER.error(e.getLocalizedMessage());
+                    throw new ExecutionException(e);
                 }
                 CachedItem ci=new CachedItem(key,valueFromFactory);
                     put(key,ci);
@@ -52,14 +55,19 @@ public abstract class AbstractCache implements ICache{
     }
 
     @Override
-    public Object refreshAfterGet(final Object key, final CacheLoader factory) {
+    public Object refreshAfterGet(final Object key, final CacheLoader factory) throws ExecutionException {
         ScheduledExecutorService pool= CacheThreadPools.getThreadPool();
         LOGGER.info("Refresh after get action begin...");
         pool.schedule(new TimerTask() {
             @Override
             public void run() {
                 LOGGER.info("Refresh...");
-                Object obj=get(key,factory);
+                Object obj= null;
+                try {
+                    obj = get(key,factory);
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
                 put(key,new CachedItem(key,obj));
             }
         }, 30, TimeUnit.SECONDS);

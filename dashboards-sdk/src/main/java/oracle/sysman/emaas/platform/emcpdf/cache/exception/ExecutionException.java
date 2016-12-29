@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.exception;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheErrorConstants;
 
 /**
@@ -11,5 +12,9 @@ public class ExecutionException extends CacheException{
     public ExecutionException()
     {
         super(CacheErrorConstants.CACHE_EXECUTION_ERROR_CODE, CACHE_EXECUTION_ERROR);
+    }
+
+    public ExecutionException(Throwable cause) {
+        super(cause, CacheErrorConstants.CACHE_EXECUTION_ERROR_CODE);
     }
 }

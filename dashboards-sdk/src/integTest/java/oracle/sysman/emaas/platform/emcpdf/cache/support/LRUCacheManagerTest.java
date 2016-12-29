@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.emcpdf.cache.support;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -24,7 +25,7 @@ public class LRUCacheManagerTest {
         cm.getCache("cache1");
     }
     @Test
-    public void testGetCachedItem1(){
+    public void testGetCachedItem1() throws ExecutionException {
         ICacheManager cm=LRUCacheManager.getInstance();
         Object o1=cm.getCache("cache1").get("two");
         Assert.assertNull(o1);
@@ -33,7 +34,7 @@ public class LRUCacheManagerTest {
         Assert.assertEquals((Integer)(((CachedItem)o2).getValue()),new Integer(2));
     }
     @Test
-    public void testGetCachedItem2(){
+    public void testGetCachedItem2() throws ExecutionException {
         ICacheManager cm=LRUCacheManager.getInstance();
         Object o1=cm.getCache("cache1").get("factoryFetch", new CacheLoader() {
             @Override
@@ -45,7 +46,7 @@ public class LRUCacheManagerTest {
         Assert.assertEquals(o1.toString(),"FromFactory");
     }
     @Test
-    public void testEviction(){
+    public void testEviction() throws ExecutionException {
         ICacheManager cm=LRUCacheManager.getInstance();
         cm.getCache("cache1");
         Assert.assertNull(cm.getCache("cache1").get("three"));
@@ -55,7 +56,7 @@ public class LRUCacheManagerTest {
         Assert.assertNull(cm.getCache("cache1").get("three"));
     }
     @Test
-    public void testExpiration(){
+    public void testExpiration() throws ExecutionException {
         ICacheManager cm=LRUCacheManager.getInstance();
         cm.getCache("cache2",1000,2000L);
         cm.getCache("cache2").put("four",new CachedItem("four",4));

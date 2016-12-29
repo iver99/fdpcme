@@ -66,7 +66,7 @@ public abstract class AbstractCacheManager implements ICacheManager{
     @Override
     public void init(){
         //log cache status
-        timer.scheduleAtFixedRate(new TimerTask() {
+        /*timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 LOGGER.info("Log Cache Statistics Begin...");
@@ -92,7 +92,7 @@ public abstract class AbstractCacheManager implements ICacheManager{
                             ac.cacheStatistics.getEvictionCount());
                 }
             }
-        },CacheConfig.LOG_INTERVAL, CacheConfig.REFRESH_CACHE_INTERVAL);
+        },CacheConfig.LOG_INTERVAL, CacheConfig.REFRESH_CACHE_INTERVAL);*/
     }
 
     @Override
