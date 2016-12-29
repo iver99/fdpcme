@@ -163,7 +163,7 @@ public class RegistrationEntity implements Serializable
 		ICacheManager cm= CacheManagers.getInstance().build();
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) cm.getCache(CacheConstants.CACHES_ADMIN_LINK_CACHE).refreshAfterGet(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_ADMIN_LINKS,UserContext.getCurrentUser())),
+			return (List<LinkEntity>) cm.getCache(CacheConstants.CACHES_ADMIN_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_ADMIN_LINKS,UserContext.getCurrentUser())),
 					new CacheLoader() {
 						@Override
 						public Object load(Object key) throws Exception
@@ -336,7 +336,7 @@ public class RegistrationEntity implements Serializable
 		ICacheManager cm= CacheManagers.getInstance().build();
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) cm.getCache(CacheConstants.CACHES_HOME_LINK_CACHE).refreshAfterGet(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_HOME_LINKS)),
+			return (List<LinkEntity>) cm.getCache(CacheConstants.CACHES_HOME_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_HOME_LINKS)),
 						new CacheLoader() {
 						@Override
 						public Object load(Object key) throws Exception
