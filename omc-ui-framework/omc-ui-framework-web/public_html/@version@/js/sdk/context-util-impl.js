@@ -26,7 +26,7 @@ define([
             }
             
             self.OMCTimeConstants = {
-                'TIME_UNIT': {
+                TIME_UNIT: {
                     SECOND: 'SECOND',
                     MINUTE: 'MINUTE',
                     HOUR: 'HOUR',
@@ -34,11 +34,28 @@ define([
                     WEEK: 'WEEK',
                     MONTH: 'MONTH',
                     YEAR: 'YEAR'
+                },
+                QUICK_PICK: {
+                    LAST_15_MINUTE: 'LAST_15_MINUTE',
+                    LAST_30_MINUTE: 'LAST_30_MINUTE',
+                    LAST_60_MINUTE: 'LAST_60_MINUTE',
+                    LAST_2_HOUR: 'LAST_2_HOUR',
+                    LAST_4_HOUR: 'LAST_4_HOUR',
+                    LAST_6_HOUR: 'LAST_6_HOUR',
+                    LAST_1_DAY: 'LAST_1_DAY',
+                    LAST_7_DAY: 'LAST_7_DAY',
+                    LAST_14_DAY: 'LAST_14_DAY',
+                    LAST_30_DAY: 'LAST_30_DAY',
+                    LAST_90_DAY: 'LAST_90_DAY',
+                    LAST_1_YEAR: 'LAST_1_YEAR',
+                    LATEST: 'LATEST',
+                    CUSTOM: 'CUSTOM'
                 }
             };
             
             //freeze every constant object inside
             Object.freeze(self.OMCTimeConstants.TIME_UNIT);
+            Object.freeze(self.OMCTimeConstants.QUICK_PICK);
 
             /**
              * Get URL parameter name for OMC global context.

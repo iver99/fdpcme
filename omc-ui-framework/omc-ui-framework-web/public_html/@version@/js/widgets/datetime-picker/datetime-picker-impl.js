@@ -198,23 +198,21 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.recentList = ko.observableArray([]);
 
-                self.timePeriodsNlsObject = {                    
-                    "LAST_15_MINUTE" : self.timePeriodLast15mins,
-                    "LAST_30_MINUTE" : self.timePeriodLast30mins,
-                    "LAST_60_MINUTE" : self.timePeriodLast60mins,
-                    "LAST_2_HOUR": self.timePeriodLast2hours,
-                    "LAST_4_HOUR" : self.timePeriodLast4hours,
-                    "LAST_6_HOUR" : self.timePeriodLast6hours,
-                    "LAST_1_DAY" : self.timePeriodLast1day,
-                    "LAST_7_DAY" : self.timePeriodLast7days,
-                    "LAST_14_DAY" : self.timePeriodLast14days,
-                    "LAST_30_DAY" : self.timePeriodLast30days,
-                    "LAST_90_DAY" : self.timePeriodLast90days,
-                    "LAST_1_YEAR": self.timePeriodLast1year,
-                    "LATEST" : self.timePeriodLatest,
-                    "TODAY":self.timePeriodToday,
-                    "CUSTOM" : self.timePeriodCustom
-                };
+                self.timePeriodsNlsObject = {};
+                self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_15_MINUTE] = self.timePeriodLast15mins;
+                self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_30_MINUTE] = self.timePeriodLast30mins;
+                self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_60_MINUTE] = self.timePeriodLast60mins;
+                self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_2_HOUR] = self.timePeriodLast2hours;
+                self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_4_HOUR] = self.timePeriodLast4hours;
+                self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_6_HOUR] = self.timePeriodLast6hours;
+                self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_1_DAY] = self.timePeriodLast1day;
+                self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_7_DAY] = self.timePeriodLast7days;
+                self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_14_DAY] = self.timePeriodLast14days;
+                self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_30_DAY] = self.timePeriodLast30days;
+                self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_90_DAY] = self.timePeriodLast90days;
+                self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_1_YEAR] = self.timePeriodLast1year;
+                self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LATEST] = self.timePeriodLatest;
+                self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM] = self.timePeriodCustom;
 
                 self.last15minsNotToShow = ko.observable(false);
                 self.last30minsNotToShow = ko.observable(false);
@@ -1250,7 +1248,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         return;
                     }
                     
-                    if(recent.timePeriod === "CUSTOM") { // for custom time range
+                    if(recent.timePeriod === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) { // for custom time range
                         start = oj.IntlConverterUtils.dateToLocalIso(recent.start);
                         end = oj.IntlConverterUtils.dateToLocalIso(recent.end);
                         if (self.timeConverter() === self.timeConverterMillisecond) {
@@ -2060,7 +2058,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var start;
                     var end;
                     var tpNls = self.timePeriodsNlsObject[data.timePeriod];
-                    if(data.timePeriod === "CUSTOM") { // for custom time range
+                    if(data.timePeriod === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) { // for custom time range
                         self.lrCtrlVal("timeLevelCtrl");
                         start = oj.IntlConverterUtils.dateToLocalIso(data.start);
                         end = oj.IntlConverterUtils.dateToLocalIso(data.end);
@@ -2293,7 +2291,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var tmpList = self.recentList();
 //                    tmpList.unshift({start: new Date(start), end: new Date(end), timePeriod: timePeriod, 
 //                                    timeFilter: self.timeFilter(), flexRelTimeVal: flexRelTimeVal, flexRelTimeOpt: flexRelTimeOpt});
-                    if(timePeriod === "CUSTOM" && flexRelTimeVal && flexRelTimeOpt) {
+                    if(timePeriod === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM && flexRelTimeVal && flexRelTimeOpt) {
                         recentTimePeriodId =  flexRelTimePeriodId;
                     }else {
                         recentTimePeriodId = timePeriod;
@@ -2303,7 +2301,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.recentList(tmpList.slice(0, 5));
 
                     //reset time params in global context
-                    if(timePeriod === "CUSTOM") {
+                    if(timePeriod === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) {
                         if(flexRelTimeVal && flexRelTimeOpt) {
                             ctxUtil.setTimePeriod(flexRelTimePeriodId);
                         }else {
