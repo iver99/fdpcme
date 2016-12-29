@@ -86,19 +86,14 @@ public class PersistenceManager
 	{
 		if (emf == null) {
 			initialize();
-		}
-		EntityManager entityManager = emf.createEntityManager();
-		try {
-			SessionInfoUtil.setModuleAndAction(entityManager, MODULE_NAME, ACTION_NAME);
-		} catch (SQLException e) {
-			LOGGER.info("setModuleAndAction in PersistenceManager",e);
-		} finally {
-			if (entityManager != null) {
-				entityManager.close();				
-			}
-		}
+		}		
 		EntityManager em = emf.createEntityManager();
 		em.setProperty("tenant.id", tenantId);
+		try {
+			SessionInfoUtil.setModuleAndAction(em, MODULE_NAME, ACTION_NAME);
+		} catch (SQLException e) {
+			LOGGER.info("setModuleAndAction in PersistenceManager",e);
+		}
 		return em;
 	}
 

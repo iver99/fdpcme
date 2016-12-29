@@ -232,7 +232,9 @@ public class DataManager
 		}
 
 		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
-		entityManager.getTransaction().begin();
+		if (!entityManager.getTransaction().isActive()) {
+			entityManager.getTransaction().begin();
+		}		
 		try {
 			if (isDashboardExist(entityManager, dashboardId, tenantId)) {
 				logger.debug("Dashboard with id {} exists", dashboardId);
@@ -322,7 +324,9 @@ public class DataManager
 			return 0;
 		}
 		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
-		entityManager.getTransaction().begin();
+		if (!entityManager.getTransaction().isActive()) {
+			entityManager.getTransaction().begin();
+		}
 		try {
 			if (isDashboardTileExist(entityManager, tileId, dashboardId, tenantId)) {
 				logger.debug("Dashboard Tile with id {} exists", tileId);
@@ -376,7 +380,9 @@ public class DataManager
 			return 0;
 		}
 		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
-		entityManager.getTransaction().begin();
+		if (!entityManager.getTransaction().isActive()) {
+			entityManager.getTransaction().begin();
+		}
 		try {
 			if (isDashboardTileParamExist(entityManager, tileId, paramName, tenantId)) {
 				logger.debug("DashboardTileParam with tile id {} exists", tileId);
@@ -419,7 +425,9 @@ public class DataManager
 			return 0;
 		}
 		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
-		entityManager.getTransaction().begin();
+		if (!entityManager.getTransaction().isActive()) {
+			entityManager.getTransaction().begin();
+		}
 		try {
 			if (isDashboardUserOptionExist(entityManager, userName, tenantId, dashboardId)) {
 				logger.debug("DashboardUserOption with dashboardId {} exists", dashboardId);
@@ -464,7 +472,9 @@ public class DataManager
 			return 0;
 		}
 		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
-		entityManager.getTransaction().begin();
+		if (!entityManager.getTransaction().isActive()) {
+			entityManager.getTransaction().begin();
+		}
 		try {
 			if (isDashboardSetExist(entityManager, dashboardSetId, tenantId, subDashboardId)) {
 				logger.debug("DashboardSet with dashboardSetId {} exist", dashboardSetId);
@@ -506,7 +516,9 @@ public class DataManager
 			return 0;
 		}
 		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
-		entityManager.getTransaction().begin();
+		if (!entityManager.getTransaction().isActive()) {
+			entityManager.getTransaction().begin();
+		}
 		try {
 			if (isPreferenceExist(entityManager, userName, prefKey, tenantId)) {
 				logger.debug("Preference with prefKey {} exists", prefKey);
