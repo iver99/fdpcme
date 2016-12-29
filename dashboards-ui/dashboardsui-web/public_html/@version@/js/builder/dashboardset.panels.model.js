@@ -122,7 +122,9 @@ define([
                     dashboardsViewModle.showExploreDataBtn(false);
 
                     dashboardsViewModle.handleDashboardClicked = function(event, data) {
-
+                        if(event){
+                            event.preventDefault();
+                        }
                         var hasDuplicatedDashboard = false;
                         var isCreator=dashboardsetToolBarModel.dashboardsetConfig.isCreator();
                         var dataId;

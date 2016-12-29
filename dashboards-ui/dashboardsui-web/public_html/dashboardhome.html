@@ -68,7 +68,8 @@
     </div>
     <div class="dbs-summaries-container" style="margin-bottom: 2%">
         <!-- ko foreach: dashboards -->
-        <div tabindex="0" class="oj-panel dbs-summary-container" 
+        <a data-bind="attr:{'href':buildPageUrl}" style = " text-decoration:none; color: #333;">
+        <div tabindex="0" class="oj-panel dbs-summary-container"
              data-tag data-bind="dbsDashboardPanel: {
                                                 activated: null,
                                                 deactivated: null,
@@ -78,6 +79,7 @@
                                                 data: $data
                                                        },attr:{'data-home-name':name}">    
         </div>
+        </a>
         <!-- /ko -->
     </div>
     <!-- /ko -->

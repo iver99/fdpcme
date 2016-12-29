@@ -184,6 +184,7 @@ $.widget('dbs.dbsDashboardPanel',
                     .on('click.'+_name, function(event) {
                         //prevent event bubble
                         event.stopPropagation();
+                        event.preventDefault();
                         self._fireShowInfoClicked(event, self.infoElement);
                     });
             self.toolbarElement.append(self.infoElement);

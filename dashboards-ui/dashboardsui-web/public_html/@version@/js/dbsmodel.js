@@ -681,7 +681,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, cxtModel)
 
         self.listNameRender = function (context)
         {
-            var _link = $(document.createElement('a')).addClass( "dbs-dsbnameele" )
+            var _dmodel = self.datasource['pagingDS'].getModelFromWindow(context.row.id);
+            var _link = $(document.createElement('a')).addClass( "dbs-dsbnameele" ).attr("href",_dmodel.get('buildPageUrl'))
                     .on('click', function(event) {
                         //prevent event bubble
                         event.stopPropagation();
