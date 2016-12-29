@@ -1,8 +1,7 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.support;
 
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
-import oracle.sysman.emaas.platform.emcpdf.cache.exception.*;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheStatistics;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheThreadPools;
@@ -10,7 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.TimerTask;
-import java.util.concurrent.*;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by chehao on 2016/12/22.
@@ -30,20 +30,8 @@ public abstract class AbstractCache implements ICache{
         checkNotNull(key);
         cacheStatistics.setRequestCount(cacheStatistics.getRequestCount()+1);
         CachedItem value=lookup(key);
-        if(value == null){
-            if(factory!=null){
-                Object valueFromFactory= null;
-                try {
-                    valueFromFactory = factory.load(key);
-                } catch (Exception e) {
-                    LOGGER.error(e.getLocalizedMessage());
-                    throw new ExecutionException(e);
-                }
-                CachedItem ci=new CachedItem(key,valueFromFactory);
-                    put(key,ci);
-                    return valueFromFactory;
-            }
-        }else{
+        Object valueFromFactory= null;
+        if(value!=null ){
             if(isExpired(value)){
                 evict(key);
             }else{
@@ -51,7 +39,18 @@ public abstract class AbstractCache implements ICache{
                 return value.getValue();
             }
         }
-        return null;
+
+        if (factory != null) {
+            try {
+                valueFromFactory = factory.load(key);
+            } catch (Exception e) {
+                LOGGER.error(e.getLocalizedMessage());
+                throw new ExecutionException(e);
+            }
+            CachedItem ci = new CachedItem(key, valueFromFactory);
+            put(key, ci);
+        }
+        return valueFromFactory;
     }
 
     @Override
