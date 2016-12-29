@@ -68,7 +68,7 @@
     </div>
     <div class="dbs-summaries-container" style="margin-bottom: 2%">
         <!-- ko foreach: dashboards -->
-        <a data-bind="attr:{'href':buildPageUrl}" style = " text-decoration:none; color: #333;">
+        <a class = "dbs-nav-link" data-bind="attr:{'href':buildPageUrl}">
         <div tabindex="0" class="oj-panel dbs-summary-container"
              data-tag data-bind="dbsDashboardPanel: {
                                                 activated: null,
