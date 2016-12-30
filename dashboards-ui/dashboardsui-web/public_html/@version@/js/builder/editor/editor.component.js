@@ -295,6 +295,10 @@ define(['knockout',
             tile.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
                 tile.dashboard.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
             };
+            
+            tile.getWigetDataFromCache = function (wigetId,sccessCallback,failureCallback) {
+                new Builder.DashboardDataSource().fetchSelDbdSsData(wigetId,sccessCallback,failureCallback);
+            };
 
             if (loadImmediately) {
                 var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME());

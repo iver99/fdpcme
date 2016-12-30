@@ -108,7 +108,7 @@ public class DashboardServiceFacade
 		EmsDashboard ed = getEmsDashboardById(dashboardId);
 		EmsPreference ep = this.getEmsPreference(userName, "Dashboards.homeDashboardId");
 		EmsUserOptions euo = this.getEmsUserOptions(userName, dashboardId);
-		return CombinedDashboard.valueOf(ed, ep, euo);
+		return CombinedDashboard.valueOf(ed, ep, euo,null);
 	}
 
 	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(String name, String owner, String description){
