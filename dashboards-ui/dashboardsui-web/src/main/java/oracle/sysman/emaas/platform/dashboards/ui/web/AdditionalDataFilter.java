@@ -135,7 +135,7 @@ public class AdditionalDataFilter implements Filter {
         if (StringUtil.isEmpty(json)) {
             return json;
         }
-        return json.replace("\\", "\\\\").replace("\"", "\\\"");
+        return json.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$");
     }
 
     private String getDashboardData(String tenant, String user, long dashboardId, String referer, String sessionExp) {
