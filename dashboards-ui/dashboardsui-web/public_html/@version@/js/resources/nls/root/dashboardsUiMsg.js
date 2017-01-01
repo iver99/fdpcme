@@ -298,6 +298,7 @@ define({
       "LANDING_HOME_DATA_EXPLORERS": "Explorers",
       "LANDING_HOME_DATA_EXPLORERS_DESC": "Search, analyze, and visualize data",
       "LANDING_HOME_DATA_EXPLORER": "Data Explorer",
+      "LANDING_HOME_LOG_EXPLORER": "Log Explorer",
 
       "LANDING_HOME_LEARN_MORE": "Learn More",
       "LANDING_HOME_GET_STARTED_LINK": "How to get started",

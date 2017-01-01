@@ -251,9 +251,9 @@ require(['ojs/ojcore',
                             var originalName = dataExplorers[i].name;
                             dataExplorers[i].name = originalName.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, '');
                             if(dataExplorers[i].serviceName === "LogAnalyticsUI"){
-                                dataExplorers[i].name = "Log Explorer";
+                                dataExplorers[i].name = getNlsString("LANDING_HOME_LOG_EXPLORER");
                             }else if(dataExplorers[i].serviceName === "TargetAnalytics"){
-                                dataExplorers[i].name = "Data Explorer";
+                                dataExplorers[i].name = getNlsString("LANDING_HOME_DATA_EXPLORER");
                             }
                             self.exploreDataLinkList.push(dataExplorers[i]);
                             self.exploreDataLinkList.sort(function(left,right){

@@ -174,9 +174,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, cxtModel)
         self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
         self.exploreDataLinkList().forEach(function(ele){
         if(ele.serviceName === "LogAnalyticsUI"){
-            ele.name = "Log Explorer";
+            ele.name = getNlsString("LANDING_HOME_LOG_EXPLORER");
         }else if(ele.serviceName === "TargetAnalytics"){
-            ele.name = "Data Explorer";
+            ele.name = getNlsString("LANDING_HOME_DATA_EXPLORER")
         }});
         self.exploreDataLinkList.sort(function(left,right){
             return left.name<=right.name?-1:1;
