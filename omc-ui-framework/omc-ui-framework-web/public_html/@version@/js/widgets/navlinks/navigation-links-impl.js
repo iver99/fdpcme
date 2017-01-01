@@ -190,6 +190,9 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                                 var aurl = analyzers[subindex].href;
                                 analyzerList.push({name: analyzers[subindex].name, href: aurl});
                             }
+                            analyzerList.sort(function(left,right){
+                                return left.name<=right.name?-1:1;
+                            })
                             self.visualAnalyzers(analyzerList);
                         }
                         //Check whether to show admin links, if discovered admin links is not null, then means user has admin privilege
