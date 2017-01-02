@@ -29,7 +29,7 @@ public class DashboardBuilderUtil_1150 extends DashboardBuilderUtil_1120  {
             widgetEl = getWidgetByName(driver, widgetName, index);
         }
         catch (InterruptedException e) {
-            driver.getLogger().info("context", e);
+            driver.getLogger().info("context "+ e);
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
