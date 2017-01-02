@@ -72,7 +72,7 @@ public class DashboardBuilderUtil_1100 extends DashboardBuilderUtil_190
     	moveWidget(driver, widgetName, 0, moveOption);
     }
     
-    private  WebElement getWidgetByName(WebDriver driver, String widgetName, int index) throws InterruptedException
+    protected WebElement getWidgetByName(WebDriver driver, String widgetName, int index) throws InterruptedException
     {
         if (widgetName == null) {
             return null;
@@ -98,7 +98,7 @@ public class DashboardBuilderUtil_1100 extends DashboardBuilderUtil_190
         return widget;
     }
     
-    private void focusOnWidgetHeader(WebDriver driver, WebElement widgetElement)
+    protected void focusOnWidgetHeader(WebDriver driver, WebElement widgetElement)
     {
         if (null == widgetElement) {
             driver.getLogger().info("Fail to find the widget element");

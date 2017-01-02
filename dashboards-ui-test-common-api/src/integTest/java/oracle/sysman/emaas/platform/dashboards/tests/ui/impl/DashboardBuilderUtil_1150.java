@@ -3,9 +3,13 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1150;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-
-public class DashboardBuilderUtil_1150 {
+public class DashboardBuilderUtil_1150 extends DashboardBuilderUtil_1120  {
     @Override
     public void removeWidget(WebDriver driver, String widgetName)
     {
@@ -15,6 +19,8 @@ public class DashboardBuilderUtil_1150 {
     @Override
     public void removeWidget(WebDriver driver, String widgetName, int index)
     {
+        driver.getLogger().info(
+                "DashboardBuilderUtil.removeWidget started for name=\"" + widgetName + "\"");
         Validator.notEmptyString("widgetName", widgetName);
         Validator.equalOrLargerThan0("index", index);
 
@@ -23,7 +29,7 @@ public class DashboardBuilderUtil_1150 {
             widgetEl = getWidgetByName(driver, widgetName, index);
         }
         catch (InterruptedException e) {
-            LOGGER.info("context", e);
+            driver.getLogger().info("context", e);
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
