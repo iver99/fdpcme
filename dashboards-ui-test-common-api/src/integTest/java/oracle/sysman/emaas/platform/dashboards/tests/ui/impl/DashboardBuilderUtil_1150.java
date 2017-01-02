@@ -14,7 +14,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
 
-public class DashBoardBuilderUtil_1150 extends DashboardBuilderUtil_1120  {
+public class DashboardBuilderUtil_1150 extends DashboardBuilderUtil_1120  {
     @Override
     public void removeWidget(WebDriver driver, String widgetName)
     {
