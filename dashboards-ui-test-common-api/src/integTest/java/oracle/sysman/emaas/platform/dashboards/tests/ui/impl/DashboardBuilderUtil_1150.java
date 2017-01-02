@@ -8,8 +8,13 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.*;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
+import org.testng.Assert;
 
-public class DashboardBuilderUtil_1150 extends DashboardBuilderUtil_1120  {
+public class DashBoardBuilderUtil_1150 extends DashboardBuilderUtil_1120  {
     @Override
     public void removeWidget(WebDriver driver, String widgetName)
     {
