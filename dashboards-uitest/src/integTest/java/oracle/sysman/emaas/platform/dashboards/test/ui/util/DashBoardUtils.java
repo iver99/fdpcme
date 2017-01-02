@@ -1,12 +1,17 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 
+import java.util.List;
+
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -217,8 +222,53 @@ public class DashBoardUtils
 		}
 	}
 
+	public static boolean verifyOpenInIconExist(WebDriver driver, String widgetName, int index)
+	{
+		//find the widget
+		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
+		driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
+		driver.takeScreenShot();
+
+		String titleTitlesLocator = String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
+		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(titleTitlesLocator));
+		if (tileTitles == null || tileTitles.size() <= index) {
+			throw new NoSuchElementException("Tile with title=" + widgetName + ", index=" + index + " is not found");
+		}
+		tileTitles.get(index).click();
+		driver.takeScreenShot();
+
+		//move the mouse to the title of the widget
+
+		driver.getLogger().info("Start to find widget with widgetName=" + widgetName + ", index=" + index);
+		WebElement widgetTitle = tileTitles.get(index);
+		if (widgetTitle == null) {
+			throw new NoSuchElementException("Widget with title=" + widgetName + ", index=" + index + " is not found");
+		}
+		driver.getLogger().info("Found widget with name=" + widgetName + ", index =" + index + " before opening widget link");
+		WebElement widgetDataExplore = widgetTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILEDATAEXPLORELOCATOR));
+		if (widgetDataExplore == null) {
+			throw new NoSuchElementException("Widget data explorer link for title=" + widgetName + ", index=" + index
+					+ " is not found");
+		}
+		driver.getLogger().info("Found widget configure button");
+		Actions builder = new Actions(driver.getWebDriver());
+		driver.getLogger().info("Now moving to the widget title bar");
+		builder.moveToElement(widgetTitle).perform();
+		driver.takeScreenShot();
+		driver.getLogger().info("and clicks the widget config button");
+		//		builder.moveToElement(widgetDataExplore).click().perform();
+		//		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		//		wait.until(ExpectedConditions.elementToBeClickable(widgetDataExplore));
+		//		widgetDataExplore.click();
+		//		driver.takeScreenShot();
+		return widgetDataExplore.isDisplayed();
+		//check if the Open In icon displayed or not
+	}
+
 	public static void verifyURL(WebDriver webdriver, String url)
 	{
+		webdriver.takeScreenShot();
+
 		String currurl = webdriver.getWebDriver().getCurrentUrl();
 
 		webdriver.getLogger().info("the origin url = " + currurl);
@@ -233,6 +283,8 @@ public class DashBoardUtils
 
 	public static void verifyURL_WithPara(WebDriver webdriver, String url)
 	{
+		webdriver.takeScreenShot();
+
 		String currurl = webdriver.getWebDriver().getCurrentUrl();
 
 		webdriver.getLogger().info("the origin url = " + currurl);
@@ -241,7 +293,7 @@ public class DashBoardUtils
 
 		webdriver.getLogger().info("the url want to compare = " + tmpurl);
 
-		Assert.assertTrue(tmpurl.contains(url));
+		Assert.assertTrue(tmpurl.contains(url), "Not open the expected url: " + url);
 	}
 
 	private static String trimUrlParameters(String url)

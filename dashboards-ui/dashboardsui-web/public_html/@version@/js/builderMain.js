@@ -60,6 +60,7 @@ requirejs.config({
             'uifwk/js/util/screenshot-util',
             'uifwk/js/util/typeahead-search',
             'uifwk/js/util/usertenant-util',
+            'uifwk/js/util/zdt-util',
             'uifwk/js/sdk/context-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
@@ -221,8 +222,8 @@ require(['knockout',
     {
         var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
-        require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
-        TargetSelectorUtils.registerComponents();
+        //require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
+        //TargetSelectorUtils.registerComponents();
         logger.initialize(logReceiver, 300000, 20000, 80, dfu.getUserTenant().tenantUser);
         // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
         // If you comment the line below, our current log calls will not be output!
@@ -244,11 +245,13 @@ require(['knockout',
                 viewModel:{require:'uifwk/js/widgets/brandingbar/js/brandingbar'},
                 template:{require:'text!uifwk/js/widgets/brandingbar/html/brandingbar.html'}
             });
-        }   
-        ko.components.register("df-datetime-picker",{
-            viewModel: {require: 'uifwk/js/widgets/datetime-picker/js/datetime-picker'},
-            template: {require: 'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
-        });
+        }
+        if(!ko.components.isRegistered('df-datetime-picker')) {
+            ko.components.register("df-datetime-picker",{
+                viewModel: {require: 'uifwk/js/widgets/datetime-picker/js/datetime-picker'},
+                template: {require: 'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
+            });
+        }
         /*ko.components.register("DF_V1_WIDGET_TEXT", {
             viewModel: textwidget,
             template: {require: 'text!./widgets/textwidget/textwidget.html'}
@@ -305,6 +308,12 @@ require(['knockout',
         var dsbId = dfu.getUrlParam("dashboardId");
         console.warn("TODO: validate valid dashboard id format");
 
+        ko.bindingHandlers.stopDataBinding = {
+            init: function(elem, valueAccessor) {
+                    var value = ko.unwrap(valueAccessor());
+                    return {controlsDescendantBindings: value};
+            }
+        };
 
         Builder.initializeFromCookie();
 
@@ -319,16 +328,26 @@ require(['knockout',
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
             new Builder.DashboardDataSource().loadDashboardData(dsbId, function (dashboard) {
-
-                var dashboardTitleModel = new DashboardTitleModel(dashboard);
-                ko.applyBindings(dashboardTitleModel, $("title")[0]);
-                var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dashboard);
-                var dashboardsetPanelsModel = new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
-                ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
-                ko.applyBindings(dashboardsetPanelsModel, document.getElementById('popUp-dialog'));
-                dashboardsetToolBarModel.initializeDashboardset();
-                $("#loading").hide();
-                $('#globalBody').show();
+                var targetSelectorNeeded;
+                if(dashboard.enableEntityFilter&&(dashboard.enableEntityFilter()==="TRUE" || dashboard.enableEntityFilter()==="GC")) {
+                    targetSelectorNeeded = true;
+                }else {
+                    targetSelectorNeeded = false;
+                }
+                Builder.requireTargetSelectorUtils(targetSelectorNeeded, function(TargetSelectorUtils) {
+                    if (TargetSelectorUtils) {
+                        TargetSelectorUtils.registerComponents();
+                    }
+                    var dashboardTitleModel = new DashboardTitleModel(dashboard);
+                    ko.applyBindings(dashboardTitleModel, $("title")[0]);
+                    var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dashboard);
+                    var dashboardsetPanelsModel = new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
+                    ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
+                    ko.applyBindings(dashboardsetPanelsModel, document.getElementById('popUp-dialog'));
+                    dashboardsetToolBarModel.initializeDashboardset();
+                    $("#loading").hide();
+                    $('#globalBody').show();
+                });
             }, function(e) {
                 console.log(e.errorMessage());
                 if (e.errorCode && e.errorCode() === 20001) {
@@ -337,7 +356,7 @@ require(['knockout',
                 }
             });
         });
-        });
+        //});
     }
 );
 

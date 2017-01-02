@@ -206,6 +206,51 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
+	public void testOpenITA_ServerPage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA: Application Server Analytics in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "performanceAnalyticsApplicationServer");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcitas/mw-analytics-war/html/mw-perf-dashboard.html");
+
+		webd.getLogger().info("Test opening ITA: Application Server Analytics in welcome page finished!!!");
+	}
+	
+	@Test
+	public void testOpenITA_ApPrefPage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA: Application Performance Analytics in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "applicationPerformanceAnalytic");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcitas/ap-analytics-war/html/ap-perf-analytics.html");
+
+		webd.getLogger().info("Test opening ITA: Application Performance Analytics in welcome page finished!!!");
+	}
+	
+	@Test
+	public void testOpenITA_AvailPage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA: Availability Analytics in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "availabilityAnalytics");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcitas/avail-analytics-war/html/avail-analytics-home.html");
+
+		webd.getLogger().info("Test opening ITA: Availability Analytics in welcome page finished!!!");
+	}
+	
+	@Test
 	public void testOpenITAPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());

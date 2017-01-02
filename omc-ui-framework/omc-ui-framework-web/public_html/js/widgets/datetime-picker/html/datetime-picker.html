@@ -15,7 +15,7 @@
                 <span data-bind="html: timeFilterInfo"></span>
             </div>
 
-            <div class="panel" style="display:inline-block; padding: 0px; margin: 0px;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none', beforeClose: setLastDatas}, attr: {id: 'panel_'+randomId}"> 
+            <div class="panel" style="display:inline-block; padding: 0px; margin: 0px;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none', beforeClose: setLastDatas}, click: function(data, event) {event.stopPropagation();return true;}, attr: {id: 'panel_'+randomId}"> 
                 <!-- left of panel -->
                 <div class="drawers" data-bind="style: {height: leftDrawerHeight}">
                 <div data-bind="attr: {id: 'drawers_'+randomId}, click: chooseTimePeriod">
@@ -47,7 +47,7 @@
 
                 <!-- right of panel-->
                 <!--<div class="pickerPanel" data-bind="visible: showRightPanel, attr: {id: 'pickerPanel_'+randomId}">-->
-                <div class="pickerPanel" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'pickerPanel_'+randomId}, css: pickerPanelCss">
+                <div class="pickerPanel" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'pickerPanel_'+randomId}, click: function(data, event) {event.stopPropagation();return true;}, css: pickerPanelCss">
 
                     <div class="lrControlRadios">
                         <span>
@@ -62,7 +62,7 @@
                         <select data-bind="ojComponent: {component: 'ojSelect', value: flexRelTimeOpt,
                             rootAttributes: {style: 'max-width: 108px;', id: 'flexRelTimeOpt_' + randomId}, 
                             optionChange: flexRelTimeOptChanged, disabled: lrCtrlVal()!=='flexRelTimeCtrl'}">
-                            <!-- ko if: shouldShowTimeLevel("second") -->
+                            <!-- ko if: (shouldShowTimeLevel("second") && hideTimeSelection() !== true && showTimeAtMillisecond === true) -->
                                 <!-- ko if: flexRelTimeVal() === 1 -->
                                     <option value="SECOND" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECOND"></option>
                                 <!-- /ko -->
@@ -70,7 +70,7 @@
                                     <option value="SECOND" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECONDS"></option>
                                 <!-- /ko -->
                             <!-- /ko -->
-                            <!-- ko if: shouldShowTimeLevel("minute") -->
+                            <!-- ko if: (shouldShowTimeLevel("minute") && hideTimeSelection() !== true) -->
                                 <!-- ko if: flexRelTimeVal() === 1 -->
                                     <option value="MINUTE" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTE"></option>
                                 <!-- /ko -->
@@ -78,7 +78,7 @@
                                     <option value="MINUTE" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTES"></option>
                                 <!-- /ko -->
                             <!-- /ko -->
-                            <!-- ko if: shouldShowTimeLevel("hour") -->
+                            <!-- ko if: (shouldShowTimeLevel("hour") && hideTimeSelection() !== true) -->
                                 <!-- ko if: flexRelTimeVal() === 1 -->
                                     <option value="HOUR" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOUR"></option>
                                 <!-- /ko -->
@@ -225,7 +225,7 @@
                     <!-- /ko -->
                     
                     <!-- pop up for time filter-->
-                    <div style="display: none; width: 560px; height: 499px; margin: auto; border: 1px solid #f0f0f0; background: #FFFFFF;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'timeFilter_'+randomId}">
+                    <div style="display: none; width: 560px; height: 499px; margin: auto; border: 1px solid #f0f0f0; background: #FFFFFF;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'timeFilter_'+randomId}, click: function(data, event) {event.stopPropagation();return true;}">
                         <!-- ko if: enableTimeFilter -->
                         <div style="padding-top: 15px;" data-bind="component: {name: 'time-filter', params: tfParams}"></div>
                         <!-- /ko -->

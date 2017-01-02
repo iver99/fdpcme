@@ -219,10 +219,17 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, cxtModel)
                 removeDelayTime: 10000});
             localStorage.deleteHomeDbd = false;
         }
-        
+        self.dataExploreBtnVisible = function(){
+              var _i = 0;
+              $.each(self.subscription, function(i, _item) {
+                  if( _item === 'LogAnalytics' || _item === 'ITAnalytics') _i++;
+              });
+              return _i === 2;
+        };
+        self.subscription = predata&&predata.sApplications ? predata.sApplications['applications'] : [];
         self.showTilesMsg = ko.observable(false);
         self.tilesMsg = ko.observable("");
-        self.showExploreDataBtn= ko.observable(true);
+        self.showExploreDataBtn = ko.observable(self.dataExploreBtnVisible());
         self.showSeachClear = ko.observable(false);
         self.tilesViewGridId = self.parentElementId+'gridtview';
         self.tilesViewListId = self.parentElementId+'listview';
@@ -570,7 +577,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, cxtModel)
 
         self.handleSortByChanged = function (context, valueParam) {
             var _preValue = valueParam.previousValue, _value = valueParam.value, _ts = self.dashboardsTS();
-            if ( valueParam.option === "value" && _value[0] !== _preValue[0] )
+            if ( valueParam.option === "value" )
             {
                 self.dsFactory.sortBy = _value[0];
                 if (valueParam.optionMetadata.writeback === 'shouldNotWrite')
@@ -690,7 +697,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, cxtModel)
 
         self.listNameRender = function (context)
         {
-            var _link = $(document.createElement('a')).addClass( "dbs-dsbnameele" )
+            var _dmodel = self.datasource['pagingDS'].getModelFromWindow(context.row.id);
+            var _link = $(document.createElement('a')).addClass( "dbs-dsbnameele" ).attr("href",_dmodel.get('buildPageUrl'))
                     .on('click', function(event) {
                         //prevent event bubble
                         event.stopPropagation();
