@@ -24,6 +24,7 @@ define([
 'uifwk/@version@/js/sdk/context-util-impl',
 'uifwk/@version@/js/resources/nls/uifwkCommonMsg',
 'uifwk/@version@/js/resources/nls/root/uifwkCommonMsg',
+'uifwk/@version@/js/util/zdt-util-impl',
 'uifwk/@version@/js/sdk/entity-object'
 ],
     function (ko, aboutVM, aboutTemplate, navVM, navTemplate, brandingVM, brandingTemplate, widgetsVM, widgetsTemplate, timefilterVM, timeFilterTemplate, timePickerVM, timePickerTemplate) {

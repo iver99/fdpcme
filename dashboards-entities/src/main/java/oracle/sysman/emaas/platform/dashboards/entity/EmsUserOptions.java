@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.MultitenantType;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
@@ -28,13 +30,13 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @IdClass(EmsUserOptionsPK.class)
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
-public class EmsUserOptions implements Serializable
+public class EmsUserOptions extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 8723513639667559582L;
 
 	@Id
 	@Column(name = "DASHBOARD_ID", nullable = false, length = 256)
-	Long dashboardId;
+	BigInteger dashboardId;
 	@Id
 	@Column(name = "USER_NAME", nullable = false, length = 128)
 	String userName;
@@ -49,10 +51,13 @@ public class EmsUserOptions implements Serializable
 
 	@Column(name = "EXTENDED_OPTIONS", length = 128)
 	String extendedOptions;
+	
+	@Column(name = "DELETED", nullable = false, length = 1)
+	private Boolean deleted;
 
 	public EmsUserOptions()
 	{
-
+		deleted = Boolean.FALSE;
 	}
 
 	/**
@@ -63,12 +68,20 @@ public class EmsUserOptions implements Serializable
 		return accessDate;
 	}
 
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
 	public Long getAutoRefreshInterval()
 	{
 		return autoRefreshInterval;
 	}
 
-	public Long getDashboardId()
+	public BigInteger getDashboardId()
 	{
 		return dashboardId;
 	}
@@ -105,7 +118,7 @@ public class EmsUserOptions implements Serializable
 		this.autoRefreshInterval = autoRefreshInterval;
 	}
 
-	public void setDashboardId(Long dashboardId)
+	public void setDashboardId(BigInteger dashboardId)
 	{
 		this.dashboardId = dashboardId;
 	}

@@ -2,7 +2,7 @@
  * Copyright (c) 2014 Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  */
-package oracle.sysman.emaas.platform.dashboards.ui.web;
+package oracle.sysman.emaas.platform.uifwk.nls.filter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

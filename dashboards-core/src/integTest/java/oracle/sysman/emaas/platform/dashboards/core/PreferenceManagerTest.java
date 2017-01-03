@@ -4,7 +4,6 @@ import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Preference;
-import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 
 import org.testng.Assert;
@@ -12,7 +11,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class PreferenceManagerTest
+public class PreferenceManagerTest extends BaseTest
 {
 
 	private static final long TENANT_ID = 0L;
@@ -32,7 +31,6 @@ public class PreferenceManagerTest
 	@BeforeClass
 	public void beforeClass() throws DashboardException
 	{
-		PersistenceManager.setTestEnv(true);
 		UserContext.setCurrentUser(TEST_USER);
 		pm = PreferenceManager.getInstance();
 		Preference p1 = new Preference();

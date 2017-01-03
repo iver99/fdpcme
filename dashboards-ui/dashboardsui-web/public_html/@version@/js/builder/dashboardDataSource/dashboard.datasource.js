@@ -33,7 +33,7 @@ define(['knockout',
             		successCallback && successCallback(self.dataSource[dashboardId].userOptions);
             	}, 
                 function (jqXHR, textStatus, errorThrown) {
-            		self[dashboardId].hasUserOptionInDB = false;
+            		self.dataSource[dashboardId].hasUserOptionInDB = false;
             		errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
             	});
             } else {
@@ -101,6 +101,22 @@ define(['knockout',
             } else {
             	self.dataSource[dashboardId].preference = undefined;
             }
+            
+            if (dsb && dsb.selectedSsData) {
+                var ssDataFormat = JSON.parse(dsb.selectedSsData);
+                var _hasNoSsDataBefore = !self.dataSource.savedSearchData;
+                if (_hasNoSsDataBefore) {
+                    self.dataSource.savedSearchData = ssDataFormat;
+                } else {
+                    ssDataFormat.forEach(function (ssItem) {
+                        self.dataSource.savedSearchData = updateNewestDataToObj(self.dataSource.savedSearchData, ssItem);
+                    });
+                }
+            } else {
+                //when first enter the fetch the set data will enter this
+                self.dataSource.savedSearchData = undefined;
+            }
+            
             if (dsb.selected) {
                 initializeDashboardAfterLoad(dsb.selected.id, kodsb.selected, dsb.selected);
             }
@@ -132,7 +148,42 @@ define(['knockout',
                 successCallback && successCallback(self.dataSource[dashboardId].dashboard);
             }
         };
-        
+
+        self.fetchSelDbdSsData = function (widgetId, successCallback, errorCallback) {
+            var foundSsDataInCache = false;
+            self.dataSource.savedSearchData.filter(function isMatched(cachedSsData) {
+                if (cachedSsData.id == widgetId) {
+                    foundSsDataInCache = true;
+                    successCallback && successCallback(cachedSsData);
+                }
+            });
+            if (!self.dataSource.savedSearchData || !foundSsDataInCache) {
+                //post request to savedsearch
+                var url = '/sso.static/savedsearch.search';
+                if (dfu.isDevMode()) {
+                    url = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint, 'search');
+                }
+                url += '/' + widgetId;
+                dfu.ajaxWithRetry(url, {
+                    type: 'get',
+                    dataType: "json",
+                    contentType: 'application/json',
+                    headers: dfu.getSavedSearchRequestHeader(),
+                    success: function (data) {
+                        if (successCallback) {
+                            self.dataSource.savedSearchData.push(data);
+                            successCallback && successCallback(data);
+                        }
+                    },
+                    error: function (e) {
+                        oj.Logger.error("Error to load savedsearch Data: " + e.responseText);
+                        if (errorCallback) {
+                            errorCallback(ko.mapping.fromJSON(e.responseText));
+                        }
+                    }
+                });
+            }
+        };
         
         
         self.updateDashboardData = function(dashboardId,dashboard,successCallback,errorCallback){
@@ -149,21 +200,22 @@ define(['knockout',
                     {
                         data['description'] = $("<div/>").html(data['description']).text();
                     }
-                    self.dataSource[dashboardId].dashboard=data;
-                    successCallback && successCallback(data);
+                    var kodsb = getKODashboardForUI(data);
+                    self.dataSource[dashboardId].dashboard=kodsb;
+                    successCallback && successCallback(self.dataSource[dashboardId].dashboard);
                }, 
                errorCallback);          
         };
         
-        self.duplicateDashboard = function(dashboard, successCallback, errorCallback) {
-            if(!self.dataSource[ko.unwrap(dashboard.id)]) {
-                self.dataSource[ko.unwrap(dashboard.id)] = {};
-            }
-            
+        self.duplicateDashboard = function(dashboard, successCallback, errorCallback) {            
             Builder.duplicateDashboard(dashboard,
                     function(data) {
-                        self.dataSource[ko.unwrap(dashboard.id)].dashboard = data;
-                        successCallback && successCallback(data);
+                        if (!self.dataSource[ko.unwrap(data.id)]) {
+                            self.dataSource[ko.unwrap(data.id)] = {};
+                        }
+                        var kodsb = getKODashboardForUI(data);
+                        self.dataSource[ko.unwrap(data.id)].dashboard = kodsb;
+                        successCallback && successCallback(self.dataSource[ko.unwrap(data.id)].dashboard);
                     },
                     function(e) {
                         errorCallback && errorCallback(e);
@@ -251,6 +303,20 @@ define(['knockout',
             return !0;
         };
         
+        function updateNewestDataToObj(obj,newestData) {
+            var replaceData = false;
+            obj.filter(function isMatched(oldData, index) {
+                if (oldData.name === newestData.name) {
+                    obj.splice(index, 1, newestData);
+                    replaceData = true;
+                }
+            });
+            if(!replaceData){
+                obj.push(newestData);
+            }
+            return obj;
+        }
+                
         //convert dashboard returned from datebase to knockout obaservable for UI use
         function getKODashboardForUI(data) {
             // If dashboad is single page app, success callback will be ignored

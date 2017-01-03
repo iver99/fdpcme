@@ -1,17 +1,17 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
+
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static org.testng.Assert.*;
 
 @Test(groups = {"s2"})
 public class DashboardTest {
@@ -21,8 +21,8 @@ public class DashboardTest {
     public void testValueOf() throws Exception {
         EmsDashboard from  = new EmsDashboard();
         from .setCreationDate(new Date());
-        from.setDashboardId(1L);
-        from.setDeleted(0L);
+        from.setDashboardId(BigInteger.ONE);
+        from.setDeleted(BigInteger.ZERO);
         from.setDescription("desc");
         from.setEnableDescription(1);
         from.setEnableTimeRange(1);
