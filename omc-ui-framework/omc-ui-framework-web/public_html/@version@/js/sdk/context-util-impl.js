@@ -998,7 +998,7 @@ define([
                         return;
                     }
                     var data = event.data;
-                    //Only handle received message for showing page level messages
+                    //Only handle received message for global context change
                     if (data && data.tag && data.tag === 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED') {
                         if ($.isFunction(callback)) {
                             callback(data);
@@ -1006,6 +1006,29 @@ define([
                     }
                 };
                 window.addEventListener("message", onCtxChange, false);
+            };
+            
+            /**
+             * Add event change listener for topology status change when it's opened or closed
+             *
+             * @param {Function} callback Callback function for the listener
+             *
+             * @returns
+             */
+            self.subscribeTopologyStatusChangeEvent = function(callback) {
+                function onTopologyStatusChange(event) {
+                    if (event.origin !== window.location.protocol + '//' + window.location.host) {
+                        return;
+                    }
+                    var data = event.data;
+                    //Only handle received message for topology status change when it's opened or closed
+                    if (data && data.tag && data.tag === 'EMAAS_OMC_TOPOLOGY_STATUS_UPDATED') {
+                        if ($.isFunction(callback)) {
+                            callback(data);
+                        }
+                    }
+                };
+                window.addEventListener("message", onTopologyStatusChange, false);
             };
 
             function afterBrandingBarInstantiated(callback) {
