@@ -1,0 +1,123 @@
+  SET FEEDBACK ON
+  SET SERVEROUTPUT ON
+  DEFINE TENANT_ID ='&1'
+DECLARE
+  V_CREATION_DATE                        TIMESTAMP(6);
+  V_LAST_MODIFICATION_DATE               TIMESTAMP(6);
+  V_LAST_MODIFIED_BY                     VARCHAR2(128 BYTE);
+  V_OWNER                                VARCHAR2(128 BYTE);
+  V_DASHBOARD_ID                         NUMBER(38,0);
+  V_TILE_ID                     NUMBER(38,0);
+  V_TITLE                       VARCHAR2(64 BYTE);
+  V_HEIGHT                      NUMBER(38,0);
+  V_WIDTH                       NUMBER(38,0);
+  V_IS_MAXIMIZED                NUMBER(1,0);
+  V_POSITION                    NUMBER(38,0);
+  V_WIDGET_UNIQUE_ID            VARCHAR2(64 BYTE);
+  V_WIDGET_NAME                 VARCHAR2(64 BYTE);
+  V_WIDGET_DESCRIPTION          VARCHAR2(256 BYTE);
+  V_WIDGET_GROUP_NAME           VARCHAR2(64 BYTE);
+  V_WIDGET_ICON                 VARCHAR2(1024 BYTE);
+  V_WIDGET_HISTOGRAM            VARCHAR2(1024 BYTE);
+  V_WIDGET_OWNER                VARCHAR2(128 BYTE);
+  V_WIDGET_CREATION_TIME        VARCHAR2(32 BYTE);
+  V_WIDGET_SOURCE               NUMBER(38,0);
+  V_WIDGET_KOC_NAME             VARCHAR2(256 BYTE);
+  V_WIDGET_VIEWMODE             VARCHAR2(1024 BYTE);
+  V_WIDGET_TEMPLATE             VARCHAR2(1024 BYTE);
+  V_PROVIDER_NAME               VARCHAR2(64 BYTE);
+  V_PROVIDER_VERSION            VARCHAR2(64 BYTE);
+  V_PROVIDER_ASSET_ROOT         VARCHAR2(64 BYTE);
+  V_TILE_ROW                    NUMBER(38,0);
+  V_TILE_COLUMN                 NUMBER(38,0);
+  V_TILE_TYPE                   NUMBER(38,0);
+  V_TILE_SUPPORT_TIMECONTROL    NUMBER(1,0);
+  V_TILE_LINKED_DASHBOARD       NUMBER(38,0);
+
+  V_PARAM_NAME                  EMS_DASHBOARD_TILE_PARAMS.PARAM_NAME%TYPE;
+  V_PARAM_TYPE                  EMS_DASHBOARD_TILE_PARAMS.PARAM_TYPE%TYPE;
+  V_PARAM_VALUE_STR             EMS_DASHBOARD_TILE_PARAMS.PARAM_VALUE_STR%TYPE;
+  V_PARAM_VALUE_NUM             EMS_DASHBOARD_TILE_PARAMS.PARAM_VALUE_NUM%TYPE;
+  V_PARAM_VALUE_TIMESTAMP       EMS_DASHBOARD_TILE_PARAMS.PARAM_VALUE_TIMESTAMP%TYPE;
+
+  CONST_NULL                       CONSTANT    CLOB:=null;
+  CONST_ORACLE                     CONSTANT    VARCHAR2(128 BYTE):='Oracle';
+  CONST_IS_SYSTEM                  CONSTANT    NUMBER:=1;
+
+  V_TENANT_ID             NUMBER(38,0);
+  V_TID                   NUMBER(38,0) := '&TENANT_ID';
+  v_count number;
+  v_count_37 number;
+CURSOR TENANT_CURSOR IS
+    SELECT DISTINCT TENANT_ID FROM EMS_DASHBOARD ORDER BY TENANT_ID;
+
+BEGIN
+  OPEN TENANT_CURSOR;
+  LOOP
+     IF (V_TID<>-1) THEN
+        V_TENANT_ID:=V_TID;
+     ELSE
+       FETCH TENANT_CURSOR INTO V_TENANT_ID;
+       EXIT WHEN TENANT_CURSOR%NOTFOUND;
+     END IF;
+        DELETE FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = V_TENANT_ID AND TILE_ID IN (121, 123, 128);
+    SELECT COUNT(*) INTO v_count FROM EMS_DASHBOARD_TILE WHERE TILE_ID = 129 AND TENANT_ID = V_TENANT_ID;
+    SELECT COUNT(*) INTO v_count_37 FROM EMS_DASHBOARD WHERE DASHBOARD_ID = 37 AND TENANT_ID = V_TENANT_ID;
+    IF v_count > 0 THEN
+       DBMS_OUTPUT.PUT_LINE('Orchestration OOB WIDGET  in tenant:'||V_TENANT_ID ||'has been added before, no need to do so');
+    ELSIF v_count_37 = 0 THEN
+        DBMS_OUTPUT.PUT_LINE(' There is no Dashboard 37 in tenant:'||V_TENANT_ID ||', no need to do so');
+    ELSE
+      V_TILE_ID                     := 129;
+      V_DASHBOARD_ID                := 37;
+      V_TITLE                       := 'Workflow Submission Details';
+      V_HEIGHT                      := 4;
+      V_WIDTH                       := 12;
+      V_IS_MAXIMIZED                := 0;
+      V_POSITION                    := 0;
+      V_WIDGET_UNIQUE_ID            := 5020;
+      V_WIDGET_NAME                 := 'Workflow Submission Details';
+      V_WIDGET_DESCRIPTION          := 'Orchestration';
+      V_WIDGET_GROUP_NAME           := 'Orchestration';
+      V_WIDGET_ICON                 := null;
+      V_WIDGET_HISTOGRAM            := null;
+      V_WIDGET_OWNER                := 'ORACLE';
+      V_WIDGET_CREATION_TIME        := to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"');
+      V_WIDGET_SOURCE               := 1;
+      V_WIDGET_KOC_NAME             := 'emcos-workflow-widgets';
+      V_WIDGET_VIEWMODE             := '/umbrellaWidget/js/umbrellaWidget.js';
+      V_WIDGET_TEMPLATE             := '/umbrellaWidget/html/umbrellaWidget.html';
+      V_PROVIDER_NAME               := 'CosUIService';
+      V_PROVIDER_VERSION            := '1.0';
+      V_PROVIDER_ASSET_ROOT         := 'assetRoot';
+      V_TILE_ROW                    := 6;
+      V_TILE_COLUMN                 := 0;
+      V_TILE_TYPE                   := 0;
+      V_TILE_SUPPORT_TIMECONTROL    := 1;
+      V_TILE_LINKED_DASHBOARD       := null;
+      V_CREATION_DATE             := SYS_EXTRACT_UTC(SYSTIMESTAMP);
+      V_LAST_MODIFICATION_DATE    := SYS_EXTRACT_UTC(SYSTIMESTAMP);
+      V_LAST_MODIFIED_BY          := CONST_ORACLE;
+      V_OWNER                     := CONST_ORACLE;
+      INSERT INTO EMS_DASHBOARD_TILE(TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+                                     WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,
+                                     WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT,TILE_ROW,TILE_COLUMN,
+                                     TYPE,WIDGET_SUPPORT_TIME_CONTROL,WIDGET_LINKED_DASHBOARD)
+      VALUES(V_TILE_ID,V_DASHBOARD_ID,V_CREATION_DATE,V_LAST_MODIFICATION_DATE,V_LAST_MODIFIED_BY,V_OWNER,V_TITLE,V_HEIGHT,V_WIDTH,V_IS_MAXIMIZED,V_POSITION,V_TENANT_ID,
+             V_WIDGET_UNIQUE_ID,V_WIDGET_NAME,V_WIDGET_DESCRIPTION,V_WIDGET_GROUP_NAME,V_WIDGET_ICON,V_WIDGET_HISTOGRAM,V_WIDGET_OWNER,V_WIDGET_CREATION_TIME,V_WIDGET_SOURCE,V_WIDGET_KOC_NAME,
+             V_WIDGET_VIEWMODE,V_WIDGET_TEMPLATE,V_PROVIDER_NAME,V_PROVIDER_VERSION,V_PROVIDER_ASSET_ROOT,V_TILE_ROW,V_TILE_COLUMN,V_TILE_TYPE,V_TILE_SUPPORT_TIMECONTROL,V_TILE_LINKED_DASHBOARD);
+       DBMS_OUTPUT.PUT_LINE('Orchestration OOB WIDGET WITH HAS BEEN ADDED SUCCESSFULLY! for tenant:'||V_TENANT_ID);
+    END IF;
+     IF (V_TID<>-1) THEN
+        EXIT;
+     END IF;
+  END LOOP;
+  CLOSE TENANT_CURSOR;
+  commit;
+  EXCEPTION
+    WHEN OTHERS THEN
+      ROLLBACK;
+      DBMS_OUTPUT.PUT_LINE('Failed to update the sql due to '||SQLERRM);
+      RAISE;
+  END;
+  /

@@ -297,7 +297,7 @@ define(['knockout',
             };
 
             if (loadImmediately) {
-                var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME());
+                var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME(), true);
                 var kocVM = tile.WIDGET_VIEWMODEL();
                 if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                     kocVM = assetRoot + kocVM;
