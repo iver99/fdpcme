@@ -130,7 +130,6 @@ define(['knockout',
                 }
                 return false;
             };
-          
 
             self.appendNewTile = function(name, description, width, height, widget) {
                 if (widget) {
@@ -930,12 +929,16 @@ define(['knockout',
                 if(!self.userExtendedOptions.tsel) {
                     self.userExtendedOptions.tsel = {};
                 }
-
+                
+                if(!self.toolbarModel.zdtStatus()){
+                    return;
+                }
+                
                 self.userExtendedOptions.tsel.entityContext = targets;
+
                 self.saveUserFilterOptions(function(data) { //update userExtendedOptions
                     self.initUserFilterOptions();
                 });
-
             };
 
             self.entitySelectorInited = false;
@@ -996,7 +999,7 @@ define(['knockout',
                                 if (TargetSelectorUtils) {
                                     TargetSelectorUtils.registerComponents();
                                 }
-                                TargetSelectorUtils.setOMCContextFromSelectionContext(entityContext);
+                                TargetSelectorUtils.setOMCContextFromSelectionContext && TargetSelectorUtils.setOMCContextFromSelectionContext(entityContext);
                                 dtd.resolve(entityContext);
                             });
                         }else {
@@ -1030,7 +1033,7 @@ define(['knockout',
                             if (TargetSelectorUtils) {
                                 TargetSelectorUtils.registerComponents();
                             }
-                            TargetSelectorUtils.setOMCContextFromSelectionContext(entityContext);
+                            TargetSelectorUtils.setOMCContextFromSelectionContext && TargetSelectorUtils.setOMCContextFromSelectionContext(entityContext);
                             dtd.resolve(entityContext);
                         });
                         
@@ -1204,7 +1207,7 @@ define(['knockout',
                         }
                         self.timeSelectorModel.timeRangeChange(true);
                         
-                        if(!self.applyClickedByAutoRefresh()) {
+                        if(!self.applyClickedByAutoRefresh() && !self.toolbarModel.zdtStatus()) {
                             if(!self.userExtendedOptions.timeSel) {
                                 self.userExtendedOptions.timeSel = {};
                             }
@@ -1221,24 +1224,26 @@ define(['knockout',
                 }
             };
 
-            self.saveUserFilterOptions = function(succCallback) {
-                var userFilterOptions = {
-                    dashboardId: self.dashboard.id(),
-                    extendedOptions: JSON.stringify(self.userExtendedOptions),
-                    autoRefreshInterval: self.userExtendedOptions.autoRefresh.defaultValue
-                };
+            self.saveUserFilterOptions = function (succCallback) {
+                if (!self.toolbarModel.zdtStatus()) {
+                    var userFilterOptions = {
+                        dashboardId: self.dashboard.id(),
+                        extendedOptions: JSON.stringify(self.userExtendedOptions),
+                        autoRefreshInterval: self.userExtendedOptions.autoRefresh.defaultValue
+                    };
 
-                new Builder.DashboardDataSource().saveDashboardUserOptions(userFilterOptions, succCallback);
+                    new Builder.DashboardDataSource().saveDashboardUserOptions(userFilterOptions, succCallback);
+                }
             };
             
             self.autoRefreshChanged = function(interval) {
                 self.userExtendedOptions.autoRefresh = {"defaultValue": interval};                
                 self.saveUserFilterOptions();
-            }
+            };
             
             self.autoRefreshingPage = function() {
                 self.applyClickedByAutoRefresh(true);
-            }
+            };
         }
 
         Builder.registerModule(DashboardTilesViewModel, 'DashboardTilesViewModel');

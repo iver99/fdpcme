@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities;
 
+import java.math.BigInteger;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
@@ -18,7 +20,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class DashboardSetRowEntity implements RowEntity
 {
 	@JsonProperty("DASHBOARD_SET_ID")
-	private Long dashboardSetId;
+	private BigInteger dashboardSetId;
 
 	@JsonProperty("TENANT_ID")
 	private Long tenantId;
@@ -113,7 +115,7 @@ public class DashboardSetRowEntity implements RowEntity
 	/**
 	 * @return the dashboardSetId
 	 */
-	public Long getDashboardSetId()
+	public BigInteger getDashboardSetId()
 	{
 		return dashboardSetId;
 	}
@@ -180,7 +182,7 @@ public class DashboardSetRowEntity implements RowEntity
 	 * @param dashboardSetId
 	 *            the dashboardSetId to set
 	 */
-	public void setDashboardSetId(Long dashboardSetId)
+	public void setDashboardSetId(BigInteger dashboardSetId)
 	{
 		this.dashboardSetId = dashboardSetId;
 	}
