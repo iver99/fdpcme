@@ -848,13 +848,23 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             function showMessage(data) {
                 if (data) {
                     var message = {};
+                    self.hasMessages(true);   
                     message.id = data.id ? data.id : dfu.getGuid();
                     message.type = data.type;
                     message.summary = data.summary;
                     message.detail = data.detail;
                     message.category = data.category;
                     message.icon = imgBackground;
-                    if (data.type && data.type.toUpperCase() === 'ERROR') {
+                    if (data.type && data.type.toUpperCase() === 'CORRECT') {    
+                        hiddenMessages = [];
+                        displayMessages = [];
+                        self.messageList(displayMessages);
+                        self.hasHiddenMessages(false);
+                        self.hasMessages(false);     
+                        self.hiddenMessagesExpanded(true);
+                        return;
+                    }
+                    else if (data.type && data.type.toUpperCase() === 'ERROR') {
                         message.iconAltText = self.altTextError;
                         message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -78px;height:16px;";
                     }
