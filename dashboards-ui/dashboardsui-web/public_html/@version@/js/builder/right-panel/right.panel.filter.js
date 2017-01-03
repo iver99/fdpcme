@@ -101,33 +101,31 @@ define([
             
             self.enableEntityFilter.subscribe(function(val){
                 val = self.getFilterEnabledValue(val);
-                self.dashboard.enableEntityFilter(val);
                 //1. reset respectOMCApplicationContext flag and respectOMCEntityContext flag, get entity context info
                 //2. update/refresh value of entity seletor accordingly
                 //3. fire event to widgets
                 //
                 //1. reset respectOMCApplicationContext flag and respectOMCEntityContext flag, get entity context info
-                var entityContext = null;
                 var dashboardTilesViewModel = self.tilesViewModel;                
-                entityContext = dashboardTilesViewModel.getEntityContext(dashboardTilesViewModel, val);
-                
-                //show/hide GC bar accordingly
-                var headerWrapper = $("#headerWrapper")[0];
-                var headerViewModel =  null;
-                if(headerWrapper) {
-                    headerViewModel = ko.dataFor(headerWrapper);
-                }
-                if(val === "GC") {
-                    headerViewModel.brandingbarParams.showGlobalContextBanner(true);
-                }else {
-                    headerViewModel.brandingbarParams.showGlobalContextBanner(false);
-                }
-                
-                //2. update/refresh value of entity seletor accordingly
-                //to do... check if updating inputCriteria updates entity selector
-                entityContext && dashboardTilesViewModel.targets(entityContext);
-                //3. fire event to widgets
-                dashboardTilesViewModel.timeSelectorModel.timeRangeChange(true);
+                $.when(dashboardTilesViewModel.getEntityContext(dashboardTilesViewModel, val)).done(function(entityContext) {
+                    self.dashboard.enableEntityFilter(val);
+                    //show/hide GC bar accordingly
+                    var headerWrapper = $("#headerWrapper")[0];
+                    var headerViewModel =  null;
+                    if(headerWrapper) {
+                        headerViewModel = ko.dataFor(headerWrapper);
+                    }
+                    if(val === "GC") {
+                        headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                    }else {
+                        headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                    }
+
+                    //2. update/refresh value of entity seletor accordingly
+                    entityContext && dashboardTilesViewModel.targets(entityContext);
+                    //3. fire event to widgets
+                    dashboardTilesViewModel.timeSelectorModel.timeRangeChange(true);
+                });
             });
             
             self.enableTimeRangeFilter.subscribe(function(val){
@@ -260,7 +258,7 @@ define([
                     return;
                 }
                 var fieldsToUpdate = {
-                    "enableEntityFilter": self.dashboard.enableEntityFilter(),
+                    "enableEntityFilter": self.getFilterEnabledValue(self.enableEntityFilter()),
                     "extendedOptions": JSON.stringify(self.extendedOptions),
                     "enableTimeRange": self.dashboard.enableTimeRange()
                 };

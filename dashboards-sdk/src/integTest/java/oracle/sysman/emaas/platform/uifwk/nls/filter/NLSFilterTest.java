@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
  
-package oracle.sysman.emaas.platform.dashboards.ui.web;
+package oracle.sysman.emaas.platform.uifwk.nls.filter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

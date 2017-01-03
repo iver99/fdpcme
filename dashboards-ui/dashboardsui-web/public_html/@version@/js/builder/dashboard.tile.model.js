@@ -130,7 +130,6 @@ define(['knockout',
                 }
                 return false;
             };
-          
 
             self.appendNewTile = function(name, description, width, height, widget) {
                 if (widget) {
@@ -413,7 +412,8 @@ define(['knockout',
                     if(isResizing) {
                         $('#globalBody').addClass('none-user-select');
                         self.resizingTile(ko.dataFor(targetHandler.closest('.dbd-widget')[0]));
-                        self.resizingOptions({mode:resizeMode});
+                        var changedingTarget=targetHandler.closest('.dbd-widget');
+                        self.resizingOptions({mode:resizeMode,containerTop:changedingTarget.offset().top,containerLeft:changedingTarget.offset().left});
                         self.beforeResizeWidth = self.resizingTile().cssWidth();
                         self.beforeResizeHeight = self.resizingTile().cssHeight();
                         self.currentWigedtWidth(self.resizingTile().cssWidth());
@@ -929,14 +929,19 @@ define(['knockout',
                 if(!self.userExtendedOptions.tsel) {
                     self.userExtendedOptions.tsel = {};
                 }
-
+                
+                if(!self.toolbarModel.zdtStatus()){
+                    return;
+                }
+                
                 self.userExtendedOptions.tsel.entityContext = targets;
+
                 self.saveUserFilterOptions(function(data) { //update userExtendedOptions
                     self.initUserFilterOptions();
                 });
-
             };
 
+            self.entitySelectorInited = false;
             self.selectionMode = ko.observable("byCriteria");
             self.returnMode = ko.observable('criteria');
             self.dropdownInitialLabel = ko.observable(getNlsString("DBS_BUILDER_ALL_ENTITIES"));
@@ -954,79 +959,100 @@ define(['knockout',
                     self.returnFromPageTsel(targets);
             };
             
-            self.initializedCallback = function() {
-                require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
-                    $.when(TargetSelectorUtils.getCriteriaFromOmcContext().done(function (inputCriteria) {
-                        if (inputCriteria) {
-                            var selectionContext = {criteria: inputCriteria};
-                            self.targets(selectionContext);
-                        }
-                        for(var i=0; i<self.dashboard.tiles().length; i++) {
-                            var tile = self.dashboard.tiles()[i]; 
-                            tile.dashboardItemChangeEvent.targets = self.targets();
-                        }
-                        TargetSelectorUtils.setTargetSelectionContext("tsel_" + self.dashboard.id(), self.targets());
-                    }));
-                });
+            self.initializedCallback = function() {               
+                if(self.entitySelectorInited) {
+                   return;
+                }                
+                //apply criteriaList to widgets at load time
+                for(var i=0; i<self.dashboard.tiles().length; i++) {
+                    var tile = self.dashboard.tiles()[i]; 
+                    tile.dashboardItemChangeEvent.targets = self.targets();
+                }
+                self.entitySelectorInited = true;
             };
             
-            var initTargets = null;
-            
             self.getEntityContext = function(dashboardTilesViewModel, enableEntityFilterVal) {
-                var entityContext = null;
-                var val = enableEntityFilterVal;
-                if(ko.unwrap(dashboardInst.type)  === "SET") { //Do not respect GC in dashboard set
-                    if(val === "GC") {
-                        val = "TRUE";
-                    }
-                }                
-                if(val === "GC") { //Respect entity context in global context
-                    //Set both of respectOMCApplicationContext and respectOMCEntityContext to true
-                    ctxUtil.respectOMCApplicationContext(true);
-                    ctxUtil.respectOMCEntityContext(true);
-                    entityContext = (omcContext.composite && omcContext.composite.compositeMEID) ? omcContext.composite.compositeMEID : null;
-                    //Use dashboard saved entity context if there's no entity context in URL
-                    if(entityContext === null) {
+                return $.Deferred(function(dtd) {
+                    var entityContext = null;
+                    var val = enableEntityFilterVal;
+                    if(ko.unwrap(dashboardInst.type)  === "SET") { //Do not respect GC in dashboard set
+                        if(val === "GC") {
+                            val = "TRUE";
+                        }
+                    }                
+                    if(val === "GC") { //Respect entity context in global context
+                        //Set both of respectOMCApplicationContext and respectOMCEntityContext to true
+                        ctxUtil.respectOMCApplicationContext(true);
+                        ctxUtil.respectOMCEntityContext(true);
+                        entityContext = (omcContext.composite && omcContext.composite.compositeMEID) ? omcContext.composite.compositeMEID : null;
+                        //Use dashboard saved entity context if there's no entity context in URL
+                        if(entityContext === null) {
+                            if(dashboardTilesViewModel.userTsel && dashboardTilesViewModel.userExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.userExtendedOptions.tsel)) {
+                                entityContext = dashboardTilesViewModel.userExtendedOptions.tsel.entityContext;
+                            }else if(self.extendedOptions && !$.isEmptyObject(self.extendedOptions.tsel)) {
+                                entityContext = self.extendedOptions.tsel.entityContext;
+                                dashboardTilesViewModel.userExtendedOptions.tsel = {};
+                            }
+                            //Set global entity context using dashboard save entity context in this case
+                            //convert json criteria to compositeMEID 
+                            Builder.requireTargetSelectorUtils(true, function(TargetSelectorUtils) {
+                                if (TargetSelectorUtils) {
+                                    TargetSelectorUtils.registerComponents();
+                                }
+                                TargetSelectorUtils.setOMCContextFromSelectionContext && TargetSelectorUtils.setOMCContextFromSelectionContext(entityContext);
+                                dtd.resolve(entityContext);
+                            });
+                        }else {
+                            //convert compositeMEID to json criteria
+                            Builder.requireTargetSelectorUtils(true, function(TargetSelectorUtils) {
+                                if (TargetSelectorUtils) {
+                                    TargetSelectorUtils.registerComponents();
+                                }
+                                $.when(TargetSelectorUtils.getCriteriaFromOmcContext()).done(function (criteria) {
+                                    entityContext = {criteria: criteria};
+                                    dtd.resolve(entityContext);
+                                });
+                            });                            
+                        }
+
+                    }else if(val === "TRUE") { //Use dashboard saved entity context
+                        //Set both of respectOMCApplicationContext and respectOMCEntityContext to false
+                        ctxUtil.respectOMCApplicationContext(false);
+                        ctxUtil.respectOMCEntityContext(false);
                         if(dashboardTilesViewModel.userTsel && dashboardTilesViewModel.userExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.userExtendedOptions.tsel)) {
                             entityContext = dashboardTilesViewModel.userExtendedOptions.tsel.entityContext;
-                        }else if(self.extendedOptions && !$.isEmptyObject(self.extendedOptions.tsel)) {
-                            entityContext = self.extendedOptions.tsel.entityContext;
+                        }else if(dashboardTilesViewModel.dashboardExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.dashboardExtendedOptions.tsel)) {
+                            entityContext = dashboardTilesViewModel.dashboardExtendedOptions.tsel.entityContext;
                             dashboardTilesViewModel.userExtendedOptions.tsel = {};
+                        }else {
+                            entityContext = {"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"};
                         }
-                        //Set global entity context using dashboard save entity context in this case
-                        //to do.... how to convert json criteria to compositeMEID 
+                        //set non-globalcontext
+                        //use saved JSON criteria to set compositeMEID
+                        Builder.requireTargetSelectorUtils(true, function(TargetSelectorUtils) {
+                            if (TargetSelectorUtils) {
+                                TargetSelectorUtils.registerComponents();
+                            }
+                            TargetSelectorUtils.setOMCContextFromSelectionContext && TargetSelectorUtils.setOMCContextFromSelectionContext(entityContext);
+                            dtd.resolve(entityContext);
+                        });
+                        
+                    }else if(val === "FALSE") { //Do not use entity context either from dashboard or from global context
+                        //No entity context in this case, widgets should use their own entity context
+                        //Set both of respectOMCApplicationContext and respectOMCEntityContext to false
+                        ctxUtil.respectOMCApplicationContext(false);
+                        ctxUtil.respectOMCEntityContext(false);
+                        entityContext = null;
+                        //set non-global entity conctext to null
+                        ctxUtil.setCompositeMeId(null);
+                        dtd.resolve(entityContext);
                     }
-                    
-                }else if(val === "TRUE") { //Use dashboard saved entity context
-                    //Set both of respectOMCApplicationContext and respectOMCEntityContext to false
-                    ctxUtil.respectOMCApplicationContext(false);
-                    ctxUtil.respectOMCEntityContext(false);
-                    if(dashboardTilesViewModel.userTsel && dashboardTilesViewModel.userExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.userExtendedOptions.tsel)) {
-                        entityContext = dashboardTilesViewModel.userExtendedOptions.tsel.entityContext;
-                    }else if(dashboardTilesViewModel.dashboardExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.dashboardExtendedOptions.tsel)) {
-                        entityContext = dashboardTilesViewModel.dashboardExtendedOptions.tsel.entityContext;
-                        dashboardTilesViewModel.userExtendedOptions.tsel = {};
-                    }else {
-                        entityContext = {"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"};
-                    }
-                    //set non-globalcontext
-                    //to do... how to use saved JSON criteria to set compositeMEID
-                    
-                }else if(val === "FALSE") { //Do not use entity context either from dashboard or from global context
-                    //No entity context in this case, widgets should use their own entity context
-                    //Set both of respectOMCApplicationContext and respectOMCEntityContext to false
-                    ctxUtil.respectOMCApplicationContext(false);
-                    ctxUtil.respectOMCEntityContext(false);
-                    entityContext = null;
-                    //set non-global entity conctext to null
-                    ctxUtil.setCompositeMeId(null);
-                }
-                
-                return entityContext;
+                });
             }
             
-            initTargets = self.getEntityContext(self, self.dashboard.enableEntityFilter());
-            initTargets && self.targets(initTargets);
+            $.when(self.getEntityContext(self, self.dashboard.enableEntityFilter())).done(function(initTargets) {
+                initTargets && self.targets(initTargets);
+            });
             
 
             var timeSelectorChangelistener = ko.computed(function(){
@@ -1181,7 +1207,7 @@ define(['knockout',
                         }
                         self.timeSelectorModel.timeRangeChange(true);
                         
-                        if(!self.applyClickedByAutoRefresh()) {
+                        if(!self.applyClickedByAutoRefresh() && !self.toolbarModel.zdtStatus()) {
                             if(!self.userExtendedOptions.timeSel) {
                                 self.userExtendedOptions.timeSel = {};
                             }
@@ -1198,24 +1224,26 @@ define(['knockout',
                 }
             };
 
-            self.saveUserFilterOptions = function(succCallback) {
-                var userFilterOptions = {
-                    dashboardId: self.dashboard.id(),
-                    extendedOptions: JSON.stringify(self.userExtendedOptions),
-                    autoRefreshInterval: self.userExtendedOptions.autoRefresh.defaultValue
-                };
+            self.saveUserFilterOptions = function (succCallback) {
+                if (!self.toolbarModel.zdtStatus()) {
+                    var userFilterOptions = {
+                        dashboardId: self.dashboard.id(),
+                        extendedOptions: JSON.stringify(self.userExtendedOptions),
+                        autoRefreshInterval: self.userExtendedOptions.autoRefresh.defaultValue
+                    };
 
-                new Builder.DashboardDataSource().saveDashboardUserOptions(userFilterOptions, succCallback);
+                    new Builder.DashboardDataSource().saveDashboardUserOptions(userFilterOptions, succCallback);
+                }
             };
             
             self.autoRefreshChanged = function(interval) {
                 self.userExtendedOptions.autoRefresh = {"defaultValue": interval};                
                 self.saveUserFilterOptions();
-            }
+            };
             
             self.autoRefreshingPage = function() {
                 self.applyClickedByAutoRefresh(true);
-            }
+            };
         }
 
         Builder.registerModule(DashboardTilesViewModel, 'DashboardTilesViewModel');

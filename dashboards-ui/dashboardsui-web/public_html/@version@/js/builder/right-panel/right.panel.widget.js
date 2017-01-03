@@ -94,7 +94,7 @@ function (ko, $, oj, dfu) {
         self.keywordInput.subscribe(function () {
             self.keyword(self.keywordInput());
             self.searchWidgetsClicked();
-            setInputClearIcon()
+            setInputClearIcon();
         });
         
         self.searchWidgetsInputKeypressed = function (e, d) {
@@ -106,6 +106,7 @@ function (ko, $, oj, dfu) {
             return true;
         };
         self.searchWidgetsClicked = function () {
+            setInputClearIcon();
             self.loadWidgets();
         };
 
