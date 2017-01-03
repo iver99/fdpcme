@@ -15,11 +15,12 @@ define(['knockout',
         'builder/right-panel/right.panel.filter',
         'builder/right-panel/right.panel.widget',
         'builder/right-panel/right.panel.edit',
+        'uifwk/js/util/zdt-util',
         'jqueryui',
         'builder/builder.core',
         'builder/widget/widget.model'
     ],
-    function(ko, $, dfu, mbu, uiutil, oj, ed, ssu, rpc, rpf, rpw,rpe) {
+    function(ko, $, dfu, mbu, uiutil, oj, ed, ssu, rpc, rpf, rpw,rpe,zdtUtilModel) {
         function ResizableView($b) {
             var self = this;
 
@@ -68,7 +69,6 @@ define(['knockout',
                     $b.triggerBuilderResizeEvent('uifwk-common-alta.css loaded');
                 };
             }
-
             self.initialize();
         }
 
@@ -113,6 +113,12 @@ define(['knockout',
             self.isOobDashboardset=dashboardsetToolBarModel.isOobDashboardset; 
             self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
             self.maximized = ko.observable(false);
+            var zdtUtil = new zdtUtilModel();
+            self.zdtStatus = ko.observable(false);
+            zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
+                self.zdtStatus(isUnderPlannedDowntime);
+//                self.zdtStatus(true)
+            });
 
             self.loadToolBarModel = function(toolBarModel,_$b){
                 self.toolBarModel = toolBarModel;
@@ -145,7 +151,7 @@ define(['knockout',
             };
           
             self.initialize = function() {
-                    if (self.isMobileDevice === 'true' || self.isOobDashboardset()) {
+                    if (self.isMobileDevice === 'true' || self.isOobDashboardset() || self.zdtStatus()) {
                         self.rightPanelControl.completelyHidden(true);
                         self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
                     } else {
@@ -173,6 +179,7 @@ define(['knockout',
 
 
                     self.initEventHandlers();
+                    
                     if(self.rightPanelControl.completelyHidden() === false) { //load widgets only when right panel is editable
                         self.rightPanelWidget.loadWidgets();
                     }
@@ -215,7 +222,7 @@ define(['knockout',
 
             self.tileRestoredHandler = function() {
                 self.maximized(false);
-                if(self.isMobileDevice !== 'true' && !self.isOobDashboardset()) {
+                if(self.isMobileDevice !== 'true' && !self.isOobDashboardset() && !self.zdtStatus()) {
                     self.rightPanelControl.completelyHidden(false);
                 }
 
@@ -232,11 +239,17 @@ define(['knockout',
                 }
             };
             
+            self.zdtStatus.subscribe(function (newZdtStatus) {
+                if (newZdtStatus) {
+                    self.rightPanelControl.completelyHidden(true);
+                    self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
+                }
+            });
+            
             function resetRightPanelWidth() {
                 $('.dbd-left-panel-show').css('width', '320px');
                 $('.dbd-left-panel-hide').css('width', '0');
             }
-          
         }
 
         Builder.registerModule(RightPanelModel, 'RightPanelModel');
