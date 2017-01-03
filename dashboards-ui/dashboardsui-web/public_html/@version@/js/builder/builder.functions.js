@@ -503,5 +503,80 @@ define(['knockout',
             }
         }
         Builder.registerFunction(requireTargetSelectorUtils, "requireTargetSelectorUtils");
+        
+        function eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile) {
+            var tileid=tile.tileId();
+            var clientGuid=tile.clientGuid;
+            var el = $($("#dashboard-tile-widget-template").text());
+            var wgtelem=$(document.createElement('div'));
+            wgtelem.css({
+                'z-index': -300
+            });
+            wgtelem.attr('id', 'wgt'+clientGuid);
+            wgtelem.append(el);
+            document.body.appendChild(wgtelem[0]);
+
+            var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME());
+            var kocVM = tile.WIDGET_VIEWMODEL();
+            if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
+                kocVM = assetRoot + kocVM;
+            }
+            var kocTemplate = tile.WIDGET_TEMPLATE();
+            if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
+                kocTemplate = assetRoot + kocTemplate;
+            }
+            Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
+                    ko.applyBindings(tile, wgtelem[0]);
+
+            //$("#tile"+clientGuid).find(".dbd-tile-widget-wrapper")[0].append($includingEl);
+        }
+        Builder.registerFunction(eagerLoadDahshboardSingleTileAtPageLoad, "eagerLoadDahshboardSingleTileAtPageLoad");
+        
+        function eagerLoadDahshboardTilesAtPageLoad(dfu, ko, mode, timeSelector, targets) {
+            var dds = new Builder.DashboardDataSource().dataSource;
+            for (var prop in dds) {
+                if (!dds[prop].dashboard || !dds[prop].dashboard.tiles) {
+                    continue;
+                }
+                var dashboard = dds[prop].dashboard;
+                if (dashboard.tiles && dashboard.tiles() &&dashboard.tiles().length > 0){
+                    for (var i=0;i<dashboard.tiles().length;i++){
+                        var tile=dashboard.tiles()[i];
+                        
+                        Builder.initializeTileAfterLoad(mode, dashboard, tile, timeSelector, targets, true);
+                        Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);
+                    }
+                }
+                break;
+            }
+        }
+        Builder.registerFunction(eagerLoadDahshboardTilesAtPageLoad, "eagerLoadDahshboardTilesAtPageLoad");
+        
+        function attachEagerLoadedDahshboardSingleTileAtPageLoad(tile, appendToElem) {
+            var clientGuid=tile.clientGuid;
+            var wgtelem=$("#wgt"+clientGuid);
+            wgtelem.detach().appendTo(appendToElem);
+        }
+        Builder.registerFunction(attachEagerLoadedDahshboardSingleTileAtPageLoad, "attachEagerLoadedDahshboardSingleTileAtPageLoad");
+        
+        function attachEagerLoadedDahshboardTilesAtPageLoad() {
+            var dds = new Builder.DashboardDataSource().dataSource;
+            for (var prop in dds) {
+                if (!dds[prop].dashboard || !dds[prop].dashboard.tiles) {
+                    continue;
+                }
+                var dashboard = dds[prop].dashboard;
+                if (dashboard.tiles && dashboard.tiles() &&dashboard.tiles().length > 0){
+                    for(var i=0;i<dashboard.tiles().length;i++){
+                        var tile=dashboard.tiles()[i];
+                        Builder.attachEagerLoadedDahshboardSingleTileAtPageLoad(tile, $("#tile"+clientGuid).find(".dbd-tile-widget-wrapper")[0]);
+                    }
+                }
+                /*var el = $($("#dashboard-tile-widget-template").text());
+                el.appendTo($("#dashboard-" + dashboard.id()).find('.dbd-tile-widget-wrapper')[0]);*/
+                break;
+            }
+        }
+        Builder.registerFunction(attachEagerLoadedDahshboardTilesAtPageLoad, "attachEagerLoadedDahshboardTilesAtPageLoad");
     }
 );

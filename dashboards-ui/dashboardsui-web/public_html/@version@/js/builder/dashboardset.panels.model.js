@@ -217,6 +217,11 @@ define([
                     var tilesViewModel = new Builder.DashboardTilesViewModel($b, dashboardsetToolBarModel.dashboardInst/*, tilesView, urlChangeView*/);
                     var toolBarModel = new Builder.ToolBarModel($b, options);
                     tilesViewModel.toolbarModel = toolBarModel;
+                    /*var wrapperEleemnt = $b.find('.dbd-tile-widget-wrapper');
+                    if (wrapperEleemnt) {
+                        var el = $($("#dashboard-tile-widget-template").text());
+                        el.appendTo(wrapperEleemnt[0]);
+                    }*/
 
                     //change dashboard name
                     toolBarModel.dashboardName.subscribe(function (dashboardName) {
@@ -242,7 +247,7 @@ define([
                             if (tile.type() === "TEXT_WIDGET") {
                                 Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.editor.tiles.deleteTile, Builder.isContentLengthValid);
                             } else {
-                                Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, true, dashboardsetToolBarModel.dashboardInst);
+                                //Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, true, dashboardsetToolBarModel.dashboardInst);
                                 Builder.getTileConfigure(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, dashboardsetToolBarModel.dashboardInst);
                             }
                         }

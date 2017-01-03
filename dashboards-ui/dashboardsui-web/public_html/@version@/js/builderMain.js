@@ -197,6 +197,9 @@ requirejs.config({
     waitSeconds: 300
 });
 
+/**
+ * A top-level require call executed by the Application.
+ */
 require(['knockout',
     'jquery',
     'dfutil',
@@ -210,214 +213,174 @@ require(['knockout',
     function(ko, $, dfu,km) {
         ko.mapping = km;
         var dsbId = dfu.getUrlParam("dashboardId");
-        new Builder.DashboardDataSource().loadDashboardData(dsbId, function (dashboard) {
-            window.dashboardCache=dashboard;
-                if (dashboard.tiles && dashboard.tiles() &&dashboard.tiles().length > 0){
-                    for (var i=0;i<dashboard.tiles().length;i++){
-                        var tile=dashboard.tiles()[i];
-                        var tileid=tile.tileId();
-                        var clientGuid=tile.clientGuid;
-                        var el = $($("#dashboard-tile-widget-template").text());
-                        var wgtelem=$(document.createElement('div'));
-                        wgtelem.css({
-                            'z-index': -300
-                        });
-                        wgtelem.attr('id', 'wgt'+clientGuid);
-                        wgtelem.append(el);
-                        document.body.appendChild(wgtelem[0]);
-                        
-                        var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME());
-                        var kocVM = tile.WIDGET_VIEWMODEL();
-                        if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
-                            kocVM = assetRoot + kocVM;
-                        }
-                        var kocTemplate = tile.WIDGET_TEMPLATE();
-                        if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
-                            kocTemplate = assetRoot + kocTemplate;
-                        }
-                        Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
-                                ko.applyBindings(tile, wgtelem[0]);
-                        
-                        //$("#tile"+clientGuid).find(".dbd-tile-widget-wrapper")[0].append($includingEl);
-                    }
-                }
-            });
-    }
-);
+        var dashboard = null;
+        var mode = null, normalMode = null, tabletMode = null;
+        var timeSelectorModel = null;
+        var targets = ko.observable({"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"});
+        new Builder.DashboardDataSource().loadDashboardData(dsbId, function (kodb) {
+            dashboard = kodb;
+            normalMode = new Builder.NormalEditorMode();
+            tabletMode = new Builder.TabletEditorMode();
 
-/**
- * A top-level require call executed by the Application.
- */
-require(['knockout',
-    'jquery',
-    'dfutil',
-    'uifwk/js/util/df-util',
-    'uifwk/js/util/logging-util',
-    'ojs/ojcore',
-//    'dashboards/widgets/textwidget/js/textwidget',
-    'dashboards/dashboardhome-impl',
-//    'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils',
-    'jqueryui',
-    'common.uifwk',
-    'builder/builder.jet.partition',
-    'builder/builder.core',
-    'dashboards/dbstypeahead',
-    'builder/dashboardset.toolbar.model',
-    'builder/dashboardset.panels.model',
-    'builder/dashboardDataSource/dashboard.datasource'
-],
-    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, /*textwidget, */dashboardhome_impl/*, TargetSelectorUtils*/) // this callback gets executed when all required modules are loaded
-    {
-        var logger = new _emJETCustomLogger();
-        var logReceiver = dfu.getLogUrl();
-        //require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
-        //TargetSelectorUtils.registerComponents();
-        logger.initialize(logReceiver, 300000, 20000, 80, dfu.getUserTenant().tenantUser);
-        // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
-        // If you comment the line below, our current log calls will not be output!
-        logger.setLogLevel(oj.Logger.LEVEL_WARN);
-        
-        window.onerror = function (msg, url, lineNo, columnNo, error)
-        {
-            var msg = "Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo;
-            if(error.stack) {
-                msg = msg + ". Error: " + JSON.stringify(error.stack);
-            }
-            oj.Logger.error(msg, true);
-            
-            return false;
-        }
-
-        if (!ko.components.isRegistered('df-oracle-branding-bar')) {
-            ko.components.register("df-oracle-branding-bar",{
-                viewModel:{require:'uifwk/js/widgets/brandingbar/js/brandingbar'},
-                template:{require:'text!uifwk/js/widgets/brandingbar/html/brandingbar.html'}
-            });
-        }
-        if(!ko.components.isRegistered('df-datetime-picker')) {
-            ko.components.register("df-datetime-picker",{
-                viewModel: {require: 'uifwk/js/widgets/datetime-picker/js/datetime-picker'},
-                template: {require: 'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
-            });
-        }
-        /*ko.components.register("DF_V1_WIDGET_TEXT", {
-            viewModel: textwidget,
-            template: {require: 'text!./widgets/textwidget/textwidget.html'}
-        });*/
-
-        if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
-            ko.components.register("df-oracle-dashboard-list",{
-                viewModel:dashboardhome_impl,
-                template:{require:'text!/emsaasui/emcpdfui/dashboardhome.html'}
-            });
-        }
-
-        function DashboardTitleModel(dashboard) {
-            var self = this;
-            var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
-            self.builderTitle = dfu_model.generateWindowTitle(dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
-        }
-
-        function DashboardsetHeaderViewModel() {
-            var self = this;
-            self.userName = dfu.getUserName();
-            self.tenantName = dfu.getTenantName();
-            self.appId = "Dashboard";
-            self.brandingbarParams = {
-                userName: self.userName,
-                tenantName: self.tenantName,
-                appId: self.appId,
-                isAdmin:true,
-                showGlobalContextBanner: ko.observable(false)
-            };
-
-            $("#headerWrapper").on("DOMSubtreeModified", function() {
-                var height = $("#headerWrapper").height();
-                if (!self.headerHeight){
-                    self.headerHeight = height;
-                }
-                if (self.headerHeight === height){
-                    return;
-                }
-                var $visibleHeaderBar = $(".dashboard-content:visible .head-bar-container");
-                var $visibleRightDrawer = $(".dbd-left-panel:visible");
-                if ($visibleHeaderBar.length > 0 && ko.dataFor($visibleHeaderBar[0])) {
-                    var $b = ko.dataFor($visibleHeaderBar[0]).$b;
-                    $b && $b.triggerBuilderResizeEvent('header wrapper bar height changed');
-                }
-                if ($visibleRightDrawer.length > 0 && ko.dataFor($visibleRightDrawer[0])) {
-                    var $b = ko.dataFor($visibleRightDrawer[0]).$b;
-                    $b && $b.triggerBuilderResizeEvent('header wrapper bar height changed, right drawer resized');
-                }
-                self.headerHeight = height;
-            });
-        };
-
-        var dsbId = dfu.getUrlParam("dashboardId");
-        console.warn("TODO: validate valid dashboard id format");
-
-        ko.bindingHandlers.stopDataBinding = {
-            init: function(elem, valueAccessor) {
-                    var value = ko.unwrap(valueAccessor());
-                    return {controlsDescendantBindings: value};
-            }
-        };
-
-        Builder.initializeFromCookie();
-
-        $(document).ready(function () {
-            //Check if uifwk css file has been loaded already or not, if not then load it
-            if (!$('#dashboardMainCss').length) {
-                //Append uifwk css file into document head
-                $('head').append('<link id="dashboardMainCss" rel="stylesheet" href="/emsaasui/emcpdfui/@version@/css/dashboards-main.css" type="text/css"/>');
-            }
-
-            var headerViewModel = new DashboardsetHeaderViewModel();
-            ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
-
-            //new Builder.DashboardDataSource().loadDashboardData(dsbId, function (dashboard) {
-                dashboard=window.dashboardCache;
-                var targetSelectorNeeded;
-                if(dashboard.enableEntityFilter&&(dashboard.enableEntityFilter()==="TRUE" || dashboard.enableEntityFilter()==="GC")) {
-                    targetSelectorNeeded = true;
-                }else {
-                    targetSelectorNeeded = false;
-                }
-                Builder.requireTargetSelectorUtils(targetSelectorNeeded, function(TargetSelectorUtils) {
-                    if (TargetSelectorUtils) {
-                        TargetSelectorUtils.registerComponents();
-                    }
-                    var dashboardTitleModel = new DashboardTitleModel(dashboard);
-                    ko.applyBindings(dashboardTitleModel, $("title")[0]);
-                    var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dashboard);
-                    var dashboardsetPanelsModel = new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
-                    ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
-                    ko.applyBindings(dashboardsetPanelsModel, document.getElementById('popUp-dialog'));
-                    dashboardsetToolBarModel.initializeDashboardset();
-                    
-                    
-                    for(var i=0;i<dashboard.tiles().length;i++){
-                        var tile=dashboard.tiles()[i];
-                        var tileid=tile.tileId();
-                        var clientGuid=tile.clientGuid;
-                        var wgtelem=$("#wgt"+clientGuid);
-                        wgtelem.detach().appendTo($("#tile"+clientGuid).find(".dbd-tile-widget-wrapper")[0]);
-                    }
-                        
-                        
-                        
-                    $("#loading").hide();
-                    $('#globalBody').show();
-                });
-            /*}, function(e) {
-                console.log(e.errorMessage());
-                if (e.errorCode && e.errorCode() === 20001) {
-                    oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
-                    location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href);
-                }
-            });*/
+            mode = Builder.isSmallMediaQuery() ? tabletMode : normalMode;
+            timeSelectorModel = new Builder.TimeSelectorModel();
+            Builder.eagerLoadDahshboardTilesAtPageLoad(dfu, ko, mode, timeSelectorModel, targets);
         });
-        //});
+
+        require(['uifwk/js/util/df-util',
+            'uifwk/js/util/logging-util',
+            'dashboards/dashboardhome-impl',
+            'jqueryui',
+            'common.uifwk',
+            'builder/builder.core',
+            'dashboards/dbstypeahead',
+            'builder/dashboardset.toolbar.model',
+            'builder/dashboardset.panels.model',
+            'builder/dashboardDataSource/dashboard.datasource'
+        ],
+            function(dfumodel, _emJETCustomLogger, dashboardhome_impl) // this callback gets executed when all required modules are loaded
+            {
+                var logger = new _emJETCustomLogger();
+                var logReceiver = dfu.getLogUrl();
+                //require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
+                //TargetSelectorUtils.registerComponents();
+                logger.initialize(logReceiver, 300000, 20000, 80, dfu.getUserTenant().tenantUser);
+                // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
+                // If you comment the line below, our current log calls will not be output!
+                logger.setLogLevel(oj.Logger.LEVEL_WARN);
+
+                window.onerror = function (msg, url, lineNo, columnNo, error)
+                {
+                    var msg = "Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo;
+                    if(error.stack) {
+                        msg = msg + ". Error: " + JSON.stringify(error.stack);
+                    }
+                    oj.Logger.error(msg, true);
+
+                    return false;
+                }
+
+                if (!ko.components.isRegistered('df-oracle-branding-bar')) {
+                    ko.components.register("df-oracle-branding-bar",{
+                        viewModel:{require:'uifwk/js/widgets/brandingbar/js/brandingbar'},
+                        template:{require:'text!uifwk/js/widgets/brandingbar/html/brandingbar.html'}
+                    });
+                }
+                if(!ko.components.isRegistered('df-datetime-picker')) {
+                    ko.components.register("df-datetime-picker",{
+                        viewModel: {require: 'uifwk/js/widgets/datetime-picker/js/datetime-picker'},
+                        template: {require: 'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
+                    });
+                }
+                /*ko.components.register("DF_V1_WIDGET_TEXT", {
+                    viewModel: textwidget,
+                    template: {require: 'text!./widgets/textwidget/textwidget.html'}
+                });*/
+
+                if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
+                    ko.components.register("df-oracle-dashboard-list",{
+                        viewModel:dashboardhome_impl,
+                        template:{require:'text!/emsaasui/emcpdfui/dashboardhome.html'}
+                    });
+                }
+
+                function DashboardTitleModel(dashboard) {
+                    var self = this;
+                    var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
+                    self.builderTitle = dfu_model.generateWindowTitle(dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
+                }
+
+                function DashboardsetHeaderViewModel() {
+                    var self = this;
+                    self.userName = dfu.getUserName();
+                    self.tenantName = dfu.getTenantName();
+                    self.appId = "Dashboard";
+                    self.brandingbarParams = {
+                        userName: self.userName,
+                        tenantName: self.tenantName,
+                        appId: self.appId,
+                        isAdmin:true,
+                        showGlobalContextBanner: ko.observable(false)
+                    };
+
+                    $("#headerWrapper").on("DOMSubtreeModified", function() {
+                        var height = $("#headerWrapper").height();
+                        if (!self.headerHeight){
+                            self.headerHeight = height;
+                        }
+                        if (self.headerHeight === height){
+                            return;
+                        }
+                        var $visibleHeaderBar = $(".dashboard-content:visible .head-bar-container");
+                        var $visibleRightDrawer = $(".dbd-left-panel:visible");
+                        if ($visibleHeaderBar.length > 0 && ko.dataFor($visibleHeaderBar[0])) {
+                            var $b = ko.dataFor($visibleHeaderBar[0]).$b;
+                            $b && $b.triggerBuilderResizeEvent('header wrapper bar height changed');
+                        }
+                        if ($visibleRightDrawer.length > 0 && ko.dataFor($visibleRightDrawer[0])) {
+                            var $b = ko.dataFor($visibleRightDrawer[0]).$b;
+                            $b && $b.triggerBuilderResizeEvent('header wrapper bar height changed, right drawer resized');
+                        }
+                        self.headerHeight = height;
+                    });
+                };
+
+                var dsbId = dfu.getUrlParam("dashboardId");
+                console.warn("TODO: validate valid dashboard id format");
+
+                ko.bindingHandlers.stopDataBinding = {
+                    init: function(elem, valueAccessor) {
+                            var value = ko.unwrap(valueAccessor());
+                            return {controlsDescendantBindings: value};
+                    }
+                };
+
+                Builder.initializeFromCookie();
+
+                $(document).ready(function () {
+                    //Check if uifwk css file has been loaded already or not, if not then load it
+                    if (!$('#dashboardMainCss').length) {
+                        //Append uifwk css file into document head
+                        $('head').append('<link id="dashboardMainCss" rel="stylesheet" href="/emsaasui/emcpdfui/@version@/css/dashboards-main.css" type="text/css"/>');
+                    }
+
+                    var headerViewModel = new DashboardsetHeaderViewModel();
+                    ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
+
+                    //new Builder.DashboardDataSource().loadDashboardData(dsbId, function (dashboard) {
+                        var targetSelectorNeeded;
+                        if(dashboard.enableEntityFilter&&(dashboard.enableEntityFilter()==="TRUE" || dashboard.enableEntityFilter()==="GC")) {
+                            targetSelectorNeeded = true;
+                        }else {
+                            targetSelectorNeeded = false;
+                        }
+                        Builder.requireTargetSelectorUtils(targetSelectorNeeded, function(TargetSelectorUtils) {
+                            if (TargetSelectorUtils) {
+                                TargetSelectorUtils.registerComponents();
+                            }
+                            var dashboardTitleModel = new DashboardTitleModel(dashboard);
+                            ko.applyBindings(dashboardTitleModel, $("title")[0]);
+                            var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dashboard);
+                            var dashboardsetPanelsModel = new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
+                            ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
+                            ko.applyBindings(dashboardsetPanelsModel, document.getElementById('popUp-dialog'));
+                            dashboardsetToolBarModel.initializeDashboardset();
+                            //Builder.attachEagerLoadedDahshboardTilesAtPageLoad();
+
+                            $("#loading").hide();
+                            $('#globalBody').show();
+                        });
+                    /*}, function(e) {
+                        console.log(e.errorMessage());
+                        if (e.errorCode && e.errorCode() === 20001) {
+                            oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
+                            location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href);
+                        }
+                    });*/
+                });
+                //});
+            }
+        );
     }
 );
 

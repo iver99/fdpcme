@@ -167,7 +167,14 @@ define(['knockout',
             if (!tile){
                 return;
             }
-
+            
+            // this avoids the tile to be initialized for the 2nd time
+            if (tile.initialized) {
+                return;
+            } else {
+                tile.initialized = true;
+            }
+            
             tile.shouldHide = ko.observable(false);
             tile.toBeOccupied = ko.observable(false);
 
@@ -297,7 +304,8 @@ define(['knockout',
             };
 
             if (loadImmediately) {
-                var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME());
+                //Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);
+                /*var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME());
                 var kocVM = tile.WIDGET_VIEWMODEL();
                 if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                     kocVM = assetRoot + kocVM;
@@ -306,7 +314,12 @@ define(['knockout',
                 if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                     kocTemplate = assetRoot + kocTemplate;
                 }
-                Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
+                Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);*/
+            }
+            
+            tile.loadEangerLoadedTile = function(element) {
+                Builder.attachEagerLoadedDahshboardSingleTileAtPageLoad(tile, $(element).find(".dbd-tile-widget-wrapper")[0]);
+                return "dbd-tile-widget-wrapper-loaded";
             }
         }
         Builder.registerFunction(initializeTileAfterLoad, 'initializeTileAfterLoad');
