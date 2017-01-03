@@ -103,7 +103,7 @@ define(['knockout',
             self.$b = $b;
             self.selectedContent = ko.observable();
             self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
-            self.rightPanelControl=new rpc.rightPanelControl(self.$b);
+            self.rightPanelControl=new rpc.rightPanelControl(self.$b,self.selectedContent);
             self.rightPanelFilter = new rpf.RightPanelFilterModel(self.$b, ko.unwrap(self.isDashboardSet));
             self.rightPanelWidget= new rpw.rightPanelWidget(self.$b);
             self.rightPanelEdit=new rpe.rightPanelEditModel(self.$b,self.dashboardsetToolBarModel);
