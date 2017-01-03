@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
@@ -538,12 +539,13 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashboardBuilderUtil.maximizeWidget(webd, "Host Logs Trend", 0);
 		DashboardBuilderUtil.restoreWidget(webd, "Host Logs Trend", 0);
 
-		//verify the edit/add button not displayed in the page
-		WebElement addButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Add Content']"));
-		Assert.assertFalse(addButton.isDisplayed(), "Add button be displayed in system dashboard set");
+		//verify the edit/add button not displayed in the page: [changed] element does not exist
+		List<WebElement> addButtons = webd.getWebDriver().findElements(By.xpath("//button[@title='Add Content']"));
+		Assert.assertFalse(addButtons != null && addButtons.size() > 0, "Unexpected: Add button exists in system dashboard set");
 
-		WebElement editButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));
-		Assert.assertFalse(editButton.isDisplayed(), "Edit button be displayed in system dashboard set");
+		List<WebElement> editButtons = webd.getWebDriver().findElements(By.xpath("//button[@title='Edit Settings']"));
+		Assert.assertFalse(editButtons != null && editButtons.size() > 0,
+				"Unexpected: Edit button exists in system dashboard set");
 	}
 
 	//test maxmize/restore widget in self created dashboard
@@ -846,7 +848,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		if (!url.substring(url.indexOf("emsaasui") + 9).contains(
-				"startTime=" + String.valueOf(StartTimeStamp) + "&endTime=" + String.valueOf(EndTimeStamp))) {
+				"startTime%3D" + String.valueOf(StartTimeStamp) + "%26endTime%3D" + String.valueOf(EndTimeStamp))) {
 			Assert.fail("not open the correct widget");
 		}
 	}
