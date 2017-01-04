@@ -29,6 +29,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public static final String NAV_LINK_TEXT_CS_LA = "Log Analytics";
 	public static final String NAV_LINK_TEXT_CS_IM = "Infrastructure Monitoring";
 	public static final String NAV_LINK_TEXT_CS_OCS = "Orchestration";
+	public static final String NAV_LINK_TEXT_CS_SECU = "Security";
 	//Visual Analyzers
 	public static final String NAV_LINK_TEXT_VA_ITA = "Analyze";
 	public static final String NAV_LINK_TEXT_VA_TA = "Search";
