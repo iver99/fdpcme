@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 
 import mockit.Expectations;
 import mockit.Mocked;
@@ -19,7 +20,7 @@ import org.testng.annotations.Test;
 public class AdditionalDataFilterTest {
     @Test(groups = { "s2" })
     public void testDoFilter(@Mocked final FilterChain chain, @Mocked final HttpServletRequest httpReq, @Mocked final HttpServletResponse response,
-                             @Mocked final DashboardDataAccessUtil dashboardDataAccessUtil) throws Exception
+                             @Mocked final ByteArrayOutputStream anyByteArrayOutputStream, @Mocked final DashboardDataAccessUtil dashboardDataAccessUtil) throws Exception
     {
         final AdditionalDataFilter filter = new AdditionalDataFilter();
         new Expectations() {
@@ -28,8 +29,10 @@ public class AdditionalDataFilterTest {
                 result = "tenant.user";
                 httpReq.getParameter(anyString);
                 result = "1";
+                anyByteArrayOutputStream.toString();
+                result = "////TODO////";
                 DashboardDataAccessUtil.getDashboardData(anyString, anyString, anyString, (BigInteger) any);
-                result = "{dashboard data}";
+                result = "{value: 123abc??$^-[]|(&!~@#%^&*+{}<>\\_,.;`':\"}";
                 DashboardDataAccessUtil.getRegistrationData(anyString, anyString, anyString, anyString);
                 result = "{registration data}";
                 DashboardDataAccessUtil.getUserTenantInfo(anyString, anyString, anyString, anyString);
@@ -47,3 +50,4 @@ public class AdditionalDataFilterTest {
         Assert.assertEquals(filter.formatJsonString(json), expected);
     }
 }
+

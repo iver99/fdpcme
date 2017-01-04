@@ -13,12 +13,13 @@ define([
     'dfutil',
     'uifwk/js/util/preference-util',
     'uifwk/js/util/mobile-util',
+	'uifwk/js/util/zdt-util',
     'uifwk/js/sdk/context-util',
     'ojs/ojknockout',
     'ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'
 ],
-function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, cxtModel)
+function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
 {
     var SHOW_WELCOME_PREF_KEY = "Dashboards.showWelcomeDialog",
             DASHBOARDS_FILTER_PREF_KEY = "Dashboards.dashboardsFilter",
@@ -234,6 +235,12 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, cxtModel)
         self.sortBy = ko.observable(['default']);
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel(parentElementId);
+		var zdtUtil = new zdtUtilModel();
+        self.zdtStatus = ko.observable(false);
+        zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
+//            self.zdtStatus(true);
+            self.zdtStatus(isUnderPlannedDowntime);
+        });
 
         self.pageSize = ko.observable(120);
 
@@ -542,7 +549,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, cxtModel)
             var _option = data.option, _value = data.value;
             if ( _option === "checked" )
             {
-                if (self.isDashboardSet !== true)
+                if (self.isDashboardSet !== true  && !self.zdtStatus())
                 {
                     self.prefUtil.setPreference(DASHBOARDS_VIEW_PREF_KEY, _value);
                 }
