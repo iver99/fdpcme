@@ -8,15 +8,16 @@ define(['knockout',
         'dfutil',
         'idfbcutil',
         'uifwk/js/util/screenshot-util',
-'uifwk/js/sdk/context-util',
+        'uifwk/js/sdk/context-util',
         'ojs/ojcore',
         'builder/tool-bar/edit.dialog',
         'builder/tool-bar/duplicate.dialog',
         'uifwk/js/util/preference-util',
+        'uifwk/js/util/zdt-util',
         'builder/builder.core',
         'builder/dashboardDataSource/dashboard.datasource'
     ],
-    function(ko, $, dfu, idfbcutil, ssu, cxtModel, oj, ed, dd, pfu) {
+    function(ko, $, dfu, idfbcutil, ssu, cxtModel, oj, ed, dd, pfu,zdtUtilModel) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
@@ -36,7 +37,16 @@ define(['knockout',
             self.isUnderSet = ko.dataFor($("#dbd-set-tabs")[0]).isDashboardSet();
             self.isInOOBDashboardSet=ko.dataFor($("#dbd-set-tabs")[0]).isOobDashboardset();
             self.duplicateInSet = ko.observable(false);
-
+            var zdtUtil = new zdtUtilModel();
+            self.zdtStatus = ko.observable(false);
+            self.notZdtStatus = ko.observable(true);
+            zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
+//                 self.zdtStatus(true);
+//                 self.notZdtStatus(false);
+                self.zdtStatus(isUnderPlannedDowntime);
+                self.notZdtStatus(!isUnderPlannedDowntime);
+            });   
+            
             if (self.dashboard.id && self.dashboard.id()){
                 self.dashboardId = self.dashboard.id();
             }
@@ -83,7 +93,7 @@ define(['knockout',
             }
             
             setAutoRefreshInterval(self.autoRefreshInterval());
-                       
+            
             self.autoRefreshInterval.subscribe(function (value) {
                 //save user options if it is in single dashboard mode
                 if (!self.isUnderSet) {
@@ -102,11 +112,11 @@ define(['knockout',
             function showConfirmLeaveDialog(event) {
                 var _msg = getNlsString('DBS_BUILDER_CONFIRM_LEAVE_DIALOG_CONTENT');
 
-                if (event && $b.isDashboardUpdated() === true && self.isDeletingDbd()===false)
+                if (event && $b.isDashboardUpdated() === true && self.isDeletingDbd()===false && self.notZdtStatus())
                 {
                     event.returnValue = _msg;
                 }
-                if ($b.isDashboardUpdated() === true && self.isDeletingDbd()===false)
+                if ($b.isDashboardUpdated() === true && self.isDeletingDbd()===false && self.notZdtStatus())
                 {
                     $b.findEl('.dashboard-screenshot').focus();
                     return _msg;
@@ -696,6 +706,7 @@ define(['knockout',
                     "disabled": self.editDisabled() === true,
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
                     "showSubMenu": false,
+                    "showInZdt":self.notZdtStatus,
                     "endOfGroup": false
                 },
                 {
@@ -708,6 +719,7 @@ define(['knockout',
                     "disabled": false,
                     "showOnMobile": true,
                     "showSubMenu": false,
+                    "showInZdt":true,
                     "endOfGroup": false
                 },
                 {
@@ -719,7 +731,8 @@ define(['knockout',
                     "title": "",
                     "disabled": false,
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
-                    "endOfGroup": true,
+                    "showInZdt":self.notZdtStatus,
+                    "endOfGroup": true && self.notZdtStatus,
                     "showSubMenu": function () {
                         if (self.currentUser !== self.dashboard.owner() && "Oracle" !== self.dashboard.owner()) {
                             return false;
@@ -740,6 +753,7 @@ define(['knockout',
                             "disabled": false,
                             "showOnMobile": true,
                             "showSubMenu": false,
+                            "showInZdt":self.notZdtStatus,
                             "endOfGroup": false
                         },
                         {
@@ -752,6 +766,7 @@ define(['knockout',
                             "disabled": false,
                             "showOnMobile": true,
                             "showSubMenu": false,
+                            "showInZdt":self.notZdtStatus,
                             "endOfGroup": false
                         }
                     ]
@@ -766,6 +781,7 @@ define(['knockout',
                     "disabled": false,
                     "showOnMobile": true,
                     "showSubMenu": false,
+                    "showInZdt":self.notZdtStatus,
                     "endOfGroup": false
                 },
                 {
@@ -778,6 +794,7 @@ define(['knockout',
                     "disabled": false,
                     "showOnMobile": true,
                     "showSubMenu": false,
+                    "showInZdt":self.notZdtStatus,
                     "endOfGroup": false
                 },
                 {
@@ -790,6 +807,7 @@ define(['knockout',
                     "disabled": false,
                     "showOnMobile": true,
                     "showSubMenu": true,
+                    "showInZdt":self.notZdtStatus,
                     "endOfGroup": false,
                     "subItems": [
                         {
@@ -804,6 +822,7 @@ define(['knockout',
                             "disabled": false,
                             "showOnMobile": true,
                             "showSubMenu": false,
+                            "showInZdt":self.notZdtStatus,
                             "endOfGroup": false
                         },
                         {
@@ -818,6 +837,7 @@ define(['knockout',
                             "disabled": false,
                             "showOnMobile": true,
                             "showSubMenu": false,
+                            "showInZdt":self.notZdtStatus,
                             "endOfGroup": false
                         }
                     ]

@@ -36,7 +36,11 @@ public class AdditionalDataFilter implements Filter {
 
         private PrintWriter writer = null;
         {
-            writer = new PrintWriter(new OutputStreamWriter(byteStream));
+            try {
+				writer = new PrintWriter(new OutputStreamWriter(byteStream, "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				LOGGER.error("Failed to encode outputStream", e);
+			}
         }
 
         public CaptureWrapper(HttpServletResponse response)
@@ -48,7 +52,7 @@ public class AdditionalDataFilter implements Filter {
         {
             String result;
             try {
-                outputStream.flush();
+            	outputStream.flush();
                 outputStream.close();
                 result = byteStream.toString();
             }
@@ -83,6 +87,8 @@ public class AdditionalDataFilter implements Filter {
         LOGGER.debug("Now enter the AdditionalDataFilter");
         HttpServletRequest httpReq = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
+        httpResponse.setCharacterEncoding("utf-8");
+        httpResponse.setContentType("text/html;charset=utf-8");
 
         final CaptureWrapper wrapper = new CaptureWrapper(httpResponse);
         chain.doFilter(request, wrapper);
@@ -136,7 +142,7 @@ public class AdditionalDataFilter implements Filter {
         if (StringUtil.isEmpty(json)) {
             return json;
         }
-        return json.replace("\\", "\\\\").replace("\"", "\\\"");
+        return json.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$");
     }
 
     private String getDashboardData(String tenant, String user, BigInteger dashboardId, String referer, String sessionExp) {

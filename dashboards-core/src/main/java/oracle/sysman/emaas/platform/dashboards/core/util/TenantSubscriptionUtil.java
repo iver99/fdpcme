@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -38,6 +39,8 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.json.JSONConfiguration;
+
 
 /**
  * @author guobaochen
@@ -120,6 +123,45 @@ public class TenantSubscriptionUtil
 				return null;
 			}
 
+		}
+
+		public String put(String url, Map<String, Object> headers, Object requestEntity, String tenant)
+		{
+			if (StringUtil.isEmpty(url)) {
+				LOGGER.error("Unable to post to an empty URL for requestEntity: \"{}\", tenant: \"{}\"", requestEntity, tenant);
+				return null;
+			}
+			if (requestEntity == null || "".equals(requestEntity)) {
+				LOGGER.error("Unable to post an empty request entity");
+				return null;
+			}
+
+			ClientConfig cc = new DefaultClientConfig();
+			cc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+			Client client = Client.create(cc);
+			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
+			String auth = String.copyValueOf(authToken);
+			if (StringUtil.isEmpty(auth)) {
+				LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
+			}
+			else {
+				LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
+				LOGGER.info(
+						"RestClient is connecting to {} after getting authorization token from registration manager. HTTP method is post.",
+						url);
+			}
+			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
+					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+			if (headers != null) {
+				for (String key : headers.keySet()) {
+					Object value = headers.get(key);
+					if (value == null) {
+						continue;
+					}
+					builder.header(key, value);
+				}
+			}
+			return builder.put(requestEntity.getClass(), requestEntity).toString();
 		}
 	}
 

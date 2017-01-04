@@ -43,17 +43,13 @@ public class DashboardServiceFacade
 	public DashboardServiceFacade()
 	{
 		final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-		EntityManager entityManager = emf.createEntityManager();
+		em = emf.createEntityManager();
 		try {
-			SessionInfoUtil.setModuleAndAction(entityManager, MODULE_NAME, ACTION_NAME);
+			SessionInfoUtil.setModuleAndAction(em, MODULE_NAME, ACTION_NAME);
 		} catch (SQLException e) {
 			LOGGER.info("setModuleAndAction in DashboardServiceFacade",e);
-		} finally {
-			if (entityManager != null) {
-				entityManager.close();				
-			}
 		}
-		em = emf.createEntityManager();
+		
 	}
 
 	/**
@@ -112,7 +108,7 @@ public class DashboardServiceFacade
 		EmsDashboard ed = getEmsDashboardById(dashboardId);
 		EmsPreference ep = this.getEmsPreference(userName, "Dashboards.homeDashboardId");
 		EmsUserOptions euo = this.getEmsUserOptions(userName, dashboardId);
-		return CombinedDashboard.valueOf(ed, ep, euo);
+		return CombinedDashboard.valueOf(ed, ep, euo,null);
 	}
 
 	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(String name, String owner, String description){
@@ -377,14 +373,18 @@ public class DashboardServiceFacade
 
 	public void removeAllEmsPreferences(String username)
 	{
-		getEntityManager().getTransaction().begin();
+		if (!getEntityManager().getTransaction().isActive()) {
+			getEntityManager().getTransaction().begin();
+		}		
 		em.createNamedQuery("EmsPreference.removeAll").setParameter("username", username).executeUpdate();
 		commitTransaction();
 	}
 
 	public void removeAllEmsUserOptions(BigInteger dashboardId)
 	{
-		getEntityManager().getTransaction().begin();
+		if (!getEntityManager().getTransaction().isActive()) {
+			getEntityManager().getTransaction().begin();
+		}
 		em.createNamedQuery("EmsUserOptions.removeAll").setParameter("dashboardId", dashboardId).executeUpdate();
 		commitTransaction();
 	}
@@ -548,7 +548,9 @@ public class DashboardServiceFacade
 
 	public int removeEmsSubDashboardBySetId(BigInteger dashboardSetId)
 	{
-		getEntityManager().getTransaction().begin();
+		if (!getEntityManager().getTransaction().isActive()) {
+			getEntityManager().getTransaction().begin();
+		}
 		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeByDashboardSetID").setParameter("p", dashboardSetId)
 				.executeUpdate();
 		commitTransaction();
@@ -589,7 +591,9 @@ public class DashboardServiceFacade
 
 	public int removeEmsSubDashboardBySubId(BigInteger subDashboardId)
 	{
-		getEntityManager().getTransaction().begin();
+		if (!getEntityManager().getTransaction().isActive()) {
+			getEntityManager().getTransaction().begin();
+		}
 		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeBySubDashboardID").setParameter("p", subDashboardId)
 				.executeUpdate();
 		commitTransaction();
@@ -598,7 +602,9 @@ public class DashboardServiceFacade
 
 	public void updateSubDashboardShowInHome(BigInteger dashboardId)
 	{
-		getEntityManager().getTransaction().begin();
+		if (!getEntityManager().getTransaction().isActive()) {
+			getEntityManager().getTransaction().begin();
+		}
 		List<EmsSubDashboard> emsSubDashboards = getEmsDashboardById(dashboardId).getSubDashboardList();
 		if (emsSubDashboards != null) {
 			for (EmsSubDashboard emsSubDashboard : emsSubDashboards) {
@@ -629,7 +635,9 @@ public class DashboardServiceFacade
 	@SuppressWarnings("unchecked")
     public List<EmsDashboard> getEmsDashboardsBySubId(BigInteger subDashboardId)
 	{
-		getEntityManager().getTransaction().begin();
+		if (!getEntityManager().getTransaction().isActive()) {
+			getEntityManager().getTransaction().begin();
+		}
 		List<EmsDashboard> dashboards = em.createNamedQuery("EmsDashboard.queryBySubDashboardID").setParameter("p", subDashboardId)
 				.getResultList();
 		commitTransaction();
@@ -660,7 +668,9 @@ public class DashboardServiceFacade
 
 	public int removeUnsharedEmsSubDashboard(BigInteger subDashboardId, String owner)
 	{
-		getEntityManager().getTransaction().begin();
+		if (!getEntityManager().getTransaction().isActive()) {
+			getEntityManager().getTransaction().begin();
+		}
 		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeUnshared").setParameter("p1", subDashboardId)
 				.setParameter("p2", owner).executeUpdate();
 		commitTransaction();
@@ -668,7 +678,9 @@ public class DashboardServiceFacade
 	}
 
 	public void updateSubDashboardVisibleInHome(EmsDashboard ed,List<BigInteger> subDashboardList){
-		getEntityManager().getTransaction().begin();
+		if (!getEntityManager().getTransaction().isActive()) {
+			getEntityManager().getTransaction().begin();
+		}
 		StringBuilder sb=new StringBuilder();
 		for(int i=0;i<subDashboardList.size();i++){
 			if(i==0){

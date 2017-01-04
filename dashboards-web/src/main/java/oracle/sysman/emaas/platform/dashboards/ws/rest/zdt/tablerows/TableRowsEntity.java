@@ -24,12 +24,6 @@ public class TableRowsEntity
 	@JsonProperty("EMS_DASHBOARD")
 	private List<DashboardRowEntity> emsDashboard;
 
-	@JsonProperty("EMS_DASHBOARD_FAVORITE")
-	private List<DashboardFavoriteRowEntity> emsDashboardFavorite;
-
-	@JsonProperty("EMS_DASHBOARD_LAST_ACCESS")
-	private List<DashboardLastAccessRowEntity> emsDashboardLastAccess;
-
 	@JsonProperty("EMS_DASHBOARD_SET")
 	private List<DashboardSetRowEntity> emsDashboardSet;
 
@@ -73,22 +67,7 @@ public class TableRowsEntity
 		else if (!emsDashboard.equals(other.emsDashboard)) {
 			return false;
 		}
-		if (emsDashboardFavorite == null) {
-			if (other.emsDashboardFavorite != null) {
-				return false;
-			}
-		}
-		else if (!emsDashboardFavorite.equals(other.emsDashboardFavorite)) {
-			return false;
-		}
-		if (emsDashboardLastAccess == null) {
-			if (other.emsDashboardLastAccess != null) {
-				return false;
-			}
-		}
-		else if (!emsDashboardLastAccess.equals(other.emsDashboardLastAccess)) {
-			return false;
-		}
+		
 		if (emsDashboardSet == null) {
 			if (other.emsDashboardSet != null) {
 				return false;
@@ -141,22 +120,6 @@ public class TableRowsEntity
 	}
 
 	/**
-	 * @return the emsDashboardFavorite
-	 */
-	public List<DashboardFavoriteRowEntity> getEmsDashboardFavorite()
-	{
-		return emsDashboardFavorite;
-	}
-
-	/**
-	 * @return the emsDashboardLastAccess
-	 */
-	public List<DashboardLastAccessRowEntity> getEmsDashboardLastAccess()
-	{
-		return emsDashboardLastAccess;
-	}
-
-	/**
 	 * @return the emsDashboardSet
 	 */
 	public List<DashboardSetRowEntity> getEmsDashboardSet()
@@ -205,8 +168,6 @@ public class TableRowsEntity
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (emsDashboard == null ? 0 : emsDashboard.hashCode());
-		result = prime * result + (emsDashboardFavorite == null ? 0 : emsDashboardFavorite.hashCode());
-		result = prime * result + (emsDashboardLastAccess == null ? 0 : emsDashboardLastAccess.hashCode());
 		result = prime * result + (emsDashboardSet == null ? 0 : emsDashboardSet.hashCode());
 		result = prime * result + (emsDashboardTile == null ? 0 : emsDashboardTile.hashCode());
 		result = prime * result + (emsDashboardTileParams == null ? 0 : emsDashboardTileParams.hashCode());
@@ -222,24 +183,6 @@ public class TableRowsEntity
 	public void setEmsDashboard(List<DashboardRowEntity> emsDashboard)
 	{
 		this.emsDashboard = emsDashboard;
-	}
-
-	/**
-	 * @param emsDashboardFavorite
-	 *            the emsDashboardFavorite to set
-	 */
-	public void setEmsDashboardFavorite(List<DashboardFavoriteRowEntity> emsDashboardFavorite)
-	{
-		this.emsDashboardFavorite = emsDashboardFavorite;
-	}
-
-	/**
-	 * @param emsDashboardLastAccess
-	 *            the emsDashboardLastAccess to set
-	 */
-	public void setEmsDashboardLastAccess(List<DashboardLastAccessRowEntity> emsDashboardLastAccess)
-	{
-		this.emsDashboardLastAccess = emsDashboardLastAccess;
 	}
 
 	/**
@@ -293,8 +236,7 @@ public class TableRowsEntity
 	@Override
 	public String toString()
 	{
-		return "TableRowsEntity [\n\tEMS_DASHBOARD=" + emsDashboard + ", \n\tEMS_DASHBOARD_FAVORITE=" + emsDashboardFavorite
-				+ ", \n\tEMS_DASHBOARD_LAST_ACCESS=" + emsDashboardLastAccess + ", \n\tEMS_DASHBOARD_SET=" + emsDashboardSet
+		return "TableRowsEntity [\n\tEMS_DASHBOARD=" + emsDashboard + ", \n\tEMS_DASHBOARD_SET=" + emsDashboardSet
 				+ ", \n\tEMS_DASHBOARD_TILE=" + emsDashboardTile + ", \n\tEMS_DASHBOARD_TILE_PARAMS=" + emsDashboardTileParams
 				+ ", \n\tEMS_DASHBOARD_USER_OPTIONS=" + emsDashboardUserOptions + ", \n\tEMS_PREFERENCE=" + emsPreference + "]";
 	}
