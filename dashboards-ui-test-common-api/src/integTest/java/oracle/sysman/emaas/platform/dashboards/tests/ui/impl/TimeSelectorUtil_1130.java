@@ -38,9 +38,13 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil#getTimeRangeLabel(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int)
 	 */
+	//index: start from 1
 	@Override
 	public String getTimeRangeLabel(WebDriver webd, int index)
 	{
+		//verify the index, it should equal or larger than 1
+		Validator.equalOrLargerThan("index", index, 1);
+
 		//locate the datetimepicker component
 		webd.waitForElementPresent("css=" + TimeSelectorUIControls.sTimeRangeBtn);
 		webd.takeScreenShot();
@@ -308,12 +312,12 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 						.getAttribute("value")
 						+ " "
 						+ driver.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartTimeInput))
-						.get(index - 1).getAttribute("value");
+								.get(index - 1).getAttribute("value");
 				String returnEndDate = driver.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndDateInput))
 						.get(index - 1).getAttribute("value")
 						+ " "
 						+ driver.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(index - 1)
-						.getAttribute("value");
+								.getAttribute("value");
 
 				returnStartDate = timeFormatChange(driver, returnStartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 				returnEndDate = timeFormatChange(driver, returnEndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
@@ -390,12 +394,12 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 						.get(index - 1).getAttribute("value")
 						+ " "
 						+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).get(index - 1)
-						.getAttribute("value");
+								.getAttribute("value");
 				String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndDateInput))
 						.get(index - 1).getAttribute("value")
 						+ " "
 						+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(index - 1)
-						.getAttribute("value");
+								.getAttribute("value");
 
 				returnStartDate = timeFormatChange(webd, returnStartDate, "MM/dd/yyyy", "MMM d, yyyy");
 				returnEndDate = timeFormatChange(webd, returnEndDate, "MM/dd/yyyy", "MMM d, yyyy");
@@ -507,12 +511,12 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 					.get(Index - 1).getAttribute("value")
 					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).get(Index - 1)
-					.getAttribute("value");
+							.getAttribute("value");
 			String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndDateInput))
 					.get(Index - 1).getAttribute("value")
 					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(Index - 1)
-					.getAttribute("value");
+							.getAttribute("value");
 
 			returnStartDate = timeFormatChange(webd, returnStartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 			returnEndDate = timeFormatChange(webd, returnEndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
