@@ -612,6 +612,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                             }
                             else
                             {
+                                self.sortBy(__sortui.header + (__sortui.direction === 'descending' ? '_dsc' : '_asc'));
                                 _ts.handleEvent(oj.TableDataSource.EventType['SORT'], __sortui);
                             }
                     }
