@@ -136,14 +136,20 @@ function (ko, $, oj, dfu, mbu, uiutil) {
             }
         });
         
+        self.completelyHidden.subscribe(function () {
+            resetTileHighlighted();
+        });
+        
         function resetTileHighlighted() {
-            var tilesArray = self.$b().dashboard.tiles();
-            tilesArray.forEach(function resetObject(element, index) {
-                if (element.outlineHightlight() === true) {
-                    self.lastHighlightWigetIndex = index;
-                }
-                element.outlineHightlight(false);
-            });
+            if(self.$b && self.$b().dashboard && self.$b().dashboard.tiles){
+                var tilesArray = self.$b().dashboard.tiles();
+                tilesArray.forEach(function resetObject(element, index) {
+                    if (element.outlineHightlight() === true) {
+                        self.lastHighlightWigetIndex = index;
+                    }
+                    element.outlineHightlight(false);
+                });
+            }
         }
         
         function setTileHightlighted(targetIndex) {
