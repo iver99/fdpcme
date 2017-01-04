@@ -5,8 +5,10 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -37,14 +39,17 @@ import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.IdGenerator;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 
 public class DashboardManager
 {
@@ -57,6 +62,7 @@ public class DashboardManager
 	}
 	
 	private static final String HOME_PAGE_PREFERENCE_KEY = "Dashboards.homeDashboardId";
+	private static final String DASHBOARD_OPTION_SELECTED_TAB_KEY = "selectedTab";
 
 
 	public static final String BLANK_SCREENSHOT = "data:image/png;base64,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AEFIhjEBbGkpyX9EeoKlxVwvUjtiTYqnp98ivhBnAMDXwenpqfbp6a+1iNgHAHS/n/PlMyGNeHNmgKWVXejlAybZ4F/iL3HrBB73ywzvAAABnWlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyI+CiAgICAgICAgIDxleGlmOlBpeGVsWERpbWVuc2lvbj4zNDk8L2V4aWY6UGl4ZWxYRGltZW5zaW9uPgogICAgICAgICA8ZXhpZjpQaXhlbFlEaW1lbnNpb24+MTg3PC9leGlmOlBpeGVsWURpbWVuc2lvbj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CppjahgAAAX4SURBVHgB7dTBCQAgDARBtf+eo1jEviYNHAxh97xbjgABAgQSgZOsGCFAgACBLyC6HoEAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqGA6IbYpggQICC6foAAAQKhgOiG2KYIECAgun6AAAECoYDohtimCBAgILp+gAABAqHABWHCBXJKFjVxAAAAAElFTkSuQmCC";
@@ -212,6 +218,7 @@ public class DashboardManager
 			//				removeFavoriteDashboard(dashboardId, tenantId);
 			//			}
 
+			em.setProperty("soft.deletion.permanent", permanent);
 			dsf.updateSubDashboardShowInHome(dashboardId);
 
 			//emcpdf2801 delete dashboard's user option
@@ -238,6 +245,41 @@ public class DashboardManager
 			}
 		}
 	}
+	
+	/**
+	 * Delete dashboards by a given tenant. Soft deletion is supported
+	 *
+	 * @param tenantId
+	 * @throws DashboardNotFoundException
+	 */
+	public void deleteDashboards(Long tenantId) throws DashboardException
+	{
+		deleteDashboards(false, tenantId);
+	}
+	
+	public void deleteDashboards(boolean permanent, Long tenantId) 
+	{
+		if (tenantId == null || tenantId <= 0) {
+			return;
+		}
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			dsf.removeDashboardsByTenant(permanent, tenantId);
+			dsf.removeDashboardSetsByTenant(permanent, tenantId);
+			dsf.removeDashboardTilesByTenant(permanent, tenantId);
+			dsf.removeDashboardTileParamsByTenant(permanent, tenantId);
+			dsf.removeDashboardPreferenceByTenant(permanent, tenantId);
+			dsf.removeUserOptionsByTenant(permanent, tenantId);			
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}		
+	}
+	
 
 	/**
 	 * Delete a dashboard specified by dashboard id for given tenant. Soft deletion is supported
@@ -360,79 +402,138 @@ public class DashboardManager
 	 * @throws DashboardException
 	 * @throws JSONException 
 	 */
-	public CombinedDashboard getCombinedDashboardById(BigInteger dashboardId, Long tenantId, String userName) throws DashboardNotFoundException,TenantWithoutSubscriptionException
-	{
-   EntityManager em = null;
-   try {
-      DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-      em = dsf.getEntityManager();
-      EmsDashboard ed = getEmsDashboardById(dsf, dashboardId, tenantId);
-      EmsPreference ep = dsf.getEmsPreference(userName, "Dashboards.homeDashboardId");
-      EmsUserOptions euo = dsf.getEmsUserOptions(userName, dashboardId);
-      CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo);
-      if (Dashboard.DASHBOARD_TYPE_CODE_SET.equals(ed.getType())) {
-         Object selected = null;
-         try {
-            JSONObject jsonObj = null;
-            if (cd.getExtendedOptions() != null) {
-               jsonObj = new JSONObject(cd.getExtendedOptions());
-               selected = jsonObj.get("selectedTab");
-               LOGGER.info("Retrieved selected tab from dashboard table for dashboard {} is {}", dashboardId, selected);
-            }
-            // get selectedTab from user options
-            String extOptions = euo == null? null: euo.getExtendedOptions();
-            LOGGER.info("Dashboard ID={} is a dashboard set, its extendedOptions from user option is {}, user is {}", dashboardId, extOptions, userName);
-            if (extOptions != null) {
-               jsonObj = new JSONObject(extOptions);
-               selected = jsonObj.get("selectedTab");
-               LOGGER.info("Retrieved selected tab from user option table for dashboard {} and user {} is {}", dashboardId, userName, selected);
-            }
-         } catch (JSONException e) {
-            // failed to parse extended options json, so failed to retrieve selected tab. 
-            // This is unexpected, but if it happens, likes just go ahead w/o selected tab then...
-            LOGGER.error(e.getLocalizedMessage(), e);
-         }
-         BigInteger selectedId = null;
-         if (selected != null) {
-            try {
-               selectedId = new BigInteger(selected.toString());
-            } catch (NumberFormatException e) {
-               // might be a null 'selectedTab' value or invalid one
-               LOGGER.info("Failed to get selected dashboard ID: ID is invalid: {}", selected);
-            }
-         }
-         else {
-            // use the 1st dashboard id
-            if (cd.getSubDashboards() != null && !cd.getSubDashboards().isEmpty()) {
-               selectedId = cd.getSubDashboards().get(0).getDashboardId();
-               LOGGER.info("Retrieved default (1st) tab for dashboard set {}, 1st dashboard id is {}", dashboardId, selected);
-            }
-         }
-         if (selectedId != null) {
-        	//check if selected dashboard is deleted
-        	/*if(dsf.isDashboardDeleted(selectedId)){
-        		return cd;
-        	}*/
-        	try{
-        		EmsDashboard sed = this.getEmsDashboardById(dsf, selectedId, tenantId);
-        		EmsUserOptions seuo = dsf.getEmsUserOptions(userName, selectedId);
-        		CombinedDashboard scd = CombinedDashboard.valueOf(sed, null, seuo);
-        		cd.setSelected(scd);
-        	}catch(DashboardException e){
-        		LOGGER.error(e.getStackTrace());
-        		return cd;
-        	}
-         }
-      }
-      return cd;
-   }
-   finally {
-      if (em != null && em.isOpen()) {
-         em.close();
-      }
-   }
+	public CombinedDashboard getCombinedDashboardById(BigInteger dashboardId,
+			Long tenantId, String userName) throws DashboardNotFoundException,TenantWithoutSubscriptionException {
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			EmsDashboard ed = getEmsDashboardById(dsf, dashboardId, tenantId);
+			EmsPreference ep = dsf.getEmsPreference(userName,"Dashboards.homeDashboardId");
+			EmsUserOptions euo = dsf.getEmsUserOptions(userName, dashboardId);
+			List<EmsDashboardTile> edbdtList = ed.getDashboardTileList();
+			CombinedDashboard cdSet = null;
+
+			if (Dashboard.DASHBOARD_TYPE_CODE_SET.equals(ed.getType())) {
+				// combine dashboard set
+				cdSet = CombinedDashboard.valueOf(ed, ep, euo, null);
+
+				// pick selected dashboard
+				Object selected = null;
+				try {
+					JSONObject jsonObj = null;
+					if (ed.getExtendedOptions() != null) {
+						jsonObj = new JSONObject(ed.getExtendedOptions());
+						if (jsonObj.has(DASHBOARD_OPTION_SELECTED_TAB_KEY)) {
+							selected = jsonObj.get(DASHBOARD_OPTION_SELECTED_TAB_KEY);
+							LOGGER.info("Retrieved selected tab from dashboard table for dashboard {} is {}", dashboardId, selected);
+						}
+					}
+				}catch (JSONException e) {
+					// failed to parse dashboard json, so failed to retrieve selected tab.
+					// This is unexpected, but if it happens, likes just go ahead w/o selected tab then...
+					LOGGER.error(e.getLocalizedMessage(), e);
+				}
+				try{
+					JSONObject jsonObj = null;
+					// get selectedTab from user options
+					String extOptions = euo == null ? null : euo.getExtendedOptions();
+					LOGGER.info(
+							"Dashboard ID={} is a dashboard set, its extendedOptions from user option is {}, user is {}",
+							dashboardId, extOptions, userName);
+					if (extOptions != null) {
+						jsonObj = new JSONObject(extOptions);
+						if (jsonObj.has(DASHBOARD_OPTION_SELECTED_TAB_KEY)) {
+							selected = jsonObj.get(DASHBOARD_OPTION_SELECTED_TAB_KEY);
+							LOGGER.info("Retrieved selected tab from user option table for dashboard {} and user {} is {}", dashboardId, userName, selected);
+						}
+					}
+				} catch (JSONException e) {
+					// failed to parse extended options json, so failed to
+					// retrieve selected tab.
+					// This is unexpected, but if it happens, likes just go
+					// ahead w/o selected tab then...
+					LOGGER.error(e.getLocalizedMessage(), e);
+				}
+				BigInteger selectedId = null;
+
+				if (selected != null) {
+					try {
+						selectedId = new BigInteger(selected.toString());
+					} catch (NumberFormatException e) {
+						// might be a null 'selectedTab' value or invalid one
+						LOGGER.info(
+								"Failed to get selected dashboard ID: ID is invalid: {}",
+								selected);
+						edbdtList = null;
+					}
+				} else {
+					// use the 1st dashboard id
+					if (cdSet.getSubDashboards() != null && !cdSet.getSubDashboards().isEmpty()) {
+						selectedId = cdSet.getSubDashboards().get(0).getDashboardId();
+						LOGGER.info(
+								"Retrieved default (1st) tab for dashboard set {}, 1st dashboard id is {}",
+								dashboardId, selected);
+					}
+				}
+
+				if (selectedId != null) {
+					try {
+						ed = this.getEmsDashboardById(dsf, selectedId, tenantId);
+						euo = dsf.getEmsUserOptions(userName, selectedId);
+						ep = null;
+						edbdtList = ed.getDashboardTileList();
+					} catch (DashboardException e) {
+						LOGGER.error(e.getStackTrace());
+						return cdSet;
+					}
+				}
+			}
+
+			// retrieve saved search list
+			List<String> ssfIdList = new ArrayList<String>();
+			if (edbdtList != null) {
+				for (EmsDashboardTile edt : edbdtList) {
+					ssfIdList.add(edt.getWidgetUniqueId());
+				}
+			}
+			String savedSearchResponse = retrieveSavedSeasrch(ssfIdList);
+
+			// combine single dashboard or selected dashbaord
+			CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo,savedSearchResponse);
+
+			// return combined dashboard Set
+			if (cdSet != null) {
+				cdSet.setSelected(cd);
+				return cdSet;
+			}
+
+			// return combined single dashboard
+			return cd;
+		} finally {
+			if (em != null && em.isOpen()) {
+				em.close();
+			}
+		}
 	}
 	
+
+    private String retrieveSavedSeasrch(List<String> ssfIdList) {
+        TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
+        Link tenantsLink = RegistryLookupUtil.getServiceInternalLink(
+        		"SavedSearch", "1.0+", "search", null);
+        String tenantHref = tenantsLink.getHref() + "/list";
+        String tenantName = TenantContext.getCurrentTenant();
+        Map<String, Object> headers = new HashMap<String, Object>();
+        headers.put("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
+        String savedSearchResponse = null;
+        try {
+        	savedSearchResponse = rc.put(tenantHref, headers, ssfIdList.toString(), tenantName);
+        } catch (Exception e) {
+        	LOGGER.info("savedsearch response", e);
+        }
+        return savedSearchResponse;
+    }
 
 	/**
 	 * Returns dashboard instance specified by name for current user Please note that same user under single tenant can't have
@@ -610,7 +711,7 @@ public class DashboardManager
 				LOGGER.debug("Last access is not found for dashboard with id {} is not found", dashboardId);
 				return null;
 			}
-			if (ed.getDeleted() != null && ed.getDeleted().equals(1)) {
+			if (ed.getDeleted() != null && ed.getDeleted().compareTo(BigInteger.ZERO) > 0) {
 				LOGGER.debug("Last access is not found for dashboard with id {} is deleted", dashboardId);
 				return null;
 			}
@@ -1219,7 +1320,9 @@ public class DashboardManager
 			String jql = "update EmsDashboardTile t set t.title = :widgetName, t.widgetName = :widgetName where t.widgetUniqueId = :widgetId";
 			Query query = em.createQuery(jql).setParameter("widgetName", widgetName)
 					.setParameter("widgetId", String.valueOf(widgetId));
-			et.begin();
+			if (!et.isActive()) {
+				et.begin();
+			}			
 			int affacted = query.executeUpdate();
 			et.commit();
 			LOGGER.info("Update dashboard tiles name: title for {} tiles have been updated to \"{}\" for specified widget ID {}",
@@ -1253,7 +1356,9 @@ public class DashboardManager
 			EntityTransaction et = em.getTransaction();
 			String jql = "update EmsDashboardTile t set t.widgetDeleted = 1 where t.widgetUniqueId = :widgetId";
 			Query query = em.createQuery(jql).setParameter("widgetId", String.valueOf(widgetId));
-			et.begin();
+			if (!et.isActive()) {
+				et.begin();
+			}
 			int affacted = query.executeUpdate();
 			et.commit();
 			LOGGER.info(
@@ -1296,7 +1401,7 @@ public class DashboardManager
 		}
 		//EntityManager em = null;
 		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-		if (ed == null || ed.getDeleted() != null && ed.getDeleted().equals(1)) {
+		if (ed == null || ed.getDeleted() != null && ed.getDeleted().compareTo(BigInteger.ZERO) > 0) {
 			return;
 		}
 		//em = dsf.getEntityManager();

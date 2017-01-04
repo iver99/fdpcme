@@ -295,9 +295,13 @@ define(['knockout',
             tile.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
                 tile.dashboard.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
             };
+            
+            tile.getWigetDataFromCache = function (wigetId,sccessCallback,failureCallback) {
+                new Builder.DashboardDataSource().fetchSelDbdSsData(wigetId,sccessCallback,failureCallback);
+            };
 
             if (loadImmediately) {
-                var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME());
+                var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME(), true);
                 var kocVM = tile.WIDGET_VIEWMODEL();
                 if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                     kocVM = assetRoot + kocVM;
@@ -351,33 +355,8 @@ define(['knockout',
                 if (url){
                     tile.configure = function(){
                         var widgetUrl = url;
-                        widgetUrl += "?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboardInst.id()+"&dashboardName="+dashboardInst.name();
-                        if(dashboard.enableTimeRange() === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
-                            widgetUrl += "";
-                        }else {
-                            var start = timeSelectorModel.viewStart();
-                            var end = timeSelectorModel.viewEnd();
-                            if(start && (start instanceof Date) && end && (end instanceof Date)) {
-                                widgetUrl += "&startTime="+start.getTime()+"&endTime="+end.getTime();
-                            }
-                            var timePeriod = timeSelectorModel.viewTimePeriod();
-                            if(timePeriod) {
-                                widgetUrl += "&timePeriod="+timePeriod;
-                            }
-                        }
-
-                    require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils){
-                        if(targets && targets()) {
-                             var compressedTargets = encodeURI(JSON.stringify(targets()));
-                            var targetUrlParam = "targets";
-                            if(TargetSelectorUtils.compress) {
-                                compressedTargets = TargetSelectorUtils.compress(targets());
-                                targetUrlParam = "targetsz";
-                            }
-                            widgetUrl += "&" +targetUrlParam + "=" + compressedTargets;
-                        }
+                        widgetUrl += "?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboardInst.id()+"&dashboardName="+encodeURI(dashboardInst.name()).replace(/\//g,'%2F');
                         window.location = cxtUtil.appendOMCContext(widgetUrl, getRespectOMCContextFlag(dashboard.enableEntityFilter()), getRespectOMCContextFlag(dashboard.enableEntityFilter()), getRespectOMCContextFlag(dashboard.enableTimeRange()));
-                    });
                     };
                 }
             }

@@ -127,22 +127,38 @@ task QATest(type:EMTest,dependsOn:[omcSetup, onboardTenant]) {
 	include "oracle/sysman/emaas/platform/dashboards/test/preference/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/screenshot/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/*" 
+
 	useRestAssured=true
 	ext.set("testType", "integration")
 }
 
 //Task is for dashboard UI Test
 task e2e (type: EMTest, dependsOn:QATest ){
-options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
-        test('name': 'DashboardUITest') {
+options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':'none') {
+        test('name': 'DashboardUITest', 'preserve-order':'true') {
             classes([:]) {
-		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestGlobalContext')
-		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage')
-                'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard')
+//		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestGlobalContext')
+                'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_SimpleCRUD')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_OtherFeatures')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_SimpleCRUD')	
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_OtherFeatures')	
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DashboardRelated_CreatedInsideSet')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DashboardRelated_CreatedOutsideSet')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DuplicateDashboard')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard_NegativeCases')
             }
-        }
+	}
+	test('name': 'DashboardUITest_testDashboardSet_SetHome', 'preserve-order':'true'){
+	    classes([:]) {
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_SetHome')
+	    }
+	}
+	test('name': 'DashboardUITest_testDashboard_SetHome', 'preserve-order':'true'){
+	    classes([:]) {
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_SetHome')
+	    }
+	}
     }
     useWebdriver = true
     useRestAssured = true
@@ -186,8 +202,14 @@ task DEVTest2(type:EMTest,dependsOn: DEVUiTest){
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
-
+/*
+task DEVTest3(type:EMTest,dependsOn: DEVTest2){ 
+	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/DashboardDeletion.class"	
+	useRestAssured=true
+	ext.set("testType", "unit")
+}*/
 task emcpdf_test_3n (dependsOn:[DEVTest2, omcTeardown]) {
     omcTeardown.mustRunAfter(DEVTest2)
+
     apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")
 }
