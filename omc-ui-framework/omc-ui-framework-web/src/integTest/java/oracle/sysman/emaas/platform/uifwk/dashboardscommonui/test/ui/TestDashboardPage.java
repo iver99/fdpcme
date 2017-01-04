@@ -10,14 +10,14 @@
 
 package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WidgetSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -31,6 +31,7 @@ import org.testng.annotations.Test;
 public class TestDashboardPage extends CommonUIUtils
 {
 	private static final Logger LOGGER = LogManager.getLogger(TestDashboardPage.class);
+
 	@BeforeClass
 	public static void initValue()
 	{
@@ -39,7 +40,7 @@ public class TestDashboardPage extends CommonUIUtils
 	}
 
 	@Test
-	public void testDashboardPage_noPara() 
+	public void testDashboardPage_noPara()
 	{
 		try {
 			String testName = this.getClass().getName() + ".testDashboardPage_noPara";
@@ -79,13 +80,13 @@ public class TestDashboardPage extends CommonUIUtils
 
 		}
 		catch (Exception ex) {
-			LOGGER.info("context",ex);
+			LOGGER.info("context", ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}
 
 	@Test
-	public void testDashboardPage_withPara() 
+	public void testDashboardPage_withPara()
 	{
 		try {
 			CommonUIUtils.commonUITestLog("This is to test Dashboard Page");
@@ -129,14 +130,14 @@ public class TestDashboardPage extends CommonUIUtils
 
 		}
 		catch (Exception ex) {
-			LOGGER.info("context",ex);
+			LOGGER.info("context", ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}
 
 	//Testcase for adding widget using widgetselector
 	@Test
-	public void testWidgetSelector() 
+	public void testWidgetSelector()
 	{
 		try {
 			String WidgetName_1 = "Database Errors Trend";
@@ -158,11 +159,14 @@ public class TestDashboardPage extends CommonUIUtils
 			WaitUtil.waitForPageFullyLoaded(webdriver);
 
 			//click on Add button
+			webdriver.getLogger().info("Click the Add icon");
+			webdriver.waitForElementEnabled("id=" + DashBoardPageId.WIDGETSELECTOR_ADDBUTTONID);
 			webdriver.click("id=" + DashBoardPageId.WIDGETSELECTOR_ADDBUTTONID);
 			webdriver.takeScreenShot();
 
-			//Adding widgets using widgetSElector diagoue
-			webdriver.getLogger().info("satrt widget selector dialogue box opens");
+			//Adding widgets using widgetSElector dialog
+			webdriver.getLogger().info("satrt widget selector dialog box opens");
+			webdriver.waitForElementPresent("css=div[id^='ojDialogWrapper-'].oj-dialog");
 
 			//webdriver.getLogger().info("set Page # in widget selector dialog");
 			//WidgetSelectorUtil.page(webdriver, 2);
@@ -181,7 +185,7 @@ public class TestDashboardPage extends CommonUIUtils
 			CommonUIUtils.logoutCommonUI(webdriver);
 		}
 		catch (Exception ex) {
-			LOGGER.info("context",ex);
+			LOGGER.info("context", ex);
 			Assert.fail(ex.getLocalizedMessage());
 		}
 	}

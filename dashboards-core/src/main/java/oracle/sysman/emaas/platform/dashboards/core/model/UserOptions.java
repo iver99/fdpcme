@@ -48,10 +48,16 @@ public class UserOptions {
     }
 
     public static UserOptions valueOf(EmsUserOptions emsUserOptions) {
+    	return UserOptions.valueOf(emsUserOptions, null);
+    }
+
+    protected static UserOptions valueOf(EmsUserOptions emsUserOptions, UserOptions userOptions) {
         if (emsUserOptions == null) {
             return null;
         }
-        UserOptions userOptions = new UserOptions();
+        if (userOptions == null) {
+        	userOptions = new UserOptions();
+        }
         userOptions.setAutoRefreshInterval(Long.valueOf(emsUserOptions.getAutoRefreshInterval()));
         userOptions.setUserName(emsUserOptions.getUserName());
         userOptions.setDashboardId(Long.valueOf(emsUserOptions.getDashboardId()));

@@ -16,6 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
@@ -26,28 +29,64 @@ import oracle.sysman.emaas.platform.dashboards.core.cache.CachedLink;
 import oracle.sysman.emaas.platform.dashboards.core.cache.Keys;
 import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * @author miao
  */
 public class RegistryLookupUtil
 {
-	private RegistryLookupUtil() {
-	  }
+	public static class VersionedLink extends Link
+	{
+		private String version;
+
+		/**
+		 *
+		 */
+		public VersionedLink()
+		{
+			// TODO Auto-generated constructor stub
+		}
+
+		public VersionedLink(Link link, String version)
+		{
+			withHref(link.getHref());
+			withOverrideTypes(link.getOverrideTypes());
+			withRel(link.getRel());
+			withTypesStr(link.getTypesStr());
+			this.version = version;
+		}
+
+		/**
+		 * @return the version
+		 */
+		public String getVersion()
+		{
+			return version;
+		}
+
+		/**
+		 * @param version
+		 *            the version to set
+		 */
+		public void setVersion(String version)
+		{
+			this.version = version;
+		}
+
+	}
 
 	private static final Logger LOGGER = LogManager.getLogger(RegistryLookupUtil.class);
-	private static final Logger itrLogger = LogUtil.getInteractionLogger();
 
+	private static final Logger itrLogger = LogUtil.getInteractionLogger();
 	// keep the following the same with service name
 	public static final String APM_SERVICE = "ApmUI";
+
 	public static final String ITA_SERVICE = "emcitas-ui-apps";
 	public static final String LA_SERVICE = "LogAnalyticsUI";
 	public static final String TA_SERVICE = "TargetAnalytics";
 	public static final String MONITORING_SERVICE = "MonitoringServiceUI";
 	public static final String SECURITY_ANALYTICS_SERVICE = "SecurityAnalyticsUI";
 	public static final String COMPLIANCE_SERVICE = "ComplianceUIService";
+	public static final String ORCHESTRATION_SERVICE = "CosUIService";
 
 	public static List<Link> getLinksWithRelPrefix(String relPrefix, SanitizedInstanceInfo instance)
 	{
@@ -76,7 +115,7 @@ public class RegistryLookupUtil
 			if (!StringUtil.isEmpty(tenantName)) {
 				internalInstance = LookupManager.getInstance().getLookupClient().getInstanceForTenant(queryInfo, tenantName);
 				itrLogger
-				.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance, tenantName);
+						.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance, tenantName);
 				if (internalInstance == null) {
 					LOGGER.error(
 							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
@@ -155,12 +194,13 @@ public class RegistryLookupUtil
 		 */
 	}
 
-	public static Link getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
+	public static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
 	{
 		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName);
 	}
 
-	public static Link getServiceExternalLinkWithRelPrefix(String serviceName, String version, String rel, String tenantName)
+	public static VersionedLink getServiceExternalLinkWithRelPrefix(String serviceName, String version, String rel,
+			String tenantName)
 	{
 		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, true, tenantName);
 	}
@@ -252,6 +292,35 @@ public class RegistryLookupUtil
 			LOGGER.debug("Completed to (try to) replace URL with vanity URL. Updated url is {}", url);
 		}
 		return url;
+	}
+
+	/**
+	 * @param tenantName
+	 * @param internalInstance
+	 * @return
+	 * @throws Exception
+	 */
+	private static SanitizedInstanceInfo findSaniInsInfo(String tenantName, InstanceInfo internalInstance)
+	{
+		SanitizedInstanceInfo sanitizedInstance = null;
+		try {
+			if (!StringUtil.isEmpty(tenantName)) {
+				sanitizedInstance = LookupManager.getInstance().getLookupClient()
+						.getSanitizedInstanceInfo(internalInstance, tenantName);
+				itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
+						sanitizedInstance, tenantName);
+			}
+			else {
+				LOGGER.debug("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
+				sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
+				itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
+						sanitizedInstance);
+			}
+		}
+		catch (Exception ex) {
+			LOGGER.error(ex.getLocalizedMessage(), ex);
+		}
+		return sanitizedInstance;
 	}
 
 	private static String getExternalEndPoint(SanitizedInstanceInfo instance)
@@ -371,7 +440,8 @@ public class RegistryLookupUtil
 				LOGGER.debug("Checks link on protocol {} with expected rel prefix {} against retrieved link (rel={}, href={})",
 						protocol, relPrefix, link.getRel(), link.getHref());
 				URI uri = URI.create(link.getHref());
-				if (protocol.equalsIgnoreCase(uri.getScheme()) && link.getRel() != null && link.getRel().indexOf(relPrefix) == 0) {
+				if (protocol.equalsIgnoreCase(uri.getScheme()) && link.getRel() != null
+						&& link.getRel().indexOf(relPrefix) == 0) {
 					protocoledLinks.add(link);
 				}
 			}
@@ -384,7 +454,7 @@ public class RegistryLookupUtil
 		return protocoledLinks;
 	}
 
-	private static Link getServiceExternalLink(String serviceName, String version, String rel, boolean prefixMatch,
+	private static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, boolean prefixMatch,
 			String tenantName)
 	{
 		LOGGER.debug(
@@ -392,7 +462,7 @@ public class RegistryLookupUtil
 				serviceName, version, rel, tenantName);
 		Tenant cacheTenant = new Tenant(tenantName);
 		try {
-			CachedLink cl = (CachedLink) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			CachedLink cl = (CachedLink) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_SERVICE_EXTERNAL_LINK_CACHE,
 					new Keys(CacheManager.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch));
 			if (cl != null) {
 				LOGGER.debug(
@@ -411,7 +481,7 @@ public class RegistryLookupUtil
 		}
 		InstanceInfo info = builder.build();
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
-		Link lk = null;
+		VersionedLink lk = null;
 		try {
 			List<InstanceInfo> result = null;
 
@@ -447,8 +517,14 @@ public class RegistryLookupUtil
 					else {
 						links = internalInstance.getLinksWithProtocol(rel, "https");
 					}
+					if (version == null) {
+						version = internalInstance.getVersion();
+						LOGGER.debug(
+								"Input version is null. Retrieved version from internalInstance for service: \"{}\" is \"{}\", rel: \"{}\", tenant: \"{}\"",
+								serviceName, version, rel, tenantName);
+					}
 
-					SanitizedInstanceInfo sanitizedInstance = findSaniInsInfo(tenantName, internalInstance);
+					SanitizedInstanceInfo sanitizedInstance = RegistryLookupUtil.findSaniInsInfo(tenantName, internalInstance);
 					if (sanitizedInstance != null) {
 						if (prefixMatch) {
 							links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("https", rel,
@@ -457,9 +533,15 @@ public class RegistryLookupUtil
 						else {
 							links = RegistryLookupUtil.getLinksWithProtocol("https", sanitizedInstance.getLinks(rel));
 						}
+						if (version == null) {
+							version = sanitizedInstance.getVersion();
+							LOGGER.debug(
+									"Input version is null. Retrieved version from sanitizedInstance for service: \"{}\" is \"{}\", rel: \"{}\", tenant: \"{}\"",
+									serviceName, version, rel, tenantName);
+						}
 					}
 					if (links != null && !links.isEmpty()) {
-						lk = links.get(0);
+						lk = new VersionedLink(links.get(0), version);
 						break;
 					}
 				}
@@ -468,7 +550,7 @@ public class RegistryLookupUtil
 					LOGGER.debug(
 							"[branch 1] Retrieved link: \"{}\" for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 							lk.getHref(), serviceName, version, rel, tenantName);
-					CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_SERVICE_EXTERNAL_LINK_CACHE,
 							new Keys(CacheManager.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch),
 							new CachedLink(lk));
 					return lk;
@@ -483,8 +565,11 @@ public class RegistryLookupUtil
 					else {
 						links = internalInstance.getLinksWithProtocol(rel, "http");
 					}
+					if (version == null) {
+						version = internalInstance.getVersion();
+					}
 
-					SanitizedInstanceInfo sanitizedInstance = findSaniInsInfo(tenantName, internalInstance);
+					SanitizedInstanceInfo sanitizedInstance = RegistryLookupUtil.findSaniInsInfo(tenantName, internalInstance);
 					if (sanitizedInstance != null) {
 						if (prefixMatch) {
 							links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("http", rel,
@@ -493,13 +578,16 @@ public class RegistryLookupUtil
 						else {
 							links = RegistryLookupUtil.getLinksWithProtocol("http", sanitizedInstance.getLinks(rel));
 						}
+						if (version == null) {
+							version = sanitizedInstance.getVersion();
+						}
 					}
 					if (links != null && !links.isEmpty()) {
-						lk = links.get(0);
+						lk = new VersionedLink(links.get(0), version);
 						LOGGER.debug(
 								"[branch 2] Retrieved link: \"{}\" for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 								lk == null ? null : lk.getHref(), serviceName, version, rel, tenantName);
-						CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+						CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_SERVICE_EXTERNAL_LINK_CACHE,
 								new Keys(CacheManager.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch),
 								new CachedLink(lk));
 						return lk;
@@ -516,35 +604,6 @@ public class RegistryLookupUtil
 		}
 	}
 
-    /**
-     * @param tenantName
-     * @param internalInstance
-     * @return
-     * @throws Exception
-     */
-    private static SanitizedInstanceInfo findSaniInsInfo(String tenantName, InstanceInfo internalInstance)
-    {
-        SanitizedInstanceInfo sanitizedInstance = null;
-        try {
-            if (!StringUtil.isEmpty(tenantName)) {
-                sanitizedInstance = LookupManager.getInstance().getLookupClient()
-                        .getSanitizedInstanceInfo(internalInstance, tenantName);
-                itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
-                        sanitizedInstance, tenantName);
-            }
-            else {
-                LOGGER.debug("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
-                sanitizedInstance = LookupManager.getInstance().getLookupClient()
-                        .getSanitizedInstanceInfo(internalInstance);
-                itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
-                        sanitizedInstance);
-            }
-        } catch(Exception ex) {
-            LOGGER.error(ex.getLocalizedMessage(), ex);
-        }
-        return sanitizedInstance;
-    }
-
 	private static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
 			String tenantName)
 	{
@@ -553,7 +612,7 @@ public class RegistryLookupUtil
 				serviceName, version, rel, prefixMatch, tenantName);
 		Tenant cacheTenant = new Tenant(tenantName);
 		try {
-			CachedLink cl = (CachedLink) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			CachedLink cl = (CachedLink) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_SERVICE_INTERNAL_LINK_CACHE,
 					new Keys(CacheManager.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch));
 			if (cl != null) {
 				LOGGER.debug(
@@ -568,7 +627,7 @@ public class RegistryLookupUtil
 
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
-		Link lk = null;
+		VersionedLink lk = null;
 		try {
 			List<InstanceInfo> result = null;
 			if (!StringUtil.isEmpty(tenantName)) {
@@ -599,10 +658,13 @@ public class RegistryLookupUtil
 					else {
 						links = internalInstance.getLinksWithProtocol(rel, "http");
 					}
+					if (version == null) {
+						version = internalInstance.getVersion();
+					}
 					if (links != null && !links.isEmpty()) {
-						lk = links.get(0);
+						lk = new VersionedLink(links.get(0), version);
 						itrLogger.debug("Retrieved link {}", lk == null ? null : lk.getHref());
-						CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+						CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_SERVICE_INTERNAL_LINK_CACHE,
 								new Keys(serviceName, version, rel, prefixMatch), new CachedLink(lk));
 						return lk;
 					}
@@ -623,7 +685,7 @@ public class RegistryLookupUtil
 		Tenant cacheTenant = new Tenant(tenantName);
 		Map<String, String> map = null;
 		try {
-			map = (Map<String, String>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			map = (Map<String, String>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_VANITY_BASE_URL_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_VANITY_BASE_URL);
 			if (map != null) {
 				return map;
@@ -640,7 +702,8 @@ public class RegistryLookupUtil
 			if (result != null && !result.isEmpty()) {
 				for (InstanceInfo internalInstance : result) {
 					if (map.containsKey(APM_SERVICE) && map.containsKey(ITA_SERVICE) && map.containsKey(LA_SERVICE)
-							&& map.containsKey(MONITORING_SERVICE) && map.containsKey(SECURITY_ANALYTICS_SERVICE) && map.containsKey(COMPLIANCE_SERVICE)) {
+							&& map.containsKey(MONITORING_SERVICE) && map.containsKey(SECURITY_ANALYTICS_SERVICE)
+							&& map.containsKey(COMPLIANCE_SERVICE) && map.containsKey(ORCHESTRATION_SERVICE)) {
 						break;
 					}
 					if (!map.containsKey(APM_SERVICE)) {
@@ -716,10 +779,23 @@ public class RegistryLookupUtil
 							lk = links.get(0);
 							LOGGER.debug("Retrieved base vanity URL for Compliance service: {} ", lk.getHref());
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
-							LOGGER.debug(
-									"Tenant id is inserted into the base vanity URL for Compliance service. The URL is {}",
+							LOGGER.debug("Tenant id is inserted into the base vanity URL for Compliance service. The URL is {}",
 									url);
 							map.put(COMPLIANCE_SERVICE, url);
+						}
+					}
+					if (!map.containsKey(ORCHESTRATION_SERVICE)) {
+						List<Link> links = internalInstance.getLinksWithProtocol("vanity/ocs", "https");
+						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
+
+						if (links != null && !links.isEmpty()) {
+							lk = links.get(0);
+							LOGGER.debug("Retrieved base vanity URL for Orchestration service: {} ", lk.getHref());
+							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
+							LOGGER.debug(
+									"Tenant id is inserted into the base vanity URL for Orchestration service. The URL is {}",
+									url);
+							map.put(ORCHESTRATION_SERVICE, url);
 						}
 					}
 				}
@@ -736,7 +812,7 @@ public class RegistryLookupUtil
 				LOGGER.debug("service name is {}, and url is {}", service, url);
 			}
 		}
-		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_VANITY_BASE_URL_CACHE,
 				CacheManager.LOOKUP_CACHE_KEY_VANITY_BASE_URL, map);
 		return map;
 	}
@@ -784,8 +860,8 @@ public class RegistryLookupUtil
 
 	private static Link replaceVanityUrlDomainForLink(String domainPort, Link lk, String tenantName)
 	{
-		LOGGER.debug("/replaceDomainForLink/ Trying to replace link url \"{}\" with domain \"{}\"", lk != null ? lk.getHref()
-				: null, domainPort);
+		LOGGER.debug("/replaceDomainForLink/ Trying to replace link url \"{}\" with domain \"{}\"",
+				lk != null ? lk.getHref() : null, domainPort);
 		if (StringUtil.isEmpty(domainPort) || lk == null || StringUtil.isEmpty(lk.getHref())) {
 			return lk;
 		}
@@ -838,5 +914,9 @@ public class RegistryLookupUtil
 		}
 		LOGGER.info("After replacing with vanity url, the target url is: \"{}\"", sb.toString());
 		return sb.toString();
+	}
+
+	private RegistryLookupUtil()
+	{
 	}
 }

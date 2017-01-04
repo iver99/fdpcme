@@ -94,8 +94,15 @@ public class LoginAndLogout
 		webd.getLogger().info("url is " + url + "   properties file is " + testPropertiesFile);
 		webd.getLogger().info("after::start to test in LoginAndOut");
 		// if the ui have been login, do not login ,again
-		if (!webd.getWebDriver().getCurrentUrl().equals(url)) {
-
+		//		if (!webd.getWebDriver().getCurrentUrl().equals(url)) {
+		if (!webd.getWebDriver().getCurrentUrl().equals(url) && !webd.getWebDriver().getCurrentUrl().contains("omcCtx=")) {
+			//Append omc context into login url
+			if (!url.contains("omcCtx=")) {
+				url = url
+						+ (url.indexOf("?") > 0 ? "&" : "?")
+						+ "omcCtx=compositeType%3DSystem%2520%28Generic%29%26compositeName%3D%252FSOA1213_base_domain%252Fbase_domain%252Fsoa_server1%252Fsoa-infra_System%26compositeMEID%3D8426448730BDF663A9806A69AA2C445B";
+				webd.getLogger().info("New url with OMC global context appended is: " + url);
+			}
 			LoginUtils.doLogin(webd, username, password, tenantId, url);
 		}
 	}
@@ -142,8 +149,15 @@ public class LoginAndLogout
 		//		webd.getLogger().info("url is " + url + "   properties file is " + testPropertiesFile);
 		webd.getLogger().info("after::start to test in LoginAndOut");
 		// if the ui have been login, do not login ,again
-		if (!webd.getWebDriver().getCurrentUrl().equals(url)) {
-
+		//		if (!webd.getWebDriver().getCurrentUrl().equals(url)) {
+		if (!webd.getWebDriver().getCurrentUrl().equals(url) && !webd.getWebDriver().getCurrentUrl().contains("omcCtx=")) {
+			//Append omc context into login url
+			if (!url.contains("omcCtx=")) {
+				url = url
+						+ (url.indexOf("?") > 0 ? "&" : "?")
+						+ "omcCtx=startTime%3D1478045700000%26endTime%3D1478240100000%26compositeMEID%3DEE380645A9711FFF881A146A00C98324";
+				webd.getLogger().info("New url with OMC global context appended is: " + url);
+			}
 			LoginUtils.doLogin(webd, username, password, tenantID, url);
 		}
 

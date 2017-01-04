@@ -194,15 +194,25 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		Validator.notEmptyString("option", option);
 
 		driver.click(convertName(DashBoardPageId.EXPLOREDATABTNID));
-		WebElement menu = driver.getElement(convertName(DashBoardPageId.EXPLOREDATAMENU));
-		List<WebElement> menuList = menu.findElements(By.tagName("li"));
+		//WebElement menu = driver.getElement(convertName(DashBoardPageId.EXPLOREDATAMENU));
+                 
+                if (IDashboardHomeUtil.EXPLOREDATA_MENU_LOG.equals(option)) {                 
+                        driver.click(DashBoardPageId.EXPLORE_LOG);
+                 } else {
+                     	driver.click(DashBoardPageId.EXPLORE_Search);
+		 }
+ 
+               
+              }  
+               
+		/*List<WebElement> menuList = menu.findElements(By.tagName("li"));
 		for (WebElement menuItem : menuList) {
 			if (option.equals(menuItem.getText())) {
 				menuItem.click();
 				break;
 			}
 		}
-	}
+	}*/
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#gridView(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
@@ -331,6 +341,10 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		if (el.isSelected()) {
 			el.click();
 		}
+		el = driver.getElement(DashBoardPageId.FILTERORCHESTRATIONLOCATOR);
+		if (el.isSelected()) {
+			el.click();
+		}
 		el = driver.getElement(DashBoardPageId.FILTERORACLELOCATOR);
 		if (el.isSelected()) {
 			el.click();
@@ -389,7 +403,9 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call selectOOB dashboardName: " + dashboardName);
 		Validator.notEmptyString("dashboardName", dashboardName);
-		String indicator = DashBoardPageId.OOBDASHBOARDNAMELOCATOR.replace("_name_", dashboardName);
+		String indicator = driver.isElementPresent(DashBoardPageId.OOBDASHBOARDNAMELOCATORLISTVIEW) ?
+				DashBoardPageId.OOBDASHBOARDNAMELOCATOR.replace("_name_", dashboardName)
+				: DashBoardPageId.OOBDASHBOARD_LIST_LINK.replace("_name_", dashboardName);
 		if (!driver.isElementPresent(indicator)) {
 			throw new NoSuchElementException("Dashboard not exists. Name: " + dashboardName);
 		}
@@ -570,7 +586,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		return "id=" + id;
 	}
 
-	private String convertName(String name)
+	protected String convertName(String name)
 	{
 		return "name=" + name;
 	}

@@ -78,6 +78,8 @@ public class Tile
 		tile.setTitle(edt.getTitle());
 		tile.setWidgetCreationTime(edt.getWidgetCreationTime());
 		tile.setWidgetDescription(edt.getWidgetDescription());
+		tile.setWidgetDeleted(DataFormatUtils.integer2Boolean(edt.getWidgetDeleted()));
+		tile.setWidgetDeletionDate(edt.getWidgetDeletionDate());
 		tile.setWidgetGroupName(edt.getWidgetGroupName());
 		tile.setWidgetHistogram(edt.getWidgetHistogram());
 		tile.setWidgetIcon(edt.getWidgetIcon());
@@ -207,6 +209,10 @@ public class Tile
 
 	private String linkUrl;
 
+	private Boolean widgetDeleted;
+
+	private Date widgetDeletionDate;
+
 	@JsonIgnore
 	private Dashboard dashboard;
 	@JsonProperty("tileParameters")
@@ -216,6 +222,7 @@ public class Tile
 	{
 		// defaults for non-null values
 		isMaximized = Boolean.FALSE;
+		widgetDeleted = Boolean.FALSE;
 	}
 
 	public TileParam addParameter(TileParam tp)
@@ -378,6 +385,19 @@ public class Tile
 		return widgetCreationTime;
 	}
 
+	public Boolean getWidgetDeleted()
+	{
+		return widgetDeleted;
+	}
+
+	/**
+	 * @return the widgetDeletionDate
+	 */
+	public Date getWidgetDeletionDate()
+	{
+		return widgetDeletionDate;
+	}
+
 	public String getWidgetDescription()
 	{
 		return widgetDescription;
@@ -468,7 +488,7 @@ public class Tile
 		if (tp == null) {
 			return null;
 		}
-		parameters.remove(name);
+		parameters.remove(tp);
 		return tp;
 	}
 
@@ -596,6 +616,20 @@ public class Tile
 		this.widgetCreationTime = widgetCreationTime;
 	}
 
+	public void setWidgetDeleted(Boolean widgetDeleted)
+	{
+		this.widgetDeleted = widgetDeleted;
+	}
+
+	/**
+	 * @param widgetDeletionDate
+	 *            the widgetDeletionDate to set
+	 */
+	public void setWidgetDeletionDate(Date widgetDeletionDate)
+	{
+		this.widgetDeletionDate = widgetDeletionDate;
+	}
+
 	public void setWidgetDescription(String widgetDescription)
 	{
 		this.widgetDescription = widgetDescription;
@@ -670,6 +704,7 @@ public class Tile
 	{
 		Integer intIsMaximized = DataFormatUtils.boolean2Integer(isMaximized);
 		Integer intWidgetSupportTimeControl = DataFormatUtils.boolean2Integer(widgetSupportTimeControl);
+		Integer intWidgetDeleted = DataFormatUtils.boolean2Integer(widgetDeleted);
 
 		if (title == null || "".equals(title)) {
 			throw new CommonFunctionalException(
@@ -757,7 +792,7 @@ public class Tile
 					lastModifiedBy, owner, providerAssetRoot, providerName, providerVersion, tileId, encodedTitle,
 					widgetCreationTime, widgetDescription, widgetGroupName, widgetHistogram, widgetIcon, widgetKocName,
 					widgetName, widgetOwner, widgetSource, widgetTemplate, widgetUniqueId, widgetViewmode,
-					intWidgetSupportTimeControl, width, widgetLinkedDashboard);
+					intWidgetSupportTimeControl, width, widgetLinkedDashboard, intWidgetDeleted, widgetDeletionDate);
 			if (parameters != null) {
 				for (TileParam param : parameters) {
 					EmsDashboardTileParams edtp = param.getPersistentEntity(to, null);
@@ -781,6 +816,7 @@ public class Tile
 			}
 			//			to.setWidgetCreationTime(widgetCreationTime);
 			to.setWidgetDescription(widgetDescription);
+			to.setWidgetDeleted(intWidgetDeleted);
 			to.setWidgetGroupName(widgetGroupName);
 			to.setWidgetHistogram(widgetHistogram);
 			to.setWidgetIcon(widgetIcon);
@@ -817,7 +853,9 @@ public class Tile
 			to = new EmsDashboardTile(creationDate, null, tileType, row, column, height, 0, lastModificationDate, lastModifiedBy,
 					owner, providerAssetRoot, providerName, providerVersion, tileId, title, widgetCreationTime, widgetDescription,
 					widgetGroupName, widgetHistogram, widgetIcon, widgetKocName, widgetName, widgetOwner, widgetSource,
-					widgetTemplate, widgetUniqueId, widgetViewmode, supportTimeControl, width, widgetLinkedDashboard);
+					widgetTemplate, widgetUniqueId, widgetViewmode, supportTimeControl, width, widgetLinkedDashboard,
+					// text tile actually doesn't exist any more
+					0, widgetDeletionDate);
 			if (parameters != null) {
 				for (TileParam param : parameters) {
 					EmsDashboardTileParams edtp = param.getPersistentEntity(to, null);

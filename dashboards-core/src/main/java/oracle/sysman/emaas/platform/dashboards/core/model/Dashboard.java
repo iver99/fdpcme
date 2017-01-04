@@ -6,6 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonValue;
+
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
@@ -16,12 +24,6 @@ import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.annotate.JsonValue;
 
 public class Dashboard
 {
@@ -233,6 +235,7 @@ public class Dashboard
 		to.setEnableDescription(EnableDescriptionState.fromValue(from.getEnableDescription()));
 		to.setEnableRefresh(DataFormatUtils.integer2Boolean(from.getEnableRefresh()));
 		to.setIsSystem(DataFormatUtils.integer2Boolean(from.getIsSystem()));
+		to.setShowInHome(DataFormatUtils.integer2Boolean(from.getShowInHome()));
 		to.setSharePublic(DataFormatUtils.integer2Boolean(from.getSharePublic()));
 		to.setLastModificationDate(from.getLastModificationDate());
 		to.setLastModifiedBy(from.getLastModifiedBy());
@@ -242,33 +245,33 @@ public class Dashboard
 		//		to.setScreenShot(from.getScreenShot());
 		to.setType(DataFormatUtils.dashboardTypeInteger2String(from.getType()));
 		to.setExtendedOptions(from.getExtendedOptions());
+		to.setApplicationType(from.getApplicationType());
 		if (from.getType().equals(DASHBOARD_TYPE_CODE_SET)) {
 			to.setEnableTimeRange(null);
 			to.setIsSystem(null);
 			if (loadSubDashboards) {
-				List<EmsSubDashboard> emsSubDashboards = from.getSubDashboardList();
+				List<EmsSubDashboard> emsSubDashboards = from
+						.getSubDashboardList();
 				if (emsSubDashboards != null) {
-					List<Dashboard> subDashboardList = new ArrayList<>();
-					for (EmsSubDashboard esd : emsSubDashboards) {
-						Dashboard dbd = new Dashboard();
-						dbd.setEnableTimeRange(null);
-						dbd.setEnableRefresh(null);
-						dbd.setIsSystem(null);
-						dbd.setSharePublic(null);
-						dbd.setType(null);
-
-						Long subDashboardId = esd.getSubDashboardId();
-						Long tenantId = from.getTenantId();
-						DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-						EmsDashboard ed = dsf.getEmsDashboardById(subDashboardId);
-
-						dbd.setDashboardId(ed.getDashboardId());
-						dbd.setName(ed.getName());
-
-						subDashboardList.add(dbd);
+					List<Long> subDashboardIds = new ArrayList<Long>();
+					getSubDashboardIds(emsSubDashboards, subDashboardIds);
+					Long tenantId = from.getTenantId();
+					EntityManager em = null;
+					try {
+						DashboardServiceFacade dsf = new DashboardServiceFacade(
+								tenantId);
+						List<EmsDashboard> subEmsDashboards = dsf.getEmsDashboardByIds(subDashboardIds, tenantId);
+						List<Dashboard> subDashboardList = new ArrayList<Dashboard>();
+						getSubDashboardsFromEmsSubDashboards(subEmsDashboards,
+								subDashboardList);
+						to.setSubDashboards(subDashboardList);
+						em = dsf.getEntityManager();
+					} finally {
+						if (em != null) {
+							em.close();
+						}
 					}
-					to.setSubDashboards(subDashboardList);
-				}
+				}	
 			}
 		}else {
 			to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
@@ -314,6 +317,8 @@ public class Dashboard
 	@JsonProperty("systemDashboard")
 	private Boolean isSystem;
 
+	private Boolean showInHome;
+
 	private Boolean sharePublic;
 
 	@JsonProperty("lastModifiedOn")
@@ -345,6 +350,12 @@ public class Dashboard
 
 	@JsonProperty("dashboardSets")
 	private List<Dashboard> dashboardSets;
+	
+	@JsonProperty("dupDashboardId")
+	private Long dupDashboardId;
+	
+	@JsonProperty("applicationType")
+	private Integer applicationType;
 
 	public Dashboard()
 	{		
@@ -357,6 +368,7 @@ public class Dashboard
 		deleted = DASHBOARD_DELETED_DEFAULT;
 		isSystem = Boolean.FALSE;
 		sharePublic = Boolean.FALSE;
+		showInHome=Boolean.TRUE;
 	}
 
 	public Tile addTile(Tile tile)
@@ -432,6 +444,11 @@ public class Dashboard
 		return isSystem;
 	}
 
+	public Boolean getShowInHome()
+	{
+		return showInHome;
+	}
+
 	public Date getLastModificationDate()
 	{
 		return lastModificationDate;
@@ -456,6 +473,39 @@ public class Dashboard
 	{
 		return owner;
 	}
+	
+
+	/**
+	 * @return the dupDashboardId
+	 */
+	public Long getDupDashboardId()
+	{
+		return dupDashboardId;
+	}
+
+	/**
+	 * @param dupDashboardId the dupDashboardId to set
+	 */
+	public void setDupDashboardId(Long dupDashboardId)
+	{
+		this.dupDashboardId = dupDashboardId;
+	}
+
+	/**
+	 * @return the applicationType
+	 */
+	public Integer getApplicationType()
+	{
+		return applicationType;
+	}
+
+	/**
+	 * @param applicationType the applicationType to set
+	 */
+	public void setApplicationType(Integer applicationType)
+	{
+		this.applicationType = applicationType;
+	}
 
 	public EmsDashboard getPersistenceEntity(EmsDashboard ed) throws DashboardException
 	{
@@ -475,6 +525,7 @@ public class Dashboard
 		Integer isEnableRefresh = DataFormatUtils.boolean2Integer(enableRefresh);
 		Integer isIsSystem = DataFormatUtils.boolean2Integer(isSystem);
 		Integer isShare = DataFormatUtils.boolean2Integer(sharePublic);
+		Integer isShowInHome=DataFormatUtils.boolean2Integer(showInHome);
 		Integer dashboardType = DataFormatUtils.dashboardTypeString2Integer(type);
 		Integer appType = appicationType == null ? null : appicationType.getValue();
 		String htmlEcodedName = StringEscapeUtils.escapeHtml4(name);
@@ -483,17 +534,18 @@ public class Dashboard
 		if (ed == null) {
 			ed = new EmsDashboard(creationDate, dashboardId, 0L, htmlEcodedDesc, isEnableTimeRange, isEnableRefresh,
 					isEnableDescription, isEnableEntityFilter, isIsSystem, isShare, lastModificationDate, lastModifiedBy,
-					htmlEcodedName, owner, screenShot, dashboardType, appType, extendedOptions);
+					htmlEcodedName, owner, screenShot, dashboardType, appType, isShowInHome, extendedOptions);
 
 			if (type.equals(Dashboard.DASHBOARD_TYPE_SET)) {
 				// support create subDashboards
-				//                if (subDashboards != null) {
-				//                    for (int index=0;index < subDashboards.size() ;index++ ) {
-				//                        Dashboard dbd = subDashboards.get(index);
-				//                        EmsSubDashboard esdbd = new EmsSubDashboard(dashboardId,dbd.getDashboardId(),index);
-				//                        ed.addEmsSubDashboard(esdbd);
-				//                    }
-				//                }
+				// support test cases in DashboardManagerTest
+				                if (subDashboards != null && dashboardId!=null) {
+				                    for (int index=0;index < subDashboards.size() ;index++ ) {
+				                        Dashboard dbd = subDashboards.get(index);
+				                        EmsSubDashboard esdbd = new EmsSubDashboard(dashboardId,dbd.getDashboardId(),index);
+				                        ed.addEmsSubDashboard(esdbd);
+				                    }
+				                }
 			}
 			else {
 				if (tileList != null) {
@@ -644,6 +696,11 @@ public class Dashboard
 		this.isSystem = isSystem;
 	}
 
+	public void setShowInHome(Boolean showInHome)
+	{
+		this.showInHome = showInHome;
+	}
+
 	public void setLastModificationDate(Date lastModificationDate)
 	{
 		this.lastModificationDate = lastModificationDate;
@@ -703,6 +760,39 @@ public class Dashboard
 	{
 		this.type = type;
 	}
+	
+	private static void getSubDashboardIds(List<EmsSubDashboard> subDashboards,
+			List<Long> subDashboardIds) {
+		if (subDashboards != null) {
+			for (EmsSubDashboard emsSubDashboard : subDashboards) {
+				subDashboardIds.add(emsSubDashboard.getSubDashboardId());
+			}
+		}
+	}
+
+	private static void getSubDashboardsFromEmsSubDashboards(
+			List<EmsDashboard> emsSubDashboards, List<Dashboard> subDashboards) {
+		if (emsSubDashboards != null) {
+			for (EmsDashboard emsDashboard : emsSubDashboards) {
+				Dashboard dbd = new Dashboard();
+				dbd.setEnableTimeRange(null);
+				dbd.setEnableRefresh(null);
+				dbd.setIsSystem(null);
+				dbd.setType(null);
+				dbd.setDashboardId(emsDashboard.getDashboardId());
+				dbd.setName(emsDashboard.getName());
+				dbd.setSharePublic(DataFormatUtils.integer2Boolean(emsDashboard
+						.getSharePublic()));
+				dbd.setOwner(emsDashboard.getOwner());
+				subDashboards.add(dbd);
+
+			}
+
+		}
+
+	}
+	 
+
 
     public List<Dashboard> getDashboardSets() {
         return dashboardSets;
