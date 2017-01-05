@@ -49,6 +49,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.entityContextReadOnly = ko.observable(true);
             }
             self.showEntityContextSelector = ko.observable(false);
+            //flag to enable removal of read only pills
+            self.showReadOnlyPillRemove = ko.observable(false);
             //respond to change to entityContextReadOnly
             self.entityContextReadOnly.subscribe(function () {
                 if (!self.entityContextReadOnly()) {
@@ -114,6 +116,46 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     refreshOMCContext();
                 }
             });
+
+            self.removeROCompositePill = function () {
+                handleROPills('composite');
+            };
+
+            self.removeROEntityPill = function (data) {
+                handleROPills('entity', data);
+            };
+
+            /**
+             * Function prompts for context type to delete depending on the X button pressed.
+             * If composite clicked, it calls clearCompositeContext() directly; if entity
+             * RO clicked, it gets the entity array from context and slpices that object
+             * before resetting it.
+             * @param {type} context
+             * @param {type} data
+             * @returns {undefined}
+             */
+            function handleROPills(context, data) {
+                if (context === 'composite') {
+                    cxtUtil.clearCompositeContext();
+                    return;
+                } else if (context === 'entity') {
+                    var toDelete = data.meId;
+                    var entities = cxtUtil.getEntities();
+                    for (var x = 0; x < entities.length; x++) {
+                        if (entities[x].meId === toDelete) {
+                            entities.splice(x, 1);
+                            break;
+                        }
+                    }
+                    if (entities.length === 0) {
+                        cxtUtil.clearEntityContext();
+                    } else {
+                        cxtUtil.setEntityMeIds(entities.map(function (val) {
+                            return val.meId;
+                        }));
+                    }
+                }
+            };
 
             function handleShowHideTopology() {
                 $("#ude-topology-div").slideToggle("fast", function () {
@@ -253,6 +295,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.topologyBtnLabel = nls.BRANDING_BAR_GLOBAL_CONTEXT_TOPOLOGY;
             self.topologyMaximizeLabel = nls.BRANDING_BAR_TOPOLOGY_MAXIMIZE;
             self.topologyRestoreLabel = nls.BRANDING_BAR_TOPOLOGY_RESTORE;
+            self.gcAllEntities = nls.BRANDING_BAR_GLOBAL_CONTEXT_ALL_ENTITIES;
+            self.removePillTitle = nls.PILL_REMOVE_TITLE;
             self.appName = ko.observable();
 
             self.hasMessages = ko.observable(true);
