@@ -56,6 +56,8 @@ public class LRUCacheManager extends AbstractCacheManager{
         getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE, CacheConfig.TENANT_SUBSCRIBED_SERVICES_CAPACITY, CacheConfig.TENANT_SUBSCRIBED_SERVICES_EXPIRE_TIME);
         getCache(CacheConstants.CACHES_SSO_LOGOUT_CACHE, CacheConfig.SSO_LOGOUT_CAPACITY, CacheConfig.SSO_LOGOUT_EXPIRE_TIME);
         getCache(CacheConstants.CACHES_ASSET_ROOT_CACHE, CacheConfig.ASSET_ROOT_CAPACITY, CacheConfig.ASSET_ROOT_EXPIRE_TIME);
+        getCache(CacheConstants.CACHES_REGISTRY_CACHE, CacheConfig.REGISTRY_CAPACITY, CacheConfig.REGISTRY_EXPIRE_TIME);
+        getCache(CacheConstants.CACHES_TENANT_USER_CACHE, CacheConfig.TENANT_USER_CAPACITY, CacheConfig.TENANT_USER_EXPIRE_TIME);
     }
 
     /**
