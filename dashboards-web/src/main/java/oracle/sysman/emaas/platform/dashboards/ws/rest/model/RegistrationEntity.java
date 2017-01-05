@@ -647,6 +647,7 @@ public class RegistrationEntity implements Serializable
 				appSet.add(SECURITY_ANALYTICS_SERVICENAME);
 				appSet.add(COMPLIANCE_SERVICENAME);
 				appSet.add(ORCHESTRATION_SERVICENAME);
+				LOGGER.info("Checking subscribed app set for app {}, it is a bundle service, so return all individual services", app);
 				break;
 			}
 			if (ApplicationOPCName.APM.toString().equals(app)) {

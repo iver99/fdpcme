@@ -10,10 +10,16 @@
 
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonValue;
-
-import java.util.*;
 
 /**
  * @author guobaochen
@@ -60,6 +66,7 @@ public enum DashboardApplicationType
 	public static final String SECSE_STRING = "SECSE";
 	public static final String SECSMA_STRING = "SECSMA";
 
+	private static final Logger LOGGER = LogManager.getLogger(DashboardApplicationType.class);
 	public static final List<DashboardApplicationType> allBasicService = Arrays.asList(APM, ITAnalytics, LogAnalytics, Monitoring, SecurityAnalytics, Orchestration, Compliance);
 
 	@JsonCreator
@@ -177,10 +184,12 @@ public enum DashboardApplicationType
 		Set<DashboardApplicationType> basicServicesSet = new HashSet<DashboardApplicationType>();
 		for (DashboardApplicationType service: services) {
 			if (service.isBundleService) {
+				LOGGER.info("When retrieving basic app type, we get a bundle service {}, so return all basic services then", service.getJsonValue());
 				return DashboardApplicationType.allBasicService;
 			}
 			basicServicesSet.add(service);
 		}
+		LOGGER.info("Getting basic services: {}", basicServicesSet);
 		return new ArrayList<DashboardApplicationType>(basicServicesSet);
 	}
 }
