@@ -446,8 +446,10 @@ public class DashboardServiceFacade
 		if (emsSubDashboards != null) {
 			for (EmsSubDashboard emsSubDashboard : emsSubDashboards) {
 				EmsDashboard dashboard = getEmsDashboardById(emsSubDashboard.getSubDashboardId());
-				dashboard.setShowInHome(1);
-				em.merge(dashboard);
+				if(dashboard.getIsSystem()!=1){
+					dashboard.setShowInHome(1);
+					em.merge(dashboard);
+				}
 			}
 		}
 		getEntityManager().getTransaction().commit();

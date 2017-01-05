@@ -121,11 +121,13 @@ define({
       "DSB_BUILDER_EDIT_TIME_RANGE": "Time Range",
       "DSB_BUILDER_EDIT_ENABLE_TIME_RANGE": "Use dashboard time range",
       "DSB_BUILDER_EDIT_DISABLE_TIME_RANGE": "Use time ranges defined within content items",
+      "DSB_BUILDER_EDIT_ENABLE_GC_TIME_RANGE": "Use time range passed in from other pages",
 
       "DSB_BUILDER_EDIT_ENTITIES": "Entities",
       "DSB_BUILDER_EDIT_ENTITY_SUPPORT_MULTIPLE": "Dashboard supports multiple entities",
       "DSB_BUILDER_EDIT_ENABLE_ENTITIES": "Use dashboard entities",
       "DSB_BUILDER_EDIT_DISABLE_ENTITIES": "Use entities defined within content items",
+      "DSB_BUILDER_EDIT_ENABLE_GC_ENTITIES": "Use entities passed in from other pages",
 
       "DSB_BUILDER_EDIT_DEFAULT_ENTITY_LABEL": "Default Entity Value",
       "DSB_BUILDER_EDIT_DEFAULT_TIME_RANGE_LABEL": "Default Time Range Value",

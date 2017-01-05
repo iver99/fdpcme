@@ -184,6 +184,54 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                 }
             }
+            
+            self.topologySize = ko.observable();
+            self.topologyHeight = ko.observable();
+            self.topologySize.subscribe(function(topoHeight) {
+               topoHeight && topoHeight.h && self.topologyHeight(topoHeight.h);
+		if(self.topologyHeight()<=201) {
+                    self.topologyCssHeight(self.topologyHeight());
+                }else {
+                    self.topologyCssHeight(201);
+                }
+            });
+            
+            self.isMaximized = ko.observable(false);
+            
+            self.showTopologyMaxIcon = function() {
+                $("#maxMinTopology").css("display", "block");
+            };
+            self.hideTopologyMaxIcon = function() {
+                $("#maxMinTopology").css("display", "none");
+            }
+            self.maximizeTopology = function() {
+                self.topologyCssHeight(self.topologyHeight());
+                self.isMaximized(true);
+                var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                $b && $b.triggerBuilderResizeEvent('Topology is maximized!');
+            };
+            self.restoreTopology = function() {
+                self.topologyCssHeight(201);
+                self.isMaximized(false);                
+                var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                $b && $b.triggerBuilderResizeEvent('Topology is restored!');
+            };
+            self.maxMinTopologyToggle = function() {
+                if(!self.isMaximized()) {
+                    self.maximizeTopology();
+                }else {
+                    self.restoreTopology();
+                }
+            }
+            
+	    self.topologyCssHeight = ko.observable();
+            self.topologyStyle = ko.computed(function() {
+                var height = "100%; max-height: 204px"
+                if(self.topologyCssHeight()) {
+                    height = (self.topologyCssHeight() + 3) + "px";
+                }
+                return "display: flex; float: left; width: 100%; height: " + height + ";";
+            });
 
             //NLS strings
             self.productName = nls.BRANDING_BAR_MANAGEMENT_CLOUD;
@@ -202,6 +250,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.altTextInfo = nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_INFO;
             self.altTextClear = nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CLEAR;
             self.topologyBtnLabel = nls.BRANDING_BAR_GLOBAL_CONTEXT_TOPOLOGY;
+            self.topologyMaximizeLabel = nls.BRANDING_BAR_TOPOLOGY_MAXIMIZE;
+            self.topologyRestoreLabel = nls.BRANDING_BAR_TOPOLOGY_RESTORE;
             self.appName = ko.observable();
 
             self.hasMessages = ko.observable(true);
@@ -422,7 +472,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.gotoHomePage = function () {
                 var welcomeUrl = dfu.discoverWelcomeUrl();
                 oj.Logger.info("Go to welcome page by URL: " + welcomeUrl, false);
-                window.location.href = cxtUtil.appendOMCContext(welcomeUrl);
+                window.location.href = cxtUtil.appendOMCContext(welcomeUrl, true, true, true);
             };
 
             //Open about box
@@ -561,7 +611,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.notificationMenuHandler = function (event, item) {
                 if (self.notificationPageUrl !== null && self.notificationPageUrl !== "") {
                     oj.Logger.info("Open notifications page: " + self.notificationPageUrl);
-                    window.open(cxtUtil.appendOMCContext(self.notificationPageUrl));
+                    window.open(cxtUtil.appendOMCContext(self.notificationPageUrl, true, true, true));
                 }
             };
 
@@ -664,7 +714,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                 }
                 else if (data && data.tag && data.tag === 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED') {
-                    refreshOMCContext();
+                    if (self.showGlobalContextBanner() === true) {
+                        refreshOMCContext();
+                    }
                 }
             }
 
@@ -901,14 +953,18 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                            }
 //                        }
 //                    }
+                    var topologyParams = cxtUtil.getTopologyParams();
+                    if (topologyParams && !self.topologyParamsSet) {
+                         refreshTopology = true;
+                    }
                     if (refreshTopology) {
-                        var topologyParams = cxtUtil.getTopologyParams();
                         if (topologyParams) {
                             self.associations(topologyParams.associations);
                             self.layout(topologyParams.layout);
                             self.customNodeDataLoader(topologyParams.customNodeDataLoader);
                             self.customEventHandler(topologyParams.customEventHandler);
                             self.miniEntityCardActions(topologyParams.miniEntityCardActions);
+                            self.topologyParamsSet = true;
                         }
                         $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
                         self.topologyInitialized = true;
@@ -1013,6 +1069,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     && !cxtUtil.getEntitiesType()
                     && cxtUtil.getEntityMeIds().length > 0
                     && cxtUtil.getEntities().length > 0;
+                displayEntitiesName = false; // disable emctas-5151/emcpdf-2773 for 1.14
 
                 if (displayCompositeName) {
                     self.compositeCxtText(self.cxtCompositeDisplayName);

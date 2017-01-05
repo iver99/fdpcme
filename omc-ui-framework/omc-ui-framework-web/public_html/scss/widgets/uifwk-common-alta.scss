@@ -35,6 +35,10 @@ a:hover {
     display: inline-block;
 }
 
+.fa-icon-font-16 {
+    font-size: 16px !important;
+}
+
 .fa-cogs:before {
   content: "\f085"; }
 
@@ -420,4 +424,12 @@ a:hover {
   flex: auto;
   min-width: 0px;
   min-height: 0px; 
+}
+
+.emaas-appheader-maximize-icon:before {
+    content:"\f065";
+}
+
+.emaas-appheader-restore-icon:before {
+    content:"\f066";
 }

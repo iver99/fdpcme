@@ -132,7 +132,6 @@
                 <!-- ko if: compositeCxtText() -->
                 <div class="ude-sdk pill filterpill_value filterpill_with_value" style="margin-bottom: auto; margin-top: auto;height: 20px; 
                      padding-left: 8px; padding-right:8px; font-size: 14px; padding-top: 3px;padding-bottom: 1px;margin-left:0px; font-weight: normal; cursor: default;"
-                     data-bind="css: { pill_disabled: !cxtComposite.isEnabled() }"
                      id="globalBar_pillWrapper">
                      <span style="white-space: pre-wrap;"
                            data-bind="text:compositeCxtText, attr:{title:cxtCompositeName}" class="ude-sdk"></span>
@@ -141,8 +140,7 @@
                 <!-- ko foreach: entitiesList() -->
                 <div class="ude-sdk pill filterpill_value filterpill_with_value" style="margin-bottom: auto; margin-top: auto;height: 20px;
                      padding-left: 8px; padding-right:8px; font-size: 14px; padding-top: 3px;padding-bottom: 1px;margin-left:0px; font-weight: normal; cursor: default;"
-                     data-bind="attr: {id: 'globalBar_pillWrapper_' + $index()},
-                        css: { pill_disabled: !$rawData.isEnabled() }"
+                     data-bind="attr: {id: 'globalBar_pillWrapper_' + $index()}"
                      >
                      <span style="white-space: pre-wrap;"
                            data-bind="text:$data.displayName, attr:{title:$data.entityName}" class="ude-sdk"></span>
@@ -159,8 +157,23 @@
 
         <!-- topology --->
         <!-- ko if: isTopologyCompRegistered() !== false -->
-        <div id="ude-topology-div" style="overflow-y:auto; max-height:200px; height:auto; background-color:white;"
-             data-bind="visible: isTopologyDisplayed" class="ude-sdk">
+        <div id="ude-topology-div" style="overflow-y:auto; height:auto; background-color:white; display: flex;"
+             data-bind="visible: isTopologyDisplayed, event: {mouseover: showTopologyMaxIcon, mouseout: hideTopologyMaxIcon}" class="ude-sdk">
+            <!-- ko if: topologyHeight() > 201 -->
+            <div id="ude-topology-title" style="display: flex; position: absolute; right: 20px; z-index: 1">
+                    <button data-bind="attr: {'id': 'maxMinTopology', title: isMaximized() ? topologyRestoreLabel : topologyMaximizeLabel}, click: maxMinTopologyToggle,
+                                    style: {display: 'none'},
+                                    ojComponent: {
+                                        component: 'ojButton', chroming: 'half',
+                                        icons: {start: isMaximized() ? 'fa-icon-font fa-icon-font-16 emaas-appheader-restore-icon' : 'fa-icon-font fa-icon-font-16 emaas-appheader-maximize-icon'},
+                                        label: ''
+                                    }" >
+                    </button>
+            </div>
+            <!-- /ko -->
+            
+            <!--<div data-bind="attr: {style: topologyStyle}" style="margin: 0 auto">test div</div>-->
+            
         <div class="ude-topology ude-topology-in-brandingbar" data-bind="component:{name:'emctas-topology', 
             params:{
                    entityQueryVars: queryVars(),
@@ -170,10 +183,11 @@
                    customNodeDataLoader: customNodeDataLoader(),
                    customEventHandler: customEventHandler(),
                    miniEntityCardActions: miniEntityCardActions(),
-                   enableCache: true
+                   enableCache: true,
+                   topologySize: topologySize
                 }
             },
-            style: {width: '100%', height: '100%'}">
+            attr: {style: topologyStyle}">
         </div>      
         </div>
         <!-- /ko -->

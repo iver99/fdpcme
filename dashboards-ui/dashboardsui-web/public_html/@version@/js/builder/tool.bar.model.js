@@ -8,6 +8,7 @@ define(['knockout',
         'dfutil',
         'idfbcutil',
         'uifwk/js/util/screenshot-util',
+'uifwk/js/sdk/context-util',
         'ojs/ojcore',
         'builder/tool-bar/edit.dialog',
         'builder/tool-bar/duplicate.dialog',
@@ -15,7 +16,7 @@ define(['knockout',
         'builder/builder.core',
         'builder/dashboardDataSource/dashboard.datasource'
     ],
-    function(ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu) {
+    function(ko, $, dfu, idfbcutil, ssu, cxtModel, oj, ed, dd, pfu) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
@@ -159,7 +160,8 @@ define(['knockout',
             };
 
             self.handleDeleteDashboardClicked = function() {
-                var _url="/sso.static/dashboards.service/";
+               var cxtUtil = new cxtModel();
+		 var _url="/sso.static/dashboards.service/";
                 if (dfu.isDevMode()){
                     _url=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards/");
                 }
@@ -177,7 +179,7 @@ define(['knockout',
                             if (self.isHomeDashboard) {                                
                                 localStorage.deleteHomeDbd=true;
                             }
-                            window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
+                            window.location = cxtUtil.appendOMCContext( document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html');
                         }     
                     },
                     error: function(jqXHR, textStatus, errorThrown) {}
