@@ -32,7 +32,7 @@ public class LinkedHashMapCache extends AbstractCache{
             private static final long serialVersionUID = 1L;
             @Override
             protected boolean removeEldestEntry(java.util.Map.Entry<Object,CachedItem> eldest) {
-                return size() > LinkedHashMapCache.this.capacity;
+                return size() > LinkedHashMapCache.this.capacity-2;
             }
         };
         LOGGER.info("Cache group named {} is created with capacity {} and timeToLive {}",name,capacity,timeToLive);
