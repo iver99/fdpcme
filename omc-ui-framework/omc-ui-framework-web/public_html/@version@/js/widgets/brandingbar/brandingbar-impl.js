@@ -64,9 +64,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.entityContextReadOnly.notifySubscribers();
 
             //Set showTimeSelector config. Default value is true. It can be set as an knockout observable and be changed after page is loaded
-            if(ko.isObservable(params.showTimeSelector)) {
+            if (ko.isObservable(params.showTimeSelector)) {
                 self.showTimeSelector = params.showTimeSelector;
-            }else {
+            } else {
                 self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === false ? false : true);
             }
 //            self.showTimeSelector = ko.observable(false);
@@ -81,11 +81,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.customEventHandler = ko.observable();
             self.miniEntityCardActions = ko.observable();
             self.highlightedEntities = ko.observableArray([NO_HIGHLIGHT]);
+            self.topologyData = ko.observable();
             if (params) {
                 self.associations(params.associations);
                 self.layout(params.layout);
                 self.customNodeDataLoader(params.customNodeDataLoader);
                 self.customEventHandler(params.customEventHandler);
+                self.topologyData(params.topologyData);
                 self.miniEntityCardActions(params.miniEntityCardActions);
             }
 
@@ -101,7 +103,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     template: {require: 'text!/emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html'}
                 });
             }
-            
+
             if (self.showGlobalContextBanner() === true) {
                 refreshOMCContext();
             }
@@ -186,50 +188,50 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                 }
             }
-            
+
             self.topologySize = ko.observable();
             self.topologyHeight = ko.observable();
-            self.topologySize.subscribe(function(topoHeight) {
-               topoHeight && topoHeight.h && self.topologyHeight(topoHeight.h);
-		if(self.topologyHeight()<=201) {
+            self.topologySize.subscribe(function (topoHeight) {
+                topoHeight && topoHeight.h && self.topologyHeight(topoHeight.h);
+                if (self.topologyHeight() <= 201) {
                     self.topologyCssHeight(self.topologyHeight());
-                }else {
+                } else {
                     self.topologyCssHeight(201);
                 }
             });
-            
+
             self.isMaximized = ko.observable(false);
-            
-            self.showTopologyMaxIcon = function() {
+
+            self.showTopologyMaxIcon = function () {
                 $("#maxMinTopology").css("display", "block");
             };
-            self.hideTopologyMaxIcon = function() {
+            self.hideTopologyMaxIcon = function () {
                 $("#maxMinTopology").css("display", "none");
             }
-            self.maximizeTopology = function() {
+            self.maximizeTopology = function () {
                 self.topologyCssHeight(self.topologyHeight());
                 self.isMaximized(true);
                 var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
                 $b && $b.triggerBuilderResizeEvent('Topology is maximized!');
             };
-            self.restoreTopology = function() {
+            self.restoreTopology = function () {
                 self.topologyCssHeight(201);
-                self.isMaximized(false);                
+                self.isMaximized(false);
                 var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
                 $b && $b.triggerBuilderResizeEvent('Topology is restored!');
             };
-            self.maxMinTopologyToggle = function() {
-                if(!self.isMaximized()) {
+            self.maxMinTopologyToggle = function () {
+                if (!self.isMaximized()) {
                     self.maximizeTopology();
-                }else {
+                } else {
                     self.restoreTopology();
                 }
             }
-            
-	    self.topologyCssHeight = ko.observable();
-            self.topologyStyle = ko.computed(function() {
+
+            self.topologyCssHeight = ko.observable();
+            self.topologyStyle = ko.computed(function () {
                 var height = "100%; max-height: 204px"
-                if(self.topologyCssHeight()) {
+                if (self.topologyCssHeight()) {
                     height = (self.topologyCssHeight() + 3) + "px";
                 }
                 return "display: flex; float: left; width: 100%; height: " + height + ";";
@@ -391,9 +393,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.sessionTimeoutBtnOK = nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK;
             self.sessionTimeoutWarnDialogId = 'sessionTimeoutWarnDialog';
             self.sessionTimeoutWarnIcon = warnMessageIcon;
-            
+
             //Fetch and set sso logout url and session expiry time
-            dfu.getRegistrations(function(data){
+            dfu.getRegistrations(function (data) {
                 //Setup timer to handle session timeout
                 if (!dfu.isDevMode()) {
                     dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, self.sessionTimeoutWarnDialogId);
@@ -770,7 +772,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                     else if (message.category === catRetryInProgress) {
                         if (retryingMessageIds.length === 0) {
-                        	if (currentPlannedDowntimeMsgId === null) {
+                            if (currentPlannedDowntimeMsgId === null) {
                                 displayMessages.splice(0, 0, message);
                             }
                             else {
@@ -985,7 +987,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                    }
                     var topologyParams = cxtUtil.getTopologyParams();
                     if (topologyParams && !self.topologyParamsSet) {
-                         refreshTopology = true;
+                        refreshTopology = true;
                     }
                     if (refreshTopology) {
                         if (topologyParams) {
@@ -993,6 +995,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             self.layout(topologyParams.layout);
                             self.customNodeDataLoader(topologyParams.customNodeDataLoader);
                             self.customEventHandler(topologyParams.customEventHandler);
+                            self.topologyData(topologyParams.topologyData);
                             self.miniEntityCardActions(topologyParams.miniEntityCardActions);
                             self.topologyParamsSet = true;
                         }
@@ -1235,10 +1238,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //
             var message = {'tag': 'EMAAS_BRANDINGBAR_INSTANTIATED'};
             window.postMessage(message, window.location.href);
-            
+
             //Detect planned downtime
             var zdtUtil = new zdtUtilModel();
-            zdtUtil.detectPlannedDowntime(function(){});
+            zdtUtil.detectPlannedDowntime(function () {
+            });
         }
 
         return BrandingBarViewModel;
