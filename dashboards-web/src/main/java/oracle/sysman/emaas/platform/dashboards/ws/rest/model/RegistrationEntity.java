@@ -32,6 +32,7 @@ import oracle.sysman.emaas.platform.dashboards.core.cache.ICacheFetchFactory;
 import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
+import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
@@ -632,6 +633,22 @@ public class RegistrationEntity implements Serializable
 			return appSet;
 		}
 		for (String app : apps) {
+			// in case any bundle service is subscribed, all 7 (actually 8 plus TA) services are subscribed
+			if (DashboardApplicationType.OMCSE_STRING.equals(app) ||
+					DashboardApplicationType.OMCEE_STRING.equals(app) ||
+					DashboardApplicationType.OMCLOG_STRING.equals(app) ||
+					DashboardApplicationType.SECSE_STRING.equals(app) ||
+					DashboardApplicationType.SECSMA_STRING.equals(app)) {
+				appSet.add(APM_SERVICENAME);
+				appSet.add(ITA_SERVICENAME);
+				appSet.add(TA_SERVICENAME);
+				appSet.add(LA_SERVICENAME);
+				appSet.add(MONITORING_SERVICENAME);
+				appSet.add(SECURITY_ANALYTICS_SERVICENAME);
+				appSet.add(COMPLIANCE_SERVICENAME);
+				appSet.add(ORCHESTRATION_SERVICENAME);
+				break;
+			}
 			if (ApplicationOPCName.APM.toString().equals(app)) {
 				appSet.add(APM_SERVICENAME);
 			}

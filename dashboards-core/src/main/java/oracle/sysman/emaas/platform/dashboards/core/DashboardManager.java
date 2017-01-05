@@ -751,6 +751,8 @@ public class DashboardManager
 		}
 
 		List<DashboardApplicationType> apps = getTenantApplications();
+		// avoid impacts from bundle service, we get basic services only
+		apps = DashboardApplicationType.getBasicServiceList(apps);
 		if (apps == null || apps.isEmpty()) {
 			throw new TenantWithoutSubscriptionException();
 		}
@@ -1513,6 +1515,8 @@ public class DashboardManager
 			return false;
 		}
 		List<DashboardApplicationType> datList = getTenantApplications();
+		// as dashboards only stores basic servcies data, we need to trasfer (possible) bundle services to basic servcies for comparision
+		datList = DashboardApplicationType.getBasicServiceList(datList);
 		if (datList == null || datList.isEmpty()) { // accessible app list is empty
 			throw new TenantWithoutSubscriptionException();
 		}
