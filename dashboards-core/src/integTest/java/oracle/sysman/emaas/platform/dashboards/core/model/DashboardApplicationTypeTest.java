@@ -94,7 +94,19 @@ public class DashboardApplicationTypeTest
 		typeList = DashboardApplicationType.getBasicServiceList(list2);
 		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
 		
+		list2 = Arrays.asList(DashboardApplicationType.OMCLOG, DashboardApplicationType.LogAnalytics);
+		typeList = DashboardApplicationType.getBasicServiceList(list2);
+		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
+		
+		list2 = Arrays.asList(DashboardApplicationType.OMCSE, DashboardApplicationType.ITAnalytics);
+		typeList = DashboardApplicationType.getBasicServiceList(list2);
+		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
+		
 		list2 = Arrays.asList(DashboardApplicationType.SECSE);
+		typeList = DashboardApplicationType.getBasicServiceList(list2);
+		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
+		
+		list2 = Arrays.asList(DashboardApplicationType.SECSMA, DashboardApplicationType.SECSMA);
 		typeList = DashboardApplicationType.getBasicServiceList(list2);
 		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
 		
