@@ -222,8 +222,8 @@ require(['knockout',
     {
         var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
-        require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
-        TargetSelectorUtils.registerComponents();
+        //require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
+        //TargetSelectorUtils.registerComponents();
         logger.initialize(logReceiver, 300000, 20000, 80, dfu.getUserTenant().tenantUser);
         // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
         // If you comment the line below, our current log calls will not be output!
@@ -280,7 +280,8 @@ require(['knockout',
                 tenantName: self.tenantName,
                 appId: self.appId,
                 isAdmin:true,
-                showGlobalContextBanner: ko.observable(false)
+                showGlobalContextBanner: ko.observable(false),
+                showTimeSelector: ko.observable(false)
             };
 
             $("#headerWrapper").on("DOMSubtreeModified", function() {
@@ -308,6 +309,12 @@ require(['knockout',
         var dsbId = dfu.getUrlParam("dashboardId");
         console.warn("TODO: validate valid dashboard id format");
 
+        ko.bindingHandlers.stopDataBinding = {
+            init: function(elem, valueAccessor) {
+                    var value = ko.unwrap(valueAccessor());
+                    return {controlsDescendantBindings: value};
+            }
+        };
 
         Builder.initializeFromCookie();
 
@@ -322,16 +329,26 @@ require(['knockout',
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
             new Builder.DashboardDataSource().loadDashboardData(dsbId, function (dashboard) {
-
-                var dashboardTitleModel = new DashboardTitleModel(dashboard);
-                ko.applyBindings(dashboardTitleModel, $("title")[0]);
-                var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dashboard);
-                var dashboardsetPanelsModel = new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
-                ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
-                ko.applyBindings(dashboardsetPanelsModel, document.getElementById('popUp-dialog'));
-                dashboardsetToolBarModel.initializeDashboardset();
-                $("#loading").hide();
-                $('#globalBody').show();
+                var targetSelectorNeeded;
+                if(dashboard.enableEntityFilter&&(dashboard.enableEntityFilter()==="TRUE" || dashboard.enableEntityFilter()==="GC")) {
+                    targetSelectorNeeded = true;
+                }else {
+                    targetSelectorNeeded = false;
+                }
+                Builder.requireTargetSelectorUtils(targetSelectorNeeded, function(TargetSelectorUtils) {
+                    if (TargetSelectorUtils) {
+                        TargetSelectorUtils.registerComponents();
+                    }
+                    var dashboardTitleModel = new DashboardTitleModel(dashboard);
+                    ko.applyBindings(dashboardTitleModel, $("title")[0]);
+                    var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dashboard);
+                    var dashboardsetPanelsModel = new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
+                    ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
+                    ko.applyBindings(dashboardsetPanelsModel, document.getElementById('popUp-dialog'));
+                    dashboardsetToolBarModel.initializeDashboardset();
+                    $("#loading").hide();
+                    $('#globalBody').show();
+                });
             }, function(e) {
                 console.log(e.errorMessage());
                 if (e.errorCode && e.errorCode() === 20001) {
@@ -340,7 +357,7 @@ require(['knockout',
                 }
             });
         });
-        });
+        //});
     }
 );
 

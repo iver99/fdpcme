@@ -42,6 +42,9 @@ public class TestTimePicker_FlexibleDate extends CommonUIUtils
 		String strTimePickerText = driver.getWebDriver().findElements(By.cssSelector(UIControls.TIMERANGEBTN_CSS)).get(index - 1)
 				.getText();
 
+		driver.getLogger().info("TimePickerLabel: " + strTimePickerText);
+		Assert.assertEquals(strTimePickerText, TimeSelectorUtil.getTimeRangeLabel(driver, index));
+
 		String timeRange = "";
 
 		if (!strTimePickerText.equals("") && strTimePickerText != null) {

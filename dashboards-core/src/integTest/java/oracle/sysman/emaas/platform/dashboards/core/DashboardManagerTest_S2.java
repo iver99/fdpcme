@@ -15,7 +15,6 @@ import javax.persistence.Query;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
-import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotData;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
@@ -34,6 +33,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
@@ -1006,8 +1006,6 @@ public class DashboardManagerTest_S2 extends BaseTest
 		// delete dashboard/soft deletion
 		dm.deleteDashboard(dbd1.getDashboardId(), tenantId1);
 		Date lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-//		Assert.assertNotNull(lastAccess);
-		//emcpdf-2801
 		Assert.assertNull(lastAccess);
 
 		// delete dashboard/hard deletion

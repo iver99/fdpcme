@@ -20,6 +20,11 @@ public class PageId
 	public static final String ADASHBOARDTESTBYARIALABEL = "//*[@aria-label='ADashboard Test']";
 	public static final String ENTERPRISEOVERVIEWBYARIALABEL = "//*[@aria-label='Enterprise Overview']";
 	public static final String SORTBYID = "oj-select-choice-mainContentsortcb";
+	public static final String DASHBOARDINFO_NAME_CSS = ".dsbinfopop [data-bind=\"with: selectedDashboard\"] [data-bind=\"text: dashboard.name\"]";
+	public static final String DASHBOARDINFO_DESC_CSS = ".dsbinfopop [data-bind=\"with: selectedDashboard\"] [data-bind=\"html: dashboard.description\"]";
+	public static final String DASHBOARD_HOME_ERRMSG_CSS = ".oj-message.oj-message-error";
+	public static final String DASHBOARD_CREATE_DIALOG_CSS = "#ojDialogWrapper-cDsbDialog";
+
 	//OOB dashboards ID
 	public static final String APPLICATION_PERFORMANCE_MONITORING_ID = "//div[@aria-dashboard='14']";
 
@@ -75,6 +80,8 @@ public class PageId
 	public static final String DASHBOARDTITLE_CSS = "#pageTitle";
 
 	public static final String DATETIMEPICKER_OOB_CSS = "#dateTimePicker_APA";
+
+	public static final String DASHBOARD_BUILDER_ERRMSG_CSS = ".emaas-appheader-message-box.emaas-appheader-message-box-error";
 
 	//error page
 	public static final String ERRORMESSAGE_CSS = ".dbd-error-msg";

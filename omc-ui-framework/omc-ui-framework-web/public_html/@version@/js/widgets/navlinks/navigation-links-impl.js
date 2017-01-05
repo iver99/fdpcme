@@ -16,10 +16,11 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                 var dfu = new dfumodel(userName, tenantName);
                 var nlsStrings = params.nlsStrings ? params.nlsStrings : {};
                 var appMap = params.appMap;
-                var sessionTimeoutWarnDialogId = params.sessionTimeoutWarnDialogId;
+//                var sessionTimeoutWarnDialogId = params.sessionTimeoutWarnDialogId;
                 var discoveredAdminLinks = [];
                 var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
                 var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
+                var isSetAsHomeChecked = false;
                 var linksNLSMap = {
                 		'homeLinks_EventUI_Alerts': nlsStrings.BRANDING_BAR_NAV_ALERTS_LABEL,
                 		'visualAnalyzers_LogAnalyticsUI_Log Visual Analyzer': nlsStrings.BRANDING_BAR_NAV_LOG_LABEL,
@@ -56,9 +57,11 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
 
                 refreshListener.subscribe(function (value) {
                     if (value.needRefresh){
-                        refreshLinks();
+//                        refreshLinks();
                         //Check home settings
-                        checkDashboardAsHomeSettings();
+                        if (!isSetAsHomeChecked) {
+                            checkDashboardAsHomeSettings();
+                        }
                         params.navLinksNeedRefresh(false);
                     }
                 });
@@ -202,14 +205,14 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                             }
                          }
 
-                        //Setup timer to handle session timeout
-                        if (!dfu.isDevMode()) {
-                            dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, sessionTimeoutWarnDialogId);
-                        }
-                        
-                        if (data.ssoLogoutUrl) {
-                            window.cachedSSOLogoutUrl = data.ssoLogoutUrl;
-                        }
+//                        //Setup timer to handle session timeout
+//                        if (!dfu.isDevMode()) {
+//                            dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, sessionTimeoutWarnDialogId);
+//                        }
+//                        
+//                        if (data.ssoLogoutUrl) {
+//                            window.cachedSSOLogoutUrl = data.ssoLogoutUrl;
+//                        }
                     };
                     dfu.getRegistrations(fetchServiceLinks, true, function(){
                         self.visualAnalyzers([]);
@@ -227,6 +230,7 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                         else {
                             dfHomeUrl = null;
                         }
+                        isSetAsHomeChecked = true;
                     }
                     function errorCallback(jqXHR, textStatus, errorThrown) {
                         dfHomeUrl = null;

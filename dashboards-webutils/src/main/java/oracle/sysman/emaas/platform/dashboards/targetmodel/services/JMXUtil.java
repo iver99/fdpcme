@@ -39,11 +39,9 @@ public class JMXUtil
 
 	public static JMXUtil getInstance()
 	{
-		if (instance == null) {
-			synchronized (JMXUtil.class) {
-				if (instance == null) {
-					instance = new JMXUtil();
-				}
+		synchronized (JMXUtil.class) {
+			if (instance == null) {
+				instance = new JMXUtil();
 			}
 		}
 

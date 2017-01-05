@@ -63,14 +63,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             });
             self.entityContextReadOnly.notifySubscribers();
 
-            //Set showTimeSelector config. Default value is false. It can be set as an knockout observable and be changed after page is loaded
-            //Per high level plan, we don't allow consumers to config to show/hide time selector themselves. So comment out below code for now.
-//            if(ko.isObservable(params.showTimeSelector)) {
-//                self.showTimeSelector = params.showTimeSelector;
-//            }else {
-//                self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === true ? true : false);
-//            }
-            self.showTimeSelector = ko.observable(false);
+            //Set showTimeSelector config. Default value is true. It can be set as an knockout observable and be changed after page is loaded
+            if(ko.isObservable(params.showTimeSelector)) {
+                self.showTimeSelector = params.showTimeSelector;
+            }else {
+                self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === false ? false : true);
+            }
+//            self.showTimeSelector = ko.observable(false);
             //
             // topology paramters
             //
@@ -392,6 +391,18 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.sessionTimeoutBtnOK = nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK;
             self.sessionTimeoutWarnDialogId = 'sessionTimeoutWarnDialog';
             self.sessionTimeoutWarnIcon = warnMessageIcon;
+            
+            //Fetch and set sso logout url and session expiry time
+            dfu.getRegistrations(function(data){
+                //Setup timer to handle session timeout
+                if (!dfu.isDevMode()) {
+                    dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, self.sessionTimeoutWarnDialogId);
+                }
+
+                if (data.ssoLogoutUrl) {
+                    window.cachedSSOLogoutUrl = data.ssoLogoutUrl;
+                }
+            }, true, null);
 
             self.clearMessage = function (data, event) {
                 removeMessage(data);
