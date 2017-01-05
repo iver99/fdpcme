@@ -80,8 +80,12 @@ define(['knockout',
                 newDashboard.enableTimeRange = (enableTimeRange === true || enableTimeRange === "TRUE" || enableTimeRange === "true") ? "true" : "false";
                 newDashboard.enableRefresh = (enableRefresh === true || enableRefresh === "TRUE" || enableRefresh === "true") ? "true" : "false";
                 newDashboard.systemDashboard = "false";
+                newDashboard.showInHome=false;
+                if (!selectedDashboardInst().toolBarModel.duplicateInSet()) {
+                    newDashboard.showInHome = true;
+                }
                 if (systemDashboard === true) {
-                	newDashboard.dupDashboardId = ko.unwrap(origDashboard.id);
+                    newDashboard.dupDashboardId = ko.unwrap(origDashboard.id);
                     self.saveDuplicatedDashboardToServer(newDashboard);
                 }
                 else {
@@ -105,8 +109,8 @@ define(['knockout',
                     } else {
                         selectedDashboardInst().toolBarModel.duplicateInSet(false);
                         $('#duplicateDsbDialog').ojDialog('close');
-                        if (data && data.id) {
-                            window.location.href = "/emsaasui/emcpdfui/builder.html?dashboardId=" + data.id;
+                        if (data && data.id()) {
+                            window.location.href = "/emsaasui/emcpdfui/builder.html?dashboardId=" + data.id();
                         }
                     }
                 };

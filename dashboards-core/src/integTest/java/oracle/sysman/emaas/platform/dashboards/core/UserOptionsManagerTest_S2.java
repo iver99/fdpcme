@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import java.math.BigInteger;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -41,11 +43,11 @@ public class UserOptionsManagerTest_S2
 			@Mocked final DashboardServiceFacade mockdsf) throws DashboardException
 	{
 		final EmsUserOptions uo = new EmsUserOptions();
-		uo.setDashboardId(1L);
+		uo.setDashboardId(BigInteger.valueOf(1L));
 		uo.setAutoRefreshInterval(0L);
 		uo.setUserName("t");
 		UserOptions uo1 = new UserOptions();
-		uo1.setDashboardId(-1L);
+		uo1.setDashboardId(BigInteger.valueOf(-1L));
 		uo1.setAutoRefreshInterval(0L);
 		uo1.setUserName("t");
 
@@ -61,22 +63,22 @@ public class UserOptionsManagerTest_S2
 				result = mocket;
 				mockem.find((Class<?>) any, any);
 				result = null;
-				mockdsf.getEmsUserOptions(anyString, anyLong);
+				mockdsf.getEmsUserOptions(anyString, BigInteger.valueOf(anyLong));
 				result = uo;
-				mockdsf.getEmsDashboardById(anyLong);
+				mockdsf.getEmsDashboardById(BigInteger.valueOf(anyLong));
 				result = null;
 			}
 		};
 
 		UserOptionsManager dbcm = UserOptionsManager.getInstance();
 		try {
-			dbcm.getOptionsById(1L, 0L);
+			dbcm.getOptionsById(BigInteger.valueOf(1L), 0L);
 		}
 		catch (DashboardNotFoundException e) {
 			LOGGER.info("context",e);
 		}
 		try {
-			dbcm.getOptionsById(-1L, 0L);
+			dbcm.getOptionsById(BigInteger.valueOf(-1L), 0L);
 		}
 		catch (DashboardNotFoundException e) {
 			LOGGER.info("context",e);
@@ -87,7 +89,7 @@ public class UserOptionsManagerTest_S2
 		catch (DashboardNotFoundException e) {
 			LOGGER.info("context",e);
 		}
-		uo1.setDashboardId(1L);
+		uo1.setDashboardId(BigInteger.valueOf(1L));
 		try {
 			dbcm.saveOrUpdateUserOptions(uo1, 1L);
 		}
@@ -96,11 +98,11 @@ public class UserOptionsManagerTest_S2
 		}
 		new NonStrictExpectations() {
 			{
-				mockdsf.getEmsDashboardById(anyLong);
+				mockdsf.getEmsDashboardById(BigInteger.valueOf(anyLong));
 				result = new EmsDashboard();
 			}
 		};
-		dbcm.getOptionsById(1L, 0L);
+		dbcm.getOptionsById(BigInteger.valueOf(1L), 0L);
 		dbcm.saveOrUpdateUserOptions(null, 1L);
 		dbcm.saveOrUpdateUserOptions(uo1, 1L);
 	}

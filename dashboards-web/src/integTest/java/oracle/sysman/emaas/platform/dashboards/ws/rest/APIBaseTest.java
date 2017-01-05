@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import java.math.BigInteger;
+
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
@@ -154,7 +156,7 @@ public class APIBaseTest {
     @Test
     public void testUpdateDashboardHrefCorrect(@SuppressWarnings("unused")@Mocked final DashboardAPIUtil dashboardAPIUtil) throws Exception {
         Dashboard dbd = new Dashboard();
-        dbd.setDashboardId(87654L);
+        dbd.setDashboardId(BigInteger.valueOf(87654L));
         new Expectations() {
             {
                 DashboardAPIUtil.getExternalDashboardAPIBase(anyString);

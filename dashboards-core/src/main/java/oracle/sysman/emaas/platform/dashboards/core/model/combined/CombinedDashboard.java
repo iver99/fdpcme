@@ -27,17 +27,19 @@ public class CombinedDashboard extends Dashboard
 	private Preference preference;
 	private UserOptions userOptions;
 	private Boolean isFavorite;
+	private String selectedSsData;
 
 	// used for dashbaord set to indicate the selected dashbaord/tab for that set
 	private CombinedDashboard selected;
 	
-	public static CombinedDashboard valueOf(EmsDashboard d, EmsPreference ep, EmsUserOptions euo) {
+	public static CombinedDashboard valueOf(EmsDashboard d, EmsPreference ep, EmsUserOptions euo,String savedSearchResponse) {
 		CombinedDashboard cb = (CombinedDashboard)Dashboard.valueOf(d, new CombinedDashboard(), true, true, true);
 		Preference p = Preference.valueOf(ep);
 		UserOptions uo = UserOptions.valueOf(euo);
 		cb.setPreference(p);
 		cb.setUserOptions(uo);
 		cb.isFavorite = euo == null ? Boolean.FALSE : DataFormatUtils.integer2Boolean(euo.getIsFavorite());
+		cb.selectedSsData=savedSearchResponse;
 		return cb;
 	}
 	
@@ -58,6 +60,13 @@ public class CombinedDashboard extends Dashboard
 	public void setPreference(Preference preference)
 	{
 		this.preference = preference;
+	}
+	/**
+	 * @param selectedSsData the preference to set
+	 */
+	public void setSelectedSsData(String selectedSsData)
+	{
+		this.selectedSsData=selectedSsData;
 	}
 	/**
 	 * @return the options
@@ -105,5 +114,9 @@ public class CombinedDashboard extends Dashboard
 	public void setIsFavorite(Boolean isFavorite)
 	{
 		this.isFavorite = isFavorite;
+	}
+
+	public String getSelectedSsData() {
+		return selectedSsData;
 	}
 }

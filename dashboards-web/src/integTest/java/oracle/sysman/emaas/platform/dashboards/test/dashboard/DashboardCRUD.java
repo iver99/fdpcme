@@ -308,8 +308,7 @@ public class DashboardCRUD
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).body(jsonString1).when().post("/dashboards");
-			
+							"Authorization", authToken).body(jsonString1).when().post("/dashboards");		
 			Assert.assertTrue(res1.getStatusCode() == 201);
 			
 			dashboard_id = res1.jsonPath().getString("id");

@@ -583,7 +583,7 @@ define(['knockout',
                     var homeDashboardId;
                     new Builder.DashboardDataSource().getHomeDashboardPreference(self.dashboard.id(), function (resp) {
                         if(typeof(resp) !== "undefined") {
-                            homeDashboardId = Number(resp.value);
+                            homeDashboardId = resp.value;
                         }
                     });
                     if (homeDashboardId && homeDashboardId === (self.dashboard.id())) {

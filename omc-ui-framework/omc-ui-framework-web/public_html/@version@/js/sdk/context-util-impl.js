@@ -24,6 +24,38 @@ define([
                 window._uifwk.respectOMCEntityContext = true;
                 window._uifwk.respectOMCTimeContext = true;
             }
+            
+            self.OMCTimeConstants = {
+                TIME_UNIT: {
+                    SECOND: 'SECOND',
+                    MINUTE: 'MINUTE',
+                    HOUR: 'HOUR',
+                    DAY: 'DAY',
+                    WEEK: 'WEEK',
+                    MONTH: 'MONTH',
+                    YEAR: 'YEAR'
+                },
+                QUICK_PICK: {
+                    LAST_15_MINUTE: 'LAST_15_MINUTE',
+                    LAST_30_MINUTE: 'LAST_30_MINUTE',
+                    LAST_60_MINUTE: 'LAST_60_MINUTE',
+                    LAST_2_HOUR: 'LAST_2_HOUR',
+                    LAST_4_HOUR: 'LAST_4_HOUR',
+                    LAST_6_HOUR: 'LAST_6_HOUR',
+                    LAST_1_DAY: 'LAST_1_DAY',
+                    LAST_7_DAY: 'LAST_7_DAY',
+                    LAST_14_DAY: 'LAST_14_DAY',
+                    LAST_30_DAY: 'LAST_30_DAY',
+                    LAST_90_DAY: 'LAST_90_DAY',
+                    LAST_1_YEAR: 'LAST_1_YEAR',
+                    LATEST: 'LATEST',
+                    CUSTOM: 'CUSTOM'
+                }
+            };
+            
+            //freeze every constant object inside
+            Object.freeze(self.OMCTimeConstants.TIME_UNIT);
+            Object.freeze(self.OMCTimeConstants.QUICK_PICK);
 
             /**
              * Get URL parameter name for OMC global context.
@@ -500,6 +532,55 @@ define([
                 var tpPattern = new RegExp("^LAST_[1-9]{1}[0-9]*_(SECOND|MINUTE|HOUR|DAY|WEEK|MONTH|YEAR){1}$");
                 return tpPattern.test(timePeriod);
             };
+            
+            /**
+             * Generate "LAST_X_UNIT" from time unit and time duration
+             * 
+             * @param {type} unit - OMC context time unit CONSTANT
+             * @param {type} duration - number larger than 0
+             * @returns {String} - formalized time period like "LAST_X_UNIT"
+             */
+            self.generateTimePeriodFromUnitAndDuration = function (unit, duration) {
+                if(!self.OMCTimeConstants.TIME_UNIT[unit]) {
+                    console.log("Invalid unit: " + unit + " to generateTimePeriodFromUnitAndDuration");
+                    return null;
+                }
+                if(duration <=0 || isNaN(parseInt(duration))) {
+                    console.log("Invalid duration: " + duration + " to generateTimePeriodFromUnitAndDuration");
+                    return null;   
+                }
+                var arr = [];
+                arr[0] = "LAST";
+                arr[1] = parseInt(duration);
+                arr[2] = self.OMCTimeConstants.TIME_UNIT[unit];
+                return arr.join("_");
+            };
+            
+            /**
+             * Parse user specified time period or OMC context time period to unit and duration
+             * 
+             * @param {type} timePeriod
+             * @returns 
+             */
+            self.parseTimePeriodToUnitAndDuration = function(timePeriod) {
+                var tp = null;
+                if(!timePeriod) {
+                    tp = self.getTimePeriod();
+                }else {
+                    tp = timePeriod;
+                }
+                
+                if(!self.isValidTimePeriod(tp)) {
+                    console.log("Invalid time period: " + tp + " in parseTimePeriodToUnitAndDuration");
+                    return null;
+                }
+                
+                var arr = tp.split("_");
+                return {
+                    unit: arr[2],
+                    duration: arr[1]
+                }
+            };
 
             /**
              * 
@@ -531,25 +612,25 @@ define([
                     num = arr[1];
                     opt = arr[2];
                     switch (opt) {
-                        case "SECOND":
+                        case self.OMCTimeConstants.TIME_UNIT.SECOND:
                             start = new Date(end - num * 1000);
                             break;
-                        case "MINUTE":
+                        case self.OMCTimeConstants.TIME_UNIT.MINUTE:
                             start = new Date(end - num * 60 * 1000);
                             break;
-                        case "HOUR":
+                        case self.OMCTimeConstants.TIME_UNIT.HOUR:
                             start = new Date(end - num * 60 * 60 * 1000);
                             break;
-                        case "DAY":
+                        case self.OMCTimeConstants.TIME_UNIT.DAY:
                             start = new Date(end.getFullYear(), end.getMonth(), end.getDate() - num, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
                             break;
-                        case "WEEK":
+                        case self.OMCTimeConstants.TIME_UNIT.WEEK:
                             start = new Date(end.getFullYear(), end.getMonth(), end.getDate() - 7 * num, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
                             break;
-                        case "MONTH":
+                        case self.OMCTimeConstants.TIME_UNIT.MONTH:
                             start = new Date(end.getFullYear(), end.getMonth() - num, end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
                             break;
-                        case "YEAR":
+                        case self.OMCTimeConstants.TIME_UNIT.YEAR:
                             start = new Date(end.getFullYear() - num, end.getMonth(), end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
                             break;
                         default:
@@ -574,7 +655,71 @@ define([
             self.getTimePeriod = function () {
                 return getIndividualContext('time', 'timePeriod');
             };
-
+            
+            /**
+             * Get OMC global context of time period duration
+             * 
+             * @returns time period duration number or null
+             */
+            self.getTimePeriodDuration = function() {
+                var tp = self.parseTimePeriodToUnitAndDuration();
+                if(tp) {
+                    return tp.duration;
+                }else {
+                    return null;
+                }
+            };
+            
+            /**
+             * Set OMC context of time period duration
+             * 
+             * @param {type} duration
+             * @returns {undefined}
+             */
+            self.setTimePeriodDuration = function(duration) {
+                var tp = self.parseTimePeriodToUnitAndDuration();
+                tp && (tp = self.generateTimePeriodFromUnitAndDuration(tp.unit, parseInt(duration)));
+                tp && self.setTimePeriod(tp);
+            };
+            
+            /**
+             * Get OMC global context of time period unit
+             * 
+             * @returns time period unit or null
+             */
+            self.getTimePeriodUnit = function() {
+                var tp = self.parseTimePeriodToUnitAndDuration();
+                if(tp) {
+                    return tp.unit;
+                }else {
+                    return null;
+                }
+            };
+            
+            /**
+             * Set OMC context of time period unit
+             * 
+             * @param {type} unit
+             * @returns {undefined}
+             */
+            self.setTimePeriodUnit = function(unit) {
+                var tp = self.parseTimePeriodToUnitAndDuration();
+                tp && (tp = self.generateTimePeriodFromUnitAndDuration(unit, tp.duration));
+                tp && self.setTimePeriod(tp);
+            };
+            
+            /**
+             * Set OMC context time period unit and duration at the same time
+             * 
+             * @param {type} unit
+             * @param {type} duration
+             * @returns {undefined}
+             */
+            self.setTimePeriodUnitAndDuration = function(unit, duration) {
+                var tp = self.generateTimePeriodFromUnitAndDuration(unit, duration);
+                tp && self.setTimePeriod(tp);
+            };
+            
             /**
              * Set OMC global context of composite guid.
              * 

@@ -1,95 +1,57 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
 import java.util.Date;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
-
 
 @Test(groups = {"s1"})
 public class EmsDashboardTileParamsPKTest { 
     Date now =  new Date();
-    
-    /*
-    private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
-            now,
-            emsDashboard,
-            10,
-            10,
-            10,
-            10,
-            10,
-            now,
-            "elephant",
-            "elephant", Integer position, 
-            "elephant",
-            "elephant",
-            "dolphine",
-            10L,
-            "dolphine",
-            "dolphine",
-            "dolphine",
-            "kitten",
-            "kitten",
-            "kitten",
-            "kitten",
-            "kitten",
-            "lion",
-            10,
-            "lion",
-            "lion",
-            "lion",
-            10,
-            10,
-            10L);*/
-    /*
-    private EmsDashboardTileParams emsDashboardTileParams = new
-            EmsDashboardTileParams(
-            10,
-            "elephant",
-            10,
-            10,
-            "dolphine",
-            now,
-            emsDashboardTile);
-            */
-    private EmsDashboardTileParamsPK emsDashboardTileParamsPK = new EmsDashboardTileParamsPK("elephant",10L);
+  
+    private EmsDashboardTileParamsPK emsDashboardTileParamsPK = new EmsDashboardTileParamsPK("elephant", "10");
 
     @Test
     public void testEquals() {
-        EmsDashboardTileParamsPK emsDashboardTileParamsPK1 = new EmsDashboardTileParamsPK("elephant",10L);
-        EmsDashboardTileParamsPK emsDashboardTileParamsPK2 = new EmsDashboardTileParamsPK("elephant",11L);
-        EmsDashboardTileParamsPK emsDashboardTileParamsPK3 = new EmsDashboardTileParamsPK("dolphine",11L);
-        EmsDashboardTileParamsPK emsDashboardTileParamsPK4 = new EmsDashboardTileParamsPK("dolphine",10L);
-        assertFalse(emsDashboardTileParamsPK.equals(new Integer(10)));
-        assertTrue(emsDashboardTileParamsPK.equals(emsDashboardTileParamsPK1));
-        assertFalse(emsDashboardTileParamsPK.equals(emsDashboardTileParamsPK2));
-        assertFalse(emsDashboardTileParamsPK.equals(emsDashboardTileParamsPK3));
-        assertFalse(emsDashboardTileParamsPK.equals(emsDashboardTileParamsPK4));
+        EmsDashboardTileParamsPK emsDashboardTileParamsPK1 = new EmsDashboardTileParamsPK("elephant", "10");
+        EmsDashboardTileParamsPK emsDashboardTileParamsPK2 = new EmsDashboardTileParamsPK("elephant", "11");
+        EmsDashboardTileParamsPK emsDashboardTileParamsPK3 = new EmsDashboardTileParamsPK("dolphine", "11");
+        EmsDashboardTileParamsPK emsDashboardTileParamsPK4 = new EmsDashboardTileParamsPK("dolphine", "10");
+        Assert.assertFalse(emsDashboardTileParamsPK.equals(new Integer(10)));
+        Assert.assertTrue(emsDashboardTileParamsPK.equals(emsDashboardTileParamsPK1));
+        Assert.assertFalse(emsDashboardTileParamsPK.equals(emsDashboardTileParamsPK2));
+        Assert.assertFalse(emsDashboardTileParamsPK.equals(emsDashboardTileParamsPK3));
+        Assert.assertFalse(emsDashboardTileParamsPK.equals(emsDashboardTileParamsPK4));
     }
 
     @Test
     public void testGetDashboardTile() {
-        emsDashboardTileParamsPK.setDashboardTile(10L);
-        assertEquals(emsDashboardTileParamsPK.getDashboardTile(),new Long(10));
-
-    }
-
+        emsDashboardTileParamsPK.setDashboardTile("10");
+        Assert.assertEquals(emsDashboardTileParamsPK.getDashboardTile(), "10");
+	}
+    
     @Test
     public void testGetParamName() {
         emsDashboardTileParamsPK= new EmsDashboardTileParamsPK();
         emsDashboardTileParamsPK.setParamName("elephant");
-        assertEquals(emsDashboardTileParamsPK.getParamName(),"elephant");
+        Assert.assertEquals(emsDashboardTileParamsPK.getParamName(),"elephant");
+	}
+    
+	@Test
+	public void testHashCode()
+	{
+		Assert.assertNotNull(emsDashboardTileParamsPK.hashCode());
+	}
 
-    }
+	@Test
+	public void testSetDashboardTile() throws Exception
+	{
 
-    @Test
-    public void testHashCode() {
-        assertNotNull(emsDashboardTileParamsPK.hashCode());
-    }
+	}
 
+	@Test
+	public void testSetParamName() throws Exception
+	{
+
+	}
 }
