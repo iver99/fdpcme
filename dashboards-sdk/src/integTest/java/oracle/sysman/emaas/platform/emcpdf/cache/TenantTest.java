@@ -20,7 +20,7 @@ public class TenantTest {
     public void testEqualsTrue() throws Exception {
         tenant.setTenantName("tenantName");
         Tenant tenantIns = new Tenant(1L, "tenantName");
-        tenant.equals(tenantIns);
+        Assert.assertTrue(tenant.equals(tenantIns));
     }
 
     @Test
@@ -51,6 +51,55 @@ public class TenantTest {
     @Test
     public void testToString() throws Exception {
         Assert.assertNotNull(tenant.toString());
+    }
+
+    @Test
+    public void testUserName(){
+        Tenant t1=new Tenant("tenant1","user1");
+        Tenant t2=new Tenant("tenant1","user1");
+        Assert.assertTrue(t1.equals(t2));
+
+        t1=new Tenant("tenant1","user1");
+        t2=new Tenant("tenant1","user2");
+        Assert.assertFalse(t1.equals(t2));
+
+        t1=new Tenant("tenant1","user1");
+        t2=new Tenant("tenant2","user1");
+        Assert.assertFalse(t1.equals(t2));
+
+        t1=new Tenant("tenant1","user1");
+        t2=new Tenant("tenant2","user2");
+        Assert.assertFalse(t1.equals(t2));
+
+        t1=new Tenant("tenant1","user1");
+        t2=new Tenant("tenant1","user2");
+        Assert.assertFalse(t1.equals(t2));
+
+        t1=new Tenant("tenant1",null);
+        t2=new Tenant("tenant1","user2");
+        Assert.assertFalse(t1.equals(t2));
+
+        t1=new Tenant("tenant1",null);
+        t2=new Tenant("tenant1",null);
+        Assert.assertTrue(t1.equals(t2));
+
+        t1=new Tenant("tenant1",null);
+        t2=new Tenant("tenant2",null);
+        Assert.assertFalse(t1.equals(t2));
+    }
+    @Test
+    public void testTenantName(){
+        Tenant t1=new Tenant("tenant1");
+        Tenant t2=new Tenant("tenant1");
+        Assert.assertTrue(t1.equals(t2));
+
+        t1=new Tenant("tenant1");
+        t2=new Tenant("tenant2");
+        Assert.assertFalse(t1.equals(t2));
+
+        t1=new Tenant("");
+        t2=new Tenant("");
+        Assert.assertTrue(t1.equals(t2));
     }
 
 }
