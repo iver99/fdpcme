@@ -280,7 +280,8 @@ require(['knockout',
                 tenantName: self.tenantName,
                 appId: self.appId,
                 isAdmin:true,
-                showGlobalContextBanner: ko.observable(false)
+                showGlobalContextBanner: ko.observable(false),
+                showTimeSelector: ko.observable(false)
             };
 
             $("#headerWrapper").on("DOMSubtreeModified", function() {
