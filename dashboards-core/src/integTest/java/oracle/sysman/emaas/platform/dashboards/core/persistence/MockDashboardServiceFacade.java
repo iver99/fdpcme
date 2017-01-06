@@ -215,6 +215,12 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	{
 		
 	}
+	
+	@Mock
+	public void updateTileLinkedDashboard(BigInteger dashboardId)
+	{
+		
+	}
 
 	@Mock
 	public EmsDashboard getEmsDashboardById(BigInteger dashboardId)

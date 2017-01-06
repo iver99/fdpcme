@@ -220,6 +220,7 @@ public class DashboardManager
 
 			em.setProperty("soft.deletion.permanent", permanent);
 			dsf.updateSubDashboardShowInHome(dashboardId);
+			dsf.updateTileLinkedDashboard(dashboardId);
 
 			//emcpdf2801 delete dashboard's user option
 			LOGGER.info("Deleting user options for id "+dashboardId);
@@ -644,8 +645,11 @@ public class DashboardManager
 			for (EmsDashboard emsDashboard : emsDashboards) {
 				dashboardList.add(Dashboard.valueOf(emsDashboard, null, false, false, false));
 			}
+			
+			List<String> linkedDashboardList = dsf.getlinkedDashboards(dashboardId);		
 
 			dashboard.setDashboardSets(dashboardList);
+			dashboard.setLinkedDashboardList(linkedDashboardList);
 
 			return dashboard;
 		}
