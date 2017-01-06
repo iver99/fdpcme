@@ -30,7 +30,7 @@ dependencies
 	deploy (project(path:':dashboards-ui:dashboardsui-web', configuration:'archives')) {transitive = false}
 	
 	earlib (project(':dashboards-ui:dashboardsui-webutils')){transitive = false} 
-
+	earlib (project(':dashboards-sdk')){transitive = false}
 	earlib getProjectArtifact('log4j-core')   
 	earlib getProjectArtifact('log4j-api')   
 	earlib getProjectArtifact('jackson-core')   
