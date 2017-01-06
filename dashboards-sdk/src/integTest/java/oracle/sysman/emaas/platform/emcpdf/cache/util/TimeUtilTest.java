@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.emcpdf.cache;
+package oracle.sysman.emaas.platform.emcpdf.cache.util;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.util.TimeUtil;
 import org.testng.Assert;
