@@ -286,6 +286,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test open LA in welcome page finished!!!");
 	}
 
+	@Test
 	public void testOpenOrchestrationPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -300,6 +301,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test open Security Analytics in welcome page finished!!!");
 	}
 
+	@Test
 	public void testOpenSecurityPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
