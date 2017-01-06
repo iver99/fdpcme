@@ -1,4 +1,4 @@
-define(['dfutil', 'ojs/ojcore', 'jquery', 'knockout', 'ojs/ojpagingcontrol', 'ojs/ojknockout-model','uifwk/js/sdk/context-util'],
+define(['dfutil', 'ojs/ojcore', 'jquery', 'knockout', 'uifwk/js/sdk/context-util', 'ojs/ojpagingcontrol', 'ojs/ojknockout-model'],
        function(dfu, oj, $, ko, cxtModel)
 {
 
@@ -65,6 +65,17 @@ DashboardPaging.prototype._refreshDataWindow = function() {
         // Update the observable array
         self._refreshObservableDataWindow();
     });
+}; 
+
+ DashboardPaging.prototype.getCxtNavLink = function(model){
+        var self = this;
+        var cxtUtil = new cxtModel();
+        var url = self.getNavLink(model);
+        if (typeof url==="string"){ 
+           return cxtUtil.appendOMCContext(url);
+        }else{
+           return null;
+        }
 };
 
 DashboardPaging.prototype.getNavLink = function(model){
@@ -112,7 +123,7 @@ DashboardPaging.prototype.IterativeAt = function (start, end) {
                                 if (model.isDsbAttrsHtmlDecoded !== true)
                                 {
                                     var __dname = $("<div/>").html(model.get('name')).text();
-                                    var _url = dashboardPagingObject.getNavLink(model);
+                                    var _url = dashboardPagingObject.getCxtNavLink(model);
                                     model.set('name', __dname, {silent: true});
                                     model.set('enableDescription','',{silent:true});
                                     model.set('enableEntityFilter','',{silent:true});
