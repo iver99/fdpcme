@@ -14,15 +14,11 @@ import java.io.IOException;
  * Created by chehao on 2016/12/26.
  */
 public class LRUScreenshotCacheManager extends AbstractCacheManager{
-
     private static final Logger LOGGER = LogManager.getLogger(LRUScreenshotCacheManager.class);
-
     private static LRUScreenshotCacheManager instance =new LRUScreenshotCacheManager();
-
     public static LRUScreenshotCacheManager getInstance(){
         return instance;
     }
-
     private LRUScreenshotCacheManager() {
         init();
     }
