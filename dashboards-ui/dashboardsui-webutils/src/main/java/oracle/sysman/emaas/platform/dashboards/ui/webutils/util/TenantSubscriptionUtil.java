@@ -115,12 +115,12 @@ public class TenantSubscriptionUtil
 		long startTime = System.currentTimeMillis();
 
 		Tenant cacheTenant = new Tenant(tenant);
-		Object userTenantKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(user));
+		Object tenantKey = DefaultKeyGenerator.getInstance().generate(cacheTenant, new Keys(tenant));
 		ICacheManager cm = CacheManagers.getInstance().build();
 		ICache cache = cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE);
 		if (cache != null) {
 			try {
-				Object obj = cache.get(userTenantKey);
+				Object obj = cache.get(tenantKey);
 				if (obj instanceof List) {
 					List<String> data = (List<String>)obj;
 					LOGGER.info("Retrieved subscribed app information from cache for userTenant {}, cached data is {}", tenant, user, data);
@@ -154,11 +154,11 @@ public class TenantSubscriptionUtil
 			if (sa == null || sa.getApplications() == null || sa.getApplications().length <= 0) {
 				LOGGER.info("Checking tenant (" + tenant
 						+ ") subscriptions. Dashboard-API subscribed app application is null or empty");
-				cache.evict(userTenantKey);
+				cache.evict(tenantKey);
 				return Collections.emptyList();
 			}
 			List<String> apps = Arrays.asList(sa.getApplications());
-			cache.put(userTenantKey, apps);
+			cache.put(tenantKey, apps);
 			LOGGER.info("Getting subscribed app from dashboard-api: {} ms", System.currentTimeMillis() - startTime);
 			return apps;
 		}
