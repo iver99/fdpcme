@@ -116,6 +116,21 @@ public class TestWelcomePage extends LoginAndLogout
 	//	}
 
 	@Test
+	public void testOpenInfrastructureMonitoringPage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening Infrastructure Monitoring in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitInfraMonitoring(webd);
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "monitoringservicesui/cms/index.html");
+
+		webd.getLogger().info("Test opening Infrastructure Monitoring in welcome page finished!!!");
+	}
+
+	@Test
 	public void testOpenITA_ApPrefPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
