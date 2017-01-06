@@ -145,7 +145,7 @@ public class WelcomeUtil_175 extends WelcomeUtil_171
 		WaitUtil.waitForPageFullyLoaded(driver);
 
 		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_SECURITYANALYTICSID);
-		driver.click("id=" + DashBoardPageId.WELCOME_ORCHESTRATIONID);
+		driver.click("id=" + DashBoardPageId.WELCOME_SECURITYANALYTICSID);
 		driver.takeScreenShot();
 
 	}	
