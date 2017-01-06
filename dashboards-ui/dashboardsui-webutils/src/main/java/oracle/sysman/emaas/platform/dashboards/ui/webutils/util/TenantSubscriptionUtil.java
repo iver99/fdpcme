@@ -115,14 +115,13 @@ public class TenantSubscriptionUtil
 		long startTime = System.currentTimeMillis();
 
 		Tenant cacheTenant = new Tenant(tenant);
-		Object tenantKey = DefaultKeyGenerator.getInstance().generate(cacheTenant, new Keys(tenant));
+		Object tenantKey = DefaultKeyGenerator.getInstance().generate(cacheTenant, new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS));
 		ICacheManager cm = CacheManagers.getInstance().build();
 		ICache cache = cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE);
 		if (cache != null) {
 			try {
-				Object obj = cache.get(tenantKey);
-				if (obj instanceof List) {
-					List<String> data = (List<String>)obj;
+				List<String> data = (List<String>)cache.get(tenantKey);
+				if (data != null) {
 					LOGGER.info("Retrieved subscribed app information from cache for userTenant {}, cached data is {}", tenant, user, data);
 					return data;
 				}
