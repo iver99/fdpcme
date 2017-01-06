@@ -20,11 +20,16 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
-import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
-import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingCollection;
 import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingEntity;
 import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainEntity;
@@ -187,12 +192,11 @@ public class TenantSubscriptionUtil
 			LOGGER.warn("This is usually unexpected: now it's trying to retrieve subscribed applications for null tenant");
 			return Collections.emptyList();
 		}
-		CacheManager cm = CacheManager.getInstance();
+		ICacheManager cm= CacheManagers.getInstance().build();
 		Tenant cacheTenant = new Tenant(tenant);
 		List<String> cachedApps;
 		try {
-			cachedApps = (List<String>) cm.getCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+			cachedApps = (List<String>) cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));
 		}
 		catch (Exception e) {
 			LOGGER.error("context", e);
@@ -210,8 +214,7 @@ public class TenantSubscriptionUtil
 			LOGGER.warn(
 					"Failed to get entity naming service, or its rel (collection/domains) link is empty. Exists the retrieval of subscribed service for tenant {}",
 					tenant);
-			cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+			cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));
 			return Collections.emptyList();
 		}
 		LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
@@ -225,8 +228,7 @@ public class TenantSubscriptionUtil
 			if (de == null || de.getItems() == null || de.getItems().isEmpty()) {
 				LOGGER.warn("Checking tenant (" + tenant
 						+ ") subscriptions: null/empty domains entity or domains item retrieved.");
-				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE,
-						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+				cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));
 				return Collections.emptyList();
 			}
 			String tenantAppUrl = null;
@@ -238,8 +240,7 @@ public class TenantSubscriptionUtil
 			}
 			if (tenantAppUrl == null || "".equals(tenantAppUrl)) {
 				LOGGER.warn("Checking tenant (" + tenant + ") subscriptions. 'TenantApplicationMapping' not found");
-				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE,
-						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+				cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));
 				return Collections.emptyList();
 			}
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
@@ -248,15 +249,13 @@ public class TenantSubscriptionUtil
 			String appMappingJson = rc.get(appMappingUrl, tenant);
 			LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
-				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE,
-						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+				cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));
 				return Collections.emptyList();
 			}
 			AppMappingCollection amec = ju.fromJson(appMappingJson, AppMappingCollection.class);
 			if (amec == null || amec.getItems() == null || amec.getItems().isEmpty()) {
 				LOGGER.error("Checking tenant (" + tenant + ") subscriptions. Empty application mapping items are retrieved");
-				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE,
-						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+				cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));
 				return Collections.emptyList();
 			}
 			AppMappingEntity ame = null;
@@ -275,8 +274,7 @@ public class TenantSubscriptionUtil
 			if (ame == null || ame.getValues() == null || ame.getValues().isEmpty()) {
 				LOGGER.error("Checking tenant (" + tenant
 						+ ") subscriptions. Failed to get an application mapping for the specified tenant");
-				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE,
-						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+				cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));
 				return Collections.emptyList();
 			}
 			String apps = null;
@@ -288,14 +286,13 @@ public class TenantSubscriptionUtil
 			}
 			LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. applications for the tenant are " + apps);
 			if (apps == null || "".equals(apps)) {
-				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE,
-						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+				cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));
 				return Collections.emptyList();
 			}
 			List<String> origAppsList = Arrays.asList(apps
 					.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
-			cm.putCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS, origAppsList);
+			cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)),origAppsList);
+
 			return origAppsList;
 
 		}

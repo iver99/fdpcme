@@ -1,5 +1,9 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
@@ -23,6 +27,11 @@ public class DashboardApplicationTypeTest
 				DashboardApplicationType.fromJsonValue("SecurityAnalytics"));
 		Assert.assertEquals(DashboardApplicationType.Orchestration, DashboardApplicationType.fromJsonValue("Orchestration"));
 		Assert.assertEquals(DashboardApplicationType.Compliance, DashboardApplicationType.fromJsonValue("Compliance"));
+		Assert.assertEquals(DashboardApplicationType.SECSE, DashboardApplicationType.fromJsonValue("SECSE"));
+		Assert.assertEquals(DashboardApplicationType.SECSMA, DashboardApplicationType.fromJsonValue("SECSMA"));
+		Assert.assertEquals(DashboardApplicationType.OMCSE, DashboardApplicationType.fromJsonValue("OMCSE"));
+		Assert.assertEquals(DashboardApplicationType.OMCEE, DashboardApplicationType.fromJsonValue("OMCEE"));
+		Assert.assertEquals(DashboardApplicationType.OMCLOG, DashboardApplicationType.fromJsonValue("OMCLOG"));
 		try {
 			DashboardApplicationType.fromJsonValue("Not Existing");
 			Assert.fail("Fail: trying to get application type from invalid value");
@@ -64,5 +73,47 @@ public class DashboardApplicationTypeTest
 				DashboardApplicationType.SecurityAnalytics.getJsonValue());
 		Assert.assertEquals(DashboardApplicationType.ORCHESTRATION_STRING, DashboardApplicationType.Orchestration.getJsonValue());
 		Assert.assertEquals(DashboardApplicationType.COMPLIANCE_STRING, DashboardApplicationType.Compliance.getJsonValue());
+		Assert.assertEquals(DashboardApplicationType.SECSMA_STRING, DashboardApplicationType.SECSMA.getJsonValue());
+		Assert.assertEquals(DashboardApplicationType.SECSE_STRING, DashboardApplicationType.SECSE.getJsonValue());
+		Assert.assertEquals(DashboardApplicationType.OMCEE_STRING, DashboardApplicationType.OMCEE.getJsonValue());
+		Assert.assertEquals(DashboardApplicationType.OMCLOG_STRING, DashboardApplicationType.OMCLOG.getJsonValue());
+		Assert.assertEquals(DashboardApplicationType.OMCSE_STRING, DashboardApplicationType.OMCSE.getJsonValue());
+	}
+
+	@Test(groups = { "s2" })
+	public void testGetBasicServices()
+	{
+		List<DashboardApplicationType> list1 = Arrays.asList(DashboardApplicationType.Compliance, DashboardApplicationType.APM);
+		List<DashboardApplicationType> typeList = DashboardApplicationType.getBasicServiceList(list1);
+		Assert.assertEquals(typeList.size(), 2);
+		Assert.assertTrue(typeList.get(0).equals(DashboardApplicationType.Compliance) || typeList.get(0).equals(DashboardApplicationType.APM));
+		Assert.assertTrue(typeList.get(1).equals(DashboardApplicationType.Compliance) || typeList.get(1).equals(DashboardApplicationType.APM));
+		Assert.assertFalse(typeList.get(0).equals(typeList.get(1)));
+
+		List<DashboardApplicationType> list2 = Arrays.asList(DashboardApplicationType.OMCEE, DashboardApplicationType.APM);
+		typeList = DashboardApplicationType.getBasicServiceList(list2);
+		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
+		
+		list2 = Arrays.asList(DashboardApplicationType.OMCLOG, DashboardApplicationType.LogAnalytics);
+		typeList = DashboardApplicationType.getBasicServiceList(list2);
+		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
+		
+		list2 = Arrays.asList(DashboardApplicationType.OMCSE, DashboardApplicationType.ITAnalytics);
+		typeList = DashboardApplicationType.getBasicServiceList(list2);
+		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
+		
+		list2 = Arrays.asList(DashboardApplicationType.SECSE);
+		typeList = DashboardApplicationType.getBasicServiceList(list2);
+		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
+		
+		list2 = Arrays.asList(DashboardApplicationType.SECSMA, DashboardApplicationType.SECSMA);
+		typeList = DashboardApplicationType.getBasicServiceList(list2);
+		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
+		
+		typeList = DashboardApplicationType.getBasicServiceList(null);
+		Assert.assertNull(typeList);
+		
+		typeList = DashboardApplicationType.getBasicServiceList(new ArrayList<DashboardApplicationType>());
+		Assert.assertTrue(typeList.isEmpty());
 	}
 }

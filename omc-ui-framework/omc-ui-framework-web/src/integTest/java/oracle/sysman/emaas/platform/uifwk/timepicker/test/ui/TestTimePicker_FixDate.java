@@ -24,6 +24,7 @@ import oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util.UIControls;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
+import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -41,8 +42,13 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 	private static void verifyResult(WebDriver driver, String returnDate, TimeRange option, String StartLabelLocator,
 			String EndLabelLocator, boolean DateOnly) throws ParseException
 	{
-
 		WaitUtil.waitForPageFullyLoaded(driver);
+
+		String strTimePickerText = driver.getWebDriver().findElement(By.cssSelector(UIControls.TIMERANGEBTN_CSS)).getText();
+
+		driver.getLogger().info("TimePickerLabel: " + strTimePickerText);
+		Assert.assertEquals(strTimePickerText, TimeSelectorUtil.getTimeRangeLabel(driver));
+
 		String timeRange = option.getRangeOption();
 
 		String sTmpStartDateTime = driver.getText(StartLabelLocator);

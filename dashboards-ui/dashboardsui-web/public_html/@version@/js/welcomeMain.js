@@ -206,13 +206,20 @@ require(['ojs/ojcore',
                 self.ITA_Type = "select";
                 self.data_type = "select";
 
+                self.showAPM = ko.observable(false);
+                self.showLA = ko.observable(false);
+                self.showITA = ko.observable(false);
+                self.showDashboard = ko.observable(false);
+                self.showDataExplorer = ko.observable(false);
+                self.showLearnMore = ko.observable(false);
+                
                 self.showInfraMonitoring = ko.observable(false);
                 self.showCompliance = ko.observable(false);
                 self.showSecurityAnalytics = ko.observable(false);
                 self.showOrchestration = ko.observable(false);
 
                 self.getServiceUrls = function() {
-                    dfu.getRegistrations(fetchServiceLinks);
+                    dfu.getRegistrations(fetchServiceLinks, true, errorCallback);
                 };
 
                 //get urls of databases and middleware
@@ -222,10 +229,27 @@ require(['ojs/ojcore',
                     var url = dfu_model.discoverUrl(serviceName, version, rel);
                     return url;
                 };
+                
+                function errorCallback() {
+                    self.showAPM(true);
+                    self.showLA(true);
+                    self.showITA(true);
+                    self.showDashboard(true);
+                    self.showDataExplorer(true);
+                    self.showLearnMore(true);
+                }
 
                 function fetchServiceLinks(data) {
                     var landingHomeUrls = {};
                     var i;
+                    
+                    self.showAPM(true);
+                    self.showLA(true);
+                    self.showITA(true);
+                    self.showDashboard(true);
+                    self.showDataExplorer(true);
+                    self.showLearnMore(true);
+                    
                     if(data.cloudServices && data.cloudServices.length>0) {
                         var cloudServices = data.cloudServices;
                         var cloudServicesNum = cloudServices.length;
