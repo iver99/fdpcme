@@ -5,6 +5,14 @@ import java.math.BigInteger;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.registration.StringCacheUtil;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,18 +51,30 @@ public class DashboardDataAccessUtil {
 
     public static String getUserTenantInfo(String tenantIdParam,
                                           String userTenant, String referer, String sessionExp) {
-        try {
-            long start = System.currentTimeMillis();
-            StringCacheUtil cache = StringCacheUtil.getUserInfoCacheInstance();
-            String data = cache.get(userTenant);
-            if (!StringUtil.isEmpty(data)) {
-                LOGGER.info("Retrieved user info from cache for userTenant {}", userTenant);
-                return data;
+        long start = System.currentTimeMillis();
+        Tenant cacheTenant = new Tenant(tenantIdParam);
+        Object userTenantKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(userTenant));
+        ICacheManager cm = CacheManagers.getInstance().build();
+        ICache cache = cm.getCache(CacheConstants.CACHES_TENANT_USER_CACHE);
+        if (cache != null) {
+            try {
+                Object obj = cache.get(userTenantKey);
+                if (obj instanceof String) {
+                    String data = (String)obj;
+                    LOGGER.info("Retrieved user info from cache for userTenant {}, cached data is {}", userTenant, data);
+                    return data;
+                }
+            } catch (ExecutionException e) {
+                // for cache issue, we'll continue retrieve data and just log a warning message
+                LOGGER.warn(e.getLocalizedMessage(), e);
             }
+        }
 
+        try {
             Link configurationsLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.configurations", null);
             if (configurationsLink == null || StringUtils.isEmpty(configurationsLink.getHref())) {
                 LOGGER.warn("Retrieving configurations links for tenant {}: null/empty configurationsLink retrieved from service registry.");
+                cache.evict(userTenantKey);
                 return null;
             }
             LOGGER.info("Configurations REST API link from dashboard-api href is: " + configurationsLink.getHref());
@@ -69,7 +89,7 @@ public class DashboardDataAccessUtil {
                 rc.setHeader("SESSION_EXP", sessionExp);
             }
             String response = rc.get(userInfoHref, tenantIdParam);
-            cache.put(userTenant, response);
+            cache.put(userTenantKey, response);
             LOGGER.info("Retrieved userInfo data is: {}", response);
             LOGGER.info("It takes {}ms to retrieve userInfo data from Dashboard-API", (System.currentTimeMillis() - start));
             return response;
@@ -81,14 +101,26 @@ public class DashboardDataAccessUtil {
 
     public static String getRegistrationData(String tenantIdParam,
                                            String userTenant, String referer, String sessionExp) {
-        try {
-            long start = System.currentTimeMillis();
-            StringCacheUtil cache = StringCacheUtil.getRegistrationCacheInstance();
-            String data = cache.get(userTenant);
-            if (!StringUtil.isEmpty(data)) {
-                LOGGER.info("Retrieved registration data from cache for userTenant {}", userTenant);
-                return data;
+        long start = System.currentTimeMillis();
+        Tenant cacheTenant = new Tenant(tenantIdParam);
+        Object userTenantKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(userTenant));
+        ICacheManager cm = CacheManagers.getInstance().build();
+        ICache cache = cm.getCache(CacheConstants.CACHES_REGISTRY_CACHE);
+        if (cache != null) {
+            try {
+                Object obj = cache.get(userTenantKey);
+                if (obj instanceof String) {
+                    String data = (String)obj;
+                    LOGGER.debug("Retrieved registration data from cache for userTenant {}, cached data is {}", userTenant, data);
+                    return data;
+                }
+            } catch (ExecutionException e) {
+                // for cache issue, we'll continue retrieve data and just log a warning message
+                LOGGER.warn(e.getLocalizedMessage(), e);
             }
+        }
+
+        try {
             Link configurationsLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.configurations", null);
             if (configurationsLink == null || StringUtils.isEmpty(configurationsLink.getHref())) {
                 LOGGER.warn("Retrieving configurations links for tenant {}: null/empty configurationsLink retrieved from service registry.");
@@ -106,7 +138,7 @@ public class DashboardDataAccessUtil {
                 rc.setHeader("SESSION_EXP", sessionExp);
             }
             String response = rc.get(userInfoHref, tenantIdParam);
-            cache.put(userTenant, response);
+            cache.put(userTenantKey, response);
             LOGGER.info("Retrieved registration data is: {}", response);
             LOGGER.info("It takes {}ms to retrieve registration data from Dashboard-API", (System.currentTimeMillis() - start));
             return response;

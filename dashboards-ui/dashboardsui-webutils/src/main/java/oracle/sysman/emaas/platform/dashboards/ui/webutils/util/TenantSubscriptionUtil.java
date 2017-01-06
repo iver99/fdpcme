@@ -28,6 +28,14 @@ import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.LogUtil.Interact
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedAppCacheUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedApps;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -105,11 +113,23 @@ public class TenantSubscriptionUtil
 		}
 
 		long startTime = System.currentTimeMillis();
-		SubscribedAppCacheUtil cache = SubscribedAppCacheUtil.getInstance();
-		List<String> apps = cache.get(tenant);
-		if (apps != null) {
-			LOGGER.info("Retrieved subscribed app information from cache");
-			return apps;
+
+		Tenant cacheTenant = new Tenant(tenant);
+		Object userTenantKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(user));
+		ICacheManager cm = CacheManagers.getInstance().build();
+		ICache cache = cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE);
+		if (cache != null) {
+			try {
+				Object obj = cache.get(userTenantKey);
+				if (obj instanceof List) {
+					List<String> data = (List<String>)obj;
+					LOGGER.info("Retrieved subscribed app information from cache for userTenant {}, cached data is {}", tenant, user, data);
+					return data;
+				}
+			} catch (ExecutionException e) {
+				// for cache issue, we'll continue retrieve data and just log a warning message
+				LOGGER.warn(e.getLocalizedMessage(), e);
+			}
 		}
 
 		// instead of retrieving subscribed apps from entitynaming, we get that from dashboard api
@@ -134,11 +154,11 @@ public class TenantSubscriptionUtil
 			if (sa == null || sa.getApplications() == null || sa.getApplications().length <= 0) {
 				LOGGER.info("Checking tenant (" + tenant
 						+ ") subscriptions. Dashboard-API subscribed app application is null or empty");
-				cache.remove(tenant);
+				cache.evict(userTenantKey);
 				return Collections.emptyList();
 			}
-			apps = Arrays.asList(sa.getApplications());
-			cache.put(tenant, apps);
+			List<String> apps = Arrays.asList(sa.getApplications());
+			cache.put(userTenantKey, apps);
 			LOGGER.info("Getting subscribed app from dashboard-api: {} ms", System.currentTimeMillis() - startTime);
 			return apps;
 		}
