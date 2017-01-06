@@ -51,7 +51,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	public final static String LEARN_MORE_SERVICE_OFFERINGS = "serviceOfferings";
 
 	public final static String SERVICE_NAME_APM = "APM";
-
+	public static final String SERVICE_NAME_DATA_EXPLORERS_EXPECTEDNAME = "Data Explorers";
 	public final static String SERVICE_NAME_LA = "LA";
 	public final static String SERVICE_NAME_ITA = "ITA";
 	public static final String SERVICE_NAME_INFRA_MONITORING = "infraMonitoring";
@@ -332,7 +332,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * 		APM | LA | ITA | infraMonitoring | compliance | securityAnalytics | orchestration |dashboards | dataExplorers | getStarted | videos | serviceOfferings
 	 * @return
 	 */
-	private String getExpectedText(String serviceName)
+	protected String getExpectedText(String serviceName)
 	{
 		String expectedName = null;
 		switch (serviceName) {
@@ -361,7 +361,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				expectedName = "Dashboards";
 				break;
 			case SERVICE_NAME_DATA_EXPLORERS:
-				expectedName = "Data Explorers";
+				expectedName = SERVICE_NAME_DATA_EXPLORERS_EXPECTEDNAME;
 				break;
 			case LEARN_MORE_GET_STARTED:
 				expectedName = "How to get started";
@@ -411,7 +411,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	 * 		APM | LA | ITA | infraMonitoring | compliance | securityAnalytics | orchestration | dashboards | dataExplorers
 	 * @return
 	 */
-	private String getServiceWrapperId(String serviceName)
+	protected String getServiceWrapperId(String serviceName)
 	{
 		String serviceWrapperId = null;
 		switch (serviceName) {

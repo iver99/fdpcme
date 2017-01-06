@@ -149,4 +149,34 @@ public class WelcomeUtil_175 extends WelcomeUtil_171
 		driver.takeScreenShot();
 
 	}	
+
+	@Override
+	public boolean isServiceExistedInWelcome(WebDriver driver, String serviceName)
+	{
+		driver.getLogger().info("Start to check if service: " + serviceName + " is existed in welcome page...");
+
+		Validator.fromValidValues("serviceName", serviceName, SERVICE_NAME_APM, SERVICE_NAME_LA, SERVICE_NAME_ITA,
+				SERVICE_NAME_INFRA_MONITORING, SERVICE_NAME_COMPLIANCE, SERVICE_NAME_SECURITY_ANALYTICS, SERVICE_NAME_ORCHESTRATION, SERVICE_NAME_DASHBOARDS, SERVICE_NAME_DATA_EXPLORERS);
+
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
+		boolean isExisted = false;
+		String serviceWrapperId = getServiceWrapperId(serviceName);
+		String xpath = "//*[@id='"
+				+ serviceWrapperId
+				+ "']/div[@class='service-box-wrapper']/div[@class='landing-home-box-content']/div[@class='landing-home-box-content-head']";
+
+		String nameExpected = getExpectedText(serviceName);
+		if ("Compliance".equals(nameExpected)){
+			//in 1.13.0, compliance name is changed, but we didn't update api version, so have to support both old name and new name here
+			String newNameExpected = "Configuration and Compliance";
+			isExisted = driver.isDisplayed(xpath) && (driver.isTextPresent(nameExpected, xpath) || driver.isTextPresent(newNameExpected, xpath));
+		}else{
+			isExisted = driver.isDisplayed(xpath) && driver.isTextPresent(nameExpected, xpath);
+		}
+		driver.getLogger().info(
+				"Check of service: " + serviceName + " existence in welcome page is finished! Result: " + isExisted);
+		return isExisted;
+		
+	}
 }

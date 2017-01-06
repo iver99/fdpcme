@@ -26,6 +26,8 @@ public class BrandingBarUtil
 	public static final String NAV_LINK_TEXT_VA_ITA = IBrandingBarUtil.NAV_LINK_TEXT_VA_ITA;
 	public static final String NAV_LINK_TEXT_VA_TA = IBrandingBarUtil.NAV_LINK_TEXT_VA_TA;
 	public static final String NAV_LINK_TEXT_VA_LA = IBrandingBarUtil.NAV_LINK_TEXT_VA_LA;
+    public static final String NAV_LINK_TEXT_DATAEXPLORER = IBrandingBarUtil.NAV_LINK_TEXT_DATAEXPLORER;
+    public static final String NAV_LINK_TEXT_LOGEXPLORER = IBrandingBarUtil.NAV_LINK_TEXT_LOGEXPLORER;
 	//Administration
 	public static final String NAV_LINK_TEXT_ADMIN_AGENT = IBrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT;
 	public static final String NAV_LINK_TEXT_ADMIN_ALERT = IBrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT;
