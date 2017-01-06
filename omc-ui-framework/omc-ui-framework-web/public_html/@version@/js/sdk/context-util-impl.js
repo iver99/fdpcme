@@ -1,4 +1,4 @@
-define([
+define('uifwk/@version@/js/sdk/context-util-impl', [
     'ojs/ojcore',
     'knockout',
     'jquery',
