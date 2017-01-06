@@ -10,6 +10,14 @@
 
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonValue;
 
@@ -21,23 +29,29 @@ public enum DashboardApplicationType
 	/**
 	 * There is no draft version for the book
 	 */
-	APM(1),
+	APM(1, false),
 	/**
 	 * The draft version is under edit
 	 */
-	ITAnalytics(2),
+	ITAnalytics(2, false),
 	/**
 	 * The draft version is submitted for release
 	 */
-	LogAnalytics(3),
+	LogAnalytics(3, false),
 	// Infrastructure Monitoring service
-	Monitoring(4),
+	Monitoring(4, false),
 	// Security Analytics service
-	SecurityAnalytics(5),
+	SecurityAnalytics(5, false),
 	// Orchestration
-	Orchestration(6),
+	Orchestration(6, false),
 	// Compliance
-	Compliance(7);
+	Compliance(7, false),
+	// following are bundle services, will be transferred to individual services
+	OMCSE(100, true),
+	OMCEE(101, true),
+	OMCLOG(102, true),
+	SECSE(103, true),
+	SECSMA(104, true);
 
 	public static final String APM_STRING = "APM";
 	public static final String ITA_SRING = "ITAnalytics";
@@ -46,6 +60,14 @@ public enum DashboardApplicationType
 	public static final String SECURITY_ANALYTICS_STRING = "SecurityAnalytics";
 	public static final String ORCHESTRATION_STRING = "Orchestration";
 	public static final String COMPLIANCE_STRING = "Compliance";
+	public static final String OMCSE_STRING = "OMCSE";
+	public static final String OMCEE_STRING = "OMCEE";
+	public static final String OMCLOG_STRING = "OMCLOG";
+	public static final String SECSE_STRING = "SECSE";
+	public static final String SECSMA_STRING = "SECSMA";
+
+	private static final Logger LOGGER = LogManager.getLogger(DashboardApplicationType.class);
+	public static final List<DashboardApplicationType> allBasicService = Arrays.asList(APM, ITAnalytics, LogAnalytics, Monitoring, SecurityAnalytics, Orchestration, Compliance);
 
 	@JsonCreator
 	public static DashboardApplicationType fromJsonValue(String value)
@@ -65,12 +87,27 @@ public enum DashboardApplicationType
 		if (SECURITY_ANALYTICS_STRING.equals(value)) {
 			return SecurityAnalytics;
 		}
-                if (ORCHESTRATION_STRING.equals(value)) {
+		if (ORCHESTRATION_STRING.equals(value)) {
 			return Orchestration;
 		}
         if (COMPLIANCE_STRING.equals(value)) {
             return Compliance;
         }
+		if (OMCSE_STRING.equals(value)) {
+			return OMCSE;
+		}
+		if (OMCEE_STRING.equals(value)) {
+			return OMCEE;
+		}
+		if (OMCLOG_STRING.equals(value)) {
+			return OMCLOG;
+		}
+		if (SECSE_STRING.equals(value)) {
+			return SECSE;
+		}
+		if (SECSMA_STRING.equals(value)) {
+			return SECSMA;
+		}
 		throw new IllegalArgumentException("Invalid DashboardApplicationType string value: " + value);
 	}
 
@@ -85,10 +122,12 @@ public enum DashboardApplicationType
 	}
 
 	private final int value;
+	private final boolean isBundleService;
 
-	private DashboardApplicationType(int value)
+	private DashboardApplicationType(int value, boolean isBundleService)
 	{
 		this.value = value;
+		this.isBundleService = isBundleService;
 	}
 
 	@JsonValue
@@ -109,12 +148,27 @@ public enum DashboardApplicationType
 		if (value == SecurityAnalytics.value) {
 			return SECURITY_ANALYTICS_STRING;
 		}
-                if (value == Orchestration.value) {
+		if (value == Orchestration.value) {
 			return ORCHESTRATION_STRING;
 		}
         if (value == Compliance.value) {
         	return COMPLIANCE_STRING;
         }
+		if (value == OMCSE.value) {
+			return OMCSE_STRING;
+		}
+		if (value == OMCEE.value) {
+			return OMCEE_STRING;
+		}
+		if (value == OMCLOG.value) {
+			return OMCLOG_STRING;
+		}
+		if (value == SECSE.value) {
+			return SECSE_STRING;
+		}
+		if (value == SECSMA.value) {
+			return SECSMA_STRING;
+		}
 		throw new IllegalArgumentException("Invalid DashboardApplicationType type value: " + value);
 	}
 
@@ -123,4 +177,19 @@ public enum DashboardApplicationType
 		return value;
 	}
 
+	public static List<DashboardApplicationType> getBasicServiceList(List<DashboardApplicationType> services) {
+		if (services == null) {
+			return null;
+		}
+		Set<DashboardApplicationType> basicServicesSet = new HashSet<DashboardApplicationType>();
+		for (DashboardApplicationType service: services) {
+			if (service.isBundleService) {
+				LOGGER.info("When retrieving basic app type, we get a bundle service {}, so return all basic services then", service.getJsonValue());
+				return DashboardApplicationType.allBasicService;
+			}
+			basicServicesSet.add(service);
+		}
+		LOGGER.info("Getting basic services: {}", basicServicesSet);
+		return new ArrayList<DashboardApplicationType>(basicServicesSet);
+	}
 }
