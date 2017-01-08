@@ -16,6 +16,8 @@ public class DashboardHomeUtil
 	public static final String EXPLOREDATA_MENU_ANALYZE = IDashboardHomeUtil.EXPLOREDATA_MENU_ANALYZE;
 	public static final String EXPLOREDATA_MENU_LOG = IDashboardHomeUtil.EXPLOREDATA_MENU_LOG;
 	public static final String EXPLOREDATA_MENU_SEARCH = IDashboardHomeUtil.EXPLOREDATA_MENU_SEARCH;
+    public static final String EXPLOREDATA_MENU_LOGEXPLORER = IDashboardHomeUtil.EXPLOREDATA_MENU_LOGEXPLORER;
+    public static final String EXPLOREDATA_MENU_DATAEXPLORER = IDashboardHomeUtil.EXPLOREDATA_MENU_DATAEXPLORER;
 	public static final String DASHBOARDS_GRID_VIEW = IDashboardHomeUtil.DASHBOARDS_GRID_VIEW;
 	public static final String DASHBOARDS_LIST_VIEW = IDashboardHomeUtil.DASHBOARDS_LIST_VIEW;
 	public static final String DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC = IDashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC;
