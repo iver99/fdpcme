@@ -74,17 +74,6 @@ public abstract class AbstractCache implements ICache{
         return get(key,factory);
     }
 
-    @Override
-    public void put(Object key, Object value) {
-        cacheStatistics.setUsage(cacheStatistics.getUsage()+1);
-    }
-
-    @Override
-    public void evict(Object key) {
-        cacheStatistics.setEvictionCount(cacheStatistics.getEvictionCount()+1);
-        cacheStatistics.setUsage(cacheStatistics.getUsage()-1);
-    }
-
     protected abstract CachedItem lookup(Object key);
 
     private  <T> T checkNotNull(T reference) {
