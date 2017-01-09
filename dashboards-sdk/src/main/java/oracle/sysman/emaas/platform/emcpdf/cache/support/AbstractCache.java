@@ -69,16 +69,6 @@ public abstract class AbstractCache implements ICache{
         return get(key,factory);
     }
 
-   /* @Override
-    public void put(Object key, Object value) {
-    	LOGGER.info("Executing invalid puit action");
-    }
-
-    @Override
-    public void evict(Object key) {
-    	LOGGER.info("Executing invalid evct action");
-    }*/
-
     protected abstract CachedItem lookup(Object key);
 
     private  <T> T checkNotNull(T reference) {
