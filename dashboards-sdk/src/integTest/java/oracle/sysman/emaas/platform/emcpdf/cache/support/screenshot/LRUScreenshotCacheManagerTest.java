@@ -61,7 +61,7 @@ public class LRUScreenshotCacheManagerTest {
     }
     @Test
     public void testExpiration() throws ExecutionException {
-        cm.getCache("cache2",1000,2000L);
+        cm.getCache("cache2",1000,2L);
         cm.getCache("cache2").put("four",new CachedItem("four",4));
         Assert.assertNotNull(cm.getCache("cache2").get("four"));
         try {
