@@ -12,7 +12,7 @@ import java.util.regex.*
 
 allprojects{
     ext.TWORK = (System.getenv('T_WORK') != null && !System.getenv('T_WORK').trim().isEmpty()) ? System.getenv('T_WORK') : buildUri(getGitRoot(),"oracle/work")
-    ext.TENANT_FOR_QUERY="emaastesttenantnoITA"	
+    ext.TENANT_FOR_QUERY="emaastesttenantnoita"	
     ext.solr_url=null
 }
 String emaasPropertiesLogPath=TWORK+"/emaas.properties.log"
@@ -152,7 +152,8 @@ boolean runOnboardTenant(String sm_url,String authToken, String emaas_properties
     }
         
     // Get the TenantService's URL
-    def response=['curl','-H', "Content-Type: application/json", '-H',"Authorization:"+authToken,'-X', 'GET',sm_url+"instances?serviceName=TenantService"].execute().text
+    def response=['curl','-H', "Content-Type: application/json", '-H',
+            "Authorization:"+authToken,'-X', 'GET',sm_url+"instances?serviceName=TenantService"].execute().text
     if(response==null||!response.contains("TenantService")){
             throw new GradleException("Fail to lookup TenantService, maybe the service is out of service or the site is broken")
     }
@@ -177,11 +178,8 @@ boolean runOnboardTenant(String sm_url,String authToken, String emaas_properties
         println "On Tenant Service host, onboard tenant...."
         exec{commandLine "chmod", "755", TWORK+"/testClasses/tenant_onboard.sh"}
         println "Tenant Onboard command... " + test_tenant_name
-        
-println ([TWORK+"/testClasses/tenant_onboard.sh","-propertiesFile", emaas_properties_log_path,"-tenantId",test_tenant_name,"-service_type","Orchestration","-service_edition","Trial"].execute().text) 
-println ([TWORK+"/testClasses/tenant_onboard.sh","-propertiesFile", emaas_properties_log_path,"-tenantId",test_tenant_name,"-service_type","Compliance","-service_edition","Trial"].execute().text) 
-println ([TWORK+"/testClasses/tenant_onboard.sh","-propertiesFile", emaas_properties_log_path,"-tenantId",test_tenant_name,"-service_type","SecurityAnalytics","-service_edition","Trial"].execute().text)        
-       
+               
+        println ([TWORK+"/testClasses/tenant_onboard.sh","-propertiesFile", emaas_properties_log_path,"-tenantId",test_tenant_name,"-service_type","LogAnalytics","-service_edition","Trial"].execute().text)
 
         // Wait and check for onboard completion
         Thread.sleep(60000)
@@ -256,10 +254,8 @@ String getLookupUrl(String smUrl,String authToken)
     }
 
     // get EntityNaming service URL from SM
-    def response=['curl','-H', "Content-Type: application/json", '-H',
-            "Authorization:"+authToken,'-X', 'GET',smUrl+"instances?serviceName=EntityNaming"].execute().text
-    def _command = ['curl','-H', "Content-Type: application/json", '-H',
-            "Authorization:"+authToken,'-X', 'GET',smUrl+"instances?serviceName=EntityNaming"]
+    def response=['curl','-H', "Content-Type: application/json", '-H', "Authorization:"+authToken,'-X', 'GET',smUrl+"instances?serviceName=EntityNaming"].execute().text
+    def _command = ['curl','-H', "Content-Type: application/json", '-H', "Authorization:"+authToken,'-X', 'GET',smUrl+"instances?serviceName=EntityNaming"]
     if(response==null||!response.contains("EntityNaming")){
         throw new GradleException("Fail to lookup EntityNaming, maybe the service is out of service or the site is broken. Command used: ${_command}")
     }	
@@ -281,8 +277,7 @@ String getInternalTenantId(String smUrl, String authToken,String tenantId)
 {
     String url=getLookupUrl(smUrl,authToken)
 
-    def response=['curl','-H', "Content-Type: application/json", '-H',
-            "Authorization:"+authToken,'-X', 'GET',url+"?domainName=InternalTenantIdMap"].execute().text
+    def response=['curl','-H', "Content-Type: application/json", '-H', "Authorization:"+authToken,'-X', 'GET',url+"?domainName=InternalTenantIdMap"].execute().text
 
     if(response == null || !response.contains("InternalTenantIdMap")){
         throw new GradleException("Fail to lookup InternalTenantIdMap, maybe the service is out of service or the site is broken")
@@ -318,8 +313,7 @@ void activateTenant(String smUrl,String authToken, String tenantId, String userN
     if(userName==null){
         throw new GradleException("userName should not be null")
     }
-    def response=['curl','-H', "Content-Type: application/json", '-H',
-            "Authorization:"+authToken,'-X', 'GET',smUrl+"instances?serviceName=LoganService"].execute().text
+    def response=['curl','-H', "Content-Type: application/json", '-H', "Authorization:"+authToken,'-X', 'GET',smUrl+"instances?serviceName=LoganService"].execute().text
     if(response==null||!response.contains("LoganService")){
         throw new GradleException("Fail to lookup LoganService, maybe the service is out of service or the site is broken")
     }
@@ -327,7 +321,7 @@ void activateTenant(String smUrl,String authToken, String tenantId, String userN
     def result = slurper.parseText(response)
     String url= result.items.links.find{it.rel}.find{it.rel=="loganService"}.href
 
-    def resp=['curl','-H', "Content-Type: application/json", '-H',"Authorization:"+authToken, '-H',"OAM_REMOTE_USER:"+tenantId+"."+userName, '-H',"X-USER-IDENTITY-DOMAIN-NAME:"+tenantId, '-X', 'GET',buildUri(url,"/qlmetadata/properties")].execute().text
+    def resp=['curl','-H', "Content-Type: application/json", '-H',"Authorization:"+authToken,'-H',"OAM_REMOTE_USER:"+tenantId+"."+userName,'-H',"X-USER-IDENTITY-DOMAIN-NAME:"+tenantId,'-X', 'GET',buildUri(url,"/qlmetadata/properties")].execute().text
     if(!resp.isEmpty())
     {
         println "Activating tenant ["+tenantId+"] done."
