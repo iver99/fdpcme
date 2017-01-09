@@ -2,8 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.core.zdt;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-
-import groovy.lang.DelegatesTo;
+ 
 import org.testng.annotations.Test;
 
 import mockit.Expectations;
