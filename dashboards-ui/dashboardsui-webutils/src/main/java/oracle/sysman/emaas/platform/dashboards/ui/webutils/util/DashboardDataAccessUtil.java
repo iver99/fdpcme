@@ -111,7 +111,7 @@ public class DashboardDataAccessUtil {
                 Object obj = cache.get(userTenantKey);
                 if (obj instanceof String) {
                     String data = (String)obj;
-                    LOGGER.debug("Retrieved registration data from cache for userTenant {}, cached data is {}", userTenant, data);
+                    LOGGER.info("Retrieved registration data from cache for userTenant {}, cached data is {}", userTenant, data);
                     return data;
                 }
             } catch (ExecutionException e) {

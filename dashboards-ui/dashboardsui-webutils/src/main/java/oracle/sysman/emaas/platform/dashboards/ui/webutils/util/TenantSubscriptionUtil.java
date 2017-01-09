@@ -122,7 +122,7 @@ public class TenantSubscriptionUtil
 			try {
 				List<String> data = (List<String>)cache.get(tenantKey);
 				if (data != null) {
-					LOGGER.info("Retrieved subscribed app information from cache for userTenant {}, cached data is {}", tenant, user, data);
+					LOGGER.info("Retrieved subscribed app information from cache for userTenant {}, cached data is {}", tenant, data);
 					return data;
 				}
 			} catch (ExecutionException e) {
