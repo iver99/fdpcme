@@ -14,8 +14,8 @@ import java.util.Date;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil.TimeRange;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil.TimeUnit;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeUnit;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.UtilLoader;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
