@@ -1,14 +1,16 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.support.lru;
 
+import java.util.LinkedHashMap;
+
 import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
 import oracle.sysman.emaas.platform.emcpdf.cache.config.CacheConfig;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.AbstractCache;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CachedItem;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.TimeUtil;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.LinkedHashMap;
 
 /**
  * Created by chehao on 2016/12/9.
@@ -61,21 +63,19 @@ public class LinkedHashMapCache extends AbstractCache{
 
     @Override
     public void put(Object key, Object value) {
-        super.put(key,value);
         cacheMap.put(key, new CachedItem(key,value));
         LOGGER.debug("CachedItem with key {} and value {} is cached into cache group {}",key,value,name);
     }
 
     @Override
     public void evict(Object key) {
-        super.evict(key);
         cacheMap.remove(key);
         LOGGER.debug("Cached Item with key {} is evicted from cache group {}",key,name);
     }
 
     @Override
     public String getName() {
-        return getName();
+        return name;
     }
 
     @Override
@@ -85,10 +85,11 @@ public class LinkedHashMapCache extends AbstractCache{
 
     @Override
     public boolean isExpired(CachedItem cachedItem) {
+    	LOGGER.debug("time to live is {}, creation time is {}, current time si {}",timeToLive,cachedItem.getCreationTime(),System.currentTimeMillis());
         if(timeToLive<=0){
             return false;
         }
-        return (System.currentTimeMillis()-cachedItem.getCreationTime())>timeToLive;
+        return (System.currentTimeMillis()-cachedItem.getCreationTime())>TimeUtil.toMillis(timeToLive);
     }
 
 }

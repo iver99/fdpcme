@@ -1,8 +1,9 @@
-package oracle.sysman.emaas.platform.emcpdf.cache.support;
+package oracle.sysman.emaas.platform.emcpdf.cache.support.lru;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CachedItem;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -58,7 +59,7 @@ public class LRUCacheManagerTest {
     @Test
     public void testExpiration() throws ExecutionException {
         ICacheManager cm=LRUCacheManager.getInstance();
-        cm.getCache("cache2",1000,2000L);
+        cm.getCache("cache2",1000,2L);
         cm.getCache("cache2").put("four",new CachedItem("four",4));
         Assert.assertNotNull(cm.getCache("cache2").get("four"));
         try {
