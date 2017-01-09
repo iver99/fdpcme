@@ -69,14 +69,6 @@ public abstract class AbstractCache implements ICache{
         return get(key,factory);
     }
 
-    @Override
-    public void put(Object key, Object value) {
-    }
-
-    @Override
-    public void evict(Object key) {
-    }
-
     protected abstract CachedItem lookup(Object key);
 
     private  <T> T checkNotNull(T reference) {
