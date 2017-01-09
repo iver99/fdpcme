@@ -13,9 +13,9 @@ public class TimeUtil {
         return (int)Math.ceil((double)timeInMillis / 1000D);
     }
 
-    public static long toMillis(int timeInSecs)
+    public static long toMillis(long timeInSecs)
     {
-        return (long)timeInSecs * 1000L;
+        return timeInSecs * 1000L;
     }
 
     public static int convertTimeToInt(long seconds)

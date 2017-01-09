@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-testapiversion="1.7.5" lang="en-US">
+<html data-testapiversion="1.14.0" lang="en-US">
     <head>
         <title data-bind="text: landingHomeTitle"></title>
         <meta charset="UTF-8">
@@ -180,7 +180,7 @@
                                         <select id="dataExp_options" aria-label="Select Data Explorers" style="float: right; margin-top: 25px; margin-right: 10px; width: 235px;" data-bind="ojComponent: {component: 'ojSelect', value: data_type, optionChange: dataExplorersChosen}">                                      
                                             <option value="select" id="dataExp_Select" data-bind="text: select"></option>                                            
                                             <!-- ko foreach: exploreDataLinkList -->
-                                            <option data-bind="attr: {id: 'dataExp_'+name}, value: name, text: name"></option>
+                                            <option data-bind="attr: {id: 'dataExp_'+name.split(' ')[0]}, value: name, text: name"></option>
                                             <!-- /ko -->
                                         </select>
 

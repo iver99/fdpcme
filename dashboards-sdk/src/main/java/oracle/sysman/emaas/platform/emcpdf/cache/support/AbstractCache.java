@@ -3,7 +3,6 @@ package oracle.sysman.emaas.platform.emcpdf.cache.support;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheStatistics;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheThreadPools;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,8 +17,6 @@ import java.util.concurrent.TimeUnit;
 public abstract class AbstractCache implements ICache{
     Logger LOGGER=LogManager.getLogger(AbstractCache.class);
 
-    public CacheStatistics cacheStatistics =new CacheStatistics();
-
     @Override
     public Object get(Object key) throws ExecutionException {
         return get(key,null);
@@ -28,14 +25,12 @@ public abstract class AbstractCache implements ICache{
     @Override
     public Object get(Object key, CacheLoader factory)throws ExecutionException {
         checkNotNull(key);
-        cacheStatistics.setRequestCount(cacheStatistics.getRequestCount()+1);
         CachedItem value=lookup(key);
         Object valueFromFactory= null;
         if(value!=null ){
             if(isExpired(value)){
                 evict(key);
             }else{
-                cacheStatistics.setHitCount(cacheStatistics.getHitCount()+1);
                 return value.getValue();
             }
         }
@@ -74,16 +69,15 @@ public abstract class AbstractCache implements ICache{
         return get(key,factory);
     }
 
-    @Override
+   /* @Override
     public void put(Object key, Object value) {
-        cacheStatistics.setUsage(cacheStatistics.getUsage()+1);
+    	LOGGER.info("Executing invalid puit action");
     }
 
     @Override
     public void evict(Object key) {
-        cacheStatistics.setEvictionCount(cacheStatistics.getEvictionCount()+1);
-        cacheStatistics.setUsage(cacheStatistics.getUsage()-1);
-    }
+    	LOGGER.info("Executing invalid evct action");
+    }*/
 
     protected abstract CachedItem lookup(Object key);
 
