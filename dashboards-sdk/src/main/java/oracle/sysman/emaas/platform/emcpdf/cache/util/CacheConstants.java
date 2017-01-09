@@ -18,6 +18,8 @@ public class CacheConstants {
     public static final String CACHES_SSO_LOGOUT_CACHE = "SsoLogoutCache";
     public static final String CACHES_SUBSCRIBED_SERVICE_CACHE = "subscribeCache";
     public static final String CACHES_ASSET_ROOT_CACHE = "assetRootCache";
+    public static final String CACHES_REGISTRY_CACHE = "registryCache";
+    public static final String CACHES_TENANT_USER_CACHE = "tenantUserCache";
 
 
     public static final String LOOKUP_CACHE_KEY_SUBSCRIBED_APPS = "subscribedApps";
@@ -30,6 +32,9 @@ public class CacheConstants {
     public static final String LOOKUP_CACHE_KEY_VISUAL_ANALYZER = "visualAnalyzer";
     public static final String LOOKUP_CACHE_KEY_ASSET_ROOTS = "assetRoots";
     public static final String LOOKUP_CACHE_KEY_SSO_LOGOUT_URL = "ssoLogoutUrl";
+    public static final String LOOKUP_CACHE_KEY_REGISTRY = "registry";
+    public static final String LOOKUP_CACHE_KEY_TENANT_USER = "tenantUser";
+
 
     //below are cache status related message
     public static final String NO_NEED_TO_CHANGE_CACHE_STATUS="No need to change cache status.";

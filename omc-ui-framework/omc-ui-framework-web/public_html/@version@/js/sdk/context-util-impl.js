@@ -304,11 +304,16 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 var previousCompositeMeId = getIndividualContext('composite', 'backupCompositeMEID');
 //                var omcCtx = self.getOMCContext();
 //                omcCtx.previousCompositeMeId = previousCompositeMeId;
+                if (!context) {
+                    context = {};
+                }
                 context.previousCompositeMeId = previousCompositeMeId;
+                var prevCtx = self.getOMCContext();
                 storeContext(context);
                 if (isGlobalContextRespected()) {
                     updateCurrentURL();
-                    fireOMCContextChangeEvent();
+                    //Fire change event. Need to parse json to avoid data clone error when post message.
+                    fireOMCContextChangeEvent('All', JSON.parse(JSON.stringify(prevCtx)), JSON.parse(JSON.stringify(context)));
                 }
             };
 
@@ -472,7 +477,9 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * @returns 
              */
             self.setStartTime = function (startTime) {
-                setIndividualContext('time', 'startTime', parseInt(startTime));
+                if (self.getStartTime() !== parseInt(startTime)) {
+                    setIndividualContext('time', 'startTime', parseInt(startTime));
+                }
             };
 
             /**
@@ -497,7 +504,9 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * @returns 
              */
             self.setEndTime = function (endTime) {
-                setIndividualContext('time', 'endTime', parseInt(endTime));
+                if (self.getEndTime() !== parseInt(endTime)) {
+                    setIndividualContext('time', 'endTime', parseInt(endTime));
+                }
             };
 
             /**
@@ -522,9 +531,11 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * @returns 
              */
             self.setTimePeriod = function (timePeriod) {
-                setIndividualContext('time', 'startTime', null, false, false);
-                setIndividualContext('time', 'endTime', null, false, false);
-                setIndividualContext('time', 'timePeriod', timePeriod, true, true);
+                if (self.getTimePeriod() !== timePeriod) {
+                    setIndividualContext('time', 'startTime', null, false, false);
+                    setIndividualContext('time', 'endTime', null, false, false);
+                    setIndividualContext('time', 'timePeriod', timePeriod, true, true);
+                }
             };
 
             /**
@@ -535,9 +546,19 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * @returns 
              */
             self.setStartAndEndTime = function (start, end) {
-                setIndividualContext('time', 'timePeriod', 'CUSTOM', false, false);
-                setIndividualContext('time', 'startTime', parseInt(start), false, false);
-                setIndividualContext('time', 'endTime', parseInt(end), true, true);
+                var prevStartTime = self.getStartTime();
+                var prevEndTime = self.getEndTime();
+                if (prevStartTime !== start || prevEndTime !== end) {
+                    setIndividualContext('time', 'timePeriod', 'CUSTOM', false, false);
+                    setIndividualContext('time', 'startTime', parseInt(start), false, false);
+                    setIndividualContext('time', 'endTime', parseInt(end), false, false);
+                    if (isGlobalContextRespected()) {
+                        updateCurrentURL();
+                        fireOMCContextChangeEvent('startEndTime', 
+                            {'startTime': prevStartTime, 'endTime': prevEndTime}, 
+                            {'startTime': start, 'endTime': end});
+                    }
+                }
             };
 
             /**
@@ -556,16 +577,16 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     return {
                         start: start,
                         end: end
-                    }
+                    };
                 } else if (timePeriod) {
                     var timeRange = self.getStartEndTimeFromTimePeriod(timePeriod);
                     if (timeRange) {
                         return {
                             start: timeRange.start.getTime(),
                             end: timeRange.end.getTime()
-                        }
+                        };
                     }
-                    return timeRange
+                    return timeRange;
                 } else {
                     return null;
                 }
@@ -792,15 +813,15 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     var omcContext = self.getOMCContext();
                     omcContext.previousCompositeMeId = self.getCompositeMeId();
                     storeContext(omcContext);
-
-                    setIndividualContext('composite', 'compositeMEID', compositeMEID, false, false);
+                    
                     //Set composite meId will reset composite type/name, 
                     //next time you get the composite type/name will return the new type/name
                     setIndividualContext('composite', 'compositeType', null, false, false);
                     setIndividualContext('composite', 'compositeName', null, false, false);
                     setIndividualContext('composite', 'compositeDisplayName', null, false, false);
                     setIndividualContext('composite', 'compositeEntity', null, false, false);
-                    setIndividualContext('composite', 'compositeNeedRefresh', true, true, false);
+                    setIndividualContext('composite', 'compositeNeedRefresh', true, false, false);
+                    setIndividualContext('composite', 'compositeMEID', compositeMEID, true, false);
                 }
             };
 
@@ -1002,16 +1023,19 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
 
                 //If it's an array, convert to a comma separated string
                 if ($.isArray(entityMEIDs)) {
-                    meIds = entityMEIDs.join();
+                    meIds = entityMEIDs.sort().join();
                 }
 //                //If it's a string
                 else if (entityMEIDs) {
                     meIds = entityMEIDs;
                 }
-                setIndividualContext('entity', 'entityMEIDs', meIds, true, true);
-                //Set entity meIds will reset the cached entity objects, 
-                //next time you get the entities will return the new ones
-                setIndividualContext('entity', 'entities', null, false, false);
+                var currentEntityIds = self.getEntityMeIds();
+                if (meIds !== (currentEntityIds ? currentEntityIds.sort().join() : null)) {
+                    setIndividualContext('entity', 'entityMEIDs', meIds, true, true);
+                    //Set entity meIds will reset the cached entity objects, 
+                    //next time you get the entities will return the new ones
+                    setIndividualContext('entity', 'entities', null, false, false);
+                }
             };
 
             /**
@@ -1039,7 +1063,9 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * @returns 
              */
             self.setEntitiesType = function (entitiesType) {
-                setIndividualContext('entity', 'entitiesType', entitiesType);
+                if (self.getEntitiesType() !== entitiesType) {
+                    setIndividualContext('entity', 'entitiesType', entitiesType);
+                }
             };
 
             /**
@@ -1085,8 +1111,8 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeName', null);
                     sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeType', null);
                     sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeClass', null);
+                    clearIndividualContext('composite');
                 }
-                clearIndividualContext('composite');
             };
 
             /**
@@ -1207,6 +1233,52 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     storeContext(omcContext);
                 }
             };
+            
+            /**
+             * Add event change listener for global context change
+             *
+             * @param {Function} callback Callback function for the listener
+             *
+             * @returns
+             */
+            self.subscribeOMCContextChangeEvent = function(callback) {
+                function onCtxChange(event) {
+                    if (event.origin !== window.location.protocol + '//' + window.location.host) {
+                        return;
+                    }
+                    var data = event.data;
+                    //Only handle received message for global context change
+                    if (data && data.tag && data.tag === 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED') {
+                        if ($.isFunction(callback)) {
+                            callback(data);
+                        }
+                    }
+                };
+                window.addEventListener("message", onCtxChange, false);
+            };
+            
+            /**
+             * Add event change listener for topology status change when it's opened or closed
+             *
+             * @param {Function} callback Callback function for the listener
+             *
+             * @returns
+             */
+            self.subscribeTopologyStatusChangeEvent = function(callback) {
+                function onTopologyStatusChange(event) {
+                    if (event.origin !== window.location.protocol + '//' + window.location.host) {
+                        return;
+                    }
+                    var data = event.data;
+                    //Only handle received message for topology status change when it's opened or closed
+                    if (data && data.tag && data.tag === 'EMAAS_OMC_TOPOLOGY_STATUS_UPDATED') {
+                        if ($.isFunction(callback)) {
+                            callback(data);
+                        }
+                    }
+                };
+                window.addEventListener("message", onTopologyStatusChange, false);
+            };
 
             function getEntityCacheKey() {
                 var entityCacheKey = null;
@@ -1242,11 +1314,16 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             /**
              * Fire OMC change event when omc context is updated.
              * 
-             * @param {Object} currentCtx Current OMC context
+             * @param {String} contextName Name of the updated context
+             * @param {Object or String} previousValue Value before change
+             * @param {Object or String} currentValue Value after change
              * @returns 
              */
-            function fireOMCContextChangeEvent(currentCtx) {
-                var message = {'tag': 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED', 'currentCtx': currentCtx};
+            function fireOMCContextChangeEvent(contextName, previousValue, currentValue) {
+                var message = {'tag': 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED', 
+                    'contextName': contextName,
+                    'previousValue': previousValue,
+                    'currentValue': currentValue};
                 window.postMessage(message, window.location.href);
             }
 
@@ -1260,11 +1337,12 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 if (contextName) {
                     var omcContext = self.getOMCContext();
                     if (omcContext[contextName]) {
+                        var previousValue = omcContext[contextName];
                         delete omcContext[contextName];
                         storeContext(omcContext);
                         if (isGlobalContextRespected()) {
                             updateCurrentURL();
-                            fireOMCContextChangeEvent();
+                            fireOMCContextChangeEvent(contextName, JSON.parse(JSON.stringify(previousValue)), null);
                         }
                     }
                 }
@@ -1284,10 +1362,15 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             function setIndividualContext(contextName, paramName, value, fireChangeEvent, replaceState, raw) {
                 if (contextName && paramName) {
                     var omcContext = self.getOMCContext();
+                    var previousValue = null;
+                    var currentValue = value;
                     //If value is not null and not empty
                     if (value) {
                         if (!omcContext[contextName]) {
                             omcContext[contextName] = {};
+                        }
+                        if (omcContext[contextName][paramName]) {
+                            previousValue = omcContext[contextName][paramName];
                         }
                         if (raw) {
                             omcContext[contextName][paramName] = value;
@@ -1297,15 +1380,40 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     }
                     //Otherwise, if value is null or empty then clear the context
                     else if (omcContext[contextName] && omcContext[contextName][paramName]) {
+                        previousValue = omcContext[contextName][paramName];
                         delete omcContext[contextName][paramName];
+                    }
+                    
+                    //Set new evaluated start, end time when time period is updated
+                    if (paramName === 'timePeriod') {
+                        //Get previous evaluated start, end time
+                        var prevEvaluatedStartEndTime = getIndividualContext('time', 'evaluatedStartEndTime');
+                        var curEvaluatedStartEndTime = null;
+                        var timeRange = self.getStartEndTimeFromTimePeriod(value);
+                        if (timeRange) {
+                            curEvaluatedStartEndTime = {
+                                start: timeRange.start.getTime(),
+                                end: timeRange.end.getTime()
+                            };
+                        }
+                        if (value) {
+                            omcContext[contextName]['evaluatedStartEndTime'] = curEvaluatedStartEndTime;
+                        }
+                        previousValue = {'timePeriod': previousValue, 
+                                    'startTime': prevEvaluatedStartEndTime ? prevEvaluatedStartEndTime.start : null,
+                                    'endTime': prevEvaluatedStartEndTime ? prevEvaluatedStartEndTime.end : null};
+                        currentValue = {'timePeriod': value, 
+                                    'startTime': curEvaluatedStartEndTime ? curEvaluatedStartEndTime.start : null,
+                                    'endTime': curEvaluatedStartEndTime ? curEvaluatedStartEndTime.end : null};
                     }
                     storeContext(omcContext);
                     if (isGlobalContextRespected()) {
                         updateCurrentURL(replaceState);
                         if (fireChangeEvent !== false) {
-                            fireOMCContextChangeEvent();
+                            fireOMCContextChangeEvent(paramName, previousValue, currentValue);
                         }
                     }
+                    
                 }
             }
 
@@ -1525,7 +1633,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeType', compositeType);
                 sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeClass', compositeClass);
 
-                setIndividualContext('composite', 'compositeNeedRefresh', 'false', true, true);
+                setIndividualContext('composite', 'compositeNeedRefresh', 'false', false, true);
             }
 
             function executeODSQuery(jsonOdsQuery, callback) {
