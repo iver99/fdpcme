@@ -44,13 +44,20 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 } else {
                     self.entityContextReadOnly = ko.observable(ko.unwrap(self.entityContextParams.readOnly) === false ? false : true);
                 }
+                if (ko.isObservable(self.entityContextParams.enableReadOnlyRemove)) {
+                    self.showReadOnlyPillRemove = self.entityContextParams.enableReadOnlyRemove;
+                } else {
+                    self.showReadOnlyPillRemove = ko.observable(ko.unwrap(self.entityContextParams.enableReadOnlyRemove) === false ? false : true);
+                }
             }
             if (!self.entityContextReadOnly) {
                 self.entityContextReadOnly = ko.observable(true);
             }
+            if (!self.showReadOnlyPillRemove) {
+                self.showReadOnlyPillRemove = ko.observable(false);
+            }
             self.showEntityContextSelector = ko.observable(false);
-            //flag to enable removal of read only pills
-            self.showReadOnlyPillRemove = ko.observable(false);
+
             //respond to change to entityContextReadOnly
             self.entityContextReadOnly.subscribe(function () {
                 if (!self.entityContextReadOnly()) {
