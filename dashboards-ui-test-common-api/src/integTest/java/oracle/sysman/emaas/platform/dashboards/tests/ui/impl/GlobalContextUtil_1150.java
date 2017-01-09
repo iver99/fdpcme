@@ -18,7 +18,7 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 /**
  * @author cawei
  */
-public class GlobalContextUtil_1150 extends GlobalContextUtil_1140
+public class GlobalContextUtil_1150 extends GlobalContextUtil_1130
 {
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#getTimeRangeLabel(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
