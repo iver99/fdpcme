@@ -118,8 +118,9 @@ dependencies{
 
 project.ext.omctf_omcCloudSetup_additionalParam = "-skipagents -skipomr"
 
-//Task added from "emcpdf_qa_test_3n"
-task QATest(type:EMTest,dependsOn:[omcSetup, onboardTenant]) {
+//Task added from "emcpdf_qa_test_3n"  
+// by Iris: task QATest(type:EMTest,dependsOn:[omcSetup, onboardTenant]) 
+task QATest(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]) {
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
 	include "oracle/sysman/emaas/platform/dashboards/logging/*"
