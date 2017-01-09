@@ -6,7 +6,7 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 /**
  * Created by qiqia on 2016/12/13.
  */
-public class BrandingBarUtil_1140 extends BrandingBarUtil_1130 {
+public class BrandingBarUtil_1150 extends BrandingBarUtil_1130 {
 
 	@Override
 	public boolean isVisualAnalyzerLinkExisted(WebDriver driver, String visualAnalyzerLinkName)
