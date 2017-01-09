@@ -67,8 +67,12 @@ define(['knockout',
                 return dfu.getVisualAnalyzer(serviceName);
             };
             
-            self.getAssetRootUrl = function(serviceName) {
-                return dfu.getAssetRoot(serviceName);
+            self.getAssetRootUrl = function(serviceName, relativeUrl) {
+                var assetRoot = dfu.getAssetRoot(serviceName);
+                if (assetRoot && relativeUrl) {
+                    assetRoot = dfu.getRelUrlFromFullUrl(assetRoot);
+                }
+                return assetRoot;
             };
             
             self.getRegistrationInfo=function(){
