@@ -223,6 +223,7 @@ define([
                         el.appendTo(wrapperEleemnt[0]);
                     }*/
 
+                    Builder.eagerLoadDahshboardTilesAtPageLoad(dfu, ko, tilesViewModel.editor.mode, tilesViewModel.timeSelectorModel, tilesViewModel.targets);
                     //change dashboard name
                     toolBarModel.dashboardName.subscribe(function (dashboardName) {
                         var currentDashboardId = self.selectedDashboardInst().toolBarModel.dashboardId;

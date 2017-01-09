@@ -535,7 +535,7 @@ define(['knockout',
         function eagerLoadDahshboardTilesAtPageLoad(dfu, ko, mode, timeSelector, targets) {
             var dds = new Builder.DashboardDataSource().dataSource;
             for (var prop in dds) {
-                if (!dds[prop].dashboard || !dds[prop].dashboard.tiles) {
+                if (!dds[prop].dashboard || !dds[prop].dashboard.tiles || dds[prop].eagerLoaded) {
                     continue;
                 }
                 var dashboard = dds[prop].dashboard;
@@ -547,6 +547,7 @@ define(['knockout',
                         Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);
                     }
                 }
+                dds[prop].eagerLoaded = true;
                 break;
             }
         }
