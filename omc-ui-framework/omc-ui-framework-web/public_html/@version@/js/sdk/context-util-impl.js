@@ -1243,6 +1243,7 @@ define([
                 if (contextName && paramName) {
                     var omcContext = self.getOMCContext();
                     var previousValue = null;
+                    var currentValue = value;
                     //If value is not null and not empty
                     if (value) {
                         if (!omcContext[contextName]) {
@@ -1262,13 +1263,37 @@ define([
                         previousValue = omcContext[contextName][paramName];
                         delete omcContext[contextName][paramName];
                     }
+                    
+                    //Set new evaluated start, end time when time period is updated
+                    if (paramName === 'timePeriod') {
+                        //Get previous evaluated start, end time
+                        var prevEvaluatedStartEndTime = getIndividualContext('time', 'evaluatedStartEndTime');
+                        var curEvaluatedStartEndTime = null;
+                        var timeRange = self.getStartEndTimeFromTimePeriod(value);
+                        if (timeRange) {
+                            curEvaluatedStartEndTime = {
+                                start: timeRange.start.getTime(),
+                                end: timeRange.end.getTime()
+                            };
+                        }
+                        if (value) {
+                            omcContext[contextName]['evaluatedStartEndTime'] = curEvaluatedStartEndTime;
+                        }
+                        previousValue = {'timePeriod': previousValue, 
+                                    'startTime': prevEvaluatedStartEndTime ? prevEvaluatedStartEndTime.start : null,
+                                    'endTime': prevEvaluatedStartEndTime ? prevEvaluatedStartEndTime.end : null};
+                        currentValue = {'timePeriod': value, 
+                                    'startTime': curEvaluatedStartEndTime ? curEvaluatedStartEndTime.start : null,
+                                    'endTime': curEvaluatedStartEndTime ? curEvaluatedStartEndTime.end : null};
+                    }
                     storeContext(omcContext);
                     if (isGlobalContextRespected()) {
                         updateCurrentURL(replaceState);
                         if (fireChangeEvent !== false) {
-                            fireOMCContextChangeEvent(paramName, previousValue, value);
+                            fireOMCContextChangeEvent(paramName, previousValue, currentValue);
                         }
                     }
+                    
                 }
             }
 
