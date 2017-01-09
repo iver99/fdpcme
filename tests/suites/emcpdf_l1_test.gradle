@@ -115,7 +115,7 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/RegistryLookupAPITest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ScreenShotEntityTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/TenantSubscriptionsAPITest.class"
-	
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ZDTAPITest.class"
 	
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/LoggingItemsTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/LoggingItemTest.class"
@@ -160,6 +160,8 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/dashboards/entity/EmsUserOptionsTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ssfnotification/WidgetNotificationTypeTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/WidgetNotificationAPITest_S2.class"
+
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/tablerows/TableRowsEntityTest.class"
 
 	include "oracle/sysman/emaas/platform/dashboards/core/util/FacadeUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/util/UserContextTest.class"
