@@ -30,6 +30,7 @@ define({
       "COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL": "Provide a unique name.",
       "COMMON_DELETE_DASHBOARD_MSG": "Delete <b>{0}</b>? This action cannot be undone.",
       "COMMON_DELETE_USED_DASHBOARD_MSG_HEAD": "Deleting this dashboard will also delete it from the following dashboard sets:",
+      "COMMON_DELETE_USED_LINKED_DASHBOARD_MSG_HEAD": "The dashboard is referenced by other dashboards,Deleting this dashboard removes it,or any links to it,from the following dashboards:",
       "COMMON_DELETE_USED_DASHBOARD_MSG_TAILE": "Are you sure you want to delete <b>{0}</b>? This action cannot be undone.",
       "COMMON_UNSHAER_USED_DASHBOARD_MSG_HEAD": "When you stop sharing this dashboard. It will no longer be visible to others. It will also be removed from the following dashboard sets:",
       "COMMON_UNSHAER_USED_DASHBOARD_MSG_TAILE": "Are you sure you want to stop sharing <b>{0}</b>? This action cannot be undone.",

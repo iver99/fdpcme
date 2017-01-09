@@ -388,11 +388,15 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                 headers: dfu.getDashboardsRequestHeader(),
                 success: function (resp) {
                     var isMemberOfDashboards = resp.dashboardSets && resp.dashboardSets.length > 0;
-                    if(isMemberOfDashboards){
-                        var _name =  _sd.dashboard.name,_sets =  resp.dashboardSets;
-                        var _message =  getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_HEAD',_name) + "<br>";
+                    var linkedDashboardList = resp.linkedDashboardList && resp.linkedDashboardList.length>0;                    
+                    if(isMemberOfDashboards || linkedDashboardList){
+                        var _name =  _sd.dashboard.name,_sets =  resp.dashboardSets,_linkedDbd=resp.linkedDashboardList;
+                        var _message =  getNlsString('COMMON_DELETE_USED_LINKED_DASHBOARD_MSG_HEAD',_name) + "<br>";
                         for(var i = 0; i < _sets.length ; i++ ){
                             _message += "<br>"+ _sets[i].name;
+                        }
+                        for(var i = 0; i < _linkedDbd.length ; i++ ){
+                             _message += "<br>"+ _linkedDbd[i];
                         }
                         _message += "<br><br>"+ getNlsString('COMMON_DELETE_USED_DASHBOARD_MSG_TAILE', _name);
                         self.confirmDialogModel.show(

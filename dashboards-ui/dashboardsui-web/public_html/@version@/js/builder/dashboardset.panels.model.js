@@ -285,7 +285,8 @@ define([
                         toolBarModel: toolBarModel,
                         tilesViewModel: tilesViewModel,
                         dashboardsetToolBar:dashboardsetToolBarModel,
-                        dashboardSets: ko.observable(null)
+                        dashboardSets: ko.observable(null),
+                        linkedDashboardList : ko.observable(null)
                     };
                     self.selectedDashboardInst(dashboardInstMap[dsbId]);
 
