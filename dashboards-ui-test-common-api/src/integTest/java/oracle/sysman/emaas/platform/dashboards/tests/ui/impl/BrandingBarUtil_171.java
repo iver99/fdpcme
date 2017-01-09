@@ -411,7 +411,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	 *            Name of the link
 	 * @return
 	 */
-	private boolean isApplicationLinkExisted(WebDriver driver, String linkType, String linkName)
+	protected boolean isApplicationLinkExisted(WebDriver driver, String linkType, String linkName)
 	{
 		String parentId = getApplicationLinkParentId(linkType);
 		//Find link element by parent id and link name
@@ -523,7 +523,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	 *            Name of the link
 	 * @return
 	 */
-	private void visitApplicationLink(WebDriver driver, String linkType, String linkName)
+	protected void visitApplicationLink(WebDriver driver, String linkType, String linkName)
 	{
 		String parentId = getApplicationLinkParentId(linkType);
 		//Find link element by parent id and link name

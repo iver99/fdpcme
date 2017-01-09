@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.emcpdf.cache;
+package oracle.sysman.emaas.platform.emcpdf.cache.tool;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKey;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;

@@ -61,6 +61,7 @@ public class LRUScreenshotCacheManagerTest {
     }
     @Test
     public void testExpiration() throws ExecutionException {
+        ICacheManager cm=LRUCacheManager.getInstance();
         cm.getCache("cache2",1000,2L);
         cm.getCache("cache2").put("four",new CachedItem("four",4));
         Assert.assertNotNull(cm.getCache("cache2").get("four"));

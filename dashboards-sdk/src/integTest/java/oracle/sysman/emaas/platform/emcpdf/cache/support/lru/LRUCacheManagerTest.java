@@ -1,8 +1,9 @@
-package oracle.sysman.emaas.platform.emcpdf.cache.support;
+package oracle.sysman.emaas.platform.emcpdf.cache.support.lru;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CachedItem;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;

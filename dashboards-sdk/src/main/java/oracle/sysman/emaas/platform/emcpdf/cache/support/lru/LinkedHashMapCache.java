@@ -75,7 +75,7 @@ public class LinkedHashMapCache extends AbstractCache{
 
     @Override
     public String getName() {
-        return getName();
+        return name;
     }
 
     @Override

@@ -26,9 +26,6 @@ import org.apache.logging.log4j.Logger;
  */
 public class PrivilegeChecker
 {
-	private PrivilegeChecker() {
-	  }
-
 	private static final Logger LOGGER = LogManager.getLogger(PrivilegeChecker.class);
 
 	public static final String ADMIN_ROLE_NAME_APM = "APM Administrator";
@@ -38,6 +35,7 @@ public class PrivilegeChecker
 	public static final String ADMIN_ROLE_NAME_SECURITY = "Security Analytics Administrator";
 	public static final String ADMIN_ROLE_NAME_COMPLIANCE = "Compliance Administrator";
 	public static final String ADMIN_ROLE_NAME_ORCHESTRATION = "Orchestration Administrator";
+	public static final String ADMIN_ROLE_NAME_OMC = "OMC Administrator";
 	public static final String SECURITY_AUTH_ROLE_CHECK_API = "api/v1/roles/grants/getRoles?grantee=";
 	private static final String SECURITY_AUTHORIZATION_SERVICENAME = "SecurityAuthorization";
 	private static final String SECURITY_AUTHORIZATION_VERSION = "1.0+";
@@ -81,13 +79,17 @@ public class PrivilegeChecker
 	{
 		boolean isAdmin = false;
 		if (userRoles != null && !userRoles.isEmpty()) {
-			if (userRoles.contains(ADMIN_ROLE_NAME_APM) || userRoles.contains(ADMIN_ROLE_NAME_ITA)
-					|| userRoles.contains(ADMIN_ROLE_NAME_LA) || userRoles.contains(ADMIN_ROLE_NAME_MONITORING)
-					|| userRoles.contains(ADMIN_ROLE_NAME_SECURITY) || userRoles.contains(ADMIN_ROLE_NAME_COMPLIANCE)
-					|| userRoles.contains(ADMIN_ROLE_NAME_ORCHESTRATION)) {
+			if (userRoles.contains(ADMIN_ROLE_NAME_OMC) || userRoles.contains(ADMIN_ROLE_NAME_APM)
+					|| userRoles.contains(ADMIN_ROLE_NAME_ITA) || userRoles.contains(ADMIN_ROLE_NAME_LA)
+					|| userRoles.contains(ADMIN_ROLE_NAME_MONITORING) || userRoles.contains(ADMIN_ROLE_NAME_SECURITY)
+					|| userRoles.contains(ADMIN_ROLE_NAME_COMPLIANCE) || userRoles.contains(ADMIN_ROLE_NAME_ORCHESTRATION)) {
 				isAdmin = true;
 			}
 		}
 		return isAdmin;
+	}
+
+	private PrivilegeChecker()
+	{
 	}
 }
