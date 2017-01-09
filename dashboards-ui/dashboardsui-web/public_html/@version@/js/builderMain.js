@@ -208,7 +208,17 @@ require(['knockout',
     'uifwk/js/util/logging-util',
     'ojs/ojcore',
     'builder/builder.functions',
-    'builder/builder.jet.partition'
+    'builder/builder.jet.partition',
+    'uifwk/js/util/df-util',
+    'uifwk/js/util/logging-util',
+    'dashboards/dashboardhome-impl',
+    'jqueryui',
+    'common.uifwk',
+    'builder/builder.core',
+    'dashboards/dbstypeahead',
+    'builder/dashboardset.toolbar.model',
+    'builder/dashboardset.panels.model',
+    'builder/dashboardDataSource/dashboard.datasource'
 ],
     function(ko, $, dfu,km) {
         ko.mapping = km;

@@ -734,6 +734,7 @@ define(['knockout',
                     }
                     if (!tile) {
                         tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targets, true, dashboardInst);
+                        Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);
                         u.helper.tile = tile;
                         self.editor.tiles.push(tile);
                         $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);

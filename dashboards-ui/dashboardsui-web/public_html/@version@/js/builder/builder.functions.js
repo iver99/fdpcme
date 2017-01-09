@@ -505,7 +505,7 @@ define(['knockout',
         Builder.registerFunction(requireTargetSelectorUtils, "requireTargetSelectorUtils");
         
         function eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile) {
-            var tileid=tile.tileId();
+            //var tileid=tile.tileId();
             var clientGuid=tile.clientGuid;
             var el = $($("#dashboard-tile-widget-template").text());
             var wgtelem=$(document.createElement('div'));
