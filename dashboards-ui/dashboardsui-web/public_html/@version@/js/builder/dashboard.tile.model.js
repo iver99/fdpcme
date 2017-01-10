@@ -46,8 +46,11 @@ define(['knockout',
 
             widgetAreaContainer = $b.findEl('.widget-area');
 
-            self.normalMode = new Builder.NormalEditorMode();
-            self.tabletMode = new Builder.TabletEditorMode();
+            self.dashboard = $b.dashboard;
+            var ddsDashboard = new Builder.DashboardDataSource().dataSource[self.dashboard.id()];
+            var eagerCreated = ddsDashboard.eagerCreated ? ddsDashboard.eagerCreated : null;
+            self.normalMode = eagerCreated ? eagerCreated.normalMode : new Builder.NormalEditorMode();
+            self.tabletMode = eagerCreated ? eagerCreated.tabletMode : new Builder.TabletEditorMode();
 
             self.editor = new Builder.TilesEditor($b, Builder.isSmallMediaQuery() ? self.tabletMode : self.normalMode);
             self.editor.tiles = $b.dashboard.tiles;
@@ -56,11 +59,10 @@ define(['knockout',
 
             self.previousDragCell = null;
 
-            self.dashboard = $b.dashboard;
             self.loginUser = ko.observable(dfu.getUserName());
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
 
-            self.targets = ko.observable({"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"});
+            self.targets = eagerCreated ? eagerCreated.targets : ko.observable({"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"});
 
 
             self.timeSelectorModel = new Builder.TimeSelectorModel();

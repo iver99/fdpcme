@@ -532,7 +532,7 @@ define(['knockout',
         }
         Builder.registerFunction(eagerLoadDahshboardSingleTileAtPageLoad, "eagerLoadDahshboardSingleTileAtPageLoad");
         
-        function eagerLoadDahshboardTilesAtPageLoad(dfu, ko, mode, timeSelector, targets) {
+        function eagerLoadDahshboardTilesAtPageLoad(dfu, ko, normalMode, tabletMode, mode, timeSelector, targets) {
             var dds = new Builder.DashboardDataSource().dataSource;
             for (var prop in dds) {
                 if (!dds[prop].dashboard || !dds[prop].dashboard.tiles || dds[prop].eagerLoaded) {
@@ -542,12 +542,12 @@ define(['knockout',
                 if (dashboard.tiles && dashboard.tiles() &&dashboard.tiles().length > 0){
                     for (var i=0;i<dashboard.tiles().length;i++){
                         var tile=dashboard.tiles()[i];
-                        
                         Builder.initializeTileAfterLoad(mode, dashboard, tile, timeSelector, targets, true);
                         Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);
                     }
                 }
                 dds[prop].eagerLoaded = true;
+                dds[prop].eagerCreated = {normalMode: normalMode, tabletMode: tabletMode, targets: targets};
                 break;
             }
         }

@@ -194,6 +194,7 @@ define(['knockout',
             tile.shorterEnabled = ko.computed(function() {
                 return mode.getModeHeight(tile) > 1;
             });
+            console.log("Eager loading tile with widget id="+tile.WIDGET_NAME())
             tile.upEnabled = ko.observable(true);
             tile.leftEnabled = ko.observable(true);
             tile.rightEnabled = ko.observable(true);
@@ -329,6 +330,8 @@ define(['knockout',
                 return;
             }
 
+            console.log("getTileConfigure with widget id="+tile.WIDGET_NAME())
+            console.log("Tile object is "+JSON.stringify(tile))
             tile.upEnabled(mode.getModeRow(tile) > 0);
             tile.leftEnabled(mode.getModeColumn(tile) > 0);
             tile.rightEnabled(mode.getModeColumn(tile)+mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS);
