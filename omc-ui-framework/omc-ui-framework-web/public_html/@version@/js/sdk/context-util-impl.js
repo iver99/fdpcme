@@ -470,11 +470,9 @@ define([
              * @returns 
              */
             self.setTimePeriod = function (timePeriod) {
-                if (self.getTimePeriod() !== timePeriod) {
-                    setIndividualContext('time', 'startTime', null, false, false);
-                    setIndividualContext('time', 'endTime', null, false, false);
-                    setIndividualContext('time', 'timePeriod', timePeriod, true, true);
-                }
+                setIndividualContext('time', 'startTime', null, false, false);
+                setIndividualContext('time', 'endTime', null, false, false);
+                setIndividualContext('time', 'timePeriod', timePeriod, true, true);
             };
 
             /**
