@@ -18,12 +18,6 @@ import java.util.List;
  */
 public class DomainsEntity
 {
-	public static void main(String args[])
-	{
-		Date date = new Date(1426609840472L);
-		System.out.println(date);
-	}
-
 	private int total;
 	private List<DomainEntity> items;
 

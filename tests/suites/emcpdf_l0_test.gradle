@@ -142,6 +142,15 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/DashboardTileRowEntityTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/DashboardUserOptionsRowEntityTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/PreferenceRowEntityTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/DashboardsComparatorCORSFilterTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/ZDTAPITest.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/targetmodel/services/DashboardComparatorStatusTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/json/DashboardComparatorStatusTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/services/DashboardComparatorLifecycleServiceTest.class"
+	include "oracle.sysman/emaas/platform/dashboards/comparator/webutils/util/JsonUtilTest.class"
+	include "oracle.sysman/emaas/platform/dashboards/comparator/webutils/util/LogUtilTest.class"
+	include "oracle.sysman/emaas/platform/dashboards/comparator/webutils/util/RegistryLookupUtilTest.class"
+
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
