@@ -106,7 +106,7 @@ public class TestDashboard extends LoginAndLogout
 		webd.click("//span[text()='Filter']");
 		webd.getLogger().info("The filter input is enabled");
 		webd.sendKeys("//*[@id='_pit_2']", "Target");
-		webd.click("//*[@id='emcta_panels0_suggestPopup']/div/ul/li[2]/div/div");	
+		//webd.click("//*[@id='emcta_panels0_suggestPopup']/div/ul/li[2]/div/div");	
 		
 		//find Select button and click it
 		WebElement selectButton = webd.getWebDriver().findElement(By.xpath("//*[@id='emcta_tgtSel0_ok']"));
