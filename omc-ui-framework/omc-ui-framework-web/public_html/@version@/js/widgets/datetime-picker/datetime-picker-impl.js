@@ -1966,6 +1966,15 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 }
                             },false);
                         }
+                        if(!self.removeClickListenerOnChosenTime){
+                            self.removeClickListenerOnChosenTime = true;
+                            $(".datetimepicker-dropdown").each(function(){
+                                this.addEventListener("click",function(_evnt){
+                                    _evnt.stopPropagation();
+                                    return true;
+                                },false);
+                            });
+                        }
                     }
                 };
 
