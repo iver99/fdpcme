@@ -1,7 +1,6 @@
 /* *************************************************************************************************
  *                   BEGIN SETUP-BLOCK
  ***************************************************************************************************
- * 
  */
 apply plugin: 'java'
 apply plugin: 'groovy'
@@ -18,7 +17,6 @@ allprojects{
 }
 String emaasPropertiesLogPath=TWORK+"/emaas.properties.log"
 boolean isOnboardTenant = true
-
 
 if (System.getenv('DO_TENANT_ONBOARD') != null && System.getenv('DO_TENANT_ONBOARD').trim().isEmpty() == false) {
     isOnboardTenant = Boolean.valueOf(System.getenv('DO_TENANT_ONBOARD'))

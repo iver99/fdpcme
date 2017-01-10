@@ -47,8 +47,8 @@ def emcpsmRegClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'regi
 def emcpsmRegLookupClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
 
 //Setup gradle to onboard a new tenant
-//apply from: 'onboard_tenant.gradle'
-apply from: 'onboard_tenant_noITA.gradle'
+apply from: 'onboard_tenant.gradle'
+//apply from: 'onboard_tenant_noITA.gradle'
 
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies{
