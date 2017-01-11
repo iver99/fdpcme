@@ -132,6 +132,7 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/util/PrivilegeCheckerTest.class"
 	
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/TableRowsSynchronizerTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/ZDTEntityTest.class"
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
@@ -271,9 +272,9 @@ task DEVUiFWKTest(type:EMTest,dependsOn: DEVUIWebUtilTest){
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/DashboardsComparatorCORSFilterTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/ZDTAPITest.class"
 
-	include "oracle.sysman.emaas.platform.uifwk.ui.webutils.util.DataFetcherTest.class"
-	include "oracle.sysman.emaas.platform.uifwk.ui.webutils.util.StringCacheUtilTestclass"
-	include "oracle.sysman.emaas.platform.uifwk.ui.web.UifwkPartitionJsFilterTest.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/DataFetcherTest.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringCacheUtilTest.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/web/UifwkPartitionJsFilterTest.class"
 	
 	useRestAssured=true
 	ext.set("testType", "unit")
