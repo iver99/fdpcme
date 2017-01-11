@@ -38,11 +38,11 @@ public class DashboardComparatorLifecycleServiceTest {
         loggingServiceManager.postStop(applicationLifecycleEvent);
     }
     private PropertyReader propertyReader = new PropertyReader();
-    @Test
+   /* @Test
     public void testPropertyReader() throws IOException {
         PropertyReader.getInstallDir();
         PropertyReader.loadProperty("");
-    }
+    }*/
     private RegistryServiceManager registryServiceManager = new RegistryServiceManager();
     private RegistryServiceManager.ServiceConfigBuilder serviceConfigBuilder =registryServiceManager.new ServiceConfigBuilder();
     @Test
@@ -63,4 +63,9 @@ public class DashboardComparatorLifecycleServiceTest {
         registryServiceManager.postStop(applicationLifecycleEvent);
         registryServiceManager.preStart(applicationLifecycleEvent);
     }
+
+    /*@Test
+    public void testDashboardComparatorLifecycleService(){
+        DashboardComparatorLifecycleService dcs=new DashboardComparatorLifecycleService();
+    }*/
 }
