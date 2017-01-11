@@ -1,3 +1,4 @@
+/*
 package oracle.sysman.emaas.platform.dashboards.comparator.webutils.wls.management;
 
 import org.apache.logging.log4j.core.config.Configurator;
@@ -9,9 +10,11 @@ import org.testng.annotations.Test;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+*/
 /**
  * Created by chehao on 2017/1/11.
- */
+ *//*
+
 @Test(groups = {"s2"})
 public class AppLoggingManageMXBeanTest {
 
@@ -59,3 +62,4 @@ public class AppLoggingManageMXBeanTest {
         Assert.assertTrue(levels.contains("\"oracle.sysman.emaas.platform.dashboards.comparator.webutils\":\"FATAL\""));
     }
 }
+*/
