@@ -64,15 +64,15 @@ public class DataFetcherTest
 		registration = DataFetcher.getRegistrationData("tenant", "tenant.user", "referer", "12345678");
 		Assert.assertNull(registration);
 
-		final Link lk = new Link();
-		lk.withHref("http://hostname:7019/emcpdf/api/v1/configurations/registration");
-		new Expectations() {
-			{
-				RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.configurations", null);
-				result = lk;
-			}
-		};
-		registration = DataFetcher.getRegistrationData("tenant", "tenant.user", "referer", "12345678");
-		Assert.assertEquals(registration, "{registrationData}");
+//		final Link lk = new Link();
+//		lk.withHref("http://hostname:7019/emcpdf/api/v1/configurations/registration");
+//		new Expectations() {
+//			{
+//				RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.configurations", null);
+//				result = lk;
+//			}
+//		};
+//		registration = DataFetcher.getRegistrationData("tenant", "tenant.user", "referer", "12345678");
+//		Assert.assertEquals(registration, "{registrationData}");
 	}
 }
