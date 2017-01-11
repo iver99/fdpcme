@@ -789,7 +789,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                 }
                 else if (data && data.tag && data.tag === 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED') {
+                    console.log("**************omc context change message received");
                     if (self.showGlobalContextBanner() === true) {
+                        console.log("****************call refreshOMCContext");
                         refreshOMCContext();
                     }
                 }
@@ -1090,8 +1092,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         refreshTopology = true;
                     }
                     var entityMEIds = cxtUtil.getEntityMeIds();
-
+                    console.log("***********updating highlightedEntities");
                     if (entityMEIds && entityMEIds.length) {
+                        console.log("***********entityMEIds are not empty");
                         self.highlightedEntities(entityMEIds);
                     } else {
                         self.highlightedEntities([NO_HIGHLIGHT]);
@@ -1169,6 +1172,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.topologyNeedRefresh = true;
                 if (self.isTopologyDisplayed()) {
                     // update parameters for topology 
+                    console.log("***********calling refreshTopologyParams");
                     refreshTopologyParams(true);
                 }
             }

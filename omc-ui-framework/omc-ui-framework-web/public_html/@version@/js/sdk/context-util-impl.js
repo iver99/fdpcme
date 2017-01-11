@@ -552,9 +552,9 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     setIndividualContext('time', 'endTime', parseInt(end), false, false);
                     if (isGlobalContextRespected()) {
                         updateCurrentURL();
-                        fireOMCContextChangeEvent('startEndTime', 
-                            {'startTime': prevStartTime, 'endTime': prevEndTime}, 
-                            {'startTime': start, 'endTime': end});
+                        fireOMCContextChangeEvent('startEndTime',
+                            {'startTime': prevStartTime, 'endTime': prevEndTime},
+                        {'startTime': start, 'endTime': end});
                     }
                 }
             };
@@ -811,7 +811,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     var omcContext = self.getOMCContext();
                     omcContext.previousCompositeMeId = self.getCompositeMeId();
                     storeContext(omcContext);
-                    
+
                     //Set composite meId will reset composite type/name, 
                     //next time you get the composite type/name will return the new type/name
                     setIndividualContext('composite', 'compositeType', null, false, false);
@@ -1029,6 +1029,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 }
                 var currentEntityIds = self.getEntityMeIds();
                 if (meIds !== (currentEntityIds ? currentEntityIds.sort().join() : null)) {
+                    console.log("****************** updating entity ids");
                     setIndividualContext('entity', 'entityMEIDs', meIds, true, true);
                     //Set entity meIds will reset the cached entity objects, 
                     //next time you get the entities will return the new ones
@@ -1231,7 +1232,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     storeContext(omcContext);
                 }
             };
-            
+
             /**
              * Add event change listener for global context change
              *
@@ -1239,7 +1240,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              *
              * @returns
              */
-            self.subscribeOMCContextChangeEvent = function(callback) {
+            self.subscribeOMCContextChangeEvent = function (callback) {
                 function onCtxChange(event) {
                     if (event.origin !== window.location.protocol + '//' + window.location.host) {
                         return;
@@ -1251,10 +1252,11 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                             callback(data);
                         }
                     }
-                };
+                }
+                ;
                 window.addEventListener("message", onCtxChange, false);
             };
-            
+
             /**
              * Add event change listener for topology status change when it's opened or closed
              *
@@ -1262,7 +1264,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              *
              * @returns
              */
-            self.subscribeTopologyStatusChangeEvent = function(callback) {
+            self.subscribeTopologyStatusChangeEvent = function (callback) {
                 function onTopologyStatusChange(event) {
                     if (event.origin !== window.location.protocol + '//' + window.location.host) {
                         return;
@@ -1274,7 +1276,8 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                             callback(data);
                         }
                     }
-                };
+                }
+                ;
                 window.addEventListener("message", onTopologyStatusChange, false);
             };
 
@@ -1315,13 +1318,16 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * @param {String} contextName Name of the updated context
              * @param {Object or String} previousValue Value before change
              * @param {Object or String} currentValue Value after change
+             * @param {boolean} ignoreContextInfo if true, don't include context info since context info may contain functions
              * @returns 
              */
-            function fireOMCContextChangeEvent(contextName, previousValue, currentValue) {
-                var message = {'tag': 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED', 
-                    'contextName': contextName,
-                    'previousValue': previousValue,
-                    'currentValue': currentValue};
+            function fireOMCContextChangeEvent(contextName, previousValue, currentValue, ignoreContextInfo) {
+                var message = {'tag': 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED'};
+                message.contextName = contextName;
+                if (!ignoreContextInfo) {
+                    message.previousValue = previousValue;
+                    message.currentValue = currentValue;
+                }
                 window.postMessage(message, window.location.href);
             }
 
@@ -1381,7 +1387,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                         previousValue = omcContext[contextName][paramName];
                         delete omcContext[contextName][paramName];
                     }
-                    
+
                     //Set new evaluated start, end time when time period is updated
                     if (paramName === 'timePeriod') {
                         //Get previous evaluated start, end time
@@ -1397,21 +1403,25 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                         if (value) {
                             omcContext[contextName]['evaluatedStartEndTime'] = curEvaluatedStartEndTime;
                         }
-                        previousValue = {'timePeriod': previousValue, 
-                                    'startTime': prevEvaluatedStartEndTime ? prevEvaluatedStartEndTime.start : null,
-                                    'endTime': prevEvaluatedStartEndTime ? prevEvaluatedStartEndTime.end : null};
-                        currentValue = {'timePeriod': value, 
-                                    'startTime': curEvaluatedStartEndTime ? curEvaluatedStartEndTime.start : null,
-                                    'endTime': curEvaluatedStartEndTime ? curEvaluatedStartEndTime.end : null};
+                        previousValue = {'timePeriod': previousValue,
+                            'startTime': prevEvaluatedStartEndTime ? prevEvaluatedStartEndTime.start : null,
+                            'endTime': prevEvaluatedStartEndTime ? prevEvaluatedStartEndTime.end : null};
+                        currentValue = {'timePeriod': value,
+                            'startTime': curEvaluatedStartEndTime ? curEvaluatedStartEndTime.start : null,
+                            'endTime': curEvaluatedStartEndTime ? curEvaluatedStartEndTime.end : null};
                     }
                     storeContext(omcContext);
                     if (isGlobalContextRespected()) {
                         updateCurrentURL(replaceState);
+                        var ignoreContextInfo = false;
                         if (fireChangeEvent !== false) {
-                            fireOMCContextChangeEvent(paramName, previousValue, currentValue);
+                            if (contextName === 'topology') {
+                                ignoreContextInfo = true;
+                            }
+                            fireOMCContextChangeEvent(paramName, previousValue, currentValue, ignoreContextInfo);
                         }
                     }
-                    
+
                 }
             }
 
