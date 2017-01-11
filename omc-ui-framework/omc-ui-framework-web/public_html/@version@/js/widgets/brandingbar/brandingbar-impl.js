@@ -75,7 +75,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             if(ko.isObservable(params.showTimeSelector)) {
                 self.showTimeSelector = params.showTimeSelector;
             }else {
-                self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === false ? false : true);
+                self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === true ? true : false);
             }
 //            self.showTimeSelector = ko.observable(false);
             //
