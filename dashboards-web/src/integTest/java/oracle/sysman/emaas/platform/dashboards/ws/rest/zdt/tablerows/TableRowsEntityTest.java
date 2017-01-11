@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows;
 
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.ZDTEntity;
 import org.testng.annotations.Test;
 
 import java.math.BigInteger;
@@ -264,6 +265,7 @@ public class TableRowsEntityTest {
     }
 
     private DashboardUserOptionsRowEntity dashboardUserOptionsRowEntity = new DashboardUserOptionsRowEntity();
+    @Test
     public void testDashboardUserOptionsRowEntity(){
         dashboardUserOptionsRowEntity.setUserName("name");
         dashboardUserOptionsRowEntity.setTenantId(1L);
@@ -298,6 +300,7 @@ public class TableRowsEntityTest {
     }
 
     private PreferenceRowEntity preferenceRowEntity = new PreferenceRowEntity();
+    @Test
     public void testPreferenceRowEntity(){
         preferenceRowEntity.setUserName("name");
         preferenceRowEntity.setPrefKey("key");

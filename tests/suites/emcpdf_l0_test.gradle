@@ -120,7 +120,8 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ScreenShotEntityTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/TenantSubscriptionsAPITest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ZDTAPITest.class"
-
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/TableRowsSynchronizerTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/ZDTEntityTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/LoggingItemsTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/LoggingItemTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/UpdatedLoggerLevelTest.class"

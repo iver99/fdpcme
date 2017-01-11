@@ -10,7 +10,6 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardTi
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardUserOptionsRowEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.PreferenceRowEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.TableRowsEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.TableRowsEntity;
 import org.testng.annotations.Test;
 
 import java.math.BigInteger;

@@ -138,6 +138,7 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/util/PrivilegeCheckerTest.class"
 	
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/TableRowsSynchronizerTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/ZDTEntityTest.class"
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
