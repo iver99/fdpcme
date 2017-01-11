@@ -2,12 +2,12 @@ package oracle.sysman.emaas.platform.dashboards.comparator.webutils.util;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
-import junit.framework.Assert;
 import mockit.*;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.core.MediaType;

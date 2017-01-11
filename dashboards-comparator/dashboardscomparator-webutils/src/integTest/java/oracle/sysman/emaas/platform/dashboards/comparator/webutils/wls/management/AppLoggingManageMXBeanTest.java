@@ -20,7 +20,7 @@ public class AppLoggingManageMXBeanTest {
     @BeforeMethod
     public void beforeMethod() throws URISyntaxException
     {
-        URL url = AppLoggingManageMXBeanTest.class.getResource("/log4j2_dsbcomparator.xml");
+        URL url = AppLoggingManageMXBeanTest.class.getResource("/log4j2_dsbcomparator-test.xml");
         Configurator.initialize("root", AppLoggingManageMXBeanTest.class.getClassLoader(), url.toURI());
     }
     @BeforeClass
