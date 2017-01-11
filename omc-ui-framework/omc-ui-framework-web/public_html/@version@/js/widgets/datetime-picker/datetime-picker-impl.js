@@ -1966,6 +1966,15 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 }
                             },false);
                         }
+                        if(!self.removeClickListenerOnChosenTime){
+                            self.removeClickListenerOnChosenTime = true;
+                            $(".datetimepicker-dropdown").each(function(){
+                                this.addEventListener("click",function(_evnt){
+                                    _evnt.stopPropagation();
+                                    return true;
+                                },false);
+                            });
+                        }
                     }
                 };
 
@@ -2288,20 +2297,20 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.timeFilterInfo(self.generateTfTooltip(hourOfDay, self.tfInstance.daysChecked(), self.tfInstance.monthsChecked()));
                     }
                     
-                    var tmpList = self.recentList();
-//                    tmpList.unshift({start: new Date(start), end: new Date(end), timePeriod: timePeriod, 
-//                                    timeFilter: self.timeFilter(), flexRelTimeVal: flexRelTimeVal, flexRelTimeOpt: flexRelTimeOpt});
-                    if(timePeriod === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM && flexRelTimeVal && flexRelTimeOpt) {
-                        recentTimePeriodId =  flexRelTimePeriodId;
-                    }else {
-                        recentTimePeriodId = timePeriod;
-                    }
-                    tmpList.unshift({start: new Date(start), end: new Date(end), timePeriod: recentTimePeriodId, 
-                                    timeFilter: self.timeFilter()});
-                    self.recentList(tmpList.slice(0, 5));
-
-                    //reset time params in global context
+                    //reset time params in global context and update recent list
                     if(shouldSetOmcCtx !== false) {
+                        var tmpList = self.recentList();
+    //                    tmpList.unshift({start: new Date(start), end: new Date(end), timePeriod: timePeriod, 
+    //                                    timeFilter: self.timeFilter(), flexRelTimeVal: flexRelTimeVal, flexRelTimeOpt: flexRelTimeOpt});
+                        if(timePeriod === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM && flexRelTimeVal && flexRelTimeOpt) {
+                            recentTimePeriodId =  flexRelTimePeriodId;
+                        }else {
+                            recentTimePeriodId = timePeriod;
+                        }
+                        tmpList.unshift({start: new Date(start), end: new Date(end), timePeriod: recentTimePeriodId, 
+                                        timeFilter: self.timeFilter()});
+                        self.recentList(tmpList.slice(0, 5));
+
                         if(timePeriod === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) {
                             if(flexRelTimeVal && flexRelTimeOpt) {
                                 ctxUtil.setTimePeriod(flexRelTimePeriodId);
