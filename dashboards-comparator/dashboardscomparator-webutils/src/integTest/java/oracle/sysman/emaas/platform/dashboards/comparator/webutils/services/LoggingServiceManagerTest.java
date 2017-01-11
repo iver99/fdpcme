@@ -2,7 +2,6 @@ package oracle.sysman.emaas.platform.dashboards.comparator.webutils.services;
 
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.wls.management.AppLoggingManageMXBeanTest;
 import org.testng.annotations.Test;
 import weblogic.application.ApplicationLifecycleEvent;
 
