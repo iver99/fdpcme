@@ -1,6 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.comparator.webutils.util;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**

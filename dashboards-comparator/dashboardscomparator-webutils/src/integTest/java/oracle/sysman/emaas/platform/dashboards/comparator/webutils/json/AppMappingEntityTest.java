@@ -1,6 +1,5 @@
 package oracle.sysman.emaas.platform.dashboards.comparator.webutils.json;
 
-import com.tangosol.util.CircularArrayList;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ public class AppMappingEntityTest {
         app.setDomainName("name");
         app.setDomainUuid("uuid");
         app.setHash(1L);
-        app.setKeys(new CircularArrayList());
+        app.setKeys(new ArrayList<AppMappingEntity.AppMappingKey>());
         app.setValues(new ArrayList<AppMappingEntity.AppMappingValue>());
     }
 }

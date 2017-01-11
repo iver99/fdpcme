@@ -1,7 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.comparator.webutils.util;
 
-import junit.framework.Assert;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -25,6 +25,6 @@ public class JsonUtilTest {
 
         json.parseNode("\"applications\":\"LogAnalytics\"");
 
-        json.toJson(new JsonUtilTest());
+//        json.toJson(new JsonUtilTest());
     }
 }

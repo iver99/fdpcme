@@ -1,13 +1,16 @@
 
 sourceSets {
-    integTest {
-        java.srcDir 'src/integTest/java'
-        compileClasspath = configurations.testNG+configurations.restAssured+configurations.testConfig
-    }
+	test{
+		java {
+			srcDirs = ['src/integTest/java']
+		}
+		resources.srcDirs = ['src/integTest/java']
+		compileClasspath += configurations.testNG + configurations.testConfig
+	}
 }
 
 task integTestJar (type:Jar) {
-    from sourceSets.integTest.output
+    from sourceSets.test.output
     appendix = 'integ-tests'
 }
 

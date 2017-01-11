@@ -1,15 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.comparator.webutils.util;
 
-import org.apache.logging.log4j.core.config.AbstractConfiguration;
-import org.apache.logging.log4j.core.config.ConfigurationSource;
-import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by chehao on 2017/1/10.
