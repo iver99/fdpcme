@@ -56,6 +56,8 @@ dependencies {
 	exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')}
+	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-web-integ-tests', version: "${REPO_BID}") {
+		exclude('module':'groovy')}
 	
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}") {transitive=false}
@@ -66,6 +68,7 @@ dependencies {
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-web', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils', version:"${REPO_BID}") {transitive=false}
+	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-web', version:"${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-sdk', version:"${REPO_BID}") {transitive=false}
     
     testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
