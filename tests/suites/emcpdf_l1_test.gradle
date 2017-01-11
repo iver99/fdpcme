@@ -173,7 +173,12 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/dashboards/core/util/TenantSubscriptionUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/AppLoggingManageMXBeanTest_S2.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/zdt/DataManagerTest.class"
-	
+
+	//below are comparator web utils test cases
+	include "oracle/sysman/emaas/platform/dashboards/comparator/targetmodel/services/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/**/*.class"
+
+	//below are sdk project test cases
 	include "oracle/sysman/emaas/platform/emcpdf/cache/screenshot/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/cache/exception/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/cache/support/**/*.class"
@@ -265,12 +270,6 @@ task DEVUiFWKTest(type:EMTest,dependsOn: DEVUIWebUtilTest){
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/PreferenceRowEntityTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/DashboardsComparatorCORSFilterTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/ZDTAPITest.class"
-	include "oracle/sysman/emaas/platform/dashboards/comparator/targetmodel/services/DashboardComparatorStatusTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/json/DashboardComparatorStatusTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/services/DashboardComparatorLifecycleServiceTest.class"
-	include "oracle.sysman/emaas/platform/dashboards/comparator/webutils/util/JsonUtilTest.class"
-	include "oracle.sysman/emaas/platform/dashboards/comparator/webutils/util/LogUtilTest.class"
-	include "oracle.sysman/emaas/platform/dashboards/comparator/webutils/util/RegistryLookupUtilTest.class"
 
 	include "oracle.sysman.emaas.platform.uifwk.ui.webutils.util.DataFetcherTest.class"
 	include "oracle.sysman.emaas.platform.uifwk.ui.webutils.util.StringCacheUtilTestclass"
