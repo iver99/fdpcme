@@ -510,7 +510,8 @@ define(['knockout',
             var el = $($("#dashboard-tile-widget-template").text());
             var wgtelem=$(document.createElement('div'));
             wgtelem.css({
-                'z-index': -300
+                'z-index': -300,
+                'display': 'none'
             });
             wgtelem.attr('id', 'wgt'+clientGuid);
             wgtelem.append(el);
@@ -556,6 +557,8 @@ define(['knockout',
         function attachEagerLoadedDahshboardSingleTileAtPageLoad(tile, appendToElem) {
             var clientGuid=tile.clientGuid;
             var wgtelem=$("#wgt"+clientGuid);
+            wgtelem.css({'z-index': 0});
+            wgtelem.show();
             wgtelem.detach().appendTo(appendToElem);
         }
         Builder.registerFunction(attachEagerLoadedDahshboardSingleTileAtPageLoad, "attachEagerLoadedDahshboardSingleTileAtPageLoad");
