@@ -46,6 +46,10 @@ dependencies {
 	exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')}
+	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-web-integ-tests', version: "${REPO_BID}") {
+		exclude('module':'groovy')}
+	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-webutils-integ-tests', version: "${REPO_BID}") {
+		exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-sdk-integ-tests', version: "${REPO_BID}") {
@@ -57,6 +61,8 @@ dependencies {
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${REPO_BID}") {transitive=false}
+	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-web', version: "${REPO_BID}") {transitive=false}
+	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-webutils', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-web', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils', version:"${REPO_BID}") {transitive=false}
@@ -271,9 +277,9 @@ task DEVUiFWKTest(type:EMTest,dependsOn: DEVUIWebUtilTest){
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/DashboardsComparatorCORSFilterTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/ZDTAPITest.class"
 
-	include "oracle.sysman.emaas.platform.uifwk.ui.webutils.util.DataFetcherTest.class"
-	include "oracle.sysman.emaas.platform.uifwk.ui.webutils.util.StringCacheUtilTestclass"
-	include "oracle.sysman.emaas.platform.uifwk.ui.web.UifwkPartitionJsFilterTest.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/DataFetcherTest.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringCacheUtilTest.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/web/UifwkPartitionJsFilterTest.class"
 	
 	useRestAssured=true
 	ext.set("testType", "unit")

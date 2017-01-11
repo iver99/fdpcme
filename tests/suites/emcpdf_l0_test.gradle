@@ -50,6 +50,8 @@ dependencies {
 	exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-web-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')}
+	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-webutils-integ-tests', version: "${REPO_BID}") {
+	exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-sdk-integ-tests', version: "${REPO_BID}") {
@@ -272,7 +274,7 @@ task DEVUiFWKTest(type:EMTest,dependsOn: DEVUIWebUtilTest){
         include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest_S2.class"
 
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/DataFetcherTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringCacheUtilTestclass"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringCacheUtilTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/web/UifwkPartitionJsFilterTest.class"
 	
 	useRestAssured=true
