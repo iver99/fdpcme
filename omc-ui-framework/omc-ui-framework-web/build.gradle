@@ -866,9 +866,15 @@ publishing.publications {
 	setGroupId("${publishGroup}")
         artifact integTestJar.archivePath
     }
+	thisJarPublication(MavenPublication) {
+		from project.components.java
+		setGroupId("${publishGroup}")
+		setArtifactId('omc-ui-framework-web')
+	}
 }
 
 artifactoryPublish {
 	publications ('integTest')
+	publications('thisJarPublication')
 }
 
