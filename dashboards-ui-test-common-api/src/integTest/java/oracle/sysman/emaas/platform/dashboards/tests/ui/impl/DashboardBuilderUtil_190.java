@@ -827,7 +827,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
 		driver.getLogger().info(
 				"DashboardBuilderUtil.removeDashboardFromSet has found and removed the dashboard named with \"" + dashboardName
-				+ "\"");
+						+ "\"");
 
 		String closeBtnLocator = DashBoardPageId_190.DASHBOARDSETTABNAMECSS.replace("_name_", dashboardName);
 		driver.waitForElementPresent("css=" + closeBtnLocator);
@@ -1083,7 +1083,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.showWidgetTitle started for widgetName=" + widgetName + ", index=" + index
-				+ ", visibility=" + visibility);
+						+ ", visibility=" + visibility);
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
 
@@ -1277,7 +1277,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.verifyDashboard started for name=\"" + dashboardName + "\", description=\"" + description
-				+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
+						+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
@@ -1464,13 +1464,16 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		Actions builder = new Actions(driver.getWebDriver());
 		driver.getLogger().info("Now moving to the widget title bar");
 		builder.moveToElement(widgetTitle).perform();
+		driver.waitForServer();
 		driver.takeScreenShot();
 		driver.getLogger().info("and clicks the widget config button");
 		//		builder.moveToElement(widgetDataExplore).click().perform();
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.elementToBeClickable(widgetDataExplore));
 		widgetDataExplore.click();
+		driver.waitForServer();
 		driver.takeScreenShot();
+
 	}
 
 	private void duplicateDashboardCommonUse(WebDriver driver, String name, String descriptions, String operationName)
@@ -1604,6 +1607,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	{
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
 		driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
+		//SKGUPTA: screenshot not required as youuse tool webdriver
 		driver.takeScreenShot();
 
 		String titleTitlesLocator = String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
@@ -1612,6 +1616,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 			throw new NoSuchElementException("Tile with title=" + widgetName + ", index=" + index + " is not found");
 		}
 		tileTitles.get(index).click();
+		//SKGUPTA: add 'webdriver.waitForServer()' after click.
 		driver.takeScreenShot();
 		return tileTitles.get(index);
 	}
