@@ -165,7 +165,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }));
                     }
                 }
-            };
+            }
+            ;
 
             function handleShowHideTopology() {
                 $("#ude-topology-div").slideToggle("fast", function () {
@@ -793,38 +794,38 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                 }
             }
-            
+
             function fireTopologyStatusChangeEvent(actionType) {
-                var intervalId = setInterval(function(){
-                        if ($('div#ude-topology-div div[id^=emcta-topology-diagram]').length > 0) {
-                            var prevStatus = null;
-                            var currentStatus = null;
-                            if (actionType === 'Open') {
-                                prevStatus = 'Closed';
-                                currentStatus = 'Open';
-                            }
-                            else if (actionType === 'Close') {
-                                prevStatus = 'Open';
-                                currentStatus = 'Closed';
-                            }
-                            else if (actionType === 'Refresh') {
-                                prevStatus = 'Open';
-                                currentStatus = 'Open';
-                            }
-                            
-                            var message = {'tag': 'EMAAS_OMC_TOPOLOGY_STATUS_UPDATED', 
-                                'eventType': actionType,
-                                'previousStatus': prevStatus, // Open or Closed
-                                'currentStatus': currentStatus // Closed or Open
-                            };
-                            window.postMessage(message, window.location.href);
-                            clearInterval(intervalId);
+                var intervalId = setInterval(function () {
+                    if ($('div#ude-topology-div div[id^=emcta-topology-diagram]').length > 0) {
+                        var prevStatus = null;
+                        var currentStatus = null;
+                        if (actionType === 'Open') {
+                            prevStatus = 'Closed';
+                            currentStatus = 'Open';
                         }
-                    }, 100); 
+                        else if (actionType === 'Close') {
+                            prevStatus = 'Open';
+                            currentStatus = 'Closed';
+                        }
+                        else if (actionType === 'Refresh') {
+                            prevStatus = 'Open';
+                            currentStatus = 'Open';
+                        }
+
+                        var message = {'tag': 'EMAAS_OMC_TOPOLOGY_STATUS_UPDATED',
+                            'eventType': actionType,
+                            'previousStatus': prevStatus, // Open or Closed
+                            'currentStatus': currentStatus // Closed or Open
+                        };
+                        window.postMessage(message, window.location.href);
+                        clearInterval(intervalId);
+                    }
+                }, 100);
             }
-            
+
             function fireMessageChangeEvent(eventType, msgId) {
-                var message = {'tag': 'EMAAS_OMC_PAGE_LEVEL_MESSAGE_UPDATED', 
+                var message = {'tag': 'EMAAS_OMC_PAGE_LEVEL_MESSAGE_UPDATED',
                     'eventType': eventType, //Add or Remove
                     'messageId': msgId
                 };
@@ -909,7 +910,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             removeMessage(message);
                         }, data.removeDelayTime);
                     }
-                    
+
                     //Fire message change event
                     fireMessageChangeEvent('Create', message.id);
                 }
@@ -955,7 +956,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         self.hiddenMessagesExpanded(false);
                     }
                 }
-                
+
                 //Fire message change event
                 fireMessageChangeEvent('Delete', data.id);
             }
@@ -1088,6 +1089,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     if (topologyParams && !self.topologyParamsSet) {
                         refreshTopology = true;
                     }
+                    var entityMEIds = cxtUtil.getEntityMeIds();
+
+                    if (entityMEIds && entityMEIds.length) {
+                        self.highlightedEntities(entityMEIds);
+                    } else {
+                        self.highlightedEntities([NO_HIGHLIGHT]);
+                    }
+
                     if (refreshTopology) {
                         if (topologyParams) {
                             self.associations(topologyParams.associations);
