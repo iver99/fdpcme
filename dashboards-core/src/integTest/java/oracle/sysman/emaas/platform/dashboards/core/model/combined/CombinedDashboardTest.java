@@ -50,7 +50,7 @@ public class CombinedDashboardTest {
         euo.setIsFavorite(1);
         euo.setAutoRefreshInterval(300L);
         
-        CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo);
+        CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo,null);
         Assert.assertEquals(cd.getDashboardId().toString(), dashboardId.toString());
         Assert.assertEquals(cd.getPreference().getKey(), prefKey);
         Assert.assertEquals(cd.getUserOptions().getDashboardId().toString(), dashboardId.toString());

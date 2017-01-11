@@ -60,18 +60,13 @@ public class DBConnectionManager
 	{
 		EntityManager em = null;
 		try {
-			final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			EntityManager entityManager = emf.createEntityManager();
+			final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();			
+			em = emf.createEntityManager();		
 			try {
-				SessionInfoUtil.setModuleAndAction(entityManager, MODULE_NAME, ACTION_NAME);
+				SessionInfoUtil.setModuleAndAction(em, MODULE_NAME, ACTION_NAME);
 			} catch (SQLException e) {
 				LOGGER.info("setModuleAndAction in DBConnectionManager",e);
-			} finally {
-				if (entityManager != null) {
-					entityManager.close();				
-				}
-			}
-			em = emf.createEntityManager();			
+			} 
 			BigDecimal result = (BigDecimal) em.createNativeQuery("select 1 from dual").getSingleResult();
 			return BigDecimal.valueOf(1).equals(result);
 		}

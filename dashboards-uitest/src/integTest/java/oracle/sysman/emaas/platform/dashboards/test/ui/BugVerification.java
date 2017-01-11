@@ -3,6 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.test.ui;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
@@ -131,6 +132,27 @@ public class BugVerification extends LoginAndLogout
 		DashboardBuilderUtil.verifyDashboardSet(webd, "DashboardSet_2425");
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Databases");
 
+	}
+
+	@Test
+	public void testEMPCDF_2970()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMPCDF_2970");
+
+		DashboardHomeUtil.createDashboard(webd, "~!@#$%^&*()-+", null);
+
+		webd.takeScreenShot();
+
+		DashboardBuilderUtil.verifyDashboard(webd, "~!@#$%^&*()-+", null, true);
+		DashboardBuilderUtil.saveDashboard(webd);
+		webd.takeScreenShot();
+		BrandingBarUtil.visitDashboardHome(webd);
+		webd.takeScreenShot();
+		DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.deleteDashboard(webd, "~!@#$%^&*()-+", "dashboards_grid_view");
+		webd.takeScreenShot();
+		webd.getLogger().info("complete testing in testEMPCDF_2970");
 	}
 
 	@Test

@@ -1,5 +1,5 @@
-define(['dfutil', 'ojs/ojcore', 'jquery', 'knockout', 'ojs/ojpagingcontrol', 'ojs/ojknockout-model'],
-       function(dfu, oj, $, ko)
+define(['dfutil', 'ojs/ojcore', 'jquery', 'knockout', 'uifwk/js/sdk/context-util', 'ojs/ojpagingcontrol', 'ojs/ojknockout-model'],
+       function(dfu, oj, $, ko, cxtModel)
 {
 
 /**
@@ -65,11 +65,54 @@ DashboardPaging.prototype._refreshDataWindow = function() {
         // Update the observable array
         self._refreshObservableDataWindow();
     });
+}; 
+
+ DashboardPaging.prototype.getCxtNavLink = function(model){
+        var self = this;
+        var cxtUtil = new cxtModel();
+        var url = self.getNavLink(model);
+        if (typeof url==="string"){ 
+           return cxtUtil.appendOMCContext(url);
+        }else{
+           return null;
+        }
 };
+
+DashboardPaging.prototype.getNavLink = function(model){
+        var _id = model.get('id');
+        if (!_id) {
+            return null;
+        }
+        var _type = model.get('type');
+        if ("SINGLEPAGE"===_type){
+            var tiles = model.get('tiles');
+            if (Array.isArray(tiles) && tiles.length===1){
+                var providerName = tiles[0]["PROVIDER_NAME"];
+                var version = tiles[0]["PROVIDER_VERSION"];
+                var assetRoot = tiles[0]["PROVIDER_ASSET_ROOT"];
+                var url = dfu.df_util_widget_lookup_assetRootUrl(providerName,version, assetRoot, false);
+                if (dfu.isDevMode()){
+                    url = dfu.getRelUrlFromFullUrl(url);
+                }
+                if (typeof url==="string"){
+                    oj.Logger.info("Single page URL for dashboard ID=" + model.get("id") + " is: " + url);
+                   return url;
+                }else{
+                   oj.Logger.error("Single Page Dashboard URL is not found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot);
+                   return null;
+                }
+            }else{
+                oj.Logger.error("Invalid tiles: "+JSON.stringify(tiles));
+            }
+        }else{
+            return document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/builder.html?dashboardId=' + _id;
+        }
+ };
 
 DashboardPaging.prototype.IterativeAt = function (start, end) {
     var array = [], i;
     var self = this;
+    var dashboardPagingObject= this;
     return self.__getPromise(function(allResolve, allReject) {
         var doTask = function(index) {
                         return self.__getPromise(function(resolve, reject) {
@@ -80,10 +123,13 @@ DashboardPaging.prototype.IterativeAt = function (start, end) {
                                 if (model.isDsbAttrsHtmlDecoded !== true)
                                 {
                                     var __dname = $("<div/>").html(model.get('name')).text();
+                                    var _url = dashboardPagingObject.getCxtNavLink(model);
                                     model.set('name', __dname, {silent: true});
                                     model.set('enableDescription','',{silent:true});
                                     model.set('enableEntityFilter','',{silent:true});
                                     model.set('lastModifiedBy','',{silent:true});
+                                    model.set('buildPageUrl',_url,{silent:true});
+
                                     if (model.get('description') && model.get('description') !== null)
                                     {
                                         var __ddesc =  $("<div/>").html(model.get('description')).text();

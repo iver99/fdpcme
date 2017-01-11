@@ -303,17 +303,18 @@ require(['knockout',
                         }
 
                         function DashboardsetHeaderViewModel() {
-                            var self = this;
-                            self.userName = dfu.getUserName();
-                            self.tenantName = dfu.getTenantName();
-                            self.appId = "Dashboard";
-                            self.brandingbarParams = {
-                                userName: self.userName,
-                                tenantName: self.tenantName,
-                                appId: self.appId,
-                                isAdmin:true,
-                                showGlobalContextBanner: ko.observable(false)
-                            };
+			    var self = this;
+			    self.userName = dfu.getUserName();
+			    self.tenantName = dfu.getTenantName();
+			    self.appId = "Dashboard";
+			    self.brandingbarParams = {
+				userName: self.userName,
+				tenantName: self.tenantName,
+				appId: self.appId,
+				isAdmin:true,
+				showGlobalContextBanner: ko.observable(false),
+				showTimeSelector: ko.observable(false)
+			    };
 
                             $("#headerWrapper").on("DOMSubtreeModified", function() {
                                 var height = $("#headerWrapper").height();

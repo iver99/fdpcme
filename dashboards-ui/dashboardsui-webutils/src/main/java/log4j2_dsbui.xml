@@ -106,6 +106,7 @@
     		<AppenderRef ref="ASYNC_MAIN_LOG"/>
 		</Logger>
 		<Logger name="oracle.sysman.emaas.platform.dashboards.ui" level="INFO"/>
+		<Logger name="oracle.sysman.emaas.platform" level="INFO"/>
 		<Root>
     		<AppenderRef ref="ASYNC_MAIN_LOG"/>
     	</Root>

@@ -8,15 +8,16 @@ define(['knockout',
     'dfutil',
     'idfbcutil',
     'uifwk/js/util/screenshot-util',
- 'uifwk/js/sdk/context-util',
+    'uifwk/js/sdk/context-util',
     'ojs/ojcore',
     'builder/tool-bar/edit.dialog',
     'builder/tool-bar/duplicate.dialog',
     'uifwk/js/util/preference-util',
     'uifwk/js/util/mobile-util',
+    'uifwk/js/util/zdt-util',
     'builder/builder.core'
 ],
-    function (ko, $, dfu, idfbcutil, ssu, cxtModel, oj, ed, dd, pfu,mbu) {
+    function (ko, $, dfu, idfbcutil, ssu, cxtModel, oj, ed, dd, pfu,mbu,zdtUtilModel) {
         // dashboard type to keep the same with return data from REST API
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
 
@@ -35,6 +36,17 @@ define(['knockout',
             });
 
             self.isDashboardSet = ko.observable(ko.unwrap(dashboardInst.type)  === "SET");
+
+            var zdtUtil = new zdtUtilModel();
+            self.zdtStatus = ko.observable(false);
+            self.notZdtStatus =ko.observable(true);
+            zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
+//                self.zdtStatus(true);
+//                self.notZdtStatus(false);
+                self.zdtStatus(isUnderPlannedDowntime);
+                self.notZdtStatus(!isUnderPlannedDowntime);
+            });
+            
             self.isOobDashboardset=ko.observable(ko.unwrap(dashboardInst.owner)  === "Oracle");
             self.dashboardsetId=ko.unwrap(dashboardInst.id());
             self.hasUserOptionInDB = false;
@@ -123,7 +135,7 @@ define(['knockout',
             };
 
             self.dashboardsetConfig.isCreator = ko.observable(dashboardsetEditDisabled());
-
+            
             self.normalMode = new Builder.NormalEditorMode();
             self.tabletMode = new Builder.TabletEditorMode();
             self.modeType = Builder.isSmallMediaQuery() ? self.tabletMode : self.normalMode;
@@ -172,14 +184,15 @@ define(['knockout',
             };
 
             self.saveDashboardSet = function (fieldsToUpdate, successCallback, failureCallback) {
-                if(dashboardInst.owner() === "Oracle" || dashboardInst.owner() !== dfu.getUserName()) { ///do not update dashboard set if it is OOB dsb set or if the user is not owner
-                    self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;
-                    self.saveUserOptions();
-                    console.log("This is an OOB dashboard set");
-                    return;
-                }
-                var newDashboardJs = ko.mapping.toJS(dashboardInst, {
-                    // TODO make sure the properties that should be included or excluded with Guobao
+                if (!self.zdtStatus()) {
+                    if (dashboardInst.owner() === "Oracle" || dashboardInst.owner() !== dfu.getUserName()) { ///do not update dashboard set if it is OOB dsb set or if the user is not owner
+                        self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;
+                        self.saveUserOptions();
+                        console.log("This is an OOB dashboard set");
+                        return;
+                    }
+                    var newDashboardJs = ko.mapping.toJS(dashboardInst, {
+                        // TODO make sure the properties that should be included or excluded with Guobao
 //                        'include': ['screenShot', 'description', 'height',
 //                            'isMaximized', 'title', 'type', 'width',
 //                            'tileParameters', 'name', 'systemParameter',
@@ -231,6 +244,7 @@ define(['knockout',
                 }, 2000, 30000);
                 self.extendedOptions.selectedTab = self.selectedDashboardItem().dashboardId;
                 self.saveUserOptions();
+                }
             };
 
             self.addNewDashboard = function (data, event) {
@@ -254,6 +268,16 @@ define(['knockout',
                 var selectedDashboard = new dashboardItem(dashboardNameId);
                 var removeResult=findTargetInArr(self.dashboardsetItems,dashboardPickerId);
                 var reorderedResult=findTargetInArr(self.reorderedDbsSetItems(),dashboardPickerId);
+                
+                if (self.zdtStatus()) {
+                    dfu.showMessage({
+                        type: 'warn',
+                        summary: getNlsString('DBS_BUILDER_ZDT_CANNOT_CHOOSE_DBD'),
+                        detail: '',
+                        removeDelayTime: 5000
+                    });
+                    return;
+                }
 
                 if (removeResult.removeIndex > -1) {
                     removeTargetTab(removeResult.removeItem);
@@ -321,7 +345,7 @@ define(['knockout',
                     "endOfGroup": false,
                     "showOnMobile": false,
                     "showOnViewer":false,
-                    "visibility":visibilityOnDifDevice(false,false),
+                    "visibility":visibilityOnDifDevice(false,false) && self.notZdtStatus,
                     "subMenu": []
                 },
                 {
@@ -332,7 +356,7 @@ define(['knockout',
                     "icon": "fa-print",
                     "title": "",
                     "disabled": "",
-                    "endOfGroup": true,
+                    "endOfGroup": true && self.notZdtStatus,
                     "showOnMobile": true,
                     "showOnViewer":true,
                     "visibility":visibilityOnDifDevice(true,true),
@@ -349,7 +373,7 @@ define(['knockout',
                     "endOfGroup": false,
                     "showOnMobile": true,
                     "showOnViewer":true,
-                    "visibility":visibilityOnDifDevice(true,true),
+                    "visibility":visibilityOnDifDevice(true,true) && self.notZdtStatus,
                     "subMenu": []
                 },
                 {
@@ -363,7 +387,7 @@ define(['knockout',
                     "endOfGroup": false,
                     "showOnMobile": true,
                     "showOnViewer":true,
-                    "visibility":visibilityOnDifDevice(true,true),
+                    "visibility":visibilityOnDifDevice(true,true) && self.notZdtStatus,
                     "subMenu": []
                 },
                 {
@@ -377,7 +401,7 @@ define(['knockout',
                     "endOfGroup": false,
                     "showOnMobile": true,
                     "showOnViewer":true,
-                    "visibility":visibilityOnDifDevice(true,true),
+                    "visibility":visibilityOnDifDevice(true,true) && self.notZdtStatus,
                     "subMenu": [{
                             "label": getNlsString("DBS_BUILDER_AUTOREFRESH_OFF"),
                             "url": "#",
@@ -675,7 +699,7 @@ define(['knockout',
                             if (!self.dashboardsetConfig.setHome()) {                                
                                 localStorage.deleteHomeDbd=true;
                             }
-                            window.location = cxtUtil.appendOMCContext( document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html');
+                            window.location = cxtUtil.appendOMCContext( document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html', true, true, true);
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                         }
@@ -784,7 +808,6 @@ define(['knockout',
 
             $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
                 var removeDashboardId = (ui.tab.attr('id').split(/dashboardTab-/)[1]);
-                //var removeDashboardId = Number(ui.tab.attr('id').split(/dashboardTab-/)[1]) || (ui.tab.attr('id').split(/dashboardTab-/)[1]);
                 var selectedItem = ui.tab;
                 self.removeDashboardInSet(removeDashboardId,selectedItem,false,event);
             } );
@@ -794,7 +817,7 @@ define(['knockout',
 
                     var selectedDashboardId=event.originalEvent.currentTarget.id.split(/dashboardTab-/)[1];
                     ko.utils.arrayForEach(self.dashboardsetItems, function (item, index) {
-                        if (item.dashboardId === selectedDashboardId) {
+                        if (item.dashboardId == selectedDashboardId) {
                             self.selectedDashboardItem(item);
                             self.extendedOptions.selectedTab = selectedDashboardId;
                         }

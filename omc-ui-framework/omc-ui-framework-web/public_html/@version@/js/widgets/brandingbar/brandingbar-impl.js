@@ -44,11 +44,20 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 } else {
                     self.entityContextReadOnly = ko.observable(ko.unwrap(self.entityContextParams.readOnly) === false ? false : true);
                 }
+                if (ko.isObservable(self.entityContextParams.enableReadOnlyRemove)) {
+                    self.showReadOnlyPillRemove = self.entityContextParams.enableReadOnlyRemove;
+                } else {
+                    self.showReadOnlyPillRemove = ko.observable(ko.unwrap(self.entityContextParams.enableReadOnlyRemove) === false ? false : true);
+                }
             }
             if (!self.entityContextReadOnly) {
                 self.entityContextReadOnly = ko.observable(true);
             }
+            if (!self.showReadOnlyPillRemove) {
+                self.showReadOnlyPillRemove = ko.observable(false);
+            }
             self.showEntityContextSelector = ko.observable(false);
+
             //respond to change to entityContextReadOnly
             self.entityContextReadOnly.subscribe(function () {
                 if (!self.entityContextReadOnly()) {
@@ -62,14 +71,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             });
             self.entityContextReadOnly.notifySubscribers();
 
-            //Set showTimeSelector config. Default value is false. It can be set as an knockout observable and be changed after page is loaded
-            //Per high level plan, we don't allow consumers to config to show/hide time selector themselves. So comment out below code for now.
-//            if(ko.isObservable(params.showTimeSelector)) {
-//                self.showTimeSelector = params.showTimeSelector;
-//            }else {
-//                self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === true ? true : false);
-//            }
-            self.showTimeSelector = ko.observable(false);
+            //Set showTimeSelector config. Default value is true. It can be set as an knockout observable and be changed after page is loaded
+            if(ko.isObservable(params.showTimeSelector)) {
+                self.showTimeSelector = params.showTimeSelector;
+            }else {
+                self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === false ? false : true);
+            }
+//            self.showTimeSelector = ko.observable(false);
             //
             // topology paramters
             //
@@ -115,6 +123,46 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             });
 
+            self.removeROCompositePill = function () {
+                handleROPills('composite');
+            };
+
+            self.removeROEntityPill = function (data) {
+                handleROPills('entity', data);
+            };
+
+            /**
+             * Function prompts for context type to delete depending on the X button pressed.
+             * If composite clicked, it calls clearCompositeContext() directly; if entity
+             * RO clicked, it gets the entity array from context and slpices that object
+             * before resetting it.
+             * @param {type} context
+             * @param {type} data
+             * @returns {undefined}
+             */
+            function handleROPills(context, data) {
+                if (context === 'composite') {
+                    cxtUtil.clearCompositeContext();
+                    return;
+                } else if (context === 'entity') {
+                    var toDelete = data.meId;
+                    var entities = cxtUtil.getEntities();
+                    for (var x = 0; x < entities.length; x++) {
+                        if (entities[x].meId === toDelete) {
+                            entities.splice(x, 1);
+                            break;
+                        }
+                    }
+                    if (entities.length === 0) {
+                        cxtUtil.clearEntityContext();
+                    } else {
+                        cxtUtil.setEntityMeIds(entities.map(function (val) {
+                            return val.meId;
+                        }));
+                    }
+                }
+            };
+
             function handleShowHideTopology() {
                 $("#ude-topology-div").slideToggle("fast", function () {
                     self.isTopologyDisplayed(!self.isTopologyDisplayed());
@@ -130,6 +178,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     window.sessionStorage._uifwk_brandingbar_cache = JSON.stringify(brandingBarCache);
                     var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
                     $b && $b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
+                    fireTopologyStatusChangeEvent(!self.isTopologyDisplayed() ? 'Close' : 'Open');
                 });
             }
 
@@ -179,6 +228,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                 refreshTopologyParams();
                                 if (self.topologyDisabled() === false) {
                                     self.isTopologyDisplayed(true);
+                                    fireTopologyStatusChangeEvent('Open');
                                 }
                             });
                         }
@@ -204,7 +254,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             };
             self.hideTopologyMaxIcon = function() {
                 $("#maxMinTopology").css("display", "none");
-            }
+            };
             self.maximizeTopology = function() {
                 self.topologyCssHeight(self.topologyHeight());
                 self.isMaximized(true);
@@ -223,7 +273,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }else {
                     self.restoreTopology();
                 }
-            }
+            };
             
 	    self.topologyCssHeight = ko.observable();
             self.topologyStyle = ko.computed(function() {
@@ -253,6 +303,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.topologyBtnLabel = nls.BRANDING_BAR_GLOBAL_CONTEXT_TOPOLOGY;
             self.topologyMaximizeLabel = nls.BRANDING_BAR_TOPOLOGY_MAXIMIZE;
             self.topologyRestoreLabel = nls.BRANDING_BAR_TOPOLOGY_RESTORE;
+            self.gcAllEntities = nls.BRANDING_BAR_GLOBAL_CONTEXT_ALL_ENTITIES;
+            self.removePillTitle = nls.PILL_REMOVE_TITLE;
             self.appName = ko.observable();
 
             self.hasMessages = ko.observable(true);
@@ -734,6 +786,43 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                 }
             }
+            
+            function fireTopologyStatusChangeEvent(actionType) {
+                var intervalId = setInterval(function(){
+                        if ($('div#ude-topology-div div[id^=emcta-topology-diagram]').length > 0) {
+                            var prevStatus = null;
+                            var currentStatus = null;
+                            if (actionType === 'Open') {
+                                prevStatus = 'Closed';
+                                currentStatus = 'Open';
+                            }
+                            else if (actionType === 'Close') {
+                                prevStatus = 'Open';
+                                currentStatus = 'Closed';
+                            }
+                            else if (actionType === 'Refresh') {
+                                prevStatus = 'Open';
+                                currentStatus = 'Open';
+                            }
+                            
+                            var message = {'tag': 'EMAAS_OMC_TOPOLOGY_STATUS_UPDATED', 
+                                'eventType': actionType,
+                                'previousStatus': prevStatus, // Open or Closed
+                                'currentStatus': currentStatus // Closed or Open
+                            };
+                            window.postMessage(message, window.location.href);
+                            clearInterval(intervalId);
+                        }
+                    }, 100); 
+            }
+            
+            function fireMessageChangeEvent(eventType, msgId) {
+                var message = {'tag': 'EMAAS_OMC_PAGE_LEVEL_MESSAGE_UPDATED', 
+                    'eventType': eventType, //Add or Remove
+                    'messageId': msgId
+                };
+                window.postMessage(message, window.location.href);
+            }
 
             function showMessage(data) {
                 if (data) {
@@ -813,6 +902,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             removeMessage(message);
                         }, data.removeDelayTime);
                     }
+                    
+                    //Fire message change event
+                    fireMessageChangeEvent('Create', message.id);
                 }
             }
 
@@ -856,6 +948,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         self.hiddenMessagesExpanded(false);
                     }
                 }
+                
+                //Fire message change event
+                fireMessageChangeEvent('Delete', data.id);
             }
 
             function removeItemByValue(obj, value)
@@ -943,7 +1038,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
                 self.appName(subscribedServices);
             }
-            function refreshTopologyParams() {
+            function refreshTopologyParams(fireTopoChangeEvent) {
                 if (self.isTopologyCompRegistered()) {
                     var refreshTopology = true;
                     var omcContext = cxtUtil.getOMCContext();
@@ -997,6 +1092,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }
                         $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
                         self.topologyInitialized = true;
+                        if (fireTopoChangeEvent) {
+                            fireTopologyStatusChangeEvent('Refresh');
+                        }
                     }
                     //Clear dirty flag for topology after refreshing done
                     self.topologyNeedRefresh = false;
@@ -1054,7 +1152,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.topologyNeedRefresh = true;
                 if (self.isTopologyDisplayed()) {
                     // update parameters for topology 
-                    refreshTopologyParams();
+                    refreshTopologyParams(true);
                 }
             }
 

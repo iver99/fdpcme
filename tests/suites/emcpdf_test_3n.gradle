@@ -74,7 +74,7 @@ dependencies{
       	exclude('module':'groovy')
     }
 
-    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.1.0-greenchannel+')
+     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.1.0-jan15+')
 
     testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')
@@ -134,16 +134,31 @@ task QATest(type:EMTest,dependsOn:[omcSetup, onboardTenant]) {
 
 //Task is for dashboard UI Test
 task e2e (type: EMTest, dependsOn:QATest ){
-options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
-        test('name': 'DashboardUITest') {
+options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':'none') {
+        test('name': 'DashboardUITest', 'preserve-order':'true') {
             classes([:]) {
-		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestGlobalContext')
-		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage')
-                'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard')
+//		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestGlobalContext')
+                'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_SimpleCRUD')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_OtherFeatures')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_SimpleCRUD')	
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_OtherFeatures')	
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DashboardRelated_CreatedInsideSet')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DashboardRelated_CreatedOutsideSet')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DuplicateDashboard')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard_NegativeCases')
             }
-        }
+	}
+	test('name': 'DashboardUITest_testDashboardSet_SetHome', 'preserve-order':'true'){
+	    classes([:]) {
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_SetHome')
+	    }
+	}
+	test('name': 'DashboardUITest_testDashboard_SetHome', 'preserve-order':'true'){
+	    classes([:]) {
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_SetHome')
+	    }
+	}
     }
     useWebdriver = true
     useRestAssured = true
