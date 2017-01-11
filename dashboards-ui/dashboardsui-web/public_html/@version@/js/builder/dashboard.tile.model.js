@@ -65,7 +65,7 @@ define(['knockout',
             self.targets = eagerCreated ? eagerCreated.targets : ko.observable({"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"});
 
 
-            self.timeSelectorModel = new Builder.TimeSelectorModel();
+            self.timeSelectorModel = eagerCreated ? eagerCreated.timeSelector : new Builder.TimeSelectorModel();
             self.tilesView = $b.getDashboardTilesView();
             self.isOnePageType = (self.dashboard.type() === Builder.SINGLEPAGE_TYPE);
 

@@ -547,7 +547,7 @@ define(['knockout',
                     }
                 }
                 dds[prop].eagerLoaded = true;
-                dds[prop].eagerCreated = {normalMode: normalMode, tabletMode: tabletMode, targets: targets};
+                dds[prop].eagerCreated = {normalMode: normalMode, tabletMode: tabletMode, timeSelector: timeSelector, targets: targets};
                 break;
             }
         }
