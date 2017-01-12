@@ -200,7 +200,8 @@
             
             <!--<div data-bind="attr: {style: topologyStyle}" style="margin: 0 auto">test div</div>-->
             
-        <div class="ude-topology ude-topology-in-brandingbar" data-bind="component:{name:'emctas-topology', 
+        <div class="ude-topology ude-topology-in-brandingbar" data-bind="attr: {style: topologyStyle},
+           component:{name:'emctas-topology', 
             params:{
                    entityQueryVars: queryVars(),
                    entities: entities(),
@@ -209,11 +210,12 @@
                    customNodeDataLoader: customNodeDataLoader(),
                    customEventHandler: customEventHandler(),
                    miniEntityCardActions: miniEntityCardActions(),
+                   highlightedEntities: highlightedEntities,
                    enableCache: true,
-                   topologySize: topologySize
+                   topologySize: topologySize,
+                   topologyData: topologyData()
                 }
-            },
-            attr: {style: topologyStyle}">
+            }">
         </div>      
         </div>
         <!-- /ko -->
