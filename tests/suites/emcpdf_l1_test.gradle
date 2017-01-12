@@ -130,9 +130,8 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/LoggingItemTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/UpdatedLoggerLevelTest.class"
 	
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/model/LinkEntityTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/model/RegistrationEntityTest.class"
-	
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/model/*.class"
+
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/subappedition/ServiceEntityTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/subappedition/TenantDetailEntityTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/subappedition/TenantEditionEntityTest.class"
