@@ -12,7 +12,7 @@
             function serverSideInit() {
                 ////TODO////
             }
-        </script>
+        </script>  
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -212,7 +212,7 @@
                                                             }"></emcta-target-selector>
                             </div>
                             <!-- /ko -->
-                            <!--ko if: dashboard.enableTimeRange && (dashboard.enableTimeRange() === 'TRUE' || dashboard.enableTimeRange() === 'GC') -->
+                            <!--ko if: isUnderSet && dashboard.enableTimeRange && (dashboard.enableTimeRange() === 'TRUE' || dashboard.enableTimeRange() === 'GC') -->
                             <div tabindex="0" class="df-date-time-picker" data-bind="attr: {id: 'dtpicker_'+dashboard.id()}, component: {name: 'df-datetime-picker', params: datetimePickerParams}" data-show-time-picker></div>
                             <!-- /ko -->
                         </div>

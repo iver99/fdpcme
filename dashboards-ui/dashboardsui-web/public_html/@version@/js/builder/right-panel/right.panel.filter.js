@@ -115,10 +115,17 @@ define([
                     if(headerWrapper) {
                         headerViewModel = ko.dataFor(headerWrapper);
                     }
-                    if(val === "GC") {
-                        headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                    
+                    if(val === "FALSE") {
+                        headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
                     }else {
+                        headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(true);
+                    }
+                    
+                    if(val === "FALSE" && self.getFilterEnabledValue(self.enableTimeRangeFilter()) === "FALSE" && headerViewModel) {
                         headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                    }else {
+                        headerViewModel.brandingbarParams.showGlobalContextBanner(true);
                     }
 
                     //2. update/refresh value of entity seletor accordingly
@@ -130,7 +137,29 @@ define([
             
             self.enableTimeRangeFilter.subscribe(function(val){
                 val = self.getFilterEnabledValue(val);
-                self.dashboard.enableTimeRange(val);
+                
+                var headerWrapper = $("#headerWrapper")[0];
+                var headerViewModel =  null;
+                if(headerWrapper) {
+                    headerViewModel = ko.dataFor(headerWrapper);
+                }
+                
+                if(self.isDashboardSet) {
+                    self.dashboard.enableTimeRange(val);
+                }else {
+                    if(val === "FALSE") {
+                        headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);
+                    }else {
+                        headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(true);
+                    }
+                    
+                    if(val === "FALSE" && self.getFilterEnabledValue(self.enableEntityFilter()) === "FALSE" && headerViewModel) {
+                        headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                    }else {
+                        headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                    }
+                }
+                
                 //1. reset respectOMCTimeContext flag and get time context infp
                 //2. update/refresh value of entity seletor accordingly
                 //3. fire event to widgets
@@ -148,10 +177,23 @@ define([
                 
                 //2. update/refresh value of entity seletor accordingly
                 if(ctxUtil.formalizeTimePeriod(timePeriod) && ctxUtil.formalizeTimePeriod(timePeriod) !== "CUSTOM") {
-                    dashboardTilesViewModel.timePeriod(timePeriod);
+                    if(self.isDashboardSet) {
+                        dashboardTilesViewModel.timePeriod(timePeriod);
+                    }else {
+                        if(headerViewModel) {
+                            headerViewModel.brandingbarParams.timeSelectorParams.timePeriod(timePeriod);
+                        }
+                    }                    
                 }else if(ctxUtil.formalizeTimePeriod(timePeriod) === "CUSTOM" && start instanceof Date && end instanceof Date) {
-                    dashboardTilesViewModel.initStart(start);
-                    dashboardTilesViewModel.initEnd(end);
+                    if(self.isDashboardSet) {
+                        dashboardTilesViewModel.initStart(start);
+                        dashboardTilesViewModel.initEnd(end);
+                    }else {
+                        if(headerViewModel) {
+                            headerViewModel.brandingbarParams.timeSelectorParams.startDateTime(start);
+                            headerViewModel.brandingbarParams.timeSelectorParams.endDateTime(end);
+                        }
+                    }
                 }
                 //3. change time context in timeSelectorModel and fire event to widgets
                 var viewStart = start;

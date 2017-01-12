@@ -281,7 +281,18 @@ require(['knockout',
                 appId: self.appId,
                 isAdmin:true,
                 showGlobalContextBanner: ko.observable(false),
-                showTimeSelector: ko.observable(false)
+                showTimeSelector: ko.observable(false),
+                timeSelectorParams: {
+                    startDateTime: ko.observable(null),
+                    endDateTime: ko.observable(null),
+                    timePeriod: ko.observable("LAST_14_DAY"),
+                    hideMainLabel: true,
+                    callbackAfterApply: null
+                },
+                showEntitySelector: ko.observable(false),
+                entityContextParams: {
+                    readOnly: true
+                }
             };
 
             $("#headerWrapper").on("DOMSubtreeModified", function() {

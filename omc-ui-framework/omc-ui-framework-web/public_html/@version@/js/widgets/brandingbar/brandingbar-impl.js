@@ -57,6 +57,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.showReadOnlyPillRemove = ko.observable(false);
             }
             self.showEntityContextSelector = ko.observable(false);
+            if (ko.isObservable(params.showEntitySelector)) {
+                self.showEntitySelector = params.showEntitySelector;
+            } else {
+                self.showEntitySelector = ko.observable(ko.unwrap(params.showEntitySelector) === false ? false : true);
+            }
 
             //respond to change to entityContextReadOnly
             self.entityContextReadOnly.subscribe(function () {

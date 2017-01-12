@@ -107,6 +107,7 @@
                 }">
             </div>  
             
+            <!-- ko if: showEntitySelector() -->
             <span style="float: left;padding-top:3px;margin-right:6px;">
             <div id="topologyButtonWrapper" data-bind="ojComponent: {component: 'ojButtonset', checked: isTopologyButtonChecked}" style="height:32px; background-color: white; border-radius: 2px;">
             <label for="buttonShowTopology"></label>
@@ -164,12 +165,15 @@
             </div>
             </div>
             <!-- /ko -->
+            <!-- /ko -->
             <!-- ko if: showTimeSelector() === true -->
                 <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="component: {name: 'df-datetime-picker', params: timeSelectorParams}" style="padding-top: 3px">
                 </div>
             <!-- /ko -->
         </div>
 
+        
+        <!-- ko if: showEntitySelector() -->
         <!-- topology --->
         <!-- ko if: isTopologyCompRegistered() !== false -->
         <div id="ude-topology-div" style="overflow-y:auto; height:auto; background-color:white; display: flex;"
@@ -207,6 +211,7 @@
         </div>
         <!-- /ko -->
         <!-- End of topology -->
+        <!-- /ko -->
 
         <!-- /ko -->  <!-- End of Global Context Banner -->
 
