@@ -1190,6 +1190,9 @@ define(['knockout',
             self.timeSelectorModel.viewStart(initStart);
             self.timeSelectorModel.viewEnd(initEnd);
             self.timeSelectorModel.viewTimePeriod(self.timePeriod());
+           
+            var dashboardExdedOpt = self.dashboard.extendedOptions && JSON.parse(ko.unwrap(self.dashboard.extendedOptions()));
+            dashboardExdedOpt && dashboardExdedOpt.timePeriodNotShow ? self.timePeriodsNotToShow = dashboardExdedOpt.timePeriodNotShow :self.timePeriodsNotToShow = [];
             
             if(self.isUnderSet) {
                 self.datetimePickerParams = {
@@ -1197,6 +1200,7 @@ define(['knockout',
                     endDateTime: self.initEnd,
                     timePeriod: self.timePeriod,
                     hideMainLabel: true,
+                    timePeriodsNotToShow:self.timePeriodsNotToShow,
                     callbackAfterApply: function(start, end, tp) {
                         callbackAfterApply(start, end, tp);   
                     }
@@ -1209,6 +1213,7 @@ define(['knockout',
                     headerViewModel.brandingbarParams.timeSelectorParams.startDateTime(ko.unwrap(self.initStart));
                     headerViewModel.brandingbarParams.timeSelectorParams.endDateTime(ko.unwrap(self.initEnd));
                     headerViewModel.brandingbarParams.timeSelectorParams.timePeriod(ko.unwrap(self.timePeriod));
+                    headerViewModel.brandingbarParams.timeSelectorParams.timePeriodsNotToShow(ko.unwrap(self.timePeriodsNotToShow));
                     headerViewModel.brandingbarParams.timeSelectorParams.callbackAfterApply = function(start, end, tp) {
                         callbackAfterApply(start, end, tp);
                     }

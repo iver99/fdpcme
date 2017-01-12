@@ -286,6 +286,7 @@ require(['knockout',
                     startDateTime: ko.observable(null),
                     endDateTime: ko.observable(null),
                     timePeriod: ko.observable("LAST_14_DAY"),
+                    timePeriodsNotToShow: ko.observable([]),
                     hideMainLabel: true,
                     callbackAfterApply: null
                 },
