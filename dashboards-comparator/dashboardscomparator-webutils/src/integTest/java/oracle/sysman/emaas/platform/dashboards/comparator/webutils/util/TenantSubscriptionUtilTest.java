@@ -1,12 +1,17 @@
 package oracle.sysman.emaas.platform.dashboards.comparator.webutils.util;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import mockit.*;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappingCollection;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappingEntity;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainEntity;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainsEntity;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -391,20 +396,73 @@ public class TenantSubscriptionUtilTest {
         };
     }
 
+    @Mocked
+    private RegistryLookupUtil registryLookupUtil;
     @Test
-    public void testGetTenantSubscribedServices(final @Mocked InstanceInfo instanceInfo) throws Exception {
+    public void testGetTenantSubscribedServices(@Mocked final DefaultClientConfig anyClientConfig,final @Mocked JsonUtil jsonUtil,
+                                                final @Mocked InstanceInfo instanceInfo,final @Mocked TenantSubscriptionUtil.RestClient rs) throws Exception {
         final Link link = new Link();
 
         link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
         link.withRel("");
+        List<DomainEntity> list=new ArrayList<>();
+        final DomainsEntity de=new DomainsEntity();
+        DomainEntity entity=new DomainEntity();
+        entity.setDomainName("TenantApplicationMapping");
+        entity.setCanonicalUrl("url");
+        list.add(entity);
+        de.setItems(list);
+        final AppMappingCollection ac=new AppMappingCollection();
+        AppMappingEntity appMappingEntity=new AppMappingEntity();
+//        appMappingEntity.setDomainName();
+        appMappingEntity.setCanonicalUrl("url");
+        final String appMappingJson="appMappingJson";
+
+        List<AppMappingEntity> appMappingEntityList=new ArrayList<>();
+        appMappingEntityList.add(appMappingEntity);
+        ac.setItems(appMappingEntityList);
+        List<AppMappingEntity.AppMappingValue> appMappingValueList=new ArrayList<>();
+        appMappingEntity.setValues(appMappingValueList);
+        AppMappingEntity.AppMappingValue value=new AppMappingEntity.AppMappingValue();
+        value.setOpcTenantId("emaastesttenant1");
+        appMappingValueList.add(value);
+
         new Expectations() {
             {
-                RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, "emaastesttenant1");
+                registryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, "emaastesttenant1");
                 result = link;
+                jsonUtil.fromJson(anyString,DomainsEntity.class);
+                result=de;
+                rs.get(anyString, "emaastesttenant1");
+                result =appMappingJson;
+                jsonUtil.fromJson(anyString, AppMappingCollection.class);
+                result=ac;
+
 
             }
         };
         TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+    }
+
+    @Mocked
+    private RegistrationManager registrationManager;
+    @Mocked
+    private WebResource.Builder builder;
+
+    @Test
+    public void testRCPut(){
+        final char[] authToke={'a','u','t','h'};
+        final String putResult="result";
+        new Expectations(){
+            {
+                registrationManager.getInstance().getAuthorizationToken() ;
+                result=authToke;
+                builder.put(String.class, any);
+                result=putResult;
+            }
+        };
+
+        new TenantSubscriptionUtil.RestClient().put("url",new Object(),"emaastesttenant1");
     }
 
 
