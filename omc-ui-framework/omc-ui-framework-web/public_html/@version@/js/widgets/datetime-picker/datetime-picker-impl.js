@@ -2665,7 +2665,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                         self.lrCtrlVal("flexRelTimeCtrl");
                                         if(parsedTimePeriod) {
                                             self.flexRelTimeVal(parsedTimePeriod.duration);
-                                            self.flexRelTimeOpt(parsedTimePeriod.unit);
+                                            self.flexRelTimeOpt([parsedTimePeriod.unit]);
                                         }
                                         self.timePeriod(self.timePeriodCustom);
                                     }
