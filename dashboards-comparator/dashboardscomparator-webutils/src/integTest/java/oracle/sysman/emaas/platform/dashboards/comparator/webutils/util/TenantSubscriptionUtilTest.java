@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.comparator.webutils.util;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import mockit.*;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
@@ -449,14 +450,33 @@ public class TenantSubscriptionUtilTest {
     @Mocked
     private WebResource.Builder builder;
 
+    @Mocked
+    private Client client;
+    @Mocked
+    private URI uri;
+    @Mocked
+    private WebResource webResource;
+    @Mocked
+    private UriBuilder uriBuilder;
     @Test
     public void testRCPut(){
         final char[] authToke={'a','u','t','h'};
         final String putResult="result";
+        ClientConfig cc = new DefaultClientConfig();
+        client=Client.create(cc);
+//        UriBuilder.fromUri(url).build()
         new Expectations(){
             {
                 registrationManager.getInstance().getAuthorizationToken() ;
                 result=authToke;
+                uriBuilder.fromUri("url");
+                result=uriBuilder;
+                uriBuilder.build();
+                result=uri;
+               /* client.resource(uri);
+                result=webResource;
+                webResource.header(anyString,authToke);
+                result=builder;*/
                 builder.put(String.class, any);
                 result=putResult;
             }
