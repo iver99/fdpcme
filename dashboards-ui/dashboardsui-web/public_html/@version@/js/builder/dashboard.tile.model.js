@@ -139,7 +139,6 @@ define(['knockout',
                        self.show();
                        Builder.getTileConfigure(self.editor.mode, self.dashboard, newTile, self.timeSelectorModel, self.targets, dashboardInst);
                        $b.triggerEvent($b.EVENT_TILE_ADDED, null, newTile);
-                       self.triggerTileTimeControlSupportEvent((newTile.type() === 'DEFAULT' && newTile.WIDGET_SUPPORT_TIME_CONTROL())?true:null);
                     }
                 }
                 else {
@@ -239,7 +238,6 @@ define(['knockout',
                         self.notifyTileChange(tile, new Builder.TileChange("POST_DELETE"));
                         $b.triggerEvent($b.EVENT_TILE_RESTORED, 'triggerred by tile deletion', tile);
                         $b.triggerEvent($b.EVENT_TILE_DELETED, null, tile);
-                        self.triggerTileTimeControlSupportEvent();
                         break;
                     case "wider":
                         self.editor.broadenTile(tile);
@@ -542,22 +540,6 @@ define(['knockout',
                 $b.findEl('.tiles-wrapper').height(height);
             };
 
-            // trigger an event to indicates if there is tile(s) supporting time control or not
-            self.triggerTileTimeControlSupportEvent = function(exists) {
-                if (exists === true || exists === false) {
-                    $b.triggerEvent($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, null, exists);
-                    return;
-                }
-                for (var i = 0; i < self.editor.tiles().length; i++) {
-                    var tile = self.editor.tiles()[i];
-                    if (tile && tile.type() === 'DEFAULT' && tile.WIDGET_SUPPORT_TIME_CONTROL()) {
-                        $b.triggerEvent($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, null, true);
-                        return;
-                    }
-                }
-                $b.triggerEvent($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, null, false);
-            };
-
             self.reRender = function() {
                 self.tilesView.disableMovingTransition();
                 self.show();
@@ -816,14 +798,8 @@ define(['knockout',
                 u.helper.tile = null;
                 self.previousDragCell = null;
                 Builder.getTileConfigure(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targets, dashboardInst);
-                tile && tile.WIDGET_SUPPORT_TIME_CONTROL && self.triggerTileTimeControlSupportEvent(tile.WIDGET_SUPPORT_TIME_CONTROL()?true:null);
             };
-
-            self.dashboardTileSupportTimeControlHandler = function(exists) {
-                window.DEV_MODE && console.debug('Received event EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL with value of ' + exists + '. ' + (exists?'Show':'Hide') + ' date time picker accordingly (self.dashboard.enableTimeRange() value is: ' + self.dashboard.enableTimeRange() + ')');
-                self.showTimeRange(self.dashboard.enableTimeRange() !== 'FALSE' && exists);
-            };
-
+           
             self.dashboardTimeRangeChangedHandler = function() {
                 self.showTimeRange(self.dashboard.enableTimeRange() === 'TRUE');
             };
@@ -840,7 +816,6 @@ define(['knockout',
             self.postDocumentShow = function() {
                 self.initializeMaximization();
                 $b.triggerEvent($b.EVENT_TILE_EXISTS_CHANGED, null, self.editor.tiles().length > 0);
-                self.triggerTileTimeControlSupportEvent();
                 //avoid brandingbar disappear when set font-size of text
                 $("#globalBody").addClass("globalBody");
                 self.editor.initializeMode();
