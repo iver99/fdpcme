@@ -9,6 +9,12 @@ sourceSets {
     }
 }
 
+test{
+	testLogging{
+		events 'passed', 'skipped', 'failed'
+		}
+}
+
 
 task integTestJar (type:Jar) {
     from sourceSets.test.output
