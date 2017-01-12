@@ -20,47 +20,27 @@ define([
             self.isDashboardSet = isDashboardSet;
             
             
-            self.getFilterEnabledState = function(enableFilterValue) {
-                if(self.isDashboardSet) {
-                    if(enableFilterValue === 'TRUE' || enableFilterValue === 'GC') {
-                        return 'ON';
-                    }else if(enableFilterValue === 'FALSE') {
-                        return 'OFF';
-                    }else {
-                        return null;
-                    }
-                }else {
-                    if(enableFilterValue === 'TRUE') {
-                        return 'ON';
-                    }else if(enableFilterValue === 'FALSE') {
-                        return 'OFF';
-                    }else if(enableFilterValue === 'GC') {
-                        return 'GC'
-                    }else {
-                        return null;
-                    }
+            self.getFilterEnabledState = function (enableFilterValue) {
+                if (enableFilterValue === 'TRUE') {
+                    return 'ON';
+                } else if (enableFilterValue === 'FALSE') {
+                    return 'OFF';
+                } else if (enableFilterValue === 'GC') {
+                    return 'GC'
+                } else {
+                    return null;
                 }
             };
             
             self.getFilterEnabledValue = function(enableFilterState) {
-                if(self.isDashboardSet) {
-                    if(enableFilterState === 'ON' || enableFilterState === 'GC') {
-                        return 'TRUE';
-                    }else if(enableFilterState === 'OFF') {
-                        return 'FALSE';
-                    }else {
-                        return null;
-                    }
-                }else {
-                    if(enableFilterState === 'ON') {
-                        return 'TRUE';
-                    }else if(enableFilterState === 'OFF') {
-                        return 'FALSE';
-                    }else if(enableFilterState === 'GC') {
-                        return 'GC';
-                    }else {
-                        return null;
-                    }
+                if (enableFilterState === 'ON') {
+                    return 'TRUE';
+                } else if (enableFilterState === 'OFF') {
+                    return 'FALSE';
+                } else if (enableFilterState === 'GC') {
+                    return 'GC';
+                } else {
+                    return null;
                 }
             };
             
@@ -108,7 +88,6 @@ define([
                 //1. reset respectOMCApplicationContext flag and respectOMCEntityContext flag, get entity context info
                 var dashboardTilesViewModel = self.tilesViewModel;                
                 $.when(dashboardTilesViewModel.getEntityContext(dashboardTilesViewModel, val)).done(function(entityContext) {
-                    self.dashboard.enableEntityFilter(val);
                     //show/hide GC bar accordingly
                     var headerWrapper = $("#headerWrapper")[0];
                     var headerViewModel =  null;
@@ -116,16 +95,23 @@ define([
                         headerViewModel = ko.dataFor(headerWrapper);
                     }
                     
-                    if(val === "FALSE") {
-                        headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
-                    }else {
-                        headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(true);
-                    }
-                    
-                    if(val === "FALSE" && self.getFilterEnabledValue(self.enableTimeRangeFilter()) === "FALSE" && headerViewModel) {
+                    if(self.isDashboardSet) {
+                        self.dashboard.enableEntityFilter(val);
                         headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                        headerViewModel.brandingbarParams.showTimeSelector(false);
+                        headerViewModel.brandingbarParams.showEntitySelector(false);
                     }else {
-                        headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                        if(val === "FALSE") {
+                            headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
+                        }else {
+                            headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(true);
+                        }
+
+                        if(val === "FALSE" && self.getFilterEnabledValue(self.enableTimeRangeFilter()) === "FALSE" && headerViewModel) {
+                            headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                        }else {
+                            headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                        }
                     }
 
                     //2. update/refresh value of entity seletor accordingly
@@ -146,7 +132,11 @@ define([
                 
                 if(self.isDashboardSet) {
                     self.dashboard.enableTimeRange(val);
+                    headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                    headerViewModel.brandingbarParams.showTimeSelector(false);
+                    headerViewModel.brandingbarParams.showEntitySelector(false);
                 }else {
+                    self.dashboard.enableTimeRange(val);
                     if(val === "FALSE") {
                         headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);
                     }else {

@@ -976,7 +976,7 @@ define(['knockout',
                 return $.Deferred(function(dtd) {
                     var entityContext = null;
                     var val = enableEntityFilterVal;
-                    if(ko.unwrap(dashboardInst.type)  === "SET") { //Do not respect GC in dashboard set
+                    if(self.isUnderSet) { //Do not respect GC in dashboard set
                         if(val === "GC") {
                             val = "TRUE";
                         }
@@ -1082,7 +1082,7 @@ define(['knockout',
                 var timePeriod = null;
                 var now = new Date();
                 var val = timeFilterEnabledVal;
-                if(ko.unwrap(dashboardInst.type)  === "SET") { //Do not respect GC in dashboard set
+                if(self.isUnderSet) { //Do not respect GC in dashboard set
                     if(val === "GC") {
                         val = "TRUE";
                     }
