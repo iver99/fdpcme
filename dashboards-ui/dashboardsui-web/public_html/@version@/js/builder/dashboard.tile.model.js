@@ -1189,11 +1189,16 @@ define(['knockout',
             self.timeSelectorModel.viewStart(initStart);
             self.timeSelectorModel.viewEnd(initEnd);
             self.timeSelectorModel.viewTimePeriod(self.timePeriod());
+           
+            var dashboardExdedOpt = self.dashboard.extendedOptions && JSON.parse(ko.unwrap(self.dashboard.extendedOptions()));
+            dashboardExdedOpt && dashboardExdedOpt.timePeriodNotShow ? self.timePeriodsNotToShow = dashboardExdedOpt.timePeriodNotShow :self.timePeriodsNotToShow = [];
+
             self.datetimePickerParams = {
                 startDateTime: self.initStart,
                 endDateTime: self.initEnd,
                 timePeriod: self.timePeriod,
                 hideMainLabel: true,
+                timePeriodsNotToShow:self.timePeriodsNotToShow,
                 callbackAfterApply: function(start, end, tp) {
                         self.timeSelectorModel.viewStart(start);
                         self.timeSelectorModel.viewEnd(end);
