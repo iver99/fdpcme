@@ -10,6 +10,9 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupM
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import weblogic.javaee.TransactionTimeoutSeconds;
+
+import static mockit.Deencapsulation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -151,10 +154,6 @@ public class RegistryLookupUtilTest {
     }
 
 
-
-
-
-
     private void testReplaceWithVanityUrlExpectations(final InstanceInfo.Builder anyBuilder, final InstanceInfo anyInstanceInfo,
                                                       final LookupManager anyLockupManager, final LookupClient anyClient, final InstanceQuery anyInstanceQuery)
             throws Exception
@@ -205,5 +204,48 @@ public class RegistryLookupUtilTest {
             }
         };
     }
+
+    @Mocked
+    private LookupManager lookupManager;
+    /*@Mocked
+    private RegistryLookupUtil registryLookupUtil;*/
+    @Mocked
+    private InstanceInfo instanceInfo;
+    @Mocked
+    private LookupClient lookupClient;
+
+
+    @Test
+    public void testReplaceWithVanityUrl() throws Exception {
+        String url="https://apm.replaced.link";
+        final List<InstanceInfo> instanceInfos =new ArrayList<>();
+        instanceInfos.add(instanceInfo);
+        instanceInfos.add(new InstanceInfo());
+        final List<Link> links =new ArrayList<>();
+        Link link1 = new Link();
+        link1.withHref("https://ita.replaced.link");
+        links.add(link1);
+
+        new Expectations(){
+            {
+               LookupManager.getInstance();
+               result=lookupManager;
+                lookupManager.getLookupClient();
+               result=lookupClient;
+                lookupClient.lookup((InstanceQuery)any);
+                result=instanceInfos;
+                invoke(instanceInfo,"getLinksWithProtocol",anyString,anyString);
+                result=links;
+            }
+        };
+
+       RegistryLookupUtil.replaceWithVanityUrl(url,"emasstesttenant1","ApmUI");
+    }
+
+    /*@Test
+    public void testPrivateReplaceVanityUrlDomainForUrl(){
+
+        Deencapsulation.invoke(RegistryLookupUtil.class,"replaceVanityUrlDomainForUrl","","https://emaastesttenant1.ita.replaced.link/home","emaastesttenant1");
+    }*/
 
 }
