@@ -391,7 +391,7 @@ public class TenantSubscriptionUtilTest {
         };
     }
 
-    /*@Test
+    @Test
     public void testGetTenantSubscribedServices(final @Mocked InstanceInfo instanceInfo) throws Exception {
         final Link link = new Link();
 
@@ -401,13 +401,11 @@ public class TenantSubscriptionUtilTest {
             {
                 RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, "emaastesttenant1");
                 result = link;
-                *//*LookupManager.getInstance().getLookupClient().getInstanceForTenant((InstanceInfo)any, "emaastesttenant1");
-                result=instanceInfo;*//*
 
             }
         };
-        List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-    }*/
+        TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+    }
 
 
 }
